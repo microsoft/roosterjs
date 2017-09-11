@@ -1,0 +1,18 @@
+import execFormatWithUndo from './execFormatWithUndo';
+import { Editor } from 'roosterjs-core';
+
+export default function setFontSize(editor: Editor, fontSize: string): void {
+    editor.focus();
+    // TODO: Verify font size
+    let validatedFontSize = fontSize.trim();
+    if (validatedFontSize) {
+        execFormatWithUndo(editor, () => {
+            // The browser provided execCommand only accepts 1-7 point value. In addition, it uses HTML <font> tag with size attribute.
+            // <font> is not HTML5 standard (http://www.w3schools.com/tags/tag_font.asp). Use editor.applyInlineStyle which gives flexibility on applying inline style
+            // for here, we use use CSS font-size style
+            editor.applyInlineStyle((element: HTMLElement) => {
+                element.style.fontSize = fontSize;
+            });
+        });
+    }
+}
