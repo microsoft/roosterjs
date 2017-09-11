@@ -10,7 +10,6 @@
     "start": "npm run copy-project-files && node ../../node_modules/typescript/lib/tsc.js -w",
     "test": "node ../../node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=jasmine.json --verbose"
   },
-  "license": "UNLICENSED",
   "dependencies": {},
   "devDependencies": {
     "jasmine": "~2.4.1",
