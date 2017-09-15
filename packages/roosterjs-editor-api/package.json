@@ -1,6 +1,6 @@
 {
   "name": "roosterjs-editor-api",
-  "version": "5.2.0",
+  "version": "6.0.0",
   "description": "Programming API for roosterjs",
   "main": "./lib/index.js",
   "scripts": {
@@ -11,9 +11,9 @@
     "test": "node ../../node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=jasmine.json --verbose"
   },
   "dependencies": {
-    "roosterjs-editor-types": "5.2.0",
-    "roosterjs-editor-dom": "5.2.0",
-    "roosterjs-editor-core": "5.2.0"
+    "roosterjs-editor-types": "6.0.0",
+    "roosterjs-editor-dom": "6.0.0",
+    "roosterjs-editor-core": "6.0.0"
   },
   "devDependencies": {
     "jasmine": "~2.4.1",
