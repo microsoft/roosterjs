@@ -1,5 +1,5 @@
-import { Editor, EditorPlugin } from 'roosterjs-core';
-import { PluginEvent, PluginEventType } from 'roosterjs-types';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 // An editor plugin to show cursor position in demo page
 export default class ShowCursorPosition implements EditorPlugin {

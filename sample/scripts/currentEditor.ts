@@ -1,4 +1,4 @@
-import { Editor } from 'roosterjs-core';
+import { Editor } from 'roosterjs-editor-core';
 
 let editor: Editor;
 

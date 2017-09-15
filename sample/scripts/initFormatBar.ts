@@ -14,9 +14,9 @@ import {
     setFontSize,
     setTextColor,
     setBackgroundColor,
-} from 'roosterjs-api';
-import { Alignment, Indentation, DefaultFormat } from 'roosterjs-types';
-import { Editor } from 'roosterjs-core';
+} from 'roosterjs-editor-api';
+import { Alignment, Indentation, DefaultFormat } from 'roosterjs-editor-types';
+import { Editor } from 'roosterjs-editor-core';
 import getCurrentEditor from './currentEditor';
 
 export default function initFormatBar() {

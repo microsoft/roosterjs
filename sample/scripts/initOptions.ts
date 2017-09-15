@@ -1,8 +1,8 @@
 import ShowCursorPosition from './plugins/ShowCursorPosition';
 import ShowFromState from './plugins/ShowFormatState';
-import { DefaultFormat } from 'roosterjs-types';
-import { DefaultShortcut, HyperLink, HtmlSnapshotUndo, PasteManager, TabIndent } from 'roosterjs-plugins';
-import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-core';
+import { DefaultFormat } from 'roosterjs-editor-types';
+import { DefaultShortcut, HyperLink, HtmlSnapshotUndo, PasteManager, TabIndent } from 'roosterjs-editor-plugins';
+import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
 import { setCurrentEditor } from './currentEditor';
 
 function initOptions() {

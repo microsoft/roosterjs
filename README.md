@@ -15,31 +15,31 @@ Rooster contains 6 packages.
    `createEditor()` function in roosterjs to create an editor with default 
    configurations.
 
-2. `roosterjs-core`:
-   Defines the core editor and plugin infrastructure. Use `roosterjs-core` 
+2. `roosterjs-editor-core`:
+   Defines the core editor and plugin infrastructure. Use `roosterjs-editor-core` 
    instead of `roosterjs` to build and customize your own editor.
 
-3. `roosterjs-api`:
+3. `roosterjs-editor-api`:
    Defines APIs for editor operations. Use these APIs to modify content and 
-   formatting in the editor you built using `roosterjs-core`.
+   formatting in the editor you built using `roosterjs-editor-core`.
 
-4. `roosterjs-dom`:
-   Defines APIs for DOM operations. Use `roosterjs-api` instead unless you want 
-   to access DOM API directly.
+4. `roosterjs-editor-dom`:
+   Defines APIs for DOM operations. Use `roosterjs-editor-api` instead unless
+   you want to access DOM API directly.
 
-5. `roosterjs-plugins`:
+5. `roosterjs-editor-plugins`:
    Defines basic plugins for common features. Examples: making hyperlinks, 
    pasting HTML content, inserting inline images.
 
-6. `roosterjs-types`: 
+6. `roosterjs-editor-types`: 
    Defines public interfaces and enumerations.
 
 ### APIs
 
-Rooster provides DOM level APIs (in `roosterjs-dom`) and formatting APIs (in 
-`roosterjs-api`) to perform editing operations.
+Rooster provides DOM level APIs (in `roosterjs-editor-dom`) and formatting APIs
+(in `roosterjs-editor-api`) to perform editing operations.
 
-`roosterjs-dom` provides several levels of DOM operations:
+`roosterjs-editor-dom` provides several levels of DOM operations:
 - Perform basic DOM operations such as `fromHtml()`, `wrap()`, `unwrap()`, ...
 - Wrap a given DOM node with `InlineElemen`t or `BlockElement` and perform 
   operations with DOM Walker API.
@@ -47,8 +47,8 @@ Rooster provides DOM level APIs (in `roosterjs-dom`) and formatting APIs (in
 - Travel among `InlineElements` and `BlockElements` with scope using 
   ContentTraverser API.
 
-`roosterjs-api` provides APIs for scenario-based operations triggered by user 
-interaction.
+`roosterjs-editor-api` provides APIs for scenario-based operations triggered by
+user interaction.
 
 ## Plugins
 

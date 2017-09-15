@@ -1,0 +1,24 @@
+{
+  "name": "roosterjs-editor-plugins",
+  "version": "5.2.0",
+  "description": "Plugins for roosterjs",
+  "main": "./lib/index.js",
+  "scripts": {
+    "lint": "tslint --project tsconfig.json",
+    "copy-project-files": "node ../../tools/copy-project-files.js",
+    "build": "npm run copy-project-files && npm run lint && node ../../node_modules/typescript/lib/tsc.js",
+    "start": "npm run copy-project-files && node ../../node_modules/typescript/lib/tsc.js -w",
+    "test": "node ../../node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=jasmine.json --verbose"
+  },
+  "dependencies": {
+    "roosterjs-editor-types": "5.2.0",
+    "roosterjs-editor-dom": "5.2.0",
+    "roosterjs-editor-core": "5.2.0",
+    "roosterjs-editor-api": "5.2.0"
+  },
+  "devDependencies": {
+    "jasmine": "~2.4.1",
+    "typescript": "~2.2.2"
+  },
+  "typings": "./lib/index.d.ts"
+}

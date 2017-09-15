@@ -1,4 +1,4 @@
-import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-core';
+import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
 import { createEditor } from 'roosterjs';
 import ShowCursorPosition from './plugins/ShowCursorPosition';
 import ShowFromState from './plugins/ShowFormatState';

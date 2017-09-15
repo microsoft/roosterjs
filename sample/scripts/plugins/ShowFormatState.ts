@@ -1,6 +1,6 @@
-import { Editor, EditorPlugin } from 'roosterjs-core';
-import { getFormatState } from 'roosterjs-api';
-import { FormatState, PluginEvent } from 'roosterjs-types';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { getFormatState } from 'roosterjs-editor-api';
+import { FormatState, PluginEvent } from 'roosterjs-editor-types';
 
 // An editor plugin to show cursor position in demo page
 export default class ShowFormatState implements EditorPlugin {

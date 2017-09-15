@@ -4,8 +4,8 @@ import {
     HyperLink,
     PasteManager,
     TabIndent,
-} from 'roosterjs-plugins';
-import { Editor, EditorOptions, EditorPlugin } from 'roosterjs-core';
+} from 'roosterjs-editor-plugins';
+import { Editor, EditorOptions, EditorPlugin } from 'roosterjs-editor-core';
 
 // Create an editor instance with most common options
 export default function createEditor(
