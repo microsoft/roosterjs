@@ -1,6 +1,12 @@
 import { Editor, EditorPlugin, browserData } from 'roosterjs-core';
 import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-types';
-import { toggleBold, toggleItalic, toggleUnderline, toggleBullet, toggleNumbering } from 'roosterjs-api';
+import {
+    toggleBold,
+    toggleItalic,
+    toggleUnderline,
+    toggleBullet,
+    toggleNumbering,
+} from 'roosterjs-api';
 
 const KEY_B = 66;
 const KEY_I = 73;

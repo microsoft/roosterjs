@@ -20,4 +20,6 @@ let copyFn = (f) => {
     copy(path.join(cwd, f), outfile);
 };
 
+glob.sync('@(README|readme)*.*').forEach(copyFn);
+glob.sync('@(license|LICENSE)*').forEach(copyFn);
 glob.sync('package.json').forEach(copyFn);

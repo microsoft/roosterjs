@@ -1,6 +1,6 @@
 {
   "name": "roosterjs-api",
-  "version": "0.1.0",
+  "version": "5.1.0",
   "description": "Programming API for roosterjs",
   "main": "./lib/index.js",
   "scripts": {
@@ -11,9 +11,9 @@
     "test": "node ../../node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=jasmine.json --verbose"
   },
   "dependencies": {
-    "roosterjs-types": "0.1.0",
-    "roosterjs-dom": "0.1.0",
-    "roosterjs-core": "0.1.0"
+    "roosterjs-types": "5.1.0",
+    "roosterjs-dom": "5.1.0",
+    "roosterjs-core": "5.1.0"
   },
   "devDependencies": {
     "jasmine": "~2.4.1",

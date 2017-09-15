@@ -214,7 +214,7 @@ export default class Editor {
     }
 
     public getContent(triggerExtractContentEvent: boolean = true): string {
-        let content =  this.contentDiv.innerHTML;
+        let content = this.contentDiv.innerHTML;
 
         if (triggerExtractContentEvent) {
             let extractContentEvent: ExtractContentEvent = {

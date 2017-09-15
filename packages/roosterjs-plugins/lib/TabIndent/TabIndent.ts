@@ -4,7 +4,7 @@ import {
     cacheGetListElement,
     cacheGetListState,
     toggleBullet,
-    toggleNumbering
+    toggleNumbering,
 } from 'roosterjs-api';
 import { Editor, EditorPlugin, browserData } from 'roosterjs-core';
 import {

@@ -1,6 +1,6 @@
 {
   "name": "roosterjs-types",
-  "version": "0.1.0",
+  "version": "5.1.0",
   "description": "Type definition for roosterjs",
   "main": "./lib/index.js",
   "scripts": {
