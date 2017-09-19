@@ -11,7 +11,9 @@
     "clean": "rimraf dist",
     "lint": "tslint --project tsconfig.json",
     "normalize": "node tools/normalize-packages.js",
-    "build": "npm run clean && npm run normalize && node tools/build-all.js",
+    "pack": "node tools/pack.js",
+    "pack:prod": "node tools/pack.js -p",
+    "build": "npm run clean && npm run normalize && node tools/build-all.js && npm run pack",
     "start": "webpack-dev-server",
     "test": "npm run build && karma start",
     "test:debug": "npm run build && karma start --no-single-run"
