@@ -28,6 +28,7 @@ export { default as toggleBold } from './format/toggleBold';
 export { default as toggleBullet } from './format/toggleBullet';
 export { default as toggleItalic } from './format/toggleItalic';
 export { default as toggleNumbering } from './format/toggleNumbering';
+export { default as toggleBlockQuote } from './format/toggleBlockQuote';
 export { default as toggleStrikethrough } from './format/toggleStrikethrough';
 export { default as toggleSubscript } from './format/toggleSubscript';
 export { default as toggleSuperscript } from './format/toggleSuperscript';

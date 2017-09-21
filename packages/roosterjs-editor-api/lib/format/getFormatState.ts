@@ -14,6 +14,7 @@ import {
 } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 import { getListStateAtNode } from './cacheGetListState';
+import { isBlockQuoteAtNode} from './getBlockQuoteState';
 
 // Get certain style of a node
 // useComputed controls from where to get the style, from computed style or crawl DOM tree to find inline style
@@ -103,6 +104,7 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
     let listState = nodeAtCursor ? getListStateAtNode(editor, nodeAtCursor) : null;
     let isBullet = listState && listState == ListState.Bullets ? true : false;
     let isNumbering = listState && listState == ListState.Numbering ? true : false;
+    let isBlockQuote = nodeAtCursor ? isBlockQuoteAtNode(editor, nodeAtCursor) : false;
     return nodeAtCursor
         ? {
               fontName: getStyleAtNode(editor, nodeAtCursor, 'font-family', true /* useComputed*/),
@@ -126,6 +128,7 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
               canAddImageAltText: canAddImageAltText,
               canUndo: editor.canUndo(),
               canRedo: editor.canRedo(),
+              isBlockQuote: isBlockQuote,
           }
         : null;
 }

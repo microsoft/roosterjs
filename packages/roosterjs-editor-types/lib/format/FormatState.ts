@@ -30,6 +30,9 @@ interface FormatState {
     // Whether the text has strike through line
     isStrikeThrough: boolean;
 
+    // Whether the text is in block quote
+    isBlockQuote: boolean;
+
     // Whether the text is in subscript mode
     isSubscript: boolean;
 
