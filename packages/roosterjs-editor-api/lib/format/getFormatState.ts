@@ -14,7 +14,7 @@ import {
 } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 import { getListStateAtNode } from './cacheGetListState';
-import { isBlockQuoteAtNode} from './getBlockQuoteState';
+import { isBlockQuoteAtNode } from './getBlockQuoteState';
 
 // Get certain style of a node
 // useComputed controls from where to get the style, from computed style or crawl DOM tree to find inline style

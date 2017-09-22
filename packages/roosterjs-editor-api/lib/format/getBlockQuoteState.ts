@@ -16,3 +16,17 @@ export function isBlockQuoteAtNode(editor: Editor, node: Node): boolean {
 
     return false;
 }
+
+export default function getBlockQuoteElement(editor: Editor, node: Node): Node {
+    let startNode = node && node.nodeType == NodeType.Text ? node.parentNode : node;
+    while (startNode && editor.contains(startNode)) {
+        let tagName = getTagOfNode(startNode);
+        if (tagName == 'BLOCKQUOTE') {
+            return startNode;
+        }
+
+        startNode = startNode.parentNode;
+    }
+
+    return null;
+}

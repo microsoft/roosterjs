@@ -48,7 +48,13 @@ export default function initFormatBar() {
 
     // Blockquote
     document.getElementById('blockquoteButton').addEventListener('click', function() {
-        toggleBlockQuote(getCurrentEditor());
+        toggleBlockQuote(getCurrentEditor(), (element: HTMLElement) => {
+            element.style.borderLeft = "3px solid";
+            element.style.borderColor = "#C8C8C8";
+            element.style.paddingLeft = "10px";
+            element.style.color = "#666666";
+            element.style.fontSize = "17px";
+        });
     });
 
     // StrikeThrough

@@ -4,6 +4,7 @@ import {
     HyperLink,
     PasteManager,
     TabIndent,
+    BlockQuote,
 } from 'roosterjs-editor-plugins';
 import { Editor, EditorOptions, EditorPlugin } from 'roosterjs-editor-core';
 
@@ -17,6 +18,7 @@ export default function createEditor(
         new HyperLink(),
         new PasteManager(),
         new TabIndent(),
+        new BlockQuote(),
     ];
 
     if (additionalPlugins) {
