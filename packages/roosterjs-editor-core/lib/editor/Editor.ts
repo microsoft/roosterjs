@@ -57,6 +57,7 @@ export default class Editor {
     private isBeforeDeactivateEventSupported: boolean;
     private undoService: UndoService;
     private isInIMESequence: boolean;
+    private suspendAddingUndoSnapshot: boolean;
 
     constructor(private contentDiv: HTMLDivElement, options: EditorOptions) {
         if (!contentDiv) {
@@ -195,8 +196,17 @@ export default class Editor {
         }
     }
 
+    public runWithoutAddingUndoSnapshot(callback: () => void) {
+        try {
+            this.suspendAddingUndoSnapshot = true;
+            callback();
+        } finally {
+            this.suspendAddingUndoSnapshot = false;
+        }
+    }
+
     public addUndoSnapshot(): void {
-        if (this.undoService && this.undoService.addUndoSnapshot) {
+        if (this.undoService && this.undoService.addUndoSnapshot && !this.suspendAddingUndoSnapshot) {
             this.undoService.addUndoSnapshot();
         }
     }

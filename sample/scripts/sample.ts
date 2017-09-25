@@ -40,5 +40,4 @@ function initEditor() {
         new ShowCursorPosition(document.getElementById('cursorPosition')),
         new ShowFromState(document.getElementById('formatState')),
     ]));
-    getCurrentEditor().setContent('Hello, RoosterJs!');
 }
