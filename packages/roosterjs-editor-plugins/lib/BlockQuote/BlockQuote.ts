@@ -5,6 +5,7 @@ import {
     PluginEvent,
     PluginEventType,
     ContentScope,
+    ContentPosition,
 } from 'roosterjs-editor-types';
 
 const KEY_ENTER = 13;
@@ -30,17 +31,27 @@ export default class BlockQuote implements EditorPlugin {
             let contentTraverser = this.editor.getContentTraverser(ContentScope.Selection);
             let blockElement = contentTraverser.currentBlockElement;
 
-            // If current block is empty, delete the corresponding node and insert empty div after current blockquote
-            if (!blockElement.getTextContent()) {
+            // If current block is empty, delete the corresponding node and insert a br node after current blockquote
+            let content = blockElement.getTextContent().replace(/\u200B/g, '');
+            if (!content) {
+                let childCount = blockQuoteElement.childNodes.length;
                 this.editor.deleteNode(nodeAtCursor);
                 let range = this.editor.getSelectionRange();
                 range.setEndAfter(blockQuoteElement);
                 range.collapse(false);
                 let brNode = this.editor.getDocument().createElement('br');
-                let div = this.editor.getDocument().createElement('div');
-                div.appendChild(brNode);
-                range.insertNode(div);
                 this.editor.updateSelection(range);
+                this.editor.insertNode(brNode, {
+                    position: ContentPosition.SelectionStart,
+                    updateCursor: false,
+                    replaceSelection: true,
+                    insertOnNewLine: false,
+                });
+
+                // If the current node is the only child in blockquote, delete the blockquote
+                if (childCount == 1) {
+                    this.editor.deleteNode(blockQuoteElement);
+                }
             }
         }
     }

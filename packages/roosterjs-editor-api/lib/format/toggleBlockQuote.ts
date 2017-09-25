@@ -1,9 +1,11 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import getFormatState  from './getFormatState';
 import getBlockQuoteElement from './getBlockQuoteState';
-import { ContentScope, ContentPosition } from 'roosterjs-editor-types';
-import { unwrap } from 'roosterjs-editor-dom';
-import { Editor } from 'roosterjs-editor-core';
+import { ContentScope, ContentPosition, NodeBoundary } from 'roosterjs-editor-types';
+import { unwrap, wrapAll, wrap } from 'roosterjs-editor-dom';
+import { Editor, browserData } from 'roosterjs-editor-core';
+
+var ZERO_WIDTH_SPACE = '&#8203;';
 
 export default function toggleBlockQuote(editor: Editor, styler: (element: HTMLElement) => void): void {
     editor.focus();
@@ -11,51 +13,79 @@ export default function toggleBlockQuote(editor: Editor, styler: (element: HTMLE
     let formatState = editor ? getFormatState(editor) : null;
     let contentTraverser = editor.getContentTraverser(ContentScope.Selection);
     let blockElement = contentTraverser.currentBlockElement;
+    let range = editor.getSelectionRange();
 
     if (!formatState.isBlockQuote) {
-        let range = editor.getSelectionRange();
-        let quoteElement = editor.getDocument().createElement('blockquote');
-
-        // We only style the quoteElement, for styles in child nodes, we leave them as is
-        styler(quoteElement);
-
-        // If block element is null, we create a new node and wrap with blockquote, otherwise we wrap the existing node with blockquote
-        if (blockElement != null) {
-            let containerNode = blockElement.getStartNode();
-            quoteElement.appendChild(containerNode);
-        } else {
-            let brNode = editor.getDocument().createElement('br');
-            let div = editor.getDocument().createElement('div');
-            div.appendChild(brNode);
-            quoteElement.appendChild(div);
-        }
-
         formatter = () => {
-            editor.insertNode(quoteElement, {
-                position: ContentPosition.SelectionStart,
-                updateCursor: true,
-                replaceSelection: true,
-                insertOnNewLine: false,
-            });
-            range.selectNode(quoteElement.lastChild);
-            range.collapse(false);
-            editor.updateSelection(range);
+            let nodes: Node[];
+            let startContainer: Node;
+            let startOffset: number;
+
+            // If there's content in the block, move the whole block into blockquote
+            if (blockElement) {
+                nodes = blockElement.getContentNodes();
+                startContainer = range.startContainer;
+                startOffset = range.startOffset;
+
+                // If the only content node is <BR>, we wrap it with <DIV>, otherwise the format will break. This often happens in firefox.
+                if (nodes.length == 1 && nodes[0].nodeName == 'BR') {
+                    nodes[0] = wrap(nodes[0], '<div></div>') as HTMLDivElement;
+                    startContainer = nodes[0];
+                    startOffset = NodeBoundary.Begin;
+                }
+            } else { // blockElment is null, we need to create an empty div. In case of IE and Edge, we insert ZWS to put cursor in the div, otherwise insert BR node
+                let div = editor.getDocument().createElement('div');
+
+                if (browserData.isEdge || browserData.isIE) {
+                    div.innerHTML = ZERO_WIDTH_SPACE;
+                } else {
+                    let brNode = editor.getDocument().createElement('br');
+                    div.appendChild(brNode);
+                }
+                editor.insertNode(div, {
+                    position: ContentPosition.SelectionStart,
+                    updateCursor: true,
+                    replaceSelection: true,
+                    insertOnNewLine: false,
+                });
+                startContainer = div.firstChild;
+                startOffset = NodeBoundary.Begin;
+                nodes = [div];
+            }
+
+            let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLQuoteElement;
+            styler(quoteElement);
+            updateSelection(range, editor, startContainer, startOffset);
         };
 
         if (formatter) {
             execFormatWithUndo(editor, formatter);
         }
     } else {
-        //To do set selection after unwrap
-        if (blockElement != null) {
+        // The current selection is inside a blockquote, need to unblockquote the blockElement
+        if (blockElement) {
             let containerNode = blockElement.getStartNode();
-            let element = getBlockQuoteElement(editor, containerNode);
-            if (element != null) {
-                let formatter = () => unwrap(element);
+            let blockQuoteElement = getBlockQuoteElement(editor, containerNode);
+            if (blockQuoteElement) {
+                let formatter = () => {
+                    let startContainer = range.startContainer;
+                    let startOffset = range.startOffset;
+                    unwrap(blockQuoteElement);
+                    updateSelection(range, editor, startContainer, startOffset);
+                };
                 if (formatter) {
                     execFormatWithUndo(editor, formatter);
                 }
             }
         }
+    }
+}
+
+function updateSelection(range: Range, editor: Editor, startContainer: Node, startOffset: number) {
+    if (editor.contains(startContainer)) {
+        editor.focus();
+        range.setStart(startContainer, startOffset);
+        range.collapse(true /*toStart*/);
+        editor.updateSelection(range);
     }
 }
