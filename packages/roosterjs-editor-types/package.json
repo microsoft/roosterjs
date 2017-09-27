@@ -1,6 +1,6 @@
 {
   "name": "roosterjs-editor-types",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "description": "Type definition for roosterjs",
   "main": "./lib/index.js",
   "scripts": {

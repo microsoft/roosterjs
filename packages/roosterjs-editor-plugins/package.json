@@ -1,6 +1,6 @@
 {
   "name": "roosterjs-editor-plugins",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "description": "Plugins for roosterjs",
   "main": "./lib/index.js",
   "scripts": {
@@ -11,10 +11,10 @@
     "test": "node ../../node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=jasmine.json --verbose"
   },
   "dependencies": {
-    "roosterjs-editor-types": "6.0.0",
-    "roosterjs-editor-dom": "6.0.0",
-    "roosterjs-editor-core": "6.0.0",
-    "roosterjs-editor-api": "6.0.0"
+    "roosterjs-editor-types": "6.1.0",
+    "roosterjs-editor-dom": "6.1.0",
+    "roosterjs-editor-core": "6.1.0",
+    "roosterjs-editor-api": "6.1.0"
   },
   "devDependencies": {
     "jasmine": "~2.4.1",

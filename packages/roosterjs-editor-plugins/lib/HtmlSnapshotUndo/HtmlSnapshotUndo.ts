@@ -22,8 +22,10 @@ const MAXSIZELIMIT = 10000000;
 // Max number of snapshot to keep in undo stack
 const MAXSNAPSHOTLIMIT = 50;
 
-// An editor plugin that manages undo history
-//
+/**
+ * @deprecated
+ * An editor plugin that manages undo history
+ */
 export default class HtmlSnapshotUndo implements UndoService {
     private editor: Editor;
 

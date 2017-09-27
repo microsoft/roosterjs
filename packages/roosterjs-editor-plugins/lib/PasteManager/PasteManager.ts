@@ -86,6 +86,7 @@ export default class PasteManager implements EditorPlugin {
                         replaceSelection: true,
                         insertOnNewLine: false,
                     });
+                    this.editor.addUndoSnapshot();
                 }
             };
             reader.readAsDataURL(file);
