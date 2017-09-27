@@ -5,6 +5,8 @@ import {
     cacheGetListState,
     toggleBullet,
     toggleNumbering,
+    getNodeAtCursor,
+    getBlockQuoteElement
 } from 'roosterjs-editor-api';
 import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
 import {
@@ -13,6 +15,8 @@ import {
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
+    ContentScope,
+    ContentPosition,
 } from 'roosterjs-editor-types';
 
 const KEY_TAB = 9;
@@ -83,6 +87,33 @@ export default class TabIndent implements EditorPlugin {
                     }
                 }
             }
+        } else {
+            let nodeAtCursor = getNodeAtCursor(this.editor);
+            let [isBlockQuoteEvent, blockQuoteElement] = this.isBlockQuoteEvent(event, [KEY_ENTER], nodeAtCursor);
+            if (isBlockQuoteEvent) {
+                let keybordEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+                keybordEvent.preventDefault();
+                let childCount = blockQuoteElement.childNodes.length;
+                this.editor.deleteNode(nodeAtCursor);
+                let range = this.editor.getSelectionRange();
+                if (!!range) {
+                    range.setEndAfter(blockQuoteElement);
+                    range.collapse(false);
+                }
+                let brNode = this.editor.getDocument().createElement('br');
+                this.editor.updateSelection(range);
+                this.editor.insertNode(brNode, {
+                    position: ContentPosition.SelectionStart,
+                    updateCursor: false,
+                    replaceSelection: true,
+                    insertOnNewLine: false,
+                });
+
+                // If the current node is the only child in blockquote, delete the blockquote
+                if (childCount == 1) {
+                    this.editor.deleteNode(blockQuoteElement);
+                }
+            }
         }
     }
 
@@ -112,5 +143,35 @@ export default class TabIndent implements EditorPlugin {
         }
 
         return false;
+    }
+
+    // Check if it is a blockquote event, if it is true, also return the blockquote element where the cursor resides
+    // 1. Cursor is in blockquote element
+    // 2. Current block has no content
+    // 3. is keyDown
+    // 4. is Enter
+    // 5. Any of ctrl/meta/alt is not pressed
+    private isBlockQuoteEvent(event: PluginEvent, interestedKeyCodes: number[], nodeAtCursor: Node): [boolean, Node] {
+        let isBlockQuoteEvent = false;
+        let blockQuoteElement: Node;
+
+        if (event.eventType == PluginEventType.KeyDown) {
+            let keybordEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+            blockQuoteElement = getBlockQuoteElement(this.editor, nodeAtCursor);
+            let contentTraverser = this.editor.getContentTraverser(ContentScope.Selection);
+            let blockElement = !!contentTraverser ? contentTraverser.currentBlockElement : null;
+
+            // Get the content of the current block element, remove any zero white spaces
+            let content = !!blockElement ? blockElement.getTextContent().replace(/\u200B/g, '') : null;
+
+            isBlockQuoteEvent = !!blockQuoteElement &&
+                !content &&
+                interestedKeyCodes.indexOf(keybordEvent.which) >= 0 &&
+                !keybordEvent.ctrlKey &&
+                !keybordEvent.altKey &&
+                !keybordEvent.metaKey;
+        }
+
+        return [isBlockQuoteEvent, blockQuoteElement];
     }
 }
