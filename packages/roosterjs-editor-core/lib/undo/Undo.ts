@@ -1,4 +1,5 @@
 import UndoSnapshots from './UndoSnapshots';
+import containsImage from './containsImage';
 import {
     ContentChangedEvent,
     PluginDomEvent,
@@ -154,6 +155,7 @@ export default class Undo implements UndoService {
         // Handle backspace/delete when there is a selection to take a snapshot
         // since we want the state prior to deletion restorable
         let evt = pluginEvent.rawEvent as KeyboardEvent;
+        let shouldTakeUndo = false;
         if (evt.which == KEY_BACKSPACE || evt.which == KEY_DELETE) {
             let selectionRange = this.editor.getSelectionRange();
             if (
@@ -162,10 +164,15 @@ export default class Undo implements UndoService {
                     // If the selection contains image, we need to add undo snapshots
                     containsImage(selectionRange.startContainer))
             ) {
-                this.addUndoSnapshot();
+                shouldTakeUndo = true;
             }
         } else if (this.hasNewContent && evt.which >= KEY_PAGEUP && evt.which <= KEY_DOWN) {
+            shouldTakeUndo = true;
+        }
+
+        if (shouldTakeUndo) {
             this.addUndoSnapshot();
+            this.lastKeyPress = 0;
         }
     }
 
@@ -197,6 +204,7 @@ export default class Undo implements UndoService {
 
     private clearRedoForInput() {
         this.getSnapshotsManager().clearRedo();
+        this.lastKeyPress = 0;
         this.hasNewContent = true;
     }
 
@@ -214,18 +222,4 @@ export default class Undo implements UndoService {
         }
         return this.undoSnapshots;
     }
-}
-
-function containsImage(node: Node): boolean {
-    if (node) {
-        let container = node as HTMLElement;
-        if (container.querySelector) {
-            let image = container.querySelector('img');
-            if (image) {
-                return true;
-            }
-        }
-    }
-
-    return false;
 }
