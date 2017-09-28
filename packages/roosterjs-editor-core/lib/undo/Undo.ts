@@ -1,7 +1,6 @@
 import UndoSnapshots from './UndoSnapshots';
 import containsImage from './containsImage';
 import {
-    ContentChangedEvent,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
