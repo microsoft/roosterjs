@@ -80,7 +80,7 @@ export default class Undo implements UndoService {
                 this.clearRedoForInput();
                 break;
             case PluginEventType.ContentChanged:
-                if ((<ContentChangedEvent>event).source != 'Undo' && !this.isRestoring) {
+                if (!this.isRestoring) {
                     this.clearRedoForInput();
                 }
                 break;
@@ -146,8 +146,6 @@ export default class Undo implements UndoService {
             } finally {
                 this.isRestoring = false;
             }
-
-            this.fireContentChangedEvent();
         }
     }
 
@@ -181,7 +179,7 @@ export default class Undo implements UndoService {
         let evt = pluginEvent.rawEvent as KeyboardEvent;
         if (evt.metaKey) {
             // if metaKey is pressed, simply return since no actual effect will be taken on the editor.
-            // this is to prevent changing hasNewContent to true when âŒ˜ + v to paste on Safari.
+            // this is to prevent changing hasNewContent to true when meta + v to paste on Safari.
             return;
         }
 
@@ -207,14 +205,6 @@ export default class Undo implements UndoService {
         this.getSnapshotsManager().clearRedo();
         this.lastKeyPress = 0;
         this.hasNewContent = true;
-    }
-
-    private fireContentChangedEvent(): void {
-        let changeEvent: ContentChangedEvent = {
-            eventType: PluginEventType.ContentChanged,
-            source: 'Undo',
-        };
-        this.editor.triggerEvent(changeEvent, true /* broadcast */);
     }
 
     private getSnapshotsManager() {

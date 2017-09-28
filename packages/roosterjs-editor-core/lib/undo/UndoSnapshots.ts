@@ -13,12 +13,12 @@ export default class UndoSnapshots {
         this.currentIndex = -1;
     }
 
-    public canMove(delta: number) {
+    public canMove(delta: number): boolean {
         let newIndex = this.currentIndex + delta;
         return newIndex >= 0 && newIndex < this.snapshots.length;
     }
 
-    public move(delta: number) {
+    public move(delta: number): string {
         if (this.canMove(delta)) {
             this.currentIndex += delta;
             return this.snapshots[this.currentIndex];
