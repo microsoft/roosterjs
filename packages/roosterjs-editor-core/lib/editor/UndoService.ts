@@ -7,6 +7,7 @@ interface UndoService extends EditorPlugin {
     addUndoSnapshot?: () => void;
     canUndo?: () => boolean;
     canRedo?: () => boolean;
+    clear?: () => void;
 }
 
 export default UndoService;

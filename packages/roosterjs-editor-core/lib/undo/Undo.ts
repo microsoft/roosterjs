@@ -167,6 +167,7 @@ export default class Undo implements UndoService {
                 shouldTakeUndo = true;
             }
         } else if (this.hasNewContent && evt.which >= KEY_PAGEUP && evt.which <= KEY_DOWN) {
+            // PageUp, PageDown, Home, End, Left, Right, Up, Down
             shouldTakeUndo = true;
         }
 
