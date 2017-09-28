@@ -36,6 +36,7 @@ function switchTab(name: string) {
 
 function initEditor() {
     let editorArea = document.getElementById('editor') as HTMLDivElement;
+    editorArea.innerHTML = '';
     setCurrentEditor(createEditor(editorArea, [
         new ShowCursorPosition(document.getElementById('cursorPosition')),
         new ShowFromState(document.getElementById('formatState')),
