@@ -15,8 +15,7 @@ import {
     setTextColor,
     setBackgroundColor,
 } from 'roosterjs-editor-api';
-import { Alignment, Indentation, DefaultFormat } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { Alignment, Indentation } from 'roosterjs-editor-types';
 import getCurrentEditor from './currentEditor';
 
 export default function initFormatBar() {
@@ -121,7 +120,7 @@ export default function initFormatBar() {
         let select = document.getElementById('fontSizeButton') as HTMLSelectElement;
         let text = select.value;
         if (text) {
-            setFontSize(editor, text + "px");
+            setFontSize(editor, text + 'px');
         }
         select.value = '';
     });

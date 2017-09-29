@@ -1,10 +1,9 @@
-import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
-import { createEditor } from 'roosterjs';
 import ShowCursorPosition from './plugins/ShowCursorPosition';
 import ShowFromState from './plugins/ShowFormatState';
 import initFormatBar from './initFormatBar';
 import initOptions from './initOptions';
-import getCurrentEditor, { setCurrentEditor } from './currentEditor';
+import { createEditor } from 'roosterjs';
+import { setCurrentEditor } from './currentEditor';
 
 window.onload = () => {
     initTabs();
@@ -37,8 +36,10 @@ function switchTab(name: string) {
 function initEditor() {
     let editorArea = document.getElementById('editor') as HTMLDivElement;
     editorArea.innerHTML = '';
-    setCurrentEditor(createEditor(editorArea, [
-        new ShowCursorPosition(document.getElementById('cursorPosition')),
-        new ShowFromState(document.getElementById('formatState')),
-    ]));
+    setCurrentEditor(
+        createEditor(editorArea, [
+            new ShowCursorPosition(document.getElementById('cursorPosition')),
+            new ShowFromState(document.getElementById('formatState')),
+        ])
+    );
 }

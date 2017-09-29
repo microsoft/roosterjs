@@ -35,8 +35,7 @@ export default class UndoSnapshots {
             this.totalSize += snapshot.length;
 
             let removeCount = 0;
-            while (removeCount < this.snapshots.length &&
-                this.totalSize > this.maxSize) {
+            while (removeCount < this.snapshots.length && this.totalSize > this.maxSize) {
                 this.totalSize -= this.snapshots[removeCount].length;
                 removeCount++;
             }

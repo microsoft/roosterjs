@@ -3,7 +3,6 @@
         "target": "es5",
         "module": "commonjs",
         "noEmitHelpers": true,
-        "experimentalDecorators": true,
         "outDir": "dist",
         "declaration": true,
         "sourceMap": true,

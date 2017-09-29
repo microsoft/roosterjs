@@ -8,7 +8,6 @@
     "removeComments": false,
     "noImplicitAny": true,
     "preserveConstEnums": true,
-    "experimentalDecorators": true,
     "baseUrl": "../../",
     "paths": {
       "*": [

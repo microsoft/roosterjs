@@ -12,8 +12,8 @@ var webpackConfig = {
         path: distPath
     },
     resolve: {
-        extensions: ['', '.js'],
-        root: [distPath]
+        extensions: ['.js'],
+        modules: [distPath]
     },
     stats: 'minimal',
     plugins: isProduction ? [
