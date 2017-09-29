@@ -1,4 +1,6 @@
 import {
+    clearFormat,
+    createLink,
     toggleBold,
     toggleItalic,
     toggleUnderline,
@@ -7,7 +9,6 @@ import {
     toggleStrikethrough,
     toggleSuperscript,
     toggleSubscript,
-    clearFormat,
     setIndentation,
     setAlignment,
     setFontName,
@@ -58,6 +59,15 @@ export default function initFormatBar() {
     // SubScript
     document.getElementById('subScriptButton').addEventListener('click', function() {
         toggleSubscript(getCurrentEditor());
+    });
+
+    // Insert link
+    document.getElementById('insertLink').addEventListener('click', function() {
+        let editor = getCurrentEditor();
+        let range = editor.getSelectionRange();
+        let url = window.prompt('Url', 'http://');
+        let text = range.collapsed ? window.prompt('Text of link', url) : null;
+        createLink(editor, url, url, text);
     });
 
     // ClearFormat
