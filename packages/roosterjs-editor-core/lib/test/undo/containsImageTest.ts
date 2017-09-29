@@ -1,5 +1,5 @@
-import * as TestHelper from 'roosterjs-editor-api/lib/test/TestHelper';
-import containsImage from '../../HtmlSnapshotUndo/containsImage';
+import * as TestHelper from '../TestHelper';
+import containsImage from '../../undo/containsImage';
 
 describe('containsImage()', () => {
     let testID = 'containsImage';

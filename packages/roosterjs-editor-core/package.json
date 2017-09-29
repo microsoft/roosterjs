@@ -1,6 +1,6 @@
 {
   "name": "roosterjs-editor-core",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "description": "Editor core for roosterjs",
   "main": "./lib/index.js",
   "scripts": {
@@ -11,8 +11,8 @@
     "test": "node ../../node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=jasmine.json --verbose"
   },
   "dependencies": {
-    "roosterjs-editor-types": "6.0.0",
-    "roosterjs-editor-dom": "6.0.0"
+    "roosterjs-editor-types": "6.1.0",
+    "roosterjs-editor-dom": "6.1.0"
   },
   "devDependencies": {
     "jasmine": "~2.4.1",

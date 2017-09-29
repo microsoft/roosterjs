@@ -1,7 +1,7 @@
 import ShowCursorPosition from './plugins/ShowCursorPosition';
 import ShowFromState from './plugins/ShowFormatState';
 import { DefaultFormat } from 'roosterjs-editor-types';
-import { DefaultShortcut, HyperLink, HtmlSnapshotUndo, PasteManager, TabIndent } from 'roosterjs-editor-plugins';
+import { DefaultShortcut, HyperLink, PasteManager, TabIndent } from 'roosterjs-editor-plugins';
 import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
 import { setCurrentEditor } from './currentEditor';
 
@@ -13,9 +13,6 @@ function initEditorForOptions() {
     let plugins: EditorPlugin[] = [];
     if ((document.getElementById('defaultShortcutCheckbox') as HTMLInputElement).checked) {
         plugins.push(new DefaultShortcut());
-    }
-    if ((document.getElementById('htmlsnapshotUndoCheckbox') as HTMLInputElement).checked) {
-        plugins.push(new HtmlSnapshotUndo());
     }
     if ((document.getElementById('hyperlinkCheckbox') as HTMLInputElement).checked) {
         plugins.push(new HyperLink());

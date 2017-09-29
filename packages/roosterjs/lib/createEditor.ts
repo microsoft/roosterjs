@@ -1,6 +1,5 @@
 import {
     DefaultShortcut,
-    HtmlSnapshotUndo,
     HyperLink,
     PasteManager,
     TabIndent,
@@ -10,7 +9,8 @@ import { Editor, EditorOptions, EditorPlugin } from 'roosterjs-editor-core';
 // Create an editor instance with most common options
 export default function createEditor(
     contentDiv: HTMLDivElement,
-    additionalPlugins?: EditorPlugin[]
+    additionalPlugins?: EditorPlugin[],
+    initialContent?: string
 ): Editor {
     let plugins: EditorPlugin[] = [
         new DefaultShortcut(),
@@ -25,7 +25,7 @@ export default function createEditor(
 
     let options: EditorOptions = {
         plugins: plugins,
-        undo: new HtmlSnapshotUndo(),
+        initialContent: initialContent,
         defaultFormat: {
             fontFamily: 'Calibri,Arial,Helvetica,sans-serif',
             fontSize: '11pt',

@@ -11,5 +11,4 @@ export function setCurrentEditor(newEditor: Editor) {
         editor.dispose();
     }
     editor = newEditor;
-    editor.setContent('');
 }

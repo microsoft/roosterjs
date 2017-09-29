@@ -93,56 +93,6 @@ describe('Editor applyInlineStyle()', () => {
     });
 });
 
-describe('Editor undo()', () => {
-    beforeEach(() => {
-        editor = TestHelper.initEditor(testID);
-    });
-
-    afterEach(() => {
-        editor.dispose();
-        TestHelper.removeElement(testID);
-    });
-
-    it('undo should invoke browser api if no undoService', () => {
-        // Arrange
-        let document = editor.getDocument();
-        spyOn(editor, 'getDocument').and.callThrough();
-        spyOn(document, 'execCommand').and.callThrough();
-
-        // Act
-        editor.undo();
-
-        // Assert
-        expect(editor.getDocument).toHaveBeenCalled();
-        expect(document.execCommand).toHaveBeenCalledWith('undo');
-    });
-});
-
-describe('Editor redo()', () => {
-    beforeEach(() => {
-        editor = TestHelper.initEditor(testID);
-    });
-
-    afterEach(() => {
-        editor.dispose();
-        TestHelper.removeElement(testID);
-    });
-
-    it('redo should invoke browser api if no undoService', () => {
-        // Arrange
-        let document = editor.getDocument();
-        spyOn(editor, 'getDocument').and.callThrough();
-        spyOn(document, 'execCommand').and.callThrough();
-
-        // Act
-        editor.redo();
-
-        // Assert
-        expect(editor.getDocument).toHaveBeenCalled();
-        expect(document.execCommand).toHaveBeenCalledWith('redo');
-    });
-});
-
 describe('Editor setContent()', () => {
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);
