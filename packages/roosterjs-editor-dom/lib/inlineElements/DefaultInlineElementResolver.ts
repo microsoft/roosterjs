@@ -18,26 +18,11 @@ class DefaultInlineElementResolver implements InlineElementResolver {
         let inlineElement: InlineElement = null;
         let tag = getTagOfNode(node);
         if (tag == 'A') {
-            inlineElement = new LinkInlineElement(
-                node,
-                rootNode,
-                parentBlock,
-                inlineElementFactory
-            );
+            inlineElement = new LinkInlineElement(node, parentBlock);
         } else if (tag == 'IMG') {
-            inlineElement = new ImageInlineElement(
-                node,
-                rootNode,
-                parentBlock,
-                inlineElementFactory
-            );
+            inlineElement = new ImageInlineElement(node, parentBlock);
         } else if (node.nodeType == NodeType.Text) {
-            inlineElement = new TextInlineElement(
-                node,
-                rootNode,
-                parentBlock,
-                inlineElementFactory
-            );
+            inlineElement = new TextInlineElement(node, parentBlock);
         }
 
         return inlineElement;

@@ -6,7 +6,10 @@ function getRectFromClientRect(clientRect: ClientRect): Rect {
     // A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p
     // We validate that and only return a rect when the passed in ClientRect is valid
     return clientRect &&
-    (clientRect.left != 0 || clientRect.right != 0 || clientRect.left != 0 || clientRect.right != 0)
+        (clientRect.left != 0 ||
+            clientRect.right != 0 ||
+            clientRect.left != 0 ||
+            clientRect.right != 0)
         ? {
               left: Math.round(clientRect.left),
               right: Math.round(clientRect.right),

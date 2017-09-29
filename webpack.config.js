@@ -1,6 +1,3 @@
-var CaseSensitivityPlugin = require('case-sensitive-paths-webpack-plugin');
-var path = require('path');
-
 module.exports = {
     entry: './sample/scripts/sample.ts',
     output: {
@@ -9,23 +6,17 @@ module.exports = {
         publicPath: '/sample/scripts/',
         sourceMapFilename: '[name].map'
     },
-    plugins: [
-        new CaseSensitivityPlugin()
-    ],    
     resolve: {
-        extensions: ['', '.ts', '.js'],
-        root: [
-            path.resolve('./dist')
+        extensions: ['.ts', '.js'],
+        modules: [
+            './dist',
+            './node_modules'
         ]
     },
     module: {
         loaders: [
             { test: /\.ts$/, loader: 'ts-loader' }
-        ],
-        preLoaders: [
-            // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            { test: /\.js$/, loader: "source-map-loader" }
-        ]        
+        ]
     },
     watch: true,
     stats: "minimal",

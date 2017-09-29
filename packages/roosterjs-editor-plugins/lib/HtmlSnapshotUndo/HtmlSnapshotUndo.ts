@@ -5,7 +5,7 @@ import { Undo } from 'roosterjs-editor-core';
  * An editor plugin that manages undo history
  */
 export default class HtmlSnapshotUndo extends Undo {
-    constructor(private snapshotOnSpace: boolean = true, private snapshotOnEnter: boolean = true) {
+    constructor(snapshotOnSpace: boolean = true, snapshotOnEnter: boolean = true) {
         super();
     }
 }

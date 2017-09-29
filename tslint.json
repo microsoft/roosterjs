@@ -25,7 +25,6 @@
     "no-multiline-string": true,
     "no-multiple-var-decl": true,
     "no-unnecessary-bind": true,
-    "no-unnecessary-semicolons": true,
     "no-octal-literal": true,
     "no-regex-spaces": true,
     "no-reserved-keywords": false,
@@ -33,7 +32,6 @@
     "no-string-based-set-immediate": true,
     "no-string-based-set-interval": true,
     "no-string-based-set-timeout": true,
-    "no-unused-imports": true,
     "no-with-statement": true,
     "prefer-array-literal": false,
     "promise-must-complete": true,
@@ -46,7 +44,6 @@
     "forin": true,
     "indent": [true, "spaces"],
     "label-position": true,
-    "label-undefined": true,
     "max-line-length": false,
     "no-arg": true,
     "no-bitwise": false,
@@ -62,7 +59,6 @@
     "no-construct": true,
     "no-constructor-vars": false,
     "no-debugger": true,
-    "no-duplicate-key": true,
     "no-duplicate-variable": true,
     "no-empty": false,
     "no-eval": true,
@@ -72,7 +68,6 @@
     "no-trailing-whitespace": true,
     "no-unused-expression": true,
     "no-unused-variable": [true, "react"],
-    "no-unreachable": true,
     "no-use-before-declare": true,
     "no-var-requires": false,
     "one-line": [
@@ -83,7 +78,6 @@
       "check-whitespace"
     ],
     "quotemark": [false],
-    "semicolon": [true],
     "triple-equals": false,
     "typedef": [
       true,

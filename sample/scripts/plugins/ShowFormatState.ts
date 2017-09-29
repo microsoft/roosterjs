@@ -1,13 +1,12 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { PluginEvent } from 'roosterjs-editor-types';
 import { getFormatState } from 'roosterjs-editor-api';
-import { FormatState, PluginEvent } from 'roosterjs-editor-types';
 
 // An editor plugin to show cursor position in demo page
 export default class ShowFormatState implements EditorPlugin {
     private editor: Editor;
 
-    constructor(private resultContainer: HTMLElement) {
-    }
+    constructor(private resultContainer: HTMLElement) {}
 
     public initialize(editor: Editor) {
         this.editor = editor;

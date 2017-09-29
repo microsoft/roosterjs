@@ -67,7 +67,11 @@ export default class Editor {
      */
     constructor(private contentDiv: HTMLDivElement, options: EditorOptions = {}) {
         // 1. Make sure all parameters are valid
-        if (!contentDiv || !(contentDiv instanceof HTMLDivElement) || contentDiv.tagName.toUpperCase() != 'DIV') {
+        if (
+            !contentDiv ||
+            !(contentDiv instanceof HTMLDivElement) ||
+            contentDiv.tagName.toUpperCase() != 'DIV'
+        ) {
             throw new Error('contentDiv must be an HTML DIV element');
         }
 
@@ -181,7 +185,11 @@ export default class Editor {
     }
 
     public addUndoSnapshot(): void {
-        if (this.undoService && this.undoService.addUndoSnapshot && !this.suspendAddingUndoSnapshot) {
+        if (
+            this.undoService &&
+            this.undoService.addUndoSnapshot &&
+            !this.suspendAddingUndoSnapshot
+        ) {
             this.undoService.addUndoSnapshot();
         }
     }
@@ -491,14 +499,14 @@ export default class Editor {
         if (!this.isBeforeDeactivateEventSupported && !this.cachedSelectionRange) {
             this.saveSelectionRange();
         }
-    }
+    };
 
     private onBeforeDeactivate = () => {
         // this should fire up only for edge and IE
         if (!this.cachedSelectionRange) {
             this.saveSelectionRange();
         }
-    }
+    };
 
     private onKeyPress = (event: KeyboardEvent) => {
         // Check if user is typing right under the content div
@@ -556,44 +564,44 @@ export default class Editor {
         }
 
         this.dispatchDomEventToPlugin(PluginEventType.KeyPress, event);
-    }
+    };
 
     private onKeyDown = (event: KeyboardEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.KeyDown, event);
-    }
+    };
 
     private onKeyUp = (event: KeyboardEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.KeyUp, event);
-    }
+    };
 
     private onCompositionStart = (event: CompositionEvent) => {
         this.isInIMESequence = true;
-    }
+    };
 
     private onCompositionEnd = (event: CompositionEvent) => {
         this.isInIMESequence = false;
         this.dispatchDomEventToPlugin(PluginEventType.CompositionEnd, event);
-    }
+    };
 
     private onMouseUp = (event: MouseEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.MouseUp, event);
-    }
+    };
 
     private onMouseOver = (event: MouseEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.MouseOver, event);
-    }
+    };
 
     private onMouseOut = (event: MouseEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.MouseOut, event);
-    }
+    };
 
     private onPaste = (event: ClipboardEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.Paste, event);
-    }
+    };
 
     private onCopy = (event: ClipboardEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.Copy, event);
-    }
+    };
 
     private onFocus = () => {
         // Restore the last saved selection first
@@ -602,7 +610,7 @@ export default class Editor {
         }
 
         this.cachedSelectionRange = null;
-    }
+    };
 
     // Dispatch DOM event to plugin
     private dispatchDomEventToPlugin(eventType: PluginEventType, rawEvent: Event): void {

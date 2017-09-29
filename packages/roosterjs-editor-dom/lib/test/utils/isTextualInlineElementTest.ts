@@ -10,7 +10,7 @@ describe('isTextualInlineElement()', () => {
     });
 
     it('input = <TextInlineElement>', () => {
-        runTest(new TextInlineElement(null, null, null, null), true);
+        runTest(new TextInlineElement(null, null), true);
     });
 
     it('input = <PartialInlineElement>{}', () => {
@@ -18,9 +18,7 @@ describe('isTextualInlineElement()', () => {
     });
 
     it('input = PartialInlineElement with TextInlineElement as decoratedInline', () => {
-        let mockInlineElement = new PartialInlineElement(
-            new TextInlineElement(null, null, null, null)
-        );
+        let mockInlineElement = new PartialInlineElement(new TextInlineElement(null, null));
         runTest(mockInlineElement, true);
     });
 

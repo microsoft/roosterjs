@@ -1,4 +1,3 @@
-var path = require('path');
 module.exports = function(config) {
     config.set({
         basePath: '.',
@@ -33,9 +32,7 @@ module.exports = function(config) {
         webpack: {
             devtool: 'inline-source-map',
             resolve: {
-                root: [
-                    path.resolve('./dist')
-                ]
+                modules: ['./dist']
             }
         },
 

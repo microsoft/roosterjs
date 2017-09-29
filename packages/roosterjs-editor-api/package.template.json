@@ -1,0 +1,9 @@
+{
+  "name": "roosterjs-editor-api",
+  "description": "Programming API for roosterjs",
+  "dependencies": {
+    "roosterjs-editor-types": "",
+    "roosterjs-editor-dom": "",
+    "roosterjs-editor-core": ""
+  }
+}

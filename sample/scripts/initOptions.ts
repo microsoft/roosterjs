@@ -38,14 +38,20 @@ function initEditorForOptions() {
     if ((document.getElementById('underlineCheckbox') as HTMLInputElement).checked) {
         defaultFormat.underline = true;
     }
-    defaultFormat.textColor = (document.getElementById('textColorDefaultFormat') as HTMLInputElement).value;
-    defaultFormat.fontFamily = (document.getElementById('fontNameDefaultFormat') as HTMLInputElement).value;
+    defaultFormat.textColor = (document.getElementById(
+        'textColorDefaultFormat'
+    ) as HTMLInputElement).value;
+    defaultFormat.fontFamily = (document.getElementById(
+        'fontNameDefaultFormat'
+    ) as HTMLInputElement).value;
     let editorOptions: EditorOptions = {
         plugins: plugins,
         defaultFormat: defaultFormat,
     };
-    
-    setCurrentEditor(new Editor(document.getElementById('editor') as HTMLDivElement, editorOptions));
+
+    setCurrentEditor(
+        new Editor(document.getElementById('editor') as HTMLDivElement, editorOptions)
+    );
 }
 
 export default initOptions;

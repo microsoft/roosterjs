@@ -613,9 +613,8 @@ describe('EditorSelection isBlockInScope()', () => {
             '<p>abc</p><p>123</p><p>456</p>'
         );
         let selectionRange = DomTestHelper.createRangeFromChildNodes(rootNode);
-        let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
-            rootNode.firstChild.nextSibling as HTMLElement
-        );
+        let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(rootNode.firstChild
+            .nextSibling as HTMLElement);
         runTest(rootNode, selectionRange, testBlockElement, true);
     });
 
@@ -625,9 +624,8 @@ describe('EditorSelection isBlockInScope()', () => {
             '<p>abc</p><p>123</p><p>456</p>'
         );
         let selectionRange = DomTestHelper.createRangeWithDiv(rootNode.lastChild as HTMLElement);
-        let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
-            rootNode.firstChild.nextSibling as HTMLElement
-        );
+        let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(rootNode.firstChild
+            .nextSibling as HTMLElement);
         runTest(rootNode, selectionRange, testBlockElement, false);
     });
 });

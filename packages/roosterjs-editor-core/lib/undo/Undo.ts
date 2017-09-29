@@ -1,13 +1,9 @@
 import UndoSnapshots from './UndoSnapshots';
 import containsImage from './containsImage';
-import {
-    PluginDomEvent,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import Editor from '../editor/Editor';
 import UndoService from '../editor/UndoService';
-import { buildSnapshot, restoreSnapshot} from './snapshotUtils';
+import { buildSnapshot, restoreSnapshot } from './snapshotUtils';
 
 const KEY_BACKSPACE = 8;
 const KEY_DELETE = 46;
@@ -31,8 +27,7 @@ export default class Undo implements UndoService {
      * @param preserveSnapshots True to preserve the snapshots after dispose, this allows
      * this object to be reused when editor is disposed and created again
      */
-    constructor(
-        private preserveSnapshots?: boolean) {}
+    constructor(private preserveSnapshots?: boolean) {}
 
     /**
      * Initialize this plugin. This should only be called from Editor
@@ -187,7 +182,10 @@ export default class Undo implements UndoService {
         if (selectionRange && !selectionRange.collapsed) {
             // The selection will be removed, should take undo
             shouldTakeUndo = true;
-        } else if ((evt.which == KEY_SPACE && this.lastKeyPress != KEY_SPACE) || evt.which == KEY_ENTER) {
+        } else if (
+            (evt.which == KEY_SPACE && this.lastKeyPress != KEY_SPACE) ||
+            evt.which == KEY_ENTER
+        ) {
             shouldTakeUndo = true;
         }
 

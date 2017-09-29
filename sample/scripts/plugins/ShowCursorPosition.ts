@@ -5,8 +5,7 @@ import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 export default class ShowCursorPosition implements EditorPlugin {
     private editor: Editor;
 
-    constructor(private resultContainer: HTMLElement) {
-    }
+    constructor(private resultContainer: HTMLElement) {}
 
     public initialize(editor: Editor) {
         this.editor = editor;

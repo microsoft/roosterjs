@@ -1,4 +1,3 @@
-import InlineElementFactory from './InlineElementFactory';
 import contains from '../utils/contains';
 import getTagOfNode from '../utils/getTagOfNode';
 import isDocumentPosition from '../utils/isDocumentPosition';
@@ -20,12 +19,7 @@ import { getNextLeafSibling, getPreviousLeafSibling } from '../domWalker/getLeaf
 // of all operations that can happen on an inline element. Other sub inline elements mostly
 // just identify themself for a certain type
 class NodeInlineElement implements InlineElement {
-    constructor(
-        private containerNode: Node,
-        private rootNode: Node,
-        private parentBlock: BlockElement,
-        private inlineElementFactory: InlineElementFactory
-    ) {}
+    constructor(private containerNode: Node, private parentBlock: BlockElement) {}
 
     // The text content for this inline element
     public getTextContent(): string {
