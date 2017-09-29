@@ -64,8 +64,7 @@ export default function createLink(editor: Editor, link: string, altText?: strin
         // if the link starts with ftp.xxx, we will add ftp:// link. For more, see applyLinkPrefix
         let normalizedUrl = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
         let originalUrl = linkData ? linkData.originalUrl : normalizedUrl;
-        // On Edge/IE/Firefox (except Webkit based browsers like Chrome/Safari), when there is no selection,
-        // calling browser execCommand("createlink") won't really create the link. Need to create and insert the link manually
+
         if (isSelectionCollapsed(editor)) {
             let anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
             anchor.textContent = displayText || originalUrl;
