@@ -47,7 +47,7 @@ function applyLinkPrefix(url: string): string {
  * @param link Link address, can be http(s), mailto, notes, file, unc, ftp, news, telnet, gopher, wais.
  * When protocol is not specified, a best matched protocol will be predicted.
  * @param altText Optional alt text of the link, will be shown when hover on the link
- * @param displayText Optional display text for the link. 
+ * @param displayText Optional display text for the link.
  * If there is a selection, this parameter will be ignored.
  * If not specified, will use link instead
  */
