@@ -33,7 +33,7 @@ export { default as toggleStrikethrough } from './format/toggleStrikethrough';
 export { default as toggleSubscript } from './format/toggleSubscript';
 export { default as toggleSuperscript } from './format/toggleSuperscript';
 export { default as toggleUnderline } from './format/toggleUnderline';
-export { default as getBlockQuoteElement } from './format/getBlockQuoteState';
+export { default as cacheGetBlockQuoteElement, getBlockQuoteElementAtNode } from './format/cacheGetBlockQuoteElement';
 export { default as defaultLinkMatchRules } from './linkMatch/defaultLinkMatchRules';
 export { default as matchLink } from './linkMatch/matchLink';
 export { default as RegExLinkMatchRule } from './linkMatch/RegExLinkMatchRule';

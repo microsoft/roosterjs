@@ -1,12 +1,12 @@
 import {
     setIndentation,
     cacheGetCursorEventData,
+    cacheGetBlockQuoteElement,
     cacheGetListElement,
     cacheGetListState,
     toggleBullet,
     toggleNumbering,
     getNodeAtCursor,
-    getBlockQuoteElement
 } from 'roosterjs-editor-api';
 import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
 import {
@@ -59,10 +59,10 @@ export default class TabIndent implements EditorPlugin {
 
     // Handle the event
     public onPluginEvent(event: PluginEvent): void {
+        let keybordEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
         if (this.isListEvent(event, [KEY_TAB, KEY_BACKSPACE, KEY_ENTER])) {
             // Tab: increase indent
             // Shift+ Tab: decrease indent
-            let keybordEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
             if (keybordEvent.which == KEY_TAB) {
                 setIndentation(
                     this.editor,
@@ -88,15 +88,14 @@ export default class TabIndent implements EditorPlugin {
                 }
             }
         } else {
-            let nodeAtCursor = getNodeAtCursor(this.editor);
-            let [isBlockQuoteEvent, blockQuoteElement] = this.isBlockQuoteEvent(event, [KEY_ENTER], nodeAtCursor);
-            if (isBlockQuoteEvent) {
-                let keybordEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+            let blockQuoteElement = this.getBlockQuoteElementFromEvent(event);
+            if (blockQuoteElement) {
                 keybordEvent.preventDefault();
                 let childCount = blockQuoteElement.childNodes.length;
+                let nodeAtCursor = getNodeAtCursor(this.editor);
                 this.editor.deleteNode(nodeAtCursor);
                 let range = this.editor.getSelectionRange();
-                if (!!range) {
+                if (range) {
                     range.setEndAfter(blockQuoteElement);
                     range.collapse(false);
                 }
@@ -145,33 +144,34 @@ export default class TabIndent implements EditorPlugin {
         return false;
     }
 
-    // Check if it is a blockquote event, if it is true, also return the blockquote element where the cursor resides
+    // Check if it is a blockquote event, if it is true, return the blockquote element where the cursor resides
+    // To qualify a blockquote event:
     // 1. Cursor is in blockquote element
     // 2. Current block has no content
     // 3. is keyDown
     // 4. is Enter
     // 5. Any of ctrl/meta/alt is not pressed
-    private isBlockQuoteEvent(event: PluginEvent, interestedKeyCodes: number[], nodeAtCursor: Node): [boolean, Node] {
-        let isBlockQuoteEvent = false;
-        let blockQuoteElement: Node;
-
+    private getBlockQuoteElementFromEvent(event: PluginEvent): Element {
         if (event.eventType == PluginEventType.KeyDown) {
-            let keybordEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
-            blockQuoteElement = getBlockQuoteElement(this.editor, nodeAtCursor);
-            let contentTraverser = this.editor.getContentTraverser(ContentScope.Selection);
-            let blockElement = !!contentTraverser ? contentTraverser.currentBlockElement : null;
+            let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+            if (
+                keyboardEvent.which == KEY_ENTER &&
+                !keyboardEvent.ctrlKey &&
+                !keyboardEvent.altKey &&
+                !keyboardEvent.metaKey
+            ) {
+                let blockQuoteElement = cacheGetBlockQuoteElement(this.editor, event);
+                if (blockQuoteElement) {
+                    let contentTraverser = this.editor.getContentTraverser(ContentScope.Selection);
+                    let blockElement = contentTraverser ? contentTraverser.currentBlockElement : null;
 
-            // Get the content of the current block element, remove any zero white spaces
-            let content = !!blockElement ? blockElement.getTextContent().replace(/\u200B/g, '') : null;
-
-            isBlockQuoteEvent = !!blockQuoteElement &&
-                !content &&
-                interestedKeyCodes.indexOf(keybordEvent.which) >= 0 &&
-                !keybordEvent.ctrlKey &&
-                !keybordEvent.altKey &&
-                !keybordEvent.metaKey;
+                    // Get the content of the current block element, remove any zero white spaces
+                    let content = blockElement ? blockElement.getTextContent().replace(/\u200B/g, '') : null;
+                    return !content ? blockQuoteElement : null;
+                }
+            }
         }
 
-        return [isBlockQuoteEvent, blockQuoteElement];
+        return null;
     }
 }

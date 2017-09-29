@@ -1,6 +1,7 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import getFormatState  from './getFormatState';
-import getBlockQuoteElement from './getBlockQuoteState';
+import getNodeAtCursor from '../cursor/getNodeAtCursor';
+import { getBlockQuoteElementAtNode, isSelectionInBlockQuote } from './cacheGetBlockQuoteElement';
 import { ContentScope, ContentPosition, NodeBoundary } from 'roosterjs-editor-types';
 import { unwrap, wrapAll, wrap } from 'roosterjs-editor-dom';
 import { Editor, browserData } from 'roosterjs-editor-core';
@@ -19,8 +20,9 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
     }
 
     let blockElement = contentTraverser.currentBlockElement;
+    let nodeAtCursor = getNodeAtCursor(editor);
 
-    if (!formatState.isBlockQuote) {
+    if (!isSelectionInBlockQuote(editor, nodeAtCursor)) {
         formatter = () => {
             let nodes: Node[];
             let startContainer: Node;
@@ -34,7 +36,7 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
                 nodes = [];
                 while (blockElement) {
                     // Some of the nodes in selection might already in blockquote, only add the ones not in blockquote
-                    if (!getBlockQuoteElement(editor, blockElement.getStartNode())) {
+                    if (!getBlockQuoteElementAtNode(editor, blockElement.getStartNode())) {
                         nodes = nodes.concat(blockElement.getContentNodes());
                     }
                     blockElement = contentTraverser.getNextBlockElement();
@@ -71,22 +73,28 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
             }
 
             let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLQuoteElement;
-            if (!!styler) {
-                styler(quoteElement);
+            if (!styler) {
+                styler = (element: HTMLElement) => {
+                    element.style.borderLeft = "3px solid";
+                    element.style.borderColor = "#C8C8C8";
+                    element.style.paddingLeft = "10px";
+                    element.style.color = "#666666";
+                    element.style.fontSize = "17px";
+                };
             }
+            styler(quoteElement);
             updateSelection(range, editor, startContainer, startOffset, isRangeCollapsed);
         };
 
-        if (formatter) {
-            execFormatWithUndo(editor, formatter);
-        }
+        execFormatWithUndo(editor, formatter);
+
     } else { // Current selection is in blockquote, need to unblockquote the selection
         let blockQuoteElements: Node[] = [];
 
         // Selection may contain multiple blockquotes, check and unblockquote all
         while (blockElement) {
             let containerNode = blockElement.getStartNode();
-            let blockQuoteElement = getBlockQuoteElement(editor, containerNode);
+            let blockQuoteElement = getBlockQuoteElementAtNode(editor, containerNode);
             if (blockQuoteElement && blockQuoteElements.indexOf(blockQuoteElement) == -1) {
                 blockQuoteElements.push(blockQuoteElement);
             }
@@ -101,9 +109,8 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
             }
             updateSelection(range, editor, startContainer, startOffset);
         };
-        if (formatter) {
-            execFormatWithUndo(editor, formatter);
-        }
+
+        execFormatWithUndo(editor, formatter);
     }
 }
 
