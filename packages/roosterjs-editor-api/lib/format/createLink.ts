@@ -4,7 +4,7 @@ import execFormatWithUndo from './execFormatWithUndo';
 import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
 import matchLink from '../linkMatch/matchLink';
 import { ContentPosition, LinkMatchOption } from 'roosterjs-editor-types';
-import { Editor, browserData } from 'roosterjs-editor-core';
+import { Editor } from 'roosterjs-editor-core';
 import { LinkInlineElement } from 'roosterjs-editor-dom';
 
 // Regex matching Uri scheme
@@ -39,7 +39,19 @@ function applyLinkPrefix(url: string): string {
     return prefix + url;
 }
 
-export default function createLink(editor: Editor, link: string, altText?: string): void {
+/**
+ * Insert a hyperlink at cursor.
+ * When there is a selection, hyperlink will be applied to the selection,
+ * otherwise a hyperlink will be inserted to the cursor position.
+ * @param editor Editor object
+ * @param link Link address, can be http(s), mailto, notes, file, unc, ftp, news, telnet, gopher, wais.
+ * When protocol is not specified, a best matched protocol will be predicted.
+ * @param altText Optional alt text of the link, will be shown when hover on the link
+ * @param displayText Optional display text for the link.
+ * If there is a selection, this parameter will be ignored.
+ * If not specified, will use link instead
+ */
+export default function createLink(editor: Editor, link: string, altText?: string, displayText?: string): void {
     editor.focus();
     let url = link ? link.trim() : '';
     if (url) {
@@ -52,14 +64,10 @@ export default function createLink(editor: Editor, link: string, altText?: strin
         // if the link starts with ftp.xxx, we will add ftp:// link. For more, see applyLinkPrefix
         let normalizedUrl = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
         let originalUrl = linkData ? linkData.originalUrl : normalizedUrl;
-        // On Edge/IE/Firefox (except Webkit based browsers like Chrome/Safari), when there is no selection,
-        // calling browser execCommand("createlink") won't really create the link. Need to create and insert the link manually
-        if (
-            isSelectionCollapsed(editor) &&
-            (browserData.isEdge || browserData.isIE || browserData.isFirefox)
-        ) {
+
+        if (isSelectionCollapsed(editor)) {
             let anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
-            anchor.textContent = originalUrl;
+            anchor.textContent = displayText || originalUrl;
             anchor.href = normalizedUrl;
             if (altText) {
                 anchor.setAttribute('alt', altText);
