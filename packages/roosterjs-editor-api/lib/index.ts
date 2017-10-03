@@ -10,7 +10,7 @@ export {
     default as replaceTextBeforeCursorWithNode,
 } from './cursor/replaceTextBeforeCursorWithNode';
 export { default as cacheGetListElement } from './format/cacheGetListElement';
-export { default as cacheGetListState, getListStateAtNode } from './format/cacheGetListState';
+export { default as cacheGetListState, getListStateAtNode, getListStateAtSelection } from './format/cacheGetListState';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
 export { default as execFormatWithUndo } from './format/execFormatWithUndo';
@@ -33,7 +33,6 @@ export { default as toggleStrikethrough } from './format/toggleStrikethrough';
 export { default as toggleSubscript } from './format/toggleSubscript';
 export { default as toggleSuperscript } from './format/toggleSuperscript';
 export { default as toggleUnderline } from './format/toggleUnderline';
-export { default as cacheGetBlockQuoteElement, getBlockQuoteElementAtNode } from './format/cacheGetBlockQuoteElement';
 export { default as defaultLinkMatchRules } from './linkMatch/defaultLinkMatchRules';
 export { default as matchLink } from './linkMatch/matchLink';
 export { default as RegExLinkMatchRule } from './linkMatch/RegExLinkMatchRule';

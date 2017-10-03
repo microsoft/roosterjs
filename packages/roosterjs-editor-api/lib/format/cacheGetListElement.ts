@@ -5,19 +5,26 @@ import { getTagOfNode } from 'roosterjs-editor-dom';
 
 const EVENTDATACACHE_LISTELEMENT = 'LISTELEMENT';
 
-export default function cacheGetListElement(editor: Editor, event?: PluginEvent): Element {
+export default function cacheGetListElement(editor: Editor, event?: PluginEvent, listType?: string): Element {
     return cacheGetEventData<Element>(event, EVENTDATACACHE_LISTELEMENT, () => {
         let node = getNodeAtCursor(editor);
-        let startElement =
-            node && node.nodeType == NodeType.Text ? node.parentElement : <Element>node;
-        while (startElement && editor.contains(startElement)) {
-            let tagName = getTagOfNode(startElement);
-            if (tagName == 'LI') {
-                return startElement;
-            }
-            startElement = startElement.parentElement;
+        if (!listType) {
+            listType = 'LI';
         }
-
-        return null;
+        return getListElementAtNode(editor, node, listType);
     });
+}
+
+export function getListElementAtNode(editor: Editor, node: Node, listType: string): Element {
+    let startElement =
+        node && node.nodeType == NodeType.Text ? node.parentElement : <Element>node;
+    while (startElement && editor.contains(startElement)) {
+        let tagName = getTagOfNode(startElement);
+        if (tagName == listType) {
+            return startElement;
+        }
+        startElement = startElement.parentElement;
+    }
+
+    return null;
 }

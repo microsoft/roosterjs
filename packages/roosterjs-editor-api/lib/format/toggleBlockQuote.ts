@@ -1,12 +1,14 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import getFormatState  from './getFormatState';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
-import { getBlockQuoteElementAtNode, isSelectionInBlockQuote } from './cacheGetBlockQuoteElement';
-import { ContentScope, ContentPosition, NodeBoundary } from 'roosterjs-editor-types';
+import { getListElementAtNode } from './cacheGetListElement';
+import { getListStateAtSelection } from './cacheGetListState';
+import { ContentScope, ContentPosition, NodeBoundary, ListState } from 'roosterjs-editor-types';
 import { unwrap, wrapAll, wrap } from 'roosterjs-editor-dom';
 import { Editor, browserData } from 'roosterjs-editor-core';
 
 var ZERO_WIDTH_SPACE = '&#8203;';
+var BLOCKQUOTE_TAG_NAME = 'BLOCKQUOTE';
 
 export default function toggleBlockQuote(editor: Editor, styler?: (element: HTMLElement) => void): void {
     editor.focus();
@@ -22,7 +24,7 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
     let blockElement = contentTraverser.currentBlockElement;
     let nodeAtCursor = getNodeAtCursor(editor);
 
-    if (!isSelectionInBlockQuote(editor, nodeAtCursor)) {
+    if (getListStateAtSelection(editor, nodeAtCursor) != ListState.BlockQuote) {
         formatter = () => {
             let nodes: Node[];
             let startContainer: Node;
@@ -36,7 +38,7 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
                 nodes = [];
                 while (blockElement) {
                     // Some of the nodes in selection might already in blockquote, only add the ones not in blockquote
-                    if (!getBlockQuoteElementAtNode(editor, blockElement.getStartNode())) {
+                    if (!getListElementAtNode(editor, blockElement.getStartNode(), BLOCKQUOTE_TAG_NAME)) {
                         nodes = nodes.concat(blockElement.getContentNodes());
                     }
                     blockElement = contentTraverser.getNextBlockElement();
@@ -94,7 +96,7 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
         // Selection may contain multiple blockquotes, check and unblockquote all
         while (blockElement) {
             let containerNode = blockElement.getStartNode();
-            let blockQuoteElement = getBlockQuoteElementAtNode(editor, containerNode);
+            let blockQuoteElement = getListElementAtNode(editor, containerNode, BLOCKQUOTE_TAG_NAME);
             if (blockQuoteElement && blockQuoteElements.indexOf(blockQuoteElement) == -1) {
                 blockQuoteElements.push(blockQuoteElement);
             }

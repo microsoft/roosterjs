@@ -1,7 +1,6 @@
 import {
     setIndentation,
     cacheGetCursorEventData,
-    cacheGetBlockQuoteElement,
     cacheGetListElement,
     cacheGetListState,
     toggleBullet,
@@ -22,6 +21,7 @@ import {
 const KEY_TAB = 9;
 const KEY_BACKSPACE = 8;
 const KEY_ENTER = 13;
+const BLOCKQUOTE_TAG_NAME = 'BLOCKQUOTE';
 
 // An editor plugin to auto increase/decrease indentation on Tab, Shift+tab, Enter, Backspace
 export default class TabIndent implements EditorPlugin {
@@ -160,7 +160,7 @@ export default class TabIndent implements EditorPlugin {
                 !keyboardEvent.altKey &&
                 !keyboardEvent.metaKey
             ) {
-                let blockQuoteElement = cacheGetBlockQuoteElement(this.editor, event);
+                let blockQuoteElement = cacheGetListElement(this.editor, event, BLOCKQUOTE_TAG_NAME);
                 if (blockQuoteElement) {
                     let contentTraverser = this.editor.getContentTraverser(ContentScope.Selection);
                     let blockElement = contentTraverser ? contentTraverser.currentBlockElement : null;

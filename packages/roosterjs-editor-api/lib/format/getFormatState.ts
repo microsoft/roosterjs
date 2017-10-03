@@ -13,8 +13,7 @@ import {
     getComputedStyle,
 } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
-import { getListStateAtNode } from './cacheGetListState';
-import { isSelectionInBlockQuote } from './cacheGetBlockQuoteElement';
+import { getListStateAtSelection } from './cacheGetListState';
 
 // Get certain style of a node
 // useComputed controls from where to get the style, from computed style or crawl DOM tree to find inline style
@@ -101,10 +100,10 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
     // in that case, the change is not DOM and querying DOM won't give us anything. queryCommandState can read into browser
     // to figure out the state. It can be discussed if there is a better way since it has been seen that queryCommandState may throw error
     let nodeAtCursor = getNodeAtCursor(editor);
-    let listState = nodeAtCursor ? getListStateAtNode(editor, nodeAtCursor) : null;
+    let listState = nodeAtCursor ? getListStateAtSelection(editor, nodeAtCursor) : null;
     let isBullet = listState && listState == ListState.Bullets ? true : false;
     let isNumbering = listState && listState == ListState.Numbering ? true : false;
-    let isBlockQuote = isSelectionInBlockQuote(editor, nodeAtCursor);
+    let isBlockQuote = listState && listState == ListState.BlockQuote ? true : false;
     return nodeAtCursor
         ? {
               fontName: getStyleAtNode(editor, nodeAtCursor, 'font-family', true /* useComputed*/),
