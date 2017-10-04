@@ -46,7 +46,7 @@ export function getListStateAtSelection(editor: Editor, nodeAtCursor: Node): Lis
         let previousListState: ListState;
         while (blockElement) {
             let listState = getListStateAtNode(editor, blockElement.getStartNode());
-            if (previousListState && previousListState != listState) {
+            if (typeof previousListState !== 'undefined' && previousListState != listState) {
                 return ListState.None;
             }
             previousListState = listState;

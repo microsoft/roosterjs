@@ -59,26 +59,26 @@ export default class TabIndent implements EditorPlugin {
 
     // Handle the event
     public onPluginEvent(event: PluginEvent): void {
-        let keybordEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+        let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
         if (this.isListEvent(event, [KEY_TAB, KEY_BACKSPACE, KEY_ENTER])) {
             // Tab: increase indent
             // Shift+ Tab: decrease indent
-            if (keybordEvent.which == KEY_TAB) {
+            if (keyboardEvent.which == KEY_TAB) {
                 setIndentation(
                     this.editor,
-                    keybordEvent.shiftKey ? Indentation.Decrease : Indentation.Increase
+                    keyboardEvent.shiftKey ? Indentation.Decrease : Indentation.Increase
                 );
-                keybordEvent.preventDefault();
+                keyboardEvent.preventDefault();
             } else if (browserData.isEdge || browserData.isIE || browserData.isChrome) {
                 let listElement = cacheGetListElement(this.editor, event);
                 if (
                     listElement &&
                     listElement.textContent == '' &&
-                    (keybordEvent.which == KEY_ENTER ||
-                        (keybordEvent.which == KEY_BACKSPACE &&
+                    (keyboardEvent.which == KEY_ENTER ||
+                        (keyboardEvent.which == KEY_BACKSPACE &&
                             listElement == listElement.parentElement.firstChild))
                 ) {
-                    keybordEvent.preventDefault();
+                    keyboardEvent.preventDefault();
                     let listState = cacheGetListState(this.editor, event);
                     if (listState == ListState.Bullets) {
                         toggleBullet(this.editor);
@@ -88,9 +88,9 @@ export default class TabIndent implements EditorPlugin {
                 }
             }
         } else {
-            let blockQuoteElement = this.getBlockQuoteElementFromEvent(event);
+            let blockQuoteElement = this.getBlockQuoteElementFromEvent(event, keyboardEvent);
             if (blockQuoteElement) {
-                keybordEvent.preventDefault();
+                keyboardEvent.preventDefault();
                 let childCount = blockQuoteElement.childNodes.length;
                 let nodeAtCursor = getNodeAtCursor(this.editor);
                 this.editor.deleteNode(nodeAtCursor);
@@ -123,12 +123,12 @@ export default class TabIndent implements EditorPlugin {
     // 3) any of ctrl/meta/alt is not pressed
     private isListEvent(event: PluginEvent, interestedKeyCodes: number[]) {
         if (event.eventType == PluginEventType.KeyDown) {
-            let keybordEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+            let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
             if (
-                interestedKeyCodes.indexOf(keybordEvent.which) >= 0 &&
-                !keybordEvent.ctrlKey &&
-                !keybordEvent.altKey &&
-                !keybordEvent.metaKey
+                interestedKeyCodes.indexOf(keyboardEvent.which) >= 0 &&
+                !keyboardEvent.ctrlKey &&
+                !keyboardEvent.altKey &&
+                !keyboardEvent.metaKey
             ) {
                 // Checks if cursor on a list
                 let listState = cacheGetListState(this.editor, event);
@@ -151,9 +151,8 @@ export default class TabIndent implements EditorPlugin {
     // 3. is keyDown
     // 4. is Enter
     // 5. Any of ctrl/meta/alt is not pressed
-    private getBlockQuoteElementFromEvent(event: PluginEvent): Element {
+    private getBlockQuoteElementFromEvent(event: PluginEvent, keyboardEvent: KeyboardEvent): Element {
         if (event.eventType == PluginEventType.KeyDown) {
-            let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
             if (
                 keyboardEvent.which == KEY_ENTER &&
                 !keyboardEvent.ctrlKey &&

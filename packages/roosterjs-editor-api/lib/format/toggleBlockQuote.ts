@@ -8,9 +8,16 @@ import { unwrap, wrapAll, wrap } from 'roosterjs-editor-dom';
 import { Editor, browserData } from 'roosterjs-editor-core';
 
 var ZERO_WIDTH_SPACE = '&#8203;';
-var BLOCKQUOTE_TAG_NAME = 'BLOCKQUOTE';
 
-export default function toggleBlockQuote(editor: Editor, styler?: (element: HTMLElement) => void): void {
+let defaultStyler = (element: HTMLElement) => {
+    element.style.borderLeft = "3px solid";
+    element.style.borderColor = "#C8C8C8";
+    element.style.paddingLeft = "10px";
+    element.style.color = "#666666";
+    element.style.fontSize = "17px";
+};
+
+export default function toggleBlockQuote(editor: Editor, styler: (element: HTMLElement) => void = defaultStyler): void {
     editor.focus();
     let formatter: () => void = null;
     let formatState = editor ? getFormatState(editor) : null;
@@ -38,10 +45,17 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
                 nodes = [];
                 while (blockElement) {
                     // Some of the nodes in selection might already in blockquote, only add the ones not in blockquote
-                    if (!getListElementAtNode(editor, blockElement.getStartNode(), BLOCKQUOTE_TAG_NAME)) {
+                    if (!getListElementAtNode(editor, blockElement.getStartNode(), 'BLOCKQUOTE')) {
                         nodes = nodes.concat(blockElement.getContentNodes());
+                    } else if (nodes.length > 0) {
+                        wrapNodesWithBlockQuote(nodes, styler);
+                        nodes = [];
                     }
                     blockElement = contentTraverser.getNextBlockElement();
+                }
+
+                if (nodes.length > 0) {
+                    wrapNodesWithBlockQuote(nodes, styler);
                 }
             } else if (blockElement) { // Selection is collapsed and there's content in the block, move the whole block into blockquote
                 nodes = blockElement.getContentNodes();
@@ -54,6 +68,8 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
                     startContainer = nodes[0];
                     startOffset = NodeBoundary.Begin;
                 }
+
+                wrapNodesWithBlockQuote(nodes, styler);
             } else { // Selection is collapsed and blockElment is null, we need to create an empty div. In case of IE and Edge, we insert ZWS to put cursor in the div, otherwise insert BR node
                 let div = editor.getDocument().createElement('div');
 
@@ -72,19 +88,10 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
                 startContainer = div.firstChild;
                 startOffset = NodeBoundary.Begin;
                 nodes = [div];
+
+                wrapNodesWithBlockQuote(nodes, styler);
             }
 
-            let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLQuoteElement;
-            if (!styler) {
-                styler = (element: HTMLElement) => {
-                    element.style.borderLeft = "3px solid";
-                    element.style.borderColor = "#C8C8C8";
-                    element.style.paddingLeft = "10px";
-                    element.style.color = "#666666";
-                    element.style.fontSize = "17px";
-                };
-            }
-            styler(quoteElement);
             updateSelection(range, editor, startContainer, startOffset, isRangeCollapsed);
         };
 
@@ -96,7 +103,7 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
         // Selection may contain multiple blockquotes, check and unblockquote all
         while (blockElement) {
             let containerNode = blockElement.getStartNode();
-            let blockQuoteElement = getListElementAtNode(editor, containerNode, BLOCKQUOTE_TAG_NAME);
+            let blockQuoteElement = getListElementAtNode(editor, containerNode, 'BLOCKQUOTE');
             if (blockQuoteElement && blockQuoteElements.indexOf(blockQuoteElement) == -1) {
                 blockQuoteElements.push(blockQuoteElement);
             }
@@ -125,4 +132,9 @@ function updateSelection(range: Range, editor: Editor, startContainer: Node, sta
         }
         editor.updateSelection(range);
     }
+}
+
+function wrapNodesWithBlockQuote(nodes: Node[], styler: (element: HTMLElement) => void) {
+    let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLQuoteElement;
+    styler(quoteElement);
 }
