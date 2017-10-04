@@ -1,4 +1,6 @@
 import {
+    clearFormat,
+    createLink,
     toggleBold,
     toggleItalic,
     toggleUnderline,
@@ -7,7 +9,6 @@ import {
     toggleStrikethrough,
     toggleSuperscript,
     toggleSubscript,
-    clearFormat,
     setIndentation,
     setAlignment,
     setFontName,
@@ -16,8 +17,7 @@ import {
     setBackgroundColor,
     toggleBlockQuote,
 } from 'roosterjs-editor-api';
-import { Alignment, Indentation, DefaultFormat } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { Alignment, Indentation } from 'roosterjs-editor-types';
 import getCurrentEditor from './currentEditor';
 
 export default function initFormatBar() {
@@ -64,6 +64,15 @@ export default function initFormatBar() {
     // SubScript
     document.getElementById('subScriptButton').addEventListener('click', function() {
         toggleSubscript(getCurrentEditor());
+    });
+
+    // Insert link
+    document.getElementById('insertLink').addEventListener('click', function() {
+        let editor = getCurrentEditor();
+        let range = editor.getSelectionRange();
+        let url = window.prompt('Url', 'http://');
+        let text = range.collapsed ? window.prompt('Text of link', url) : null;
+        createLink(editor, url, url, text);
     });
 
     // ClearFormat
@@ -127,7 +136,7 @@ export default function initFormatBar() {
         let select = document.getElementById('fontSizeButton') as HTMLSelectElement;
         let text = select.value;
         if (text) {
-            setFontSize(editor, text + "px");
+            setFontSize(editor, text + 'px');
         }
         select.value = '';
     });

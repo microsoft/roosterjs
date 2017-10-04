@@ -65,7 +65,7 @@ class InlineElementFactory {
 
         // Last fallback, resolve it as a simple NodeInlineElement
         if (!inlineElement) {
-            inlineElement = new NodeInlineElement(node, rootNode, parentBlock, this);
+            inlineElement = new NodeInlineElement(node, parentBlock);
         }
 
         return inlineElement;

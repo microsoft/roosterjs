@@ -1,0 +1,8 @@
+{
+  "name": "roosterjs-editor-core",
+  "description": "Editor core for roosterjs",
+  "dependencies": {
+    "roosterjs-editor-types": "",
+    "roosterjs-editor-dom": ""
+  }
+}

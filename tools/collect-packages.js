@@ -8,7 +8,7 @@ function getDependencies(packageBasePath, packageName) {
 	var allPackages = getAllPackages(packageBasePath);
 
 	var packagePath = allPackages[packageName];
-	var packageJson = JSON.parse(fs.readFileSync(path.resolve(packagePath, "package.json")).toString());
+	var packageJson = JSON.parse(fs.readFileSync(path.resolve(packagePath, "package.template.json")).toString());
 	var depsMap = {};
 
 	if ('dependencies' in packageJson) {
@@ -75,7 +75,7 @@ function getPackageDependencies(packageBasePath, rootPackageNames, depth) {
  * NOTE: If this will be turned to REPL, we need to add cache invalidation
  */
 function getAllPackages(packageBasePath) {
-	var packageJsonPaths = glob.sync(path.relative(process.cwd(), path.join(packageBasePath, "**", "package.json")), { nocase: true });
+	var packageJsonPaths = glob.sync(path.relative(process.cwd(), path.join(packageBasePath, "**", "package.template.json")), { nocase: true });
 	var allPackages = {};
 
 	packageJsonPaths.forEach(packageJsonPath => {

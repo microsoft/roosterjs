@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
     <head>
+        <title>RoosterJs Sample Page</title>
         <style>
             html, body {
                 height: 100%;
@@ -20,6 +21,20 @@
                 background-color: #4444ff;
                 padding: 10px 20px;
                 margin-bottom: 20px;
+            }
+
+            .topButtons {
+                float: right;
+            }
+
+            .topButtons a {
+                font-size: 16px;
+                color: white;
+                text-decoration: none;
+            }
+
+            .topButtons a:hover {
+                text-decoration: underline;
             }
 
             .tabs {
@@ -92,7 +107,13 @@
     <body>
         <script src="scripts/sample.js"></script>
         <div class="root">
-            <div class="banner">RoosterJs Sample Site</div>
+            <div class="banner">
+                RoosterJs Sample Site
+                <div class="topButtons">
+                    <a href="https://github.com/microsoft/roosterjs" target="_blank">RoosterJs on GitHub</a>
+                    <a href="https://github.com/Microsoft/roosterjs/wiki" target="_blank">Documentations</a>
+                </div>
+            </div>
             <div class="tabs">
                 <div id="quickstartTab">Quick Start</div>
                 <div id="optionsTab">Editor Options</div>
@@ -103,7 +124,6 @@
                     <div class="optionList">
                         <div>Plugins:</div>
                         <div><input type="checkbox" id="defaultShortcutCheckbox" checked><label for="defaultShortcutCheckbox">Default Shortcut plugin</label></div>
-                        <div><input type="checkbox" id="htmlsnapshotUndoCheckbox" checked><label for="htmlsnapshotUndoCheckbox">HTML Snapshot Undo plugin</label></div>
                         <div><input type="checkbox" id="hyperlinkCheckbox" checked><label for="hyperlinkCheckbox">Hyperlink plugin</label></div>
                         <div><input type="checkbox" id="pasteManagerCheckbox" checked><label for="pasteManagerCheckbox">Paste Manager plugin</label></div>
                         <div><input type="checkbox" id="tabIndentCheckbox" checked><label for="tabIndentCheckbox">Tab Indent plugin</label></div>
@@ -252,6 +272,8 @@
                 &nbsp;
                 <button id="superScriptButton">X<sup>2</sup></button>
                 <button id="subScriptButton">X<sub>2</sub></button>
+                &nbsp;
+                <button id="insertLink">Inert Link</button>
                 &nbsp;
                 <button id="undoButton">Undo</button>
                 <button id="redoButton">Redo</button>

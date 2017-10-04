@@ -22,4 +22,3 @@ let copyFn = (f) => {
 
 glob.sync('@(README|readme)*.*').forEach(copyFn);
 glob.sync('@(license|LICENSE)*').forEach(copyFn);
-glob.sync('package.json').forEach(copyFn);

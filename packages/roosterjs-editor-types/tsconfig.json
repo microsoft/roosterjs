@@ -7,7 +7,7 @@
     "declaration": true,
     "removeComments": false,
     "noImplicitAny": true,
-    "experimentalDecorators": true,
+    "preserveConstEnums": true,
     "baseUrl": "../../",
     "paths": {
       "*": [

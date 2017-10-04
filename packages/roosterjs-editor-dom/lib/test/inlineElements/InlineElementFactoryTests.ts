@@ -88,6 +88,23 @@ describe('InlineElementFactory resolve() resolves an inline element using the de
 });
 
 describe('InlineElementFactory resolve()', () => {
+    class MockInlineElement extends NodeInlineElement {
+        constructor(containerNode: Node, parentBlock: BlockElement) {
+            super(containerNode, parentBlock);
+        }
+    }
+
+    class MockInlineElementResolver implements InlineElementResolver {
+        public resolve(
+            node: Node,
+            rootNode: Node,
+            parentBlock: BlockElement,
+            inlineElementFactory: InlineElementFactory
+        ): InlineElement {
+            return new MockInlineElement(node, parentBlock);
+        }
+    }
+
     let testID = 'InlineElementFactory_resolve_custom';
 
     afterEach(() => {
@@ -112,26 +129,4 @@ describe('InlineElementFactory resolve()', () => {
         expect(inlineElement.getContainerNode()).toBe(testDiv);
         expect(inlineElement.getParentBlock()).toBe(parentBlock);
     });
-
-    class MockInlineElement extends NodeInlineElement {
-        constructor(
-            containerNode: Node,
-            rootNode: Node,
-            parentBlock: BlockElement,
-            inlineElementFactory: InlineElementFactory
-        ) {
-            super(containerNode, rootNode, parentBlock, inlineElementFactory);
-        }
-    }
-
-    class MockInlineElementResolver implements InlineElementResolver {
-        public resolve(
-            node: Node,
-            rootNode: Node,
-            parentBlock: BlockElement,
-            inlineElementFactory: InlineElementFactory
-        ): InlineElement {
-            return new MockInlineElement(node, rootNode, parentBlock, inlineElementFactory);
-        }
-    }
 });

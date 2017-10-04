@@ -1,6 +1,7 @@
 import EditorOptions from './EditorOptions';
 import EditorPlugin from './EditorPlugin';
 import UndoService from './UndoService';
+import Undo from '../undo/Undo';
 import applyInlineStyle from '../utils/applyInlineStyle';
 import browserData from '../utils/BrowserData';
 import getCursorRect from '../utils/getCursorRect';
@@ -53,61 +54,48 @@ export default class Editor {
     private plugins: EditorPlugin[];
     private defaultFormat: DefaultFormat;
     private cachedSelectionRange: Range;
-    private inlineElementFactory: InlineElementFactory;
+    private inlineElementFactory = new InlineElementFactory();
     private isBeforeDeactivateEventSupported: boolean;
     private undoService: UndoService;
     private isInIMESequence: boolean;
+    private suspendAddingUndoSnapshot: boolean;
 
-    constructor(private contentDiv: HTMLDivElement, options: EditorOptions) {
-        if (!contentDiv) {
-            throw new Error('contentDiv must not be null');
-        }
-
-        if (!(contentDiv instanceof HTMLDivElement) || contentDiv.tagName.toUpperCase() != 'DIV') {
+    /**
+     * Creates an instance of Editor
+     * @param contentDiv The DIV HTML element which will be the container element of editor
+     * @param options An optional options object to customize the editor
+     */
+    constructor(private contentDiv: HTMLDivElement, options: EditorOptions = {}) {
+        // 1. Make sure all parameters are valid
+        if (
+            !contentDiv ||
+            !(contentDiv instanceof HTMLDivElement) ||
+            contentDiv.tagName.toUpperCase() != 'DIV'
+        ) {
             throw new Error('contentDiv must be an HTML DIV element');
         }
 
-        if (!options) {
-            throw new Error('Must pass in a valid options object');
-        }
-
-        // TODO: consider breaking this down into several functions for readability
-        this.isBeforeDeactivateEventSupported = browserData.isIE || browserData.isEdge;
-        this.onKeyPress = this.onKeyPress.bind(this);
-        this.onKeyDown = this.onKeyDown.bind(this);
-        this.onKeyUp = this.onKeyUp.bind(this);
-        this.onMouseUp = this.onMouseUp.bind(this);
-        this.onMouseOver = this.onMouseOver.bind(this);
-        this.onMouseOut = this.onMouseOut.bind(this);
-        this.onCompositionEnd = this.onCompositionEnd.bind(this);
-        this.onFocus = this.onFocus.bind(this);
-        this.onBlur = this.onBlur.bind(this);
-        this.onBeforeDeactivate = this.onBeforeDeactivate.bind(this);
-        this.onPaste = this.onPaste.bind(this);
-        this.onCopy = this.onCopy.bind(this);
-
+        // 2. Store options values to local variables
         this.defaultFormat = options.defaultFormat;
         this.plugins = options.plugins || [];
 
-        if (options.undo) {
-            this.undoService = options.undo;
-            this.plugins.push(options.undo);
-        }
-
-        // Enable content editable
-        this.contentDiv.setAttribute('contenteditable', 'true');
-
-        // Set user-select style
-        let styles = this.contentDiv.style;
-        styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
-
-        this.ensureInitialContent();
-
-        this.bindEvents();
+        // 3. Initialize plugins
         this.initializePlugins();
 
-        // Initialize the inline element resolver factory
-        this.inlineElementFactory = new InlineElementFactory();
+        // 4. Ensure initial content and its format
+        this.ensureInitialContent(options.initialContent);
+
+        // 5. Initialize undo service
+        // This need to be after step 4 so that undo service can pickup initial content
+        this.undoService = options.undo || new Undo();
+        this.undoService.initialize(this);
+        this.plugins.push(this.undoService);
+
+        // 6. Finally make the container editalbe, set its selection styles and bind events
+        this.contentDiv.setAttribute('contenteditable', 'true');
+        let styles = this.contentDiv.style;
+        styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
+        this.bindEvents();
     }
 
     public dispose(): void {
@@ -179,24 +167,29 @@ export default class Editor {
 
     public undo(): void {
         this.focus();
-        if (this.undoService) {
-            this.undoService.undo();
-        } else {
-            this.getDocument().execCommand('undo');
-        }
+        this.undoService.undo();
     }
 
     public redo(): void {
         this.focus();
-        if (this.undoService) {
-            this.undoService.redo();
-        } else {
-            this.getDocument().execCommand('redo');
+        this.undoService.redo();
+    }
+
+    public runWithoutAddingUndoSnapshot(callback: () => void) {
+        try {
+            this.suspendAddingUndoSnapshot = true;
+            callback();
+        } finally {
+            this.suspendAddingUndoSnapshot = false;
         }
     }
 
     public addUndoSnapshot(): void {
-        if (this.undoService && this.undoService.addUndoSnapshot) {
+        if (
+            this.undoService &&
+            this.undoService.addUndoSnapshot &&
+            !this.suspendAddingUndoSnapshot
+        ) {
             this.undoService.addUndoSnapshot();
         }
     }
@@ -442,6 +435,7 @@ export default class Editor {
     }
 
     private bindEvents(): void {
+        this.isBeforeDeactivateEventSupported = browserData.isIE || browserData.isEdge;
         this.contentDiv.addEventListener('keypress', this.onKeyPress);
         this.contentDiv.addEventListener('keydown', this.onKeyDown);
         this.contentDiv.addEventListener('keyup', this.onKeyUp);
@@ -498,23 +492,23 @@ export default class Editor {
         });
     }
 
-    private onBlur(): void {
+    private onBlur = () => {
         // For browsers that do not support beforedeactivate, still do the saving selection in onBlur
         // Also check if there's already a selection range cache because in Chrome onBlur can be triggered multiple times when user clicks to other places,
         // in that case the second time when fetching the selection range may result in a wrong selection.
         if (!this.isBeforeDeactivateEventSupported && !this.cachedSelectionRange) {
             this.saveSelectionRange();
         }
-    }
+    };
 
-    private onBeforeDeactivate(): void {
+    private onBeforeDeactivate = () => {
         // this should fire up only for edge and IE
         if (!this.cachedSelectionRange) {
             this.saveSelectionRange();
         }
-    }
+    };
 
-    private onKeyPress(event: KeyboardEvent): void {
+    private onKeyPress = (event: KeyboardEvent) => {
         // Check if user is typing right under the content div
         // When typing goes directly under content div, many things can go wrong
         // We fix it by wrapping it with a div and reposition cursor within the div
@@ -570,53 +564,53 @@ export default class Editor {
         }
 
         this.dispatchDomEventToPlugin(PluginEventType.KeyPress, event);
-    }
+    };
 
-    private onKeyDown(event: KeyboardEvent): void {
+    private onKeyDown = (event: KeyboardEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.KeyDown, event);
-    }
+    };
 
-    private onKeyUp(event: KeyboardEvent) {
+    private onKeyUp = (event: KeyboardEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.KeyUp, event);
-    }
+    };
 
-    private onCompositionStart(event: CompositionEvent): void {
+    private onCompositionStart = (event: CompositionEvent) => {
         this.isInIMESequence = true;
-    }
+    };
 
-    private onCompositionEnd(event: CompositionEvent): void {
+    private onCompositionEnd = (event: CompositionEvent) => {
         this.isInIMESequence = false;
         this.dispatchDomEventToPlugin(PluginEventType.CompositionEnd, event);
-    }
+    };
 
-    private onMouseUp(event: MouseEvent): void {
+    private onMouseUp = (event: MouseEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.MouseUp, event);
-    }
+    };
 
-    private onMouseOver(event: MouseEvent): void {
+    private onMouseOver = (event: MouseEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.MouseOver, event);
-    }
+    };
 
-    private onMouseOut(event: MouseEvent): void {
+    private onMouseOut = (event: MouseEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.MouseOut, event);
-    }
+    };
 
-    private onPaste(event: ClipboardEvent): void {
+    private onPaste = (event: ClipboardEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.Paste, event);
-    }
+    };
 
-    private onCopy(event: ClipboardEvent): void {
+    private onCopy = (event: ClipboardEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.Copy, event);
-    }
+    };
 
-    private onFocus(): void {
+    private onFocus = () => {
         // Restore the last saved selection first
         if (this.cachedSelectionRange) {
             this.restoreLastSavedSelection();
         }
 
         this.cachedSelectionRange = null;
-    }
+    };
 
     // Dispatch DOM event to plugin
     private dispatchDomEventToPlugin(eventType: PluginEventType, rawEvent: Event): void {
@@ -629,7 +623,12 @@ export default class Editor {
     }
 
     // Ensure initial content exist in editor
-    private ensureInitialContent(): void {
+    private ensureInitialContent(initialContent?: string): void {
+        // Use the initial content to overwrite any existing content if specified
+        if (initialContent) {
+            this.setContent(initialContent);
+        }
+
         let firstBlock = getFirstBlockElement(this.contentDiv, this.inlineElementFactory);
         let defaultFormatBlockElement: HTMLElement;
 
