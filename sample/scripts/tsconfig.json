@@ -2,22 +2,6 @@
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
-        "noEmitHelpers": true,
-        "outDir": "dist",
-        "declaration": true,
-        "sourceMap": true,
-        "baseUrl": "../../",
-        "paths": {
-            "*": [
-                "*",
-                "dist/*"
-            ]
-        },
-        "typeRoots": [
-            "../../node_modules/@types/jasmine"
-        ]
-    },
-    "include": [
-        "*"
-    ]
+        "baseUrl": "../../"
+    }
 }

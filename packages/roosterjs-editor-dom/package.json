@@ -3,5 +3,6 @@
   "description": "Object Model for roosterjs",
   "dependencies": {
     "roosterjs-editor-types": ""
-  }
+  },
+  "main": "./lib/index.ts"
 }

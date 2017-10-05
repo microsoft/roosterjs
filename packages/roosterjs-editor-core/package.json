@@ -2,7 +2,8 @@
   "name": "roosterjs-editor-core",
   "description": "Editor core for roosterjs",
   "dependencies": {
-    "roosterjs-editor-types": "",
-    "roosterjs-editor-dom": ""
-  }
+      "roosterjs-editor-types": "",
+      "roosterjs-editor-dom": ""
+  },
+  "main": "./lib/index.ts"
 }

@@ -1,6 +1,0 @@
-{
-  "include": [
-    "packages/**/*.ts",
-    "sample/**/*.ts"
-  ]
-}

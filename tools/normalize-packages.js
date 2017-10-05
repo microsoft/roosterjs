@@ -13,14 +13,14 @@ packages.forEach((package) => {
 });
 
 function readPackageJson(package) {
-    var packageJsonFilePath = path.join(packagePath, package, 'package.template.json');
+    var packageJsonFilePath = path.join(packagePath, package, 'package.json');
     var content = fs.readFileSync(packageJsonFilePath);
     var packageJson = JSON.parse(content);
     return packageJson;
 }
 
 function normalizePackageJson(package, packages) {
-    var packageJsonFilePath = path.join(packagePath, package, 'package.template.json');
+    var packageJsonFilePath = path.join(packagePath, package, 'package.json');
     var packageJson = readPackageJson(package);
 
     Object.keys(packageJson.dependencies).forEach((dep) => {

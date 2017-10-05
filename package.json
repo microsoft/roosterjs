@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "tslint": "node node_modules/tslint/bin/tslint --project tsconfig.tslint.json",
+    "tslint": "node node_modules/tslint/bin/tslint --project tools/tsconfig.tslint.json",
     "normalize": "node tools/normalize-packages.js",
     "pack": "node tools/pack.js",
     "pack:prod": "node tools/pack.js -p",

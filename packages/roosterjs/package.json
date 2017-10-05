@@ -7,5 +7,6 @@
     "roosterjs-editor-core": "",
     "roosterjs-editor-api": "",
     "roosterjs-editor-plugins": ""
-  }
+  },
+  "main": "./lib/index.ts"
 }
