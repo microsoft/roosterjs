@@ -174,7 +174,7 @@ export default class HyperLink implements EditorPlugin {
         let shouldOpenLink = browserData.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey;
         if (shouldOpenLink) {
             let href = this.tryGetHref(linkInline.getContainerNode() as HTMLAnchorElement);
-            if (href) {
+            if (href && !browserData.isFirefox) {
                 let target = this.target || '_blank';
                 window.open(href, target);
             }
