@@ -15,6 +15,7 @@ import {
     setFontSize,
     setTextColor,
     setBackgroundColor,
+    toggleBlockQuote,
 } from 'roosterjs-editor-api';
 import { Alignment, Indentation } from 'roosterjs-editor-types';
 import getCurrentEditor from './currentEditor';
@@ -43,6 +44,11 @@ export default function initFormatBar() {
     // Numbering
     document.getElementById('numberingButton').addEventListener('click', function() {
         toggleNumbering(getCurrentEditor());
+    });
+
+    // Blockquote
+    document.getElementById('blockquoteButton').addEventListener('click', function() {
+        toggleBlockQuote(getCurrentEditor());
     });
 
     // StrikeThrough

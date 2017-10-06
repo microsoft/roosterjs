@@ -1,6 +1,6 @@
 import cacheGetListElement from './cacheGetListElement';
 import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
-import { ListState, PluginEvent, NodeType } from 'roosterjs-editor-types';
+import { ListState, PluginEvent, NodeType, ContentScope } from 'roosterjs-editor-types';
 import { getTagOfNode } from 'roosterjs-editor-dom';
 
 const EVENTDATACACHE_LISTSTATE = 'LISTSTATE';
@@ -24,10 +24,43 @@ export function getListStateAtNode(editor: Editor, node: Node): ListState {
             inList = tagName == 'LI';
         }
 
+        // In rare cases that an element is both in list and blockquote we treat is as a list element
+        if (tagName == 'BLOCKQUOTE') {
+            listState = ListState.BlockQuote;
+            break;
+        }
+
         startNode = startNode.parentNode;
     }
 
     return listState;
+}
+
+// Get the list state from selection
+export function getListStateAtSelection(editor: Editor, nodeAtCursor: Node): ListState {
+    let contentTraverser = editor.getContentTraverser(ContentScope.Selection);
+    let range = editor.getSelectionRange();
+
+    if (contentTraverser && range && !range.collapsed) {
+        let blockElement = contentTraverser.currentBlockElement;
+        let listStates = [];
+
+        // If any lines in selection is related to blockquote, then the state is blockquote,
+        // this is treated different than other list states
+        while (blockElement) {
+            let listState = getListStateAtNode(editor, blockElement.getStartNode());
+            if (listState == ListState.BlockQuote) {
+                return ListState.BlockQuote;
+            } else if (listStates.indexOf(listState) == -1) {
+                listStates.push(listState);
+            }
+            blockElement = contentTraverser.getNextBlockElement();
+        }
+
+        return listStates.length > 1 ? ListState.None : listStates[0];
+    } else {
+        return getListStateAtNode(editor, nodeAtCursor);
+    }
 }
 
 // Get the list state
