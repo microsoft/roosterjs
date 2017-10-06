@@ -113,10 +113,11 @@ export default function toggleBlockQuote(editor: Editor, styler: (element: HTMLE
         let formatter = () => {
             let startContainer = range.startContainer;
             let startOffset = range.startOffset;
+            let isCollapsed = range.collapsed;
             for (let element of blockQuoteElements) {
                 unwrap(element);
             }
-            updateSelection(range, editor, startContainer, startOffset);
+            updateSelection(range, editor, startContainer, startOffset, isCollapsed);
         };
 
         execFormatWithUndo(editor, formatter);
