@@ -36,11 +36,15 @@ export default function toggleBlockQuote(editor: Editor, styler: (element: HTMLE
             let nodes: Node[];
             let startContainer: Node;
             let startOffset: number;
+            let endContainer: Node;
+            let endOffset: number;
             let isRangeCollapsed = true;
 
             if (!range.collapsed) { // If selection not collapsed, check and try to wrap nodes in selection
                 startContainer = range.startContainer;
                 startOffset = range.startOffset;
+                endContainer = range.endContainer;
+                endOffset = range.endOffset;
                 isRangeCollapsed = false;
                 nodes = [];
                 while (blockElement) {
@@ -92,7 +96,7 @@ export default function toggleBlockQuote(editor: Editor, styler: (element: HTMLE
                 wrapNodesWithBlockQuote(nodes, styler);
             }
 
-            updateSelection(range, editor, startContainer, startOffset, isRangeCollapsed);
+            updateSelection(range, editor, startContainer, startOffset, endContainer, endOffset, isRangeCollapsed);
         };
 
         execFormatWithUndo(editor, formatter);
@@ -113,26 +117,34 @@ export default function toggleBlockQuote(editor: Editor, styler: (element: HTMLE
         let formatter = () => {
             let startContainer = range.startContainer;
             let startOffset = range.startOffset;
+            let endContainer = range.endContainer;
+            let endOffset = range.endOffset;
             let isCollapsed = range.collapsed;
             for (let element of blockQuoteElements) {
                 unwrap(element);
             }
-            updateSelection(range, editor, startContainer, startOffset, isCollapsed);
+            updateSelection(range, editor, startContainer, startOffset, endContainer, endOffset, isCollapsed);
         };
 
         execFormatWithUndo(editor, formatter);
     }
 }
 
-function updateSelection(range: Range, editor: Editor, startContainer: Node, startOffset: number, isRangeCollapsed: boolean = true) {
-    if (editor.contains(startContainer)) {
-        editor.focus();
+function updateSelection(range: Range, editor: Editor, startContainer: Node, startOffset: number, endContainer: Node, endOffset: number, isRangeCollapsed: boolean = true) {
+    editor.focus();
+    if (startContainer && editor.contains(startContainer)) {
         range.setStart(startContainer, startOffset);
-        if (isRangeCollapsed) {
-            range.collapse(true /*toStart*/);
-        }
-        editor.updateSelection(range);
     }
+
+    if (endContainer && editor.contains(endContainer)) {
+        range.setEnd(endContainer, endOffset);
+    }
+
+    if (isRangeCollapsed) {
+        range.collapse(true /*toStart*/);
+    }
+
+    editor.updateSelection(range);
 }
 
 function wrapNodesWithBlockQuote(nodes: Node[], styler: (element: HTMLElement) => void) {
