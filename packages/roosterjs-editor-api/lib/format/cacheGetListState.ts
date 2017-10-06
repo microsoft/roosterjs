@@ -43,17 +43,21 @@ export function getListStateAtSelection(editor: Editor, nodeAtCursor: Node): Lis
 
     if (contentTraverser && range && !range.collapsed) {
         let blockElement = contentTraverser.currentBlockElement;
-        let previousListState: ListState;
+        let listStates = [];
+
+        // If any lines in selection is related to blockquote, then the state is blockquote,
+        // this is treated different than other list states
         while (blockElement) {
             let listState = getListStateAtNode(editor, blockElement.getStartNode());
-            if (typeof previousListState !== 'undefined' && previousListState != listState) {
-                return ListState.None;
+            if (listState == ListState.BlockQuote) {
+                return ListState.BlockQuote;
+            } else if (listStates.indexOf(listState) == -1) {
+                listStates.push(listState);
             }
-            previousListState = listState;
             blockElement = contentTraverser.getNextBlockElement();
         }
 
-        return previousListState;
+        return listStates.length > 1 ? ListState.None : listStates[0];
     } else {
         return getListStateAtNode(editor, nodeAtCursor);
     }
