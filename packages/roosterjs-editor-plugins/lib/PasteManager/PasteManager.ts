@@ -59,7 +59,7 @@ export default class PasteManager implements EditorPlugin {
             // There is text to paste, so clear any image data if any.
             // Otherwise both text and image will be pasted, this will cause duplicated paste
             clipboardData.imageData = {};
-            getHtml(this.editor, container => {
+            retrieveHtml(this.editor, container => {
                 processImages(container, clipboardData);
                 clipboardData.htmlData = container.innerHTML;
 
@@ -126,7 +126,7 @@ function getImage(dataTransfer: DataTransfer): File {
             return item.getAsFile();
         }
     }
-    // IE, Safari suuport dataTransfer.files
+    // IE, Safari support dataTransfer.files
     fileCount = dataTransfer.files ? dataTransfer.files.length : 0;
     for (let i = 0; i < fileCount; i++) {
         let file = dataTransfer.files.item(i);
@@ -137,7 +137,7 @@ function getImage(dataTransfer: DataTransfer): File {
     return null;
 }
 
-function getHtml(editor: Editor, callback: (container: HTMLElement) => void) {
+function retrieveHtml(editor: Editor, callback: (container: HTMLElement) => void) {
     // cache original selection range in editor
     let originalSelectionRange = editor.getSelectionRange();
 

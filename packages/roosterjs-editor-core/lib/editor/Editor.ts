@@ -240,7 +240,7 @@ export default class Editor {
             // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with
             // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
             // separately to show up on its own line
-            if (option.insertOnNewLine && allNodes.length > 0) {
+            if (option && option.insertOnNewLine && allNodes.length > 0) {
                 allNodes = [wrapAll(allNodes, HTML_EMPTY_DIV)];
             }
             for (let i = 0; i < allNodes.length; i++) {
