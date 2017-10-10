@@ -234,13 +234,13 @@ export default class Editor {
     }
 
     // Insert content into editor
-    public insertContent(content: string, option: InsertOption): void {
+    public insertContent(content: string, option?: InsertOption): void {
         if (content) {
             let allNodes = fromHtml(content);
             // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with
             // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
             // separately to show up on its own line
-            if (option.insertOnNewLine && allNodes.length > 0) {
+            if (option && option.insertOnNewLine && allNodes.length > 0) {
                 allNodes = [wrapAll(allNodes, HTML_EMPTY_DIV)];
             }
             for (let i = 0; i < allNodes.length; i++) {
@@ -250,10 +250,17 @@ export default class Editor {
     }
 
     // Insert node into editor
-    public insertNode(node: Node, option: InsertOption): boolean {
+    public insertNode(node: Node, option?: InsertOption): boolean {
         if (!node) {
             return false;
         }
+
+        option = option || {
+            position: ContentPosition.SelectionStart,
+            updateCursor: true,
+            replaceSelection: true,
+            insertOnNewLine: false,
+        };
 
         // For any change to editor, it's better to first bring focus into editor
         // Editor maintains a cached selection range when focus is not in editor

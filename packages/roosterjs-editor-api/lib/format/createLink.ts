@@ -3,7 +3,7 @@ import defaultLinkMatchRules from '../linkMatch/defaultLinkMatchRules';
 import execFormatWithUndo from './execFormatWithUndo';
 import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
 import matchLink from '../linkMatch/matchLink';
-import { ContentPosition, LinkMatchOption } from 'roosterjs-editor-types';
+import { LinkMatchOption } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { LinkInlineElement } from 'roosterjs-editor-dom';
 
@@ -51,7 +51,12 @@ function applyLinkPrefix(url: string): string {
  * If there is a selection, this parameter will be ignored.
  * If not specified, will use link instead
  */
-export default function createLink(editor: Editor, link: string, altText?: string, displayText?: string): void {
+export default function createLink(
+    editor: Editor,
+    link: string,
+    altText?: string,
+    displayText?: string
+): void {
     editor.focus();
     let url = link ? link.trim() : '';
     if (url) {
@@ -73,13 +78,7 @@ export default function createLink(editor: Editor, link: string, altText?: strin
                 anchor.setAttribute('alt', altText);
             }
 
-            formatter = () =>
-                editor.insertNode(anchor, {
-                    position: ContentPosition.SelectionStart,
-                    updateCursor: true,
-                    replaceSelection: true,
-                    insertOnNewLine: false,
-                });
+            formatter = () => editor.insertNode(anchor);
         } else {
             /* the selection is not collapsed, use browser execCommand */
             formatter = () => {

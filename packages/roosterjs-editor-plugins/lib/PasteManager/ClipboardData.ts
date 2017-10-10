@@ -18,6 +18,7 @@ export interface ImageData {
 
 interface ClipboardData {
     imageData: ImageData;
+    textData: string;
     htmlData: string;
 }
 
