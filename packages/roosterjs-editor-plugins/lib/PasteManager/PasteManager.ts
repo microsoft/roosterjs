@@ -5,7 +5,7 @@ import { processImages } from './PasteUtility';
 import { fromHtml } from 'roosterjs-editor-dom';
 
 const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
-const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/gi;
+const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/i;
 const CONTAINER_HTML =
     '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
 
