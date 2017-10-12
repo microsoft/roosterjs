@@ -60,7 +60,8 @@ class Watermark implements EditorPlugin {
             event.eventType == PluginEventType.ContentChanged
         ) {
             this.showHideWatermark();
-        } else if (event.eventType == PluginEventType.ExtractContent) {
+        } else if (event.eventType == PluginEventType.ExtractContent &&
+            this.isWatermarkShowing) {
             this.removeWartermarkFromHtml(event as ExtractContentEvent);
         }
     }
