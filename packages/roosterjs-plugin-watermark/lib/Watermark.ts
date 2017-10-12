@@ -93,7 +93,10 @@ class Watermark implements EditorPlugin {
     private hideWatermark() {
         let nodes = this.editor.queryContent(`span[id="${WATERMARK_SPAN_ID}"]`);
         for (let i = 0; i < nodes.length; i++) {
-            this.editor.deleteNode(nodes.item(i));
+            let node = nodes.item(i);
+            if (node.parentNode) {
+                node.parentNode.removeChild(node);
+            }
         }
         this.isWatermarkShowing = false;
     }
