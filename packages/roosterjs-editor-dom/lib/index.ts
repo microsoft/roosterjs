@@ -38,6 +38,7 @@ export { default as EditorSelection } from './scopers/EditorSelection';
 export { default as SelectionBlockScoper } from './scopers/SelectionBlockScoper';
 export { default as SelectionScoper } from './scopers/SelectionScoper';
 
+export { default as applyFormat } from './utils/applyFormat';
 export { default as contains } from './utils/contains';
 export { default as convertInlineCss } from './utils/convertInlineCss';
 export { default as fromHtml } from './utils/fromHtml';

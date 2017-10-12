@@ -6,7 +6,11 @@ import { getTagOfNode } from 'roosterjs-editor-dom';
 const EVENTDATACACHE_LISTELEMENT = 'LISTELEMENT';
 export type ListType = 'LI' | 'BLOCKQUOTE';
 
-export default function cacheGetListElement(editor: Editor, event?: PluginEvent, listType?: ListType): Element {
+export default function cacheGetListElement(
+    editor: Editor,
+    event?: PluginEvent,
+    listType?: ListType
+): Element {
     return cacheGetEventData<Element>(event, EVENTDATACACHE_LISTELEMENT, () => {
         let node = getNodeAtCursor(editor);
         listType = listType || 'LI';
@@ -15,8 +19,7 @@ export default function cacheGetListElement(editor: Editor, event?: PluginEvent,
 }
 
 export function getListElementAtNode(editor: Editor, node: Node, listType: ListType): Element {
-    let startElement =
-        node && node.nodeType == NodeType.Text ? node.parentElement : <Element>node;
+    let startElement = node && node.nodeType == NodeType.Text ? node.parentElement : <Element>node;
     while (startElement && editor.contains(startElement)) {
         let tagName = getTagOfNode(startElement);
         if (tagName == listType) {

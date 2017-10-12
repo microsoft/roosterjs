@@ -164,7 +164,7 @@ function normalizeContent(content: string): string {
 
     // Replace <BR> with <DIV>
     if (TEXT_WITH_BR_ONLY.test(content)) {
-        content = '<div>' + content.replace(/<br>/ig, '</div><div>') + '<br></div>';
+        content = '<div>' + content.replace(/<br>/gi, '</div><div>') + '<br></div>';
     }
 
     return content;

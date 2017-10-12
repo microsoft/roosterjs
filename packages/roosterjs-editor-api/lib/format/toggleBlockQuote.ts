@@ -1,5 +1,5 @@
 import execFormatWithUndo from './execFormatWithUndo';
-import getFormatState  from './getFormatState';
+import getFormatState from './getFormatState';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import { getListElementAtNode } from './cacheGetListElement';
 import { getListStateAtSelection } from './cacheGetListState';
@@ -10,14 +10,17 @@ import { Editor, browserData } from 'roosterjs-editor-core';
 var ZERO_WIDTH_SPACE = '&#8203;';
 
 let defaultStyler = (element: HTMLElement) => {
-    element.style.borderLeft = "3px solid";
-    element.style.borderColor = "#C8C8C8";
-    element.style.paddingLeft = "10px";
-    element.style.color = "#666666";
-    element.style.fontSize = "17px";
+    element.style.borderLeft = '3px solid';
+    element.style.borderColor = '#C8C8C8';
+    element.style.paddingLeft = '10px';
+    element.style.color = '#666666';
+    element.style.fontSize = '17px';
 };
 
-export default function toggleBlockQuote(editor: Editor, styler: (element: HTMLElement) => void = defaultStyler): void {
+export default function toggleBlockQuote(
+    editor: Editor,
+    styler: (element: HTMLElement) => void = defaultStyler
+): void {
     editor.focus();
     let formatter: () => void = null;
     let formatState = editor ? getFormatState(editor) : null;
@@ -40,7 +43,8 @@ export default function toggleBlockQuote(editor: Editor, styler: (element: HTMLE
             let endOffset: number;
             let isRangeCollapsed = true;
 
-            if (!range.collapsed) { // If selection not collapsed, check and try to wrap nodes in selection
+            if (!range.collapsed) {
+                // If selection not collapsed, check and try to wrap nodes in selection
                 startContainer = range.startContainer;
                 startOffset = range.startOffset;
                 endContainer = range.endContainer;
@@ -61,7 +65,8 @@ export default function toggleBlockQuote(editor: Editor, styler: (element: HTMLE
                 if (nodes.length > 0) {
                     wrapNodesWithBlockQuote(nodes, styler);
                 }
-            } else if (blockElement) { // Selection is collapsed and there's content in the block, move the whole block into blockquote
+            } else if (blockElement) {
+                // Selection is collapsed and there's content in the block, move the whole block into blockquote
                 nodes = blockElement.getContentNodes();
                 startContainer = range.startContainer;
                 startOffset = range.startOffset;
@@ -74,7 +79,8 @@ export default function toggleBlockQuote(editor: Editor, styler: (element: HTMLE
                 }
 
                 wrapNodesWithBlockQuote(nodes, styler);
-            } else { // Selection is collapsed and blockElment is null, we need to create an empty div. In case of IE and Edge, we insert ZWS to put cursor in the div, otherwise insert BR node
+            } else {
+                // Selection is collapsed and blockElment is null, we need to create an empty div. In case of IE and Edge, we insert ZWS to put cursor in the div, otherwise insert BR node
                 let div = editor.getDocument().createElement('div');
 
                 if (browserData.isEdge || browserData.isIE) {
@@ -96,12 +102,20 @@ export default function toggleBlockQuote(editor: Editor, styler: (element: HTMLE
                 wrapNodesWithBlockQuote(nodes, styler);
             }
 
-            updateSelection(range, editor, startContainer, startOffset, endContainer, endOffset, isRangeCollapsed);
+            updateSelection(
+                range,
+                editor,
+                startContainer,
+                startOffset,
+                endContainer,
+                endOffset,
+                isRangeCollapsed
+            );
         };
 
         execFormatWithUndo(editor, formatter);
-
-    } else { // Current selection is in blockquote, need to unblockquote the selection
+    } else {
+        // Current selection is in blockquote, need to unblockquote the selection
         let blockQuoteElements: Node[] = [];
 
         // Selection may contain multiple blockquotes, check and unblockquote all
@@ -123,14 +137,30 @@ export default function toggleBlockQuote(editor: Editor, styler: (element: HTMLE
             for (let element of blockQuoteElements) {
                 unwrap(element);
             }
-            updateSelection(range, editor, startContainer, startOffset, endContainer, endOffset, isCollapsed);
+            updateSelection(
+                range,
+                editor,
+                startContainer,
+                startOffset,
+                endContainer,
+                endOffset,
+                isCollapsed
+            );
         };
 
         execFormatWithUndo(editor, formatter);
     }
 }
 
-function updateSelection(range: Range, editor: Editor, startContainer: Node, startOffset: number, endContainer: Node, endOffset: number, isRangeCollapsed: boolean = true) {
+function updateSelection(
+    range: Range,
+    editor: Editor,
+    startContainer: Node,
+    startOffset: number,
+    endContainer: Node,
+    endOffset: number,
+    isRangeCollapsed: boolean = true
+) {
     editor.focus();
     if (startContainer && editor.contains(startContainer)) {
         range.setStart(startContainer, startOffset);
