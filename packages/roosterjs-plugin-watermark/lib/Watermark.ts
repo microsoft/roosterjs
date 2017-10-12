@@ -23,7 +23,7 @@ class Watermark implements EditorPlugin {
     private visibleElementSelectors: string[] = ['table', 'img', 'li'];
 
     /**
-     * Create an instace of Watermark plugin
+     * Create an instance of Watermark plugin
      * @param watermark The watermark string
      * @param visibleElementSelectors Optional. Additional selectors for visible element
      */
