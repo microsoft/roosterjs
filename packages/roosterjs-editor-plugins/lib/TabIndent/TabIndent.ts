@@ -151,7 +151,10 @@ export default class TabIndent implements EditorPlugin {
     // 3. is keyDown
     // 4. is Enter
     // 5. Any of ctrl/meta/alt is not pressed
-    private getBlockQuoteElementFromEvent(event: PluginEvent, keyboardEvent: KeyboardEvent): Element {
+    private getBlockQuoteElementFromEvent(
+        event: PluginEvent,
+        keyboardEvent: KeyboardEvent
+    ): Element {
         if (event.eventType == PluginEventType.KeyDown) {
             if (
                 keyboardEvent.which == KEY_ENTER &&
@@ -159,13 +162,21 @@ export default class TabIndent implements EditorPlugin {
                 !keyboardEvent.altKey &&
                 !keyboardEvent.metaKey
             ) {
-                let blockQuoteElement = cacheGetListElement(this.editor, event, BLOCKQUOTE_TAG_NAME);
+                let blockQuoteElement = cacheGetListElement(
+                    this.editor,
+                    event,
+                    BLOCKQUOTE_TAG_NAME
+                );
                 if (blockQuoteElement) {
                     let contentTraverser = this.editor.getContentTraverser(ContentScope.Selection);
-                    let blockElement = contentTraverser ? contentTraverser.currentBlockElement : null;
+                    let blockElement = contentTraverser
+                        ? contentTraverser.currentBlockElement
+                        : null;
 
                     // Get the content of the current block element, remove any zero white spaces
-                    let content = blockElement ? blockElement.getTextContent().replace(/\u200B/g, '') : null;
+                    let content = blockElement
+                        ? blockElement.getTextContent().replace(/\u200B/g, '')
+                        : null;
                     return !content ? blockQuoteElement : null;
                 }
             }
