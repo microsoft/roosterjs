@@ -1,5 +1,6 @@
 module.exports = {
     entry: './sample/scripts/sample.ts',
+    devtool: 'source-map',
     output: {
         filename: 'sample.js',
         path: __dirname + '/sample/scripts',

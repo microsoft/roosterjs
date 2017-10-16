@@ -16,10 +16,10 @@ export interface ImageData {
     noSrcImageIds?: string[]; // images pasted with no src
 }
 
-interface ClipboardData {
+interface ClipBoardData {
     imageData: ImageData;
     textData: string;
     htmlData: string;
 }
 
-export default ClipboardData;
+export default ClipBoardData;

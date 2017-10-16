@@ -1,4 +1,4 @@
-import ClipboardData from './ClipboardData';
+import ClipBoardData from './ClipboardData';
 import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { processImages } from './PasteUtility';
@@ -27,7 +27,7 @@ export default class PasteManager implements EditorPlugin {
      * @param pasteHandler An optional pasteHandler to perform extra actions after pasting.
      * Default behavior is to paste image (if any) as BASE64 inline image.
      */
-    constructor(private readonly pasteHandler?: (clipboardData: ClipboardData) => void) {}
+    constructor(private readonly pasteHandler?: (clipboardData: ClipBoardData) => void) {}
 
     public initialize(editor: Editor) {
         this.editor = editor;
@@ -73,7 +73,7 @@ export default class PasteManager implements EditorPlugin {
         }
     }
 
-    private onPasteComplete = (clipboardData: ClipboardData) => {
+    private onPasteComplete = (clipboardData: ClipBoardData) => {
         let pasteHandler = this.pasteHandler || this.defaultPasteHandler;
         if (clipboardData) {
             // if any clipboard data exists, call into pasteHandler
@@ -87,7 +87,7 @@ export default class PasteManager implements EditorPlugin {
         this.editor.addUndoSnapshot();
     };
 
-    private defaultPasteHandler = (clipboardData: ClipboardData) => {
+    private defaultPasteHandler = (clipboardData: ClipBoardData) => {
         let file = clipboardData.imageData ? clipboardData.imageData.file : null;
         if (file) {
             let reader = new FileReader();
@@ -104,8 +104,8 @@ export default class PasteManager implements EditorPlugin {
     };
 }
 
-function getClipboardData(dataTransfer: DataTransfer): ClipboardData {
-    let clipboardData: ClipboardData = {
+function getClipboardData(dataTransfer: DataTransfer): ClipBoardData {
+    let clipboardData: ClipBoardData = {
         imageData: {},
         textData: dataTransfer.getData('text'),
         htmlData: null,

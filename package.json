@@ -13,7 +13,7 @@
     "normalize": "node tools/normalize-packages.js",
     "pack": "node tools/pack.js",
     "pack:prod": "node tools/pack.js -p",
-    "build": "npm run clean && npm run normalize && npm run tslint && node tools/build-all.js && npm run pack",
+    "build": "npm run clean && npm run normalize && npm run tslint && node tools/build-all.js && npm run pack:prod",
     "start": "webpack-dev-server",
     "test": "npm run build && karma start",
     "test:debug": "npm run build && karma start --no-single-run"
