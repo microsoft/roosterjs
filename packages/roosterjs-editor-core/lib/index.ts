@@ -10,3 +10,4 @@ export {
     clearEventDataCache,
     cacheGetEventData,
 } from './utils/eventDataCacheUtils';
+export { buildSnapshot, restoreSnapshot } from './undo/snapshotUtils';

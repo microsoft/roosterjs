@@ -30,6 +30,12 @@ const enum PluginEventType {
     // HTML Copy event
     Copy,
 
+    // HTML Focus event
+    Focus,
+
+    // HTML blur event
+    Blur,
+
     // Extract Content event
     // This event is triggered when getContent() is called with triggerExtractContentEvent = true
     // Plugin can handle this event to remove the UI only markups to return clean HTML

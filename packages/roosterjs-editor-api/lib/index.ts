@@ -10,7 +10,11 @@ export {
     default as replaceTextBeforeCursorWithNode,
 } from './cursor/replaceTextBeforeCursorWithNode';
 export { default as cacheGetListElement } from './format/cacheGetListElement';
-export { default as cacheGetListState, getListStateAtNode, getListStateAtSelection } from './format/cacheGetListState';
+export {
+    default as cacheGetListState,
+    getListStateAtNode,
+    getListStateAtSelection,
+} from './format/cacheGetListState';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
 export { default as execFormatWithUndo } from './format/execFormatWithUndo';

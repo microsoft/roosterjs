@@ -4,9 +4,14 @@ import { DefaultFormat } from 'roosterjs-editor-types';
 import { DefaultShortcut, HyperLink, PasteManager, TabIndent } from 'roosterjs-editor-plugins';
 import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
 import { setCurrentEditor } from './currentEditor';
+import { Watermark } from 'roosterjs-plugin-watermark';
+import getCurrentEditor from './currentEditor';
 
 function initOptions() {
     document.getElementById('setEditorOptions').addEventListener('click', initEditorForOptions);
+    document.getElementById('showHtmlContent').addEventListener('click', () => {
+        window.alert(getCurrentEditor().getContent(true));
+    });
 }
 
 function initEditorForOptions() {
@@ -22,6 +27,10 @@ function initEditorForOptions() {
     }
     if ((document.getElementById('tabIndentCheckbox') as HTMLInputElement).checked) {
         plugins.push(new TabIndent());
+    }
+
+    if ((document.getElementById('watermarkCheckbox') as HTMLInputElement).checked) {
+        plugins.push(new Watermark('Type content here...'));
     }
 
     plugins.push(new ShowCursorPosition(document.getElementById('cursorPosition')));

@@ -36,6 +36,7 @@ import {
     NodeBlockElement,
     SelectionBlockScoper,
     SelectionScoper,
+    applyFormat,
     contains,
     fromHtml,
     getInlineElementAtNode,
@@ -233,6 +234,10 @@ export default class Editor {
         );
     }
 
+    public getTextContent(): string {
+        return this.contentDiv.textContent;
+    }
+
     // Insert content into editor
     public insertContent(content: string, option?: InsertOption): void {
         if (content) {
@@ -262,10 +267,10 @@ export default class Editor {
             insertOnNewLine: false,
         };
 
-        // For any change to editor, it's better to first bring focus into editor
-        // Editor maintains a cached selection range when focus is not in editor
-        // DOM change could change "real" selection which may invalidate the cached selection
-        this.focus();
+        if (option.updateCursor) {
+            this.focus();
+        }
+
         switch (option.position) {
             case ContentPosition.Begin:
                 insertNodeAtBegin(this.contentDiv, this.inlineElementFactory, node, option);
@@ -400,7 +405,7 @@ export default class Editor {
     public updateSelection(selectionRange: Range): boolean {
         let selectionUpdated = false;
         if (isRangeInContainer(selectionRange, this.contentDiv)) {
-            let selectionUpdated = updateSelectionToRange(this.getDocument(), selectionRange);
+            selectionUpdated = updateSelectionToRange(this.getDocument(), selectionRange);
 
             // When the selection is updated when editor does not have the focus, also update the cached selection range
             if (selectionUpdated && !this.hasFocus()) {
@@ -499,13 +504,14 @@ export default class Editor {
         });
     }
 
-    private onBlur = () => {
+    private onBlur = (event: FocusEvent) => {
         // For browsers that do not support beforedeactivate, still do the saving selection in onBlur
         // Also check if there's already a selection range cache because in Chrome onBlur can be triggered multiple times when user clicks to other places,
         // in that case the second time when fetching the selection range may result in a wrong selection.
         if (!this.isBeforeDeactivateEventSupported && !this.cachedSelectionRange) {
             this.saveSelectionRange();
         }
+        this.dispatchDomEventToPlugin(PluginEventType.Blur, event);
     };
 
     private onBeforeDeactivate = () => {
@@ -543,7 +549,7 @@ export default class Editor {
                 // The fix is to add a DIV wrapping, apply default format and move cursor over
                 let nodes = fromHtml(HTML_EMPTY_DIV_BLOCK);
                 let element = this.contentDiv.appendChild(nodes[0]) as HTMLElement;
-                this.applyDefaultFormatToElement(element);
+                applyFormat(element, this.defaultFormat);
                 // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
                 this.updateSelectionToEditorPoint({
                     containerNode: element.firstChild,
@@ -563,7 +569,7 @@ export default class Editor {
                 if (getTagOfNode(blockElement.getStartNode()) == 'BR') {
                     // if the block is just BR, apply default format
                     // Otherwise, leave it as it is as we don't want to change the style for existing data
-                    this.applyDefaultFormatToElement(element);
+                    applyFormat(element, this.defaultFormat);
                 }
                 // Last restore the selection using the normalized editor point
                 this.updateSelectionToEditorPoint(editorPoint);
@@ -610,13 +616,14 @@ export default class Editor {
         this.dispatchDomEventToPlugin(PluginEventType.Copy, event);
     };
 
-    private onFocus = () => {
+    private onFocus = (event: FocusEvent) => {
         // Restore the last saved selection first
         if (this.cachedSelectionRange) {
             this.restoreLastSavedSelection();
         }
 
         this.cachedSelectionRange = null;
+        this.dispatchDomEventToPlugin(PluginEventType.Focus, event);
     };
 
     // Dispatch DOM event to plugin
@@ -654,33 +661,7 @@ export default class Editor {
         }
 
         if (defaultFormatBlockElement) {
-            this.applyDefaultFormatToElement(defaultFormatBlockElement);
-        }
-    }
-
-    // Apply default format to element
-    private applyDefaultFormatToElement(element: HTMLElement): void {
-        if (this.defaultFormat) {
-            let elementStyle = element.style;
-
-            if (this.defaultFormat.fontFamily) {
-                elementStyle.fontFamily = this.defaultFormat.fontFamily;
-            }
-            if (this.defaultFormat.fontSize) {
-                elementStyle.fontSize = this.defaultFormat.fontSize;
-            }
-            if (this.defaultFormat.textColor) {
-                elementStyle.color = this.defaultFormat.textColor;
-            }
-            if (this.defaultFormat.bold) {
-                elementStyle.fontWeight = 'bold';
-            }
-            if (this.defaultFormat.italic) {
-                elementStyle.fontStyle = 'italic';
-            }
-            if (this.defaultFormat.underline) {
-                elementStyle.textDecoration = 'underline';
-            }
+            applyFormat(defaultFormatBlockElement, this.defaultFormat);
         }
     }
 
