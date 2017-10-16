@@ -1,3 +1,4 @@
+var exec = require('child_process').execSync;
 var path = require('path');
 var rootPath = path.resolve(__dirname, '..');
 var sourcePath = path.resolve(rootPath, 'packages');
@@ -7,6 +8,7 @@ var param = process.argv[2];
 var isProduction = param == '-p';
 var webpackConfig = {
     entry: path.resolve(sourcePath, 'roosterjs/lib/index.ts'),
+    devtool: 'source-map',
     output: {
         library: 'roosterjs',
         filename: 'rooster.js',
@@ -48,4 +50,9 @@ webpack(webpackConfig).run((err, stat) => {
     if (err) {
         console.error(err);
     }
+});
+
+exec('node ./dts.js', {
+    stdio: 'inherit',
+    cwd: __dirname
 });
