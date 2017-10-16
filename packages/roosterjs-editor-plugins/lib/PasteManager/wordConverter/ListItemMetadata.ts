@@ -19,4 +19,7 @@ export default interface ListItemMetadata {
 
     /** Word list item node */
     originalNode: HTMLElement;
+
+    /** This is last node in list for Edge  */
+    isLastNodeForEdge: boolean;
 };

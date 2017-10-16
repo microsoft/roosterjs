@@ -131,7 +131,8 @@ export function processNodesDiscovery(wordConverter: WordConverter): boolean {
                 last &&
                 getRealPreviousSibling(node) == last &&
                 node.tagName == last.tagName &&
-                node.className == last.className
+                node.className == last.className &&
+                (!browserData.isEdge || args.listItems.length == 0 || !args.listItems[args.listItems.length - 1].isLastNodeForEdge)
             ) {
                 // Add 2 line breaks and move all the nodes to the last item
                 last.appendChild(last.ownerDocument.createElement('br'));
@@ -347,18 +348,19 @@ function getListItemMetadata(node: HTMLElement): ListItemMetadata {
                 try {
                     let margin = node.style.margin;
                     let margins = margin ? margin.split(' ') : [];
-                    if (margins[0] == '0px' && margins[2] == '0px') {
+                    if (margins[0] == '0px' && (margins[2] == '0px' || margins[2] == '11px')) {
                         let right = parsePx(margins[1]);
                         let left = parsePx(margins[3]);
                         let marginValue = right == 0 && left > 0 ? left : left == 0 && right > 0 ? right : 0;
                         if (marginValue > 0 && Math.round(marginValue / 48) * 48 == marginValue) {
                             let text = getFakeBulletText(node, LOOKUP_DEPTH);                            
-                            return <ListItemMetadata>{
+                            return text ? <ListItemMetadata>{
                                 level: Math.round(marginValue / 48),
                                 wordListId: getFakeBulletTagName(text),
                                 originalNode: node,
-                                uniqueListId: 0
-                            };
+                                uniqueListId: 0,
+                                isLastNodeForEdge: margins[2] == '11px',
+                            } : null;
                         }
                     }
                 } catch (e) {                    
@@ -383,6 +385,7 @@ function getListItemMetadata(node: HTMLElement): ListItemMetadata {
                             wordListId: listatt,
                             originalNode: node,
                             uniqueListId: 0,
+                            isLastNodeForEdge: false,
                         };
                     }
                 } catch (e) {}
