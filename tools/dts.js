@@ -213,7 +213,7 @@ function output(filename, library, queue) {
     var content = '// Type definitions for ' + library + '\r\n';
     content += '// Generated with dts tool from roosterjs\r\n';
     content += '// Project: https://github.com/Microsoft/roosterjs\r\n';
-    content += '/r/n';
+    content += '\r\n';
     content += 'declare namespace ' + library + ' {\r\n';
     
     for (var i = 0; i < queue.length; i++) {
