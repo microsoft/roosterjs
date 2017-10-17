@@ -1,10 +1,15 @@
 import ShowCursorPosition from './plugins/ShowCursorPosition';
 import ShowFromState from './plugins/ShowFormatState';
 import { DefaultFormat } from 'roosterjs-editor-types';
-import { DefaultShortcut, HyperLink, PasteManager, TabIndent } from 'roosterjs-editor-plugins';
+import {
+    DefaultShortcut,
+    HyperLink,
+    PasteManager,
+    TabIndent,
+    Watermark,
+} from 'roosterjs-editor-plugins';
 import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
 import { setCurrentEditor } from './currentEditor';
-import { Watermark } from 'roosterjs-plugin-watermark';
 import getCurrentEditor from './currentEditor';
 
 function initOptions() {
