@@ -17,9 +17,6 @@ const UNIQUE_LIST_ID_CUSTOM_DATA = 'UniqueListId';
 /** Word list metadata style name */
 const MSO_LIST_STYLE_NAME = 'mso-list';
 
-/** text-indent style name for Edge */
-const EDGE_LIST_STYLE_NAME = 'text-indent';
-
 /** Margin value for Edge */
 const EDGE_MARGIN_VALUE = 48;
 
@@ -132,7 +129,9 @@ export function processNodesDiscovery(wordConverter: WordConverter): boolean {
                 getRealPreviousSibling(node) == last &&
                 node.tagName == last.tagName &&
                 node.className == last.className &&
-                (!browserData.isEdge || args.listItems.length == 0 || !args.listItems[args.listItems.length - 1].isLastNodeForEdge)
+                (!browserData.isEdge ||
+                    args.listItems.length == 0 ||
+                    !args.listItems[args.listItems.length - 1].isLastNodeForEdge)
             ) {
                 // Add 2 line breaks and move all the nodes to the last item
                 last.appendChild(last.ownerDocument.createElement('br'));
@@ -351,20 +350,26 @@ function getListItemMetadata(node: HTMLElement): ListItemMetadata {
                     if (margins[0] == '0px' && (margins[2] == '0px' || margins[2] == '11px')) {
                         let right = parsePx(margins[1]);
                         let left = parsePx(margins[3]);
-                        let marginValue = right == 0 && left > 0 ? left : left == 0 && right > 0 ? right : 0;
-                        if (marginValue > 0 && Math.round(marginValue / 48) * 48 == marginValue) {
-                            let text = getFakeBulletText(node, LOOKUP_DEPTH);                            
-                            return text ? <ListItemMetadata>{
-                                level: Math.round(marginValue / 48),
-                                wordListId: getFakeBulletTagName(text),
-                                originalNode: node,
-                                uniqueListId: 0,
-                                isLastNodeForEdge: margins[2] == '11px',
-                            } : null;
+                        let marginValue =
+                            right == 0 && left > 0 ? left : left == 0 && right > 0 ? right : 0;
+                        if (
+                            marginValue > 0 &&
+                            Math.round(marginValue / EDGE_MARGIN_VALUE) * EDGE_MARGIN_VALUE ==
+                                marginValue
+                        ) {
+                            let text = getFakeBulletText(node, LOOKUP_DEPTH);
+                            return text
+                                ? <ListItemMetadata>{
+                                      level: Math.round(marginValue / 48),
+                                      wordListId: getFakeBulletTagName(text),
+                                      originalNode: node,
+                                      uniqueListId: 0,
+                                      isLastNodeForEdge: margins[2] == '11px',
+                                  }
+                                : null;
                         }
                     }
-                } catch (e) {                    
-                }
+                } catch (e) {}
             }
         } else {
             let listatt = getStyleValue(node, MSO_LIST_STYLE_NAME);
@@ -396,7 +401,7 @@ function getListItemMetadata(node: HTMLElement): ListItemMetadata {
 }
 
 function parsePx(s: string): number {
-    let pxPos = s.length - 'px'.length
+    let pxPos = s.length - 'px'.length;
     if (s.indexOf('px') == pxPos) {
         s = s.substr(0, pxPos);
         return parseInt(s);
@@ -546,7 +551,10 @@ function isIgnoreNode(node: Node): boolean {
         let element = node as HTMLElement;
         if (browserData.isEdge) {
             let textContent = element.textContent.trim();
-            if (element.style.margin == '0px' && (isFakeBullet(textContent) || isFakeNumbering(textContent))) {
+            if (
+                element.style.margin == '0px' &&
+                (isFakeBullet(textContent) || isFakeNumbering(textContent))
+            ) {
                 return true;
             }
         } else {
