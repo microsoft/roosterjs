@@ -3,6 +3,7 @@ import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-t
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { processImages } from './PasteUtility';
 import { fromHtml } from 'roosterjs-editor-dom';
+import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 
 const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
 const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/i;
@@ -66,6 +67,7 @@ export default class PasteManager implements EditorPlugin {
                 let span = this.editor.getDocument().createElement('span');
                 span.innerHTML = normalizeContent(clipboardData.htmlData);
                 this.editor.insertNode(span);
+                convertPastedContentFromWord(span);
                 this.onPasteComplete(clipboardData);
             });
         }
