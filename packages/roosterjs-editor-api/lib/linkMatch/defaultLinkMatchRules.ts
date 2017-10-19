@@ -56,7 +56,7 @@ const waisMatchingRegEx = /^wais:\S+/i;
 
 // Default match rules that will be used in matching a link
 const defaultLinkMatchRules: LinkMatchRule[] = [
-    new RegExLinkMatchRule('http', 'http' + '://', httpMatchingRegEx, httpExcludeRegEx),
+    new RegExLinkMatchRule('http', 'http://', httpMatchingRegEx, httpExcludeRegEx),
     new RegExLinkMatchRule('https', 'https://', httpsMatchingRegEx, httpExcludeRegEx),
     new RegExLinkMatchRule('mailto', 'mailto:', mailtoMatchingRegEx),
     new RegExLinkMatchRule('notes', 'notes://', notesMatchingRegEx),

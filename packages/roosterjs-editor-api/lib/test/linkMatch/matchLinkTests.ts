@@ -4,7 +4,7 @@ import { LinkMatchOption } from 'roosterjs-editor-types';
 
 describe('matchLink', () => {
     it('exclude override test', () => {
-        let regexRule = new RegExLinkMatchRule('http', 'http' + '://', /http:\/\/\S+|www\.\S+/i);
+        let regexRule = new RegExLinkMatchRule('http', 'http://', /http:\/\/\S+|www\.\S+/i);
 
         // Spyon on exclude to return true
         spyOn(regexRule, 'exclude').and.returnValue(true);

@@ -1,9 +1,7 @@
 import CursorData from '../cursor/CursorData';
-import defaultLinkMatchRules from '../linkMatch/defaultLinkMatchRules';
 import execFormatWithUndo from './execFormatWithUndo';
 import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
 import matchLink from '../linkMatch/matchLink';
-import { LinkMatchOption } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { LinkInlineElement } from 'roosterjs-editor-dom';
 
@@ -32,7 +30,7 @@ function applyLinkPrefix(url: string): string {
             prefix = 'ftp://';
         } else {
             // fallback to http://
-            prefix = 'http' + '://';
+            prefix = 'http://';
         }
     }
 
@@ -61,7 +59,7 @@ export default function createLink(
     let url = link ? link.trim() : '';
     if (url) {
         let formatter: () => void = null;
-        let linkData = matchLink(url, LinkMatchOption.Exact, defaultLinkMatchRules);
+        let linkData = matchLink(url);
         // matchLink can match most links, but not all, i.e. if you pass link a link as "abc", it won't match
         // we know in that case, users will want to insert a link like http://abc
         // so we have separate logic in applyLinkPrefix to add link prefix depending on the format of the link

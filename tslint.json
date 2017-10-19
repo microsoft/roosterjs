@@ -17,7 +17,6 @@
     "no-exec-script": true,
     "no-function-constructor-with-string-args": true,
     "no-function-expression": false,
-    "no-http-string": [true, "http://", "http://www.example.com/?.*", "http://www.examples.com/?.*"],
     "no-increment-decrement": false,
     "no-invalid-regexp": true,
     "no-for-in": true,
