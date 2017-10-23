@@ -5,16 +5,13 @@ export {
 export { default as CursorData } from './cursor/CursorData';
 export { default as getNodeAtCursor } from './cursor/getNodeAtCursor';
 export { default as isSelectionCollapsed } from './cursor/isSelectionCollapsed';
+export { default as queryNodesWithSelection } from './cursor/queryNodesWithSelection';
 export { default as replaceRangeWithNode } from './cursor/replaceRangeWithNode';
 export {
     default as replaceTextBeforeCursorWithNode,
 } from './cursor/replaceTextBeforeCursorWithNode';
 export { default as cacheGetListElement } from './format/cacheGetListElement';
-export {
-    default as cacheGetListState,
-    getListStateAtNode,
-    getListStateAtSelection,
-} from './format/cacheGetListState';
+export { default as cacheGetListState } from './format/cacheGetListState';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
 export { default as execFormatWithUndo } from './format/execFormatWithUndo';

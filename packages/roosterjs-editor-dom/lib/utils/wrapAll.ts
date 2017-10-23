@@ -17,9 +17,6 @@ export default function wrapAll(nodes: Node[], htmlFragment: string): Node {
         }
 
         for (let i = 0; i < nodes.length; i++) {
-            if (parentNode) {
-                parentNode.removeChild(nodes[i]);
-            }
             wrapper.appendChild(nodes[i]);
         }
     }
