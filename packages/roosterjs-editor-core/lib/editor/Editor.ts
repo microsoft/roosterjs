@@ -43,6 +43,7 @@ import {
     getFirstLeafNode,
     getFirstBlockElement,
     getTagOfNode,
+    isNodeEmpty,
     normalizeEditorPoint,
     wrapAll,
 } from 'roosterjs-editor-dom';
@@ -234,8 +235,8 @@ export default class Editor {
         );
     }
 
-    public getTextContent(): string {
-        return this.contentDiv.textContent;
+    public isEmpty(trim?: boolean): boolean {
+        return isNodeEmpty(this.contentDiv, trim);
     }
 
     // Insert content into editor

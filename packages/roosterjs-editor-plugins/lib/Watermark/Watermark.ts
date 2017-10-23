@@ -20,23 +20,12 @@ const WATERMARK_REGEX = new RegExp(
 class Watermark implements EditorPlugin {
     private editor: Editor;
     private isWatermarkShowing: boolean;
-    private visibleElementSelectors: string[] = ['table', 'img', 'li'];
 
     /**
      * Create an instance of Watermark plugin
      * @param watermark The watermark string
-     * @param visibleElementSelectors Optional. Additional selectors for visible element
      */
-    constructor(
-        private watermark: string,
-        private format?: DefaultFormat,
-        visibleElementSelectors?: string[]
-    ) {
-        if (visibleElementSelectors) {
-            this.visibleElementSelectors = this.visibleElementSelectors.concat(
-                visibleElementSelectors
-            );
-        }
+    constructor(private watermark: string, private format?: DefaultFormat) {
         this.format = this.format || {
             fontSize: '14px',
             textColor: '#aaa',
@@ -68,7 +57,11 @@ class Watermark implements EditorPlugin {
     private showHideWatermark() {
         if (this.editor.hasFocus() && this.isWatermarkShowing) {
             this.hideWatermark();
-        } else if (!this.editor.hasFocus() && !this.isWatermarkShowing && this.isEmpty()) {
+        } else if (
+            !this.editor.hasFocus() &&
+            !this.isWatermarkShowing &&
+            this.editor.isEmpty(true /*trim*/)
+        ) {
             this.showWatermark();
         }
     }
@@ -104,18 +97,6 @@ class Watermark implements EditorPlugin {
         let content = event.content;
         content = content.replace(WATERMARK_REGEX, '');
         event.content = content;
-    }
-
-    private isEmpty(): boolean {
-        if (this.editor.getTextContent().trim() != '') {
-            return false;
-        }
-        for (let selector of this.visibleElementSelectors) {
-            if (this.editor.queryContent(selector).length > 0) {
-                return false;
-            }
-        }
-        return true;
     }
 }
 

@@ -5,7 +5,7 @@ import {
     DefaultShortcut,
     HyperLink,
     PasteManager,
-    TabIndent,
+    ContentEdit,
     Watermark,
 } from 'roosterjs-editor-plugins';
 import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
@@ -30,8 +30,8 @@ function initEditorForOptions() {
     if ((document.getElementById('pasteManagerCheckbox') as HTMLInputElement).checked) {
         plugins.push(new PasteManager());
     }
-    if ((document.getElementById('tabIndentCheckbox') as HTMLInputElement).checked) {
-        plugins.push(new TabIndent());
+    if ((document.getElementById('contentEditCheckbox') as HTMLInputElement).checked) {
+        plugins.push(new ContentEdit());
     }
 
     if ((document.getElementById('watermarkCheckbox') as HTMLInputElement).checked) {

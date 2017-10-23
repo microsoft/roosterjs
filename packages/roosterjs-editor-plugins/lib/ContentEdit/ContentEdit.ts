@@ -24,7 +24,7 @@ const KEY_ENTER = 13;
 const BLOCKQUOTE_TAG_NAME = 'BLOCKQUOTE';
 
 // An editor plugin to auto increase/decrease indentation on Tab, Shift+tab, Enter, Backspace
-export default class TabIndent implements EditorPlugin {
+export default class ContentEdit implements EditorPlugin {
     private editor: Editor;
 
     // onlyBegin: To instruct auto indent to happen only when cursor is at begin of a list
@@ -183,5 +183,14 @@ export default class TabIndent implements EditorPlugin {
         }
 
         return null;
+    }
+}
+
+/**
+ * @deprecated Use ContentEdit instead
+ */
+export class TabIndent extends ContentEdit {
+    constructor(onlyBegin: boolean = false) {
+        super();
     }
 }

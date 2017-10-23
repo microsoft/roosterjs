@@ -3,6 +3,8 @@ import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import { Editor, browserData } from 'roosterjs-editor-core';
 import { NodeType } from 'roosterjs-editor-types';
 
+const ZERO_WIDTH_SPACE = '&#8203;';
+
 // Edge may incorrectly put cursor after toggle bullet, workaround it by adding a space.
 // The space will be removed by Edge after toggle bullet
 export function workaroundForEdge(editor: Editor): HTMLElement {
@@ -11,7 +13,7 @@ export function workaroundForEdge(editor: Editor): HTMLElement {
         if (node.nodeType == NodeType.Element && node.textContent == '') {
             let span = editor.getDocument().createElement('span');
             node.insertBefore(span, node.firstChild);
-            span.innerHTML = 'a';
+            span.innerHTML = ZERO_WIDTH_SPACE;
             return span;
         }
     }

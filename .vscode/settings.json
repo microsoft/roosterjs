@@ -1,0 +1,16 @@
+{
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "files.exclude": {
+        "**/.buildcache": true
+    },
+    "files.trimTrailingWhitespace": true,
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "obj": true,
+        "coverage": true,
+        ".vscode/**": true,
+        "dist/**": true,
+        "stats.json": true,
+    }
+}

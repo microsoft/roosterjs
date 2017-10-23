@@ -1,4 +1,4 @@
-import { DefaultShortcut, HyperLink, PasteManager, TabIndent } from 'roosterjs-editor-plugins';
+import { DefaultShortcut, HyperLink, PasteManager, ContentEdit } from 'roosterjs-editor-plugins';
 import { Editor, EditorOptions, EditorPlugin } from 'roosterjs-editor-core';
 
 // Create an editor instance with most common options
@@ -11,7 +11,7 @@ export default function createEditor(
         new DefaultShortcut(),
         new HyperLink(),
         new PasteManager(),
-        new TabIndent(),
+        new ContentEdit(),
     ];
 
     if (additionalPlugins) {

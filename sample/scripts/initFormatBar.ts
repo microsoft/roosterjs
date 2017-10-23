@@ -16,6 +16,7 @@ import {
     setTextColor,
     setBackgroundColor,
     toggleBlockQuote,
+    removeLink,
 } from 'roosterjs-editor-api';
 import { Alignment, Indentation } from 'roosterjs-editor-types';
 import getCurrentEditor from './currentEditor';
@@ -117,6 +118,13 @@ export default function initFormatBar() {
         let editor = getCurrentEditor();
         editor.focus();
         editor.redo();
+    });
+
+    // remove link
+    document.getElementById('removeLink').addEventListener('click', function() {
+        let editor = getCurrentEditor();
+        editor.focus();
+        removeLink(editor);
     });
 
     // font name
