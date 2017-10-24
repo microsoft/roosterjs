@@ -8,9 +8,6 @@ const enum ListState {
 
     // In numbering mode
     Numbering,
-
-    // In blockquote mode
-    BlockQuote,
 }
 
 export default ListState;

@@ -50,6 +50,7 @@ export { default as isNodeEmpty } from './utils/isNodeEmpty';
 export { default as isTextualInlineElement } from './utils/isTextualInlineElement';
 export { default as matchWhiteSpaces } from './utils/matchWhiteSpaces';
 export { default as normalizeEditorPoint } from './utils/normalizeEditorPoint';
+export { default as splitParentNode } from './utils/splitParentNode';
 export { default as unwrap } from './utils/unwrap';
 export { default as wrap } from './utils/wrap';
 export { default as wrapAll } from './utils/wrapAll';

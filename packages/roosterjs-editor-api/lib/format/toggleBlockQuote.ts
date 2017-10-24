@@ -1,10 +1,8 @@
 import execFormatWithUndo from './execFormatWithUndo';
-import getFormatState from './getFormatState';
-import getNodeAtCursor from '../cursor/getNodeAtCursor';
+import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { getListElementAtNode } from './cacheGetListElement';
-import { getListStateAtSelection } from './cacheGetListState';
-import { ContentScope, ContentPosition, NodeBoundary, ListState } from 'roosterjs-editor-types';
-import { unwrap, wrapAll, wrap } from 'roosterjs-editor-dom';
+import { getTagOfNode, splitParentNode, unwrap, wrapAll, wrap } from 'roosterjs-editor-dom';
+import { ContentScope, EditorPoint, NodeBoundary } from 'roosterjs-editor-types';
 import { Editor, browserData } from 'roosterjs-editor-core';
 
 var ZERO_WIDTH_SPACE = '&#8203;';
@@ -14,170 +12,137 @@ let defaultStyler = (element: HTMLElement) => {
     element.style.borderColor = '#C8C8C8';
     element.style.paddingLeft = '10px';
     element.style.color = '#666666';
-    element.style.fontSize = '17px';
 };
 
 export default function toggleBlockQuote(
     editor: Editor,
-    styler: (element: HTMLElement) => void = defaultStyler
+    styler?: (element: HTMLElement) => void
 ): void {
     editor.focus();
-    let formatter: () => void = null;
-    let formatState = editor ? getFormatState(editor) : null;
-    let contentTraverser = editor.getContentTraverser(ContentScope.Selection);
     let range = editor.getSelectionRange();
-
-    if (!formatState || !contentTraverser || !range) {
-        return;
-    }
-
-    let blockElement = contentTraverser.currentBlockElement;
-    let nodeAtCursor = getNodeAtCursor(editor);
-
-    if (getListStateAtSelection(editor, nodeAtCursor) != ListState.BlockQuote) {
-        formatter = () => {
-            let nodes: Node[];
-            let startContainer: Node;
-            let startOffset: number;
-            let endContainer: Node;
-            let endOffset: number;
-            let isRangeCollapsed = true;
-
-            if (!range.collapsed) {
-                // If selection not collapsed, check and try to wrap nodes in selection
-                startContainer = range.startContainer;
-                startOffset = range.startOffset;
-                endContainer = range.endContainer;
-                endOffset = range.endOffset;
-                isRangeCollapsed = false;
-                nodes = [];
-                while (blockElement) {
-                    // Some of the nodes in selection might already in blockquote, only add the ones not in blockquote
-                    if (!getListElementAtNode(editor, blockElement.getStartNode(), 'BLOCKQUOTE')) {
-                        nodes = nodes.concat(blockElement.getContentNodes());
-                    } else if (nodes.length > 0) {
-                        wrapNodesWithBlockQuote(nodes, styler);
-                        nodes = [];
-                    }
-                    blockElement = contentTraverser.getNextBlockElement();
-                }
-
-                if (nodes.length > 0) {
-                    wrapNodesWithBlockQuote(nodes, styler);
-                }
-            } else if (blockElement) {
-                // Selection is collapsed and there's content in the block, move the whole block into blockquote
-                nodes = blockElement.getContentNodes();
-                startContainer = range.startContainer;
-                startOffset = range.startOffset;
-
-                // If the only content node is <BR>, we wrap it with <DIV>, otherwise the format will break. This often happens in firefox.
-                if (nodes.length == 1 && nodes[0].nodeName == 'BR') {
-                    nodes[0] = wrap(nodes[0], '<div></div>') as HTMLDivElement;
-                    startContainer = nodes[0];
-                    startOffset = NodeBoundary.Begin;
-                }
-
-                wrapNodesWithBlockQuote(nodes, styler);
+    if (range) {
+        let startPoint = { containerNode: range.startContainer, offset: range.startOffset };
+        let endPoint = { containerNode: range.endContainer, offset: range.endOffset };
+        let blockquoteNodes = queryNodesWithSelection(editor, 'blockquote');
+        execFormatWithUndo(editor, () => {
+            if (blockquoteNodes.length) {
+                // There are already blockquote nodes, unwrap them
+                blockquoteNodes.forEach(node => unwrap(node));
             } else {
-                // Selection is collapsed and blockElment is null, we need to create an empty div. In case of IE and Edge, we insert ZWS to put cursor in the div, otherwise insert BR node
-                let div = editor.getDocument().createElement('div');
+                // Step 1: Find all block elements and their content nodes
+                let nodes = getContentNodes(editor);
 
-                if (browserData.isEdge || browserData.isIE) {
-                    div.innerHTML = ZERO_WIDTH_SPACE;
-                } else {
-                    let brNode = editor.getDocument().createElement('br');
-                    div.appendChild(brNode);
-                }
-                editor.insertNode(div, {
-                    position: ContentPosition.SelectionStart,
-                    updateCursor: true,
-                    replaceSelection: true,
-                    insertOnNewLine: false,
-                });
-                startContainer = div.firstChild;
-                startOffset = NodeBoundary.Begin;
-                nodes = [div];
+                // Step 2: Split existing list container if necessary
+                nodes = getSplittedListNodes(nodes);
 
-                wrapNodesWithBlockQuote(nodes, styler);
+                // Step 3: Handle some special cases
+                nodes = getNodesWithSpecialCaseHandled(editor, nodes, startPoint, endPoint);
+
+                let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLElement;
+                (styler || defaultStyler)(quoteElement);
             }
-
-            updateSelection(
-                range,
-                editor,
-                startContainer,
-                startOffset,
-                endContainer,
-                endOffset,
-                isRangeCollapsed
-            );
-        };
-
-        execFormatWithUndo(editor, formatter);
-    } else {
-        // Current selection is in blockquote, need to unblockquote the selection
-        let blockQuoteElements: Node[] = [];
-
-        // Selection may contain multiple blockquotes, check and unblockquote all
-        while (blockElement) {
-            let containerNode = blockElement.getStartNode();
-            let blockQuoteElement = getListElementAtNode(editor, containerNode, 'BLOCKQUOTE');
-            if (blockQuoteElement && blockQuoteElements.indexOf(blockQuoteElement) == -1) {
-                blockQuoteElements.push(blockQuoteElement);
-            }
-            blockElement = contentTraverser.getNextBlockElement();
-        }
-
-        let formatter = () => {
-            let startContainer = range.startContainer;
-            let startOffset = range.startOffset;
-            let endContainer = range.endContainer;
-            let endOffset = range.endOffset;
-            let isCollapsed = range.collapsed;
-            for (let element of blockQuoteElements) {
-                unwrap(element);
-            }
-            updateSelection(
-                range,
-                editor,
-                startContainer,
-                startOffset,
-                endContainer,
-                endOffset,
-                isCollapsed
-            );
-        };
-
-        execFormatWithUndo(editor, formatter);
+            updateSelection(editor, startPoint, endPoint);
+        });
     }
 }
 
-function updateSelection(
-    range: Range,
+function getContentNodes(editor: Editor): Node[] {
+    let result: Node[] = [];
+    let contentTraverser = editor.getContentTraverser(ContentScope.Selection);
+    let blockElement = contentTraverser ? contentTraverser.currentBlockElement : null;
+    while (blockElement) {
+        let nodes = blockElement.getContentNodes();
+        for (let node of nodes) {
+            let listElement = getListElementAtNode(editor, node, 'LI');
+            if (!listElement) {
+                result.push(node);
+            } else if (listElement != result[result.length - 1]) {
+                result.push(listElement);
+            }
+        }
+        blockElement = contentTraverser.getNextBlockElement();
+    }
+    return result;
+}
+
+function getSplittedListNodes(nodes: Node[]): Node[] {
+    for (let changed = true, currentListNode = null; changed; ) {
+        changed = false;
+        for (let i = 0; i < nodes.length; i++) {
+            // When we are in list, check if the whole list is in selection.
+            // If so, use the list element instead of each item
+            let node = nodes[i];
+            if (isListElement(node)) {
+                let parentNode = node.parentNode;
+                let firstIndex = nodes.indexOf(parentNode.firstChild);
+                let nodeCount = parentNode.childNodes.length;
+
+                // If all children are in the list, remove these nodes and use parent node instead
+                if (firstIndex >= 0 && nodes[firstIndex + nodeCount - 1] == parentNode.lastChild) {
+                    nodes.splice(firstIndex, nodeCount, parentNode);
+                    i = firstIndex - 1;
+                }
+            }
+        }
+
+        // Use "i <= nodes.length" to do one more round of loop to perform a fianl round of parent node splitting
+        for (let i = 0; i <= nodes.length; i++) {
+            let node = nodes[i];
+            if (isListElement(node)) {
+                if (!currentListNode || node.parentNode != currentListNode.parentNode) {
+                    changed = !!splitParentNode(node, true /*splitBefore*/) || changed;
+                }
+                currentListNode = node;
+            } else if (currentListNode) {
+                changed = !!splitParentNode(currentListNode, false /*splitBefore*/) || changed;
+                currentListNode = null;
+            }
+        }
+    }
+    return nodes;
+}
+
+function getNodesWithSpecialCaseHandled(
     editor: Editor,
-    startContainer: Node,
-    startOffset: number,
-    endContainer: Node,
-    endOffset: number,
-    isRangeCollapsed: boolean = true
-) {
+    nodes: Node[],
+    startPoint: EditorPoint,
+    endPoint: EditorPoint
+): Node[] {
+    if (nodes.length == 1 && nodes[0].nodeName == 'BR') {
+        nodes[0] = wrap(nodes[0], '<div></div>') as HTMLDivElement;
+    } else if (nodes.length == 0) {
+        let document = editor.getDocument();
+        // Selection is collapsed and blockElment is null, we need to create an empty div.
+        // In case of IE and Edge, we insert ZWS to put cursor in the div, otherwise insert BR node.
+        let div = document.createElement('div');
+        div.appendChild(
+            browserData.isEdge || browserData.isIE
+                ? document.createTextNode(ZERO_WIDTH_SPACE)
+                : document.createElement('BR')
+        );
+
+        editor.insertNode(div);
+        nodes.push(div);
+        startPoint.containerNode = endPoint.containerNode = div;
+        startPoint.offset = endPoint.offset = NodeBoundary.Begin;
+    }
+    return nodes;
+}
+
+function isListElement(node: Node) {
+    let parentTag = node ? getTagOfNode(node.parentNode) : '';
+    return parentTag == 'OL' || parentTag == 'UL';
+}
+
+function updateSelection(editor: Editor, startPoint: EditorPoint, endPoint: EditorPoint) {
     editor.focus();
-    if (startContainer && editor.contains(startContainer)) {
-        range.setStart(startContainer, startOffset);
+    let range = editor.getDocument().createRange();
+    if (startPoint.containerNode && editor.contains(startPoint.containerNode)) {
+        range.setStart(startPoint.containerNode, startPoint.offset);
     }
-
-    if (endContainer && editor.contains(endContainer)) {
-        range.setEnd(endContainer, endOffset);
-    }
-
-    if (isRangeCollapsed) {
-        range.collapse(true /*toStart*/);
+    if (endPoint.containerNode && editor.contains(endPoint.containerNode)) {
+        range.setEnd(endPoint.containerNode, endPoint.offset);
     }
 
     editor.updateSelection(range);
-}
-
-function wrapNodesWithBlockQuote(nodes: Node[], styler: (element: HTMLElement) => void) {
-    let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLQuoteElement;
-    styler(quoteElement);
 }

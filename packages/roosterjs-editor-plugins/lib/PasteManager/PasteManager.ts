@@ -66,8 +66,10 @@ export default class PasteManager implements EditorPlugin {
 
                 let span = this.editor.getDocument().createElement('span');
                 span.innerHTML = normalizeContent(clipboardData.htmlData);
-                this.editor.insertNode(span);
                 convertPastedContentFromWord(span);
+                while (span.firstChild) {
+                    this.editor.insertNode(span.firstChild);
+                }
                 this.onPasteComplete(clipboardData);
             });
         }
