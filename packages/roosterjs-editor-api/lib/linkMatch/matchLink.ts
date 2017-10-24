@@ -1,11 +1,18 @@
+import defaultLinkMatchRules from './defaultLinkMatchRules';
 import { LinkData, LinkMatchOption, LinkMatchRule } from 'roosterjs-editor-types';
 
-// Match a url against the rules
-function matchLink(url: string, option: LinkMatchOption, rules: LinkMatchRule[]): LinkData {
-    if (!url || !rules || rules.length == 0) {
+/**
+ * Try to match a given string with link match rules, return matched link
+ * @param url Input url to match
+ * @param option Link match option, exact or partial
+ * @param rules Optional link match rules
+ */
+function matchLink(url: string, option: LinkMatchOption = LinkMatchOption.Exact, rules?: LinkMatchRule[]): LinkData {
+    if (!url) {
         return null;
     }
 
+    rules = rules || defaultLinkMatchRules;
     let matchedLink: LinkData = null;
     for (let rule of rules) {
         let link = rule.include(url);

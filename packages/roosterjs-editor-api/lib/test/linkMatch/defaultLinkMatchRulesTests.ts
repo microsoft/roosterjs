@@ -21,29 +21,29 @@ function runMatchTestWithBadLink(link: string, matchOption: LinkMatchOption): vo
 }
 
 describe('defaultLinkMatchRules regular http links with extact match', () => {
-    it('http' + '://www.bing.com', () => {
-        let link = 'http' + '://www.bing.com';
+    it('http://www.bing.com', () => {
+        let link = 'http://www.bing.com';
         runMatchTestWithValidLink(
             link,
-            { scheme: 'http', prefix: 'http' + '://', originalUrl: link, normalizedUrl: link },
+            { scheme: 'http', prefix: 'http://', originalUrl: link, normalizedUrl: link },
             LinkMatchOption.Exact
         );
     });
 
-    it('http' + '://www.bing.com/', () => {
-        let link = 'http' + '://www.bing.com/';
+    it('http://www.bing.com/', () => {
+        let link = 'http://www.bing.com/';
         runMatchTestWithValidLink(
             link,
-            { scheme: 'http', prefix: 'http' + '://', originalUrl: link, normalizedUrl: link },
+            { scheme: 'http', prefix: 'http://', originalUrl: link, normalizedUrl: link },
             LinkMatchOption.Exact
         );
     });
 
-    it('http' + '://www.lifewire.com/how-torrent-downloading-works-2483513', () => {
-        let link = 'http' + '://www.lifewire.com/how-torrent-downloading-works-2483513';
+    it('http://www.lifewire.com/how-torrent-downloading-works-2483513', () => {
+        let link = 'http://www.lifewire.com/how-torrent-downloading-works-2483513';
         runMatchTestWithValidLink(
             link,
-            { scheme: 'http', prefix: 'http' + '://', originalUrl: link, normalizedUrl: link },
+            { scheme: 'http', prefix: 'http://', originalUrl: link, normalizedUrl: link },
             LinkMatchOption.Exact
         );
     });
@@ -56,9 +56,9 @@ describe('defaultLinkMatchRules regular www links with extact match', () => {
             link,
             {
                 scheme: 'http',
-                prefix: 'http' + '://',
+                prefix: 'http://',
                 originalUrl: link,
-                normalizedUrl: 'http' + '://' + link,
+                normalizedUrl: 'http://' + link,
             },
             LinkMatchOption.Exact
         );
@@ -112,9 +112,9 @@ describe('defaultLinkMatchRules special http links that has % and @, but is vali
             link,
             {
                 scheme: 'http',
-                prefix: 'http' + '://',
+                prefix: 'http://',
                 originalUrl: link,
-                normalizedUrl: 'http' + '://' + link,
+                normalizedUrl: 'http://' + link,
             },
             LinkMatchOption.Exact
         );
@@ -127,9 +127,9 @@ describe('defaultLinkMatchRules special http links that has % and @, but is vali
             link,
             {
                 scheme: 'http',
-                prefix: 'http' + '://',
+                prefix: 'http://',
                 originalUrl: link,
-                normalizedUrl: 'http' + '://' + link,
+                normalizedUrl: 'http://' + link,
             },
             LinkMatchOption.Exact
         );
@@ -142,20 +142,20 @@ describe('defaultLinkMatchRules special http links that has % and @, but is vali
             link,
             {
                 scheme: 'http',
-                prefix: 'http' + '://',
+                prefix: 'http://',
                 originalUrl: link,
-                normalizedUrl: 'http' + '://' + link,
+                normalizedUrl: 'http://' + link,
             },
             LinkMatchOption.Exact
         );
     });
 
-    it('http' + '://www.test.com/?test=test%hhit', () => {
+    it('http://www.test.com/?test=test%hhit', () => {
         // URL: http://www.test.com/?test=test%hhit => %h is invalid encoding, but URL is valid since it is after ?
-        let link = 'http' + '://www.test.com/?test=test%hhit';
+        let link = 'http://www.test.com/?test=test%hhit';
         runMatchTestWithValidLink(
             link,
-            { scheme: 'http', prefix: 'http' + '://', originalUrl: link, normalizedUrl: link },
+            { scheme: 'http', prefix: 'http://', originalUrl: link, normalizedUrl: link },
             LinkMatchOption.Exact
         );
     });
@@ -167,9 +167,9 @@ describe('defaultLinkMatchRules special http links that has % and @, but is vali
             link,
             {
                 scheme: 'http',
-                prefix: 'http' + '://',
+                prefix: 'http://',
                 originalUrl: link,
-                normalizedUrl: 'http' + '://' + link,
+                normalizedUrl: 'http://' + link,
             },
             LinkMatchOption.Exact
         );
@@ -182,34 +182,34 @@ describe('defaultLinkMatchRules special http links that has % and @, but is vali
             link,
             {
                 scheme: 'http',
-                prefix: 'http' + '://',
+                prefix: 'http://',
                 originalUrl: link,
-                normalizedUrl: 'http' + '://' + link,
+                normalizedUrl: 'http://' + link,
             },
             LinkMatchOption.Exact
         );
     });
 
-    it('http' + '://www.test.com/kitty@supercute.com', () => {
+    it('http://www.test.com/kitty@supercute.com', () => {
         // URL: http://www.test.com/kitty@supercute.com @ is valid when it is after / for URL that has http:// prefix
-        let link = 'http' + '://www.test.com/kitty@supercute.com';
+        let link = 'http://www.test.com/kitty@supercute.com';
         runMatchTestWithValidLink(
             link,
-            { scheme: 'http', prefix: 'http' + '://', originalUrl: link, normalizedUrl: link },
+            { scheme: 'http', prefix: 'http://', originalUrl: link, normalizedUrl: link },
             LinkMatchOption.Exact
         );
     });
 });
 
 describe('defaultLinkMatchRules invalid http links with % and @ in URL', () => {
-    it('http' + '://www.test%00it.com/', () => {
+    it('http://www.test%00it.com/', () => {
         // %00 is invalid percent encoding
-        runMatchTestWithBadLink('http' + '://www.test%00it.com/', LinkMatchOption.Exact);
+        runMatchTestWithBadLink('http://www.test%00it.com/', LinkMatchOption.Exact);
     });
 
-    it('http' + '://www.test%hhit.com/', () => {
+    it('http://www.test%hhit.com/', () => {
         // %h is invalid percent encoding
-        runMatchTestWithBadLink('http' + '://www.test%hhit.com/', LinkMatchOption.Exact);
+        runMatchTestWithBadLink('http://www.test%hhit.com/', LinkMatchOption.Exact);
     });
 
     it('www.test%0hit.com/', () => {
@@ -244,15 +244,15 @@ describe('defaultLinkMatchRules exact match with extra space and text', () => {
 });
 
 describe('defaultLinkMatchRules partial match with extra space', () => {
-    it('http' + '://www.bing.com more', () => {
-        let link = 'http' + '://www.bing.com more';
-        let matchedLink = 'http' + '://www.bing.com';
+    it('http://www.bing.com more', () => {
+        let link = 'http://www.bing.com more';
+        let matchedLink = 'http://www.bing.com';
         // It should match since it is a partial match
         runMatchTestWithValidLink(
             link,
             {
                 scheme: 'http',
-                prefix: 'http' + '://',
+                prefix: 'http://',
                 originalUrl: matchedLink,
                 normalizedUrl: matchedLink,
             },

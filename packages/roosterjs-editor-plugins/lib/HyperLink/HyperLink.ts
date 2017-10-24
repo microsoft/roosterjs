@@ -3,37 +3,39 @@ import {
     replaceTextBeforeCursorWithNode,
     cacheGetCursorEventData,
     clearCursorEventDataCache,
-    defaultLinkMatchRules,
 } from 'roosterjs-editor-api';
 import {
+    ExtractContentEvent,
     LinkMatchOption,
     LinkMatchRule,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import { LinkInlineElement } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
 
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
 // we need to trim off the trailing puncatuation before turning it to link match
-const trailingPunctuationRegex = /[.()+={}\[\]\s:;"',>]+$/i;
-const CUSTOMATTR_NAME = 'data-clickabletitle';
-const CUSTOMATTR_VALUE = 'clickable';
-const ATTRIBUTE_TITLE = 'title';
+const TRAILING_PUNCTUATION_REGEX = /[.()+={}\[\]\s:;"',>]+$/i;
+const TEMP_TITLE_REGEX = /<a\s+([^>]*\s+)?(title|istemptitle)="[^"]*"\s*([^>]*)\s+(title|istemptitle)="[^"]*"(\s+[^>]*)?>/gm;
+const TEMP_TITLE = 'istemptitle';
 const MINIMUM_LENGTH = 5;
 const KEY_SPACE = 32;
 const KEY_ENTER = 13;
 
-// An editor plugin that auto linkify text as users type
+/**
+ * An editor plugin that auto linkify text as users type and show a tooltip for existing link
+ */
 export default class HyperLink implements EditorPlugin {
     private editor: Editor;
 
-    // Constructor
-    // getTooltipCallback: A callback function to get tooltip text for an existing hyperlink. Default value is to return the href itself
-    //                     If null, there will be no tooltip text.
-    // target:             (Optional) Target window name for hyperlink. If null, will use "_blank"
-    // linkMatchRules:     (Optional) Rules for matching hyperlink. If null, will use defaultLinkMatchRules
+    /**
+     * Create a new instance of HyperLink class
+     * @param getTooltipCallback A callback function to get tooltip text for an existing hyperlink.
+     * Default value is to return the href itself. If null, there will be no tooltip text.
+     * @param target (Optional) Target window name for hyperlink. If null, will use "_blank"
+     * @param linkMatchRules (Optional) Rules for matching hyperlink. If null, will use defaultLinkMatchRules
+     */
     constructor(
         private getTooltipCallback: (href: string) => string = href => href,
         private target?: string,
@@ -68,27 +70,16 @@ export default class HyperLink implements EditorPlugin {
                 }
                 break;
 
-            case PluginEventType.MouseUp:
-            case PluginEventType.MouseOver:
-            case PluginEventType.MouseOut:
-                let domEvent = event as PluginDomEvent;
-                let inline =
-                    domEvent.rawEvent && domEvent.rawEvent.target
-                        ? this.editor.getInlineElementAtNode(domEvent.rawEvent.target as Node)
-                        : null;
-                if (inline && inline instanceof LinkInlineElement) {
-                    // The event target is on a link
-                    if (event.eventType == PluginEventType.MouseUp) {
-                        this.onMouseUp(event, inline as LinkInlineElement);
-                    } else if (this.getTooltipCallback) {
-                        if (event.eventType == PluginEventType.MouseOver) {
-                            this.onMouseOver(event, inline as LinkInlineElement);
-                        } else {
-                            /* PluginEventType.MouseOut */
-                            this.onMouseOut(event, inline as LinkInlineElement);
-                        }
-                    }
+            case PluginEventType.ContentChanged:
+                let anchors = this.editor.queryContent('a[href]');
+                for (let i = 0; i < anchors.length; i++) {
+                    this.processLink(anchors[i] as HTMLAnchorElement);
                 }
+                break;
+
+            case PluginEventType.ExtractContent:
+                let extractContentEvent = event as ExtractContentEvent;
+                extractContentEvent.content = this.removeTempTooltip(extractContentEvent.content);
                 break;
         }
     }
@@ -98,7 +89,7 @@ export default class HyperLink implements EditorPlugin {
         let wordBeforeCursor = cursorData ? cursorData.wordBeforeCursor : null;
         if (wordBeforeCursor && wordBeforeCursor.length > MINIMUM_LENGTH) {
             // Check for trailing punctuation
-            let trailingPunctuations = wordBeforeCursor.match(trailingPunctuationRegex);
+            let trailingPunctuations = wordBeforeCursor.match(TRAILING_PUNCTUATION_REGEX);
             let trailingPunctuation =
                 trailingPunctuations && trailingPunctuations.length > 0
                     ? trailingPunctuations[0]
@@ -112,10 +103,8 @@ export default class HyperLink implements EditorPlugin {
                     : wordBeforeCursor.length
             );
 
-            let linkMatchRules = this.linkMatchRules || defaultLinkMatchRules;
-
             // Match and replace in editor
-            let linkData = matchLink(linkCandidate, LinkMatchOption.Exact, linkMatchRules);
+            let linkData = matchLink(linkCandidate, LinkMatchOption.Exact, this.linkMatchRules);
             if (linkData) {
                 let anchor = this.editor.getDocument().createElement('A') as HTMLAnchorElement;
                 anchor.textContent = linkData.originalUrl;
@@ -146,40 +135,29 @@ export default class HyperLink implements EditorPlugin {
         }
     }
 
-    // Handle mouse over to add tooltip (the title attribute on a link)
-    private onMouseOver(event: PluginEvent, linkInline: LinkInlineElement): void {
-        let anchor = linkInline.getContainerNode() as HTMLAnchorElement;
-        let oldTitle = anchor.title;
-        // Let's not overwrite the title if there is already one
-        if (!oldTitle || anchor.hasAttribute(CUSTOMATTR_NAME)) {
-            let tooltip = this.getTooltipCallback(this.tryGetHref(anchor));
-            // Add the title and mark it
-            anchor.title = tooltip;
-            anchor.setAttribute(CUSTOMATTR_NAME, CUSTOMATTR_VALUE);
+    private processLink(a: HTMLAnchorElement) {
+        if (!a.title && this.getTooltipCallback) {
+            a.setAttribute(TEMP_TITLE, 'true');
+            a.title = this.getTooltipCallback(this.tryGetHref(a));
         }
+        a.addEventListener('mouseup', this.onClickLink);
     }
 
-    // Handle mouse over to remove tooltip (the title attribute on a link)
-    private onMouseOut(event: PluginEvent, linkInline: LinkInlineElement): void {
-        let anchor = linkInline.getContainerNode() as HTMLAnchorElement;
-        if (anchor.hasAttribute(CUSTOMATTR_NAME)) {
-            anchor.removeAttribute(ATTRIBUTE_TITLE);
-            anchor.removeAttribute(CUSTOMATTR_NAME);
-        }
+    private removeTempTooltip(content: string): string {
+        return content.replace(TEMP_TITLE_REGEX, '<a $1$3$5>');
     }
 
-    // Handle mouse up to open link in a separate window
-    private onMouseUp(event: PluginEvent, linkInline: LinkInlineElement): void {
-        let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
-        let shouldOpenLink = browserData.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey;
-        if (shouldOpenLink) {
-            let href = this.tryGetHref(linkInline.getContainerNode() as HTMLAnchorElement);
-            if (href && !browserData.isFirefox) {
-                let target = this.target || '_blank';
-                window.open(href, target);
-            }
+    private onClickLink = (keyboardEvent: KeyboardEvent) => {
+        let href: string;
+        if (
+            !browserData.isFirefox &&
+            (href = this.tryGetHref(keyboardEvent.srcElement as HTMLAnchorElement)) &&
+            (browserData.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey)
+        ) {
+            let target = this.target || '_blank';
+            this.editor.getDocument().defaultView.window.open(href, target);
         }
-    }
+    };
 
     // Try get href from an anchor element
     // The reason this is put in a try-catch is that
