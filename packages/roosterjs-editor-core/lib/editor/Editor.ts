@@ -69,11 +69,7 @@ export default class Editor {
      */
     constructor(private contentDiv: HTMLDivElement, options: EditorOptions = {}) {
         // 1. Make sure all parameters are valid
-        if (
-            !contentDiv ||
-            !(contentDiv instanceof HTMLDivElement) ||
-            contentDiv.tagName.toUpperCase() != 'DIV'
-        ) {
+        if (getTagOfNode(contentDiv) != 'DIV') {
             throw new Error('contentDiv must be an HTML DIV element');
         }
 
@@ -287,6 +283,9 @@ export default class Editor {
                     node,
                     option
                 );
+                break;
+            case ContentPosition.Outside:
+                this.contentDiv.parentNode.insertBefore(node, this.contentDiv.nextSibling);
                 break;
         }
 
