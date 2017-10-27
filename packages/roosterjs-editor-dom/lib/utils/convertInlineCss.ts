@@ -114,7 +114,10 @@ export default function convertInlineCss(sourceHtml: string): string {
                             // Always put existing styles after so that they have higher priority
                             // Which means if both global style and inline style apply to the same element,
                             // inline style will have higher priority
-                            element.style.cssText = styleRule.style.cssText + element.style.cssText;
+                            element.setAttribute(
+                                'style',
+                                styleRule.style.cssText + element.getAttribute('style')
+                            );
                         }
                     }
                 }

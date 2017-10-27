@@ -11,15 +11,15 @@ describe('convertInlineCss', () => {
 
     it('input = <style>div{font-size:12px}</style><div style="margin-top:0;">Test</div>', () => {
         runTest(
-            '<style>div{font-size:12px}</style><div style="margin-top:0;">Test</div>',
-            '<div style="font-size: 12px; margin-top: 0px;">Test</div>'
+            '<style>div{font-size: 12px}</style><div style="margin-top: 0;">Test</div>',
+            '<div style="font-size: 12px;margin-top: 0;">Test</div>'
         );
     });
 
     it('input = <style>div{font-size:12px}</style><style>div{background-color:#98a3a6}<div style="margin-top:0;">Test</div>', () => {
         runTest(
-            '<style>div{font-size:12px}</style><style>div{background-color:#98a3a6}</style><div style="margin-top:0;">Test</div>',
-            '<div style="font-size: 12px; background-color: rgb(152, 163, 166); margin-top: 0px;">Test</div>'
+            '<style>div{font-size: 12px}</style><style>div{background-color:#98a3a6}</style><div style="margin-top: 0;">Test</div>',
+            '<div style="font-size: 12px;background-color: rgb(152, 163, 166);margin-top: 0;">Test</div>'
         );
     });
 

@@ -1,16 +1,19 @@
 import ClipBoardData from './ClipboardData';
-import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    ContentPosition,
+    PluginDomEvent,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { processImages } from './PasteUtility';
-import { fromHtml } from 'roosterjs-editor-dom';
+import { fromHtml, unwrap } from 'roosterjs-editor-dom';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 
 const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
 const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/i;
 const CONTAINER_HTML =
     '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
-
-let pasteContainer: HTMLElement = null;
 
 interface WindowForIE extends Window {
     clipboardData: DataTransfer;
@@ -21,6 +24,7 @@ interface WindowForIE extends Window {
  */
 export default class PasteManager implements EditorPlugin {
     private editor: Editor;
+    private pasteContainer: HTMLElement = null;
 
     /**
      * Create an instance of PasteManager
@@ -35,6 +39,10 @@ export default class PasteManager implements EditorPlugin {
 
     public dispose() {
         this.editor = null;
+        if (this.pasteContainer && this.pasteContainer.parentNode) {
+            this.pasteContainer.parentNode.removeChild(this.pasteContainer);
+            this.pasteContainer = null;
+        }
     }
 
     public willHandleEventExclusively(event: PluginEvent): boolean {
@@ -60,16 +68,15 @@ export default class PasteManager implements EditorPlugin {
             // There is text to paste, so clear any image data if any.
             // Otherwise both text and image will be pasted, this will cause duplicated paste
             clipboardData.imageData = {};
-            retrieveHtml(this.editor, container => {
+            this.retrieveHtml(this.editor, container => {
                 processImages(container, clipboardData);
                 clipboardData.htmlData = container.innerHTML;
 
                 let span = this.editor.getDocument().createElement('span');
                 span.innerHTML = normalizeContent(clipboardData.htmlData);
                 convertPastedContentFromWord(span);
-                while (span.firstChild) {
-                    this.editor.insertNode(span.firstChild);
-                }
+                this.editor.insertNode(span);
+                unwrap(span);
                 this.onPasteComplete(clipboardData);
             });
         }
@@ -104,6 +111,32 @@ export default class PasteManager implements EditorPlugin {
             reader.readAsDataURL(file);
         }
     };
+
+    private retrieveHtml(editor: Editor, callback: (container: HTMLElement) => void) {
+        // cache original selection range in editor
+        let originalSelectionRange = editor.getSelectionRange();
+
+        if (!this.pasteContainer || !this.pasteContainer.parentNode) {
+            this.pasteContainer = fromHtml(CONTAINER_HTML)[0] as HTMLElement;
+            editor.insertNode(this.pasteContainer, {
+                position: ContentPosition.Outside,
+                updateCursor: false,
+                replaceSelection: false,
+                insertOnNewLine: false,
+            });
+        } else {
+            this.pasteContainer.style.display = '';
+        }
+        this.pasteContainer.focus();
+
+        window.requestAnimationFrame(() => {
+            // restore original selection range in editor
+            editor.updateSelection(originalSelectionRange);
+            callback(this.pasteContainer);
+            this.pasteContainer.style.display = 'none';
+            this.pasteContainer.innerHTML = '';
+        });
+    }
 }
 
 function getClipboardData(dataTransfer: DataTransfer): ClipBoardData {
@@ -139,27 +172,6 @@ function getImage(dataTransfer: DataTransfer): File {
         }
     }
     return null;
-}
-
-function retrieveHtml(editor: Editor, callback: (container: HTMLElement) => void) {
-    // cache original selection range in editor
-    let originalSelectionRange = editor.getSelectionRange();
-
-    if (!pasteContainer) {
-        pasteContainer = fromHtml(CONTAINER_HTML)[0] as HTMLElement;
-        document.body.appendChild(pasteContainer);
-    } else {
-        pasteContainer.style.display = '';
-    }
-    pasteContainer.focus();
-
-    window.requestAnimationFrame(() => {
-        // restore original selection range in editor
-        editor.updateSelection(originalSelectionRange);
-        callback(pasteContainer);
-        pasteContainer.style.display = 'none';
-        pasteContainer.innerHTML = '';
-    });
 }
 
 function normalizeContent(content: string): string {
