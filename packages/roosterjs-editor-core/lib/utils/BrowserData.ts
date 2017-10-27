@@ -11,6 +11,21 @@ export interface BrowserData {
 }
 
 export function getBrowserData(userAgent?: string, appVersion?: string): BrowserData {
+    // In case universal render somehow hits this code path
+    if (typeof window == 'undefined') {
+        return {
+            isMac: false,
+            isWin: false,
+            isWebKit: false,
+            isIE: false,
+            isIE11OrGreater: false,
+            isSafari: false,
+            isChrome: false,
+            isFirefox: false,
+            isEdge: false,
+        };
+    }
+
     let rawValue = userAgent || window.navigator.userAgent;
     let appVer = appVersion || window.navigator.appVersion;
 
