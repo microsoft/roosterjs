@@ -86,7 +86,7 @@ export default class ContentEdit implements EditorPlugin {
                         execFormatWithUndo(this.editor, () => {
                             let newParent = splitParentNode(node, false /*splitBefore*/);
 
-                            blockQuoteElement.parentNode.insertBefore(node, newParent);
+                            blockQuoteElement.parentNode.insertBefore(node, blockQuoteElement.nextSibling);
                             if (!blockQuoteElement.firstChild) {
                                 blockQuoteElement.parentNode.removeChild(blockQuoteElement);
                             }

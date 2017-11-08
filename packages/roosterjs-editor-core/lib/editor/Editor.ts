@@ -99,6 +99,9 @@ export default class Editor {
     public dispose(): void {
         this.disposePlugins();
         this.unbindEvents();
+        let styles = this.contentDiv.style;
+        styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = '';
+        this.contentDiv.removeAttribute('contenteditable');
     }
 
     public getSelectionRange(): Range {
