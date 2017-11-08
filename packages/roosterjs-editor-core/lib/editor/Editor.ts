@@ -241,7 +241,7 @@ export default class Editor {
     // Insert content into editor
     public insertContent(content: string, option?: InsertOption): void {
         if (content) {
-            let allNodes = fromHtml(content);
+            let allNodes = fromHtml(content, this.getDocument());
             // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with
             // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
             // separately to show up on its own line
@@ -550,7 +550,7 @@ export default class Editor {
                 // Only reason we don't get the selection block is that we have an empty content div
                 // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
                 // The fix is to add a DIV wrapping, apply default format and move cursor over
-                let nodes = fromHtml(HTML_EMPTY_DIV_BLOCK);
+                let nodes = fromHtml(HTML_EMPTY_DIV_BLOCK, this.getDocument());
                 let element = this.contentDiv.appendChild(nodes[0]) as HTMLElement;
                 applyFormat(element, this.defaultFormat);
                 // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
@@ -651,7 +651,7 @@ export default class Editor {
 
         if (!firstBlock) {
             // No first block, let's create one
-            let nodes = fromHtml(HTML_EMPTY_DIV_BLOCK);
+            let nodes = fromHtml(HTML_EMPTY_DIV_BLOCK, this.getDocument());
             defaultFormatBlockElement = this.contentDiv.appendChild(nodes[0]) as HTMLElement;
         } else if (firstBlock instanceof NodeBlockElement) {
             // There is a first block and it is a Node (P, DIV etc.) block

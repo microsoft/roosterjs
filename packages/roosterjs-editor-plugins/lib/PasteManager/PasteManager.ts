@@ -117,7 +117,7 @@ export default class PasteManager implements EditorPlugin {
         let originalSelectionRange = editor.getSelectionRange();
 
         if (!this.pasteContainer || !this.pasteContainer.parentNode) {
-            this.pasteContainer = fromHtml(CONTAINER_HTML)[0] as HTMLElement;
+            this.pasteContainer = fromHtml(CONTAINER_HTML, editor.getDocument())[0] as HTMLElement;
             editor.insertNode(this.pasteContainer, {
                 position: ContentPosition.Outside,
                 updateCursor: false,

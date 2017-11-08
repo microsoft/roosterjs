@@ -1,6 +1,6 @@
 // Creates a HTMLElement array from html
-export default function fromHtml(htmlFragment: string): Node[] {
-    let element = document.createElement('DIV');
+export default function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[] {
+    let element = ownerDocument.createElement('DIV');
     element.innerHTML = htmlFragment;
 
     let children: Node[] = [];
