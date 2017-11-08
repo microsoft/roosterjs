@@ -9,7 +9,7 @@ export default function wrap(node: Node, htmlFragment: string): Node {
     let wrapper = node;
 
     if (htmlFragment) {
-        wrapper = fromHtml(htmlFragment)[0];
+        wrapper = fromHtml(htmlFragment, node.ownerDocument)[0];
         if (node.parentNode) {
             node.parentNode.insertBefore(wrapper, node);
             node.parentNode.removeChild(node);
