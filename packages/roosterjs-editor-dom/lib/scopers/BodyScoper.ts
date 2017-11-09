@@ -1,7 +1,6 @@
 import InlineElementFactory from '../inlineElements/InlineElementFactory';
 import { BlockElement, InlineElement, TraversingScoper } from 'roosterjs-editor-types';
-import { getFirstBlockElement } from '../domWalker/getBlockElement';
-import { getFirstInlineElement } from '../domWalker/getInlineElement';
+import { getFirstBlockElement, getFirstInlineElement } from '../blockElements/BlockElement';
 
 // This provides scoper for traversing the entire editor body starting from the beginning
 class BodyScoper implements TraversingScoper {

@@ -6,7 +6,7 @@ import {
     getLastBlockElement,
     getNextBlockElement,
     getPreviousBlockElement,
-} from '../../domWalker/getBlockElement';
+} from '../../blockElements/BlockElement';
 import { BlockElement } from 'roosterjs-editor-types';
 
 let testID = 'getBlockElement';

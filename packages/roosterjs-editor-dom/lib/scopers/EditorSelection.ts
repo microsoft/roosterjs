@@ -4,11 +4,11 @@ import editorPointEquals from '../utils/editorPointEquals';
 import isEditorPointAfter from '../utils/isEditorPointAfter';
 import normalizeEditorPoint from '../utils/normalizeEditorPoint';
 import { BlockElement, EditorPoint, InlineElement } from 'roosterjs-editor-types';
-import { getBlockElementAtNode } from '../domWalker/getBlockElement';
 import {
+    getBlockElementAtNode,
     getInlineElementAfterPoint,
     getInlineElementBeforePoint,
-} from '../domWalker/getInlineElement';
+} from '../blockElements/BlockElement';
 
 // This is a utility like class that produces editor point/inline/block element around or within a selection range
 class EditorSelection {

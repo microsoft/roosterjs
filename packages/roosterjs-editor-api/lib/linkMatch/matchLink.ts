@@ -7,7 +7,11 @@ import { LinkData, LinkMatchOption, LinkMatchRule } from 'roosterjs-editor-types
  * @param option Link match option, exact or partial
  * @param rules Optional link match rules
  */
-function matchLink(url: string, option: LinkMatchOption = LinkMatchOption.Exact, rules?: LinkMatchRule[]): LinkData {
+function matchLink(
+    url: string,
+    option: LinkMatchOption = LinkMatchOption.Exact,
+    rules?: LinkMatchRule[]
+): LinkData {
     if (!url) {
         return null;
     }

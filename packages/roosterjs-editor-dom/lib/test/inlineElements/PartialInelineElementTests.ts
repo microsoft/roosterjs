@@ -1,6 +1,6 @@
 import * as TestHelper from '../DomTestHelper';
 import { InlineElement } from 'roosterjs-editor-types';
-import NodeBlockElement from '../../blockElements/NodeBlockElement';
+import { NodeBlockElement } from '../../blockElements/BlockElement';
 import PartialInlineElement from '../../inlineElements/PartialInlineElement';
 import InlineElementFactory from '../../inlineElements/InlineElementFactory';
 

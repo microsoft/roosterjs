@@ -3,7 +3,7 @@ import { BlockElement, InlineElement } from 'roosterjs-editor-types';
 import InlineElementFactory from '../../inlineElements/InlineElementFactory';
 import InlineElementResolver from '../../inlineElements/InlineElementResolver';
 import LinkInlineElement from '../../inlineElements/LinkInlineElement';
-import NodeBlockElement from '../../blockElements/NodeBlockElement';
+import { NodeBlockElement } from '../../blockElements/BlockElement';
 import NodeInlineElement from '../../inlineElements/NodeInlineElement';
 
 describe('InlineElementFactory resolve() resolves an inline element using the default inline element resolver', () => {

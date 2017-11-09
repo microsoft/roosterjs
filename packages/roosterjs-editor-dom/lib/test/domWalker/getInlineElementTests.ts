@@ -8,7 +8,7 @@ import {
     getPreviousInlineElement,
     getInlineElementBeforePoint,
     getInlineElementAfterPoint,
-} from '../../domWalker/getInlineElement';
+} from '../../blockElements/BlockElement';
 import { NodeBoundary, InlineElement, EditorPoint } from 'roosterjs-editor-types';
 
 let testID = 'getInlineElement';

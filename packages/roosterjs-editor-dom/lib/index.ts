@@ -1,18 +1,11 @@
-export { default as NodeBlockElement } from './blockElements/NodeBlockElement';
-export { default as StartEndBlockElement } from './blockElements/StartEndBlockElement';
-
-export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
-
 export {
+    NodeBlockElement,
+    StartEndBlockElement,
     getBlockElementAtNode,
     getFirstBlockElement,
     getLastBlockElement,
     getNextBlockElement,
     getPreviousBlockElement,
-} from './domWalker/getBlockElement';
-export { getNextLeafSibling, getPreviousLeafSibling } from './domWalker/getLeafSibling';
-export { getFirstLeafNode, getLastLeafNode } from './domWalker/getLeafNode';
-export {
     getFirstInlineElement,
     getLastInlineElement,
     getInlineElementAtNode,
@@ -20,7 +13,12 @@ export {
     getPreviousInlineElement,
     getInlineElementBeforePoint,
     getInlineElementAfterPoint,
-} from './domWalker/getInlineElement';
+} from './blockElements/BlockElement';
+
+export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
+
+export { getNextLeafSibling, getPreviousLeafSibling } from './domWalker/getLeafSibling';
+export { getFirstLeafNode, getLastLeafNode } from './domWalker/getLeafNode';
 
 export {
     default as DefaultInlineElementResolver,

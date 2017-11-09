@@ -1,8 +1,7 @@
 import * as DomTestHelper from '../DomTestHelper';
-import StartEndBlockElement from '../../blockElements/StartEndBlockElement';
+import { StartEndBlockElement, getNextInlineElement } from '../../blockElements/BlockElement';
 import InlineElementFactory from '../../inlineElements/InlineElementFactory';
 import { InlineElement } from 'roosterjs-editor-types';
-import { getNextInlineElement } from '../../domWalker/getInlineElement';
 
 let testID = 'StartEndBlockElement';
 

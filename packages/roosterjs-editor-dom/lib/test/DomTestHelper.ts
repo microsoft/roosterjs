@@ -1,7 +1,6 @@
 import { InlineElement, EditorPoint } from 'roosterjs-editor-types';
 import InlineElementFactory from '../inlineElements/InlineElementFactory';
-import NodeBlockElement from '../blockElements/NodeBlockElement';
-import StartEndBlockElement from '../blockElements/StartEndBlockElement';
+import { NodeBlockElement, StartEndBlockElement } from '../blockElements/BlockElement';
 
 // Create element with content and id and insert the element in the DOM
 export function createElementFromContent(id: string, content: string): HTMLElement {
