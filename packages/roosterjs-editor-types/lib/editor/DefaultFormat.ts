@@ -9,6 +9,9 @@ interface DefaultFormat {
     // Text color
     textColor?: string;
 
+    // Background Color
+    backgroundColor?: string;
+
     // Whether is bold
     bold?: boolean;
 
