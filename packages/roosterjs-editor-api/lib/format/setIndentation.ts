@@ -1,8 +1,8 @@
 import execFormatWithUndo from './execFormatWithUndo';
-import { Editor } from 'roosterjs-editor-core';
-import { Indentation } from 'roosterjs-editor-types';
 import getFormatState from '../format/getFormatState';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
+import { Editor } from 'roosterjs-editor-core';
+import { Indentation } from 'roosterjs-editor-types';
 
 export default function setIndentation(editor: Editor, indentation: Indentation): void {
     editor.focus();

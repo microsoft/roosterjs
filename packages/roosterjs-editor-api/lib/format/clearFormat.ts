@@ -1,9 +1,9 @@
 import execFormatWithUndo from './execFormatWithUndo';
-import { Editor, browserData } from 'roosterjs-editor-core';
+import setBackgroundColor from './setBackgroundColor';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';
 import setTextColor from './setTextColor';
-import setBackgroundColor from './setBackgroundColor';
+import { Editor, browserData } from 'roosterjs-editor-core';
 
 export default function clearFormat(editor: Editor): void {
     editor.focus();
