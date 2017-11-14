@@ -39,6 +39,7 @@ import {
     applyFormat,
     contains,
     fromHtml,
+    getComputedStyle,
     getInlineElementAtNode,
     getFirstLeafNode,
     getFirstBlockElement,
@@ -74,7 +75,7 @@ export default class Editor {
         }
 
         // 2. Store options values to local variables
-        this.defaultFormat = options.defaultFormat;
+        this.setDefaultFormat(options.defaultFormat);
         this.plugins = options.plugins || [];
 
         // 3. Initialize plugins
@@ -449,6 +450,11 @@ export default class Editor {
         return getCursorRect(this.contentDiv);
     }
 
+    // Get default format of this editor
+    public getDefaultFormat(): DefaultFormat {
+        return this.defaultFormat;
+    }
+
     private bindEvents(): void {
         this.isBeforeDeactivateEventSupported = browserData.isIE || browserData.isEdge;
         this.contentDiv.addEventListener('keypress', this.onKeyPress);
@@ -735,5 +741,13 @@ export default class Editor {
         }
 
         return selectionRestored;
+    }
+
+    private setDefaultFormat(format: DefaultFormat) {
+        this.defaultFormat = format || {};
+        this.defaultFormat.fontFamily = this.defaultFormat.fontFamily || getComputedStyle(this.contentDiv, 'font-family');
+        this.defaultFormat.fontSize = this.defaultFormat.fontSize || getComputedStyle(this.contentDiv, 'font-size');
+        this.defaultFormat.textColor = this.defaultFormat.textColor || getComputedStyle(this.contentDiv, 'color');
+        this.defaultFormat.backgroundColor = this.defaultFormat.backgroundColor || getComputedStyle(this.contentDiv, 'background-color');
     }
 }

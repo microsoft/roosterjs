@@ -13,6 +13,9 @@ export default function applyFormat(element: HTMLElement, format: DefaultFormat)
         if (format.textColor) {
             elementStyle.color = format.textColor;
         }
+        if (format.backgroundColor) {
+            elementStyle.backgroundColor = format.backgroundColor;
+        }
         if (format.bold) {
             elementStyle.fontWeight = 'bold';
         }
