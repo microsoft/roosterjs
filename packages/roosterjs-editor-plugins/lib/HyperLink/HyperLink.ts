@@ -5,6 +5,7 @@ import {
     clearCursorEventDataCache,
 } from 'roosterjs-editor-api';
 import {
+    ContentChangedEvent,
     ExtractContentEvent,
     LinkMatchOption,
     LinkMatchRule,
@@ -71,6 +72,11 @@ export default class HyperLink implements EditorPlugin {
                 break;
 
             case PluginEventType.ContentChanged:
+                let contentChangedEvent = event as ContentChangedEvent;
+                if (contentChangedEvent.source == 'Paste') {
+                    this.autoLink(event);
+                }
+
                 let anchors = this.editor.queryContent('a[href]');
                 for (let i = 0; i < anchors.length; i++) {
                     this.processLink(anchors[i] as HTMLAnchorElement);
