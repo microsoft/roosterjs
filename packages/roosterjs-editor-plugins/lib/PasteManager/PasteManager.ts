@@ -9,6 +9,7 @@ import {
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { processImages } from './PasteUtility';
 import { fromHtml, unwrap } from 'roosterjs-editor-dom';
+import { browserData } from 'roosterjs-editor-core';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 
 const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
@@ -76,8 +77,16 @@ export default class PasteManager implements EditorPlugin {
                 let span = this.editor.getDocument().createElement('span');
                 span.innerHTML = normalizeContent(clipboardData.htmlData);
                 convertPastedContentFromWord(span);
-                this.editor.insertNode(span);
-                unwrap(span);
+
+                if (browserData.isChrome) {
+                    // In Chrome, if insert the span node first then do unwrap, the cursor position will be wrong
+                    while (span.firstChild) {
+                        this.editor.insertNode(span.firstChild);
+                    }
+                } else {
+                    this.editor.insertNode(span);
+                    unwrap(span);
+                }
                 this.onPasteComplete(clipboardData);
             });
         }
