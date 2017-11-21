@@ -6,10 +6,9 @@ import {
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
 import { processImages } from './PasteUtility';
 import { fromHtml, unwrap } from 'roosterjs-editor-dom';
-import { browserData } from 'roosterjs-editor-core';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 
 const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
