@@ -4,6 +4,7 @@ import setFontName from './setFontName';
 import setFontSize from './setFontSize';
 import setTextColor from './setTextColor';
 import { Editor, browserData } from 'roosterjs-editor-core';
+import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 
 export default function clearFormat(editor: Editor): void {
     editor.focus();
@@ -13,13 +14,16 @@ export default function clearFormat(editor: Editor): void {
         editor.runWithoutAddingUndoSnapshot(() => {
             editor.getDocument().execCommand('removeFormat', false, null);
 
-            if (browserData.isEdge || browserData.isIE) {
-                let defaultFormat = editor.getDefaultFormat();
-                setFontName(editor, defaultFormat.fontFamily);
-                setFontSize(editor, defaultFormat.fontSize);
-                setTextColor(editor, defaultFormat.textColor);
-                setBackgroundColor(editor, defaultFormat.backgroundColor);
+            let nodes = queryNodesWithSelection(editor, '[class]');
+            for (let node of nodes) {
+                (<HTMLElement>node).removeAttribute('class');
             }
+
+            let defaultFormat = editor.getDefaultFormat();
+            setFontName(editor, defaultFormat.fontFamily);
+            setFontSize(editor, defaultFormat.fontSize);
+            setTextColor(editor, defaultFormat.textColor);
+            setBackgroundColor(editor, defaultFormat.backgroundColor);
         });
     });
 }

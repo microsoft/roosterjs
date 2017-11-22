@@ -281,10 +281,14 @@ function main(config) { //baseDir, startFile, outputFile) {
 
 var projDir = path.resolve(__dirname, '..');
 var baseDir = path.resolve(projDir, 'dist');
+var targetDir = path.resolve(baseDir, 'roosterjs', 'dist');
+if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir);
+}
 main({
     baseDir: baseDir,
     library: 'roosterjs',
-    output: path.resolve(baseDir, 'rooster.d.ts'),
+    output: path.resolve(targetDir, 'rooster.d.ts'),
     include: [
         'roosterjs/lib/index.d.ts'
     ]

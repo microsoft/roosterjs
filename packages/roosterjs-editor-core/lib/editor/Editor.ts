@@ -82,7 +82,10 @@ export default class Editor {
         this.initializePlugins();
 
         // 4. Ensure initial content and its format
-        this.ensureInitialContent(options.initialContent);
+        if (options.initialContent) {
+            this.setContent(options.initialContent);
+        }
+        this.ensureInitialContent();
 
         // 5. Initialize undo service
         // This need to be after step 4 so that undo service can pickup initial content
@@ -225,7 +228,6 @@ export default class Editor {
 
     public setContent(content: string): void {
         this.contentDiv.innerHTML = content || '';
-        this.ensureInitialContent();
         this.triggerEvent(
             {
                 eventType: PluginEventType.ContentChanged,
@@ -646,12 +648,7 @@ export default class Editor {
     }
 
     // Ensure initial content exist in editor
-    private ensureInitialContent(initialContent?: string): void {
-        // Use the initial content to overwrite any existing content if specified
-        if (initialContent) {
-            this.setContent(initialContent);
-        }
-
+    private ensureInitialContent(): void {
         let firstBlock = getFirstBlockElement(this.contentDiv, this.inlineElementFactory);
         let defaultFormatBlockElement: HTMLElement;
 
