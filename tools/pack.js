@@ -7,7 +7,7 @@ var exec = require('child_process').execSync;
 var path = require('path');
 var rootPath = path.resolve(__dirname, '..');
 var sourcePath = path.resolve(rootPath, 'packages');
-var distPath = path.resolve(rootPath, 'dist');
+var distPath = path.resolve(rootPath, 'dist/roosterjs/dist');
 var webpack = require('webpack');
 var isProduction = checkParam('-p', '-prod');
 var isAmd = checkParam('-amd');
@@ -17,19 +17,20 @@ if (isProduction) {
     filename += '-min';
 }
 filename += '.js';
+var output = {
+    filename: filename,
+    path: distPath
+};
+if (isAmd) {
+    output.libraryTarget = 'amd';
+} else {
+    output.library = 'roosterjs';
+};
 
 var webpackConfig = {
     entry: path.resolve(sourcePath, 'roosterjs/lib/index.ts'),
     devtool: 'source-map',
-    output: isAmd ? {
-        filename: filename,
-        libraryTarget: 'amd',
-        path: path.join(distPath, 'roosterjs/dist')
-    } : {
-        library: 'roosterjs',
-        filename: filename,
-        path: path.join(distPath, 'roosterjs/dist')
-    },
+    output: output,
     resolve: {
         extensions: ['.ts'],
         modules: [ sourcePath ],
