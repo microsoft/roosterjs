@@ -3,7 +3,7 @@ import setBackgroundColor from './setBackgroundColor';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';
 import setTextColor from './setTextColor';
-import { Editor, browserData } from 'roosterjs-editor-core';
+import { Editor } from 'roosterjs-editor-core';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 
 export default function clearFormat(editor: Editor): void {
