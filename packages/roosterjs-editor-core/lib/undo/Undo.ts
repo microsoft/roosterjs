@@ -1,5 +1,4 @@
 import UndoSnapshots from './UndoSnapshots';
-import containsImage from './containsImage';
 import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import Editor from '../editor/Editor';
 import UndoService from '../editor/UndoService';
@@ -147,24 +146,31 @@ export default class Undo implements UndoService {
         // Handle backspace/delete when there is a selection to take a snapshot
         // since we want the state prior to deletion restorable
         let evt = pluginEvent.rawEvent as KeyboardEvent;
-        let shouldTakeUndo = false;
         if (evt.which == KEY_BACKSPACE || evt.which == KEY_DELETE) {
             let selectionRange = this.editor.getSelectionRange();
+
+            // Add snapshot when
+            // 1. Something has been selected (not collapsed), or
+            // 2. It has a different key code from the last keyDown event (to prevent adding too many snapshot when keeping press the same key), or
+            // 3. Ctrl/Meta key is pressed so that a whole word will be deleted
             if (
                 selectionRange &&
                 (!selectionRange.collapsed ||
-                    // If the selection contains image, we need to add undo snapshots
-                    containsImage(selectionRange.startContainer))
+                    this.lastKeyPress != evt.which ||
+                    evt.ctrlKey ||
+                    evt.metaKey)
             ) {
-                shouldTakeUndo = true;
+                this.addUndoSnapshot();
             }
-        } else if (this.hasNewContent && evt.which >= KEY_PAGEUP && evt.which <= KEY_DOWN) {
-            // PageUp, PageDown, Home, End, Left, Right, Up, Down
-            shouldTakeUndo = true;
-        }
 
-        if (shouldTakeUndo) {
-            this.addUndoSnapshot();
+            // Since some content is deleted, always set hasNewContent to true so that we will take undo snapshot next time
+            this.hasNewContent = true;
+            this.lastKeyPress = evt.which;
+        } else if (evt.which >= KEY_PAGEUP && evt.which <= KEY_DOWN) {
+            // PageUp, PageDown, Home, End, Left, Right, Up, Down
+            if (this.hasNewContent) {
+                this.addUndoSnapshot();
+            }
             this.lastKeyPress = 0;
         }
     }
