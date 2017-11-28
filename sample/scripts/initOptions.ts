@@ -20,6 +20,8 @@ function initOptions() {
 }
 
 function initEditorForOptions() {
+    setCurrentEditor(null);
+
     let plugins: EditorPlugin[] = [];
     if ((document.getElementById('defaultShortcutCheckbox') as HTMLInputElement).checked) {
         plugins.push(new DefaultShortcut());

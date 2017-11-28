@@ -1,6 +1,6 @@
 {
   "name": "roosterjs",
-  "version": "6.3.5",
+  "version": "6.3.6",
   "description": "Framework-independent javascript editor",
   "repository": {
     "type": "git",
@@ -9,11 +9,12 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
+    "dts": "node tools/dts.js",
     "tslint": "node node_modules/tslint/bin/tslint --project tools/tsconfig.tslint.json",
     "normalize": "node tools/normalize-packages.js",
-    "pack": "node tools/pack.js",
-    "pack:prod": "node tools/pack.js -p",
-    "build": "npm run clean && npm run normalize && npm run tslint && node tools/build-all.js && npm run pack:prod",
+    "pack": "node tools/pack.js && node tools/pack.js -amd -e",
+    "pack:prod": "node tools/pack.js -p && node tools/pack.js -p -amd -e",
+    "build": "npm run clean && npm run normalize && npm run tslint && node tools/build-all.js && npm run pack && npm run pack:prod && npm run dts",
     "start": "webpack-dev-server",
     "test": "npm run build && karma start",
     "test:debug": "npm run build && karma start --no-single-run"
