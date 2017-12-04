@@ -8,10 +8,9 @@ import {
 } from 'roosterjs-editor-types';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { processImages } from './PasteUtility';
-import { fromHtml, unwrap } from 'roosterjs-editor-dom';
+import { fromHtml } from 'roosterjs-editor-dom';
 import { insertImage } from 'roosterjs-editor-api';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
-import convertInlineCss from 'roosterjs-editor-dom/lib/utils/convertInlineCss';
 
 const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
 const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/i;
