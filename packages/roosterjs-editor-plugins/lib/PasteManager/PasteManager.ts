@@ -6,10 +6,12 @@ import {
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { processImages } from './PasteUtility';
 import { fromHtml, unwrap } from 'roosterjs-editor-dom';
+import { insertImage } from 'roosterjs-editor-api';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
+import convertInlineCss from 'roosterjs-editor-dom/lib/utils/convertInlineCss';
 
 const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
 const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/i;
@@ -71,21 +73,17 @@ export default class PasteManager implements EditorPlugin {
             clipboardData.imageData = {};
             this.retrieveHtml(this.editor, container => {
                 processImages(container, clipboardData);
-                clipboardData.htmlData = container.innerHTML;
+                clipboardData.htmlData = normalizeContent(container.innerHTML);
 
-                let span = this.editor.getDocument().createElement('span');
-                span.innerHTML = normalizeContent(clipboardData.htmlData);
-                convertPastedContentFromWord(span);
-
-                if (browserData.isChrome) {
-                    // In Chrome, if insert the span node first then do unwrap, the cursor position will be wrong
-                    while (span.firstChild) {
-                        this.editor.insertNode(span.firstChild);
-                    }
-                } else {
-                    this.editor.insertNode(span);
-                    unwrap(span);
+                let document = this.editor.getDocument();
+                let fragment = document.createDocumentFragment();
+                let nodes = fromHtml(clipboardData.htmlData, document);
+                for (let node of nodes) {
+                    fragment.appendChild(node);
                 }
+
+                convertPastedContentFromWord(fragment);
+                this.editor.insertNode(fragment);
                 this.onPasteComplete(clipboardData);
             });
         }
@@ -111,16 +109,7 @@ export default class PasteManager implements EditorPlugin {
     private defaultPasteHandler = (clipboardData: ClipBoardData) => {
         let file = clipboardData.imageData ? clipboardData.imageData.file : null;
         if (file) {
-            let reader = new FileReader();
-            reader.onload = (event: ProgressEvent) => {
-                if (this.editor) {
-                    let image = this.editor.getDocument().createElement('img');
-                    image.src = (event.target as FileReader).result;
-                    this.editor.insertNode(image);
-                    this.editor.addUndoSnapshot();
-                }
-            };
-            reader.readAsDataURL(file);
+            insertImage(this.editor, file);
         }
     };
 

@@ -62,20 +62,24 @@ export default class Editor {
     private undoService: UndoService;
     private isInIMESequence: boolean;
     private suspendAddingUndoSnapshot: boolean;
+    private doNotRestoreSelectionOnFocus: boolean;
+    private disposed: boolean;
 
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(private contentDiv: HTMLDivElement, options: EditorOptions = {}) {
+    constructor(private contentDiv: HTMLDivElement, options?: EditorOptions) {
         // 1. Make sure all parameters are valid
         if (getTagOfNode(contentDiv) != 'DIV') {
             throw new Error('contentDiv must be an HTML DIV element');
         }
 
         // 2. Store options values to local variables
+        options = options || {};
         this.setDefaultFormat(options.defaultFormat);
+        this.doNotRestoreSelectionOnFocus = options.doNotRestoreSelectionOnFocus;
         this.plugins = options.plugins || [];
 
         // 3. Initialize plugins
@@ -101,11 +105,16 @@ export default class Editor {
     }
 
     public dispose(): void {
+        this.disposed = true;
         this.disposePlugins();
         this.unbindEvents();
         let styles = this.contentDiv.style;
         styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = '';
         this.contentDiv.removeAttribute('contenteditable');
+    }
+
+    public isDisposed(): boolean {
+        return this.disposed;
     }
 
     public getSelectionRange(): Range {
@@ -629,7 +638,7 @@ export default class Editor {
 
     private onFocus = (event: FocusEvent) => {
         // Restore the last saved selection first
-        if (this.cachedSelectionRange) {
+        if (this.cachedSelectionRange && !this.doNotRestoreSelectionOnFocus) {
             this.restoreLastSavedSelection();
         }
 

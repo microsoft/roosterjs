@@ -37,6 +37,6 @@ describe('clearFormat()', () => {
         clearFormat(editor);
 
         // Assert
-        expect(editor.getContent()).toBe('<div id="text" style="">text</div>');
+        expect(editor.getContent()).toBe('<div id="text" style=""><span style="font-family: &quot;times new roman&quot;; font-size: 16px; color: black; background-color: rgba(0, 0, 0, 0);">text</span></div>');
     });
 });

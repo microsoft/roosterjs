@@ -132,7 +132,7 @@ export default class Undo implements UndoService {
     private restoreSnapshot(delta: number) {
         let snapshot = this.getSnapshotsManager().move(delta);
 
-        if (snapshot) {
+        if (snapshot != null) {
             try {
                 this.isRestoring = true;
                 restoreSnapshot(this.editor, snapshot);

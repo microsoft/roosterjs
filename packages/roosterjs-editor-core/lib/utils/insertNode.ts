@@ -143,9 +143,10 @@ export function insertNodeAtSelection(
             selectionRange.collapse(false /*toStart*/);
         }
 
+        let nodeForCursor = node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
         selectionRange.insertNode(node);
-        if (option.updateCursor) {
-            selectionRange.setEndAfter(node);
+        if (option.updateCursor && nodeForCursor) {
+            selectionRange.setEndAfter(nodeForCursor);
             selectionRange.collapse(false /*toStart*/);
             updateSelectionToRange(container.ownerDocument, selectionRange);
         } else {

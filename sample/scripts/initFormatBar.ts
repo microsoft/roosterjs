@@ -1,6 +1,8 @@
 import {
     clearFormat,
     createLink,
+    insertImage,
+    insertTable,
     toggleBold,
     toggleItalic,
     toggleUnderline,
@@ -79,6 +81,29 @@ export default function initFormatBar() {
     // ClearFormat
     document.getElementById('clearFormatButton').addEventListener('click', function() {
         clearFormat(getCurrentEditor());
+    });
+
+    // Insert Table
+    document.getElementById('insertTable').addEventListener('click', function() {
+        let columns = Math.min(parseInt(window.prompt('How many columns?')), 10);
+        let rows = Math.min(parseInt(window.prompt('How many rows?')), 10);
+        if (columns > 0 && rows > 0) {
+            insertTable(getCurrentEditor(), columns, rows);
+        }
+    });
+
+    // Insert Image
+    document.getElementById('insertImage').addEventListener('click', function() {
+        (document.getElementById('selectFile') as HTMLInputElement).click();
+    });
+
+    document.getElementById('selectFile').addEventListener('change', function () {
+        let input = document.getElementById('selectFile') as HTMLInputElement;
+        let file = input.files[0];
+        if (file) {
+            insertImage(getCurrentEditor(), file);
+            input.value = '';
+        }
     });
 
     // Indent
