@@ -143,7 +143,7 @@ class NodeInlineElement implements InlineElement {
                     : NodeBoundary.End;
         }
 
-        if (!startNode || !endNode ) {
+        if (!startNode || !endNode) {
             // we need a valid start and end node, if either one is null, we will just exit
             // this isn't an error, it just tells the fact we don't see a good node to apply a style
             return;
