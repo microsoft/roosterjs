@@ -143,7 +143,7 @@ class NodeInlineElement implements InlineElement {
                     : NodeBoundary.End;
         }
 
-        if (!startNode || !endNode) {
+        if (!startNode || !endNode ) {
             // we need a valid start and end node, if either one is null, we will just exit
             // this isn't an error, it just tells the fact we don't see a good node to apply a style
             return;
@@ -164,7 +164,13 @@ class NodeInlineElement implements InlineElement {
             }
 
             // Apply the style
-            if (startNode.nodeType == NodeType.Text && startNode.nodeValue) {
+            // If a node has only white space and new line and is in table, we ignore it,
+            // otherwise the table will be distorted
+            if (
+                startNode.nodeType == NodeType.Text &&
+                startNode.nodeValue &&
+                !(startNode.nodeValue.trim() == '' && this.isNodeInTable(startNode))
+            ) {
                 let adjustedEndOffset =
                     startNode == endNode ? endOffset : startNode.nodeValue.length;
                 if (adjustedEndOffset > startOffset) {
@@ -201,6 +207,17 @@ class NodeInlineElement implements InlineElement {
             startNode = nextLeafNode;
             startOffset = NodeBoundary.Begin;
         }
+    }
+
+    private isNodeInTable(node: Node): boolean {
+        while (node) {
+            let tagName = getTagOfNode(node);
+            if (tagName == 'TR' || tagName == 'TD') {
+                  return true;
+            }
+            node = node.parentNode;
+        }
+        return false;
     }
 }
 
