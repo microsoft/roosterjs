@@ -1,5 +1,12 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType, PluginDomEvent, ExtractContentEvent, ContentChangedEvent } from 'roosterjs-editor-types';
+import {
+    NodeType,
+    PluginEvent,
+    PluginEventType,
+    PluginDomEvent,
+    ExtractContentEvent,
+    ContentChangedEvent,
+} from 'roosterjs-editor-types';
 import { contains, getTagOfNode } from 'roosterjs-editor-dom';
 import { execFormatWithUndo } from 'roosterjs-editor-api';
 
@@ -12,18 +19,24 @@ const SHIFT_KEYCODE = 16;
 
 export default class ImageResizePlugin implements EditorPlugin {
     private editor: Editor;
-    private px: number;
-    private py: number;
-    private ratio: number;
+    private startPageX: number;
+    private startPageY: number;
+    private startWidth: number;
+    private startHeight: number;
     private resizeDiv: HTMLElement;
-    private startComment: Node;
-    private endComment: Node;
-    private resizingHandle: HTMLElement;
+    private direction: string;
 
+    /**
+     * Create a new instance of ImageResizePlugin
+     * @param minWidth Minimum width of image when resize in pixel, default value is 10
+     * @param minHeight Minimum height of image when resize in pixel, default value is 10
+     * @param selectionBorderColor Color of resize border and handles, default value is #DB626C
+     * @param forcePreserveRatio Whether always preserve width/height ratio when resize, default value is false
+     */
     constructor(
         private minWidth: number = 10,
         private minHeight: number = 10,
-        private selectionBorderColor: string = 'red',
+        private selectionBorderColor: string = '#DB626C',
         private forcePreserveRatio: boolean = false
     ) {}
 
@@ -40,22 +53,18 @@ export default class ImageResizePlugin implements EditorPlugin {
     }
 
     onPluginEvent(e: PluginEvent) {
-        if (e.eventType == PluginEventType.MouseUp) {
+        if (e.eventType == PluginEventType.MouseDown) {
             let event = (<PluginDomEvent>e).rawEvent;
             let target = <HTMLElement>(event.srcElement || event.target);
             if (getTagOfNode(target) == 'IMG') {
-                event.stopPropagation();
+                target.contentEditable = 'false';
                 let currentImg = this.getSelectedImage();
                 if (currentImg && currentImg != target) {
                     this.unselect();
                 }
 
                 if (!this.resizeDiv) {
-                    this.resizeDiv = this.createResizeDiv(target);
-                    let range = document.createRange();
-                    range.setEndAfter(this.resizeDiv);
-                    range.collapse(false /*toStart*/);
-                    this.editor.updateSelection(range);
+                    this.select(target);
                 }
             } else if (this.resizeDiv && !contains(this.resizeDiv, target)) {
                 this.unselect();
@@ -76,8 +85,13 @@ export default class ImageResizePlugin implements EditorPlugin {
         }
     }
 
-    private getSelectedImage(): HTMLElement {
-        return this.resizeDiv ? <HTMLElement>this.resizeDiv.getElementsByTagName('IMG')[0] : null;
+    private select(target: HTMLElement) {
+        this.resizeDiv = this.createResizeDiv(target);
+        target.contentEditable = 'false';
+        let range = document.createRange();
+        range.setEndAfter(this.resizeDiv);
+        range.collapse(false /*toStart*/);
+        this.editor.updateSelection(range);
     }
 
     private unselect() {
@@ -85,10 +99,76 @@ export default class ImageResizePlugin implements EditorPlugin {
         let parent = this.resizeDiv.parentNode;
         if (parent) {
             if (img) {
-                parent.insertBefore(img, this.resizeDiv);
+                img.removeAttribute('contentEditable');
+                let referenceNode =
+                    this.resizeDiv.previousSibling &&
+                    this.resizeDiv.previousSibling.nodeType == NodeType.Comment ?
+                    this.resizeDiv.previousSibling :
+                    this.resizeDiv;
+                parent.insertBefore(img, referenceNode);
             }
             this.removeResizeDiv();
         }
+    }
+
+    private startResize = (e: MouseEvent) => {
+        let img = this.getSelectedImage();
+        if (this.editor && img) {
+            this.startPageX = e.pageX;
+            this.startPageY = e.pageY;
+            this.startWidth = img.clientWidth;
+            this.startHeight = img.clientHeight;
+            this.editor.addUndoSnapshot();
+
+            let document = this.editor.getDocument();
+            document.addEventListener('mousemove', this.doResize, true /*useCapture*/);
+            document.addEventListener('mouseup', this.finishResize, true /*useCapture*/);
+            this.direction = (<HTMLElement>(e.srcElement || e.target)).style.cursor;
+        }
+
+        e.preventDefault();
+    }
+
+    private doResize = (e: MouseEvent) => {
+        let img = this.getSelectedImage();
+        if (this.editor && img) {
+            let widthChange = e.pageX - this.startPageX;
+            let heightChange = e.pageY - this.startPageY;
+            let newWidth = Math.max(this.startWidth + (this.isWest(this.direction) ? -widthChange : widthChange), this.minWidth);
+            let newHeight = Math.max(this.startHeight + (this.isNorth(this.direction) ? -heightChange : heightChange), this.minHeight);
+
+            if (this.forcePreserveRatio || e.shiftKey) {
+                let ratio = (this.startWidth > 0 && this.startHeight > 0) ? this.startWidth * 1.0 / this.startHeight : 0;
+                if (ratio > 0) {
+                    if (newWidth < newHeight * ratio) {
+                        newWidth = newHeight * ratio;
+                    } else {
+                        newHeight = newWidth / ratio;
+                    }
+                }
+            }
+
+            img.style.width = newWidth + 'px';
+            img.style.height = newHeight + 'px';
+        }
+        e.preventDefault();
+    }
+
+    private finishResize = (e: MouseEvent) => {
+        var img = this.getSelectedImage();
+        if (this.editor && img) {
+            let document = this.editor.getDocument();
+            document.removeEventListener('mousemove', this.doResize, true /*useCapture*/);
+            document.removeEventListener('mouseup', this.finishResize, true /*useCapture*/);
+            img.style.width = img.clientWidth + 'px';
+            img.style.height = img.clientHeight + 'px';
+            this.resizeDiv.style.width = '';
+            this.resizeDiv.style.height = '';
+        }
+        this.direction = null;
+        this.editor.addUndoSnapshot();
+        this.triggerContentChangedEvent();
+        e.preventDefault();
     }
 
     private createResizeDiv(target: HTMLElement) {
@@ -96,13 +176,11 @@ export default class ImageResizePlugin implements EditorPlugin {
         let resizeDiv = document.createElement('DIV');
         let parent = target.parentNode;
         parent.insertBefore(resizeDiv, target);
-        parent.insertBefore(this.startComment = document.createComment(BEGIN_TAG), resizeDiv);
-        parent.insertBefore(this.endComment = document.createComment(END_TAG), resizeDiv.nextSibling);
+        parent.insertBefore(document.createComment(BEGIN_TAG), resizeDiv);
+        parent.insertBefore(document.createComment(END_TAG), resizeDiv.nextSibling);
 
         resizeDiv.style.position = 'relative';
-        resizeDiv.style.display = 'inline-block';
-        resizeDiv.style.width = target.clientWidth + 'px';
-        resizeDiv.style.height = target.clientHeight + 'px';
+        resizeDiv.style.display = 'inline-table';
         resizeDiv.contentEditable = 'false';
         resizeDiv.appendChild(target);
         ['nw', 'ne', 'sw', 'se'].forEach(pos => {
@@ -113,12 +191,12 @@ export default class ImageResizePlugin implements EditorPlugin {
             div.style.height = '7px';
             div.style.backgroundColor = this.selectionBorderColor;
             div.style.cursor = pos + '-resize';
-            if (pos.substr(0, 1) == 'n') {
+            if (this.isNorth(pos)) {
                 div.style.top = '-3px';
             } else {
                 div.style.bottom = '-3px';
             }
-            if (pos.substr(1, 1) == 'w') {
+            if (this.isWest(pos)) {
                 div.style.left = '-3px';
             } else {
                 div.style.right = '-3px';
@@ -136,104 +214,25 @@ export default class ImageResizePlugin implements EditorPlugin {
         return resizeDiv;
     }
 
-    private startResize = (e: MouseEvent) => {
-        let img = this.getSelectedImage();
-        if (this.editor && img) {
-            this.editor.addUndoSnapshot();
-
-            let document = this.editor.getDocument();
-            document.addEventListener('mousemove', this.resizing, true /*useCapture*/);
-            document.addEventListener('mouseup', this.finishResize, true /*useCapture*/);
-            this.px = e.pageX;
-            this.py = e.pageY;
-            this.resizingHandle = <HTMLElement>(e.srcElement || e.target);
-            if (img) {
-                this.ratio = (img.clientWidth > 0 && img.clientHeight > 0) ? img.clientWidth * 1.0 / img.clientHeight : 0;
-            }
-
-            this.resizeDiv.style.width = this.resizeDiv.clientWidth + 'px';
-            this.resizeDiv.style.height = this.resizeDiv.clientHeight + 'px';
-        }
-
-        e.preventDefault();
-    }
-
-    private resizing = (e: MouseEvent) => {
-        let img = this.getSelectedImage();
-        if (this.editor && img && this.resizingHandle) {
-            let widthChange: number;
-            let heightChange: number;
-            let cursor = this.resizingHandle.style.cursor;
-            switch (cursor) {
-                case 'nw-resize':
-                    widthChange = this.px - e.pageX;
-                    heightChange = this.py - e.pageY;
-                    break;
-                case 'ne-resize':
-                    widthChange = e.pageX - this.px;
-                    heightChange = this.py - e.pageY;
-                    break;
-                case 'sw-resize':
-                    widthChange = this.px - e.pageX;
-                    heightChange = e.pageY - this.py;
-                    break;
-                case 'se-resize':
-                    widthChange = e.pageX - this.px;
-                    heightChange = e.pageY - this.py;
-                    break;
-            }
-
-            let newWidth = Math.max(this.resizeDiv.clientWidth + widthChange, this.minWidth);
-            let newHeight = Math.max(this.resizeDiv.clientHeight + heightChange, this.minHeight);
-            this.resizeDiv.style.width = newWidth + 'px';
-            this.resizeDiv.style.height = newHeight + 'px';
-
-            if (this.ratio > 0 && (this.forcePreserveRatio || e.shiftKey)) {
-                if (newWidth > newHeight * this.ratio) {
-                    newWidth = newHeight * this.ratio;
-                } else {
-                    newHeight = newWidth / this.ratio;
-                }
-            }
-            img.style.width = newWidth + 'px';
-            img.style.height = newHeight + 'px';
-            this.px = e.pageX;
-            this.py = e.pageY;
-        }
-        e.preventDefault();
-    }
-
-    private finishResize = (e: MouseEvent) => {
-        var img = this.getSelectedImage();
-        if (this.editor && img) {
-            let document = this.editor.getDocument();
-            document.removeEventListener('mousemove', this.resizing, true /*useCapture*/);
-            document.removeEventListener('mouseup', this.finishResize, true /*useCapture*/);
-            img.style.width = img.clientWidth + 'px';
-            img.style.height = img.clientHeight + 'px';
-            this.resizeDiv.style.width = '';
-            this.resizeDiv.style.height = '';
-        }
-        this.resizingHandle = null;
-        this.editor.addUndoSnapshot();
-        this.triggerContentChangedEvent();
-        e.preventDefault();
-    }
-
     private removeResizeDiv() {
-        let parent = this.resizeDiv.parentNode;
-        if (this.startComment) {
-            parent.removeChild(this.startComment);
+        if (this.resizeDiv) {
+            let parent = this.resizeDiv.parentNode;
+            [this.resizeDiv.previousSibling, this.resizeDiv.nextSibling].forEach(comment => {
+                if (comment && comment.nodeType == NodeType.Comment) {
+                    parent.removeChild(comment);
+                }
+            });
+            parent.removeChild(this.resizeDiv);
+            this.resizeDiv = null;
         }
-        if (this.endComment) {
-            parent.removeChild(this.endComment);
-        }
-        parent.removeChild(this.resizeDiv);
-        this.resizeDiv = this.startComment = this.endComment = null;
     }
 
     private extractHtml(html: string): string {
         return html.replace(EXTRACT_HTML_REGEX, '$1');
+    }
+
+    private getSelectedImage(): HTMLElement {
+        return this.resizeDiv ? <HTMLElement>this.resizeDiv.getElementsByTagName('IMG')[0] : null;
     }
 
     private triggerContentChangedEvent() {
@@ -242,5 +241,13 @@ export default class ImageResizePlugin implements EditorPlugin {
             source: 'ImageResize',
         };
         this.editor.triggerEvent(eventToTrigger);
+    }
+
+    private isNorth(direction: string): boolean {
+        return direction && direction.substr(0, 1) == 'n';
+    }
+
+    private isWest(direction: string): boolean {
+        return direction && direction.substr(1, 1) == 'w';
     }
 }
