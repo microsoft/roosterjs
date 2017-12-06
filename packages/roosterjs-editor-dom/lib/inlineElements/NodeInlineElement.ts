@@ -169,7 +169,7 @@ class NodeInlineElement implements InlineElement {
             if (
                 startNode.nodeType == NodeType.Text &&
                 startNode.nodeValue &&
-                !(startNode.nodeValue.trim() == '' && this.isNodeInTable(startNode))
+                !(startNode.nodeValue.trim() == '' && getTagOfNode(startNode.parentNode) == 'TR')
             ) {
                 let adjustedEndOffset =
                     startNode == endNode ? endOffset : startNode.nodeValue.length;
@@ -207,17 +207,6 @@ class NodeInlineElement implements InlineElement {
             startNode = nextLeafNode;
             startOffset = NodeBoundary.Begin;
         }
-    }
-
-    private isNodeInTable(node: Node): boolean {
-        while (node) {
-            let tagName = getTagOfNode(node);
-            if (tagName == 'TR' || tagName == 'TD') {
-                  return true;
-            }
-            node = node.parentNode;
-        }
-        return false;
     }
 }
 
