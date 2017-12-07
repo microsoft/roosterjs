@@ -84,6 +84,8 @@ export default class Editor {
         // 4. Ensure initial content and its format
         if (options.initialContent) {
             this.setContent(options.initialContent);
+        } else if (this.contentDiv.innerHTML != '') {
+            this.triggerContentChangedEvent();
         }
         this.ensureInitialContent();
 
@@ -228,13 +230,7 @@ export default class Editor {
 
     public setContent(content: string): void {
         this.contentDiv.innerHTML = content || '';
-        this.triggerEvent(
-            {
-                eventType: PluginEventType.ContentChanged,
-                source: 'SetContent',
-            } as PluginEvent,
-            true /* broadcast */
-        );
+        this.triggerContentChangedEvent();
     }
 
     public isEmpty(trim?: boolean): boolean {
@@ -746,5 +742,15 @@ export default class Editor {
         this.defaultFormat.fontSize = this.defaultFormat.fontSize || getComputedStyle(this.contentDiv, 'font-size');
         this.defaultFormat.textColor = this.defaultFormat.textColor || getComputedStyle(this.contentDiv, 'color');
         this.defaultFormat.backgroundColor = this.defaultFormat.backgroundColor || getComputedStyle(this.contentDiv, 'background-color');
+    }
+
+    private triggerContentChangedEvent() {
+        this.triggerEvent(
+            {
+                eventType: PluginEventType.ContentChanged,
+                source: 'SetContent',
+            } as PluginEvent,
+            true /* broadcast */
+        );
     }
 }

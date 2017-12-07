@@ -58,6 +58,20 @@ export default class HyperLink implements EditorPlugin {
     }
 
     public dispose(): void {
+        let anchors = this.editor.queryContent('a[href]');
+        for (let i = 0; i < anchors.length; i++) {
+            try {
+                let a = anchors[i];
+                if (a.getAttribute(TEMP_TITLE)) {
+                    a.removeAttribute(TEMP_TITLE);
+                    a.removeAttribute('title');
+                }
+                a.removeEventListener('mouseup', this.onClickLink);
+            } catch (e) {
+                // Dispose code, no need to handle any exception
+            }
+        }
+
         this.editor = null;
     }
 
