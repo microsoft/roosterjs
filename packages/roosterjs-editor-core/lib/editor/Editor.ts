@@ -62,20 +62,24 @@ export default class Editor {
     private undoService: UndoService;
     private isInIMESequence: boolean;
     private suspendAddingUndoSnapshot: boolean;
+    private doNotRestoreSelectionOnFocus: boolean;
+    private disposed: boolean;
 
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(private contentDiv: HTMLDivElement, options: EditorOptions = {}) {
+    constructor(private contentDiv: HTMLDivElement, options?: EditorOptions) {
         // 1. Make sure all parameters are valid
         if (getTagOfNode(contentDiv) != 'DIV') {
             throw new Error('contentDiv must be an HTML DIV element');
         }
 
         // 2. Store options values to local variables
+        options = options || {};
         this.setDefaultFormat(options.defaultFormat);
+        this.doNotRestoreSelectionOnFocus = options.doNotRestoreSelectionOnFocus;
         this.plugins = options.plugins || [];
 
         // 3. Initialize plugins
@@ -103,11 +107,16 @@ export default class Editor {
     }
 
     public dispose(): void {
+        this.disposed = true;
         this.disposePlugins();
         this.unbindEvents();
         let styles = this.contentDiv.style;
         styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = '';
         this.contentDiv.removeAttribute('contenteditable');
+    }
+
+    public isDisposed(): boolean {
+        return this.disposed;
     }
 
     public getSelectionRange(): Range {
@@ -458,6 +467,7 @@ export default class Editor {
         this.contentDiv.addEventListener('keypress', this.onKeyPress);
         this.contentDiv.addEventListener('keydown', this.onKeyDown);
         this.contentDiv.addEventListener('keyup', this.onKeyUp);
+        this.contentDiv.addEventListener('mousedown', this.onMouseDown);
         this.contentDiv.addEventListener('mouseup', this.onMouseUp);
         this.contentDiv.addEventListener('compositionstart', this.onCompositionStart);
         this.contentDiv.addEventListener('compositionend', this.onCompositionEnd);
@@ -480,6 +490,7 @@ export default class Editor {
         this.contentDiv.removeEventListener('keypress', this.onKeyPress);
         this.contentDiv.removeEventListener('keydown', this.onKeyDown);
         this.contentDiv.removeEventListener('keyup', this.onKeyUp);
+        this.contentDiv.removeEventListener('mousedown', this.onMouseDown);
         this.contentDiv.removeEventListener('mouseup', this.onMouseUp);
         this.contentDiv.removeEventListener('compositionstart', this.onCompositionStart);
         this.contentDiv.removeEventListener('compositionend', this.onCompositionEnd);
@@ -603,6 +614,10 @@ export default class Editor {
         this.dispatchDomEventToPlugin(PluginEventType.CompositionEnd, event);
     };
 
+    private onMouseDown = (event: MouseEvent) => {
+        this.dispatchDomEventToPlugin(PluginEventType.MouseDown, event);
+    };
+
     private onMouseUp = (event: MouseEvent) => {
         this.dispatchDomEventToPlugin(PluginEventType.MouseUp, event);
     };
@@ -625,7 +640,7 @@ export default class Editor {
 
     private onFocus = (event: FocusEvent) => {
         // Restore the last saved selection first
-        if (this.cachedSelectionRange) {
+        if (this.cachedSelectionRange && !this.doNotRestoreSelectionOnFocus) {
             this.restoreLastSavedSelection();
         }
 

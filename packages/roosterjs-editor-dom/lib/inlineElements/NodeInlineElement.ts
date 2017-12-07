@@ -164,7 +164,13 @@ class NodeInlineElement implements InlineElement {
             }
 
             // Apply the style
-            if (startNode.nodeType == NodeType.Text && startNode.nodeValue) {
+            // If a node has only white space and new line and is in table, we ignore it,
+            // otherwise the table will be distorted
+            if (
+                startNode.nodeType == NodeType.Text &&
+                startNode.nodeValue &&
+                !(startNode.nodeValue.trim() == '' && getTagOfNode(startNode.parentNode) == 'TR')
+            ) {
                 let adjustedEndOffset =
                     startNode == endNode ? endOffset : startNode.nodeValue.length;
                 if (adjustedEndOffset > startOffset) {

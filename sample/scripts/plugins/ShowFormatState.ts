@@ -65,6 +65,9 @@ export default class ShowFormatState implements EditorPlugin {
             if (formatState.canUnlink) {
                 result += ' <b>CanUnlink</b>';
             }
+            if (formatState.canAddImageAltText) {
+                result += ' <b>CanAddImageAltText</b>';
+            }
 
             this.resultContainer.innerHTML = result;
         }

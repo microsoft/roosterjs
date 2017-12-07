@@ -12,6 +12,9 @@ const enum PluginEventType {
     // HTML CompositionEnd event
     CompositionEnd,
 
+    // HTML MouseDown event
+    MouseDown,
+
     // HTML MouseUp event
     MouseUp,
 
