@@ -17,7 +17,7 @@ export { default as createLink } from './format/createLink';
 export { default as execFormatWithUndo } from './format/execFormatWithUndo';
 export { default as getFormatState } from './format/getFormatState';
 export { default as insertImage } from './format/insertImage';
-export { default as insertTable } from './format/insertTable';
+export { default as insertTable, TableFormat } from './format/insertTable';
 export { default as removeLink } from './format/removeLink';
 export { default as setAlignment } from './format/setAlignment';
 export { default as setBackgroundColor } from './format/setBackgroundColor';

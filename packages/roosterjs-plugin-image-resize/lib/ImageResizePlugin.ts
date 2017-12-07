@@ -16,6 +16,8 @@ const EXTRACT_HTML_REGEX = new RegExp(`<!--${BEGIN_TAG}-->[\\s\\S]*(<img\\s[^>]+
 const DELETE_KEYCODE = 46;
 const BACKSPACE_KEYCODE = 8;
 const SHIFT_KEYCODE = 16;
+const CTRL_KEYCODE = 17;
+const ALT_KEYCODE = 18;
 
 export default class ImageResizePlugin implements EditorPlugin {
     private editor: Editor;
@@ -47,7 +49,7 @@ export default class ImageResizePlugin implements EditorPlugin {
 
     dispose() {
         if (this.resizeDiv) {
-            this.unselect();
+            this.unselect(false /*selectImageAfterUnSelect*/);
         }
         this.editor = null;
     }
@@ -60,14 +62,14 @@ export default class ImageResizePlugin implements EditorPlugin {
                 target.contentEditable = 'false';
                 let currentImg = this.getSelectedImage();
                 if (currentImg && currentImg != target) {
-                    this.unselect();
+                    this.unselect(false /*selectImageAfterUnSelect*/);
                 }
 
                 if (!this.resizeDiv) {
                     this.select(target);
                 }
             } else if (this.resizeDiv && !contains(this.resizeDiv, target)) {
-                this.unselect();
+                this.unselect(false /*selectImageAfterUnSelect*/);
             }
         } else if (e.eventType == PluginEventType.KeyDown && this.resizeDiv) {
             let event = <KeyboardEvent>(<PluginDomEvent>e).rawEvent;
@@ -76,8 +78,10 @@ export default class ImageResizePlugin implements EditorPlugin {
                     this.removeResizeDiv();
                 });
                 event.preventDefault();
-            } else if (event.which != SHIFT_KEYCODE) {
-                this.unselect();
+            } else if (event.which != SHIFT_KEYCODE &&
+                event.which != CTRL_KEYCODE &&
+                event.which != ALT_KEYCODE) {
+                this.unselect(true /*selectImageAfterUnSelect*/);
             }
         } else if (e.eventType == PluginEventType.ExtractContent) {
             let event = <ExtractContentEvent>e;
@@ -94,7 +98,7 @@ export default class ImageResizePlugin implements EditorPlugin {
         this.editor.updateSelection(range);
     }
 
-    private unselect() {
+    private unselect(selectImageAfterUnSelect: boolean) {
         let img = this.getSelectedImage();
         let parent = this.resizeDiv.parentNode;
         if (parent) {
@@ -106,6 +110,12 @@ export default class ImageResizePlugin implements EditorPlugin {
                     this.resizeDiv.previousSibling :
                     this.resizeDiv;
                 parent.insertBefore(img, referenceNode);
+
+                if (selectImageAfterUnSelect) {
+                    let range = this.editor.getDocument().createRange();
+                    range.selectNode(img);
+                    this.editor.updateSelection(range);
+                }
             }
             this.removeResizeDiv();
         }
