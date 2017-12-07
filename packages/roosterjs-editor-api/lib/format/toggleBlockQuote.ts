@@ -19,31 +19,27 @@ export default function toggleBlockQuote(
     styler?: (element: HTMLElement) => void
 ): void {
     editor.focus();
-    let range = editor.getSelectionRange();
-    if (range) {
-        let startPoint = { containerNode: range.startContainer, offset: range.startOffset };
-        let endPoint = { containerNode: range.endContainer, offset: range.endOffset };
-        let blockquoteNodes = queryNodesWithSelection(editor, 'blockquote');
-        execFormatWithUndo(editor, () => {
-            if (blockquoteNodes.length) {
-                // There are already blockquote nodes, unwrap them
-                blockquoteNodes.forEach(node => unwrap(node));
-            } else {
-                // Step 1: Find all block elements and their content nodes
-                let nodes = getContentNodes(editor);
+    let blockquoteNodes = queryNodesWithSelection(editor, 'blockquote');
+    execFormatWithUndo(editor, (startPoint, endPoint) => {
+        if (blockquoteNodes.length) {
+            // There are already blockquote nodes, unwrap them
+            blockquoteNodes.forEach(node => unwrap(node));
+        } else {
+            // Step 1: Find all block elements and their content nodes
+            let nodes = getContentNodes(editor);
 
-                // Step 2: Split existing list container if necessary
-                nodes = getSplittedListNodes(nodes);
+            // Step 2: Split existing list container if necessary
+            nodes = getSplittedListNodes(nodes);
 
-                // Step 3: Handle some special cases
-                nodes = getNodesWithSpecialCaseHandled(editor, nodes, startPoint, endPoint);
+            // Step 3: Handle some special cases
+            nodes = getNodesWithSpecialCaseHandled(editor, nodes, startPoint, endPoint);
 
-                let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLElement;
-                (styler || defaultStyler)(quoteElement);
-            }
-            updateSelection(editor, startPoint, endPoint);
-        });
-    }
+            let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLElement;
+            (styler || defaultStyler)(quoteElement);
+
+            return quoteElement;
+        }
+    }, true /*preserveSelection*/);
 }
 
 function getContentNodes(editor: Editor): Node[] {
@@ -123,8 +119,11 @@ function getNodesWithSpecialCaseHandled(
 
         editor.insertNode(div);
         nodes.push(div);
-        startPoint.containerNode = endPoint.containerNode = div;
-        startPoint.offset = endPoint.offset = NodeBoundary.Begin;
+
+        if (startPoint && endPoint) {
+            startPoint.containerNode = endPoint.containerNode = div;
+            startPoint.offset = endPoint.offset = NodeBoundary.Begin;
+        }
     }
     return nodes;
 }
@@ -132,17 +131,4 @@ function getNodesWithSpecialCaseHandled(
 function isListElement(node: Node) {
     let parentTag = node ? getTagOfNode(node.parentNode) : '';
     return parentTag == 'OL' || parentTag == 'UL';
-}
-
-function updateSelection(editor: Editor, startPoint: EditorPoint, endPoint: EditorPoint) {
-    editor.focus();
-    let range = editor.getDocument().createRange();
-    if (startPoint.containerNode && editor.contains(startPoint.containerNode)) {
-        range.setStart(startPoint.containerNode, startPoint.offset);
-    }
-    if (endPoint.containerNode && editor.contains(endPoint.containerNode)) {
-        range.setEnd(endPoint.containerNode, endPoint.offset);
-    }
-
-    editor.updateSelection(range);
 }

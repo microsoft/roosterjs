@@ -50,6 +50,9 @@ interface FormatState {
 
     // Whether the content ca nbe redone
     canRedo: boolean;
+
+    // Header level (0-6, 0 means no header)
+    headerLevel: number;
 }
 
 export default FormatState;
