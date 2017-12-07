@@ -86,7 +86,6 @@ export default function initFormatBar() {
 
     // Header
     document.getElementById('header').addEventListener('change', function() {
-        let editor = getCurrentEditor();
         let select = document.getElementById('header') as HTMLSelectElement;
         let level = parseInt(select.value);
         toggleHeader(getCurrentEditor(), level);

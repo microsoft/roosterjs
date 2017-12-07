@@ -1,58 +1,58 @@
 // The format state
 interface FormatState {
     // Font name
-    fontName: string;
+    fontName?: string;
 
     // Font size
-    fontSize: string;
+    fontSize?: string;
 
     // Whether the text is bolded
-    isBold: boolean;
+    isBold?: boolean;
 
     // Whether the text is italic
-    isItalic: boolean;
+    isItalic?: boolean;
 
     // Whether the text has underline
-    isUnderline: boolean;
+    isUnderline?: boolean;
 
     // Background color
-    backgroundColor: string;
+    backgroundColor?: string;
 
     // Text color
-    textColor: string;
+    textColor?: string;
 
     // Whether the text is in bullet mode
-    isBullet: boolean;
+    isBullet?: boolean;
 
     // Whether the text is in numbering mode
-    isNumbering: boolean;
+    isNumbering?: boolean;
 
     // Whether the text has strike through line
-    isStrikeThrough: boolean;
+    isStrikeThrough?: boolean;
 
     // Whether the text is in block quote
-    isBlockQuote: boolean;
+    isBlockQuote?: boolean;
 
     // Whether the text is in subscript mode
-    isSubscript: boolean;
+    isSubscript?: boolean;
 
     // Whether the text is in superscript mode
-    isSuperscript: boolean;
+    isSuperscript?: boolean;
 
     // Whether unlink command can be called to the text
-    canUnlink: boolean;
+    canUnlink?: boolean;
 
     // Whether add image alt text command can be called to the text
-    canAddImageAltText: boolean;
+    canAddImageAltText?: boolean;
 
     // Whether the content can be undone
-    canUndo: boolean;
+    canUndo?: boolean;
 
     // Whether the content ca nbe redone
-    canRedo: boolean;
+    canRedo?: boolean;
 
     // Header level (0-6, 0 means no header)
-    headerLevel: number;
+    headerLevel?: number;
 }
 
 export default FormatState;

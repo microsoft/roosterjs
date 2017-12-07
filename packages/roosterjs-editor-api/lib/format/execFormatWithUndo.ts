@@ -1,7 +1,6 @@
 import { Editor } from 'roosterjs-editor-core';
 import {
     EditorPoint,
-    NodeBoundary,
     NodeType,
     PluginEvent,
     PluginEventType

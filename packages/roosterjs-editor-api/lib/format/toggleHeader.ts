@@ -1,9 +1,9 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
+import wrap from 'roosterjs-editor-dom/lib/utils/wrap';
 import { Editor } from 'roosterjs-editor-core';
 import { ContentScope, NodeType } from 'roosterjs-editor-types';
 import { unwrap } from 'roosterjs-editor-dom';
-import wrap from 'roosterjs-editor-dom/lib/utils/wrap';
 
 export default function toggleHeader(editor: Editor, level: number) {
     level = Math.min(Math.max(Math.round(level), 0), 6);
@@ -31,7 +31,7 @@ export default function toggleHeader(editor: Editor, level: number) {
                 }
                 inlineElement = traverser.getNextInlineElement();
             }
-            let result = editor.getDocument().execCommand('formatBlock', false, `<H${level}>`);
+            editor.getDocument().execCommand('formatBlock', false, `<H${level}>`);
 
             let nodes = queryNodesWithSelection(editor, 'H' + level);
             return nodes.length == 1 ? nodes[0] : null;
