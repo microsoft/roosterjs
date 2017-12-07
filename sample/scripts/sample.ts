@@ -2,7 +2,7 @@ import ShowCursorPosition from './plugins/ShowCursorPosition';
 import ShowFromState from './plugins/ShowFormatState';
 import initFormatBar from './initFormatBar';
 import initOptions from './initOptions';
-import { createEditor } from 'roosterjs';
+import { createEditor, ImageResizePlugin } from 'roosterjs';
 import { setCurrentEditor } from './currentEditor';
 
 window.onload = () => {
@@ -40,6 +40,7 @@ function initEditor() {
         createEditor(editorArea, [
             new ShowCursorPosition(document.getElementById('cursorPosition')),
             new ShowFromState(document.getElementById('formatState')),
+            new ImageResizePlugin()
         ])
     );
 }

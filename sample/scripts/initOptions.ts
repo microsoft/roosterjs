@@ -8,6 +8,7 @@ import {
     ContentEdit,
     Watermark,
 } from 'roosterjs-editor-plugins';
+import { ImageResizePlugin } from 'roosterjs-plugin-image-resize';
 import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
 import { setCurrentEditor } from './currentEditor';
 import getCurrentEditor from './currentEditor';
@@ -38,6 +39,10 @@ function initEditorForOptions() {
 
     if ((document.getElementById('watermarkCheckbox') as HTMLInputElement).checked) {
         plugins.push(new Watermark('Type content here...'));
+    }
+
+    if ((document.getElementById('imageResizeCheckbox') as HTMLInputElement).checked) {
+        plugins.push(new ImageResizePlugin());
     }
 
     plugins.push(new ShowCursorPosition(document.getElementById('cursorPosition')));

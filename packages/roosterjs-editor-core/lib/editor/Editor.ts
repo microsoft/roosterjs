@@ -471,6 +471,7 @@ export default class Editor {
         this.contentDiv.addEventListener('keypress', this.onKeyPress);
         this.contentDiv.addEventListener('keydown', this.onKeyDown);
         this.contentDiv.addEventListener('keyup', this.onKeyUp);
+        this.contentDiv.addEventListener('mousedown', this.onMouseDown);
         this.contentDiv.addEventListener('mouseup', this.onMouseUp);
         this.contentDiv.addEventListener('compositionstart', this.onCompositionStart);
         this.contentDiv.addEventListener('compositionend', this.onCompositionEnd);
@@ -493,6 +494,7 @@ export default class Editor {
         this.contentDiv.removeEventListener('keypress', this.onKeyPress);
         this.contentDiv.removeEventListener('keydown', this.onKeyDown);
         this.contentDiv.removeEventListener('keyup', this.onKeyUp);
+        this.contentDiv.removeEventListener('mousedown', this.onMouseDown);
         this.contentDiv.removeEventListener('mouseup', this.onMouseUp);
         this.contentDiv.removeEventListener('compositionstart', this.onCompositionStart);
         this.contentDiv.removeEventListener('compositionend', this.onCompositionEnd);
@@ -614,6 +616,10 @@ export default class Editor {
     private onCompositionEnd = (event: CompositionEvent) => {
         this.isInIMESequence = false;
         this.dispatchDomEventToPlugin(PluginEventType.CompositionEnd, event);
+    };
+
+    private onMouseDown = (event: MouseEvent) => {
+        this.dispatchDomEventToPlugin(PluginEventType.MouseDown, event);
     };
 
     private onMouseUp = (event: MouseEvent) => {
