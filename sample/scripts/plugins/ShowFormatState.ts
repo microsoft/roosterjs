@@ -68,6 +68,9 @@ export default class ShowFormatState implements EditorPlugin {
             if (formatState.canAddImageAltText) {
                 result += ' <b>CanAddImageAltText</b>';
             }
+            if (formatState.headerLevel > 0) {
+                result += ` <b>Header${formatState.headerLevel}</b>`;
+            }
 
             this.resultContainer.innerHTML = result;
         }

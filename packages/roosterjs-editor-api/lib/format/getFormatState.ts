@@ -3,6 +3,7 @@ import { FormatState, ListState, NodeType, PluginEvent } from 'roosterjs-editor-
 import { getComputedStyle } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 import cacheGetListState from './cacheGetListState';
+import cacheGetHeaderLevel from './cacheGetHeaderLevel';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 
 // Get certain style of a node
@@ -59,6 +60,7 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
     }
 
     let listState = cacheGetListState(editor, event);
+    let headerLevel = cacheGetHeaderLevel(editor, event);
     return {
         fontName: getStyleAtNode(editor, nodeAtCursor, 'font-family', true /* useComputed*/),
         fontSize: getStyleAtNode(editor, nodeAtCursor, 'font-size', false /* useComputed*/),
@@ -82,5 +84,6 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
         canUndo: editor.canUndo(),
         canRedo: editor.canRedo(),
         isBlockQuote: queryNodesWithSelection(editor, 'blockquote').length > 0,
+        headerLevel: headerLevel,
     };
 }

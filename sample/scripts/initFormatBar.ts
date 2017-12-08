@@ -19,6 +19,7 @@ import {
     setBackgroundColor,
     toggleBlockQuote,
     removeLink,
+    toggleHeader,
 } from 'roosterjs-editor-api';
 import { Alignment, Indentation } from 'roosterjs-editor-types';
 import getCurrentEditor from './currentEditor';
@@ -81,6 +82,14 @@ export default function initFormatBar() {
     // ClearFormat
     document.getElementById('clearFormatButton').addEventListener('click', function() {
         clearFormat(getCurrentEditor());
+    });
+
+    // Header
+    document.getElementById('header').addEventListener('change', function() {
+        let select = document.getElementById('header') as HTMLSelectElement;
+        let level = parseInt(select.value);
+        toggleHeader(getCurrentEditor(), level);
+        select.value = '-1';
     });
 
     // Insert Table
