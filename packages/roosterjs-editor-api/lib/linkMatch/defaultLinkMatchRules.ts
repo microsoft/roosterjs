@@ -27,6 +27,12 @@ const httpMatchingRegEx = /^http:\/\/\S+|www\.\S+/i;
 // https matching regex
 const httpsMatchingRegEx = /^https:\/\/\S+/i;
 
+// http matching regex
+const edgeHttpMatchingRegEx = /^microsoft-edge:http:\/\/\S+|www\.\S+/i;
+
+// https matching regex
+const edgeHttpsMatchingRegEx = /^microsoft-edge:https:\/\/\S+/i;
+
 // mailto matching regex
 const mailtoMatchingRegEx = /^mailto:\S+@\S+\.\S+/i;
 
@@ -58,6 +64,8 @@ const waisMatchingRegEx = /^wais:\S+/i;
 const defaultLinkMatchRules: LinkMatchRule[] = [
     new RegExLinkMatchRule('http', 'http://', httpMatchingRegEx, httpExcludeRegEx),
     new RegExLinkMatchRule('https', 'https://', httpsMatchingRegEx, httpExcludeRegEx),
+    new RegExLinkMatchRule('microsoft-edge:http', 'microsoft-edge:http://', edgeHttpMatchingRegEx),
+    new RegExLinkMatchRule('microsoft-edge:https', 'microsoft-edge:https://', edgeHttpsMatchingRegEx),
     new RegExLinkMatchRule('mailto', 'mailto:', mailtoMatchingRegEx),
     new RegExLinkMatchRule('notes', 'notes://', notesMatchingRegEx),
     new RegExLinkMatchRule('file', 'file://', fileMatchingRegEx),
