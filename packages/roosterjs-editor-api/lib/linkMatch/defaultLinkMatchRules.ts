@@ -65,7 +65,11 @@ const defaultLinkMatchRules: LinkMatchRule[] = [
     new RegExLinkMatchRule('http', 'http://', httpMatchingRegEx, httpExcludeRegEx),
     new RegExLinkMatchRule('https', 'https://', httpsMatchingRegEx, httpExcludeRegEx),
     new RegExLinkMatchRule('microsoft-edge:http', 'microsoft-edge:http://', edgeHttpMatchingRegEx),
-    new RegExLinkMatchRule('microsoft-edge:https', 'microsoft-edge:https://', edgeHttpsMatchingRegEx),
+    new RegExLinkMatchRule(
+        'microsoft-edge:https',
+        'microsoft-edge:https://',
+        edgeHttpsMatchingRegEx
+    ),
     new RegExLinkMatchRule('mailto', 'mailto:', mailtoMatchingRegEx),
     new RegExLinkMatchRule('notes', 'notes://', notesMatchingRegEx),
     new RegExLinkMatchRule('file', 'file://', fileMatchingRegEx),

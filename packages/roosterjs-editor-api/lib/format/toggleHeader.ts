@@ -12,29 +12,33 @@ export default function toggleHeader(editor: Editor, level: number) {
         headerNodes = headerNodes.concat(queryNodesWithSelection(editor, 'H' + i));
     }
 
-    execFormatWithUndo(editor, () => {
-        headerNodes.forEach(header => {
-            wrap(header, '<div></div>');
-            unwrap(header);
-        });
+    execFormatWithUndo(
+        editor,
+        () => {
+            headerNodes.forEach(header => {
+                wrap(header, '<div></div>');
+                unwrap(header);
+            });
 
-        if (level > 0) {
-            let traverser = editor.getContentTraverser(ContentScope.Selection);
-            let inlineElement = traverser ? traverser.currentInlineElement : null;
-            while (inlineElement) {
-                let node = inlineElement.getContainerNode();
-                if (node.nodeType == NodeType.Text) {
-                    node = node.parentNode
+            if (level > 0) {
+                let traverser = editor.getContentTraverser(ContentScope.Selection);
+                let inlineElement = traverser ? traverser.currentInlineElement : null;
+                while (inlineElement) {
+                    let node = inlineElement.getContainerNode();
+                    if (node.nodeType == NodeType.Text) {
+                        node = node.parentNode;
+                    }
+                    if (node.nodeType == NodeType.Element) {
+                        (<HTMLElement>node).style.fontSize = '';
+                    }
+                    inlineElement = traverser.getNextInlineElement();
                 }
-                if (node.nodeType == NodeType.Element) {
-                    (<HTMLElement>node).style.fontSize = '';
-                }
-                inlineElement = traverser.getNextInlineElement();
+                editor.getDocument().execCommand('formatBlock', false, `<H${level}>`);
+
+                let nodes = queryNodesWithSelection(editor, 'H' + level);
+                return nodes.length == 1 ? nodes[0] : null;
             }
-            editor.getDocument().execCommand('formatBlock', false, `<H${level}>`);
-
-            let nodes = queryNodesWithSelection(editor, 'H' + level);
-            return nodes.length == 1 ? nodes[0] : null;
-        }
-    }, true /*preserveSelection*/);
+        },
+        true /*preserveSelection*/
+    );
 }

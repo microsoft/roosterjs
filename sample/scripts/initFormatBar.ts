@@ -106,7 +106,7 @@ export default function initFormatBar() {
         (document.getElementById('selectFile') as HTMLInputElement).click();
     });
 
-    document.getElementById('selectFile').addEventListener('change', function () {
+    document.getElementById('selectFile').addEventListener('change', function() {
         let input = document.getElementById('selectFile') as HTMLInputElement;
         let file = input.files[0];
         if (file) {

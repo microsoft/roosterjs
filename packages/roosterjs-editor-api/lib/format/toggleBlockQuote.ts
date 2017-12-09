@@ -20,26 +20,30 @@ export default function toggleBlockQuote(
 ): void {
     editor.focus();
     let blockquoteNodes = queryNodesWithSelection(editor, 'blockquote');
-    execFormatWithUndo(editor, (startPoint, endPoint) => {
-        if (blockquoteNodes.length) {
-            // There are already blockquote nodes, unwrap them
-            blockquoteNodes.forEach(node => unwrap(node));
-        } else {
-            // Step 1: Find all block elements and their content nodes
-            let nodes = getContentNodes(editor);
+    execFormatWithUndo(
+        editor,
+        (startPoint, endPoint) => {
+            if (blockquoteNodes.length) {
+                // There are already blockquote nodes, unwrap them
+                blockquoteNodes.forEach(node => unwrap(node));
+            } else {
+                // Step 1: Find all block elements and their content nodes
+                let nodes = getContentNodes(editor);
 
-            // Step 2: Split existing list container if necessary
-            nodes = getSplittedListNodes(nodes);
+                // Step 2: Split existing list container if necessary
+                nodes = getSplittedListNodes(nodes);
 
-            // Step 3: Handle some special cases
-            nodes = getNodesWithSpecialCaseHandled(editor, nodes, startPoint, endPoint);
+                // Step 3: Handle some special cases
+                nodes = getNodesWithSpecialCaseHandled(editor, nodes, startPoint, endPoint);
 
-            let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLElement;
-            (styler || defaultStyler)(quoteElement);
+                let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLElement;
+                (styler || defaultStyler)(quoteElement);
 
-            return quoteElement;
-        }
-    }, true /*preserveSelection*/);
+                return quoteElement;
+            }
+        },
+        true /*preserveSelection*/
+    );
 }
 
 function getContentNodes(editor: Editor): Node[] {

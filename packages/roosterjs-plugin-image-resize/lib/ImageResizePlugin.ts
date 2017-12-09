@@ -12,7 +12,10 @@ import { execFormatWithUndo } from 'roosterjs-editor-api';
 
 const BEGIN_TAG = 'RoosterJsImageResizingBegin';
 const END_TAG = 'RoosterJsImageResizingEnd';
-const EXTRACT_HTML_REGEX = new RegExp(`<!--${BEGIN_TAG}-->[\\s\\S]*(<img\\s[^>]+>)[\\s\\S]*<!--${END_TAG}-->`, 'gim');
+const EXTRACT_HTML_REGEX = new RegExp(
+    `<!--${BEGIN_TAG}-->[\\s\\S]*(<img\\s[^>]+>)[\\s\\S]*<!--${END_TAG}-->`,
+    'gim'
+);
 const DELETE_KEYCODE = 46;
 const BACKSPACE_KEYCODE = 8;
 const SHIFT_KEYCODE = 16;
@@ -78,9 +81,11 @@ export default class ImageResizePlugin implements EditorPlugin {
                     this.removeResizeDiv();
                 });
                 event.preventDefault();
-            } else if (event.which != SHIFT_KEYCODE &&
+            } else if (
+                event.which != SHIFT_KEYCODE &&
                 event.which != CTRL_KEYCODE &&
-                event.which != ALT_KEYCODE) {
+                event.which != ALT_KEYCODE
+            ) {
                 this.unselect(true /*selectImageAfterUnSelect*/);
             }
         } else if (e.eventType == PluginEventType.ExtractContent) {
@@ -106,9 +111,9 @@ export default class ImageResizePlugin implements EditorPlugin {
                 img.removeAttribute('contentEditable');
                 let referenceNode =
                     this.resizeDiv.previousSibling &&
-                    this.resizeDiv.previousSibling.nodeType == NodeType.Comment ?
-                    this.resizeDiv.previousSibling :
-                    this.resizeDiv;
+                    this.resizeDiv.previousSibling.nodeType == NodeType.Comment
+                        ? this.resizeDiv.previousSibling
+                        : this.resizeDiv;
                 parent.insertBefore(img, referenceNode);
 
                 if (selectImageAfterUnSelect) {
@@ -137,18 +142,27 @@ export default class ImageResizePlugin implements EditorPlugin {
         }
 
         e.preventDefault();
-    }
+    };
 
     private doResize = (e: MouseEvent) => {
         let img = this.getSelectedImage();
         if (this.editor && img) {
             let widthChange = e.pageX - this.startPageX;
             let heightChange = e.pageY - this.startPageY;
-            let newWidth = Math.max(this.startWidth + (this.isWest(this.direction) ? -widthChange : widthChange), this.minWidth);
-            let newHeight = Math.max(this.startHeight + (this.isNorth(this.direction) ? -heightChange : heightChange), this.minHeight);
+            let newWidth = Math.max(
+                this.startWidth + (this.isWest(this.direction) ? -widthChange : widthChange),
+                this.minWidth
+            );
+            let newHeight = Math.max(
+                this.startHeight + (this.isNorth(this.direction) ? -heightChange : heightChange),
+                this.minHeight
+            );
 
             if (this.forcePreserveRatio || e.shiftKey) {
-                let ratio = (this.startWidth > 0 && this.startHeight > 0) ? this.startWidth * 1.0 / this.startHeight : 0;
+                let ratio =
+                    this.startWidth > 0 && this.startHeight > 0
+                        ? this.startWidth * 1.0 / this.startHeight
+                        : 0;
                 if (ratio > 0) {
                     if (newWidth < newHeight * ratio) {
                         newWidth = newHeight * ratio;
@@ -162,7 +176,7 @@ export default class ImageResizePlugin implements EditorPlugin {
             img.style.height = newHeight + 'px';
         }
         e.preventDefault();
-    }
+    };
 
     private finishResize = (e: MouseEvent) => {
         var img = this.getSelectedImage();
@@ -179,7 +193,7 @@ export default class ImageResizePlugin implements EditorPlugin {
         this.editor.addUndoSnapshot();
         this.triggerContentChangedEvent();
         e.preventDefault();
-    }
+    };
 
     private createResizeDiv(target: HTMLElement) {
         let document = this.editor.getDocument();

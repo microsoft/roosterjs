@@ -753,10 +753,15 @@ export default class Editor {
 
     private setDefaultFormat(format: DefaultFormat) {
         this.defaultFormat = format || {};
-        this.defaultFormat.fontFamily = this.defaultFormat.fontFamily || getComputedStyle(this.contentDiv, 'font-family');
-        this.defaultFormat.fontSize = this.defaultFormat.fontSize || getComputedStyle(this.contentDiv, 'font-size');
-        this.defaultFormat.textColor = this.defaultFormat.textColor || getComputedStyle(this.contentDiv, 'color');
-        this.defaultFormat.backgroundColor = this.defaultFormat.backgroundColor || getComputedStyle(this.contentDiv, 'background-color');
+        this.defaultFormat.fontFamily =
+            this.defaultFormat.fontFamily || getComputedStyle(this.contentDiv, 'font-family');
+        this.defaultFormat.fontSize =
+            this.defaultFormat.fontSize || getComputedStyle(this.contentDiv, 'font-size');
+        this.defaultFormat.textColor =
+            this.defaultFormat.textColor || getComputedStyle(this.contentDiv, 'color');
+        this.defaultFormat.backgroundColor =
+            this.defaultFormat.backgroundColor ||
+            getComputedStyle(this.contentDiv, 'background-color');
     }
 
     private triggerContentChangedEvent() {

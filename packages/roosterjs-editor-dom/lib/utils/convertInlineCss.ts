@@ -68,7 +68,10 @@ function convertThroughRegEx(sourceHtml: string): string {
 /**
  * Convert CSS from header or external, to inline CSS
  */
-export default function convertInlineCss(sourceHtml: string, additionalStyleNodes?: HTMLStyleElement[]): string {
+export default function convertInlineCss(
+    sourceHtml: string,
+    additionalStyleNodes?: HTMLStyleElement[]
+): string {
     // Skip for empty string
     if (!sourceHtml) {
         return '';
@@ -90,7 +93,7 @@ export default function convertInlineCss(sourceHtml: string, additionalStyleNode
         contentDocument.close();
 
         let styleSheets: CSSStyleSheet[] = [];
-        for (let i = (additionalStyleNodes ? additionalStyleNodes.length - 1 : -1); i >= 0; i--) {
+        for (let i = additionalStyleNodes ? additionalStyleNodes.length - 1 : -1; i >= 0; i--) {
             styleSheets.push(additionalStyleNodes[i].sheet as CSSStyleSheet);
         }
         for (let i = contentDocument.styleSheets.length - 1; i >= 0; i--) {

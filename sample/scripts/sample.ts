@@ -40,7 +40,7 @@ function initEditor() {
         createEditor(editorArea, [
             new ShowCursorPosition(document.getElementById('cursorPosition')),
             new ShowFromState(document.getElementById('formatState')),
-            new ImageResizePlugin()
+            new ImageResizePlugin(),
         ])
     );
 }

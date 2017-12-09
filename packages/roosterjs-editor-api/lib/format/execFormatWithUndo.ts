@@ -1,10 +1,5 @@
 import { Editor } from 'roosterjs-editor-core';
-import {
-    EditorPoint,
-    NodeType,
-    PluginEvent,
-    PluginEventType
-} from 'roosterjs-editor-types';
+import { EditorPoint, NodeType, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 /**
  * Formatter function type
@@ -13,13 +8,19 @@ import {
  * @returns A fallback node for selection. When original selection range is not valid after format,
  * will try to select this element instead
  */
-export type Formatter = (startPoint: EditorPoint, endPoint: EditorPoint) => (Node | void | any);
+export type Formatter = (startPoint: EditorPoint, endPoint: EditorPoint) => Node | void | any;
 
 // Exec format with undo
-export default function execFormatWithUndo(editor: Editor, formatter: Formatter, preserveSelection?: boolean): void {
+export default function execFormatWithUndo(
+    editor: Editor,
+    formatter: Formatter,
+    preserveSelection?: boolean
+): void {
     editor.addUndoSnapshot();
     let range = editor.getSelectionRange();
-    let startPoint = range ? { containerNode: range.startContainer, offset: range.startOffset } : null;
+    let startPoint = range
+        ? { containerNode: range.startContainer, offset: range.startOffset }
+        : null;
     let endPoint = range ? { containerNode: range.endContainer, offset: range.endOffset } : null;
 
     let fallbackNode = formatter(startPoint, endPoint);
@@ -61,7 +62,10 @@ function validateEditorPoint(editor: Editor, point: EditorPoint): boolean {
         if (point.containerNode.nodeType == NodeType.Text) {
             point.offset = Math.min(point.offset, (<Text>point.containerNode).data.length);
         } else if (point.containerNode.nodeType == NodeType.Element) {
-            point.offset = Math.min(point.offset, (<HTMLElement>point.containerNode).childNodes.length);
+            point.offset = Math.min(
+                point.offset,
+                (<HTMLElement>point.containerNode).childNodes.length
+            );
         }
         return point.offset >= 0;
     }

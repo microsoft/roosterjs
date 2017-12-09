@@ -12,7 +12,12 @@ export interface TableFormat {
     borderCollapse?: string;
 }
 
-export default function insertTable(editor: Editor, columns: number, rows: number, format?: TableFormat) {
+export default function insertTable(
+    editor: Editor,
+    columns: number,
+    rows: number,
+    format?: TableFormat
+) {
     let document = editor.getDocument();
     let fragment = document.createDocumentFragment();
     let table = document.createElement('table') as HTMLTableElement;
