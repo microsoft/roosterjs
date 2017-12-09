@@ -10,7 +10,7 @@ export function initEditor(id: string, plugins?: EditorPlugin[], undo?: UndoServ
 
     let editor = new Editor(node as HTMLDivElement, {
         plugins: plugins || [],
-        defaultFormat: { textColor: 'black' },
+        defaultFormat: { textColor: 'black', fontFamily: 'times new roman' },
         undo: undo,
     });
 
