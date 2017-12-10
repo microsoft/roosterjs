@@ -5,20 +5,20 @@ var namePlaceholder = '__NAME__';
 var regExportFrom = /export([^;]+)from\s+'([^']+)';/gm;
 var regImportFrom = /import[^;]+from[^;]+;/gm;
 var singleLineComment = /\/\/[^\n]*\n/g;
-var multiLineComment = /\/\*([^\*]*(\*[^\/]|\/)*)*\**\*\//g;
+var multiLineComment = /(^\/\*(\*(?!\/)|[^*])*\*\/\s*)/m;
 
 // 1. [export ][default |declare ](class|interface) <NAME>[ extends| implements <BASECLASS>] {...}
-var regClassInterface = /(export\s+)?(default\s+|declare\s+)?(interface|class)\s+([a-zA-Z0-9_<>]+)((\s+extends|\s+implements)(\s+[0-9a-zA-Z_<>]+))?\s*{/gm;
+var regClassInterface = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?(interface|class)\s+([a-zA-Z0-9_<>]+)((\s+extends|\s+implements)(\s+[0-9a-zA-Z_<>]+))?\s*{/gm;
 // 2. [export ][default |declare ]function <NAME>(...)[: <TYPE>];
-var regFunction = /(export\s+)?(default\s+|declare\s+)?function\s+([a-zA-Z0-9_<>]+)\s*(\([^;]+;)/gm;
+var regFunction = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?function\s+([a-zA-Z0-9_<>]+)\s*(\([^;]+;)/gm;
 // 3. [export ][default |declare ]const enum <NAME> {...}
-var regEnum = /(export\s+)?(default\s+|declare\s+)?(const\s+)?enum\s+([a-zA-Z0-9_<>]+)\s*{/gm;
+var regEnum = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?(const\s+)?enum\s+([a-zA-Z0-9_<>]+)\s*{/gm;
 // 4. [export ][default |declare ]type <NAME> = ...;
-var regType = /(export\s+)?(default\s+|declare\s+)?type\s+([0-9a-zA-Z_<>]+)\s*(=[^;]+;)/gm;
+var regType = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?type\s+([0-9a-zA-Z_<>]+)\s*(=[^;]+;)/gm;
 // 5. [export ][default |declare ]const <NAME>: ...;
-var regConst = /(exports\s+)?(default\s+|declare\s+)?const\s+([0-9a-zA-Z_<>]+)\s*(:[^;]+;)/gm;
+var regConst = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(exports\s+)?(default\s+|declare\s+)?const\s+([0-9a-zA-Z_<>]+)\s*(:[^;]+;)/gm;
 // 6. export[ default] <NAME>|{NAMES};
-var regExport = /(export\s+)(default\s+([0-9a-zA-Z_]+)\s*,?)?(\s*{([^}]+)})?\s*;/gm;
+var regExport = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)(default\s+([0-9a-zA-Z_]+)\s*,?)?(\s*{([^}]+)})?\s*;/gm;
 
 function enqueue(queue, filename, exports) {
     if (queue.find(function(v) {
@@ -84,7 +84,7 @@ function parsePair(content, startIndex, open, close, startLevel) {
 }
 
 function getName(matches, nameIndex) {
-    if (matches[1] && matches[2] && matches[2].trim() == 'default') {
+    if (matches[3] && matches[4] && matches[4].trim() == 'default') {
         return 'default';
     } else {
         return matches[nameIndex].trim();
@@ -95,8 +95,8 @@ function parseClasses(content, elements) {
     var matches;
     while (matches = regClassInterface.exec(content)) {
         var result = parsePair(content, matches.index + matches[0].length, '{', '}', 1);
-        var classText = matches[3] + ' ' + namePlaceholder + (matches[5] || '') + ' {' + result[0];
-        var name = getName(matches, 4);
+        var classText = (matches[1] || '') + matches[5] + ' ' + namePlaceholder + (matches[7] || '') + ' {' + result[0];
+        var name = getName(matches, 6);
         elements[name] = classText;
         content = result[1];
     }
@@ -106,8 +106,8 @@ function parseClasses(content, elements) {
 function parseFunctions(content, elements) {
     var matches;
     while (matches = regFunction.exec(content)) {
-        var functionText = 'function ' + namePlaceholder + matches[4];
-        var name = getName(matches, 3);
+        var functionText = (matches[1] || '') + 'function ' + namePlaceholder + matches[6];
+        var name = getName(matches, 5);
         elements[name] = functionText;
     }
     return content.replace(regFunction, '');
@@ -117,8 +117,8 @@ function parseEnum(content, elements) {
     var matches;
     while (matches = regEnum.exec(content)) {
         var result = parsePair(content, matches.index + matches[0].length, '{', '}', 1);
-        var enumText = (matches[3] || '') + 'enum '+ namePlaceholder + ' {' + result[0];
-        var name = getName(matches, 4);
+        var enumText = (matches[1] || '') + (matches[5] || '') + 'enum '+ namePlaceholder + ' {' + result[0];
+        var name = getName(matches, 6);
         elements[name] = enumText;
         content = result[1];
     }
@@ -128,8 +128,8 @@ function parseEnum(content, elements) {
 function parseType(content, elements) {
     var matches;
     while (matches = regType.exec(content)) {
-        var typeText = 'type ' + namePlaceholder + ' ' + matches[4];
-        var name = getName(matches, 3);
+        var typeText = (matches[1] || '') + 'type ' + namePlaceholder + ' ' + matches[6];
+        var name = getName(matches, 5);
         elements[name] = typeText;
     }
 
@@ -139,8 +139,8 @@ function parseType(content, elements) {
 function parseConst(content, elements) {
     var matches;
     while (matches = regConst.exec(content)) {
-        var constText = 'const ' + namePlaceholder + matches[4];
-        var name = getName(matches, 3);
+        var constText = (matches[1] || '') + 'const ' + namePlaceholder + matches[6];
+        var name = getName(matches, 5);
         elements[name] = constText;
     }
 
@@ -150,7 +150,7 @@ function parseConst(content, elements) {
 function parseExport(content, elements) {
     var matches;
     while (matches = regExport.exec(content)) {
-        var defaultExport = matches[3];
+        var defaultExport = matches[5];
         if (defaultExport) {
             elements['default'] = elements[defaultExport];
         }
@@ -175,10 +175,8 @@ function process(baseDir, queue, index) {
     var file = fs.readFileSync(currentFileName);
     var content = file.toString();
 
-    // 1. Remove comments
-    // TODO: Preserve comments
+    // 1. Remove single line comments
     content = content.replace(singleLineComment, '');
-    content = content.replace(multiLineComment, '');
 
     // 2. Process 'export ... from ...;'
     content = parseExportFrom(content, currentFileName, queue);
@@ -235,9 +233,14 @@ function output(filename, library, queue) {
                     throw new Error('Name not found: ' + name);
                 }
                 text = text.replace(namePlaceholder, alias);
-                content += library ?
-                    '    ' + text.replace(/\r\n/g, '\r\n    ').trim() + '\r\n\r\n' :
-                    'export ' + text + '\r\n\r\n';
+
+                if (library) {
+                    content += '    ' + text.replace(/\r\n/g, '\r\n    ').trim() + '\r\n\r\n';
+                } else {
+                    content += (multiLineComment.test(text) ?
+                        text.replace(multiLineComment, '$1export ') :
+                        'export ' + text) + '\r\n\r\n';
+                }
             }
         }
     }
