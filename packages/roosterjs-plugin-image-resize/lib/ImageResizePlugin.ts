@@ -179,13 +179,17 @@ export default class ImageResizePlugin implements EditorPlugin {
     };
 
     private finishResize = (e: MouseEvent) => {
-        var img = this.getSelectedImage();
+        var img = this.getSelectedImage() as HTMLImageElement;
         if (this.editor && img) {
             let document = this.editor.getDocument();
             document.removeEventListener('mousemove', this.doResize, true /*useCapture*/);
             document.removeEventListener('mouseup', this.finishResize, true /*useCapture*/);
-            img.style.width = img.clientWidth + 'px';
-            img.style.height = img.clientHeight + 'px';
+            let width = img.clientWidth;
+            let height = img.clientHeight;
+            img.style.width = width + 'px';
+            img.style.height = height + 'px';
+            img.width = width;
+            img.height = height;
             this.resizeDiv.style.width = '';
             this.resizeDiv.style.height = '';
         }
