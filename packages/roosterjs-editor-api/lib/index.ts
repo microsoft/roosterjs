@@ -14,7 +14,7 @@ export { default as cacheGetListElement } from './format/cacheGetListElement';
 export { default as cacheGetListState } from './format/cacheGetListState';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
-export { default as execFormatWithUndo } from './format/execFormatWithUndo';
+export { default as execFormatWithUndo, Formatter } from './format/execFormatWithUndo';
 export { default as getFormatState } from './format/getFormatState';
 export { default as insertImage } from './format/insertImage';
 export { default as insertTable, TableFormat } from './format/insertTable';

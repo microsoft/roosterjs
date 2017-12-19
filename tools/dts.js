@@ -6,6 +6,7 @@ var regExportFrom = /export([^;]+)from\s+'([^']+)';/gm;
 var regImportFrom = /import[^;]+from[^;]+;/gm;
 var singleLineComment = /\/\/[^\n]*\n/g;
 var multiLineComment = /(^\/\*(\*(?!\/)|[^*])*\*\/\s*)/m;
+var exec = require('child_process').execSync;
 
 // 1. [export ][default |declare ](class|interface) <NAME>[ extends| implements <BASECLASS>] {...}
 var regClassInterface = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?(interface|class)\s+([a-zA-Z0-9_<>]+)((\s+extends|\s+implements)(\s+[0-9a-zA-Z_<>]+))?\s*{/gm;
@@ -249,6 +250,14 @@ function output(filename, library, queue) {
         content += '}';
     }
     fs.writeFileSync(filename, content);
+
+    // Test the .d.ts file
+    var result;
+    var options = {
+        stdio: 'inherit',
+        cwd: __dirname
+    };
+    exec(`node ../node_modules/typescript/lib/tsc.js ` + filename + ' -outFile nul', options);
     console.log('Type definition file ' + filename + ' generated.');
 }
 
@@ -261,7 +270,7 @@ function output(filename, library, queue) {
 //          included root files, must be relative with baseDir'
 //      ]
 // }
-function main(config) { //baseDir, startFile, outputFile) {
+function main(config) {
     if (!config) {
         throw new Error('config cannot be null');
     }
