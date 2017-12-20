@@ -11,9 +11,11 @@ export default function queryNodesWithSelection(editor: Editor, selector: string
     let result: Node[] = [];
     let nodes = editor.queryContent(selector);
     let range = editor.getSelectionRange();
-    for (let i = 0; i < nodes.length; i++) {
-        if (isIntersectWithNodeRange(nodes[i], range)) {
-            result.push(nodes[i]);
+    if (range) {
+        for (let i = 0; i < nodes.length; i++) {
+            if (isIntersectWithNodeRange(nodes[i], range)) {
+                result.push(nodes[i]);
+            }
         }
     }
     return result;
