@@ -62,7 +62,8 @@ export default class Editor {
     private undoService: UndoService;
     private isInIMESequence: boolean;
     private suspendAddingUndoSnapshot: boolean;
-    private doNotRestoreSelectionOnFocus: boolean;
+    private disableRestoreSelectionOnFocus: boolean;
+    private omitContentEditableAttributeChanges: boolean;
     private disposed: boolean;
 
     /**
@@ -79,7 +80,8 @@ export default class Editor {
         // 2. Store options values to local variables
         options = options || {};
         this.setDefaultFormat(options.defaultFormat);
-        this.doNotRestoreSelectionOnFocus = options.doNotRestoreSelectionOnFocus;
+        this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus;
+        this.omitContentEditableAttributeChanges = options.omitContentEditableAttributeChanges;
         this.plugins = options.plugins || [];
 
         // 3. Initialize plugins
@@ -99,10 +101,12 @@ export default class Editor {
         this.undoService.initialize(this);
         this.plugins.push(this.undoService);
 
-        // 6. Finally make the container editalbe, set its selection styles and bind events
-        this.contentDiv.setAttribute('contenteditable', 'true');
-        let styles = this.contentDiv.style;
-        styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
+        // 6. Finally make the container editable, set its selection styles and bind events
+        if (!this.omitContentEditableAttributeChanges) {
+            this.contentDiv.setAttribute('contenteditable', 'true');
+            let styles = this.contentDiv.style;
+            styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
+        }
         this.bindEvents();
     }
 
@@ -110,9 +114,11 @@ export default class Editor {
         this.disposed = true;
         this.disposePlugins();
         this.unbindEvents();
-        let styles = this.contentDiv.style;
-        styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = '';
-        this.contentDiv.removeAttribute('contenteditable');
+        if (!this.omitContentEditableAttributeChanges) {
+            let styles = this.contentDiv.style;
+            styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = '';
+            this.contentDiv.removeAttribute('contenteditable');
+        }
     }
 
     public isDisposed(): boolean {
@@ -640,7 +646,7 @@ export default class Editor {
 
     private onFocus = (event: FocusEvent) => {
         // Restore the last saved selection first
-        if (this.cachedSelectionRange && !this.doNotRestoreSelectionOnFocus) {
+        if (this.cachedSelectionRange && !this.disableRestoreSelectionOnFocus) {
             this.restoreLastSavedSelection();
         }
 
