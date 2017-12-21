@@ -9,6 +9,7 @@ interface EditorOptions {
     undo?: UndoService;
     initialContent?: string;
     doNotRestoreSelectionOnFocus?: boolean;
+    omitContentEditableAttributeChanges?: boolean;
 }
 
 export default EditorOptions;
