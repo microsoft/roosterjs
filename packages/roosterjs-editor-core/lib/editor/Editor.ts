@@ -62,7 +62,7 @@ export default class Editor {
     private undoService: UndoService;
     private isInIMESequence: boolean;
     private suspendAddingUndoSnapshot: boolean;
-    private doNotRestoreSelectionOnFocus: boolean;
+    private disableRestoreSelectionOnFocus: boolean;
     private omitContentEditableAttributeChanges: boolean;
     private disposed: boolean;
 
@@ -80,7 +80,7 @@ export default class Editor {
         // 2. Store options values to local variables
         options = options || {};
         this.setDefaultFormat(options.defaultFormat);
-        this.doNotRestoreSelectionOnFocus = options.doNotRestoreSelectionOnFocus;
+        this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus;
         this.omitContentEditableAttributeChanges = options.omitContentEditableAttributeChanges;
         this.plugins = options.plugins || [];
 
@@ -646,7 +646,7 @@ export default class Editor {
 
     private onFocus = (event: FocusEvent) => {
         // Restore the last saved selection first
-        if (this.cachedSelectionRange && !this.doNotRestoreSelectionOnFocus) {
+        if (this.cachedSelectionRange && !this.disableRestoreSelectionOnFocus) {
             this.restoreLastSavedSelection();
         }
 
