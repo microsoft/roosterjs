@@ -7,14 +7,18 @@ const UNSAFE_TAG_REGEX = [
     /<embed\s*[^>]*>[\s\S]*<\/embed>/gi,
     /<meta\s*[^>]*>[\s\S]*<\/meta>/gi,
 ];
-const EVENT_REGEX = /<(\w+)([^>]*\W+)on\w+\s*=\s*('[^']*'|"[^"]*"|[^'"\s]*)/gi;
+const UNSAFE_ATTRIBUTE_REGEX = [
+    /<(\w+)([^>]*\W+)on\w+\s*=\s*('[^']*'|"[^"]*"|[^'"\s]*)/gi,
+];
 
 export default function removeUnsafeTags(html: string): string {
     UNSAFE_TAG_REGEX.forEach(regex => {
         html = html.replace(regex, ZERO_WIDTH_SPACE); // Use zero width space rather than empty string to handle cases like <scr<script>ipt>
     });
-    while (EVENT_REGEX.test(html)) {
-        html = html.replace(EVENT_REGEX, '<$1$2');
-    }
+    UNSAFE_ATTRIBUTE_REGEX.forEach(regex => {
+        while (regex.test(html)) {
+            html = html.replace(regex, '<$1$2');
+        }
+    })
     return html;
 }

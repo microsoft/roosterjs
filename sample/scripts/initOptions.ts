@@ -31,7 +31,7 @@ function initEditorForOptions() {
         plugins.push(new HyperLink());
     }
     if ((document.getElementById('pasteManagerCheckbox') as HTMLInputElement).checked) {
-        plugins.push(new PasteManager());
+        plugins.push(new PasteManager(null, true));
     }
     if ((document.getElementById('contentEditCheckbox') as HTMLInputElement).checked) {
         plugins.push(new ContentEdit());
