@@ -11,7 +11,7 @@ export function validateFileType(file: File): boolean {
     return file instanceof Blob;
 }
 
-export function processImages(pasteContainer: HTMLElement, clipboardData: ClipboardData) {
+export function processImages(pasteContainer: NodeSelector, clipboardData: ClipboardData) {
     let images = pasteContainer.querySelectorAll('img');
     let imageCount = images.length;
     for (let i = 0; i < imageCount; i++) {

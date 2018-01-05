@@ -8,14 +8,16 @@ import {
 } from 'roosterjs-editor-types';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { processImages } from './PasteUtility';
-import { fromHtml } from 'roosterjs-editor-dom';
+import { convertInlineCss, fromHtml } from 'roosterjs-editor-dom';
 import { insertImage } from 'roosterjs-editor-api';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
+import removeUnsafeTags from './removeUnsafeTags';
 
 const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
 const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/i;
 const CONTAINER_HTML =
     '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
+const HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
 
 interface WindowForIE extends Window {
     clipboardData: DataTransfer;
@@ -32,8 +34,14 @@ export default class PasteManager implements EditorPlugin {
      * Create an instance of PasteManager
      * @param pasteHandler An optional pasteHandler to perform extra actions after pasting.
      * Default behavior is to paste image (if any) as BASE64 inline image.
+     * @param useDirectHtml: This is a test parameter and may be removed in the future.
+     * When set to true, we retrieve HTML from clipboard directly rather than using a hidden pasting DIV,
+     * then filter out unsafe HTML tags and attributes.
      */
-    constructor(private readonly pasteHandler?: (clipboardData: ClipBoardData) => void) {}
+    constructor(
+        private readonly pasteHandler?: (clipboardData: ClipBoardData) => void,
+        private useDirectHtml?: boolean
+    ) {}
 
     public initialize(editor: Editor) {
         this.editor = editor;
@@ -70,10 +78,24 @@ export default class PasteManager implements EditorPlugin {
             // There is text to paste, so clear any image data if any.
             // Otherwise both text and image will be pasted, this will cause duplicated paste
             clipboardData.imageData = {};
-            this.retrieveHtml(this.editor, container => {
-                processImages(container, clipboardData);
-                clipboardData.htmlData = normalizeContent(container.innerHTML);
+            this.retrieveHtml(pasteEvent, html => {
+                if (this.useDirectHtml) {
+                    // 1. Remove content outside HTML tag if any
+                    let matches = HTML_REGEX.exec(html);
+                    html = matches ? matches[0] : html;
 
+                    // 2. Remove unsafe tags and attributes
+                    html = removeUnsafeTags(html);
+
+                    // 3. Convert inline css, so that Office documentations are showing well
+                    html = convertInlineCss(html);
+                }
+
+                // 4. Do other normalization
+                html = normalizeContent(html);
+                clipboardData.htmlData = html;
+
+                // 5. Prepare HTML fragment for pasting
                 let document = this.editor.getDocument();
                 let fragment = document.createDocumentFragment();
                 let nodes = fromHtml(clipboardData.htmlData, document);
@@ -81,8 +103,16 @@ export default class PasteManager implements EditorPlugin {
                     fragment.appendChild(node);
                 }
 
+                // 6. Process inline image
+                processImages(fragment, clipboardData);
+
+                // 7. Process content pasted from Word
                 convertPastedContentFromWord(fragment);
+
+                // 8. Insert content into body
                 this.editor.insertNode(fragment);
+
+                // 9. Raise the callback after pasting
                 this.onPasteComplete(clipboardData);
             });
         }
@@ -112,13 +142,28 @@ export default class PasteManager implements EditorPlugin {
         }
     };
 
-    private retrieveHtml(editor: Editor, callback: (container: HTMLElement) => void) {
+    private retrieveHtml(event: ClipboardEvent, callback: (html: string) => void) {
+        if (this.useDirectHtml) {
+            let fileCount = event.clipboardData
+                ? event.clipboardData.items ? event.clipboardData.items.length : 0
+                : 0;
+
+            for (let i = 0; i < fileCount; i++) {
+                let item = event.clipboardData.items[i];
+                if (item.type && item.type.indexOf('text/html') == 0) {
+                    item.getAsString(callback);
+                    event.preventDefault();
+                    return;
+                }
+            }
+        }
+
         // cache original selection range in editor
-        let originalSelectionRange = editor.getSelectionRange();
+        let originalSelectionRange = this.editor.getSelectionRange();
 
         if (!this.pasteContainer || !this.pasteContainer.parentNode) {
-            this.pasteContainer = fromHtml(CONTAINER_HTML, editor.getDocument())[0] as HTMLElement;
-            editor.insertNode(this.pasteContainer, {
+            this.pasteContainer = fromHtml(CONTAINER_HTML, this.editor.getDocument())[0] as HTMLElement;
+            this.editor.insertNode(this.pasteContainer, {
                 position: ContentPosition.Outside,
                 updateCursor: false,
                 replaceSelection: false,
@@ -130,11 +175,13 @@ export default class PasteManager implements EditorPlugin {
         this.pasteContainer.focus();
 
         window.requestAnimationFrame(() => {
-            // restore original selection range in editor
-            editor.updateSelection(originalSelectionRange);
-            callback(this.pasteContainer);
-            this.pasteContainer.style.display = 'none';
-            this.pasteContainer.innerHTML = '';
+            if (this.editor) {
+                // restore original selection range in editor
+                this.editor.updateSelection(originalSelectionRange);
+                callback(this.pasteContainer.innerHTML);
+                this.pasteContainer.style.display = 'none';
+                this.pasteContainer.innerHTML = '';
+            }
         });
     }
 }
