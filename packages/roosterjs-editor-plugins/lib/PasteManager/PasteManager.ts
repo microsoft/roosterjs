@@ -12,7 +12,7 @@ import { insertImage } from 'roosterjs-editor-api';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import normalizeContent from './normalizeContent';
 import removeUnsafeTags from './removeUnsafeTags';
-import retrieveClipBoardData from './retrieveClipBoardData';
+import retrieveClipBoardData, { PasteHelper } from './retrieveClipBoardData';
 
 const HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
 
@@ -21,19 +21,21 @@ const HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
  */
 export default class PasteManager implements EditorPlugin {
     private editor: Editor;
-    private pasteContainer: HTMLElement = null;
+    private helper: PasteHelper = {};
 
     /**
      * Create an instance of PasteManager
      * @param pasteHandler An optional pasteHandler to perform extra actions after pasting.
      * Default behavior is to paste image (if any) as BASE64 inline image.
-     * @param useDirectHtml: This is a test parameter and may be removed in the future.
+     * @param useDirectPaste: This is a test parameter and may be removed in the future.
      * When set to true, we retrieve HTML from clipboard directly rather than using a hidden pasting DIV,
-     * then filter out unsafe HTML tags and attributes.
+     * then filter out unsafe HTML tags and attributes. Although we removed some unsafe tags such as SCRIPT,
+     * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
+     * this parameter if you don't have other XSS detecting logic outside the edtior.
      */
     constructor(
         private readonly pasteHandler?: (clipboardData: ClipBoardData) => void,
-        private useDirectHtml?: boolean
+        private useDirectPaste?: boolean
     ) {}
 
     public initialize(editor: Editor) {
@@ -42,9 +44,9 @@ export default class PasteManager implements EditorPlugin {
 
     public dispose() {
         this.editor = null;
-        if (this.pasteContainer && this.pasteContainer.parentNode) {
-            this.pasteContainer.parentNode.removeChild(this.pasteContainer);
-            this.pasteContainer = null;
+        if (this.helper.tempDiv && this.helper.tempDiv.parentNode) {
+            this.helper.tempDiv.parentNode.removeChild(this.helper.tempDiv);
+            this.helper.tempDiv = null;
         }
     }
 
@@ -60,12 +62,13 @@ export default class PasteManager implements EditorPlugin {
         // add undo snapshot before paste
         this.editor.addUndoSnapshot();
         let pasteEvent = <ClipboardEvent>(<PluginDomEvent>event).rawEvent;
-        this.pasteContainer = retrieveClipBoardData(
+        retrieveClipBoardData(
             pasteEvent,
             this.editor,
-            this.processClipBoardData,
-            this.pasteContainer,
-            this.useDirectHtml);
+            this.helper,
+            this.useDirectPaste,
+            this.processClipBoardData
+        );
     }
 
     private processClipBoardData = (clipboardData: ClipBoardData) => {
@@ -84,14 +87,12 @@ export default class PasteManager implements EditorPlugin {
 
         // add undo snapshot after paste
         this.editor.addUndoSnapshot();
-    }
+    };
 
     private pasteHTML(clipboardData: ClipBoardData) {
         let html = clipboardData.htmlData;
 
-        // There is text to paste, so clear any image data if any.
-        // Otherwise both text and image will be pasted, this will cause duplicated paste
-        if (this.useDirectHtml) {
+        if (this.useDirectPaste) {
             // 1. Remove content outside HTML tag if any
             let matches = HTML_REGEX.exec(html);
             html = matches ? matches[0] : html;

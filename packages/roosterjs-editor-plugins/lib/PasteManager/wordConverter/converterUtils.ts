@@ -3,7 +3,6 @@ import ListMetadata from './ListMetadata';
 import WordConverter from './wordConverter';
 import WordConverterArguments from './WordConverterArguments';
 import { NodeType } from 'roosterjs-editor-types';
-import { browserData } from 'roosterjs-editor-core';
 import { createLevelLists } from './LevelLists';
 import { getObject, setObject } from './CustomData';
 import { getTagOfNode } from 'roosterjs-editor-dom';
@@ -16,9 +15,6 @@ const UNIQUE_LIST_ID_CUSTOM_DATA = 'UniqueListId';
 
 /** Word list metadata style name */
 const MSO_LIST_STYLE_NAME = 'mso-list';
-
-/** Margin value for Edge */
-const EDGE_MARGIN_VALUE = 48;
 
 /** Regular expression to match line breaks */
 const LINE_BREAKS = /[\n|\r]/gi;
@@ -128,10 +124,7 @@ export function processNodesDiscovery(wordConverter: WordConverter): boolean {
                 last &&
                 getRealPreviousSibling(node) == last &&
                 node.tagName == last.tagName &&
-                node.className == last.className &&
-                (!browserData.isEdge ||
-                    args.listItems.length == 0 ||
-                    !args.listItems[args.listItems.length - 1].isLastNodeForEdge)
+                node.className == last.className
             ) {
                 // Add 2 line breaks and move all the nodes to the last item
                 last.appendChild(last.ownerDocument.createElement('br'));
@@ -340,77 +333,30 @@ function cleanupListIgnore(node: Node, levels: number) {
  */
 function getListItemMetadata(node: HTMLElement): ListItemMetadata {
     if (node.nodeType == NodeType.Element) {
-        // Edge will strip out the mso-list style, so we use indent and margin to calculate list statue
-        if (browserData.isEdge) {
-            // A list element will have style like 'margin: 0px 0px 0px 48px; text-indent: -0.25in'
-            if (node.style.textIndent == '-0.25in') {
-                try {
-                    let margin = node.style.margin;
-                    let margins = margin ? margin.split(' ') : [];
-                    if (margins[0] == '0px' && (margins[2] == '0px' || margins[2] == '11px')) {
-                        let right = parsePx(margins[1]);
-                        let left = parsePx(margins[3]);
-                        let marginValue =
-                            right == 0 && left > 0 ? left : left == 0 && right > 0 ? right : 0;
-                        if (
-                            marginValue > 0 &&
-                            Math.round(marginValue / EDGE_MARGIN_VALUE) * EDGE_MARGIN_VALUE ==
-                                marginValue
-                        ) {
-                            let text = getFakeBulletText(node, LOOKUP_DEPTH);
-                            return text
-                                ? <ListItemMetadata>{
-                                      level: Math.round(marginValue / 48),
-                                      wordListId: getFakeBulletTagName(text),
-                                      originalNode: node,
-                                      uniqueListId: 0,
-                                      isLastNodeForEdge: margins[2] == '11px',
-                                  }
-                                : null;
-                        }
-                    }
-                } catch (e) {}
-            }
-        } else {
-            let listatt = getStyleValue(node, MSO_LIST_STYLE_NAME);
-            if (listatt && listatt.length > 0) {
-                try {
-                    // Word mso-list property holds 3 space separated values in the following format: lst1 level1 lfo0
-                    // Where:
-                    // (0) List identified for the metadata in the <head> of the document. We cannot read the <head> metada
-                    // (1) Level of the list. This also maps to the <head> metadata that we cannot read, but
-                    // for almost all cases, it maps to the list identation (or level). We'll use it as the
-                    // list indentation value
-                    // (2) Contains a specific list identifier.
-                    // Example value: "l0 level1 lfo1"
-                    let listprops = listatt.split(' ');
-                    if (listprops.length == 3) {
-                        return <ListItemMetadata>{
-                            level: parseInt(listprops[1].substr('level'.length)),
-                            wordListId: listatt,
-                            originalNode: node,
-                            uniqueListId: 0,
-                            isLastNodeForEdge: false,
-                        };
-                    }
-                } catch (e) {}
-            }
+        let listatt = getStyleValue(node, MSO_LIST_STYLE_NAME);
+        if (listatt && listatt.length > 0) {
+            try {
+                // Word mso-list property holds 3 space separated values in the following format: lst1 level1 lfo0
+                // Where:
+                // (0) List identified for the metadata in the <head> of the document. We cannot read the <head> metada
+                // (1) Level of the list. This also maps to the <head> metadata that we cannot read, but
+                // for almost all cases, it maps to the list identation (or level). We'll use it as the
+                // list indentation value
+                // (2) Contains a specific list identifier.
+                // Example value: "l0 level1 lfo1"
+                let listprops = listatt.split(' ');
+                if (listprops.length == 3) {
+                    return <ListItemMetadata>{
+                        level: parseInt(listprops[1].substr('level'.length)),
+                        wordListId: listatt,
+                        originalNode: node,
+                        uniqueListId: 0,
+                    };
+                }
+            } catch (e) {}
         }
     }
     return null;
-}
-
-function parsePx(s: string): number {
-    let pxPos = s.length - 'px'.length;
-    if (s.indexOf('px') == pxPos) {
-        s = s.substr(0, pxPos);
-        return parseInt(s);
-    }
-    return -1;
-}
-
-function isFakeNumbering(fakeNumbering: string): boolean {
-    return /^\w+\.$/.test(fakeNumbering);
 }
 
 function isFakeBullet(fakeBullet: string): boolean {
@@ -548,20 +494,9 @@ function getRealNextSibling(node: Node): Node {
  */
 function isIgnoreNode(node: Node): boolean {
     if (node.nodeType == NodeType.Element) {
-        let element = node as HTMLElement;
-        if (browserData.isEdge) {
-            let textContent = element.textContent.trim();
-            if (
-                element.style.margin == '0px' &&
-                (isFakeBullet(textContent) || isFakeNumbering(textContent))
-            ) {
-                return true;
-            }
-        } else {
-            let listatt = getStyleValue(node as HTMLElement, MSO_LIST_STYLE_NAME);
-            if (listatt && listatt.length > 0 && listatt.trim().toLowerCase() == 'ignore') {
-                return true;
-            }
+        let listatt = getStyleValue(node as HTMLElement, MSO_LIST_STYLE_NAME);
+        if (listatt && listatt.length > 0 && listatt.trim().toLowerCase() == 'ignore') {
+            return true;
         }
     }
 

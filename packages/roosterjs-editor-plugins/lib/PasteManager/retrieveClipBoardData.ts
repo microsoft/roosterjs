@@ -10,34 +10,35 @@ interface WindowForIE extends Window {
     clipboardData: DataTransfer;
 }
 
-function getClipboardDataFromEvent(event: ClipboardEvent, editor: Editor): DataTransfer {
-    return event.clipboardData || (<WindowForIE>editor.getDocument().defaultView).clipboardData;
+export interface PasteHelper {
+    tempDiv?: HTMLElement;
 }
 
 export default function retrieveClipBoardData(
     event: ClipboardEvent,
     editor: Editor,
-    callback: (clipboardData: ClipBoardData) => void,
-    pasteContainer: HTMLElement,
-    useDirectHtml: boolean): HTMLElement {
-    let dataTransfer = getClipboardDataFromEvent(event, editor);
+    helper: PasteHelper,
+    useDirectPaste: boolean,
+    callback: (clipboardData: ClipBoardData) => void
+) {
+    let dataTransfer =
+        event.clipboardData || (<WindowForIE>editor.getDocument().defaultView).clipboardData;
     let clipboardData: ClipBoardData = {
         imageData: {
-            file: getImage(dataTransfer)
+            file: getImage(dataTransfer),
         },
         textData: dataTransfer.getData('text'),
         htmlData: null,
     };
 
-    return retrieveHtml(
-        event,
-        editor,
-        html => {
-            clipboardData.htmlData = html;
-            callback(clipboardData);
-        },
-        pasteContainer,
-        useDirectHtml);
+    let retrieveHtmlCallback = (html: string) => {
+        clipboardData.htmlData = html;
+        callback(clipboardData);
+    };
+
+    if (!useDirectPaste || !directRetrieveHtml(event, editor, retrieveHtmlCallback)) {
+        retrieveHtmlViaTempDiv(editor, helper, retrieveHtmlCallback);
+    }
 }
 
 function getImage(dataTransfer: DataTransfer): File {
@@ -60,51 +61,56 @@ function getImage(dataTransfer: DataTransfer): File {
     return null;
 }
 
-function retrieveHtml(
+function directRetrieveHtml(
     event: ClipboardEvent,
     editor: Editor,
-    callback: (html: string) => void,
-    pasteContainer: HTMLElement,
-    useDirectHtml: boolean
-): HTMLElement {
-    if (useDirectHtml) {
-        let clipboardData = event.clipboardData;
-        let fileCount = clipboardData && clipboardData.items ? clipboardData.items.length : 0;
-        for (let i = 0; i < fileCount; i++) {
-            let item = clipboardData.items[i];
-            if (item.type && item.type.indexOf('text/html') == 0) {
-                item.getAsString(callback);
-                event.preventDefault();
-                return;
-            }
+    callback: (html: string) => void
+): boolean {
+    let clipboardData = event.clipboardData;
+    let fileCount = clipboardData && clipboardData.items ? clipboardData.items.length : 0;
+    for (let i = 0; i < fileCount; i++) {
+        let item = clipboardData.items[i];
+        if (item.type && item.type.indexOf('text/html') == 0) {
+            event.preventDefault();
+            item.getAsString(callback);
+            return true;
         }
     }
 
+    return false;
+}
+
+function retrieveHtmlViaTempDiv(
+    editor: Editor,
+    helper: PasteHelper,
+    callback: (html: string) => void
+) {
     // cache original selection range in editor
     let originalSelectionRange = editor.getSelectionRange();
 
-    if (!pasteContainer || !pasteContainer.parentNode) {
-        pasteContainer = fromHtml(CONTAINER_HTML, editor.getDocument())[0] as HTMLElement;
-        editor.insertNode(pasteContainer, {
+    if (!helper.tempDiv || !helper.tempDiv.parentNode) {
+        helper.tempDiv = fromHtml(
+            CONTAINER_HTML,
+            editor.getDocument()
+        )[0] as HTMLElement;
+        editor.insertNode(helper.tempDiv, {
             position: ContentPosition.Outside,
             updateCursor: false,
             replaceSelection: false,
             insertOnNewLine: false,
         });
     } else {
-        pasteContainer.style.display = '';
+        helper.tempDiv.style.display = '';
     }
-    pasteContainer.focus();
+    helper.tempDiv.focus();
 
     window.requestAnimationFrame(() => {
         if (editor) {
             // restore original selection range in editor
             editor.updateSelection(originalSelectionRange);
-            callback(pasteContainer.innerHTML);
-            pasteContainer.style.display = 'none';
-            pasteContainer.innerHTML = '';
+            callback(helper.tempDiv.innerHTML);
+            helper.tempDiv.style.display = 'none';
+            helper.tempDiv.innerHTML = '';
         }
     });
-
-    return pasteContainer;
 }
