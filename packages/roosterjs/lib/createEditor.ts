@@ -1,7 +1,12 @@
 import { DefaultShortcut, HyperLink, PasteManager, ContentEdit } from 'roosterjs-editor-plugins';
 import { Editor, EditorOptions, EditorPlugin } from 'roosterjs-editor-core';
 
-// Create an editor instance with most common options
+/**
+ * Create an editor instance with most common options
+ * @param contentDiv The html div element needed for create the editor
+ * @param additionalPlugins The user defined plugins
+ * @param initialContent The initial content to show in editor
+ */
 export default function createEditor(
     contentDiv: HTMLDivElement,
     additionalPlugins?: EditorPlugin[],

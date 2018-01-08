@@ -1,6 +1,11 @@
 import { Editor } from 'roosterjs-editor-core';
 import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
+/**
+ * Insert an image to editor
+ * @param editor The editor instance
+ * @param imageFile The image file
+ */
 export default function insertImage(editor: Editor, imageFile: File) {
     editor.addUndoSnapshot();
     let reader = new FileReader();

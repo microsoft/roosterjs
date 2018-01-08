@@ -5,8 +5,11 @@ import { NodeType } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
 
-// Edge may incorrectly put cursor after toggle bullet, workaround it by adding a space.
-// The space will be removed by Edge after toggle bullet
+/**
+ * Edge may incorrectly put cursor after toggle bullet, workaround it by adding a space.
+ * The space will be removed by Edge after toggle bullet
+ * @param editor The editor instance
+ */
 export function workaroundForEdge(editor: Editor): HTMLElement {
     if (browserData.isEdge) {
         let node = getNodeAtCursor(editor) as Element;
@@ -21,12 +24,20 @@ export function workaroundForEdge(editor: Editor): HTMLElement {
     return null;
 }
 
+/**
+ * Remove workaround for Edge
+ * @param workaroundSpan The workaroundSpan
+ */
 export function removeWorkaroundForEdge(workaroundSpan: HTMLElement) {
     if (workaroundSpan && workaroundSpan.parentNode) {
         workaroundSpan.parentNode.removeChild(workaroundSpan);
     }
 }
 
+/**
+ * Toggle bullet at selection
+ * @param editor The editor instance
+ */
 export default function toggleBullet(editor: Editor): void {
     editor.focus();
     execFormatWithUndo(editor, () => {

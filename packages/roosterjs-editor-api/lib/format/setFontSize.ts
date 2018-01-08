@@ -1,6 +1,11 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import { Editor } from 'roosterjs-editor-core';
 
+/**
+ * Set font size at selection
+ * @param editor The editor instance
+ * @param fontSize The fontSize string
+ */
 export default function setFontSize(editor: Editor, fontSize: string): void {
     editor.focus();
     // TODO: Verify font size

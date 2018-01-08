@@ -5,6 +5,11 @@ import { getTagOfNode } from 'roosterjs-editor-dom';
 
 const EVENTDATACACHE_LISTELEMENT = 'LISTELEMENT';
 
+/**
+ * Get the list element at current selection
+ * @param editor The editor instance
+ * @param event The plugin event
+ */
 export default function cacheGetListElement(editor: Editor, event?: PluginEvent): Element {
     return cacheGetEventData<Element>(event, EVENTDATACACHE_LISTELEMENT, () => {
         let node = getNodeAtCursor(editor);
@@ -12,6 +17,12 @@ export default function cacheGetListElement(editor: Editor, event?: PluginEvent)
     });
 }
 
+/**
+ * Get the list element at node
+ * @param editor The editor instance
+ * @param node The node
+ * @param tagName The tag name of the list element we want to get. e.g, 'LI', 'OL', etc
+ */
 export function getListElementAtNode(editor: Editor, node: Node, tagName: string): Element {
     let startElement = node && node.nodeType == NodeType.Text ? node.parentElement : <Element>node;
     while (startElement && editor.contains(startElement)) {

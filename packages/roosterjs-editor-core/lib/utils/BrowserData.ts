@@ -10,6 +10,11 @@ export interface BrowserData {
     isEdge: boolean;
 }
 
+/**
+ * Get the browser related data
+ * @param userAgent The userAgent
+ * @param appVersion The version of the browser
+ */
 export function getBrowserData(userAgent?: string, appVersion?: string): BrowserData {
     // In case universal render somehow hits this code path
     if (typeof window == 'undefined') {

@@ -6,6 +6,10 @@ import setTextColor from './setTextColor';
 import { Editor } from 'roosterjs-editor-core';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 
+/**
+ * Clear the format in current selection
+ * @param editor The editor instance
+ */
 export default function clearFormat(editor: Editor): void {
     editor.focus();
     // We have no way if this clear format will really result in any DOM change

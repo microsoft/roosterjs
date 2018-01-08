@@ -4,6 +4,11 @@ import { PluginEvent } from 'roosterjs-editor-types';
 
 const EVENTDATACACHE_HEADER_LEVEL = 'HeaderLevel';
 
+/**
+ * Get the header level in current selection
+ * @param editor The editor instance
+ * @param event The plugin event
+ */
 export default function cacheGetHeaderLevel(editor: Editor, event?: PluginEvent): number {
     return cacheGetEventData<number>(event, EVENTDATACACHE_HEADER_LEVEL, () => {
         for (let i = 1; i <= 6; i++) {

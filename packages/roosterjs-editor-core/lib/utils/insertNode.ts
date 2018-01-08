@@ -12,7 +12,13 @@ import { updateSelectionToRange } from './selection';
 
 const HTML_EMPTY_DIV = '<div></div>';
 
-// Insert a node at begin of the editor
+/**
+ * Insert a node at begin of the editor
+ * @param container The container node
+ * @param inlineElementFactory The InlineElementFactory
+ * @param node The node to insert
+ * @param option The insert option
+ */
 export function insertNodeAtBegin(
     container: Node,
     inlineElementFactory: InlineElementFactory,
@@ -62,7 +68,13 @@ export function insertNodeAtBegin(
     }
 }
 
-// Insert a node at end of the editor
+/**
+ * Insert a node at end of the editor
+ * @param container The container node
+ * @param inlineElementFactory The inlineElementFactory
+ * @param node The node to insert
+ * @param option The insert option
+ */
 export function insertNodeAtEnd(
     container: Node,
     inlineElementFactory: InlineElementFactory,
@@ -111,7 +123,14 @@ export function insertNodeAtEnd(
     }
 }
 
-// Insert node at selection
+/**
+ * Insert node at selection
+ * @param container The container node
+ * @param inlineElementFactory The inlineElementFactory
+ * @param selectionRange The selection range
+ * @param node The node to insert
+ * @param option The insert option
+ */
 export function insertNodeAtSelection(
     container: Node,
     inlineElementFactory: InlineElementFactory,

@@ -7,7 +7,10 @@ import { normalizeEditorPoint } from 'roosterjs-editor-dom';
 const CURSOR_START = 'cursor-start';
 const CURSOR_END = 'cursor-end';
 
-// Build undo snapshot
+/**
+ * Build undo snapshot
+ * @param editor The editor instance
+ */
 export function buildSnapshot(editor: Editor): string {
     // Build the snapshot in-between adding and removing cursor marker
     let selectionRange = editor.getSelectionRange();
@@ -30,7 +33,11 @@ export function buildSnapshot(editor: Editor): string {
     return htmlContent;
 }
 
-// Restore a snapshot
+/**
+ * Restore a snapshot
+ * @param editor The editor instance
+ * @param snapshot The snapshot to restore into
+ */
 export function restoreSnapshot(editor: Editor, snapshot: string): void {
     editor.setContent(snapshot);
 

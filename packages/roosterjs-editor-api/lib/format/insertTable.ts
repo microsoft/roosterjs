@@ -3,6 +3,9 @@ import execFormatWithUndo from './execFormatWithUndo';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
 
+/**
+ * The table format
+ */
 export interface TableFormat {
     cellSpacing?: string;
     cellPadding?: string;
@@ -12,6 +15,13 @@ export interface TableFormat {
     borderCollapse?: string;
 }
 
+/**
+ * Insert table into editor
+ * @param editor The editor instance
+ * @param columns Number of columns in table
+ * @param rows Number of rows in table
+ * @param format The table format
+ */
 export default function insertTable(
     editor: Editor,
     columns: number,

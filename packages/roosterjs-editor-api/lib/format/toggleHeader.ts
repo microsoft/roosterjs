@@ -5,6 +5,11 @@ import { Editor } from 'roosterjs-editor-core';
 import { ContentScope, NodeType } from 'roosterjs-editor-types';
 import { unwrap } from 'roosterjs-editor-dom';
 
+/**
+ * Toggle header at selection
+ * @param editor The editor instance
+ * @param level The header level
+ */
 export default function toggleHeader(editor: Editor, level: number) {
     level = Math.min(Math.max(Math.round(level), 0), 6);
     let headerNodes: Node[] = [];

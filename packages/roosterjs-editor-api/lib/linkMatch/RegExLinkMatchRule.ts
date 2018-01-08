@@ -1,6 +1,8 @@
 import { LinkData, LinkMatchRule } from 'roosterjs-editor-types';
 
-// The RegExLinkMatchRule which takes an inclusion regex and an exclusion regex
+/**
+ * The RegExLinkMatchRule which takes an inclusion regex and an exclusion regex
+ */
 export default class RegExLinkMatchRule implements LinkMatchRule {
     constructor(
         private scheme: string,

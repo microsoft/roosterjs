@@ -5,7 +5,11 @@ import { getTagOfNode } from 'roosterjs-editor-dom';
 
 const EVENTDATACACHE_LISTSTATE = 'LISTSTATE';
 
-// Get the list state
+/**
+ * Get the list state in current selection
+ * @param editor The editor instance
+ * @param event The plugin event
+ */
 export default function cacheGetListState(editor: Editor, event?: PluginEvent): ListState {
     return cacheGetEventData<ListState>(event, EVENTDATACACHE_LISTSTATE, () => {
         let itemNodes = queryNodesWithSelection(editor, 'li');

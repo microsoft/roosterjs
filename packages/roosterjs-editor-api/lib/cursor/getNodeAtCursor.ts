@@ -1,12 +1,15 @@
 import { Editor } from 'roosterjs-editor-core';
 import { NodeType } from 'roosterjs-editor-types';
 
+/**
+ * First get the node at selection
+ * if editor has focus, use selection.focusNode
+ * if for some reason, the focus node does not get us a good node
+ * fallback to this.getSelectionRange() which will return you a cached selection range if there is any
+ * and use the start container or commonAncestorContainer
+ * @param editor The editor instance
+ */
 export default function getNodeAtCursor(editor: Editor): Node {
-    // First get the node at selection
-    // if editor has focus, use selection.focusNode
-    // if for some reason, the focus node does not get us a good node
-    // fallback to this.getSelectionRange() which will return you a cached selection range if there is any
-    // and use the start container or commonAncestorContainer
     let node: Node = null;
     if (editor.hasFocus()) {
         let sel = editor.getSelection();

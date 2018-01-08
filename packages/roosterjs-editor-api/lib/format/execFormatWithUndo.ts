@@ -10,7 +10,12 @@ import { EditorPoint, NodeType, PluginEvent, PluginEventType } from 'roosterjs-e
  */
 export type Formatter = (startPoint: EditorPoint, endPoint: EditorPoint) => Node | void | any;
 
-// Exec format with undo
+/**
+ * Exec format with undo
+ * @param editor The editor instance
+ * @param formatter The formatter
+ * @param preserveSelection Whether to preserve selection
+ */
 export default function execFormatWithUndo(
     editor: Editor,
     formatter: Formatter,

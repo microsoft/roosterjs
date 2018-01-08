@@ -72,7 +72,12 @@ function applyInlineStyleToNonCollapsedSelection(
     }
 }
 
-// Apply inline style to current selection
+/**
+ * Apply inline style to current selection
+ * @param container The container node
+ * @param contentTraverser The contentTraverser
+ * @param styler The styler function
+ */
 function applyInlineStyle(
     container: Node,
     contentTraverser: ContentTraverser,

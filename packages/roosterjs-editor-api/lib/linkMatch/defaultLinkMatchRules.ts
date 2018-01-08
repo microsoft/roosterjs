@@ -60,7 +60,9 @@ const gopherMatchingRegEx = /^gopher:\/\/\S+/i;
 // wais matching regex
 const waisMatchingRegEx = /^wais:\S+/i;
 
-// Default match rules that will be used in matching a link
+/**
+ * Default match rules that will be used in matching a link
+ */
 const defaultLinkMatchRules: LinkMatchRule[] = [
     new RegExLinkMatchRule('http', 'http://', httpMatchingRegEx, httpExcludeRegEx),
     new RegExLinkMatchRule('https', 'https://', httpsMatchingRegEx, httpExcludeRegEx),
