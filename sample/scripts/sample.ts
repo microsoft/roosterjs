@@ -1,9 +1,5 @@
-import ShowCursorPosition from './plugins/ShowCursorPosition';
-import ShowFromState from './plugins/ShowFormatState';
 import initFormatBar from './initFormatBar';
-import initOptions from './initOptions';
-import { createEditor, ImageResizePlugin } from 'roosterjs';
-import { setCurrentEditor } from './currentEditor';
+import initOptions, { initEditorForOptions } from './initOptions';
 
 window.onload = () => {
     initTabs();
@@ -36,11 +32,5 @@ function switchTab(name: string) {
 function initEditor() {
     let editorArea = document.getElementById('editor') as HTMLDivElement;
     editorArea.innerHTML = '';
-    setCurrentEditor(
-        createEditor(editorArea, [
-            new ShowCursorPosition(document.getElementById('cursorPosition')),
-            new ShowFromState(document.getElementById('formatState')),
-            new ImageResizePlugin(),
-        ])
-    );
+    initEditorForOptions();
 }

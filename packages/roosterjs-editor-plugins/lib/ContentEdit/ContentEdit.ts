@@ -8,15 +8,17 @@ import {
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-import { isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
-import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
+import { contains, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     Indentation,
     ListState,
+    NodeBoundary,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
+import ContentEditOptions, { getDefaultContentEditOptions } from './ContentEditOptions';
 
 const KEY_TAB = 9;
 const KEY_BACKSPACE = 8;
@@ -32,6 +34,10 @@ const BLOCKQUOTE_TAG_NAME = 'BLOCKQUOTE';
  */
 export default class ContentEdit implements EditorPlugin {
     private editor: Editor;
+
+    constructor(private options?: ContentEditOptions) {
+        this.options = this.options || getDefaultContentEditOptions();
+    }
 
     public initialize(editor: Editor): void {
         this.editor = editor;
@@ -53,14 +59,16 @@ export default class ContentEdit implements EditorPlugin {
             // Tab: increase indent
             // Shift+ Tab: decrease indent
             if (keyboardEvent.which == KEY_TAB) {
-                setIndentation(
-                    this.editor,
-                    keyboardEvent.shiftKey ? Indentation.Decrease : Indentation.Increase
-                );
-                keyboardEvent.preventDefault();
-            } else if (browserData.isEdge || browserData.isIE || browserData.isChrome) {
+                if (this.options.indentWhenTab && !keyboardEvent.shiftKey) {
+                    setIndentation(this.editor, Indentation.Increase);
+                    keyboardEvent.preventDefault();
+                } else if (this.options.outdentWhenShiftTab && keyboardEvent.shiftKey) {
+                    setIndentation(this.editor, Indentation.Decrease);
+                    keyboardEvent.preventDefault();
+                }
+            } else {
                 let listElement = cacheGetListElement(this.editor, event);
-                if (listElement && this.shouldToggleState(keyboardEvent, listElement)) {
+                if (listElement && this.shouldToggleState(event, listElement)) {
                     keyboardEvent.preventDefault();
                     let listState = cacheGetListState(this.editor, event);
                     if (listState == ListState.Bullets) {
@@ -80,7 +88,7 @@ export default class ContentEdit implements EditorPlugin {
                     }
                     if (
                         node.parentNode == blockQuoteElement &&
-                        this.shouldToggleState(keyboardEvent, node)
+                        this.shouldToggleState(event, node)
                     ) {
                         keyboardEvent.preventDefault();
                         execFormatWithUndo(this.editor, () => {
@@ -158,12 +166,65 @@ export default class ContentEdit implements EditorPlugin {
         return null;
     }
 
-    private shouldToggleState(keyboardEvent: KeyboardEvent, node: Node) {
-        return (
-            (keyboardEvent.which == KEY_ENTER ||
-                (keyboardEvent.which == KEY_BACKSPACE && node == node.parentNode.firstChild)) &&
-            isNodeEmpty(node)
-        );
+    private shouldToggleState(event: PluginEvent, node: Node) {
+        let isEmpty = isNodeEmpty(node);
+        let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+        let isList = getTagOfNode(node) == 'LI';
+
+        if (
+            this.checkOptionForListOrQuote(
+                isList,
+                this.options.outdentWhenBackspaceOnEmptyFirstLine,
+                this.options.unquoteWhenBackspaceOnEmptyFirstLine
+            ) &&
+            isEmpty &&
+            keyboardEvent.which == KEY_BACKSPACE &&
+            node == node.parentNode.firstChild
+        ) {
+            return true;
+        }
+
+        if (
+            this.checkOptionForListOrQuote(
+                isList,
+                this.options.outdentWhenEnterOnEmptyLine,
+                this.options.unquoteWhenEnterOnEmptyLine
+            ) &&
+            isEmpty &&
+            keyboardEvent.which == KEY_ENTER
+        ) {
+            return true;
+        }
+
+        if (
+            this.checkOptionForListOrQuote(
+                isList,
+                this.options.outdentWhenBackspaceOnFirstChar,
+                this.options.unquoteWhenBackspaceOnFirstChar
+            ) &&
+            keyboardEvent.which == KEY_BACKSPACE &&
+            this.isCursorAtBeginningOf(node)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private checkOptionForListOrQuote(isList: boolean, listOption: boolean, quoteOption: boolean) {
+        return (isList && listOption) || (!isList && quoteOption);
+    }
+
+    private isCursorAtBeginningOf(node: Node) {
+        let range = this.editor.getSelectionRange();
+        if (range && range.startOffset == NodeBoundary.Begin) {
+            let container = range.startContainer;
+            while (container != node && contains(node, container) && !container.previousSibling) {
+                container = container.parentNode;
+            }
+            return container == node;
+        }
+        return false;
     }
 }
 

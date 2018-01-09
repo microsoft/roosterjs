@@ -20,7 +20,7 @@ function initOptions() {
     });
 }
 
-function initEditorForOptions() {
+export function initEditorForOptions() {
     setCurrentEditor(null);
 
     let plugins: EditorPlugin[] = [];
