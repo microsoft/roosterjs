@@ -12,12 +12,24 @@ import { ImageResizePlugin } from 'roosterjs-plugin-image-resize';
 import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
 import { setCurrentEditor } from './currentEditor';
 import getCurrentEditor from './currentEditor';
+import updateSampleCode from './updateSampleCode';
 
 function initOptions() {
-    document.getElementById('setEditorOptions').addEventListener('click', initEditorForOptions);
     document.getElementById('showHtmlContent').addEventListener('click', () => {
         window.alert(getCurrentEditor().getContent(true));
     });
+    document.getElementById('defaultShortcutCheckbox').addEventListener('change', initEditorForOptions);
+    document.getElementById('hyperlinkCheckbox').addEventListener('change', initEditorForOptions);
+    document.getElementById('pasteManagerCheckbox').addEventListener('change', initEditorForOptions);
+    document.getElementById('contentEditCheckbox').addEventListener('change', initEditorForOptions);
+    document.getElementById('watermarkCheckbox').addEventListener('change', initEditorForOptions);
+    document.getElementById('imageResizeCheckbox').addEventListener('change', initEditorForOptions);
+
+    document.getElementById('boldCheckbox').addEventListener('change', initEditorForOptions);
+    document.getElementById('italicCheckbox').addEventListener('change', initEditorForOptions);
+    document.getElementById('underlineCheckbox').addEventListener('change', initEditorForOptions);
+    document.getElementById('textColorDefaultFormat').addEventListener('change', initEditorForOptions);
+    document.getElementById('fontNameDefaultFormat').addEventListener('change', initEditorForOptions);
 }
 
 function initEditorForOptions() {
@@ -73,6 +85,8 @@ function initEditorForOptions() {
     setCurrentEditor(
         new Editor(document.getElementById('editor') as HTMLDivElement, editorOptions)
     );
+
+    updateSampleCode(plugins, defaultFormat);
 }
 
 export default initOptions;
