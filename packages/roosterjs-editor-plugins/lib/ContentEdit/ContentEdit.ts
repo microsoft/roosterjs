@@ -209,10 +209,6 @@ export default class ContentEdit implements EditorPlugin {
         return false;
     }
 
-    private checkOptionForListOrQuote(isList: boolean, listOption: boolean, quoteOption: boolean) {
-        return (isList && listOption) || (!isList && quoteOption);
-    }
-
     private isCursorAtBeginningOf(node: Node) {
         let range = this.editor.getSelectionRange();
         if (range && range.startOffset == NodeBoundary.Begin) {
