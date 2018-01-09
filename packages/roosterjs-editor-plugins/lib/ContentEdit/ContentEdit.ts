@@ -76,6 +76,22 @@ export default class ContentEdit implements EditorPlugin {
                     } else if (listState == ListState.Numbering) {
                         toggleNumbering(this.editor);
                     }
+                } else if (
+                    this.options.outdentWhenBackspaceOnFirstChar &&
+                    keyboardEvent.which == KEY_BACKSPACE &&
+                    listElement != listElement.parentElement.firstChild &&
+                    this.isCursorAtBeginningOf(listElement)
+                ) {
+                    let document = this.editor.getDocument();
+                    document.defaultView.requestAnimationFrame(() => {
+                        if (this.editor) {
+                            let br = document.createElement('br');
+                            this.editor.insertNode(br);
+                            let range = document.createRange();
+                            range.setStartAfter(br);
+                            this.editor.updateSelection(range);
+                        }
+                    });
                 }
             }
         } else {
@@ -172,11 +188,8 @@ export default class ContentEdit implements EditorPlugin {
         let isList = getTagOfNode(node) == 'LI';
 
         if (
-            this.checkOptionForListOrQuote(
-                isList,
-                this.options.outdentWhenBackspaceOnEmptyFirstLine,
-                this.options.unquoteWhenBackspaceOnEmptyFirstLine
-            ) &&
+            ((isList && this.options.outdentWhenBackspaceOnEmptyFirstLine) ||
+                (!isList && this.options.unquoteWhenBackspaceOnEmptyFirstLine)) &&
             isEmpty &&
             keyboardEvent.which == KEY_BACKSPACE &&
             node == node.parentNode.firstChild
@@ -185,25 +198,10 @@ export default class ContentEdit implements EditorPlugin {
         }
 
         if (
-            this.checkOptionForListOrQuote(
-                isList,
-                this.options.outdentWhenEnterOnEmptyLine,
-                this.options.unquoteWhenEnterOnEmptyLine
-            ) &&
+            ((isList && this.options.outdentWhenEnterOnEmptyLine) ||
+                (!isList && this.options.unquoteWhenEnterOnEmptyLine)) &&
             isEmpty &&
             keyboardEvent.which == KEY_ENTER
-        ) {
-            return true;
-        }
-
-        if (
-            this.checkOptionForListOrQuote(
-                isList,
-                this.options.outdentWhenBackspaceOnFirstChar,
-                this.options.unquoteWhenBackspaceOnFirstChar
-            ) &&
-            keyboardEvent.which == KEY_BACKSPACE &&
-            this.isCursorAtBeginningOf(node)
         ) {
             return true;
         }

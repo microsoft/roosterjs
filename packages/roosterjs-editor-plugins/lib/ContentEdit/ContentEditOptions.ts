@@ -6,7 +6,6 @@ interface ContentEditOptions {
     outdentWhenBackspaceOnFirstChar: boolean;
     unquoteWhenBackspaceOnEmptyFirstLine: boolean;
     unquoteWhenEnterOnEmptyLine: boolean;
-    unquoteWhenBackspaceOnFirstChar: boolean;
 }
 
 export default ContentEditOptions;
@@ -20,6 +19,5 @@ export function getDefaultContentEditOptions(): ContentEditOptions {
         outdentWhenBackspaceOnFirstChar: false,
         unquoteWhenBackspaceOnEmptyFirstLine: true,
         unquoteWhenEnterOnEmptyLine: true,
-        unquoteWhenBackspaceOnFirstChar: false,
     };
 }
