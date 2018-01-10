@@ -1,5 +1,5 @@
 const ZERO_WIDTH_SPACE = '\u200b';
-const UNSAFE_TAG_SUMMARY_REGEX = /<(script|iframe|applet|object|embed|meta|base)/i;
+const UNSAFE_TAG_SUMMARY_REGEX = /<(script|iframe|applet|object|embed|meta|base|xml)/i;
 const UNSAFE_TAG_REGEX = [
     /<script\s*[^>]*>[\s\S]*<\/script\s*>/gi,
     /<iframe\s*[^>]*>[\s\S]*<\/iframe\s*>/gi,
@@ -8,6 +8,7 @@ const UNSAFE_TAG_REGEX = [
     /<embed\s*[^>]*>[\s\S]*<\/embed\s*>/gi,
     /<meta\s*[^>]*>[\s\S]*<\/meta\s*>/gi,
     /<base\s*[^>]*>[\s\S]*<\/base\s*>/gi,
+    /<xml\s*[^>]*>[\s\S]*<\/xml\s*>/gi,
 ];
 const UNSAFE_ATTRIBUTE_REGEX = [/<(\w+)([^>]*\W+)on\w+\s*=\s*('[^']*'|"[^"]*"|[^'"\s]*)/gi];
 

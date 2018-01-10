@@ -1,3 +1,5 @@
+import FormatState from "../format/FormatState";
+
 export interface LocalFileImageData {
     path: string;
     imageId: string;
@@ -17,6 +19,8 @@ export interface ImageData {
 }
 
 interface ClipBoardData {
+    snapshotBeforePaste: string;
+    currentFormat: FormatState
     imageData: ImageData;
     textData: string;
     htmlData: string;

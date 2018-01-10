@@ -1,7 +1,8 @@
-import processImages from './utils/processImages';
 import { ClipBoardData } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { convertInlineCss, fromHtml } from 'roosterjs-editor-dom';
+import getFormatState from '../format/getFormatState';
+import processImages from './utils/processImages';
 
 const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
 const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/i;
@@ -28,6 +29,8 @@ export default function buildClipBoardData(
     let dataTransfer =
         event.clipboardData || (<WindowForIE>editor.getDocument().defaultView).clipboardData;
     let clipboardData: ClipBoardData = {
+        snapshotBeforePaste: null,
+        currentFormat: getFormatState(editor),
         imageData: {
             file: getImage(dataTransfer),
         },
@@ -48,6 +51,9 @@ function createCallback(
     unsafeHtmlFilter: (html: string) => string,
     pasteCallback: (data: ClipBoardData) => void) {
     return (html: string) => {
+        let matches = HTML_REGEX.exec(html);
+        html = matches ? matches[0] : html;
+
         if (unsafeHtmlFilter) {
             html = unsafeHtmlFilter(html);
         }
@@ -130,10 +136,6 @@ function retrieveHtmlViaTempDiv(
 }
 
 function normalizeContent(content: string): string {
-    // 1. Remove content outside HTML tag if any
-    let matches = HTML_REGEX.exec(content);
-    content = matches ? matches[0] : content;
-
     // Remove 'position' style from source HTML
     content = content.replace(INLINE_POSITION_STYLE, '$1');
     content = content.replace(COMMENT, '');
