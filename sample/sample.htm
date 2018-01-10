@@ -80,13 +80,45 @@
                 position: absolute;
                 word-wrap: break-word;
                 left: 10px;
-                right: 10px;
                 top: 10px;
                 bottom: 10px;
                 border: solid 1px #cccccc;
                 background-color: white;
                 overflow: auto;
                 outline: none;
+                width: 60%;
+            }
+
+            .sampleCodeContainer {
+                position: absolute;
+                word-wrap: break-word;
+                right: 10px;
+                top: 10px;
+                bottom: 10px;
+                border: solid 2px #cccccc;
+                background-color: white;
+                overflow: auto;
+                outline: none;
+                float: right;
+                width: 40%;
+            }
+
+            .htmlSample {
+                word-wrap: break-word;
+                border-bottom: solid 2px #cccccc;
+                background-color: white;
+                overflow: auto;
+                outline: none;
+                height: 49%;
+            }
+
+            .jsSample {
+                word-wrap: break-word;
+                border-top: solid 2px #cccccc;
+                background-color: white;
+                overflow: auto;
+                outline: none;
+                height: 50%;
             }
 
             .optionsTab {
@@ -162,7 +194,6 @@
                         </div>
                     </div>
                     <div>
-                        <div><button id="setEditorOptions">Reset Editor</button></div>
                         <div><button id="showHtmlContent">Show HTML Content</button></div>
                     </div>
                 </div>
@@ -210,6 +241,10 @@
                         4. Navigate to this demo using a web browser with the following url: <br>
                         &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://localhost:3000/sample/sample.htm">http://localhost:3000/sample/sample.htm</a>
                     </div>
+                </div>
+                <div class="sampleCodeContainer">
+                    <div class="htmlSample" id="htmlSample"></div>
+                    <div class="jsSample" id="jsSample"></div>
                 </div>
             </div>
             <div class="formatBar">

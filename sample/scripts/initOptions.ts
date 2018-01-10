@@ -12,11 +12,16 @@ import { ImageResizePlugin } from 'roosterjs-plugin-image-resize';
 import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
 import { setCurrentEditor } from './currentEditor';
 import getCurrentEditor from './currentEditor';
+import updateSampleCode from './updateSampleCode';
 
 function initOptions() {
-    document.getElementById('setEditorOptions').addEventListener('click', initEditorForOptions);
     document.getElementById('showHtmlContent').addEventListener('click', () => {
         window.alert(getCurrentEditor().getContent(true));
+    });
+
+    ['defaultShortcutCheckbox', 'hyperlinkCheckbox', 'pasteManagerCheckbox', 'contentEditCheckbox', 'watermarkCheckbox',
+    'imageResizeCheckbox', 'boldCheckbox', 'italicCheckbox', 'underlineCheckbox', 'textColorDefaultFormat', 'fontNameDefaultFormat'].forEach(id => {
+        document.getElementById(id).addEventListener('change', initEditorForOptions);
     });
 }
 
@@ -73,6 +78,8 @@ function initEditorForOptions() {
     setCurrentEditor(
         new Editor(document.getElementById('editor') as HTMLDivElement, editorOptions)
     );
+
+    updateSampleCode(plugins, defaultFormat);
 }
 
 export default initOptions;
