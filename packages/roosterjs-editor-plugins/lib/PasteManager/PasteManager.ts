@@ -1,7 +1,6 @@
 import {
     ClipBoardData,
     ContentChangedEvent,
-    NodeType,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
@@ -10,7 +9,6 @@ import { Editor, EditorPlugin, buildSnapshot, restoreSnapshot } from 'roosterjs-
 import { buildClipBoardData, insertImage } from 'roosterjs-editor-api';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import removeUnsafeTags from './removeUnsafeTags';
-import applyFormat from 'roosterjs-editor-dom/lib/utils/applyFormat';
 
 /**
  * Paste option
