@@ -7,7 +7,7 @@ import { Editor } from 'roosterjs-editor-core';
  * @param editor The editor instance
  * @param altText The image alt text
  */
-export default function setImageAltText(editor: Editor, altText: string): void {
+export default function setImageAltText(editor: Editor, altText: string) {
     editor.focus();
     let imageNodes = queryNodesWithSelection(editor, 'img');
 

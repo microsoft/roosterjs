@@ -6,7 +6,7 @@ import { Editor } from 'roosterjs-editor-core';
  * Toggle italic at selection
  * @param editor The editor instance
  */
-export default function toggleItalic(editor: Editor): void {
+export default function toggleItalic(editor: Editor) {
     editor.focus();
     let formatter = () => editor.getDocument().execCommand('italic', false, null);
     if (isSelectionCollapsed(editor)) {

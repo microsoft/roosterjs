@@ -98,7 +98,8 @@ function validateAndGetRangeForTextBeforeCursor(
  * @param text The text before cursor
  * @param node The node to replace the text with
  * @param exactMatch Whether to match exactly
- * @param cursorData The cursorData
+ * @param cursorData The cursorData. Default value is null
+ * @returns True if we successfully perform the replacement, false otherwise
  */
 function replaceTextBeforeCursorWithNode(
     editor: Editor,

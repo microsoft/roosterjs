@@ -10,7 +10,7 @@ import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
  * Clear the format in current selection
  * @param editor The editor instance
  */
-export default function clearFormat(editor: Editor): void {
+export default function clearFormat(editor: Editor) {
     editor.focus();
     // We have no way if this clear format will really result in any DOM change
     // Let's just do it with undo

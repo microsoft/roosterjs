@@ -6,7 +6,7 @@ import { Editor } from 'roosterjs-editor-core';
  * @param editor The editor instance
  * @param fontSize The fontSize string
  */
-export default function setFontSize(editor: Editor, fontSize: string): void {
+export default function setFontSize(editor: Editor, fontSize: string) {
     editor.focus();
     // TODO: Verify font size
     let validatedFontSize = fontSize.trim();

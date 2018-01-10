@@ -45,6 +45,8 @@ function queryCommandState(editor: Editor, command: string): boolean {
 /**
  * Get format state at cursor
  * @param editor The editor
+ * @param event (Optional) The plugin event
+ * @returns The FormatState
  */
 export default function getFormatState(editor: Editor, event?: PluginEvent): FormatState {
     // TODO: for background and color, shall we also use computed style?

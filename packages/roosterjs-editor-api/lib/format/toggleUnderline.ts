@@ -6,7 +6,7 @@ import { Editor } from 'roosterjs-editor-core';
  * Toggle underline at selection
  * @param editor The editor instance
  */
-export default function toggleUnderline(editor: Editor): void {
+export default function toggleUnderline(editor: Editor) {
     editor.focus();
     let formatter = () => editor.getDocument().execCommand('underline', false, null);
     if (isSelectionCollapsed(editor)) {

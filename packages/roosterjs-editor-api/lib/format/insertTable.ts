@@ -20,7 +20,7 @@ export interface TableFormat {
  * @param editor The editor instance
  * @param columns Number of columns in table
  * @param rows Number of rows in table
- * @param format The table format
+ * @param format (Optional) The table format
  */
 export default function insertTable(
     editor: Editor,

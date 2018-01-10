@@ -6,7 +6,7 @@ import { workaroundForEdge, removeWorkaroundForEdge } from './toggleBullet';
  * Toggle numbering at selection
  * @param editor The editor instance
  */
-export default function toggleNumbering(editor: Editor): void {
+export default function toggleNumbering(editor: Editor) {
     editor.focus();
     execFormatWithUndo(editor, () => {
         let workaroundSpan = workaroundForEdge(editor);

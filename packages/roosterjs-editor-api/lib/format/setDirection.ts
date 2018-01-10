@@ -8,7 +8,7 @@ import { Editor } from 'roosterjs-editor-core';
  * @param editor The editor instance
  * @param dir The direction option
  */
-export default function setDirection(editor: Editor, dir: Direction): void {
+export default function setDirection(editor: Editor, dir: Direction) {
     editor.focus();
     let dirValue = dir == Direction.LeftToRight ? 'ltr' : 'rtl';
     let styleValue = dir == Direction.LeftToRight ? 'left' : 'right';

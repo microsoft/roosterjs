@@ -24,7 +24,7 @@ export function insertNodeAtBegin(
     inlineElementFactory: InlineElementFactory,
     node: Node,
     option: InsertOption
-): void {
+) {
     let firstBlock = getFirstBlockElement(container, inlineElementFactory);
     let insertedNode: Node;
     if (firstBlock) {
@@ -80,7 +80,7 @@ export function insertNodeAtEnd(
     inlineElementFactory: InlineElementFactory,
     node: Node,
     option: InsertOption
-): void {
+) {
     let lastBlock = getLastBlockElement(container, inlineElementFactory);
     let insertedNode: Node;
     if (lastBlock) {
@@ -137,7 +137,7 @@ export function insertNodeAtSelection(
     selectionRange: Range,
     node: Node,
     option: InsertOption
-): void {
+) {
     if (selectionRange) {
         // if to replace the selection and the selection is not collapsed, remove the the content at selection first
         if (option.replaceSelection && !selectionRange.collapsed) {

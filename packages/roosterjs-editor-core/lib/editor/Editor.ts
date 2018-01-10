@@ -69,7 +69,7 @@ export default class Editor {
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
-     * @param options An optional options object to customize the editor
+     * @param options (Optional) An optional options object to customize the editor
      */
     constructor(private contentDiv: HTMLDivElement, options?: EditorOptions) {
         // 1. Make sure all parameters are valid
@@ -113,7 +113,7 @@ export default class Editor {
     /**
      * Dispose the editor instance
      */
-    public dispose(): void {
+    public dispose() {
         this.disposed = true;
         this.disposePlugins();
         this.unbindEvents();
@@ -126,6 +126,7 @@ export default class Editor {
 
     /**
      * Whether the editor is disposed
+     * @returns True if the editor is disposed, false otherwise
      */
     public isDisposed(): boolean {
         return this.disposed;
@@ -133,6 +134,7 @@ export default class Editor {
 
     /**
      * Get the selection range
+     * @returns The selection range
      */
     public getSelectionRange(): Range {
         // When we have the focus, we should try to do a live pull on the selection.
@@ -143,6 +145,7 @@ export default class Editor {
 
     /**
      * Get the document at contentDiv
+     * @returns The document at contentDiv
      */
     public getDocument(): Document {
         return this.contentDiv.ownerDocument;
@@ -150,6 +153,7 @@ export default class Editor {
 
     /**
      * Get current selection
+     * @returns The current selection
      */
     public getSelection(): Selection {
         return getSelection(this.getDocument());
@@ -157,6 +161,7 @@ export default class Editor {
 
     /**
      * Whether editor has focus
+     * @returns True if editor has focus, false otherwise
      */
     public hasFocus(): boolean {
         let activeElement = this.getDocument().activeElement;
@@ -165,9 +170,10 @@ export default class Editor {
 
     /**
      * Put focus on editor
-     * @param resetCursor Whether to reset cursor, if resetCursor is requested, set selection to beginning of content
+     * @param resetCursor Whether to reset cursor, if resetCursor is requested, set selection to beginning of content.
+     * Default value is false.
      */
-    public focus(resetCursor: boolean = false): void {
+    public focus(resetCursor: boolean = false) {
         // This is more than just focus. What we want to achieve here are:
         // - focus is moved to editor
         // - the selection was restored to where it was before
@@ -207,7 +213,7 @@ export default class Editor {
      * Apply inline style to current selection
      * @param styler The styler function
      */
-    public applyInlineStyle(styler: (element: HTMLElement) => void): void {
+    public applyInlineStyle(styler: (element: HTMLElement) => void) {
         this.focus();
         applyInlineStyle(this.contentDiv, this.getContentTraverser(ContentScope.Selection), styler);
     }
@@ -215,7 +221,7 @@ export default class Editor {
     /**
      * Call undoService to undo
      */
-    public undo(): void {
+    public undo() {
         this.focus();
         this.undoService.undo();
     }
@@ -223,7 +229,7 @@ export default class Editor {
     /**
      * Call undoService to redo
      */
-    public redo(): void {
+    public redo() {
         this.focus();
         this.undoService.redo();
     }
@@ -244,7 +250,7 @@ export default class Editor {
     /**
      * Add undo snapshot
      */
-    public addUndoSnapshot(): void {
+    public addUndoSnapshot() {
         if (
             this.undoService &&
             this.undoService.addUndoSnapshot &&
@@ -255,7 +261,8 @@ export default class Editor {
     }
 
     /**
-     * Decide if we can perform an undo
+     * Whether we can perform an undo
+     * @returns True if we can performa an undo, false otherwise
      */
     public canUndo(): boolean {
         return this.undoService
@@ -264,7 +271,8 @@ export default class Editor {
     }
 
     /**
-     * Decide if we can perform a redo
+     * Whether we can perform a redo
+     * @returns True if we can perform a redo, false otherwise
      */
     public canRedo(): boolean {
         return this.undoService
@@ -274,7 +282,9 @@ export default class Editor {
 
     /**
      * Get content of the editor
-     * @param triggerExtractContentEvent Whether to trigger extract content event
+     * @param triggerExtractContentEvent Whether to trigger extract content event.
+     * Default value is true
+     * @returns The content of the editor
      */
     public getContent(triggerExtractContentEvent: boolean = true): string {
         let content = this.contentDiv.innerHTML;
@@ -295,14 +305,15 @@ export default class Editor {
      * Set editor content
      * @param content The content string
      */
-    public setContent(content: string): void {
+    public setContent(content: string) {
         this.contentDiv.innerHTML = content || '';
         this.triggerContentChangedEvent();
     }
 
     /**
      * Decide whether the content of editor is empty
-     * @param trim Whether we want to trim the content
+     * @param trim (Optional) Whether we want to trim the content
+     * @returns True if content of editor is empty, false otherwise
      */
     public isEmpty(trim?: boolean): boolean {
         return isNodeEmpty(this.contentDiv, trim);
@@ -311,9 +322,9 @@ export default class Editor {
     /**
      * Insert content into editor
      * @param content The content to insert
-     * @param option The insert option
+     * @param option (Optional) The insert option
      */
-    public insertContent(content: string, option?: InsertOption): void {
+    public insertContent(content: string, option?: InsertOption) {
         if (content) {
             let allNodes = fromHtml(content, this.getDocument());
             // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with
@@ -331,7 +342,8 @@ export default class Editor {
     /**
      * Insert node into editor
      * @param node The node to insert
-     * @param option The insert option
+     * @param option (Optioanl) The insert option
+     * @returns True if the node has been inserted, false otherwise
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
         if (!node) {
@@ -376,6 +388,7 @@ export default class Editor {
     /**
      * Delete a node
      * @param node The node to delete
+     * @returns True if the node has been deleted, false otherwise
      */
     public deleteNode(node: Node): boolean {
         // Only remove the node when it falls within editor
@@ -392,6 +405,7 @@ export default class Editor {
      * Replace a node with another node
      * @param existingNode The node to be replaced
      * @param toNode The node to replace into
+     * @returns True if the node has been replaced, false otherwise
      */
     public replaceNode(existingNode: Node, toNode: Node): boolean {
         // Only replace the node when it falls within editor
@@ -408,6 +422,7 @@ export default class Editor {
     /**
      * Get inline element at node
      * @param node The node
+     * @returns The inline element at node
      */
     public getInlineElementAtNode(node: Node): InlineElement {
         return getInlineElementAtNode(this.contentDiv, node, this.inlineElementFactory);
@@ -419,7 +434,7 @@ export default class Editor {
      * @param broadcast Indicates if the event needs to be dispatched to all plugins,
      * true means to all, false means to allow exclusive handling from one plugin unless no one wants that
      */
-    public triggerEvent(pluginEvent: PluginEvent, broadcast: boolean = true): void {
+    public triggerEvent(pluginEvent: PluginEvent, broadcast: boolean = true) {
         let isHandledExclusively = false;
         if (!broadcast) {
             for (let i = 0; i < this.plugins.length; i++) {
@@ -448,7 +463,8 @@ export default class Editor {
     /**
      * Get a content traverser that can be used to traverse content within editor
      * @param scope The ContentScope
-     * @param position The ContentPosition option
+     * @param position The ContentPosition option. Default value is ContentPosition.SelectionStart
+     * @returns The ContentTraverser
      */
     public getContentTraverser(
         scope: ContentScope,
@@ -503,6 +519,7 @@ export default class Editor {
     /**
      * Update selection in editor
      * @param selectionRange The selection range we want to update selection to
+     * @returns True if the selection has been updated, false otherwise
      */
     public updateSelection(selectionRange: Range): boolean {
         let selectionUpdated = false;
@@ -523,6 +540,7 @@ export default class Editor {
     /**
      * DOM query content in editor
      * @param selector The selector
+     * @returns The list of elements returned by query
      */
     public queryContent(selector: string): NodeListOf<Element> {
         return this.contentDiv.querySelectorAll(selector);
@@ -530,6 +548,7 @@ export default class Editor {
 
     /**
      * Check if editor is in IME input sequence
+     * @returns True if editor is in IME input sequence, false otherwise
      */
     public isInIME(): boolean {
         return this.isInIMESequence;
@@ -538,6 +557,7 @@ export default class Editor {
     /**
      * Check if the node falls in the contentDiv
      * @param node The node to check
+     * @returns True if the node falls in the contentDiv, false otherwise
      */
     public contains(node: Node): boolean {
         return node && contains(this.contentDiv, node);
@@ -546,7 +566,7 @@ export default class Editor {
     /**
      * Save the current selection in editor
      */
-    public saveSelectionRange(): void {
+    public saveSelectionRange() {
         let range = tryGetSelectionRange(this.contentDiv);
         if (range) {
             this.cachedSelectionRange = range;
@@ -555,6 +575,7 @@ export default class Editor {
 
     /**
      * Get a rect representing the location of the cursor.
+     * @returns The Rect
      */
     public getCursorRect(): Rect {
         return getCursorRect(this.contentDiv);
@@ -562,6 +583,7 @@ export default class Editor {
 
     /**
      * Get default format of this editor
+     * @returns The default format
      */
     public getDefaultFormat(): DefaultFormat {
         return this.defaultFormat;

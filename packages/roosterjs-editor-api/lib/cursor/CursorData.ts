@@ -33,10 +33,15 @@ export default class CursorData {
     // All text sections before cursor that have been read so far
     private textsBeforeCursor: TextSection[];
 
+    /**
+     * Create a new CursorData instance
+     * @param editor The editor instance
+     */
     constructor(private editor: Editor) {}
 
     /**
      * Get the word before cursor
+     * @returns The word before cursor
      */
     public get wordBeforeCursor(): string {
         if (!this.cachedWordBeforeCursor && !this.backwardTraversingComplete) {
@@ -50,6 +55,7 @@ export default class CursorData {
 
     /**
      * Get the inline element before cursor
+     * @returns The inline element before cursor
      */
     public get inlineElementBeforeCursor(): InlineElement {
         if (!this.inlineBeforeCursor && !this.backwardTraversingComplete) {
@@ -64,6 +70,7 @@ export default class CursorData {
 
     /**
      * Get the inline element after cursor
+     * @returns The inlineElement after cursor
      */
     public get inlineElementAfterCursor(): InlineElement {
         if (!this.inlineAfterCursor && !this.forwardTraversingComplete) {
@@ -90,6 +97,7 @@ export default class CursorData {
      * Get X number of chars before cursor
      * The actual returned chars may be less than what is requested
      * @param numChars The number of chars to get
+     * @returns The X number of chars before cursor
      */
     public getXCharsBeforeCursor(numChars: number): string {
         if (
@@ -122,7 +130,7 @@ export default class CursorData {
      * when cursor moves out of context etc.
      * @param stopFunc The stop function
      */
-    public getTextSectionBeforeCursorTill(stopFunc: (textSection: TextSection) => boolean): void {
+    public getTextSectionBeforeCursorTill(stopFunc: (textSection: TextSection) => boolean) {
         // We cache all text sections read so far
         // Every time when you ask for textSection, we start with the cached first
         // and resort to further reading once we exhausted with the cache
@@ -143,7 +151,7 @@ export default class CursorData {
     }
 
     /// Continue traversing backward till stop condition is met or begin of block is reached
-    private continueTraversingBackwardTill(stopFunc: (textSection: TextSection) => boolean): void {
+    private continueTraversingBackwardTill(stopFunc: (textSection: TextSection) => boolean) {
         if (!this.backwardTraverser) {
             this.backwardTraverser = this.editor.getContentTraverser(
                 ContentScope.Block,

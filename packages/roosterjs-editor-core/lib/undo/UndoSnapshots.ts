@@ -24,6 +24,7 @@ export default class UndoSnapshots {
      * Whether can move forward or backward nunmber of steps
      * @param delta The number of steps to move, positive means moving to next snapshots
      * negative means moving to previous snapshots
+     * @returns True if we can move, false otherwise
      */
     public canMove(delta: number): boolean {
         let newIndex = this.currentIndex + delta;
@@ -34,6 +35,7 @@ export default class UndoSnapshots {
      * Move forward or backward number of steps
      * @param delta The number of steps to move, positive means moving to next snapshots
      * negative means moving to previous snapshots
+     * @returns The snapshot after moving, null if we can not do the move
      */
     public move(delta: number): string {
         if (this.canMove(delta)) {

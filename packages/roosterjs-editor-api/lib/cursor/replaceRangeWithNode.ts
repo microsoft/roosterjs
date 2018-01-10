@@ -8,6 +8,7 @@ import { Editor } from 'roosterjs-editor-core';
  * @param range The range in which content needs to be replaced
  * @param node The node to be inserted
  * @param exactMatch Whether it is exactMatch
+ * @returns True if we complete the replacement, false otherwise
  */
 function replaceRangeWithNode(
     editor: Editor,

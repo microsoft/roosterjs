@@ -12,7 +12,7 @@ function applyInlineStyleToCollapsedSelection(
     currentDocument: Document,
     selectionRange: Range,
     styler: (element: HTMLElement) => void
-): void {
+) {
     // let's just be simple to create a new span to hold the style
     // TODO: maybe we should be a bit smarter to see if we're in a span, and apply the style in parent span
     let element = currentDocument.createElement('SPAN');
@@ -40,7 +40,7 @@ function applyInlineStyleToNonCollapsedSelection(
     contentTraverser: ContentTraverser,
     selectionRange: Range,
     styler: (element: HTMLElement) => void
-): void {
+) {
     // This is start and end node that get the style. The start and end needs to be recorded so that selection
     // can be re-applied post-applying style
     let startNode: Node;
@@ -82,7 +82,7 @@ function applyInlineStyle(
     container: Node,
     contentTraverser: ContentTraverser,
     styler: (element: HTMLElement) => void
-): void {
+) {
     let currentDocument = container.ownerDocument;
     let selectionRange = tryGetSelectionRange(container);
     if (selectionRange) {

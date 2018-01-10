@@ -10,6 +10,7 @@ const CURSOR_END = 'cursor-end';
 /**
  * Build undo snapshot
  * @param editor The editor instance
+ * @returns The snapshot
  */
 export function buildSnapshot(editor: Editor): string {
     // Build the snapshot in-between adding and removing cursor marker
@@ -38,7 +39,7 @@ export function buildSnapshot(editor: Editor): string {
  * @param editor The editor instance
  * @param snapshot The snapshot to restore into
  */
-export function restoreSnapshot(editor: Editor, snapshot: string): void {
+export function restoreSnapshot(editor: Editor, snapshot: string) {
     editor.setContent(snapshot);
 
     // Restore the selection and delete the cursor marker afterwards
@@ -47,14 +48,14 @@ export function restoreSnapshot(editor: Editor, snapshot: string): void {
 }
 
 // Remove the temporarily added cursor markers
-function removeCursorMarkers(editor: Editor): void {
+function removeCursorMarkers(editor: Editor) {
     removeCursorMarkerById(editor, CURSOR_START);
     removeCursorMarkerById(editor, CURSOR_END);
 }
 
 // Temporarily inject a SPAN marker to the selection which is used to remember where the selection is
 // The marker is used on restore selection on undo
-function addCursorMarkersToSelection(editor: Editor, selectionRange: Range): void {
+function addCursorMarkersToSelection(editor: Editor, selectionRange: Range) {
     // First to insert the start marker
     let startMarker = createCursorMarker(editor, CURSOR_START);
     let startPoint = normalizeEditorPoint(
@@ -98,7 +99,7 @@ function insertCursorMarkerToEditorPoint(
     editor: Editor,
     editorPoint: EditorPoint,
     cursorMaker: Element
-): void {
+) {
     let containerNode = editorPoint.containerNode;
     let offset = editorPoint.offset;
     let parentNode = containerNode.parentNode;
@@ -122,7 +123,7 @@ function insertCursorMarkerToEditorPoint(
 }
 
 // Remove an element from editor by Id
-function removeCursorMarkerById(editor: Editor, id: string): void {
+function removeCursorMarkerById(editor: Editor, id: string) {
     let nodes = getCursorMarkNodes(editor, id);
     if (nodes) {
         for (let i = 0; i < nodes.length; i++) {

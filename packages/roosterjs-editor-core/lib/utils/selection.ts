@@ -8,6 +8,7 @@ function getWindow(currentDocument: Document) {
  * Checks if a range falls within the content Div
  * @param range The range
  * @param container The container node
+ * @returns True if the range is in container Div, false otherwise
  */
 export function isRangeInContainer(range: Range, container: Node): boolean {
     let ancestorContainer = range ? range.commonAncestorContainer : null;
@@ -34,6 +35,7 @@ export function getSelection(currentDocument: Document) {
 /**
  * Try to get range from container node
  * @param container The container node
+ * @returns The range from container node
  */
 export function tryGetSelectionRange(container: Node): Range {
     let sel = getSelection(container.ownerDocument);
@@ -52,6 +54,7 @@ export function tryGetSelectionRange(container: Node): Range {
  * Update selection to range
  * @param currentDocument The current document
  * @param range The range to update selection to
+ * @returns True if the selection has been updated, false otherwise
  */
 export function updateSelectionToRange(currentDocument: Document, range: Range): boolean {
     let selectionUpdated = false;

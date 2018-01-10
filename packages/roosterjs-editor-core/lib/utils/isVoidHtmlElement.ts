@@ -9,6 +9,7 @@ const HTML_VOID_ELEMENTS_REGEX = /^(AREA|BASE|BR|COL|COMMAND|EMBED|HR|IMG|INPUT|
 /**
  * Check if it is html void element. void element cannot have childen
  * @param element The HTML element to check
+ * @returns True if element is void html element, false otherwise
  */
 export default function isVoidHtmlElement(element: HTMLElement): boolean {
     return element && HTML_VOID_ELEMENTS_REGEX.test(getTagOfNode(element)) ? true : false;

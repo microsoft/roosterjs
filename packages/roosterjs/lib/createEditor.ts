@@ -6,6 +6,7 @@ import { Editor, EditorOptions, EditorPlugin } from 'roosterjs-editor-core';
  * @param contentDiv The html div element needed for create the editor
  * @param additionalPlugins The user defined plugins
  * @param initialContent The initial content to show in editor
+ * @returns The editor instance
  */
 export default function createEditor(
     contentDiv: HTMLDivElement,

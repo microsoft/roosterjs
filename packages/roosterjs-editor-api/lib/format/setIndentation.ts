@@ -9,7 +9,7 @@ import { Indentation } from 'roosterjs-editor-types';
  * @param editor The editor instance
  * @param indentation The indentation option
  */
-export default function setIndentation(editor: Editor, indentation: Indentation): void {
+export default function setIndentation(editor: Editor, indentation: Indentation) {
     editor.focus();
     let command = indentation == Indentation.Increase ? 'indent' : 'outdent';
     execFormatWithUndo(editor, () => {

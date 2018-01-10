@@ -8,6 +8,7 @@ import { NodeType } from 'roosterjs-editor-types';
  * fallback to this.getSelectionRange() which will return you a cached selection range if there is any
  * and use the start container or commonAncestorContainer
  * @param editor The editor instance
+ * @returns The node at cursor
  */
 export default function getNodeAtCursor(editor: Editor): Node {
     let node: Node = null;

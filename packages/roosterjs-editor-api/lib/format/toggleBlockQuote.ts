@@ -17,12 +17,12 @@ let defaultStyler = (element: HTMLElement) => {
 /**
  * Toggle blockquote at selection
  * @param editor The editor instance
- * @param styler The custom styler
+ * @param styler (Optional) The custom styler
  */
 export default function toggleBlockQuote(
     editor: Editor,
     styler?: (element: HTMLElement) => void
-): void {
+) {
     editor.focus();
     let blockquoteNodes = queryNodesWithSelection(editor, 'blockquote');
     execFormatWithUndo(

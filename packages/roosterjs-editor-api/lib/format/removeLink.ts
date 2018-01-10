@@ -7,7 +7,7 @@ import { Editor } from 'roosterjs-editor-core';
  * Remove link at selection
  * @param editor The editor instance
  */
-export default function removeLink(editor: Editor): void {
+export default function removeLink(editor: Editor) {
     editor.focus();
     let nodes = queryNodesWithSelection(editor, 'a[href]');
     if (nodes.length) {

@@ -6,7 +6,7 @@ import { PluginEvent } from 'roosterjs-editor-types';
  * @param cacheKey The cache key
  * @param eventData The event data
  */
-function cacheEventData<T>(event: PluginEvent, cacheKey: string, eventData: T): void {
+function cacheEventData<T>(event: PluginEvent, cacheKey: string, eventData: T) {
     if (event) {
         if (!event.eventDataCache) {
             event.eventDataCache = {};
@@ -19,6 +19,7 @@ function cacheEventData<T>(event: PluginEvent, cacheKey: string, eventData: T): 
  * Get cached event data (as specified by key) or null if not found
  * @param event The plugin event
  * @param key The cache key
+ * @returns The cached event data
  */
 function getEventDataCache<T>(event: PluginEvent, key: string): T {
     let eventData: T = null;
@@ -33,18 +34,19 @@ function getEventDataCache<T>(event: PluginEvent, key: string): T {
  * @param event The plugin event
  * @param key The cache key
  */
-function clearEventDataCache(event: PluginEvent, key: string): void {
+function clearEventDataCache(event: PluginEvent, key: string) {
     if (event && event.eventDataCache && event.eventDataCache[key]) {
         event.eventDataCache[key] = null;
     }
 }
 
 /**
- * Return the cached event data per cache key if there is already one.
+ * Returns the cached event data per cache key if there is already one.
  * If not, create one and put it in event data cache
  * @param event The plugin event
  * @param cacheKey The cache key
  * @param eventDataBuilder The callback function to build event data
+ * @returns The event data
  */
 function cacheGetEventData<T>(event: PluginEvent, cacheKey: string, eventDataBuilder: () => T): T {
     let eventData = getEventDataCache<T>(event, cacheKey);

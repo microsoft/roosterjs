@@ -6,7 +6,7 @@ import { Editor } from 'roosterjs-editor-core';
  * Toggle subscript at selection
  * @param editor The editor instance
  */
-export default function toggleSubscript(editor: Editor): void {
+export default function toggleSubscript(editor: Editor) {
     editor.focus();
     let formatter = () => editor.getDocument().execCommand('subscript', false, null);
     if (isSelectionCollapsed(editor)) {

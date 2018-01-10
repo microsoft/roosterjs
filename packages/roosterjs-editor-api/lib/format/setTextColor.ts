@@ -6,7 +6,7 @@ import { Editor } from 'roosterjs-editor-core';
  * @param editor The editor instance
  * @param color The color string
  */
-export default function setTextColor(editor: Editor, color: string): void {
+export default function setTextColor(editor: Editor, color: string) {
     editor.focus();
     // TODO: Verify color
     let validatedColor = color.trim();

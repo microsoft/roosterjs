@@ -13,7 +13,8 @@ export interface BrowserData {
 /**
  * Get the browser related data
  * @param userAgent The userAgent
- * @param appVersion The version of the browser
+ * @param appVersion (Optioanl) The version of the browser
+ * @returns The browser data
  */
 export function getBrowserData(userAgent?: string, appVersion?: string): BrowserData {
     // In case universal render somehow hits this code path

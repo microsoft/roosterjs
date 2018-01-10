@@ -6,7 +6,7 @@ import { Editor } from 'roosterjs-editor-core';
  * Toggle strikethrough at selection
  * @param editor The editor instance
  */
-export default function toggleStrikethrough(editor: Editor): void {
+export default function toggleStrikethrough(editor: Editor) {
     editor.focus();
     let formatter = () => editor.getDocument().execCommand('strikeThrough', false, null);
     if (isSelectionCollapsed(editor)) {

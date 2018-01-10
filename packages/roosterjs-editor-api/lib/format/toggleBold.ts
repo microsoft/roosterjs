@@ -6,7 +6,7 @@ import { Editor } from 'roosterjs-editor-core';
  * Toggle bold at selection
  * @param editor The editor instance
  */
-export default function toggleBold(editor: Editor): void {
+export default function toggleBold(editor: Editor) {
     editor.focus();
     let formatter = () => editor.getDocument().execCommand('bold', false, null);
     if (isSelectionCollapsed(editor)) {

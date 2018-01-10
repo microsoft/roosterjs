@@ -26,6 +26,7 @@ function getRectFromClientRect(clientRect: ClientRect): Rect {
  * The returned rect structure has a left and right and they should be same
  * here since it is for cursor, not for a range.
  * @param container The container node
+ * @returns The Rect
  */
 function getCursorRect(container: Node): Rect {
     let document = container.ownerDocument;

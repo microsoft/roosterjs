@@ -9,6 +9,7 @@ const ZERO_WIDTH_SPACE = '&#8203;';
  * Edge may incorrectly put cursor after toggle bullet, workaround it by adding a space.
  * The space will be removed by Edge after toggle bullet
  * @param editor The editor instance
+ * @returns The wordaround span
  */
 export function workaroundForEdge(editor: Editor): HTMLElement {
     if (browserData.isEdge) {
@@ -25,8 +26,8 @@ export function workaroundForEdge(editor: Editor): HTMLElement {
 }
 
 /**
- * Remove workaround for Edge
- * @param workaroundSpan The workaroundSpan
+ * Remove the workaroundSpan added when toggling bullet in Edge
+ * @param workaroundSpan The workaroundSpan that was added
  */
 export function removeWorkaroundForEdge(workaroundSpan: HTMLElement) {
     if (workaroundSpan && workaroundSpan.parentNode) {
@@ -38,7 +39,7 @@ export function removeWorkaroundForEdge(workaroundSpan: HTMLElement) {
  * Toggle bullet at selection
  * @param editor The editor instance
  */
-export default function toggleBullet(editor: Editor): void {
+export default function toggleBullet(editor: Editor) {
     editor.focus();
     execFormatWithUndo(editor, () => {
         let workaroundSpan = workaroundForEdge(editor);

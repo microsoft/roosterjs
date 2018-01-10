@@ -8,7 +8,8 @@ const EVENTDATACACHE_LISTELEMENT = 'LISTELEMENT';
 /**
  * Get the list element at current selection
  * @param editor The editor instance
- * @param event The plugin event
+ * @param event (Optional) The plugin event
+ * @returns The list element
  */
 export default function cacheGetListElement(editor: Editor, event?: PluginEvent): Element {
     return cacheGetEventData<Element>(event, EVENTDATACACHE_LISTELEMENT, () => {
@@ -22,6 +23,7 @@ export default function cacheGetListElement(editor: Editor, event?: PluginEvent)
  * @param editor The editor instance
  * @param node The node
  * @param tagName The tag name of the list element we want to get. e.g, 'LI', 'OL', etc
+ * @returns The list element at node, null if no list element at node
  */
 export function getListElementAtNode(editor: Editor, node: Node, tagName: string): Element {
     let startElement = node && node.nodeType == NodeType.Text ? node.parentElement : <Element>node;
