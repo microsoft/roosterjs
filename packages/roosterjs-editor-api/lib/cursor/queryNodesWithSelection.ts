@@ -6,6 +6,7 @@ import { isDocumentPosition } from 'roosterjs-editor-dom';
  * Query nodes intersected with current selection using a selector
  * @param editor The editor
  * @param selector The selector to query
+ * @returns The nodes intersected with current selection
  */
 export default function queryNodesWithSelection(editor: Editor, selector: string): Node[] {
     let result: Node[] = [];

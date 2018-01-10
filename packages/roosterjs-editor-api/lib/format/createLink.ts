@@ -55,7 +55,7 @@ export default function createLink(
     link: string,
     altText?: string,
     displayText?: string
-): void {
+) {
     editor.focus();
     let url = link ? link.trim() : '';
     if (url) {

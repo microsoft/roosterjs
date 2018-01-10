@@ -12,13 +12,19 @@ import { updateSelectionToRange } from './selection';
 
 const HTML_EMPTY_DIV = '<div></div>';
 
-// Insert a node at begin of the editor
+/**
+ * Insert a node at begin of the editor
+ * @param container The container node
+ * @param inlineElementFactory The InlineElementFactory
+ * @param node The node to insert
+ * @param option The insert option
+ */
 export function insertNodeAtBegin(
     container: Node,
     inlineElementFactory: InlineElementFactory,
     node: Node,
     option: InsertOption
-): void {
+) {
     let firstBlock = getFirstBlockElement(container, inlineElementFactory);
     let insertedNode: Node;
     if (firstBlock) {
@@ -62,13 +68,19 @@ export function insertNodeAtBegin(
     }
 }
 
-// Insert a node at end of the editor
+/**
+ * Insert a node at end of the editor
+ * @param container The container node
+ * @param inlineElementFactory The inlineElementFactory
+ * @param node The node to insert
+ * @param option The insert option
+ */
 export function insertNodeAtEnd(
     container: Node,
     inlineElementFactory: InlineElementFactory,
     node: Node,
     option: InsertOption
-): void {
+) {
     let lastBlock = getLastBlockElement(container, inlineElementFactory);
     let insertedNode: Node;
     if (lastBlock) {
@@ -111,14 +123,21 @@ export function insertNodeAtEnd(
     }
 }
 
-// Insert node at selection
+/**
+ * Insert node at selection
+ * @param container The container node
+ * @param inlineElementFactory The inlineElementFactory
+ * @param selectionRange The selection range
+ * @param node The node to insert
+ * @param option The insert option
+ */
 export function insertNodeAtSelection(
     container: Node,
     inlineElementFactory: InlineElementFactory,
     selectionRange: Range,
     node: Node,
     option: InsertOption
-): void {
+) {
     if (selectionRange) {
         // if to replace the selection and the selection is not collapsed, remove the the content at selection first
         if (option.replaceSelection && !selectionRange.collapsed) {

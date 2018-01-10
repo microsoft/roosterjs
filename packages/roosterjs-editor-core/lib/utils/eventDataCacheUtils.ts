@@ -1,7 +1,12 @@
 import { PluginEvent } from 'roosterjs-editor-types';
 
-// cache some certain data in event cache by key
-function cacheEventData<T>(event: PluginEvent, cacheKey: string, eventData: T): void {
+/**
+ * cache some certain data in event cache by key
+ * @param event The plugin event
+ * @param cacheKey The cache key
+ * @param eventData The event data
+ */
+function cacheEventData<T>(event: PluginEvent, cacheKey: string, eventData: T) {
     if (event) {
         if (!event.eventDataCache) {
             event.eventDataCache = {};
@@ -10,7 +15,12 @@ function cacheEventData<T>(event: PluginEvent, cacheKey: string, eventData: T): 
     }
 }
 
-// Get cached event data (as specified by key) or null if not found
+/**
+ * Get cached event data (as specified by key) or null if not found
+ * @param event The plugin event
+ * @param key The cache key
+ * @returns The cached event data
+ */
 function getEventDataCache<T>(event: PluginEvent, key: string): T {
     let eventData: T = null;
     if (event && event.eventDataCache && event.eventDataCache[key]) {
@@ -19,15 +29,25 @@ function getEventDataCache<T>(event: PluginEvent, key: string): T {
     return eventData;
 }
 
-// Clear a specifc cached data (as specified by a key) in a plugin event
-function clearEventDataCache(event: PluginEvent, key: string): void {
+/**
+ * Clear a specifc cached data (as specified by a key) in a plugin event
+ * @param event The plugin event
+ * @param key The cache key
+ */
+function clearEventDataCache(event: PluginEvent, key: string) {
     if (event && event.eventDataCache && event.eventDataCache[key]) {
         event.eventDataCache[key] = null;
     }
 }
 
-// Return the cached event data per cache key if there is already one.
-// If not, create one and put it in event data cache
+/**
+ * Returns the cached event data per cache key if there is already one.
+ * If not, create one and put it in event data cache
+ * @param event The plugin event
+ * @param cacheKey The cache key
+ * @param eventDataBuilder The callback function to build event data
+ * @returns The event data
+ */
 function cacheGetEventData<T>(event: PluginEvent, cacheKey: string, eventDataBuilder: () => T): T {
     let eventData = getEventDataCache<T>(event, cacheKey);
     if (!eventData) {

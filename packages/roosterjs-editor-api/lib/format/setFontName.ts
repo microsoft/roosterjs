@@ -1,7 +1,12 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import { Editor } from 'roosterjs-editor-core';
 
-export default function setFontName(editor: Editor, fontName: string): void {
+/**
+ * Set font name at selection
+ * @param editor The editor instance
+ * @param fontName The fontName string
+ */
+export default function setFontName(editor: Editor, fontName: string) {
     editor.focus();
     // TODO: Verify font name
     let validatedFontName = fontName.trim();

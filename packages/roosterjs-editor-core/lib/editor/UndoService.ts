@@ -1,6 +1,8 @@
 import EditorPlugin from './EditorPlugin';
 
-// This defines replaceable undo service for editor
+/**
+ * This defines default undo service for editor
+ */
 interface UndoService extends EditorPlugin {
     undo: () => void;
     redo: () => void;

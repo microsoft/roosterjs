@@ -3,7 +3,11 @@ import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { normalizeEditorPoint, unwrap } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
-export default function removeLink(editor: Editor): void {
+/**
+ * Remove link at selection
+ * @param editor The editor instance
+ */
+export default function removeLink(editor: Editor) {
     editor.focus();
     let nodes = queryNodesWithSelection(editor, 'a[href]');
     if (nodes.length) {

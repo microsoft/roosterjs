@@ -2,7 +2,11 @@ import execFormatWithUndo from './execFormatWithUndo';
 import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
 import { Editor } from 'roosterjs-editor-core';
 
-export default function toggleSubscript(editor: Editor): void {
+/**
+ * Toggle subscript at selection
+ * @param editor The editor instance
+ */
+export default function toggleSubscript(editor: Editor) {
     editor.focus();
     let formatter = () => editor.getDocument().execCommand('subscript', false, null);
     if (isSelectionCollapsed(editor)) {

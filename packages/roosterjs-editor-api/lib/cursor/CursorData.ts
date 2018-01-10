@@ -2,7 +2,9 @@ import { ContentPosition, ContentScope, InlineElement, TextSection } from 'roost
 import { ContentTraverser, isTextualInlineElement, matchWhiteSpaces } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
-// The class that helps parse content around cursor
+/**
+ * The class that helps parse content around cursor
+ */
 export default class CursorData {
     // The cached text before cursor that has been read so far
     private cachedTextBeforeCursor: string;
@@ -31,9 +33,16 @@ export default class CursorData {
     // All text sections before cursor that have been read so far
     private textsBeforeCursor: TextSection[];
 
+    /**
+     * Create a new CursorData instance
+     * @param editor The editor instance
+     */
     constructor(private editor: Editor) {}
 
-    // Get the word before cursor
+    /**
+     * Get the word before cursor
+     * @returns The word before cursor
+     */
     public get wordBeforeCursor(): string {
         if (!this.cachedWordBeforeCursor && !this.backwardTraversingComplete) {
             this.continueTraversingBackwardTill((textSection: TextSection): boolean => {
@@ -44,7 +53,10 @@ export default class CursorData {
         return this.cachedWordBeforeCursor;
     }
 
-    // Get the inline element before cursor
+    /**
+     * Get the inline element before cursor
+     * @returns The inline element before cursor
+     */
     public get inlineElementBeforeCursor(): InlineElement {
         if (!this.inlineBeforeCursor && !this.backwardTraversingComplete) {
             // Just return after it moves the needle by one step
@@ -56,7 +68,10 @@ export default class CursorData {
         return this.inlineBeforeCursor;
     }
 
-    // Get the inline element after cursor
+    /**
+     * Get the inline element after cursor
+     * @returns The inlineElement after cursor
+     */
     public get inlineElementAfterCursor(): InlineElement {
         if (!this.inlineAfterCursor && !this.forwardTraversingComplete) {
             // TODO: this may needs to be extended to support read more than just one inline element after cursor
@@ -78,8 +93,12 @@ export default class CursorData {
         return this.inlineAfterCursor;
     }
 
-    // Get X number of chars before cursor
-    // The actual returned chars may be less than what is requested
+    /**
+     * Get X number of chars before cursor
+     * The actual returned chars may be less than what is requested
+     * @param numChars The number of chars to get
+     * @returns The X number of chars before cursor
+     */
     public getXCharsBeforeCursor(numChars: number): string {
         if (
             (!this.cachedTextBeforeCursor || this.cachedTextBeforeCursor.length < numChars) &&
@@ -103,12 +122,15 @@ export default class CursorData {
         }
     }
 
-    /// Get text section before cursor till
-    /// This offers consumers to retrieve text section by section
-    /// The section essentially is just an inline element which has Container element
-    /// so that the consumer can remember it for anchoring popup or verification purpose
-    /// when cursor moves out of context etc.
-    public getTextSectionBeforeCursorTill(stopFunc: (textSection: TextSection) => boolean): void {
+    /**
+     * Get text section before cursor till
+     * This offers consumers to retrieve text section by section
+     * The section essentially is just an inline element which has Container element
+     * so that the consumer can remember it for anchoring popup or verification purpose
+     * when cursor moves out of context etc.
+     * @param stopFunc The stop function
+     */
+    public getTextSectionBeforeCursorTill(stopFunc: (textSection: TextSection) => boolean) {
         // We cache all text sections read so far
         // Every time when you ask for textSection, we start with the cached first
         // and resort to further reading once we exhausted with the cache
@@ -129,7 +151,7 @@ export default class CursorData {
     }
 
     /// Continue traversing backward till stop condition is met or begin of block is reached
-    private continueTraversingBackwardTill(stopFunc: (textSection: TextSection) => boolean): void {
+    private continueTraversingBackwardTill(stopFunc: (textSection: TextSection) => boolean) {
         if (!this.backwardTraverser) {
             this.backwardTraverser = this.editor.getContentTraverser(
                 ContentScope.Block,

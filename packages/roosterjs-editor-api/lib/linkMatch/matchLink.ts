@@ -6,6 +6,7 @@ import { LinkData, LinkMatchOption, LinkMatchRule } from 'roosterjs-editor-types
  * @param url Input url to match
  * @param option Link match option, exact or partial
  * @param rules Optional link match rules
+ * @returns The mathced link
  */
 function matchLink(
     url: string,

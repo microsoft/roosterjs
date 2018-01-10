@@ -69,7 +69,7 @@ export default class Editor {
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
-     * @param options An optional options object to customize the editor
+     * @param options (Optional) An optional options object to customize the editor
      */
     constructor(private contentDiv: HTMLDivElement, options?: EditorOptions) {
         // 1. Make sure all parameters are valid
@@ -110,7 +110,10 @@ export default class Editor {
         this.bindEvents();
     }
 
-    public dispose(): void {
+    /**
+     * Dispose the editor instance
+     */
+    public dispose() {
         this.disposed = true;
         this.disposePlugins();
         this.unbindEvents();
@@ -121,10 +124,18 @@ export default class Editor {
         }
     }
 
+    /**
+     * Whether the editor is disposed
+     * @returns True if the editor is disposed, false otherwise
+     */
     public isDisposed(): boolean {
         return this.disposed;
     }
 
+    /**
+     * Get the selection range
+     * @returns The selection range
+     */
     public getSelectionRange(): Range {
         // When we have the focus, we should try to do a live pull on the selection.
         // Otherwise, return whatever we have in cache.
@@ -132,20 +143,37 @@ export default class Editor {
         return selectionRange || this.cachedSelectionRange;
     }
 
+    /**
+     * Get the document at contentDiv
+     * @returns The document at contentDiv
+     */
     public getDocument(): Document {
         return this.contentDiv.ownerDocument;
     }
 
+    /**
+     * Get current selection
+     * @returns The current selection
+     */
     public getSelection(): Selection {
         return getSelection(this.getDocument());
     }
 
+    /**
+     * Whether editor has focus
+     * @returns True if editor has focus, false otherwise
+     */
     public hasFocus(): boolean {
         let activeElement = this.getDocument().activeElement;
         return activeElement && (this.contentDiv == activeElement || this.contains(activeElement));
     }
 
-    public focus(resetCursor: boolean = false): void {
+    /**
+     * Put focus on editor
+     * @param resetCursor Whether to reset cursor, if resetCursor is requested, set selection to beginning of content.
+     * Default value is false.
+     */
+    public focus(resetCursor: boolean = false) {
         // This is more than just focus. What we want to achieve here are:
         // - focus is moved to editor
         // - the selection was restored to where it was before
@@ -181,22 +209,35 @@ export default class Editor {
         }
     }
 
-    // Apply inline style to current selection
-    public applyInlineStyle(styler: (element: HTMLElement) => void): void {
+    /**
+     * Apply inline style to current selection
+     * @param styler The styler function
+     */
+    public applyInlineStyle(styler: (element: HTMLElement) => void) {
         this.focus();
         applyInlineStyle(this.contentDiv, this.getContentTraverser(ContentScope.Selection), styler);
     }
 
-    public undo(): void {
+    /**
+     * Call undoService to undo
+     */
+    public undo() {
         this.focus();
         this.undoService.undo();
     }
 
-    public redo(): void {
+    /**
+     * Call undoService to redo
+     */
+    public redo() {
         this.focus();
         this.undoService.redo();
     }
 
+    /**
+     * Exec function without adding undo snapshot
+     * @param callback The function to exec
+     */
     public runWithoutAddingUndoSnapshot(callback: () => void) {
         try {
             this.suspendAddingUndoSnapshot = true;
@@ -206,7 +247,10 @@ export default class Editor {
         }
     }
 
-    public addUndoSnapshot(): void {
+    /**
+     * Add undo snapshot
+     */
+    public addUndoSnapshot() {
         if (
             this.undoService &&
             this.undoService.addUndoSnapshot &&
@@ -216,18 +260,32 @@ export default class Editor {
         }
     }
 
+    /**
+     * Whether we can perform an undo
+     * @returns True if we can performa an undo, false otherwise
+     */
     public canUndo(): boolean {
         return this.undoService
             ? this.undoService.canUndo ? this.undoService.canUndo() : true
             : false;
     }
 
+    /**
+     * Whether we can perform a redo
+     * @returns True if we can perform a redo, false otherwise
+     */
     public canRedo(): boolean {
         return this.undoService
             ? this.undoService.canRedo ? this.undoService.canRedo() : true
             : false;
     }
 
+    /**
+     * Get content of the editor
+     * @param triggerExtractContentEvent Whether to trigger extract content event.
+     * Default value is true
+     * @returns The content of the editor
+     */
     public getContent(triggerExtractContentEvent: boolean = true): string {
         let content = this.contentDiv.innerHTML;
 
@@ -243,17 +301,30 @@ export default class Editor {
         return content;
     }
 
-    public setContent(content: string): void {
+    /**
+     * Set editor content
+     * @param content The content string
+     */
+    public setContent(content: string) {
         this.contentDiv.innerHTML = content || '';
         this.triggerContentChangedEvent();
     }
 
+    /**
+     * Decide whether the content of editor is empty
+     * @param trim (Optional) Whether we want to trim the content
+     * @returns True if content of editor is empty, false otherwise
+     */
     public isEmpty(trim?: boolean): boolean {
         return isNodeEmpty(this.contentDiv, trim);
     }
 
-    // Insert content into editor
-    public insertContent(content: string, option?: InsertOption): void {
+    /**
+     * Insert content into editor
+     * @param content The content to insert
+     * @param option (Optional) The insert option
+     */
+    public insertContent(content: string, option?: InsertOption) {
         if (content) {
             let allNodes = fromHtml(content, this.getDocument());
             // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with
@@ -268,7 +339,12 @@ export default class Editor {
         }
     }
 
-    // Insert node into editor
+    /**
+     * Insert node into editor
+     * @param node The node to insert
+     * @param option (Optioanl) The insert option
+     * @returns True if the node has been inserted, false otherwise
+     */
     public insertNode(node: Node, option?: InsertOption): boolean {
         if (!node) {
             return false;
@@ -309,7 +385,11 @@ export default class Editor {
         return true;
     }
 
-    // Delete a node
+    /**
+     * Delete a node
+     * @param node The node to delete
+     * @returns True if the node has been deleted, false otherwise
+     */
     public deleteNode(node: Node): boolean {
         // Only remove the node when it falls within editor
         if (node && this.contains(node)) {
@@ -321,7 +401,12 @@ export default class Editor {
         return false;
     }
 
-    // Replace a node with another node
+    /**
+     * Replace a node with another node
+     * @param existingNode The node to be replaced
+     * @param toNode The node to replace into
+     * @returns True if the node has been replaced, false otherwise
+     */
     public replaceNode(existingNode: Node, toNode: Node): boolean {
         // Only replace the node when it falls within editor
         if (existingNode && toNode && this.contains(existingNode)) {
@@ -334,14 +419,22 @@ export default class Editor {
         return false;
     }
 
+    /**
+     * Get inline element at node
+     * @param node The node
+     * @returns The inline element at node
+     */
     public getInlineElementAtNode(node: Node): InlineElement {
         return getInlineElementAtNode(this.contentDiv, node, this.inlineElementFactory);
     }
 
-    // Trigger an event to be dispatched to all plugins
-    // broadcast indicates if the event needs to be dispatched to all plugins
-    // true means to all, false means to allow exclusive handling from one plugin unless no one wants that
-    public triggerEvent(pluginEvent: PluginEvent, broadcast: boolean = true): void {
+    /**
+     * Trigger an event to be dispatched to all plugins
+     * @param pluginEvent The plugin event
+     * @param broadcast Indicates if the event needs to be dispatched to all plugins,
+     * true means to all, false means to allow exclusive handling from one plugin unless no one wants that
+     */
+    public triggerEvent(pluginEvent: PluginEvent, broadcast: boolean = true) {
         let isHandledExclusively = false;
         if (!broadcast) {
             for (let i = 0; i < this.plugins.length; i++) {
@@ -367,7 +460,12 @@ export default class Editor {
         }
     }
 
-    // Get a content traverser that can be used to travse content within editor
+    /**
+     * Get a content traverser that can be used to traverse content within editor
+     * @param scope The ContentScope
+     * @param position The ContentPosition option. Default value is ContentPosition.SelectionStart
+     * @returns The ContentTraverser
+     */
     public getContentTraverser(
         scope: ContentScope,
         position: ContentPosition = ContentPosition.SelectionStart
@@ -418,7 +516,11 @@ export default class Editor {
         return contentTraverser;
     }
 
-    // Update selection in editor
+    /**
+     * Update selection in editor
+     * @param selectionRange The selection range we want to update selection to
+     * @returns True if the selection has been updated, false otherwise
+     */
     public updateSelection(selectionRange: Range): boolean {
         let selectionUpdated = false;
         if (isRangeInContainer(selectionRange, this.contentDiv)) {
@@ -435,35 +537,54 @@ export default class Editor {
         return selectionUpdated;
     }
 
-    // DOM query content in editor
+    /**
+     * DOM query content in editor
+     * @param selector The selector
+     * @returns The list of elements returned by query
+     */
     public queryContent(selector: string): NodeListOf<Element> {
         return this.contentDiv.querySelectorAll(selector);
     }
 
-    // Check if editor is in IME input sequence
+    /**
+     * Check if editor is in IME input sequence
+     * @returns True if editor is in IME input sequence, false otherwise
+     */
     public isInIME(): boolean {
         return this.isInIMESequence;
     }
 
-    // Check if the node falls in the contentDiv
+    /**
+     * Check if the node falls in the contentDiv
+     * @param node The node to check
+     * @returns True if the node falls in the contentDiv, false otherwise
+     */
     public contains(node: Node): boolean {
         return node && contains(this.contentDiv, node);
     }
 
-    // Save the current selection in editor
-    public saveSelectionRange(): void {
+    /**
+     * Save the current selection in editor
+     */
+    public saveSelectionRange() {
         let range = tryGetSelectionRange(this.contentDiv);
         if (range) {
             this.cachedSelectionRange = range;
         }
     }
 
-    // Get a rect representing the location of the cursor.
+    /**
+     * Get a rect representing the location of the cursor.
+     * @returns The Rect
+     */
     public getCursorRect(): Rect {
         return getCursorRect(this.contentDiv);
     }
 
-    // Get default format of this editor
+    /**
+     * Get default format of this editor
+     * @returns The default format
+     */
     public getDefaultFormat(): DefaultFormat {
         return this.defaultFormat;
     }

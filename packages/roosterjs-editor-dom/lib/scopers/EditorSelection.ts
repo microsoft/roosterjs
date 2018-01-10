@@ -90,7 +90,7 @@ class EditorSelection {
     }
 
     // Trim an inline element to ensure it fits in the selection boundary
-    // Return null if the inline element completely falls out of the selection
+    // Returns null if the inline element completely falls out of the selection
     public trimInlineElement(inlineElement: InlineElement): InlineElement {
         this.calculateStartEndIfNecessory();
 
