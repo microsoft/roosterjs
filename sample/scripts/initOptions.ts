@@ -18,18 +18,11 @@ function initOptions() {
     document.getElementById('showHtmlContent').addEventListener('click', () => {
         window.alert(getCurrentEditor().getContent(true));
     });
-    document.getElementById('defaultShortcutCheckbox').addEventListener('change', initEditorForOptions);
-    document.getElementById('hyperlinkCheckbox').addEventListener('change', initEditorForOptions);
-    document.getElementById('pasteManagerCheckbox').addEventListener('change', initEditorForOptions);
-    document.getElementById('contentEditCheckbox').addEventListener('change', initEditorForOptions);
-    document.getElementById('watermarkCheckbox').addEventListener('change', initEditorForOptions);
-    document.getElementById('imageResizeCheckbox').addEventListener('change', initEditorForOptions);
 
-    document.getElementById('boldCheckbox').addEventListener('change', initEditorForOptions);
-    document.getElementById('italicCheckbox').addEventListener('change', initEditorForOptions);
-    document.getElementById('underlineCheckbox').addEventListener('change', initEditorForOptions);
-    document.getElementById('textColorDefaultFormat').addEventListener('change', initEditorForOptions);
-    document.getElementById('fontNameDefaultFormat').addEventListener('change', initEditorForOptions);
+    ['defaultShortcutCheckbox', 'hyperlinkCheckbox', 'pasteManagerCheckbox', 'contentEditCheckbox', 'watermarkCheckbox',
+    'imageResizeCheckbox', 'boldCheckbox', 'italicCheckbox', 'underlineCheckbox', 'textColorDefaultFormat', 'fontNameDefaultFormat'].forEach(id => {
+        document.getElementById(id).addEventListener('change', initEditorForOptions);
+    });
 }
 
 function initEditorForOptions() {

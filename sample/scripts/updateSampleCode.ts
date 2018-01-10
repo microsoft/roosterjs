@@ -74,17 +74,17 @@ function assemblePluginsString(plugins: EditorPlugin[]): string {
         let pluginsString = 'var plugins = [\n';
         plugins.forEach(plugin => {
             if (plugin instanceof Watermark) {
-                pluginsString = pluginsString.concat('  new roosterPlugins.Watermark(),\n');
+                pluginsString = pluginsString.concat('  new roosterjsPlugins.Watermark(\'Type content here...\'),\n');
             } else if (plugin instanceof ImageResizePlugin) {
-                pluginsString = pluginsString.concat('  new roosterPlugins.ImageResizePlugin(),\n');
+                pluginsString = pluginsString.concat('  new roosterjsImageResizePlugin.ImageResizePlugin(),\n');
             } else if (plugin instanceof DefaultShortcut) {
-                pluginsString = pluginsString.concat('  new roosterPlugins.DefaultShortcut(),\n');
+                pluginsString = pluginsString.concat('  new roosterjsPlugins.DefaultShortcut(),\n');
             } else if (plugin instanceof HyperLink) {
-                pluginsString = pluginsString.concat('  new roosterPlugins.HyperLink(),\n');
+                pluginsString = pluginsString.concat('  new roosterjsPlugins.HyperLink(),\n');
             } else if (plugin instanceof PasteManager) {
-                pluginsString = pluginsString.concat('  new roosterPlugins.PasteManager(),\n');
+                pluginsString = pluginsString.concat('  new roosterjsPlugins.PasteManager(),\n');
             } else if (plugin instanceof ContentEdit) {
-                pluginsString = pluginsString.concat('  new roosterPlugins.ContentEdit(),\n');
+                pluginsString = pluginsString.concat('  new roosterjsPlugins.ContentEdit(),\n');
             }
         });
         pluginsString = pluginsString.concat('];\n');
@@ -101,18 +101,19 @@ function assembleFormatString(defaultFormat: DefaultFormat): string {
     if (!defaultFormat) {
         return '';
     }
-    let defaultFormatString = 'var defaultFormat = {};\n'
+    let defaultFormatString = 'var defaultFormat = {\n'
     if (defaultFormat.bold) {
-        defaultFormatString = defaultFormatString.concat('defaultFormat.bold = true;\n');
+        defaultFormatString = defaultFormatString.concat('  bold: true,\n');
     }
     if (defaultFormat.italic) {
-        defaultFormatString = defaultFormatString.concat('defaultFormat.italic = true;\n');
+        defaultFormatString = defaultFormatString.concat('  italic: true,\n');
     }
     if (defaultFormat.underline) {
-        defaultFormatString = defaultFormatString.concat('defaultFormat.underline = true;\n');
+        defaultFormatString = defaultFormatString.concat('  underline: true,\n');
     }
-    defaultFormatString = defaultFormatString.concat(`defaultFormat.textColor = ${defaultFormat.textColor};\n`);
-    defaultFormatString = defaultFormatString.concat(`defaultFormat.textColor = ${defaultFormat.fontFamily};\n`);
+    defaultFormatString = defaultFormatString.concat(`  textColor: \"${defaultFormat.textColor}\",\n`);
+    defaultFormatString = defaultFormatString.concat(`  fontFamily: \"${defaultFormat.fontFamily}\",\n`);
+    defaultFormatString = defaultFormatString.concat('};\n');
     return defaultFormatString;
 }
 
@@ -120,13 +121,26 @@ function assembleRequireString(
     plugins: EditorPlugin[],
     defaultFormat: DefaultFormat,
 ) : string {
+    //If there is no plugins or defaultFormat provided, require roosterjs package only
     if (!plugins && !defaultFormat) {
         return 'var roosterjs = require(\'roosterjs\');\n';
     }
+
     let requireString = '';
-    if (plugins) {
+
+    //If there is image resize plugin, require the image resize plugin package
+    plugins.forEach(plugin => {
+        if (plugin instanceof ImageResizePlugin) {
+            requireString = requireString.concat('var roosterjsImageResizePlugin = require(\'roosterjs-plugin-image-resize\');\n');
+            return;
+        }
+    });
+
+    //If there are other plugins than image resize plugins, require roosterjs plugin package
+    if (plugins.length > 1) {
         requireString = requireString.concat('var roosterjsPlugins = require(\'roosterjs-editor-plugins\');\n');
     }
+
     requireString = requireString.concat('var roosterjsCore = require(\'roosterjs-editor-core\');\n');
 
     return requireString;
@@ -141,7 +155,7 @@ function assembleOptionsString(
     }
     let optionsString = 'var options = {\n';
     if (pluginsString) {
-        optionsString = optionsString.concat('  plugins: Plugins,\n');
+        optionsString = optionsString.concat('  plugins: plugins,\n');
     }
     if (formatString) {
         optionsString = optionsString.concat('  defaultFormat: defaultFormat,\n');
