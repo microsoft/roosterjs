@@ -1,27 +1,20 @@
-import ClipBoardData from './ClipboardData';
 import {
+    ClipBoardData,
     ContentChangedEvent,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { processImages } from './PasteUtility';
-import { convertInlineCss, fromHtml } from 'roosterjs-editor-dom';
-import { insertImage } from 'roosterjs-editor-api';
+import { buildClipBoardData, insertImage } from 'roosterjs-editor-api';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
-import normalizeContent from './normalizeContent';
 import removeUnsafeTags from './removeUnsafeTags';
-import retrieveClipBoardData, { PasteHelper } from './retrieveClipBoardData';
-
-const HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
 
 /**
  * PasteManager plugin, handles onPaste event and paste content into editor
  */
 export default class PasteManager implements EditorPlugin {
     private editor: Editor;
-    private helper: PasteHelper = {};
 
     /**
      * Create an instance of PasteManager
@@ -44,10 +37,6 @@ export default class PasteManager implements EditorPlugin {
 
     public dispose() {
         this.editor = null;
-        if (this.helper.tempDiv && this.helper.tempDiv.parentNode) {
-            this.helper.tempDiv.parentNode.removeChild(this.helper.tempDiv);
-            this.helper.tempDiv = null;
-        }
     }
 
     public willHandleEventExclusively(event: PluginEvent): boolean {
@@ -62,19 +51,18 @@ export default class PasteManager implements EditorPlugin {
         // add undo snapshot before paste
         this.editor.addUndoSnapshot();
         let pasteEvent = <ClipboardEvent>(<PluginDomEvent>event).rawEvent;
-        retrieveClipBoardData(
+        buildClipBoardData(
             pasteEvent,
             this.editor,
-            this.helper,
-            this.useDirectPaste,
-            this.processClipBoardData
+            this.onPaste,
+            this.useDirectPaste ? removeUnsafeTags : null
         );
     }
 
-    private processClipBoardData = (clipboardData: ClipBoardData) => {
-        if (clipboardData.textData && clipboardData.htmlData) {
+    private onPaste = (clipboardData: ClipBoardData) => {
+        if (clipboardData.textData || !clipboardData.imageData.file) {
             this.pasteHTML(clipboardData);
-        } else if (clipboardData.imageData.file) {
+        } else {
             this.pasteImage(clipboardData);
         }
 
@@ -90,38 +78,8 @@ export default class PasteManager implements EditorPlugin {
     };
 
     private pasteHTML(clipboardData: ClipBoardData) {
-        let html = clipboardData.htmlData;
-
-        if (this.useDirectPaste) {
-            // 1. Remove content outside HTML tag if any
-            let matches = HTML_REGEX.exec(html);
-            html = matches ? matches[0] : html;
-
-            // 2. Remove unsafe tags and attributes
-            html = removeUnsafeTags(html);
-
-            // 3. Convert inline css, so that Office documentations are showing well
-            html = convertInlineCss(html);
-        }
-
-        // 4. Do other normalization
-        html = normalizeContent(html);
-
-        // 5. Prepare HTML fragment for pasting
-        let document = this.editor.getDocument();
-        let fragment = document.createDocumentFragment();
-        let nodes = fromHtml(html, document);
-        for (let node of nodes) {
-            fragment.appendChild(node);
-        }
-
-        // 6. Process inline image
-        processImages(fragment, clipboardData);
-
-        // 7. Process content pasted from Word
+        let fragment = clipboardData.htmlFragment;
         convertPastedContentFromWord(fragment);
-
-        // 8. Insert content into body
         this.editor.insertNode(fragment);
     }
 

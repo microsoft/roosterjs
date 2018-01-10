@@ -1,4 +1,4 @@
-import ClipboardData, { LocalFileImageData, Base64ImageData } from './ClipboardData';
+import { ClipBoardData, LocalFileImageData, Base64ImageData } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 const LOCALFILEREFERENCEREGEX = new RegExp('^file:///[a-zA-Z]:', 'i');
@@ -7,12 +7,8 @@ const SAFARI_IMAGE_BLOB_PREFIX = 'blob:';
 const WEBKIT_FAKE_URL_IMAGE_PREFIX = 'webkit-fake-url:';
 const PASTED_IMAGE_ATTRIBUTE_NAME = 'data-pastedImageId';
 
-export function validateFileType(file: File): boolean {
-    return file instanceof Blob;
-}
-
-export function processImages(pasteContainer: NodeSelector, clipboardData: ClipboardData) {
-    let images = pasteContainer.querySelectorAll('img');
+export default function processImages(clipboardData: ClipBoardData) {
+    let images = clipboardData.htmlFragment.querySelectorAll('img');
     let imageCount = images.length;
     for (let i = 0; i < imageCount; i++) {
         let image = images[i];

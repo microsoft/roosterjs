@@ -52,6 +52,8 @@ import { insertNodeAtBegin, insertNodeAtEnd, insertNodeAtSelection } from '../ut
 
 const HTML_EMPTY_DIV = '<div></div>';
 const HTML_EMPTY_DIV_BLOCK = '<div><br></div>';
+const CONTAINER_HTML =
+    '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
 
 export default class Editor {
     private plugins: EditorPlugin[];
@@ -65,6 +67,7 @@ export default class Editor {
     private disableRestoreSelectionOnFocus: boolean;
     private omitContentEditableAttributeChanges: boolean;
     private disposed: boolean;
+    private pasteDiv: HTMLElement;
 
     /**
      * Creates an instance of Editor
@@ -118,6 +121,10 @@ export default class Editor {
             let styles = this.contentDiv.style;
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = '';
             this.contentDiv.removeAttribute('contenteditable');
+        }
+        if (this.pasteDiv && this.pasteDiv.parentNode) {
+            this.pasteDiv.parentNode.removeChild(this.pasteDiv);
+            this.pasteDiv = null;
         }
     }
 
@@ -466,6 +473,28 @@ export default class Editor {
     // Get default format of this editor
     public getDefaultFormat(): DefaultFormat {
         return this.defaultFormat;
+    }
+
+    /**
+     * For internal use only
+     */
+    public getTempDivForPaste(): HTMLElement {
+        if (!this.pasteDiv || !this.pasteDiv.parentNode) {
+            this.pasteDiv = fromHtml(
+                CONTAINER_HTML,
+                this.getDocument()
+            )[0] as HTMLElement;
+            this.insertNode(this.pasteDiv, {
+                position: ContentPosition.Outside,
+                updateCursor: false,
+                replaceSelection: false,
+                insertOnNewLine: false,
+            });
+        } else {
+            this.pasteDiv.style.display = '';
+        }
+
+        return this.pasteDiv;
     }
 
     private bindEvents(): void {

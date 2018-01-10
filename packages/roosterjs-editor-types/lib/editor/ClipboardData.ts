@@ -20,6 +20,7 @@ interface ClipBoardData {
     imageData: ImageData;
     textData: string;
     htmlData: string;
+    htmlFragment: DocumentFragment;
 }
 
 export default ClipBoardData;
