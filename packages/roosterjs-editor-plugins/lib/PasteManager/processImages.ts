@@ -1,4 +1,4 @@
-import { ClipBoardData, LocalFileImageData, Base64ImageData } from 'roosterjs-editor-types';
+import ClipBoardData, { LocalFileImageData, Base64ImageData } from './ClipBoardData';
 import { Editor } from 'roosterjs-editor-core';
 
 const LOCALFILEREFERENCEREGEX = new RegExp('^file:///[a-zA-Z]:', 'i');

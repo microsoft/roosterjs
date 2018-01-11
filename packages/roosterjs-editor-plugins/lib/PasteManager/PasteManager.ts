@@ -1,12 +1,13 @@
 import {
-    ClipBoardData,
     ContentChangedEvent,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
 import { Editor, EditorPlugin, buildSnapshot, restoreSnapshot } from 'roosterjs-editor-core';
-import { buildClipBoardData, insertImage } from 'roosterjs-editor-api';
+import { insertImage } from 'roosterjs-editor-api';
+import ClipBoardData from './ClipBoardData';
+import buildClipBoardData from './buildClipBoardData';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import removeUnsafeTags from './removeUnsafeTags';
 

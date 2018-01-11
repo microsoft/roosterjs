@@ -1,8 +1,8 @@
-import { ClipBoardData } from 'roosterjs-editor-types';
+import ClipBoardData from './ClipBoardData';
 import { Editor } from 'roosterjs-editor-core';
 import { convertInlineCss, fromHtml } from 'roosterjs-editor-dom';
-import getFormatState from '../format/getFormatState';
-import processImages from './utils/processImages';
+import { getFormatState } from 'roosterjs-editor-api';
+import processImages from './processImages';
 
 const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
 const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/i;
@@ -40,7 +40,7 @@ export default function buildClipBoardData(
     };
     let retrieveHtmlCallback = createCallback(editor, clipboardData, unsafeHtmlFilter, callback);
 
-    if (!unsafeHtmlFilter || !directRetrieveHtml(event, editor, retrieveHtmlCallback)) {
+    if (!unsafeHtmlFilter || !directRetrieveHtml(event, retrieveHtmlCallback)) {
         retrieveHtmlViaTempDiv(editor, retrieveHtmlCallback);
     }
 }
@@ -98,7 +98,6 @@ function getImage(dataTransfer: DataTransfer): File {
 
 function directRetrieveHtml(
     event: ClipboardEvent,
-    editor: Editor,
     callback: (html: string) => void
 ): boolean {
     let clipboardData = event.clipboardData;

@@ -1,4 +1,4 @@
-import FormatState from "../format/FormatState";
+import { FormatState } from "roosterjs-editor-types";
 
 export interface LocalFileImageData {
     path: string;
