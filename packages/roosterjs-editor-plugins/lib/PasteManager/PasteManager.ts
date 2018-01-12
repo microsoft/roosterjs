@@ -1,24 +1,34 @@
-import ClipBoardData from './ClipboardData';
 import {
     ContentChangedEvent,
-    ContentPosition,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { processImages } from './PasteUtility';
-import { fromHtml } from 'roosterjs-editor-dom';
+import { Editor, EditorPlugin, buildSnapshot, restoreSnapshot } from 'roosterjs-editor-core';
 import { insertImage } from 'roosterjs-editor-api';
+import ClipBoardData from './ClipBoardData';
+import buildClipBoardData from './buildClipBoardData';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
+import removeUnsafeTags from './removeUnsafeTags';
 
-const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
-const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/i;
-const CONTAINER_HTML =
-    '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
+/**
+ * Paste option
+ */
+export const enum PasteOption {
+    /**
+     * Paste with original format when copy
+     */
+    PasteAsIs = 0,
 
-interface WindowForIE extends Window {
-    clipboardData: DataTransfer;
+    /**
+     * Paste as plain text, remove any format
+     */
+    PasteText = 1,
+
+    /**
+     * Paste using current format
+     */
+    PasteWithCurrentFormat = 2,
 }
 
 /**
@@ -26,14 +36,23 @@ interface WindowForIE extends Window {
  */
 export default class PasteManager implements EditorPlugin {
     private editor: Editor;
-    private pasteContainer: HTMLElement = null;
 
     /**
      * Create an instance of PasteManager
      * @param pasteHandler An optional pasteHandler to perform extra actions after pasting.
      * Default behavior is to paste image (if any) as BASE64 inline image.
+     * @param useDirectPaste: This is a test parameter and may be removed in the future.
+     * When set to true, we retrieve HTML from clipboard directly rather than using a hidden pasting DIV,
+     * then filter out unsafe HTML tags and attributes. Although we removed some unsafe tags such as SCRIPT,
+     * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
+     * this parameter if you don't have other XSS detecting logic outside the edtior.
+     * @param defaultPasteOption: Default option of pasting. Default value is PasteAsIs
      */
-    constructor(private readonly pasteHandler?: (clipboardData: ClipBoardData) => void) {}
+    constructor(
+        private readonly imageHandler?: (clipboardData: ClipBoardData) => void,
+        private useDirectPaste?: boolean,
+        private defaultPasteOption: PasteOption = PasteOption.PasteAsIs
+    ) {}
 
     public initialize(editor: Editor) {
         this.editor = editor;
@@ -41,10 +60,6 @@ export default class PasteManager implements EditorPlugin {
 
     public dispose() {
         this.editor = null;
-        if (this.pasteContainer && this.pasteContainer.parentNode) {
-            this.pasteContainer.parentNode.removeChild(this.pasteContainer);
-            this.pasteContainer = null;
-        }
     }
 
     public willHandleEventExclusively(event: PluginEvent): boolean {
@@ -59,129 +74,77 @@ export default class PasteManager implements EditorPlugin {
         // add undo snapshot before paste
         this.editor.addUndoSnapshot();
         let pasteEvent = <ClipboardEvent>(<PluginDomEvent>event).rawEvent;
-        let dataTransfer =
-            pasteEvent.clipboardData ||
-            (<WindowForIE>this.editor.getDocument().defaultView).clipboardData;
-        let clipboardData = getClipboardData(dataTransfer);
-        if ((clipboardData.textData || '') == '' && clipboardData.imageData.file) {
-            pasteEvent.preventDefault();
-            this.onPasteComplete(clipboardData);
-        } else {
-            // There is text to paste, so clear any image data if any.
-            // Otherwise both text and image will be pasted, this will cause duplicated paste
-            clipboardData.imageData = {};
-            this.retrieveHtml(this.editor, container => {
-                processImages(container, clipboardData);
-                clipboardData.htmlData = normalizeContent(container.innerHTML);
-
-                let document = this.editor.getDocument();
-                let fragment = document.createDocumentFragment();
-                let nodes = fromHtml(clipboardData.htmlData, document);
-                for (let node of nodes) {
-                    fragment.appendChild(node);
-                }
-
-                convertPastedContentFromWord(fragment);
-                this.editor.insertNode(fragment);
-                this.onPasteComplete(clipboardData);
-            });
-        }
+        buildClipBoardData(
+            pasteEvent,
+            this.editor,
+            data => this.paste(data, this.defaultPasteOption),
+            this.useDirectPaste ? removeUnsafeTags : null
+        );
     }
 
-    private onPasteComplete = (clipboardData: ClipBoardData) => {
-        let pasteHandler = this.pasteHandler || this.defaultPasteHandler;
-        if (clipboardData) {
-            // if any clipboard data exists, call into pasteHandler
-            pasteHandler(clipboardData);
+    paste = (clipboardData: ClipBoardData, pasteOption: PasteOption) => {
+        if (!clipboardData) {
+            return;
         }
 
-        // add undo snapshot after paste
+        if (clipboardData.snapshotBeforePaste == null) {
+            clipboardData.snapshotBeforePaste = buildSnapshot(this.editor);
+        } else {
+            restoreSnapshot(this.editor, clipboardData.snapshotBeforePaste);
+        }
+
+        switch (pasteOption) {
+            case PasteOption.PasteAsIs:
+                this.pasteHTML(clipboardData);
+                break;
+
+            case PasteOption.PasteText:
+                this.pasteText(clipboardData);
+                break;
+
+            case PasteOption.PasteWithCurrentFormat:
+                this.pasteWithCurrentFormat(clipboardData);
+                break;
+        }
+
         // broadcast contentChangedEvent to ensure the snapshot actually gets added
         let contentChangedEvent: ContentChangedEvent = {
             eventType: PluginEventType.ContentChanged,
             source: 'Paste',
+            data: clipboardData,
         };
         this.editor.triggerEvent(contentChangedEvent, true /* broadcast */);
+
+        // add undo snapshot after paste
         this.editor.addUndoSnapshot();
     };
 
-    private defaultPasteHandler = (clipboardData: ClipBoardData) => {
+    private pasteHTML(clipboardData: ClipBoardData, fragmentOverride?: DocumentFragment) {
+        if (clipboardData.textData || !clipboardData.imageData.file) {
+            let fragment = fragmentOverride || clipboardData.htmlFragment;
+            convertPastedContentFromWord(fragment);
+            this.editor.insertNode(fragment);
+        } else {
+            let pasteHandler = this.imageHandler || this.defaultImageHandler;
+            pasteHandler(clipboardData);
+        }
+
+    }
+
+    private pasteText(clipboardData: ClipBoardData) {
+        let text = clipboardData.textData || '';
+        let html = text.replace(/\n/g, '<br>').replace(/\s/g, '&nbsp;');
+        this.editor.insertContent(html);
+    }
+
+    private pasteWithCurrentFormat(clipboardData: ClipBoardData) {
+        throw new Error('Not implemented');
+    }
+
+    private defaultImageHandler = (clipboardData: ClipBoardData) => {
         let file = clipboardData.imageData ? clipboardData.imageData.file : null;
         if (file) {
             insertImage(this.editor, file);
         }
     };
-
-    private retrieveHtml(editor: Editor, callback: (container: HTMLElement) => void) {
-        // cache original selection range in editor
-        let originalSelectionRange = editor.getSelectionRange();
-
-        if (!this.pasteContainer || !this.pasteContainer.parentNode) {
-            this.pasteContainer = fromHtml(CONTAINER_HTML, editor.getDocument())[0] as HTMLElement;
-            editor.insertNode(this.pasteContainer, {
-                position: ContentPosition.Outside,
-                updateCursor: false,
-                replaceSelection: false,
-                insertOnNewLine: false,
-            });
-        } else {
-            this.pasteContainer.style.display = '';
-        }
-        this.pasteContainer.focus();
-
-        window.requestAnimationFrame(() => {
-            // restore original selection range in editor
-            editor.updateSelection(originalSelectionRange);
-            callback(this.pasteContainer);
-            this.pasteContainer.style.display = 'none';
-            this.pasteContainer.innerHTML = '';
-        });
-    }
-}
-
-function getClipboardData(dataTransfer: DataTransfer): ClipBoardData {
-    let clipboardData: ClipBoardData = {
-        imageData: {},
-        textData: dataTransfer.getData('text'),
-        htmlData: null,
-    };
-
-    let image = getImage(dataTransfer);
-    if (image) {
-        clipboardData.imageData.file = image;
-    }
-
-    return clipboardData;
-}
-
-function getImage(dataTransfer: DataTransfer): File {
-    // Chrome, Firefox, Edge support dataTransfer.items
-    let fileCount = dataTransfer.items ? dataTransfer.items.length : 0;
-    for (let i = 0; i < fileCount; i++) {
-        let item = dataTransfer.items[i];
-        if (item.type && item.type.indexOf('image/') == 0) {
-            return item.getAsFile();
-        }
-    }
-    // IE, Safari support dataTransfer.files
-    fileCount = dataTransfer.files ? dataTransfer.files.length : 0;
-    for (let i = 0; i < fileCount; i++) {
-        let file = dataTransfer.files.item(i);
-        if (file.type && file.type.indexOf('image/') == 0) {
-            return file;
-        }
-    }
-    return null;
-}
-
-function normalizeContent(content: string): string {
-    // Remove 'position' style from source HTML
-    content = content.replace(INLINE_POSITION_STYLE, '$1');
-
-    // Replace <BR> with <DIV>
-    if (TEXT_WITH_BR_ONLY.test(content)) {
-        content = '<div>' + content.replace(/<br>/gi, '</div><div>') + '<br></div>';
-    }
-
-    return content;
 }

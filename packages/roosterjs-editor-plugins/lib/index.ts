@@ -6,7 +6,7 @@ export {
     default as ContentEditOptions,
     getDefaultContentEditOptions,
 } from './ContentEdit/ContentEditOptions';
-export { default as PasteManager } from './PasteManager/PasteManager';
+export { default as PasteManager, PasteOption } from './PasteManager/PasteManager';
 export { default as Watermark } from './Watermark/Watermark';
 export {
     default as ClipBoardData,
@@ -14,4 +14,5 @@ export {
     LocalFileImageData,
     Base64ImageData,
 } from './PasteManager/ClipboardData';
-export { getPastedElementWithId } from './PasteManager/PasteUtility';
+export { getPastedElementWithId } from './PasteManager/processImages';
+export { default as buildClipBoardData } from './PasteManager/buildClipBoardData';

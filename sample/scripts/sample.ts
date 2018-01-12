@@ -1,4 +1,5 @@
 import initFormatBar from './initFormatBar';
+import updateSampleCode from './updateSampleCode';
 import initOptions, { initEditorForOptions } from './initOptions';
 
 window.onload = () => {
@@ -6,6 +7,7 @@ window.onload = () => {
     initEditor();
     initFormatBar();
     initOptions();
+    updateSampleCode();
     switchTab('quickstart');
 };
 

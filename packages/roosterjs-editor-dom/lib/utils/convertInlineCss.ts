@@ -35,8 +35,12 @@ function runWithTempIFrame(callback: (doc: Document) => void): boolean {
         // just swallow all exception for the moment
         return false;
     } finally {
-        contentDocument.body.innerHTML = '';
-        contentDocument.head.innerHTML = '';
+        if (contentDocument.body) {
+            contentDocument.body.innerHTML = '';
+        }
+        if (contentDocument.head) {
+            contentDocument.head.innerHTML = '';
+        }
         document.body.removeChild(contentIFrameForInlineCssConverter);
     }
 }
@@ -89,8 +93,11 @@ export default function convertInlineCss(
     let result: string;
     let succeeded = runWithTempIFrame(contentDocument => {
         contentDocument.open();
-        contentDocument.write(sourceHtml);
-        contentDocument.close();
+        try {
+            contentDocument.write(sourceHtml);
+        } finally {
+            contentDocument.close();
+        }
 
         let styleSheets: CSSStyleSheet[] = [];
         for (let i = additionalStyleNodes ? additionalStyleNodes.length - 1 : -1; i >= 0; i--) {
@@ -103,12 +110,11 @@ export default function convertInlineCss(
         for (let styleSheet of styleSheets) {
             for (let j = styleSheet.cssRules.length - 1; j >= 0; j--) {
                 // Skip any none-style rule, i.e. @page
-                let cssRule = styleSheet.cssRules[j];
-                if (cssRule.type != CSSRule.STYLE_RULE) {
+                let styleRule = styleSheet.cssRules[j] as CSSStyleRule;
+                if (styleRule.type != CSSRule.STYLE_RULE || !styleRule.style.cssText) {
                     continue;
                 }
                 // Make sure the selector is not empty
-                let styleRule = cssRule as CSSStyleRule;
                 let selectors = styleRule.selectorText ? styleRule.selectorText.split(',') : null;
                 if (selectors == null || selectors.length == 0) {
                     continue;

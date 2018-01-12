@@ -1,3 +1,5 @@
+import { FormatState } from "roosterjs-editor-types";
+
 export interface LocalFileImageData {
     path: string;
     imageId: string;
@@ -17,9 +19,12 @@ export interface ImageData {
 }
 
 interface ClipBoardData {
+    snapshotBeforePaste: string;
+    currentFormat: FormatState
     imageData: ImageData;
     textData: string;
     htmlData: string;
+    htmlFragment: DocumentFragment;
 }
 
 export default ClipBoardData;
