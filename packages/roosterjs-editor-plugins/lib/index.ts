@@ -3,9 +3,9 @@ export { default as HtmlSnapshotUndo } from './HtmlSnapshotUndo/HtmlSnapshotUndo
 export { default as HyperLink } from './HyperLink/HyperLink';
 export { default as ContentEdit, TabIndent } from './ContentEdit/ContentEdit';
 export {
-    default as ContentEditOptions,
-    getDefaultContentEditOptions,
-} from './ContentEdit/ContentEditOptions';
+    default as ContentEditFeatures,
+    getDefaultContentEditFeatures,
+} from './ContentEdit/ContentEditFeatures';
 export { default as PasteManager, PasteOption } from './PasteManager/PasteManager';
 export { default as Watermark } from './Watermark/Watermark';
 export {

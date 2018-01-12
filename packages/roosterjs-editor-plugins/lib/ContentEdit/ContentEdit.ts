@@ -18,7 +18,7 @@ import {
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import ContentEditOptions, { getDefaultContentEditOptions } from './ContentEditOptions';
+import ContentEditFeatures, { getDefaultContentEditFeatures } from './ContentEditFeatures';
 
 const KEY_TAB = 9;
 const KEY_BACKSPACE = 8;
@@ -35,8 +35,12 @@ const BLOCKQUOTE_TAG_NAME = 'BLOCKQUOTE';
 export default class ContentEdit implements EditorPlugin {
     private editor: Editor;
 
-    constructor(private options?: ContentEditOptions) {
-        this.options = this.options || getDefaultContentEditOptions();
+    /**
+     * Create instance of ContentEdit plugin
+     * @param features An optional feature set to determine which features the plugin should provide
+     */
+    constructor(private features?: ContentEditFeatures) {
+        this.features = this.features || getDefaultContentEditFeatures();
     }
 
     public initialize(editor: Editor): void {
@@ -59,39 +63,36 @@ export default class ContentEdit implements EditorPlugin {
             // Tab: increase indent
             // Shift+ Tab: decrease indent
             if (keyboardEvent.which == KEY_TAB) {
-                if (this.options.indentWhenTab && !keyboardEvent.shiftKey) {
+                if (this.features.indentWhenTab && !keyboardEvent.shiftKey) {
                     setIndentation(this.editor, Indentation.Increase);
                     keyboardEvent.preventDefault();
-                } else if (this.options.outdentWhenShiftTab && keyboardEvent.shiftKey) {
+                } else if (this.features.outdentWhenShiftTab && keyboardEvent.shiftKey) {
                     setIndentation(this.editor, Indentation.Decrease);
                     keyboardEvent.preventDefault();
                 }
             } else {
                 let listElement = cacheGetListElement(this.editor, event);
                 if (listElement && this.shouldToggleState(event, listElement)) {
-                    keyboardEvent.preventDefault();
-                    let listState = cacheGetListState(this.editor, event);
-                    if (listState == ListState.Bullets) {
-                        toggleBullet(this.editor);
-                    } else if (listState == ListState.Numbering) {
-                        toggleNumbering(this.editor);
-                    }
+                    this.toggleList(event);
                 } else if (
-                    this.options.outdentWhenBackspaceOnFirstChar &&
+                    this.features.mergeInNewLineWhenBackspaceOnFirstChar &&
                     keyboardEvent.which == KEY_BACKSPACE &&
-                    listElement != listElement.parentElement.firstChild &&
                     this.isCursorAtBeginningOf(listElement)
                 ) {
-                    let document = this.editor.getDocument();
-                    document.defaultView.requestAnimationFrame(() => {
-                        if (this.editor) {
-                            let br = document.createElement('br');
-                            this.editor.insertNode(br);
-                            let range = document.createRange();
-                            range.setStartAfter(br);
-                            this.editor.updateSelection(range);
-                        }
-                    });
+                    if (listElement == listElement.parentElement.firstChild) {
+                        this.toggleList(event);
+                    } else {
+                        let document = this.editor.getDocument();
+                        document.defaultView.requestAnimationFrame(() => {
+                            if (this.editor) {
+                                let br = document.createElement('br');
+                                this.editor.insertNode(br);
+                                let range = document.createRange();
+                                range.setStartAfter(br);
+                                this.editor.updateSelection(range);
+                            }
+                        });
+                    }
                 }
             }
         } else {
@@ -188,8 +189,8 @@ export default class ContentEdit implements EditorPlugin {
         let isList = getTagOfNode(node) == 'LI';
 
         if (
-            ((isList && this.options.outdentWhenBackspaceOnEmptyFirstLine) ||
-                (!isList && this.options.unquoteWhenBackspaceOnEmptyFirstLine)) &&
+            ((isList && this.features.outdentWhenBackspaceOnEmptyFirstLine) ||
+                (!isList && this.features.unquoteWhenBackspaceOnEmptyFirstLine)) &&
             isEmpty &&
             keyboardEvent.which == KEY_BACKSPACE &&
             node == node.parentNode.firstChild
@@ -198,8 +199,8 @@ export default class ContentEdit implements EditorPlugin {
         }
 
         if (
-            ((isList && this.options.outdentWhenEnterOnEmptyLine) ||
-                (!isList && this.options.unquoteWhenEnterOnEmptyLine)) &&
+            ((isList && this.features.outdentWhenEnterOnEmptyLine) ||
+                (!isList && this.features.unquoteWhenEnterOnEmptyLine)) &&
             isEmpty &&
             keyboardEvent.which == KEY_ENTER
         ) {
@@ -207,6 +208,18 @@ export default class ContentEdit implements EditorPlugin {
         }
 
         return false;
+    }
+
+    private toggleList(event: PluginEvent) {
+        let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+        let listState = cacheGetListState(this.editor, event);
+
+        keyboardEvent.preventDefault();
+        if (listState == ListState.Bullets) {
+            toggleBullet(this.editor);
+        } else if (listState == ListState.Numbering) {
+            toggleNumbering(this.editor);
+        }
     }
 
     private isCursorAtBeginningOf(node: Node) {
