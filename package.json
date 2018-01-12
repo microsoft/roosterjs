@@ -17,7 +17,8 @@
     "build": "npm run clean && npm run normalize && npm run tslint && node tools/build-all.js && npm run pack && npm run pack:prod && npm run dts",
     "start": "webpack-dev-server",
     "test": "npm run build && karma start",
-    "test:debug": "npm run build && karma start --no-single-run"
+    "test:debug": "npm run build && karma start --no-single-run",
+    "build-docs": "rimraf dist/docs && node node_modules/typedoc/bin/typedoc --options typedoc.json dist/roosterjs/dist/rooster-amd.d.ts"
   },
   "devDependencies": {
     "@types/jasmine": "2.6.0",
@@ -34,6 +35,7 @@
     "tslint": "5.7.0",
     "tslint-eslint-rules": "4.1.1",
     "tslint-microsoft-contrib": "5.0.1",
+    "typedoc": "0.8.0",
     "typescript": "2.5.3",
     "webpack": "3.6.0",
     "webpack-dev-server": "2.9.1"
