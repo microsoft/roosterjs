@@ -8,15 +8,17 @@ import {
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-import { isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
-import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
+import { contains, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     Indentation,
     ListState,
+    NodeBoundary,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
+import ContentEditFeatures, { getDefaultContentEditFeatures } from './ContentEditFeatures';
 
 const KEY_TAB = 9;
 const KEY_BACKSPACE = 8;
@@ -32,6 +34,14 @@ const BLOCKQUOTE_TAG_NAME = 'BLOCKQUOTE';
  */
 export default class ContentEdit implements EditorPlugin {
     private editor: Editor;
+
+    /**
+     * Create instance of ContentEdit plugin
+     * @param features An optional feature set to determine which features the plugin should provide
+     */
+    constructor(private features?: ContentEditFeatures) {
+        this.features = this.features || getDefaultContentEditFeatures();
+    }
 
     public initialize(editor: Editor): void {
         this.editor = editor;
@@ -53,20 +63,35 @@ export default class ContentEdit implements EditorPlugin {
             // Tab: increase indent
             // Shift+ Tab: decrease indent
             if (keyboardEvent.which == KEY_TAB) {
-                setIndentation(
-                    this.editor,
-                    keyboardEvent.shiftKey ? Indentation.Decrease : Indentation.Increase
-                );
-                keyboardEvent.preventDefault();
-            } else if (browserData.isEdge || browserData.isIE || browserData.isChrome) {
-                let listElement = cacheGetListElement(this.editor, event);
-                if (listElement && this.shouldToggleState(keyboardEvent, listElement)) {
+                if (this.features.indentWhenTab && !keyboardEvent.shiftKey) {
+                    setIndentation(this.editor, Indentation.Increase);
                     keyboardEvent.preventDefault();
-                    let listState = cacheGetListState(this.editor, event);
-                    if (listState == ListState.Bullets) {
-                        toggleBullet(this.editor);
-                    } else if (listState == ListState.Numbering) {
-                        toggleNumbering(this.editor);
+                } else if (this.features.outdentWhenShiftTab && keyboardEvent.shiftKey) {
+                    setIndentation(this.editor, Indentation.Decrease);
+                    keyboardEvent.preventDefault();
+                }
+            } else {
+                let listElement = cacheGetListElement(this.editor, event);
+                if (listElement && this.shouldToggleState(event, listElement)) {
+                    this.toggleList(event);
+                } else if (
+                    this.features.mergeInNewLineWhenBackspaceOnFirstChar &&
+                    keyboardEvent.which == KEY_BACKSPACE &&
+                    this.isCursorAtBeginningOf(listElement)
+                ) {
+                    if (listElement == listElement.parentElement.firstChild) {
+                        this.toggleList(event);
+                    } else {
+                        let document = this.editor.getDocument();
+                        document.defaultView.requestAnimationFrame(() => {
+                            if (this.editor) {
+                                let br = document.createElement('br');
+                                this.editor.insertNode(br);
+                                let range = document.createRange();
+                                range.setStartAfter(br);
+                                this.editor.updateSelection(range);
+                            }
+                        });
                     }
                 }
             }
@@ -80,7 +105,7 @@ export default class ContentEdit implements EditorPlugin {
                     }
                     if (
                         node.parentNode == blockQuoteElement &&
-                        this.shouldToggleState(keyboardEvent, node)
+                        this.shouldToggleState(event, node)
                     ) {
                         keyboardEvent.preventDefault();
                         execFormatWithUndo(this.editor, () => {
@@ -158,12 +183,55 @@ export default class ContentEdit implements EditorPlugin {
         return null;
     }
 
-    private shouldToggleState(keyboardEvent: KeyboardEvent, node: Node) {
-        return (
-            (keyboardEvent.which == KEY_ENTER ||
-                (keyboardEvent.which == KEY_BACKSPACE && node == node.parentNode.firstChild)) &&
-            isNodeEmpty(node)
-        );
+    private shouldToggleState(event: PluginEvent, node: Node) {
+        let isEmpty = isNodeEmpty(node);
+        let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+        let isList = getTagOfNode(node) == 'LI';
+
+        if (
+            ((isList && this.features.outdentWhenBackspaceOnEmptyFirstLine) ||
+                (!isList && this.features.unquoteWhenBackspaceOnEmptyFirstLine)) &&
+            isEmpty &&
+            keyboardEvent.which == KEY_BACKSPACE &&
+            node == node.parentNode.firstChild
+        ) {
+            return true;
+        }
+
+        if (
+            ((isList && this.features.outdentWhenEnterOnEmptyLine) ||
+                (!isList && this.features.unquoteWhenEnterOnEmptyLine)) &&
+            isEmpty &&
+            keyboardEvent.which == KEY_ENTER
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private toggleList(event: PluginEvent) {
+        let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+        let listState = cacheGetListState(this.editor, event);
+
+        keyboardEvent.preventDefault();
+        if (listState == ListState.Bullets) {
+            toggleBullet(this.editor);
+        } else if (listState == ListState.Numbering) {
+            toggleNumbering(this.editor);
+        }
+    }
+
+    private isCursorAtBeginningOf(node: Node) {
+        let range = this.editor.getSelectionRange();
+        if (range && range.startOffset == NodeBoundary.Begin) {
+            let container = range.startContainer;
+            while (container != node && contains(node, container) && !container.previousSibling) {
+                container = container.parentNode;
+            }
+            return container == node;
+        }
+        return false;
     }
 }
 

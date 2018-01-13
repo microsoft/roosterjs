@@ -171,7 +171,7 @@ export default class HyperLink implements EditorPlugin {
         let href: string;
         if (
             !browserData.isFirefox &&
-            (href = this.tryGetHref(keyboardEvent.srcElement as HTMLAnchorElement)) &&
+            (href = this.tryGetHref(keyboardEvent.srcElement)) &&
             (browserData.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey)
         ) {
             let target = this.target || '_blank';
@@ -182,10 +182,16 @@ export default class HyperLink implements EditorPlugin {
     // Try get href from an anchor element
     // The reason this is put in a try-catch is that
     // it has been seen that accessing href may throw an exception, in particular on IE/Edge
-    private tryGetHref(anchor: HTMLAnchorElement): string {
+    private tryGetHref(element: Element): string {
         let href: string = null;
         try {
-            href = anchor.href;
+            do {
+                if (element.tagName == 'A') {
+                    href = (<HTMLAnchorElement>element).href;
+                    break;
+                }
+                element = element.parentElement;
+            } while (this.editor.contains(element));
         } catch (error) {
             // Not do anything for the moment
         }
