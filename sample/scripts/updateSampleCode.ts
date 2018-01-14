@@ -1,21 +1,24 @@
-import { DefaultShortcut, HyperLink, PasteManager, ContentEdit, Watermark } from 'roosterjs-editor-plugins';
+import {
+    DefaultShortcut,
+    HyperLink,
+    PasteManager,
+    ContentEdit,
+    Watermark,
+} from 'roosterjs-editor-plugins';
 import { ImageResizePlugin } from 'roosterjs-plugin-image-resize';
 import { EditorPlugin } from 'roosterjs-editor-core';
 import { DefaultFormat } from 'roosterjs-editor-types';
 
-const defaultPluginsString: string = ['var plugins = [',
+const defaultPluginsString: string = [
+    'var plugins = [',
     '  new roosterPlugins.DefaultShortcut(),',
     '  new roosterPlugins.HyperLink(),',
     '  new roosterPlugins.PasteManager(),',
     '  new roosterPlugins.ContentEdit(),',
     '];\n',
-].join("\n");
+].join('\n');
 
-
-export default function updateSampleCode(
-    plugins?: EditorPlugin[],
-    defaultFormat?: DefaultFormat
-) {
+export default function updateSampleCode(plugins?: EditorPlugin[], defaultFormat?: DefaultFormat) {
     updateHtmlSampleCode();
     updateJsSampleCode(plugins, defaultFormat);
 }
@@ -35,15 +38,12 @@ function updateHtmlSampleCode() {
         '       <script src="editor.js"></script>',
         '   </body>',
         '</html>',
-    ].join("\n");
+    ].join('\n');
 
     htmlSampleCode.appendChild(createElementFromContent('htmlSampleCode', codeString));
 }
 
-function updateJsSampleCode(
-    plugins: EditorPlugin[],
-    defaultFormat: DefaultFormat,
-) {
+function updateJsSampleCode(plugins: EditorPlugin[], defaultFormat: DefaultFormat) {
     let jsSampleCode = document.getElementById('jsSample');
     jsSampleCode.innerHTML = '';
     let node = document.createElement('h2');
@@ -55,7 +55,11 @@ function updateJsSampleCode(
     let optionsString = assembleOptionsString(pluginsString, formatString);
     let endString = assembleEndString(optionsString);
 
-    let jsCodeString = startString.concat(pluginsString).concat(formatString).concat(optionsString).concat(endString);
+    let jsCodeString = startString
+        .concat(pluginsString)
+        .concat(formatString)
+        .concat(optionsString)
+        .concat(endString);
     jsSampleCode.appendChild(createElementFromContent('jsSampleCode', jsCodeString));
 }
 
@@ -74,9 +78,13 @@ function assemblePluginsString(plugins: EditorPlugin[]): string {
         let pluginsString = 'var plugins = [\n';
         plugins.forEach(plugin => {
             if (plugin instanceof Watermark) {
-                pluginsString = pluginsString.concat('  new roosterjsPlugins.Watermark(\'Type content here...\'),\n');
+                pluginsString = pluginsString.concat(
+                    "  new roosterjsPlugins.Watermark('Type content here...'),\n"
+                );
             } else if (plugin instanceof ImageResizePlugin) {
-                pluginsString = pluginsString.concat('  new roosterjsImageResizePlugin.ImageResizePlugin(),\n');
+                pluginsString = pluginsString.concat(
+                    '  new roosterjsImageResizePlugin.ImageResizePlugin(),\n'
+                );
             } else if (plugin instanceof DefaultShortcut) {
                 pluginsString = pluginsString.concat('  new roosterjsPlugins.DefaultShortcut(),\n');
             } else if (plugin instanceof HyperLink) {
@@ -101,7 +109,7 @@ function assembleFormatString(defaultFormat: DefaultFormat): string {
     if (!defaultFormat) {
         return '';
     }
-    let defaultFormatString = 'var defaultFormat = {\n'
+    let defaultFormatString = 'var defaultFormat = {\n';
     if (defaultFormat.bold) {
         defaultFormatString = defaultFormatString.concat('  bold: true,\n');
     }
@@ -111,16 +119,17 @@ function assembleFormatString(defaultFormat: DefaultFormat): string {
     if (defaultFormat.underline) {
         defaultFormatString = defaultFormatString.concat('  underline: true,\n');
     }
-    defaultFormatString = defaultFormatString.concat(`  textColor: \"${defaultFormat.textColor}\",\n`);
-    defaultFormatString = defaultFormatString.concat(`  fontFamily: \"${defaultFormat.fontFamily}\",\n`);
+    defaultFormatString = defaultFormatString.concat(
+        `  textColor: \"${defaultFormat.textColor}\",\n`
+    );
+    defaultFormatString = defaultFormatString.concat(
+        `  fontFamily: \"${defaultFormat.fontFamily}\",\n`
+    );
     defaultFormatString = defaultFormatString.concat('};\n');
     return defaultFormatString;
 }
 
-function assembleRequireString(
-    plugins: EditorPlugin[],
-    defaultFormat: DefaultFormat,
-) : string {
+function assembleRequireString(plugins: EditorPlugin[], defaultFormat: DefaultFormat): string {
     //If there is no plugins or defaultFormat provided, require roosterjs package only
     if (!plugins && !defaultFormat) {
         return 'var roosterjs = require(\'roosterjs\');\n';
@@ -131,25 +140,26 @@ function assembleRequireString(
     //If there is image resize plugin, require the image resize plugin package
     plugins.forEach(plugin => {
         if (plugin instanceof ImageResizePlugin) {
-            requireString = requireString.concat('var roosterjsImageResizePlugin = require(\'roosterjs-plugin-image-resize\');\n');
+            requireString = requireString.concat(
+                "var roosterjsImageResizePlugin = require('roosterjs-plugin-image-resize');\n"
+            );
             return;
         }
     });
 
     //If there are other plugins than image resize plugins, require roosterjs plugin package
     if (plugins.length > 1) {
-        requireString = requireString.concat('var roosterjsPlugins = require(\'roosterjs-editor-plugins\');\n');
+        requireString = requireString.concat(
+            "var roosterjsPlugins = require('roosterjs-editor-plugins');\n"
+        );
     }
 
-    requireString = requireString.concat('var roosterjsCore = require(\'roosterjs-editor-core\');\n');
+    requireString = requireString.concat("var roosterjsCore = require('roosterjs-editor-core');\n");
 
     return requireString;
 }
 
-function assembleOptionsString(
-    pluginsString: string,
-    formatString: string,
-) : string {
+function assembleOptionsString(pluginsString: string, formatString: string): string {
     if (!pluginsString && !formatString) {
         return '';
     }
@@ -165,10 +175,8 @@ function assembleOptionsString(
     return optionsString;
 }
 
-function assembleEndString(
-    optionsString: string
-) : string {
-    let endString = 'var editorDiv = document.getElementById(\'editorDiv\');\n';
+function assembleEndString(optionsString: string): string {
+    let endString = "var editorDiv = document.getElementById('editorDiv');\n";
     if (optionsString) {
         endString = endString.concat('var editor = new roosterjsCore.Editor(editorDiv, options);');
     } else {

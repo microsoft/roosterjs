@@ -19,8 +19,19 @@ function initOptions() {
         window.alert(getCurrentEditor().getContent(true));
     });
 
-    ['defaultShortcutCheckbox', 'hyperlinkCheckbox', 'pasteManagerCheckbox', 'contentEditCheckbox', 'watermarkCheckbox',
-    'imageResizeCheckbox', 'boldCheckbox', 'italicCheckbox', 'underlineCheckbox', 'textColorDefaultFormat', 'fontNameDefaultFormat'].forEach(id => {
+    [
+        'defaultShortcutCheckbox',
+        'hyperlinkCheckbox',
+        'pasteManagerCheckbox',
+        'contentEditCheckbox',
+        'watermarkCheckbox',
+        'imageResizeCheckbox',
+        'boldCheckbox',
+        'italicCheckbox',
+        'underlineCheckbox',
+        'textColorDefaultFormat',
+        'fontNameDefaultFormat',
+    ].forEach(id => {
         document.getElementById(id).addEventListener('change', initEditorForOptions);
     });
 }

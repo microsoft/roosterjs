@@ -1,8 +1,7 @@
-import ClipBoardData from './ClipBoardData';
+import { ClipboardData, DefaultFormat } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { convertInlineCss, fromHtml } from 'roosterjs-editor-dom';
-import { getFormatState } from 'roosterjs-editor-api';
-import processImages from './processImages';
+import { convertInlineCss } from 'roosterjs-editor-dom';
+import getFormatState from '../format/getFormatState';
 
 const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
 const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/i;
@@ -20,60 +19,49 @@ interface WindowForIE extends Window {
  * @param callback Callback function when data is ready
  * @param useDirectPaste Whether use direct HTML instead of using temp DIV
  */
-export default function buildClipBoardData(
+export default function buildClipboardData(
     event: ClipboardEvent,
     editor: Editor,
-    callback: (clipboardData: ClipBoardData) => void,
-    unsafeHtmlFilter?: (html: string) => string,
-) {
-    let dataTransfer =
-        event.clipboardData || (<WindowForIE>editor.getDocument().defaultView).clipboardData;
-    let clipboardData: ClipBoardData = {
-        snapshotBeforePaste: null,
-        currentFormat: getFormatState(editor),
-        imageData: {
-            file: getImage(dataTransfer),
-        },
-        textData: dataTransfer.getData('text'),
-        htmlData: null,
-        htmlFragment: null,
-    };
-    let retrieveHtmlCallback = createCallback(editor, clipboardData, unsafeHtmlFilter, callback);
+    unsafeHtmlFilter?: (html: string) => string
+): Promise<ClipboardData> {
+    return new Promise<ClipboardData>((resolve, reject) => {
+        let dataTransfer =
+            event.clipboardData || (<WindowForIE>editor.getDocument().defaultView).clipboardData;
+        let clipboardData: ClipboardData = {
+            snapshotBeforePaste: null,
+            originalFormat: getCurrentFormat(editor),
+            image: getImage(dataTransfer),
+            text: dataTransfer.getData('text'),
+            html: null,
+        };
 
-    if (!unsafeHtmlFilter || !directRetrieveHtml(event, retrieveHtmlCallback)) {
-        retrieveHtmlViaTempDiv(editor, retrieveHtmlCallback);
-    }
+        let retrieveHtmlCallback = (html: string) => {
+            let matches = HTML_REGEX.exec(html);
+            html = matches ? matches[0] : html;
+            html = unsafeHtmlFilter ? unsafeHtmlFilter(html) : html;
+            html = convertInlineCss(html);
+            html = normalizeContent(html);
+            clipboardData.html = html;
+            resolve(clipboardData);
+        };
+
+        if (!unsafeHtmlFilter || !directRetrieveHtml(event, retrieveHtmlCallback)) {
+            retrieveHtmlViaTempDiv(editor, retrieveHtmlCallback);
+        }
+    });
 }
 
-function createCallback(
-    editor: Editor,
-    clipboardData: ClipBoardData,
-    unsafeHtmlFilter: (html: string) => string,
-    pasteCallback: (data: ClipBoardData) => void) {
-    return (html: string) => {
-        let matches = HTML_REGEX.exec(html);
-        html = matches ? matches[0] : html;
-
-        if (unsafeHtmlFilter) {
-            html = unsafeHtmlFilter(html);
-        }
-        html = convertInlineCss(html);
-        html = normalizeContent(html);
-
-        // 4. Prepare HTML fragment for pasting
-        let document = editor.getDocument();
-        let fragment = document.createDocumentFragment();
-        let nodes = fromHtml(html, document);
-        for (let node of nodes) {
-            fragment.appendChild(node);
-        }
-
-        clipboardData.htmlData = html;
-        clipboardData.htmlFragment = fragment;
-
-        processImages(clipboardData);
-        pasteCallback(clipboardData);
-    }
+function getCurrentFormat(editor: Editor): DefaultFormat {
+    let format = getFormatState(editor);
+    return {
+        fontFamily: format.fontName,
+        fontSize: format.fontSize,
+        textColor: format.textColor,
+        backgroundColor: format.backgroundColor,
+        bold: format.isBold,
+        italic: format.isItalic,
+        underline: format.isUnderline,
+    };
 }
 
 function getImage(dataTransfer: DataTransfer): File {
@@ -96,10 +84,7 @@ function getImage(dataTransfer: DataTransfer): File {
     return null;
 }
 
-function directRetrieveHtml(
-    event: ClipboardEvent,
-    callback: (html: string) => void
-): boolean {
+function directRetrieveHtml(event: ClipboardEvent, callback: (html: string) => void): boolean {
     let clipboardData = event.clipboardData;
     let fileCount = clipboardData && clipboardData.items ? clipboardData.items.length : 0;
     for (let i = 0; i < fileCount; i++) {
@@ -114,10 +99,7 @@ function directRetrieveHtml(
     return false;
 }
 
-function retrieveHtmlViaTempDiv(
-    editor: Editor,
-    callback: (html: string) => void
-) {
+function retrieveHtmlViaTempDiv(editor: Editor, callback: (html: string) => void) {
     // cache original selection range in editor
     let originalSelectionRange = editor.getSelectionRange();
     let tempDiv = editor.getTempDivForPaste();

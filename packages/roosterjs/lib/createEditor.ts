@@ -1,4 +1,4 @@
-import { DefaultShortcut, HyperLink, PasteManager, ContentEdit } from 'roosterjs-editor-plugins';
+import { DefaultShortcut, HyperLink, Paste, ContentEdit } from 'roosterjs-editor-plugins';
 import { Editor, EditorOptions, EditorPlugin } from 'roosterjs-editor-core';
 
 // Create an editor instance with most common options
@@ -10,7 +10,7 @@ export default function createEditor(
     let plugins: EditorPlugin[] = [
         new DefaultShortcut(),
         new HyperLink(),
-        new PasteManager(),
+        new Paste(),
         new ContentEdit(),
     ];
 

@@ -496,10 +496,7 @@ export default class Editor {
      */
     public getTempDivForPaste(): HTMLElement {
         if (!this.pasteDiv || !this.pasteDiv.parentNode) {
-            this.pasteDiv = fromHtml(
-                CONTAINER_HTML,
-                this.getDocument()
-            )[0] as HTMLElement;
+            this.pasteDiv = fromHtml(CONTAINER_HTML, this.getDocument())[0] as HTMLElement;
             this.insertNode(this.pasteDiv, {
                 position: ContentPosition.Outside,
                 updateCursor: false,

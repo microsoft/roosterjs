@@ -23,3 +23,6 @@ export { default as PluginEventType } from './editor/PluginEventType';
 export { default as Rect } from './editor/Rect';
 export { default as TextSection } from './editor/TextSection';
 export { default as TraversingScoper } from './editor/TraversingScoper';
+export { default as ClipboardData } from './clipboard/ClipboardData';
+export { default as BeforePasteEvent } from './clipboard/BeforePasteEvent';
+export { default as PasteOption } from './clipboard/PasteOption';

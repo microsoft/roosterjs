@@ -1,48 +1,83 @@
-// Editor plugin event type
+/**
+ * Editor plugin event type
+ */
 const enum PluginEventType {
-    // HTML KeyDown event
+    /**
+     * HTML KeyDown event
+     */
     KeyDown,
 
-    // HTML KeyPress event
+    /**
+     * HTML KeyPress event
+     */
     KeyPress,
 
-    // HTML KeyUp event
+    /**
+     * HTML KeyUp event
+     */
     KeyUp,
 
-    // HTML CompositionEnd event
+    /**
+     * HTML CompositionEnd event
+     */
     CompositionEnd,
 
-    // HTML MouseDown event
+    /**
+     * HTML MouseDown event
+     */
     MouseDown,
 
-    // HTML MouseUp event
+    /**
+     * HTML MouseUp event
+     */
     MouseUp,
 
-    // Content changed event
+    /**
+     * Content changed event
+     */
     ContentChanged,
 
-    // HTML MouseOver event
+    /**
+     * HTML MouseOver event
+     */
     MouseOver,
 
-    // HTML MouseOut event
+    /**
+     * HTML MouseOut event
+     */
     MouseOut,
 
-    // HTML Paste event
+    /**
+     * HTML Paste event
+     */
     Paste,
 
-    // HTML Copy event
+    /**
+     * HTML Copy event
+     */
     Copy,
 
-    // HTML Focus event
+    /**
+     * HTML Focus event
+     */
     Focus,
 
-    // HTML blur event
+    /**
+     * HTML blur event
+     */
     Blur,
 
-    // Extract Content event
-    // This event is triggered when getContent() is called with triggerExtractContentEvent = true
-    // Plugin can handle this event to remove the UI only markups to return clean HTML
+    /**
+     * Extract Content event
+     * This event is triggered when getContent() is called with triggerExtractContentEvent = true
+     * Plugin can handle this event to remove the UI only markups to return clean HTML
+     */
     ExtractContent,
+
+    /**
+     * Before Paste event, provide a chance to change paste content
+     */
+    BeforePaste,
 }
 
 export default PluginEventType;
