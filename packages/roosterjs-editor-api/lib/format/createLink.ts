@@ -4,7 +4,6 @@ import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
 import matchLink from '../linkMatch/matchLink';
 import { Editor } from 'roosterjs-editor-core';
 import { LinkInlineElement } from 'roosterjs-editor-dom';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 // Regex matching Uri scheme
 const URI_REGEX = /^[a-zA-Z]+:/i;
@@ -102,13 +101,6 @@ export default function createLink(
 
         execFormatWithUndo(editor, formatter);
 
-        editor.triggerEvent(
-            {
-                eventType: PluginEventType.ContentChanged,
-                source: 'CreateLink',
-                data: anchor,
-            } as PluginEvent,
-            true /* broadcast */
-        );
+        editor.triggerContentChangedEvent('CreateLink', anchor);
     }
 }

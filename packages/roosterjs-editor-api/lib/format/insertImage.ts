@@ -1,5 +1,4 @@
 import { Editor } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 export default function insertImage(editor: Editor, imageFile: File) {
     editor.addUndoSnapshot();
@@ -10,10 +9,7 @@ export default function insertImage(editor: Editor, imageFile: File) {
             image.src = (event.target as FileReader).result;
             image.style.maxWidth = '100%';
             editor.insertNode(image);
-            editor.triggerEvent({
-                eventType: PluginEventType.ContentChanged,
-                source: 'Format',
-            } as PluginEvent);
+            editor.triggerContentChangedEvent('Format');
             editor.addUndoSnapshot();
         }
     };

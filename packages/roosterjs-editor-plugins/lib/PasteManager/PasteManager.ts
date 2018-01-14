@@ -1,5 +1,4 @@
 import {
-    ContentChangedEvent,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
@@ -107,13 +106,7 @@ export default class PasteManager implements EditorPlugin {
                 break;
         }
 
-        // broadcast contentChangedEvent to ensure the snapshot actually gets added
-        let contentChangedEvent: ContentChangedEvent = {
-            eventType: PluginEventType.ContentChanged,
-            source: 'Paste',
-            data: clipboardData,
-        };
-        this.editor.triggerEvent(contentChangedEvent, true /* broadcast */);
+        this.editor.triggerContentChangedEvent('Paste', clipboardData);
 
         // add undo snapshot after paste
         this.editor.addUndoSnapshot();

@@ -5,7 +5,6 @@ import {
     PluginEventType,
     PluginDomEvent,
     ExtractContentEvent,
-    ContentChangedEvent,
 } from 'roosterjs-editor-types';
 import { contains, getTagOfNode } from 'roosterjs-editor-dom';
 import { execFormatWithUndo } from 'roosterjs-editor-api';
@@ -195,7 +194,7 @@ export default class ImageResizePlugin implements EditorPlugin {
         }
         this.direction = null;
         this.editor.addUndoSnapshot();
-        this.triggerContentChangedEvent();
+        this.editor.triggerContentChangedEvent('ImageResize');
         e.preventDefault();
     };
 
@@ -261,14 +260,6 @@ export default class ImageResizePlugin implements EditorPlugin {
 
     private getSelectedImage(): HTMLElement {
         return this.resizeDiv ? <HTMLElement>this.resizeDiv.getElementsByTagName('IMG')[0] : null;
-    }
-
-    private triggerContentChangedEvent() {
-        let eventToTrigger: ContentChangedEvent = {
-            eventType: PluginEventType.ContentChanged,
-            source: 'ImageResize',
-        };
-        this.editor.triggerEvent(eventToTrigger);
     }
 
     private isNorth(direction: string): boolean {

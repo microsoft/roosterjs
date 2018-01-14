@@ -476,6 +476,22 @@ export default class Editor {
     }
 
     /**
+     * Trigger a ContentChangedEvent
+     * @param source Source of this event, by default is 'SetContent'
+     * @param data additional data for this event
+     */
+    public triggerContentChangedEvent(source: string = 'SetContent', data?: any) {
+        this.triggerEvent(
+            {
+                eventType: PluginEventType.ContentChanged,
+                source: source,
+                data: data,
+            } as PluginEvent,
+            true /* broadcast */
+        );
+    }
+
+    /**
      * For internal use only
      */
     public getTempDivForPaste(): HTMLElement {
@@ -797,15 +813,5 @@ export default class Editor {
         this.defaultFormat.backgroundColor =
             this.defaultFormat.backgroundColor ||
             getComputedStyle(this.contentDiv, 'background-color');
-    }
-
-    private triggerContentChangedEvent() {
-        this.triggerEvent(
-            {
-                eventType: PluginEventType.ContentChanged,
-                source: 'SetContent',
-            } as PluginEvent,
-            true /* broadcast */
-        );
     }
 }

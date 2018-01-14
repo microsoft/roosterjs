@@ -10,7 +10,10 @@ const UNSAFE_TAG_REGEX = [
     /<base\s*[^>]*>[\s\S]*<\/base\s*>/gi,
     /<xml\s*[^>]*>[\s\S]*<\/xml\s*>/gi,
 ];
-const UNSAFE_ATTRIBUTE_REGEX = [/<(\w+)([^>]*\W+)on\w+\s*=\s*('[^']*'|"[^"]*"|[^'"\s]*)/gi];
+const UNSAFE_ATTRIBUTE_REGEX = [
+    /<(\w+)([^>]*\W+)on\w+\s*=\s*('[^']*'|"[^"]*"|`[^`]*`|[^'"\s]*)/gi,
+    /<(\w+)([^>]*\W+)id\s*=\s*('[^']*'|"[^"]*"|`[^`]*`|[^'"\s]*)/gi,
+];
 
 export default function removeUnsafeTags(html: string): string {
     if (UNSAFE_TAG_SUMMARY_REGEX.test(html)) {

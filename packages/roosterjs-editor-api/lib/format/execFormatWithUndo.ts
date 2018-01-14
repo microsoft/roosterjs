@@ -1,5 +1,5 @@
 import { Editor } from 'roosterjs-editor-core';
-import { EditorPoint, NodeType, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPoint, NodeType } from 'roosterjs-editor-types';
 
 /**
  * Formatter function type
@@ -24,10 +24,7 @@ export default function execFormatWithUndo(
     let endPoint = range ? { containerNode: range.endContainer, offset: range.endOffset } : null;
 
     let fallbackNode = formatter(startPoint, endPoint);
-    editor.triggerEvent({
-        eventType: PluginEventType.ContentChanged,
-        source: 'Format',
-    } as PluginEvent);
+    editor.triggerContentChangedEvent('Format');
 
     if (preserveSelection && startPoint && endPoint) {
         updateSelection(editor, startPoint, endPoint, <Node>fallbackNode);

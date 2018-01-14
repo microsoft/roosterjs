@@ -4,7 +4,6 @@ export {
 } from './cursor/cacheGetCursorEventData';
 export { default as CursorData } from './cursor/CursorData';
 export { default as getNodeAtCursor } from './cursor/getNodeAtCursor';
-export { default as isSelectionCollapsed } from './cursor/isSelectionCollapsed';
 export { default as queryNodesWithSelection } from './cursor/queryNodesWithSelection';
 export { default as replaceRangeWithNode } from './cursor/replaceRangeWithNode';
 export {

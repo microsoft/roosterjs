@@ -2,6 +2,10 @@
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
-        "baseUrl": "../../"
+        "baseUrl": "../../",
+        "lib": [
+            "es6",
+            "dom"
+        ]
     }
 }

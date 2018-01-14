@@ -3,6 +3,7 @@ import {
     PluginEvent,
     PluginEventType,
     ContentPosition,
+    ContentChangedEvent,
     ExtractContentEvent,
     DefaultFormat,
 } from 'roosterjs-editor-types';
@@ -34,7 +35,7 @@ class Watermark implements EditorPlugin {
 
     initialize(editor: Editor) {
         this.editor = editor;
-        this.showHideWatermark();
+        this.showHideWatermark(false /*ignoreCachedState*/);
     }
 
     dispose() {
@@ -48,18 +49,23 @@ class Watermark implements EditorPlugin {
             event.eventType == PluginEventType.Blur ||
             event.eventType == PluginEventType.ContentChanged
         ) {
-            this.showHideWatermark();
+            // When content is changed from setContent() API, current cached state
+            // may not be accurate, so we ignore it
+            let ignoreCachedState =
+                event.eventType == PluginEventType.ContentChanged &&
+                (<ContentChangedEvent>event).source == 'SetContent';
+            this.showHideWatermark(ignoreCachedState);
         } else if (event.eventType == PluginEventType.ExtractContent && this.isWatermarkShowing) {
             this.removeWartermarkFromHtml(event as ExtractContentEvent);
         }
     }
 
-    private showHideWatermark() {
-        if (this.editor.hasFocus() && this.isWatermarkShowing) {
+    private showHideWatermark(ignoreCachedState: boolean) {
+        if (this.editor.hasFocus() && (ignoreCachedState || this.isWatermarkShowing)) {
             this.hideWatermark();
         } else if (
             !this.editor.hasFocus() &&
-            !this.isWatermarkShowing &&
+            (ignoreCachedState || !this.isWatermarkShowing) &&
             this.editor.isEmpty(true /*trim*/)
         ) {
             this.showWatermark();

@@ -65,6 +65,8 @@
             .editorContainer {
                 height: 100%;
                 position: relative;
+                display: flex;
+                padding: 10px;
             }
 
             .tab {
@@ -77,30 +79,22 @@
             }
 
             .editor {
-                position: absolute;
                 word-wrap: break-word;
-                left: 10px;
-                top: 10px;
-                bottom: 10px;
                 border: solid 1px #cccccc;
                 background-color: white;
                 overflow: auto;
                 outline: none;
                 width: 60%;
+                height: 100%;
             }
 
             .sampleCodeContainer {
-                position: absolute;
+                flex: 1 1;
                 word-wrap: break-word;
-                right: 10px;
-                top: 10px;
-                bottom: 10px;
                 border: solid 2px #cccccc;
                 background-color: white;
                 overflow: auto;
                 outline: none;
-                float: right;
-                width: 40%;
             }
 
             .htmlSample {

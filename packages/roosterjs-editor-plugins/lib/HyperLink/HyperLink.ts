@@ -141,14 +141,7 @@ export default class HyperLink implements EditorPlugin {
                 if (replaced) {
                     // The content at cursor has changed. Should also clear the cursor data cache
                     clearCursorEventDataCache(event);
-                    this.editor.triggerEvent(
-                        {
-                            eventType: PluginEventType.ContentChanged,
-                            source: 'AutoLink',
-                            data: anchor,
-                        } as PluginEvent,
-                        true /* broadcast */
-                    );
+                    this.editor.triggerContentChangedEvent('AutoLink', anchor);
                     this.editor.addUndoSnapshot();
                 }
             }
