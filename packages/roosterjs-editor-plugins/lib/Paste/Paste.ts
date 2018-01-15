@@ -10,7 +10,8 @@ import {
 } from 'roosterjs-editor-types';
 import { applyFormat, fromHtml, getFirstLeafNode, getNextLeafSibling } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin, buildSnapshot, restoreSnapshot } from 'roosterjs-editor-core';
-import { insertImage, buildClipboardData } from 'roosterjs-editor-api';
+import { insertImage } from 'roosterjs-editor-api';
+import buildClipboardData from './buildClipboardData';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import removeUnsafeTags from './removeUnsafeTags';
 

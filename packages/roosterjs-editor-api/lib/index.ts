@@ -39,4 +39,3 @@ export { default as toggleHeader } from './format/toggleHeader';
 export { default as defaultLinkMatchRules } from './linkMatch/defaultLinkMatchRules';
 export { default as matchLink } from './linkMatch/matchLink';
 export { default as RegExLinkMatchRule } from './linkMatch/RegExLinkMatchRule';
-export { default as buildClipboardData } from './paste/buildClipboardData';

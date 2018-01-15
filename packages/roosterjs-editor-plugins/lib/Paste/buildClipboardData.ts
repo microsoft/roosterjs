@@ -1,7 +1,7 @@
 import { ClipboardData, DefaultFormat } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { convertInlineCss } from 'roosterjs-editor-dom';
-import getFormatState from '../format/getFormatState';
+import { getFormatState } from 'roosterjs-editor-api';
 
 const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
 const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/i;
