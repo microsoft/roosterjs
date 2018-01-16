@@ -1,12 +1,14 @@
-import { ClipboardData, DefaultFormat } from 'roosterjs-editor-types';
+import { ClipboardData, ContentPosition, DefaultFormat } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { convertInlineCss } from 'roosterjs-editor-dom';
+import { convertInlineCss, fromHtml } from 'roosterjs-editor-dom';
 import { getFormatState } from 'roosterjs-editor-api';
 
 const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
 const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/i;
 const COMMENT = /<!--([\s\S]*?)-->/gi;
 const HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
+const CONTAINER_HTML =
+    '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
 
 interface WindowForIE extends Window {
     clipboardData: DataTransfer;
@@ -22,33 +24,32 @@ interface WindowForIE extends Window {
 export default function buildClipboardData(
     event: ClipboardEvent,
     editor: Editor,
+    callback: (clipboardData: ClipboardData) => void,
     unsafeHtmlFilter?: (html: string) => string
-): Promise<ClipboardData> {
-    return new Promise<ClipboardData>((resolve, reject) => {
-        let dataTransfer =
-            event.clipboardData || (<WindowForIE>editor.getDocument().defaultView).clipboardData;
-        let clipboardData: ClipboardData = {
-            snapshotBeforePaste: null,
-            originalFormat: getCurrentFormat(editor),
-            image: getImage(dataTransfer),
-            text: dataTransfer.getData('text'),
-            html: null,
-        };
+) {
+    let dataTransfer =
+        event.clipboardData || (<WindowForIE>editor.getDocument().defaultView).clipboardData;
+    let clipboardData: ClipboardData = {
+        snapshotBeforePaste: null,
+        originalFormat: getCurrentFormat(editor),
+        image: getImage(dataTransfer),
+        text: dataTransfer.getData('text'),
+        html: null,
+    };
 
-        let retrieveHtmlCallback = (html: string) => {
-            let matches = HTML_REGEX.exec(html);
-            html = matches ? matches[0] : html;
-            html = unsafeHtmlFilter ? unsafeHtmlFilter(html) : html;
-            html = convertInlineCss(html);
-            html = normalizeContent(html);
-            clipboardData.html = html;
-            resolve(clipboardData);
-        };
+    let retrieveHtmlCallback = (html: string) => {
+        let matches = HTML_REGEX.exec(html);
+        html = matches ? matches[0] : html;
+        html = unsafeHtmlFilter ? unsafeHtmlFilter(html) : html;
+        html = convertInlineCss(html);
+        html = normalizeContent(html);
+        clipboardData.html = html;
+        callback(clipboardData);
+    };
 
-        if (!unsafeHtmlFilter || !directRetrieveHtml(event, retrieveHtmlCallback)) {
-            retrieveHtmlViaTempDiv(editor, retrieveHtmlCallback);
-        }
-    });
+    if (!unsafeHtmlFilter || !directRetrieveHtml(event, retrieveHtmlCallback)) {
+        retrieveHtmlViaTempDiv(editor, retrieveHtmlCallback);
+    }
 }
 
 function getCurrentFormat(editor: Editor): DefaultFormat {
@@ -102,7 +103,7 @@ function directRetrieveHtml(event: ClipboardEvent, callback: (html: string) => v
 function retrieveHtmlViaTempDiv(editor: Editor, callback: (html: string) => void) {
     // cache original selection range in editor
     let originalSelectionRange = editor.getSelectionRange();
-    let tempDiv = editor.getTempDivForPaste();
+    let tempDiv = getTempDivForPaste(editor);
     tempDiv.focus();
 
     window.requestAnimationFrame(() => {
@@ -114,6 +115,27 @@ function retrieveHtmlViaTempDiv(editor: Editor, callback: (html: string) => void
             tempDiv.innerHTML = '';
         }
     });
+}
+
+function getTempDivForPaste(editor: Editor): HTMLElement {
+    let tempDiv = editor.getCustomData(
+        'PasteDiv',
+        () => {
+            let pasteDiv = fromHtml(CONTAINER_HTML, editor.getDocument())[0] as HTMLElement;
+            editor.insertNode(pasteDiv, {
+                position: ContentPosition.Outside,
+                updateCursor: false,
+                replaceSelection: false,
+                insertOnNewLine: false,
+            });
+            return pasteDiv;
+        },
+        pasteDiv => {
+            pasteDiv.parentNode.removeChild(pasteDiv);
+        }
+    );
+    tempDiv.style.display = '';
+    return tempDiv;
 }
 
 function normalizeContent(content: string): string {

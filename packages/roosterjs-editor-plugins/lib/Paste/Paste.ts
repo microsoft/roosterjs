@@ -50,15 +50,15 @@ export default class Paste implements EditorPlugin {
             buildClipboardData(
                 pasteEvent,
                 this.editor,
+                clipboardData =>
+                    this.paste(
+                        clipboardData,
+                        clipboardData.text || !clipboardData.image
+                            ? PasteOption.PasteHtml
+                            : PasteOption.PasteImage
+                    ),
                 this.useDirectPaste ? removeUnsafeTags : null
-            ).then(clipboardData => {
-                this.paste(
-                    clipboardData,
-                    clipboardData.text || !clipboardData.image
-                        ? PasteOption.PasteHtml
-                        : PasteOption.PasteImage
-                );
-            });
+            );
         } else if (event.eventType == PluginEventType.BeforePaste) {
             let beforePasteEvent = <BeforePasteEvent>event;
 

@@ -1,7 +1,7 @@
 import Editor from '../../editor/Editor';
 import * as TestHelper from '../TestHelper';
 import { ContentPosition } from 'roosterjs-editor-types';
-import * as Selection from '../../utils/selection';
+import * as Selection from '../../editor/coreAPI/selection';
 
 let editor: Editor;
 let testID = 'EditorTest';
@@ -40,25 +40,25 @@ describe('Editor getSelectionRange()', () => {
 
     it('getSelectionRange shold invoke getSelectionRange in Selection if in foucs', () => {
         // Arrange
-        spyOn(Selection, 'tryGetSelectionRange').and.callThrough();
+        spyOn(Selection, 'getSelectionRange').and.callThrough();
         editor.focus();
 
         // Act
         editor.getSelectionRange();
 
         // Assert
-        expect(Selection.tryGetSelectionRange).toHaveBeenCalled();
+        expect(Selection.getSelectionRange).toHaveBeenCalled();
     });
 
     it('getSelectionRange shold return null if not in focus', () => {
         // Arrange
-        spyOn(Selection, 'tryGetSelectionRange').and.callThrough();
+        spyOn(Selection, 'getSelectionRange').and.callThrough();
 
         // Act
         let selectionRange = editor.getSelectionRange();
 
         // Assert
-        expect(selectionRange).toBeUndefined();
+        expect(selectionRange).toBeNull();
     });
 });
 
@@ -492,14 +492,14 @@ describe('Editor saveSelectionRange()', () => {
         TestHelper.removeElement(testID);
     });
 
-    it('saveSelectionRange should trigger the tryGetSelectionRange() method', () => {
+    it('saveSelectionRange should trigger the Selection.saveSelectionRange() method', () => {
         // Arrange
-        spyOn(Selection, 'tryGetSelectionRange').and.callThrough();
+        spyOn(Selection, 'saveSelectionRange').and.callThrough();
 
         // Act
         editor.saveSelectionRange();
 
         // Assert
-        expect(Selection.tryGetSelectionRange).toHaveBeenCalled();
+        expect(Selection.saveSelectionRange).toHaveBeenCalled();
     });
 });

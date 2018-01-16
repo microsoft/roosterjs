@@ -4,10 +4,10 @@ import EditorPlugin from './EditorPlugin';
 interface UndoService extends EditorPlugin {
     undo: () => void;
     redo: () => void;
-    addUndoSnapshot?: () => void;
-    canUndo?: () => boolean;
-    canRedo?: () => boolean;
-    clear?: () => void;
+    addUndoSnapshot: () => void;
+    canUndo: () => boolean;
+    canRedo: () => boolean;
+    clear: () => void;
 }
 
 export default UndoService;

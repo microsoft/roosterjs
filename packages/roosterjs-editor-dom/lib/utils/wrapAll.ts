@@ -2,7 +2,7 @@ import fromHtml from './fromHtml';
 
 // Wrap all the node with html and return the wrapped node
 // All nodes should be under same parent
-export default function wrapAll(nodes: Node[], htmlFragment: string): Node {
+export default function wrapAll(nodes: Node[], htmlFragment: string = '<div></div>'): Node {
     if (!nodes || nodes.length == 0) {
         return null;
     }

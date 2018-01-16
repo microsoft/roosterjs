@@ -1,25 +1,50 @@
-import isVoidHtmlElement from './isVoidHtmlElement';
+import EditorCore from '../EditorCore';
+import isVoidHtmlElement from '../../utils/isVoidHtmlElement';
 import {
     EditorSelection,
-    InlineElementFactory,
     getFirstBlockElement,
     getLastBlockElement,
     isBlockElement,
     wrap,
 } from 'roosterjs-editor-dom';
-import { InsertOption, NodeType } from 'roosterjs-editor-types';
-import { updateSelectionToRange } from './selection';
+import { ContentPosition, InsertOption, NodeType } from 'roosterjs-editor-types';
+import { getSelectionRange, internalFocus, updateSelection } from './selection';
 
 const HTML_EMPTY_DIV = '<div></div>';
 
+export default function insertNode(core: EditorCore, node: Node, option: InsertOption): boolean {
+    option = option || {
+        position: ContentPosition.SelectionStart,
+        updateCursor: true,
+        replaceSelection: true,
+        insertOnNewLine: false,
+    };
+
+    if (option.updateCursor) {
+        internalFocus(core);
+    }
+
+    switch (option.position) {
+        case ContentPosition.Begin:
+            insertNodeAtBegin(core, node, option);
+            break;
+        case ContentPosition.End:
+            insertNodeAtEnd(core, node, option);
+            break;
+        case ContentPosition.SelectionStart:
+            insertNodeAtSelection(core, node, option);
+            break;
+        case ContentPosition.Outside:
+            core.contentDiv.parentNode.insertBefore(node, core.contentDiv.nextSibling);
+            break;
+    }
+
+    return true;
+}
+
 // Insert a node at begin of the editor
-export function insertNodeAtBegin(
-    container: Node,
-    inlineElementFactory: InlineElementFactory,
-    node: Node,
-    option: InsertOption
-): void {
-    let firstBlock = getFirstBlockElement(container, inlineElementFactory);
+function insertNodeAtBegin(core: EditorCore, node: Node, option: InsertOption) {
+    let firstBlock = getFirstBlockElement(core.contentDiv, core.inlineElementFactory);
     let insertedNode: Node;
     if (firstBlock) {
         let refNode = firstBlock.getStartNode();
@@ -52,7 +77,7 @@ export function insertNodeAtBegin(
         }
     } else {
         // No first block, this can happen when editor is empty. Use appendChild to insert the content in contentDiv
-        insertedNode = container.appendChild(node);
+        insertedNode = core.contentDiv.appendChild(node);
     }
 
     // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
@@ -63,13 +88,8 @@ export function insertNodeAtBegin(
 }
 
 // Insert a node at end of the editor
-export function insertNodeAtEnd(
-    container: Node,
-    inlineElementFactory: InlineElementFactory,
-    node: Node,
-    option: InsertOption
-): void {
-    let lastBlock = getLastBlockElement(container, inlineElementFactory);
+function insertNodeAtEnd(core: EditorCore, node: Node, option: InsertOption) {
+    let lastBlock = getLastBlockElement(core.contentDiv, core.inlineElementFactory);
     let insertedNode: Node;
     if (lastBlock) {
         let refNode = lastBlock.getEndNode();
@@ -101,7 +121,7 @@ export function insertNodeAtEnd(
         }
     } else {
         // No last block, editor is likely empty, use appendChild
-        insertedNode = container.appendChild(node);
+        insertedNode = core.contentDiv.appendChild(node);
     }
 
     // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
@@ -112,13 +132,8 @@ export function insertNodeAtEnd(
 }
 
 // Insert node at selection
-export function insertNodeAtSelection(
-    container: Node,
-    inlineElementFactory: InlineElementFactory,
-    selectionRange: Range,
-    node: Node,
-    option: InsertOption
-): void {
+function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOption) {
+    let selectionRange = getSelectionRange(core, true /*tryGetFromCache*/);
     if (selectionRange) {
         // if to replace the selection and the selection is not collapsed, remove the the content at selection first
         if (option.replaceSelection && !selectionRange.collapsed) {
@@ -134,9 +149,9 @@ export function insertNodeAtSelection(
         // and insert signature, they actually want signature to be inserted the line after the selection
         if (option.insertOnNewLine) {
             let editorSelection = new EditorSelection(
-                container,
+                core.contentDiv,
                 selectionRange,
-                inlineElementFactory
+                core.inlineElementFactory
             );
             let blockElement = editorSelection.startBlockElement;
             selectionRange.setEndAfter(blockElement.getEndNode());
@@ -148,9 +163,9 @@ export function insertNodeAtSelection(
         if (option.updateCursor && nodeForCursor) {
             selectionRange.setEndAfter(nodeForCursor);
             selectionRange.collapse(false /*toStart*/);
-            updateSelectionToRange(container.ownerDocument, selectionRange);
+            updateSelection(core, selectionRange);
         } else {
-            updateSelectionToRange(container.ownerDocument, originalSelectionRange);
+            updateSelection(core, originalSelectionRange);
         }
     }
 }

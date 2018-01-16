@@ -1,5 +1,6 @@
+import EditorCore from '../EditorCore';
 import { ContentTraverser } from 'roosterjs-editor-dom';
-import { updateSelectionToRange, tryGetSelectionRange } from './selection';
+import { updateSelection, getSelectionRange } from './selection';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
 
@@ -9,13 +10,13 @@ const ZERO_WIDTH_SPACE = '&#8203;';
 // The workaround is to create a SPAN and have the style applied on the SPAN, and then re-position cursor within the SPAN where typing can happen
 // TODO: what if user position this in an inlne element, i.e. hashtag, creating a span within an existing inline element may not be a good idea
 function applyInlineStyleToCollapsedSelection(
-    currentDocument: Document,
+    core: EditorCore,
     selectionRange: Range,
     styler: (element: HTMLElement) => void
 ): void {
     // let's just be simple to create a new span to hold the style
     // TODO: maybe we should be a bit smarter to see if we're in a span, and apply the style in parent span
-    let element = currentDocument.createElement('SPAN');
+    let element = core.document.createElement('SPAN');
     // Some content is needed to position selection into the span
     // for here, we inject ZWS - zero width space
     element.innerHTML = ZERO_WIDTH_SPACE;
@@ -26,17 +27,17 @@ function applyInlineStyleToCollapsedSelection(
     // This is needed so that the cursor still looks blinking inside editor
     // This also means an extra ZWS will be in editor
     // TODO: somewhere in returning content to consumer, we may need to do a cleanup for ZWS
-    let updatedRange = currentDocument.createRange();
+    let updatedRange = core.document.createRange();
     updatedRange.selectNodeContents(element);
     updatedRange.collapse(false /* toStart */);
-    updateSelectionToRange(currentDocument, updatedRange);
+    updateSelection(core, updatedRange);
 }
 
 // Apply style to non collapsed selection
 // It does that by looping through all inline element that can be found in the selection
 // and apply style on each individual inline element
 function applyInlineStyleToNonCollapsedSelection(
-    currentDocument: Document,
+    core: EditorCore,
     contentTraverser: ContentTraverser,
     selectionRange: Range,
     styler: (element: HTMLElement) => void
@@ -65,37 +66,29 @@ function applyInlineStyleToNonCollapsedSelection(
     // When selectionStartNode/EndNode is set, it means there is DOM change. Re-create the selection
     if (startNode && endNode) {
         // Set the selection
-        let updatedRange = currentDocument.createRange();
+        let updatedRange = core.document.createRange();
         updatedRange.setStartBefore(startNode);
         updatedRange.setEndAfter(endNode);
-        updateSelectionToRange(currentDocument, updatedRange);
+        updateSelection(core, updatedRange);
     }
 }
 
 // Apply inline style to current selection
-function applyInlineStyle(
-    container: Node,
+export default function applyInlineStyle(
+    core: EditorCore,
     contentTraverser: ContentTraverser,
     styler: (element: HTMLElement) => void
 ): void {
-    let currentDocument = container.ownerDocument;
-    let selectionRange = tryGetSelectionRange(container);
+    let selectionRange = getSelectionRange(core, false /*tryGetFromCache*/);
     if (selectionRange) {
         // TODO: Chrome has a bug that when the selection spans over several empty text nodes,
         // it may incorrectly report range not to be collapsed.
         // We may do a browser check to force it to go collapsed code path when we see an empty range
         // UserAgent.GetInstance().IsBrowserChrome && range.toString() == _String.Empty
         if (selectionRange.collapsed) {
-            applyInlineStyleToCollapsedSelection(currentDocument, selectionRange, styler);
+            applyInlineStyleToCollapsedSelection(core, selectionRange, styler);
         } else {
-            applyInlineStyleToNonCollapsedSelection(
-                currentDocument,
-                contentTraverser,
-                selectionRange,
-                styler
-            );
+            applyInlineStyleToNonCollapsedSelection(core, contentTraverser, selectionRange, styler);
         }
     }
 }
-
-export default applyInlineStyle;
