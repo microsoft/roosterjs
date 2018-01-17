@@ -1,12 +1,12 @@
-import EditorCore from '../EditorCore';
-import isVoidHtmlElement from '../../utils/isVoidHtmlElement';
-import { contains, getFirstLeafNode, isDocumentPosition, normalizeEditorPoint } from 'roosterjs-editor-dom';
+import EditorCore from '../editor/EditorCore';
+import isVoidHtmlElement from '../utils/isVoidHtmlElement';
+import {
+    contains,
+    getFirstLeafNode,
+    isDocumentPosition,
+    normalizeEditorPoint,
+} from 'roosterjs-editor-dom';
 import { DocumentPosition, NodeBoundary, NodeType, Rect } from 'roosterjs-editor-types';
-
-export function getSelection(core: EditorCore) {
-    let win = (core.document || document).defaultView || window;
-    return win.getSelection();
-}
 
 export function hasFocus(core: EditorCore): boolean {
     let activeElement = core.document.activeElement;
@@ -14,6 +14,11 @@ export function hasFocus(core: EditorCore): boolean {
         activeElement &&
         (core.contentDiv == activeElement || contains(core.contentDiv, activeElement))
     );
+}
+
+export function getSelection(core: EditorCore) {
+    let win = (core.document || document).defaultView || window;
+    return win.getSelection();
 }
 
 export function getSelectionRange(core: EditorCore, tryGetFromCache: boolean): Range {
@@ -36,7 +41,7 @@ export function getSelectionRange(core: EditorCore, tryGetFromCache: boolean): R
     return result;
 }
 
-export function internalFocus(core: EditorCore) {
+export function focus(core: EditorCore) {
     if (!hasFocus(core) || !getSelectionRange(core, false /*tryGetFromCache*/)) {
         // Focus (document.activeElement indicates) and selection are mostly in sync, but could be out of sync in some extreme cases.
         // i.e. if you programmatically change window selection to point to a non-focusable DOM element (i.e. tabindex=-1 etc.).
@@ -45,7 +50,7 @@ export function internalFocus(core: EditorCore) {
         // So here we always do a live selection pull on DOM and make it point in Editor. The pitfall is, the cursor could be reset
         // to very begin to of editor since we don't really have last saved selection (created on blur which does not fire in this case).
         // It should be better than the case you cannot type
-        if (!restoreLastSavedSelection(core)) {
+        if (!restoreSelection(core)) {
             setSelectionToBegin(core);
         }
     }
@@ -80,7 +85,7 @@ export function updateSelection(core: EditorCore, range: Range): boolean {
     return selectionUpdated;
 }
 
-export function restoreLastSavedSelection(core: EditorCore): boolean {
+export function restoreSelection(core: EditorCore): boolean {
     let selectionRestored = false;
     if (core.cachedSelectionRange) {
         selectionRestored = updateSelection(core, core.cachedSelectionRange);

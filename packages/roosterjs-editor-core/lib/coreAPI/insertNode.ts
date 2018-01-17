@@ -1,5 +1,5 @@
-import EditorCore from '../EditorCore';
-import isVoidHtmlElement from '../../utils/isVoidHtmlElement';
+import EditorCore from '../editor/EditorCore';
+import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import {
     EditorSelection,
     getFirstBlockElement,
@@ -8,7 +8,7 @@ import {
     wrap,
 } from 'roosterjs-editor-dom';
 import { ContentPosition, InsertOption, NodeType } from 'roosterjs-editor-types';
-import { getSelectionRange, internalFocus, updateSelection } from './selection';
+import { getSelectionRange, focus, updateSelection } from './selection';
 
 const HTML_EMPTY_DIV = '<div></div>';
 
@@ -21,7 +21,7 @@ export default function insertNode(core: EditorCore, node: Node, option: InsertO
     };
 
     if (option.updateCursor) {
-        internalFocus(core);
+        focus(core);
     }
 
     switch (option.position) {

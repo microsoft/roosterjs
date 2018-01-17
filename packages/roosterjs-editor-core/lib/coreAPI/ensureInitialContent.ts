@@ -1,4 +1,4 @@
-import EditorCore from '../EditorCore';
+import EditorCore from '../editor/EditorCore';
 import {
     NodeBlockElement,
     applyFormat,

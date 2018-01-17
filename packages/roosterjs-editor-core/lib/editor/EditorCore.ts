@@ -1,5 +1,4 @@
-import EditorPlugin from './EditorPlugin';
-import { CustomDataSet } from './CustomData';
+import EditorPlugin from '../editor/EditorPlugin';
 import { DefaultFormat } from 'roosterjs-editor-types';
 import { InlineElementFactory } from 'roosterjs-editor-dom';
 
@@ -9,7 +8,10 @@ interface EditorCore {
     plugins: EditorPlugin[];
     inlineElementFactory: InlineElementFactory;
     defaultFormat: DefaultFormat;
-    customData: CustomDataSet;
+    customData: {[Key: string]: {
+        value: any;
+        disposer: (value: any) => void;
+    }};
     cachedSelectionRange: Range;
     isInIME: boolean;
     disableRestoreSelectionOnFocus: boolean;

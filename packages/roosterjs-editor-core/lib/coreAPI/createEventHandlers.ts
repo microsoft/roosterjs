@@ -1,5 +1,5 @@
-import EditorCore from '../EditorCore';
-import browserData from '../../utils/BrowserData';
+import EditorCore from '../editor/EditorCore';
+import browserData from '../utils/BrowserData';
 import {
     NodeBoundary,
     NodeType,
@@ -18,26 +18,17 @@ import {
 } from 'roosterjs-editor-dom';
 import {
     getSelectionRange,
-    restoreLastSavedSelection,
+    restoreSelection,
     saveSelectionRange,
     updateSelection,
 } from './selection';
 
-export interface EventHandler {
-    dispose: () => void;
-}
-
-interface EditorHTMLElementEventMap extends HTMLElementEventMap {
-    compositionstart: KeyboardEvent;
-    compositionend: KeyboardEvent;
-}
-
-class Hander<K extends keyof EditorHTMLElementEventMap> implements EventHandler {
+export class DOMEventHandler {
     constructor(
         private core: EditorCore,
-        private eventName: K,
-        private pluginEventType?: PluginEventType | null,
-        private onBeforeDispatch?: (event: EditorHTMLElementEventMap[K]) => void
+        private eventName: string,
+        private eventType?: PluginEventType | null,
+        private beforeDispatch?: (event: Event) => void
     ) {
         this.core.contentDiv.addEventListener(this.eventName, this.onEvent);
     }
@@ -45,16 +36,16 @@ class Hander<K extends keyof EditorHTMLElementEventMap> implements EventHandler 
     dispose() {
         this.core.contentDiv.removeEventListener(this.eventName, this.onEvent);
         this.core = null;
-        this.onBeforeDispatch = null;
+        this.beforeDispatch = null;
     }
 
-    private onEvent = (event: EditorHTMLElementEventMap[K]) => {
-        if (this.onBeforeDispatch) {
-            this.onBeforeDispatch(event);
+    private onEvent = (event: Event) => {
+        if (this.beforeDispatch) {
+            this.beforeDispatch(event);
         }
-        if (this.pluginEventType != null) {
+        if (this.eventType != null) {
             let pluginEvent: PluginDomEvent = {
-                eventType: this.pluginEventType,
+                eventType: this.eventType,
                 rawEvent: event,
             };
 
@@ -89,10 +80,10 @@ export function triggerEvent(core: EditorCore, pluginEvent: PluginEvent, broadca
     }
 }
 
-export function createEventHandlers(core: EditorCore): EventHandler[] {
+export function createEventHandlers(core: EditorCore): DOMEventHandler[] {
     let isIEorEdge = browserData.isIE || browserData.isEdge;
-    let handlers: EventHandler[] = [
-        new Hander(
+    let handlers: DOMEventHandler[] = [
+        new DOMEventHandler(
             core,
             'blur',
             PluginEventType.Blur,
@@ -107,26 +98,26 @@ export function createEventHandlers(core: EditorCore): EventHandler[] {
                       }
                   }
         ),
-        new Hander(core, 'keypress', PluginEventType.KeyPress, event => onKeyPress(core, event)),
-        new Hander(core, 'keydown', PluginEventType.KeyDown),
-        new Hander(core, 'keyup', PluginEventType.KeyUp),
-        new Hander(core, 'compositionstart', null, () => (core.isInIME = true)),
-        new Hander(
+        new DOMEventHandler(core, 'keypress', PluginEventType.KeyPress, event => onKeyPress(core, event as KeyboardEvent)),
+        new DOMEventHandler(core, 'keydown', PluginEventType.KeyDown),
+        new DOMEventHandler(core, 'keyup', PluginEventType.KeyUp),
+        new DOMEventHandler(core, 'compositionstart', null, () => (core.isInIME = true)),
+        new DOMEventHandler(
             core,
             'compositionend',
             PluginEventType.CompositionEnd,
             () => (core.isInIME = false)
         ),
-        new Hander(core, 'mousedown', PluginEventType.MouseDown),
-        new Hander(core, 'mouseup', PluginEventType.MouseUp),
-        new Hander(core, 'mouseover', PluginEventType.MouseOver),
-        new Hander(core, 'mouseout', PluginEventType.MouseOut),
-        new Hander(core, 'paste', PluginEventType.Paste),
-        new Hander(core, 'copy', PluginEventType.Copy, () => {}),
-        new Hander(core, 'focus', PluginEventType.Focus, () => {
+        new DOMEventHandler(core, 'mousedown', PluginEventType.MouseDown),
+        new DOMEventHandler(core, 'mouseup', PluginEventType.MouseUp),
+        new DOMEventHandler(core, 'mouseover', PluginEventType.MouseOver),
+        new DOMEventHandler(core, 'mouseout', PluginEventType.MouseOut),
+        new DOMEventHandler(core, 'paste', PluginEventType.Paste),
+        new DOMEventHandler(core, 'copy', PluginEventType.Copy, () => {}),
+        new DOMEventHandler(core, 'focus', PluginEventType.Focus, () => {
             // Restore the last saved selection first
             if (core.cachedSelectionRange && !core.disableRestoreSelectionOnFocus) {
-                restoreLastSavedSelection(core);
+                restoreSelection(core);
             }
 
             core.cachedSelectionRange = null;
@@ -138,7 +129,7 @@ export function createEventHandlers(core: EditorCore): EventHandler[] {
         // Edge and IE, however attempting to save selection from onBlur is too late
         // There is an Edge and IE only beforedeactivate event where we can save selection
         handlers.push(
-            new Hander(core, 'beforedeactivate', null, () => {
+            new DOMEventHandler(core, 'beforedeactivate', null, () => {
                 // this should fire up only for edge and IE
                 if (!core.cachedSelectionRange) {
                     saveSelectionRange(core);

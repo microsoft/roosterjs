@@ -2,25 +2,20 @@ import EditorCore from './EditorCore';
 import EditorOptions from './EditorOptions';
 import Undo from '../undo/Undo';
 import UndoService from './UndoService';
-import applyInlineStyle from './coreAPI/applyInlineStyle';
+import applyInlineStyle from '../coreAPI/applyInlineStyle';
 import calcDefaultFormat from '../utils/calcDefaultFormat';
-import insertNode from './coreAPI/insertNode';
-import { EventHandler, createEventHandlers, triggerEvent } from './coreAPI/createEventHandlers';
-import {
-    KnownEditorCustomDataTypeMap,
-    getCustomData,
-    disposeCustomData,
-} from './CustomData';
-import { ensureInitialContent } from './coreAPI/ensureInitialContent';
+import insertNode from '../coreAPI/insertNode';
+import { DOMEventHandler, createEventHandlers, triggerEvent } from '../coreAPI/createEventHandlers';
+import { ensureInitialContent } from '../coreAPI/ensureInitialContent';
 import {
     hasFocus,
     getCursorRect,
     getSelection,
     getSelectionRange,
-    internalFocus,
+    focus,
     saveSelectionRange,
     updateSelection,
-} from './coreAPI/selection';
+} from '../coreAPI/selection';
 import {
     ContentPosition,
     ContentScope,
@@ -52,7 +47,7 @@ export default class Editor {
     private suspendAddingUndoSnapshot: boolean;
     private omitContentEditableAttributeChanges: boolean;
     private core: EditorCore;
-    private eventHandlers: EventHandler[];
+    private eventHandlers: DOMEventHandler[];
 
     /**
      * Creates an instance of Editor
@@ -106,6 +101,9 @@ export default class Editor {
         this.eventHandlers = createEventHandlers(this.core);
     }
 
+    /**
+     * Dispose this editor, dispose all plugins and custom data
+     */
     public dispose(): void {
         this.core.plugins.forEach(plugin => {
             plugin.dispose();
@@ -114,13 +112,19 @@ export default class Editor {
         this.eventHandlers.forEach(handler => handler.dispose());
         this.eventHandlers = null;
 
+        for (let key of Object.keys(this.core.customData)) {
+            let data = this.core.customData[key];
+            if (data && data.disposer) {
+                data.disposer(data.value);
+            }
+            delete this.core.customData[key];
+        }
+
         if (!this.omitContentEditableAttributeChanges) {
             let styles = this.core.contentDiv.style;
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = '';
             this.core.contentDiv.removeAttribute('contenteditable');
         }
-
-        disposeCustomData(this.core.customData);
 
         this.core = null;
     }
@@ -138,12 +142,11 @@ export default class Editor {
     /**
      * Insert node into editor
      * @param node The node to insert
-     * @param option Insert options. Default value is {
+     * @param option Insert options. Default value is:
      *  position: ContentPosition.SelectionStart
      *  updateCursor: true
      *  replaceSelection: true
      *  insertOnNewLine: false
-     * }
      * @returns true if node is inserted. Otherwise false
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
@@ -245,12 +248,11 @@ export default class Editor {
     /**
      * Insert HTML content into editor
      * @param HTML content to insert
-     * @param option Insert options. Default value is {
+     * @param option Insert options. Default value is:
      *  position: ContentPosition.SelectionStart
      *  updateCursor: true
      *  replaceSelection: true
      *  insertOnNewLine: false
-     * }
      */
     public insertContent(content: string, option?: InsertOption) {
         if (content) {
@@ -309,7 +311,7 @@ export default class Editor {
      * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
      */
     public focus() {
-        internalFocus(this.core);
+        focus(this.core);
     }
 
     /**
@@ -448,12 +450,16 @@ export default class Editor {
      * @param disposer An optional disposer function to dispose this custom data when
      * dispose editor.
      */
-    public getCustomData<Key extends keyof KnownEditorCustomDataTypeMap>(
-        key: Key,
-        getter: () => KnownEditorCustomDataTypeMap[Key],
-        disposer?: (value: KnownEditorCustomDataTypeMap[Key]) => void
-    ): KnownEditorCustomDataTypeMap[Key] {
-        return getCustomData(this.core.customData, key, getter, disposer);
+    public getCustomData<T>(
+        key: string,
+        getter: () => T,
+        disposer?: (value: T) => void
+    ): T {
+        let customData = this.core.customData;
+        return (customData[key] = customData[key] || {
+            value: getter(),
+            disposer: disposer,
+        }).value;
     }
 
     /**
