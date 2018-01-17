@@ -51,14 +51,7 @@ export default class Paste implements EditorPlugin {
                 pasteEvent,
                 this.editor,
                 this.useDirectPaste ? removeUnsafeTags : null
-            ).then(clipboardData => {
-                this.paste(
-                    clipboardData,
-                    clipboardData.text || !clipboardData.image
-                        ? PasteOption.PasteHtml
-                        : PasteOption.PasteImage
-                );
-            });
+            ).then(this.pasteOriginal);
         } else if (event.eventType == PluginEventType.BeforePaste) {
             let beforePasteEvent = <BeforePasteEvent>event;
 
@@ -69,12 +62,37 @@ export default class Paste implements EditorPlugin {
     }
 
     /**
-     * Paste into editor using passed in clipboardData
+     * Paste into editor using passed in clipboardData with original format
      * @param clipboardData The clipboardData to paste
-     * @param pasteOption Paste option, whether paste html, text or image from clipboardData
-     * @param mergeCurrentFormat When paste with html, whether merge with current format. Default is false.
      */
-    public paste(
+    public pasteOriginal = (clipboardData: ClipboardData) => {
+        this.paste(clipboardData, this.detectPasteOption(clipboardData));
+    }
+
+    /**
+     * Paste plain text into editor using passed in clipboardData
+     * @param clipboardData The clipboardData to paste
+     */
+    public pasteText(clipboardData: ClipboardData) {
+        this.paste(clipboardData, PasteOption.PasteText);
+
+    }
+
+    /**
+     * Paste into editor using passed in clipboardData with curent format
+     * @param clipboardData The clipboardData to paste
+     */
+    public pasteAndMergeFormat(clipboardData: ClipboardData) {
+        this.paste(clipboardData, this.detectPasteOption(clipboardData), true /*mergeFormat*/);
+    }
+
+    private detectPasteOption(clipboardData: ClipboardData): PasteOption {
+        return clipboardData.text || !clipboardData.image
+            ? PasteOption.PasteHtml
+            : PasteOption.PasteImage
+    }
+
+    private paste(
         clipboardData: ClipboardData,
         pasteOption: PasteOption,
         mergeCurrentFormat?: boolean
