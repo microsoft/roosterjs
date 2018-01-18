@@ -18,7 +18,7 @@
     "start": "webpack-dev-server",
     "test": "npm run build && karma start",
     "test:debug": "npm run build && karma start --no-single-run",
-    "build-docs": "rimraf dist/docs && node node_modules/typedoc/bin/typedoc --options typedoc.json dist/roosterjs/dist/rooster-amd.d.ts"
+    "build-docs": "rimraf dist/docs && node node_modules/typedoc/bin/typedoc --options typedoc.json dist/roosterjs/dist/"
   },
   "devDependencies": {
     "@types/jasmine": "2.6.0",
