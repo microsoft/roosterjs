@@ -40,6 +40,6 @@ describe('createLink()', () => {
 
         // Assert
         let link = document.getElementsByTagName('a')[0];
-        expect(link.outerHTML).toBe('<a href="http://www.example.com" alt="altText">text</a>');
+        expect(link.outerHTML).toBe('<a href="http://www.example.com" title="altText">text</a>');
     });
 });

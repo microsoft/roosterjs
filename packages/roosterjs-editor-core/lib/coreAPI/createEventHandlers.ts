@@ -87,7 +87,7 @@ export function createEventHandlers(core: EditorCore): DOMEventHandler[] {
             core,
             'blur',
             PluginEventType.Blur,
-            !isIEorEdge
+            isIEorEdge
                 ? null
                 : () => {
                       // For browsers that do not support beforedeactivate, still do the saving selection in onBlur

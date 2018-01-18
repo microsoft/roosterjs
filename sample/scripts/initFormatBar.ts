@@ -3,6 +3,7 @@ import {
     createLink,
     insertImage,
     insertTable,
+    queryNodesWithSelection,
     toggleBold,
     toggleItalic,
     toggleUnderline,
@@ -74,8 +75,9 @@ export default function initFormatBar() {
     document.getElementById('insertLink').addEventListener('click', function() {
         let editor = getCurrentEditor();
         let range = editor.getSelectionRange();
-        let url = window.prompt('Url', 'http://');
-        let text = range.collapsed ? window.prompt('Text of link', url) : null;
+        let existingLink = queryNodesWithSelection(editor, 'a[href]')[0] as HTMLAnchorElement;
+        let url = window.prompt('Url', existingLink ? existingLink.href : 'http://');
+        let text = range.collapsed && !existingLink ? window.prompt('Text of link', url) : null;
         createLink(editor, url, url, text);
     });
 

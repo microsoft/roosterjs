@@ -1,6 +1,6 @@
 {
   "name": "roosterjs",
-  "version": "6.4.1",
+  "version": "6.5.0",
   "description": "Framework-independent javascript editor",
   "repository": {
     "type": "git",
@@ -14,10 +14,11 @@
     "normalize": "node tools/normalize-packages.js",
     "pack": "node tools/pack.js && node tools/pack.js -amd -e",
     "pack:prod": "node tools/pack.js -p && node tools/pack.js -p -amd -e",
-    "build": "npm run clean && npm run normalize && npm run tslint && node tools/build-all.js && npm run pack && npm run pack:prod && npm run dts",
+    "b": "npm run clean && npm run normalize && npm run tslint && node tools/build-all.js",
+    "build": "npm run b && npm run pack && npm run pack:prod && npm run dts",
     "start": "webpack-dev-server",
-    "test": "npm run build && karma start",
-    "test:debug": "npm run build && karma start --no-single-run"
+    "test": "npm run b && karma start",
+    "test:debug": "npm run b && karma start --no-single-run"
   },
   "devDependencies": {
     "@types/jasmine": "2.6.0",

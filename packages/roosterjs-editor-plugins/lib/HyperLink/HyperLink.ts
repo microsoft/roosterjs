@@ -61,12 +61,7 @@ export default class HyperLink implements EditorPlugin {
         let anchors = this.editor.queryContent('a[href]');
         for (let i = 0; i < anchors.length; i++) {
             try {
-                let a = anchors[i];
-                if (a.getAttribute(TEMP_TITLE)) {
-                    a.removeAttribute(TEMP_TITLE);
-                    a.removeAttribute('title');
-                }
-                a.removeEventListener('mouseup', this.onClickLink);
+                this.resetAnchor(anchors[i] as HTMLAnchorElement);
             } catch (e) {
                 // Dispose code, no need to handle any exception
             }
@@ -89,6 +84,8 @@ export default class HyperLink implements EditorPlugin {
                 let contentChangedEvent = event as ContentChangedEvent;
                 if (contentChangedEvent.source == 'Paste') {
                     this.autoLink(event);
+                } else if (contentChangedEvent.source == 'CreateLink') {
+                    this.resetAnchor(contentChangedEvent.data as HTMLAnchorElement);
                 }
 
                 let anchors = this.editor.queryContent('a[href]');
@@ -101,6 +98,16 @@ export default class HyperLink implements EditorPlugin {
                 let extractContentEvent = event as ExtractContentEvent;
                 extractContentEvent.content = this.removeTempTooltip(extractContentEvent.content);
                 break;
+        }
+    }
+
+    private resetAnchor(a: HTMLAnchorElement) {
+        if (a) {
+            if (a.getAttribute(TEMP_TITLE)) {
+                a.removeAttribute(TEMP_TITLE);
+                a.removeAttribute('title');
+            }
+            a.removeEventListener('mouseup', this.onClickLink);
         }
     }
 
