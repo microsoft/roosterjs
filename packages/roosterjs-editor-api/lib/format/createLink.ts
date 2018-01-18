@@ -4,6 +4,7 @@ import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
 import matchLink from '../linkMatch/matchLink';
 import { Editor } from 'roosterjs-editor-core';
 import { LinkInlineElement } from 'roosterjs-editor-dom';
+import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 
 // Regex matching Uri scheme
 const URI_REGEX = /^[a-zA-Z]+:/i;
@@ -11,6 +12,7 @@ const URI_REGEX = /^[a-zA-Z]+:/i;
 const MAILTO_REGEX = /^[\w.%+-]+@/i;
 // Regex matching begin of ftp, i.e. ftp.microsoft.com
 const FTP_REGEX = /^ftp\./i;
+const TEMP_TITLE = 'istemptitle';
 
 function applyLinkPrefix(url: string): string {
     if (!url) {
@@ -58,7 +60,6 @@ export default function createLink(
     editor.focus();
     let url = link ? link.trim() : '';
     if (url) {
-        let formatter: () => void = null;
         let linkData = matchLink(url);
         // matchLink can match most links, but not all, i.e. if you pass link a link as "abc", it won't match
         // we know in that case, users will want to insert a link like http://abc
@@ -69,18 +70,21 @@ export default function createLink(
         let originalUrl = linkData ? linkData.originalUrl : normalizedUrl;
         let anchor: HTMLAnchorElement = null;
 
-        if (isSelectionCollapsed(editor)) {
-            anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
-            anchor.textContent = displayText || originalUrl;
-            anchor.href = normalizedUrl;
-            if (altText) {
-                anchor.setAttribute('alt', altText);
-            }
+        execFormatWithUndo(editor, () => {
+            if (isSelectionCollapsed(editor)) {
+                anchor = queryNodesWithSelection(editor, 'a[href]')[0] as HTMLAnchorElement;
 
-            formatter = () => editor.insertNode(anchor);
-        } else {
-            /* the selection is not collapsed, use browser execCommand */
-            formatter = () => {
+                // If there is already a link, just change its href
+                if (anchor) {
+                    anchor.href = normalizedUrl;
+                } else {
+                    anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
+                    anchor.textContent = displayText || originalUrl;
+                    anchor.href = normalizedUrl;
+                    editor.insertNode(anchor);
+                }
+            } else {
+                /* the selection is not collapsed, use browser execCommand */
                 editor.getDocument().execCommand('createLink', false, normalizedUrl);
                 let cursorData = new CursorData(editor);
                 // The link remains selected after it is applied. To get the link, need to read
@@ -91,15 +95,16 @@ export default function createLink(
                 let inlineBeforeCursor = cursorData.inlineElementAfterCursor;
                 if (inlineBeforeCursor && inlineBeforeCursor instanceof LinkInlineElement) {
                     anchor = inlineBeforeCursor.getContainerNode() as HTMLAnchorElement;
-                    // The link is created first, and then we apply altText if user asks
-                    if (altText) {
-                        anchor.setAttribute('alt', altText);
-                    }
                 }
-            };
-        }
-
-        execFormatWithUndo(editor, formatter);
+            }
+            if (altText && anchor) {
+                // Hack: Ideally this should be done by HyperLink plugin.
+                // We make a hack here since we don't have an event to notify HyperLink plugin
+                // before we apply the link.
+                anchor.removeAttribute(TEMP_TITLE);
+                anchor.title = altText;
+            }
+        });
 
         editor.triggerContentChangedEvent('CreateLink', anchor);
     }
