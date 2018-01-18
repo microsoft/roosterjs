@@ -3,6 +3,15 @@ import execFormatWithUndo from './execFormatWithUndo';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
 
+/**
+ * The table format
+ * @param cellSpacing (Optional) The cellSpacing style for the HTML table element
+ * @param cellPadding (Optional) The cellPadding style for the HTML table element
+ * @param borderWidth (Optional) The borderWidth style for the HTML table element
+ * @param borderStyle (Optional) The borderStyle style for the HTML table element
+ * @param borderColor (Optional) The borderColor style for the HTML table element
+ * @param borderCollapse (Optional) The borderCollapse style for the HTML table element
+ */
 export interface TableFormat {
     cellSpacing?: string;
     cellPadding?: string;
@@ -12,6 +21,14 @@ export interface TableFormat {
     borderCollapse?: string;
 }
 
+/**
+ * Insert table into editor at current selection
+ * @param editor The editor instance
+ * @param columns Number of columns in table, it also controls the default table cell width:
+ * if columns <= 4, width = 120px; if columns <= 6, width = 100px; else width = 70px
+ * @param rows Number of rows in table
+ * @param format (Optional) The table format
+ */
 export default function insertTable(
     editor: Editor,
     columns: number,

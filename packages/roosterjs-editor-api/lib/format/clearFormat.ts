@@ -6,7 +6,13 @@ import setTextColor from './setTextColor';
 import { Editor } from 'roosterjs-editor-core';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 
-export default function clearFormat(editor: Editor): void {
+/**
+ * Clear the format in current selection, after cleaning, the format will be
+ * changed to default format. The format that get cleaned include B/I/U/font name/
+ * font size/text color/background color/left/right/center/superscript/subscript
+ * @param editor The editor instance
+ */
+export default function clearFormat(editor: Editor) {
     editor.focus();
     // We have no way if this clear format will really result in any DOM change
     // Let's just do it with undo

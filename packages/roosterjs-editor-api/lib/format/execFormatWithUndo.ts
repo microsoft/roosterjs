@@ -10,12 +10,19 @@ import { EditorPoint, NodeType } from 'roosterjs-editor-types';
  */
 export type Formatter = (startPoint: EditorPoint, endPoint: EditorPoint) => Node | void | any;
 
-// Exec format with undo
+/**
+ * Execute format with undo
+ * @param editor The editor instance
+ * @param formatter The callback format function we want to perform, it also creates a fallback node for selection
+ * given a start point and end point
+ * @param preserveSelection (Optional) Whether to preserve selection, if set to true,
+ * we update the selection to original selection range.
+ */
 export default function execFormatWithUndo(
     editor: Editor,
     formatter: Formatter,
     preserveSelection?: boolean
-): void {
+) {
     editor.addUndoSnapshot();
     let range = editor.getSelectionRange();
     let startPoint = range
