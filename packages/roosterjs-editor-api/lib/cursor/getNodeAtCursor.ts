@@ -5,7 +5,7 @@ import { NodeType } from 'roosterjs-editor-types';
  * Get the node at selection
  * if editor has focus, use selection.focusNode
  * if for some reason, the focus node does not get us a good node
- * fallback to this.getSelectionRange() which will return you a cached selection range if there is any
+ * fallback to the cached selection range if there is any
  * and use the start container if selection is collapsed or commonAncestorContainer otherwise
  * @param editor The editor instance
  * @returns The node at cursor

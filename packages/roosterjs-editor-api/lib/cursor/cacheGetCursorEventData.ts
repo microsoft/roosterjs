@@ -6,7 +6,8 @@ const EVENTDATACACHE_CURSORDATA = 'CURSORDATA';
 
 /**
  * Read CursorData from plugin event cache. If not, create one
- * @param event The plugin event
+ * @param event The plugin event, it stores the event cached data for looking up.
+ * If passed as null, we will create a new cursor data
  * @param editor The editor instance
  * @returns The cursor data
  */

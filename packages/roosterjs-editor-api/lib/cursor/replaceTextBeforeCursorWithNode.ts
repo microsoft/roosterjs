@@ -92,11 +92,10 @@ function validateAndGetRangeForTextBeforeCursor(
  * @param text The text for matching. We will try to match the text with the text before cursor
  * @param node The node to replace the text with
  * @param exactMatch exactMatch is to match exactly, i.e.
- * exactMatch = true case, in Mentions, you type @nick, and then pick a suggestion from picker, we need to replace exactly everything before cursor (@nick)
- * with the suggestion from Mentions picker
- * exactMatch = false case, in auto linkification, users could type "www.bing.com,<space>". The auto link will kick in on space
- * at the moment, what is before cursor is "www.bing.com,", however, only "www.bing.com" makes the link. by setting exactMatch = false, it does not match
- * right from the end, but can scan through till first same char is seen.
+ * In auto linkification, users could type URL followed by some punctuation and hit space. The auto link will kick in on space,
+ * at the moment, what is before cursor could be "<URL>,", however, only "<URL>" makes the link. by setting exactMatch = false, it does not match
+ * from right before cursor, but can scan through till first same char is seen. On the other hand if set exactMatch = true, it starts the match right
+ * before cursor.
  * @param cursorData
  */
 function replaceTextBeforeCursorWithNode(
