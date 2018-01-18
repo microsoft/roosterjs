@@ -1,0 +1,17 @@
+{
+  "mode": "modules",
+  "out": "dist/docs",
+  "theme": "markdown",
+  "ignoreCompilerErrors": "true",
+  "experimentalDecorators": "true",
+  "emitDecoratorMetadata": "true",
+  "preserveConstEnums": "true",
+  "stripInternal": "true",
+  "suppressExcessPropertyErrors": "true",
+  "suppressImplicitAnyIndexErrors": "true",
+  "target": "ES5",
+  "includeDeclarations": "true",
+  "excludeExternals": "true",
+  "logger": "none",
+  "exclude": "**/*-amd.d.ts"
+}
