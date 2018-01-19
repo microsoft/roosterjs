@@ -44,6 +44,8 @@ function queryCommandState(editor: Editor, command: string): boolean {
 
 /**
  * Get format state at cursor
+ * A format state is a collection of all format related states, e.g.,
+ * bold, italic, underline, font name, font size, etc.
  * @param editor The editor
  * @param (Optional) The plugin event, it stores the event cached data for looking up.
  * In this function the event cache is used to get list state and header level. If not passed,

@@ -9,7 +9,7 @@ import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 /**
  * Clear the format in current selection, after cleaning, the format will be
  * changed to default format. The format that get cleaned include B/I/U/font name/
- * font size/text color/background color/left/right/center/superscript/subscript
+ * font size/text color/background color/align left/align right/align center/superscript/subscript
  * @param editor The editor instance
  */
 export default function clearFormat(editor: Editor) {
