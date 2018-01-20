@@ -31,7 +31,7 @@ export default function toggleHeader(editor: Editor, level: number) {
             if (level > 0) {
                 let traverser = editor.getContentTraverser(ContentScope.Selection);
                 let inlineElement = traverser ? traverser.currentInlineElement : null;
-                /*while (inlineElement) {
+                while (inlineElement) {
                     let node = inlineElement.getContainerNode();
                     if (node.nodeType == NodeType.Text) {
                         node = node.parentNode;
@@ -40,7 +40,7 @@ export default function toggleHeader(editor: Editor, level: number) {
                         (<HTMLElement>node).style.fontSize = '';
                     }
                     inlineElement = traverser.getNextInlineElement();
-                }*/
+                }
                 editor.getDocument().execCommand('formatBlock', false, `<H${level}>`);
 
                 let nodes = queryNodesWithSelection(editor, 'H' + level);
