@@ -2,7 +2,15 @@ import execFormatWithUndo from './execFormatWithUndo';
 import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
 import { Editor } from 'roosterjs-editor-core';
 
-export default function toggleSubscript(editor: Editor): void {
+/**
+ * Toggle subscript at selection
+ * If selection is collapsed, it will only affect the input after caret
+ * If selection contains only subscript text, the subscript style will be removed
+ * If selection contains only normal text, subscript style will be added to the whole selected text
+ * If selection contains both subscript and normal text, the subscript style will be removed from whole selected text
+ * @param editor The editor instance
+ */
+export default function toggleSubscript(editor: Editor) {
     editor.focus();
     let formatter = () => editor.getDocument().execCommand('subscript', false, null);
     if (isSelectionCollapsed(editor)) {

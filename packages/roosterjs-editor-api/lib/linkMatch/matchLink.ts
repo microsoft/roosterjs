@@ -4,8 +4,11 @@ import { LinkData, LinkMatchOption, LinkMatchRule } from 'roosterjs-editor-types
 /**
  * Try to match a given string with link match rules, return matched link
  * @param url Input url to match
- * @param option Link match option, exact or partial
- * @param rules Optional link match rules
+ * @param option Link match option, exact or partial. If it is exact match, we need
+ * to check the length of matched link and url
+ * @param rules Optional link match rules, if not passed, only the default link match
+ * rules will be applied
+ * @returns The matched link data, the link data includes an original url and a normalized url
  */
 function matchLink(
     url: string,
