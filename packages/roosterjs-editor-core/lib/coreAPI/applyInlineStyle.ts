@@ -1,6 +1,9 @@
 import EditorCore from '../editor/EditorCore';
-import { ContentTraverser } from 'roosterjs-editor-dom';
-import { updateSelection, getSelectionRange } from './selection';
+import focus from './focus';
+import getContentTraverser from './getContentTraverser';
+import getSelectionRange from './getSelectionRange';
+import updateSelection from './updateSelection';
+import { ContentScope } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
 
@@ -38,7 +41,6 @@ function applyInlineStyleToCollapsedSelection(
 // and apply style on each individual inline element
 function applyInlineStyleToNonCollapsedSelection(
     core: EditorCore,
-    contentTraverser: ContentTraverser,
     selectionRange: Range,
     styler: (element: HTMLElement) => void
 ): void {
@@ -46,7 +48,7 @@ function applyInlineStyleToNonCollapsedSelection(
     // can be re-applied post-applying style
     let startNode: Node;
     let endNode: Node;
-
+    let contentTraverser = getContentTraverser(core, ContentScope.Selection)
     // Just loop through all inline elements in the selection and apply style for each
     let startInline = contentTraverser.currentInlineElement;
     while (startInline) {
@@ -76,9 +78,9 @@ function applyInlineStyleToNonCollapsedSelection(
 // Apply inline style to current selection
 export default function applyInlineStyle(
     core: EditorCore,
-    contentTraverser: ContentTraverser,
     styler: (element: HTMLElement) => void
 ): void {
+    focus(core);
     let selectionRange = getSelectionRange(core, false /*tryGetFromCache*/);
     if (selectionRange) {
         // TODO: Chrome has a bug that when the selection spans over several empty text nodes,
@@ -88,7 +90,7 @@ export default function applyInlineStyle(
         if (selectionRange.collapsed) {
             applyInlineStyleToCollapsedSelection(core, selectionRange, styler);
         } else {
-            applyInlineStyleToNonCollapsedSelection(core, contentTraverser, selectionRange, styler);
+            applyInlineStyleToNonCollapsedSelection(core, selectionRange, styler);
         }
     }
 }

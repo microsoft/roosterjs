@@ -37,4 +37,4 @@ function cacheGetEventData<T>(event: PluginEvent, cacheKey: string, eventDataBui
     return eventData;
 }
 
-export { cacheEventData, getEventDataCache, clearEventDataCache, cacheGetEventData };
+export { cacheGetEventData, clearEventDataCache };

@@ -1,5 +1,8 @@
 import EditorCore from '../editor/EditorCore';
+import focus from './focus';
+import getSelectionRange from './getSelectionRange';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
+import updateSelection from './updateSelection';
 import {
     EditorSelection,
     getFirstBlockElement,
@@ -8,7 +11,6 @@ import {
     wrap,
 } from 'roosterjs-editor-dom';
 import { ContentPosition, InsertOption, NodeType } from 'roosterjs-editor-types';
-import { getSelectionRange, focus, updateSelection } from './selection';
 
 const HTML_EMPTY_DIV = '<div></div>';
 

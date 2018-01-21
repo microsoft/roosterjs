@@ -13,8 +13,6 @@ interface EditorCore {
         disposer: (value: any) => void;
     }};
     cachedSelectionRange: Range;
-    isInIME: boolean;
-    disableRestoreSelectionOnFocus: boolean;
 }
 
 export default EditorCore;

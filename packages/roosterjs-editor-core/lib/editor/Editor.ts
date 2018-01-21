@@ -3,19 +3,20 @@ import EditorOptions from './EditorOptions';
 import Undo from '../undo/Undo';
 import UndoService from './UndoService';
 import applyInlineStyle from '../coreAPI/applyInlineStyle';
+import attachDomEvent from '../coreAPI/attachDomEvent';
+import browserData from '../utils/BrowserData';
 import calcDefaultFormat from '../utils/calcDefaultFormat';
+import focus from '../coreAPI/focus';
+import getContentTraverser from '../coreAPI/getContentTraverser';
+import getCursorRect from '../coreAPI/getCursorRect';
+import getSelection from '../coreAPI/getSelection';
+import getSelectionRange from '../coreAPI/getSelectionRange';
+import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
-import { DOMEventHandler, createEventHandlers, triggerEvent } from '../coreAPI/createEventHandlers';
-import { ensureInitialContent } from '../coreAPI/ensureInitialContent';
-import {
-    hasFocus,
-    getCursorRect,
-    getSelection,
-    getSelectionRange,
-    focus,
-    saveSelectionRange,
-    updateSelection,
-} from '../coreAPI/selection';
+import restoreSelection from '../coreAPI/restoreSelection';
+import saveSelectionRange from '../coreAPI/saveSelectionRange';
+import triggerEvent from '../coreAPI/triggerEvent';
+import updateSelection from '../coreAPI/updateSelection';
 import {
     ContentPosition,
     ContentScope,
@@ -23,31 +24,38 @@ import {
     ExtractContentEvent,
     InlineElement,
     InsertOption,
+    NodeBoundary,
+    NodeType,
     PluginEvent,
     PluginEventType,
     Rect,
-    TraversingScoper,
 } from 'roosterjs-editor-types';
 import {
-    BodyScoper,
     ContentTraverser,
+    EditorSelection,
     InlineElementFactory,
-    SelectionBlockScoper,
-    SelectionScoper,
+    NodeBlockElement,
+    applyFormat,
     contains,
     fromHtml,
+    getFirstBlockElement,
     getInlineElementAtNode,
     getTagOfNode,
     isNodeEmpty,
+    normalizeEditorPoint,
     wrapAll,
 } from 'roosterjs-editor-dom';
+
+const IS_IE_OR_EDGE = browserData.isIE || browserData.isEdge;
 
 export default class Editor {
     private undoService: UndoService;
     private suspendAddingUndoSnapshot: boolean;
     private omitContentEditableAttributeChanges: boolean;
+    private disableRestoreSelectionOnFocus: boolean;
+    private inIME: boolean;
     private core: EditorCore;
-    private eventHandlers: DOMEventHandler[];
+    private eventDisposers: (() => void)[];
 
     /**
      * Creates an instance of Editor
@@ -69,9 +77,8 @@ export default class Editor {
             customData: {},
             cachedSelectionRange: null,
             plugins: (options.plugins || []).filter(plugin => !!plugin),
-            isInIME: false,
-            disableRestoreSelectionOnFocus: options.disableRestoreSelectionOnFocus,
         };
+        this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus,
         this.omitContentEditableAttributeChanges = options.omitContentEditableAttributeChanges;
 
         // 3. Initialize plugins
@@ -83,7 +90,7 @@ export default class Editor {
         } else if (contentDiv.innerHTML != '') {
             this.triggerContentChangedEvent();
         }
-        ensureInitialContent(this.core);
+        this.ensureInitialContent();
 
         // 5. Initialize undo service
         // This need to be after step 4 so that undo service can pickup initial content
@@ -91,14 +98,15 @@ export default class Editor {
         this.undoService.initialize(this);
         this.core.plugins.push(this.undoService);
 
-        // 6. Finally make the container editable, set its selection styles and bind events
+        // 6. Create event handler to bind DOM events
+        this.createEventHandlers();
+
+        // 7. Finally make the container editable and set its selection styles
         if (!this.omitContentEditableAttributeChanges) {
             contentDiv.setAttribute('contenteditable', 'true');
             let styles = contentDiv.style;
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
         }
-
-        this.eventHandlers = createEventHandlers(this.core);
     }
 
     /**
@@ -109,8 +117,8 @@ export default class Editor {
             plugin.dispose();
         });
 
-        this.eventHandlers.forEach(handler => handler.dispose());
-        this.eventHandlers = null;
+        this.eventDisposers.forEach(disposer => disposer());
+        this.eventDisposers = null;
 
         for (let key of Object.keys(this.core.customData)) {
             let data = this.core.customData[key];
@@ -343,13 +351,23 @@ export default class Editor {
      * @param styler The callback function to apply style
      */
     public applyInlineStyle(styler: (element: HTMLElement) => void): void {
-        this.focus();
-        applyInlineStyle(this.core, this.getContentTraverser(ContentScope.Selection), styler);
+        applyInlineStyle(this.core, styler);
     }
 
     //#endregion
 
     //#region EVENT API
+
+    /**
+     * Add a custom DOM event handler to handle events not handled by roosterjs.
+     * Caller need to take the responsibility to dispose the handler properly
+     * @param eventName DOM event name to handle
+     * @param handler Handler callback
+     * @returns A dispose function. Call the function to dispose this event handler
+     */
+    public addDomEventHandler(eventName: string, handler: (event: UIEvent) => void): () => void {
+        return attachDomEvent(this.core, eventName, null /*pluginEventType*/, handler);
+    }
 
     /**
      * Trigger an event to be dispatched to all plugins
@@ -467,7 +485,7 @@ export default class Editor {
      * @returns True if editor is in IME input sequence, otherwise false
      */
     public isInIME(): boolean {
-        return this.core.isInIME;
+        return this.inIME;
     }
 
     /**
@@ -493,44 +511,124 @@ export default class Editor {
         scope: ContentScope,
         position: ContentPosition = ContentPosition.SelectionStart
     ): ContentTraverser {
-        let selectionRange = this.getSelectionRange();
-        if (scope != ContentScope.Body && !selectionRange) {
-            return null;
-        }
-
-        let contentTraverser: ContentTraverser;
-        let scoper: TraversingScoper;
-        switch (scope) {
-            case ContentScope.Block:
-                scoper = new SelectionBlockScoper(
-                    this.core.contentDiv,
-                    selectionRange,
-                    position,
-                    this.core.inlineElementFactory
-                );
-                break;
-            case ContentScope.Selection:
-                scoper = new SelectionScoper(
-                    this.core.contentDiv,
-                    selectionRange,
-                    this.core.inlineElementFactory
-                );
-                break;
-            case ContentScope.Body:
-                scoper = new BodyScoper(this.core.contentDiv, this.core.inlineElementFactory);
-                break;
-        }
-
-        if (scoper) {
-            contentTraverser = new ContentTraverser(
-                this.core.contentDiv,
-                scoper,
-                this.core.inlineElementFactory
-            );
-        }
-
-        return contentTraverser;
+        return getContentTraverser(this.core, scope, position);
     }
 
+    //#endregion
+
+    //#region Private functions
+    private createEventHandlers() {
+        this.eventDisposers = [
+            attachDomEvent(this.core, 'keypress', PluginEventType.KeyPress, this.onKeyPress),
+            attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown),
+            attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp),
+            attachDomEvent(this.core, 'compositionstart', null, () => (this.inIME = true)),
+            attachDomEvent(this.core, 'compositionend', PluginEventType.CompositionEnd, () => (this.inIME = false)),
+            attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
+            attachDomEvent(this.core, 'mouseup', PluginEventType.MouseUp),
+            attachDomEvent(this.core, 'focus', null, () => {
+                // Restore the last saved selection first
+                if (this.core.cachedSelectionRange && !this.disableRestoreSelectionOnFocus) {
+                    restoreSelection(this.core);
+                }
+                this.core.cachedSelectionRange = null;
+            }),
+            attachDomEvent(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, () => {
+                if (!this.core.cachedSelectionRange) {
+                    saveSelectionRange(this.core);
+                }
+            }),
+        ];
+    }
+
+    // Check if user is typing right under the content div
+    // When typing goes directly under content div, many things can go wrong
+    // We fix it by wrapping it with a div and reposition cursor within the div
+    // TODO: we only fix the case when selection is collapsed
+    // When selection is not collapsed, i.e. users press ctrl+A, and then type
+    // We don't have a good way to fix that for the moment
+    private onKeyPress = () => {
+        let selectionRange = getSelectionRange(this.core, true /*tryGetFromCache*/);
+        let focusNode: Node;
+        if (
+            selectionRange &&
+            selectionRange.collapsed &&
+            (focusNode = selectionRange.startContainer) &&
+            (focusNode == this.core.contentDiv ||
+                (focusNode.nodeType == NodeType.Text && focusNode.parentNode == this.core.contentDiv))
+        ) {
+            let editorSelection = new EditorSelection(
+                this.core.contentDiv,
+                selectionRange,
+                this.core.inlineElementFactory
+            );
+            let blockElement = editorSelection.startBlockElement;
+            if (!blockElement) {
+                // Only reason we don't get the selection block is that we have an empty content div
+                // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
+                // The fix is to add a DIV wrapping, apply default format and move cursor over
+                let nodes = fromHtml('<div><br></div>', this.core.document);
+                let element = this.core.contentDiv.appendChild(nodes[0]) as HTMLElement;
+                applyFormat(element, this.core.defaultFormat);
+                // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
+                this.selectEditorPoint(element.firstChild, NodeBoundary.Begin);
+            } else if (blockElement.getStartNode().parentNode == blockElement.getEndNode().parentNode) {
+                // Only fix the balanced start-end block where start and end node is under same parent
+                // The focus node could be pointing to the content div, normalize it to have it point to a child first
+                let focusOffset = selectionRange.startOffset;
+                let editorPoint = normalizeEditorPoint(focusNode, focusOffset);
+                let element = wrapAll(blockElement.getContentNodes()) as HTMLElement;
+                if (getTagOfNode(blockElement.getStartNode()) == 'BR') {
+                    // if the block is just BR, apply default format
+                    // Otherwise, leave it as it is as we don't want to change the style for existing data
+                    applyFormat(element, this.core.defaultFormat);
+                }
+                // Last restore the selection using the normalized editor point
+                this.selectEditorPoint(editorPoint.containerNode, editorPoint.offset);
+            }
+        }
+    }
+
+    private selectEditorPoint(container: Node, offset: number): boolean {
+        if (!this.contains(container)) {
+            return false;
+        }
+
+        let range = this.core.document.createRange();
+        if (container.nodeType == NodeType.Text && offset <= container.nodeValue.length) {
+            range.setStart(container, offset);
+        } else if (offset == NodeBoundary.Begin) {
+            range.setStartBefore(container);
+        } else {
+            range.setStartAfter(container);
+        }
+
+        range.collapse(true /* toStart */);
+
+        return updateSelection(this.core, range);
+    }
+
+    private ensureInitialContent() {
+        let firstBlock = getFirstBlockElement(this.core.contentDiv, this.core.inlineElementFactory);
+        let defaultFormatBlockElement: HTMLElement;
+
+        if (!firstBlock) {
+            // No first block, let's create one
+            let nodes = fromHtml('<div><br></div>', this.core.document);
+            defaultFormatBlockElement = this.core.contentDiv.appendChild(nodes[0]) as HTMLElement;
+        } else if (firstBlock instanceof NodeBlockElement) {
+            // There is a first block and it is a Node (P, DIV etc.) block
+            // Check if it is empty block and apply default format if so
+            // TODO: what about first block contains just an image? testing getTextContent won't tell that
+            // Probably it is no harm since apply default format on an image block won't change anything for the image
+            if (firstBlock.getTextContent() == '') {
+                defaultFormatBlockElement = firstBlock.getStartNode() as HTMLElement;
+            }
+        }
+
+        if (defaultFormatBlockElement) {
+            applyFormat(defaultFormatBlockElement, this.core.defaultFormat);
+        }
+    }
     //#endregion
 }
