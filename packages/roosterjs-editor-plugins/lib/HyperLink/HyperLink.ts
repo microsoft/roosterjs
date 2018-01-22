@@ -58,15 +58,7 @@ export default class HyperLink implements EditorPlugin {
     }
 
     public dispose(): void {
-        let anchors = this.editor.queryContent('a[href]');
-        for (let i = 0; i < anchors.length; i++) {
-            try {
-                this.resetAnchor(anchors[i] as HTMLAnchorElement);
-            } catch (e) {
-                // Dispose code, no need to handle any exception
-            }
-        }
-
+        this.forEachHyperLink(this.resetAnchor.bind(this));
         this.editor = null;
     }
 
@@ -88,10 +80,7 @@ export default class HyperLink implements EditorPlugin {
                     this.resetAnchor(contentChangedEvent.data as HTMLAnchorElement);
                 }
 
-                let anchors = this.editor.queryContent('a[href]');
-                for (let i = 0; i < anchors.length; i++) {
-                    this.processLink(anchors[i] as HTMLAnchorElement);
-                }
+                this.forEachHyperLink(this.processLink.bind(this));
                 break;
 
             case PluginEventType.ExtractContent:
@@ -102,13 +91,13 @@ export default class HyperLink implements EditorPlugin {
     }
 
     private resetAnchor(a: HTMLAnchorElement) {
-        if (a) {
+        try {
             if (a.getAttribute(TEMP_TITLE)) {
                 a.removeAttribute(TEMP_TITLE);
                 a.removeAttribute('title');
             }
             a.removeEventListener('mouseup', this.onClickLink);
-        }
+        } catch (e) {}
     }
 
     private autoLink(event: PluginEvent) {
@@ -197,5 +186,12 @@ export default class HyperLink implements EditorPlugin {
         }
 
         return href;
+    }
+
+    private forEachHyperLink(callback: (a: HTMLAnchorElement) => void) {
+        let anchors = this.editor.queryContent('a[href]');
+        for (let i = 0; i < anchors.length; i++) {
+            callback(anchors[i] as HTMLAnchorElement);
+        }
     }
 }

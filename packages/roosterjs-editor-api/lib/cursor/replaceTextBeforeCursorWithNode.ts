@@ -1,6 +1,6 @@
 import CursorData from './CursorData';
 import replaceRangeWithNode from './replaceRangeWithNode';
-import { TextSection } from 'roosterjs-editor-types';
+import { InlineElement } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /// Validate the text matches what's before the cursor, and return the range for it
@@ -8,7 +8,7 @@ function validateAndGetRangeForTextBeforeCursor(
     editor: Editor,
     text: string,
     exactMatch: boolean,
-    cursorData: CursorData = null
+    cursorData: CursorData
 ): Range {
     if (!text || text.length == 0) {
         return;
@@ -33,8 +33,7 @@ function validateAndGetRangeForTextBeforeCursor(
     let endOfRangeSet = false;
     // The cursor data, create a new one from editor when not supplied
     let cursor = cursorData || new CursorData(editor);
-    cursor.getTextSectionBeforeCursorTill((textSection: TextSection): boolean => {
-        let textInline = textSection.inlineElement;
+    cursor.getTextSectionBeforeCursorTill((textInline: InlineElement): boolean => {
         let nodeContent = textInline.getTextContent();
         let nodeIndex = nodeContent ? nodeContent.length - 1 : -1;
         while (nodeIndex >= 0 && textIndex >= 0) {
@@ -98,12 +97,12 @@ function validateAndGetRangeForTextBeforeCursor(
  * before cursor.
  * @param cursorData
  */
-function replaceTextBeforeCursorWithNode(
+export default function replaceTextBeforeCursorWithNode(
     editor: Editor,
     text: string,
     node: Node,
     exactMatch: boolean,
-    cursorData: CursorData = null
+    cursorData?: CursorData
 ): boolean {
     // Make sure the text and node is valid
     if (!text || text.length == 0 || !node) {
@@ -111,12 +110,10 @@ function replaceTextBeforeCursorWithNode(
     }
 
     let replaced = false;
-    let range = validateAndGetRangeForTextBeforeCursor(editor, text, exactMatch);
+    let range = validateAndGetRangeForTextBeforeCursor(editor, text, exactMatch, cursorData);
     if (range) {
         replaced = replaceRangeWithNode(editor, range, node, exactMatch);
     }
 
     return replaced;
 }
-
-export default replaceTextBeforeCursorWithNode;

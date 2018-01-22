@@ -1,9 +1,7 @@
-import CursorData from '../cursor/CursorData';
 import execFormatWithUndo from './execFormatWithUndo';
 import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
 import matchLink from '../linkMatch/matchLink';
 import { Editor } from 'roosterjs-editor-core';
-import { LinkInlineElement } from 'roosterjs-editor-dom';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 
 // Regex matching Uri scheme
@@ -72,7 +70,7 @@ export default function createLink(
 
         execFormatWithUndo(editor, () => {
             if (isSelectionCollapsed(editor)) {
-                anchor = queryNodesWithSelection(editor, 'a[href]')[0] as HTMLAnchorElement;
+                anchor = getAnchorNodeAtCursor(editor);
 
                 // If there is already a link, just change its href
                 if (anchor) {
@@ -86,16 +84,7 @@ export default function createLink(
             } else {
                 /* the selection is not collapsed, use browser execCommand */
                 editor.getDocument().execCommand('createLink', false, normalizedUrl);
-                let cursorData = new CursorData(editor);
-                // The link remains selected after it is applied. To get the link, need to read
-                // The inline element after cursor since cursor always points to start of selection
-                // There can also be cases that users select text across multiple lines causing mulitple links
-                // to be created (one per line). This means the alttext will only be applied to first link
-                // This is less a case. For simplicity, we just that case for the moment
-                let inlineBeforeCursor = cursorData.inlineElementAfterCursor;
-                if (inlineBeforeCursor && inlineBeforeCursor instanceof LinkInlineElement) {
-                    anchor = inlineBeforeCursor.getContainerNode() as HTMLAnchorElement;
-                }
+                anchor = getAnchorNodeAtCursor(editor);
             }
             if (altText && anchor) {
                 // Hack: Ideally this should be done by HyperLink plugin.
@@ -108,4 +97,8 @@ export default function createLink(
 
         editor.triggerContentChangedEvent('CreateLink', anchor);
     }
+}
+
+function getAnchorNodeAtCursor(editor: Editor): HTMLAnchorElement {
+    return queryNodesWithSelection(editor, 'a[href]')[0] as HTMLAnchorElement;
 }
