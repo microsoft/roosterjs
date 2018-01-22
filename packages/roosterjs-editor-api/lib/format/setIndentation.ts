@@ -6,6 +6,8 @@ import { Indentation } from 'roosterjs-editor-types';
 
 /**
  * Set indentation at selection
+ * If selection contains bullet/numbering list, increase/decrease indentation will
+ * increase/decrease the list level by one.
  * @param editor The editor instance
  * @param indentation The indentation option:
  * Indentation.Increase to increase indentation or Indentation.Decrease to decrease indentation
