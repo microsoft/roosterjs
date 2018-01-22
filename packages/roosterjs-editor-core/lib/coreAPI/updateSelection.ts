@@ -23,4 +23,3 @@ export default function updateSelection(core: EditorCore, range: Range): boolean
 
     return selectionUpdated;
 }
-

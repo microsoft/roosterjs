@@ -20,9 +20,6 @@ export { default as ContentTraverser } from './contentTraverser/ContentTraverser
 export { getNextLeafSibling, getPreviousLeafSibling } from './domWalker/getLeafSibling';
 export { getFirstLeafNode, getLastLeafNode } from './domWalker/getLeafNode';
 
-export {
-    default as DefaultInlineElementResolver,
-} from './inlineElements/DefaultInlineElementResolver';
 export { default as ImageInlineElement } from './inlineElements/ImageInlineElement';
 export { default as InlineElementFactory } from './inlineElements/InlineElementFactory';
 export { default as InlineElementResolver } from './inlineElements/InlineElementResolver';

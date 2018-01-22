@@ -48,7 +48,7 @@ function applyInlineStyleToNonCollapsedSelection(
     // can be re-applied post-applying style
     let startNode: Node;
     let endNode: Node;
-    let contentTraverser = getContentTraverser(core, ContentScope.Selection)
+    let contentTraverser = getContentTraverser(core, ContentScope.Selection);
     // Just loop through all inline elements in the selection and apply style for each
     let startInline = contentTraverser.currentInlineElement;
     while (startInline) {

@@ -1,7 +1,11 @@
 import EditorCore from '../editor/EditorCore';
 import { PluginEvent } from 'roosterjs-editor-types';
 
-export default function triggerEvent(core: EditorCore, pluginEvent: PluginEvent, broadcast: boolean) {
+export default function triggerEvent(
+    core: EditorCore,
+    pluginEvent: PluginEvent,
+    broadcast: boolean
+) {
     let isHandledExclusively = false;
     if (!broadcast) {
         for (let i = 0; i < core.plugins.length; i++) {

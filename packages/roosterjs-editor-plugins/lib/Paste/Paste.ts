@@ -59,7 +59,7 @@ export default class Paste implements EditorPlugin {
             this.pasteOriginal,
             this.useDirectPaste ? removeUnsafeTags : null
         );
-    }
+    };
 
     /**
      * Paste into editor using passed in clipboardData with original format
@@ -67,7 +67,7 @@ export default class Paste implements EditorPlugin {
      */
     public pasteOriginal = (clipboardData: ClipboardData) => {
         this.paste(clipboardData, this.detectPasteOption(clipboardData));
-    }
+    };
 
     /**
      * Paste plain text into editor using passed in clipboardData
@@ -75,7 +75,6 @@ export default class Paste implements EditorPlugin {
      */
     public pasteText(clipboardData: ClipboardData) {
         this.paste(clipboardData, PasteOption.PasteText);
-
     }
 
     /**
@@ -89,7 +88,7 @@ export default class Paste implements EditorPlugin {
     private detectPasteOption(clipboardData: ClipboardData): PasteOption {
         return clipboardData.text || !clipboardData.image
             ? PasteOption.PasteHtml
-            : PasteOption.PasteImage
+            : PasteOption.PasteImage;
     }
 
     private paste(
@@ -167,14 +166,5 @@ export default class Paste implements EditorPlugin {
         for (let parent of parents) {
             applyFormat(parent, format);
         }
-    }
-}
-
-/**
- * @deprecated Use Paste plugin instead
- */
-export class PasteManager extends Paste {
-    constructor(handler?: any, useDirectPaste?: boolean) {
-        super(useDirectPaste);
     }
 }

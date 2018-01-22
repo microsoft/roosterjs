@@ -8,10 +8,12 @@ interface EditorCore {
     plugins: EditorPlugin[];
     inlineElementFactory: InlineElementFactory;
     defaultFormat: DefaultFormat;
-    customData: {[Key: string]: {
-        value: any;
-        disposer: (value: any) => void;
-    }};
+    customData: {
+        [Key: string]: {
+            value: any;
+            disposer: (value: any) => void;
+        };
+    };
     cachedSelectionRange: Range;
 }
 

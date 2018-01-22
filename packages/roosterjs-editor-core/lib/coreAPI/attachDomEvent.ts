@@ -13,14 +13,18 @@ export default function attachDomEvent(
             beforeDispatch(event);
         }
         if (pluginEventType != null) {
-            triggerEvent(core, <PluginDomEvent>{
-                eventType: pluginEventType,
-                rawEvent: event,
-            }, false /*broadcast*/);
+            triggerEvent(
+                core,
+                <PluginDomEvent>{
+                    eventType: pluginEventType,
+                    rawEvent: event,
+                },
+                false /*broadcast*/
+            );
         }
     };
     core.contentDiv.addEventListener(eventName, onEvent);
     return () => {
         core.contentDiv.removeEventListener(eventName, onEvent);
-    }
+    };
 }

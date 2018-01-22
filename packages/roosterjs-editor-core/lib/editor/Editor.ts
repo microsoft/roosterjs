@@ -51,7 +51,7 @@ const IS_IE_OR_EDGE = browserData.isIE || browserData.isEdge;
 export default class Editor {
     private undoService: UndoService;
     private suspendAddingUndoSnapshot: boolean;
-    private omitContentEditableAttributeChanges: boolean;
+    private omitContentEditable: boolean;
     private disableRestoreSelectionOnFocus: boolean;
     private inIME: boolean;
     private core: EditorCore;
@@ -78,8 +78,8 @@ export default class Editor {
             cachedSelectionRange: null,
             plugins: (options.plugins || []).filter(plugin => !!plugin),
         };
-        this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus,
-        this.omitContentEditableAttributeChanges = options.omitContentEditableAttributeChanges;
+        this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus;
+        this.omitContentEditable = options.omitContentEditableAttributeChanges;
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
@@ -102,7 +102,7 @@ export default class Editor {
         this.createEventHandlers();
 
         // 7. Finally make the container editable and set its selection styles
-        if (!this.omitContentEditableAttributeChanges) {
+        if (!this.omitContentEditable) {
             contentDiv.setAttribute('contenteditable', 'true');
             let styles = contentDiv.style;
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
@@ -128,7 +128,7 @@ export default class Editor {
             delete this.core.customData[key];
         }
 
-        if (!this.omitContentEditableAttributeChanges) {
+        if (!this.omitContentEditable) {
             let styles = this.core.contentDiv.style;
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = '';
             this.core.contentDiv.removeAttribute('contenteditable');
@@ -468,11 +468,7 @@ export default class Editor {
      * @param disposer An optional disposer function to dispose this custom data when
      * dispose editor.
      */
-    public getCustomData<T>(
-        key: string,
-        getter: () => T,
-        disposer?: (value: T) => void
-    ): T {
+    public getCustomData<T>(key: string, getter: () => T, disposer?: (value: T) => void): T {
         let customData = this.core.customData;
         return (customData[key] = customData[key] || {
             value: getter(),
@@ -522,10 +518,15 @@ export default class Editor {
             attachDomEvent(this.core, 'keypress', PluginEventType.KeyPress, this.onKeyPress),
             attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown),
             attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp),
-            attachDomEvent(this.core, 'compositionstart', null, () => (this.inIME = true)),
-            attachDomEvent(this.core, 'compositionend', PluginEventType.CompositionEnd, () => (this.inIME = false)),
             attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
             attachDomEvent(this.core, 'mouseup', PluginEventType.MouseUp),
+            attachDomEvent(this.core, 'compositionstart', null, () => (this.inIME = true)),
+            attachDomEvent(
+                this.core,
+                'compositionend',
+                PluginEventType.CompositionEnd,
+                () => (this.inIME = false)
+            ),
             attachDomEvent(this.core, 'focus', null, () => {
                 // Restore the last saved selection first
                 if (this.core.cachedSelectionRange && !this.disableRestoreSelectionOnFocus) {
@@ -555,7 +556,8 @@ export default class Editor {
             selectionRange.collapsed &&
             (focusNode = selectionRange.startContainer) &&
             (focusNode == this.core.contentDiv ||
-                (focusNode.nodeType == NodeType.Text && focusNode.parentNode == this.core.contentDiv))
+                (focusNode.nodeType == NodeType.Text &&
+                    focusNode.parentNode == this.core.contentDiv))
         ) {
             let editorSelection = new EditorSelection(
                 this.core.contentDiv,
@@ -572,7 +574,9 @@ export default class Editor {
                 applyFormat(element, this.core.defaultFormat);
                 // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
                 this.selectEditorPoint(element.firstChild, NodeBoundary.Begin);
-            } else if (blockElement.getStartNode().parentNode == blockElement.getEndNode().parentNode) {
+            } else if (
+                blockElement.getStartNode().parentNode == blockElement.getEndNode().parentNode
+            ) {
                 // Only fix the balanced start-end block where start and end node is under same parent
                 // The focus node could be pointing to the content div, normalize it to have it point to a child first
                 let focusOffset = selectionRange.startOffset;
@@ -587,7 +591,7 @@ export default class Editor {
                 this.selectEditorPoint(editorPoint.containerNode, editorPoint.offset);
             }
         }
-    }
+    };
 
     private selectEditorPoint(container: Node, offset: number): boolean {
         if (!this.contains(container)) {

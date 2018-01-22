@@ -4,8 +4,5 @@ export { default as EditorPlugin } from './editor/EditorPlugin';
 export { default as Undo } from './undo/Undo';
 export { default as UndoService } from './editor/UndoService';
 export { default as browserData, BrowserData } from './utils/BrowserData';
-export {
-    clearEventDataCache,
-    cacheGetEventData,
-} from './utils/eventDataCacheUtils';
+export { clearEventDataCache, cacheGetEventData } from './utils/eventDataCacheUtils';
 export { buildSnapshot, restoreSnapshot } from './undo/snapshotUtils';

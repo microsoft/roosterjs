@@ -1,7 +1,12 @@
 import EditorCore from '../editor/EditorCore';
 import getSelectionRange from './getSelectionRange';
 import { ContentScope, ContentPosition, TraversingScoper } from 'roosterjs-editor-types';
-import { ContentTraverser, SelectionBlockScoper, SelectionScoper, BodyScoper } from 'roosterjs-editor-dom';
+import {
+    ContentTraverser,
+    SelectionBlockScoper,
+    SelectionScoper,
+    BodyScoper,
+} from 'roosterjs-editor-dom';
 
 export default function getContentTraverser(
     core: EditorCore,
@@ -37,11 +42,7 @@ export default function getContentTraverser(
     }
 
     if (scoper) {
-        contentTraverser = new ContentTraverser(
-            core.contentDiv,
-            scoper,
-            core.inlineElementFactory
-        );
+        contentTraverser = new ContentTraverser(core.contentDiv, scoper, core.inlineElementFactory);
     }
 
     return contentTraverser;
