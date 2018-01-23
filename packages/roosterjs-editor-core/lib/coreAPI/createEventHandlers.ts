@@ -190,7 +190,7 @@ function onKeyPress(core: EditorCore, event: KeyboardEvent) {
 }
 
 function selectEditorPoint(core: EditorCore, container: Node, offset: number): boolean {
-    if (container || !contains(core.contentDiv, container)) {
+    if (!container || !contains(core.contentDiv, container)) {
         return false;
     }
 
