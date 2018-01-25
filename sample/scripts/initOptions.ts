@@ -4,7 +4,7 @@ import { DefaultFormat } from 'roosterjs-editor-types';
 import {
     DefaultShortcut,
     HyperLink,
-    PasteManager,
+    Paste,
     ContentEdit,
     Watermark,
 } from 'roosterjs-editor-plugins';
@@ -22,7 +22,7 @@ function initOptions() {
     [
         'defaultShortcutCheckbox',
         'hyperlinkCheckbox',
-        'pasteManagerCheckbox',
+        'pasteCheckbox',
         'contentEditCheckbox',
         'watermarkCheckbox',
         'imageResizeCheckbox',
@@ -46,8 +46,8 @@ export function initEditorForOptions() {
     if ((document.getElementById('hyperlinkCheckbox') as HTMLInputElement).checked) {
         plugins.push(new HyperLink());
     }
-    if ((document.getElementById('pasteManagerCheckbox') as HTMLInputElement).checked) {
-        plugins.push(new PasteManager(null, true));
+    if ((document.getElementById('pasteCheckbox') as HTMLInputElement).checked) {
+        plugins.push(new Paste(true));
     }
     if ((document.getElementById('contentEditCheckbox') as HTMLInputElement).checked) {
         plugins.push(new ContentEdit());

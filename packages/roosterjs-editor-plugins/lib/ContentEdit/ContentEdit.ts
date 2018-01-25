@@ -234,12 +234,3 @@ export default class ContentEdit implements EditorPlugin {
         return false;
     }
 }
-
-/**
- * @deprecated Use ContentEdit instead
- */
-export class TabIndent extends ContentEdit {
-    constructor(onlyBegin: boolean = false) {
-        super();
-    }
-}

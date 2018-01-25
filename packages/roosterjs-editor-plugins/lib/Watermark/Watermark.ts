@@ -21,6 +21,8 @@ const WATERMARK_REGEX = new RegExp(
 class Watermark implements EditorPlugin {
     private editor: Editor;
     private isWatermarkShowing: boolean;
+    private focusDisposer: () => void;
+    private blurDisposer: () => void;
 
     /**
      * Create an instance of Watermark plugin
@@ -36,29 +38,32 @@ class Watermark implements EditorPlugin {
     initialize(editor: Editor) {
         this.editor = editor;
         this.showHideWatermark(false /*ignoreCachedState*/);
+        this.focusDisposer = this.editor.addDomEventHandler('focus', this.handleWatermark);
+        this.blurDisposer = this.editor.addDomEventHandler('blur', this.handleWatermark);
     }
 
     dispose() {
+        this.focusDisposer();
+        this.blurDisposer();
+        this.focusDisposer = null;
+        this.blurDisposer = null;
         this.hideWatermark();
         this.editor = null;
     }
 
     onPluginEvent(event: PluginEvent) {
-        if (
-            event.eventType == PluginEventType.Focus ||
-            event.eventType == PluginEventType.Blur ||
-            event.eventType == PluginEventType.ContentChanged
-        ) {
+        if (event.eventType == PluginEventType.ContentChanged) {
             // When content is changed from setContent() API, current cached state
             // may not be accurate, so we ignore it
-            let ignoreCachedState =
-                event.eventType == PluginEventType.ContentChanged &&
-                (<ContentChangedEvent>event).source == 'SetContent';
-            this.showHideWatermark(ignoreCachedState);
+            this.showHideWatermark((<ContentChangedEvent>event).source == 'SetContent');
         } else if (event.eventType == PluginEventType.ExtractContent && this.isWatermarkShowing) {
             this.removeWartermarkFromHtml(event as ExtractContentEvent);
         }
     }
+
+    private handleWatermark = () => {
+        this.showHideWatermark(false /*ignoreCachedState*/);
+    };
 
     private showHideWatermark(ignoreCachedState: boolean) {
         if (this.editor.hasFocus() && (ignoreCachedState || this.isWatermarkShowing)) {

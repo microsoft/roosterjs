@@ -1,5 +1,5 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { PluginEvent } from 'roosterjs-editor-types';
 
 // An editor plugin to show cursor position in demo page
 export default class ShowCursorPosition implements EditorPlugin {
@@ -16,13 +16,6 @@ export default class ShowCursorPosition implements EditorPlugin {
     }
 
     public onPluginEvent(event: PluginEvent) {
-        if (
-            event.eventType == PluginEventType.MouseOut ||
-            event.eventType == PluginEventType.MouseOver
-        ) {
-            return;
-        }
-
         let rect = this.editor.getCursorRect();
         if (rect) {
             let result =

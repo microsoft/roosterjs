@@ -1,7 +1,7 @@
 import {
     DefaultShortcut,
     HyperLink,
-    PasteManager,
+    Paste,
     ContentEdit,
     Watermark,
 } from 'roosterjs-editor-plugins';
@@ -13,7 +13,7 @@ const defaultPluginsString: string = [
     'var plugins = [',
     '  new roosterPlugins.DefaultShortcut(),',
     '  new roosterPlugins.HyperLink(),',
-    '  new roosterPlugins.PasteManager(),',
+    '  new roosterPlugins.Paste(),',
     '  new roosterPlugins.ContentEdit(),',
     '];\n',
 ].join('\n');
@@ -89,8 +89,8 @@ function assemblePluginsString(plugins: EditorPlugin[]): string {
                 pluginsString = pluginsString.concat('  new roosterjsPlugins.DefaultShortcut(),\n');
             } else if (plugin instanceof HyperLink) {
                 pluginsString = pluginsString.concat('  new roosterjsPlugins.HyperLink(),\n');
-            } else if (plugin instanceof PasteManager) {
-                pluginsString = pluginsString.concat('  new roosterjsPlugins.PasteManager(),\n');
+            } else if (plugin instanceof Paste) {
+                pluginsString = pluginsString.concat('  new roosterjsPlugins.Paste(),\n');
             } else if (plugin instanceof ContentEdit) {
                 pluginsString = pluginsString.concat('  new roosterjsPlugins.ContentEdit(),\n');
             }

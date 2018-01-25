@@ -1,3 +1,4 @@
+import { ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -15,7 +16,7 @@ export default function insertImage(editor: Editor, imageFile: File) {
             image.src = (event.target as FileReader).result;
             image.style.maxWidth = '100%';
             editor.insertNode(image);
-            editor.triggerContentChangedEvent('Format');
+            editor.triggerContentChangedEvent(ChangeSource.Format);
             editor.addUndoSnapshot();
         }
     };

@@ -1,4 +1,4 @@
-import { ContentPosition, ContentScope, InlineElement, TextSection } from 'roosterjs-editor-types';
+import { ContentPosition, ContentScope, InlineElement } from 'roosterjs-editor-types';
 import { ContentTraverser, isTextualInlineElement, matchWhiteSpaces } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
@@ -28,8 +28,8 @@ export default class CursorData {
     // Forward traversing has completed
     private forwardTraversingComplete: boolean;
 
-    // All text sections before cursor that have been read so far
-    private textsBeforeCursor: TextSection[];
+    // All inline elements before cursor that have been read so far
+    private inlineElementsBeforeCursor: InlineElement[];
 
     /**
      * Create a new CursorData instance
@@ -44,9 +44,7 @@ export default class CursorData {
      */
     public get wordBeforeCursor(): string {
         if (!this.cachedWordBeforeCursor && !this.backwardTraversingComplete) {
-            this.continueTraversingBackwardTill((textSection: TextSection): boolean => {
-                return this.cachedWordBeforeCursor != null;
-            });
+            this.continueTraversingBackwardTill(() => this.cachedWordBeforeCursor != null);
         }
 
         return this.cachedWordBeforeCursor;
@@ -59,9 +57,7 @@ export default class CursorData {
     public get inlineElementBeforeCursor(): InlineElement {
         if (!this.inlineBeforeCursor && !this.backwardTraversingComplete) {
             // Just return after it moves the needle by one step
-            this.continueTraversingBackwardTill((textSection: TextSection): boolean => {
-                return true;
-            });
+            this.continueTraversingBackwardTill(() => true);
         }
 
         return this.inlineBeforeCursor;
@@ -104,12 +100,11 @@ export default class CursorData {
             !this.backwardTraversingComplete
         ) {
             // The cache is not built yet or not to the point the client asked for
-            this.continueTraversingBackwardTill((textSection: TextSection): boolean => {
-                return (
+            this.continueTraversingBackwardTill(
+                () =>
                     this.cachedTextBeforeCursor != null &&
                     this.cachedTextBeforeCursor.length >= numChars
-                );
-            });
+            );
         }
 
         if (this.cachedTextBeforeCursor) {
@@ -129,14 +124,14 @@ export default class CursorData {
      * when cursor moves out of context etc.
      * @param stopFunc The callback stop function
      */
-    public getTextSectionBeforeCursorTill(stopFunc: (textSection: TextSection) => boolean) {
+    public getTextSectionBeforeCursorTill(stopFunc: (textInlineElement: InlineElement) => boolean) {
         // We cache all text sections read so far
         // Every time when you ask for textSection, we start with the cached first
         // and resort to further reading once we exhausted with the cache
         let shouldStop = false;
-        if (this.textsBeforeCursor && this.textsBeforeCursor.length > 0) {
-            for (let i = 0; i < this.textsBeforeCursor.length; i++) {
-                shouldStop = stopFunc(this.textsBeforeCursor[i]);
+        if (this.inlineElementsBeforeCursor && this.inlineElementsBeforeCursor.length > 0) {
+            for (let i = 0; i < this.inlineElementsBeforeCursor.length; i++) {
+                shouldStop = stopFunc(this.inlineElementsBeforeCursor[i]);
                 if (shouldStop) {
                     break;
                 }
@@ -150,7 +145,7 @@ export default class CursorData {
     }
 
     /// Continue traversing backward till stop condition is met or begin of block is reached
-    private continueTraversingBackwardTill(stopFunc: (textSection: TextSection) => boolean) {
+    private continueTraversingBackwardTill(stopFunc: (inlineElement: InlineElement) => boolean) {
         if (!this.backwardTraverser) {
             this.backwardTraverser = this.editor.getContentTraverser(
                 ContentScope.Block,
@@ -190,19 +185,14 @@ export default class CursorData {
                     ? textContent
                     : textContent + this.cachedTextBeforeCursor;
 
-                // We have a new TextSection, remember it by pushing it to this.textsBeforeCursor array
-                let newSection = {
-                    wholeText: this.cachedTextBeforeCursor,
-                    inlineElement: previousInline,
-                };
-                if (!this.textsBeforeCursor) {
-                    this.textsBeforeCursor = [newSection];
+                if (!this.inlineElementsBeforeCursor) {
+                    this.inlineElementsBeforeCursor = [previousInline];
                 } else {
-                    this.textsBeforeCursor.push(newSection);
+                    this.inlineElementsBeforeCursor.push(previousInline);
                 }
 
                 // Check if stop condition is met
-                if (stopFunc && stopFunc(newSection)) {
+                if (stopFunc && stopFunc(previousInline)) {
                     break;
                 }
             } else {

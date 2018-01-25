@@ -5,10 +5,9 @@ import {
     clearCursorEventDataCache,
 } from 'roosterjs-editor-api';
 import {
+    ChangeSource,
     ContentChangedEvent,
     ExtractContentEvent,
-    LinkMatchOption,
-    LinkMatchRule,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
@@ -39,8 +38,7 @@ export default class HyperLink implements EditorPlugin {
      */
     constructor(
         private getTooltipCallback: (href: string) => string = href => href,
-        private target?: string,
-        private linkMatchRules?: LinkMatchRule[]
+        private target?: string
     ) {}
 
     public initialize(editor: Editor): void {
@@ -58,15 +56,7 @@ export default class HyperLink implements EditorPlugin {
     }
 
     public dispose(): void {
-        let anchors = this.editor.queryContent('a[href]');
-        for (let i = 0; i < anchors.length; i++) {
-            try {
-                this.resetAnchor(anchors[i] as HTMLAnchorElement);
-            } catch (e) {
-                // Dispose code, no need to handle any exception
-            }
-        }
-
+        this.forEachHyperLink(this.resetAnchor.bind(this));
         this.editor = null;
     }
 
@@ -88,10 +78,7 @@ export default class HyperLink implements EditorPlugin {
                     this.resetAnchor(contentChangedEvent.data as HTMLAnchorElement);
                 }
 
-                let anchors = this.editor.queryContent('a[href]');
-                for (let i = 0; i < anchors.length; i++) {
-                    this.processLink(anchors[i] as HTMLAnchorElement);
-                }
+                this.forEachHyperLink(this.processLink.bind(this));
                 break;
 
             case PluginEventType.ExtractContent:
@@ -102,13 +89,13 @@ export default class HyperLink implements EditorPlugin {
     }
 
     private resetAnchor(a: HTMLAnchorElement) {
-        if (a) {
+        try {
             if (a.getAttribute(TEMP_TITLE)) {
                 a.removeAttribute(TEMP_TITLE);
                 a.removeAttribute('title');
             }
             a.removeEventListener('mouseup', this.onClickLink);
-        }
+        } catch (e) {}
     }
 
     private autoLink(event: PluginEvent) {
@@ -131,7 +118,7 @@ export default class HyperLink implements EditorPlugin {
             );
 
             // Match and replace in editor
-            let linkData = matchLink(linkCandidate, LinkMatchOption.Exact, this.linkMatchRules);
+            let linkData = matchLink(linkCandidate);
             if (linkData) {
                 let anchor = this.editor.getDocument().createElement('A') as HTMLAnchorElement;
                 anchor.textContent = linkData.originalUrl;
@@ -148,7 +135,7 @@ export default class HyperLink implements EditorPlugin {
                 if (replaced) {
                     // The content at cursor has changed. Should also clear the cursor data cache
                     clearCursorEventDataCache(event);
-                    this.editor.triggerContentChangedEvent('AutoLink', anchor);
+                    this.editor.triggerContentChangedEvent(ChangeSource.AutoLink, anchor);
                     this.editor.addUndoSnapshot();
                 }
             }
@@ -197,5 +184,12 @@ export default class HyperLink implements EditorPlugin {
         }
 
         return href;
+    }
+
+    private forEachHyperLink(callback: (a: HTMLAnchorElement) => void) {
+        let anchors = this.editor.queryContent('a[href]');
+        for (let i = 0; i < anchors.length; i++) {
+            callback(anchors[i] as HTMLAnchorElement);
+        }
     }
 }

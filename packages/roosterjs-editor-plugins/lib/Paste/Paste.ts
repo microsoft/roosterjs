@@ -1,10 +1,10 @@
 import {
     BeforePasteEvent,
+    ChangeSource,
     ClipboardData,
     DefaultFormat,
     NodeType,
     PasteOption,
-    PluginDomEvent,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
@@ -20,6 +20,7 @@ import removeUnsafeTags from './removeUnsafeTags';
  */
 export default class Paste implements EditorPlugin {
     private editor: Editor;
+    private pasteDisposer: () => void;
 
     /**
      * Create an instance of Paste
@@ -33,34 +34,33 @@ export default class Paste implements EditorPlugin {
 
     public initialize(editor: Editor) {
         this.editor = editor;
+        this.pasteDisposer = editor.addDomEventHandler('paste', this.onPaste);
     }
 
     public dispose() {
+        this.pasteDisposer();
+        this.pasteDisposer = null;
         this.editor = null;
     }
 
-    public willHandleEventExclusively(event: PluginEvent): boolean {
-        return event.eventType == PluginEventType.Paste;
-    }
-
     public onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.Paste) {
-            this.editor.addUndoSnapshot();
-            let pasteEvent = <ClipboardEvent>(<PluginDomEvent>event).rawEvent;
-            buildClipboardData(
-                pasteEvent,
-                this.editor,
-                this.pasteOriginal,
-                this.useDirectPaste ? removeUnsafeTags : null
-            );
-        } else if (event.eventType == PluginEventType.BeforePaste) {
+        if (event.eventType == PluginEventType.BeforePaste) {
             let beforePasteEvent = <BeforePasteEvent>event;
-
             if (beforePasteEvent.pasteOption == PasteOption.PasteHtml) {
                 convertPastedContentFromWord(beforePasteEvent.fragment);
             }
         }
     }
+
+    private onPaste = (event: Event) => {
+        this.editor.addUndoSnapshot();
+        buildClipboardData(
+            <ClipboardEvent>event,
+            this.editor,
+            this.pasteOriginal,
+            this.useDirectPaste ? removeUnsafeTags : null
+        );
+    };
 
     /**
      * Paste into editor using passed in clipboardData with original format
@@ -68,7 +68,7 @@ export default class Paste implements EditorPlugin {
      */
     public pasteOriginal = (clipboardData: ClipboardData) => {
         this.paste(clipboardData, this.detectPasteOption(clipboardData));
-    }
+    };
 
     /**
      * Paste plain text into editor using passed in clipboardData
@@ -76,7 +76,6 @@ export default class Paste implements EditorPlugin {
      */
     public pasteText(clipboardData: ClipboardData) {
         this.paste(clipboardData, PasteOption.PasteText);
-
     }
 
     /**
@@ -90,7 +89,7 @@ export default class Paste implements EditorPlugin {
     private detectPasteOption(clipboardData: ClipboardData): PasteOption {
         return clipboardData.text || !clipboardData.image
             ? PasteOption.PasteHtml
-            : PasteOption.PasteImage
+            : PasteOption.PasteImage;
     }
 
     private paste(
@@ -148,7 +147,7 @@ export default class Paste implements EditorPlugin {
                 break;
         }
 
-        this.editor.triggerContentChangedEvent('Paste', clipboardData);
+        this.editor.triggerContentChangedEvent(ChangeSource.Paste, clipboardData);
         this.editor.addUndoSnapshot();
     }
 
@@ -168,14 +167,5 @@ export default class Paste implements EditorPlugin {
         for (let parent of parents) {
             applyFormat(parent, format);
         }
-    }
-}
-
-/**
- * @deprecated Use Paste plugin instead
- */
-export class PasteManager extends Paste {
-    constructor(handler?: any, useDirectPaste?: boolean) {
-        super(useDirectPaste);
     }
 }

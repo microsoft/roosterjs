@@ -1,7 +1,9 @@
 import Editor from '../../editor/Editor';
 import * as TestHelper from '../TestHelper';
 import { ContentPosition } from 'roosterjs-editor-types';
-import * as Selection from '../../coreAPI/selection';
+import * as getSelection from '../../coreAPI/getSelection';
+import * as getSelectionRange from '../../coreAPI/getSelectionRange';
+import * as saveSelectionRange from '../../coreAPI/saveSelectionRange';
 
 let editor: Editor;
 let testID = 'EditorTest';
@@ -18,13 +20,13 @@ describe('Editor getSelection()', () => {
 
     it('getSelection shold invoke getSelection in Selection', () => {
         // Arrange
-        spyOn(Selection, 'getSelection').and.callThrough();
+        spyOn(getSelection, 'default').and.callThrough();
 
         // Act
         editor.getSelection();
 
         // Assery
-        expect(Selection.getSelection).toHaveBeenCalled();
+        expect(getSelection.default).toHaveBeenCalled();
     });
 });
 
@@ -40,19 +42,19 @@ describe('Editor getSelectionRange()', () => {
 
     it('getSelectionRange shold invoke getSelectionRange in Selection if in foucs', () => {
         // Arrange
-        spyOn(Selection, 'getSelectionRange').and.callThrough();
+        spyOn(getSelectionRange, 'default').and.callThrough();
         editor.focus();
 
         // Act
         editor.getSelectionRange();
 
         // Assert
-        expect(Selection.getSelectionRange).toHaveBeenCalled();
+        expect(getSelectionRange.default).toHaveBeenCalled();
     });
 
     it('getSelectionRange shold return null if not in focus', () => {
         // Arrange
-        spyOn(Selection, 'getSelectionRange').and.callThrough();
+        spyOn(getSelectionRange, 'default').and.callThrough();
 
         // Act
         let selectionRange = editor.getSelectionRange();
@@ -494,12 +496,12 @@ describe('Editor saveSelectionRange()', () => {
 
     it('saveSelectionRange should trigger the Selection.saveSelectionRange() method', () => {
         // Arrange
-        spyOn(Selection, 'saveSelectionRange').and.callThrough();
+        spyOn(saveSelectionRange, 'default').and.callThrough();
 
         // Act
         editor.saveSelectionRange();
 
         // Assert
-        expect(Selection.saveSelectionRange).toHaveBeenCalled();
+        expect(saveSelectionRange.default).toHaveBeenCalled();
     });
 });

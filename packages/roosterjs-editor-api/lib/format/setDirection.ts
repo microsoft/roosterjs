@@ -3,8 +3,13 @@ import { BlockElement, ContentScope, Direction } from 'roosterjs-editor-types';
 import { NodeBlockElement, StartEndBlockElement, wrapAll } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
-// Change direction for the blocks/paragraph in the selection
-export default function setDirection(editor: Editor, dir: Direction): void {
+/**
+ * Change direction for the blocks/paragraph at selection
+ * @param editor The editor instance
+ * @param dir The direction option:
+ * Direction.LeftToRight refers to 'ltr', Direction.RightToLeft refers to 'rtl'
+ */
+export default function setDirection(editor: Editor, dir: Direction) {
     editor.focus();
     let dirValue = dir == Direction.LeftToRight ? 'ltr' : 'rtl';
     let styleValue = dir == Direction.LeftToRight ? 'left' : 'right';

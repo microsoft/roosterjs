@@ -1,40 +1,25 @@
 import { PluginEvent } from 'roosterjs-editor-types';
 
-// cache some certain data in event cache by key
-function cacheEventData<T>(event: PluginEvent, cacheKey: string, eventData: T): void {
-    if (event) {
-        if (!event.eventDataCache) {
-            event.eventDataCache = {};
-        }
-        event.eventDataCache[cacheKey] = eventData;
-    }
-}
-
-// Get cached event data (as specified by key) or null if not found
-function getEventDataCache<T>(event: PluginEvent, key: string): T {
-    let eventData: T = null;
-    if (event && event.eventDataCache && event.eventDataCache[key]) {
-        eventData = event.eventDataCache[key] as T;
-    }
-    return eventData;
-}
-
 // Clear a specifc cached data (as specified by a key) in a plugin event
 function clearEventDataCache(event: PluginEvent, key: string): void {
-    if (event && event.eventDataCache && event.eventDataCache[key]) {
-        event.eventDataCache[key] = null;
+    if (event && event.eventDataCache && event.eventDataCache.hasOwnProperty(key)) {
+        delete event.eventDataCache[key];
     }
 }
 
 // Return the cached event data per cache key if there is already one.
 // If not, create one and put it in event data cache
-function cacheGetEventData<T>(event: PluginEvent, cacheKey: string, eventDataBuilder: () => T): T {
-    let eventData = getEventDataCache<T>(event, cacheKey);
-    if (!eventData) {
-        eventData = eventDataBuilder();
-        cacheEventData<T>(event, cacheKey, eventData);
+function cacheGetEventData<T>(event: PluginEvent, key: string, getter: () => T): T {
+    let result =
+        event && event.eventDataCache && event.eventDataCache.hasOwnProperty(key)
+            ? <T>event.eventDataCache[key]
+            : getter();
+    if (event) {
+        event.eventDataCache = event.eventDataCache || {};
+        event.eventDataCache[key] = result;
     }
-    return eventData;
+
+    return result;
 }
 
-export { cacheEventData, getEventDataCache, clearEventDataCache, cacheGetEventData };
+export { cacheGetEventData, clearEventDataCache };
