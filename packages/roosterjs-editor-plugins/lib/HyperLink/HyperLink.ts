@@ -7,8 +7,6 @@ import {
 import {
     ContentChangedEvent,
     ExtractContentEvent,
-    LinkMatchOption,
-    LinkMatchRule,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
@@ -39,8 +37,7 @@ export default class HyperLink implements EditorPlugin {
      */
     constructor(
         private getTooltipCallback: (href: string) => string = href => href,
-        private target?: string,
-        private linkMatchRules?: LinkMatchRule[]
+        private target?: string
     ) {}
 
     public initialize(editor: Editor): void {
@@ -120,7 +117,7 @@ export default class HyperLink implements EditorPlugin {
             );
 
             // Match and replace in editor
-            let linkData = matchLink(linkCandidate, LinkMatchOption.Exact, this.linkMatchRules);
+            let linkData = matchLink(linkCandidate);
             if (linkData) {
                 let anchor = this.editor.getDocument().createElement('A') as HTMLAnchorElement;
                 anchor.textContent = linkData.originalUrl;

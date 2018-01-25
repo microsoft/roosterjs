@@ -65,7 +65,7 @@ export default function createLink(
         // i.e. if the link starts with something like abc@xxx, we will add mailto: prefix
         // if the link starts with ftp.xxx, we will add ftp:// link. For more, see applyLinkPrefix
         let normalizedUrl = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
-        let originalUrl = linkData ? linkData.originalUrl : normalizedUrl;
+        let originalUrl = linkData ? linkData.originalUrl : url;
         let anchor: HTMLAnchorElement = null;
 
         execFormatWithUndo(editor, () => {
