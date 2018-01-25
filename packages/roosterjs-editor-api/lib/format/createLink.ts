@@ -1,8 +1,9 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
 import matchLink from '../linkMatch/matchLink';
-import { Editor } from 'roosterjs-editor-core';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
+import { ChangeSource } from 'roosterjs-editor-types';
+import { Editor } from 'roosterjs-editor-core';
 
 // Regex matching Uri scheme
 const URI_REGEX = /^[a-zA-Z]+:/i;
@@ -95,7 +96,7 @@ export default function createLink(
             }
         });
 
-        editor.triggerContentChangedEvent('CreateLink', anchor);
+        editor.triggerContentChangedEvent(ChangeSource.CreateLink, anchor);
     }
 }
 

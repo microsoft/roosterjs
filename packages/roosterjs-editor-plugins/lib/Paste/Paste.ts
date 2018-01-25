@@ -1,5 +1,6 @@
 import {
     BeforePasteEvent,
+    ChangeSource,
     ClipboardData,
     DefaultFormat,
     NodeType,
@@ -146,7 +147,7 @@ export default class Paste implements EditorPlugin {
                 break;
         }
 
-        this.editor.triggerContentChangedEvent('Paste', clipboardData);
+        this.editor.triggerContentChangedEvent(ChangeSource.Paste, clipboardData);
         this.editor.addUndoSnapshot();
     }
 

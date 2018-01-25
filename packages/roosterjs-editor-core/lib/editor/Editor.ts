@@ -18,6 +18,7 @@ import saveSelectionRange from '../coreAPI/saveSelectionRange';
 import triggerEvent from '../coreAPI/triggerEvent';
 import updateSelection from '../coreAPI/updateSelection';
 import {
+    ChangeSource,
     ContentPosition,
     ContentScope,
     DefaultFormat,
@@ -384,7 +385,7 @@ export default class Editor {
      * @param source Source of this event, by default is 'SetContent'
      * @param data additional data for this event
      */
-    public triggerContentChangedEvent(source: string = 'SetContent', data?: any) {
+    public triggerContentChangedEvent(source: ChangeSource | string = ChangeSource.SetContent, data?: any) {
         this.triggerEvent({
             eventType: PluginEventType.ContentChanged,
             source: source,

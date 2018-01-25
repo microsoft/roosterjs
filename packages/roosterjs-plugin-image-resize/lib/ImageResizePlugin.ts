@@ -1,5 +1,6 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
+    ChangeSource,
     NodeType,
     PluginEvent,
     PluginEventType,
@@ -194,7 +195,7 @@ export default class ImageResizePlugin implements EditorPlugin {
         }
         this.direction = null;
         this.editor.addUndoSnapshot();
-        this.editor.triggerContentChangedEvent('ImageResize');
+        this.editor.triggerContentChangedEvent(ChangeSource.ImageResize);
         e.preventDefault();
     };
 

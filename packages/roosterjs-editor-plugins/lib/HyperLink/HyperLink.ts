@@ -5,6 +5,7 @@ import {
     clearCursorEventDataCache,
 } from 'roosterjs-editor-api';
 import {
+    ChangeSource,
     ContentChangedEvent,
     ExtractContentEvent,
     PluginDomEvent,
@@ -134,7 +135,7 @@ export default class HyperLink implements EditorPlugin {
                 if (replaced) {
                     // The content at cursor has changed. Should also clear the cursor data cache
                     clearCursorEventDataCache(event);
-                    this.editor.triggerContentChangedEvent('AutoLink', anchor);
+                    this.editor.triggerContentChangedEvent(ChangeSource.AutoLink, anchor);
                     this.editor.addUndoSnapshot();
                 }
             }
