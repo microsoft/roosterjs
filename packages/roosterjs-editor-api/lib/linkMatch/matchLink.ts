@@ -53,7 +53,12 @@ const linkMatchRules: {[schema: string]: LinkMatchRule} = {
 /**
  * Try to match a given string with link match rules, return matched link
  * @param url Input url to match
- * @returns A matched link data, or null if no match found
+ * @param option Link match option, exact or partial. If it is exact match, we need
+ * to check the length of matched link and url
+ * @param rules Optional link match rules, if not passed, only the default link match
+ * rules will be applied
+ * @returns The matched link data, or null if no match found.
+ * The link data includes an original url and a normalized url
  */
 export default function matchLink(url: string): LinkData {
     if (url) {
