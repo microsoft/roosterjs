@@ -26,7 +26,7 @@ function isCRLFOnlyTextNode(node: Node): boolean {
 
 // Checks if the element has a display: none or empty if it is not an element
 function isDisplayNone(node: Node): boolean {
-    return getComputedStyle(node, 'display') == 'none';
+    return getComputedStyle(node, 'display')[0] == 'none';
 }
 
 // Skip a node when any of following conditions are true

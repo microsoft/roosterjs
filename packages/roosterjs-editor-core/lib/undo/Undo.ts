@@ -20,6 +20,7 @@ export default class Undo implements UndoService {
     private hasNewContent: boolean;
     private undoSnapshots: UndoSnapshots;
     private lastKeyPress: number;
+    private onDropDisposer: () => void;
 
     /**
      * Create an instance of Undo
@@ -34,6 +35,10 @@ export default class Undo implements UndoService {
      */
     public initialize(editor: Editor): void {
         this.editor = editor;
+        this.onDropDisposer = this.editor.addDomEventHandler('drop', () => {
+            this.addUndoSnapshot();
+            this.hasNewContent = true;
+        });
 
         // Add an initial snapshot if snapshotsManager isn't created yet
         if (!this.undoSnapshots) {
@@ -45,6 +50,8 @@ export default class Undo implements UndoService {
      * Dispose this plugin
      */
     public dispose() {
+        this.onDropDisposer();
+        this.onDropDisposer = null;
         this.editor = null;
 
         if (!this.preserveSnapshots) {

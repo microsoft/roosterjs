@@ -680,7 +680,7 @@ function getBlockElementAtNode(
         // NOTE: this container block could be just the rootNode,
         // which cannot be used to create block element. We will special case handle it later on
         let containerBlockNode = node.parentNode;
-        while (!isBlockElement(containerBlockNode)) {
+        while (contains(rootNode, containerBlockNode) && !isBlockElement(containerBlockNode)) {
             containerBlockNode = containerBlockNode.parentNode;
         }
 

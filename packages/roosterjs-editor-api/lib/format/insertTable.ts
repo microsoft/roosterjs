@@ -55,11 +55,10 @@ export default function insertTable(
     format?: TableFormat
 ) {
     let document = editor.getDocument();
-    let fragment = document.createDocumentFragment();
     let table = document.createElement('table') as HTMLTableElement;
-    fragment.appendChild(table);
-    table.cellSpacing = (format && format.cellSpacing) || '0';
-    table.cellPadding = (format && format.cellPadding) || '0';
+    format = format || {};
+    table.cellSpacing = format.cellSpacing || '0';
+    table.cellPadding = format.cellPadding || '0';
     buildBorderStyle(table, format);
     for (let i = 0; i < rows; i++) {
         let tr = document.createElement('tr') as HTMLTableRowElement;
@@ -74,12 +73,11 @@ export default function insertTable(
     }
 
     execFormatWithUndo(editor, () => {
-        editor.insertNode(fragment);
+        editor.insertNode(table);
     });
 }
 
 function buildBorderStyle(node: HTMLElement, format: TableFormat) {
-    format = format || {};
     node.style.borderWidth = format.borderWidth || '1px';
     node.style.borderStyle = format.borderStyle || 'solid';
     node.style.borderColor = format.borderColor || '#c6c6c6';

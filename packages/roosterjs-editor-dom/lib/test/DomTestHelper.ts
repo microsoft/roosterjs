@@ -39,7 +39,7 @@ export function runTestMethod2(
     let result = testMethod(input[0], input[1]);
 
     // Assert
-    expect(result).toBe(output);
+    expect(result).toEqual(output);
 }
 
 // Check inlineElement equality based on startPoint, endPoint and textContent

@@ -10,13 +10,9 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function setTextColor(editor: Editor, color: string) {
     editor.focus();
-    // TODO: Verify color
-    let validatedColor = color.trim();
-    if (validatedColor) {
-        execFormatWithUndo(editor, () => {
-            editor.applyInlineStyle((element: HTMLElement) => {
-                element.style.color = validatedColor;
-            });
+    execFormatWithUndo(editor, () => {
+        editor.applyInlineStyle((element: HTMLElement) => {
+            element.style.color = color;
         });
-    }
+    });
 }

@@ -13,6 +13,11 @@ import { unwrap } from 'roosterjs-editor-dom';
  * if passed in param is outside the range, will be rounded to nearest number in the range
  */
 export default function toggleHeader(editor: Editor, level: number) {
+    let range = editor.getSelectionRange();
+    if (!range) {
+        return;
+    }
+
     level = Math.min(Math.max(Math.round(level), 0), 6);
     let headerNodes: Node[] = [];
     for (let i = 1; i <= 6; i++) {
@@ -23,10 +28,21 @@ export default function toggleHeader(editor: Editor, level: number) {
         editor,
         () => {
             headerNodes.forEach(header => {
-                wrap(header, '<div></div>');
-                //TODO: fix the unwrap issue and update comments
+                let replaceStart =
+                    header == range.startContainer || header.contains(range.startContainer);
+                let replaceEnd =
+                    header == range.endContainer || header.contains(range.endContainer);
+                let div = wrap(header, '<div></div>');
+                if (replaceStart) {
+                    range.setStartBefore(div);
+                }
+                if (replaceEnd) {
+                    range.setEndAfter(div);
+                }
                 unwrap(header);
             });
+
+            editor.updateSelection(range);
 
             if (level > 0) {
                 let traverser = editor.getContentTraverser(ContentScope.Selection);

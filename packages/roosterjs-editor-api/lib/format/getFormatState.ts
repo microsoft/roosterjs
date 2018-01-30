@@ -6,37 +6,6 @@ import cacheGetListState from './cacheGetListState';
 import cacheGetHeaderLevel from './cacheGetHeaderLevel';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 
-// Get certain style of a node
-// useComputed controls from where to get the style, from computed style or crawl DOM tree to find inline style
-// attached to a node. Use case:
-// font-family, can use the computed style. Suppose that is more efficient
-// font-size, the browser computed style use px, i.e. even though you set font-size to be 12pt, the computed style will
-// be something like 14.399px. So for font-size, we should do the DOM tree crawl (useComputed = false)
-function getStyleAtNode(
-    editor: Editor,
-    node: Node,
-    styleName: string,
-    useComputed: boolean = true
-): string {
-    let styleValue = '';
-    let startNode = node && node.nodeType == NodeType.Text ? node.parentNode : node;
-    if (useComputed) {
-        styleValue = getComputedStyle(node, styleName);
-    } else {
-        while (startNode && editor.contains(startNode)) {
-            let styles = (startNode as HTMLElement).style;
-            let style = styles ? styles.getPropertyValue(styleName) : '';
-            if (style && style.trim()) {
-                styleValue = style;
-                break;
-            }
-            startNode = startNode.parentNode;
-        }
-    }
-
-    return styleValue;
-}
-
 // Query command state, used for query Bold, Italic, Underline state
 function queryCommandState(editor: Editor, command: string): boolean {
     return editor.getDocument().queryCommandState(command);
@@ -65,24 +34,25 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
         return null;
     }
 
+    nodeAtCursor =
+        nodeAtCursor && nodeAtCursor.nodeType == NodeType.Text
+            ? nodeAtCursor.parentNode
+            : nodeAtCursor;
+    let styles = getComputedStyle(nodeAtCursor);
+
     let listState = cacheGetListState(editor, event);
     let headerLevel = cacheGetHeaderLevel(editor, event);
     return {
-        fontName: getStyleAtNode(editor, nodeAtCursor, 'font-family', true /* useComputed*/),
-        fontSize: getStyleAtNode(editor, nodeAtCursor, 'font-size', false /* useComputed*/),
+        fontName: styles[0],
+        fontSize: styles[1],
         isBold: queryCommandState(editor, 'bold'),
         isItalic: queryCommandState(editor, 'italic'),
         isUnderline: queryCommandState(editor, 'underline'),
         isStrikeThrough: queryCommandState(editor, 'strikeThrough'),
         isSubscript: queryCommandState(editor, 'subscript'),
         isSuperscript: queryCommandState(editor, 'superscript'),
-        backgroundColor: getStyleAtNode(
-            editor,
-            nodeAtCursor,
-            'background-color',
-            true /* useComputed*/
-        ),
-        textColor: getStyleAtNode(editor, nodeAtCursor, 'color', true /* useComputed*/),
+        textColor: styles[2],
+        backgroundColor: styles[3],
         isBullet: listState == ListState.Bullets,
         isNumbering: listState == ListState.Numbering,
         canUnlink: queryNodesWithSelection(editor, 'a[href]').length > 0,

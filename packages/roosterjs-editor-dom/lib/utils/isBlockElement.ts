@@ -6,7 +6,7 @@ import { NodeType } from 'roosterjs-editor-types';
 // Other block like style to consider: table-caption, table-header-group, table-footer-group etc.
 export default function isBlockElement(node: Node): boolean {
     if (node && node.nodeType == NodeType.Element) {
-        let displayStyle = getComputedStyle(node, 'display');
+        let displayStyle = getComputedStyle(node, 'display')[0];
         return (
             displayStyle == 'block' || displayStyle == 'list-item' || displayStyle == 'table-cell'
         );

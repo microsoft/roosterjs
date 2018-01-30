@@ -50,6 +50,7 @@ var webpackConfig = {
     stats: 'minimal',
     plugins: isProduction ? [
         new webpack.optimize.UglifyJsPlugin({
+            sourceMap: true,
             compress: {
                 dead_code: true,
                 warnings: true,

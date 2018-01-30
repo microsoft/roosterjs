@@ -1,5 +1,3 @@
-import execFormatWithUndo from './execFormatWithUndo';
-import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
 import matchLink from '../linkMatch/matchLink';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { ChangeSource } from 'roosterjs-editor-types';
@@ -12,31 +10,6 @@ const MAILTO_REGEX = /^[\w.%+-]+@/i;
 // Regex matching begin of ftp, i.e. ftp.microsoft.com
 const FTP_REGEX = /^ftp\./i;
 const TEMP_TITLE = 'istemptitle';
-
-function applyLinkPrefix(url: string): string {
-    if (!url) {
-        return url;
-    }
-
-    // Add link prefix per rule:
-    // (a) if the url always starts with a URI scheme, leave it as it is
-    // (b) if the url is an email address, xxx@... add mailto: prefix
-    // (c) if the url starts with ftp., add ftp:// prefix
-    // (d) rest, add http:// prefix
-    let prefix = '';
-    if (url.search(URI_REGEX) < 0) {
-        if (url.search(MAILTO_REGEX) == 0) {
-            prefix = 'mailto:';
-        } else if (url.search(FTP_REGEX) == 0) {
-            prefix = 'ftp://';
-        } else {
-            // fallback to http://
-            prefix = 'http://';
-        }
-    }
-
-    return prefix + url;
-}
 
 /**
  * Insert a hyperlink at cursor.
@@ -69,37 +42,64 @@ export default function createLink(
         let originalUrl = linkData ? linkData.originalUrl : url;
         let anchor: HTMLAnchorElement = null;
 
-        execFormatWithUndo(editor, () => {
-            if (isSelectionCollapsed(editor)) {
-                anchor = getAnchorNodeAtCursor(editor);
+        editor.addUndoSnapshot();
 
-                // If there is already a link, just change its href
-                if (anchor) {
-                    anchor.href = normalizedUrl;
-                } else {
-                    anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
-                    anchor.textContent = displayText || originalUrl;
-                    anchor.href = normalizedUrl;
-                    editor.insertNode(anchor);
-                }
+        let range = editor.getSelectionRange();
+        if (range && range.collapsed) {
+            anchor = getAnchorNodeAtCursor(editor);
+
+            // If there is already a link, just change its href
+            if (anchor) {
+                anchor.href = normalizedUrl;
             } else {
-                /* the selection is not collapsed, use browser execCommand */
-                editor.getDocument().execCommand('createLink', false, normalizedUrl);
-                anchor = getAnchorNodeAtCursor(editor);
+                anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
+                anchor.textContent = displayText || originalUrl;
+                anchor.href = normalizedUrl;
+                editor.insertNode(anchor);
             }
-            if (altText && anchor) {
-                // Hack: Ideally this should be done by HyperLink plugin.
-                // We make a hack here since we don't have an event to notify HyperLink plugin
-                // before we apply the link.
-                anchor.removeAttribute(TEMP_TITLE);
-                anchor.title = altText;
-            }
-        });
+        } else {
+            /* the selection is not collapsed, use browser execCommand */
+            editor.getDocument().execCommand('createLink', false, normalizedUrl);
+            anchor = getAnchorNodeAtCursor(editor);
+        }
+        if (altText && anchor) {
+            // Hack: Ideally this should be done by HyperLink plugin.
+            // We make a hack here since we don't have an event to notify HyperLink plugin
+            // before we apply the link.
+            anchor.removeAttribute(TEMP_TITLE);
+            anchor.title = altText;
+        }
 
+        editor.addUndoSnapshot();
         editor.triggerContentChangedEvent(ChangeSource.CreateLink, anchor);
     }
 }
 
 function getAnchorNodeAtCursor(editor: Editor): HTMLAnchorElement {
     return queryNodesWithSelection(editor, 'a[href]')[0] as HTMLAnchorElement;
+}
+
+function applyLinkPrefix(url: string): string {
+    if (!url) {
+        return url;
+    }
+
+    // Add link prefix per rule:
+    // (a) if the url always starts with a URI scheme, leave it as it is
+    // (b) if the url is an email address, xxx@... add mailto: prefix
+    // (c) if the url starts with ftp., add ftp:// prefix
+    // (d) rest, add http:// prefix
+    let prefix = '';
+    if (url.search(URI_REGEX) < 0) {
+        if (url.search(MAILTO_REGEX) == 0) {
+            prefix = 'mailto:';
+        } else if (url.search(FTP_REGEX) == 0) {
+            prefix = 'ftp://';
+        } else {
+            // fallback to http://
+            prefix = 'http://';
+        }
+    }
+
+    return prefix + url;
 }

@@ -2,6 +2,7 @@ import EditorCore from '../editor/EditorCore';
 import focus from './focus';
 import getContentTraverser from './getContentTraverser';
 import getSelectionRange from './getSelectionRange';
+import insertNode from './insertNode';
 import updateSelection from './updateSelection';
 import { ContentScope } from 'roosterjs-editor-types';
 
@@ -14,7 +15,6 @@ const ZERO_WIDTH_SPACE = '&#8203;';
 // TODO: what if user position this in an inlne element, i.e. hashtag, creating a span within an existing inline element may not be a good idea
 function applyInlineStyleToCollapsedSelection(
     core: EditorCore,
-    selectionRange: Range,
     styler: (element: HTMLElement) => void
 ): void {
     // let's just be simple to create a new span to hold the style
@@ -24,7 +24,7 @@ function applyInlineStyleToCollapsedSelection(
     // for here, we inject ZWS - zero width space
     element.innerHTML = ZERO_WIDTH_SPACE;
     styler(element);
-    selectionRange.insertNode(element);
+    insertNode(core, element);
 
     // reset selection to be after the ZWS (rather than selecting it)
     // This is needed so that the cursor still looks blinking inside editor
@@ -41,7 +41,6 @@ function applyInlineStyleToCollapsedSelection(
 // and apply style on each individual inline element
 function applyInlineStyleToNonCollapsedSelection(
     core: EditorCore,
-    selectionRange: Range,
     styler: (element: HTMLElement) => void
 ): void {
     // This is start and end node that get the style. The start and end needs to be recorded so that selection
@@ -88,9 +87,9 @@ export default function applyInlineStyle(
         // We may do a browser check to force it to go collapsed code path when we see an empty range
         // UserAgent.GetInstance().IsBrowserChrome && range.toString() == _String.Empty
         if (selectionRange.collapsed) {
-            applyInlineStyleToCollapsedSelection(core, selectionRange, styler);
+            applyInlineStyleToCollapsedSelection(core, styler);
         } else {
-            applyInlineStyleToNonCollapsedSelection(core, selectionRange, styler);
+            applyInlineStyleToNonCollapsedSelection(core, styler);
         }
     }
 }

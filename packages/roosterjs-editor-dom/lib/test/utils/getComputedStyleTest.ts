@@ -5,18 +5,18 @@ describe('getComputedStyle()', () => {
     let testID = 'getComputedStyle';
 
     it('input = ["", "font-size"]', () => {
-        runTest(['', 'font-size'], '');
+        runTest(['', 'font-size'], []);
     });
 
     it('input = ["test", "font-size"]', () => {
-        runTest(['test', 'font-size'], '');
+        runTest(['test', 'font-size'], []);
     });
 
     it('input = [<div style="font-size:12px">Test</div>, "font-size"]', () => {
-        runTest(['<div style="font-size:12px">Test</div>', 'font-size'], '12px');
+        runTest(['<div style="font-size:12px">Test</div>', 'font-size'], ['12px']);
     });
 
-    function runTest(input: [string, string], output: string) {
+    function runTest(input: [string, string], output: string[]) {
         // Arrange
         let testDiv = DomTestHelper.createElementFromContent(testID, input[0]);
 

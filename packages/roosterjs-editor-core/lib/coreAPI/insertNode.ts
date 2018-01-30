@@ -14,7 +14,7 @@ import { ContentPosition, InsertOption, NodeType } from 'roosterjs-editor-types'
 
 const HTML_EMPTY_DIV = '<div></div>';
 
-export default function insertNode(core: EditorCore, node: Node, option: InsertOption): boolean {
+export default function insertNode(core: EditorCore, node: Node, option?: InsertOption): boolean {
     option = option || {
         position: ContentPosition.SelectionStart,
         updateCursor: true,

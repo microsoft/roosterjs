@@ -1,5 +1,4 @@
 import execFormatWithUndo from './execFormatWithUndo';
-import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -12,10 +11,5 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function toggleUnderline(editor: Editor) {
     editor.focus();
-    let formatter = () => editor.getDocument().execCommand('underline', false, null);
-    if (isSelectionCollapsed(editor)) {
-        formatter();
-    } else {
-        execFormatWithUndo(editor, formatter);
-    }
+    execFormatWithUndo(editor, () => editor.getDocument().execCommand('underline', false, null));
 }
