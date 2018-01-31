@@ -100,13 +100,21 @@ function getName(matches, nameIndex) {
     }
 }
 
+function appendText(elements, name, text) {
+    if (!elements[name]) {
+        elements[name] = [];
+    }
+
+    elements[name].push(text);
+}
+
 function parseClasses(content, elements) {
     var matches;
     while (matches = regClassInterface.exec(content)) {
         var result = parsePair(content, matches.index + matches[0].length, '{', '}', 1);
         var classText = (matches[1] || '') + matches[5] + ' ' + namePlaceholder + (matches[8] || '') + ' {' + result[0];
         var name = getName(matches, 6);
-        elements[name] = classText;
+        appendText(elements, name, classText);
         content = result[1];
     }
     return content.replace(regClassInterface, '');
@@ -117,7 +125,7 @@ function parseFunctions(content, elements) {
     while (matches = regFunction.exec(content)) {
         var functionText = (matches[1] || '') + 'function ' + namePlaceholder + matches[7];
         var name = getName(matches, 5);
-        elements[name] = functionText;
+        appendText(elements, name, functionText);
     }
     return content.replace(regFunction, '');
 }
@@ -128,7 +136,7 @@ function parseEnum(content, elements) {
         var result = parsePair(content, matches.index + matches[0].length, '{', '}', 1);
         var enumText = (matches[1] || '') + (matches[5] || '') + 'enum '+ namePlaceholder + ' {' + result[0];
         var name = getName(matches, 6);
-        elements[name] = enumText;
+        appendText(elements, name, enumText);
         content = result[1];
     }
     return content.replace(regEnum, '');
@@ -140,7 +148,7 @@ function parseType(content, elements) {
         var result = parsePair(content, matches.index + matches[0].length, '{', '}', 0, ';');
         var typeText = (matches[1] || '') + 'type ' + namePlaceholder + ' = ' + result[0];
         var name = getName(matches, 5);
-        elements[name] = typeText;
+        appendText(elements, name, typeText);
         content = result[1];
     }
 
@@ -153,7 +161,7 @@ function parseConst(content, elements) {
         var result = parsePair(content, matches.index + matches[0].length, '{', '}', 0, ';');
         var constText = (matches[1] || '') + 'const ' + namePlaceholder + ': ' + result[0];
         var name = getName(matches, 5);
-        elements[name] = constText;
+        appendText(elements, name, constText);
         content = result[1];
     }
 
@@ -237,23 +245,26 @@ function output(filename, library, queue) {
         if (exports) {
             for (var name in exports){
                 var alias = exports[name];
-                var text;
+                var texts;
                 if (elements[name]) {
-                    text = elements[name];
+                    texts = elements[name];
                 } else if (elements[name + '<T>']) {
-                    text = elements[name + '<T>'];
+                    texts = elements[name + '<T>'];
                     alias = alias + '<T>';
                 } else {
                     throw new Error('Name not found: ' + name);
                 }
-                text = text.replace(namePlaceholder, alias);
 
-                if (library) {
-                    content += '    ' + text.replace(/\r\n/g, '\r\n    ').trim() + '\r\n\r\n';
-                } else {
-                    content += (multiLineComment.test(text) ?
-                        text.replace(multiLineComment, '$1export ') :
-                        'export ' + text) + '\r\n\r\n';
+                for (var text of texts) {
+                    text = text.replace(namePlaceholder, alias);
+
+                    if (library) {
+                        content += '    ' + text.replace(/\r\n/g, '\r\n    ').trim() + '\r\n\r\n';
+                    } else {
+                        content += (multiLineComment.test(text) ?
+                            text.replace(multiLineComment, '$1export ') :
+                            'export ' + text) + '\r\n\r\n';
+                    }
                 }
             }
         }

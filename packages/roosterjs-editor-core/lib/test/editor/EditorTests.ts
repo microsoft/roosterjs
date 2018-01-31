@@ -2,7 +2,7 @@ import Editor from '../../editor/Editor';
 import * as TestHelper from '../TestHelper';
 import { ContentPosition } from 'roosterjs-editor-types';
 import * as getSelection from '../../coreAPI/getSelection';
-import * as getSelectionRange from '../../coreAPI/getSelectionRange';
+import * as getLiveSelectionRange from '../../coreAPI/getLiveSelectionRange';
 import * as saveSelectionRange from '../../coreAPI/saveSelectionRange';
 
 let editor: Editor;
@@ -30,7 +30,7 @@ describe('Editor getSelection()', () => {
     });
 });
 
-describe('Editor getSelectionRange()', () => {
+describe('Editor getRange()', () => {
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);
     });
@@ -40,24 +40,24 @@ describe('Editor getSelectionRange()', () => {
         TestHelper.removeElement(testID);
     });
 
-    it('getSelectionRange shold invoke getSelectionRange in Selection if in foucs', () => {
+    it('getRange shold invoke getRange in Selection if in foucs', () => {
         // Arrange
-        spyOn(getSelectionRange, 'default').and.callThrough();
+        spyOn(getLiveSelectionRange, 'default').and.callThrough();
         editor.focus();
 
         // Act
-        editor.getSelectionRange();
+        editor.getRange();
 
         // Assert
-        expect(getSelectionRange.default).toHaveBeenCalled();
+        expect(getLiveSelectionRange.default).toHaveBeenCalled();
     });
 
-    it('getSelectionRange shold return null if not in focus', () => {
+    it('getRange shold return null if not in focus', () => {
         // Arrange
-        spyOn(getSelectionRange, 'default').and.callThrough();
+        spyOn(getLiveSelectionRange, 'default').and.callThrough();
 
         // Act
-        let selectionRange = editor.getSelectionRange();
+        let selectionRange = editor.getRange();
 
         // Assert
         expect(selectionRange).toBeNull();
@@ -401,7 +401,7 @@ describe('Editor updateSelection()', () => {
         editor.updateSelection(selectionRange);
 
         // Assert
-        expect(editor.getSelectionRange()).toBe(selectionRange);
+        expect(editor.getRange()).toBe(selectionRange);
     });
 });
 

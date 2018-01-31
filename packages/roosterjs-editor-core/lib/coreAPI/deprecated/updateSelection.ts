@@ -1,7 +1,8 @@
-import EditorCore from '../editor/EditorCore';
-import getSelection from './getSelection';
-import hasFocus from './hasFocus';
-import isRangeInContainer from '../utils/isRangeInContainer';
+import EditorCore from '../../editor/EditorCore';
+import getSelection from '../getSelection';
+import hasFocus from '../hasFocus';
+import isRangeInContainer from '../../utils/isRangeInContainer';
+import { SelectionRange } from 'roosterjs-editor-types';
 
 export default function updateSelection(core: EditorCore, range: Range): boolean {
     let selectionUpdated = false;
@@ -14,7 +15,8 @@ export default function updateSelection(core: EditorCore, range: Range): boolean
 
             selection.addRange(range);
             if (!hasFocus(core)) {
-                core.cachedSelectionRange = range;
+                core.cachedRange = range;
+                core.cachedSelectionRange = SelectionRange.create(range);
             }
 
             selectionUpdated = true;

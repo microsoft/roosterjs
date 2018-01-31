@@ -9,14 +9,14 @@ import calcDefaultFormat from '../utils/calcDefaultFormat';
 import focus from '../coreAPI/focus';
 import getContentTraverser from '../coreAPI/getContentTraverser';
 import getCursorRect from '../coreAPI/getCursorRect';
+import getLiveSelectionRange from '../coreAPI/getLiveSelectionRange';
 import getSelection from '../coreAPI/getSelection';
-import getSelectionRange from '../coreAPI/getSelectionRange';
 import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
 import restoreSelection from '../coreAPI/restoreSelection';
 import saveSelectionRange from '../coreAPI/saveSelectionRange';
 import triggerEvent from '../coreAPI/triggerEvent';
-import updateSelection from '../coreAPI/updateSelection';
+import updateSelection from '../coreAPI/deprecated/updateSelection';
 import {
     ChangeSource,
     ContentPosition,
@@ -30,6 +30,7 @@ import {
     PluginEvent,
     PluginEventType,
     Rect,
+    SelectionRange,
 } from 'roosterjs-editor-types';
 import {
     ContentTraverser,
@@ -57,6 +58,7 @@ export default class Editor {
     private inIME: boolean;
     private core: EditorCore;
     private eventDisposers: (() => void)[];
+    private defaultSelectionRange: SelectionRange;
 
     /**
      * Creates an instance of Editor
@@ -76,6 +78,7 @@ export default class Editor {
             inlineElementFactory: new InlineElementFactory(),
             defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
             customData: {},
+            cachedRange: null,
             cachedSelectionRange: null,
             plugins: (options.plugins || []).filter(plugin => !!plugin),
         };
@@ -102,7 +105,13 @@ export default class Editor {
         // 6. Create event handler to bind DOM events
         this.createEventHandlers();
 
-        // 7. Finally make the container editable and set its selection styles
+        // 7. Create a default selection range at beginning of editor
+        let range = this.core.document.createRange();
+        range.setStart(this.core.contentDiv, 0);
+        range.collapse(true);
+        this.defaultSelectionRange = SelectionRange.create(range);
+
+        // 8. Finally make the container editable and set its selection styles
         if (!this.omitContentEditable) {
             contentDiv.setAttribute('contenteditable', 'true');
             let styles = contentDiv.style;
@@ -294,10 +303,20 @@ export default class Editor {
     /**
      * Get current selection range from Editor.
      * It does a live pull on the selection, if nothing retrieved, return whatever we have in cache.
+     * @deprecated Use getSelectionRange() instead
      * @returns current selection range, or null if editor never got focus before
      */
-    public getSelectionRange(): Range {
-        return getSelectionRange(this.core, true /*tryGetFromCache*/);
+    public getRange(): Range {
+        let selectionRange = getLiveSelectionRange(this.core) || this.core.cachedSelectionRange;
+        return selectionRange ? selectionRange.rawRange : null;
+    }
+
+    public getSelectionRange(): SelectionRange {
+        return (
+            getLiveSelectionRange(this.core) ||
+            this.core.cachedSelectionRange ||
+            this.defaultSelectionRange
+        );
     }
 
     /**
@@ -533,13 +552,14 @@ export default class Editor {
             ),
             attachDomEvent(this.core, 'focus', null, () => {
                 // Restore the last saved selection first
-                if (this.core.cachedSelectionRange && !this.disableRestoreSelectionOnFocus) {
+                if (this.core.cachedRange && !this.disableRestoreSelectionOnFocus) {
                     restoreSelection(this.core);
                 }
+                this.core.cachedRange = null;
                 this.core.cachedSelectionRange = null;
             }),
             attachDomEvent(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, () => {
-                if (!this.core.cachedSelectionRange) {
+                if (!this.core.cachedRange) {
                     saveSelectionRange(this.core);
                 }
             }),
@@ -553,7 +573,7 @@ export default class Editor {
     // When selection is not collapsed, i.e. users press ctrl+A, and then type
     // We don't have a good way to fix that for the moment
     private onKeyPress = () => {
-        let selectionRange = getSelectionRange(this.core, true /*tryGetFromCache*/);
+        let selectionRange = this.getRange();
         let focusNode: Node;
         if (
             selectionRange &&

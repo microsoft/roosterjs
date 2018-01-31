@@ -1,5 +1,5 @@
 import EditorPlugin from '../editor/EditorPlugin';
-import { DefaultFormat } from 'roosterjs-editor-types';
+import { DefaultFormat, SelectionRange } from 'roosterjs-editor-types';
 import { InlineElementFactory } from 'roosterjs-editor-dom';
 
 interface EditorCore {
@@ -14,7 +14,12 @@ interface EditorCore {
             disposer: (value: any) => void;
         };
     };
-    cachedSelectionRange: Range;
+    /**
+     * @deprecated
+     */
+    cachedRange: Range;
+
+    cachedSelectionRange: SelectionRange;
 }
 
 export default EditorCore;

@@ -18,7 +18,7 @@ export default function getNodeAtCursor(editor: Editor): Node {
     }
 
     if (!node) {
-        let selectionRange = editor.getSelectionRange();
+        let selectionRange = editor.getRange();
         if (selectionRange) {
             node = selectionRange.collapsed
                 ? selectionRange.startContainer

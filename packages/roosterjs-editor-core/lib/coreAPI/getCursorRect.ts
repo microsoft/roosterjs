@@ -1,6 +1,6 @@
 import EditorCore from '../editor/EditorCore';
 import getSelection from './getSelection';
-import getSelectionRange from './getSelectionRange';
+import getLiveSelectionRange from './getLiveSelectionRange';
 import { DocumentPosition, Rect, NodeType, NodeBoundary } from 'roosterjs-editor-types';
 import { isDocumentPosition, normalizeEditorPoint } from 'roosterjs-editor-dom';
 
@@ -10,11 +10,13 @@ import { isDocumentPosition, normalizeEditorPoint } from 'roosterjs-editor-dom';
 // The returned rect structure has a left and right and they should be same
 // here since it is for cursor, not for a range.
 export default function getCursorRect(core: EditorCore): Rect {
-    let range = getSelectionRange(core, false /*tryGetFromCache*/);
+    let selectionRange = getLiveSelectionRange(core);
 
-    if (!range) {
+    if (!selectionRange) {
         return null;
     }
+
+    let range = selectionRange.rawRange;
 
     // There isn't a browser API that gets you position of cursor.
     // Different browsers emit slightly different behaviours and there is no a single API that

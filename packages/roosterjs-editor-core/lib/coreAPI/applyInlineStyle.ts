@@ -1,9 +1,9 @@
 import EditorCore from '../editor/EditorCore';
 import focus from './focus';
 import getContentTraverser from './getContentTraverser';
-import getSelectionRange from './getSelectionRange';
+import getLiveSelectionRange from './getLiveSelectionRange';
 import insertNode from './insertNode';
-import updateSelection from './updateSelection';
+import updateSelection from './deprecated/updateSelection';
 import { ContentScope } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
@@ -80,7 +80,7 @@ export default function applyInlineStyle(
     styler: (element: HTMLElement) => void
 ): void {
     focus(core);
-    let selectionRange = getSelectionRange(core, false /*tryGetFromCache*/);
+    let selectionRange = getLiveSelectionRange(core);
     if (selectionRange) {
         // TODO: Chrome has a bug that when the selection spans over several empty text nodes,
         // it may incorrectly report range not to be collapsed.

@@ -1,10 +1,10 @@
 import EditorCore from '../editor/EditorCore';
-import updateSelection from './updateSelection';
+import updateSelection from './deprecated/updateSelection';
 
 export default function restoreSelection(core: EditorCore): boolean {
     let selectionRestored = false;
-    if (core.cachedSelectionRange) {
-        selectionRestored = updateSelection(core, core.cachedSelectionRange);
+    if (core.cachedRange) {
+        selectionRestored = updateSelection(core, core.cachedRange);
     }
 
     return selectionRestored;

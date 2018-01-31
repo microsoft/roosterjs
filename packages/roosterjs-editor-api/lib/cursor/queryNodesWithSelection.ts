@@ -11,7 +11,7 @@ import { isDocumentPosition } from 'roosterjs-editor-dom';
 export default function queryNodesWithSelection(editor: Editor, selector: string): Node[] {
     let result: Node[] = [];
     let nodes = editor.queryContent(selector);
-    let range = editor.getSelectionRange();
+    let range = editor.getRange();
     if (range) {
         for (let i = 0; i < nodes.length; i++) {
             if (isIntersectWithNodeRange(nodes[i], range)) {

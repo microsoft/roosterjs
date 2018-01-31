@@ -11,5 +11,7 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function toggleStrikethrough(editor: Editor) {
     editor.focus();
-    execFormatWithUndo(editor, () => editor.getDocument().execCommand('strikeThrough', false, null));
+    execFormatWithUndo(editor, () =>
+        editor.getDocument().execCommand('strikeThrough', false, null)
+    );
 }

@@ -10,7 +10,7 @@ const CURSOR_END = 'cursor-end';
 // Build undo snapshot
 export function buildSnapshot(editor: Editor): string {
     // Build the snapshot in-between adding and removing cursor marker
-    let selectionRange = editor.getSelectionRange();
+    let selectionRange = editor.getRange();
     if (selectionRange) {
         addCursorMarkersToSelection(editor, selectionRange);
     }

@@ -1,6 +1,7 @@
 import EditorCore from '../editor/EditorCore';
-import getSelectionRange from './getSelectionRange';
+import getLiveSelectionRange from './getLiveSelectionRange';
 
 export default function saveSelectionRange(core: EditorCore) {
-    core.cachedSelectionRange = getSelectionRange(core, false /*tryGetFromCache*/);
+    core.cachedSelectionRange = getLiveSelectionRange(core);
+    core.cachedRange = core.cachedSelectionRange ? core.cachedSelectionRange.rawRange : null;
 }

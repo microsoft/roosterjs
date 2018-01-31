@@ -119,7 +119,7 @@ export default class ContentEdit implements EditorPlugin {
                                 blockQuoteElement.parentNode.removeChild(blockQuoteElement);
                             }
 
-                            let range = this.editor.getSelectionRange();
+                            let range = this.editor.getRange();
                             range.selectNode(node);
                             range.collapse(true /*toStart*/);
                             this.editor.updateSelection(range);
@@ -223,7 +223,7 @@ export default class ContentEdit implements EditorPlugin {
     }
 
     private isCursorAtBeginningOf(node: Node) {
-        let range = this.editor.getSelectionRange();
+        let range = this.editor.getRange();
         if (range && range.startOffset == NodeBoundary.Begin) {
             let container = range.startContainer;
             while (container != node && contains(node, container) && !container.previousSibling) {

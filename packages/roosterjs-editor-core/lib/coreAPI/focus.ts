@@ -1,14 +1,14 @@
 import EditorCore from '../editor/EditorCore';
-import getSelectionRange from './getSelectionRange';
+import getLiveSelectionRange from './getLiveSelectionRange';
 import hasFocus from './hasFocus';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import restoreSelection from './restoreSelection';
-import updateSelection from './updateSelection';
+import updateSelection from './deprecated/updateSelection';
 import { NodeType } from 'roosterjs-editor-types';
 import { getFirstLeafNode } from 'roosterjs-editor-dom';
 
 export default function focus(core: EditorCore) {
-    if (!hasFocus(core) || !getSelectionRange(core, false /*tryGetFromCache*/)) {
+    if (!hasFocus(core) || !getLiveSelectionRange(core)) {
         // Focus (document.activeElement indicates) and selection are mostly in sync, but could be out of sync in some extreme cases.
         // i.e. if you programmatically change window selection to point to a non-focusable DOM element (i.e. tabindex=-1 etc.).
         // On Chrome/Firefox, it does not change document.activeElement. On Edge/IE, it change document.activeElement to be body
@@ -21,7 +21,8 @@ export default function focus(core: EditorCore) {
         }
     }
 
-    // remember to clear cachedSelectionRange
+    // remember to clear cachedRange
+    core.cachedRange = null;
     core.cachedSelectionRange = null;
 
     // This is more a fallback to ensure editor gets focus if it didn't manage to move focus to editor

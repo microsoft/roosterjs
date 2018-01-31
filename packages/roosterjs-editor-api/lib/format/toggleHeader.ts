@@ -13,7 +13,7 @@ import { unwrap } from 'roosterjs-editor-dom';
  * if passed in param is outside the range, will be rounded to nearest number in the range
  */
 export default function toggleHeader(editor: Editor, level: number) {
-    let range = editor.getSelectionRange();
+    let range = editor.getRange();
     if (!range) {
         return;
     }

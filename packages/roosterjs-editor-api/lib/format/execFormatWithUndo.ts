@@ -25,7 +25,7 @@ export default function execFormatWithUndo(
     preserveSelection?: boolean
 ) {
     editor.addUndoSnapshot();
-    let range = editor.getSelectionRange();
+    let range = editor.getRange();
     let startPoint = range
         ? { containerNode: range.startContainer, offset: range.startOffset }
         : null;

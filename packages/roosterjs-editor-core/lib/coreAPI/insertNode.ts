@@ -1,8 +1,8 @@
 import EditorCore from '../editor/EditorCore';
 import focus from './focus';
-import getSelectionRange from './getSelectionRange';
+import getLiveSelectionRange from './getLiveSelectionRange';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
-import updateSelection from './updateSelection';
+import updateSelection from './deprecated/updateSelection';
 import {
     EditorSelection,
     getFirstBlockElement,
@@ -135,15 +135,15 @@ function insertNodeAtEnd(core: EditorCore, node: Node, option: InsertOption) {
 
 // Insert node at selection
 function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOption) {
-    let selectionRange = getSelectionRange(core, true /*tryGetFromCache*/);
+    let selectionRange = getLiveSelectionRange(core) || core.cachedSelectionRange;
     if (selectionRange) {
         // if to replace the selection and the selection is not collapsed, remove the the content at selection first
         if (option.replaceSelection && !selectionRange.collapsed) {
-            selectionRange.deleteContents();
+            selectionRange.rawRange.deleteContents();
         }
 
         // Create a clone (backup) for the selection first as we may need to restore to it later
-        let originalSelectionRange = selectionRange.cloneRange();
+        let originalSelectionRange = selectionRange.rawRange.cloneRange();
 
         // Adjust the insertion point
         // option.insertOnNewLine means to insert on a block after the selection, not really right at the selection
@@ -152,20 +152,20 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
         if (option.insertOnNewLine) {
             let editorSelection = new EditorSelection(
                 core.contentDiv,
-                selectionRange,
+                selectionRange.rawRange,
                 core.inlineElementFactory
             );
             let blockElement = editorSelection.startBlockElement;
-            selectionRange.setEndAfter(blockElement.getEndNode());
-            selectionRange.collapse(false /*toStart*/);
+            selectionRange.rawRange.setEndAfter(blockElement.getEndNode());
+            selectionRange.rawRange.collapse(false /*toStart*/);
         }
 
         let nodeForCursor = node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
-        selectionRange.insertNode(node);
+        selectionRange.rawRange.insertNode(node);
         if (option.updateCursor && nodeForCursor) {
-            selectionRange.setEndAfter(nodeForCursor);
-            selectionRange.collapse(false /*toStart*/);
-            updateSelection(core, selectionRange);
+            selectionRange.rawRange.setEndAfter(nodeForCursor);
+            selectionRange.rawRange.collapse(false /*toStart*/);
+            updateSelection(core, selectionRange.rawRange);
         } else {
             updateSelection(core, originalSelectionRange);
         }
