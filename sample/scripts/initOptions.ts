@@ -19,6 +19,11 @@ function initOptions() {
         window.alert(getCurrentEditor().getContent(true));
     });
 
+    document.getElementById('showTextContent').addEventListener('click', () => {
+        let text = getCurrentEditor().getTextContent();
+        window.alert(text);
+    });
+
     [
         'defaultShortcutCheckbox',
         'hyperlinkCheckbox',
