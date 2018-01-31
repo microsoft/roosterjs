@@ -246,6 +246,14 @@ export default class Editor {
     }
 
     /**
+     * Get plain text content inside editor
+     * @returns The text content inside editor
+     */
+    public getTextContent(): string {
+        return this.core.contentDiv.innerText;
+    }
+
+    /**
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * @param content HTML content to set in
      */
