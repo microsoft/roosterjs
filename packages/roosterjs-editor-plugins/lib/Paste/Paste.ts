@@ -56,8 +56,11 @@ export default class Paste implements EditorPlugin {
         } else if (event.eventType == PluginEventType.BeforePaste) {
             let beforePasteEvent = <BeforePasteEvent>event;
 
-            if (beforePasteEvent.pasteOption == PasteOption.PasteHtml) {
-                convertPastedContentFromWord(beforePasteEvent.fragment);
+            if (
+                beforePasteEvent.pasteOption == PasteOption.PasteHtml &&
+                convertPastedContentFromWord(beforePasteEvent.fragment)
+            ) {
+                beforePasteEvent.clipboardData.html = this.documentFragmentToHtml(beforePasteEvent.fragment);
             }
         }
     }
@@ -168,6 +171,12 @@ export default class Paste implements EditorPlugin {
         for (let parent of parents) {
             applyFormat(parent, format);
         }
+    }
+
+    private documentFragmentToHtml(fragment: DocumentFragment): string {
+        let span = this.editor.getDocument().createElement('span');
+        span.appendChild(fragment.cloneNode(true /*deep*/));
+        return span.innerHTML;
     }
 }
 
