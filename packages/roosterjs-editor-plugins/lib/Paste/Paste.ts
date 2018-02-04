@@ -14,6 +14,7 @@ import { insertImage } from 'roosterjs-editor-api';
 import buildClipboardData from './buildClipboardData';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import removeUnsafeTags from './removeUnsafeTags';
+import removeUselessCss from './removeUselessCss';
 
 /**
  * Paste plugin, handles onPaste event and paste content into editor
@@ -47,11 +48,12 @@ export default class Paste implements EditorPlugin {
         if (event.eventType == PluginEventType.BeforePaste) {
             let beforePasteEvent = <BeforePasteEvent>event;
 
-            if (
-                beforePasteEvent.pasteOption == PasteOption.PasteHtml &&
-                convertPastedContentFromWord(beforePasteEvent.fragment)
-            ) {
-                beforePasteEvent.clipboardData.html = this.documentFragmentToHtml(beforePasteEvent.fragment);
+            if (beforePasteEvent.pasteOption == PasteOption.PasteHtml) {
+                let changed = convertPastedContentFromWord(beforePasteEvent.fragment);
+                changed = removeUselessCss(beforePasteEvent.fragment) || changed;
+                if (changed) {
+                    beforePasteEvent.clipboardData.html = this.documentFragmentToHtml(beforePasteEvent.fragment);
+                }
             }
         }
     }
