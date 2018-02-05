@@ -74,7 +74,7 @@ export default function initFormatBar() {
     // Insert link
     document.getElementById('insertLink').addEventListener('click', function() {
         let editor = getCurrentEditor();
-        let range = editor.getRange();
+        let range = editor.getSelectionRange();
         let existingLink = queryNodesWithSelection(editor, 'a[href]')[0] as HTMLAnchorElement;
         let url = window.prompt('Url', existingLink ? existingLink.href : 'http://');
         let text = range.collapsed && !existingLink ? window.prompt('Text of link', url) : null;

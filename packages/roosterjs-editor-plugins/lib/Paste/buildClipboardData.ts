@@ -102,14 +102,14 @@ function directRetrieveHtml(event: ClipboardEvent, callback: (html: string) => v
 
 function retrieveHtmlViaTempDiv(editor: Editor, callback: (html: string) => void) {
     // cache original selection range in editor
-    let originalSelectionRange = editor.getRange();
+    let originalSelectionRange = editor.getSelectionRange();
     let tempDiv = getTempDivForPaste(editor);
     tempDiv.focus();
 
     window.requestAnimationFrame(() => {
         if (editor) {
             // restore original selection range in editor
-            editor.updateSelection(originalSelectionRange);
+            editor.updateSelection(originalSelectionRange.rawRange);
             callback(tempDiv.innerHTML);
             tempDiv.style.display = 'none';
             tempDiv.innerHTML = '';

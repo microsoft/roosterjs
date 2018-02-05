@@ -154,18 +154,16 @@ export default class Undo implements UndoService {
         // since we want the state prior to deletion restorable
         let evt = pluginEvent.rawEvent as KeyboardEvent;
         if (evt.which == KEY_BACKSPACE || evt.which == KEY_DELETE) {
-            let selectionRange = this.editor.getRange();
+            let selectionRange = this.editor.getSelectionRange();
 
             // Add snapshot when
             // 1. Something has been selected (not collapsed), or
             // 2. It has a different key code from the last keyDown event (to prevent adding too many snapshot when keeping press the same key), or
             // 3. Ctrl/Meta key is pressed so that a whole word will be deleted
-            if (
-                selectionRange &&
-                (!selectionRange.collapsed ||
+            if (!selectionRange.collapsed ||
                     this.lastKeyPress != evt.which ||
                     evt.ctrlKey ||
-                    evt.metaKey)
+                    evt.metaKey
             ) {
                 this.addUndoSnapshot();
             }
@@ -191,8 +189,7 @@ export default class Undo implements UndoService {
         }
 
         let shouldTakeUndo = false;
-        let selectionRange = this.editor.getRange();
-        if (selectionRange && !selectionRange.collapsed) {
+        if (!this.editor.getSelectionRange().collapsed) {
             // The selection will be removed, should take undo
             shouldTakeUndo = true;
         } else if (

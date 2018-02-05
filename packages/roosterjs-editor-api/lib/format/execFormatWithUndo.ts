@@ -1,14 +1,5 @@
 import { Editor } from 'roosterjs-editor-core';
-import { ChangeSource, EditorPoint, NodeType } from 'roosterjs-editor-types';
-
-/**
- * Formatter function type
- * @param startPoint Current selection start point
- * @param endPoint Current selection end point
- * @returns A fallback node for selection. When original selection range is not valid after format,
- * will try to select this element instead
- */
-export type Formatter = (startPoint: EditorPoint, endPoint: EditorPoint) => Node | void | any;
+import { ChangeSource, SelectionRangeBase, Position } from 'roosterjs-editor-types';
 
 /**
  * Execute format with undo
@@ -21,38 +12,32 @@ export type Formatter = (startPoint: EditorPoint, endPoint: EditorPoint) => Node
  */
 export default function execFormatWithUndo(
     editor: Editor,
-    formatter: Formatter,
+    formatter: () => Node | void | any,
     preserveSelection?: boolean
 ) {
     editor.addUndoSnapshot();
-    let range = editor.getRange();
-    let startPoint = range
-        ? { containerNode: range.startContainer, offset: range.startOffset }
-        : null;
-    let endPoint = range ? { containerNode: range.endContainer, offset: range.endOffset } : null;
-
-    let fallbackNode = formatter(startPoint, endPoint);
-    editor.triggerContentChangedEvent(ChangeSource.Format);
-
-    if (preserveSelection && startPoint && endPoint) {
-        updateSelection(editor, startPoint, endPoint, <Node>fallbackNode);
+    let range = editor.getSelectionRange();
+    let fallbackNode = formatter();
+    if (preserveSelection) {
+        updateSelection(editor, range, <Node>fallbackNode);
     }
 
+    editor.triggerContentChangedEvent(ChangeSource.Format);
     editor.addUndoSnapshot();
 }
 
 function updateSelection(
     editor: Editor,
-    startPoint: EditorPoint,
-    endPoint: EditorPoint,
+    selectionRange: SelectionRangeBase,
     fallbackNode: Node
 ) {
     editor.focus();
     let range = editor.getDocument().createRange();
-
-    if (validateEditorPoint(editor, startPoint) && validateEditorPoint(editor, endPoint)) {
-        range.setStart(startPoint.containerNode, startPoint.offset);
-        range.setEnd(endPoint.containerNode, endPoint.offset);
+    let start = Position.create(selectionRange.start);
+    let end = Position.create(selectionRange.end);
+    if (editor.contains(start.node) && editor.contains(end.node)) {
+        range.setStart(start.node, start.offset);
+        range.setEnd(end.node, end.offset);
     } else if (fallbackNode instanceof Node) {
         range.selectNode(fallbackNode);
     } else {
@@ -60,19 +45,4 @@ function updateSelection(
     }
 
     editor.updateSelection(range);
-}
-
-function validateEditorPoint(editor: Editor, point: EditorPoint): boolean {
-    if (point.containerNode && editor.contains(point.containerNode)) {
-        if (point.containerNode.nodeType == NodeType.Text) {
-            point.offset = Math.min(point.offset, (<Text>point.containerNode).data.length);
-        } else if (point.containerNode.nodeType == NodeType.Element) {
-            point.offset = Math.min(
-                point.offset,
-                (<HTMLElement>point.containerNode).childNodes.length
-            );
-        }
-        return point.offset >= 0;
-    }
-    return false;
 }

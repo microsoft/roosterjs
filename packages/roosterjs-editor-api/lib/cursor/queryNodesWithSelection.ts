@@ -1,4 +1,4 @@
-import { DocumentPosition } from 'roosterjs-editor-types';
+import { DocumentPosition, SelectionRangeBase } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { isDocumentPosition } from 'roosterjs-editor-dom';
 
@@ -11,20 +11,18 @@ import { isDocumentPosition } from 'roosterjs-editor-dom';
 export default function queryNodesWithSelection(editor: Editor, selector: string): Node[] {
     let result: Node[] = [];
     let nodes = editor.queryContent(selector);
-    let range = editor.getRange();
-    if (range) {
-        for (let i = 0; i < nodes.length; i++) {
-            if (isIntersectWithNodeRange(nodes[i], range)) {
-                result.push(nodes[i]);
-            }
+    let range = editor.getSelectionRange();
+    for (let i = 0; i < nodes.length; i++) {
+        if (isIntersectWithNodeRange(nodes[i], range)) {
+            result.push(nodes[i]);
         }
     }
     return result;
 }
 
-function isIntersectWithNodeRange(node: Node, range: Range): boolean {
-    let startPosition = node.compareDocumentPosition(range.startContainer);
-    let endPosition = node.compareDocumentPosition(range.endContainer);
+function isIntersectWithNodeRange(node: Node, range: SelectionRangeBase): boolean {
+    let startPosition = node.compareDocumentPosition(range.start.node);
+    let endPosition = node.compareDocumentPosition(range.end.node);
     let targetPositions = [
         DocumentPosition.Same,
         DocumentPosition.ContainedBy,

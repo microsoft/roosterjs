@@ -30,7 +30,7 @@ describe('Editor getSelection()', () => {
     });
 });
 
-describe('Editor getRange()', () => {
+describe('Editor getSelectionRange()', () => {
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);
     });
@@ -40,27 +40,27 @@ describe('Editor getRange()', () => {
         TestHelper.removeElement(testID);
     });
 
-    it('getRange shold invoke getRange in Selection if in foucs', () => {
+    it('getSelectionRange shold invoke getSelectionRange in Selection if in foucs', () => {
         // Arrange
         spyOn(getLiveSelectionRange, 'default').and.callThrough();
         editor.focus();
 
         // Act
-        editor.getRange();
+        editor.getSelectionRange();
 
         // Assert
         expect(getLiveSelectionRange.default).toHaveBeenCalled();
     });
 
-    it('getRange shold return null if not in focus', () => {
+    it('getSelectionRange shold return default selection if not in focus', () => {
         // Arrange
         spyOn(getLiveSelectionRange, 'default').and.callThrough();
 
         // Act
-        let selectionRange = editor.getRange();
+        let selectionRange = editor.getSelectionRange();
 
         // Assert
-        expect(selectionRange).toBeNull();
+        expect(selectionRange.start.node).toBe(document.getElementById(testID));
     });
 });
 
@@ -401,7 +401,7 @@ describe('Editor updateSelection()', () => {
         editor.updateSelection(selectionRange);
 
         // Assert
-        expect(editor.getRange()).toBe(selectionRange);
+        expect(editor.getSelectionRange().rawRange).toBe(selectionRange);
     });
 });
 

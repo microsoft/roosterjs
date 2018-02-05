@@ -44,8 +44,7 @@ export default function createLink(
 
         editor.addUndoSnapshot();
 
-        let range = editor.getRange();
-        if (range && range.collapsed) {
+        if (editor.getSelectionRange().collapsed) {
             anchor = getAnchorNodeAtCursor(editor);
 
             // If there is already a link, just change its href

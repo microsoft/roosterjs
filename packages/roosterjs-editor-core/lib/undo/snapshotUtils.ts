@@ -1,7 +1,6 @@
 import Editor from '../editor/Editor';
 import browserData from '../utils/BrowserData';
-import { EditorPoint, NodeBoundary, NodeType } from 'roosterjs-editor-types';
-import { normalizeEditorPoint } from 'roosterjs-editor-dom';
+import { Position } from 'roosterjs-editor-types';
 
 // Undo cursor marker
 const CURSOR_START = 'cursor-start';
@@ -10,10 +9,7 @@ const CURSOR_END = 'cursor-end';
 // Build undo snapshot
 export function buildSnapshot(editor: Editor): string {
     // Build the snapshot in-between adding and removing cursor marker
-    let selectionRange = editor.getRange();
-    if (selectionRange) {
-        addCursorMarkersToSelection(editor, selectionRange);
-    }
+    addCursorMarkersToSelection(editor);
 
     let htmlContent = editor.getContent(false /*triggerExtractContentEvent*/) || '';
 
@@ -47,23 +43,18 @@ function removeCursorMarkers(editor: Editor): void {
 
 // Temporarily inject a SPAN marker to the selection which is used to remember where the selection is
 // The marker is used on restore selection on undo
-function addCursorMarkersToSelection(editor: Editor, selectionRange: Range): void {
+function addCursorMarkersToSelection(editor: Editor): void {
+    let range = editor.getSelectionRange();
+
     // First to insert the start marker
     let startMarker = createCursorMarker(editor, CURSOR_START);
-    let startPoint = normalizeEditorPoint(
-        selectionRange.startContainer,
-        selectionRange.startOffset
-    );
-    insertCursorMarkerToEditorPoint(editor, startPoint, startMarker);
+    insertCursorMarkerToEditorPoint(editor, range.start, startMarker);
 
     // Then the end marker
     // For collapsed selection, use the start marker as the editor so that
     // the end marker is always placed after the start marker
     let endMarker = createCursorMarker(editor, CURSOR_END);
-    let endPoint = selectionRange.collapsed
-        ? { containerNode: startMarker, offset: NodeBoundary.End }
-        : normalizeEditorPoint(selectionRange.endContainer, selectionRange.endOffset);
-    insertCursorMarkerToEditorPoint(editor, endPoint, endMarker);
+    insertCursorMarkerToEditorPoint(editor, range.end, endMarker);
 }
 
 // Update selection to where cursor marker is
@@ -89,26 +80,19 @@ function updateSelectionToCursorMarkers(editor: Editor) {
 // which gives precise control over DOM structure and solves the chrome issue
 function insertCursorMarkerToEditorPoint(
     editor: Editor,
-    editorPoint: EditorPoint,
+    position: Position,
     cursorMaker: Element
 ): void {
-    let containerNode = editorPoint.containerNode;
-    let offset = editorPoint.offset;
-    let parentNode = containerNode.parentNode;
-    if (editorPoint.offset == NodeBoundary.Begin) {
-        // For boundary_begin, insert the marker before the node
-        parentNode.insertBefore(cursorMaker, containerNode);
-    } else if (
-        containerNode.nodeType == NodeType.Element ||
-        (containerNode.nodeType == NodeType.Text &&
-            editorPoint.offset == containerNode.nodeValue.length)
-    ) {
+    let parentNode = position.node.parentNode;
+    if (position.offset == 0) {
+        parentNode.insertBefore(cursorMaker, position.node);
+    } else if (position.isAtEnd) {
         // otherwise, insert after
-        parentNode.insertBefore(cursorMaker, containerNode.nextSibling);
+        parentNode.insertBefore(cursorMaker, position.node.nextSibling);
     } else {
         // This is for insertion in-between a text node
         let insertionRange = editor.getDocument().createRange();
-        insertionRange.setStart(containerNode, offset);
+        insertionRange.setStart(position.node, position.offset);
         insertionRange.collapse(true /* toStart */);
         insertionRange.insertNode(cursorMaker);
     }

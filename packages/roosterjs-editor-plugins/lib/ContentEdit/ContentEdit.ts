@@ -8,15 +8,15 @@ import {
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-import { contains, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
+import { getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     Indentation,
     ListState,
-    NodeBoundary,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
+    Position,
 } from 'roosterjs-editor-types';
 import ContentEditFeatures, { getDefaultContentEditFeatures } from './ContentEditFeatures';
 
@@ -119,7 +119,7 @@ export default class ContentEdit implements EditorPlugin {
                                 blockQuoteElement.parentNode.removeChild(blockQuoteElement);
                             }
 
-                            let range = this.editor.getRange();
+                            let range = this.editor.getDocument().createRange();
                             range.selectNode(node);
                             range.collapse(true /*toStart*/);
                             this.editor.updateSelection(range);
@@ -223,14 +223,10 @@ export default class ContentEdit implements EditorPlugin {
     }
 
     private isCursorAtBeginningOf(node: Node) {
-        let range = this.editor.getRange();
-        if (range && range.startOffset == NodeBoundary.Begin) {
-            let container = range.startContainer;
-            while (container != node && contains(node, container) && !container.previousSibling) {
-                container = container.parentNode;
-            }
-            return container == node;
-        }
-        return false;
+        let range = this.editor.getSelectionRange();
+        return range.collapsed && range.start.offset == 0 && Position.equal(
+            Position.normalize(Position.create(node, Position.Begin)),
+            Position.normalize(range.start)
+        );
     }
 }

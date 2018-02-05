@@ -13,17 +13,15 @@ import { NodeType } from 'roosterjs-editor-types';
 export default function getNodeAtCursor(editor: Editor): Node {
     let node: Node = null;
     if (editor.hasFocus()) {
-        let sel = editor.getSelection();
-        node = sel ? sel.focusNode : null;
+        let selection = editor.getSelection();
+        node = selection ? selection.focusNode : null;
     }
 
     if (!node) {
-        let selectionRange = editor.getRange();
-        if (selectionRange) {
-            node = selectionRange.collapsed
-                ? selectionRange.startContainer
-                : selectionRange.commonAncestorContainer;
-        }
+        let selectionRange = editor.getSelectionRange();
+        node = selectionRange.collapsed
+            ? selectionRange.start.node
+            : selectionRange.rawRange.commonAncestorContainer;
     }
 
     if (node && node.nodeType == NodeType.Text) {

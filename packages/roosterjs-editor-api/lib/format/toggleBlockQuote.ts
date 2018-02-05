@@ -2,10 +2,10 @@ import execFormatWithUndo from './execFormatWithUndo';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { getListElementAtNode } from './cacheGetListElement';
 import { getTagOfNode, splitParentNode, unwrap, wrapAll, wrap } from 'roosterjs-editor-dom';
-import { ContentScope, EditorPoint, NodeBoundary } from 'roosterjs-editor-types';
+import { ContentScope } from 'roosterjs-editor-types';
 import { Editor, browserData } from 'roosterjs-editor-core';
 
-var ZERO_WIDTH_SPACE = '&#8203;';
+var ZERO_WIDTH_SPACE = '\u200b';
 
 let defaultStyler = (element: HTMLElement) => {
     element.style.borderLeft = '3px solid';
@@ -26,7 +26,7 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
     let blockquoteNodes = queryNodesWithSelection(editor, 'blockquote');
     execFormatWithUndo(
         editor,
-        (startPoint, endPoint) => {
+        () => {
             if (blockquoteNodes.length) {
                 // There are already blockquote nodes, unwrap them
                 blockquoteNodes.forEach(node => unwrap(node));
@@ -38,12 +38,13 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
                 nodes = getSplittedListNodes(nodes);
 
                 // Step 3: Handle some special cases
-                nodes = getNodesWithSpecialCaseHandled(editor, nodes, startPoint, endPoint);
+                nodes = getNodesWithSpecialCaseHandled(editor, nodes);
 
                 let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLElement;
                 (styler || defaultStyler)(quoteElement);
 
-                return quoteElement;
+                // Return a fallback to select in case original selection is not valid any more
+                return nodes[0];
             }
         },
         true /*preserveSelection*/
@@ -108,15 +109,13 @@ function getSplittedListNodes(nodes: Node[]): Node[] {
 
 function getNodesWithSpecialCaseHandled(
     editor: Editor,
-    nodes: Node[],
-    startPoint: EditorPoint,
-    endPoint: EditorPoint
+    nodes: Node[]
 ): Node[] {
     if (nodes.length == 1 && nodes[0].nodeName == 'BR') {
         nodes[0] = wrap(nodes[0], '<div></div>') as HTMLDivElement;
     } else if (nodes.length == 0) {
         let document = editor.getDocument();
-        // Selection is collapsed and blockElment is null, we need to create an empty div.
+        // Selection is collapsed and blockElement is null, we need to create an empty div.
         // In case of IE and Edge, we insert ZWS to put cursor in the div, otherwise insert BR node.
         let div = document.createElement('div');
         div.appendChild(
@@ -127,11 +126,6 @@ function getNodesWithSpecialCaseHandled(
 
         editor.insertNode(div);
         nodes.push(div);
-
-        if (startPoint && endPoint) {
-            startPoint.containerNode = endPoint.containerNode = div;
-            startPoint.offset = endPoint.offset = NodeBoundary.Begin;
-        }
     }
     return nodes;
 }

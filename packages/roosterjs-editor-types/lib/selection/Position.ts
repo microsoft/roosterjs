@@ -1,8 +1,9 @@
 import NodeType from '../browser/NodeType';
 
 interface Position {
-    node: Node;
-    offset: number;
+    readonly node: Node;
+    readonly offset: number;
+    readonly isAtEnd: boolean;
 }
 
 export const enum PositionType {
@@ -19,58 +20,88 @@ const Position = {
     After: PositionType.After,
     create: createPosition,
     normalize: normalize,
+    equal: equal,
 };
 
+/**
+ * Clone and validate a position from existing position.
+ * If the given position has invalid offset, this function will return a corrected value.
+ * @param position The original position to clone from
+ */
+function createPosition(position: Position): Position;
+
+/**
+ * Create a Position from node and an offset number
+ * @param node The node of this position
+ * @param offset Offset of this position
+ */
 function createPosition(node: Node, offset: number): Position;
+
+/**
+ * Create a Position from node and a type of position
+ * @param node The node of this position
+ * @param positionType Type of the postion, can be Begin, End, Before, After
+ */
 function createPosition(node: Node, positionType: PositionType): Position;
 
-function createPosition(node: Node, offsetOrPosType: number | PositionType): Position {
+function createPosition(nodeOrPosition: Node | Position, offsetOrPosType?: number | PositionType): Position {
     let offset = 0;
+    let isAtEnd: boolean;
+    let node: Node;
+
+    if ((<Position>nodeOrPosition).node) {
+        node = (<Position>nodeOrPosition).node;
+        offsetOrPosType = (<Position>nodeOrPosition).offset;
+    } else {
+        node = <Node>nodeOrPosition;
+    }
+
     switch (offsetOrPosType) {
         case PositionType.Before:
             offset = getIndexOfNode(node);
             node = node.parentNode;
+            isAtEnd = false;
             break;
 
         case PositionType.After:
             offset = getIndexOfNode(node) + 1;
+            isAtEnd = !node.nextSibling;
             node = node.parentNode;
             break;
 
         case PositionType.End:
             offset = getEndOffset(node);
+            isAtEnd = true;
             break;
 
         default:
-            offset = Math.max(0, Math.min(<number>offsetOrPosType, getEndOffset(node)));
+            let endOffset = getEndOffset(node);
+            offset = Math.max(0, Math.min(<number>offsetOrPosType, endOffset));
+            isAtEnd = offset == endOffset;
             break;
     }
 
     return {
         node: node,
         offset: offset,
+        isAtEnd: isAtEnd,
     };
 }
 
-function normalize(position: Position) {
-    let childCount: number;
-    while (
-        position.node.nodeType == NodeType.Element &&
-        (childCount = position.node.childNodes.length) > 0
-    ) {
-        let isAtEnd = position.offset >= childCount;
-        let child = isAtEnd ? position.node.lastChild : position.node.childNodes[position.offset];
-        if (child.nodeType == NodeType.Element) {
-            position.node = child;
-            position.offset = isAtEnd ? child.childNodes.length : 0;
-        } else if (child.nodeType == NodeType.Text) {
-            position.node = child;
-            position.offset = isAtEnd ? child.nodeValue.length : 0;
-            break;
-        } else {
-            break;
-        }
+function normalize(position: Position): Position {
+    let { node, offset, isAtEnd } = position;
+    let newOffset: number | PositionType.Begin | PositionType.End = offset;
+    while (node.nodeType == NodeType.Element && node.firstChild) {
+        node = newOffset == PositionType.Begin ?
+            node.firstChild :
+            newOffset == PositionType.End ? node.lastChild : node.childNodes[<number>newOffset];
+        newOffset = isAtEnd ? PositionType.End : PositionType.Begin;
     }
+    return createPosition(node, newOffset);
+}
+
+function equal(p1: Position, p2: Position): boolean {
+    return p1 == p2 || (p1.node == p2.node && p1.offset == p2.offset);
 }
 
 function getIndexOfNode(node: Node): number {

@@ -5,7 +5,6 @@ import UndoService from './UndoService';
 import applyInlineStyle from '../coreAPI/applyInlineStyle';
 import attachDomEvent from '../coreAPI/attachDomEvent';
 import browserData from '../utils/BrowserData';
-import calcDefaultFormat from '../utils/calcDefaultFormat';
 import focus from '../coreAPI/focus';
 import getContentTraverser from '../coreAPI/getContentTraverser';
 import getCursorRect from '../coreAPI/getCursorRect';
@@ -35,7 +34,6 @@ import {
 import {
     ContentTraverser,
     EditorSelection,
-    InlineElementFactory,
     NodeBlockElement,
     applyFormat,
     contains,
@@ -72,16 +70,7 @@ export default class Editor {
         }
 
         // 2. Store options values to local variables
-        this.core = {
-            contentDiv: contentDiv,
-            document: contentDiv.ownerDocument,
-            inlineElementFactory: new InlineElementFactory(),
-            defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
-            customData: {},
-            cachedRange: null,
-            cachedSelectionRange: null,
-            plugins: (options.plugins || []).filter(plugin => !!plugin),
-        };
+        this.core = EditorCore.create(contentDiv, options);
         this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus;
         this.omitContentEditable = options.omitContentEditableAttributeChanges;
 
@@ -89,27 +78,19 @@ export default class Editor {
         this.core.plugins.forEach(plugin => plugin.initialize(this));
 
         // 4. Ensure initial content and its format
-        if (options.initialContent) {
-            this.setContent(options.initialContent);
-        } else if (contentDiv.innerHTML != '') {
-            this.triggerContentChangedEvent();
-        }
-        this.ensureInitialContent();
+        this.ensureInitialContent(options.initialContent);
 
-        // 5. Initialize undo service
-        // This need to be after step 4 so that undo service can pickup initial content
+        // 5. Create a default selection range at beginning of editor
+        this.defaultSelectionRange = this.createDefaultRange();
+
+        // 6. Initialize undo service. This need to be after step 4 and 5 so that undo service
+        // can pickup initial content and default selection is ready
         this.undoService = options.undo || new Undo();
         this.undoService.initialize(this);
         this.core.plugins.push(this.undoService);
 
-        // 6. Create event handler to bind DOM events
+        // 7. Create event handler to bind DOM events
         this.createEventHandlers();
-
-        // 7. Create a default selection range at beginning of editor
-        let range = this.core.document.createRange();
-        range.setStart(this.core.contentDiv, 0);
-        range.collapse(true);
-        this.defaultSelectionRange = SelectionRange.create(range);
 
         // 8. Finally make the container editable and set its selection styles
         if (!this.omitContentEditable) {
@@ -307,17 +288,6 @@ export default class Editor {
     //#endregion
 
     //#region Focus and Selection
-
-    /**
-     * Get current selection range from Editor.
-     * It does a live pull on the selection, if nothing retrieved, return whatever we have in cache.
-     * @deprecated Use getSelectionRange() instead
-     * @returns current selection range, or null if editor never got focus before
-     */
-    public getRange(): Range {
-        let selectionRange = getLiveSelectionRange(this.core) || this.core.cachedSelectionRange;
-        return selectionRange ? selectionRange.rawRange : null;
-    }
 
     public getSelectionRange(): SelectionRange {
         return (
@@ -581,19 +551,18 @@ export default class Editor {
     // When selection is not collapsed, i.e. users press ctrl+A, and then type
     // We don't have a good way to fix that for the moment
     private onKeyPress = () => {
-        let selectionRange = this.getRange();
+        let selectionRange = this.getSelectionRange();
         let focusNode: Node;
         if (
-            selectionRange &&
             selectionRange.collapsed &&
-            (focusNode = selectionRange.startContainer) &&
+            (focusNode = selectionRange.start.node) &&
             (focusNode == this.core.contentDiv ||
                 (focusNode.nodeType == NodeType.Text &&
                     focusNode.parentNode == this.core.contentDiv))
         ) {
             let editorSelection = new EditorSelection(
                 this.core.contentDiv,
-                selectionRange,
+                selectionRange.rawRange,
                 this.core.inlineElementFactory
             );
             let blockElement = editorSelection.startBlockElement;
@@ -611,7 +580,7 @@ export default class Editor {
             ) {
                 // Only fix the balanced start-end block where start and end node is under same parent
                 // The focus node could be pointing to the content div, normalize it to have it point to a child first
-                let focusOffset = selectionRange.startOffset;
+                let focusOffset = selectionRange.start.offset;
                 let editorPoint = normalizeEditorPoint(focusNode, focusOffset);
                 let element = wrapAll(blockElement.getContentNodes()) as HTMLElement;
                 if (getTagOfNode(blockElement.getStartNode()) == 'BR') {
@@ -644,7 +613,13 @@ export default class Editor {
         return updateSelection(this.core, range);
     }
 
-    private ensureInitialContent() {
+    private ensureInitialContent(initialContent: string) {
+        if (initialContent) {
+            this.setContent(initialContent);
+        } else if (this.core.contentDiv.innerHTML != '') {
+            this.triggerContentChangedEvent();
+        }
+
         let firstBlock = getFirstBlockElement(this.core.contentDiv, this.core.inlineElementFactory);
         let defaultFormatBlockElement: HTMLElement;
 
@@ -665,6 +640,13 @@ export default class Editor {
         if (defaultFormatBlockElement) {
             applyFormat(defaultFormatBlockElement, this.core.defaultFormat);
         }
+    }
+
+    private createDefaultRange() {
+        let range = this.core.document.createRange();
+        range.setStart(this.core.contentDiv, 0);
+        range.collapse(true);
+        return SelectionRange.create(range);
     }
     //#endregion
 }
