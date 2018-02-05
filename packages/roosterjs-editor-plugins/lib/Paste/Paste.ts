@@ -8,7 +8,7 @@ import {
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import { applyFormat, fromHtml, getFirstLeafNode, getNextLeafSibling } from 'roosterjs-editor-dom';
+import { applyFormat, fromHtml, getFirstLeafNode, getNextLeafSibling, textToHtml } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin, buildSnapshot, restoreSnapshot } from 'roosterjs-editor-core';
 import { insertImage } from 'roosterjs-editor-api';
 import buildClipboardData from './buildClipboardData';
@@ -46,8 +46,12 @@ export default class Paste implements EditorPlugin {
     public onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.BeforePaste) {
             let beforePasteEvent = <BeforePasteEvent>event;
-            if (beforePasteEvent.pasteOption == PasteOption.PasteHtml) {
-                convertPastedContentFromWord(beforePasteEvent.fragment);
+
+            if (
+                beforePasteEvent.pasteOption == PasteOption.PasteHtml &&
+                convertPastedContentFromWord(beforePasteEvent.fragment)
+            ) {
+                beforePasteEvent.clipboardData.html = this.documentFragmentToHtml(beforePasteEvent.fragment);
             }
         }
     }
@@ -125,6 +129,7 @@ export default class Paste implements EditorPlugin {
 
     private internalPaste(event: BeforePasteEvent) {
         let { clipboardData, fragment, pasteOption } = event;
+        this.editor.focus();
         if (clipboardData.snapshotBeforePaste == null) {
             clipboardData.snapshotBeforePaste = buildSnapshot(this.editor);
         } else {
@@ -137,8 +142,7 @@ export default class Paste implements EditorPlugin {
                 break;
 
             case PasteOption.PasteText:
-                let text = clipboardData.text || '';
-                let html = text.replace(/\n/g, '<br>').replace(/\s/g, '&nbsp;');
+                let html = textToHtml(clipboardData.text);
                 this.editor.insertContent(html);
                 break;
 
@@ -167,5 +171,11 @@ export default class Paste implements EditorPlugin {
         for (let parent of parents) {
             applyFormat(parent, format);
         }
+    }
+
+    private documentFragmentToHtml(fragment: DocumentFragment): string {
+        let span = this.editor.getDocument().createElement('span');
+        span.appendChild(fragment.cloneNode(true /*deep*/));
+        return span.innerHTML;
     }
 }
