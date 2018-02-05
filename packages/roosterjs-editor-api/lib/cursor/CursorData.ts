@@ -31,6 +31,13 @@ export default class CursorData {
     // All text sections before cursor that have been read so far
     private textsBeforeCursor: TextSection[];
 
+    // First non-text inline before cursor
+    private firstNonTextInlineBeforeCursor: InlineElement;
+
+    /**
+     * Create a new CursorData instance
+     * @param editor The editor instance
+     */
     constructor(private editor: Editor) {}
 
     // Get the word before cursor
@@ -128,6 +135,20 @@ export default class CursorData {
         }
     }
 
+    /**
+     * Get first non textual inline element before cursor
+     * @returns First non textutal inline element before cursor or null if no such element exists
+     */
+    public getFirstNonTextInlineBeforeCursor(): InlineElement {
+        if (!this.firstNonTextInlineBeforeCursor && !this.backwardTraversingComplete) {
+            this.continueTraversingBackwardTill(() => {
+                return false;
+            });
+        }
+
+        return this.firstNonTextInlineBeforeCursor;
+    }
+
     /// Continue traversing backward till stop condition is met or begin of block is reached
     private continueTraversingBackwardTill(stopFunc: (textSection: TextSection) => boolean): void {
         if (!this.backwardTraverser) {
@@ -191,7 +212,7 @@ export default class CursorData {
                     // Make sure to set inlineBeforeCursor if it is not set
                     this.inlineBeforeCursor = previousInline;
                 }
-
+                this.firstNonTextInlineBeforeCursor = previousInline;
                 this.backwardTraversingComplete = true;
                 if (!this.cachedWordBeforeCursor) {
                     // if parsing is done, whatever we get so far in this.cachedText should also be in this.cachedWordBeforeCursor
