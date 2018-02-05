@@ -4,7 +4,7 @@ import { InlineElement } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /// Validate the text matches what's before the cursor, and return the range for it
-function validateAndGetRangeForTextBeforeCursor(
+export function validateAndGetRangeForTextBeforeCursor(
     editor: Editor,
     text: string,
     exactMatch: boolean,
