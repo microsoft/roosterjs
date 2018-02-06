@@ -44,6 +44,12 @@ interface ContentEditFeatures {
      * @default true
      */
     unquoteWhenEnterOnEmptyLine: boolean;
+
+    /**
+     * When press space after an asterik or number in an empty line, toggle bullet/numbering
+     * @default true
+     */
+    autoBullet: boolean;
 }
 
 export default ContentEditFeatures;
@@ -60,5 +66,6 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         mergeInNewLineWhenBackspaceOnFirstChar: false,
         unquoteWhenBackspaceOnEmptyFirstLine: true,
         unquoteWhenEnterOnEmptyLine: true,
+        autoBullet: true,
     };
 }
