@@ -3,6 +3,7 @@ export {
     clearCursorEventDataCache,
 } from './cursor/cacheGetCursorEventData';
 export { default as CursorData } from './cursor/CursorData';
+export { default as getCursorRect } from './cursor/getCursorRect';
 export { default as getNodeAtCursor } from './cursor/getNodeAtCursor';
 export { default as queryNodesWithSelection } from './cursor/queryNodesWithSelection';
 export { default as replaceRangeWithNode } from './cursor/replaceRangeWithNode';

@@ -3,7 +3,6 @@ import * as TestHelper from '../TestHelper';
 import { ContentPosition } from 'roosterjs-editor-types';
 import * as getSelection from '../../coreAPI/getSelection';
 import * as getLiveSelectionRange from '../../coreAPI/getLiveSelectionRange';
-import * as saveSelectionRange from '../../coreAPI/saveSelectionRange';
 
 let editor: Editor;
 let testID = 'EditorTest';
@@ -481,27 +480,5 @@ describe('Editor contains()', () => {
 
         // Assert
         expect(containsNode).toBe(false);
-    });
-});
-
-describe('Editor saveSelectionRange()', () => {
-    beforeEach(() => {
-        editor = TestHelper.initEditor(testID);
-    });
-
-    afterEach(() => {
-        editor.dispose();
-        TestHelper.removeElement(testID);
-    });
-
-    it('saveSelectionRange should trigger the Selection.saveSelectionRange() method', () => {
-        // Arrange
-        spyOn(saveSelectionRange, 'default').and.callThrough();
-
-        // Act
-        editor.saveSelectionRange();
-
-        // Assert
-        expect(saveSelectionRange.default).toHaveBeenCalled();
     });
 });

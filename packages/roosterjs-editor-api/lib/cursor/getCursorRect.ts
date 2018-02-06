@@ -1,21 +1,14 @@
-import EditorCore from '../editor/EditorCore';
-import getSelection from './getSelection';
-import getLiveSelectionRange from './getLiveSelectionRange';
-import { DocumentPosition, Rect, NodeType, NodeBoundary } from 'roosterjs-editor-types';
-import { isDocumentPosition, normalizeEditorPoint } from 'roosterjs-editor-dom';
+import { Editor } from 'roosterjs-editor-core';
+import { DocumentPosition, Rect, NodeType, Position } from 'roosterjs-editor-types';
+import { isDocumentPosition } from 'roosterjs-editor-dom';
 
 // Returns a rect representing the location of the cursor.
 // In case there is a uncollapsed selection witin editor, this returns
 // the position for focus node.
 // The returned rect structure has a left and right and they should be same
 // here since it is for cursor, not for a range.
-export default function getCursorRect(core: EditorCore): Rect {
-    let selectionRange = getLiveSelectionRange(core);
-
-    if (!selectionRange) {
-        return null;
-    }
-
+export default function getCursorRect(editor: Editor): Rect {
+    let selectionRange = editor.getSelectionRange();
     let range = selectionRange.rawRange;
 
     // There isn't a browser API that gets you position of cursor.
@@ -29,9 +22,9 @@ export default function getCursorRect(core: EditorCore): Rect {
     // 5) lastly fallback range.startContainer.getBoundingClientRect()
 
     // 1) obtain a collapsed range pointing to cursor
-    if (!range.collapsed) {
+    if (!selectionRange.collapsed) {
         // Range is not collapsed, collapse to cursor first
-        let selection = getSelection(core);
+        let selection = editor.getSelection();
         if (selection && selection.focusNode && selection.anchorNode) {
             let forwardSelection =
                 selection.focusNode == selection.anchorNode
@@ -54,18 +47,14 @@ export default function getCursorRect(core: EditorCore): Rect {
         // i.e. <p>{cursor}<br></p>, or <p><img ...>{cursor}text</p>.
         // range.getBoundingClientRect mostly return a client rect of all 0
         // Skip this if we're in middle of a text node
-        let editorPoint = normalizeEditorPoint(range.startContainer, range.startOffset);
-        if (
-            editorPoint.containerNode.nodeType != NodeType.Text ||
-            editorPoint.containerNode.nodeValue.length == editorPoint.offset
-        ) {
-            let nearbyRange = core.document.createRange();
-            nearbyRange.selectNode(editorPoint.containerNode);
+        let position = Position.normalize(Position.create(range.startContainer, range.startOffset));
+        if (position.node.nodeType != NodeType.Text || position.isAtEnd) {
+            let nearbyRange = editor.getDocument().createRange();
+            nearbyRange.selectNode(position.node);
             rect = getRectFromClientRect(nearbyRange.getBoundingClientRect());
             if (rect) {
                 // Fix the position to boundary of the nearby range
-                rect.left = rect.right =
-                    editorPoint.offset == NodeBoundary.Begin ? rect.left : rect.right;
+                rect.left = rect.right = position.offset == 0 ? rect.left : rect.right;
             }
         }
     }

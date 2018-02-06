@@ -7,13 +7,11 @@ import attachDomEvent from '../coreAPI/attachDomEvent';
 import browserData from '../utils/BrowserData';
 import focus from '../coreAPI/focus';
 import getContentTraverser from '../coreAPI/getContentTraverser';
-import getCursorRect from '../coreAPI/getCursorRect';
 import getLiveSelectionRange from '../coreAPI/getLiveSelectionRange';
 import getSelection from '../coreAPI/getSelection';
 import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
 import restoreSelection from '../coreAPI/restoreSelection';
-import saveSelectionRange from '../coreAPI/saveSelectionRange';
 import triggerEvent from '../coreAPI/triggerEvent';
 import updateSelection from '../coreAPI/deprecated/updateSelection';
 import {
@@ -28,7 +26,6 @@ import {
     NodeType,
     PluginEvent,
     PluginEventType,
-    Rect,
     SelectionRange,
 } from 'roosterjs-editor-types';
 import {
@@ -325,27 +322,13 @@ export default class Editor {
     }
 
     /**
+     * @deprecated
      * Update selection in editor
      * @param selectionRange The selection range to update to
      * @returns true if selection range is updated. Otherwise false.
      */
     public updateSelection(selectionRange: Range): boolean {
         return updateSelection(this.core, selectionRange);
-    }
-
-    /**
-     * Save the current selection in editor so that when focus again, the selection can be restored
-     */
-    public saveSelectionRange() {
-        saveSelectionRange(this.core);
-    }
-
-    /**
-     * Get a rect representing the location of the cursor.
-     * @returns a Rect object representing cursor location
-     */
-    public getCursorRect(): Rect {
-        return getCursorRect(this.core);
     }
 
     /**
@@ -542,7 +525,8 @@ export default class Editor {
             }),
             attachDomEvent(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, () => {
                 if (!this.core.cachedRange) {
-                    saveSelectionRange(this.core);
+                    this.core.cachedSelectionRange = getLiveSelectionRange(this.core);
+                    this.core.cachedRange = this.core.cachedSelectionRange ? this.core.cachedSelectionRange.rawRange : null;
                 }
             }),
         ];
