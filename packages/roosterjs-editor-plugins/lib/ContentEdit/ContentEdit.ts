@@ -126,7 +126,7 @@ export default class ContentEdit implements EditorPlugin {
                     });
                 }
             }
-        } else if (tryHandleAutoBullet(this.editor, event, keyboardEvent)) {
+        } else if (this.features.autoBullet && tryHandleAutoBullet(this.editor, event, keyboardEvent)) {
             keyboardEvent.preventDefault();
         }
     }
