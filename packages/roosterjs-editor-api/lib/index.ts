@@ -8,6 +8,7 @@ export { default as queryNodesWithSelection } from './cursor/queryNodesWithSelec
 export { default as replaceRangeWithNode } from './cursor/replaceRangeWithNode';
 export {
     default as replaceTextBeforeCursorWithNode,
+    validateAndGetRangeForTextBeforeCursor
 } from './cursor/replaceTextBeforeCursorWithNode';
 export { default as cacheGetListElement } from './format/cacheGetListElement';
 export { default as cacheGetListState } from './format/cacheGetListState';

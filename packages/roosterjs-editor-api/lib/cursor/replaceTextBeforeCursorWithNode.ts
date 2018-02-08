@@ -3,8 +3,15 @@ import replaceRangeWithNode from './replaceRangeWithNode';
 import { TextSection } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
-/// Validate the text matches what's before the cursor, and return the range for it
-function validateAndGetRangeForTextBeforeCursor(
+/**
+ * Validate the text matches what's before the cursor, and return the range for it
+ * @param editor The editor instance
+ * @param text The text to match against
+ * @param exactMatch Whether it is an exact match
+ * @param cursorData The cursor data
+ * @returns The range for the matched text, null if unable to find a match
+ */
+export function validateAndGetRangeForTextBeforeCursor(
     editor: Editor,
     text: string,
     exactMatch: boolean,
