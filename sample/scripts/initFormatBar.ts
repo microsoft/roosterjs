@@ -21,9 +21,36 @@ import {
     toggleBlockQuote,
     removeLink,
     toggleHeader,
+    editTable,
+    formatTable,
 } from 'roosterjs-editor-api';
-import { Alignment, Indentation } from 'roosterjs-editor-types';
+import { Alignment, Indentation, TableOperation, TableFormat } from 'roosterjs-editor-types';
 import getCurrentEditor from './currentEditor';
+
+let TABLE_FORMAT = [
+    createTableFormat('#FFF', '#FFF', '#ABABAB', '#ABABAB', '#ABABAB'),
+    createTableFormat('#FFF', '#FFF', null, '#92C0E0'),
+    createTableFormat('#C0E4FF', '#FFF'),
+    createTableFormat('#D8D8D8', '#FFF'),
+    createTableFormat('#D8D8D8', '#FFF', '#ABABAB', '#ABABAB', '#ABABAB'),
+    createTableFormat('#FFF', '#FFF'),
+];
+
+function createTableFormat(
+    bgColorEven?: string,
+    bgColorOdd?: string,
+    topBorder?: string,
+    bottomBorder?: string,
+    verticalBorder?: string
+): TableFormat {
+    return {
+        bgColorEven: bgColorEven,
+        bgColorOdd: bgColorOdd,
+        topBorderColor: topBorder,
+        bottomBorderColor: bottomBorder,
+        verticalBorderColor: verticalBorder,
+    };
+}
 
 export default function initFormatBar() {
     // Bold
@@ -85,6 +112,26 @@ export default function initFormatBar() {
     document.getElementById('clearFormatButton').addEventListener('click', function() {
         clearFormat(getCurrentEditor());
     });
+
+    // Edit table
+    document.getElementById('editTable').addEventListener('change', function() {
+        let select = document.getElementById('editTable') as HTMLSelectElement;
+        let intValue = parseInt(select.value);
+        if (intValue >= 0) {
+            let operation = <TableOperation>intValue;
+            editTable(getCurrentEditor(), operation);
+            select.value = '-1';
+        }
+    });
+
+    document.getElementById('formatTable').addEventListener('change', function() {
+        let select = document.getElementById('formatTable') as HTMLSelectElement;
+        let intValue = parseInt(select.value);
+        if (intValue >= 0) {
+            formatTable(getCurrentEditor(), TABLE_FORMAT[intValue]);
+            select.value = '-1';
+        }
+    })
 
     // Header
     document.getElementById('header').addEventListener('change', function() {

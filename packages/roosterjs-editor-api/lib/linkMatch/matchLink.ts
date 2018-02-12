@@ -26,11 +26,11 @@ interface LinkMatchRule {
 // ^www\.[^?\/]+@ => to exclude URL like www.bing.com@name
 const httpExcludeRegEx = /^[^?]+%[^0-9a-f]+|^[^?]+%[0-9a-f][^0-9a-f]+|^[^?]+%00|^[^?]+%$|^https?:\/\/[^?\/]+@|^www\.[^?\/]+@/i;
 
-const linkMatchRules: {[schema: string]: LinkMatchRule} = {
+const linkMatchRules: { [schema: string]: LinkMatchRule } = {
     http: {
         match: /^(microsoft-edge:)?http:\/\/\S+|www\.\S+/i,
         except: httpExcludeRegEx,
-        normalizeUrl: url => /^(microsoft-edge:)?http:\/\//i.test(url) ? url : 'http://' + url
+        normalizeUrl: url => (/^(microsoft-edge:)?http:\/\//i.test(url) ? url : 'http://' + url),
     },
     https: {
         match: /^(microsoft-edge:)?https:\/\/\S+/i,
@@ -42,7 +42,7 @@ const linkMatchRules: {[schema: string]: LinkMatchRule} = {
     unc: { match: /^\\\\\S+/i },
     ftp: {
         match: /^ftp:\/\/\S+|ftp\.\S+/i,
-        normalizeUrl: url => /^ftp:\/\//i.test(url) ? url : 'ftp://' + url
+        normalizeUrl: url => (/^ftp:\/\//i.test(url) ? url : 'ftp://' + url),
     },
     news: { match: /^news:(\/\/)?\S+/i },
     telnet: { match: /^telnet:\S+/i },

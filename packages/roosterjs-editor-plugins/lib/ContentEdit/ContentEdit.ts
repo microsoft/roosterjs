@@ -1,6 +1,6 @@
 import {
     setIndentation,
-    cacheGetListElement,
+    cacheGetNodeAtCursor,
     cacheGetListState,
     execFormatWithUndo,
     getNodeAtCursor,
@@ -73,7 +73,7 @@ export default class ContentEdit implements EditorPlugin {
                     keyboardEvent.preventDefault();
                 }
             } else {
-                let listElement = cacheGetListElement(this.editor, event);
+                let listElement = cacheGetNodeAtCursor(this.editor, event, 'LI');
                 if (listElement && this.shouldToggleState(event, listElement)) {
                     this.toggleList(event);
                 } else if (
@@ -97,16 +97,13 @@ export default class ContentEdit implements EditorPlugin {
                     }
                 }
             }
-        } else if (blockQuoteElement = this.getBlockQuoteElementFromEvent(event, keyboardEvent)) {
+        } else if ((blockQuoteElement = this.getBlockQuoteElementFromEvent(event, keyboardEvent))) {
             let node = getNodeAtCursor(this.editor);
             if (node && node != blockQuoteElement) {
                 while (this.editor.contains(node) && node.parentNode != blockQuoteElement) {
                     node = node.parentNode;
                 }
-                if (
-                    node.parentNode == blockQuoteElement &&
-                    this.shouldToggleState(event, node)
-                ) {
+                if (node.parentNode == blockQuoteElement && this.shouldToggleState(event, node)) {
                     keyboardEvent.preventDefault();
                     execFormatWithUndo(this.editor, () => {
                         splitParentNode(node, false /*splitBefore*/);
@@ -126,7 +123,10 @@ export default class ContentEdit implements EditorPlugin {
                     });
                 }
             }
-        } else if (this.features.autoBullet && tryHandleAutoBullet(this.editor, event, keyboardEvent)) {
+        } else if (
+            this.features.autoBullet &&
+            tryHandleAutoBullet(this.editor, event, keyboardEvent)
+        ) {
             keyboardEvent.preventDefault();
         }
     }

@@ -1,10 +1,12 @@
+import { ListState, PluginEvent, PluginEventType, ContentPosition } from 'roosterjs-editor-types';
 import {
-    ListState,
-    PluginEvent,
-    PluginEventType,
-    ContentPosition,
-} from 'roosterjs-editor-types';
-import { cacheGetCursorEventData, cacheGetListState, toggleBullet, toggleNumbering, validateAndGetRangeForTextBeforeCursor, CursorData } from 'roosterjs-editor-api';
+    cacheGetCursorEventData,
+    cacheGetListState,
+    toggleBullet,
+    toggleNumbering,
+    validateAndGetRangeForTextBeforeCursor,
+    CursorData,
+} from 'roosterjs-editor-api';
 import { Editor, browserData } from 'roosterjs-editor-core';
 
 const KEY_SPACE = 32;
@@ -24,7 +26,7 @@ export default function tryHandleAutoBullet(
 ): boolean {
     if (event.eventType == PluginEventType.KeyDown) {
         if (
-            (keyboardEvent.which == KEY_SPACE) &&
+            keyboardEvent.which == KEY_SPACE &&
             !keyboardEvent.ctrlKey &&
             !keyboardEvent.altKey &&
             !keyboardEvent.metaKey
@@ -39,7 +41,11 @@ export default function tryHandleAutoBullet(
             // 1. Text before cursor exactly mathces '*' or '1.'
             // 2. Cursor is not in html list
             // 3. There's no non-text inline entities before cursor
-            if ((textBeforeCursor == '*' || textBeforeCursor == '1.') && cacheGetListState(editor, event) == ListState.None && !cursorData.getFirstNonTextInlineBeforeCursor()) {
+            if (
+                (textBeforeCursor == '*' || textBeforeCursor == '1.') &&
+                cacheGetListState(editor, event) == ListState.None &&
+                !cursorData.getFirstNonTextInlineBeforeCursor()
+            ) {
                 handleAutoBulletOrNumbering(textBeforeCursor, editor);
                 return true;
             }
@@ -64,7 +70,12 @@ function handleAutoBulletOrNumbering(identifier: string, editor: Editor) {
 
     editor.runWithoutAddingUndoSnapshot(() => {
         // Remove the user input '*' or '1.'
-        let rangeToDelete: Range = validateAndGetRangeForTextBeforeCursor(editor, identifier + ' ', true, new CursorData(editor));
+        let rangeToDelete: Range = validateAndGetRangeForTextBeforeCursor(
+            editor,
+            identifier + ' ',
+            true,
+            new CursorData(editor)
+        );
         if (rangeToDelete) {
             rangeToDelete.deleteContents();
         }

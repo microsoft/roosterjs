@@ -46,7 +46,10 @@ const INHERITABLE_PROPERTOES = [
     'word-spacing',
 ];
 
-export default function removeUselessCss(node: Node, currentStyle: {[name: string]: string} = {}): boolean {
+export default function removeUselessCss(
+    node: Node,
+    currentStyle: { [name: string]: string } = {}
+): boolean {
     let changed = false;
     let element = <HTMLElement>node;
     let style: string;

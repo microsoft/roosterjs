@@ -4,6 +4,7 @@ import {
     Paste,
     ContentEdit,
     Watermark,
+    TableResize,
 } from 'roosterjs-editor-plugins';
 import { ImageResizePlugin } from 'roosterjs-plugin-image-resize';
 import { EditorPlugin } from 'roosterjs-editor-core';
@@ -55,11 +56,11 @@ function updateJsSampleCode(plugins: EditorPlugin[], defaultFormat: DefaultForma
     let optionsString = assembleOptionsString(pluginsString, formatString);
     let endString = assembleEndString(optionsString);
 
-    let jsCodeString = startString
-        .concat(pluginsString)
-        .concat(formatString)
-        .concat(optionsString)
-        .concat(endString);
+    let jsCodeString = startString +
+        pluginsString +
+        formatString +
+        optionsString +
+        endString;
     jsSampleCode.appendChild(createElementFromContent('jsSampleCode', jsCodeString));
 }
 
@@ -78,24 +79,22 @@ function assemblePluginsString(plugins: EditorPlugin[]): string {
         let pluginsString = 'var plugins = [\n';
         plugins.forEach(plugin => {
             if (plugin instanceof Watermark) {
-                pluginsString = pluginsString.concat(
-                    "  new roosterjsPlugins.Watermark('Type content here...'),\n"
-                );
+                pluginsString += "  new roosterjsPlugins.Watermark('Type content here...'),\n";
             } else if (plugin instanceof ImageResizePlugin) {
-                pluginsString = pluginsString.concat(
-                    '  new roosterjsImageResizePlugin.ImageResizePlugin(),\n'
-                );
+                pluginsString += '  new roosterjsImageResizePlugin.ImageResizePlugin(),\n';
             } else if (plugin instanceof DefaultShortcut) {
-                pluginsString = pluginsString.concat('  new roosterjsPlugins.DefaultShortcut(),\n');
+                pluginsString += '  new roosterjsPlugins.DefaultShortcut(),\n';
             } else if (plugin instanceof HyperLink) {
-                pluginsString = pluginsString.concat('  new roosterjsPlugins.HyperLink(),\n');
+                pluginsString += '  new roosterjsPlugins.HyperLink(),\n';
             } else if (plugin instanceof Paste) {
-                pluginsString = pluginsString.concat('  new roosterjsPlugins.Paste(),\n');
+                pluginsString += '  new roosterjsPlugins.Paste(),\n';
             } else if (plugin instanceof ContentEdit) {
-                pluginsString = pluginsString.concat('  new roosterjsPlugins.ContentEdit(),\n');
+                pluginsString += '  new roosterjsPlugins.ContentEdit(),\n';
+            } else if (plugin instanceof TableResize) {
+                pluginsString += '  new roosterjsPlugins.TableResize(),\n';
             }
         });
-        pluginsString = pluginsString.concat('];\n');
+        pluginsString += '];\n';
 
         if (pluginsString != defaultPluginsString) {
             return pluginsString;
@@ -111,21 +110,17 @@ function assembleFormatString(defaultFormat: DefaultFormat): string {
     }
     let defaultFormatString = 'var defaultFormat = {\n';
     if (defaultFormat.bold) {
-        defaultFormatString = defaultFormatString.concat('  bold: true,\n');
+        defaultFormatString += '  bold: true,\n';
     }
     if (defaultFormat.italic) {
-        defaultFormatString = defaultFormatString.concat('  italic: true,\n');
+        defaultFormatString += '  italic: true,\n';
     }
     if (defaultFormat.underline) {
-        defaultFormatString = defaultFormatString.concat('  underline: true,\n');
+        defaultFormatString += '  underline: true,\n';
     }
-    defaultFormatString = defaultFormatString.concat(
-        `  textColor: \"${defaultFormat.textColor}\",\n`
-    );
-    defaultFormatString = defaultFormatString.concat(
-        `  fontFamily: \"${defaultFormat.fontFamily}\",\n`
-    );
-    defaultFormatString = defaultFormatString.concat('};\n');
+    defaultFormatString += `  textColor: \"${defaultFormat.textColor}\",\n`;
+    defaultFormatString += `  fontFamily: \"${defaultFormat.fontFamily}\",\n`;
+    defaultFormatString += '};\n';
     return defaultFormatString;
 }
 

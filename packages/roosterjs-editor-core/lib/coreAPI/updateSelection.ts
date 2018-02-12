@@ -8,7 +8,8 @@ export default function updateSelection(core: EditorCore, range: Range): boolean
     if (isRangeInContainer(range, core.contentDiv)) {
         let selection = getSelection(core);
         if (selection) {
-            if (selection.rangeCount > 0) {
+            // Workaround IE exception 800a025e
+            if (selection.rangeCount > 0 && selection.getRangeAt(0).getClientRects().length) {
                 selection.removeAllRanges();
             }
 

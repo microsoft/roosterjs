@@ -110,8 +110,8 @@ export default class Editor {
         }
 
         // Disable t hese operations for firefox since its behavior is usually wrong
-        this.core.document.execCommand( 'enableObjectResizing', false, false );
-        this.core.document.execCommand( 'enableInlineTableEditing', false, false );
+        this.core.document.execCommand('enableObjectResizing', false, false);
+        this.core.document.execCommand('enableInlineTableEditing', false, false);
     }
 
     /**
@@ -397,7 +397,10 @@ export default class Editor {
      * @param source Source of this event, by default is 'SetContent'
      * @param data additional data for this event
      */
-    public triggerContentChangedEvent(source: ChangeSource | string = ChangeSource.SetContent, data?: any) {
+    public triggerContentChangedEvent(
+        source: ChangeSource | string = ChangeSource.SetContent,
+        data?: any
+    ) {
         this.triggerEvent({
             eventType: PluginEventType.ContentChanged,
             source: source,
@@ -548,9 +551,7 @@ export default class Editor {
                 this.core.cachedSelectionRange = null;
             }),
             attachDomEvent(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, () => {
-                if (!this.core.cachedSelectionRange) {
-                    saveSelectionRange(this.core);
-                }
+                saveSelectionRange(this.core);
             }),
         ];
     }

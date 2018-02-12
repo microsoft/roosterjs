@@ -172,6 +172,87 @@ export const enum ListState {
     Numbering = 2,
 }
 
+/**
+ * Table format
+ */
+export interface TableFormat {
+    /**
+     * Background color for even rows
+     */
+    bgColorEven: string;
+    /**
+     * Background color for odd rows
+     */
+    bgColorOdd: string;
+    /**
+     * Top border color for each row
+     */
+    topBorderColor: string;
+    /**
+     * Bottom border color for each row
+     */
+    bottomBorderColor: string;
+    /**
+     * Vertical border color for each row
+     */
+    verticalBorderColor: string;
+}
+
+export const enum TableOperation {
+    /**
+     * Insert a row above current row
+     */
+    InsertAbove = 0,
+    /**
+     * Insert a row below current row
+     */
+    InsertBelow = 1,
+    /**
+     * Insert a column on the left of current column
+     */
+    InsertLeft = 2,
+    /**
+     * Insert a column on the right of current column
+     */
+    InsertRight = 3,
+    /**
+     * Delete the whole table
+     */
+    DeleteTable = 4,
+    /**
+     * Delete current column
+     */
+    DeleteColumn = 5,
+    /**
+     * Delete current row
+     */
+    DeleteRow = 6,
+    /**
+     * Merge current row with the row above
+     */
+    MergeAbove = 7,
+    /**
+     * Merge current row with the row below
+     */
+    MergeBelow = 8,
+    /**
+     * Merge current column with the column on the left
+     */
+    MergeLeft = 9,
+    /**
+     * Merge current column with the column on the right
+     */
+    MergeRight = 10,
+    /**
+     * Split current table cell horizontally
+     */
+    SplitHorizontally = 11,
+    /**
+     * Split current table cell vertically
+     */
+    SplitVertically = 12,
+}
+
 export const enum NodeType {
     Element = 1,
     Text = 3,
@@ -544,6 +625,31 @@ export function wrap(node: Node, htmlFragment: string): Node;
 
 export function wrapAll(nodes: Node[], htmlFragment?: string): Node;
 
+export class VTable {
+    table: HTMLTableElement;
+    cells: VCell[][];
+    row: number;
+    col: number;
+    private trs;
+    constructor(node: HTMLTableElement | HTMLTableCellElement);
+    writeBack(): void;
+    applyFormat(format: TableFormat): void;
+    forEachCellOfCurrentColumn(callback: (cell: VCell, row: VCell[], i: number) => void): void;
+    forEachCellOfCurrentRow(callback: (cell: VCell, i: number) => void): void;
+    getCell(row: number, col: number): VCell;
+    getCurrentTd(): HTMLTableCellElement;
+    static moveChildren(fromNode: Node, toNode?: Node): void;
+    static cloneNode<T extends Node>(node: T): T;
+    static cloneCell(cell: VCell): VCell;
+    private recalcSpans(row, col);
+}
+
+export interface VCell {
+    td?: HTMLTableCellElement;
+    spanLeft?: boolean;
+    spanAbove?: boolean;
+}
+
 export class Editor {
     private undoService;
     private suspendAddingUndoSnapshot;
@@ -905,6 +1011,7 @@ export class CursorData {
     private backwardTraversingComplete;
     private forwardTraversingComplete;
     private inlineElementsBeforeCursor;
+    private firstNonTextInlineBeforeCursor;
     /**
      * Create a new CursorData instance
      * @param editor The editor instance
@@ -942,19 +1049,39 @@ export class CursorData {
      * @param stopFunc The callback stop function
      */
     getTextSectionBeforeCursorTill(stopFunc: (textInlineElement: InlineElement) => boolean): void;
+    /**
+     * Get first non textual inline element before cursor
+     * @returns First non textutal inline element before cursor or null if no such element exists
+     */
+    getFirstNonTextInlineBeforeCursor(): InlineElement;
     private continueTraversingBackwardTill(stopFunc);
 }
 
 /**
- * Get the node at selection
- * if editor has focus, use selection.focusNode
- * if for some reason, the focus node does not get us a good node
- * fallback to the cached selection range if there is any
- * and use the start container if selection is collapsed or commonAncestorContainer otherwise
+ * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
+ * which matches the tag name, or null if no match found in editor.
  * @param editor The editor instance
- * @returns The node at cursor
+ * @param expectedTag The expected tag name. If null, return the element at cursor
+ * @param startNode If specified, use this node as start node to search instead of current node
+ * @returns The node at cursor or the nearest ancestor with the tag name is specified
  */
-export function getNodeAtCursor(editor: Editor): Node;
+export function getNodeAtCursor(editor: Editor, expectedTag?: string, startNode?: Node): Node;
+
+/**
+ * @deprecated Use cacheGetNodeAtCursor instead
+ */
+export function cacheGetListElement(editor: Editor, event?: PluginEvent): Node;
+
+/**
+ * Get the node at selection from event cache if it exists.
+ * If an expectedTag is specified, return the nearest ancestor of current node
+ * which matches the tag name, or null if no match found in editor.
+ * @param editor The editor instance
+ * @param event Event object to get cached object from
+ * @param expectedTag The expected tag name. If null, return the element at cursor
+ * @returns The element at cursor or the nearest ancestor with the tag name is specified
+ */
+export function cacheGetNodeAtCursor(editor: Editor, event: PluginEvent, expectedTag: string): Node;
 
 /**
  * Query nodes intersected with current selection using a selector
@@ -993,14 +1120,14 @@ export function replaceRangeWithNode(editor: Editor, range: Range, node: Node, e
 export function replaceTextBeforeCursorWithNode(editor: Editor, text: string, node: Node, exactMatch: boolean, cursorData?: CursorData): boolean;
 
 /**
- * Get the list element at current selection
- * A list element referes to the HTML <LI> element
+ * Validate the text matches what's before the cursor, and return the range for it
  * @param editor The editor instance
- * @param event (Optional) The plugin event, it stores the event cached data for looking up.
- * If not passed, we will crawl up the node at cursor until we find a list element
- * @returns The list element, or null if no list element at current selection
+ * @param text The text to match against
+ * @param exactMatch Whether it is an exact match
+ * @param cursorData The cursor data
+ * @returns The range for the matched text, null if unable to find a match
  */
-export function cacheGetListElement(editor: Editor, event?: PluginEvent): Element;
+export function validateAndGetRangeForTextBeforeCursor(editor: Editor, text: string, exactMatch: boolean, cursorData: CursorData): Range;
 
 /**
  * Get the list state at selection
@@ -1082,40 +1209,23 @@ export function insertImage(editor: Editor, imageFile: File): void;
  * if columns <= 4, width = 120px; if columns <= 6, width = 100px; else width = 70px
  * @param rows Number of rows in table
  * @param format (Optional) The table format. If not passed, the default format will be applied:
- * cellSpacing = '0', cellPadding = '0', borderWidth = '1px', borderStyle = 'solid', borderColor = '#c6c6c6',
- * borderCollapse = 'collapse'
+ * background color: #FFF; border color: #ABABAB
  */
 export function insertTable(editor: Editor, columns: number, rows: number, format?: TableFormat): void;
 
 /**
- * The table format
+ * Edit table with given operation. If there is no table at cursor then no op.
+ * @param editor The editor instance
+ * @param operation Table operation
  */
-export interface TableFormat {
-    /**
-     * (Optional) The cellSpacing style for the HTML table element
-     */
-    cellSpacing?: string;
-    /**
-     * (Optional) The cellPadding style for the HTML table element
-     */
-    cellPadding?: string;
-    /**
-     * (Optional) The borderWidth style for the HTML table element
-     */
-    borderWidth?: string;
-    /**
-     * (Optional) The borderStyle style for the HTML table element
-     */
-    borderStyle?: string;
-    /**
-     * (Optional) The borderColor style for the HTML table element
-     */
-    borderColor?: string;
-    /**
-     * (Optional) The borderCollapse style for the HTML table element
-     */
-    borderCollapse?: string;
-}
+export function editTable(editor: Editor, operation: TableOperation): void;
+
+/**
+ * Format table
+ * @param table The table to format
+ * @param formatName Name of the format to use
+ */
+export function formatTable(editor: Editor, format: TableFormat, table?: HTMLTableElement): void;
 
 /**
  * Remove link at selection. If no links at selection, do nothing.
@@ -1452,6 +1562,11 @@ export interface ContentEditFeatures {
      * @default true
      */
     unquoteWhenEnterOnEmptyLine: boolean;
+    /**
+     * When press space after an asterik or number in an empty line, toggle bullet/numbering
+     * @default true
+     */
+    autoBullet: boolean;
 }
 
 /**
@@ -1482,6 +1597,29 @@ export class Watermark implements EditorPlugin {
     private showWatermark();
     private hideWatermark();
     private removeWartermarkFromHtml(event);
+}
+
+export class TableResize implements EditorPlugin {
+    private isRtl;
+    private editor;
+    private onMouseOverDisposer;
+    private td;
+    private pageX;
+    private initialPageX;
+    constructor(isRtl?: boolean);
+    initialize(editor: Editor): void;
+    dispose(): void;
+    onPluginEvent(event: PluginEvent): void;
+    private clickIntoCurrentTd(event);
+    private onMouseOver;
+    private calcAndShowHandle();
+    private adjustHandle(pageX);
+    private getPosition(e);
+    private getResizeHandle();
+    private onMouseDown;
+    private onMouseMove;
+    private onMouseUp;
+    private setTableColumnWidth(width);
 }
 
 export class ImageResizePlugin implements EditorPlugin {

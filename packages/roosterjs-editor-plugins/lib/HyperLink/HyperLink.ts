@@ -72,9 +72,9 @@ export default class HyperLink implements EditorPlugin {
 
             case PluginEventType.ContentChanged:
                 let contentChangedEvent = event as ContentChangedEvent;
-                if (contentChangedEvent.source == 'Paste') {
+                if (contentChangedEvent.source == ChangeSource.Paste) {
                     this.autoLink(event);
-                } else if (contentChangedEvent.source == 'CreateLink') {
+                } else if (contentChangedEvent.source == ChangeSource.CreateLink) {
                     this.resetAnchor(contentChangedEvent.data as HTMLAnchorElement);
                 }
 

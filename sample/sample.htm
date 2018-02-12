@@ -85,6 +85,7 @@
                 overflow: auto;
                 outline: none;
                 width: 60%;
+                position: relative;
             }
 
             .sampleCodeContainer {
@@ -156,6 +157,7 @@
                         <div><input type="checkbox" id="contentEditCheckbox" checked><label for="contentEditCheckbox">Content Edit plugin</label></div>
                         <div><input type="checkbox" id="watermarkCheckbox"><label for="watermarkCheckbox">Watermark plugin</label></div>
                         <div><input type="checkbox" id="imageResizeCheckbox" checked><label for="imageResizeCheckbox">Image Resize plugin</label></div>
+                        <div><input type="checkbox" id="tableResizeCheckbox" checked><label for="tableResizeCheckbox">Table Resize plugin</label></div>
                     </div>
                     <div class="optionList">
                         <div>Default Format:</div>
@@ -314,7 +316,6 @@
                 <button id="redoButton">Redo</button>
                 &nbsp;
                 <button id="insertImage">Insert Image</button>
-                <button id="insertTable">Insert Table</button>
                 <input style='display: none' type='file' id='selectFile' accept='image/*'>
                 &nbsp;
                 <select id="header" title="Header">
@@ -329,6 +330,33 @@
                 </select>
                 &nbsp;
                 <button id="clearFormatButton">Clear Format</button>
+                &nbsp;
+                <button id="insertTable">Insert Table</button>
+                <select id="editTable" title="Edit table">
+                    <option value="-1">Edit Table</option>
+                    <option value="0">Insert Above</option>
+                    <option value="1">Insert Below</option>
+                    <option value="2">Insert Left</option>
+                    <option value="3">Insert Right</option>
+                    <option value="4">Delete Table</option>
+                    <option value="5">Delete Column</option>
+                    <option value="6">Delete Row</option>
+                    <option value="7">Merge Above</option>
+                    <option value="8">Merge Below</option>
+                    <option value="9">Merge Left</option>
+                    <option value="10">Merge Right</option>
+                    <option value="11">Split Horizontally</option>
+                    <option value="12">Split Vertically</option>
+                </select>
+                <select id="formatTable" title="Format table">
+                    <option value="-1">Format Table</option>
+                    <option value="0">Default </option>
+                    <option value="1">Light Lines</option>
+                    <option value="2">Two Tones</option>
+                    <option value="3">Light Bands</option>
+                    <option value="4">Grid</option>
+                    <option value="5">Clear</option>
+                </select>
             </div>
         </div>
     </body>
