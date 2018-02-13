@@ -1,6 +1,6 @@
 {
   "name": "roosterjs",
-  "version": "6.7.0",
+  "version": "6.7.2",
   "description": "Framework-independent javascript editor",
   "repository": {
     "type": "git",
@@ -19,7 +19,8 @@
     "build": "npm run b && npm run pack && npm run pack:prod && npm run dts && npm run copysample",
     "start": "webpack-dev-server",
     "test": "npm run b && karma start",
-    "test:debug": "npm run b && karma start --no-single-run"
+    "test:debug": "npm run b && karma start --no-single-run",
+    "publish": "node tools/publish-all.js"
   },
   "devDependencies": {
     "@types/jasmine": "2.6.0",

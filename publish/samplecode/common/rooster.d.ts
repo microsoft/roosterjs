@@ -1617,6 +1617,7 @@ declare namespace roosterjs {
         private adjustHandle(pageX);
         private getPosition(e);
         private getResizeHandle();
+        private cancelEvent(e);
         private onMouseDown;
         private onMouseMove;
         private onMouseUp;

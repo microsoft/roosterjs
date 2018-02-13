@@ -9,8 +9,9 @@ export default function updateSelection(core: EditorCore, range: Range): boolean
         let selection = getSelection(core);
         if (selection) {
             // Workaround IE exception 800a025e
-            if (selection.rangeCount > 0 && selection.getRangeAt(0).getClientRects().length) {
+            try {
                 selection.removeAllRanges();
+            } catch (e) {
             }
 
             selection.addRange(range);

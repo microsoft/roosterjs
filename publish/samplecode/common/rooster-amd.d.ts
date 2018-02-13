@@ -1616,6 +1616,7 @@ export class TableResize implements EditorPlugin {
     private adjustHandle(pageX);
     private getPosition(e);
     private getResizeHandle();
+    private cancelEvent(e);
     private onMouseDown;
     private onMouseMove;
     private onMouseUp;

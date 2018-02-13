@@ -109,9 +109,13 @@ export default class Editor {
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
         }
 
-        // Disable t hese operations for firefox since its behavior is usually wrong
-        this.core.document.execCommand('enableObjectResizing', false, false);
-        this.core.document.execCommand('enableInlineTableEditing', false, false);
+        // 8. Disable these operations for firefox since its behavior is usually wrong
+        // Catch any possible exception since this should not block the initialization of editor
+        try {
+            this.core.document.execCommand('enableObjectResizing', false, false);
+            this.core.document.execCommand('enableInlineTableEditing', false, false);
+        } catch (e) {
+        }
     }
 
     /**

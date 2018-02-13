@@ -693,8 +693,10 @@ function updateSelection(core, range) {
         var selection = getSelection_1.default(core);
         if (selection) {
             // Workaround IE exception 800a025e
-            if (selection.rangeCount > 0 && selection.getRangeAt(0).getClientRects().length) {
+            try {
                 selection.removeAllRanges();
+            }
+            catch (e) {
             }
             selection.addRange(range);
             if (!hasFocus_1.default(core)) {
@@ -3819,9 +3821,14 @@ var Editor = /** @class */ (function () {
             var styles = contentDiv.style;
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
         }
-        // Disable t hese operations for firefox since its behavior is usually wrong
-        this.core.document.execCommand('enableObjectResizing', false, false);
-        this.core.document.execCommand('enableInlineTableEditing', false, false);
+        // 8. Disable these operations for firefox since its behavior is usually wrong
+        // Catch any possible exception since this should not block the initialization of editor
+        try {
+            this.core.document.execCommand('enableObjectResizing', false, false);
+            this.core.document.execCommand('enableInlineTableEditing', false, false);
+        }
+        catch (e) {
+        }
     }
     /**
      * Dispose this editor, dispose all plugins and custom data
@@ -8356,7 +8363,7 @@ var TableResize = /** @class */ (function () {
         this.isRtl = isRtl;
         this.pageX = -1;
         this.onMouseOver = function (e) {
-            var node = e.srcElement;
+            var node = (e.srcElement || e.target);
             if (_this.pageX < 0 && node && node.tagName == 'TD' && node != _this.td) {
                 _this.td = node;
                 _this.calcAndShowHandle();
@@ -8370,11 +8377,11 @@ var TableResize = /** @class */ (function () {
             document.addEventListener('mouseup', _this.onMouseUp, true);
             var handle = _this.getResizeHandle();
             handle.style.borderWidth = '0 1px';
+            _this.cancelEvent(e);
         };
         this.onMouseMove = function (e) {
             _this.adjustHandle(e.pageX);
-            e.preventDefault();
-            e.stopPropagation();
+            _this.cancelEvent(e);
         };
         this.onMouseUp = function (e) {
             var document = _this.editor.getDocument();
@@ -8394,6 +8401,7 @@ var TableResize = /** @class */ (function () {
             _this.pageX = -1;
             _this.calcAndShowHandle();
             _this.editor.focus();
+            _this.cancelEvent(e);
         };
     }
     TableResize.prototype.initialize = function (editor) {
@@ -8459,6 +8467,10 @@ var TableResize = /** @class */ (function () {
             handle.removeEventListener('mousedown', _this.onMouseDown);
             handle.parentNode.removeChild(handle);
         });
+    };
+    TableResize.prototype.cancelEvent = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
     };
     TableResize.prototype.setTableColumnWidth = function (width) {
         var _this = this;
