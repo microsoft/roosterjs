@@ -1,10 +1,10 @@
 import EditorCore from '../editor/EditorCore';
 import focus from './focus';
 import getContentTraverser from './getContentTraverser';
-import getLiveSelectionRange from './getLiveSelectionRange';
+import getLiveRange from './getLiveRange';
 import insertNode from './insertNode';
-import updateSelection from './deprecated/updateSelection';
-import { ContentScope } from 'roosterjs-editor-types';
+import select from './select';
+import { ContentScope, Position } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
 
@@ -30,10 +30,7 @@ function applyInlineStyleToCollapsedSelection(
     // This is needed so that the cursor still looks blinking inside editor
     // This also means an extra ZWS will be in editor
     // TODO: somewhere in returning content to consumer, we may need to do a cleanup for ZWS
-    let updatedRange = core.document.createRange();
-    updatedRange.selectNodeContents(element);
-    updatedRange.collapse(false /* toStart */);
-    updateSelection(core, updatedRange);
+    select(core, element, Position.End);
 }
 
 // Apply style to non collapsed selection
@@ -66,11 +63,7 @@ function applyInlineStyleToNonCollapsedSelection(
 
     // When selectionStartNode/EndNode is set, it means there is DOM change. Re-create the selection
     if (startNode && endNode) {
-        // Set the selection
-        let updatedRange = core.document.createRange();
-        updatedRange.setStartBefore(startNode);
-        updatedRange.setEndAfter(endNode);
-        updateSelection(core, updatedRange);
+        select(core, startNode, Position.Before, endNode, Position.After);
     }
 }
 
@@ -80,13 +73,13 @@ export default function applyInlineStyle(
     styler: (element: HTMLElement) => void
 ): void {
     focus(core);
-    let selectionRange = getLiveSelectionRange(core);
-    if (selectionRange) {
+    let range = getLiveRange(core);
+    if (range) {
         // TODO: Chrome has a bug that when the selection spans over several empty text nodes,
         // it may incorrectly report range not to be collapsed.
         // We may do a browser check to force it to go collapsed code path when we see an empty range
         // UserAgent.GetInstance().IsBrowserChrome && range.toString() == _String.Empty
-        if (selectionRange.collapsed) {
+        if (range.collapsed) {
             applyInlineStyleToCollapsedSelection(core, styler);
         } else {
             applyInlineStyleToNonCollapsedSelection(core, styler);

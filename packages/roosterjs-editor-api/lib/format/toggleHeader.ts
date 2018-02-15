@@ -1,9 +1,7 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
-import wrap from 'roosterjs-editor-dom/lib/utils/wrap';
 import { Editor } from 'roosterjs-editor-core';
 import { ContentScope, NodeType } from 'roosterjs-editor-types';
-import { unwrap } from 'roosterjs-editor-dom';
 
 /**
  * Toggle header at selection
@@ -13,34 +11,12 @@ import { unwrap } from 'roosterjs-editor-dom';
  * if passed in param is outside the range, will be rounded to nearest number in the range
  */
 export default function toggleHeader(editor: Editor, level: number) {
-    let selectionRange = editor.getSelectionRange();
-
     level = Math.min(Math.max(Math.round(level), 0), 6);
-    let headerNodes: Node[] = [];
-    for (let i = 1; i <= 6; i++) {
-        headerNodes = headerNodes.concat(queryNodesWithSelection(editor, 'H' + i));
-    }
 
     execFormatWithUndo(
         editor,
         () => {
-            let range = selectionRange.rawRange.cloneRange();
-            headerNodes.forEach(header => {
-                let replaceStart =
-                    header == selectionRange.start.node || header.contains(selectionRange.start.node);
-                let replaceEnd =
-                    header == selectionRange.end.node || header.contains(selectionRange.end.node);
-                let div = wrap(header, '<div></div>');
-                if (replaceStart) {
-                    range.setStartBefore(div);
-                }
-                if (replaceEnd) {
-                    range.setEndAfter(div);
-                }
-                unwrap(header);
-            });
-
-            editor.updateSelection(range);
+            editor.focus();
 
             if (level > 0) {
                 let traverser = editor.getContentTraverser(ContentScope.Selection);
@@ -56,11 +32,19 @@ export default function toggleHeader(editor: Editor, level: number) {
                     inlineElement = traverser.getNextInlineElement();
                 }
                 editor.getDocument().execCommand('formatBlock', false, `<H${level}>`);
-
-                let nodes = queryNodesWithSelection(editor, 'H' + level);
-                return nodes.length == 1 ? nodes[0] : null;
+            } else {
+                editor.getDocument().execCommand('formatBlock', false, '<DIV>');
+                for (let i = 1; i <= 6; i++) {
+                    let headers = queryNodesWithSelection(editor, 'H' + i);
+                    headers.forEach(header => {
+                        let div = editor.getDocument().createElement('div');
+                        while (header.firstChild) {
+                            div.appendChild(header.firstChild);
+                        }
+                        editor.replaceNode(header, div);
+                    });
+                }
             }
-        },
-        true /*preserveSelection*/
+        }
     );
 }

@@ -1,5 +1,5 @@
 import { Editor } from 'roosterjs-editor-core';
-import { ChangeSource, SelectionRangeBase, Position } from 'roosterjs-editor-types';
+import { ChangeSource } from 'roosterjs-editor-types';
 
 /**
  * Execute format with undo
@@ -18,31 +18,13 @@ export default function execFormatWithUndo(
     editor.addUndoSnapshot();
     let range = editor.getSelectionRange();
     let fallbackNode = formatter();
-    if (preserveSelection) {
-        updateSelection(editor, range, <Node>fallbackNode);
+    if (preserveSelection &&
+        !editor.select(range.start, range.end) &&
+        fallbackNode instanceof Node
+    ) {
+        editor.select(<Node>fallbackNode);
     }
 
     editor.triggerContentChangedEvent(ChangeSource.Format);
     editor.addUndoSnapshot();
-}
-
-function updateSelection(
-    editor: Editor,
-    selectionRange: SelectionRangeBase,
-    fallbackNode: Node
-) {
-    editor.focus();
-    let range = editor.getDocument().createRange();
-    let start = Position.create(selectionRange.start);
-    let end = Position.create(selectionRange.end);
-    if (editor.contains(start.node) && editor.contains(end.node)) {
-        range.setStart(start.node, start.offset);
-        range.setEnd(end.node, end.offset);
-    } else if (fallbackNode instanceof Node) {
-        range.selectNode(fallbackNode);
-    } else {
-        return;
-    }
-
-    editor.updateSelection(range);
 }

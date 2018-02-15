@@ -109,7 +109,7 @@ function retrieveHtmlViaTempDiv(editor: Editor, callback: (html: string) => void
     window.requestAnimationFrame(() => {
         if (editor) {
             // restore original selection range in editor
-            editor.updateSelection(originalSelectionRange.rawRange);
+            editor.select(originalSelectionRange);
             callback(tempDiv.innerHTML);
             tempDiv.style.display = 'none';
             tempDiv.innerHTML = '';

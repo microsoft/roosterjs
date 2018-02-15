@@ -8,6 +8,7 @@ interface SelectionRangeBase {
 
 const SelectionRangeBase = {
     create: createRangeBase,
+    toRange: toRange,
 };
 
 export default SelectionRangeBase;
@@ -39,4 +40,11 @@ function createRange(rawRange: Range): SelectionRange {
         ),
         rawRange: rawRange,
     };
+}
+
+function toRange(document: Document, selectionRangeBase: SelectionRangeBase): Range {
+    let range = document.createRange();
+    range.setStart(selectionRangeBase.start.node, selectionRangeBase.start.offset);
+    range.setEnd(selectionRangeBase.end.node, selectionRangeBase.end.offset);
+    return range;
 }

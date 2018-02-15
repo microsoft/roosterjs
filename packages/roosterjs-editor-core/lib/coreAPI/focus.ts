@@ -1,14 +1,13 @@
 import EditorCore from '../editor/EditorCore';
-import getLiveSelectionRange from './getLiveSelectionRange';
+import getLiveRange from './getLiveRange';
 import hasFocus from './hasFocus';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
-import restoreSelection from './restoreSelection';
-import updateSelection from './deprecated/updateSelection';
-import { NodeType } from 'roosterjs-editor-types';
+import select from './select';
+import { NodeType, Position } from 'roosterjs-editor-types';
 import { getFirstLeafNode } from 'roosterjs-editor-dom';
 
 export default function focus(core: EditorCore) {
-    if (!hasFocus(core) || !getLiveSelectionRange(core)) {
+    if (!hasFocus(core) || !getLiveRange(core)) {
         // Focus (document.activeElement indicates) and selection are mostly in sync, but could be out of sync in some extreme cases.
         // i.e. if you programmatically change window selection to point to a non-focusable DOM element (i.e. tabindex=-1 etc.).
         // On Chrome/Firefox, it does not change document.activeElement. On Edge/IE, it change document.activeElement to be body
@@ -16,14 +15,13 @@ export default function focus(core: EditorCore) {
         // So here we always do a live selection pull on DOM and make it point in Editor. The pitfall is, the cursor could be reset
         // to very begin to of editor since we don't really have last saved selection (created on blur which does not fire in this case).
         // It should be better than the case you cannot type
-        if (!restoreSelection(core)) {
+        if (!(core.cachedRange && select(core, core.cachedRange))) {
             setSelectionToBegin(core);
         }
     }
 
     // remember to clear cachedRange
     core.cachedRange = null;
-    core.cachedSelectionRange = null;
 
     // This is more a fallback to ensure editor gets focus if it didn't manage to move focus to editor
     if (!hasFocus(core)) {
@@ -32,31 +30,22 @@ export default function focus(core: EditorCore) {
 }
 
 function setSelectionToBegin(core: EditorCore) {
-    let range: Range;
     let firstNode = getFirstLeafNode(core.contentDiv);
     if (firstNode) {
         if (firstNode.nodeType == NodeType.Text) {
-            // First node is text, move range to the begin
-            range = core.document.createRange();
-            range.setStart(firstNode, 0);
+            // First node is text, move selection to the begin
+            select(core, firstNode, Position.Begin);
         } else if (firstNode.nodeType == NodeType.Element) {
             if (isVoidHtmlElement(firstNode as HTMLElement)) {
-                // First node is a html void element (void elements cannot have child nodes), move range before it
-                range = core.document.createRange();
-                range.setStartBefore(firstNode);
+                // First node is a html void element (void elements cannot have child nodes), move selection before it
+                select(core, firstNode, Position.Before);
             } else {
-                // Other html element, move range inside it
-                range = core.document.createRange();
-                range.setStart(firstNode, 0);
+                // Other html element, move selection inside it
+                select(core, firstNode, Position.Begin);
             }
         }
     } else {
-        // No first node, likely we have an empty content DIV, move range inside it
-        range = core.document.createRange();
-        range.setStart(core.contentDiv, 0);
-    }
-
-    if (range) {
-        updateSelection(core, range);
+        // No first node, likely we have an empty content DIV, move selection inside it
+        select(core, core.contentDiv, Position.Begin);
     }
 }

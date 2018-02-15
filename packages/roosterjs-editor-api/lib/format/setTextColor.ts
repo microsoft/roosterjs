@@ -1,4 +1,4 @@
-import execFormatWithUndo from './execFormatWithUndo';
+import { ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -10,9 +10,9 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function setTextColor(editor: Editor, color: string) {
     editor.focus();
-    execFormatWithUndo(editor, () => {
-        editor.applyInlineStyle((element: HTMLElement) => {
-            element.style.color = color;
-        });
+    editor.addUndoSnapshot();
+    editor.applyInlineStyle((element: HTMLElement) => {
+        element.style.color = color;
     });
+    editor.triggerContentChangedEvent(ChangeSource.Format);
 }

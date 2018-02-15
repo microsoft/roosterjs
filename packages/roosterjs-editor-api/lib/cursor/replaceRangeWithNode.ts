@@ -1,4 +1,5 @@
 import { Editor } from 'roosterjs-editor-core';
+import { Position } from 'roosterjs-editor-types';
 
 /**
  * Replace the specified range with a node
@@ -12,7 +13,7 @@ import { Editor } from 'roosterjs-editor-core';
  * before cursor.
  * @returns True if we complete the replacement, false otherwise
  */
-function replaceRangeWithNode(
+export default function replaceRangeWithNode(
     editor: Editor,
     range: Range,
     node: Node,
@@ -27,12 +28,8 @@ function replaceRangeWithNode(
     range.insertNode(node);
 
     if (exactMatch) {
-        range.setEndAfter(node);
-        range.collapse(false /*toStart*/);
-        editor.updateSelection(range);
+        editor.select(node, Position.After);
     }
 
     return true;
 }
-
-export default replaceRangeWithNode;

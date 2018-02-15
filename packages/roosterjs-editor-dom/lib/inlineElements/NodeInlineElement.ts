@@ -149,7 +149,7 @@ class NodeInlineElement implements InlineElement {
             return;
         }
 
-        while (startNode == this.containerNode || contains(this.containerNode, startNode)) {
+        while (contains(this.containerNode, startNode, true /*treatSameNodeAsContain*/)) {
             // The code below modifies DOM. Need to get the next sibling first otherwise you won't be able to reliably get a good next sibling node
             let nextLeafNode = getNextLeafSibling(this.containerNode, startNode);
 

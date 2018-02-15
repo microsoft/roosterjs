@@ -1,4 +1,4 @@
-import execFormatWithUndo from './execFormatWithUndo';
+import { ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -9,12 +9,12 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function setFontSize(editor: Editor, fontSize: string) {
     editor.focus();
-    execFormatWithUndo(editor, () => {
-        // The browser provided execCommand only accepts 1-7 point value. In addition, it uses HTML <font> tag with size attribute.
-        // <font> is not HTML5 standard (http://www.w3schools.com/tags/tag_font.asp). Use editor.applyInlineStyle which gives flexibility on applying inline style
-        // for here, we use CSS font-size style
-        editor.applyInlineStyle((element: HTMLElement) => {
-            element.style.fontSize = fontSize;
-        });
+    editor.addUndoSnapshot();
+    // The browser provided execCommand only accepts 1-7 point value. In addition, it uses HTML <font> tag with size attribute.
+    // <font> is not HTML5 standard (http://www.w3schools.com/tags/tag_font.asp). Use editor.applyInlineStyle which gives flexibility on applying inline style
+    // for here, we use CSS font-size style
+    editor.applyInlineStyle((element: HTMLElement) => {
+        element.style.fontSize = fontSize;
     });
+    editor.triggerContentChangedEvent(ChangeSource.Format);
 }

@@ -1,6 +1,7 @@
 import * as TestHelper from '../TestHelper';
 import replaceTextBeforeCursorWithNode from '../../cursor/replaceTextBeforeCursorWithNode';
 import { Editor } from 'roosterjs-editor-core';
+import { Position } from 'roosterjs-editor-types';
 
 describe('replaceTextBeforeCursorWithNode replaceTextBeforeCursorWithNode()', () => {
     let testID = 'replaceTextBeforeCursorWithNode';
@@ -112,10 +113,6 @@ describe('replaceTextBeforeCursorWithNode replaceTextBeforeCursorWithNode()', ()
     function setEditorContentAndUpdateSelection(originalContent: string, selectedNodeID: string) {
         editor.setContent(originalContent);
         let selectedNode = document.getElementById(selectedNodeID);
-        let range = document.createRange();
-        range.setStartBefore(selectedNode);
-        range.setEndAfter(selectedNode);
-        range.collapse(false);
-        editor.updateSelection(range);
+        editor.select(selectedNode, Position.After);
     }
 });

@@ -90,7 +90,7 @@ function createPosition(nodeOrPosition: Node | Position, offsetOrPosType?: numbe
 
 function normalize(position: Position): Position {
     let { node, offset, isAtEnd } = position;
-    let newOffset: number | PositionType.Begin | PositionType.End = offset;
+    let newOffset: number | PositionType.Begin | PositionType.End = isAtEnd ? PositionType.End : offset;
     while (node.nodeType == NodeType.Element && node.firstChild) {
         node = newOffset == PositionType.Begin ?
             node.firstChild :

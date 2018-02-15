@@ -5,15 +5,15 @@ describe('contains()', () => {
     let testID = 'contains';
 
     it('container = null, contained = null', () => {
-        runTest(null, null, false);
+        runTest(null, null, null);
     });
 
     it('container = null, contained = not null', () => {
-        runTest(null, DomTestHelper.createElementFromContent(testID, 'test'), false);
+        runTest(null, DomTestHelper.createElementFromContent(testID, 'test'), null);
     });
 
     it('container = not null, contained = null', () => {
-        runTest(DomTestHelper.createElementFromContent(testID, 'test'), null, false);
+        runTest(DomTestHelper.createElementFromContent(testID, 'test'), null, null);
     });
 
     it('container = <div>test</div>, contained = test', () => {

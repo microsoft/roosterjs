@@ -6,6 +6,7 @@ import {
     PluginEventType,
     PluginDomEvent,
     ExtractContentEvent,
+    Position,
 } from 'roosterjs-editor-types';
 import { contains, getTagOfNode } from 'roosterjs-editor-dom';
 import { execFormatWithUndo } from 'roosterjs-editor-api';
@@ -52,7 +53,7 @@ export default class ImageResizePlugin implements EditorPlugin {
 
     dispose() {
         if (this.resizeDiv) {
-            this.unselect(false /*selectImageAfterUnSelect*/);
+            this.unselect(false /*selectImageAfterUnselect*/);
         }
         this.editor = null;
     }
@@ -65,14 +66,14 @@ export default class ImageResizePlugin implements EditorPlugin {
                 target.contentEditable = 'false';
                 let currentImg = this.getSelectedImage();
                 if (currentImg && currentImg != target) {
-                    this.unselect(false /*selectImageAfterUnSelect*/);
+                    this.unselect(false /*selectImageAfterUnselect*/);
                 }
 
                 if (!this.resizeDiv) {
                     this.select(target);
                 }
             } else if (this.resizeDiv && !contains(this.resizeDiv, target)) {
-                this.unselect(false /*selectImageAfterUnSelect*/);
+                this.unselect(false /*selectImageAfterUnselect*/);
             }
         } else if (e.eventType == PluginEventType.KeyDown && this.resizeDiv) {
             let event = <KeyboardEvent>(<PluginDomEvent>e).rawEvent;
@@ -86,7 +87,7 @@ export default class ImageResizePlugin implements EditorPlugin {
                 event.which != CTRL_KEYCODE &&
                 event.which != ALT_KEYCODE
             ) {
-                this.unselect(true /*selectImageAfterUnSelect*/);
+                this.unselect(true /*selectImageAfterUnselect*/);
             }
         } else if (e.eventType == PluginEventType.ExtractContent) {
             let event = <ExtractContentEvent>e;
@@ -97,13 +98,10 @@ export default class ImageResizePlugin implements EditorPlugin {
     private select(target: HTMLElement) {
         this.resizeDiv = this.createResizeDiv(target);
         target.contentEditable = 'false';
-        let range = document.createRange();
-        range.setEndAfter(this.resizeDiv);
-        range.collapse(false /*toStart*/);
-        this.editor.updateSelection(range);
+        this.editor.select(this.resizeDiv, Position.After);
     }
 
-    private unselect(selectImageAfterUnSelect: boolean) {
+    private unselect(selectImageAfterUnselect: boolean) {
         let img = this.getSelectedImage();
         let parent = this.resizeDiv.parentNode;
         if (parent) {
@@ -116,10 +114,8 @@ export default class ImageResizePlugin implements EditorPlugin {
                         : this.resizeDiv;
                 parent.insertBefore(img, referenceNode);
 
-                if (selectImageAfterUnSelect) {
-                    let range = this.editor.getDocument().createRange();
-                    range.selectNode(img);
-                    this.editor.updateSelection(range);
+                if (selectImageAfterUnselect) {
+                    this.editor.select(img);
                 }
             }
             this.removeResizeDiv();

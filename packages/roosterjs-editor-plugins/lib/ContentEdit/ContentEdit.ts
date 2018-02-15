@@ -87,9 +87,7 @@ export default class ContentEdit implements EditorPlugin {
                             if (this.editor) {
                                 let br = document.createElement('br');
                                 this.editor.insertNode(br);
-                                let range = document.createRange();
-                                range.setStartAfter(br);
-                                this.editor.updateSelection(range);
+                                this.editor.select(br, Position.After);
                             }
                         });
                     }
@@ -119,10 +117,7 @@ export default class ContentEdit implements EditorPlugin {
                                 blockQuoteElement.parentNode.removeChild(blockQuoteElement);
                             }
 
-                            let range = this.editor.getDocument().createRange();
-                            range.selectNode(node);
-                            range.collapse(true /*toStart*/);
-                            this.editor.updateSelection(range);
+                            this.editor.select(node, Position.Before);
                         });
                     }
                 }

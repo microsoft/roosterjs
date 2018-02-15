@@ -1,4 +1,5 @@
 import { NodeType } from 'roosterjs-editor-types';
+import { contains } from 'roosterjs-editor-dom';
 
 export default function isRangeInContainer(range: Range, container: Node): boolean {
     let ancestorContainer = range ? range.commonAncestorContainer : null;
@@ -8,8 +9,5 @@ export default function isRangeInContainer(range: Range, container: Node): boole
         ancestorContainer = ancestorContainer.parentNode;
     }
 
-    return (
-        ancestorContainer &&
-        (container == ancestorContainer || container.contains(ancestorContainer))
-    );
+    return contains(container, ancestorContainer, true /*treatSameNodeAsContain*/);
 }

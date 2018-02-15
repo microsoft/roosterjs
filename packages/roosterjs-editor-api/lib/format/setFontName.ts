@@ -1,4 +1,4 @@
-import execFormatWithUndo from './execFormatWithUndo';
+import { ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -9,12 +9,12 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function setFontName(editor: Editor, fontName: string) {
     editor.focus();
-    execFormatWithUndo(editor, () => {
-        // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
-        // (http://www.w3schools.com/tags/tag_font.asp). Use editor.applyInlineStyle which gives flexibility on applying inline style
-        // for here, we use CSS font-family style
-        editor.applyInlineStyle((element: HTMLElement) => {
-            element.style.fontFamily = fontName;
-        });
+    editor.addUndoSnapshot();
+    // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
+    // (http://www.w3schools.com/tags/tag_font.asp). Use editor.applyInlineStyle which gives flexibility on applying inline style
+    // for here, we use CSS font-family style
+    editor.applyInlineStyle((element: HTMLElement) => {
+        element.style.fontFamily = fontName;
     });
+    editor.triggerContentChangedEvent(ChangeSource.Format);
 }

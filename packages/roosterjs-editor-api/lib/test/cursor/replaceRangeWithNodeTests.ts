@@ -2,6 +2,7 @@ import * as TestHelper from '../TestHelper';
 import CursorData from '../../cursor/CursorData';
 import replaceRangeWithNode from '../../cursor/replaceRangeWithNode';
 import { Editor } from 'roosterjs-editor-core';
+import { Position } from 'roosterjs-editor-types';
 
 describe('replaceRangeWithNode replaceRangeWithNode()', () => {
     let testID = 'replaceRangeWithNode';
@@ -107,13 +108,10 @@ describe('replaceRangeWithNode replaceRangeWithNode()', () => {
 
     function configRange(originalNodeID: string, startOffset: number, endOffset: number): Range {
         let selectedNode = document.getElementById(originalNodeID);
-        let range = document.createRange();
-        range.setStartBefore(selectedNode);
-        range.setEndAfter(selectedNode);
-        range.collapse(false);
-        editor.updateSelection(range);
+        editor.select(selectedNode, Position.After);
         let cursor = new CursorData(editor);
         let textElement = cursor.inlineElementBeforeCursor;
+        let range = document.createRange();
         range.setStart(textElement.getContainerNode(), startOffset);
         range.setEnd(textElement.getContainerNode(), endOffset);
         return range;

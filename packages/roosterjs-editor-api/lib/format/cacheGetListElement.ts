@@ -30,7 +30,7 @@ export default function cacheGetListElement(editor: Editor, event?: PluginEvent)
  */
 export function getListElementAtNode(editor: Editor, node: Node, tagName: string): Element {
     let startElement = node && node.nodeType == NodeType.Text ? node.parentElement : <Element>node;
-    while (startElement && editor.contains(startElement)) {
+    while (editor.contains(startElement)) {
         if (getTagOfNode(startElement) == tagName) {
             return startElement;
         }

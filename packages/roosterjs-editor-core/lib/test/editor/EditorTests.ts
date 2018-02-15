@@ -2,7 +2,7 @@ import Editor from '../../editor/Editor';
 import * as TestHelper from '../TestHelper';
 import { ContentPosition } from 'roosterjs-editor-types';
 import * as getSelection from '../../coreAPI/getSelection';
-import * as getLiveSelectionRange from '../../coreAPI/getLiveSelectionRange';
+import * as getLiveRange from '../../coreAPI/getLiveRange';
 
 let editor: Editor;
 let testID = 'EditorTest';
@@ -41,19 +41,19 @@ describe('Editor getSelectionRange()', () => {
 
     it('getSelectionRange shold invoke getSelectionRange in Selection if in foucs', () => {
         // Arrange
-        spyOn(getLiveSelectionRange, 'default').and.callThrough();
+        spyOn(getLiveRange, 'default').and.callThrough();
         editor.focus();
 
         // Act
         editor.getSelectionRange();
 
         // Assert
-        expect(getLiveSelectionRange.default).toHaveBeenCalled();
+        expect(getLiveRange.default).toHaveBeenCalled();
     });
 
     it('getSelectionRange shold return default selection if not in focus', () => {
         // Arrange
-        spyOn(getLiveSelectionRange, 'default').and.callThrough();
+        spyOn(getLiveRange, 'default').and.callThrough();
 
         // Act
         let selectionRange = editor.getSelectionRange();
@@ -374,7 +374,7 @@ describe('Editor getInlineElementAtNode()', () => {
     });
 });
 
-describe('Editor updateSelection()', () => {
+describe('Editor select()', () => {
     let node = TestHelper.createElementFromContent('testNode', '<p>abc</p><p>123</p>');
 
     beforeEach(() => {
@@ -397,7 +397,7 @@ describe('Editor updateSelection()', () => {
         let selectionRange = TestHelper.createRangeWithDiv(node.firstChild as HTMLElement);
 
         // Act
-        editor.updateSelection(selectionRange);
+        editor.select(selectionRange);
 
         // Assert
         expect(editor.getSelectionRange().rawRange).toBe(selectionRange);

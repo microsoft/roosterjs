@@ -7,13 +7,12 @@ import attachDomEvent from '../coreAPI/attachDomEvent';
 import browserData from '../utils/BrowserData';
 import focus from '../coreAPI/focus';
 import getContentTraverser from '../coreAPI/getContentTraverser';
-import getLiveSelectionRange from '../coreAPI/getLiveSelectionRange';
+import getLiveRange from '../coreAPI/getLiveRange';
 import getSelection from '../coreAPI/getSelection';
 import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
-import restoreSelection from '../coreAPI/restoreSelection';
+import select from '../coreAPI/select';
 import triggerEvent from '../coreAPI/triggerEvent';
-import updateSelection from '../coreAPI/deprecated/updateSelection';
 import {
     ChangeSource,
     ContentPosition,
@@ -22,11 +21,13 @@ import {
     ExtractContentEvent,
     InlineElement,
     InsertOption,
-    NodeBoundary,
     NodeType,
     PluginEvent,
     PluginEventType,
+    Position,
+    PositionType,
     SelectionRange,
+    SelectionRangeBase,
 } from 'roosterjs-editor-types';
 import {
     ContentTraverser,
@@ -39,7 +40,6 @@ import {
     getInlineElementAtNode,
     getTagOfNode,
     isNodeEmpty,
-    normalizeEditorPoint,
     wrapAll,
 } from 'roosterjs-editor-dom';
 
@@ -53,7 +53,7 @@ export default class Editor {
     private inIME: boolean;
     private core: EditorCore;
     private eventDisposers: (() => void)[];
-    private defaultSelectionRange: SelectionRange;
+    private defaultRange: Range;
 
     /**
      * Creates an instance of Editor
@@ -70,6 +70,8 @@ export default class Editor {
         this.core = EditorCore.create(contentDiv, options);
         this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus;
         this.omitContentEditable = options.omitContentEditableAttributeChanges;
+        this.defaultRange = this.createDefaultRange();
+        this.undoService = options.undo || new Undo();
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
@@ -77,26 +79,21 @@ export default class Editor {
         // 4. Ensure initial content and its format
         this.ensureInitialContent(options.initialContent);
 
-        // 5. Create a default selection range at beginning of editor
-        this.defaultSelectionRange = this.createDefaultRange();
-
-        // 6. Initialize undo service. This need to be after step 4 and 5 so that undo service
-        // can pickup initial content and default selection is ready
-        this.undoService = options.undo || new Undo();
+        // 5. Initialize undo service
         this.undoService.initialize(this);
         this.core.plugins.push(this.undoService);
 
-        // 7. Create event handler to bind DOM events
+        // 6. Create event handler to bind DOM events
         this.createEventHandlers();
 
-        // 8. Finally make the container editable and set its selection styles
+        // 7. Finally make the container editable and set its selection styles
         if (!this.omitContentEditable) {
             contentDiv.setAttribute('contenteditable', 'true');
             let styles = contentDiv.style;
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
         }
 
-        // Disable these operations for firefox since its behavior is usually wrong
+        // 8. Disable these operations for firefox since its behavior is usually wrong
         this.core.document.execCommand( 'enableObjectResizing', false, false );
         this.core.document.execCommand( 'enableInlineTableEditing', false, false );
     }
@@ -160,7 +157,7 @@ export default class Editor {
      */
     public deleteNode(node: Node): boolean {
         // Only remove the node when it falls within editor
-        if (node && this.contains(node)) {
+        if (this.contains(node)) {
             node.parentNode.removeChild(node);
             return true;
         }
@@ -176,7 +173,7 @@ export default class Editor {
      */
     public replaceNode(existingNode: Node, toNode: Node): boolean {
         // Only replace the node when it falls within editor
-        if (existingNode && toNode && this.contains(existingNode)) {
+        if (toNode && this.contains(existingNode)) {
             existingNode.parentNode.replaceChild(toNode, existingNode);
             return true;
         }
@@ -291,10 +288,10 @@ export default class Editor {
     //#region Focus and Selection
 
     public getSelectionRange(): SelectionRange {
-        return (
-            getLiveSelectionRange(this.core) ||
-            this.core.cachedSelectionRange ||
-            this.defaultSelectionRange
+        return SelectionRange.create(
+            getLiveRange(this.core) ||
+            this.core.cachedRange ||
+            this.defaultRange
         );
     }
 
@@ -322,13 +319,61 @@ export default class Editor {
     }
 
     /**
-     * @deprecated
-     * Update selection in editor
-     * @param selectionRange The selection range to update to
-     * @returns true if selection range is updated. Otherwise false.
+     * Select content by range
+     * @param range The range to select
+     * @returns True if content is selected, otherwise false
      */
-    public updateSelection(selectionRange: Range): boolean {
-        return updateSelection(this.core, selectionRange);
+    public select(range: Range): boolean;
+
+    /**
+     * Select content by SelectionRangeBase
+     * @param range The SelectionRangeBase object which represents the content range to select
+     * @returns True if content is selected, otherwise false
+     */
+    public select(range: SelectionRangeBase): boolean;
+
+    /**
+     * Select content by Position and collapse to this position
+     * @param position The position to select
+     * @returns True if content is selected, otherwise false
+     */
+    public select(position: Position): boolean;
+
+    /**
+     * Select content by a start and end position
+     * @param start The start position to select
+     * @param end The end position to select, if this is the same with start, the selection will be collapsed
+     * @returns True if content is selected, otherwise false
+     */
+    public select(start: Position, end: Position): boolean;
+
+    /**
+     * Select content by node
+     * @param node The node to select
+     * @returns True if content is selected, otherwise false
+     */
+    public select(node: Node): boolean;
+
+    /**
+     * Select content by node and offset, and collapse to this position
+     * @param node The node to select
+     * @param offset The offset of node to select, can be a number or value of PositionType
+     * @returns True if content is selected, otherwise false
+     */
+    public select(node: Node, offset: number | PositionType): boolean;
+
+    /**
+     * Select content by start and end nodes and offsets
+     * @param startNode The node to select start from
+     * @param startOffset The offset to select start from
+     * @param endNode The node to select end to
+     * @param endOffset The offset to select end to
+     * @returns True if content is selected, otherwise false
+     */
+    public select(startNode: Node, startOffset: number | PositionType, endNode: Node, endOffset: number | PositionType): boolean;
+
+    public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
+        return select(this.core, arg1, arg2, arg3, arg4);
     }
 
     /**
@@ -518,15 +563,13 @@ export default class Editor {
             attachDomEvent(this.core, 'focus', null, () => {
                 // Restore the last saved selection first
                 if (this.core.cachedRange && !this.disableRestoreSelectionOnFocus) {
-                    restoreSelection(this.core);
+                    this.select(this.core.cachedRange);
                 }
                 this.core.cachedRange = null;
-                this.core.cachedSelectionRange = null;
             }),
             attachDomEvent(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, () => {
                 if (!this.core.cachedRange) {
-                    this.core.cachedSelectionRange = getLiveSelectionRange(this.core);
-                    this.core.cachedRange = this.core.cachedSelectionRange ? this.core.cachedSelectionRange.rawRange : null;
+                    this.core.cachedRange = getLiveRange(this.core);
                 }
             }),
         ];
@@ -562,14 +605,13 @@ export default class Editor {
                 let element = this.core.contentDiv.appendChild(nodes[0]) as HTMLElement;
                 applyFormat(element, this.core.defaultFormat);
                 // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
-                this.selectEditorPoint(element.firstChild, NodeBoundary.Begin);
+                this.select(element.firstChild, Position.Begin);
             } else if (
                 blockElement.getStartNode().parentNode == blockElement.getEndNode().parentNode
             ) {
                 // Only fix the balanced start-end block where start and end node is under same parent
                 // The focus node could be pointing to the content div, normalize it to have it point to a child first
                 let focusOffset = selectionRange.start.offset;
-                let editorPoint = normalizeEditorPoint(focusNode, focusOffset);
                 let element = wrapAll(blockElement.getContentNodes()) as HTMLElement;
                 if (getTagOfNode(blockElement.getStartNode()) == 'BR') {
                     // if the block is just BR, apply default format
@@ -577,29 +619,10 @@ export default class Editor {
                     applyFormat(element, this.core.defaultFormat);
                 }
                 // Last restore the selection using the normalized editor point
-                this.selectEditorPoint(editorPoint.containerNode, editorPoint.offset);
+                this.select(Position.normalize(Position.create(focusNode, focusOffset)));
             }
         }
     };
-
-    private selectEditorPoint(container: Node, offset: number): boolean {
-        if (!this.contains(container)) {
-            return false;
-        }
-
-        let range = this.core.document.createRange();
-        if (container.nodeType == NodeType.Text && offset <= container.nodeValue.length) {
-            range.setStart(container, offset);
-        } else if (offset == NodeBoundary.Begin) {
-            range.setStartBefore(container);
-        } else {
-            range.setStartAfter(container);
-        }
-
-        range.collapse(true /* toStart */);
-
-        return updateSelection(this.core, range);
-    }
 
     private ensureInitialContent(initialContent: string) {
         if (initialContent) {
@@ -634,7 +657,7 @@ export default class Editor {
         let range = this.core.document.createRange();
         range.setStart(this.core.contentDiv, 0);
         range.collapse(true);
-        return SelectionRange.create(range);
+        return range;
     }
     //#endregion
 }
