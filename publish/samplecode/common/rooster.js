@@ -6151,7 +6151,7 @@ function editTable(editor, operation) {
                     break;
                 case 5 /* DeleteColumn */:
                     vtable.forEachCellOfCurrentColumn(function (cell, row, i) {
-                        var nextCell = vtable.getCell(i, vtable.col);
+                        var nextCell = vtable.getCell(i, vtable.col + 1);
                         if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
                             nextCell.td = cell.td;
                         }
@@ -7203,7 +7203,7 @@ var roosterjs_editor_api_1 = __webpack_require__(4);
 var roosterjs_editor_core_1 = __webpack_require__(2);
 var KEY_SPACE = 32;
 /**
- * Handles the autoBullet event. Specifically, when user press space after input '*' and '1.' in an empty line,
+ * Handles the autoBullet event. Specifically, when user press space after input '*', '-' and '1.' in an empty line,
  * we automatically convert it to an html list
  * @param editor The editor instance
  * @param event The plugin event
@@ -7221,10 +7221,10 @@ function tryHandleAutoBullet(editor, event, keyboardEvent) {
             // we do not fire auto list.
             var textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
             // Auto list is triggered if:
-            // 1. Text before cursor exactly mathces '*' or '1.'
+            // 1. Text before cursor exactly mathces '*', '-' or '1.'
             // 2. Cursor is not in html list
             // 3. There's no non-text inline entities before cursor
-            if ((textBeforeCursor == '*' || textBeforeCursor == '1.') &&
+            if (isAutoBulletInput(textBeforeCursor) &&
                 roosterjs_editor_api_1.cacheGetListState(editor, event) == 0 /* None */ &&
                 !cursorData.getFirstNonTextInlineBeforeCursor()) {
                 handleAutoBulletOrNumbering(textBeforeCursor, editor);
@@ -7246,7 +7246,7 @@ function handleAutoBulletOrNumbering(identifier, editor) {
     });
     editor.addUndoSnapshot();
     editor.runWithoutAddingUndoSnapshot(function () {
-        // Remove the user input '*' or '1.'
+        // Remove the user input '*', '-' or '1.'
         var rangeToDelete = roosterjs_editor_api_1.validateAndGetRangeForTextBeforeCursor(editor, identifier + ' ', true, new roosterjs_editor_api_1.CursorData(editor));
         if (rangeToDelete) {
             rangeToDelete.deleteContents();
@@ -7261,7 +7261,7 @@ function handleAutoBulletOrNumbering(identifier, editor) {
                 insertOnNewLine: false,
             });
         }
-        if (identifier == '*') {
+        if (identifier == '*' || identifier == '-') {
             roosterjs_editor_api_1.toggleBullet(editor);
         }
         else if (identifier == '1.') {
@@ -7269,6 +7269,9 @@ function handleAutoBulletOrNumbering(identifier, editor) {
         }
     });
     editor.addUndoSnapshot();
+}
+function isAutoBulletInput(input) {
+    return ['*', '-', '1.'].indexOf(input) >= 0;
 }
 
 

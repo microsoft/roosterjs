@@ -12,7 +12,7 @@ import { Editor, browserData } from 'roosterjs-editor-core';
 const KEY_SPACE = 32;
 
 /**
- * Handles the autoBullet event. Specifically, when user press space after input '*' and '1.' in an empty line,
+ * Handles the autoBullet event. Specifically, when user press space after input '*', '-' and '1.' in an empty line,
  * we automatically convert it to an html list
  * @param editor The editor instance
  * @param event The plugin event
@@ -38,11 +38,11 @@ export default function tryHandleAutoBullet(
             let textBeforeCursor: string = cursorData.getXCharsBeforeCursor(3);
 
             // Auto list is triggered if:
-            // 1. Text before cursor exactly mathces '*' or '1.'
+            // 1. Text before cursor exactly mathces '*', '-' or '1.'
             // 2. Cursor is not in html list
             // 3. There's no non-text inline entities before cursor
             if (
-                (textBeforeCursor == '*' || textBeforeCursor == '1.') &&
+                isAutoBulletInput(textBeforeCursor) &&
                 cacheGetListState(editor, event) == ListState.None &&
                 !cursorData.getFirstNonTextInlineBeforeCursor()
             ) {
@@ -69,7 +69,7 @@ function handleAutoBulletOrNumbering(identifier: string, editor: Editor) {
     editor.addUndoSnapshot();
 
     editor.runWithoutAddingUndoSnapshot(() => {
-        // Remove the user input '*' or '1.'
+        // Remove the user input '*', '-' or '1.'
         let rangeToDelete: Range = validateAndGetRangeForTextBeforeCursor(
             editor,
             identifier + ' ',
@@ -91,7 +91,7 @@ function handleAutoBulletOrNumbering(identifier: string, editor: Editor) {
             });
         }
 
-        if (identifier == '*') {
+        if (identifier == '*' || identifier == '-') {
             toggleBullet(editor);
         } else if (identifier == '1.') {
             toggleNumbering(editor);
@@ -99,4 +99,8 @@ function handleAutoBulletOrNumbering(identifier: string, editor: Editor) {
     });
 
     editor.addUndoSnapshot();
+}
+
+function isAutoBulletInput(input: string): boolean {
+    return ['*', '-', '1.'].indexOf(input) >= 0;
 }

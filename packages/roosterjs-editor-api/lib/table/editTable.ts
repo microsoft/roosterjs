@@ -49,7 +49,7 @@ export default function editTable(editor: Editor, operation: TableOperation) {
 
                     case TableOperation.DeleteColumn:
                         vtable.forEachCellOfCurrentColumn((cell, row, i) => {
-                            let nextCell = vtable.getCell(i, vtable.col);
+                            let nextCell = vtable.getCell(i, vtable.col + 1);
                             if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
                                 nextCell.td = cell.td;
                             }
