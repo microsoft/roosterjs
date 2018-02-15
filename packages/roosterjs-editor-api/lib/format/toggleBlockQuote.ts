@@ -1,6 +1,6 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
-import { getListElementAtNode } from './cacheGetListElement';
+import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import { getTagOfNode, splitParentNode, unwrap, wrapAll, wrap } from 'roosterjs-editor-dom';
 import { ContentScope } from 'roosterjs-editor-types';
 import { Editor, browserData } from 'roosterjs-editor-core';
@@ -58,7 +58,7 @@ function getContentNodes(editor: Editor): Node[] {
     while (blockElement) {
         let nodes = blockElement.getContentNodes();
         for (let node of nodes) {
-            let listElement = getListElementAtNode(editor, node, 'LI');
+            let listElement = getNodeAtCursor(editor, 'LI', node);
             if (!listElement) {
                 result.push(node);
             } else if (listElement != result[result.length - 1]) {

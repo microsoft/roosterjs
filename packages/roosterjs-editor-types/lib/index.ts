@@ -14,6 +14,8 @@ export { default as InlineElement } from './editor/InlineElement';
 export { default as InsertOption } from './editor/InsertOption';
 export { default as LinkData } from './format/LinkData';
 export { default as ListState } from './format/ListState';
+export { default as TableFormat } from './format/TableFormat';
+export { default as TableOperation } from './format/TableOperation';
 export { default as NodeType } from './browser/NodeType';
 export { default as PluginDomEvent } from './editor/PluginDomEvent';
 export { default as PluginEvent } from './editor/PluginEvent';

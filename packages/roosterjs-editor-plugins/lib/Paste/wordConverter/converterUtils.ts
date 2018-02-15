@@ -456,7 +456,7 @@ function fixWordListComments(child: Node, removeComments: boolean): Node {
                 // Remove the comments out if the call specified it out
                 if (removeComments) {
                     child.parentNode.removeChild(child);
-                    endComment.parentElement.removeChild(endComment);
+                    endComment.parentNode.removeChild(endComment);
                 }
 
                 // Last, make sure we return the new element out instead of the comment

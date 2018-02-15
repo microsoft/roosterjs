@@ -3,21 +3,27 @@ export {
     clearCursorEventDataCache,
 } from './cursor/cacheGetCursorEventData';
 export { default as CursorData } from './cursor/CursorData';
-export { default as getCursorRect } from './cursor/getCursorRect';
-export { default as getNodeAtCursor } from './cursor/getNodeAtCursor';
+export { default as getCursorRect} from './cursor/getCursorRect';
+export {
+    default as getNodeAtCursor,
+    cacheGetListElement,
+    cacheGetNodeAtCursor,
+} from './cursor/getNodeAtCursor';
 export { default as queryNodesWithSelection } from './cursor/queryNodesWithSelection';
 export { default as replaceRangeWithNode } from './cursor/replaceRangeWithNode';
 export {
     default as replaceTextBeforeCursorWithNode,
+    validateAndGetRangeForTextBeforeCursor,
 } from './cursor/replaceTextBeforeCursorWithNode';
-export { default as cacheGetListElement } from './format/cacheGetListElement';
 export { default as cacheGetListState } from './format/cacheGetListState';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
 export { default as execFormatWithUndo } from './format/execFormatWithUndo';
 export { default as getFormatState } from './format/getFormatState';
 export { default as insertImage } from './format/insertImage';
-export { default as insertTable, TableFormat } from './format/insertTable';
+export { default as insertTable } from './table/insertTable';
+export { default as editTable } from './table/editTable';
+export { default as formatTable } from './table/formatTable';
 export { default as removeLink } from './format/removeLink';
 export { default as setAlignment } from './format/setAlignment';
 export { default as setBackgroundColor } from './format/setBackgroundColor';

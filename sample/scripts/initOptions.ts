@@ -7,6 +7,7 @@ import {
     Paste,
     ContentEdit,
     Watermark,
+    TableResize,
 } from 'roosterjs-editor-plugins';
 import { ImageResizePlugin } from 'roosterjs-plugin-image-resize';
 import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
@@ -31,6 +32,7 @@ function initOptions() {
         'contentEditCheckbox',
         'watermarkCheckbox',
         'imageResizeCheckbox',
+        'tableResizeCheckbox',
         'boldCheckbox',
         'italicCheckbox',
         'underlineCheckbox',
@@ -64,6 +66,10 @@ export function initEditorForOptions() {
 
     if ((document.getElementById('imageResizeCheckbox') as HTMLInputElement).checked) {
         plugins.push(new ImageResizePlugin());
+    }
+
+    if ((document.getElementById('tableResizeCheckbox') as HTMLInputElement).checked) {
+        plugins.push(new TableResize());
     }
 
     plugins.push(new ShowCursorPosition(document.getElementById('cursorPosition')));

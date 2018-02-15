@@ -94,8 +94,12 @@ export default class Editor {
         }
 
         // 8. Disable these operations for firefox since its behavior is usually wrong
-        this.core.document.execCommand( 'enableObjectResizing', false, false );
-        this.core.document.execCommand( 'enableInlineTableEditing', false, false );
+        // Catch any possible exception since this should not block the initialization of editor
+        try {
+            this.core.document.execCommand('enableObjectResizing', false, false);
+            this.core.document.execCommand('enableInlineTableEditing', false, false);
+        } catch (e) {
+        }
     }
 
     /**
@@ -568,9 +572,7 @@ export default class Editor {
                 this.core.cachedRange = null;
             }),
             attachDomEvent(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, () => {
-                if (!this.core.cachedRange) {
-                    this.core.cachedRange = getLiveRange(this.core);
-                }
+                this.core.cachedRange = getLiveRange(this.core);
             }),
         ];
     }

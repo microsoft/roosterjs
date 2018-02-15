@@ -1,6 +1,6 @@
 import {
     setIndentation,
-    cacheGetListElement,
+    cacheGetNodeAtCursor,
     cacheGetListState,
     execFormatWithUndo,
     getNodeAtCursor,
@@ -19,6 +19,7 @@ import {
     Position,
 } from 'roosterjs-editor-types';
 import ContentEditFeatures, { getDefaultContentEditFeatures } from './ContentEditFeatures';
+import tryHandleAutoBullet from './autoBullet';
 
 const KEY_TAB = 9;
 const KEY_BACKSPACE = 8;
@@ -59,6 +60,7 @@ export default class ContentEdit implements EditorPlugin {
     // Handle the event
     public onPluginEvent(event: PluginEvent): void {
         let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+        let blockQuoteElement: Element = null;
         if (this.isListEvent(event, [KEY_TAB, KEY_BACKSPACE, KEY_ENTER])) {
             // Tab: increase indent
             // Shift+ Tab: decrease indent
@@ -71,7 +73,7 @@ export default class ContentEdit implements EditorPlugin {
                     keyboardEvent.preventDefault();
                 }
             } else {
-                let listElement = cacheGetListElement(this.editor, event);
+                let listElement = cacheGetNodeAtCursor(this.editor, event, 'LI');
                 if (listElement && this.shouldToggleState(event, listElement)) {
                     this.toggleList(event);
                 } else if (
@@ -93,35 +95,34 @@ export default class ContentEdit implements EditorPlugin {
                     }
                 }
             }
-        } else {
-            let blockQuoteElement = this.getBlockQuoteElementFromEvent(event, keyboardEvent);
-            if (blockQuoteElement) {
-                let node = getNodeAtCursor(this.editor);
-                if (node && node != blockQuoteElement) {
-                    while (this.editor.contains(node) && node.parentNode != blockQuoteElement) {
-                        node = node.parentNode;
-                    }
-                    if (
-                        node.parentNode == blockQuoteElement &&
-                        this.shouldToggleState(event, node)
-                    ) {
-                        keyboardEvent.preventDefault();
-                        execFormatWithUndo(this.editor, () => {
-                            splitParentNode(node, false /*splitBefore*/);
+        } else if ((blockQuoteElement = this.getBlockQuoteElementFromEvent(event, keyboardEvent))) {
+            let node = getNodeAtCursor(this.editor);
+            if (node && node != blockQuoteElement) {
+                while (this.editor.contains(node) && node.parentNode != blockQuoteElement) {
+                    node = node.parentNode;
+                }
+                if (node.parentNode == blockQuoteElement && this.shouldToggleState(event, node)) {
+                    keyboardEvent.preventDefault();
+                    execFormatWithUndo(this.editor, () => {
+                        splitParentNode(node, false /*splitBefore*/);
 
-                            blockQuoteElement.parentNode.insertBefore(
-                                node,
-                                blockQuoteElement.nextSibling
-                            );
-                            if (!blockQuoteElement.firstChild) {
-                                blockQuoteElement.parentNode.removeChild(blockQuoteElement);
-                            }
+                        blockQuoteElement.parentNode.insertBefore(
+                            node,
+                            blockQuoteElement.nextSibling
+                        );
+                        if (!blockQuoteElement.firstChild) {
+                            blockQuoteElement.parentNode.removeChild(blockQuoteElement);
+                        }
 
-                            this.editor.select(node, Position.Before);
-                        });
-                    }
+                        this.editor.select(node, Position.Before);
+                    });
                 }
             }
+        } else if (
+            this.features.autoBullet &&
+            tryHandleAutoBullet(this.editor, event, keyboardEvent)
+        ) {
+            keyboardEvent.preventDefault();
         }
     }
 

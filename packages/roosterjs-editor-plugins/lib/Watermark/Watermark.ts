@@ -1,5 +1,6 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
+    ChangeSource,
     PluginEvent,
     PluginEventType,
     ContentPosition,
@@ -55,7 +56,7 @@ class Watermark implements EditorPlugin {
         if (event.eventType == PluginEventType.ContentChanged) {
             // When content is changed from setContent() API, current cached state
             // may not be accurate, so we ignore it
-            this.showHideWatermark((<ContentChangedEvent>event).source == 'SetContent');
+            this.showHideWatermark((<ContentChangedEvent>event).source == ChangeSource.SetContent);
         } else if (event.eventType == PluginEventType.ExtractContent && this.isWatermarkShowing) {
             this.removeWartermarkFromHtml(event as ExtractContentEvent);
         }

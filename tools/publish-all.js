@@ -1,5 +1,6 @@
 var path = require('path');
 var packagePath = path.resolve(__dirname, '../packages');
+var distPath = path.resolve(__dirname, '../dist');
 var exec = require('child_process').execSync;
 var collectPackages = require('./collect-packages');
 var packages = collectPackages(packagePath).map(p => p.replace('packages/', ''));
@@ -9,9 +10,8 @@ packages.forEach((package) => {
 
     var options = {
         stdio: 'inherit',
-        cwd: path.join(packagePath, package)
+        cwd: path.join(distPath, package)
     };
-    exec(`node ../../tools/copy-project-files.js`, options);
-    exec(`node ../../node_modules/typescript/lib/tsc.js`, options);
+    exec(`npm publish`, options);
 });
 

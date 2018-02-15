@@ -50,3 +50,5 @@ export { default as textToHtml } from './utils/textToHtml';
 export { default as unwrap } from './utils/unwrap';
 export { default as wrap } from './utils/wrap';
 export { default as wrapAll } from './utils/wrapAll';
+
+export { default as VTable, VCell } from './table/VTable';
