@@ -17,7 +17,7 @@ export default function getNodeAtCursor(
 ): Node {
     let node = startNode;
     if (!node && editor.hasFocus()) {
-        let selection = editor.getSelection();
+        let selection = editor.getDocument().defaultView.getSelection();
         node = selection ? selection.focusNode : null;
     }
 

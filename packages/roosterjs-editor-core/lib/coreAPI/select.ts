@@ -1,6 +1,5 @@
 import { Position, PositionType, SelectionRangeBase } from 'roosterjs-editor-types';
 import EditorCore from '../editor/EditorCore';
-import getSelection from './getSelection';
 import hasFocus from './hasFocus';
 import isRangeInContainer from '../utils/isRangeInContainer';
 
@@ -30,11 +29,11 @@ export default function select(core: EditorCore, arg1: any, arg2?: any, arg3?: a
             }
             selectionRangeBase = SelectionRangeBase.create(start, end);
         }
-        rawRange = SelectionRangeBase.toRange(core.document, selectionRangeBase);
+        rawRange = SelectionRangeBase.toRange(selectionRangeBase);
     }
 
     if (isRangeInContainer(rawRange, core.contentDiv)) {
-        let selection = getSelection(core);
+        let selection = core.document.defaultView.getSelection();
         if (selection) {
             if (selection.rangeCount > 0) {
                 selection.removeAllRanges();

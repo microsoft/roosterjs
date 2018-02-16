@@ -8,7 +8,6 @@ import browserData from '../utils/BrowserData';
 import focus from '../coreAPI/focus';
 import getContentTraverser from '../coreAPI/getContentTraverser';
 import getLiveRange from '../coreAPI/getLiveRange';
-import getSelection from '../coreAPI/getSelection';
 import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
 import select from '../coreAPI/select';
@@ -297,14 +296,6 @@ export default class Editor {
             this.core.cachedRange ||
             this.defaultRange
         );
-    }
-
-    /**
-     * Get current selection
-     * @return current selection object
-     */
-    public getSelection(): Selection {
-        return getSelection(this.core);
     }
 
     /**

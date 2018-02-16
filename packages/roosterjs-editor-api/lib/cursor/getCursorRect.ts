@@ -24,7 +24,7 @@ export default function getCursorRect(editor: Editor): Rect {
     // 1) obtain a collapsed range pointing to cursor
     if (!selectionRange.collapsed) {
         // Range is not collapsed, collapse to cursor first
-        let selection = editor.getSelection();
+        let selection = editor.getDocument().defaultView.getSelection();
         if (selection && selection.focusNode && selection.anchorNode) {
             let forwardSelection =
                 selection.focusNode == selection.anchorNode

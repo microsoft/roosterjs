@@ -42,7 +42,8 @@ function createRange(rawRange: Range): SelectionRange {
     };
 }
 
-function toRange(document: Document, selectionRangeBase: SelectionRangeBase): Range {
+function toRange(selectionRangeBase: SelectionRangeBase): Range {
+    let document = selectionRangeBase.start.node.ownerDocument;
     let range = document.createRange();
     range.setStart(selectionRangeBase.start.node, selectionRangeBase.start.offset);
     range.setEnd(selectionRangeBase.end.node, selectionRangeBase.end.offset);

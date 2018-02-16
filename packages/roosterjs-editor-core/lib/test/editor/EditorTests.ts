@@ -1,33 +1,10 @@
 import Editor from '../../editor/Editor';
 import * as TestHelper from '../TestHelper';
 import { ContentPosition } from 'roosterjs-editor-types';
-import * as getSelection from '../../coreAPI/getSelection';
 import * as getLiveRange from '../../coreAPI/getLiveRange';
 
 let editor: Editor;
 let testID = 'EditorTest';
-
-describe('Editor getSelection()', () => {
-    beforeEach(() => {
-        editor = TestHelper.initEditor(testID);
-    });
-
-    afterEach(() => {
-        editor.dispose();
-        TestHelper.removeElement(testID);
-    });
-
-    it('getSelection shold invoke getSelection in Selection', () => {
-        // Arrange
-        spyOn(getSelection, 'default').and.callThrough();
-
-        // Act
-        editor.getSelection();
-
-        // Assery
-        expect(getSelection.default).toHaveBeenCalled();
-    });
-});
 
 describe('Editor getSelectionRange()', () => {
     beforeEach(() => {

@@ -798,11 +798,6 @@ declare namespace roosterjs {
         queryContent(selector: string): NodeListOf<Element>;
         getSelectionRange(): SelectionRange;
         /**
-         * Get current selection
-         * @return current selection object
-         */
-        getSelection(): Selection;
-        /**
          * Check if focus is in editor now
          * @returns true if focus is in editor, otherwise false
          */
@@ -1132,6 +1127,8 @@ declare namespace roosterjs {
         getFirstNonTextInlineBeforeCursor(): InlineElement;
         private continueTraversingBackwardTill(stopFunc);
     }
+
+    function getCursorRect(editor: Editor): Rect;
 
     /**
      * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
