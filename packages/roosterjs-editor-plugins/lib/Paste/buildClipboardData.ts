@@ -54,7 +54,7 @@ export default function buildClipboardData(
 
 function getCurrentFormat(editor: Editor): DefaultFormat {
     let format = getFormatState(editor);
-    return {
+    return format ? {
         fontFamily: format.fontName,
         fontSize: format.fontSize,
         textColor: format.textColor,
@@ -62,7 +62,7 @@ function getCurrentFormat(editor: Editor): DefaultFormat {
         bold: format.isBold,
         italic: format.isItalic,
         underline: format.isUnderline,
-    };
+    } : {};
 }
 
 function getImage(dataTransfer: DataTransfer): File {
