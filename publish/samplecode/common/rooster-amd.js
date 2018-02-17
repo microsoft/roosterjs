@@ -6080,14 +6080,16 @@ function insertTable(editor, columns, rows, format) {
         }
     }
     execFormatWithUndo_1.default(editor, function () {
-        editor.insertNode(fragment);
-        formatTable_1.default(editor, format || {
-            bgColorEven: '#FFF',
-            bgColorOdd: '#FFF',
-            topBorderColor: '#ABABAB',
-            bottomBorderColor: '#ABABAB',
-            verticalBorderColor: '#ABABAB',
-        }, table);
+        editor.runWithoutAddingUndoSnapshot(function () {
+            editor.insertNode(fragment);
+            formatTable_1.default(editor, format || {
+                bgColorEven: '#FFF',
+                bgColorOdd: '#FFF',
+                topBorderColor: '#ABABAB',
+                bottomBorderColor: '#ABABAB',
+                verticalBorderColor: '#ABABAB',
+            }, table);
+        });
     });
 }
 exports.default = insertTable;
