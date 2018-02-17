@@ -6028,14 +6028,16 @@ function insertTable(editor, columns, rows, format) {
         }
     }
     execFormatWithUndo_1.default(editor, function () {
-        editor.insertNode(fragment);
-        formatTable_1.default(editor, format || {
-            bgColorEven: '#FFF',
-            bgColorOdd: '#FFF',
-            topBorderColor: '#ABABAB',
-            bottomBorderColor: '#ABABAB',
-            verticalBorderColor: '#ABABAB',
-        }, table);
+        editor.runWithoutAddingUndoSnapshot(function () {
+            editor.insertNode(fragment);
+            formatTable_1.default(editor, format || {
+                bgColorEven: '#FFF',
+                bgColorOdd: '#FFF',
+                topBorderColor: '#ABABAB',
+                bottomBorderColor: '#ABABAB',
+                verticalBorderColor: '#ABABAB',
+            }, table);
+        });
     });
 }
 exports.default = insertTable;
@@ -7356,7 +7358,7 @@ function buildClipboardData(event, editor, callback, unsafeHtmlFilter) {
 exports.default = buildClipboardData;
 function getCurrentFormat(editor) {
     var format = roosterjs_editor_api_1.getFormatState(editor);
-    return {
+    return format ? {
         fontFamily: format.fontName,
         fontSize: format.fontSize,
         textColor: format.textColor,
@@ -7364,7 +7366,7 @@ function getCurrentFormat(editor) {
         bold: format.isBold,
         italic: format.isItalic,
         underline: format.isUnderline,
-    };
+    } : {};
 }
 function getImage(dataTransfer) {
     // Chrome, Firefox, Edge support dataTransfer.items
