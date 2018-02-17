@@ -7475,7 +7475,7 @@ function buildClipboardData(event, editor, callback, unsafeHtmlFilter) {
 exports.default = buildClipboardData;
 function getCurrentFormat(editor) {
     var format = roosterjs_editor_api_1.getFormatState(editor);
-    return {
+    return format ? {
         fontFamily: format.fontName,
         fontSize: format.fontSize,
         textColor: format.textColor,
@@ -7483,7 +7483,7 @@ function getCurrentFormat(editor) {
         bold: format.isBold,
         italic: format.isItalic,
         underline: format.isUnderline,
-    };
+    } : {};
 }
 function getImage(dataTransfer) {
     // Chrome, Firefox, Edge support dataTransfer.items

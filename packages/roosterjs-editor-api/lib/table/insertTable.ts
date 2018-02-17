@@ -36,18 +36,20 @@ export default function insertTable(
     }
 
     execFormatWithUndo(editor, () => {
-        editor.insertNode(fragment);
-        formatTable(
-            editor,
-            format || {
-                bgColorEven: '#FFF',
-                bgColorOdd: '#FFF',
-                topBorderColor: '#ABABAB',
-                bottomBorderColor: '#ABABAB',
-                verticalBorderColor: '#ABABAB',
-            },
-            table
-        );
+        editor.runWithoutAddingUndoSnapshot(() => {
+            editor.insertNode(fragment);
+            formatTable(
+                editor,
+                format || {
+                    bgColorEven: '#FFF',
+                    bgColorOdd: '#FFF',
+                    topBorderColor: '#ABABAB',
+                    bottomBorderColor: '#ABABAB',
+                    verticalBorderColor: '#ABABAB',
+                },
+                table
+            );
+        });
     });
 }
 
