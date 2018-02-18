@@ -1,5 +1,7 @@
 import EditorOptions from './EditorOptions';
 import EditorPlugin from '../editor/EditorPlugin';
+import Undo from '../undo/Undo';
+import UndoService from './UndoService';
 import { DefaultFormat } from 'roosterjs-editor-types';
 import { InlineElementFactory } from 'roosterjs-editor-dom';
 import { getComputedStyle } from 'roosterjs-editor-dom';
@@ -11,6 +13,8 @@ interface EditorCore {
     inlineElementFactory: InlineElementFactory;
     defaultFormat: DefaultFormat;
     cachedRange: Range;
+    undo: UndoService;
+    suspendAddingUndoSnapshot: boolean;
     customData: {
         [Key: string]: {
             value: any;
@@ -28,10 +32,12 @@ let EditorCore = {
             defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
             customData: {},
             cachedRange: null,
+            undo: options.undo || new Undo(),
+            suspendAddingUndoSnapshot: false,
             plugins: (options.plugins || []).filter(plugin => !!plugin),
         };
-    }
-}
+    },
+};
 
 export default EditorCore;
 

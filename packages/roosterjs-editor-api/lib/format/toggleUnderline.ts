@@ -1,4 +1,3 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -11,5 +10,7 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function toggleUnderline(editor: Editor) {
     editor.focus();
-    execFormatWithUndo(editor, () => editor.getDocument().execCommand('underline', false, null));
+    editor.formatWithUndo(() => {
+        editor.getDocument().execCommand('underline', false, null);
+    });
 }

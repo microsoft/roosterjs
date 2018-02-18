@@ -42,35 +42,37 @@ export default function createLink(
         let originalUrl = linkData ? linkData.originalUrl : url;
         let anchor: HTMLAnchorElement = null;
 
-        editor.addUndoSnapshot();
+        editor.formatWithUndo(
+            () => {
+                if (editor.getSelectionRange().collapsed) {
+                    anchor = getAnchorNodeAtCursor(editor);
 
-        if (editor.getSelectionRange().collapsed) {
-            anchor = getAnchorNodeAtCursor(editor);
-
-            // If there is already a link, just change its href
-            if (anchor) {
-                anchor.href = normalizedUrl;
-            } else {
-                anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
-                anchor.textContent = displayText || originalUrl;
-                anchor.href = normalizedUrl;
-                editor.insertNode(anchor);
-            }
-        } else {
-            /* the selection is not collapsed, use browser execCommand */
-            editor.getDocument().execCommand('createLink', false, normalizedUrl);
-            anchor = getAnchorNodeAtCursor(editor);
-        }
-        if (altText && anchor) {
-            // Hack: Ideally this should be done by HyperLink plugin.
-            // We make a hack here since we don't have an event to notify HyperLink plugin
-            // before we apply the link.
-            anchor.removeAttribute(TEMP_TITLE);
-            anchor.title = altText;
-        }
-
-        editor.addUndoSnapshot();
-        editor.triggerContentChangedEvent(ChangeSource.CreateLink, anchor);
+                    // If there is already a link, just change its href
+                    if (anchor) {
+                        anchor.href = normalizedUrl;
+                    } else {
+                        anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
+                        anchor.textContent = displayText || originalUrl;
+                        anchor.href = normalizedUrl;
+                        editor.insertNode(anchor);
+                    }
+                } else {
+                    /* the selection is not collapsed, use browser execCommand */
+                    editor.getDocument().execCommand('createLink', false, normalizedUrl);
+                    anchor = getAnchorNodeAtCursor(editor);
+                }
+                if (altText && anchor) {
+                    // Hack: Ideally this should be done by HyperLink plugin.
+                    // We make a hack here since we don't have an event to notify HyperLink plugin
+                    // before we apply the link.
+                    anchor.removeAttribute(TEMP_TITLE);
+                    anchor.title = altText;
+                }
+            },
+            false /*preserveSelection*/,
+            ChangeSource.CreateLink,
+            () => anchor
+        );
     }
 }
 

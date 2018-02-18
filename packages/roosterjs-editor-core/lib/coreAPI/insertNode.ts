@@ -10,7 +10,13 @@ import {
     isBlockElement,
     wrap,
 } from 'roosterjs-editor-dom';
-import { ContentPosition, InsertOption, NodeType, Position, SelectionRange } from 'roosterjs-editor-types';
+import {
+    ContentPosition,
+    InsertOption,
+    NodeType,
+    Position,
+    SelectionRange,
+} from 'roosterjs-editor-types';
 
 const HTML_EMPTY_DIV = '<div></div>';
 

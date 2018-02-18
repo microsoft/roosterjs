@@ -1,8 +1,6 @@
 import EditorCore from './EditorCore';
 import EditorOptions from './EditorOptions';
-import Undo from '../undo/Undo';
-import UndoService from './UndoService';
-import applyInlineStyle from '../coreAPI/applyInlineStyle';
+import formatWithUndo from '../coreAPI/formatWithUndo';
 import attachDomEvent from '../coreAPI/attachDomEvent';
 import browserData from '../utils/BrowserData';
 import focus from '../coreAPI/focus';
@@ -45,8 +43,6 @@ import {
 const IS_IE_OR_EDGE = browserData.isIE || browserData.isEdge;
 
 export default class Editor {
-    private undoService: UndoService;
-    private suspendAddingUndoSnapshot: boolean;
     private omitContentEditable: boolean;
     private disableRestoreSelectionOnFocus: boolean;
     private inIME: boolean;
@@ -70,7 +66,6 @@ export default class Editor {
         this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus;
         this.omitContentEditable = options.omitContentEditableAttributeChanges;
         this.defaultRange = this.createDefaultRange();
-        this.undoService = options.undo || new Undo();
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
@@ -79,8 +74,8 @@ export default class Editor {
         this.ensureInitialContent(options.initialContent);
 
         // 5. Initialize undo service
-        this.undoService.initialize(this);
-        this.core.plugins.push(this.undoService);
+        this.core.undo.initialize(this);
+        this.core.plugins.push(this.core.undo);
 
         // 6. Create event handler to bind DOM events
         this.createEventHandlers();
@@ -97,8 +92,7 @@ export default class Editor {
         try {
             this.core.document.execCommand('enableObjectResizing', false, false);
             this.core.document.execCommand('enableInlineTableEditing', false, false);
-        } catch (e) {
-        }
+        } catch (e) {}
     }
 
     /**
@@ -292,9 +286,7 @@ export default class Editor {
 
     public getSelectionRange(): SelectionRange {
         return SelectionRange.create(
-            getLiveRange(this.core) ||
-            this.core.cachedRange ||
-            this.defaultRange
+            getLiveRange(this.core) || this.core.cachedRange || this.defaultRange
         );
     }
 
@@ -365,18 +357,15 @@ export default class Editor {
      * @param endOffset The offset to select end to
      * @returns True if content is selected, otherwise false
      */
-    public select(startNode: Node, startOffset: number | PositionType, endNode: Node, endOffset: number | PositionType): boolean;
+    public select(
+        startNode: Node,
+        startOffset: number | PositionType,
+        endNode: Node,
+        endOffset: number | PositionType
+    ): boolean;
 
     public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
         return select(this.core, arg1, arg2, arg3, arg4);
-    }
-
-    /**
-     * Apply inline style to current selection
-     * @param styler The callback function to apply style
-     */
-    public applyInlineStyle(styler: (element: HTMLElement) => void): void {
-        applyInlineStyle(this.core, styler);
     }
 
     //#endregion
@@ -429,7 +418,7 @@ export default class Editor {
      */
     public undo() {
         this.focus();
-        this.undoService.undo();
+        this.core.undo.undo();
     }
 
     /**
@@ -437,28 +426,31 @@ export default class Editor {
      */
     public redo() {
         this.focus();
-        this.undoService.redo();
+        this.core.undo.redo();
     }
 
     /**
-     * Run a callback with undo suspended.
-     * @param callback The callback to run
+     * Add undo snapshot, and execute a format callback function, then add another undo snapshot if
+     * addsnapshotAfterFormat is set to true, finally trigger ContentChangedEvent with given change source.
+     * If this function is called nested, undo snapshot will only be added in the outside one
+     * @param callback The callback function to perform formatting
+     * @param preserveSelection Set to true to try preserve the selection after format
+     * @param addsnapshotAfterFormat Whether should add an undo snapshot after format callback is called
+     * @param changeSource The change source to use when fire ContentChangedEvent. Default value is 'Format'
+     * If pass null, the event will not be fired.
+     * @param dataCallback A callback function to retrieve the data for ContentChangedEvent
+     * @param skipAddingUndoAfterFormat Set to true to only add undo snapshot before format. Default value is false
      */
-    public runWithoutAddingUndoSnapshot(callback: () => void) {
-        try {
-            this.suspendAddingUndoSnapshot = true;
-            callback();
-        } finally {
-            this.suspendAddingUndoSnapshot = false;
-        }
-    }
-
-    /**
-     * Add an undo snapshot if undo is not suspended
-     */
-    public addUndoSnapshot() {
-        if (!this.suspendAddingUndoSnapshot) {
-            this.undoService.addUndoSnapshot();
+    public formatWithUndo(
+        callback: () => void | Node,
+        preserveSelection: boolean = false,
+        changeSource: ChangeSource | string = ChangeSource.Format,
+        dataCallback?: () => any,
+        skipAddingUndoAfterFormat: boolean = false
+    ) {
+        formatWithUndo(this.core, callback, preserveSelection, skipAddingUndoAfterFormat);
+        if (changeSource) {
+            this.triggerContentChangedEvent(changeSource, dataCallback ? dataCallback() : null);
         }
     }
 
@@ -466,14 +458,14 @@ export default class Editor {
      * Whether there is an available undo snapshot
      */
     public canUndo(): boolean {
-        return this.undoService.canUndo();
+        return this.core.undo.canUndo();
     }
 
     /**
      * Whether there is an available redo snapshot
      */
     public canRedo(): boolean {
-        return this.undoService.canRedo();
+        return this.core.undo.canRedo();
     }
 
     //#endregion

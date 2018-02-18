@@ -1,4 +1,3 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -11,5 +10,7 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function toggleItalic(editor: Editor) {
     editor.focus();
-    execFormatWithUndo(editor, () => editor.getDocument().execCommand('italic', false, null));
+    editor.formatWithUndo(() => {
+        editor.getDocument().execCommand('italic', false, null);
+    });
 }

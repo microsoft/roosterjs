@@ -1,4 +1,4 @@
-import { ChangeSource } from 'roosterjs-editor-types';
+import applyInlineStyle from './applyInlineStyle';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -9,10 +9,5 @@ import { Editor } from 'roosterjs-editor-core';
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
  */
 export default function setBackgroundColor(editor: Editor, color: string) {
-    editor.focus();
-    editor.addUndoSnapshot();
-    editor.applyInlineStyle((element: HTMLElement) => {
-        element.style.backgroundColor = color;
-    });
-    editor.triggerContentChangedEvent(ChangeSource.Format);
+    applyInlineStyle(editor, element => (element.style.backgroundColor = color));
 }

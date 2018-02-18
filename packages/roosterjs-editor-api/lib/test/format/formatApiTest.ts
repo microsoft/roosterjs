@@ -1,4 +1,5 @@
 import * as TestHelper from '../TestHelper';
+import * as applyInlineStyle from '../../format/applyInlineStyle';
 import toggleBullet from '../../format/toggleBullet';
 import toggleNumbering from '../../format/toggleNumbering';
 import toggleStrikethrough from '../../format/toggleStrikethrough';
@@ -69,64 +70,64 @@ describe('FormatUtils', () => {
     });
 
     it('setTextColor() triggers the applyInlineStyle method in editor', () => {
-        spyOn(editor, 'addUndoSnapshot').and.callThrough();
-        spyOn(editor, 'applyInlineStyle').and.callThrough();
+        spyOn(editor, 'formatWithUndo').and.callThrough();
+        spyOn(applyInlineStyle, 'default').and.callThrough();
 
         let mockColor = 'red';
         setTextColor(editor, mockColor);
 
-        expect(editor.addUndoSnapshot).toHaveBeenCalled();
-        expect(editor.applyInlineStyle).toHaveBeenCalled();
+        expect(editor.formatWithUndo).toHaveBeenCalled();
+        expect(applyInlineStyle.default).toHaveBeenCalled();
 
-        let style = (<jasmine.Spy>editor.applyInlineStyle).calls.argsFor(0)[0];
+        let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];
         let element = document.createElement('div');
         style(element);
         expect(element.style.color).toBe(mockColor);
     });
 
     it('setBackgroundColor() triggers the applyInlineStyle method in editor', () => {
-        spyOn(editor, 'addUndoSnapshot').and.callThrough();
-        spyOn(editor, 'applyInlineStyle').and.callThrough();
+        spyOn(editor, 'formatWithUndo').and.callThrough();
+        spyOn(applyInlineStyle, 'default').and.callThrough();
 
         let mockColor = 'red';
         setBackgroundColor(editor, mockColor);
 
-        expect(editor.addUndoSnapshot).toHaveBeenCalled();
-        expect(editor.applyInlineStyle).toHaveBeenCalled();
+        expect(editor.formatWithUndo).toHaveBeenCalled();
+        expect(applyInlineStyle.default).toHaveBeenCalled();
 
-        let style = (<jasmine.Spy>editor.applyInlineStyle).calls.argsFor(0)[0];
+        let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];
         let element = document.createElement('div');
         style(element);
         expect(element.style.backgroundColor).toBe(mockColor);
     });
 
     it('setFontName() triggers the applyInlineStyle method in editor', () => {
-        spyOn(editor, 'addUndoSnapshot').and.callThrough();
-        spyOn(editor, 'applyInlineStyle').and.callThrough();
+        spyOn(editor, 'formatWithUndo').and.callThrough();
+        spyOn(applyInlineStyle, 'default').and.callThrough();
 
         let mockFontName = 'Calibri, Arial, Helvetica, sans-serif';
         setFontName(editor, mockFontName);
 
-        expect(editor.addUndoSnapshot).toHaveBeenCalled();
-        expect(editor.applyInlineStyle).toHaveBeenCalled();
+        expect(editor.formatWithUndo).toHaveBeenCalled();
+        expect(applyInlineStyle.default).toHaveBeenCalled();
 
-        let style = (<jasmine.Spy>editor.applyInlineStyle).calls.argsFor(0)[0];
+        let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];
         let element = document.createElement('div');
         style(element);
         expect(element.style.fontFamily).toBe(mockFontName);
     });
 
     it('setFontSize() triggers the applyInlineStyle method in editor', () => {
-        spyOn(editor, 'addUndoSnapshot').and.callThrough();
-        spyOn(editor, 'applyInlineStyle').and.callThrough();
+        spyOn(editor, 'formatWithUndo').and.callThrough();
+        spyOn(applyInlineStyle, 'default').and.callThrough();
 
         let mockFontSize = '6pt';
         setFontSize(editor, mockFontSize);
 
-        expect(editor.addUndoSnapshot).toHaveBeenCalled();
-        expect(editor.applyInlineStyle).toHaveBeenCalled();
+        expect(editor.formatWithUndo).toHaveBeenCalled();
+        expect(applyInlineStyle.default).toHaveBeenCalled();
 
-        let style = (<jasmine.Spy>editor.applyInlineStyle).calls.argsFor(0)[0];
+        let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];
         let element = document.createElement('div');
         style(element);
         expect(element.style.fontSize).toBe(mockFontSize);

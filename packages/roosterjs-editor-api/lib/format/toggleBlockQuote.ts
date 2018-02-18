@@ -1,4 +1,3 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import { getTagOfNode, splitParentNode, unwrap, wrapAll, wrap } from 'roosterjs-editor-dom';
@@ -24,31 +23,27 @@ let defaultStyler = (element: HTMLElement) => {
 export default function toggleBlockQuote(editor: Editor, styler?: (element: HTMLElement) => void) {
     editor.focus();
     let blockquoteNodes = queryNodesWithSelection(editor, 'blockquote');
-    execFormatWithUndo(
-        editor,
-        () => {
-            if (blockquoteNodes.length) {
-                // There are already blockquote nodes, unwrap them
-                blockquoteNodes.forEach(node => unwrap(node));
-            } else {
-                // Step 1: Find all block elements and their content nodes
-                let nodes = getContentNodes(editor);
+    editor.formatWithUndo(() => {
+        if (blockquoteNodes.length) {
+            // There are already blockquote nodes, unwrap them
+            blockquoteNodes.forEach(node => unwrap(node));
+        } else {
+            // Step 1: Find all block elements and their content nodes
+            let nodes = getContentNodes(editor);
 
-                // Step 2: Split existing list container if necessary
-                nodes = getSplittedListNodes(nodes);
+            // Step 2: Split existing list container if necessary
+            nodes = getSplittedListNodes(nodes);
 
-                // Step 3: Handle some special cases
-                nodes = getNodesWithSpecialCaseHandled(editor, nodes);
+            // Step 3: Handle some special cases
+            nodes = getNodesWithSpecialCaseHandled(editor, nodes);
 
-                let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLElement;
-                (styler || defaultStyler)(quoteElement);
+            let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLElement;
+            (styler || defaultStyler)(quoteElement);
 
-                // Return a fallback to select in case original selection is not valid any more
-                return nodes[0];
-            }
-        },
-        true /*preserveSelection*/
-    );
+            // Return a fallback to select in case original selection is not valid any more
+            return nodes[0];
+        }
+    }, true /*preserveSelection*/);
 }
 
 function getContentNodes(editor: Editor): Node[] {
@@ -107,10 +102,7 @@ function getSplittedListNodes(nodes: Node[]): Node[] {
     return nodes;
 }
 
-function getNodesWithSpecialCaseHandled(
-    editor: Editor,
-    nodes: Node[]
-): Node[] {
+function getNodesWithSpecialCaseHandled(editor: Editor, nodes: Node[]): Node[] {
     if (nodes.length == 1 && nodes[0].nodeName == 'BR') {
         nodes[0] = wrap(nodes[0], '<div></div>') as HTMLDivElement;
     } else if (nodes.length == 0) {

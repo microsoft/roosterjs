@@ -67,7 +67,6 @@ export default class Paste implements EditorPlugin {
     }
 
     private onPaste = (event: Event) => {
-        this.editor.addUndoSnapshot();
         buildClipboardData(
             <ClipboardEvent>event,
             this.editor,
@@ -146,23 +145,27 @@ export default class Paste implements EditorPlugin {
             restoreSnapshot(this.editor, clipboardData.snapshotBeforePaste);
         }
 
-        switch (pasteOption) {
-            case PasteOption.PasteHtml:
-                this.editor.insertNode(fragment);
-                break;
+        this.editor.formatWithUndo(
+            () => {
+                switch (pasteOption) {
+                    case PasteOption.PasteHtml:
+                        this.editor.insertNode(fragment);
+                        break;
 
-            case PasteOption.PasteText:
-                let html = textToHtml(clipboardData.text);
-                this.editor.insertContent(html);
-                break;
+                    case PasteOption.PasteText:
+                        let html = textToHtml(clipboardData.text);
+                        this.editor.insertContent(html);
+                        break;
 
-            case PasteOption.PasteImage:
-                insertImage(this.editor, clipboardData.image);
-                break;
-        }
-
-        this.editor.triggerContentChangedEvent(ChangeSource.Paste, clipboardData);
-        this.editor.addUndoSnapshot();
+                    case PasteOption.PasteImage:
+                        insertImage(this.editor, clipboardData.image);
+                        break;
+                }
+            },
+            false /*preserveSelection*/,
+            ChangeSource.Paste,
+            () => clipboardData
+        );
     }
 
     private applyTextFormat(node: Node, format: DefaultFormat) {

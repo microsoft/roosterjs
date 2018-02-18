@@ -3,7 +3,7 @@ export {
     clearCursorEventDataCache,
 } from './cursor/cacheGetCursorEventData';
 export { default as CursorData } from './cursor/CursorData';
-export { default as getCursorRect} from './cursor/getCursorRect';
+export { default as getCursorRect } from './cursor/getCursorRect';
 export {
     default as getNodeAtCursor,
     cacheGetListElement,
@@ -18,7 +18,6 @@ export {
 export { default as cacheGetListState } from './format/cacheGetListState';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
-export { default as execFormatWithUndo } from './format/execFormatWithUndo';
 export { default as getFormatState } from './format/getFormatState';
 export { default as insertImage } from './format/insertImage';
 export { default as insertTable } from './table/insertTable';

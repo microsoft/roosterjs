@@ -7,13 +7,13 @@ export default function contains(
     contained: Node,
     treatSameNodeAsContain: boolean = false
 ): boolean {
-    return container &&
+    return (
+        container &&
         contained &&
-        (
-            (treatSameNodeAsContain && container == contained) ||
+        ((treatSameNodeAsContain && container == contained) ||
             isDocumentPosition(
                 container.compareDocumentPosition(contained),
                 DocumentPosition.ContainedBy
-            )
-        );
+            ))
+    );
 }

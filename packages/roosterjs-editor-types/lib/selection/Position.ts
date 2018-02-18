@@ -44,7 +44,10 @@ function createPosition(node: Node, offset: number): Position;
  */
 function createPosition(node: Node, positionType: PositionType): Position;
 
-function createPosition(nodeOrPosition: Node | Position, offsetOrPosType?: number | PositionType): Position {
+function createPosition(
+    nodeOrPosition: Node | Position,
+    offsetOrPosType?: number | PositionType
+): Position {
     let offset = 0;
     let isAtEnd: boolean;
     let node: Node;
@@ -90,11 +93,16 @@ function createPosition(nodeOrPosition: Node | Position, offsetOrPosType?: numbe
 
 function normalize(position: Position): Position {
     let { node, offset, isAtEnd } = position;
-    let newOffset: number | PositionType.Begin | PositionType.End = isAtEnd ? PositionType.End : offset;
+    let newOffset: number | PositionType.Begin | PositionType.End = isAtEnd
+        ? PositionType.End
+        : offset;
     while (node.nodeType == NodeType.Element && node.firstChild) {
-        node = newOffset == PositionType.Begin ?
-            node.firstChild :
-            newOffset == PositionType.End ? node.lastChild : node.childNodes[<number>newOffset];
+        node =
+            newOffset == PositionType.Begin
+                ? node.firstChild
+                : newOffset == PositionType.End
+                  ? node.lastChild
+                  : node.childNodes[<number>newOffset];
         newOffset = isAtEnd ? PositionType.End : PositionType.Begin;
     }
     return createPosition(node, newOffset);

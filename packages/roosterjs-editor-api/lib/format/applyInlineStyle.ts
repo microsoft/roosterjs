@@ -1,10 +1,5 @@
-import EditorCore from '../editor/EditorCore';
-import focus from './focus';
-import getContentTraverser from './getContentTraverser';
-import getLiveRange from './getLiveRange';
-import insertNode from './insertNode';
-import select from './select';
-import { ContentScope, Position } from 'roosterjs-editor-types';
+import { ContentScope, ChangeSource, Position } from 'roosterjs-editor-types';
+import { Editor } from 'roosterjs-editor-core';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
 
@@ -14,37 +9,37 @@ const ZERO_WIDTH_SPACE = '&#8203;';
 // The workaround is to create a SPAN and have the style applied on the SPAN, and then re-position cursor within the SPAN where typing can happen
 // TODO: what if user position this in an inlne element, i.e. hashtag, creating a span within an existing inline element may not be a good idea
 function applyInlineStyleToCollapsedSelection(
-    core: EditorCore,
+    editor: Editor,
     styler: (element: HTMLElement) => void
 ): void {
     // let's just be simple to create a new span to hold the style
     // TODO: maybe we should be a bit smarter to see if we're in a span, and apply the style in parent span
-    let element = core.document.createElement('SPAN');
+    let element = editor.getDocument().createElement('SPAN');
     // Some content is needed to position selection into the span
     // for here, we inject ZWS - zero width space
     element.innerHTML = ZERO_WIDTH_SPACE;
     styler(element);
-    insertNode(core, element);
+    editor.insertNode(element);
 
     // reset selection to be after the ZWS (rather than selecting it)
     // This is needed so that the cursor still looks blinking inside editor
     // This also means an extra ZWS will be in editor
     // TODO: somewhere in returning content to consumer, we may need to do a cleanup for ZWS
-    select(core, element, Position.End);
+    editor.select(element, Position.End);
 }
 
 // Apply style to non collapsed selection
 // It does that by looping through all inline element that can be found in the selection
 // and apply style on each individual inline element
 function applyInlineStyleToNonCollapsedSelection(
-    core: EditorCore,
+    editor: Editor,
     styler: (element: HTMLElement) => void
 ): void {
     // This is start and end node that get the style. The start and end needs to be recorded so that selection
     // can be re-applied post-applying style
     let startNode: Node;
     let endNode: Node;
-    let contentTraverser = getContentTraverser(core, ContentScope.Selection);
+    let contentTraverser = editor.getContentTraverser(ContentScope.Selection);
     // Just loop through all inline elements in the selection and apply style for each
     let startInline = contentTraverser.currentInlineElement;
     while (startInline) {
@@ -63,26 +58,32 @@ function applyInlineStyleToNonCollapsedSelection(
 
     // When selectionStartNode/EndNode is set, it means there is DOM change. Re-create the selection
     if (startNode && endNode) {
-        select(core, startNode, Position.Before, endNode, Position.After);
+        editor.select(startNode, Position.Before, endNode, Position.After);
     }
 }
 
-// Apply inline style to current selection
+/**
+ * Apply inline style to current selection
+ * @param editor The editor instance
+ * @param styler The callback function to apply style to each element inside selection
+ */
 export default function applyInlineStyle(
-    core: EditorCore,
+    editor: Editor,
     styler: (element: HTMLElement) => void
 ): void {
-    focus(core);
-    let range = getLiveRange(core);
-    if (range) {
-        // TODO: Chrome has a bug that when the selection spans over several empty text nodes,
-        // it may incorrectly report range not to be collapsed.
-        // We may do a browser check to force it to go collapsed code path when we see an empty range
-        // UserAgent.GetInstance().IsBrowserChrome && range.toString() == _String.Empty
-        if (range.collapsed) {
-            applyInlineStyleToCollapsedSelection(core, styler);
-        } else {
-            applyInlineStyleToNonCollapsedSelection(core, styler);
-        }
-    }
+    editor.focus();
+    let collapsed = editor.getSelectionRange().collapsed;
+    editor.formatWithUndo(
+        () => {
+            if (collapsed) {
+                applyInlineStyleToCollapsedSelection(editor, styler);
+            } else {
+                applyInlineStyleToNonCollapsedSelection(editor, styler);
+            }
+        },
+        false /*preserveSelection*/,
+        ChangeSource.Format,
+        null /*dataCallback*/,
+        collapsed /*skipAddingUndoAfterFormat*/
+    );
 }

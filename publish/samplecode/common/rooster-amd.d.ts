@@ -401,7 +401,7 @@ export interface SelectionRangeBase {
 
 export const SelectionRangeBase: {
     create: (start: Position, end?: Position) => SelectionRangeBase;
-    toRange: (document: Document, selectionRangeBase: SelectionRangeBase) => Range;
+    toRange: (selectionRangeBase: SelectionRangeBase) => Range;
 };
 
 export interface SelectionRange extends SelectionRangeBase {
@@ -697,8 +697,6 @@ export interface VCell {
 }
 
 export class Editor {
-    private undoService;
-    private suspendAddingUndoSnapshot;
     private omitContentEditable;
     private disableRestoreSelectionOnFocus;
     private inIME;
@@ -853,11 +851,6 @@ export class Editor {
      */
     select(startNode: Node, startOffset: number | PositionType, endNode: Node, endOffset: number | PositionType): boolean;
     /**
-     * Apply inline style to current selection
-     * @param styler The callback function to apply style
-     */
-    applyInlineStyle(styler: (element: HTMLElement) => void): void;
-    /**
      * Add a custom DOM event handler to handle events not handled by roosterjs.
      * Caller need to take the responsibility to dispose the handler properly
      * @param eventName DOM event name to handle
@@ -887,14 +880,18 @@ export class Editor {
      */
     redo(): void;
     /**
-     * Run a callback with undo suspended.
-     * @param callback The callback to run
+     * Add undo snapshot, and execute a format callback function, then add another undo snapshot if
+     * addsnapshotAfterFormat is set to true, finally trigger ContentChangedEvent with given change source.
+     * If this function is called nested, undo snapshot will only be added in the outside one
+     * @param callback The callback function to perform formatting
+     * @param preserveSelection Set to true to try preserve the selection after format
+     * @param addsnapshotAfterFormat Whether should add an undo snapshot after format callback is called
+     * @param changeSource The change source to use when fire ContentChangedEvent. Default value is 'Format'
+     * If pass null, the event will not be fired.
+     * @param dataCallback A callback function to retrieve the data for ContentChangedEvent
+     * @param skipAddingUndoAfterFormat Set to true to only add undo snapshot before format. Default value is false
      */
-    runWithoutAddingUndoSnapshot(callback: () => void): void;
-    /**
-     * Add an undo snapshot if undo is not suspended
-     */
-    addUndoSnapshot(): void;
+    formatWithUndo(callback: () => void | Node, preserveSelection?: boolean, changeSource?: ChangeSource | string, dataCallback?: () => any, skipAddingUndoAfterFormat?: boolean): void;
     /**
      * Whether there is an available undo snapshot
      */
@@ -1233,17 +1230,6 @@ export function clearFormat(editor: Editor): void;
  * If not specified, will use link instead
  */
 export function createLink(editor: Editor, link: string, altText?: string, displayText?: string): void;
-
-/**
- * Execute format with undo
- * It tries to add undo snapshot at begin and end of the function. Duplicated snapshot will only be added once
- * @param editor The editor instance
- * @param formatter The callback format function we want to perform, it also creates a fallback node for selection.
- * A fallback node is a node to update selection to if start point or end point is not avaiable/valid
- * @param preserveSelection (Optional) Whether to preserve selection, if set to true,
- * we update the selection to original selection range.
- */
-export function execFormatWithUndo(editor: Editor, formatter: () => Node | void | any, preserveSelection?: boolean): void;
 
 /**
  * Get format state at cursor
@@ -1715,7 +1701,7 @@ export class ImageResizePlugin implements EditorPlugin {
     private doResize;
     private finishResize;
     private createResizeDiv(target);
-    private removeResizeDiv();
+    private removeResizeDiv;
     private extractHtml(html);
     private getSelectedImage();
     private isNorth(direction);

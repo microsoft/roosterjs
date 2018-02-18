@@ -16,8 +16,8 @@ function runTest(
 
 describe('SelectionRangeBase.create test', () => {
     it('SelectionRangeBase.create', () => {
-        let node1 = <Node><any>{};
-        let node2 = <Node><any>{};
+        let node1 = <Node>(<any>{});
+        let node2 = <Node>(<any>{});
         let start1 = {
             node: node1,
             offset: 0,

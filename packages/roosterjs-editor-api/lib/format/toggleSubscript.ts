@@ -1,4 +1,3 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -13,5 +12,7 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function toggleSubscript(editor: Editor) {
     editor.focus();
-    execFormatWithUndo(editor, () => editor.getDocument().execCommand('subscript', false, null));
+    editor.formatWithUndo(() => {
+        editor.getDocument().execCommand('subscript', false, null);
+    });
 }

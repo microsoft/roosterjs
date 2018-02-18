@@ -160,10 +160,11 @@ export default class Undo implements UndoService {
             // 1. Something has been selected (not collapsed), or
             // 2. It has a different key code from the last keyDown event (to prevent adding too many snapshot when keeping press the same key), or
             // 3. Ctrl/Meta key is pressed so that a whole word will be deleted
-            if (!selectionRange.collapsed ||
-                    this.lastKeyPress != evt.which ||
-                    evt.ctrlKey ||
-                    evt.metaKey
+            if (
+                !selectionRange.collapsed ||
+                this.lastKeyPress != evt.which ||
+                evt.ctrlKey ||
+                evt.metaKey
             ) {
                 this.addUndoSnapshot();
             }

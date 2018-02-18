@@ -39,8 +39,14 @@ export function restoreSnapshot(editor: Editor, snapshot: string): void {
 
 // Remove the temporarily added cursor markers
 function removeCursorMarkers(editor: Editor): void {
-    removeCursorMarkerById(editor, CURSOR_START);
-    removeCursorMarkerById(editor, CURSOR_END);
+    [CURSOR_START, CURSOR_END].forEach(id => {
+        let nodes = getCursorMarkNodes(editor, id);
+        if (nodes) {
+            for (let i = 0; i < nodes.length; i++) {
+                nodes[i].parentNode.removeChild(nodes[i]);
+            }
+        }
+    });
 }
 
 // Temporarily inject a SPAN marker to the selection which is used to remember where the selection is
@@ -84,6 +90,7 @@ function insertCursorMarkerToEditorPoint(
     position: Position,
     cursorMaker: Node
 ): void {
+    position = Position.normalize(position);
     let parentNode = position.node.parentNode;
     if (position.offset == Position.Begin) {
         parentNode.insertBefore(cursorMaker, position.node);
@@ -95,16 +102,6 @@ function insertCursorMarkerToEditorPoint(
         let insertionRange = editor.getDocument().createRange();
         insertionRange.setStart(position.node, position.offset);
         insertionRange.insertNode(cursorMaker);
-    }
-}
-
-// Remove an element from editor by Id
-function removeCursorMarkerById(editor: Editor, id: string): void {
-    let nodes = getCursorMarkNodes(editor, id);
-    if (nodes) {
-        for (let i = 0; i < nodes.length; i++) {
-            nodes[i].parentNode.removeChild(nodes[i]);
-        }
     }
 }
 

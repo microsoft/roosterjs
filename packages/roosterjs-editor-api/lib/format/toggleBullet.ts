@@ -1,4 +1,3 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import { Editor, browserData } from 'roosterjs-editor-core';
 import { NodeType } from 'roosterjs-editor-types';
@@ -36,7 +35,7 @@ export function workaroundForEdge(editor: Editor, callback: () => void) {
  */
 export default function toggleBullet(editor: Editor) {
     editor.focus();
-    execFormatWithUndo(editor, () => {
+    editor.formatWithUndo(() => {
         workaroundForEdge(editor, () => {
             editor.getDocument().execCommand('insertUnorderedList', false, null);
         });

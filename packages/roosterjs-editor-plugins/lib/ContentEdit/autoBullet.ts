@@ -66,9 +66,7 @@ function handleAutoBulletOrNumbering(identifier: string, editor: Editor) {
         insertOnNewLine: false,
     });
 
-    editor.addUndoSnapshot();
-
-    editor.runWithoutAddingUndoSnapshot(() => {
+    editor.formatWithUndo(() => {
         // Remove the user input '*', '-' or '1.'
         let rangeToDelete: Range = validateAndGetRangeForTextBeforeCursor(
             editor,
@@ -97,8 +95,6 @@ function handleAutoBulletOrNumbering(identifier: string, editor: Editor) {
             toggleNumbering(editor);
         }
     });
-
-    editor.addUndoSnapshot();
 }
 
 function isAutoBulletInput(input: string): boolean {

@@ -1,4 +1,3 @@
-import execFormatWithUndo from '../format/execFormatWithUndo';
 import { Editor } from 'roosterjs-editor-core';
 import { TableFormat } from 'roosterjs-editor-types';
 import formatTable from './formatTable';
@@ -35,21 +34,19 @@ export default function insertTable(
         }
     }
 
-    execFormatWithUndo(editor, () => {
-        editor.runWithoutAddingUndoSnapshot(() => {
-            editor.insertNode(fragment);
-            formatTable(
-                editor,
-                format || {
-                    bgColorEven: '#FFF',
-                    bgColorOdd: '#FFF',
-                    topBorderColor: '#ABABAB',
-                    bottomBorderColor: '#ABABAB',
-                    verticalBorderColor: '#ABABAB',
-                },
-                table
-            );
-        });
+    editor.formatWithUndo(() => {
+        editor.insertNode(fragment);
+        formatTable(
+            editor,
+            format || {
+                bgColorEven: '#FFF',
+                bgColorOdd: '#FFF',
+                topBorderColor: '#ABABAB',
+                bottomBorderColor: '#ABABAB',
+                verticalBorderColor: '#ABABAB',
+            },
+            table
+        );
     });
 }
 

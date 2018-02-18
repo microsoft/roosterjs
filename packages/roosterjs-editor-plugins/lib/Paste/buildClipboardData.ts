@@ -54,15 +54,17 @@ export default function buildClipboardData(
 
 function getCurrentFormat(editor: Editor): DefaultFormat {
     let format = getFormatState(editor);
-    return format ? {
-        fontFamily: format.fontName,
-        fontSize: format.fontSize,
-        textColor: format.textColor,
-        backgroundColor: format.backgroundColor,
-        bold: format.isBold,
-        italic: format.isItalic,
-        underline: format.isUnderline,
-    } : {};
+    return format
+        ? {
+              fontFamily: format.fontName,
+              fontSize: format.fontSize,
+              textColor: format.textColor,
+              backgroundColor: format.backgroundColor,
+              bold: format.isBold,
+              italic: format.isItalic,
+              underline: format.isUnderline,
+          }
+        : {};
 }
 
 function getImage(dataTransfer: DataTransfer): File {

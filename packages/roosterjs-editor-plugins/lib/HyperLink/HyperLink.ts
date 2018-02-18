@@ -124,20 +124,25 @@ export default class HyperLink implements EditorPlugin {
                 anchor.textContent = linkData.originalUrl;
                 anchor.href = linkData.normalizedUrl;
 
-                this.editor.addUndoSnapshot();
-                let replaced = replaceTextBeforeCursorWithNode(
-                    this.editor,
-                    linkData.originalUrl,
-                    anchor,
-                    trailingPunctuation ? false : true /* exactMatch */,
-                    cursorData
+                this.editor.formatWithUndo(
+                    () => {
+                        if (
+                            replaceTextBeforeCursorWithNode(
+                                this.editor,
+                                linkData.originalUrl,
+                                anchor,
+                                trailingPunctuation ? false : true /* exactMatch */,
+                                cursorData
+                            )
+                        ) {
+                            // The content at cursor has changed. Should also clear the cursor data cache
+                            clearCursorEventDataCache(event);
+                        }
+                    },
+                    false /*preserveSelection*/,
+                    ChangeSource.AutoLink,
+                    () => anchor
                 );
-                if (replaced) {
-                    // The content at cursor has changed. Should also clear the cursor data cache
-                    clearCursorEventDataCache(event);
-                    this.editor.triggerContentChangedEvent(ChangeSource.AutoLink, anchor);
-                    this.editor.addUndoSnapshot();
-                }
             }
         }
     }

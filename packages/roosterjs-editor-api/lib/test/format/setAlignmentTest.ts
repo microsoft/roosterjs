@@ -30,12 +30,12 @@ describe('setAlignment()', () => {
 
     function runningTest(alignment: Alignment, command: string) {
         let document = editor.getDocument();
-        spyOn(editor, 'addUndoSnapshot').and.callThrough();
+        spyOn(editor, 'formatWithUndo').and.callThrough();
         spyOn(document, 'execCommand').and.callThrough();
 
         setAlignment(editor, alignment);
 
-        expect(editor.addUndoSnapshot).toHaveBeenCalled();
+        expect(editor.formatWithUndo).toHaveBeenCalled();
         expect(document.execCommand).toHaveBeenCalledWith(command, false, null);
     }
 });

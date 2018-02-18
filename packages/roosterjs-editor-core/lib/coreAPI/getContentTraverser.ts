@@ -30,11 +30,7 @@ export default function getContentTraverser(
             );
             break;
         case ContentScope.Selection:
-            scoper = new SelectionScoper(
-                core.contentDiv,
-                range,
-                core.inlineElementFactory
-            );
+            scoper = new SelectionScoper(core.contentDiv, range, core.inlineElementFactory);
             break;
         case ContentScope.Body:
             scoper = new BodyScoper(core.contentDiv, core.inlineElementFactory);

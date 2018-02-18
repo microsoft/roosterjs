@@ -1,4 +1,3 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import { BlockElement, ContentScope, Direction } from 'roosterjs-editor-types';
 import { NodeBlockElement, StartEndBlockElement, wrapAll } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
@@ -29,7 +28,7 @@ export default function setDirection(editor: Editor, dir: Direction) {
     }
 
     if (blockElements.length > 0) {
-        execFormatWithUndo(editor, () => {
+        editor.formatWithUndo(() => {
             for (let block of blockElements) {
                 // Any DOM change in the loop might interfere with the traversing so we should try to
                 // get the next block first before running any logic that may change DOM

@@ -3,7 +3,13 @@ import EditorCore from '../editor/EditorCore';
 import hasFocus from './hasFocus';
 import isRangeInContainer from '../utils/isRangeInContainer';
 
-export default function select(core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
+export default function select(
+    core: EditorCore,
+    arg1: any,
+    arg2?: any,
+    arg3?: any,
+    arg4?: any
+): boolean {
     let rawRange: Range;
 
     if (arg1 instanceof Range) {
@@ -24,8 +30,11 @@ export default function select(core: EditorCore, arg1: any, arg2?: any, arg3?: a
                 start = Position.create(<Node>arg1, Position.Before);
                 end = Position.create(<Node>arg1, Position.After);
             } else {
-                start = Position.create(<Node>arg1, <number|PositionType>arg2);
-                end = arg3 instanceof Node ? Position.create(<Node>arg3, <number|PositionType>arg4) : null;
+                start = Position.create(<Node>arg1, <number | PositionType>arg2);
+                end =
+                    arg3 instanceof Node
+                        ? Position.create(<Node>arg3, <number | PositionType>arg4)
+                        : null;
             }
             selectionRangeBase = SelectionRangeBase.create(start, end);
         }

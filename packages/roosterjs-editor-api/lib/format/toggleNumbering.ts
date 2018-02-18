@@ -1,4 +1,3 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import { Editor } from 'roosterjs-editor-core';
 import { workaroundForEdge } from './toggleBullet';
 
@@ -12,7 +11,7 @@ import { workaroundForEdge } from './toggleBullet';
  */
 export default function toggleNumbering(editor: Editor) {
     editor.focus();
-    execFormatWithUndo(editor, () => {
+    editor.formatWithUndo(() => {
         workaroundForEdge(editor, () => {
             editor.getDocument().execCommand('insertOrderedList', false, null);
         });

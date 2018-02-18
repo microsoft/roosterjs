@@ -9,7 +9,6 @@ import {
     Position,
 } from 'roosterjs-editor-types';
 import { contains, getTagOfNode } from 'roosterjs-editor-dom';
-import { execFormatWithUndo } from 'roosterjs-editor-api';
 
 const BEGIN_TAG = 'RoosterJsImageResizingBegin';
 const END_TAG = 'RoosterJsImageResizingEnd';
@@ -78,9 +77,7 @@ export default class ImageResizePlugin implements EditorPlugin {
         } else if (e.eventType == PluginEventType.KeyDown && this.resizeDiv) {
             let event = <KeyboardEvent>(<PluginDomEvent>e).rawEvent;
             if (event.which == DELETE_KEYCODE || event.which == BACKSPACE_KEYCODE) {
-                execFormatWithUndo(this.editor, () => {
-                    this.removeResizeDiv();
-                });
+                this.editor.formatWithUndo(this.removeResizeDiv);
                 event.preventDefault();
             } else if (
                 event.which != SHIFT_KEYCODE &&
@@ -129,8 +126,7 @@ export default class ImageResizePlugin implements EditorPlugin {
             this.startPageY = e.pageY;
             this.startWidth = img.clientWidth;
             this.startHeight = img.clientHeight;
-            this.editor.addUndoSnapshot();
-
+            this.editor.formatWithUndo(null);
             let document = this.editor.getDocument();
             document.addEventListener('mousemove', this.doResize, true /*useCapture*/);
             document.addEventListener('mouseup', this.finishResize, true /*useCapture*/);
@@ -190,8 +186,7 @@ export default class ImageResizePlugin implements EditorPlugin {
             this.resizeDiv.style.height = '';
         }
         this.direction = null;
-        this.editor.addUndoSnapshot();
-        this.editor.triggerContentChangedEvent(ChangeSource.ImageResize);
+        this.editor.formatWithUndo(null, false, ChangeSource.ImageResize);
         e.preventDefault();
     };
 
@@ -238,7 +233,7 @@ export default class ImageResizePlugin implements EditorPlugin {
         return resizeDiv;
     }
 
-    private removeResizeDiv() {
+    private removeResizeDiv = () => {
         if (this.resizeDiv) {
             let parent = this.resizeDiv.parentNode;
             [this.resizeDiv.previousSibling, this.resizeDiv.nextSibling].forEach(comment => {
@@ -249,7 +244,7 @@ export default class ImageResizePlugin implements EditorPlugin {
             parent.removeChild(this.resizeDiv);
             this.resizeDiv = null;
         }
-    }
+    };
 
     private extractHtml(html: string): string {
         return html.replace(EXTRACT_HTML_REGEX, '$1');

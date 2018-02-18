@@ -2,7 +2,6 @@ import {
     setIndentation,
     cacheGetNodeAtCursor,
     cacheGetListState,
-    execFormatWithUndo,
     getNodeAtCursor,
     queryNodesWithSelection,
     toggleBullet,
@@ -103,7 +102,7 @@ export default class ContentEdit implements EditorPlugin {
                 }
                 if (node.parentNode == blockQuoteElement && this.shouldToggleState(event, node)) {
                     keyboardEvent.preventDefault();
-                    execFormatWithUndo(this.editor, () => {
+                    this.editor.formatWithUndo(() => {
                         splitParentNode(node, false /*splitBefore*/);
 
                         blockQuoteElement.parentNode.insertBefore(
@@ -220,9 +219,13 @@ export default class ContentEdit implements EditorPlugin {
 
     private isCursorAtBeginningOf(node: Node) {
         let range = this.editor.getSelectionRange();
-        return range.collapsed && range.start.offset == 0 && Position.equal(
-            Position.normalize(Position.create(node, Position.Begin)),
-            Position.normalize(range.start)
+        return (
+            range.collapsed &&
+            range.start.offset == 0 &&
+            Position.equal(
+                Position.normalize(Position.create(node, Position.Begin)),
+                Position.normalize(range.start)
+            )
         );
     }
 }

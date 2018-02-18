@@ -1,4 +1,3 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import { Alignment } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
@@ -10,13 +9,15 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function setAlignment(editor: Editor, alignment: Alignment) {
     editor.focus();
-    let command = 'justifyLeft';
-    if (alignment == Alignment.Center) {
-        command = 'justifyCenter';
-    } else if (alignment == Alignment.Right) {
-        command = 'justifyRight';
-    }
-    execFormatWithUndo(editor, () => {
-        editor.getDocument().execCommand(command, false, null);
+    editor.formatWithUndo(() => {
+        editor
+            .getDocument()
+            .execCommand(
+                alignment == Alignment.Center
+                    ? 'justifyCenter'
+                    : alignment == Alignment.Right ? 'justifyRight' : 'justifyLeft',
+                false,
+                null
+            );
     });
 }
