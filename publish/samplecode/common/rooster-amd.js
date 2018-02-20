@@ -678,9 +678,7 @@ function getInlineElementAfter(rootNode, position, inlineElementFactory) {
         if (node && shouldSkipNode_1.default(node)) {
             node = getLeafSibling_1.getNextLeafSibling(rootNode, node);
         }
-        inlineElement = node
-            ? getInlineElementAtNode(rootNode, node, inlineElementFactory)
-            : null;
+        inlineElement = node ? getInlineElementAtNode(rootNode, node, inlineElementFactory) : null;
         // if the inline element we get in the end wraps (contains) the editor point, this has to be a partial
         // the point runs across a test node in a link
         isPartial = isPartial || (inlineElement && inlineElement.contains(position));
@@ -1214,7 +1212,8 @@ var PartialInlineElement = /** @class */ (function () {
     });
     // Checks if it contains a position
     PartialInlineElement.prototype.contains = function (position) {
-        return roosterjs_editor_types_1.Position.isAfter(position, this.getStartPosition()) && roosterjs_editor_types_1.Position.isAfter(this.getEndPosition(), position);
+        return (roosterjs_editor_types_1.Position.isAfter(position, this.getStartPosition()) &&
+            roosterjs_editor_types_1.Position.isAfter(this.getEndPosition(), position));
     };
     // Check if this inline element is after the other inline element
     PartialInlineElement.prototype.isAfter = function (inlineElement) {
@@ -1237,8 +1236,9 @@ var PartialInlineElement = /** @class */ (function () {
             var otherInlineEndPosition = otherInline.getEndPosition();
             // this partial's start
             var thisStartPosition = this.getStartPosition();
-            isAfter = roosterjs_editor_types_1.Position.isAfter(thisStartPosition, otherInlineEndPosition) ||
-                roosterjs_editor_types_1.Position.equal(thisStartPosition, otherInlineEndPosition);
+            isAfter =
+                roosterjs_editor_types_1.Position.isAfter(thisStartPosition, otherInlineEndPosition) ||
+                    roosterjs_editor_types_1.Position.equal(thisStartPosition, otherInlineEndPosition);
         }
         return isAfter;
     };
@@ -1760,7 +1760,9 @@ var EditorSelection = /** @class */ (function () {
                 trimmedStartPosition = inlineElement.isStartPartial()
                     ? inlineElement.getStartPosition()
                     : null;
-                trimmedEndPosition = inlineElement.isEndPartial() ? inlineElement.getEndPosition() : null;
+                trimmedEndPosition = inlineElement.isEndPartial()
+                    ? inlineElement.getEndPosition()
+                    : null;
             }
             else {
                 decoratedInline = inlineElement;
@@ -2389,7 +2391,7 @@ function removeCursorMarkers(editor) {
 function addCursorMarkersToSelection(editor) {
     var range = editor.getSelectionRange();
     var markers = roosterjs_editor_dom_1.fromHtml(CURSOR_MARKER_HTML, editor.getDocument());
-    insertCursorMarkerToEditorPoint(editor, range.start, markers[0]);
+    insertCursorMarker(editor, range.start, markers[0]);
     // Then the end marker
     // For collapsed selection, use the start marker as the editor so that
     // the end marker is always placed after the start marker
@@ -2397,7 +2399,7 @@ function addCursorMarkersToSelection(editor) {
     var endPosition = range.collapsed
         ? roosterjs_editor_types_1.Position.create(markers[0], roosterjs_editor_types_1.Position.After)
         : roosterjs_editor_types_1.Position.create(rawRange.endContainer, rawRange.endOffset);
-    insertCursorMarkerToEditorPoint(editor, endPosition, markers[1]);
+    insertCursorMarker(editor, endPosition, markers[1]);
 }
 // Update selection to where cursor marker is
 // This is used in post building snapshot to restore selection
@@ -2415,7 +2417,7 @@ function updateSelectionToCursorMarkers(editor) {
 // will cause indentation to behave really weirdly
 // This revised version uses DOM parentNode.insertBefore when it sees the insertion point is in node boundary_begin
 // which gives precise control over DOM structure and solves the chrome issue
-function insertCursorMarkerToEditorPoint(editor, position, cursorMaker) {
+function insertCursorMarker(editor, position, cursorMaker) {
     position = roosterjs_editor_types_1.Position.normalize(position);
     var parentNode = position.node.parentNode;
     if (position.offset == 0) {
@@ -2522,7 +2524,8 @@ function equal(p1, p2) {
 function isAfter(position1, position2) {
     return position1.node == position2.node
         ? position1.offset > position2.offset
-        : (position2.node.compareDocumentPosition(position1.node) & 4 /* Following */) == 4 /* Following */;
+        : (position2.node.compareDocumentPosition(position1.node) & 4 /* Following */) ==
+            4 /* Following */;
 }
 function getIndexOfNode(node) {
     var i = 0;

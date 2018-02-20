@@ -206,10 +206,10 @@ describe('NodeInlineElement contains()', () => {
         let position = Position.create(testDiv.firstChild.lastChild, 3);
 
         // Act
-        let elementContainsEditorPoint = element.contains(position);
+        let elementContainsPosition = element.contains(position);
 
         // Assert
-        expect(elementContainsEditorPoint).toBe(true);
+        expect(elementContainsPosition).toBe(true);
     });
 
     it('element does not contain position', () => {
@@ -227,10 +227,10 @@ describe('NodeInlineElement contains()', () => {
         let position = Position.create(testDiv.firstChild.lastChild, Position.End);
 
         // Act
-        let elementContainsEditorPoint = element.contains(position);
+        let elementContainsPosition = element.contains(position);
 
         // Assert
-        expect(elementContainsEditorPoint).toBe(false);
+        expect(elementContainsPosition).toBe(false);
     });
 });
 

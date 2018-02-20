@@ -55,7 +55,7 @@ function addCursorMarkersToSelection(editor: Editor): void {
     let range = editor.getSelectionRange();
     let markers = fromHtml(CURSOR_MARKER_HTML, editor.getDocument());
 
-    insertCursorMarkerToEditorPoint(editor, range.start, markers[0]);
+    insertCursorMarker(editor, range.start, markers[0]);
 
     // Then the end marker
     // For collapsed selection, use the start marker as the editor so that
@@ -64,7 +64,7 @@ function addCursorMarkersToSelection(editor: Editor): void {
     let endPosition = range.collapsed
         ? Position.create(markers[0], Position.After)
         : Position.create(rawRange.endContainer, rawRange.endOffset);
-    insertCursorMarkerToEditorPoint(editor, endPosition, markers[1]);
+    insertCursorMarker(editor, endPosition, markers[1]);
 }
 
 // Update selection to where cursor marker is
@@ -85,7 +85,7 @@ function updateSelectionToCursorMarkers(editor: Editor) {
 // will cause indentation to behave really weirdly
 // This revised version uses DOM parentNode.insertBefore when it sees the insertion point is in node boundary_begin
 // which gives precise control over DOM structure and solves the chrome issue
-function insertCursorMarkerToEditorPoint(
+function insertCursorMarker(
     editor: Editor,
     position: Position,
     cursorMaker: Node
