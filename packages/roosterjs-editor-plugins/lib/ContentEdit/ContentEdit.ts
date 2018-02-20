@@ -223,7 +223,7 @@ export default class ContentEdit implements EditorPlugin {
             range.collapsed &&
             range.start.offset == 0 &&
             Position.equal(
-                Position.normalize(Position.create(node, Position.Begin)),
+                Position.normalize(Position.create(node, 0)),
                 Position.normalize(range.start)
             )
         );

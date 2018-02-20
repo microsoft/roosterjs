@@ -10,8 +10,7 @@ import {
     BlockElement,
     DocumentPosition,
     InlineElement,
-    EditorPoint,
-    NodeBoundary,
+    Position,
     NodeType,
 } from 'roosterjs-editor-types';
 import { getFirstLeafNode, getLastLeafNode } from '../domWalker/getLeafNode';
@@ -114,17 +113,17 @@ function getPreviousInlineElement(
 // There is a good possibility that the cursor is in middle of an inline element (i.e. mid of a text node)
 // in this case, we only want to return what is before cursor (a partial of an inline) to indicate
 // that we're in middle. The logic is largely to detect if the editor point runs across an inline element
-function getInlineElementBeforePoint(
+function getInlineElementBefore(
     rootNode: Node,
-    position: EditorPoint,
+    position: Position,
     inlineElementFactory: InlineElementFactory
 ) {
     let inlineElement: InlineElement;
-    let containerNode = position.containerNode;
+    let containerNode = position.node;
     let offset = position.offset;
     if (containerNode) {
         let isPartial = false;
-        if (offset == NodeBoundary.Begin) {
+        if (offset == 0 && !position.isAtEnd) {
             // The point is at the begin of container element
             containerNode = getPreviousLeafSibling(rootNode, containerNode);
         } else if (
@@ -154,45 +153,35 @@ function getInlineElementBeforePoint(
 }
 
 // Similar to getInlineElementBeforePoint, to get inline element after an editor point
-function getInlineElementAfterPoint(
+function getInlineElementAfter(
     rootNode: Node,
-    editorPoint: EditorPoint,
+    position: Position,
     inlineElementFactory: InlineElementFactory
 ) {
     let inlineElement: InlineElement;
-    let containerNode = editorPoint.containerNode;
-    let offset = editorPoint.offset;
-    if (containerNode) {
+    if (position) {
         let isPartial = false;
-        if (
-            (containerNode.nodeType == NodeType.Text && offset == containerNode.nodeValue.length) ||
-            (containerNode.nodeType == NodeType.Element && offset == NodeBoundary.End)
-        ) {
+        let node = position.node;
+        if (position.isAtEnd) {
             // The point is at the end of container element
-            containerNode = getNextLeafSibling(rootNode, containerNode);
-        } else if (
-            containerNode.nodeType == NodeType.Text &&
-            offset > NodeBoundary.Begin &&
-            offset < containerNode.nodeValue.length
-        ) {
+            node = getNextLeafSibling(rootNode, node);
+        } else if (position.node.nodeType == NodeType.Text && position.offset > 0) {
             // Run across a text node, this inline has to be partial
             isPartial = true;
         }
 
-        if (containerNode && shouldSkipNode(containerNode)) {
-            containerNode = getNextLeafSibling(rootNode, containerNode);
+        if (node && shouldSkipNode(node)) {
+            node = getNextLeafSibling(rootNode, node);
         }
 
-        inlineElement = containerNode
-            ? getInlineElementAtNode(rootNode, containerNode, inlineElementFactory)
-            : null;
+        inlineElement = node ? getInlineElementAtNode(rootNode, node, inlineElementFactory) : null;
 
         // if the inline element we get in the end wraps (contains) the editor point, this has to be a partial
         // the point runs across a test node in a link
-        isPartial = isPartial || (inlineElement && inlineElement.contains(editorPoint));
+        isPartial = isPartial || (inlineElement && inlineElement.contains(position));
 
         if (isPartial && inlineElement) {
-            inlineElement = new PartialInlineElement(inlineElement, editorPoint, null);
+            inlineElement = new PartialInlineElement(inlineElement, position, null);
         }
     }
 
@@ -767,6 +756,6 @@ export {
     getInlineElementAtNode,
     getNextInlineElement,
     getPreviousInlineElement,
-    getInlineElementBeforePoint,
-    getInlineElementAfterPoint,
+    getInlineElementBefore,
+    getInlineElementAfter,
 };

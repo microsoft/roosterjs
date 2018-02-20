@@ -11,8 +11,8 @@ export {
     getInlineElementAtNode,
     getNextInlineElement,
     getPreviousInlineElement,
-    getInlineElementBeforePoint,
-    getInlineElementAfterPoint,
+    getInlineElementBefore,
+    getInlineElementAfter,
 } from './blockElements/BlockElement';
 
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
@@ -44,7 +44,6 @@ export { default as isDocumentPosition } from './utils/isDocumentPosition';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
 export { default as isTextualInlineElement } from './utils/isTextualInlineElement';
 export { default as matchWhiteSpaces } from './utils/matchWhiteSpaces';
-export { default as normalizeEditorPoint } from './utils/normalizeEditorPoint';
 export { default as splitParentNode } from './utils/splitParentNode';
 export { default as textToHtml } from './utils/textToHtml';
 export { default as unwrap } from './utils/unwrap';

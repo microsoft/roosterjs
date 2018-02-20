@@ -158,7 +158,7 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
         if (option.insertOnNewLine) {
             let editorSelection = new EditorSelection(
                 core.contentDiv,
-                rawRange,
+                clonedRange,
                 core.inlineElementFactory
             );
             let blockElement = editorSelection.startBlockElement;

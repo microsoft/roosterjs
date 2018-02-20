@@ -344,9 +344,11 @@ describe('Editor select()', () => {
 
         // Act
         editor.select(selectionRange);
+        let targetRange = editor.getSelectionRange();
 
         // Assert
-        expect(editor.getSelectionRange().rawRange).toBe(selectionRange);
+        expect(targetRange.start).toEqual(selectionRange.start);
+        expect(targetRange.end).toEqual(selectionRange.end);
     });
 });
 

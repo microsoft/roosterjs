@@ -1,7 +1,11 @@
-import editorPointEquals from '../utils/editorPointEquals';
 import isDocumentPosition from '../utils/isDocumentPosition';
-import isEditorPointAfter from '../utils/isEditorPointAfter';
-import { BlockElement, DocumentPosition, EditorPoint, InlineElement } from 'roosterjs-editor-types';
+import {
+    BlockElement,
+    DocumentPosition,
+    Position,
+    InlineElement,
+    SelectionRangeBase,
+} from 'roosterjs-editor-types';
 
 // This is a special version of inline element that identifies a section of an inline element
 // We often have the need to cut an inline element in half and perform some operation only on half of an inline element
@@ -11,8 +15,8 @@ import { BlockElement, DocumentPosition, EditorPoint, InlineElement } from 'roos
 class PartialInlineElement implements InlineElement {
     constructor(
         private inlineElement: InlineElement,
-        private startPoint: EditorPoint = null,
-        private endPoint: EditorPoint = null
+        private start?: Position,
+        private end?: Position
     ) {}
 
     // Get the full inline element that this partial inline decorates
@@ -32,49 +36,49 @@ class PartialInlineElement implements InlineElement {
 
     // Gets the text content
     public getTextContent(): string {
-        let range = this.getRange();
-        return range.toString();
+        let node = this.inlineElement.getContainerNode();
+        let range = SelectionRangeBase.create(
+            this.start || Position.create(node, Position.Before),
+            this.end || Position.create(node, Position.After)
+        );
+        return SelectionRangeBase.toRange(range).toString();
     }
 
-    // Gets the start point
-    public getStartPoint(): EditorPoint {
-        return this.startPoint ? this.startPoint : this.inlineElement.getStartPoint();
+    // Gets the start position
+    public getStartPosition(): Position {
+        return this.start || this.inlineElement.getStartPosition();
     }
 
-    // Gets the end point
-    public getEndPoint(): EditorPoint {
-        return this.endPoint ? this.endPoint : this.inlineElement.getEndPoint();
+    // Gets the end position
+    public getEndPosition(): Position {
+        return this.end || this.inlineElement.getEndPosition();
     }
 
     // Checks if the partial is on start point
     public isStartPartial(): boolean {
-        return this.startPoint != null;
+        return !!this.start;
     }
 
     // Checks if the partial is on the end point
     public isEndPartial(): boolean {
-        return this.endPoint != null;
+        return !!this.end;
     }
 
     // Get next partial inline element if it is not at the end boundary yet
     public get nextInlineElement(): PartialInlineElement {
-        return this.endPoint
-            ? new PartialInlineElement(this.inlineElement, this.endPoint, null)
-            : null;
+        return this.end && new PartialInlineElement(this.inlineElement, this.end, null);
     }
 
     // Get previous partial inline element if it is not at the begin boundary yet
     public get previousInlineElement(): PartialInlineElement {
-        return this.startPoint != null
-            ? new PartialInlineElement(this.inlineElement, null, this.startPoint)
-            : null;
+        return this.start && new PartialInlineElement(this.inlineElement, null, this.start);
     }
 
-    // Checks if it contains an editor point
-    public contains(editorPoint: EditorPoint): boolean {
+    // Checks if it contains a position
+    public contains(position: Position): boolean {
         return (
-            isEditorPointAfter(editorPoint, this.getStartPoint()) &&
-            isEditorPointAfter(this.getEndPoint(), editorPoint)
+            Position.isAfter(position, this.getStartPosition()) &&
+            Position.isAfter(this.getEndPosition(), position)
         );
     }
 
@@ -88,62 +92,32 @@ class PartialInlineElement implements InlineElement {
         let isAfter = isDocumentPosition(documentPosition, DocumentPosition.Following);
 
         // If node level is not "is after", need to do extra check if the other inline element is also a partial that decorates same inline element
-        // and this partical is partial on start (this.startPoint != null)
+        // and this partical is partial on start (this.startPosition != null)
         // The idea here is to take this partial's start to compare with the other inline end. We consider "is after" only when
         // this partial's start is after or same as the other inline's end
         if (
             !isAfter &&
             documentPosition == DocumentPosition.Same &&
             inlineElement instanceof PartialInlineElement &&
-            this.startPoint
+            this.start
         ) {
             // get partial's end
             let otherInline = inlineElement as PartialInlineElement;
-            let otherInlineEndPoint = otherInline.getEndPoint();
+            let otherInlineEndPosition = otherInline.getEndPosition();
 
             // this partial's start
-            let thisStartPoint = this.getStartPoint();
+            let thisStartPosition = this.getStartPosition();
             isAfter =
-                isEditorPointAfter(thisStartPoint, otherInlineEndPoint) ||
-                editorPointEquals(thisStartPoint, otherInlineEndPoint);
+                Position.isAfter(thisStartPosition, otherInlineEndPosition) ||
+                Position.equal(thisStartPosition, otherInlineEndPosition);
         }
 
         return isAfter;
     }
 
     // apply style
-    public applyStyle(
-        styler: (node: Node) => void,
-        fromPoint?: EditorPoint,
-        toPoint?: EditorPoint
-    ): void {
-        this.inlineElement.applyStyle(
-            styler,
-            fromPoint ? fromPoint : this.startPoint,
-            toPoint ? toPoint : this.endPoint
-        );
-    }
-
-    // get the entire inline element as a range
-    private getRange(): Range {
-        let ownerDoc = this.inlineElement.getContainerNode().ownerDocument;
-        let range: Range = null;
-        if (ownerDoc) {
-            range = ownerDoc.createRange();
-            if (this.startPoint) {
-                range.setStart(this.startPoint.containerNode, this.startPoint.offset);
-            } else {
-                range.setStartBefore(this.inlineElement.getContainerNode());
-            }
-
-            if (this.endPoint) {
-                range.setEnd(this.endPoint.containerNode, this.endPoint.offset);
-            } else {
-                range.setEndAfter(this.inlineElement.getContainerNode());
-            }
-        }
-
-        return range;
+    public applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void {
+        this.inlineElement.applyStyle(styler, from || this.start, to || this.end);
     }
 }
 

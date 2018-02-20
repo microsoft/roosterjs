@@ -6,7 +6,6 @@ export { default as ContentScope } from './editor/ContentScope';
 export { default as DefaultFormat } from './editor/DefaultFormat';
 export { default as Direction } from './format/Direction';
 export { default as DocumentPosition } from './browser/DocumentPosition';
-export { default as EditorPoint, NodeBoundary } from './editor/EditorPoint';
 export { default as ExtractContentEvent } from './editor/ExtractContentEvent';
 export { default as FormatState } from './format/FormatState';
 export { default as Indentation } from './format/Indentation';

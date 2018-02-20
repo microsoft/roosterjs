@@ -102,16 +102,6 @@ export const enum DocumentPosition {
     ImplementationSpecific = 32,
 }
 
-export interface EditorPoint {
-    containerNode: Node;
-    offset: NodeBoundary | number;
-}
-
-export const enum NodeBoundary {
-    Begin = 0,
-    End = 1,
-}
-
 export interface ExtractContentEvent extends PluginEvent {
     content: string;
 }
@@ -146,11 +136,11 @@ export interface InlineElement {
     getTextContent: () => string;
     getContainerNode: () => Node;
     getParentBlock: () => BlockElement;
-    getStartPoint: () => EditorPoint;
-    getEndPoint: () => EditorPoint;
+    getStartPosition: () => Position;
+    getEndPosition: () => Position;
     isAfter: (inlineElement: InlineElement) => boolean;
-    contains: (editorPoint: EditorPoint) => boolean;
-    applyStyle: (styler: (node: Node) => void, fromPoint?: EditorPoint, toPoint?: EditorPoint) => void;
+    contains: (position: Position) => boolean;
+    applyStyle: (styler: (node: Node) => void, from?: Position, to?: Position) => void;
 }
 
 export interface InsertOption {
@@ -384,6 +374,7 @@ export const Position: {
     };
     normalize: (position: Position) => Position;
     equal: (p1: Position, p2: Position) => boolean;
+    isAfter: (position1: Position, position2: Position) => boolean;
 };
 
 export const enum PositionType {
@@ -472,9 +463,9 @@ export function getNextInlineElement(rootNode: Node, inlineElement: InlineElemen
 
 export function getPreviousInlineElement(rootNode: Node, inlineElement: InlineElement, inlineElementFactory: InlineElementFactory): InlineElement;
 
-export function getInlineElementBeforePoint(rootNode: Node, position: EditorPoint, inlineElementFactory: InlineElementFactory): InlineElement;
+export function getInlineElementBefore(rootNode: Node, position: Position, inlineElementFactory: InlineElementFactory): InlineElement;
 
-export function getInlineElementAfterPoint(rootNode: Node, editorPoint: EditorPoint, inlineElementFactory: InlineElementFactory): InlineElement;
+export function getInlineElementAfter(rootNode: Node, position: Position, inlineElementFactory: InlineElementFactory): InlineElement;
 
 export class ContentTraverser {
     private rootNode;
@@ -525,32 +516,31 @@ export class NodeInlineElement implements InlineElement {
     getTextContent(): string;
     getContainerNode(): Node;
     getParentBlock(): BlockElement;
-    getStartPoint(): EditorPoint;
-    getEndPoint(): EditorPoint;
+    getStartPosition(): Position;
+    getEndPosition(): Position;
     isAfter(inlineElement: InlineElement): boolean;
-    contains(editorPoint: EditorPoint): boolean;
-    applyStyle(styler: (node: Node) => void, fromPoint?: EditorPoint, toPoint?: EditorPoint): void;
+    contains(position: Position): boolean;
+    applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void;
 }
 
 export class PartialInlineElement implements InlineElement {
     private inlineElement;
-    private startPoint;
-    private endPoint;
-    constructor(inlineElement: InlineElement, startPoint?: EditorPoint, endPoint?: EditorPoint);
+    private start;
+    private end;
+    constructor(inlineElement: InlineElement, start?: Position, end?: Position);
     getDecoratedInline(): InlineElement;
     getContainerNode(): Node;
     getParentBlock(): BlockElement;
     getTextContent(): string;
-    getStartPoint(): EditorPoint;
-    getEndPoint(): EditorPoint;
+    getStartPosition(): Position;
+    getEndPosition(): Position;
     isStartPartial(): boolean;
     isEndPartial(): boolean;
     readonly nextInlineElement: PartialInlineElement;
     readonly previousInlineElement: PartialInlineElement;
-    contains(editorPoint: EditorPoint): boolean;
+    contains(position: Position): boolean;
     isAfter(inlineElement: InlineElement): boolean;
-    applyStyle(styler: (node: Node) => void, fromPoint?: EditorPoint, toPoint?: EditorPoint): void;
-    private getRange();
+    applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void;
 }
 
 export class TextInlineElement extends NodeInlineElement {
@@ -569,16 +559,14 @@ export class BodyScoper implements TraversingScoper {
 
 export class EditorSelection {
     private rootNode;
-    private selectionRange;
     private inlineElementFactory;
-    private readonly startPoint;
-    private readonly endPoint;
     private startInline;
     private endInline;
     private startEndCalculated;
     private startBlock;
     private endBlock;
-    constructor(rootNode: Node, selectionRange: Range, inlineElementFactory: InlineElementFactory);
+    private selectionRange;
+    constructor(rootNode: Node, range: SelectionRangeBase, inlineElementFactory: InlineElementFactory);
     readonly collapsed: boolean;
     readonly inlineElementBeforeStart: InlineElement;
     readonly startInlineElement: InlineElement;
@@ -595,7 +583,7 @@ export class SelectionBlockScoper implements TraversingScoper {
     private startPosition;
     private readonly editorSelection;
     private selectionBlock;
-    constructor(rootNode: Node, selectionRange: Range, startPosition: ContentPosition, inlineElementFactory: InlineElementFactory);
+    constructor(rootNode: Node, selectionRange: SelectionRangeBase, startPosition: ContentPosition, inlineElementFactory: InlineElementFactory);
     getStartBlockElement(): BlockElement;
     getStartInlineElement(): InlineElement;
     getInlineElementBeforeStart(): InlineElement;
@@ -605,7 +593,7 @@ export class SelectionBlockScoper implements TraversingScoper {
 
 export class SelectionScoper implements TraversingScoper {
     private readonly editorSelection;
-    constructor(rootNode: Node, selectionRange: Range, inlineElementFactory: InlineElementFactory);
+    constructor(rootNode: Node, selectionRange: SelectionRangeBase, inlineElementFactory: InlineElementFactory);
     getStartBlockElement(): BlockElement;
     getStartInlineElement(): InlineElement;
     isBlockInScope(blockElement: BlockElement): boolean;
@@ -644,8 +632,6 @@ export function isNodeEmpty(node: Node, trim?: boolean): boolean;
 export function isTextualInlineElement(inlineElement: InlineElement): boolean;
 
 export function matchWhiteSpaces(source: string): string[];
-
-export function normalizeEditorPoint(container: Node, offset: number): EditorPoint;
 
 /**
  * Split parent node of the given node before/after the given node.

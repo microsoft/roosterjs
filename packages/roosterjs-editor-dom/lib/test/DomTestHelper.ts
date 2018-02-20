@@ -1,4 +1,4 @@
-import { InlineElement, EditorPoint } from 'roosterjs-editor-types';
+import { InlineElement, Position, SelectionRangeBase } from 'roosterjs-editor-types';
 import InlineElementFactory from '../inlineElements/InlineElementFactory';
 import { NodeBlockElement, StartEndBlockElement } from '../blockElements/BlockElement';
 
@@ -42,23 +42,23 @@ export function runTestMethod2(
     expect(result).toEqual(output);
 }
 
-// Check inlineElement equality based on startPoint, endPoint and textContent
+// Check inlineElement equality based on startPosition, endPosition and textContent
 export function isInlineElementEqual(
     element: InlineElement,
-    startPoint: EditorPoint,
-    endPoint: EditorPoint,
+    startPosition: Position,
+    endPosition: Position,
     textContent: string
 ): boolean {
     return (
-        isEditorPointEqual(element.getStartPoint(), startPoint) &&
-        isEditorPointEqual(element.getEndPoint(), endPoint) &&
+        isPositionEqual(element.getStartPosition(), startPosition) &&
+        isPositionEqual(element.getEndPosition(), endPosition) &&
         element.getTextContent() == textContent
     );
 }
 
 // Check if two editor points are equal
-export function isEditorPointEqual(point1: EditorPoint, point2: EditorPoint): boolean {
-    return point1.containerNode.isEqualNode(point2.containerNode) && point1.offset == point2.offset;
+export function isPositionEqual(position1: Position, position2: Position): boolean {
+    return position1.node.isEqualNode(position2.node) && position1.offset == position2.offset;
 }
 
 // Create NodeBlockElement from given HTMLElement
@@ -93,25 +93,17 @@ export function createInlineElementFromNode(node: Node, rootNode: Node): InlineE
 }
 
 // Create range from child nodes of given node
-export function createRangeFromChildNodes(node: Node): Range {
-    let selectionRange = new Range();
-    selectionRange.setStartBefore(node.firstChild);
-    selectionRange.setEndAfter(node.lastChild);
-    return selectionRange;
-}
-
-// Create range from start and end point
-export function createRangeWithStartEndNode(startPoint: EditorPoint, endPoint: EditorPoint): Range {
-    let selectionRange = new Range();
-    selectionRange.setStart(startPoint.containerNode, startPoint.offset);
-    selectionRange.setEnd(endPoint.containerNode, endPoint.offset);
-    return selectionRange;
+export function createRangeFromChildNodes(node: Node): SelectionRangeBase {
+    return SelectionRangeBase.create(
+        Position.create(node.firstChild, Position.Before),
+        Position.create(node.lastChild, Position.After)
+    );
 }
 
 // Create range from given HTMLElement
-export function createRangeWithDiv(testDiv: HTMLElement): Range {
-    let selectionRange = new Range();
-    selectionRange.setStartBefore(testDiv);
-    selectionRange.setEndAfter(testDiv);
-    return selectionRange;
+export function createRangeWithDiv(testDiv: HTMLElement): SelectionRangeBase {
+    return SelectionRangeBase.create(
+        Position.create(testDiv, Position.Before),
+        Position.create(testDiv, Position.After)
+    );
 }

@@ -1,7 +1,7 @@
 import * as DomTestHelper from '../DomTestHelper';
 import InlineElementFactory from '../../inlineElements/InlineElementFactory';
 import { NodeBlockElement } from '../../blockElements/BlockElement';
-import { InlineElement } from 'roosterjs-editor-types';
+import { InlineElement, Position } from 'roosterjs-editor-types';
 
 let testID = 'NodeBlockElement';
 
@@ -149,8 +149,8 @@ describe('NodeBlockElement getFirstInlineElement()', () => {
     function runTest(input: string, startOffset: number, endOffset: number, node: Node) {
         // Arrange
         let [nodeBlockElement] = createNodeBlockElementWithContent(input);
-        let startPoint = { containerNode: node, offset: startOffset };
-        let endPoint = { containerNode: node, offset: endOffset };
+        let startPosition = Position.create(node, startOffset);
+        let endPosition = Position.create(node, endOffset);
 
         // Act
         let inlineElement = nodeBlockElement.getFirstInlineElement();
@@ -159,8 +159,8 @@ describe('NodeBlockElement getFirstInlineElement()', () => {
         expect(
             DomTestHelper.isInlineElementEqual(
                 inlineElement,
-                startPoint,
-                endPoint,
+                startPosition,
+                endPosition,
                 node.textContent
             )
         ).toBe(true);
@@ -195,8 +195,8 @@ describe('NodeBlockElement getLastInlineElement()', () => {
     function runTest(input: string, startOffset: number, endOffset: number, node: Node) {
         // Arrange
         let [nodeBlockElement] = createNodeBlockElementWithContent(input);
-        let startPoint = { containerNode: node, offset: startOffset };
-        let endPoint = { containerNode: node, offset: endOffset };
+        let startPosition = Position.create(node, startOffset);
+        let endPosition = Position.create(node, endOffset);
 
         // Act
         let inlineElement = nodeBlockElement.getLastInlineElement();
@@ -205,8 +205,8 @@ describe('NodeBlockElement getLastInlineElement()', () => {
         expect(
             DomTestHelper.isInlineElementEqual(
                 inlineElement,
-                startPoint,
-                endPoint,
+                startPosition,
+                endPosition,
                 node.textContent
             )
         ).toBe(true);
@@ -244,13 +244,13 @@ describe('NodeBlockElement getInlineElements()', () => {
         endOffset: number,
         node: Node
     ) {
-        let startPoint = { containerNode: node, offset: startOffset };
-        let endPoint = { containerNode: node, offset: endOffset };
+        let startPosition = Position.create(node, startOffset);
+        let endPosition = Position.create(node, endOffset);
         expect(
             DomTestHelper.isInlineElementEqual(
                 inlineElement,
-                startPoint,
-                endPoint,
+                startPosition,
+                endPosition,
                 node.textContent
             )
         ).toBe(true);

@@ -578,7 +578,7 @@ export default class Editor {
         ) {
             let editorSelection = new EditorSelection(
                 this.core.contentDiv,
-                selectionRange.rawRange,
+                selectionRange,
                 this.core.inlineElementFactory
             );
             let blockElement = editorSelection.startBlockElement;
@@ -590,7 +590,7 @@ export default class Editor {
                 let element = this.core.contentDiv.appendChild(nodes[0]) as HTMLElement;
                 applyFormat(element, this.core.defaultFormat);
                 // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
-                this.select(element.firstChild, Position.Begin);
+                this.select(element.firstChild, 0);
             } else if (
                 blockElement.getStartNode().parentNode == blockElement.getEndNode().parentNode
             ) {

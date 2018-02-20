@@ -1,7 +1,7 @@
 import * as DomTestHelper from '../DomTestHelper';
 import InlineElementFactory from '../../inlineElements/InlineElementFactory';
 import { NodeBlockElement } from '../../blockElements/BlockElement';
-import { InlineElement, NodeBoundary } from 'roosterjs-editor-types';
+import { InlineElement, Position } from 'roosterjs-editor-types';
 
 let testID = 'NodeInlineElement';
 
@@ -53,7 +53,7 @@ describe('NodeInlineElement getTextContent()', () => {
     });
 });
 
-describe('NodeInlineElement getStartPoint()', () => {
+describe('NodeInlineElement getStartPosition()', () => {
     afterEach(() => {
         DomTestHelper.removeElement(testID);
     });
@@ -63,11 +63,11 @@ describe('NodeInlineElement getStartPoint()', () => {
         let element = createNodeInlineElement('<span>www.example.com</span>');
 
         // Act
-        let startPoint = element.getStartPoint();
+        let startPosition = element.getStartPosition();
 
         // Assert
-        expect(startPoint.containerNode.textContent).toBe('www.example.com');
-        expect(startPoint.offset).toBe(NodeBoundary.Begin);
+        expect(startPosition.node.textContent).toBe('www.example.com');
+        expect(startPosition.offset).toBe(0);
     });
 
     it('input = <span><a><span>part1</span>text</a>text<span>part2</span>part3</span>', () => {
@@ -77,15 +77,15 @@ describe('NodeInlineElement getStartPoint()', () => {
         );
 
         // Act
-        let startPoint = element.getStartPoint();
+        let startPosition = element.getStartPosition();
 
         // Assert
-        expect(startPoint.containerNode.textContent).toBe('part1');
-        expect(startPoint.offset).toBe(NodeBoundary.Begin);
+        expect(startPosition.node.textContent).toBe('part1');
+        expect(startPosition.offset).toBe(0);
     });
 });
 
-describe('NodeInlineElement getEndPoint()', () => {
+describe('NodeInlineElement getEndPosition()', () => {
     afterEach(() => {
         DomTestHelper.removeElement(testID);
     });
@@ -95,11 +95,11 @@ describe('NodeInlineElement getEndPoint()', () => {
         let element = createNodeInlineElement('<span>www.example.com</span>');
 
         // Act
-        let endPoint = element.getEndPoint();
+        let endPosition = element.getEndPosition();
 
         // Assert
-        expect(endPoint.containerNode.textContent).toBe('www.example.com');
-        expect(endPoint.offset).toBe(15);
+        expect(endPosition.node.textContent).toBe('www.example.com');
+        expect(endPosition.offset).toBe(15);
     });
 
     it('input = <span>part1<span>part2</span><a><span>part3</span></a></span>', () => {
@@ -109,11 +109,11 @@ describe('NodeInlineElement getEndPoint()', () => {
         );
 
         // Act
-        let endPoint = element.getEndPoint();
+        let endPosition = element.getEndPosition();
 
         // Assert
-        expect(endPoint.containerNode.textContent).toBe('part3');
-        expect(endPoint.offset).toBe(5);
+        expect(endPosition.node.textContent).toBe('part3');
+        expect(endPosition.offset).toBe(5);
     });
 
     it('input = <img>', () => {
@@ -121,11 +121,11 @@ describe('NodeInlineElement getEndPoint()', () => {
         let element = createNodeInlineElement('<img>');
 
         // Act
-        let endPoint = element.getEndPoint();
+        let endPosition = element.getEndPosition();
 
         // Assert
-        expect(endPoint.containerNode.textContent).toBe('');
-        expect(endPoint.offset).toBe(NodeBoundary.End);
+        expect(endPosition.node.textContent).toBe('');
+        expect(endPosition.offset).toBe(0);
     });
 });
 
@@ -195,7 +195,7 @@ describe('NodeInlineElement contains()', () => {
         DomTestHelper.removeElement(testID);
     });
 
-    it('element contains editorPoint', () => {
+    it('element contains position', () => {
         // Arrange
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
@@ -203,19 +203,16 @@ describe('NodeInlineElement contains()', () => {
         );
         let parentBlock = new NodeBlockElement(testDiv, null);
         let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
-        let editorPoint = {
-            containerNode: testDiv.firstChild.lastChild,
-            offset: NodeBoundary.End,
-        };
+        let position = Position.create(testDiv.firstChild.lastChild, 3);
 
         // Act
-        let elementContainsEditorPoint = element.contains(editorPoint);
+        let elementContainsEditorPoint = element.contains(position);
 
         // Assert
         expect(elementContainsEditorPoint).toBe(true);
     });
 
-    it('element does not contain editorPoint', () => {
+    it('element does not contain position', () => {
         // Arrange
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
@@ -227,13 +224,10 @@ describe('NodeInlineElement contains()', () => {
             testDiv,
             parentBlock
         );
-        let editorPoint = {
-            containerNode: testDiv.firstChild.lastChild,
-            offset: NodeBoundary.End,
-        };
+        let position = Position.create(testDiv.firstChild.lastChild, Position.End);
 
         // Act
-        let elementContainsEditorPoint = element.contains(editorPoint);
+        let elementContainsEditorPoint = element.contains(position);
 
         // Assert
         expect(elementContainsEditorPoint).toBe(false);
@@ -252,7 +246,7 @@ describe('NodeInlineElement applyStyle()', () => {
         return wrapper.innerHTML;
     }
 
-    it('fromPoint = null, toPoint = null', () => {
+    it('fromPosition = null, toPosition = null', () => {
         // Arrange
         let element = createNodeInlineElement('<span>www.example.com</span>');
         let mockColor = 'red';
@@ -267,7 +261,7 @@ describe('NodeInlineElement applyStyle()', () => {
         expect(innerHTML).toBe('<span style="color: red;">www.example.com</span>');
     });
 
-    it('fromPoint != null, toPoint != null', () => {
+    it('fromPosition != null, toPosition != null', () => {
         // Arrange
         let inlineElementFactory = new InlineElementFactory(null);
         let testDiv = DomTestHelper.createElementFromContent(
@@ -276,8 +270,8 @@ describe('NodeInlineElement applyStyle()', () => {
         );
         let parentBlock = new NodeBlockElement(testDiv, null);
         let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
-        let fromPoint = { containerNode: testDiv.firstChild.firstChild, offset: 3 };
-        let toPoint = { containerNode: testDiv.firstChild.lastChild, offset: 11 };
+        let fromPosition = Position.create(testDiv.firstChild.firstChild, 3);
+        let toPosition = Position.create(testDiv.firstChild.lastChild, 11);
         let mockColor = 'red';
 
         // Act
@@ -285,8 +279,8 @@ describe('NodeInlineElement applyStyle()', () => {
             function(node: HTMLElement) {
                 node.style.color = mockColor;
             },
-            fromPoint,
-            toPoint
+            fromPosition,
+            toPosition
         );
 
         // Assert
@@ -294,7 +288,7 @@ describe('NodeInlineElement applyStyle()', () => {
         expect(innerHTML).toBe('<span>www<span style="color: red;">.example</span>.com</span>');
     });
 
-    it('fromPoint != null, toPoint = null', () => {
+    it('fromPosition != null, toPosition = null', () => {
         // Arrange
         let inlineElementFactory = new InlineElementFactory(null);
         let testDiv = DomTestHelper.createElementFromContent(
@@ -303,7 +297,7 @@ describe('NodeInlineElement applyStyle()', () => {
         );
         let parentBlock = new NodeBlockElement(testDiv, null);
         let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
-        let fromPoint = { containerNode: testDiv.firstChild.firstChild, offset: 3 };
+        let fromPosition = Position.create(testDiv.firstChild.firstChild, 3);
         let mockColor = 'red';
 
         // Act
@@ -311,8 +305,8 @@ describe('NodeInlineElement applyStyle()', () => {
             function(node: HTMLElement) {
                 node.style.color = mockColor;
             },
-            fromPoint,
-            null /*toPoint*/
+            fromPosition,
+            null /*toPosition*/
         );
 
         // Assert
@@ -320,7 +314,7 @@ describe('NodeInlineElement applyStyle()', () => {
         expect(innerHTML).toBe('<span>www<span style="color: red;">.example.com</span></span>');
     });
 
-    it('fromPoint = null, toPoint != null', () => {
+    it('fromPosition = null, toPosition != null', () => {
         // Arrange
         let inlineElementFactory = new InlineElementFactory(null);
         let testDiv = DomTestHelper.createElementFromContent(
@@ -329,7 +323,7 @@ describe('NodeInlineElement applyStyle()', () => {
         );
         let parentBlock = new NodeBlockElement(testDiv, null);
         let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
-        let toPoint = { containerNode: testDiv.firstChild.firstChild, offset: 11 };
+        let toPosition = Position.create(testDiv.firstChild.firstChild, 11);
         let mockColor = 'red';
 
         // Act
@@ -337,8 +331,8 @@ describe('NodeInlineElement applyStyle()', () => {
             function(node: HTMLElement) {
                 node.style.color = mockColor;
             },
-            null /*fromPoint*/,
-            toPoint
+            null /*fromPosition*/,
+            toPosition
         );
 
         // Assert
@@ -346,7 +340,7 @@ describe('NodeInlineElement applyStyle()', () => {
         expect(innerHTML).toBe('<span><span style="color: red;">www.example</span>.com</span>');
     });
 
-    it('fromPoint != null, toPoint != null, fromPoint = toPoint', () => {
+    it('fromPosition != null, toPosition != null, fromPosition = toPosition', () => {
         // Arrange
         let inlineElementFactory = new InlineElementFactory(null);
         let testDiv = DomTestHelper.createElementFromContent(
@@ -355,8 +349,8 @@ describe('NodeInlineElement applyStyle()', () => {
         );
         let parentBlock = new NodeBlockElement(testDiv, null);
         let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
-        let fromPoint = { containerNode: testDiv.firstChild.firstChild, offset: 3 };
-        let toPoint = { containerNode: testDiv.firstChild.firstChild, offset: 3 };
+        let fromPosition = Position.create(testDiv.firstChild.firstChild, 3);
+        let toPosition = Position.create(testDiv.firstChild.firstChild, 3);
         let mockColor = 'red';
 
         // Act
@@ -364,8 +358,8 @@ describe('NodeInlineElement applyStyle()', () => {
             function(node: HTMLElement) {
                 node.style.color = mockColor;
             },
-            fromPoint,
-            toPoint
+            fromPosition,
+            toPosition
         );
 
         // Assert
@@ -373,7 +367,7 @@ describe('NodeInlineElement applyStyle()', () => {
         expect(innerHTML).toBe('<span>www.example.com</span>');
     });
 
-    it('fromPoint != null, toPoint != null, fromPoint is after toPoint', () => {
+    it('fromPosition != null, toPosition != null, fromPosition is after toPosition', () => {
         // Arrange
         let inlineElementFactory = new InlineElementFactory(null);
         let testDiv = DomTestHelper.createElementFromContent(
@@ -382,8 +376,8 @@ describe('NodeInlineElement applyStyle()', () => {
         );
         let parentBlock = new NodeBlockElement(testDiv, null);
         let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
-        let fromPoint = { containerNode: testDiv.firstChild.firstChild, offset: 4 };
-        let toPoint = { containerNode: testDiv.firstChild.firstChild, offset: 3 };
+        let fromPosition = Position.create(testDiv.firstChild.firstChild, 4);
+        let toPosition = Position.create(testDiv.firstChild.firstChild, 3);
         let mockColor = 'red';
 
         // Act
@@ -391,8 +385,8 @@ describe('NodeInlineElement applyStyle()', () => {
             function(node: HTMLElement) {
                 node.style.color = mockColor;
             },
-            fromPoint,
-            toPoint
+            fromPosition,
+            toPosition
         );
 
         // Assert

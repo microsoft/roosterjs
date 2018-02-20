@@ -1,15 +1,14 @@
 import contains from '../utils/contains';
 import getTagOfNode from '../utils/getTagOfNode';
 import isDocumentPosition from '../utils/isDocumentPosition';
-import isEditorPointAfter from '../utils/isEditorPointAfter';
 import isNodeAfter from '../utils/isNodeAfter';
 import wrap from '../utils/wrap';
 import {
+    SelectionRangeBase,
     BlockElement,
     DocumentPosition,
-    EditorPoint,
+    Position,
     InlineElement,
-    NodeBoundary,
     NodeType,
 } from 'roosterjs-editor-types';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../domWalker/getLeafSibling';
@@ -40,29 +39,17 @@ class NodeInlineElement implements InlineElement {
     }
 
     // Get the start point of the inline element
-    public getStartPoint(): EditorPoint {
+    public getStartPosition(): Position {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest first child node from the container
-        let firstChild = this.containerNode;
-        while (firstChild.firstChild) {
-            firstChild = firstChild.firstChild;
-        }
-        return { containerNode: firstChild, offset: NodeBoundary.Begin };
+        return Position.normalize(Position.create(this.containerNode, 0));
     }
 
     // Get the end point of the inline element
-    public getEndPoint(): EditorPoint {
+    public getEndPosition(): Position {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest last child node from the container
-        let lastChild = this.containerNode;
-        while (lastChild.lastChild) {
-            lastChild = lastChild.lastChild;
-        }
-        return {
-            containerNode: lastChild,
-            offset:
-                lastChild.nodeType == NodeType.Text ? lastChild.nodeValue.length : NodeBoundary.End,
-        };
+        return Position.normalize(Position.create(this.containerNode, Position.End));
     }
 
     // Checks if an inline element is after the current inline element
@@ -71,92 +58,56 @@ class NodeInlineElement implements InlineElement {
     }
 
     // Checks if an editor point is contained in the inline element
-    public contains(editorPoint: EditorPoint): boolean {
-        let startPoint = this.getStartPoint();
-        let endPoint = this.getEndPoint();
-        return (
-            isEditorPointAfter(editorPoint, startPoint) && isEditorPointAfter(endPoint, editorPoint)
-        );
+    public contains(position: Position): boolean {
+        let start = this.getStartPosition();
+        let end = this.getEndPosition();
+        return Position.isAfter(position, start) && Position.isAfter(end, position);
     }
 
     // Apply inline style to a region of an inline element. The region is identified thorugh the from and to point
-    // The fromPoint and toPoint are optional and when bing missed, it indicates the boundary of the element
+    // The fromPosition and toPosition are optional and when bing missed, it indicates the boundary of the element
     // The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
     // when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
     // The actuall styling is done by consumer through the styler callback
-    public applyStyle(
-        styler: (node: Node) => void,
-        fromPoint?: EditorPoint,
-        toPoint?: EditorPoint
-    ): void {
+    public applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void {
         let ownerDoc = this.containerNode.ownerDocument;
 
-        let startNode: Node = null;
-        let endNode: Node = null;
-        let startOffset = NodeBoundary.Begin;
-        let endOffset = NodeBoundary.End;
-
         // Adjust the start point
-        if (fromPoint) {
-            startNode = fromPoint.containerNode;
-            startOffset = fromPoint.offset;
-            if (
-                (startNode.nodeType == NodeType.Text &&
-                    startOffset == startNode.nodeValue.length) ||
-                (startNode.nodeType == NodeType.Element && startOffset == NodeBoundary.End)
-            ) {
-                // The point is at the end of container element
-                startNode = getNextLeafSibling(this.containerNode, startNode);
-                startOffset = NodeBoundary.Begin;
-            }
-        } else {
-            startNode = this.containerNode;
-            while (startNode.firstChild) {
-                startNode = startNode.firstChild;
-                startOffset = NodeBoundary.Begin;
-            }
+        if (!from) {
+            from = Position.create(this.containerNode, 0);
+        } else if (from.isAtEnd) {
+            let nextNode = getNextLeafSibling(this.containerNode, from.node);
+            from = nextNode ? Position.create(nextNode, 0) : null;
         }
 
         // Adjust the end point
-        if (toPoint) {
-            endNode = toPoint.containerNode;
-            endOffset = toPoint.offset;
-
-            if (endOffset == NodeBoundary.Begin) {
-                // The point is at the begin of container element, use previous leaf
-                // Set endOffset to end of node
-                endNode = getPreviousLeafSibling(this.containerNode, endNode);
-                endOffset =
-                    endNode && endNode.nodeType == NodeType.Text
-                        ? endNode.nodeValue.length
-                        : NodeBoundary.End;
-            }
-        } else {
-            endNode = this.containerNode;
-            while (endNode.lastChild) {
-                endNode = endNode.lastChild;
-            }
-
-            endOffset =
-                endNode && endNode.nodeType == NodeType.Text
-                    ? endNode.nodeValue.length
-                    : NodeBoundary.End;
+        if (!to) {
+            to = Position.create(this.containerNode, Position.End);
+        } else if (to.offset == 0) {
+            let prevNode = getPreviousLeafSibling(this.containerNode, to.node);
+            to = prevNode ? Position.create(prevNode, Position.End) : null;
         }
 
-        if (!startNode || !endNode) {
+        if (!from || !to) {
             // we need a valid start and end node, if either one is null, we will just exit
             // this isn't an error, it just tells the fact we don't see a good node to apply a style
             return;
         }
 
-        while (contains(this.containerNode, startNode, true /*treatSameNodeAsContain*/)) {
+        from = Position.normalize(from);
+        to = Position.normalize(to);
+
+        let fromNode = from.node;
+        let toNode = to.node;
+        let fromOffset = from.offset;
+        while (contains(this.containerNode, fromNode, true /*treatSameNodeAsContain*/)) {
             // The code below modifies DOM. Need to get the next sibling first otherwise you won't be able to reliably get a good next sibling node
-            let nextLeafNode = getNextLeafSibling(this.containerNode, startNode);
+            let nextLeafNode = getNextLeafSibling(this.containerNode, fromNode);
 
             let withinRange =
-                startNode == endNode ||
+                fromNode == toNode ||
                 isDocumentPosition(
-                    startNode.compareDocumentPosition(endNode),
+                    fromNode.compareDocumentPosition(toNode),
                     DocumentPosition.Following
                 );
             if (!withinRange) {
@@ -166,16 +117,11 @@ class NodeInlineElement implements InlineElement {
             // Apply the style
             // If a node has only white space and new line and is in table, we ignore it,
             // otherwise the table will be distorted
-            if (
-                startNode.nodeType == NodeType.Text &&
-                startNode.nodeValue &&
-                !(startNode.nodeValue.trim() == '' && getTagOfNode(startNode.parentNode) == 'TR')
-            ) {
-                let adjustedEndOffset =
-                    startNode == endNode ? endOffset : startNode.nodeValue.length;
-                if (adjustedEndOffset > startOffset) {
-                    let len = adjustedEndOffset - startOffset;
-                    let parentNode = startNode.parentNode;
+            if (fromNode.nodeType == NodeType.Text && getTagOfNode(fromNode.parentNode) != 'TR') {
+                let adjustedEndOffset = fromNode == toNode ? to.offset : fromNode.nodeValue.length;
+                if (adjustedEndOffset > fromOffset) {
+                    let len = adjustedEndOffset - fromOffset;
+                    let parentNode = fromNode.parentNode;
                     if (
                         getTagOfNode(parentNode) == 'SPAN' &&
                         parentNode.textContent.length == len
@@ -183,20 +129,22 @@ class NodeInlineElement implements InlineElement {
                         // If the element is in a span and this element is everything of the parent
                         // apply the style on parent span
                         styler(parentNode);
-                    } else if (len == startNode.nodeValue.length) {
+                    } else if (len == fromNode.nodeValue.length) {
                         // It is whole text node
-                        styler(wrap(startNode, '<span></span>'));
+                        styler(wrap(fromNode, '<span></span>'));
                     } else {
                         // It is partial of a text node
                         let newNode = ownerDoc.createElement('SPAN');
-                        newNode.textContent = startNode.nodeValue.substring(
-                            startOffset,
+                        newNode.textContent = fromNode.nodeValue.substring(
+                            fromOffset,
                             adjustedEndOffset
                         );
 
-                        let range = ownerDoc.createRange();
-                        range.setStart(startNode, startOffset);
-                        range.setEnd(startNode, adjustedEndOffset);
+                        let selectionRange = SelectionRangeBase.create(
+                            Position.create(fromNode, fromOffset),
+                            Position.create(fromNode, adjustedEndOffset)
+                        );
+                        let range = SelectionRangeBase.toRange(selectionRange);
                         range.deleteContents();
                         range.insertNode(newNode);
                         styler(newNode);
@@ -204,8 +152,8 @@ class NodeInlineElement implements InlineElement {
                 }
             }
 
-            startNode = nextLeafNode;
-            startOffset = NodeBoundary.Begin;
+            fromNode = nextLeafNode;
+            fromOffset = 0;
         }
     }
 }

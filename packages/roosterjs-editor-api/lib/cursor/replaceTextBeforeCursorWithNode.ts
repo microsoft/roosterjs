@@ -53,7 +53,7 @@ export function validateAndGetRangeForTextBeforeCursor(
                 if (endMatched && !endOfRangeSet) {
                     range.setEnd(
                         textInline.getContainerNode(),
-                        textInline.getStartPoint().offset + nodeIndex + 1
+                        textInline.getStartPosition().offset + nodeIndex + 1
                     );
                     endOfRangeSet = true;
                 }
@@ -81,7 +81,7 @@ export function validateAndGetRangeForTextBeforeCursor(
             matchComplete = true;
             range.setStart(
                 textInline.getContainerNode(),
-                textInline.getStartPoint().offset + nodeIndex + 1
+                textInline.getStartPosition().offset + nodeIndex + 1
             );
         }
 

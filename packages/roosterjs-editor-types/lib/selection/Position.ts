@@ -1,4 +1,5 @@
 import NodeType from '../browser/NodeType';
+import DocumentPosition from '../browser/DocumentPosition';
 
 interface Position {
     readonly node: Node;
@@ -21,6 +22,7 @@ const Position = {
     create: createPosition,
     normalize: normalize,
     equal: equal,
+    isAfter: isAfter,
 };
 
 /**
@@ -80,7 +82,7 @@ function createPosition(
         default:
             let endOffset = getEndOffset(node);
             offset = Math.max(0, Math.min(<number>offsetOrPosType, endOffset));
-            isAtEnd = offset == endOffset;
+            isAtEnd = offsetOrPosType == PositionType.End || (offset > 0 && offset == endOffset);
             break;
     }
 
@@ -110,6 +112,16 @@ function normalize(position: Position): Position {
 
 function equal(p1: Position, p2: Position): boolean {
     return p1 == p2 || (p1.node == p2.node && p1.offset == p2.offset);
+}
+
+/**
+ * Checks if position 1 is after position 2
+ */
+function isAfter(position1: Position, position2: Position): boolean {
+    return position1.node == position2.node
+        ? position1.offset > position2.offset
+        : (position2.node.compareDocumentPosition(position1.node) & DocumentPosition.Following) ==
+              DocumentPosition.Following;
 }
 
 function getIndexOfNode(node: Node): number {

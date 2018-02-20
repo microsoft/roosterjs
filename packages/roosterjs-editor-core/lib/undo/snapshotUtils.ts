@@ -92,7 +92,7 @@ function insertCursorMarkerToEditorPoint(
 ): void {
     position = Position.normalize(position);
     let parentNode = position.node.parentNode;
-    if (position.offset == Position.Begin) {
+    if (position.offset == 0) {
         parentNode.insertBefore(cursorMaker, position.node);
     } else if (position.isAtEnd) {
         // otherwise, insert after

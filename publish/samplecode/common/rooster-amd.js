@@ -60,7 +60,7 @@ define(function() { return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 54);
+/******/ 	return __webpack_require__(__webpack_require__.s = 51);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -83,71 +83,69 @@ exports.getLastInlineElement = BlockElement_1.getLastInlineElement;
 exports.getInlineElementAtNode = BlockElement_1.getInlineElementAtNode;
 exports.getNextInlineElement = BlockElement_1.getNextInlineElement;
 exports.getPreviousInlineElement = BlockElement_1.getPreviousInlineElement;
-exports.getInlineElementBeforePoint = BlockElement_1.getInlineElementBeforePoint;
-exports.getInlineElementAfterPoint = BlockElement_1.getInlineElementAfterPoint;
-var ContentTraverser_1 = __webpack_require__(61);
+exports.getInlineElementBefore = BlockElement_1.getInlineElementBefore;
+exports.getInlineElementAfter = BlockElement_1.getInlineElementAfter;
+var ContentTraverser_1 = __webpack_require__(58);
 exports.ContentTraverser = ContentTraverser_1.default;
 var getLeafSibling_1 = __webpack_require__(13);
 exports.getNextLeafSibling = getLeafSibling_1.getNextLeafSibling;
 exports.getPreviousLeafSibling = getLeafSibling_1.getPreviousLeafSibling;
-var getLeafNode_1 = __webpack_require__(32);
+var getLeafNode_1 = __webpack_require__(30);
 exports.getFirstLeafNode = getLeafNode_1.getFirstLeafNode;
 exports.getLastLeafNode = getLeafNode_1.getLastLeafNode;
-var ImageInlineElement_1 = __webpack_require__(33);
+var ImageInlineElement_1 = __webpack_require__(31);
 exports.ImageInlineElement = ImageInlineElement_1.default;
-var InlineElementFactory_1 = __webpack_require__(62);
+var InlineElementFactory_1 = __webpack_require__(59);
 exports.InlineElementFactory = InlineElementFactory_1.default;
-var LinkInlineElement_1 = __webpack_require__(35);
+var LinkInlineElement_1 = __webpack_require__(33);
 exports.LinkInlineElement = LinkInlineElement_1.default;
 var NodeInlineElement_1 = __webpack_require__(7);
 exports.NodeInlineElement = NodeInlineElement_1.default;
 var PartialInlineElement_1 = __webpack_require__(10);
 exports.PartialInlineElement = PartialInlineElement_1.default;
-var TextInlineElement_1 = __webpack_require__(22);
+var TextInlineElement_1 = __webpack_require__(20);
 exports.TextInlineElement = TextInlineElement_1.default;
-var BodyScoper_1 = __webpack_require__(64);
+var BodyScoper_1 = __webpack_require__(61);
 exports.BodyScoper = BodyScoper_1.default;
-var EditorSelection_1 = __webpack_require__(23);
+var EditorSelection_1 = __webpack_require__(21);
 exports.EditorSelection = EditorSelection_1.default;
-var SelectionBlockScoper_1 = __webpack_require__(65);
+var SelectionBlockScoper_1 = __webpack_require__(62);
 exports.SelectionBlockScoper = SelectionBlockScoper_1.default;
-var SelectionScoper_1 = __webpack_require__(66);
+var SelectionScoper_1 = __webpack_require__(63);
 exports.SelectionScoper = SelectionScoper_1.default;
-var applyFormat_1 = __webpack_require__(67);
+var applyFormat_1 = __webpack_require__(64);
 exports.applyFormat = applyFormat_1.default;
 var contains_1 = __webpack_require__(11);
 exports.contains = contains_1.default;
-var convertInlineCss_1 = __webpack_require__(68);
+var convertInlineCss_1 = __webpack_require__(65);
 exports.convertInlineCss = convertInlineCss_1.default;
-var fromHtml_1 = __webpack_require__(21);
+var fromHtml_1 = __webpack_require__(19);
 exports.fromHtml = fromHtml_1.default;
-var getComputedStyle_1 = __webpack_require__(19);
+var getComputedStyle_1 = __webpack_require__(17);
 exports.getComputedStyle = getComputedStyle_1.default;
 var getTagOfNode_1 = __webpack_require__(12);
 exports.getTagOfNode = getTagOfNode_1.default;
-var isBlockElement_1 = __webpack_require__(31);
+var isBlockElement_1 = __webpack_require__(28);
 exports.isBlockElement = isBlockElement_1.default;
 var isDocumentPosition_1 = __webpack_require__(5);
 exports.isDocumentPosition = isDocumentPosition_1.default;
-var isNodeEmpty_1 = __webpack_require__(69);
+var isNodeEmpty_1 = __webpack_require__(66);
 exports.isNodeEmpty = isNodeEmpty_1.default;
-var isTextualInlineElement_1 = __webpack_require__(70);
+var isTextualInlineElement_1 = __webpack_require__(67);
 exports.isTextualInlineElement = isTextualInlineElement_1.default;
-var matchWhiteSpaces_1 = __webpack_require__(71);
+var matchWhiteSpaces_1 = __webpack_require__(68);
 exports.matchWhiteSpaces = matchWhiteSpaces_1.default;
-var normalizeEditorPoint_1 = __webpack_require__(36);
-exports.normalizeEditorPoint = normalizeEditorPoint_1.default;
-var splitParentNode_1 = __webpack_require__(72);
+var splitParentNode_1 = __webpack_require__(69);
 exports.splitParentNode = splitParentNode_1.default;
-var textToHtml_1 = __webpack_require__(73);
+var textToHtml_1 = __webpack_require__(70);
 exports.textToHtml = textToHtml_1.default;
-var unwrap_1 = __webpack_require__(74);
+var unwrap_1 = __webpack_require__(71);
 exports.unwrap = unwrap_1.default;
-var wrap_1 = __webpack_require__(34);
+var wrap_1 = __webpack_require__(32);
 exports.wrap = wrap_1.default;
-var wrapAll_1 = __webpack_require__(75);
+var wrapAll_1 = __webpack_require__(72);
 exports.wrapAll = wrapAll_1.default;
-var VTable_1 = __webpack_require__(76);
+var VTable_1 = __webpack_require__(73);
 exports.VTable = VTable_1.default;
 
 
@@ -158,18 +156,11 @@ exports.VTable = VTable_1.default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Editor_1 = __webpack_require__(57);
-exports.Editor = Editor_1.default;
-var Undo_1 = __webpack_require__(27);
-exports.Undo = Undo_1.default;
-var BrowserData_1 = __webpack_require__(16);
-exports.browserData = BrowserData_1.default;
-var eventDataCacheUtils_1 = __webpack_require__(81);
-exports.clearEventDataCache = eventDataCacheUtils_1.clearEventDataCache;
-exports.cacheGetEventData = eventDataCacheUtils_1.cacheGetEventData;
-var snapshotUtils_1 = __webpack_require__(28);
-exports.buildSnapshot = snapshotUtils_1.buildSnapshot;
-exports.restoreSnapshot = snapshotUtils_1.restoreSnapshot;
+var Position_1 = __webpack_require__(27);
+exports.Position = Position_1.default;
+var SelectionRange_1 = __webpack_require__(57);
+exports.SelectionRangeBase = SelectionRange_1.default;
+exports.SelectionRange = SelectionRange_1.SelectionRange;
 
 
 /***/ }),
@@ -179,11 +170,18 @@ exports.restoreSnapshot = snapshotUtils_1.restoreSnapshot;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Position_1 = __webpack_require__(29);
-exports.Position = Position_1.default;
-var SelectionRange_1 = __webpack_require__(60);
-exports.SelectionRangeBase = SelectionRange_1.default;
-exports.SelectionRange = SelectionRange_1.SelectionRange;
+var Editor_1 = __webpack_require__(54);
+exports.Editor = Editor_1.default;
+var Undo_1 = __webpack_require__(25);
+exports.Undo = Undo_1.default;
+var BrowserData_1 = __webpack_require__(16);
+exports.browserData = BrowserData_1.default;
+var eventDataCacheUtils_1 = __webpack_require__(78);
+exports.clearEventDataCache = eventDataCacheUtils_1.clearEventDataCache;
+exports.cacheGetEventData = eventDataCacheUtils_1.cacheGetEventData;
+var snapshotUtils_1 = __webpack_require__(26);
+exports.buildSnapshot = snapshotUtils_1.buildSnapshot;
+exports.restoreSnapshot = snapshotUtils_1.restoreSnapshot;
 
 
 /***/ }),
@@ -235,12 +233,12 @@ function isIntersectWithNodeRange(node, range) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cacheGetCursorEventData_1 = __webpack_require__(82);
+var cacheGetCursorEventData_1 = __webpack_require__(79);
 exports.cacheGetCursorEventData = cacheGetCursorEventData_1.default;
 exports.clearCursorEventDataCache = cacheGetCursorEventData_1.clearCursorEventDataCache;
-var CursorData_1 = __webpack_require__(25);
+var CursorData_1 = __webpack_require__(23);
 exports.CursorData = CursorData_1.default;
-var getCursorRect_1 = __webpack_require__(83);
+var getCursorRect_1 = __webpack_require__(80);
 exports.getCursorRect = getCursorRect_1.default;
 var getNodeAtCursor_1 = __webpack_require__(6);
 exports.getNodeAtCursor = getNodeAtCursor_1.default;
@@ -248,66 +246,66 @@ exports.cacheGetListElement = getNodeAtCursor_1.cacheGetListElement;
 exports.cacheGetNodeAtCursor = getNodeAtCursor_1.cacheGetNodeAtCursor;
 var queryNodesWithSelection_1 = __webpack_require__(3);
 exports.queryNodesWithSelection = queryNodesWithSelection_1.default;
-var replaceRangeWithNode_1 = __webpack_require__(41);
+var replaceRangeWithNode_1 = __webpack_require__(38);
 exports.replaceRangeWithNode = replaceRangeWithNode_1.default;
-var replaceTextBeforeCursorWithNode_1 = __webpack_require__(84);
+var replaceTextBeforeCursorWithNode_1 = __webpack_require__(81);
 exports.replaceTextBeforeCursorWithNode = replaceTextBeforeCursorWithNode_1.default;
 exports.validateAndGetRangeForTextBeforeCursor = replaceTextBeforeCursorWithNode_1.validateAndGetRangeForTextBeforeCursor;
-var cacheGetListState_1 = __webpack_require__(42);
+var cacheGetListState_1 = __webpack_require__(39);
 exports.cacheGetListState = cacheGetListState_1.default;
-var clearFormat_1 = __webpack_require__(85);
+var clearFormat_1 = __webpack_require__(82);
 exports.clearFormat = clearFormat_1.default;
-var createLink_1 = __webpack_require__(86);
+var createLink_1 = __webpack_require__(83);
 exports.createLink = createLink_1.default;
-var getFormatState_1 = __webpack_require__(48);
+var getFormatState_1 = __webpack_require__(45);
 exports.getFormatState = getFormatState_1.default;
-var insertImage_1 = __webpack_require__(88);
+var insertImage_1 = __webpack_require__(85);
 exports.insertImage = insertImage_1.default;
-var insertTable_1 = __webpack_require__(89);
+var insertTable_1 = __webpack_require__(86);
 exports.insertTable = insertTable_1.default;
-var editTable_1 = __webpack_require__(90);
+var editTable_1 = __webpack_require__(87);
 exports.editTable = editTable_1.default;
-var formatTable_1 = __webpack_require__(49);
+var formatTable_1 = __webpack_require__(46);
 exports.formatTable = formatTable_1.default;
-var removeLink_1 = __webpack_require__(91);
+var removeLink_1 = __webpack_require__(88);
 exports.removeLink = removeLink_1.default;
-var setAlignment_1 = __webpack_require__(92);
+var setAlignment_1 = __webpack_require__(89);
 exports.setAlignment = setAlignment_1.default;
-var setBackgroundColor_1 = __webpack_require__(43);
+var setBackgroundColor_1 = __webpack_require__(40);
 exports.setBackgroundColor = setBackgroundColor_1.default;
-var setTextColor_1 = __webpack_require__(46);
+var setTextColor_1 = __webpack_require__(43);
 exports.setTextColor = setTextColor_1.default;
-var setDirection_1 = __webpack_require__(93);
+var setDirection_1 = __webpack_require__(90);
 exports.setDirection = setDirection_1.default;
-var setFontName_1 = __webpack_require__(44);
+var setFontName_1 = __webpack_require__(41);
 exports.setFontName = setFontName_1.default;
-var setFontSize_1 = __webpack_require__(45);
+var setFontSize_1 = __webpack_require__(42);
 exports.setFontSize = setFontSize_1.default;
-var setImageAltText_1 = __webpack_require__(94);
+var setImageAltText_1 = __webpack_require__(91);
 exports.setImageAltText = setImageAltText_1.default;
-var setIndentation_1 = __webpack_require__(95);
+var setIndentation_1 = __webpack_require__(92);
 exports.setIndentation = setIndentation_1.default;
-var toggleBold_1 = __webpack_require__(96);
+var toggleBold_1 = __webpack_require__(93);
 exports.toggleBold = toggleBold_1.default;
-var toggleBullet_1 = __webpack_require__(50);
+var toggleBullet_1 = __webpack_require__(47);
 exports.toggleBullet = toggleBullet_1.default;
-var toggleItalic_1 = __webpack_require__(97);
+var toggleItalic_1 = __webpack_require__(94);
 exports.toggleItalic = toggleItalic_1.default;
-var toggleNumbering_1 = __webpack_require__(98);
+var toggleNumbering_1 = __webpack_require__(95);
 exports.toggleNumbering = toggleNumbering_1.default;
-var toggleBlockQuote_1 = __webpack_require__(99);
+var toggleBlockQuote_1 = __webpack_require__(96);
 exports.toggleBlockQuote = toggleBlockQuote_1.default;
-var toggleStrikethrough_1 = __webpack_require__(100);
+var toggleStrikethrough_1 = __webpack_require__(97);
 exports.toggleStrikethrough = toggleStrikethrough_1.default;
-var toggleSubscript_1 = __webpack_require__(101);
+var toggleSubscript_1 = __webpack_require__(98);
 exports.toggleSubscript = toggleSubscript_1.default;
-var toggleSuperscript_1 = __webpack_require__(102);
+var toggleSuperscript_1 = __webpack_require__(99);
 exports.toggleSuperscript = toggleSuperscript_1.default;
-var toggleUnderline_1 = __webpack_require__(103);
+var toggleUnderline_1 = __webpack_require__(100);
 exports.toggleUnderline = toggleUnderline_1.default;
-var toggleHeader_1 = __webpack_require__(104);
+var toggleHeader_1 = __webpack_require__(101);
 exports.toggleHeader = toggleHeader_1.default;
-var matchLink_1 = __webpack_require__(47);
+var matchLink_1 = __webpack_require__(44);
 exports.matchLink = matchLink_1.default;
 
 
@@ -341,7 +339,7 @@ exports.default = isDocumentPosition;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_core_1 = __webpack_require__(1);
+var roosterjs_editor_core_1 = __webpack_require__(2);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 /**
  * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
@@ -409,9 +407,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(11);
 var getTagOfNode_1 = __webpack_require__(12);
 var isDocumentPosition_1 = __webpack_require__(5);
-var isEditorPointAfter_1 = __webpack_require__(17);
-var isNodeAfter_1 = __webpack_require__(18);
-var wrap_1 = __webpack_require__(34);
+var isNodeAfter_1 = __webpack_require__(29);
+var wrap_1 = __webpack_require__(32);
+var roosterjs_editor_types_1 = __webpack_require__(1);
 var getLeafSibling_1 = __webpack_require__(13);
 // This presents an inline element that can be reprented by a single html node.
 // This serves as base for most inline element as it contains most implentation
@@ -438,140 +436,100 @@ var NodeInlineElement = /** @class */ (function () {
         return this.parentBlock;
     };
     // Get the start point of the inline element
-    NodeInlineElement.prototype.getStartPoint = function () {
+    NodeInlineElement.prototype.getStartPosition = function () {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest first child node from the container
-        var firstChild = this.containerNode;
-        while (firstChild.firstChild) {
-            firstChild = firstChild.firstChild;
-        }
-        return { containerNode: firstChild, offset: 0 /* Begin */ };
+        return roosterjs_editor_types_1.Position.normalize(roosterjs_editor_types_1.Position.create(this.containerNode, 0));
     };
     // Get the end point of the inline element
-    NodeInlineElement.prototype.getEndPoint = function () {
+    NodeInlineElement.prototype.getEndPosition = function () {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest last child node from the container
-        var lastChild = this.containerNode;
-        while (lastChild.lastChild) {
-            lastChild = lastChild.lastChild;
-        }
-        return {
-            containerNode: lastChild,
-            offset: lastChild.nodeType == 3 /* Text */ ? lastChild.nodeValue.length : 1 /* End */,
-        };
+        return roosterjs_editor_types_1.Position.normalize(roosterjs_editor_types_1.Position.create(this.containerNode, roosterjs_editor_types_1.Position.End));
     };
     // Checks if an inline element is after the current inline element
     NodeInlineElement.prototype.isAfter = function (inlineElement) {
         return isNodeAfter_1.default(this.containerNode, inlineElement.getContainerNode());
     };
     // Checks if an editor point is contained in the inline element
-    NodeInlineElement.prototype.contains = function (editorPoint) {
-        var startPoint = this.getStartPoint();
-        var endPoint = this.getEndPoint();
-        return (isEditorPointAfter_1.default(editorPoint, startPoint) && isEditorPointAfter_1.default(endPoint, editorPoint));
+    NodeInlineElement.prototype.contains = function (position) {
+        var start = this.getStartPosition();
+        var end = this.getEndPosition();
+        return roosterjs_editor_types_1.Position.isAfter(position, start) && roosterjs_editor_types_1.Position.isAfter(end, position);
     };
     // Apply inline style to a region of an inline element. The region is identified thorugh the from and to point
-    // The fromPoint and toPoint are optional and when bing missed, it indicates the boundary of the element
+    // The fromPosition and toPosition are optional and when bing missed, it indicates the boundary of the element
     // The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
     // when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
     // The actuall styling is done by consumer through the styler callback
-    NodeInlineElement.prototype.applyStyle = function (styler, fromPoint, toPoint) {
+    NodeInlineElement.prototype.applyStyle = function (styler, from, to) {
         var ownerDoc = this.containerNode.ownerDocument;
-        var startNode = null;
-        var endNode = null;
-        var startOffset = 0 /* Begin */;
-        var endOffset = 1 /* End */;
         // Adjust the start point
-        if (fromPoint) {
-            startNode = fromPoint.containerNode;
-            startOffset = fromPoint.offset;
-            if ((startNode.nodeType == 3 /* Text */ &&
-                startOffset == startNode.nodeValue.length) ||
-                (startNode.nodeType == 1 /* Element */ && startOffset == 1 /* End */)) {
-                // The point is at the end of container element
-                startNode = getLeafSibling_1.getNextLeafSibling(this.containerNode, startNode);
-                startOffset = 0 /* Begin */;
-            }
+        if (!from) {
+            from = roosterjs_editor_types_1.Position.create(this.containerNode, 0);
         }
-        else {
-            startNode = this.containerNode;
-            while (startNode.firstChild) {
-                startNode = startNode.firstChild;
-                startOffset = 0 /* Begin */;
-            }
+        else if (from.isAtEnd) {
+            var nextNode = getLeafSibling_1.getNextLeafSibling(this.containerNode, from.node);
+            from = nextNode ? roosterjs_editor_types_1.Position.create(nextNode, 0) : null;
         }
         // Adjust the end point
-        if (toPoint) {
-            endNode = toPoint.containerNode;
-            endOffset = toPoint.offset;
-            if (endOffset == 0 /* Begin */) {
-                // The point is at the begin of container element, use previous leaf
-                // Set endOffset to end of node
-                endNode = getLeafSibling_1.getPreviousLeafSibling(this.containerNode, endNode);
-                endOffset =
-                    endNode && endNode.nodeType == 3 /* Text */
-                        ? endNode.nodeValue.length
-                        : 1 /* End */;
-            }
+        if (!to) {
+            to = roosterjs_editor_types_1.Position.create(this.containerNode, roosterjs_editor_types_1.Position.End);
         }
-        else {
-            endNode = this.containerNode;
-            while (endNode.lastChild) {
-                endNode = endNode.lastChild;
-            }
-            endOffset =
-                endNode && endNode.nodeType == 3 /* Text */
-                    ? endNode.nodeValue.length
-                    : 1 /* End */;
+        else if (to.offset == 0) {
+            var prevNode = getLeafSibling_1.getPreviousLeafSibling(this.containerNode, to.node);
+            to = prevNode ? roosterjs_editor_types_1.Position.create(prevNode, roosterjs_editor_types_1.Position.End) : null;
         }
-        if (!startNode || !endNode) {
+        if (!from || !to) {
             // we need a valid start and end node, if either one is null, we will just exit
             // this isn't an error, it just tells the fact we don't see a good node to apply a style
             return;
         }
-        while (contains_1.default(this.containerNode, startNode, true /*treatSameNodeAsContain*/)) {
+        from = roosterjs_editor_types_1.Position.normalize(from);
+        to = roosterjs_editor_types_1.Position.normalize(to);
+        var fromNode = from.node;
+        var toNode = to.node;
+        var fromOffset = from.offset;
+        while (contains_1.default(this.containerNode, fromNode, true /*treatSameNodeAsContain*/)) {
             // The code below modifies DOM. Need to get the next sibling first otherwise you won't be able to reliably get a good next sibling node
-            var nextLeafNode = getLeafSibling_1.getNextLeafSibling(this.containerNode, startNode);
-            var withinRange = startNode == endNode ||
-                isDocumentPosition_1.default(startNode.compareDocumentPosition(endNode), 4 /* Following */);
+            var nextLeafNode = getLeafSibling_1.getNextLeafSibling(this.containerNode, fromNode);
+            var withinRange = fromNode == toNode ||
+                isDocumentPosition_1.default(fromNode.compareDocumentPosition(toNode), 4 /* Following */);
             if (!withinRange) {
                 break;
             }
             // Apply the style
             // If a node has only white space and new line and is in table, we ignore it,
             // otherwise the table will be distorted
-            if (startNode.nodeType == 3 /* Text */ &&
-                startNode.nodeValue &&
-                !(startNode.nodeValue.trim() == '' && getTagOfNode_1.default(startNode.parentNode) == 'TR')) {
-                var adjustedEndOffset = startNode == endNode ? endOffset : startNode.nodeValue.length;
-                if (adjustedEndOffset > startOffset) {
-                    var len = adjustedEndOffset - startOffset;
-                    var parentNode = startNode.parentNode;
+            if (fromNode.nodeType == 3 /* Text */ && getTagOfNode_1.default(fromNode.parentNode) != 'TR') {
+                var adjustedEndOffset = fromNode == toNode ? to.offset : fromNode.nodeValue.length;
+                if (adjustedEndOffset > fromOffset) {
+                    var len = adjustedEndOffset - fromOffset;
+                    var parentNode = fromNode.parentNode;
                     if (getTagOfNode_1.default(parentNode) == 'SPAN' &&
                         parentNode.textContent.length == len) {
                         // If the element is in a span and this element is everything of the parent
                         // apply the style on parent span
                         styler(parentNode);
                     }
-                    else if (len == startNode.nodeValue.length) {
+                    else if (len == fromNode.nodeValue.length) {
                         // It is whole text node
-                        styler(wrap_1.default(startNode, '<span></span>'));
+                        styler(wrap_1.default(fromNode, '<span></span>'));
                     }
                     else {
                         // It is partial of a text node
                         var newNode = ownerDoc.createElement('SPAN');
-                        newNode.textContent = startNode.nodeValue.substring(startOffset, adjustedEndOffset);
-                        var range = ownerDoc.createRange();
-                        range.setStart(startNode, startOffset);
-                        range.setEnd(startNode, adjustedEndOffset);
+                        newNode.textContent = fromNode.nodeValue.substring(fromOffset, adjustedEndOffset);
+                        var selectionRange = roosterjs_editor_types_1.SelectionRangeBase.create(roosterjs_editor_types_1.Position.create(fromNode, fromOffset), roosterjs_editor_types_1.Position.create(fromNode, adjustedEndOffset));
+                        var range = roosterjs_editor_types_1.SelectionRangeBase.toRange(selectionRange);
                         range.deleteContents();
                         range.insertNode(newNode);
                         styler(newNode);
                     }
                 }
             }
-            startNode = nextLeafNode;
-            startOffset = 0 /* Begin */;
+            fromNode = nextLeafNode;
+            fromOffset = 0;
         }
     };
     return NodeInlineElement;
@@ -586,7 +544,7 @@ exports.default = NodeInlineElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var isRangeInContainer_1 = __webpack_require__(37);
+var isRangeInContainer_1 = __webpack_require__(34);
 function getLiveRange(core) {
     var selection = core.document.defaultView.getSelection();
     if (selection && selection.rangeCount > 0) {
@@ -610,11 +568,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(10);
 var contains_1 = __webpack_require__(11);
 var getTagOfNode_1 = __webpack_require__(12);
-var isBlockElement_1 = __webpack_require__(31);
+var isBlockElement_1 = __webpack_require__(28);
 var isDocumentPosition_1 = __webpack_require__(5);
-var isNodeAfter_1 = __webpack_require__(18);
-var shouldSkipNode_1 = __webpack_require__(20);
-var getLeafNode_1 = __webpack_require__(32);
+var isNodeAfter_1 = __webpack_require__(29);
+var shouldSkipNode_1 = __webpack_require__(18);
+var getLeafNode_1 = __webpack_require__(30);
 var getLeafSibling_1 = __webpack_require__(13);
 // Get the inline element at a node
 function getInlineElementAtNode(rootNode, node, inlineElementFactory) {
@@ -673,13 +631,13 @@ exports.getPreviousInlineElement = getPreviousInlineElement;
 // There is a good possibility that the cursor is in middle of an inline element (i.e. mid of a text node)
 // in this case, we only want to return what is before cursor (a partial of an inline) to indicate
 // that we're in middle. The logic is largely to detect if the editor point runs across an inline element
-function getInlineElementBeforePoint(rootNode, position, inlineElementFactory) {
+function getInlineElementBefore(rootNode, position, inlineElementFactory) {
     var inlineElement;
-    var containerNode = position.containerNode;
+    var containerNode = position.node;
     var offset = position.offset;
     if (containerNode) {
         var isPartial = false;
-        if (offset == 0 /* Begin */) {
+        if (offset == 0 && !position.isAtEnd) {
             // The point is at the begin of container element
             containerNode = getLeafSibling_1.getPreviousLeafSibling(rootNode, containerNode);
         }
@@ -702,41 +660,37 @@ function getInlineElementBeforePoint(rootNode, position, inlineElementFactory) {
     }
     return inlineElement;
 }
-exports.getInlineElementBeforePoint = getInlineElementBeforePoint;
+exports.getInlineElementBefore = getInlineElementBefore;
 // Similar to getInlineElementBeforePoint, to get inline element after an editor point
-function getInlineElementAfterPoint(rootNode, editorPoint, inlineElementFactory) {
+function getInlineElementAfter(rootNode, position, inlineElementFactory) {
     var inlineElement;
-    var containerNode = editorPoint.containerNode;
-    var offset = editorPoint.offset;
-    if (containerNode) {
+    if (position) {
         var isPartial = false;
-        if ((containerNode.nodeType == 3 /* Text */ && offset == containerNode.nodeValue.length) ||
-            (containerNode.nodeType == 1 /* Element */ && offset == 1 /* End */)) {
+        var node = position.node;
+        if (position.isAtEnd) {
             // The point is at the end of container element
-            containerNode = getLeafSibling_1.getNextLeafSibling(rootNode, containerNode);
+            node = getLeafSibling_1.getNextLeafSibling(rootNode, node);
         }
-        else if (containerNode.nodeType == 3 /* Text */ &&
-            offset > 0 /* Begin */ &&
-            offset < containerNode.nodeValue.length) {
+        else if (position.node.nodeType == 3 /* Text */ && position.offset > 0) {
             // Run across a text node, this inline has to be partial
             isPartial = true;
         }
-        if (containerNode && shouldSkipNode_1.default(containerNode)) {
-            containerNode = getLeafSibling_1.getNextLeafSibling(rootNode, containerNode);
+        if (node && shouldSkipNode_1.default(node)) {
+            node = getLeafSibling_1.getNextLeafSibling(rootNode, node);
         }
-        inlineElement = containerNode
-            ? getInlineElementAtNode(rootNode, containerNode, inlineElementFactory)
+        inlineElement = node
+            ? getInlineElementAtNode(rootNode, node, inlineElementFactory)
             : null;
         // if the inline element we get in the end wraps (contains) the editor point, this has to be a partial
         // the point runs across a test node in a link
-        isPartial = isPartial || (inlineElement && inlineElement.contains(editorPoint));
+        isPartial = isPartial || (inlineElement && inlineElement.contains(position));
         if (isPartial && inlineElement) {
-            inlineElement = new PartialInlineElement_1.default(inlineElement, editorPoint, null);
+            inlineElement = new PartialInlineElement_1.default(inlineElement, position, null);
         }
     }
     return inlineElement;
 }
-exports.getInlineElementAfterPoint = getInlineElementAfterPoint;
+exports.getInlineElementAfter = getInlineElementAfter;
 // Checks if the node is a BR
 function isBrElement(node) {
     return getTagOfNode_1.default(node) == 'BR';
@@ -1195,21 +1149,18 @@ exports.getBlockElementAtNode = getBlockElementAtNode;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var editorPointEquals_1 = __webpack_require__(30);
 var isDocumentPosition_1 = __webpack_require__(5);
-var isEditorPointAfter_1 = __webpack_require__(17);
+var roosterjs_editor_types_1 = __webpack_require__(1);
 // This is a special version of inline element that identifies a section of an inline element
 // We often have the need to cut an inline element in half and perform some operation only on half of an inline element
 // i.e. users select only some text of a text node and apply format, in that case, format has to happen on partial of an inline element
 // PartialInlineElement is implemented in a way that decorate another full inline element with its own override on methods like isAfter
 // It also offers some special methods that others don't have, i.e. nextInlineElement etc.
 var PartialInlineElement = /** @class */ (function () {
-    function PartialInlineElement(inlineElement, startPoint, endPoint) {
-        if (startPoint === void 0) { startPoint = null; }
-        if (endPoint === void 0) { endPoint = null; }
+    function PartialInlineElement(inlineElement, start, end) {
         this.inlineElement = inlineElement;
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
+        this.start = start;
+        this.end = end;
     }
     // Get the full inline element that this partial inline decorates
     PartialInlineElement.prototype.getDecoratedInline = function () {
@@ -1225,31 +1176,30 @@ var PartialInlineElement = /** @class */ (function () {
     };
     // Gets the text content
     PartialInlineElement.prototype.getTextContent = function () {
-        var range = this.getRange();
-        return range.toString();
+        var node = this.inlineElement.getContainerNode();
+        var range = roosterjs_editor_types_1.SelectionRangeBase.create(this.start || roosterjs_editor_types_1.Position.create(node, roosterjs_editor_types_1.Position.Before), this.end || roosterjs_editor_types_1.Position.create(node, roosterjs_editor_types_1.Position.After));
+        return roosterjs_editor_types_1.SelectionRangeBase.toRange(range).toString();
     };
-    // Gets the start point
-    PartialInlineElement.prototype.getStartPoint = function () {
-        return this.startPoint ? this.startPoint : this.inlineElement.getStartPoint();
+    // Gets the start position
+    PartialInlineElement.prototype.getStartPosition = function () {
+        return this.start || this.inlineElement.getStartPosition();
     };
-    // Gets the end point
-    PartialInlineElement.prototype.getEndPoint = function () {
-        return this.endPoint ? this.endPoint : this.inlineElement.getEndPoint();
+    // Gets the end position
+    PartialInlineElement.prototype.getEndPosition = function () {
+        return this.end || this.inlineElement.getEndPosition();
     };
     // Checks if the partial is on start point
     PartialInlineElement.prototype.isStartPartial = function () {
-        return this.startPoint != null;
+        return !!this.start;
     };
     // Checks if the partial is on the end point
     PartialInlineElement.prototype.isEndPartial = function () {
-        return this.endPoint != null;
+        return !!this.end;
     };
     Object.defineProperty(PartialInlineElement.prototype, "nextInlineElement", {
         // Get next partial inline element if it is not at the end boundary yet
         get: function () {
-            return this.endPoint
-                ? new PartialInlineElement(this.inlineElement, this.endPoint, null)
-                : null;
+            return this.end && new PartialInlineElement(this.inlineElement, this.end, null);
         },
         enumerable: true,
         configurable: true
@@ -1257,17 +1207,14 @@ var PartialInlineElement = /** @class */ (function () {
     Object.defineProperty(PartialInlineElement.prototype, "previousInlineElement", {
         // Get previous partial inline element if it is not at the begin boundary yet
         get: function () {
-            return this.startPoint != null
-                ? new PartialInlineElement(this.inlineElement, null, this.startPoint)
-                : null;
+            return this.start && new PartialInlineElement(this.inlineElement, null, this.start);
         },
         enumerable: true,
         configurable: true
     });
-    // Checks if it contains an editor point
-    PartialInlineElement.prototype.contains = function (editorPoint) {
-        return (isEditorPointAfter_1.default(editorPoint, this.getStartPoint()) &&
-            isEditorPointAfter_1.default(this.getEndPoint(), editorPoint));
+    // Checks if it contains a position
+    PartialInlineElement.prototype.contains = function (position) {
+        return roosterjs_editor_types_1.Position.isAfter(position, this.getStartPosition()) && roosterjs_editor_types_1.Position.isAfter(this.getEndPosition(), position);
     };
     // Check if this inline element is after the other inline element
     PartialInlineElement.prototype.isAfter = function (inlineElement) {
@@ -1278,48 +1225,26 @@ var PartialInlineElement = /** @class */ (function () {
             .compareDocumentPosition(this.getContainerNode());
         var isAfter = isDocumentPosition_1.default(documentPosition, 4 /* Following */);
         // If node level is not "is after", need to do extra check if the other inline element is also a partial that decorates same inline element
-        // and this partical is partial on start (this.startPoint != null)
+        // and this partical is partial on start (this.startPosition != null)
         // The idea here is to take this partial's start to compare with the other inline end. We consider "is after" only when
         // this partial's start is after or same as the other inline's end
         if (!isAfter &&
             documentPosition == 0 /* Same */ &&
             inlineElement instanceof PartialInlineElement &&
-            this.startPoint) {
+            this.start) {
             // get partial's end
             var otherInline = inlineElement;
-            var otherInlineEndPoint = otherInline.getEndPoint();
+            var otherInlineEndPosition = otherInline.getEndPosition();
             // this partial's start
-            var thisStartPoint = this.getStartPoint();
-            isAfter =
-                isEditorPointAfter_1.default(thisStartPoint, otherInlineEndPoint) ||
-                    editorPointEquals_1.default(thisStartPoint, otherInlineEndPoint);
+            var thisStartPosition = this.getStartPosition();
+            isAfter = roosterjs_editor_types_1.Position.isAfter(thisStartPosition, otherInlineEndPosition) ||
+                roosterjs_editor_types_1.Position.equal(thisStartPosition, otherInlineEndPosition);
         }
         return isAfter;
     };
     // apply style
-    PartialInlineElement.prototype.applyStyle = function (styler, fromPoint, toPoint) {
-        this.inlineElement.applyStyle(styler, fromPoint ? fromPoint : this.startPoint, toPoint ? toPoint : this.endPoint);
-    };
-    // get the entire inline element as a range
-    PartialInlineElement.prototype.getRange = function () {
-        var ownerDoc = this.inlineElement.getContainerNode().ownerDocument;
-        var range = null;
-        if (ownerDoc) {
-            range = ownerDoc.createRange();
-            if (this.startPoint) {
-                range.setStart(this.startPoint.containerNode, this.startPoint.offset);
-            }
-            else {
-                range.setStartBefore(this.inlineElement.getContainerNode());
-            }
-            if (this.endPoint) {
-                range.setEnd(this.endPoint.containerNode, this.endPoint.offset);
-            }
-            else {
-                range.setEndAfter(this.inlineElement.getContainerNode());
-            }
-        }
-        return range;
+    PartialInlineElement.prototype.applyStyle = function (styler, from, to) {
+        this.inlineElement.applyStyle(styler, from || this.start, to || this.end);
     };
     return PartialInlineElement;
 }());
@@ -1337,10 +1262,10 @@ var isDocumentPosition_1 = __webpack_require__(5);
 // Test if a node contains another node
 function contains(container, contained, treatSameNodeAsContain) {
     if (treatSameNodeAsContain === void 0) { treatSameNodeAsContain = false; }
-    return container &&
+    return (container &&
         contained &&
         ((treatSameNodeAsContain && container == contained) ||
-            isDocumentPosition_1.default(container.compareDocumentPosition(contained), 16 /* ContainedBy */));
+            isDocumentPosition_1.default(container.compareDocumentPosition(contained), 16 /* ContainedBy */)));
 }
 exports.default = contains;
 
@@ -1368,7 +1293,7 @@ exports.default = getTagOfNode;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(11);
-var shouldSkipNode_1 = __webpack_require__(20);
+var shouldSkipNode_1 = __webpack_require__(18);
 function getLeafSibling(rootNode, startNode, isNext) {
     var result = null;
     var getSibling = isNext
@@ -1424,9 +1349,9 @@ exports.getPreviousLeafSibling = getPreviousLeafSibling;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_types_1 = __webpack_require__(2);
-var hasFocus_1 = __webpack_require__(24);
-var isRangeInContainer_1 = __webpack_require__(37);
+var roosterjs_editor_types_1 = __webpack_require__(1);
+var hasFocus_1 = __webpack_require__(22);
+var isRangeInContainer_1 = __webpack_require__(34);
 function select(core, arg1, arg2, arg3, arg4) {
     var rawRange;
     if (arg1 instanceof Range) {
@@ -1449,7 +1374,10 @@ function select(core, arg1, arg2, arg3, arg4) {
             }
             else {
                 start = roosterjs_editor_types_1.Position.create(arg1, arg2);
-                end = arg3 instanceof Node ? roosterjs_editor_types_1.Position.create(arg3, arg4) : null;
+                end =
+                    arg3 instanceof Node
+                        ? roosterjs_editor_types_1.Position.create(arg3, arg4)
+                        : null;
             }
             selectionRangeBase = roosterjs_editor_types_1.SelectionRangeBase.create(start, end);
         }
@@ -1480,7 +1408,7 @@ exports.default = select;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_types_1 = __webpack_require__(2);
+var roosterjs_editor_types_1 = __webpack_require__(1);
 var ZERO_WIDTH_SPACE = '&#8203;';
 // Apply inline style to collapsed selection
 // Use case is that users do not select anything, and then choose a style first (i.e. a font name), and then type and expect text to have the style
@@ -1626,40 +1554,6 @@ exports.default = browserData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var isNodeAfter_1 = __webpack_require__(18);
-// Checks if point1 is after point2
-function isEditorPointAfter(point1, point2) {
-    return point1.containerNode == point2.containerNode
-        ? point1.offset > point2.offset
-        : isNodeAfter_1.default(point1.containerNode, point2.containerNode);
-}
-exports.default = isEditorPointAfter;
-
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var isDocumentPosition_1 = __webpack_require__(5);
-// Checks if node1 is after node2
-function isNodeAfter(node1, node2) {
-    return !!(node1 &&
-        node2 &&
-        isDocumentPosition_1.default(node2.compareDocumentPosition(node1), 4 /* Following */));
-}
-exports.default = isNodeAfter;
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
 function getComputedStyle(node, styleNames) {
     if (styleNames === void 0) { styleNames = ['font-family', 'font-size', 'color', 'background-color']; }
     var result = [];
@@ -1678,13 +1572,13 @@ exports.default = getComputedStyle;
 
 
 /***/ }),
-/* 20 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(19);
+var getComputedStyle_1 = __webpack_require__(17);
 // Check if it is an empty text node
 function isEmptyTextNode(node) {
     return !!(node &&
@@ -1722,7 +1616,7 @@ exports.default = shouldSkipNode;
 
 
 /***/ }),
-/* 21 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1742,7 +1636,7 @@ exports.default = fromHtml;
 
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1771,29 +1665,22 @@ exports.default = TextInlineElement;
 
 
 /***/ }),
-/* 23 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(10);
-var editorPointEquals_1 = __webpack_require__(30);
-var isEditorPointAfter_1 = __webpack_require__(17);
-var normalizeEditorPoint_1 = __webpack_require__(36);
+var roosterjs_editor_types_1 = __webpack_require__(1);
 var BlockElement_1 = __webpack_require__(9);
 // This is a utility like class that produces editor point/inline/block element around or within a selection range
 var EditorSelection = /** @class */ (function () {
-    function EditorSelection(rootNode, selectionRange, inlineElementFactory) {
+    function EditorSelection(rootNode, range, inlineElementFactory) {
         this.rootNode = rootNode;
-        this.selectionRange = selectionRange;
         this.inlineElementFactory = inlineElementFactory;
         this.startEndCalculated = false;
-        // compute the start and end point
-        this.startPoint = normalizeEditorPoint_1.default(this.selectionRange.startContainer, this.selectionRange.startOffset);
-        this.endPoint = this.selectionRange.collapsed
-            ? this.startPoint
-            : normalizeEditorPoint_1.default(this.selectionRange.endContainer, this.selectionRange.endOffset);
+        this.selectionRange = roosterjs_editor_types_1.SelectionRangeBase.create(roosterjs_editor_types_1.Position.normalize(range.start), roosterjs_editor_types_1.Position.normalize(range.end));
     }
     Object.defineProperty(EditorSelection.prototype, "collapsed", {
         // Get the collapsed state of the selection
@@ -1806,7 +1693,7 @@ var EditorSelection = /** @class */ (function () {
     Object.defineProperty(EditorSelection.prototype, "inlineElementBeforeStart", {
         // Get the inline element before start of the selection
         get: function () {
-            return BlockElement_1.getInlineElementBeforePoint(this.rootNode, this.startPoint, this.inlineElementFactory);
+            return BlockElement_1.getInlineElementBefore(this.rootNode, this.selectionRange.start, this.inlineElementFactory);
         },
         enumerable: true,
         configurable: true
@@ -1832,8 +1719,8 @@ var EditorSelection = /** @class */ (function () {
     Object.defineProperty(EditorSelection.prototype, "startBlockElement", {
         // Get start block element
         get: function () {
-            if (!this.startBlock && this.startPoint) {
-                this.startBlock = BlockElement_1.getBlockElementAtNode(this.rootNode, this.startPoint.containerNode, this.inlineElementFactory);
+            if (!this.startBlock) {
+                this.startBlock = BlockElement_1.getBlockElementAtNode(this.rootNode, this.selectionRange.start.node, this.inlineElementFactory);
             }
             return this.startBlock;
         },
@@ -1843,8 +1730,8 @@ var EditorSelection = /** @class */ (function () {
     Object.defineProperty(EditorSelection.prototype, "endBlockElement", {
         // Get end block element
         get: function () {
-            if (!this.endBlock && this.endPoint) {
-                this.endBlock = BlockElement_1.getBlockElementAtNode(this.rootNode, this.endPoint.containerNode, this.inlineElementFactory);
+            if (!this.endBlock) {
+                this.endBlock = BlockElement_1.getBlockElementAtNode(this.rootNode, this.selectionRange.end.node, this.inlineElementFactory);
             }
             return this.endBlock;
         },
@@ -1862,19 +1749,18 @@ var EditorSelection = /** @class */ (function () {
         var trimmedInline;
         if (inlineElement && this.startInline && this.endInline) {
             // Start with the decorated inline, and trim first by startInline, and then endInline
-            // if we end up getting a trimmed trimmedStartPoint or trimmedEndPoint, we know the new element
+            // if we end up getting a trimmed trimmedstartPosition or trimmedendPosition, we know the new element
             // has to be partial. otherwise return a full inline
             var decoratedInline = void 0;
-            var trimmedStartPoint = void 0;
-            var trimmedEndPoint = void 0;
+            var trimmedStartPosition = void 0;
+            var trimmedEndPosition = void 0;
             // First unwrap inlineElement if it is partial
             if (inlineElement instanceof PartialInlineElement_1.default) {
-                var partialInline = inlineElement;
-                decoratedInline = partialInline.getDecoratedInline();
-                trimmedStartPoint = partialInline.isStartPartial()
-                    ? partialInline.getStartPoint()
+                decoratedInline = inlineElement.getDecoratedInline();
+                trimmedStartPosition = inlineElement.isStartPartial()
+                    ? inlineElement.getStartPosition()
                     : null;
-                trimmedEndPoint = partialInline.isEndPartial() ? partialInline.getEndPoint() : null;
+                trimmedEndPosition = inlineElement.isEndPartial() ? inlineElement.getEndPosition() : null;
             }
             else {
                 decoratedInline = inlineElement;
@@ -1886,12 +1772,12 @@ var EditorSelection = /** @class */ (function () {
             }
             else if (decoratedInline.getContainerNode() == this.startInline.getContainerNode() &&
                 this.startInline instanceof PartialInlineElement_1.default &&
-                this.startInline.isStartPartial) {
+                this.startInline.isStartPartial()) {
                 // On same container, and startInline is a partial, compare start point
-                if (!trimmedStartPoint ||
-                    isEditorPointAfter_1.default(this.startInline.getStartPoint(), trimmedStartPoint)) {
+                if (!trimmedStartPosition ||
+                    roosterjs_editor_types_1.Position.isAfter(this.startInline.getStartPosition(), trimmedStartPosition)) {
                     // selection start is after the element, use selection start's as new start point
-                    trimmedStartPoint = this.startInline.getStartPoint();
+                    trimmedStartPosition = this.startInline.getStartPosition();
                 }
             }
             // Trim by the end point
@@ -1902,12 +1788,12 @@ var EditorSelection = /** @class */ (function () {
                 }
                 else if (decoratedInline.getContainerNode() == this.endInline.getContainerNode() &&
                     this.endInline instanceof PartialInlineElement_1.default &&
-                    this.endInline.isEndPartial) {
+                    this.endInline.isEndPartial()) {
                     // On same container, and endInline is a partial, compare end point
-                    if (!trimmedEndPoint ||
-                        isEditorPointAfter_1.default(trimmedEndPoint, this.endInline.getEndPoint())) {
+                    if (!trimmedEndPosition ||
+                        roosterjs_editor_types_1.Position.isAfter(trimmedEndPosition, this.endInline.getEndPosition())) {
                         // selection end is before the element, use selection end's as new end point
-                        trimmedEndPoint = this.endInline.getEndPoint();
+                        trimmedEndPosition = this.endInline.getEndPosition();
                     }
                 }
             }
@@ -1917,16 +1803,16 @@ var EditorSelection = /** @class */ (function () {
                 // 1) both points are null, means it is full node, no need to decorate
                 // 2) both points are not null and they actually point to same point, this isn't an invalid inline element, set null
                 // 3) rest, create a new partial inline element
-                if (!trimmedStartPoint && !trimmedEndPoint) {
+                if (!trimmedStartPosition && !trimmedEndPosition) {
                     trimmedInline = decoratedInline;
                 }
                 else {
                     trimmedInline =
-                        trimmedStartPoint &&
-                            trimmedEndPoint &&
-                            editorPointEquals_1.default(trimmedStartPoint, trimmedEndPoint)
+                        trimmedStartPosition &&
+                            trimmedEndPosition &&
+                            roosterjs_editor_types_1.Position.equal(trimmedStartPosition, trimmedEndPosition)
                             ? null
-                            : new PartialInlineElement_1.default(decoratedInline, trimmedStartPoint, trimmedEndPoint);
+                            : new PartialInlineElement_1.default(decoratedInline, trimmedStartPosition, trimmedEndPosition);
                 }
             }
         }
@@ -1967,37 +1853,37 @@ var EditorSelection = /** @class */ (function () {
     // calculate start and end inline element
     EditorSelection.prototype.calculateStartEndInline = function () {
         // Compute the start point
-        this.startInline = BlockElement_1.getInlineElementAfterPoint(this.rootNode, this.startPoint, this.inlineElementFactory);
+        this.startInline = BlockElement_1.getInlineElementAfter(this.rootNode, this.selectionRange.start, this.inlineElementFactory);
         if (this.collapsed) {
             // For collapsed range, set end to be same as start
             this.endInline = this.startInline;
         }
         else {
             // For non-collapsed range, get same for end point
-            this.endInline = BlockElement_1.getInlineElementBeforePoint(this.rootNode, this.endPoint, this.inlineElementFactory);
+            this.endInline = BlockElement_1.getInlineElementBefore(this.rootNode, this.selectionRange.end, this.inlineElementFactory);
             // it is possible that start and end points to same inline element, which
             // is often the case where users select partial text of a text node
             // in that case, we want to fix startInline and endInline to be a partial inline element
             if (this.startInline &&
                 this.endInline &&
                 this.startInline.getContainerNode() == this.endInline.getContainerNode()) {
-                var fromPoint = void 0;
+                var fromPosition = void 0;
                 var decoratedInline = void 0;
                 if (this.startInline instanceof PartialInlineElement_1.default) {
-                    fromPoint = this.startInline.getStartPoint();
+                    fromPosition = this.startInline.getStartPosition();
                     decoratedInline = this
                         .startInline.getDecoratedInline();
                 }
                 else {
                     decoratedInline = this.startInline;
                 }
-                var toPoint = this.endInline instanceof PartialInlineElement_1.default
-                    ? this.endInline.getEndPoint()
+                var toPosition = this.endInline instanceof PartialInlineElement_1.default
+                    ? this.endInline.getEndPosition()
                     : null;
                 this.startInline = this.endInline =
-                    !fromPoint && !toPoint
+                    !fromPosition && !toPosition
                         ? decoratedInline
-                        : new PartialInlineElement_1.default(decoratedInline, fromPoint, toPoint);
+                        : new PartialInlineElement_1.default(decoratedInline, fromPosition, toPosition);
             }
         }
     };
@@ -2007,7 +1893,7 @@ exports.default = EditorSelection;
 
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2021,7 +1907,7 @@ exports.default = hasFocus;
 
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2224,37 +2110,37 @@ exports.default = CursorData;
 
 
 /***/ }),
-/* 26 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DefaultShortcut_1 = __webpack_require__(56);
+var DefaultShortcut_1 = __webpack_require__(53);
 exports.DefaultShortcut = DefaultShortcut_1.default;
-var HyperLink_1 = __webpack_require__(105);
+var HyperLink_1 = __webpack_require__(102);
 exports.HyperLink = HyperLink_1.default;
-var ContentEdit_1 = __webpack_require__(106);
+var ContentEdit_1 = __webpack_require__(103);
 exports.ContentEdit = ContentEdit_1.default;
-var Paste_1 = __webpack_require__(108);
+var Paste_1 = __webpack_require__(105);
 exports.Paste = Paste_1.default;
-var ContentEditFeatures_1 = __webpack_require__(51);
+var ContentEditFeatures_1 = __webpack_require__(48);
 exports.getDefaultContentEditFeatures = ContentEditFeatures_1.getDefaultContentEditFeatures;
-var Watermark_1 = __webpack_require__(116);
+var Watermark_1 = __webpack_require__(113);
 exports.Watermark = Watermark_1.default;
-var TableResize_1 = __webpack_require__(117);
+var TableResize_1 = __webpack_require__(114);
 exports.TableResize = TableResize_1.default;
 
 
 /***/ }),
-/* 27 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var UndoSnapshots_1 = __webpack_require__(59);
-var snapshotUtils_1 = __webpack_require__(28);
+var UndoSnapshots_1 = __webpack_require__(56);
+var snapshotUtils_1 = __webpack_require__(26);
 var KEY_BACKSPACE = 8;
 var KEY_DELETE = 46;
 var KEY_SPACE = 32;
@@ -2449,14 +2335,14 @@ exports.default = Undo;
 
 
 /***/ }),
-/* 28 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var BrowserData_1 = __webpack_require__(16);
-var roosterjs_editor_types_1 = __webpack_require__(2);
+var roosterjs_editor_types_1 = __webpack_require__(1);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 // Undo cursor marker
 var CURSOR_START = 'cursor-start';
@@ -2532,7 +2418,7 @@ function updateSelectionToCursorMarkers(editor) {
 function insertCursorMarkerToEditorPoint(editor, position, cursorMaker) {
     position = roosterjs_editor_types_1.Position.normalize(position);
     var parentNode = position.node.parentNode;
-    if (position.offset == roosterjs_editor_types_1.Position.Begin) {
+    if (position.offset == 0) {
         parentNode.insertBefore(cursorMaker, position.node);
     }
     else if (position.isAtEnd) {
@@ -2557,7 +2443,7 @@ function getCursorMarkNodes(editor, id) {
 
 
 /***/ }),
-/* 29 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2571,6 +2457,7 @@ var Position = {
     create: createPosition,
     normalize: normalize,
     equal: equal,
+    isAfter: isAfter,
 };
 function createPosition(nodeOrPosition, offsetOrPosType) {
     var offset = 0;
@@ -2601,7 +2488,7 @@ function createPosition(nodeOrPosition, offsetOrPosType) {
         default:
             var endOffset = getEndOffset(node);
             offset = Math.max(0, Math.min(offsetOrPosType, endOffset));
-            isAtEnd = offset == endOffset;
+            isAtEnd = offsetOrPosType == "e" /* End */ || (offset > 0 && offset == endOffset);
             break;
     }
     return {
@@ -2612,17 +2499,30 @@ function createPosition(nodeOrPosition, offsetOrPosType) {
 }
 function normalize(position) {
     var node = position.node, offset = position.offset, isAtEnd = position.isAtEnd;
-    var newOffset = isAtEnd ? "e" /* End */ : offset;
+    var newOffset = isAtEnd
+        ? "e" /* End */
+        : offset;
     while (node.nodeType == 1 /* Element */ && node.firstChild) {
-        node = newOffset == 0 /* Begin */ ?
-            node.firstChild :
-            newOffset == "e" /* End */ ? node.lastChild : node.childNodes[newOffset];
+        node =
+            newOffset == 0 /* Begin */
+                ? node.firstChild
+                : newOffset == "e" /* End */
+                    ? node.lastChild
+                    : node.childNodes[newOffset];
         newOffset = isAtEnd ? "e" /* End */ : 0 /* Begin */;
     }
     return createPosition(node, newOffset);
 }
 function equal(p1, p2) {
     return p1 == p2 || (p1.node == p2.node && p1.offset == p2.offset);
+}
+/**
+ * Checks if position 1 is after position 2
+ */
+function isAfter(position1, position2) {
+    return position1.node == position2.node
+        ? position1.offset > position2.offset
+        : (position2.node.compareDocumentPosition(position1.node) & 4 /* Following */) == 4 /* Following */;
 }
 function getIndexOfNode(node) {
     var i = 0;
@@ -2646,27 +2546,13 @@ exports.default = Position;
 
 
 /***/ }),
-/* 30 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-// Checks if the two EditorPoint points to same location
-function editorPointEquals(point1, point2) {
-    return point1.containerNode == point2.containerNode && point1.offset == point2.offset;
-}
-exports.default = editorPointEquals;
-
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(19);
+var getComputedStyle_1 = __webpack_require__(17);
 // Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.
 // TODO: should inline-block be considered as block?
 // Other block like style to consider: table-caption, table-header-group, table-footer-group etc.
@@ -2681,13 +2567,30 @@ exports.default = isBlockElement;
 
 
 /***/ }),
-/* 32 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var shouldSkipNode_1 = __webpack_require__(20);
+var isDocumentPosition_1 = __webpack_require__(5);
+// Checks if node1 is after node2
+function isNodeAfter(node1, node2) {
+    return !!(node1 &&
+        node2 &&
+        isDocumentPosition_1.default(node2.compareDocumentPosition(node1), 4 /* Following */));
+}
+exports.default = isNodeAfter;
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var shouldSkipNode_1 = __webpack_require__(18);
 var getLeafSibling_1 = __webpack_require__(13);
 function getLeafNode(rootNode, isFirst) {
     var getChild = isFirst ? function (node) { return node.firstChild; } : function (node) { return node.lastChild; };
@@ -2717,7 +2620,7 @@ exports.getLastLeafNode = getLastLeafNode;
 
 
 /***/ }),
-/* 33 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2746,13 +2649,13 @@ exports.default = ImageInlineElement;
 
 
 /***/ }),
-/* 34 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var fromHtml_1 = __webpack_require__(21);
+var fromHtml_1 = __webpack_require__(19);
 // Wrap the node with html and return the wrapped node
 function wrap(node, htmlFragment) {
     if (!node) {
@@ -2773,7 +2676,7 @@ exports.default = wrap;
 
 
 /***/ }),
-/* 35 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2802,48 +2705,7 @@ exports.default = LinkInlineElement;
 
 
 /***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-// The browser returned point (StartContainer/EndContainer as in Selection range) can be a container with offset pointing to a child
-// in the container. This is bad when we do point to point comparison. This function normalizes to the point to closest leaf node.
-// End goal of normalization:
-// 1) The editor point has a container points to a leaf node (it can be a text node, or an element that has 0 child
-// 2) offet of the new editor point means:
-// offset = NodeBoundary.Begin: begin of the node
-// offset = NodeBoundary.End: end of node for non-textual node (leaf element type node)
-// offset = offset into text node: text node
-function normalizeEditorPoint(container, offset) {
-    var childCount;
-    while (container.nodeType == 1 /* Element */ &&
-        (childCount = container.childNodes.length) > 0) {
-        var isAtEnd = offset >= childCount;
-        var childContainer = isAtEnd ? container.lastChild : container.childNodes[offset];
-        if (childContainer.nodeType == 1 /* Element */) {
-            container = childContainer;
-            offset = isAtEnd
-                ? Math.max(childContainer.childNodes.length, 1 /* End */)
-                : 0 /* Begin */;
-        }
-        else if (childContainer.nodeType == 3 /* Text */) {
-            container = childContainer;
-            offset = isAtEnd ? childContainer.data.length : 0 /* Begin */;
-            break;
-        }
-        else {
-            break;
-        }
-    }
-    return { containerNode: container, offset: offset };
-}
-exports.default = normalizeEditorPoint;
-
-
-/***/ }),
-/* 37 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2862,7 +2724,7 @@ exports.default = isRangeInContainer;
 
 
 /***/ }),
-/* 38 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2894,17 +2756,17 @@ exports.default = triggerEvent;
 
 
 /***/ }),
-/* 39 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var getLiveRange_1 = __webpack_require__(8);
-var hasFocus_1 = __webpack_require__(24);
-var isVoidHtmlElement_1 = __webpack_require__(40);
+var hasFocus_1 = __webpack_require__(22);
+var isVoidHtmlElement_1 = __webpack_require__(37);
 var select_1 = __webpack_require__(14);
-var roosterjs_editor_types_1 = __webpack_require__(2);
+var roosterjs_editor_types_1 = __webpack_require__(1);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 function focus(core) {
     if (!hasFocus_1.default(core) || !getLiveRange_1.default(core)) {
@@ -2932,7 +2794,7 @@ function setSelectionToBegin(core) {
     if (firstNode) {
         if (firstNode.nodeType == 3 /* Text */) {
             // First node is text, move selection to the begin
-            select_1.default(core, firstNode, roosterjs_editor_types_1.Position.Begin);
+            select_1.default(core, firstNode, 0);
         }
         else if (firstNode.nodeType == 1 /* Element */) {
             if (isVoidHtmlElement_1.default(firstNode)) {
@@ -2941,19 +2803,19 @@ function setSelectionToBegin(core) {
             }
             else {
                 // Other html element, move selection inside it
-                select_1.default(core, firstNode, roosterjs_editor_types_1.Position.Begin);
+                select_1.default(core, firstNode, 0);
             }
         }
     }
     else {
         // No first node, likely we have an empty content DIV, move selection inside it
-        select_1.default(core, core.contentDiv, roosterjs_editor_types_1.Position.Begin);
+        select_1.default(core, core.contentDiv, 0);
     }
 }
 
 
 /***/ }),
-/* 40 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2973,13 +2835,13 @@ exports.default = isVoidHtmlElement;
 
 
 /***/ }),
-/* 41 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_types_1 = __webpack_require__(2);
+var roosterjs_editor_types_1 = __webpack_require__(1);
 /**
  * Replace the specified range with a node
  * @param editor The editor instance
@@ -3008,14 +2870,14 @@ exports.default = replaceRangeWithNode;
 
 
 /***/ }),
-/* 42 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var queryNodesWithSelection_1 = __webpack_require__(3);
-var roosterjs_editor_core_1 = __webpack_require__(1);
+var roosterjs_editor_core_1 = __webpack_require__(2);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var EVENTDATACACHE_LISTSTATE = 'LISTSTATE';
 /**
@@ -3046,7 +2908,7 @@ exports.default = cacheGetListState;
 
 
 /***/ }),
-/* 43 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3061,13 +2923,13 @@ var applyInlineStyle_1 = __webpack_require__(15);
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
  */
 function setBackgroundColor(editor, color) {
-    applyInlineStyle_1.default(editor, function (element) { return element.style.backgroundColor = color; });
+    applyInlineStyle_1.default(editor, function (element) { return (element.style.backgroundColor = color); });
 }
 exports.default = setBackgroundColor;
 
 
 /***/ }),
-/* 44 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3084,13 +2946,13 @@ function setFontName(editor, fontName) {
     // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
     // (http://www.w3schools.com/tags/tag_font.asp). Use editor.applyInlineStyle which gives flexibility on applying inline style
     // for here, we use CSS font-family style
-    applyInlineStyle_1.default(editor, function (element) { return element.style.fontFamily = fontName; });
+    applyInlineStyle_1.default(editor, function (element) { return (element.style.fontFamily = fontName); });
 }
 exports.default = setFontName;
 
 
 /***/ }),
-/* 45 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3107,13 +2969,13 @@ function setFontSize(editor, fontSize) {
     // The browser provided execCommand only accepts 1-7 point value. In addition, it uses HTML <font> tag with size attribute.
     // <font> is not HTML5 standard (http://www.w3schools.com/tags/tag_font.asp). Use editor.applyInlineStyle which gives flexibility on applying inline style
     // for here, we use CSS font-size style
-    applyInlineStyle_1.default(editor, function (element) { return element.style.fontSize = fontSize; });
+    applyInlineStyle_1.default(editor, function (element) { return (element.style.fontSize = fontSize); });
 }
 exports.default = setFontSize;
 
 
 /***/ }),
-/* 46 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3128,13 +2990,13 @@ var applyInlineStyle_1 = __webpack_require__(15);
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
  */
 function setTextColor(editor, color) {
-    applyInlineStyle_1.default(editor, function (element) { return element.style.color = color; });
+    applyInlineStyle_1.default(editor, function (element) { return (element.style.color = color); });
 }
 exports.default = setTextColor;
 
 
 /***/ }),
-/* 47 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3213,7 +3075,7 @@ exports.default = matchLink;
 
 
 /***/ }),
-/* 48 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3221,8 +3083,8 @@ exports.default = matchLink;
 Object.defineProperty(exports, "__esModule", { value: true });
 var getNodeAtCursor_1 = __webpack_require__(6);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var cacheGetListState_1 = __webpack_require__(42);
-var cacheGetHeaderLevel_1 = __webpack_require__(87);
+var cacheGetListState_1 = __webpack_require__(39);
+var cacheGetHeaderLevel_1 = __webpack_require__(84);
 var queryNodesWithSelection_1 = __webpack_require__(3);
 // Query command state, used for query Bold, Italic, Underline state
 function queryCommandState(editor, command) {
@@ -3281,7 +3143,7 @@ exports.default = getFormatState;
 
 
 /***/ }),
-/* 49 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3313,14 +3175,14 @@ exports.default = formatTable;
 
 
 /***/ }),
-/* 50 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var getNodeAtCursor_1 = __webpack_require__(6);
-var roosterjs_editor_core_1 = __webpack_require__(1);
+var roosterjs_editor_core_1 = __webpack_require__(2);
 var ZERO_WIDTH_SPACE = '&#8203;';
 /**
  * Edge may incorrectly put cursor after toggle bullet, workaround it by adding a space.
@@ -3364,7 +3226,7 @@ exports.default = toggleBullet;
 
 
 /***/ }),
-/* 51 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3389,7 +3251,7 @@ exports.getDefaultContentEditFeatures = getDefaultContentEditFeatures;
 
 
 /***/ }),
-/* 52 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3450,7 +3312,7 @@ function getAndSetNodeId(customData, element) {
 
 
 /***/ }),
-/* 53 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3468,7 +3330,7 @@ exports.createLevelLists = createLevelLists;
 
 
 /***/ }),
-/* 54 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3477,25 +3339,25 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-var createEditor_1 = __webpack_require__(55);
+var createEditor_1 = __webpack_require__(52);
 exports.createEditor = createEditor_1.default;
-__export(__webpack_require__(2));
-__export(__webpack_require__(0));
 __export(__webpack_require__(1));
+__export(__webpack_require__(0));
+__export(__webpack_require__(2));
 __export(__webpack_require__(4));
-__export(__webpack_require__(26));
-__export(__webpack_require__(118));
+__export(__webpack_require__(24));
+__export(__webpack_require__(115));
 
 
 /***/ }),
-/* 55 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_plugins_1 = __webpack_require__(26);
-var roosterjs_editor_core_1 = __webpack_require__(1);
+var roosterjs_editor_plugins_1 = __webpack_require__(24);
+var roosterjs_editor_core_1 = __webpack_require__(2);
 /**
  * Create an editor instance with most common options
  * @param contentDiv The html div element needed for creating the editor
@@ -3529,13 +3391,13 @@ exports.default = createEditor;
 
 
 /***/ }),
-/* 56 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_core_1 = __webpack_require__(1);
+var roosterjs_editor_core_1 = __webpack_require__(2);
 var roosterjs_editor_api_1 = __webpack_require__(4);
 var KEY_B = 66;
 var KEY_I = 73;
@@ -3662,24 +3524,24 @@ exports.default = DefaultShortcut;
 
 
 /***/ }),
-/* 57 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorCore_1 = __webpack_require__(58);
-var formatWithUndo_1 = __webpack_require__(77);
-var attachDomEvent_1 = __webpack_require__(78);
+var EditorCore_1 = __webpack_require__(55);
+var formatWithUndo_1 = __webpack_require__(74);
+var attachDomEvent_1 = __webpack_require__(75);
 var BrowserData_1 = __webpack_require__(16);
-var focus_1 = __webpack_require__(39);
-var getContentTraverser_1 = __webpack_require__(79);
+var focus_1 = __webpack_require__(36);
+var getContentTraverser_1 = __webpack_require__(76);
 var getLiveRange_1 = __webpack_require__(8);
-var hasFocus_1 = __webpack_require__(24);
-var insertNode_1 = __webpack_require__(80);
+var hasFocus_1 = __webpack_require__(22);
+var insertNode_1 = __webpack_require__(77);
 var select_1 = __webpack_require__(14);
-var triggerEvent_1 = __webpack_require__(38);
-var roosterjs_editor_types_1 = __webpack_require__(2);
+var triggerEvent_1 = __webpack_require__(35);
+var roosterjs_editor_types_1 = __webpack_require__(1);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var IS_IE_OR_EDGE = BrowserData_1.default.isIE || BrowserData_1.default.isEdge;
 var Editor = /** @class */ (function () {
@@ -3705,7 +3567,7 @@ var Editor = /** @class */ (function () {
                 (focusNode == _this.core.contentDiv ||
                     (focusNode.nodeType == 3 /* Text */ &&
                         focusNode.parentNode == _this.core.contentDiv))) {
-                var editorSelection = new roosterjs_editor_dom_1.EditorSelection(_this.core.contentDiv, selectionRange.rawRange, _this.core.inlineElementFactory);
+                var editorSelection = new roosterjs_editor_dom_1.EditorSelection(_this.core.contentDiv, selectionRange, _this.core.inlineElementFactory);
                 var blockElement = editorSelection.startBlockElement;
                 if (!blockElement) {
                     // Only reason we don't get the selection block is that we have an empty content div
@@ -3715,7 +3577,7 @@ var Editor = /** @class */ (function () {
                     var element = _this.core.contentDiv.appendChild(nodes[0]);
                     roosterjs_editor_dom_1.applyFormat(element, _this.core.defaultFormat);
                     // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
-                    _this.select(element.firstChild, roosterjs_editor_types_1.Position.Begin);
+                    _this.select(element.firstChild, 0);
                 }
                 else if (blockElement.getStartNode().parentNode == blockElement.getEndNode().parentNode) {
                     // Only fix the balanced start-end block where start and end node is under same parent
@@ -3762,8 +3624,7 @@ var Editor = /** @class */ (function () {
             this.core.document.execCommand('enableObjectResizing', false, false);
             this.core.document.execCommand('enableInlineTableEditing', false, false);
         }
-        catch (e) {
-        }
+        catch (e) { }
     }
     /**
      * Dispose this editor, dispose all plugins and custom data
@@ -3931,9 +3792,7 @@ var Editor = /** @class */ (function () {
     //#endregion
     //#region Focus and Selection
     Editor.prototype.getSelectionRange = function () {
-        return roosterjs_editor_types_1.SelectionRange.create(getLiveRange_1.default(this.core) ||
-            this.core.cachedRange ||
-            this.defaultRange);
+        return roosterjs_editor_types_1.SelectionRange.create(getLiveRange_1.default(this.core) || this.core.cachedRange || this.defaultRange);
     };
     /**
      * Check if focus is in editor now
@@ -4151,13 +4010,13 @@ exports.default = Editor;
 
 
 /***/ }),
-/* 58 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Undo_1 = __webpack_require__(27);
+var Undo_1 = __webpack_require__(25);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var roosterjs_editor_dom_2 = __webpack_require__(0);
 var EditorCore = {
@@ -4173,7 +4032,7 @@ var EditorCore = {
             suspendAddingUndoSnapshot: false,
             plugins: (options.plugins || []).filter(function (plugin) { return !!plugin; }),
         };
-    }
+    },
 };
 exports.default = EditorCore;
 function calcDefaultFormat(node, baseFormat) {
@@ -4192,7 +4051,7 @@ function calcDefaultFormat(node, baseFormat) {
 
 
 /***/ }),
-/* 59 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4255,7 +4114,7 @@ exports.default = UndoSnapshots;
 
 
 /***/ }),
-/* 60 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4269,7 +4128,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Position_1 = __webpack_require__(29);
+var Position_1 = __webpack_require__(27);
 var SelectionRangeBase = {
     create: createRangeBase,
     toRange: toRange,
@@ -4300,7 +4159,7 @@ function toRange(selectionRangeBase) {
 
 
 /***/ }),
-/* 61 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4433,13 +4292,13 @@ exports.default = ContentTraverser;
 
 
 /***/ }),
-/* 62 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DefaultInlineElementResolver_1 = __webpack_require__(63);
+var DefaultInlineElementResolver_1 = __webpack_require__(60);
 var NodeInlineElement_1 = __webpack_require__(7);
 // This factory holds all resolvers and provide function to resolve DOM node to inline element
 var InlineElementFactory = /** @class */ (function () {
@@ -4502,15 +4361,15 @@ exports.default = InlineElementFactory;
 
 
 /***/ }),
-/* 63 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var ImageInlineElement_1 = __webpack_require__(33);
-var LinkInlineElement_1 = __webpack_require__(35);
-var TextInlineElement_1 = __webpack_require__(22);
+var ImageInlineElement_1 = __webpack_require__(31);
+var LinkInlineElement_1 = __webpack_require__(33);
+var TextInlineElement_1 = __webpack_require__(20);
 var getTagOfNode_1 = __webpack_require__(12);
 // This is default inline element resolver which produces very basic inline elements
 var DefaultInlineElementResolver = /** @class */ (function () {
@@ -4537,7 +4396,7 @@ exports.default = DefaultInlineElementResolver;
 
 
 /***/ }),
-/* 64 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4572,13 +4431,13 @@ exports.default = BodyScoper;
 
 
 /***/ }),
-/* 65 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorSelection_1 = __webpack_require__(23);
+var EditorSelection_1 = __webpack_require__(21);
 // This provides traversing content in a selection start block
 // This is commonly used for those cursor context sensitive plugin
 // i.e. Mentions, Hashtag etc. they want to know text being typed at cursor
@@ -4659,13 +4518,13 @@ exports.default = SelectionBlockScoper;
 
 
 /***/ }),
-/* 66 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorSelection_1 = __webpack_require__(23);
+var EditorSelection_1 = __webpack_require__(21);
 // This is selection scoper that provide a start inline as the start of the selection
 // and checks if a block falls in the selection (isBlockInScope)
 // last trimInlineElement to trim any inline element to return a partial that falls in the selection
@@ -4696,7 +4555,7 @@ exports.default = SelectionScoper;
 
 
 /***/ }),
-/* 67 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4732,7 +4591,7 @@ exports.default = applyFormat;
 
 
 /***/ }),
-/* 68 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4871,7 +4730,7 @@ exports.default = convertInlineCss;
 
 
 /***/ }),
-/* 69 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4906,14 +4765,14 @@ exports.default = isNodeEmpty;
 
 
 /***/ }),
-/* 70 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(10);
-var TextInlineElement_1 = __webpack_require__(22);
+var TextInlineElement_1 = __webpack_require__(20);
 // Check if the inline is a text type inline element
 // This essentially test if the inline is TextInlineElement
 // or a partial inline element that decorates a TextInlineElement
@@ -4932,7 +4791,7 @@ exports.default = isTextualInlineElement;
 
 
 /***/ }),
-/* 71 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4951,7 +4810,7 @@ exports.default = matchWhiteSpaces;
 
 
 /***/ }),
-/* 72 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4991,7 +4850,7 @@ exports.default = splitParentNode;
 
 
 /***/ }),
-/* 73 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5014,7 +4873,7 @@ exports.default = textToHtml;
 
 
 /***/ }),
-/* 74 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5037,13 +4896,13 @@ exports.default = unwrap;
 
 
 /***/ }),
-/* 75 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var fromHtml_1 = __webpack_require__(21);
+var fromHtml_1 = __webpack_require__(19);
 // Wrap all the node with html and return the wrapped node
 // All nodes should be under same parent
 function wrapAll(nodes, htmlFragment) {
@@ -5068,7 +4927,7 @@ exports.default = wrapAll;
 
 
 /***/ }),
-/* 76 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5234,7 +5093,7 @@ function getBorderStyle(style) {
 
 
 /***/ }),
-/* 77 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5252,9 +5111,7 @@ function formatWithUndo(core, callback, preserveSelection, skipAddingUndoAfterFo
         if (callback) {
             var range = getLiveRange_1.default(core) || core.cachedRange;
             var fallbackNode = callback();
-            if (preserveSelection &&
-                !select_1.default(core, range) &&
-                fallbackNode instanceof Node) {
+            if (preserveSelection && !select_1.default(core, range) && fallbackNode instanceof Node) {
                 select_1.default(core, fallbackNode);
             }
             if (!isNested && !skipAddingUndoAfterFormat) {
@@ -5272,13 +5129,13 @@ exports.default = formatWithUndo;
 
 
 /***/ }),
-/* 78 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var triggerEvent_1 = __webpack_require__(38);
+var triggerEvent_1 = __webpack_require__(35);
 function attachDomEvent(core, eventName, pluginEventType, beforeDispatch) {
     var onEvent = function (event) {
         if (beforeDispatch) {
@@ -5300,13 +5157,14 @@ exports.default = attachDomEvent;
 
 
 /***/ }),
-/* 79 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var getLiveRange_1 = __webpack_require__(8);
+var roosterjs_editor_types_1 = __webpack_require__(1);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 function getContentTraverser(core, scope, position) {
     if (position === void 0) { position = 2 /* SelectionStart */; }
@@ -5318,10 +5176,10 @@ function getContentTraverser(core, scope, position) {
     var scoper;
     switch (scope) {
         case 0 /* Block */:
-            scoper = new roosterjs_editor_dom_1.SelectionBlockScoper(core.contentDiv, range, position, core.inlineElementFactory);
+            scoper = new roosterjs_editor_dom_1.SelectionBlockScoper(core.contentDiv, roosterjs_editor_types_1.SelectionRange.create(range), position, core.inlineElementFactory);
             break;
         case 1 /* Selection */:
-            scoper = new roosterjs_editor_dom_1.SelectionScoper(core.contentDiv, range, core.inlineElementFactory);
+            scoper = new roosterjs_editor_dom_1.SelectionScoper(core.contentDiv, roosterjs_editor_types_1.SelectionRange.create(range), core.inlineElementFactory);
             break;
         case 2 /* Body */:
             scoper = new roosterjs_editor_dom_1.BodyScoper(core.contentDiv, core.inlineElementFactory);
@@ -5336,18 +5194,18 @@ exports.default = getContentTraverser;
 
 
 /***/ }),
-/* 80 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var focus_1 = __webpack_require__(39);
+var focus_1 = __webpack_require__(36);
 var getLiveRange_1 = __webpack_require__(8);
-var isVoidHtmlElement_1 = __webpack_require__(40);
+var isVoidHtmlElement_1 = __webpack_require__(37);
 var select_1 = __webpack_require__(14);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var roosterjs_editor_types_1 = __webpack_require__(2);
+var roosterjs_editor_types_1 = __webpack_require__(1);
 var HTML_EMPTY_DIV = '<div></div>';
 function insertNode(core, node, option) {
     option = option || {
@@ -5480,7 +5338,7 @@ function insertNodeAtSelection(core, node, option) {
         // This is commonly used when users want to insert signature. They could place cursor somewhere mid of a line
         // and insert signature, they actually want signature to be inserted the line after the selection
         if (option.insertOnNewLine) {
-            var editorSelection = new roosterjs_editor_dom_1.EditorSelection(core.contentDiv, rawRange, core.inlineElementFactory);
+            var editorSelection = new roosterjs_editor_dom_1.EditorSelection(core.contentDiv, clonedRange, core.inlineElementFactory);
             var blockElement = editorSelection.startBlockElement;
             rawRange.setEndAfter(blockElement.getEndNode());
             rawRange.collapse(false /*toStart*/);
@@ -5498,7 +5356,7 @@ function insertNodeAtSelection(core, node, option) {
 
 
 /***/ }),
-/* 81 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5527,14 +5385,14 @@ exports.cacheGetEventData = cacheGetEventData;
 
 
 /***/ }),
-/* 82 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CursorData_1 = __webpack_require__(25);
-var roosterjs_editor_core_1 = __webpack_require__(1);
+var CursorData_1 = __webpack_require__(23);
+var roosterjs_editor_core_1 = __webpack_require__(2);
 var EVENTDATACACHE_CURSORDATA = 'CURSORDATA';
 /**
  * Read CursorData from plugin event cache. If not, create one
@@ -5561,13 +5419,13 @@ exports.clearCursorEventDataCache = clearCursorEventDataCache;
 
 
 /***/ }),
-/* 83 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_types_1 = __webpack_require__(2);
+var roosterjs_editor_types_1 = __webpack_require__(1);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 // Returns a rect representing the location of the cursor.
 // In case there is a uncollapsed selection witin editor, this returns
@@ -5653,14 +5511,14 @@ function getRectFromClientRect(clientRect) {
 
 
 /***/ }),
-/* 84 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CursorData_1 = __webpack_require__(25);
-var replaceRangeWithNode_1 = __webpack_require__(41);
+var CursorData_1 = __webpack_require__(23);
+var replaceRangeWithNode_1 = __webpack_require__(38);
 /**
  * Validate the text matches what's before the cursor, and return the range for it
  * @param editor The editor instance
@@ -5702,7 +5560,7 @@ function validateAndGetRangeForTextBeforeCursor(editor, text, exactMatch, cursor
                 }
                 // on first time when end is matched, set the end of range
                 if (endMatched && !endOfRangeSet) {
-                    range.setEnd(textInline.getContainerNode(), textInline.getStartPoint().offset + nodeIndex + 1);
+                    range.setEnd(textInline.getContainerNode(), textInline.getStartPosition().offset + nodeIndex + 1);
                     endOfRangeSet = true;
                 }
                 // Move both index one char backward
@@ -5727,7 +5585,7 @@ function validateAndGetRangeForTextBeforeCursor(editor, text, exactMatch, cursor
         // when textIndex == -1, we have a successful complete match
         if (textIndex == -1) {
             matchComplete = true;
-            range.setStart(textInline.getContainerNode(), textInline.getStartPoint().offset + nodeIndex + 1);
+            range.setStart(textInline.getContainerNode(), textInline.getStartPosition().offset + nodeIndex + 1);
         }
         return matchComplete;
     });
@@ -5763,16 +5621,16 @@ exports.default = replaceTextBeforeCursorWithNode;
 
 
 /***/ }),
-/* 85 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var setBackgroundColor_1 = __webpack_require__(43);
-var setFontName_1 = __webpack_require__(44);
-var setFontSize_1 = __webpack_require__(45);
-var setTextColor_1 = __webpack_require__(46);
+var setBackgroundColor_1 = __webpack_require__(40);
+var setFontName_1 = __webpack_require__(41);
+var setFontSize_1 = __webpack_require__(42);
+var setTextColor_1 = __webpack_require__(43);
 var queryNodesWithSelection_1 = __webpack_require__(3);
 /**
  * Clear the format in current selection, after cleaning, the format will be
@@ -5800,13 +5658,13 @@ exports.default = clearFormat;
 
 
 /***/ }),
-/* 86 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var matchLink_1 = __webpack_require__(47);
+var matchLink_1 = __webpack_require__(44);
 var queryNodesWithSelection_1 = __webpack_require__(3);
 // Regex matching Uri scheme
 var URI_REGEX = /^[a-zA-Z]+:/i;
@@ -5900,14 +5758,14 @@ function applyLinkPrefix(url) {
 
 
 /***/ }),
-/* 87 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var queryNodesWithSelection_1 = __webpack_require__(3);
-var roosterjs_editor_core_1 = __webpack_require__(1);
+var roosterjs_editor_core_1 = __webpack_require__(2);
 var EVENTDATACACHE_HEADER_LEVEL = 'HeaderLevel';
 /**
  * Get the header level in current selection. The header level refers to the HTML <H1> to <H6> elements,
@@ -5931,7 +5789,7 @@ exports.default = cacheGetHeaderLevel;
 
 
 /***/ }),
-/* 88 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5961,13 +5819,13 @@ exports.default = insertImage;
 
 
 /***/ }),
-/* 89 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var formatTable_1 = __webpack_require__(49);
+var formatTable_1 = __webpack_require__(46);
 /**
  * Insert table into editor at current selection
  * @param editor The editor instance
@@ -6020,7 +5878,7 @@ function getTableCellWidth(columns) {
 
 
 /***/ }),
-/* 90 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6149,7 +6007,7 @@ exports.default = editTable;
 
 
 /***/ }),
-/* 91 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6179,7 +6037,7 @@ exports.default = removeLink;
 
 
 /***/ }),
-/* 92 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6194,14 +6052,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function setAlignment(editor, alignment) {
     editor.focus();
     editor.formatWithUndo(function () {
-        editor.getDocument().execCommand(alignment == 1 /* Center */ ? 'justifyCenter' : alignment == 2 /* Right */ ? 'justifyRight' : 'justifyLeft', false, null);
+        editor
+            .getDocument()
+            .execCommand(alignment == 1 /* Center */
+            ? 'justifyCenter'
+            : alignment == 2 /* Right */ ? 'justifyRight' : 'justifyLeft', false, null);
     });
 }
 exports.default = setAlignment;
 
 
 /***/ }),
-/* 93 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6262,7 +6124,7 @@ exports.default = setDirection;
 
 
 /***/ }),
-/* 94 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6294,13 +6156,13 @@ exports.default = setImageAltText;
 
 
 /***/ }),
-/* 95 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getFormatState_1 = __webpack_require__(48);
+var getFormatState_1 = __webpack_require__(45);
 var queryNodesWithSelection_1 = __webpack_require__(3);
 /**
  * Set indentation at selection
@@ -6329,7 +6191,7 @@ exports.default = setIndentation;
 
 
 /***/ }),
-/* 96 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6353,7 +6215,7 @@ exports.default = toggleBold;
 
 
 /***/ }),
-/* 97 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6377,13 +6239,13 @@ exports.default = toggleItalic;
 
 
 /***/ }),
-/* 98 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var toggleBullet_1 = __webpack_require__(50);
+var toggleBullet_1 = __webpack_require__(47);
 /**
  * Toggle numbering at selection
  * If selection contains numbering in deep level, toggle numbering will decrease the numbering level by one
@@ -6404,7 +6266,7 @@ exports.default = toggleNumbering;
 
 
 /***/ }),
-/* 99 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6413,7 +6275,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var queryNodesWithSelection_1 = __webpack_require__(3);
 var getNodeAtCursor_1 = __webpack_require__(6);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var roosterjs_editor_core_1 = __webpack_require__(1);
+var roosterjs_editor_core_1 = __webpack_require__(2);
 var ZERO_WIDTH_SPACE = '\u200b';
 var defaultStyler = function (element) {
     element.style.borderLeft = '3px solid';
@@ -6530,7 +6392,7 @@ function isListElement(node) {
 
 
 /***/ }),
-/* 100 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6554,7 +6416,7 @@ exports.default = toggleStrikethrough;
 
 
 /***/ }),
-/* 101 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6580,7 +6442,7 @@ exports.default = toggleSubscript;
 
 
 /***/ }),
-/* 102 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6606,7 +6468,7 @@ exports.default = toggleSuperscript;
 
 
 /***/ }),
-/* 103 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6630,7 +6492,7 @@ exports.default = toggleUnderline;
 
 
 /***/ }),
-/* 104 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6682,14 +6544,14 @@ exports.default = toggleHeader;
 
 
 /***/ }),
-/* 105 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_api_1 = __webpack_require__(4);
-var roosterjs_editor_core_1 = __webpack_require__(1);
+var roosterjs_editor_core_1 = __webpack_require__(2);
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
 // we need to trim off the trailing puncatuation before turning it to link match
 var TRAILING_PUNCTUATION_REGEX = /[.()+={}\[\]\s:;"',>]+$/i;
@@ -6841,7 +6703,7 @@ exports.default = HyperLink;
 
 
 /***/ }),
-/* 106 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6849,9 +6711,9 @@ exports.default = HyperLink;
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_api_1 = __webpack_require__(4);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var roosterjs_editor_types_1 = __webpack_require__(2);
-var ContentEditFeatures_1 = __webpack_require__(51);
-var autoBullet_1 = __webpack_require__(107);
+var roosterjs_editor_types_1 = __webpack_require__(1);
+var ContentEditFeatures_1 = __webpack_require__(48);
+var autoBullet_1 = __webpack_require__(104);
 var KEY_TAB = 9;
 var KEY_BACKSPACE = 8;
 var KEY_ENTER = 13;
@@ -7020,7 +6882,9 @@ var ContentEdit = /** @class */ (function () {
     };
     ContentEdit.prototype.isCursorAtBeginningOf = function (node) {
         var range = this.editor.getSelectionRange();
-        return range.collapsed && range.start.offset == 0 && roosterjs_editor_types_1.Position.equal(roosterjs_editor_types_1.Position.normalize(roosterjs_editor_types_1.Position.create(node, roosterjs_editor_types_1.Position.Begin)), roosterjs_editor_types_1.Position.normalize(range.start));
+        return (range.collapsed &&
+            range.start.offset == 0 &&
+            roosterjs_editor_types_1.Position.equal(roosterjs_editor_types_1.Position.normalize(roosterjs_editor_types_1.Position.create(node, 0)), roosterjs_editor_types_1.Position.normalize(range.start)));
     };
     return ContentEdit;
 }());
@@ -7028,14 +6892,14 @@ exports.default = ContentEdit;
 
 
 /***/ }),
-/* 107 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_api_1 = __webpack_require__(4);
-var roosterjs_editor_core_1 = __webpack_require__(1);
+var roosterjs_editor_core_1 = __webpack_require__(2);
 var KEY_SPACE = 32;
 /**
  * Handles the autoBullet event. Specifically, when user press space after input '*', '-' and '1.' in an empty line,
@@ -7109,19 +6973,19 @@ function isAutoBulletInput(input) {
 
 
 /***/ }),
-/* 108 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var roosterjs_editor_core_1 = __webpack_require__(1);
+var roosterjs_editor_core_1 = __webpack_require__(2);
 var roosterjs_editor_api_1 = __webpack_require__(4);
-var buildClipboardData_1 = __webpack_require__(109);
-var convertPastedContentFromWord_1 = __webpack_require__(110);
-var removeUnsafeTags_1 = __webpack_require__(114);
-var removeUselessCss_1 = __webpack_require__(115);
+var buildClipboardData_1 = __webpack_require__(106);
+var convertPastedContentFromWord_1 = __webpack_require__(107);
+var removeUnsafeTags_1 = __webpack_require__(111);
+var removeUselessCss_1 = __webpack_require__(112);
 /**
  * Paste plugin, handles onPaste event and paste content into editor
  */
@@ -7263,7 +7127,7 @@ exports.default = Paste;
 
 
 /***/ }),
-/* 109 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7308,15 +7172,17 @@ function buildClipboardData(event, editor, callback, unsafeHtmlFilter) {
 exports.default = buildClipboardData;
 function getCurrentFormat(editor) {
     var format = roosterjs_editor_api_1.getFormatState(editor);
-    return format ? {
-        fontFamily: format.fontName,
-        fontSize: format.fontSize,
-        textColor: format.textColor,
-        backgroundColor: format.backgroundColor,
-        bold: format.isBold,
-        italic: format.isItalic,
-        underline: format.isUnderline,
-    } : {};
+    return format
+        ? {
+            fontFamily: format.fontName,
+            fontSize: format.fontSize,
+            textColor: format.textColor,
+            backgroundColor: format.backgroundColor,
+            bold: format.isBold,
+            italic: format.isItalic,
+            underline: format.isUnderline,
+        }
+        : {};
 }
 function getImage(dataTransfer) {
     // Chrome, Firefox, Edge support dataTransfer.items
@@ -7394,15 +7260,15 @@ function normalizeContent(content) {
 
 
 /***/ }),
-/* 110 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var wordConverter_1 = __webpack_require__(111);
-var WordConverterArguments_1 = __webpack_require__(112);
-var converterUtils_1 = __webpack_require__(113);
+var wordConverter_1 = __webpack_require__(108);
+var WordConverterArguments_1 = __webpack_require__(109);
+var converterUtils_1 = __webpack_require__(110);
 /** Converts all the Word generated list items in the specified node into standard HTML UL and OL tags */
 function convertPastedContentFromWord(root) {
     var wordConverter = wordConverter_1.createWordConverter();
@@ -7423,13 +7289,13 @@ exports.default = convertPastedContentFromWord;
 
 
 /***/ }),
-/* 111 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CustomData_1 = __webpack_require__(52);
+var CustomData_1 = __webpack_require__(49);
 ;
 /** create an empty WordConverter */
 function createWordConverter() {
@@ -7445,13 +7311,13 @@ exports.createWordConverter = createWordConverter;
 
 
 /***/ }),
-/* 112 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var LevelLists_1 = __webpack_require__(53);
+var LevelLists_1 = __webpack_require__(50);
 ;
 /** create an empty WordConverterArguments */
 function createWordConverterArguments(nodes) {
@@ -7468,14 +7334,14 @@ exports.createWordConverterArguments = createWordConverterArguments;
 
 
 /***/ }),
-/* 113 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var LevelLists_1 = __webpack_require__(53);
-var CustomData_1 = __webpack_require__(52);
+var LevelLists_1 = __webpack_require__(50);
+var CustomData_1 = __webpack_require__(49);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 /** Word list metadata style name */
 var LOOKUP_DEPTH = 5;
@@ -7955,7 +7821,7 @@ function resetCurrentLists(args) {
 
 
 /***/ }),
-/* 114 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7994,7 +7860,7 @@ exports.default = removeUnsafeTags;
 
 
 /***/ }),
-/* 115 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8087,7 +7953,7 @@ exports.default = removeUselessCss;
 
 
 /***/ }),
-/* 116 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8184,7 +8050,7 @@ exports.default = Watermark;
 
 
 /***/ }),
-/* 117 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8328,24 +8194,24 @@ exports.default = TableResize;
 
 
 /***/ }),
-/* 118 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var ImageResizePlugin_1 = __webpack_require__(119);
+var ImageResizePlugin_1 = __webpack_require__(116);
 exports.ImageResizePlugin = ImageResizePlugin_1.default;
 
 
 /***/ }),
-/* 119 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_types_1 = __webpack_require__(2);
+var roosterjs_editor_types_1 = __webpack_require__(1);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var BEGIN_TAG = 'RoosterJsImageResizingBegin';
 var END_TAG = 'RoosterJsImageResizingEnd';

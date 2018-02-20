@@ -1,40 +1,31 @@
 import InlineElementFactory from '../inlineElements/InlineElementFactory';
 import PartialInlineElement from '../inlineElements/PartialInlineElement';
-import editorPointEquals from '../utils/editorPointEquals';
-import isEditorPointAfter from '../utils/isEditorPointAfter';
-import normalizeEditorPoint from '../utils/normalizeEditorPoint';
-import { BlockElement, EditorPoint, InlineElement } from 'roosterjs-editor-types';
+import { BlockElement, Position, InlineElement, SelectionRangeBase } from 'roosterjs-editor-types';
 import {
     getBlockElementAtNode,
-    getInlineElementAfterPoint,
-    getInlineElementBeforePoint,
+    getInlineElementAfter,
+    getInlineElementBefore,
 } from '../blockElements/BlockElement';
 
 // This is a utility like class that produces editor point/inline/block element around or within a selection range
 class EditorSelection {
-    private readonly startPoint: EditorPoint;
-    private readonly endPoint: EditorPoint;
-
     private startInline: InlineElement;
     private endInline: InlineElement;
     private startEndCalculated: boolean = false;
 
     private startBlock: BlockElement;
     private endBlock: BlockElement;
+    private selectionRange: SelectionRangeBase;
 
     constructor(
         private rootNode: Node,
-        private selectionRange: Range,
+        range: SelectionRangeBase,
         private inlineElementFactory: InlineElementFactory
     ) {
-        // compute the start and end point
-        this.startPoint = normalizeEditorPoint(
-            this.selectionRange.startContainer,
-            this.selectionRange.startOffset
+        this.selectionRange = SelectionRangeBase.create(
+            Position.normalize(range.start),
+            Position.normalize(range.end)
         );
-        this.endPoint = this.selectionRange.collapsed
-            ? this.startPoint
-            : normalizeEditorPoint(this.selectionRange.endContainer, this.selectionRange.endOffset);
     }
 
     // Get the collapsed state of the selection
@@ -44,9 +35,9 @@ class EditorSelection {
 
     // Get the inline element before start of the selection
     public get inlineElementBeforeStart(): InlineElement {
-        return getInlineElementBeforePoint(
+        return getInlineElementBefore(
             this.rootNode,
-            this.startPoint,
+            this.selectionRange.start,
             this.inlineElementFactory
         );
     }
@@ -65,10 +56,10 @@ class EditorSelection {
 
     // Get start block element
     public get startBlockElement(): BlockElement {
-        if (!this.startBlock && this.startPoint) {
+        if (!this.startBlock) {
             this.startBlock = getBlockElementAtNode(
                 this.rootNode,
-                this.startPoint.containerNode,
+                this.selectionRange.start.node,
                 this.inlineElementFactory
             );
         }
@@ -78,10 +69,10 @@ class EditorSelection {
 
     // Get end block element
     public get endBlockElement(): BlockElement {
-        if (!this.endBlock && this.endPoint) {
+        if (!this.endBlock) {
             this.endBlock = getBlockElementAtNode(
                 this.rootNode,
-                this.endPoint.containerNode,
+                this.selectionRange.end.node,
                 this.inlineElementFactory
             );
         }
@@ -102,20 +93,21 @@ class EditorSelection {
         let trimmedInline: InlineElement;
         if (inlineElement && this.startInline && this.endInline) {
             // Start with the decorated inline, and trim first by startInline, and then endInline
-            // if we end up getting a trimmed trimmedStartPoint or trimmedEndPoint, we know the new element
+            // if we end up getting a trimmed trimmedstartPosition or trimmedendPosition, we know the new element
             // has to be partial. otherwise return a full inline
             let decoratedInline: InlineElement;
-            let trimmedStartPoint: EditorPoint;
-            let trimmedEndPoint: EditorPoint;
+            let trimmedStartPosition: Position;
+            let trimmedEndPosition: Position;
 
             // First unwrap inlineElement if it is partial
             if (inlineElement instanceof PartialInlineElement) {
-                let partialInline = inlineElement as PartialInlineElement;
-                decoratedInline = partialInline.getDecoratedInline();
-                trimmedStartPoint = partialInline.isStartPartial()
-                    ? partialInline.getStartPoint()
+                decoratedInline = inlineElement.getDecoratedInline();
+                trimmedStartPosition = inlineElement.isStartPartial()
+                    ? inlineElement.getStartPosition()
                     : null;
-                trimmedEndPoint = partialInline.isEndPartial() ? partialInline.getEndPoint() : null;
+                trimmedEndPosition = inlineElement.isEndPartial()
+                    ? inlineElement.getEndPosition()
+                    : null;
             } else {
                 decoratedInline = inlineElement;
             }
@@ -127,15 +119,15 @@ class EditorSelection {
             } else if (
                 decoratedInline.getContainerNode() == this.startInline.getContainerNode() &&
                 this.startInline instanceof PartialInlineElement &&
-                (this.startInline as PartialInlineElement).isStartPartial
+                (this.startInline as PartialInlineElement).isStartPartial()
             ) {
                 // On same container, and startInline is a partial, compare start point
                 if (
-                    !trimmedStartPoint ||
-                    isEditorPointAfter(this.startInline.getStartPoint(), trimmedStartPoint)
+                    !trimmedStartPosition ||
+                    Position.isAfter(this.startInline.getStartPosition(), trimmedStartPosition)
                 ) {
                     // selection start is after the element, use selection start's as new start point
-                    trimmedStartPoint = this.startInline.getStartPoint();
+                    trimmedStartPosition = this.startInline.getStartPosition();
                 }
             }
 
@@ -147,15 +139,15 @@ class EditorSelection {
                 } else if (
                     decoratedInline.getContainerNode() == this.endInline.getContainerNode() &&
                     this.endInline instanceof PartialInlineElement &&
-                    (this.endInline as PartialInlineElement).isEndPartial
+                    (this.endInline as PartialInlineElement).isEndPartial()
                 ) {
                     // On same container, and endInline is a partial, compare end point
                     if (
-                        !trimmedEndPoint ||
-                        isEditorPointAfter(trimmedEndPoint, this.endInline.getEndPoint())
+                        !trimmedEndPosition ||
+                        Position.isAfter(trimmedEndPosition, this.endInline.getEndPosition())
                     ) {
                         // selection end is before the element, use selection end's as new end point
-                        trimmedEndPoint = this.endInline.getEndPoint();
+                        trimmedEndPosition = this.endInline.getEndPosition();
                     }
                 }
             }
@@ -166,18 +158,18 @@ class EditorSelection {
                 // 1) both points are null, means it is full node, no need to decorate
                 // 2) both points are not null and they actually point to same point, this isn't an invalid inline element, set null
                 // 3) rest, create a new partial inline element
-                if (!trimmedStartPoint && !trimmedEndPoint) {
+                if (!trimmedStartPosition && !trimmedEndPosition) {
                     trimmedInline = decoratedInline;
                 } else {
                     trimmedInline =
-                        trimmedStartPoint &&
-                        trimmedEndPoint &&
-                        editorPointEquals(trimmedStartPoint, trimmedEndPoint)
+                        trimmedStartPosition &&
+                        trimmedEndPosition &&
+                        Position.equal(trimmedStartPosition, trimmedEndPosition)
                             ? null
                             : new PartialInlineElement(
                                   decoratedInline,
-                                  trimmedStartPoint,
-                                  trimmedEndPoint
+                                  trimmedStartPosition,
+                                  trimmedEndPosition
                               );
                 }
             }
@@ -225,9 +217,9 @@ class EditorSelection {
     // calculate start and end inline element
     private calculateStartEndInline(): void {
         // Compute the start point
-        this.startInline = getInlineElementAfterPoint(
+        this.startInline = getInlineElementAfter(
             this.rootNode,
-            this.startPoint,
+            this.selectionRange.start,
             this.inlineElementFactory
         );
 
@@ -236,9 +228,9 @@ class EditorSelection {
             this.endInline = this.startInline;
         } else {
             // For non-collapsed range, get same for end point
-            this.endInline = getInlineElementBeforePoint(
+            this.endInline = getInlineElementBefore(
                 this.rootNode,
-                this.endPoint,
+                this.selectionRange.end,
                 this.inlineElementFactory
             );
 
@@ -250,24 +242,24 @@ class EditorSelection {
                 this.endInline &&
                 this.startInline.getContainerNode() == this.endInline.getContainerNode()
             ) {
-                let fromPoint: EditorPoint;
+                let fromPosition: Position;
                 let decoratedInline: InlineElement;
                 if (this.startInline instanceof PartialInlineElement) {
-                    fromPoint = (this.startInline as PartialInlineElement).getStartPoint();
+                    fromPosition = (this.startInline as PartialInlineElement).getStartPosition();
                     decoratedInline = (this
                         .startInline as PartialInlineElement).getDecoratedInline();
                 } else {
                     decoratedInline = this.startInline;
                 }
 
-                let toPoint =
+                let toPosition =
                     this.endInline instanceof PartialInlineElement
-                        ? (this.endInline as PartialInlineElement).getEndPoint()
+                        ? (this.endInline as PartialInlineElement).getEndPosition()
                         : null;
                 this.startInline = this.endInline =
-                    !fromPoint && !toPoint
+                    !fromPosition && !toPosition
                         ? decoratedInline
-                        : new PartialInlineElement(decoratedInline, fromPoint, toPoint);
+                        : new PartialInlineElement(decoratedInline, fromPosition, toPosition);
             }
         }
     }
