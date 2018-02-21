@@ -1,7 +1,7 @@
 import * as TestHelper from '../TestHelper';
 import replaceTextBeforeCursorWithNode from '../../cursor/replaceTextBeforeCursorWithNode';
 import { Editor } from 'roosterjs-editor-core';
-import { Position } from 'roosterjs-editor-types';
+import { Position } from 'roosterjs-editor-dom';
 
 describe('replaceTextBeforeCursorWithNode replaceTextBeforeCursorWithNode()', () => {
     let testID = 'replaceTextBeforeCursorWithNode';

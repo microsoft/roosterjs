@@ -2,7 +2,7 @@ import * as TestHelper from '../TestHelper';
 import CursorData from '../../cursor/CursorData';
 import replaceRangeWithNode from '../../cursor/replaceRangeWithNode';
 import { Editor } from 'roosterjs-editor-core';
-import { Position } from 'roosterjs-editor-types';
+import { Position } from 'roosterjs-editor-dom';
 
 describe('replaceRangeWithNode replaceRangeWithNode()', () => {
     let testID = 'replaceRangeWithNode';

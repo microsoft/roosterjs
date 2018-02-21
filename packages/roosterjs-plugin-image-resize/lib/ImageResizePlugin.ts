@@ -6,9 +6,8 @@ import {
     PluginEventType,
     PluginDomEvent,
     ExtractContentEvent,
-    Position,
 } from 'roosterjs-editor-types';
-import { contains, getTagOfNode } from 'roosterjs-editor-dom';
+import { Position, contains, getTagOfNode } from 'roosterjs-editor-dom';
 
 const BEGIN_TAG = 'RoosterJsImageResizingBegin';
 const END_TAG = 'RoosterJsImageResizingEnd';

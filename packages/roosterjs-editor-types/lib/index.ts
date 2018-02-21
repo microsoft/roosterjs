@@ -25,5 +25,6 @@ export { default as ClipboardData } from './clipboard/ClipboardData';
 export { default as BeforePasteEvent } from './clipboard/BeforePasteEvent';
 export { default as PasteOption } from './clipboard/PasteOption';
 
-export { default as Position, PositionType } from './selection/Position';
-export { default as SelectionRangeBase, SelectionRange } from './selection/SelectionRange';
+export { default as PositionType } from './selection/PositionType';
+export { default as PositionInterface } from './selection/PositionInterface';
+export { default as SelectionRangeBaseInterface } from './selection/SelectionRangeBaseInterface';

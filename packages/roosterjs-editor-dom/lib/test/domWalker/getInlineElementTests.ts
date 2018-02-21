@@ -9,7 +9,8 @@ import {
     getInlineElementBefore,
     getInlineElementAfter,
 } from '../../blockElements/BlockElement';
-import { Position, PositionType, InlineElement } from 'roosterjs-editor-types';
+import { PositionInterface, PositionType, InlineElement } from 'roosterjs-editor-types';
+import Position from '../../selection/Position';
 
 let testID = 'getInlineElement';
 let inlineElementFactory: InlineElementFactory;
@@ -35,8 +36,8 @@ describe('getInlineElement getInlineElementAtNode()', () => {
         endOffset: number | PositionType
     ) {
         // Arrange
-        let startPosition = Position.create(testNode, startOffset);
-        let endPosition = Position.create(testNode, endOffset);
+        let startPosition = new Position(testNode, startOffset);
+        let endPosition = new Position(testNode, endOffset);
 
         // Act
         let inlineElement = getInlineElementAtNode(rootNode, node, inlineElementFactory);
@@ -96,8 +97,8 @@ describe('getInlineElement getFirstInlineElement()', () => {
         endOffset: number | PositionType
     ) {
         // Arrange
-        let startPosition = Position.create(testNode, startOffset);
-        let endPosition = Position.create(testNode, endOffset);
+        let startPosition = new Position(testNode, startOffset);
+        let endPosition = new Position(testNode, endOffset);
 
         // Act
         let inlineElement = getFirstInlineElement(rootNode, inlineElementFactory);
@@ -157,8 +158,8 @@ describe('getInlineElement getLastInlineElement()', () => {
         endOffset: number | PositionType
     ) {
         // Arrange
-        let startPosition = Position.create(testNode, startOffset);
-        let endPosition = Position.create(testNode, endOffset);
+        let startPosition = new Position(testNode, startOffset);
+        let endPosition = new Position(testNode, endOffset);
 
         // Act
         let inlineElement = getLastInlineElement(rootNode, inlineElementFactory);
@@ -219,8 +220,8 @@ describe('getInlineElement getNextInlineElement()', () => {
         endOffset: number | PositionType
     ) {
         // Arrange
-        let startPosition = Position.create(testNode, startOffset);
-        let endPosition = Position.create(testNode, endOffset);
+        let startPosition = new Position(testNode, startOffset);
+        let endPosition = new Position(testNode, endOffset);
 
         // Act
         let inlineElement = getNextInlineElement(rootNode, currentInline, inlineElementFactory);
@@ -315,8 +316,8 @@ describe('getInlineElement getPreviousInlineElement()', () => {
         endOffset: number | PositionType
     ) {
         // Arrange
-        let startPosition = Position.create(testNode, startOffset);
-        let endPosition = Position.create(testNode, endOffset);
+        let startPosition = new Position(testNode, startOffset);
+        let endPosition = new Position(testNode, endOffset);
 
         // Act
         let inlineElement = getPreviousInlineElement(rootNode, currentInline, inlineElementFactory);
@@ -413,14 +414,14 @@ describe('getInlineElement getInlineElementBeforePoint()', () => {
 
     function runTest(
         rootNode: Node,
-        position: Position,
+        position: PositionInterface,
         startOffset: number | PositionType,
         endOffset: number | PositionType,
         node: Node
     ) {
         // Arrange
-        let startPosition = Position.create(node, startOffset);
-        let endPosition = Position.create(node, endOffset);
+        let startPosition = new Position(node, startOffset);
+        let endPosition = new Position(node, endOffset);
 
         // Act
         let inlineElementBeforePoint = getInlineElementBefore(
@@ -446,7 +447,7 @@ describe('getInlineElement getInlineElementBeforePoint()', () => {
             testID,
             '<span>abc</span><span>123</span>'
         );
-        let position = Position.create(rootNode.firstChild, 0);
+        let position = new Position(rootNode.firstChild, 0);
 
         // Act
         let inlineElementBeforePoint = getInlineElementBefore(
@@ -464,7 +465,7 @@ describe('getInlineElement getInlineElementBeforePoint()', () => {
             testID,
             '<span>abc</span><span>123</span>'
         );
-        let position = Position.create(rootNode.lastChild, 0);
+        let position = new Position(rootNode.lastChild, 0);
         runTest(rootNode, position, 0, 3, rootNode.firstChild.firstChild);
     });
 
@@ -473,7 +474,7 @@ describe('getInlineElement getInlineElementBeforePoint()', () => {
             testID,
             '<span>www.example.com</span>'
         );
-        let position = Position.create(rootNode.firstChild.firstChild, 3);
+        let position = new Position(rootNode.firstChild.firstChild, 3);
         runTest(rootNode, position, 0, 3, rootNode.firstChild.firstChild);
     });
 });
@@ -493,14 +494,14 @@ describe('getInlineElement getInlineElementAfterPoint()', () => {
 
     function runTest(
         rootNode: Node,
-        position: Position,
+        position: PositionInterface,
         startOffset: number | PositionType,
         endOffset: number | PositionType,
         node: Node
     ) {
         // Arrange
-        let startPosition = Position.create(node, startOffset);
-        let endPosition = Position.create(node, endOffset);
+        let startPosition = new Position(node, startOffset);
+        let endPosition = new Position(node, endOffset);
 
         // Act
         let inlineElementAfterPoint = getInlineElementAfter(
@@ -526,7 +527,7 @@ describe('getInlineElement getInlineElementAfterPoint()', () => {
             testID,
             '<span>abc</span><span>123</span>'
         );
-        let position = Position.create(rootNode.lastChild, Position.End);
+        let position = new Position(rootNode.lastChild, Position.End);
 
         // Act
         let inlineElementAfterPoint = getInlineElementAfter(
@@ -544,7 +545,7 @@ describe('getInlineElement getInlineElementAfterPoint()', () => {
             testID,
             '<span>abc</span><span>123</span>'
         );
-        let position = Position.create(rootNode.firstChild, Position.End);
+        let position = new Position(rootNode.firstChild, Position.End);
         runTest(rootNode, position, 0, 3, rootNode.lastChild.firstChild);
     });
 
@@ -553,7 +554,7 @@ describe('getInlineElement getInlineElementAfterPoint()', () => {
             testID,
             '<span>www.example.com</span>'
         );
-        let position = Position.create(rootNode.firstChild.firstChild, 12);
+        let position = new Position(rootNode.firstChild.firstChild, 12);
         runTest(rootNode, position, 12, 15, rootNode.firstChild.firstChild);
     });
 });

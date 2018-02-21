@@ -4,14 +4,15 @@ import isDocumentPosition from '../utils/isDocumentPosition';
 import isNodeAfter from '../utils/isNodeAfter';
 import wrap from '../utils/wrap';
 import {
-    SelectionRangeBase,
     BlockElement,
     DocumentPosition,
-    Position,
     InlineElement,
     NodeType,
+    PositionInterface,
 } from 'roosterjs-editor-types';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../domWalker/getLeafSibling';
+import Position from '../selection/Position';
+import SelectionRangeBase from '../selection/SelectionRangeBase';
 
 // This presents an inline element that can be reprented by a single html node.
 // This serves as base for most inline element as it contains most implentation
@@ -39,17 +40,17 @@ class NodeInlineElement implements InlineElement {
     }
 
     // Get the start point of the inline element
-    public getStartPosition(): Position {
+    public getStartPosition(): PositionInterface {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest first child node from the container
-        return Position.normalize(Position.create(this.containerNode, 0));
+        return new Position(this.containerNode, 0).normalize();
     }
 
     // Get the end point of the inline element
-    public getEndPosition(): Position {
+    public getEndPosition(): PositionInterface {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest last child node from the container
-        return Position.normalize(Position.create(this.containerNode, Position.End));
+        return new Position(this.containerNode, Position.End).normalize();
     }
 
     // Checks if an inline element is after the current inline element
@@ -58,10 +59,10 @@ class NodeInlineElement implements InlineElement {
     }
 
     // Checks if an editor point is contained in the inline element
-    public contains(position: Position): boolean {
+    public contains(position: PositionInterface): boolean {
         let start = this.getStartPosition();
         let end = this.getEndPosition();
-        return Position.isAfter(position, start) && Position.isAfter(end, position);
+        return position.isAfter(start) && end.isAfter(position);
     }
 
     // Apply inline style to a region of an inline element. The region is identified thorugh the from and to point
@@ -69,23 +70,23 @@ class NodeInlineElement implements InlineElement {
     // The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
     // when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
     // The actuall styling is done by consumer through the styler callback
-    public applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void {
+    public applyStyle(styler: (node: Node) => void, from?: PositionInterface, to?: PositionInterface): void {
         let ownerDoc = this.containerNode.ownerDocument;
 
         // Adjust the start point
         if (!from) {
-            from = Position.create(this.containerNode, 0);
+            from = new Position(this.containerNode, 0);
         } else if (from.isAtEnd) {
             let nextNode = getNextLeafSibling(this.containerNode, from.node);
-            from = nextNode ? Position.create(nextNode, 0) : null;
+            from = nextNode ? new Position(nextNode, 0) : null;
         }
 
         // Adjust the end point
         if (!to) {
-            to = Position.create(this.containerNode, Position.End);
+            to = new Position(this.containerNode, Position.End);
         } else if (to.offset == 0) {
             let prevNode = getPreviousLeafSibling(this.containerNode, to.node);
-            to = prevNode ? Position.create(prevNode, Position.End) : null;
+            to = prevNode ? new Position(prevNode, Position.End) : null;
         }
 
         if (!from || !to) {
@@ -94,8 +95,8 @@ class NodeInlineElement implements InlineElement {
             return;
         }
 
-        from = Position.normalize(from);
-        to = Position.normalize(to);
+        from = from.normalize();
+        to = to.normalize();
 
         let fromNode = from.node;
         let toNode = to.node;
@@ -140,11 +141,11 @@ class NodeInlineElement implements InlineElement {
                             adjustedEndOffset
                         );
 
-                        let selectionRange = SelectionRangeBase.create(
-                            Position.create(fromNode, fromOffset),
-                            Position.create(fromNode, adjustedEndOffset)
+                        let selectionRange = new SelectionRangeBase(
+                            new Position(fromNode, fromOffset),
+                            new Position(fromNode, adjustedEndOffset)
                         );
-                        let range = SelectionRangeBase.toRange(selectionRange);
+                        let range = selectionRange.toRange();
                         range.deleteContents();
                         range.insertNode(newNode);
                         styler(newNode);

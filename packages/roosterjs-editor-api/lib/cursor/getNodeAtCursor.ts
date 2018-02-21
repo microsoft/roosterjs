@@ -15,18 +15,7 @@ export default function getNodeAtCursor(
     expectedTag?: string,
     startNode?: Node
 ): Node {
-    let node = startNode;
-    if (!node && editor.hasFocus()) {
-        let selection = editor.getDocument().defaultView.getSelection();
-        node = selection ? selection.focusNode : null;
-    }
-
-    if (!node) {
-        let selectionRange = editor.getSelectionRange();
-        node = selectionRange.collapsed
-            ? selectionRange.start.node
-            : selectionRange.rawRange.commonAncestorContainer;
-    }
+    let node = startNode || editor.getSelectionRange().start.normalize().node;
 
     node = node && node.nodeType == NodeType.Text ? node.parentNode : node;
     if (expectedTag) {

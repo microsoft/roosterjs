@@ -1,6 +1,6 @@
 import InlineElementFactory from '../inlineElements/InlineElementFactory';
 import PartialInlineElement from '../inlineElements/PartialInlineElement';
-import { BlockElement, Position, InlineElement, SelectionRangeBase } from 'roosterjs-editor-types';
+import { BlockElement, PositionInterface, InlineElement, SelectionRangeBaseInterface } from 'roosterjs-editor-types';
 import {
     getBlockElementAtNode,
     getInlineElementAfter,
@@ -15,17 +15,13 @@ class EditorSelection {
 
     private startBlock: BlockElement;
     private endBlock: BlockElement;
-    private selectionRange: SelectionRangeBase;
 
     constructor(
         private rootNode: Node,
-        range: SelectionRangeBase,
+        private selectionRange: SelectionRangeBaseInterface,
         private inlineElementFactory: InlineElementFactory
     ) {
-        this.selectionRange = SelectionRangeBase.create(
-            Position.normalize(range.start),
-            Position.normalize(range.end)
-        );
+        this.selectionRange = selectionRange.normalize();
     }
 
     // Get the collapsed state of the selection
@@ -96,8 +92,8 @@ class EditorSelection {
             // if we end up getting a trimmed trimmedstartPosition or trimmedendPosition, we know the new element
             // has to be partial. otherwise return a full inline
             let decoratedInline: InlineElement;
-            let trimmedStartPosition: Position;
-            let trimmedEndPosition: Position;
+            let trimmedStartPosition: PositionInterface;
+            let trimmedEndPosition: PositionInterface;
 
             // First unwrap inlineElement if it is partial
             if (inlineElement instanceof PartialInlineElement) {
@@ -124,7 +120,7 @@ class EditorSelection {
                 // On same container, and startInline is a partial, compare start point
                 if (
                     !trimmedStartPosition ||
-                    Position.isAfter(this.startInline.getStartPosition(), trimmedStartPosition)
+                    this.startInline.getStartPosition().isAfter(trimmedStartPosition)
                 ) {
                     // selection start is after the element, use selection start's as new start point
                     trimmedStartPosition = this.startInline.getStartPosition();
@@ -144,7 +140,7 @@ class EditorSelection {
                     // On same container, and endInline is a partial, compare end point
                     if (
                         !trimmedEndPosition ||
-                        Position.isAfter(trimmedEndPosition, this.endInline.getEndPosition())
+                        trimmedEndPosition.isAfter(this.endInline.getEndPosition())
                     ) {
                         // selection end is before the element, use selection end's as new end point
                         trimmedEndPosition = this.endInline.getEndPosition();
@@ -164,7 +160,7 @@ class EditorSelection {
                     trimmedInline =
                         trimmedStartPosition &&
                         trimmedEndPosition &&
-                        Position.equal(trimmedStartPosition, trimmedEndPosition)
+                        trimmedStartPosition.equalTo(trimmedEndPosition)
                             ? null
                             : new PartialInlineElement(
                                   decoratedInline,
@@ -242,7 +238,7 @@ class EditorSelection {
                 this.endInline &&
                 this.startInline.getContainerNode() == this.endInline.getContainerNode()
             ) {
-                let fromPosition: Position;
+                let fromPosition: PositionInterface;
                 let decoratedInline: InlineElement;
                 if (this.startInline instanceof PartialInlineElement) {
                     fromPosition = (this.startInline as PartialInlineElement).getStartPosition();

@@ -1,7 +1,8 @@
 import * as DomTestHelper from '../DomTestHelper';
 import { StartEndBlockElement, getNextInlineElement } from '../../blockElements/BlockElement';
 import InlineElementFactory from '../../inlineElements/InlineElementFactory';
-import { InlineElement, Position } from 'roosterjs-editor-types';
+import { InlineElement } from 'roosterjs-editor-types';
+import Position from '../../selection/Position';
 
 let testID = 'StartEndBlockElement';
 
@@ -139,8 +140,8 @@ describe('StartEndBlockElement getFirstInlineElement()', () => {
     function runTest(input: string, startOffset: number, endOffset: number, node: Node) {
         // Arrange
         let [blockElement] = createStartEndBlockElementWithContent(input);
-        let startPosition = Position.create(node, startOffset);
-        let endPosition = Position.create(node, endOffset);
+        let startPosition = new Position(node, startOffset);
+        let endPosition = new Position(node, endOffset);
 
         // Act
         let inlineElement = blockElement.getFirstInlineElement();
@@ -180,8 +181,8 @@ describe('StartEndBlockElement getLastInlineElement()', () => {
     function runTest(input: string, startOffset: number, endOffset: number, node: Node) {
         // Arrange
         let [blockElement] = createStartEndBlockElementWithContent(input);
-        let startPosition = Position.create(node, startOffset);
-        let endPosition = Position.create(node, endOffset);
+        let startPosition = new Position(node, startOffset);
+        let endPosition = new Position(node, endOffset);
 
         // Act
         let inlineElement = blockElement.getLastInlineElement();
@@ -228,8 +229,8 @@ describe('StartEndBlockElement getInlineElements()', () => {
         endOffset: number,
         node: Node
     ) {
-        let startPosition = Position.create(node, startOffset);
-        let endPosition = Position.create(node, endOffset);
+        let startPosition = new Position(node, startOffset);
+        let endPosition = new Position(node, endOffset);
         expect(
             DomTestHelper.isInlineElementEqual(
                 inlineElement,

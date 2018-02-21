@@ -1,5 +1,5 @@
 import BlockElement from './BlockElement';
-import Position from '../selection/Position';
+import PositionInterface from '../selection/PositionInterface';
 
 // This refers to an inline element (as opposed to block) in editor
 // Inline and block makes the "type" system in editor.
@@ -21,23 +21,23 @@ interface InlineElement {
     getParentBlock: () => BlockElement;
 
     // Get the start position of this inline element
-    getStartPosition: () => Position;
+    getStartPosition: () => PositionInterface;
 
     // Get the end position of this inline element
-    getEndPosition: () => Position;
+    getEndPosition: () => PositionInterface;
 
     // Checks if the given inline element is after this inline element
     isAfter: (inlineElement: InlineElement) => boolean;
 
     // Checks if the given editor position is contained in this inline element
-    contains: (position: Position) => boolean;
+    contains: (position: PositionInterface) => boolean;
 
     // Apply inline style to a region of an inline element. The region is identified thorugh the from and to point
     // The fromPosition and toPosition are optional and when bing missed, it indicates the boundary of the element
     // The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
     // when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
     // The actuall styling is done by consumer through the styler callback
-    applyStyle: (styler: (node: Node) => void, from?: Position, to?: Position) => void;
+    applyStyle: (styler: (node: Node) => void, from?: PositionInterface, to?: PositionInterface) => void;
 }
 
 export default InlineElement;

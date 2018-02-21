@@ -1,7 +1,8 @@
 import * as DomTestHelper from '../DomTestHelper';
 import InlineElementFactory from '../../inlineElements/InlineElementFactory';
 import { NodeBlockElement } from '../../blockElements/BlockElement';
-import { InlineElement, Position } from 'roosterjs-editor-types';
+import { InlineElement } from 'roosterjs-editor-types';
+import Position from '../../selection/Position';
 
 let testID = 'NodeBlockElement';
 
@@ -149,8 +150,8 @@ describe('NodeBlockElement getFirstInlineElement()', () => {
     function runTest(input: string, startOffset: number, endOffset: number, node: Node) {
         // Arrange
         let [nodeBlockElement] = createNodeBlockElementWithContent(input);
-        let startPosition = Position.create(node, startOffset);
-        let endPosition = Position.create(node, endOffset);
+        let startPosition = new Position(node, startOffset);
+        let endPosition = new Position(node, endOffset);
 
         // Act
         let inlineElement = nodeBlockElement.getFirstInlineElement();
@@ -195,8 +196,8 @@ describe('NodeBlockElement getLastInlineElement()', () => {
     function runTest(input: string, startOffset: number, endOffset: number, node: Node) {
         // Arrange
         let [nodeBlockElement] = createNodeBlockElementWithContent(input);
-        let startPosition = Position.create(node, startOffset);
-        let endPosition = Position.create(node, endOffset);
+        let startPosition = new Position(node, startOffset);
+        let endPosition = new Position(node, endOffset);
 
         // Act
         let inlineElement = nodeBlockElement.getLastInlineElement();
@@ -244,8 +245,8 @@ describe('NodeBlockElement getInlineElements()', () => {
         endOffset: number,
         node: Node
     ) {
-        let startPosition = Position.create(node, startOffset);
-        let endPosition = Position.create(node, endOffset);
+        let startPosition = new Position(node, startOffset);
+        let endPosition = new Position(node, endOffset);
         expect(
             DomTestHelper.isInlineElementEqual(
                 inlineElement,

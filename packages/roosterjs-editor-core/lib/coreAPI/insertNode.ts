@@ -5,6 +5,8 @@ import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import select from './select';
 import {
     EditorSelection,
+    Position,
+    SelectionRange,
     getFirstBlockElement,
     getLastBlockElement,
     isBlockElement,
@@ -14,8 +16,6 @@ import {
     ContentPosition,
     InsertOption,
     NodeType,
-    Position,
-    SelectionRange,
 } from 'roosterjs-editor-types';
 
 const HTML_EMPTY_DIV = '<div></div>';
@@ -149,7 +149,7 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
         }
 
         // Create a clone (backup) for the selection first as we may need to restore to it later
-        let clonedRange = SelectionRange.create(rawRange);
+        let clonedRange = new SelectionRange(rawRange);
 
         // Adjust the insertion point
         // option.insertOnNewLine means to insert on a block after the selection, not really right at the selection

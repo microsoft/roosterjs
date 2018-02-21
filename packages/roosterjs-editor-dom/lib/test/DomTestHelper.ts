@@ -1,6 +1,8 @@
-import { InlineElement, Position, SelectionRangeBase } from 'roosterjs-editor-types';
+import { InlineElement, PositionInterface, SelectionRangeBaseInterface } from 'roosterjs-editor-types';
 import InlineElementFactory from '../inlineElements/InlineElementFactory';
 import { NodeBlockElement, StartEndBlockElement } from '../blockElements/BlockElement';
+import Position from '../selection/Position';
+import SelectionRangeBase from '../selection/SelectionRangeBase';
 
 // Create element with content and id and insert the element in the DOM
 export function createElementFromContent(id: string, content: string): HTMLElement {
@@ -45,8 +47,8 @@ export function runTestMethod2(
 // Check inlineElement equality based on startPosition, endPosition and textContent
 export function isInlineElementEqual(
     element: InlineElement,
-    startPosition: Position,
-    endPosition: Position,
+    startPosition: PositionInterface,
+    endPosition: PositionInterface,
     textContent: string
 ): boolean {
     return (
@@ -57,7 +59,7 @@ export function isInlineElementEqual(
 }
 
 // Check if two editor points are equal
-export function isPositionEqual(position1: Position, position2: Position): boolean {
+export function isPositionEqual(position1: PositionInterface, position2: PositionInterface): boolean {
     return position1.node.isEqualNode(position2.node) && position1.offset == position2.offset;
 }
 
@@ -93,17 +95,17 @@ export function createInlineElementFromNode(node: Node, rootNode: Node): InlineE
 }
 
 // Create range from child nodes of given node
-export function createRangeFromChildNodes(node: Node): SelectionRangeBase {
-    return SelectionRangeBase.create(
-        Position.create(node.firstChild, Position.Before),
-        Position.create(node.lastChild, Position.After)
+export function createRangeFromChildNodes(node: Node): SelectionRangeBaseInterface {
+    return new SelectionRangeBase(
+        new Position(node.firstChild, Position.Before),
+        new Position(node.lastChild, Position.After)
     );
 }
 
 // Create range from given HTMLElement
-export function createRangeWithDiv(testDiv: HTMLElement): SelectionRangeBase {
-    return SelectionRangeBase.create(
-        Position.create(testDiv, Position.Before),
-        Position.create(testDiv, Position.After)
+export function createRangeWithDiv(testDiv: HTMLElement): SelectionRangeBaseInterface {
+    return new SelectionRangeBase(
+        new Position(testDiv, Position.Before),
+        new Position(testDiv, Position.After)
     );
 }

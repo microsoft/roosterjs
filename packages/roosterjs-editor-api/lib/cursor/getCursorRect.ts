@@ -1,6 +1,6 @@
 import { Editor } from 'roosterjs-editor-core';
-import { DocumentPosition, Rect, NodeType, Position } from 'roosterjs-editor-types';
-import { isDocumentPosition } from 'roosterjs-editor-dom';
+import { DocumentPosition, Rect, NodeType,  } from 'roosterjs-editor-types';
+import { isDocumentPosition, Position } from 'roosterjs-editor-dom';
 
 // Returns a rect representing the location of the cursor.
 // In case there is a uncollapsed selection witin editor, this returns
@@ -47,7 +47,7 @@ export default function getCursorRect(editor: Editor): Rect {
         // i.e. <p>{cursor}<br></p>, or <p><img ...>{cursor}text</p>.
         // range.getBoundingClientRect mostly return a client rect of all 0
         // Skip this if we're in middle of a text node
-        let position = Position.normalize(Position.create(range.startContainer, range.startOffset));
+        let position = new Position(range.startContainer, range.startOffset).normalize();
         if (position.node.nodeType != NodeType.Text || position.isAtEnd) {
             let nearbyRange = editor.getDocument().createRange();
             nearbyRange.selectNode(position.node);

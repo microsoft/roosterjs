@@ -1,5 +1,5 @@
 import { Editor } from 'roosterjs-editor-core';
-import { Position } from 'roosterjs-editor-types';
+import { Position } from 'roosterjs-editor-dom';
 
 /**
  * Replace the specified range with a node

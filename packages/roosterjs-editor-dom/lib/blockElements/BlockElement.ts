@@ -10,7 +10,7 @@ import {
     BlockElement,
     DocumentPosition,
     InlineElement,
-    Position,
+    PositionInterface,
     NodeType,
 } from 'roosterjs-editor-types';
 import { getFirstLeafNode, getLastLeafNode } from '../domWalker/getLeafNode';
@@ -115,7 +115,7 @@ function getPreviousInlineElement(
 // that we're in middle. The logic is largely to detect if the editor point runs across an inline element
 function getInlineElementBefore(
     rootNode: Node,
-    position: Position,
+    position: PositionInterface,
     inlineElementFactory: InlineElementFactory
 ) {
     let inlineElement: InlineElement;
@@ -155,7 +155,7 @@ function getInlineElementBefore(
 // Similar to getInlineElementBeforePoint, to get inline element after an editor point
 function getInlineElementAfter(
     rootNode: Node,
-    position: Position,
+    position: PositionInterface,
     inlineElementFactory: InlineElementFactory
 ) {
     let inlineElement: InlineElement;

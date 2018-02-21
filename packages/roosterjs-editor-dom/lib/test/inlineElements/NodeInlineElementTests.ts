@@ -1,7 +1,8 @@
 import * as DomTestHelper from '../DomTestHelper';
 import InlineElementFactory from '../../inlineElements/InlineElementFactory';
 import { NodeBlockElement } from '../../blockElements/BlockElement';
-import { InlineElement, Position } from 'roosterjs-editor-types';
+import { InlineElement } from 'roosterjs-editor-types';
+import Position from '../../selection/Position';
 
 let testID = 'NodeInlineElement';
 
@@ -203,7 +204,7 @@ describe('NodeInlineElement contains()', () => {
         );
         let parentBlock = new NodeBlockElement(testDiv, null);
         let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
-        let position = Position.create(testDiv.firstChild.lastChild, 3);
+        let position = new Position(testDiv.firstChild.lastChild, 3);
 
         // Act
         let elementContainsPosition = element.contains(position);
@@ -224,7 +225,7 @@ describe('NodeInlineElement contains()', () => {
             testDiv,
             parentBlock
         );
-        let position = Position.create(testDiv.firstChild.lastChild, Position.End);
+        let position = new Position(testDiv.firstChild.lastChild, Position.End);
 
         // Act
         let elementContainsPosition = element.contains(position);
@@ -270,8 +271,8 @@ describe('NodeInlineElement applyStyle()', () => {
         );
         let parentBlock = new NodeBlockElement(testDiv, null);
         let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
-        let fromPosition = Position.create(testDiv.firstChild.firstChild, 3);
-        let toPosition = Position.create(testDiv.firstChild.lastChild, 11);
+        let fromPosition = new Position(testDiv.firstChild.firstChild, 3);
+        let toPosition = new Position(testDiv.firstChild.lastChild, 11);
         let mockColor = 'red';
 
         // Act
@@ -297,7 +298,7 @@ describe('NodeInlineElement applyStyle()', () => {
         );
         let parentBlock = new NodeBlockElement(testDiv, null);
         let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
-        let fromPosition = Position.create(testDiv.firstChild.firstChild, 3);
+        let fromPosition = new Position(testDiv.firstChild.firstChild, 3);
         let mockColor = 'red';
 
         // Act
@@ -323,7 +324,7 @@ describe('NodeInlineElement applyStyle()', () => {
         );
         let parentBlock = new NodeBlockElement(testDiv, null);
         let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
-        let toPosition = Position.create(testDiv.firstChild.firstChild, 11);
+        let toPosition = new Position(testDiv.firstChild.firstChild, 11);
         let mockColor = 'red';
 
         // Act
@@ -349,8 +350,8 @@ describe('NodeInlineElement applyStyle()', () => {
         );
         let parentBlock = new NodeBlockElement(testDiv, null);
         let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
-        let fromPosition = Position.create(testDiv.firstChild.firstChild, 3);
-        let toPosition = Position.create(testDiv.firstChild.firstChild, 3);
+        let fromPosition = new Position(testDiv.firstChild.firstChild, 3);
+        let toPosition = new Position(testDiv.firstChild.firstChild, 3);
         let mockColor = 'red';
 
         // Act
@@ -376,8 +377,8 @@ describe('NodeInlineElement applyStyle()', () => {
         );
         let parentBlock = new NodeBlockElement(testDiv, null);
         let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
-        let fromPosition = Position.create(testDiv.firstChild.firstChild, 4);
-        let toPosition = Position.create(testDiv.firstChild.firstChild, 3);
+        let fromPosition = new Position(testDiv.firstChild.firstChild, 4);
+        let toPosition = new Position(testDiv.firstChild.firstChild, 3);
         let mockColor = 'red';
 
         // Act

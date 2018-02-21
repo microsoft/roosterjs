@@ -1,7 +1,9 @@
 import * as DomTestHelper from '../DomTestHelper';
 import EditorSelection from '../../scopers/EditorSelection';
 import InlineElementFactory from '../../inlineElements/InlineElementFactory';
-import { BlockElement, Position, PositionType, SelectionRangeBase } from 'roosterjs-editor-types';
+import { BlockElement, PositionType } from 'roosterjs-editor-types';
+import Position from '../../selection/Position';
+import SelectionRangeBase from '../../selection/SelectionRangeBase';
 
 let testID = 'EditorSelection';
 let inlineElementFactory: InlineElementFactory;
@@ -25,7 +27,7 @@ describe('EditorSelection collapsed()', () => {
             testID,
             '<span>www.example.com</span>'
         );
-        let selectionRange = SelectionRangeBase.create(Position.create(rootNode, Position.End));
+        let selectionRange = new SelectionRangeBase(new Position(rootNode, Position.End));
         let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
 
         // Act
@@ -41,7 +43,7 @@ describe('EditorSelection collapsed()', () => {
             testID,
             '<span>www.example.com</span>'
         );
-        let selectionRange = SelectionRangeBase.create(Position.create(rootNode, 0));
+        let selectionRange = new SelectionRangeBase(new Position(rootNode, 0));
         let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
 
         // Act
@@ -89,8 +91,8 @@ describe('EditorSelection inlineElementBeforeStart()', () => {
         node: Node
     ) {
         // Arrange
-        let startPosition = Position.create(node, startOffset);
-        let endPosition = Position.create(node, endOffset);
+        let startPosition = new Position(node, startOffset);
+        let endPosition = new Position(node, endOffset);
         let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
 
         // Act
@@ -112,9 +114,9 @@ describe('EditorSelection inlineElementBeforeStart()', () => {
             testID,
             '<span>part1</span><span>part2</span>'
         );
-        let startPosition = Position.create(rootNode.lastChild, 0);
-        let endPosition = Position.create(rootNode.lastChild, Position.End);
-        let selectionRange = SelectionRangeBase.create(startPosition, endPosition);
+        let startPosition = new Position(rootNode.lastChild, 0);
+        let endPosition = new Position(rootNode.lastChild, Position.End);
+        let selectionRange = new SelectionRangeBase(startPosition, endPosition);
         let node = document.createTextNode('part1');
         runTest(rootNode, selectionRange, 0, 5, node);
     });
@@ -125,9 +127,9 @@ describe('EditorSelection inlineElementBeforeStart()', () => {
             testID,
             '<span>part1</span><span>part2</span>'
         );
-        let startPosition = Position.create(rootNode.firstChild, 0);
-        let endPosition = Position.create(rootNode.firstChild, Position.End);
-        let selectionRange = SelectionRangeBase.create(startPosition, endPosition);
+        let startPosition = new Position(rootNode.firstChild, 0);
+        let endPosition = new Position(rootNode.firstChild, Position.End);
+        let selectionRange = new SelectionRangeBase(startPosition, endPosition);
         let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
 
         // Act
@@ -142,11 +144,11 @@ describe('EditorSelection inlineElementBeforeStart()', () => {
             testID,
             '<span>www.example.com</span>'
         );
-        let startPosition = Position.create(rootNode.firstChild.firstChild, 3);
-        let endPosition = Position.create(rootNode.firstChild.firstChild, 15);
+        let startPosition = new Position(rootNode.firstChild.firstChild, 3);
+        let endPosition = new Position(rootNode.firstChild.firstChild, 15);
 
         // selectionRange is '.example.com'
-        let selectionRange = SelectionRangeBase.create(startPosition, endPosition);
+        let selectionRange = new SelectionRangeBase(startPosition, endPosition);
         let node = document.createTextNode('www.example.com');
         runTest(rootNode, selectionRange, 0, 3, node);
     });
@@ -173,8 +175,8 @@ describe('EditorSelection startInlineElement()', () => {
         node: Node
     ) {
         // Arrange
-        let startPosition = Position.create(node, startOffset);
-        let endPosition = Position.create(node, endOffset);
+        let startPosition = new Position(node, startOffset);
+        let endPosition = new Position(node, endOffset);
         let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
 
         // Act
@@ -196,11 +198,11 @@ describe('EditorSelection startInlineElement()', () => {
             testID,
             '<span>www.example.com</span>'
         );
-        let startPosition = Position.create(rootNode.firstChild.firstChild, 3);
-        let endPosition = Position.create(rootNode.firstChild.firstChild, 15);
+        let startPosition = new Position(rootNode.firstChild.firstChild, 3);
+        let endPosition = new Position(rootNode.firstChild.firstChild, 15);
 
         // selectionRange is '.example.com'
-        let selectionRange = SelectionRangeBase.create(startPosition, endPosition);
+        let selectionRange = new SelectionRangeBase(startPosition, endPosition);
         let node = document.createTextNode('www.example.com');
         runTest(rootNode, selectionRange, 3, 15, node);
     });
@@ -210,11 +212,11 @@ describe('EditorSelection startInlineElement()', () => {
             testID,
             '<span>www.example.com</span>'
         );
-        let startPosition = Position.create(rootNode.firstChild, 0);
-        let endPosition = Position.create(rootNode.firstChild, Position.End);
+        let startPosition = new Position(rootNode.firstChild, 0);
+        let endPosition = new Position(rootNode.firstChild, Position.End);
 
         // selectionRange is '<span>www.example.com</span>'
-        let selectionRange = SelectionRangeBase.create(startPosition, endPosition);
+        let selectionRange = new SelectionRangeBase(startPosition, endPosition);
         let node = document.createTextNode('www.example.com');
         runTest(rootNode, selectionRange, 0, 15, node);
     });
@@ -248,8 +250,8 @@ describe('EditorSelection endInlineElement()', () => {
         node: Node
     ) {
         // Arrange
-        let startPosition = Position.create(node, startOffset);
-        let endPosition = Position.create(node, endOffset);
+        let startPosition = new Position(node, startOffset);
+        let endPosition = new Position(node, endOffset);
         let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
 
         // Act
@@ -271,11 +273,11 @@ describe('EditorSelection endInlineElement()', () => {
             testID,
             '<span>www.example.com</span>'
         );
-        let startPosition = Position.create(rootNode.firstChild.firstChild, 3);
-        let endPosition = Position.create(rootNode.firstChild.firstChild, 15);
+        let startPosition = new Position(rootNode.firstChild.firstChild, 3);
+        let endPosition = new Position(rootNode.firstChild.firstChild, 15);
 
         // selectionRange is '.example.com'
-        let selectionRange = SelectionRangeBase.create(startPosition, endPosition);
+        let selectionRange = new SelectionRangeBase(startPosition, endPosition);
         let node = document.createTextNode('www.example.com');
         runTest(rootNode, selectionRange, 3, 15, node);
     });
@@ -460,7 +462,7 @@ describe('EditorSelection trimInlineElement()', () => {
     it('input = <div>abc</div>, collapsed selection', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
-        let selectionRange = SelectionRangeBase.create(Position.create(rootNode, Position.End));
+        let selectionRange = new SelectionRangeBase(new Position(rootNode, Position.End));
         let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
         let inlineElement = DomTestHelper.createInlineElementFromNode(
             rootNode.firstChild.firstChild,
@@ -477,11 +479,11 @@ describe('EditorSelection trimInlineElement()', () => {
     it('input = <p>part1</p><p>part2</p>, inlineElement inside selectionRange', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
-        let startPosition = Position.create(rootNode.firstChild, 0);
-        let endPosition = Position.create(rootNode.firstChild, Position.End);
+        let startPosition = new Position(rootNode.firstChild, 0);
+        let endPosition = new Position(rootNode.firstChild, Position.End);
 
         // range is '<p>part1</p>'
-        let selectionRange = SelectionRangeBase.create(startPosition, endPosition);
+        let selectionRange = new SelectionRangeBase(startPosition, endPosition);
         let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
 
         // inlineElement is 'part1'
@@ -500,11 +502,11 @@ describe('EditorSelection trimInlineElement()', () => {
     it('input = <p>part1</p><p>part2</p>, inlineElement complete outside selectionRange', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
-        let startPosition = Position.create(rootNode.firstChild, 0);
-        let endPosition = Position.create(rootNode.firstChild, Position.End);
+        let startPosition = new Position(rootNode.firstChild, 0);
+        let endPosition = new Position(rootNode.firstChild, Position.End);
 
         // range is '<p>part1</p>'
-        let selectionRange = SelectionRangeBase.create(startPosition, endPosition);
+        let selectionRange = new SelectionRangeBase(startPosition, endPosition);
         let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
 
         // inlineElement is 'part2'
@@ -523,11 +525,11 @@ describe('EditorSelection trimInlineElement()', () => {
     it('input = <span>part1,part2</span>, part of inlineElement is out of scope', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<span>part1,part2</span>');
-        let startPosition = Position.create(rootNode.firstChild.firstChild, 0);
-        let endPosition = Position.create(rootNode.firstChild.firstChild, 5);
+        let startPosition = new Position(rootNode.firstChild.firstChild, 0);
+        let endPosition = new Position(rootNode.firstChild.firstChild, 5);
 
         // range is 'part1'
-        let selectionRange = SelectionRangeBase.create(startPosition, endPosition);
+        let selectionRange = new SelectionRangeBase(startPosition, endPosition);
         let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
 
         // inlineElement is 'part1,part2'
@@ -540,8 +542,8 @@ describe('EditorSelection trimInlineElement()', () => {
         let trimmedElement = editorSelection.trimInlineElement(inlineElement);
 
         // Assert
-        startPosition = Position.create(rootNode.firstChild.firstChild, 0);
-        endPosition = Position.create(rootNode.firstChild.firstChild, 5);
+        startPosition = new Position(rootNode.firstChild.firstChild, 0);
+        endPosition = new Position(rootNode.firstChild.firstChild, 5);
         expect(
             DomTestHelper.isInlineElementEqual(trimmedElement, startPosition, endPosition, 'part1')
         ).toBe(true);
@@ -579,9 +581,9 @@ describe('EditorSelection isBlockInScope()', () => {
 
     it('input = <p>abc</p><p>123</p>, the start of selection falls on the block', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>abc</p><p>123</p>');
-        let startPosition = Position.create(rootNode.firstChild.firstChild, 2);
-        let endPosition = Position.create(rootNode.lastChild, Position.End);
-        let selectionRange = SelectionRangeBase.create(startPosition, endPosition);
+        let startPosition = new Position(rootNode.firstChild.firstChild, 2);
+        let endPosition = new Position(rootNode.lastChild, Position.End);
+        let selectionRange = new SelectionRangeBase(startPosition, endPosition);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.firstChild as HTMLElement
         );
@@ -590,9 +592,9 @@ describe('EditorSelection isBlockInScope()', () => {
 
     it('input = <p>abc</p><p>123</p>, the end of selection falls on the block', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>abc</p><p>123</p>');
-        let startPosition = Position.create(rootNode.firstChild, 0);
-        let endPosition = Position.create(rootNode.lastChild.firstChild, 1);
-        let selectionRange = SelectionRangeBase.create(startPosition, endPosition);
+        let startPosition = new Position(rootNode.firstChild, 0);
+        let endPosition = new Position(rootNode.lastChild.firstChild, 1);
+        let selectionRange = new SelectionRangeBase(startPosition, endPosition);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.lastChild as HTMLElement
         );

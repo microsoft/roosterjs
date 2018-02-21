@@ -1,4 +1,4 @@
-import { DocumentPosition, SelectionRangeBase } from 'roosterjs-editor-types';
+import { DocumentPosition, SelectionRangeBaseInterface } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { isDocumentPosition } from 'roosterjs-editor-dom';
 
@@ -20,7 +20,7 @@ export default function queryNodesWithSelection(editor: Editor, selector: string
     return result;
 }
 
-function isIntersectWithNodeRange(node: Node, range: SelectionRangeBase): boolean {
+function isIntersectWithNodeRange(node: Node, range: SelectionRangeBaseInterface): boolean {
     let startPosition = node.compareDocumentPosition(range.start.node);
     let endPosition = node.compareDocumentPosition(range.end.node);
     let targetPositions = [

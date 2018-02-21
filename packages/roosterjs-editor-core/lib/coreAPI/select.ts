@@ -1,4 +1,5 @@
-import { Position, PositionType, SelectionRangeBase } from 'roosterjs-editor-types';
+import { PositionType } from 'roosterjs-editor-types';
+import { Position, SelectionRangeBase } from 'roosterjs-editor-dom';
 import EditorCore from '../editor/EditorCore';
 import hasFocus from './hasFocus';
 import isRangeInContainer from '../utils/isRangeInContainer';
@@ -19,26 +20,26 @@ export default function select(
         if (arg1.start && arg1.end) {
             selectionRangeBase = <SelectionRangeBase>arg1;
         } else if (arg1.node) {
-            selectionRangeBase = SelectionRangeBase.create(
-                Position.create(<Position>arg1),
-                arg2 && arg2.node ? Position.create(<Position>arg2) : null
+            selectionRangeBase = new SelectionRangeBase(
+                new Position(arg1),
+                arg2 && arg2.node ? new Position(arg2) : null
             );
         } else if (arg1 instanceof Node) {
             let start: Position;
             let end: Position;
             if (arg2 == undefined) {
-                start = Position.create(<Node>arg1, Position.Before);
-                end = Position.create(<Node>arg1, Position.After);
+                start = new Position(<Node>arg1, Position.Before);
+                end = new Position(<Node>arg1, Position.After);
             } else {
-                start = Position.create(<Node>arg1, <number | PositionType>arg2);
+                start = new Position(<Node>arg1, <number | PositionType>arg2);
                 end =
                     arg3 instanceof Node
-                        ? Position.create(<Node>arg3, <number | PositionType>arg4)
+                        ? new Position(<Node>arg3, <number | PositionType>arg4)
                         : null;
             }
-            selectionRangeBase = SelectionRangeBase.create(start, end);
+            selectionRangeBase = new SelectionRangeBase(start, end);
         }
-        rawRange = SelectionRangeBase.toRange(selectionRangeBase);
+        rawRange = selectionRangeBase.toRange();
     }
 
     if (isRangeInContainer(rawRange, core.contentDiv)) {

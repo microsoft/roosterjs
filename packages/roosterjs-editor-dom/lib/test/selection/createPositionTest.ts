@@ -1,4 +1,5 @@
-import Position, { PositionType } from '../../selection/Position';
+import Position from '../../selection/Position';
+import { PositionType } from 'roosterjs-editor-types';
 
 function runTest(
     testName: string,
@@ -9,9 +10,9 @@ function runTest(
     expectOffset: number,
     expectIsAtEnd: boolean
 ) {
-    let position = Position.create(node, offset);
+    let position = new Position(node, offset);
     if (normalize) {
-        position = Position.normalize(position);
+        position = position.normalize();
     }
 
     expect(position.node).toBe(expectNode || node, `Test ${testName}.Node`);

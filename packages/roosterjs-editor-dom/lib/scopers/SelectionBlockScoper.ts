@@ -5,7 +5,7 @@ import {
     ContentPosition,
     InlineElement,
     TraversingScoper,
-    SelectionRangeBase,
+    SelectionRangeBaseInterface,
 } from 'roosterjs-editor-types';
 
 // This provides traversing content in a selection start block
@@ -18,7 +18,7 @@ class SelectionBlockScoper implements TraversingScoper {
 
     constructor(
         rootNode: Node,
-        selectionRange: SelectionRangeBase,
+        selectionRange: SelectionRangeBaseInterface,
         private startPosition: ContentPosition,
         inlineElementFactory: InlineElementFactory
     ) {

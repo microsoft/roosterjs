@@ -7,7 +7,7 @@ import {
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-import { getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
+import { Position, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     Indentation,
@@ -15,7 +15,6 @@ import {
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
-    Position,
 } from 'roosterjs-editor-types';
 import ContentEditFeatures, { getDefaultContentEditFeatures } from './ContentEditFeatures';
 import tryHandleAutoBullet from './autoBullet';
@@ -222,10 +221,7 @@ export default class ContentEdit implements EditorPlugin {
         return (
             range.collapsed &&
             range.start.offset == 0 &&
-            Position.equal(
-                Position.normalize(Position.create(node, 0)),
-                Position.normalize(range.start)
-            )
+            new Position(node, 0).normalize().equalTo(range.start.normalize())
         );
     }
 }

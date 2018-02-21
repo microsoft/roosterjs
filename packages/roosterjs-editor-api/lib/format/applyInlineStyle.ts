@@ -1,5 +1,6 @@
-import { ContentScope, ChangeSource, Position } from 'roosterjs-editor-types';
+import { ContentScope, ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
+import { Position } from 'roosterjs-editor-dom';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
 
