@@ -273,12 +273,13 @@ export default class Editor {
     }
 
     /**
-     * DOM query content in editor
+     * DOM query nodes in editor
      * @param selector Selector string to query
      * @returns Node list of the query result
      */
-    public queryContent(selector: string): NodeListOf<Element> {
-        return this.core.contentDiv.querySelectorAll(selector);
+    public queryNodes(selector: string): Node[] {
+        let nodes = this.core.contentDiv.querySelectorAll(selector);
+        return <Node[]>Array.apply(null, nodes);
     }
 
     //#endregion

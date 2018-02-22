@@ -105,11 +105,11 @@ function insertCursorMarker(
 }
 
 // Get an element by unique id. If there is more than one element by the id, it should return null
-function getCursorMarkerByUniqueId(editor: Editor, id: string): Element {
+function getCursorMarkerByUniqueId(editor: Editor, id: string): Node {
     let nodes = getCursorMarkNodes(editor, id);
     return nodes && nodes.length == 1 ? nodes[0] : null;
 }
 
-function getCursorMarkNodes(editor: Editor, id: string): NodeListOf<Element> {
-    return editor.queryContent(`span[id="${id}"]:empty`);
+function getCursorMarkNodes(editor: Editor, id: string): Node[] {
+    return editor.queryNodes(`span[id="${id}"]:empty`);
 }

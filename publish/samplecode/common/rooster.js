@@ -193,7 +193,7 @@ var roosterjs_editor_dom_1 = __webpack_require__(0);
  */
 function queryNodesWithSelection(editor, selector) {
     var result = [];
-    var nodes = editor.queryContent(selector);
+    var nodes = editor.queryNodes(selector);
     var range = editor.getSelectionRange();
     for (var i = 0; i < nodes.length; i++) {
         if (isIntersectWithNodeRange(nodes[i], range)) {
@@ -2565,7 +2565,7 @@ function getCursorMarkerByUniqueId(editor, id) {
     return nodes && nodes.length == 1 ? nodes[0] : null;
 }
 function getCursorMarkNodes(editor, id) {
-    return editor.queryContent("span[id=\"" + id + "\"]:empty");
+    return editor.queryNodes("span[id=\"" + id + "\"]:empty");
 }
 
 
@@ -3781,12 +3781,13 @@ var Editor = /** @class */ (function () {
         }
     };
     /**
-     * DOM query content in editor
+     * DOM query nodes in editor
      * @param selector Selector string to query
      * @returns Node list of the query result
      */
-    Editor.prototype.queryContent = function (selector) {
-        return this.core.contentDiv.querySelectorAll(selector);
+    Editor.prototype.queryNodes = function (selector) {
+        var nodes = this.core.contentDiv.querySelectorAll(selector);
+        return Array.apply(null, nodes);
     };
     //#endregion
     //#region Focus and Selection
@@ -6675,10 +6676,8 @@ var HyperLink = /** @class */ (function () {
         return href;
     };
     HyperLink.prototype.forEachHyperLink = function (callback) {
-        var anchors = this.editor.queryContent('a[href]');
-        for (var i = 0; i < anchors.length; i++) {
-            callback(anchors[i]);
-        }
+        var anchors = this.editor.queryNodes('a[href]');
+        anchors.forEach(callback);
     };
     return HyperLink;
 }());
@@ -8012,12 +8011,10 @@ var Watermark = /** @class */ (function () {
         this.isWatermarkShowing = true;
     };
     Watermark.prototype.hideWatermark = function () {
-        var nodes = this.editor.queryContent("span[id=\"" + WATERMARK_SPAN_ID + "\"]");
-        for (var i = 0; i < nodes.length; i++) {
-            var node = nodes.item(i);
-            if (node.parentNode) {
-                node.parentNode.removeChild(node);
-            }
+        var nodes = this.editor.queryNodes("span[id=\"" + WATERMARK_SPAN_ID + "\"]");
+        for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
+            var node = nodes_1[_i];
+            this.editor.deleteNode(node);
         }
         this.isWatermarkShowing = false;
     };

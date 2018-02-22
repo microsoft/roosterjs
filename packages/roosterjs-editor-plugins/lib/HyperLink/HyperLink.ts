@@ -192,9 +192,7 @@ export default class HyperLink implements EditorPlugin {
     }
 
     private forEachHyperLink(callback: (a: HTMLAnchorElement) => void) {
-        let anchors = this.editor.queryContent('a[href]');
-        for (let i = 0; i < anchors.length; i++) {
-            callback(anchors[i] as HTMLAnchorElement);
-        }
+        let anchors = this.editor.queryNodes('a[href]') as HTMLAnchorElement[];
+        anchors.forEach(callback);
     }
 }

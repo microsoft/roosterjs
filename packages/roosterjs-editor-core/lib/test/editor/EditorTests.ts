@@ -352,7 +352,7 @@ describe('Editor select()', () => {
     });
 });
 
-describe('Editor queryContent()', () => {
+describe('Editor queryNodes()', () => {
     let node = TestHelper.createElementFromContent(
         'testNode',
         '<p class="myClass">abc</p><p class="myClass">123</p><p class="otherClass">456</p>'
@@ -375,7 +375,7 @@ describe('Editor queryContent()', () => {
 
     it('select myClass', () => {
         // Act
-        let nodeList = editor.queryContent('.myClass');
+        let nodeList = editor.queryNodes('.myClass');
 
         // Assert
         expect(nodeList.length).toBe(2);
@@ -385,7 +385,7 @@ describe('Editor queryContent()', () => {
 
     it('select otherClass', () => {
         // Act
-        let nodeList = editor.queryContent('.otherClass');
+        let nodeList = editor.queryNodes('.otherClass');
 
         // Assert
         expect(nodeList.length).toBe(1);

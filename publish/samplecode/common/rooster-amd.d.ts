@@ -799,11 +799,11 @@ export class Editor {
      */
     insertContent(content: string, option?: InsertOption): void;
     /**
-     * DOM query content in editor
+     * DOM query nodes in editor
      * @param selector Selector string to query
      * @returns Node list of the query result
      */
-    queryContent(selector: string): NodeListOf<Element>;
+    queryNodes(selector: string): Node[];
     getSelectionRange(): SelectionRange;
     /**
      * Check if focus is in editor now
