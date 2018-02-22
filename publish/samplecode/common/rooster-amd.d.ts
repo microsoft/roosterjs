@@ -1623,7 +1623,7 @@ export class TableResize implements EditorPlugin {
     private setTableColumnWidth(width);
 }
 
-export class ImageResizePlugin implements EditorPlugin {
+export class ImageResize implements EditorPlugin {
     private minWidth;
     private minHeight;
     private selectionBorderColor;
@@ -1636,7 +1636,7 @@ export class ImageResizePlugin implements EditorPlugin {
     private resizeDiv;
     private direction;
     /**
-     * Create a new instance of ImageResizePlugin
+     * Create a new instance of ImageResize
      * @param minWidth Minimum width of image when resize in pixel, default value is 10
      * @param minHeight Minimum height of image when resize in pixel, default value is 10
      * @param selectionBorderColor Color of resize border and handles, default value is #DB626C
@@ -1657,5 +1657,15 @@ export class ImageResizePlugin implements EditorPlugin {
     private getSelectedImage();
     private isNorth(direction);
     private isWest(direction);
+}
+
+/**
+ * @deprecated Use ImageResize instead
+ */
+export class ImageResizePlugin extends ImageResize {
+    /**
+     * @deprecated Use ImageResize instead
+     */
+    constructor(minWidth?: number, minHeight?: number, selectionBorderColor?: string, forcePreserveRatio?: boolean);
 }
 

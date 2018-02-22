@@ -9,7 +9,7 @@ import {
     Watermark,
     TableResize,
 } from 'roosterjs-editor-plugins';
-import { ImageResizePlugin } from 'roosterjs-plugin-image-resize';
+import { ImageResize } from 'roosterjs-plugin-image-resize';
 import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
 import { setCurrentEditor } from './currentEditor';
 import getCurrentEditor from './currentEditor';
@@ -65,7 +65,7 @@ export function initEditorForOptions() {
     }
 
     if ((document.getElementById('imageResizeCheckbox') as HTMLInputElement).checked) {
-        plugins.push(new ImageResizePlugin());
+        plugins.push(new ImageResize());
     }
 
     if ((document.getElementById('tableResizeCheckbox') as HTMLInputElement).checked) {

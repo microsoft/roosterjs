@@ -8511,8 +8511,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var ImageResizePlugin_1 = __webpack_require__(121);
-exports.ImageResizePlugin = ImageResizePlugin_1.default;
+var ImageResize_1 = __webpack_require__(121);
+exports.ImageResize = ImageResize_1.default;
+exports.ImageResizePlugin = ImageResize_1.ImageResizePlugin;
 
 
 /***/ }),
@@ -8521,6 +8522,16 @@ exports.ImageResizePlugin = ImageResizePlugin_1.default;
 
 "use strict";
 
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var roosterjs_editor_api_1 = __webpack_require__(4);
@@ -8532,15 +8543,15 @@ var BACKSPACE_KEYCODE = 8;
 var SHIFT_KEYCODE = 16;
 var CTRL_KEYCODE = 17;
 var ALT_KEYCODE = 18;
-var ImageResizePlugin = /** @class */ (function () {
+var ImageResize = /** @class */ (function () {
     /**
-     * Create a new instance of ImageResizePlugin
+     * Create a new instance of ImageResize
      * @param minWidth Minimum width of image when resize in pixel, default value is 10
      * @param minHeight Minimum height of image when resize in pixel, default value is 10
      * @param selectionBorderColor Color of resize border and handles, default value is #DB626C
      * @param forcePreserveRatio Whether always preserve width/height ratio when resize, default value is false
      */
-    function ImageResizePlugin(minWidth, minHeight, selectionBorderColor, forcePreserveRatio) {
+    function ImageResize(minWidth, minHeight, selectionBorderColor, forcePreserveRatio) {
         if (minWidth === void 0) { minWidth = 10; }
         if (minHeight === void 0) { minHeight = 10; }
         if (selectionBorderColor === void 0) { selectionBorderColor = '#DB626C'; }
@@ -8611,17 +8622,17 @@ var ImageResizePlugin = /** @class */ (function () {
             e.preventDefault();
         };
     }
-    ImageResizePlugin.prototype.initialize = function (editor) {
+    ImageResize.prototype.initialize = function (editor) {
         this.editor = editor;
         this.editor.getDocument().execCommand('enableObjectResizing', false, false);
     };
-    ImageResizePlugin.prototype.dispose = function () {
+    ImageResize.prototype.dispose = function () {
         if (this.resizeDiv) {
             this.unselect(false /*selectImageAfterUnSelect*/);
         }
         this.editor = null;
     };
-    ImageResizePlugin.prototype.onPluginEvent = function (e) {
+    ImageResize.prototype.onPluginEvent = function (e) {
         var _this = this;
         if (e.eventType == 4 /* MouseDown */) {
             var event_1 = e.rawEvent;
@@ -8659,7 +8670,7 @@ var ImageResizePlugin = /** @class */ (function () {
             event_3.content = this.extractHtml(event_3.content);
         }
     };
-    ImageResizePlugin.prototype.select = function (target) {
+    ImageResize.prototype.select = function (target) {
         this.resizeDiv = this.createResizeDiv(target);
         target.contentEditable = 'false';
         var range = document.createRange();
@@ -8667,7 +8678,7 @@ var ImageResizePlugin = /** @class */ (function () {
         range.collapse(false /*toStart*/);
         this.editor.updateSelection(range);
     };
-    ImageResizePlugin.prototype.unselect = function (selectImageAfterUnSelect) {
+    ImageResize.prototype.unselect = function (selectImageAfterUnSelect) {
         var img = this.getSelectedImage();
         var parent = this.resizeDiv.parentNode;
         if (parent) {
@@ -8687,7 +8698,7 @@ var ImageResizePlugin = /** @class */ (function () {
             this.removeResizeDiv();
         }
     };
-    ImageResizePlugin.prototype.createResizeDiv = function (target) {
+    ImageResize.prototype.createResizeDiv = function (target) {
         var _this = this;
         var document = this.editor.getDocument();
         var resizeDiv = document.createElement('DIV');
@@ -8731,7 +8742,7 @@ var ImageResizePlugin = /** @class */ (function () {
         div.style.border = 'solid 1px ' + this.selectionBorderColor;
         return resizeDiv;
     };
-    ImageResizePlugin.prototype.removeResizeDiv = function () {
+    ImageResize.prototype.removeResizeDiv = function () {
         if (this.resizeDiv) {
             var parent_1 = this.resizeDiv.parentNode;
             [this.resizeDiv.previousSibling, this.resizeDiv.nextSibling].forEach(function (comment) {
@@ -8743,21 +8754,41 @@ var ImageResizePlugin = /** @class */ (function () {
             this.resizeDiv = null;
         }
     };
-    ImageResizePlugin.prototype.extractHtml = function (html) {
+    ImageResize.prototype.extractHtml = function (html) {
         return html.replace(EXTRACT_HTML_REGEX, '$1');
     };
-    ImageResizePlugin.prototype.getSelectedImage = function () {
+    ImageResize.prototype.getSelectedImage = function () {
         return this.resizeDiv ? this.resizeDiv.getElementsByTagName('IMG')[0] : null;
     };
-    ImageResizePlugin.prototype.isNorth = function (direction) {
+    ImageResize.prototype.isNorth = function (direction) {
         return direction && direction.substr(0, 1) == 'n';
     };
-    ImageResizePlugin.prototype.isWest = function (direction) {
+    ImageResize.prototype.isWest = function (direction) {
         return direction && direction.substr(1, 1) == 'w';
     };
-    return ImageResizePlugin;
+    return ImageResize;
 }());
-exports.default = ImageResizePlugin;
+exports.default = ImageResize;
+/**
+ * @deprecated Use ImageResize instead
+ */
+var ImageResizePlugin = /** @class */ (function (_super) {
+    __extends(ImageResizePlugin, _super);
+    /**
+     * @deprecated Use ImageResize instead
+     */
+    function ImageResizePlugin(minWidth, minHeight, selectionBorderColor, forcePreserveRatio) {
+        if (minWidth === void 0) { minWidth = 10; }
+        if (minHeight === void 0) { minHeight = 10; }
+        if (selectionBorderColor === void 0) { selectionBorderColor = '#DB626C'; }
+        if (forcePreserveRatio === void 0) { forcePreserveRatio = false; }
+        var _this = _super.call(this, minWidth, minHeight, selectionBorderColor, forcePreserveRatio) || this;
+        console.warn('ImageResizePlugin class is deprecated. Use ImageResize class instead');
+        return _this;
+    }
+    return ImageResizePlugin;
+}(ImageResize));
+exports.ImageResizePlugin = ImageResizePlugin;
 
 
 /***/ })

@@ -1624,7 +1624,7 @@ declare namespace roosterjs {
         private setTableColumnWidth(width);
     }
 
-    class ImageResizePlugin implements EditorPlugin {
+    class ImageResize implements EditorPlugin {
         private minWidth;
         private minHeight;
         private selectionBorderColor;
@@ -1637,7 +1637,7 @@ declare namespace roosterjs {
         private resizeDiv;
         private direction;
         /**
-         * Create a new instance of ImageResizePlugin
+         * Create a new instance of ImageResize
          * @param minWidth Minimum width of image when resize in pixel, default value is 10
          * @param minHeight Minimum height of image when resize in pixel, default value is 10
          * @param selectionBorderColor Color of resize border and handles, default value is #DB626C
@@ -1658,6 +1658,16 @@ declare namespace roosterjs {
         private getSelectedImage();
         private isNorth(direction);
         private isWest(direction);
+    }
+
+    /**
+     * @deprecated Use ImageResize instead
+     */
+    class ImageResizePlugin extends ImageResize {
+        /**
+         * @deprecated Use ImageResize instead
+         */
+        constructor(minWidth?: number, minHeight?: number, selectionBorderColor?: string, forcePreserveRatio?: boolean);
     }
 
 }

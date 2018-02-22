@@ -6,7 +6,7 @@ import {
     Watermark,
     TableResize,
 } from 'roosterjs-editor-plugins';
-import { ImageResizePlugin } from 'roosterjs-plugin-image-resize';
+import { ImageResize } from 'roosterjs-plugin-image-resize';
 import { EditorPlugin } from 'roosterjs-editor-core';
 import { DefaultFormat } from 'roosterjs-editor-types';
 
@@ -80,8 +80,8 @@ function assemblePluginsString(plugins: EditorPlugin[]): string {
         plugins.forEach(plugin => {
             if (plugin instanceof Watermark) {
                 pluginsString += "  new roosterjsPlugins.Watermark('Type content here...'),\n";
-            } else if (plugin instanceof ImageResizePlugin) {
-                pluginsString += '  new roosterjsImageResizePlugin.ImageResizePlugin(),\n';
+            } else if (plugin instanceof ImageResize) {
+                pluginsString += '  new roosterjsImageResizePlugin.ImageResize(),\n';
             } else if (plugin instanceof DefaultShortcut) {
                 pluginsString += '  new roosterjsPlugins.DefaultShortcut(),\n';
             } else if (plugin instanceof HyperLink) {
@@ -134,7 +134,7 @@ function assembleRequireString(plugins: EditorPlugin[], defaultFormat: DefaultFo
 
     //If there is image resize plugin, require the image resize plugin package
     plugins.forEach(plugin => {
-        if (plugin instanceof ImageResizePlugin) {
+        if (plugin instanceof ImageResize) {
             requireString = requireString.concat(
                 "var roosterjsImageResizePlugin = require('roosterjs-plugin-image-resize');\n"
             );
