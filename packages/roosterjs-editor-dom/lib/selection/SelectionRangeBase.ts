@@ -5,7 +5,7 @@ export default class SelectionRangeBase implements SelectionRangeBaseInterface {
 
     constructor(public readonly start: PositionInterface, public readonly end: PositionInterface = null) {
         this.end = end || start;
-        this.collapsed = start.node == end.node && start.offset == end.offset;
+        this.collapsed = this.start.node == this.end.node && this.start.offset == this.end.offset;
     }
 
     toRange(): Range {
