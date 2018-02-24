@@ -1,5 +1,5 @@
 import { PositionType } from 'roosterjs-editor-types';
-import { Position, SelectionRangeBase } from 'roosterjs-editor-dom';
+import { Position, SelectionRange } from 'roosterjs-editor-dom';
 import EditorCore from '../editor/EditorCore';
 import hasFocus from './hasFocus';
 import isRangeInContainer from '../utils/isRangeInContainer';
@@ -14,13 +14,13 @@ export default function select(
     let rawRange: Range;
 
     if (arg1 instanceof Range) {
-        rawRange = <Range>arg1;
+        rawRange = arg1;
     } else {
-        let selectionRangeBase: SelectionRangeBase;
+        let range: SelectionRange;
         if (arg1.start && arg1.end) {
-            selectionRangeBase = <SelectionRangeBase>arg1;
+            range = <SelectionRange>arg1;
         } else if (arg1.node) {
-            selectionRangeBase = new SelectionRangeBase(
+            range = new SelectionRange(
                 new Position(arg1),
                 arg2 && arg2.node ? new Position(arg2) : null
             );
@@ -37,9 +37,9 @@ export default function select(
                         ? new Position(<Node>arg3, <number | PositionType>arg4)
                         : null;
             }
-            selectionRangeBase = new SelectionRangeBase(start, end);
+            range = new SelectionRange(start, end);
         }
-        rawRange = selectionRangeBase.toRange();
+        rawRange = range.getRange();
     }
 
     if (isRangeInContainer(rawRange, core.contentDiv)) {

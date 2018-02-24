@@ -1,4 +1,4 @@
-import SelectionRangeBase from '../../selection/SelectionRangeBase';
+import SelectionRange from '../../selection/SelectionRange';
 import Position from '../../selection/Position';
 
 function runTest(
@@ -8,14 +8,14 @@ function runTest(
     expectEnd: Position,
     expectCollapsed: boolean
 ) {
-    let range = new SelectionRangeBase(start, end);
+    let range = new SelectionRange(start, end);
     expect(range.start).toEqual(expectStart);
     expect(range.end).toEqual(expectEnd);
     expect(range.collapsed).toBe(expectCollapsed);
 }
 
-describe('new SelectionRangeBase test', () => {
-    it('new SelectionRangeBase', () => {
+describe('new SelectionRange test', () => {
+    it('new SelectionRange', () => {
         let node1 = <Node>(<any>{});
         let node2 = <Node>(<any>{});
         let start1 = <Position>{

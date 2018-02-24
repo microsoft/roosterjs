@@ -6,7 +6,7 @@ import {
     InlineElement,
 } from 'roosterjs-editor-types';
 import Position from '../selection/Position';
-import SelectionRangeBase from '../selection/SelectionRangeBase';
+import SelectionRange from '../selection/SelectionRange';
 
 // This is a special version of inline element that identifies a section of an inline element
 // We often have the need to cut an inline element in half and perform some operation only on half of an inline element
@@ -38,10 +38,10 @@ class PartialInlineElement implements InlineElement {
     // Gets the text content
     public getTextContent(): string {
         let node = this.inlineElement.getContainerNode();
-        return new SelectionRangeBase(
+        return new SelectionRange(
             this.start || new Position(node, Position.Before),
             this.end || new Position(node, Position.After)
-        ).toRange().toString();
+        ).getRange().toString();
     }
 
     // Gets the start position

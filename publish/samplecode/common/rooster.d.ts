@@ -373,12 +373,12 @@ declare namespace roosterjs {
         isAfter: (pos: PositionInterface) => boolean;
     }
 
-    interface SelectionRangeBaseInterface {
+    interface SelectionRangeInterface {
         readonly start: PositionInterface;
         readonly end: PositionInterface;
         readonly collapsed: boolean;
-        toRange: () => Range;
-        normalize: () => SelectionRangeBaseInterface;
+        getRange: () => Range;
+        normalize: () => SelectionRangeInterface;
     }
 
     class NodeBlockElement implements BlockElement {
@@ -544,7 +544,7 @@ declare namespace roosterjs {
         private startEndCalculated;
         private startBlock;
         private endBlock;
-        constructor(rootNode: Node, selectionRange: SelectionRangeBaseInterface, inlineElementFactory: InlineElementFactory);
+        constructor(rootNode: Node, selectionRange: SelectionRangeInterface, inlineElementFactory: InlineElementFactory);
         readonly collapsed: boolean;
         readonly inlineElementBeforeStart: InlineElement;
         readonly startInlineElement: InlineElement;
@@ -561,7 +561,7 @@ declare namespace roosterjs {
         private startPosition;
         private readonly editorSelection;
         private selectionBlock;
-        constructor(rootNode: Node, selectionRange: SelectionRangeBaseInterface, startPosition: ContentPosition, inlineElementFactory: InlineElementFactory);
+        constructor(rootNode: Node, selectionRange: SelectionRangeInterface, startPosition: ContentPosition, inlineElementFactory: InlineElementFactory);
         getStartBlockElement(): BlockElement;
         getStartInlineElement(): InlineElement;
         getInlineElementBeforeStart(): InlineElement;
@@ -571,7 +571,7 @@ declare namespace roosterjs {
 
     class SelectionScoper implements TraversingScoper {
         private readonly editorSelection;
-        constructor(rootNode: Node, selectionRange: SelectionRangeBaseInterface, inlineElementFactory: InlineElementFactory);
+        constructor(rootNode: Node, selectionRange: SelectionRangeInterface, inlineElementFactory: InlineElementFactory);
         getStartBlockElement(): BlockElement;
         getStartInlineElement(): InlineElement;
         isBlockInScope(blockElement: BlockElement): boolean;
@@ -669,18 +669,15 @@ declare namespace roosterjs {
         isAfter(p: PositionInterface): boolean;
     }
 
-    class SelectionRangeBase implements SelectionRangeBaseInterface {
+    class SelectionRange implements SelectionRangeInterface {
+        readonly collapsed: boolean;
         readonly start: PositionInterface;
         readonly end: PositionInterface;
-        readonly collapsed: boolean;
-        constructor(start: PositionInterface, end?: PositionInterface);
-        toRange(): Range;
-        normalize(): SelectionRangeBaseInterface;
-    }
-
-    class SelectionRange extends SelectionRangeBase {
-        readonly rawRange: Range;
+        private rawRange;
         constructor(rawRange: Range);
+        constructor(start: PositionInterface, end?: PositionInterface);
+        getRange(): Range;
+        normalize(): SelectionRangeInterface;
     }
 
     class VTable {
@@ -822,11 +819,11 @@ declare namespace roosterjs {
          */
         select(range: Range): boolean;
         /**
-         * Select content by SelectionRangeBase
-         * @param range The SelectionRangeBase object which represents the content range to select
+         * Select content by SelectionRange
+         * @param range The SelectionRange object which represents the content range to select
          * @returns True if content is selected, otherwise false
          */
-        select(range: SelectionRangeBase): boolean;
+        select(range: SelectionRange): boolean;
         /**
          * Select content by Position and collapse to this position
          * @param position The position to select

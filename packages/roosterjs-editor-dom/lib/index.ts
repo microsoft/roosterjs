@@ -51,7 +51,6 @@ export { default as wrap } from './utils/wrap';
 export { default as wrapAll } from './utils/wrapAll';
 
 export { default as Position } from './selection/Position';
-export { default as SelectionRangeBase } from './selection/SelectionRangeBase';
 export { default as SelectionRange } from './selection/SelectionRange';
 
 export { default as VTable, VCell } from './table/VTable';

@@ -27,4 +27,4 @@ export { default as PasteOption } from './clipboard/PasteOption';
 
 export { default as PositionType } from './selection/PositionType';
 export { default as PositionInterface } from './selection/PositionInterface';
-export { default as SelectionRangeBaseInterface } from './selection/SelectionRangeBaseInterface';
+export { default as SelectionRangeInterface } from './selection/SelectionRangeInterface';

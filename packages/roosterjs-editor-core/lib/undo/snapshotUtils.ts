@@ -59,7 +59,7 @@ function addCursorMarkersToSelection(editor: Editor): void {
     // Then the end marker
     // For collapsed selection, use the start marker as the editor so that
     // the end marker is always placed after the start marker
-    let rawRange = range.rawRange;
+    let rawRange = range.getRange();
     let endPosition = range.collapsed
         ? new Position(markers[0], Position.After)
         : new Position(rawRange.endContainer, rawRange.endOffset);

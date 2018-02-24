@@ -3,11 +3,11 @@ import InlineElementFactory from '../../inlineElements/InlineElementFactory';
 import SelectionScoper from '../../scopers/SelectionScoper';
 import { BlockElement, PositionType } from 'roosterjs-editor-types';
 import Position from '../../selection/Position';
-import SelectionRangeBase from '../../selection/SelectionRangeBase';
+import SelectionRange from '../../selection/SelectionRange';
 
 let testID = 'SelectionScoper';
 
-function createSelectionScoper(rootNode: Node, selectionRange: SelectionRangeBase) {
+function createSelectionScoper(rootNode: Node, selectionRange: SelectionRange) {
     let inlineElementFactory = new InlineElementFactory(null);
     return new SelectionScoper(rootNode, selectionRange, inlineElementFactory);
 }
@@ -17,7 +17,7 @@ describe('SelectionScoper getStartBlockElement()', () => {
         DomTestHelper.removeElement(testID);
     });
 
-    function runTest(rootNode: Node, range: SelectionRangeBase, testBlockElement: BlockElement) {
+    function runTest(rootNode: Node, range: SelectionRange, testBlockElement: BlockElement) {
         // Arrange
         let scoper = createSelectionScoper(rootNode, range);
 
@@ -68,7 +68,7 @@ describe('SelectionScoper getStartBlockElement()', () => {
         let endPosition = new Position(rootNode.firstChild.firstChild, Position.End);
 
         // range is 'e'
-        let range = new SelectionRangeBase(startPosition, endPosition);
+        let range = new SelectionRange(startPosition, endPosition);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.firstChild as HTMLElement
         );
@@ -80,7 +80,7 @@ describe('SelectionScoper getStartBlockElement()', () => {
         let startPosition = new Position(rootNode.firstChild, 0);
         let endPosition = new Position(rootNode.lastChild, Position.End);
 
-        let range = new SelectionRangeBase(startPosition, endPosition);
+        let range = new SelectionRange(startPosition, endPosition);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.firstChild as HTMLElement
         );
@@ -95,7 +95,7 @@ describe('SelectionScoper getStartInlineElement()', () => {
 
     function runTest(
         rootNode: Node,
-        range: SelectionRangeBase,
+        range: SelectionRange,
         startOffset: number | PositionType,
         endOffset: number | PositionType,
         node: Node
@@ -149,7 +149,7 @@ describe('SelectionScoper getStartInlineElement()', () => {
         let endPosition = new Position(rootNode.firstChild, 3);
 
         // range is 'www'
-        let range = new SelectionRangeBase(startPosition, endPosition);
+        let range = new SelectionRange(startPosition, endPosition);
         let node = document.createTextNode('www.example.com');
         runTest(rootNode, range, 0, 3, node);
     });
@@ -162,7 +162,7 @@ describe('SelectionScoper isBlockInScope()', () => {
 
     function runTest(
         rootNode: Node,
-        range: SelectionRangeBase,
+        range: SelectionRange,
         testBlockElement: BlockElement,
         output: boolean
     ) {
@@ -180,7 +180,7 @@ describe('SelectionScoper isBlockInScope()', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let startPosition = new Position(rootNode.firstChild, 0);
         let endPosition = new Position(rootNode.lastChild, Position.End);
-        let range = new SelectionRangeBase(startPosition, endPosition);
+        let range = new SelectionRange(startPosition, endPosition);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.lastChild as HTMLElement
         );
@@ -191,7 +191,7 @@ describe('SelectionScoper isBlockInScope()', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let startPosition = new Position(rootNode.firstChild, 0);
         let endPosition = new Position(rootNode.firstChild, Position.End);
-        let range = new SelectionRangeBase(startPosition, endPosition);
+        let range = new SelectionRange(startPosition, endPosition);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.lastChild as HTMLElement
         );
@@ -204,7 +204,7 @@ describe('SelectionScoper isBlockInScope()', () => {
         let endPosition = new Position(rootNode.lastChild.firstChild, 3);
 
         // range = 'rt1</p><p>par'
-        let range = new SelectionRangeBase(startPosition, endPosition);
+        let range = new SelectionRange(startPosition, endPosition);
 
         // First block element
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
@@ -219,7 +219,7 @@ describe('SelectionScoper isBlockInScope()', () => {
         let endPosition = new Position(rootNode.lastChild.firstChild, 3);
 
         // range = 'rt1</p><p>par'
-        let range = new SelectionRangeBase(startPosition, endPosition);
+        let range = new SelectionRange(startPosition, endPosition);
 
         // Second block element
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
@@ -241,7 +241,7 @@ describe('SelectionScoper trimInlineElement()', () => {
         let endPosition = new Position(rootNode.firstChild, Position.End);
 
         // range is '<p>part1</p>'
-        let range = new SelectionRangeBase(startPosition, endPosition);
+        let range = new SelectionRange(startPosition, endPosition);
         let scoper = createSelectionScoper(rootNode, range);
 
         // inlineElement is 'part1'
@@ -264,7 +264,7 @@ describe('SelectionScoper trimInlineElement()', () => {
         let endPosition = new Position(rootNode.firstChild, Position.End);
 
         // range is '<p>part1</p>'
-        let range = new SelectionRangeBase(startPosition, endPosition);
+        let range = new SelectionRange(startPosition, endPosition);
         let scoper = createSelectionScoper(rootNode, range);
 
         // inlineElement is 'part2'
@@ -287,7 +287,7 @@ describe('SelectionScoper trimInlineElement()', () => {
         let endPosition = new Position(rootNode.firstChild.firstChild, 5);
 
         // range is 'part1'
-        let range = new SelectionRangeBase(startPosition, endPosition);
+        let range = new SelectionRange(startPosition, endPosition);
         let scoper = createSelectionScoper(rootNode, range);
 
         // inlineElement is 'part1,part2'

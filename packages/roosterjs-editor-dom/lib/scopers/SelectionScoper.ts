@@ -4,7 +4,7 @@ import {
     BlockElement,
     InlineElement,
     TraversingScoper,
-    SelectionRangeBaseInterface,
+    SelectionRangeInterface,
 } from 'roosterjs-editor-types';
 
 // This is selection scoper that provide a start inline as the start of the selection
@@ -15,7 +15,7 @@ class SelectionScoper implements TraversingScoper {
 
     constructor(
         rootNode: Node,
-        selectionRange: SelectionRangeBaseInterface,
+        selectionRange: SelectionRangeInterface,
         inlineElementFactory: InlineElementFactory
     ) {
         this.editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);

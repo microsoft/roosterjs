@@ -9,7 +9,7 @@ import { isDocumentPosition, Position } from 'roosterjs-editor-dom';
 // here since it is for cursor, not for a range.
 export default function getCursorRect(editor: Editor): Rect {
     let selectionRange = editor.getSelectionRange();
-    let range = selectionRange.rawRange;
+    let range = selectionRange.getRange();
 
     // There isn't a browser API that gets you position of cursor.
     // Different browsers emit slightly different behaviours and there is no a single API that

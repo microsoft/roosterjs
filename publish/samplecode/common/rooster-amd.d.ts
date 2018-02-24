@@ -372,12 +372,12 @@ export interface PositionInterface {
     isAfter: (pos: PositionInterface) => boolean;
 }
 
-export interface SelectionRangeBaseInterface {
+export interface SelectionRangeInterface {
     readonly start: PositionInterface;
     readonly end: PositionInterface;
     readonly collapsed: boolean;
-    toRange: () => Range;
-    normalize: () => SelectionRangeBaseInterface;
+    getRange: () => Range;
+    normalize: () => SelectionRangeInterface;
 }
 
 export class NodeBlockElement implements BlockElement {
@@ -543,7 +543,7 @@ export class EditorSelection {
     private startEndCalculated;
     private startBlock;
     private endBlock;
-    constructor(rootNode: Node, selectionRange: SelectionRangeBaseInterface, inlineElementFactory: InlineElementFactory);
+    constructor(rootNode: Node, selectionRange: SelectionRangeInterface, inlineElementFactory: InlineElementFactory);
     readonly collapsed: boolean;
     readonly inlineElementBeforeStart: InlineElement;
     readonly startInlineElement: InlineElement;
@@ -560,7 +560,7 @@ export class SelectionBlockScoper implements TraversingScoper {
     private startPosition;
     private readonly editorSelection;
     private selectionBlock;
-    constructor(rootNode: Node, selectionRange: SelectionRangeBaseInterface, startPosition: ContentPosition, inlineElementFactory: InlineElementFactory);
+    constructor(rootNode: Node, selectionRange: SelectionRangeInterface, startPosition: ContentPosition, inlineElementFactory: InlineElementFactory);
     getStartBlockElement(): BlockElement;
     getStartInlineElement(): InlineElement;
     getInlineElementBeforeStart(): InlineElement;
@@ -570,7 +570,7 @@ export class SelectionBlockScoper implements TraversingScoper {
 
 export class SelectionScoper implements TraversingScoper {
     private readonly editorSelection;
-    constructor(rootNode: Node, selectionRange: SelectionRangeBaseInterface, inlineElementFactory: InlineElementFactory);
+    constructor(rootNode: Node, selectionRange: SelectionRangeInterface, inlineElementFactory: InlineElementFactory);
     getStartBlockElement(): BlockElement;
     getStartInlineElement(): InlineElement;
     isBlockInScope(blockElement: BlockElement): boolean;
@@ -668,18 +668,15 @@ export class Position implements PositionInterface {
     isAfter(p: PositionInterface): boolean;
 }
 
-export class SelectionRangeBase implements SelectionRangeBaseInterface {
+export class SelectionRange implements SelectionRangeInterface {
+    readonly collapsed: boolean;
     readonly start: PositionInterface;
     readonly end: PositionInterface;
-    readonly collapsed: boolean;
-    constructor(start: PositionInterface, end?: PositionInterface);
-    toRange(): Range;
-    normalize(): SelectionRangeBaseInterface;
-}
-
-export class SelectionRange extends SelectionRangeBase {
-    readonly rawRange: Range;
+    private rawRange;
     constructor(rawRange: Range);
+    constructor(start: PositionInterface, end?: PositionInterface);
+    getRange(): Range;
+    normalize(): SelectionRangeInterface;
 }
 
 export class VTable {
@@ -821,11 +818,11 @@ export class Editor {
      */
     select(range: Range): boolean;
     /**
-     * Select content by SelectionRangeBase
-     * @param range The SelectionRangeBase object which represents the content range to select
+     * Select content by SelectionRange
+     * @param range The SelectionRange object which represents the content range to select
      * @returns True if content is selected, otherwise false
      */
-    select(range: SelectionRangeBase): boolean;
+    select(range: SelectionRange): boolean;
     /**
      * Select content by Position and collapse to this position
      * @param position The position to select

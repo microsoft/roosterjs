@@ -23,6 +23,7 @@ import {
     PluginEventType,
     PositionInterface,
     PositionType,
+    SelectionRangeInterface
 } from 'roosterjs-editor-types';
 import {
     ContentTraverser,
@@ -30,7 +31,6 @@ import {
     NodeBlockElement,
     Position,
     SelectionRange,
-    SelectionRangeBase,
     applyFormat,
     contains,
     fromHtml,
@@ -286,7 +286,7 @@ export default class Editor {
 
     //#region Focus and Selection
 
-    public getSelectionRange(): SelectionRange {
+    public getSelectionRange(): SelectionRangeInterface {
         return new SelectionRange(
             getLiveRange(this.core) || this.core.cachedRange || this.defaultRange
         );
@@ -315,11 +315,11 @@ export default class Editor {
     public select(range: Range): boolean;
 
     /**
-     * Select content by SelectionRangeBase
-     * @param range The SelectionRangeBase object which represents the content range to select
+     * Select content by SelectionRange
+     * @param range The SelectionRange object which represents the content range to select
      * @returns True if content is selected, otherwise false
      */
-    public select(range: SelectionRangeBase): boolean;
+    public select(range: SelectionRangeInterface): boolean;
 
     /**
      * Select content by Position and collapse to this position
@@ -569,18 +569,18 @@ export default class Editor {
     // When selection is not collapsed, i.e. users press ctrl+A, and then type
     // We don't have a good way to fix that for the moment
     private onKeyPress = () => {
-        let selectionRange = this.getSelectionRange();
+        let range = this.getSelectionRange();
         let focusNode: Node;
         if (
-            selectionRange.collapsed &&
-            (focusNode = selectionRange.start.node) &&
+            range.collapsed &&
+            (focusNode = range.start.node) &&
             (focusNode == this.core.contentDiv ||
                 (focusNode.nodeType == NodeType.Text &&
                     focusNode.parentNode == this.core.contentDiv))
         ) {
             let editorSelection = new EditorSelection(
                 this.core.contentDiv,
-                selectionRange,
+                range,
                 this.core.inlineElementFactory
             );
             let blockElement = editorSelection.startBlockElement;
@@ -598,7 +598,7 @@ export default class Editor {
             ) {
                 // Only fix the balanced start-end block where start and end node is under same parent
                 // The focus node could be pointing to the content div, normalize it to have it point to a child first
-                let focusOffset = selectionRange.start.offset;
+                let focusOffset = range.start.offset;
                 let element = wrapAll(blockElement.getContentNodes()) as HTMLElement;
                 if (getTagOfNode(blockElement.getStartNode()) == 'BR') {
                     // if the block is just BR, apply default format

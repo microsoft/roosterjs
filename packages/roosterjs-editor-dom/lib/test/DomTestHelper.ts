@@ -1,8 +1,8 @@
-import { InlineElement, PositionInterface, SelectionRangeBaseInterface } from 'roosterjs-editor-types';
+import { InlineElement, PositionInterface } from 'roosterjs-editor-types';
 import InlineElementFactory from '../inlineElements/InlineElementFactory';
 import { NodeBlockElement, StartEndBlockElement } from '../blockElements/BlockElement';
 import Position from '../selection/Position';
-import SelectionRangeBase from '../selection/SelectionRangeBase';
+import SelectionRange from '../selection/SelectionRange';
 
 // Create element with content and id and insert the element in the DOM
 export function createElementFromContent(id: string, content: string): HTMLElement {
@@ -95,16 +95,16 @@ export function createInlineElementFromNode(node: Node, rootNode: Node): InlineE
 }
 
 // Create range from child nodes of given node
-export function createRangeFromChildNodes(node: Node): SelectionRangeBaseInterface {
-    return new SelectionRangeBase(
+export function createRangeFromChildNodes(node: Node): SelectionRange {
+    return new SelectionRange(
         new Position(node.firstChild, Position.Before),
         new Position(node.lastChild, Position.After)
     );
 }
 
 // Create range from given HTMLElement
-export function createRangeWithDiv(testDiv: HTMLElement): SelectionRangeBaseInterface {
-    return new SelectionRangeBase(
+export function createRangeWithDiv(testDiv: HTMLElement): SelectionRange {
+    return new SelectionRange(
         new Position(testDiv, Position.Before),
         new Position(testDiv, Position.After)
     );

@@ -12,7 +12,7 @@ import {
 } from 'roosterjs-editor-types';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../domWalker/getLeafSibling';
 import Position from '../selection/Position';
-import SelectionRangeBase from '../selection/SelectionRangeBase';
+import SelectionRange from '../selection/SelectionRange';
 
 // This presents an inline element that can be reprented by a single html node.
 // This serves as base for most inline element as it contains most implentation
@@ -141,11 +141,11 @@ class NodeInlineElement implements InlineElement {
                             adjustedEndOffset
                         );
 
-                        let selectionRange = new SelectionRangeBase(
+                        let selectionRange = new SelectionRange(
                             new Position(fromNode, fromOffset),
                             new Position(fromNode, adjustedEndOffset)
                         );
-                        let range = selectionRange.toRange();
+                        let range = selectionRange.getRange();
                         range.deleteContents();
                         range.insertNode(newNode);
                         styler(newNode);

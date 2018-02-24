@@ -1,6 +1,6 @@
 import InlineElementFactory from '../inlineElements/InlineElementFactory';
 import PartialInlineElement from '../inlineElements/PartialInlineElement';
-import { BlockElement, PositionInterface, InlineElement, SelectionRangeBaseInterface } from 'roosterjs-editor-types';
+import { BlockElement, PositionInterface, InlineElement, SelectionRangeInterface } from 'roosterjs-editor-types';
 import {
     getBlockElementAtNode,
     getInlineElementAfter,
@@ -18,7 +18,7 @@ class EditorSelection {
 
     constructor(
         private rootNode: Node,
-        private selectionRange: SelectionRangeBaseInterface,
+        private selectionRange: SelectionRangeInterface,
         private inlineElementFactory: InlineElementFactory
     ) {
         this.selectionRange = selectionRange.normalize();
