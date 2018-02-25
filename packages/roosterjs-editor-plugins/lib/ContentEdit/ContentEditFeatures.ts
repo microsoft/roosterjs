@@ -50,6 +50,12 @@ interface ContentEditFeatures {
      * @default true
      */
     autoBullet: boolean;
+
+    /**
+     * When press TAB or SHIFT+TAB key in table cell, jump to next/previous table cell
+     * @default true
+     */
+    tabInTable: boolean;
 }
 
 export default ContentEditFeatures;
@@ -67,5 +73,6 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         unquoteWhenBackspaceOnEmptyFirstLine: true,
         unquoteWhenEnterOnEmptyLine: true,
         autoBullet: true,
+        tabInTable: true,
     };
 }

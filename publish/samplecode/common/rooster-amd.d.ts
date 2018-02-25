@@ -1476,6 +1476,8 @@ export class ContentEdit implements EditorPlugin {
     willHandleEventExclusively(event: PluginEvent): boolean;
     onPluginEvent(event: PluginEvent): void;
     private isListEvent(event, interestedKeyCodes);
+    private isTabInTable(event);
+    private cacheGetTd(event);
     private getBlockQuoteElementFromEvent(event, keyboardEvent);
     private shouldToggleState(event, node);
     private toggleList(event);
@@ -1569,6 +1571,11 @@ export interface ContentEditFeatures {
      * @default true
      */
     autoBullet: boolean;
+    /**
+     * When press TAB or SHIFT+TAB key in table cell, jump to next/previous table cell
+     * @default true
+     */
+    tabInTable: boolean;
 }
 
 /**
@@ -1602,7 +1609,6 @@ export class Watermark implements EditorPlugin {
 }
 
 export class TableResize implements EditorPlugin {
-    private isRtl;
     private editor;
     private onMouseOverDisposer;
     private td;
@@ -1623,6 +1629,7 @@ export class TableResize implements EditorPlugin {
     private onMouseMove;
     private onMouseUp;
     private setTableColumnWidth(width);
+    private isRtl(element);
 }
 
 export class ImageResize implements EditorPlugin {

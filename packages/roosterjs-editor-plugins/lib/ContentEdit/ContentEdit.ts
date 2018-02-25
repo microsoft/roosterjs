@@ -8,7 +8,13 @@ import {
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-import { contains, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
+import {
+    VTable,
+    contains,
+    getTagOfNode,
+    isNodeEmpty,
+    splitParentNode
+} from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     Indentation,
@@ -54,7 +60,7 @@ export default class ContentEdit implements EditorPlugin {
 
     // Handle the event if it is a tab event, and cursor is at begin of a list
     public willHandleEventExclusively(event: PluginEvent): boolean {
-        return this.isListEvent(event, [KEY_TAB]);
+        return this.isListEvent(event, [KEY_TAB]) || this.isTabInTable(event);
     }
 
     // Handle the event
@@ -97,6 +103,39 @@ export default class ContentEdit implements EditorPlugin {
                     }
                 }
             }
+        } else if (this.isTabInTable(event)) {
+            let range = this.editor.getDocument().createRange();
+            for (
+                let td = this.cacheGetTd(event),
+                vtable = new VTable(td),
+                step = keyboardEvent.shiftKey ? -1 : 1,
+                row = vtable.row,
+                col = vtable.col + step;
+                ;
+                col += step
+            ) {
+                if (col < 0 || col >= vtable.cells[row].length) {
+                    row += step;
+                    if (row < 0 || row >= vtable.cells.length) {
+                        if (keyboardEvent.shiftKey) {
+                            range.setStartBefore(vtable.table);
+                        } else {
+                            range.setEndAfter(vtable.table);
+                            range.collapse(false /*toStart*/);
+                        }
+                        this.editor.updateSelection(range);
+                        break;
+                    }
+                    col = keyboardEvent.shiftKey ? vtable.cells[row].length - 1 : 0;
+                }
+                let cell = vtable.getCell(row, col);
+                if (cell.td) {
+                    range.setStart(cell.td, 0);
+                    this.editor.updateSelection(range);
+                    break;
+                }
+            }
+            keyboardEvent.preventDefault();
         } else if ((blockQuoteElement = this.getBlockQuoteElementFromEvent(event, keyboardEvent))) {
             let node = getNodeAtCursor(this.editor);
             if (node && node != blockQuoteElement) {
@@ -157,6 +196,18 @@ export default class ContentEdit implements EditorPlugin {
         }
 
         return false;
+    }
+
+    private isTabInTable(event: PluginEvent): boolean {
+        let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+        return this.features.tabInTable &&
+            event.eventType == PluginEventType.KeyDown &&
+            keyboardEvent.which == KEY_TAB &&
+            !!this.cacheGetTd(event);
+    }
+
+    private cacheGetTd(event: PluginEvent): HTMLTableCellElement {
+        return cacheGetNodeAtCursor(this.editor, event, 'TD') as HTMLTableCellElement;
     }
 
     // Check if it is a blockquote event, if it is true, return the blockquote element where the cursor resides

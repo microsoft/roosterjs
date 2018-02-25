@@ -3430,6 +3430,7 @@ function getDefaultContentEditFeatures() {
         unquoteWhenBackspaceOnEmptyFirstLine: true,
         unquoteWhenEnterOnEmptyLine: true,
         autoBullet: true,
+        tabInTable: true,
     };
 }
 exports.getDefaultContentEditFeatures = getDefaultContentEditFeatures;
@@ -7091,7 +7092,7 @@ var ContentEdit = /** @class */ (function () {
     };
     // Handle the event if it is a tab event, and cursor is at begin of a list
     ContentEdit.prototype.willHandleEventExclusively = function (event) {
-        return this.isListEvent(event, [KEY_TAB]);
+        return this.isListEvent(event, [KEY_TAB]) || this.isTabInTable(event);
     };
     // Handle the event
     ContentEdit.prototype.onPluginEvent = function (event) {
@@ -7136,6 +7137,33 @@ var ContentEdit = /** @class */ (function () {
                     }
                 }
             }
+        }
+        else if (this.isTabInTable(event)) {
+            var range = this.editor.getDocument().createRange();
+            for (var td = this.cacheGetTd(event), vtable = new roosterjs_editor_dom_1.VTable(td), step = keyboardEvent.shiftKey ? -1 : 1, row = vtable.row, col = vtable.col + step;; col += step) {
+                if (col < 0 || col >= vtable.cells[row].length) {
+                    row += step;
+                    if (row < 0 || row >= vtable.cells.length) {
+                        if (keyboardEvent.shiftKey) {
+                            range.setStartBefore(vtable.table);
+                        }
+                        else {
+                            range.setEndAfter(vtable.table);
+                            range.collapse(false /*toStart*/);
+                        }
+                        this.editor.updateSelection(range);
+                        break;
+                    }
+                    col = keyboardEvent.shiftKey ? vtable.cells[row].length - 1 : 0;
+                }
+                var cell = vtable.getCell(row, col);
+                if (cell.td) {
+                    range.setStart(cell.td, 0);
+                    this.editor.updateSelection(range);
+                    break;
+                }
+            }
+            keyboardEvent.preventDefault();
         }
         else if ((blockQuoteElement = this.getBlockQuoteElementFromEvent(event, keyboardEvent))) {
             var node_1 = roosterjs_editor_api_1.getNodeAtCursor(this.editor);
@@ -7185,6 +7213,16 @@ var ContentEdit = /** @class */ (function () {
             }
         }
         return false;
+    };
+    ContentEdit.prototype.isTabInTable = function (event) {
+        var keyboardEvent = event.rawEvent;
+        return this.features.tabInTable &&
+            event.eventType == 0 /* KeyDown */ &&
+            keyboardEvent.which == KEY_TAB &&
+            !!this.cacheGetTd(event);
+    };
+    ContentEdit.prototype.cacheGetTd = function (event) {
+        return roosterjs_editor_api_1.cacheGetNodeAtCursor(this.editor, event, 'TD');
     };
     // Check if it is a blockquote event, if it is true, return the blockquote element where the cursor resides
     // To qualify a blockquote event:
@@ -8422,7 +8460,6 @@ var CONTAINER_HTML = "<div style=\"position: absolute; cursor: col-resize; width
 var TableResize = /** @class */ (function () {
     function TableResize(isRtl) {
         var _this = this;
-        this.isRtl = isRtl;
         this.pageX = -1;
         this.onMouseOver = function (e) {
             var node = (e.srcElement || e.target);
@@ -8457,7 +8494,7 @@ var TableResize = /** @class */ (function () {
             if (e.pageX != _this.initialPageX) {
                 var newWidth_1 = _this.td.clientWidth -
                     cellPadding * 2 +
-                    (e.pageX - _this.initialPageX) * (_this.isRtl ? -1 : 1);
+                    (e.pageX - _this.initialPageX) * (_this.isRtl(table) ? -1 : 1);
                 roosterjs_editor_api_1.execFormatWithUndo(_this.editor, function () { return _this.setTableColumnWidth(newWidth_1 + 'px'); }, true /*preserveSelection*/);
             }
             _this.pageX = -1;
@@ -8496,7 +8533,7 @@ var TableResize = /** @class */ (function () {
             if (tr && table) {
                 var _a = this.getPosition(table), left = _a[0], top_1 = _a[1];
                 var handle = this.getResizeHandle();
-                left += this.td.offsetLeft + (this.isRtl ? 0 : this.td.offsetWidth - HANDLE_WIDTH);
+                left += this.td.offsetLeft + (this.isRtl(table) ? 0 : this.td.offsetWidth - HANDLE_WIDTH);
                 handle.style.display = '';
                 handle.style.top = top_1 + 'px';
                 handle.style.height = table.offsetHeight + 'px';
@@ -8545,6 +8582,9 @@ var TableResize = /** @class */ (function () {
         });
         vtable.writeBack();
         return this.editor.contains(this.td) ? this.td : vtable.getCurrentTd();
+    };
+    TableResize.prototype.isRtl = function (element) {
+        return roosterjs_editor_dom_1.getComputedStyle(element, 'direction') == 'rtl';
     };
     return TableResize;
 }());
