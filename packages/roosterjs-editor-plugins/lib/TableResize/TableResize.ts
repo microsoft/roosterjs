@@ -1,5 +1,5 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { contains, fromHtml, VTable } from 'roosterjs-editor-dom';
+import { contains, fromHtml, getComputedStyle, VTable } from 'roosterjs-editor-dom';
 import { execFormatWithUndo, getNodeAtCursor } from 'roosterjs-editor-api';
 import { PluginEvent, PluginEventType, PluginDomEvent } from 'roosterjs-editor-types';
 
@@ -13,8 +13,6 @@ export default class TableResize implements EditorPlugin {
     private td: HTMLTableCellElement;
     private pageX = -1;
     private initialPageX: number;
-
-    constructor(private isRtl?: boolean) {}
 
     initialize(editor: Editor) {
         this.editor = editor;
@@ -61,7 +59,7 @@ export default class TableResize implements EditorPlugin {
                 let [left, top] = this.getPosition(table);
                 let handle = this.getResizeHandle();
 
-                left += this.td.offsetLeft + (this.isRtl ? 0 : this.td.offsetWidth - HANDLE_WIDTH);
+                left += this.td.offsetLeft + (this.isRtl(table) ? 0 : this.td.offsetWidth - HANDLE_WIDTH);
                 handle.style.display = '';
                 handle.style.top = top + 'px';
                 handle.style.height = table.offsetHeight + 'px';
@@ -141,7 +139,7 @@ export default class TableResize implements EditorPlugin {
             let newWidth =
                 this.td.clientWidth -
                 cellPadding * 2 +
-                (e.pageX - this.initialPageX) * (this.isRtl ? -1 : 1);
+                (e.pageX - this.initialPageX) * (this.isRtl(table) ? -1 : 1);
             execFormatWithUndo(
                 this.editor,
                 () => this.setTableColumnWidth(newWidth + 'px'),
@@ -165,5 +163,9 @@ export default class TableResize implements EditorPlugin {
         });
         vtable.writeBack();
         return this.editor.contains(this.td) ? this.td : vtable.getCurrentTd();
+    }
+
+    private isRtl(element: HTMLElement) {
+        return getComputedStyle(element, 'direction') == 'rtl';
     }
 }

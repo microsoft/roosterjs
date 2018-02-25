@@ -14,6 +14,7 @@ import {
     toggleSubscript,
     setIndentation,
     setAlignment,
+    setDirection,
     setFontName,
     setFontSize,
     setTextColor,
@@ -24,7 +25,7 @@ import {
     editTable,
     formatTable,
 } from 'roosterjs-editor-api';
-import { Alignment, Indentation, TableOperation, TableFormat } from 'roosterjs-editor-types';
+import { Alignment, Direction, Indentation, TableOperation, TableFormat } from 'roosterjs-editor-types';
 import getCurrentEditor from './currentEditor';
 
 let TABLE_FORMAT = [
@@ -187,6 +188,16 @@ export default function initFormatBar() {
     // AlignRight
     document.getElementById('alignRightButton').addEventListener('click', function() {
         setAlignment(getCurrentEditor(), Alignment.Right);
+    });
+
+    // LTR
+    document.getElementById('ltr').addEventListener('click', function() {
+        setDirection(getCurrentEditor(), Direction.LeftToRight)
+    });
+
+    // RTL
+    document.getElementById('rtl').addEventListener('click', function() {
+        setDirection(getCurrentEditor(), Direction.RightToLeft);
     });
 
     // undo

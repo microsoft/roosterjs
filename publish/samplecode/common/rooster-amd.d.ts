@@ -568,6 +568,8 @@ export class SelectionScoper implements TraversingScoper {
 
 export function applyFormat(element: HTMLElement, format: DefaultFormat): void;
 
+export function changeElementTag(element: HTMLElement, newTag: string, range?: Range): HTMLElement;
+
 export function contains(container: Node, contained: Node): boolean;
 
 /**

@@ -569,6 +569,8 @@ declare namespace roosterjs {
 
     function applyFormat(element: HTMLElement, format: DefaultFormat): void;
 
+    function changeElementTag(element: HTMLElement, newTag: string, range?: Range): HTMLElement;
+
     function contains(container: Node, contained: Node): boolean;
 
     /**

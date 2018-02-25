@@ -5,8 +5,10 @@ import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import updateSelection from './updateSelection';
 import {
     EditorSelection,
+    changeElementTag,
     getFirstBlockElement,
     getLastBlockElement,
+    getTagOfNode,
     isBlockElement,
     wrap,
 } from 'roosterjs-editor-dom';
@@ -145,19 +147,27 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
         // Create a clone (backup) for the selection first as we may need to restore to it later
         let originalSelectionRange = selectionRange.cloneRange();
 
-        // Adjust the insertion point
-        // option.insertOnNewLine means to insert on a block after the selection, not really right at the selection
-        // This is commonly used when users want to insert signature. They could place cursor somewhere mid of a line
-        // and insert signature, they actually want signature to be inserted the line after the selection
-        if (option.insertOnNewLine) {
-            let editorSelection = new EditorSelection(
-                core.contentDiv,
-                selectionRange,
-                core.inlineElementFactory
-            );
-            let blockElement = editorSelection.startBlockElement;
-            selectionRange.setEndAfter(blockElement.getEndNode());
-            selectionRange.collapse(false /*toStart*/);
+        let editorSelection = new EditorSelection(
+            core.contentDiv,
+            selectionRange,
+            core.inlineElementFactory
+        );
+        let blockElement = editorSelection.startBlockElement;
+
+        if (blockElement) {
+            let endNode = blockElement.getEndNode();
+            if (option.insertOnNewLine) {
+                // Adjust the insertion point
+                // option.insertOnNewLine means to insert on a block after the selection, not really right at the selection
+                // This is commonly used when users want to insert signature. They could place cursor somewhere mid of a line
+                // and insert signature, they actually want signature to be inserted the line after the selection
+                selectionRange.setEndAfter(endNode);
+                selectionRange.collapse(false /*toStart*/);
+            } else if (getTagOfNode(endNode) == 'P') {
+                // Insert into a P tag may cause issues when the inserted content contains any block element.
+                // Change P tag to DIV to make sure it works well
+                changeElementTag(endNode as HTMLElement, 'div', selectionRange);
+            }
         }
 
         let nodeForCursor = node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
