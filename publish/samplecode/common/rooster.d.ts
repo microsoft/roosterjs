@@ -580,6 +580,8 @@ declare namespace roosterjs {
 
     function applyFormat(element: HTMLElement, format: DefaultFormat): void;
 
+    function changeElementTag(element: HTMLElement, newTag: string, range?: Range): HTMLElement;
+
     function contains(container: Node, contained: Node, treatSameNodeAsContain?: boolean): boolean;
 
     /**
@@ -802,7 +804,7 @@ declare namespace roosterjs {
          * @returns Node list of the query result
          */
         queryNodes(selector: string): Node[];
-        getSelectionRange(): SelectionRange;
+        getSelectionRange(): SelectionRangeInterface;
         /**
          * Check if focus is in editor now
          * @returns true if focus is in editor, otherwise false
@@ -823,7 +825,7 @@ declare namespace roosterjs {
          * @param range The SelectionRange object which represents the content range to select
          * @returns True if content is selected, otherwise false
          */
-        select(range: SelectionRange): boolean;
+        select(range: SelectionRangeInterface): boolean;
         /**
          * Select content by Position and collapse to this position
          * @param position The position to select
@@ -1658,7 +1660,6 @@ declare namespace roosterjs {
     }
 
     class TableResize implements EditorPlugin {
-        private isRtl;
         private editor;
         private onMouseOverDisposer;
         private td;
@@ -1679,9 +1680,10 @@ declare namespace roosterjs {
         private onMouseMove;
         private onMouseUp;
         private setTableColumnWidth(width);
+        private isRtl(element);
     }
 
-    class ImageResizePlugin implements EditorPlugin {
+    class ImageResize implements EditorPlugin {
         private minWidth;
         private minHeight;
         private selectionBorderColor;
@@ -1694,7 +1696,7 @@ declare namespace roosterjs {
         private resizeDiv;
         private direction;
         /**
-         * Create a new instance of ImageResizePlugin
+         * Create a new instance of ImageResize
          * @param minWidth Minimum width of image when resize in pixel, default value is 10
          * @param minHeight Minimum height of image when resize in pixel, default value is 10
          * @param selectionBorderColor Color of resize border and handles, default value is #DB626C
@@ -1715,6 +1717,16 @@ declare namespace roosterjs {
         private getSelectedImage();
         private isNorth(direction);
         private isWest(direction);
+    }
+
+    /**
+     * @deprecated Use ImageResize instead
+     */
+    class ImageResizePlugin extends ImageResize {
+        /**
+         * @deprecated Use ImageResize instead
+         */
+        constructor(minWidth?: number, minHeight?: number, selectionBorderColor?: string, forcePreserveRatio?: boolean);
     }
 
 }

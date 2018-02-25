@@ -1,1 +1,1 @@
-export { default as ImageResizePlugin } from './ImageResizePlugin';
+export { default as ImageResize, ImageResizePlugin } from './ImageResize';

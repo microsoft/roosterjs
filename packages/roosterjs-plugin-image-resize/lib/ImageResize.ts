@@ -21,7 +21,7 @@ const SHIFT_KEYCODE = 16;
 const CTRL_KEYCODE = 17;
 const ALT_KEYCODE = 18;
 
-export default class ImageResizePlugin implements EditorPlugin {
+export default class ImageResize implements EditorPlugin {
     private editor: Editor;
     private startPageX: number;
     private startPageY: number;
@@ -31,7 +31,7 @@ export default class ImageResizePlugin implements EditorPlugin {
     private direction: string;
 
     /**
-     * Create a new instance of ImageResizePlugin
+     * Create a new instance of ImageResize
      * @param minWidth Minimum width of image when resize in pixel, default value is 10
      * @param minHeight Minimum height of image when resize in pixel, default value is 10
      * @param selectionBorderColor Color of resize border and handles, default value is #DB626C
@@ -259,5 +259,23 @@ export default class ImageResizePlugin implements EditorPlugin {
 
     private isWest(direction: string): boolean {
         return direction && direction.substr(1, 1) == 'w';
+    }
+}
+
+/**
+ * @deprecated Use ImageResize instead
+ */
+export class ImageResizePlugin extends ImageResize {
+    /**
+     * @deprecated Use ImageResize instead
+     */
+    constructor(
+        minWidth: number = 10,
+        minHeight: number = 10,
+        selectionBorderColor: string = '#DB626C',
+        forcePreserveRatio: boolean = false
+    ) {
+        super(minWidth, minHeight, selectionBorderColor, forcePreserveRatio);
+        console.warn('ImageResizePlugin class is deprecated. Use ImageResize class instead');
     }
 }
