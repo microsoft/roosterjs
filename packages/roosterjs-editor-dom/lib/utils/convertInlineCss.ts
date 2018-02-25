@@ -1,7 +1,5 @@
-const DOCTYPE_HTML5 = '<!doctype html>';
 const STYLE_TAG_FILTER = 'style';
 const STYLEORLINK_REGEX = /<style|<link/i;
-const DOCTYPE_REGEX = /^\s*<!doctype /i;
 
 // Matches global style and body tag
 const STYLE_REGEX = /<style[^>]*>([\s\S]*?)<\/style>/gi;
@@ -15,36 +13,6 @@ const BODY_REGEX = /<body[^>]*>([\s\S]*)<\/body>/i;
 // TODO: Outlook desktop emails used to contain some global P style
 const PSEUDOSELECTOR_REGEX = /\w+\s*:\w+\s*/i;
 
-let contentIFrameForInlineCssConverter: HTMLIFrameElement;
-
-function runWithTempIFrame(callback: (doc: Document) => void): boolean {
-    if (!contentIFrameForInlineCssConverter) {
-        contentIFrameForInlineCssConverter = document.createElement('IFRAME') as HTMLIFrameElement;
-        contentIFrameForInlineCssConverter.style.display = 'none';
-    }
-
-    document.body.appendChild(contentIFrameForInlineCssConverter);
-    let contentDocument =
-        contentIFrameForInlineCssConverter.contentDocument ||
-        contentIFrameForInlineCssConverter.contentWindow.document;
-
-    try {
-        callback(contentDocument);
-        return true;
-    } catch (exception) {
-        // just swallow all exception for the moment
-        return false;
-    } finally {
-        if (contentDocument.body) {
-            contentDocument.body.innerHTML = '';
-        }
-        if (contentDocument.head) {
-            contentDocument.head.innerHTML = '';
-        }
-        document.body.removeChild(contentIFrameForInlineCssConverter);
-    }
-}
-
 function forEachElementInQueryResult(
     doc: Document,
     selector: string,
@@ -52,7 +20,7 @@ function forEachElementInQueryResult(
 ) {
     let elements = doc.querySelectorAll(selector);
 
-    for (let i = 0; i < elements.length; i++) {
+    for (let i = elements.length - 1; i >= 0; i--) {
         callback(elements[i] as HTMLElement);
     }
 }
@@ -85,27 +53,20 @@ export default function convertInlineCss(
     if (!STYLEORLINK_REGEX.test(sourceHtml) && !additionalStyleNodes) {
         return convertThroughRegEx(sourceHtml);
     }
-    // Always add <!doctype html> if source html doesn't have doctype
-    if (!DOCTYPE_REGEX.test(sourceHtml)) {
-        sourceHtml = DOCTYPE_HTML5 + sourceHtml;
-    }
 
     let result: string;
-    let succeeded = runWithTempIFrame(contentDocument => {
-        contentDocument.open();
-        try {
-            contentDocument.write(sourceHtml);
-        } finally {
-            contentDocument.close();
-        }
 
+    try {
+        let domParser = new DOMParser();
+        let contentDocument = domParser.parseFromString(sourceHtml, 'text/html');
         let styleSheets: CSSStyleSheet[] = [];
         for (let i = additionalStyleNodes ? additionalStyleNodes.length - 1 : -1; i >= 0; i--) {
             styleSheets.push(additionalStyleNodes[i].sheet as CSSStyleSheet);
         }
-        for (let i = contentDocument.styleSheets.length - 1; i >= 0; i--) {
-            styleSheets.push(contentDocument.styleSheets[i] as CSSStyleSheet);
-        }
+
+        forEachElementInQueryResult(contentDocument, 'style', style => {
+            styleSheets.push((<HTMLStyleElement>style).sheet as CSSStyleSheet);
+        })
 
         for (let styleSheet of styleSheets) {
             for (let j = styleSheet.cssRules.length - 1; j >= 0; j--) {
@@ -116,26 +77,19 @@ export default function convertInlineCss(
                 }
                 // Make sure the selector is not empty
                 let selectors = styleRule.selectorText ? styleRule.selectorText.split(',') : null;
-                if (selectors == null || selectors.length == 0) {
-                    continue;
-                }
-                // Loop through and apply selector one after one
-                for (let k = 0; k < selectors.length; k++) {
-                    let selector = selectors[k] ? selectors[k].trim() : null;
-                    if (selector && !selector.match(PSEUDOSELECTOR_REGEX)) {
-                        let elements = contentDocument.body.querySelectorAll(selector);
-                        for (let l = 0; l < elements.length; l++) {
-                            let element = elements[l] as HTMLElement;
-
-                            // Always put existing styles after so that they have higher priority
-                            // Which means if both global style and inline style apply to the same element,
-                            // inline style will have higher priority
-                            element.setAttribute(
-                                'style',
-                                styleRule.style.cssText + (element.getAttribute('style') || '')
-                            );
-                        }
+                for (let selector of (selectors || [])) {
+                    if (!selector || !selector.trim() || selector.match(PSEUDOSELECTOR_REGEX)) {
+                        continue;
                     }
+                    forEachElementInQueryResult(contentDocument, selector, element => {
+                        // Always put existing styles after so that they have higher priority
+                        // Which means if both global style and inline style apply to the same element,
+                        // inline style will have higher priority
+                        element.setAttribute(
+                            'style',
+                            styleRule.style.cssText + (element.getAttribute('style') || '')
+                        );
+                    });
                 }
             }
         }
@@ -144,12 +98,9 @@ export default function convertInlineCss(
         forEachElementInQueryResult(contentDocument, STYLE_TAG_FILTER, (element: HTMLElement) => {
             element.parentNode.removeChild(element);
         });
+
         result = contentDocument.body.innerHTML.trim();
-    });
+    } catch (e) {}
 
-    if (!succeeded) {
-        result = convertThroughRegEx(sourceHtml);
-    }
-
-    return result;
+    return result || convertThroughRegEx(sourceHtml);
 }
