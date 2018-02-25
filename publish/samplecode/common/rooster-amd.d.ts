@@ -1533,6 +1533,8 @@ export class ContentEdit implements EditorPlugin {
     willHandleEventExclusively(event: PluginEvent): boolean;
     onPluginEvent(event: PluginEvent): void;
     private isListEvent(event, interestedKeyCodes);
+    private isTabInTable(event);
+    private cacheGetTd(event);
     private getBlockQuoteElementFromEvent(event, keyboardEvent);
     private shouldToggleState(event, node);
     private toggleList(event);
@@ -1626,6 +1628,11 @@ export interface ContentEditFeatures {
      * @default true
      */
     autoBullet: boolean;
+    /**
+     * When press TAB or SHIFT+TAB key in table cell, jump to next/previous table cell
+     * @default true
+     */
+    tabInTable: boolean;
 }
 
 /**

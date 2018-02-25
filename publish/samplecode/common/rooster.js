@@ -3253,6 +3253,7 @@ function getDefaultContentEditFeatures() {
         unquoteWhenBackspaceOnEmptyFirstLine: true,
         unquoteWhenEnterOnEmptyLine: true,
         autoBullet: true,
+        tabInTable: true,
     };
 }
 exports.getDefaultContentEditFeatures = getDefaultContentEditFeatures;
@@ -6706,7 +6707,7 @@ var ContentEdit = /** @class */ (function () {
     };
     // Handle the event if it is a tab event, and cursor is at begin of a list
     ContentEdit.prototype.willHandleEventExclusively = function (event) {
-        return this.isListEvent(event, [KEY_TAB]);
+        return this.isListEvent(event, [KEY_TAB]) || this.isTabInTable(event);
     };
     // Handle the event
     ContentEdit.prototype.onPluginEvent = function (event) {
@@ -6749,6 +6750,24 @@ var ContentEdit = /** @class */ (function () {
                     }
                 }
             }
+        }
+        else if (this.isTabInTable(event)) {
+            for (var td = this.cacheGetTd(event), vtable = new roosterjs_editor_dom_1.VTable(td), step = keyboardEvent.shiftKey ? -1 : 1, row = vtable.row, col = vtable.col + step;; col += step) {
+                if (col < 0 || col >= vtable.cells[row].length) {
+                    row += step;
+                    if (row < 0 || row >= vtable.cells.length) {
+                        this.editor.select(vtable.table, keyboardEvent.shiftKey ? roosterjs_editor_dom_1.Position.Before : roosterjs_editor_dom_1.Position.After);
+                        break;
+                    }
+                    col = keyboardEvent.shiftKey ? vtable.cells[row].length - 1 : 0;
+                }
+                var cell = vtable.getCell(row, col);
+                if (cell.td) {
+                    this.editor.select(cell.td, roosterjs_editor_dom_1.Position.Begin);
+                    break;
+                }
+            }
+            keyboardEvent.preventDefault();
         }
         else if ((blockQuoteElement = this.getBlockQuoteElementFromEvent(event, keyboardEvent))) {
             var node_1 = roosterjs_editor_api_1.getNodeAtCursor(this.editor);
@@ -6795,6 +6814,16 @@ var ContentEdit = /** @class */ (function () {
             }
         }
         return false;
+    };
+    ContentEdit.prototype.isTabInTable = function (event) {
+        var keyboardEvent = event.rawEvent;
+        return this.features.tabInTable &&
+            event.eventType == 0 /* KeyDown */ &&
+            keyboardEvent.which == KEY_TAB &&
+            !!this.cacheGetTd(event);
+    };
+    ContentEdit.prototype.cacheGetTd = function (event) {
+        return roosterjs_editor_api_1.cacheGetNodeAtCursor(this.editor, event, 'TD');
     };
     // Check if it is a blockquote event, if it is true, return the blockquote element where the cursor resides
     // To qualify a blockquote event:
