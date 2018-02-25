@@ -14,6 +14,8 @@ export default class TableResize implements EditorPlugin {
     private pageX = -1;
     private initialPageX: number;
 
+    constructor(isRtl?: boolean) {}
+
     initialize(editor: Editor) {
         this.editor = editor;
         this.onMouseOverDisposer = this.editor.addDomEventHandler('mouseover', this.onMouseOver);
