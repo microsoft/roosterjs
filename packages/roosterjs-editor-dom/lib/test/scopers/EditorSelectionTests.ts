@@ -1,16 +1,17 @@
 import * as DomTestHelper from '../DomTestHelper';
 import EditorSelection from '../../scopers/EditorSelection';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
-import { BlockElement, PositionType } from 'roosterjs-editor-types';
+import InlineElementFactory from '../../objectModel/InlineElementFactory';
+import PositionType from '../../selection/PositionType';
 import Position from '../../selection/Position';
 import SelectionRange from '../../selection/SelectionRange';
+import { BlockElement } from '../../objectModel/types';
 
 let testID = 'EditorSelection';
 let inlineElementFactory: InlineElementFactory;
 
 describe('EditorSelection collapsed()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -72,7 +73,7 @@ describe('EditorSelection collapsed()', () => {
 
 describe('EditorSelection inlineElementBeforeStart()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -156,7 +157,7 @@ describe('EditorSelection inlineElementBeforeStart()', () => {
 
 describe('EditorSelection startInlineElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -231,7 +232,7 @@ describe('EditorSelection startInlineElement()', () => {
 
 describe('EditorSelection endInlineElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -302,7 +303,7 @@ describe('EditorSelection endInlineElement()', () => {
 
 describe('EditorSelection startBlockElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -375,7 +376,7 @@ describe('EditorSelection startBlockElement()', () => {
 
 describe('EditorSelection endBlockElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -448,7 +449,7 @@ describe('EditorSelection endBlockElement()', () => {
 
 describe('EditorSelection trimInlineElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -552,7 +553,7 @@ describe('EditorSelection trimInlineElement()', () => {
 
 describe('EditorSelection isBlockInScope()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {

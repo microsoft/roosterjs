@@ -84,11 +84,7 @@ function updateSelectionToCursorMarkers(editor: Editor) {
 // will cause indentation to behave really weirdly
 // This revised version uses DOM parentNode.insertBefore when it sees the insertion point is in node boundary_begin
 // which gives precise control over DOM structure and solves the chrome issue
-function insertCursorMarker(
-    editor: Editor,
-    position: Position,
-    cursorMaker: Node
-): void {
+function insertCursorMarker(editor: Editor, position: Position, cursorMaker: Node): void {
     position = position.normalize();
     let parentNode = position.node.parentNode;
     if (position.offset == 0) {

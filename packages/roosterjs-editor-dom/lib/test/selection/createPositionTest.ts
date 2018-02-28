@@ -1,5 +1,5 @@
 import Position from '../../selection/Position';
-import { PositionType } from 'roosterjs-editor-types';
+import PositionType from '../../selection/PositionType';
 
 function runTest(
     testName: string,

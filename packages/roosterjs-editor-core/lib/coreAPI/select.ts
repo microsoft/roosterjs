@@ -1,5 +1,4 @@
-import { PositionType } from 'roosterjs-editor-types';
-import { Position, SelectionRange } from 'roosterjs-editor-dom';
+import { Position, SelectionRange, PositionType } from 'roosterjs-editor-dom';
 import EditorCore from '../editor/EditorCore';
 import hasFocus from './hasFocus';
 import isRangeInContainer from '../utils/isRangeInContainer';

@@ -1,5 +1,5 @@
 import * as DomTestHelper from '../DomTestHelper';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
+import InlineElementFactory from '../../objectModel/InlineElementFactory';
 import {
     getInlineElementAtNode,
     getFirstInlineElement,
@@ -8,8 +8,9 @@ import {
     getPreviousInlineElement,
     getInlineElementBefore,
     getInlineElementAfter,
-} from '../../blockElements/BlockElement';
-import { PositionInterface, PositionType, InlineElement } from 'roosterjs-editor-types';
+} from '../../objectModel/BlockElement';
+import PositionType from '../../selection/PositionType';
+import { InlineElement } from '../../objectModel/types';
 import Position from '../../selection/Position';
 
 let testID = 'getInlineElement';
@@ -17,7 +18,7 @@ let inlineElementFactory: InlineElementFactory;
 
 describe('getInlineElement getInlineElementAtNode()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -79,7 +80,7 @@ describe('getInlineElement getInlineElementAtNode()', () => {
 
 describe('getInlineElement getFirstInlineElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -140,7 +141,7 @@ describe('getInlineElement getFirstInlineElement()', () => {
 
 describe('getInlineElement getLastInlineElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -201,7 +202,7 @@ describe('getInlineElement getLastInlineElement()', () => {
 
 describe('getInlineElement getNextInlineElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -297,7 +298,7 @@ describe('getInlineElement getNextInlineElement()', () => {
 
 describe('getInlineElement getPreviousInlineElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -401,7 +402,7 @@ describe('getInlineElement getPreviousInlineElement()', () => {
 
 describe('getInlineElement getInlineElementBeforePoint()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -414,7 +415,7 @@ describe('getInlineElement getInlineElementBeforePoint()', () => {
 
     function runTest(
         rootNode: Node,
-        position: PositionInterface,
+        position: Position,
         startOffset: number | PositionType,
         endOffset: number | PositionType,
         node: Node
@@ -481,7 +482,7 @@ describe('getInlineElement getInlineElementBeforePoint()', () => {
 
 describe('getInlineElement getInlineElementAfterPoint()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -494,7 +495,7 @@ describe('getInlineElement getInlineElementAfterPoint()', () => {
 
     function runTest(
         rootNode: Node,
-        position: PositionInterface,
+        position: Position,
         startOffset: number | PositionType,
         endOffset: number | PositionType,
         node: Node

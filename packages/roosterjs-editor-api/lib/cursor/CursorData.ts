@@ -1,5 +1,10 @@
-import { ContentPosition, ContentScope, InlineElement } from 'roosterjs-editor-types';
-import { ContentTraverser, isTextualInlineElement, matchWhiteSpaces } from 'roosterjs-editor-dom';
+import { ContentPosition, ContentScope, NodeType } from 'roosterjs-editor-types';
+import {
+    ContentTraverser,
+    InlineElement,
+    PartialInlineElement,
+    matchWhiteSpaces,
+} from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
 // The class that helps parse content around cursor
@@ -235,4 +240,13 @@ export default class CursorData {
             previousInline = this.backwardTraverser.getPreviousInlineElement();
         }
     }
+}
+
+function isTextualInlineElement(inlineElement: InlineElement): boolean {
+    return (
+        inlineElement &&
+        (inlineElement.getContainerNode().nodeType == NodeType.Text ||
+            (inlineElement instanceof PartialInlineElement &&
+                inlineElement.getDecoratedInline().getContainerNode().nodeType == NodeType.Text))
+    );
 }

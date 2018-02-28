@@ -1,6 +1,6 @@
 import CursorData from './CursorData';
 import replaceRangeWithNode from './replaceRangeWithNode';
-import { InlineElement } from 'roosterjs-editor-types';
+import { InlineElement } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
 /**

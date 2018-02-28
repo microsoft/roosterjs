@@ -1,11 +1,13 @@
-import InlineElementFactory from '../inlineElements/InlineElementFactory';
-import PartialInlineElement from '../inlineElements/PartialInlineElement';
-import { BlockElement, PositionInterface, InlineElement, SelectionRangeInterface } from 'roosterjs-editor-types';
+import InlineElementFactory from '../objectModel/InlineElementFactory';
+import PartialInlineElement from '../objectModel/PartialInlineElement';
 import {
     getBlockElementAtNode,
     getInlineElementAfter,
     getInlineElementBefore,
-} from '../blockElements/BlockElement';
+} from '../objectModel/BlockElement';
+import { InlineElement, BlockElement } from '../objectModel/types';
+import Position from '../selection/Position';
+import SelectionRange from '../selection/SelectionRange';
 
 // This is a utility like class that produces editor point/inline/block element around or within a selection range
 class EditorSelection {
@@ -18,7 +20,7 @@ class EditorSelection {
 
     constructor(
         private rootNode: Node,
-        private selectionRange: SelectionRangeInterface,
+        private selectionRange: SelectionRange,
         private inlineElementFactory: InlineElementFactory
     ) {
         this.selectionRange = selectionRange.normalize();
@@ -92,8 +94,8 @@ class EditorSelection {
             // if we end up getting a trimmed trimmedstartPosition or trimmedendPosition, we know the new element
             // has to be partial. otherwise return a full inline
             let decoratedInline: InlineElement;
-            let trimmedStartPosition: PositionInterface;
-            let trimmedEndPosition: PositionInterface;
+            let trimmedStartPosition: Position;
+            let trimmedEndPosition: Position;
 
             // First unwrap inlineElement if it is partial
             if (inlineElement instanceof PartialInlineElement) {
@@ -238,7 +240,7 @@ class EditorSelection {
                 this.endInline &&
                 this.startInline.getContainerNode() == this.endInline.getContainerNode()
             ) {
-                let fromPosition: PositionInterface;
+                let fromPosition: Position;
                 let decoratedInline: InlineElement;
                 if (this.startInline instanceof PartialInlineElement) {
                     fromPosition = (this.startInline as PartialInlineElement).getStartPosition();

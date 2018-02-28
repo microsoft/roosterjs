@@ -1,24 +1,22 @@
 import * as DomTestHelper from '../DomTestHelper';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
+import InlineElementFactory from '../../objectModel/InlineElementFactory';
 import ContentTraverser from '../../contentTraverser/ContentTraverser';
 import BodyScoper from '../../scopers/BodyScoper';
 import SelectionScoper from '../../scopers/SelectionScoper';
 import SelectionBlockScoper from '../../scopers/SelectionBlockScoper';
-import {
-    ContentPosition,
-    TraversingScoper,
-    BlockElement,
-    PositionType,
-} from 'roosterjs-editor-types';
+import { ContentPosition } from 'roosterjs-editor-types';
 import Position from '../../selection/Position';
 import SelectionRange from '../../selection/SelectionRange';
+import PositionType from '../../selection/PositionType';
+import TraversingScoper from '../../scopers/TraversingScoper';
+import { BlockElement } from '../../objectModel/types';
 
 let testID = 'ContentTraverser';
 let inlineElementFactory: InlineElementFactory;
 
 describe('ContentTraverser currentBlockElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -73,7 +71,7 @@ describe('ContentTraverser currentBlockElement()', () => {
 
 describe('ContentTraverser getNextBlockElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -150,7 +148,7 @@ describe('ContentTraverser getNextBlockElement()', () => {
 
 describe('ContentTraverser getPreviousBlockElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -211,7 +209,7 @@ describe('ContentTraverser getPreviousBlockElement()', () => {
 
 describe('ContentTraverser currentInlineElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -318,7 +316,7 @@ describe('ContentTraverser currentInlineElement()', () => {
 
 describe('ContentTraverser getNextInlineElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -440,7 +438,7 @@ describe('ContentTraverser getNextInlineElement()', () => {
 
 describe('ContentTraverser getPreviousInlineElement()', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {

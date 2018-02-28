@@ -1,5 +1,10 @@
-import { BlockElement, ContentScope, Direction } from 'roosterjs-editor-types';
-import { NodeBlockElement, StartEndBlockElement, wrapAll } from 'roosterjs-editor-dom';
+import { ContentScope, Direction } from 'roosterjs-editor-types';
+import {
+    BlockElement,
+    NodeBlockElement,
+    StartEndBlockElement,
+    wrapAll,
+} from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
 /**

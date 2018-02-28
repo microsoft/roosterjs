@@ -1,20 +1,20 @@
 import * as DomTestHelper from '../DomTestHelper';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
+import InlineElementFactory from '../../objectModel/InlineElementFactory';
 import {
     getBlockElementAtNode,
     getFirstBlockElement,
     getLastBlockElement,
     getNextBlockElement,
     getPreviousBlockElement,
-} from '../../blockElements/BlockElement';
-import { BlockElement } from 'roosterjs-editor-types';
+} from '../../objectModel/BlockElement';
+import { BlockElement } from '../../objectModel/types';
 
 let testID = 'getBlockElement';
 let inlineElementFactory: InlineElementFactory;
 
 describe('getBlockElement getBlockElementAtNode', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -80,7 +80,7 @@ describe('getBlockElement getBlockElementAtNode', () => {
 
 describe('getBlockElement getFirstBlockElement', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -146,7 +146,7 @@ describe('getBlockElement getFirstBlockElement', () => {
 
 describe('getBlockElement getLastBlockElement', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -212,7 +212,7 @@ describe('getBlockElement getLastBlockElement', () => {
 
 describe('getBlockElement getNextBlockElement', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -310,7 +310,7 @@ describe('getBlockElement getNextBlockElement', () => {
 
 describe('getBlockElement getPreviousBlockElement', () => {
     beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {

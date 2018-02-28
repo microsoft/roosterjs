@@ -19,136 +19,14 @@ declare namespace roosterjs {
         Right = 2,
     }
 
-    interface BlockElement {
-        getTextContent: () => string;
-        getStartNode: () => Node;
-        getEndNode: () => Node;
-        getContentNodes: () => Node[];
-        getFirstInlineElement: () => InlineElement;
-        getLastInlineElement: () => InlineElement;
-        getInlineElements: () => InlineElement[];
-        equals: (blockElement: BlockElement) => boolean;
-        isAfter: (blockElement: BlockElement) => boolean;
-        isInBlock: (inlineElement: InlineElement) => boolean;
-        contains: (node: Node) => boolean;
-    }
-
-    interface ContentChangedEvent extends PluginEvent {
-        source: ChangeSource | string;
-        data?: any;
-    }
-
-    const enum ChangeSource {
-        AutoLink = "AutoLink",
-        CreateLink = "CreateLink",
-        Format = "Format",
-        ImageResize = "ImageResize",
-        Paste = "Paste",
-        SetContent = "SetContent",
-        Undo = "Undo",
-    }
-
-    /**
-     * The position. Mostly used for content insertion and traversing
-     * On insertion, we will need to specify where we want the content to be placed (begin, end, selection or outside)
-     * On content traversing, we will need to specify the start position of traversing
-     */
-    const enum ContentPosition {
-        /**
-         * Begin of the container
-         */
-        Begin = 0,
-        /**
-         * End of the container
-         */
-        End = 1,
-        /**
-         * Selection start
-         */
-        SelectionStart = 2,
-        /**
-         * Outside of editor
-         */
-        Outside = 3,
-    }
-
-    const enum ContentScope {
-        Block = 0,
-        Selection = 1,
-        Body = 2,
-    }
-
-    interface DefaultFormat {
-        fontFamily?: string;
-        fontSize?: string;
-        textColor?: string;
-        backgroundColor?: string;
-        bold?: boolean;
-        italic?: boolean;
-        underline?: boolean;
-    }
-
     const enum Direction {
         LeftToRight = 0,
         RightToLeft = 1,
     }
 
-    const enum DocumentPosition {
-        Same = 0,
-        Disconnected = 1,
-        Preceding = 2,
-        Following = 4,
-        Contains = 8,
-        ContainedBy = 16,
-        ImplementationSpecific = 32,
-    }
-
-    interface ExtractContentEvent extends PluginEvent {
-        content: string;
-    }
-
-    interface FormatState {
-        fontName?: string;
-        fontSize?: string;
-        isBold?: boolean;
-        isItalic?: boolean;
-        isUnderline?: boolean;
-        backgroundColor?: string;
-        textColor?: string;
-        isBullet?: boolean;
-        isNumbering?: boolean;
-        isStrikeThrough?: boolean;
-        isBlockQuote?: boolean;
-        isSubscript?: boolean;
-        isSuperscript?: boolean;
-        canUnlink?: boolean;
-        canAddImageAltText?: boolean;
-        canUndo?: boolean;
-        canRedo?: boolean;
-        headerLevel?: number;
-    }
-
     const enum Indentation {
         Increase = 0,
         Decrease = 1,
-    }
-
-    interface InlineElement {
-        getTextContent: () => string;
-        getContainerNode: () => Node;
-        getParentBlock: () => BlockElement;
-        getStartPosition: () => PositionInterface;
-        getEndPosition: () => PositionInterface;
-        isAfter: (inlineElement: InlineElement) => boolean;
-        contains: (position: PositionInterface) => boolean;
-        applyStyle: (styler: (node: Node) => void, from?: PositionInterface, to?: PositionInterface) => void;
-    }
-
-    interface InsertOption {
-        position: ContentPosition;
-        updateCursor: boolean;
-        replaceSelection: boolean;
-        insertOnNewLine: boolean;
     }
 
     interface LinkData {
@@ -244,14 +122,68 @@ declare namespace roosterjs {
         SplitVertically = 12,
     }
 
-    const enum NodeType {
-        Element = 1,
-        Text = 3,
-        ProcessingInstruction = 7,
-        Comment = 8,
-        Document = 9,
-        DocumentType = 10,
-        DocumentFragment = 11,
+    interface ClipboardData {
+        snapshotBeforePaste: string;
+        originalFormat: DefaultFormat;
+        image: File;
+        text: string;
+        html: string;
+    }
+
+    /**
+     * The position. Mostly used for content insertion and traversing
+     * On insertion, we will need to specify where we want the content to be placed (begin, end, selection or outside)
+     * On content traversing, we will need to specify the start position of traversing
+     */
+    const enum ContentPosition {
+        /**
+         * Begin of the container
+         */
+        Begin = 0,
+        /**
+         * End of the container
+         */
+        End = 1,
+        /**
+         * Selection start
+         */
+        SelectionStart = 2,
+        /**
+         * Outside of editor
+         */
+        Outside = 3,
+    }
+
+    const enum ContentScope {
+        Block = 0,
+        Selection = 1,
+        Body = 2,
+    }
+
+    interface InsertOption {
+        position: ContentPosition;
+        updateCursor: boolean;
+        replaceSelection: boolean;
+        insertOnNewLine: boolean;
+    }
+
+    interface ContentChangedEvent extends PluginEvent {
+        source: ChangeSource | string;
+        data?: any;
+    }
+
+    const enum ChangeSource {
+        AutoLink = "AutoLink",
+        CreateLink = "CreateLink",
+        Format = "Format",
+        ImageResize = "ImageResize",
+        Paste = "Paste",
+        SetContent = "SetContent",
+        Undo = "Undo",
+    }
+
+    interface ExtractContentEvent extends PluginEvent {
+        content: string;
     }
 
     interface PluginDomEvent extends PluginEvent {
@@ -309,34 +241,68 @@ declare namespace roosterjs {
         BeforePaste = 8,
     }
 
+    interface BeforePasteEvent extends PluginEvent {
+        clipboardData: ClipboardData;
+        fragment: DocumentFragment;
+        pasteOption: PasteOption;
+    }
+
+    const enum DocumentPosition {
+        Same = 0,
+        Disconnected = 1,
+        Preceding = 2,
+        Following = 4,
+        Contains = 8,
+        ContainedBy = 16,
+        ImplementationSpecific = 32,
+    }
+
+    const enum NodeType {
+        Element = 1,
+        Text = 3,
+        ProcessingInstruction = 7,
+        Comment = 8,
+        Document = 9,
+        DocumentType = 10,
+        DocumentFragment = 11,
+    }
+
+    interface DefaultFormat {
+        fontFamily?: string;
+        fontSize?: string;
+        textColor?: string;
+        backgroundColor?: string;
+        bold?: boolean;
+        italic?: boolean;
+        underline?: boolean;
+    }
+
+    interface FormatState {
+        fontName?: string;
+        fontSize?: string;
+        isBold?: boolean;
+        isItalic?: boolean;
+        isUnderline?: boolean;
+        backgroundColor?: string;
+        textColor?: string;
+        isBullet?: boolean;
+        isNumbering?: boolean;
+        isStrikeThrough?: boolean;
+        isBlockQuote?: boolean;
+        isSubscript?: boolean;
+        isSuperscript?: boolean;
+        canUnlink?: boolean;
+        canAddImageAltText?: boolean;
+        canUndo?: boolean;
+        canRedo?: boolean;
+        headerLevel?: number;
+    }
+
     interface Rect {
         top: number;
         bottom: number;
         left: number;
         right: number;
-    }
-
-    interface TraversingScoper {
-        getStartBlockElement: () => BlockElement;
-        getStartInlineElement: () => InlineElement;
-        getInlineElementBeforeStart?: () => InlineElement;
-        getInlineElementAfterStart?: () => InlineElement;
-        isBlockInScope: (blockElement: BlockElement) => boolean;
-        trimInlineElement: (inlineElement: InlineElement) => InlineElement;
-    }
-
-    interface ClipboardData {
-        snapshotBeforePaste: string;
-        originalFormat: DefaultFormat;
-        image: File;
-        text: string;
-        html: string;
-    }
-
-    interface BeforePasteEvent extends PluginEvent {
-        clipboardData: ClipboardData;
-        fragment: DocumentFragment;
-        pasteOption: PasteOption;
     }
 
     /**
@@ -357,28 +323,29 @@ declare namespace roosterjs {
         PasteImage = 2,
     }
 
-    const enum PositionType {
-        Before = "b",
-        Begin = 0,
-        End = "e",
-        After = "a",
+    interface InlineElement {
+        getTextContent: () => string;
+        getContainerNode: () => Node;
+        getParentBlock: () => BlockElement;
+        getStartPosition: () => Position;
+        getEndPosition: () => Position;
+        isAfter: (inlineElement: InlineElement) => boolean;
+        contains: (position: Position) => boolean;
+        applyStyle: (styler: (node: Node) => void, from?: Position, to?: Position) => void;
     }
 
-    interface PositionInterface {
-        readonly node: Node;
-        readonly offset: number;
-        readonly isAtEnd: boolean;
-        normalize: () => PositionInterface;
-        equalTo: (pos: PositionInterface) => boolean;
-        isAfter: (pos: PositionInterface) => boolean;
-    }
-
-    interface SelectionRangeInterface {
-        readonly start: PositionInterface;
-        readonly end: PositionInterface;
-        readonly collapsed: boolean;
-        getRange: () => Range;
-        normalize: () => SelectionRangeInterface;
+    interface BlockElement {
+        getTextContent: () => string;
+        getStartNode: () => Node;
+        getEndNode: () => Node;
+        getContentNodes: () => Node[];
+        getFirstInlineElement: () => InlineElement;
+        getLastInlineElement: () => InlineElement;
+        getInlineElements: () => InlineElement[];
+        equals: (blockElement: BlockElement) => boolean;
+        isAfter: (blockElement: BlockElement) => boolean;
+        isInBlock: (inlineElement: InlineElement) => boolean;
+        contains: (node: Node) => boolean;
     }
 
     class NodeBlockElement implements BlockElement {
@@ -441,9 +408,18 @@ declare namespace roosterjs {
 
     function getPreviousInlineElement(rootNode: Node, inlineElement: InlineElement, inlineElementFactory: InlineElementFactory): InlineElement;
 
-    function getInlineElementBefore(rootNode: Node, position: PositionInterface, inlineElementFactory: InlineElementFactory): InlineElement;
+    function getInlineElementBefore(rootNode: Node, position: Position, inlineElementFactory: InlineElementFactory): InlineElement;
 
-    function getInlineElementAfter(rootNode: Node, position: PositionInterface, inlineElementFactory: InlineElementFactory): InlineElement;
+    function getInlineElementAfter(rootNode: Node, position: Position, inlineElementFactory: InlineElementFactory): InlineElement;
+
+    interface TraversingScoper {
+        getStartBlockElement: () => BlockElement;
+        getStartInlineElement: () => InlineElement;
+        getInlineElementBeforeStart?: () => InlineElement;
+        getInlineElementAfterStart?: () => InlineElement;
+        isBlockInScope: (blockElement: BlockElement) => boolean;
+        trimInlineElement: (inlineElement: InlineElement) => InlineElement;
+    }
 
     class ContentTraverser {
         private rootNode;
@@ -468,23 +444,8 @@ declare namespace roosterjs {
 
     function getLastLeafNode(rootNode: Node): Node;
 
-    class ImageInlineElement extends NodeInlineElement {
-        constructor(containerNode: Node, parentBlock: BlockElement);
-    }
-
     class InlineElementFactory {
-        private customResolvers;
-        private defaultResolver;
-        constructor(customResolvers?: InlineElementResolver[]);
         resolve(node: Node, rootNode: Node, parentBlock: BlockElement): InlineElement;
-    }
-
-    interface InlineElementResolver {
-        resolve: (node: Node, rootNode: Node, parentBlock: BlockElement, inlineElementFactory: InlineElementFactory) => InlineElement;
-    }
-
-    class LinkInlineElement extends NodeInlineElement {
-        constructor(containerNode: Node, parentBlock: BlockElement);
     }
 
     class NodeInlineElement implements InlineElement {
@@ -494,35 +455,31 @@ declare namespace roosterjs {
         getTextContent(): string;
         getContainerNode(): Node;
         getParentBlock(): BlockElement;
-        getStartPosition(): PositionInterface;
-        getEndPosition(): PositionInterface;
+        getStartPosition(): Position;
+        getEndPosition(): Position;
         isAfter(inlineElement: InlineElement): boolean;
-        contains(position: PositionInterface): boolean;
-        applyStyle(styler: (node: Node) => void, from?: PositionInterface, to?: PositionInterface): void;
+        contains(position: Position): boolean;
+        applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void;
     }
 
     class PartialInlineElement implements InlineElement {
         private inlineElement;
         private start;
         private end;
-        constructor(inlineElement: InlineElement, start?: PositionInterface, end?: PositionInterface);
+        constructor(inlineElement: InlineElement, start?: Position, end?: Position);
         getDecoratedInline(): InlineElement;
         getContainerNode(): Node;
         getParentBlock(): BlockElement;
         getTextContent(): string;
-        getStartPosition(): PositionInterface;
-        getEndPosition(): PositionInterface;
+        getStartPosition(): Position;
+        getEndPosition(): Position;
         isStartPartial(): boolean;
         isEndPartial(): boolean;
         readonly nextInlineElement: PartialInlineElement;
         readonly previousInlineElement: PartialInlineElement;
-        contains(p: PositionInterface): boolean;
+        contains(p: Position): boolean;
         isAfter(inlineElement: InlineElement): boolean;
-        applyStyle(styler: (node: Node) => void, from?: PositionInterface, to?: PositionInterface): void;
-    }
-
-    class TextInlineElement extends NodeInlineElement {
-        constructor(containerNode: Node, parentBlock: BlockElement);
+        applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void;
     }
 
     class BodyScoper implements TraversingScoper {
@@ -544,7 +501,7 @@ declare namespace roosterjs {
         private startEndCalculated;
         private startBlock;
         private endBlock;
-        constructor(rootNode: Node, selectionRange: SelectionRangeInterface, inlineElementFactory: InlineElementFactory);
+        constructor(rootNode: Node, selectionRange: SelectionRange, inlineElementFactory: InlineElementFactory);
         readonly collapsed: boolean;
         readonly inlineElementBeforeStart: InlineElement;
         readonly startInlineElement: InlineElement;
@@ -561,7 +518,7 @@ declare namespace roosterjs {
         private startPosition;
         private readonly editorSelection;
         private selectionBlock;
-        constructor(rootNode: Node, selectionRange: SelectionRangeInterface, startPosition: ContentPosition, inlineElementFactory: InlineElementFactory);
+        constructor(rootNode: Node, selectionRange: SelectionRange, startPosition: ContentPosition, inlineElementFactory: InlineElementFactory);
         getStartBlockElement(): BlockElement;
         getStartInlineElement(): InlineElement;
         getInlineElementBeforeStart(): InlineElement;
@@ -571,7 +528,7 @@ declare namespace roosterjs {
 
     class SelectionScoper implements TraversingScoper {
         private readonly editorSelection;
-        constructor(rootNode: Node, selectionRange: SelectionRangeInterface, inlineElementFactory: InlineElementFactory);
+        constructor(rootNode: Node, selectionRange: SelectionRange, inlineElementFactory: InlineElementFactory);
         getStartBlockElement(): BlockElement;
         getStartInlineElement(): InlineElement;
         isBlockInScope(blockElement: BlockElement): boolean;
@@ -609,8 +566,6 @@ declare namespace roosterjs {
      */
     function isNodeEmpty(node: Node, trim?: boolean): boolean;
 
-    function isTextualInlineElement(inlineElement: InlineElement): boolean;
-
     function matchWhiteSpaces(source: string): string[];
 
     /**
@@ -637,7 +592,7 @@ declare namespace roosterjs {
 
     function wrapAll(nodes: Node[], htmlFragment?: string): Node;
 
-    class Position implements PositionInterface {
+    class Position {
         static readonly Before: PositionType;
         static readonly Begin: PositionType;
         static readonly End: PositionType;
@@ -650,7 +605,7 @@ declare namespace roosterjs {
          * If the given position has invalid offset, this function will return a corrected value.
          * @param position The original position to clone from
          */
-        constructor(position: PositionInterface);
+        constructor(position: Position);
         /**
          * Create a Position from node and an offset number
          * @param node The node of this position
@@ -663,23 +618,30 @@ declare namespace roosterjs {
          * @param positionType Type of the postion, can be Begin, End, Before, After
          */
         constructor(node: Node, positionType: PositionType);
-        normalize(): PositionInterface;
-        equalTo(p: PositionInterface): boolean;
+        normalize(): Position;
+        equalTo(p: Position): boolean;
         /**
          * Checks if position 1 is after position 2
          */
-        isAfter(p: PositionInterface): boolean;
+        isAfter(p: Position): boolean;
     }
 
-    class SelectionRange implements SelectionRangeInterface {
+    class SelectionRange {
         readonly collapsed: boolean;
-        readonly start: PositionInterface;
-        readonly end: PositionInterface;
+        readonly start: Position;
+        readonly end: Position;
         private rawRange;
         constructor(rawRange: Range);
-        constructor(start: PositionInterface, end?: PositionInterface);
+        constructor(start: Position, end?: Position);
         getRange(): Range;
-        normalize(): SelectionRangeInterface;
+        normalize(): SelectionRange;
+    }
+
+    const enum PositionType {
+        Before = "b",
+        Begin = 0,
+        End = "e",
+        After = "a",
     }
 
     class VTable {
@@ -804,7 +766,7 @@ declare namespace roosterjs {
          * @returns Node list of the query result
          */
         queryNodes(selector: string): Node[];
-        getSelectionRange(): SelectionRangeInterface;
+        getSelectionRange(): SelectionRange;
         /**
          * Check if focus is in editor now
          * @returns true if focus is in editor, otherwise false
@@ -825,20 +787,20 @@ declare namespace roosterjs {
          * @param range The SelectionRange object which represents the content range to select
          * @returns True if content is selected, otherwise false
          */
-        select(range: SelectionRangeInterface): boolean;
+        select(range: SelectionRange): boolean;
         /**
          * Select content by Position and collapse to this position
          * @param position The position to select
          * @returns True if content is selected, otherwise false
          */
-        select(position: PositionInterface): boolean;
+        select(position: Position): boolean;
         /**
          * Select content by a start and end position
          * @param start The start position to select
          * @param end The end position to select, if this is the same with start, the selection will be collapsed
          * @returns True if content is selected, otherwise false
          */
-        select(start: PositionInterface, end: PositionInterface): boolean;
+        select(start: Position, end: Position): boolean;
         /**
          * Select content by node
          * @param node The node to select

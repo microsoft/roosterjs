@@ -3,16 +3,11 @@ import getTagOfNode from '../utils/getTagOfNode';
 import isDocumentPosition from '../utils/isDocumentPosition';
 import isNodeAfter from '../utils/isNodeAfter';
 import wrap from '../utils/wrap';
-import {
-    BlockElement,
-    DocumentPosition,
-    InlineElement,
-    NodeType,
-    PositionInterface,
-} from 'roosterjs-editor-types';
+import { DocumentPosition, NodeType } from 'roosterjs-editor-types';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../domWalker/getLeafSibling';
 import Position from '../selection/Position';
 import SelectionRange from '../selection/SelectionRange';
+import { InlineElement, BlockElement } from './types';
 
 // This presents an inline element that can be reprented by a single html node.
 // This serves as base for most inline element as it contains most implentation
@@ -40,14 +35,14 @@ class NodeInlineElement implements InlineElement {
     }
 
     // Get the start point of the inline element
-    public getStartPosition(): PositionInterface {
+    public getStartPosition(): Position {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest first child node from the container
         return new Position(this.containerNode, 0).normalize();
     }
 
     // Get the end point of the inline element
-    public getEndPosition(): PositionInterface {
+    public getEndPosition(): Position {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest last child node from the container
         return new Position(this.containerNode, Position.End).normalize();
@@ -59,7 +54,7 @@ class NodeInlineElement implements InlineElement {
     }
 
     // Checks if an editor point is contained in the inline element
-    public contains(position: PositionInterface): boolean {
+    public contains(position: Position): boolean {
         let start = this.getStartPosition();
         let end = this.getEndPosition();
         return position.isAfter(start) && end.isAfter(position);
@@ -70,7 +65,7 @@ class NodeInlineElement implements InlineElement {
     // The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
     // when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
     // The actuall styling is done by consumer through the styler callback
-    public applyStyle(styler: (node: Node) => void, from?: PositionInterface, to?: PositionInterface): void {
+    public applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void {
         let ownerDoc = this.containerNode.ownerDocument;
 
         // Adjust the start point

@@ -16,20 +16,18 @@ import {
     ContentScope,
     DefaultFormat,
     ExtractContentEvent,
-    InlineElement,
     InsertOption,
     NodeType,
     PluginEvent,
     PluginEventType,
-    PositionInterface,
-    PositionType,
-    SelectionRangeInterface
 } from 'roosterjs-editor-types';
 import {
     ContentTraverser,
     EditorSelection,
     NodeBlockElement,
+    InlineElement,
     Position,
+    PositionType,
     SelectionRange,
     applyFormat,
     contains,
@@ -286,7 +284,7 @@ export default class Editor {
 
     //#region Focus and Selection
 
-    public getSelectionRange(): SelectionRangeInterface {
+    public getSelectionRange(): SelectionRange {
         return new SelectionRange(
             getLiveRange(this.core) || this.core.cachedRange || this.defaultRange
         );
@@ -319,14 +317,14 @@ export default class Editor {
      * @param range The SelectionRange object which represents the content range to select
      * @returns True if content is selected, otherwise false
      */
-    public select(range: SelectionRangeInterface): boolean;
+    public select(range: SelectionRange): boolean;
 
     /**
      * Select content by Position and collapse to this position
      * @param position The position to select
      * @returns True if content is selected, otherwise false
      */
-    public select(position: PositionInterface): boolean;
+    public select(position: Position): boolean;
 
     /**
      * Select content by a start and end position
@@ -334,7 +332,7 @@ export default class Editor {
      * @param end The end position to select, if this is the same with start, the selection will be collapsed
      * @returns True if content is selected, otherwise false
      */
-    public select(start: PositionInterface, end: PositionInterface): boolean;
+    public select(start: Position, end: Position): boolean;
 
     /**
      * Select content by node

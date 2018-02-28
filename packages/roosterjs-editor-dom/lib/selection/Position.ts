@@ -1,7 +1,8 @@
-import { NodeType, PositionInterface, PositionType } from 'roosterjs-editor-types';
+import { NodeType } from 'roosterjs-editor-types';
+import PositionType from './PositionType';
 import isNodeAfter from '../utils/isNodeAfter';
 
-export default class Position implements PositionInterface {
+export default class Position {
     static readonly Before = PositionType.Before;
     static readonly Begin = PositionType.Begin;
     static readonly End = PositionType.End;
@@ -16,7 +17,7 @@ export default class Position implements PositionInterface {
      * If the given position has invalid offset, this function will return a corrected value.
      * @param position The original position to clone from
      */
-    constructor(position: PositionInterface);
+    constructor(position: Position);
 
     /**
      * Create a Position from node and an offset number
@@ -32,9 +33,9 @@ export default class Position implements PositionInterface {
      */
     constructor(node: Node, positionType: PositionType);
 
-    constructor(nodeOrPosition: Node | PositionInterface, offsetOrPosType?: number | PositionType) {
-        if ((<PositionInterface>nodeOrPosition).node) {
-            this.node = (<PositionInterface>nodeOrPosition).node;
+    constructor(nodeOrPosition: Node | Position, offsetOrPosType?: number | PositionType) {
+        if ((<Position>nodeOrPosition).node) {
+            this.node = (<Position>nodeOrPosition).node;
             offsetOrPosType = (<Position>nodeOrPosition).offset;
         } else {
             this.node = <Node>nodeOrPosition;
@@ -61,12 +62,14 @@ export default class Position implements PositionInterface {
             default:
                 let endOffset = getEndOffset(this.node);
                 this.offset = Math.max(0, Math.min(<number>offsetOrPosType, endOffset));
-                this.isAtEnd = offsetOrPosType == PositionType.End || (this.offset > 0 && this.offset == endOffset);
+                this.isAtEnd =
+                    offsetOrPosType == PositionType.End ||
+                    (this.offset > 0 && this.offset == endOffset);
                 break;
         }
     }
 
-    normalize(): PositionInterface {
+    normalize(): Position {
         if (this.node.nodeType == NodeType.Text || !this.node.firstChild) {
             return this;
         }
@@ -80,24 +83,22 @@ export default class Position implements PositionInterface {
                 newOffset == PositionType.Begin
                     ? node.firstChild
                     : newOffset == PositionType.End
-                    ? node.lastChild
-                    : node.childNodes[<number>newOffset];
+                      ? node.lastChild
+                      : node.childNodes[<number>newOffset];
             newOffset = this.isAtEnd ? PositionType.End : PositionType.Begin;
         }
         return new Position(node, newOffset);
     }
 
-    equalTo(p: PositionInterface): boolean {
+    equalTo(p: Position): boolean {
         return this == p || (this.node == p.node && this.offset == p.offset);
     }
 
     /**
      * Checks if position 1 is after position 2
      */
-    isAfter(p: PositionInterface): boolean {
-        return this.node == p.node
-            ? this.offset > p.offset
-            : isNodeAfter(this.node, p.node);
+    isAfter(p: Position): boolean {
+        return this.node == p.node ? this.offset > p.offset : isNodeAfter(this.node, p.node);
     }
 }
 

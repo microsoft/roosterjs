@@ -1,5 +1,4 @@
-import BlockElement from './BlockElement';
-import InlineElement from './InlineElement';
+import { InlineElement, BlockElement } from '../objectModel/types';
 
 // A scoper provides two things to a content traverser:
 // 1) a start position -- a start inline or block element

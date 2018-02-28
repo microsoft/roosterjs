@@ -61,7 +61,9 @@ export default class TableResize implements EditorPlugin {
                 let [left, top] = this.getPosition(table);
                 let handle = this.getResizeHandle();
 
-                left += this.td.offsetLeft + (this.isRtl(table) ? 0 : this.td.offsetWidth - HANDLE_WIDTH);
+                left +=
+                    this.td.offsetLeft +
+                    (this.isRtl(table) ? 0 : this.td.offsetWidth - HANDLE_WIDTH);
                 handle.style.display = '';
                 handle.style.top = top + 'px';
                 handle.style.height = table.offsetHeight + 'px';

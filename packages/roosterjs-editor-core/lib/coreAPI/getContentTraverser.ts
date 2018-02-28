@@ -1,16 +1,13 @@
 import EditorCore from '../editor/EditorCore';
 import getLiveRange from './getLiveRange';
-import {
-    ContentScope,
-    ContentPosition,
-    TraversingScoper,
-} from 'roosterjs-editor-types';
+import { ContentScope, ContentPosition } from 'roosterjs-editor-types';
 import {
     ContentTraverser,
     SelectionBlockScoper,
     SelectionScoper,
     BodyScoper,
     SelectionRange,
+    TraversingScoper,
 } from 'roosterjs-editor-dom';
 
 export default function getContentTraverser(

@@ -1,13 +1,11 @@
 import * as DomTestHelper from '../DomTestHelper';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
+import InlineElementFactory from '../../objectModel/InlineElementFactory';
 import SelectionBlockScoper from '../../scopers/SelectionBlockScoper';
-import {
-    BlockElement,
-    ContentPosition,
-    PositionType,
-} from 'roosterjs-editor-types';
+import { ContentPosition } from 'roosterjs-editor-types';
 import Position from '../../selection/Position';
 import SelectionRange from '../../selection/SelectionRange';
+import { BlockElement } from '../../objectModel/types';
+import PositionType from '../../selection/PositionType';
 
 let testID = 'SelectionBlockScoper';
 
@@ -16,7 +14,7 @@ function createSelectionBlockScoper(
     selectionRange: SelectionRange,
     startPosition: ContentPosition
 ) {
-    let inlineElementFactory = new InlineElementFactory(null);
+    let inlineElementFactory = new InlineElementFactory();
     return new SelectionBlockScoper(rootNode, selectionRange, startPosition, inlineElementFactory);
 }
 

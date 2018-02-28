@@ -1,11 +1,8 @@
 import EditorSelection from './EditorSelection';
-import InlineElementFactory from '../inlineElements/InlineElementFactory';
-import {
-    BlockElement,
-    InlineElement,
-    TraversingScoper,
-    SelectionRangeInterface,
-} from 'roosterjs-editor-types';
+import InlineElementFactory from '../objectModel/InlineElementFactory';
+import { InlineElement, BlockElement } from '../objectModel/types';
+import TraversingScoper from './TraversingScoper';
+import SelectionRange from '../selection/SelectionRange';
 
 // This is selection scoper that provide a start inline as the start of the selection
 // and checks if a block falls in the selection (isBlockInScope)
@@ -15,7 +12,7 @@ class SelectionScoper implements TraversingScoper {
 
     constructor(
         rootNode: Node,
-        selectionRange: SelectionRangeInterface,
+        selectionRange: SelectionRange,
         inlineElementFactory: InlineElementFactory
     ) {
         this.editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);

@@ -1,16 +1,15 @@
-import { SelectionRangeInterface, PositionInterface } from 'roosterjs-editor-types';
 import Position from './Position';
 
-export default class SelectionRange implements SelectionRangeInterface {
+export default class SelectionRange {
     readonly collapsed: boolean;
-    readonly start: PositionInterface;
-    readonly end: PositionInterface;
+    readonly start: Position;
+    readonly end: Position;
     private rawRange: Range;
 
     constructor(rawRange: Range);
-    constructor(start: PositionInterface, end?: PositionInterface);
+    constructor(start: Position, end?: Position);
 
-    constructor(startOrRawRange: PositionInterface | Range, end?: PositionInterface) {
+    constructor(startOrRawRange: Position | Range, end?: Position) {
         if (startOrRawRange instanceof Range) {
             this.rawRange = startOrRawRange;
             this.start = new Position(startOrRawRange.startContainer, startOrRawRange.startOffset);
@@ -32,10 +31,7 @@ export default class SelectionRange implements SelectionRangeInterface {
         return this.rawRange;
     }
 
-    normalize(): SelectionRangeInterface {
-        return new SelectionRange(
-            this.start.normalize(),
-            this.end.normalize()
-        )
+    normalize(): SelectionRange {
+        return new SelectionRange(this.start.normalize(), this.end.normalize());
     }
 }

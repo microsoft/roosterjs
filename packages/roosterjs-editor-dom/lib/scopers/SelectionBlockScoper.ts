@@ -1,12 +1,9 @@
 import EditorSelection from './EditorSelection';
-import InlineElementFactory from '../inlineElements/InlineElementFactory';
-import {
-    BlockElement,
-    ContentPosition,
-    InlineElement,
-    TraversingScoper,
-    SelectionRangeInterface,
-} from 'roosterjs-editor-types';
+import InlineElementFactory from '../objectModel/InlineElementFactory';
+import { ContentPosition } from 'roosterjs-editor-types';
+import { InlineElement, BlockElement } from '../objectModel/types';
+import TraversingScoper from './TraversingScoper';
+import SelectionRange from '../selection/SelectionRange';
 
 // This provides traversing content in a selection start block
 // This is commonly used for those cursor context sensitive plugin
@@ -18,7 +15,7 @@ class SelectionBlockScoper implements TraversingScoper {
 
     constructor(
         rootNode: Node,
-        selectionRange: SelectionRangeInterface,
+        selectionRange: SelectionRange,
         private startPosition: ContentPosition,
         inlineElementFactory: InlineElementFactory
     ) {

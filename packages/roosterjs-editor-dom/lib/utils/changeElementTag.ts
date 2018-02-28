@@ -2,7 +2,11 @@ import SelectionRange from '../selection/SelectionRange';
 import getComputedStyle from './getComputedStyle';
 import getTagOfNode from './getTagOfNode';
 
-export default function changeElementTag(element: HTMLElement, newTag: string, range?: Range): HTMLElement {
+export default function changeElementTag(
+    element: HTMLElement,
+    newTag: string,
+    range?: Range
+): HTMLElement {
     let selectionRange = range ? new SelectionRange(range).normalize() : null;
     let newElement = element.ownerDocument.createElement(newTag);
 
@@ -25,12 +29,15 @@ export default function changeElementTag(element: HTMLElement, newTag: string, r
         element.parentNode.replaceChild(newElement, element);
     }
 
-    if (selectionRange && selectionRange.start.node != element && selectionRange.end.node != element) {
+    if (
+        selectionRange &&
+        selectionRange.start.node != element &&
+        selectionRange.end.node != element
+    ) {
         try {
             range.setStart(selectionRange.start.node, selectionRange.start.offset);
             range.setEnd(selectionRange.end.node, selectionRange.end.offset);
-        } catch (e) {
-        }
+        } catch (e) {}
     }
 
     return newElement;

@@ -7,13 +7,7 @@ import {
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-import {
-    Position,
-    VTable,
-    getTagOfNode,
-    isNodeEmpty,
-    splitParentNode,
-} from 'roosterjs-editor-dom';
+import { Position, VTable, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     Indentation,
@@ -102,17 +96,20 @@ export default class ContentEdit implements EditorPlugin {
         } else if (this.isTabInTable(event)) {
             for (
                 let td = this.cacheGetTd(event),
-                vtable = new VTable(td),
-                step = keyboardEvent.shiftKey ? -1 : 1,
-                row = vtable.row,
-                col = vtable.col + step;
+                    vtable = new VTable(td),
+                    step = keyboardEvent.shiftKey ? -1 : 1,
+                    row = vtable.row,
+                    col = vtable.col + step;
                 ;
                 col += step
             ) {
                 if (col < 0 || col >= vtable.cells[row].length) {
                     row += step;
                     if (row < 0 || row >= vtable.cells.length) {
-                        this.editor.select(vtable.table, keyboardEvent.shiftKey ? Position.Before : Position.After);
+                        this.editor.select(
+                            vtable.table,
+                            keyboardEvent.shiftKey ? Position.Before : Position.After
+                        );
                         break;
                     }
                     col = keyboardEvent.shiftKey ? vtable.cells[row].length - 1 : 0;
@@ -185,10 +182,12 @@ export default class ContentEdit implements EditorPlugin {
 
     private isTabInTable(event: PluginEvent): boolean {
         let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
-        return this.features.tabInTable &&
+        return (
+            this.features.tabInTable &&
             event.eventType == PluginEventType.KeyDown &&
             keyboardEvent.which == KEY_TAB &&
-            !!this.cacheGetTd(event);
+            !!this.cacheGetTd(event)
+        );
     }
 
     private cacheGetTd(event: PluginEvent): HTMLTableCellElement {

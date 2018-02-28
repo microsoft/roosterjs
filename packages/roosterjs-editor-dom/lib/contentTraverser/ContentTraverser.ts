@@ -1,11 +1,12 @@
-import InlineElementFactory from '../inlineElements/InlineElementFactory';
-import { BlockElement, InlineElement, TraversingScoper } from 'roosterjs-editor-types';
+import { InlineElement, BlockElement } from '../objectModel/types';
+import InlineElementFactory from '../objectModel/InlineElementFactory';
+import TraversingScoper from '../scopers/TraversingScoper';
 import {
     getNextBlockElement,
     getPreviousBlockElement,
     getNextInlineElement,
     getPreviousInlineElement,
-} from '../blockElements/BlockElement';
+} from '../objectModel/BlockElement';
 
 // The provides traversing of content inside editor.
 // There are two ways to traverse, block by block, or inline element by inline element

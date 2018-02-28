@@ -1,8 +1,8 @@
-import { InlineElement, PositionInterface } from 'roosterjs-editor-types';
-import InlineElementFactory from '../inlineElements/InlineElementFactory';
-import { NodeBlockElement, StartEndBlockElement } from '../blockElements/BlockElement';
+import InlineElementFactory from '../objectModel/InlineElementFactory';
+import { NodeBlockElement, StartEndBlockElement } from '../objectModel/BlockElement';
 import Position from '../selection/Position';
 import SelectionRange from '../selection/SelectionRange';
+import { InlineElement } from '../objectModel/types';
 
 // Create element with content and id and insert the element in the DOM
 export function createElementFromContent(id: string, content: string): HTMLElement {
@@ -47,8 +47,8 @@ export function runTestMethod2(
 // Check inlineElement equality based on startPosition, endPosition and textContent
 export function isInlineElementEqual(
     element: InlineElement,
-    startPosition: PositionInterface,
-    endPosition: PositionInterface,
+    startPosition: Position,
+    endPosition: Position,
     textContent: string
 ): boolean {
     return (
@@ -59,13 +59,13 @@ export function isInlineElementEqual(
 }
 
 // Check if two editor points are equal
-export function isPositionEqual(position1: PositionInterface, position2: PositionInterface): boolean {
+export function isPositionEqual(position1: Position, position2: Position): boolean {
     return position1.node.isEqualNode(position2.node) && position1.offset == position2.offset;
 }
 
 // Create NodeBlockElement from given HTMLElement
 export function createNodeBlockElementWithDiv(testDiv: HTMLElement): NodeBlockElement {
-    let inlineElementFactory = new InlineElementFactory(null);
+    let inlineElementFactory = new InlineElementFactory();
     let nodeBlockElement = new NodeBlockElement(testDiv, inlineElementFactory);
     return nodeBlockElement;
 }
@@ -76,7 +76,7 @@ export function createStartEndBlockElementWithStartEndNode(
     startNode: Node,
     endNode: Node
 ): StartEndBlockElement {
-    let inlineElementFactory = new InlineElementFactory(null);
+    let inlineElementFactory = new InlineElementFactory();
     let startEndBlockElement = new StartEndBlockElement(
         rootNode,
         startNode,
@@ -88,7 +88,7 @@ export function createStartEndBlockElementWithStartEndNode(
 
 // Create inlineElement from node
 export function createInlineElementFromNode(node: Node, rootNode: Node): InlineElement {
-    let inlineElementFactory = new InlineElementFactory(null);
+    let inlineElementFactory = new InlineElementFactory();
     let parentBlock = new NodeBlockElement(node, null);
     let inlineElement = inlineElementFactory.resolve(node, rootNode, parentBlock);
     return inlineElement;

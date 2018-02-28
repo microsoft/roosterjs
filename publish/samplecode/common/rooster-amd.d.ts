@@ -18,136 +18,14 @@ export const enum Alignment {
     Right = 2,
 }
 
-export interface BlockElement {
-    getTextContent: () => string;
-    getStartNode: () => Node;
-    getEndNode: () => Node;
-    getContentNodes: () => Node[];
-    getFirstInlineElement: () => InlineElement;
-    getLastInlineElement: () => InlineElement;
-    getInlineElements: () => InlineElement[];
-    equals: (blockElement: BlockElement) => boolean;
-    isAfter: (blockElement: BlockElement) => boolean;
-    isInBlock: (inlineElement: InlineElement) => boolean;
-    contains: (node: Node) => boolean;
-}
-
-export interface ContentChangedEvent extends PluginEvent {
-    source: ChangeSource | string;
-    data?: any;
-}
-
-export const enum ChangeSource {
-    AutoLink = "AutoLink",
-    CreateLink = "CreateLink",
-    Format = "Format",
-    ImageResize = "ImageResize",
-    Paste = "Paste",
-    SetContent = "SetContent",
-    Undo = "Undo",
-}
-
-/**
- * The position. Mostly used for content insertion and traversing
- * On insertion, we will need to specify where we want the content to be placed (begin, end, selection or outside)
- * On content traversing, we will need to specify the start position of traversing
- */
-export const enum ContentPosition {
-    /**
-     * Begin of the container
-     */
-    Begin = 0,
-    /**
-     * End of the container
-     */
-    End = 1,
-    /**
-     * Selection start
-     */
-    SelectionStart = 2,
-    /**
-     * Outside of editor
-     */
-    Outside = 3,
-}
-
-export const enum ContentScope {
-    Block = 0,
-    Selection = 1,
-    Body = 2,
-}
-
-export interface DefaultFormat {
-    fontFamily?: string;
-    fontSize?: string;
-    textColor?: string;
-    backgroundColor?: string;
-    bold?: boolean;
-    italic?: boolean;
-    underline?: boolean;
-}
-
 export const enum Direction {
     LeftToRight = 0,
     RightToLeft = 1,
 }
 
-export const enum DocumentPosition {
-    Same = 0,
-    Disconnected = 1,
-    Preceding = 2,
-    Following = 4,
-    Contains = 8,
-    ContainedBy = 16,
-    ImplementationSpecific = 32,
-}
-
-export interface ExtractContentEvent extends PluginEvent {
-    content: string;
-}
-
-export interface FormatState {
-    fontName?: string;
-    fontSize?: string;
-    isBold?: boolean;
-    isItalic?: boolean;
-    isUnderline?: boolean;
-    backgroundColor?: string;
-    textColor?: string;
-    isBullet?: boolean;
-    isNumbering?: boolean;
-    isStrikeThrough?: boolean;
-    isBlockQuote?: boolean;
-    isSubscript?: boolean;
-    isSuperscript?: boolean;
-    canUnlink?: boolean;
-    canAddImageAltText?: boolean;
-    canUndo?: boolean;
-    canRedo?: boolean;
-    headerLevel?: number;
-}
-
 export const enum Indentation {
     Increase = 0,
     Decrease = 1,
-}
-
-export interface InlineElement {
-    getTextContent: () => string;
-    getContainerNode: () => Node;
-    getParentBlock: () => BlockElement;
-    getStartPosition: () => PositionInterface;
-    getEndPosition: () => PositionInterface;
-    isAfter: (inlineElement: InlineElement) => boolean;
-    contains: (position: PositionInterface) => boolean;
-    applyStyle: (styler: (node: Node) => void, from?: PositionInterface, to?: PositionInterface) => void;
-}
-
-export interface InsertOption {
-    position: ContentPosition;
-    updateCursor: boolean;
-    replaceSelection: boolean;
-    insertOnNewLine: boolean;
 }
 
 export interface LinkData {
@@ -243,14 +121,68 @@ export const enum TableOperation {
     SplitVertically = 12,
 }
 
-export const enum NodeType {
-    Element = 1,
-    Text = 3,
-    ProcessingInstruction = 7,
-    Comment = 8,
-    Document = 9,
-    DocumentType = 10,
-    DocumentFragment = 11,
+export interface ClipboardData {
+    snapshotBeforePaste: string;
+    originalFormat: DefaultFormat;
+    image: File;
+    text: string;
+    html: string;
+}
+
+/**
+ * The position. Mostly used for content insertion and traversing
+ * On insertion, we will need to specify where we want the content to be placed (begin, end, selection or outside)
+ * On content traversing, we will need to specify the start position of traversing
+ */
+export const enum ContentPosition {
+    /**
+     * Begin of the container
+     */
+    Begin = 0,
+    /**
+     * End of the container
+     */
+    End = 1,
+    /**
+     * Selection start
+     */
+    SelectionStart = 2,
+    /**
+     * Outside of editor
+     */
+    Outside = 3,
+}
+
+export const enum ContentScope {
+    Block = 0,
+    Selection = 1,
+    Body = 2,
+}
+
+export interface InsertOption {
+    position: ContentPosition;
+    updateCursor: boolean;
+    replaceSelection: boolean;
+    insertOnNewLine: boolean;
+}
+
+export interface ContentChangedEvent extends PluginEvent {
+    source: ChangeSource | string;
+    data?: any;
+}
+
+export const enum ChangeSource {
+    AutoLink = "AutoLink",
+    CreateLink = "CreateLink",
+    Format = "Format",
+    ImageResize = "ImageResize",
+    Paste = "Paste",
+    SetContent = "SetContent",
+    Undo = "Undo",
+}
+
+export interface ExtractContentEvent extends PluginEvent {
+    content: string;
 }
 
 export interface PluginDomEvent extends PluginEvent {
@@ -308,34 +240,68 @@ export const enum PluginEventType {
     BeforePaste = 8,
 }
 
+export interface BeforePasteEvent extends PluginEvent {
+    clipboardData: ClipboardData;
+    fragment: DocumentFragment;
+    pasteOption: PasteOption;
+}
+
+export const enum DocumentPosition {
+    Same = 0,
+    Disconnected = 1,
+    Preceding = 2,
+    Following = 4,
+    Contains = 8,
+    ContainedBy = 16,
+    ImplementationSpecific = 32,
+}
+
+export const enum NodeType {
+    Element = 1,
+    Text = 3,
+    ProcessingInstruction = 7,
+    Comment = 8,
+    Document = 9,
+    DocumentType = 10,
+    DocumentFragment = 11,
+}
+
+export interface DefaultFormat {
+    fontFamily?: string;
+    fontSize?: string;
+    textColor?: string;
+    backgroundColor?: string;
+    bold?: boolean;
+    italic?: boolean;
+    underline?: boolean;
+}
+
+export interface FormatState {
+    fontName?: string;
+    fontSize?: string;
+    isBold?: boolean;
+    isItalic?: boolean;
+    isUnderline?: boolean;
+    backgroundColor?: string;
+    textColor?: string;
+    isBullet?: boolean;
+    isNumbering?: boolean;
+    isStrikeThrough?: boolean;
+    isBlockQuote?: boolean;
+    isSubscript?: boolean;
+    isSuperscript?: boolean;
+    canUnlink?: boolean;
+    canAddImageAltText?: boolean;
+    canUndo?: boolean;
+    canRedo?: boolean;
+    headerLevel?: number;
+}
+
 export interface Rect {
     top: number;
     bottom: number;
     left: number;
     right: number;
-}
-
-export interface TraversingScoper {
-    getStartBlockElement: () => BlockElement;
-    getStartInlineElement: () => InlineElement;
-    getInlineElementBeforeStart?: () => InlineElement;
-    getInlineElementAfterStart?: () => InlineElement;
-    isBlockInScope: (blockElement: BlockElement) => boolean;
-    trimInlineElement: (inlineElement: InlineElement) => InlineElement;
-}
-
-export interface ClipboardData {
-    snapshotBeforePaste: string;
-    originalFormat: DefaultFormat;
-    image: File;
-    text: string;
-    html: string;
-}
-
-export interface BeforePasteEvent extends PluginEvent {
-    clipboardData: ClipboardData;
-    fragment: DocumentFragment;
-    pasteOption: PasteOption;
 }
 
 /**
@@ -356,28 +322,29 @@ export const enum PasteOption {
     PasteImage = 2,
 }
 
-export const enum PositionType {
-    Before = "b",
-    Begin = 0,
-    End = "e",
-    After = "a",
+export interface InlineElement {
+    getTextContent: () => string;
+    getContainerNode: () => Node;
+    getParentBlock: () => BlockElement;
+    getStartPosition: () => Position;
+    getEndPosition: () => Position;
+    isAfter: (inlineElement: InlineElement) => boolean;
+    contains: (position: Position) => boolean;
+    applyStyle: (styler: (node: Node) => void, from?: Position, to?: Position) => void;
 }
 
-export interface PositionInterface {
-    readonly node: Node;
-    readonly offset: number;
-    readonly isAtEnd: boolean;
-    normalize: () => PositionInterface;
-    equalTo: (pos: PositionInterface) => boolean;
-    isAfter: (pos: PositionInterface) => boolean;
-}
-
-export interface SelectionRangeInterface {
-    readonly start: PositionInterface;
-    readonly end: PositionInterface;
-    readonly collapsed: boolean;
-    getRange: () => Range;
-    normalize: () => SelectionRangeInterface;
+export interface BlockElement {
+    getTextContent: () => string;
+    getStartNode: () => Node;
+    getEndNode: () => Node;
+    getContentNodes: () => Node[];
+    getFirstInlineElement: () => InlineElement;
+    getLastInlineElement: () => InlineElement;
+    getInlineElements: () => InlineElement[];
+    equals: (blockElement: BlockElement) => boolean;
+    isAfter: (blockElement: BlockElement) => boolean;
+    isInBlock: (inlineElement: InlineElement) => boolean;
+    contains: (node: Node) => boolean;
 }
 
 export class NodeBlockElement implements BlockElement {
@@ -440,9 +407,18 @@ export function getNextInlineElement(rootNode: Node, inlineElement: InlineElemen
 
 export function getPreviousInlineElement(rootNode: Node, inlineElement: InlineElement, inlineElementFactory: InlineElementFactory): InlineElement;
 
-export function getInlineElementBefore(rootNode: Node, position: PositionInterface, inlineElementFactory: InlineElementFactory): InlineElement;
+export function getInlineElementBefore(rootNode: Node, position: Position, inlineElementFactory: InlineElementFactory): InlineElement;
 
-export function getInlineElementAfter(rootNode: Node, position: PositionInterface, inlineElementFactory: InlineElementFactory): InlineElement;
+export function getInlineElementAfter(rootNode: Node, position: Position, inlineElementFactory: InlineElementFactory): InlineElement;
+
+export interface TraversingScoper {
+    getStartBlockElement: () => BlockElement;
+    getStartInlineElement: () => InlineElement;
+    getInlineElementBeforeStart?: () => InlineElement;
+    getInlineElementAfterStart?: () => InlineElement;
+    isBlockInScope: (blockElement: BlockElement) => boolean;
+    trimInlineElement: (inlineElement: InlineElement) => InlineElement;
+}
 
 export class ContentTraverser {
     private rootNode;
@@ -467,23 +443,8 @@ export function getFirstLeafNode(rootNode: Node): Node;
 
 export function getLastLeafNode(rootNode: Node): Node;
 
-export class ImageInlineElement extends NodeInlineElement {
-    constructor(containerNode: Node, parentBlock: BlockElement);
-}
-
 export class InlineElementFactory {
-    private customResolvers;
-    private defaultResolver;
-    constructor(customResolvers?: InlineElementResolver[]);
     resolve(node: Node, rootNode: Node, parentBlock: BlockElement): InlineElement;
-}
-
-export interface InlineElementResolver {
-    resolve: (node: Node, rootNode: Node, parentBlock: BlockElement, inlineElementFactory: InlineElementFactory) => InlineElement;
-}
-
-export class LinkInlineElement extends NodeInlineElement {
-    constructor(containerNode: Node, parentBlock: BlockElement);
 }
 
 export class NodeInlineElement implements InlineElement {
@@ -493,35 +454,31 @@ export class NodeInlineElement implements InlineElement {
     getTextContent(): string;
     getContainerNode(): Node;
     getParentBlock(): BlockElement;
-    getStartPosition(): PositionInterface;
-    getEndPosition(): PositionInterface;
+    getStartPosition(): Position;
+    getEndPosition(): Position;
     isAfter(inlineElement: InlineElement): boolean;
-    contains(position: PositionInterface): boolean;
-    applyStyle(styler: (node: Node) => void, from?: PositionInterface, to?: PositionInterface): void;
+    contains(position: Position): boolean;
+    applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void;
 }
 
 export class PartialInlineElement implements InlineElement {
     private inlineElement;
     private start;
     private end;
-    constructor(inlineElement: InlineElement, start?: PositionInterface, end?: PositionInterface);
+    constructor(inlineElement: InlineElement, start?: Position, end?: Position);
     getDecoratedInline(): InlineElement;
     getContainerNode(): Node;
     getParentBlock(): BlockElement;
     getTextContent(): string;
-    getStartPosition(): PositionInterface;
-    getEndPosition(): PositionInterface;
+    getStartPosition(): Position;
+    getEndPosition(): Position;
     isStartPartial(): boolean;
     isEndPartial(): boolean;
     readonly nextInlineElement: PartialInlineElement;
     readonly previousInlineElement: PartialInlineElement;
-    contains(p: PositionInterface): boolean;
+    contains(p: Position): boolean;
     isAfter(inlineElement: InlineElement): boolean;
-    applyStyle(styler: (node: Node) => void, from?: PositionInterface, to?: PositionInterface): void;
-}
-
-export class TextInlineElement extends NodeInlineElement {
-    constructor(containerNode: Node, parentBlock: BlockElement);
+    applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void;
 }
 
 export class BodyScoper implements TraversingScoper {
@@ -543,7 +500,7 @@ export class EditorSelection {
     private startEndCalculated;
     private startBlock;
     private endBlock;
-    constructor(rootNode: Node, selectionRange: SelectionRangeInterface, inlineElementFactory: InlineElementFactory);
+    constructor(rootNode: Node, selectionRange: SelectionRange, inlineElementFactory: InlineElementFactory);
     readonly collapsed: boolean;
     readonly inlineElementBeforeStart: InlineElement;
     readonly startInlineElement: InlineElement;
@@ -560,7 +517,7 @@ export class SelectionBlockScoper implements TraversingScoper {
     private startPosition;
     private readonly editorSelection;
     private selectionBlock;
-    constructor(rootNode: Node, selectionRange: SelectionRangeInterface, startPosition: ContentPosition, inlineElementFactory: InlineElementFactory);
+    constructor(rootNode: Node, selectionRange: SelectionRange, startPosition: ContentPosition, inlineElementFactory: InlineElementFactory);
     getStartBlockElement(): BlockElement;
     getStartInlineElement(): InlineElement;
     getInlineElementBeforeStart(): InlineElement;
@@ -570,7 +527,7 @@ export class SelectionBlockScoper implements TraversingScoper {
 
 export class SelectionScoper implements TraversingScoper {
     private readonly editorSelection;
-    constructor(rootNode: Node, selectionRange: SelectionRangeInterface, inlineElementFactory: InlineElementFactory);
+    constructor(rootNode: Node, selectionRange: SelectionRange, inlineElementFactory: InlineElementFactory);
     getStartBlockElement(): BlockElement;
     getStartInlineElement(): InlineElement;
     isBlockInScope(blockElement: BlockElement): boolean;
@@ -608,8 +565,6 @@ export function isDocumentPosition(position: DocumentPosition, targets: Document
  */
 export function isNodeEmpty(node: Node, trim?: boolean): boolean;
 
-export function isTextualInlineElement(inlineElement: InlineElement): boolean;
-
 export function matchWhiteSpaces(source: string): string[];
 
 /**
@@ -636,7 +591,7 @@ export function wrap(node: Node, htmlFragment: string): Node;
 
 export function wrapAll(nodes: Node[], htmlFragment?: string): Node;
 
-export class Position implements PositionInterface {
+export class Position {
     static readonly Before: PositionType;
     static readonly Begin: PositionType;
     static readonly End: PositionType;
@@ -649,7 +604,7 @@ export class Position implements PositionInterface {
      * If the given position has invalid offset, this function will return a corrected value.
      * @param position The original position to clone from
      */
-    constructor(position: PositionInterface);
+    constructor(position: Position);
     /**
      * Create a Position from node and an offset number
      * @param node The node of this position
@@ -662,23 +617,30 @@ export class Position implements PositionInterface {
      * @param positionType Type of the postion, can be Begin, End, Before, After
      */
     constructor(node: Node, positionType: PositionType);
-    normalize(): PositionInterface;
-    equalTo(p: PositionInterface): boolean;
+    normalize(): Position;
+    equalTo(p: Position): boolean;
     /**
      * Checks if position 1 is after position 2
      */
-    isAfter(p: PositionInterface): boolean;
+    isAfter(p: Position): boolean;
 }
 
-export class SelectionRange implements SelectionRangeInterface {
+export class SelectionRange {
     readonly collapsed: boolean;
-    readonly start: PositionInterface;
-    readonly end: PositionInterface;
+    readonly start: Position;
+    readonly end: Position;
     private rawRange;
     constructor(rawRange: Range);
-    constructor(start: PositionInterface, end?: PositionInterface);
+    constructor(start: Position, end?: Position);
     getRange(): Range;
-    normalize(): SelectionRangeInterface;
+    normalize(): SelectionRange;
+}
+
+export const enum PositionType {
+    Before = "b",
+    Begin = 0,
+    End = "e",
+    After = "a",
 }
 
 export class VTable {
@@ -803,7 +765,7 @@ export class Editor {
      * @returns Node list of the query result
      */
     queryNodes(selector: string): Node[];
-    getSelectionRange(): SelectionRangeInterface;
+    getSelectionRange(): SelectionRange;
     /**
      * Check if focus is in editor now
      * @returns true if focus is in editor, otherwise false
@@ -824,20 +786,20 @@ export class Editor {
      * @param range The SelectionRange object which represents the content range to select
      * @returns True if content is selected, otherwise false
      */
-    select(range: SelectionRangeInterface): boolean;
+    select(range: SelectionRange): boolean;
     /**
      * Select content by Position and collapse to this position
      * @param position The position to select
      * @returns True if content is selected, otherwise false
      */
-    select(position: PositionInterface): boolean;
+    select(position: Position): boolean;
     /**
      * Select content by a start and end position
      * @param start The start position to select
      * @param end The end position to select, if this is the same with start, the selection will be collapsed
      * @returns True if content is selected, otherwise false
      */
-    select(start: PositionInterface, end: PositionInterface): boolean;
+    select(start: Position, end: Position): boolean;
     /**
      * Select content by node
      * @param node The node to select

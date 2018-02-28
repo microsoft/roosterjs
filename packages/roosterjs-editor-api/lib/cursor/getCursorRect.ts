@@ -1,5 +1,5 @@
 import { Editor } from 'roosterjs-editor-core';
-import { DocumentPosition, Rect, NodeType,  } from 'roosterjs-editor-types';
+import { DocumentPosition, Rect, NodeType } from 'roosterjs-editor-types';
 import { isDocumentPosition, Position } from 'roosterjs-editor-dom';
 
 // Returns a rect representing the location of the cursor.

@@ -1,9 +1,9 @@
 import * as TestHelper from '../DomTestHelper';
-import { InlineElement } from 'roosterjs-editor-types';
-import { NodeBlockElement } from '../../blockElements/BlockElement';
-import PartialInlineElement from '../../inlineElements/PartialInlineElement';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
+import { NodeBlockElement } from '../../objectModel/BlockElement';
+import PartialInlineElement from '../../objectModel/PartialInlineElement';
+import InlineElementFactory from '../../objectModel/InlineElementFactory';
 import Position from '../../selection/Position';
+import { InlineElement } from '../../objectModel/types';
 
 let testID = 'PartialInlineElement';
 
@@ -27,7 +27,7 @@ function createPartialInlineElementWithDiv(
     endOffset: number
 ): [PartialInlineElement, InlineElement, NodeBlockElement] {
     let testParentBlock = new NodeBlockElement(testDiv, null /*InlineElementFactory*/);
-    let inlineElementFactory = new InlineElementFactory(null);
+    let inlineElementFactory = new InlineElementFactory();
     let inlineElement = inlineElementFactory.resolve(testDiv.firstChild, testDiv, testParentBlock);
     let startPosition = startOffset
         ? new Position(testDiv.firstChild.firstChild, startOffset)
@@ -43,7 +43,7 @@ function createPartialInlineElementWithSpan(
     endOffset: number
 ): [PartialInlineElement, InlineElement, NodeBlockElement] {
     let testParentBlock = new NodeBlockElement(span.parentNode, null /*InlineElementFactory*/);
-    let inlineElementFactory = new InlineElementFactory(null);
+    let inlineElementFactory = new InlineElementFactory();
     let inlineElement = inlineElementFactory.resolve(span, span.parentNode, testParentBlock);
     let startPosition = startOffset ? new Position(span.firstChild, startOffset) : null;
     let endPosition = endOffset ? new Position(span.firstChild, endOffset) : null;
@@ -232,9 +232,7 @@ describe('PartialInlineElement getStartPosition()', () => {
         let startPosition = partialInlineElement.getStartPosition();
 
         // Assert
-        expect(startPosition).toEqual(
-            new Position(testDiv.firstChild.firstChild, input[1] || 0)
-        );
+        expect(startPosition).toEqual(new Position(testDiv.firstChild.firstChild, input[1] || 0));
     }
 
     it('Partial on start point', () => {

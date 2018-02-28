@@ -1,13 +1,13 @@
 import * as DomTestHelper from '../DomTestHelper';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
-import { NodeBlockElement } from '../../blockElements/BlockElement';
-import { InlineElement } from 'roosterjs-editor-types';
+import InlineElementFactory from '../../objectModel/InlineElementFactory';
+import { NodeBlockElement } from '../../objectModel/BlockElement';
+import { InlineElement } from '../../objectModel/types';
 import Position from '../../selection/Position';
 
 let testID = 'NodeInlineElement';
 
 function createNodeInlineElement(inlineElementContent: string): InlineElement {
-    let inlineElementFactory = new InlineElementFactory(null);
+    let inlineElementFactory = new InlineElementFactory();
     let testDiv = DomTestHelper.createElementFromContent(testID, inlineElementContent);
     let parentBlock = new NodeBlockElement(testDiv, null);
     let inlineElement = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
@@ -134,7 +134,7 @@ describe('NodeInlineElement isAfter()', () => {
     let inlineElementFactory: InlineElementFactory;
 
     beforeEach(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -189,7 +189,7 @@ describe('NodeInlineElement contains()', () => {
     let inlineElementFactory: InlineElementFactory;
 
     beforeEach(() => {
-        inlineElementFactory = new InlineElementFactory(null);
+        inlineElementFactory = new InlineElementFactory();
     });
 
     afterEach(() => {
@@ -264,7 +264,7 @@ describe('NodeInlineElement applyStyle()', () => {
 
     it('fromPosition != null, toPosition != null', () => {
         // Arrange
-        let inlineElementFactory = new InlineElementFactory(null);
+        let inlineElementFactory = new InlineElementFactory();
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
             '<span>www.example.com</span>'
@@ -291,7 +291,7 @@ describe('NodeInlineElement applyStyle()', () => {
 
     it('fromPosition != null, toPosition = null', () => {
         // Arrange
-        let inlineElementFactory = new InlineElementFactory(null);
+        let inlineElementFactory = new InlineElementFactory();
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
             '<span>www.example.com</span>'
@@ -317,7 +317,7 @@ describe('NodeInlineElement applyStyle()', () => {
 
     it('fromPosition = null, toPosition != null', () => {
         // Arrange
-        let inlineElementFactory = new InlineElementFactory(null);
+        let inlineElementFactory = new InlineElementFactory();
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
             '<span>www.example.com</span>'
@@ -343,7 +343,7 @@ describe('NodeInlineElement applyStyle()', () => {
 
     it('fromPosition != null, toPosition != null, fromPosition = toPosition', () => {
         // Arrange
-        let inlineElementFactory = new InlineElementFactory(null);
+        let inlineElementFactory = new InlineElementFactory();
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
             '<span>www.example.com</span>'
@@ -370,7 +370,7 @@ describe('NodeInlineElement applyStyle()', () => {
 
     it('fromPosition != null, toPosition != null, fromPosition is after toPosition', () => {
         // Arrange
-        let inlineElementFactory = new InlineElementFactory(null);
+        let inlineElementFactory = new InlineElementFactory();
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
             '<span>www.example.com</span>'
