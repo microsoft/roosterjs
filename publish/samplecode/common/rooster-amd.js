@@ -4805,10 +4805,8 @@ exports.default = changeElementTag;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DOCTYPE_HTML5 = '<!doctype html>';
 var STYLE_TAG_FILTER = 'style';
 var STYLEORLINK_REGEX = /<style|<link/i;
-var DOCTYPE_REGEX = /^\s*<!doctype /i;
 // Matches global style and body tag
 var STYLE_REGEX = /<style[^>]*>([\s\S]*?)<\/style>/gi;
 // Group regex. It should return two matches:
@@ -4818,36 +4816,9 @@ var BODY_REGEX = /<body[^>]*>([\s\S]*)<\/body>/i;
 // Pseudo selector, for things like :hover :link
 // TODO: Outlook desktop emails used to contain some global P style
 var PSEUDOSELECTOR_REGEX = /\w+\s*:\w+\s*/i;
-var contentIFrameForInlineCssConverter;
-function runWithTempIFrame(callback) {
-    if (!contentIFrameForInlineCssConverter) {
-        contentIFrameForInlineCssConverter = document.createElement('IFRAME');
-        contentIFrameForInlineCssConverter.style.display = 'none';
-    }
-    document.body.appendChild(contentIFrameForInlineCssConverter);
-    var contentDocument = contentIFrameForInlineCssConverter.contentDocument ||
-        contentIFrameForInlineCssConverter.contentWindow.document;
-    try {
-        callback(contentDocument);
-        return true;
-    }
-    catch (exception) {
-        // just swallow all exception for the moment
-        return false;
-    }
-    finally {
-        if (contentDocument.body) {
-            contentDocument.body.innerHTML = '';
-        }
-        if (contentDocument.head) {
-            contentDocument.head.innerHTML = '';
-        }
-        document.body.removeChild(contentIFrameForInlineCssConverter);
-    }
-}
 function forEachElementInQueryResult(doc, selector, callback) {
     var elements = doc.querySelectorAll(selector);
-    for (var i = 0; i < elements.length; i++) {
+    for (var i = elements.length - 1; i >= 0; i--) {
         callback(elements[i]);
     }
 }
@@ -4874,53 +4845,42 @@ function convertInlineCss(sourceHtml, additionalStyleNodes) {
     if (!STYLEORLINK_REGEX.test(sourceHtml) && !additionalStyleNodes) {
         return convertThroughRegEx(sourceHtml);
     }
-    // Always add <!doctype html> if source html doesn't have doctype
-    if (!DOCTYPE_REGEX.test(sourceHtml)) {
-        sourceHtml = DOCTYPE_HTML5 + sourceHtml;
-    }
     var result;
-    var succeeded = runWithTempIFrame(function (contentDocument) {
-        contentDocument.open();
-        try {
-            contentDocument.write(sourceHtml);
-        }
-        finally {
-            contentDocument.close();
-        }
-        var styleSheets = [];
+    try {
+        var domParser = new DOMParser();
+        var contentDocument = domParser.parseFromString(sourceHtml, 'text/html');
+        var styleSheets_1 = [];
         for (var i = additionalStyleNodes ? additionalStyleNodes.length - 1 : -1; i >= 0; i--) {
-            styleSheets.push(additionalStyleNodes[i].sheet);
+            styleSheets_1.push(additionalStyleNodes[i].sheet);
         }
-        for (var i = contentDocument.styleSheets.length - 1; i >= 0; i--) {
-            styleSheets.push(contentDocument.styleSheets[i]);
-        }
-        for (var _i = 0, styleSheets_1 = styleSheets; _i < styleSheets_1.length; _i++) {
-            var styleSheet = styleSheets_1[_i];
-            for (var j = styleSheet.cssRules.length - 1; j >= 0; j--) {
+        forEachElementInQueryResult(contentDocument, 'style', function (style) {
+            styleSheets_1.push(style.sheet);
+        });
+        for (var _i = 0, styleSheets_2 = styleSheets_1; _i < styleSheets_2.length; _i++) {
+            var styleSheet = styleSheets_2[_i];
+            var _loop_1 = function (j) {
                 // Skip any none-style rule, i.e. @page
                 var styleRule = styleSheet.cssRules[j];
                 if (styleRule.type != CSSRule.STYLE_RULE || !styleRule.style.cssText) {
-                    continue;
+                    return "continue";
                 }
                 // Make sure the selector is not empty
                 var selectors = styleRule.selectorText ? styleRule.selectorText.split(',') : null;
-                if (selectors == null || selectors.length == 0) {
-                    continue;
-                }
-                // Loop through and apply selector one after one
-                for (var k = 0; k < selectors.length; k++) {
-                    var selector = selectors[k] ? selectors[k].trim() : null;
-                    if (selector && !selector.match(PSEUDOSELECTOR_REGEX)) {
-                        var elements = contentDocument.body.querySelectorAll(selector);
-                        for (var l = 0; l < elements.length; l++) {
-                            var element = elements[l];
-                            // Always put existing styles after so that they have higher priority
-                            // Which means if both global style and inline style apply to the same element,
-                            // inline style will have higher priority
-                            element.setAttribute('style', styleRule.style.cssText + (element.getAttribute('style') || ''));
-                        }
+                for (var _i = 0, _a = (selectors || []); _i < _a.length; _i++) {
+                    var selector = _a[_i];
+                    if (!selector || !selector.trim() || selector.match(PSEUDOSELECTOR_REGEX)) {
+                        continue;
                     }
+                    forEachElementInQueryResult(contentDocument, selector, function (element) {
+                        // Always put existing styles after so that they have higher priority
+                        // Which means if both global style and inline style apply to the same element,
+                        // inline style will have higher priority
+                        element.setAttribute('style', styleRule.style.cssText + (element.getAttribute('style') || ''));
+                    });
                 }
+            };
+            for (var j = styleSheet.cssRules.length - 1; j >= 0; j--) {
+                _loop_1(j);
             }
         }
         // Remove <style> tags in body if any
@@ -4928,11 +4888,9 @@ function convertInlineCss(sourceHtml, additionalStyleNodes) {
             element.parentNode.removeChild(element);
         });
         result = contentDocument.body.innerHTML.trim();
-    });
-    if (!succeeded) {
-        result = convertThroughRegEx(sourceHtml);
     }
-    return result;
+    catch (e) { }
+    return result || convertThroughRegEx(sourceHtml);
 }
 exports.default = convertInlineCss;
 
@@ -5070,11 +5028,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @returns HTML string to present the input text
  */
 function textToHtml(text) {
-    text = (text || '').replace(/</g, '&lt;');
+    text = text || '';
+    text = text.replace(/&/g, '&amp;');
+    text = text.replace(/</g, '&lt;');
     text = text.replace(/>/g, '&gt;');
-    text = text.replace(/(\n|\r\n)/g, '<br></div><div>');
+    text = text.replace(/'/g, '&#39;');
+    text = text.replace(/"/g, '&quot;');
+    text = text.replace(/(\n|\r\n)/g, '<br>');
     text = text.replace(/\s/g, '&nbsp;');
-    text = "<div>" + text + "<br></div>";
     return text;
 }
 exports.default = textToHtml;
