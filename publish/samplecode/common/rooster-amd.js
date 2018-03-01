@@ -1009,7 +1009,9 @@ var Position = /** @class */ (function () {
             default:
                 var endOffset = getEndOffset(this.node);
                 this.offset = Math.max(0, Math.min(offsetOrPosType, endOffset));
-                this.isAtEnd = offsetOrPosType == "e" /* End */ || (this.offset > 0 && this.offset == endOffset);
+                this.isAtEnd =
+                    offsetOrPosType == "e" /* End */ ||
+                        (this.offset > 0 && this.offset == endOffset);
                 break;
         }
     }
@@ -1039,9 +1041,7 @@ var Position = /** @class */ (function () {
      * Checks if position 1 is after position 2
      */
     Position.prototype.isAfter = function (p) {
-        return this.node == p.node
-            ? this.offset > p.offset
-            : isNodeAfter_1.default(this.node, p.node);
+        return this.node == p.node ? this.offset > p.offset : isNodeAfter_1.default(this.node, p.node);
     };
     Position.Before = "b" /* Before */;
     Position.Begin = 0 /* Begin */;
@@ -1435,9 +1435,9 @@ exports.default = browserData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var isDocumentPosition_1 = __webpack_require__(4);
 var Position_1 = __webpack_require__(8);
 var SelectionRange_1 = __webpack_require__(9);
+var isDocumentPosition_1 = __webpack_require__(4);
 // This is a special version of inline element that identifies a section of an inline element
 // We often have the need to cut an inline element in half and perform some operation only on half of an inline element
 // i.e. users select only some text of a text node and apply format, in that case, format has to happen on partial of an inline element
@@ -1464,7 +1464,9 @@ var PartialInlineElement = /** @class */ (function () {
     // Gets the text content
     PartialInlineElement.prototype.getTextContent = function () {
         var node = this.inlineElement.getContainerNode();
-        return new SelectionRange_1.default(this.start || new Position_1.default(node, Position_1.default.Before), this.end || new Position_1.default(node, Position_1.default.After)).getRange().toString();
+        return new SelectionRange_1.default(this.start || new Position_1.default(node, Position_1.default.Before), this.end || new Position_1.default(node, Position_1.default.After))
+            .getRange()
+            .toString();
     };
     // Gets the start position
     PartialInlineElement.prototype.getStartPosition = function () {
@@ -2065,8 +2067,10 @@ var CursorData = /** @class */ (function () {
 }());
 exports.default = CursorData;
 function isTextualInlineElement(inlineElement) {
-    return inlineElement && (inlineElement.getContainerNode().nodeType == 3 /* Text */ ||
-        (inlineElement instanceof roosterjs_editor_dom_1.PartialInlineElement && inlineElement.getDecoratedInline().getContainerNode().nodeType == 3 /* Text */));
+    return (inlineElement &&
+        (inlineElement.getContainerNode().nodeType == 3 /* Text */ ||
+            (inlineElement instanceof roosterjs_editor_dom_1.PartialInlineElement &&
+                inlineElement.getDecoratedInline().getContainerNode().nodeType == 3 /* Text */)));
 }
 
 
@@ -2087,10 +2091,6 @@ var Paste_1 = __webpack_require__(100);
 exports.Paste = Paste_1.default;
 var ContentEditFeatures_1 = __webpack_require__(45);
 exports.getDefaultContentEditFeatures = ContentEditFeatures_1.getDefaultContentEditFeatures;
-var Watermark_1 = __webpack_require__(108);
-exports.Watermark = Watermark_1.default;
-var TableResize_1 = __webpack_require__(109);
-exports.TableResize = TableResize_1.default;
 
 
 /***/ }),
@@ -3258,12 +3258,14 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var createEditor_1 = __webpack_require__(49);
 exports.createEditor = createEditor_1.default;
-__export(__webpack_require__(110));
+__export(__webpack_require__(108));
 __export(__webpack_require__(0));
 __export(__webpack_require__(1));
 __export(__webpack_require__(3));
 __export(__webpack_require__(24));
+__export(__webpack_require__(109));
 __export(__webpack_require__(111));
+__export(__webpack_require__(113));
 
 
 /***/ }),
@@ -4407,13 +4409,14 @@ function changeElementTag(element, newTag, range) {
     if (element.parentNode) {
         element.parentNode.replaceChild(newElement, element);
     }
-    if (selectionRange && selectionRange.start.node != element && selectionRange.end.node != element) {
+    if (selectionRange &&
+        selectionRange.start.node != element &&
+        selectionRange.end.node != element) {
         try {
             range.setStart(selectionRange.start.node, selectionRange.start.offset);
             range.setEnd(selectionRange.end.node, selectionRange.end.offset);
         }
-        catch (e) {
-        }
+        catch (e) { }
     }
     return newElement;
 }
@@ -4488,7 +4491,7 @@ function convertInlineCss(sourceHtml, additionalStyleNodes) {
                 }
                 // Make sure the selector is not empty
                 var selectors = styleRule.selectorText ? styleRule.selectorText.split(',') : null;
-                for (var _i = 0, _a = (selectors || []); _i < _a.length; _i++) {
+                for (var _i = 0, _a = selectors || []; _i < _a.length; _i++) {
                     var selector = _a[_i];
                     if (!selector || !selector.trim() || selector.match(PSEUDOSELECTOR_REGEX)) {
                         continue;
@@ -6616,10 +6619,10 @@ var ContentEdit = /** @class */ (function () {
     };
     ContentEdit.prototype.isTabInTable = function (event) {
         var keyboardEvent = event.rawEvent;
-        return this.features.tabInTable &&
+        return (this.features.tabInTable &&
             event.eventType == 0 /* KeyDown */ &&
             keyboardEvent.which == KEY_TAB &&
-            !!this.cacheGetTd(event);
+            !!this.cacheGetTd(event));
     };
     ContentEdit.prototype.cacheGetTd = function (event) {
         return roosterjs_editor_api_1.cacheGetNodeAtCursor(this.editor, event, 'TD');
@@ -7751,92 +7754,6 @@ exports.default = removeUselessCss;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(0);
-var WATERMARK_SPAN_ID = '_rooster_watermarkSpan';
-var WATERMARK_REGEX = new RegExp("<span[^>]*id=['\"]?" + WATERMARK_SPAN_ID + "['\"]?[^>]*>[^<]*</span>", 'ig');
-/**
- * A watermark plugin to manage watermark string for roosterjs
- */
-var Watermark = /** @class */ (function () {
-    /**
-     * Create an instance of Watermark plugin
-     * @param watermark The watermark string
-     */
-    function Watermark(watermark, format) {
-        var _this = this;
-        this.watermark = watermark;
-        this.format = format;
-        this.handleWatermark = function () {
-            _this.showHideWatermark(false /*ignoreCachedState*/);
-        };
-        this.format = this.format || {
-            fontSize: '14px',
-            textColor: '#aaa',
-        };
-    }
-    Watermark.prototype.initialize = function (editor) {
-        this.editor = editor;
-        this.showHideWatermark(false /*ignoreCachedState*/);
-        this.focusDisposer = this.editor.addDomEventHandler('focus', this.handleWatermark);
-        this.blurDisposer = this.editor.addDomEventHandler('blur', this.handleWatermark);
-    };
-    Watermark.prototype.dispose = function () {
-        this.focusDisposer();
-        this.blurDisposer();
-        this.focusDisposer = null;
-        this.blurDisposer = null;
-        this.hideWatermark();
-        this.editor = null;
-    };
-    Watermark.prototype.onPluginEvent = function (event) {
-        if (event.eventType == 6 /* ContentChanged */) {
-            // When content is changed from setContent() API, current cached state
-            // may not be accurate, so we ignore it
-            this.showHideWatermark(event.source == "SetContent" /* SetContent */);
-        }
-        else if (event.eventType == 7 /* ExtractContent */ && this.isWatermarkShowing) {
-            this.removeWartermarkFromHtml(event);
-        }
-    };
-    Watermark.prototype.showHideWatermark = function (ignoreCachedState) {
-        var hasFocus = this.editor.hasFocus();
-        if (hasFocus && (ignoreCachedState || this.isWatermarkShowing)) {
-            this.hideWatermark();
-        }
-        else if (!hasFocus &&
-            (ignoreCachedState || !this.isWatermarkShowing) &&
-            this.editor.isEmpty(true /*trim*/)) {
-            this.showWatermark();
-        }
-    };
-    Watermark.prototype.showWatermark = function () {
-        var document = this.editor.getDocument();
-        var watermarkNode = roosterjs_editor_dom_1.wrap(document.createTextNode(this.watermark), "<span id=\"" + WATERMARK_SPAN_ID + "\"></span>");
-        roosterjs_editor_dom_1.applyFormat(watermarkNode, this.format);
-        this.editor.insertNode(watermarkNode, {
-            position: 0 /* Begin */,
-            updateCursor: false,
-            replaceSelection: false,
-            insertOnNewLine: false,
-        });
-        this.isWatermarkShowing = true;
-    };
-    Watermark.prototype.hideWatermark = function () {
-        var nodes = this.editor.queryNodes("span[id=\"" + WATERMARK_SPAN_ID + "\"]");
-        for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
-            var node = nodes_1[_i];
-            this.editor.deleteNode(node);
-        }
-        this.isWatermarkShowing = false;
-    };
-    Watermark.prototype.removeWartermarkFromHtml = function (event) {
-        var content = event.content;
-        content = content.replace(WATERMARK_REGEX, '');
-        event.content = content;
-    };
-    return Watermark;
-}());
-exports.default = Watermark;
 
 
 /***/ }),
@@ -7846,168 +7763,13 @@ exports.default = Watermark;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(0);
-var roosterjs_editor_api_1 = __webpack_require__(3);
-var TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
-var HANDLE_WIDTH = 6;
-var CONTAINER_HTML = "<div style=\"position: absolute; cursor: col-resize; width: " + HANDLE_WIDTH + "px; border: solid 0 #C6C6C6;\"></div>";
-var TableResize = /** @class */ (function () {
-    function TableResize(isRtl) {
-        var _this = this;
-        this.pageX = -1;
-        this.onMouseOver = function (e) {
-            var node = (e.srcElement || e.target);
-            if (_this.pageX < 0 && node && node.tagName == 'TD' && node != _this.td) {
-                _this.td = node;
-                _this.calcAndShowHandle();
-            }
-        };
-        this.onMouseDown = function (e) {
-            _this.pageX = e.pageX;
-            _this.initialPageX = e.pageX;
-            var document = _this.editor.getDocument();
-            document.addEventListener('mousemove', _this.onMouseMove, true);
-            document.addEventListener('mouseup', _this.onMouseUp, true);
-            var handle = _this.getResizeHandle();
-            handle.style.borderWidth = '0 1px';
-            _this.cancelEvent(e);
-        };
-        this.onMouseMove = function (e) {
-            _this.adjustHandle(e.pageX);
-            _this.cancelEvent(e);
-        };
-        this.onMouseUp = function (e) {
-            var document = _this.editor.getDocument();
-            document.removeEventListener('mousemove', _this.onMouseMove, true);
-            document.removeEventListener('mouseup', _this.onMouseUp, true);
-            var handle = _this.getResizeHandle();
-            handle.style.borderWidth = '0';
-            var table = roosterjs_editor_api_1.getNodeAtCursor(_this.editor, 'TABLE', _this.td);
-            var cellPadding = parseInt(table.cellPadding);
-            cellPadding = isNaN(cellPadding) ? 0 : cellPadding;
-            if (e.pageX != _this.initialPageX) {
-                var newWidth_1 = _this.td.clientWidth -
-                    cellPadding * 2 +
-                    (e.pageX - _this.initialPageX) * (_this.isRtl(table) ? -1 : 1);
-                _this.editor.formatWithUndo(function () { return _this.setTableColumnWidth(newWidth_1 + 'px'); }, true /*preserveSelection*/);
-            }
-            _this.pageX = -1;
-            _this.calcAndShowHandle();
-            _this.editor.focus();
-            _this.cancelEvent(e);
-        };
-    }
-    TableResize.prototype.initialize = function (editor) {
-        this.editor = editor;
-        this.onMouseOverDisposer = this.editor.addDomEventHandler('mouseover', this.onMouseOver);
-    };
-    TableResize.prototype.dispose = function () {
-        this.editor = null;
-        this.onMouseOverDisposer();
-    };
-    TableResize.prototype.onPluginEvent = function (event) {
-        if (this.td &&
-            (event.eventType == 0 /* KeyDown */ ||
-                event.eventType == 6 /* ContentChanged */ ||
-                (event.eventType == 4 /* MouseDown */ &&
-                    !this.clickIntoCurrentTd(event)))) {
-            this.td = null;
-            this.calcAndShowHandle();
-        }
-    };
-    TableResize.prototype.clickIntoCurrentTd = function (event) {
-        var mouseEvent = event.rawEvent;
-        var target = mouseEvent.target;
-        return target instanceof Node && (this.td == target || roosterjs_editor_dom_1.contains(this.td, target));
-    };
-    TableResize.prototype.calcAndShowHandle = function () {
-        if (this.td) {
-            var tr = roosterjs_editor_api_1.getNodeAtCursor(this.editor, 'TR', this.td);
-            var table = roosterjs_editor_api_1.getNodeAtCursor(this.editor, 'TABLE', tr);
-            if (tr && table) {
-                var _a = this.getPosition(table), left = _a[0], top_1 = _a[1];
-                var handle = this.getResizeHandle();
-                left += this.td.offsetLeft + (this.isRtl(table) ? 0 : this.td.offsetWidth - HANDLE_WIDTH);
-                handle.style.display = '';
-                handle.style.top = top_1 + 'px';
-                handle.style.height = table.offsetHeight + 'px';
-                handle.style.left = left + 'px';
-            }
-        }
-        else {
-            this.getResizeHandle().style.display = 'none';
-        }
-    };
-    TableResize.prototype.adjustHandle = function (pageX) {
-        var handle = this.getResizeHandle();
-        handle.style.left = handle.offsetLeft + pageX - this.pageX + 'px';
-        this.pageX = pageX;
-    };
-    TableResize.prototype.getPosition = function (e) {
-        var parent = e.offsetParent;
-        var _a = parent ? this.getPosition(parent) : [0, 0], left = _a[0], top = _a[1];
-        return [left + e.offsetLeft - e.scrollLeft, top + e.offsetTop - e.scrollTop];
-    };
-    TableResize.prototype.getResizeHandle = function () {
-        var _this = this;
-        return this.editor.getCustomData(TABLE_RESIZE_HANDLE_KEY, function () {
-            var document = _this.editor.getDocument();
-            var handle = roosterjs_editor_dom_1.fromHtml(CONTAINER_HTML, document)[0];
-            document.body.appendChild(handle);
-            handle.addEventListener('mousedown', _this.onMouseDown);
-            return handle;
-        }, function (handle) {
-            handle.removeEventListener('mousedown', _this.onMouseDown);
-            handle.parentNode.removeChild(handle);
-        });
-    };
-    TableResize.prototype.cancelEvent = function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-    };
-    TableResize.prototype.setTableColumnWidth = function (width) {
-        var _this = this;
-        var vtable = new roosterjs_editor_dom_1.VTable(this.td);
-        vtable.table.style.width = '';
-        vtable.forEachCellOfCurrentColumn(function (cell) {
-            if (cell.td) {
-                cell.td.style.width = cell.td == _this.td ? width : '';
-            }
-        });
-        vtable.writeBack();
-        return this.editor.contains(this.td) ? this.td : vtable.getCurrentTd();
-    };
-    TableResize.prototype.isRtl = function (element) {
-        return roosterjs_editor_dom_1.getComputedStyle(element, 'direction')[0] == 'rtl';
-    };
-    return TableResize;
-}());
-exports.default = TableResize;
-
-
-/***/ }),
-/* 110 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-
-
-/***/ }),
-/* 111 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var ImageResize_1 = __webpack_require__(112);
+var ImageResize_1 = __webpack_require__(110);
 exports.ImageResize = ImageResize_1.default;
 exports.ImageResizePlugin = ImageResize_1.ImageResizePlugin;
 
 
 /***/ }),
-/* 112 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8269,6 +8031,271 @@ var ImageResizePlugin = /** @class */ (function (_super) {
     return ImageResizePlugin;
 }(ImageResize));
 exports.ImageResizePlugin = ImageResizePlugin;
+
+
+/***/ }),
+/* 111 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var TableResize_1 = __webpack_require__(112);
+exports.TableResize = TableResize_1.default;
+
+
+/***/ }),
+/* 112 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(0);
+var roosterjs_editor_api_1 = __webpack_require__(3);
+var TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
+var HANDLE_WIDTH = 6;
+var CONTAINER_HTML = "<div style=\"position: absolute; cursor: col-resize; width: " + HANDLE_WIDTH + "px; border: solid 0 #C6C6C6;\"></div>";
+var TableResize = /** @class */ (function () {
+    function TableResize(isRtl) {
+        var _this = this;
+        this.pageX = -1;
+        this.onMouseOver = function (e) {
+            var node = (e.srcElement || e.target);
+            if (_this.pageX < 0 && node && node.tagName == 'TD' && node != _this.td) {
+                _this.td = node;
+                _this.calcAndShowHandle();
+            }
+        };
+        this.onMouseDown = function (e) {
+            _this.pageX = e.pageX;
+            _this.initialPageX = e.pageX;
+            var document = _this.editor.getDocument();
+            document.addEventListener('mousemove', _this.onMouseMove, true);
+            document.addEventListener('mouseup', _this.onMouseUp, true);
+            var handle = _this.getResizeHandle();
+            handle.style.borderWidth = '0 1px';
+            _this.cancelEvent(e);
+        };
+        this.onMouseMove = function (e) {
+            _this.adjustHandle(e.pageX);
+            _this.cancelEvent(e);
+        };
+        this.onMouseUp = function (e) {
+            var document = _this.editor.getDocument();
+            document.removeEventListener('mousemove', _this.onMouseMove, true);
+            document.removeEventListener('mouseup', _this.onMouseUp, true);
+            var handle = _this.getResizeHandle();
+            handle.style.borderWidth = '0';
+            var table = roosterjs_editor_api_1.getNodeAtCursor(_this.editor, 'TABLE', _this.td);
+            var cellPadding = parseInt(table.cellPadding);
+            cellPadding = isNaN(cellPadding) ? 0 : cellPadding;
+            if (e.pageX != _this.initialPageX) {
+                var newWidth_1 = _this.td.clientWidth -
+                    cellPadding * 2 +
+                    (e.pageX - _this.initialPageX) * (_this.isRtl(table) ? -1 : 1);
+                _this.editor.formatWithUndo(function () { return _this.setTableColumnWidth(newWidth_1 + 'px'); }, true /*preserveSelection*/);
+            }
+            _this.pageX = -1;
+            _this.calcAndShowHandle();
+            _this.editor.focus();
+            _this.cancelEvent(e);
+        };
+    }
+    TableResize.prototype.initialize = function (editor) {
+        this.editor = editor;
+        this.onMouseOverDisposer = this.editor.addDomEventHandler('mouseover', this.onMouseOver);
+    };
+    TableResize.prototype.dispose = function () {
+        this.editor = null;
+        this.onMouseOverDisposer();
+    };
+    TableResize.prototype.onPluginEvent = function (event) {
+        if (this.td &&
+            (event.eventType == 0 /* KeyDown */ ||
+                event.eventType == 6 /* ContentChanged */ ||
+                (event.eventType == 4 /* MouseDown */ &&
+                    !this.clickIntoCurrentTd(event)))) {
+            this.td = null;
+            this.calcAndShowHandle();
+        }
+    };
+    TableResize.prototype.clickIntoCurrentTd = function (event) {
+        var mouseEvent = event.rawEvent;
+        var target = mouseEvent.target;
+        return target instanceof Node && (this.td == target || roosterjs_editor_dom_1.contains(this.td, target));
+    };
+    TableResize.prototype.calcAndShowHandle = function () {
+        if (this.td) {
+            var tr = roosterjs_editor_api_1.getNodeAtCursor(this.editor, 'TR', this.td);
+            var table = roosterjs_editor_api_1.getNodeAtCursor(this.editor, 'TABLE', tr);
+            if (tr && table) {
+                var _a = this.getPosition(table), left = _a[0], top_1 = _a[1];
+                var handle = this.getResizeHandle();
+                left +=
+                    this.td.offsetLeft +
+                        (this.isRtl(table) ? 0 : this.td.offsetWidth - HANDLE_WIDTH);
+                handle.style.display = '';
+                handle.style.top = top_1 + 'px';
+                handle.style.height = table.offsetHeight + 'px';
+                handle.style.left = left + 'px';
+            }
+        }
+        else {
+            this.getResizeHandle().style.display = 'none';
+        }
+    };
+    TableResize.prototype.adjustHandle = function (pageX) {
+        var handle = this.getResizeHandle();
+        handle.style.left = handle.offsetLeft + pageX - this.pageX + 'px';
+        this.pageX = pageX;
+    };
+    TableResize.prototype.getPosition = function (e) {
+        var parent = e.offsetParent;
+        var _a = parent ? this.getPosition(parent) : [0, 0], left = _a[0], top = _a[1];
+        return [left + e.offsetLeft - e.scrollLeft, top + e.offsetTop - e.scrollTop];
+    };
+    TableResize.prototype.getResizeHandle = function () {
+        var _this = this;
+        return this.editor.getCustomData(TABLE_RESIZE_HANDLE_KEY, function () {
+            var document = _this.editor.getDocument();
+            var handle = roosterjs_editor_dom_1.fromHtml(CONTAINER_HTML, document)[0];
+            document.body.appendChild(handle);
+            handle.addEventListener('mousedown', _this.onMouseDown);
+            return handle;
+        }, function (handle) {
+            handle.removeEventListener('mousedown', _this.onMouseDown);
+            handle.parentNode.removeChild(handle);
+        });
+    };
+    TableResize.prototype.cancelEvent = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+    };
+    TableResize.prototype.setTableColumnWidth = function (width) {
+        var _this = this;
+        var vtable = new roosterjs_editor_dom_1.VTable(this.td);
+        vtable.table.style.width = '';
+        vtable.forEachCellOfCurrentColumn(function (cell) {
+            if (cell.td) {
+                cell.td.style.width = cell.td == _this.td ? width : '';
+            }
+        });
+        vtable.writeBack();
+        return this.editor.contains(this.td) ? this.td : vtable.getCurrentTd();
+    };
+    TableResize.prototype.isRtl = function (element) {
+        return roosterjs_editor_dom_1.getComputedStyle(element, 'direction')[0] == 'rtl';
+    };
+    return TableResize;
+}());
+exports.default = TableResize;
+
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Watermark_1 = __webpack_require__(114);
+exports.Watermark = Watermark_1.default;
+
+
+/***/ }),
+/* 114 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(0);
+var WATERMARK_SPAN_ID = '_rooster_watermarkSpan';
+var WATERMARK_REGEX = new RegExp("<span[^>]*id=['\"]?" + WATERMARK_SPAN_ID + "['\"]?[^>]*>[^<]*</span>", 'ig');
+/**
+ * A watermark plugin to manage watermark string for roosterjs
+ */
+var Watermark = /** @class */ (function () {
+    /**
+     * Create an instance of Watermark plugin
+     * @param watermark The watermark string
+     */
+    function Watermark(watermark, format) {
+        var _this = this;
+        this.watermark = watermark;
+        this.format = format;
+        this.handleWatermark = function () {
+            _this.showHideWatermark(false /*ignoreCachedState*/);
+        };
+        this.format = this.format || {
+            fontSize: '14px',
+            textColor: '#aaa',
+        };
+    }
+    Watermark.prototype.initialize = function (editor) {
+        this.editor = editor;
+        this.showHideWatermark(false /*ignoreCachedState*/);
+        this.focusDisposer = this.editor.addDomEventHandler('focus', this.handleWatermark);
+        this.blurDisposer = this.editor.addDomEventHandler('blur', this.handleWatermark);
+    };
+    Watermark.prototype.dispose = function () {
+        this.focusDisposer();
+        this.blurDisposer();
+        this.focusDisposer = null;
+        this.blurDisposer = null;
+        this.hideWatermark();
+        this.editor = null;
+    };
+    Watermark.prototype.onPluginEvent = function (event) {
+        if (event.eventType == 6 /* ContentChanged */) {
+            // When content is changed from setContent() API, current cached state
+            // may not be accurate, so we ignore it
+            this.showHideWatermark(event.source == "SetContent" /* SetContent */);
+        }
+        else if (event.eventType == 7 /* ExtractContent */ && this.isWatermarkShowing) {
+            this.removeWartermarkFromHtml(event);
+        }
+    };
+    Watermark.prototype.showHideWatermark = function (ignoreCachedState) {
+        var hasFocus = this.editor.hasFocus();
+        if (hasFocus && (ignoreCachedState || this.isWatermarkShowing)) {
+            this.hideWatermark();
+        }
+        else if (!hasFocus &&
+            (ignoreCachedState || !this.isWatermarkShowing) &&
+            this.editor.isEmpty(true /*trim*/)) {
+            this.showWatermark();
+        }
+    };
+    Watermark.prototype.showWatermark = function () {
+        var document = this.editor.getDocument();
+        var watermarkNode = roosterjs_editor_dom_1.wrap(document.createTextNode(this.watermark), "<span id=\"" + WATERMARK_SPAN_ID + "\"></span>");
+        roosterjs_editor_dom_1.applyFormat(watermarkNode, this.format);
+        this.editor.insertNode(watermarkNode, {
+            position: 0 /* Begin */,
+            updateCursor: false,
+            replaceSelection: false,
+            insertOnNewLine: false,
+        });
+        this.isWatermarkShowing = true;
+    };
+    Watermark.prototype.hideWatermark = function () {
+        var nodes = this.editor.queryNodes("span[id=\"" + WATERMARK_SPAN_ID + "\"]");
+        for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
+            var node = nodes_1[_i];
+            this.editor.deleteNode(node);
+        }
+        this.isWatermarkShowing = false;
+    };
+    Watermark.prototype.removeWartermarkFromHtml = function (event) {
+        var content = event.content;
+        content = content.replace(WATERMARK_REGEX, '');
+        event.content = content;
+    };
+    return Watermark;
+}());
+exports.default = Watermark;
 
 
 /***/ })

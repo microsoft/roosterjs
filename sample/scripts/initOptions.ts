@@ -1,15 +1,10 @@
 import ShowCursorPosition from './plugins/ShowCursorPosition';
 import ShowFromState from './plugins/ShowFormatState';
 import { DefaultFormat } from 'roosterjs-editor-types';
-import {
-    DefaultShortcut,
-    HyperLink,
-    Paste,
-    ContentEdit,
-    Watermark,
-    TableResize,
-} from 'roosterjs-editor-plugins';
+import { DefaultShortcut, HyperLink, Paste, ContentEdit } from 'roosterjs-editor-plugins';
 import { ImageResize } from 'roosterjs-plugin-image-resize';
+import { TableResize } from 'roosterjs-plugin-table-resize';
+import { Watermark } from 'roosterjs-plugin-watermark';
 import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
 import { setCurrentEditor } from './currentEditor';
 import getCurrentEditor from './currentEditor';

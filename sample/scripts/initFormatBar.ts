@@ -25,7 +25,13 @@ import {
     editTable,
     formatTable,
 } from 'roosterjs-editor-api';
-import { Alignment, Direction, Indentation, TableOperation, TableFormat } from 'roosterjs-editor-types';
+import {
+    Alignment,
+    Direction,
+    Indentation,
+    TableOperation,
+    TableFormat,
+} from 'roosterjs-editor-types';
 import getCurrentEditor from './currentEditor';
 
 let TABLE_FORMAT = [
@@ -132,7 +138,7 @@ export default function initFormatBar() {
             formatTable(getCurrentEditor(), TABLE_FORMAT[intValue]);
             select.value = '-1';
         }
-    })
+    });
 
     // Header
     document.getElementById('header').addEventListener('change', function() {
@@ -192,7 +198,7 @@ export default function initFormatBar() {
 
     // LTR
     document.getElementById('ltr').addEventListener('click', function() {
-        setDirection(getCurrentEditor(), Direction.LeftToRight)
+        setDirection(getCurrentEditor(), Direction.LeftToRight);
     });
 
     // RTL
