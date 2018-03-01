@@ -67,7 +67,7 @@ var roosterjs =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 112);
+/******/ 	return __webpack_require__(__webpack_require__.s = 114);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -92,7 +92,7 @@ exports.getNextInlineElement = BlockElement_1.getNextInlineElement;
 exports.getPreviousInlineElement = BlockElement_1.getPreviousInlineElement;
 exports.getInlineElementBefore = BlockElement_1.getInlineElementBefore;
 exports.getInlineElementAfter = BlockElement_1.getInlineElementAfter;
-var ContentTraverser_1 = __webpack_require__(106);
+var ContentTraverser_1 = __webpack_require__(108);
 exports.ContentTraverser = ContentTraverser_1.default;
 var getLeafSibling_1 = __webpack_require__(9);
 exports.getNextLeafSibling = getLeafSibling_1.getNextLeafSibling;
@@ -100,27 +100,27 @@ exports.getPreviousLeafSibling = getLeafSibling_1.getPreviousLeafSibling;
 var getLeafNode_1 = __webpack_require__(43);
 exports.getFirstLeafNode = getLeafNode_1.getFirstLeafNode;
 exports.getLastLeafNode = getLeafNode_1.getLastLeafNode;
-var InlineElementFactory_1 = __webpack_require__(105);
+var InlineElementFactory_1 = __webpack_require__(107);
 exports.InlineElementFactory = InlineElementFactory_1.default;
 var NodeInlineElement_1 = __webpack_require__(42);
 exports.NodeInlineElement = NodeInlineElement_1.default;
 var PartialInlineElement_1 = __webpack_require__(22);
 exports.PartialInlineElement = PartialInlineElement_1.default;
-var BodyScoper_1 = __webpack_require__(104);
+var BodyScoper_1 = __webpack_require__(106);
 exports.BodyScoper = BodyScoper_1.default;
 var EditorSelection_1 = __webpack_require__(18);
 exports.EditorSelection = EditorSelection_1.default;
-var SelectionBlockScoper_1 = __webpack_require__(103);
+var SelectionBlockScoper_1 = __webpack_require__(105);
 exports.SelectionBlockScoper = SelectionBlockScoper_1.default;
-var SelectionScoper_1 = __webpack_require__(102);
+var SelectionScoper_1 = __webpack_require__(104);
 exports.SelectionScoper = SelectionScoper_1.default;
-var applyFormat_1 = __webpack_require__(101);
+var applyFormat_1 = __webpack_require__(103);
 exports.applyFormat = applyFormat_1.default;
-var changeElementTag_1 = __webpack_require__(100);
+var changeElementTag_1 = __webpack_require__(102);
 exports.changeElementTag = changeElementTag_1.default;
 var contains_1 = __webpack_require__(12);
 exports.contains = contains_1.default;
-var convertInlineCss_1 = __webpack_require__(99);
+var convertInlineCss_1 = __webpack_require__(101);
 exports.convertInlineCss = convertInlineCss_1.default;
 var fromHtml_1 = __webpack_require__(19);
 exports.fromHtml = fromHtml_1.default;
@@ -132,25 +132,25 @@ var isBlockElement_1 = __webpack_require__(44);
 exports.isBlockElement = isBlockElement_1.default;
 var isDocumentPosition_1 = __webpack_require__(5);
 exports.isDocumentPosition = isDocumentPosition_1.default;
-var isNodeEmpty_1 = __webpack_require__(98);
+var isNodeEmpty_1 = __webpack_require__(100);
 exports.isNodeEmpty = isNodeEmpty_1.default;
-var matchWhiteSpaces_1 = __webpack_require__(97);
+var matchWhiteSpaces_1 = __webpack_require__(99);
 exports.matchWhiteSpaces = matchWhiteSpaces_1.default;
-var splitParentNode_1 = __webpack_require__(96);
+var splitParentNode_1 = __webpack_require__(98);
 exports.splitParentNode = splitParentNode_1.default;
-var textToHtml_1 = __webpack_require__(95);
+var textToHtml_1 = __webpack_require__(97);
 exports.textToHtml = textToHtml_1.default;
-var unwrap_1 = __webpack_require__(94);
+var unwrap_1 = __webpack_require__(96);
 exports.unwrap = unwrap_1.default;
 var wrap_1 = __webpack_require__(41);
 exports.wrap = wrap_1.default;
-var wrapAll_1 = __webpack_require__(93);
+var wrapAll_1 = __webpack_require__(95);
 exports.wrapAll = wrapAll_1.default;
 var Position_1 = __webpack_require__(14);
 exports.Position = Position_1.default;
 var SelectionRange_1 = __webpack_require__(13);
 exports.SelectionRange = SelectionRange_1.default;
-var VTable_1 = __webpack_require__(92);
+var VTable_1 = __webpack_require__(94);
 exports.VTable = VTable_1.default;
 
 
@@ -161,13 +161,13 @@ exports.VTable = VTable_1.default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Editor_1 = __webpack_require__(109);
+var Editor_1 = __webpack_require__(111);
 exports.Editor = Editor_1.default;
 var Undo_1 = __webpack_require__(46);
 exports.Undo = Undo_1.default;
 var BrowserData_1 = __webpack_require__(23);
 exports.browserData = BrowserData_1.default;
-var eventDataCacheUtils_1 = __webpack_require__(87);
+var eventDataCacheUtils_1 = __webpack_require__(89);
 exports.clearEventDataCache = eventDataCacheUtils_1.clearEventDataCache;
 exports.cacheGetEventData = eventDataCacheUtils_1.cacheGetEventData;
 var snapshotUtils_1 = __webpack_require__(45);
@@ -224,12 +224,12 @@ function isIntersectWithNodeRange(node, range) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cacheGetCursorEventData_1 = __webpack_require__(86);
+var cacheGetCursorEventData_1 = __webpack_require__(88);
 exports.cacheGetCursorEventData = cacheGetCursorEventData_1.default;
 exports.clearCursorEventDataCache = cacheGetCursorEventData_1.clearCursorEventDataCache;
 var CursorData_1 = __webpack_require__(16);
 exports.CursorData = CursorData_1.default;
-var getCursorRect_1 = __webpack_require__(85);
+var getCursorRect_1 = __webpack_require__(87);
 exports.getCursorRect = getCursorRect_1.default;
 var getNodeAtCursor_1 = __webpack_require__(4);
 exports.getNodeAtCursor = getNodeAtCursor_1.default;
@@ -239,62 +239,62 @@ var queryNodesWithSelection_1 = __webpack_require__(2);
 exports.queryNodesWithSelection = queryNodesWithSelection_1.default;
 var replaceRangeWithNode_1 = __webpack_require__(36);
 exports.replaceRangeWithNode = replaceRangeWithNode_1.default;
-var replaceTextBeforeCursorWithNode_1 = __webpack_require__(84);
+var replaceTextBeforeCursorWithNode_1 = __webpack_require__(86);
 exports.replaceTextBeforeCursorWithNode = replaceTextBeforeCursorWithNode_1.default;
 exports.validateAndGetRangeForTextBeforeCursor = replaceTextBeforeCursorWithNode_1.validateAndGetRangeForTextBeforeCursor;
 var cacheGetListState_1 = __webpack_require__(35);
 exports.cacheGetListState = cacheGetListState_1.default;
-var clearFormat_1 = __webpack_require__(83);
+var clearFormat_1 = __webpack_require__(85);
 exports.clearFormat = clearFormat_1.default;
-var createLink_1 = __webpack_require__(82);
+var createLink_1 = __webpack_require__(84);
 exports.createLink = createLink_1.default;
 var getFormatState_1 = __webpack_require__(29);
 exports.getFormatState = getFormatState_1.default;
-var insertImage_1 = __webpack_require__(80);
+var insertImage_1 = __webpack_require__(82);
 exports.insertImage = insertImage_1.default;
-var insertTable_1 = __webpack_require__(79);
+var insertTable_1 = __webpack_require__(81);
 exports.insertTable = insertTable_1.default;
-var editTable_1 = __webpack_require__(78);
+var editTable_1 = __webpack_require__(80);
 exports.editTable = editTable_1.default;
 var formatTable_1 = __webpack_require__(28);
 exports.formatTable = formatTable_1.default;
-var removeLink_1 = __webpack_require__(77);
+var removeLink_1 = __webpack_require__(79);
 exports.removeLink = removeLink_1.default;
-var setAlignment_1 = __webpack_require__(76);
+var setAlignment_1 = __webpack_require__(78);
 exports.setAlignment = setAlignment_1.default;
 var setBackgroundColor_1 = __webpack_require__(34);
 exports.setBackgroundColor = setBackgroundColor_1.default;
 var setTextColor_1 = __webpack_require__(31);
 exports.setTextColor = setTextColor_1.default;
-var setDirection_1 = __webpack_require__(75);
+var setDirection_1 = __webpack_require__(77);
 exports.setDirection = setDirection_1.default;
 var setFontName_1 = __webpack_require__(33);
 exports.setFontName = setFontName_1.default;
 var setFontSize_1 = __webpack_require__(32);
 exports.setFontSize = setFontSize_1.default;
-var setImageAltText_1 = __webpack_require__(74);
+var setImageAltText_1 = __webpack_require__(76);
 exports.setImageAltText = setImageAltText_1.default;
-var setIndentation_1 = __webpack_require__(73);
+var setIndentation_1 = __webpack_require__(75);
 exports.setIndentation = setIndentation_1.default;
-var toggleBold_1 = __webpack_require__(72);
+var toggleBold_1 = __webpack_require__(74);
 exports.toggleBold = toggleBold_1.default;
 var toggleBullet_1 = __webpack_require__(27);
 exports.toggleBullet = toggleBullet_1.default;
-var toggleItalic_1 = __webpack_require__(71);
+var toggleItalic_1 = __webpack_require__(73);
 exports.toggleItalic = toggleItalic_1.default;
-var toggleNumbering_1 = __webpack_require__(70);
+var toggleNumbering_1 = __webpack_require__(72);
 exports.toggleNumbering = toggleNumbering_1.default;
-var toggleBlockQuote_1 = __webpack_require__(69);
+var toggleBlockQuote_1 = __webpack_require__(71);
 exports.toggleBlockQuote = toggleBlockQuote_1.default;
-var toggleStrikethrough_1 = __webpack_require__(68);
+var toggleStrikethrough_1 = __webpack_require__(70);
 exports.toggleStrikethrough = toggleStrikethrough_1.default;
-var toggleSubscript_1 = __webpack_require__(67);
+var toggleSubscript_1 = __webpack_require__(69);
 exports.toggleSubscript = toggleSubscript_1.default;
-var toggleSuperscript_1 = __webpack_require__(66);
+var toggleSuperscript_1 = __webpack_require__(68);
 exports.toggleSuperscript = toggleSuperscript_1.default;
-var toggleUnderline_1 = __webpack_require__(65);
+var toggleUnderline_1 = __webpack_require__(67);
 exports.toggleUnderline = toggleUnderline_1.default;
-var toggleHeader_1 = __webpack_require__(64);
+var toggleHeader_1 = __webpack_require__(66);
 exports.toggleHeader = toggleHeader_1.default;
 var matchLink_1 = __webpack_require__(30);
 exports.matchLink = matchLink_1.default;
@@ -2279,7 +2279,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var getNodeAtCursor_1 = __webpack_require__(4);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var cacheGetListState_1 = __webpack_require__(35);
-var cacheGetHeaderLevel_1 = __webpack_require__(81);
+var cacheGetHeaderLevel_1 = __webpack_require__(83);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 // Query command state, used for query Bold, Italic, Underline state
 function queryCommandState(editor, command) {
@@ -3039,7 +3039,7 @@ function getCursorMarkNodes(editor, id) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var UndoSnapshots_1 = __webpack_require__(107);
+var UndoSnapshots_1 = __webpack_require__(109);
 var snapshotUtils_1 = __webpack_require__(45);
 var KEY_BACKSPACE = 8;
 var KEY_DELETE = 46;
@@ -3241,24 +3241,285 @@ exports.default = Undo;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DefaultShortcut_1 = __webpack_require__(110);
+var DefaultShortcut_1 = __webpack_require__(112);
 exports.DefaultShortcut = DefaultShortcut_1.default;
-var HyperLink_1 = __webpack_require__(63);
+var HyperLink_1 = __webpack_require__(65);
 exports.HyperLink = HyperLink_1.default;
-var ContentEdit_1 = __webpack_require__(62);
+var ContentEdit_1 = __webpack_require__(64);
 exports.ContentEdit = ContentEdit_1.default;
-var Paste_1 = __webpack_require__(60);
+var Paste_1 = __webpack_require__(62);
 exports.Paste = Paste_1.default;
 var ContentEditFeatures_1 = __webpack_require__(26);
 exports.getDefaultContentEditFeatures = ContentEditFeatures_1.getDefaultContentEditFeatures;
-var Watermark_1 = __webpack_require__(52);
-exports.Watermark = Watermark_1.default;
-var TableResize_1 = __webpack_require__(51);
-exports.TableResize = TableResize_1.default;
 
 
 /***/ }),
 /* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(0);
+var WATERMARK_SPAN_ID = '_rooster_watermarkSpan';
+var WATERMARK_REGEX = new RegExp("<span[^>]*id=['\"]?" + WATERMARK_SPAN_ID + "['\"]?[^>]*>[^<]*</span>", 'ig');
+/**
+ * A watermark plugin to manage watermark string for roosterjs
+ */
+var Watermark = /** @class */ (function () {
+    /**
+     * Create an instance of Watermark plugin
+     * @param watermark The watermark string
+     */
+    function Watermark(watermark, format) {
+        var _this = this;
+        this.watermark = watermark;
+        this.format = format;
+        this.handleWatermark = function () {
+            _this.showHideWatermark(false /*ignoreCachedState*/);
+        };
+        this.format = this.format || {
+            fontSize: '14px',
+            textColor: '#aaa',
+        };
+    }
+    Watermark.prototype.initialize = function (editor) {
+        this.editor = editor;
+        this.showHideWatermark(false /*ignoreCachedState*/);
+        this.focusDisposer = this.editor.addDomEventHandler('focus', this.handleWatermark);
+        this.blurDisposer = this.editor.addDomEventHandler('blur', this.handleWatermark);
+    };
+    Watermark.prototype.dispose = function () {
+        this.focusDisposer();
+        this.blurDisposer();
+        this.focusDisposer = null;
+        this.blurDisposer = null;
+        this.hideWatermark();
+        this.editor = null;
+    };
+    Watermark.prototype.onPluginEvent = function (event) {
+        if (event.eventType == 6 /* ContentChanged */) {
+            // When content is changed from setContent() API, current cached state
+            // may not be accurate, so we ignore it
+            this.showHideWatermark(event.source == "SetContent" /* SetContent */);
+        }
+        else if (event.eventType == 7 /* ExtractContent */ && this.isWatermarkShowing) {
+            this.removeWartermarkFromHtml(event);
+        }
+    };
+    Watermark.prototype.showHideWatermark = function (ignoreCachedState) {
+        var hasFocus = this.editor.hasFocus();
+        if (hasFocus && (ignoreCachedState || this.isWatermarkShowing)) {
+            this.hideWatermark();
+        }
+        else if (!hasFocus &&
+            (ignoreCachedState || !this.isWatermarkShowing) &&
+            this.editor.isEmpty(true /*trim*/)) {
+            this.showWatermark();
+        }
+    };
+    Watermark.prototype.showWatermark = function () {
+        var document = this.editor.getDocument();
+        var watermarkNode = roosterjs_editor_dom_1.wrap(document.createTextNode(this.watermark), "<span id=\"" + WATERMARK_SPAN_ID + "\"></span>");
+        roosterjs_editor_dom_1.applyFormat(watermarkNode, this.format);
+        this.editor.insertNode(watermarkNode, {
+            position: 0 /* Begin */,
+            updateCursor: false,
+            replaceSelection: false,
+            insertOnNewLine: false,
+        });
+        this.isWatermarkShowing = true;
+    };
+    Watermark.prototype.hideWatermark = function () {
+        var nodes = this.editor.queryNodes("span[id=\"" + WATERMARK_SPAN_ID + "\"]");
+        for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
+            var node = nodes_1[_i];
+            this.editor.deleteNode(node);
+        }
+        this.isWatermarkShowing = false;
+    };
+    Watermark.prototype.removeWartermarkFromHtml = function (event) {
+        var content = event.content;
+        content = content.replace(WATERMARK_REGEX, '');
+        event.content = content;
+    };
+    return Watermark;
+}());
+exports.default = Watermark;
+
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Watermark_1 = __webpack_require__(48);
+exports.Watermark = Watermark_1.default;
+
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(0);
+var roosterjs_editor_api_1 = __webpack_require__(3);
+var TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
+var HANDLE_WIDTH = 6;
+var CONTAINER_HTML = "<div style=\"position: absolute; cursor: col-resize; width: " + HANDLE_WIDTH + "px; border: solid 0 #C6C6C6;\"></div>";
+var TableResize = /** @class */ (function () {
+    function TableResize(isRtl) {
+        var _this = this;
+        this.pageX = -1;
+        this.onMouseOver = function (e) {
+            var node = (e.srcElement || e.target);
+            if (_this.pageX < 0 && node && node.tagName == 'TD' && node != _this.td) {
+                _this.td = node;
+                _this.calcAndShowHandle();
+            }
+        };
+        this.onMouseDown = function (e) {
+            _this.pageX = e.pageX;
+            _this.initialPageX = e.pageX;
+            var document = _this.editor.getDocument();
+            document.addEventListener('mousemove', _this.onMouseMove, true);
+            document.addEventListener('mouseup', _this.onMouseUp, true);
+            var handle = _this.getResizeHandle();
+            handle.style.borderWidth = '0 1px';
+            _this.cancelEvent(e);
+        };
+        this.onMouseMove = function (e) {
+            _this.adjustHandle(e.pageX);
+            _this.cancelEvent(e);
+        };
+        this.onMouseUp = function (e) {
+            var document = _this.editor.getDocument();
+            document.removeEventListener('mousemove', _this.onMouseMove, true);
+            document.removeEventListener('mouseup', _this.onMouseUp, true);
+            var handle = _this.getResizeHandle();
+            handle.style.borderWidth = '0';
+            var table = roosterjs_editor_api_1.getNodeAtCursor(_this.editor, 'TABLE', _this.td);
+            var cellPadding = parseInt(table.cellPadding);
+            cellPadding = isNaN(cellPadding) ? 0 : cellPadding;
+            if (e.pageX != _this.initialPageX) {
+                var newWidth_1 = _this.td.clientWidth -
+                    cellPadding * 2 +
+                    (e.pageX - _this.initialPageX) * (_this.isRtl(table) ? -1 : 1);
+                _this.editor.formatWithUndo(function () { return _this.setTableColumnWidth(newWidth_1 + 'px'); }, true /*preserveSelection*/);
+            }
+            _this.pageX = -1;
+            _this.calcAndShowHandle();
+            _this.editor.focus();
+            _this.cancelEvent(e);
+        };
+    }
+    TableResize.prototype.initialize = function (editor) {
+        this.editor = editor;
+        this.onMouseOverDisposer = this.editor.addDomEventHandler('mouseover', this.onMouseOver);
+    };
+    TableResize.prototype.dispose = function () {
+        this.editor = null;
+        this.onMouseOverDisposer();
+    };
+    TableResize.prototype.onPluginEvent = function (event) {
+        if (this.td &&
+            (event.eventType == 0 /* KeyDown */ ||
+                event.eventType == 6 /* ContentChanged */ ||
+                (event.eventType == 4 /* MouseDown */ &&
+                    !this.clickIntoCurrentTd(event)))) {
+            this.td = null;
+            this.calcAndShowHandle();
+        }
+    };
+    TableResize.prototype.clickIntoCurrentTd = function (event) {
+        var mouseEvent = event.rawEvent;
+        var target = mouseEvent.target;
+        return target instanceof Node && (this.td == target || roosterjs_editor_dom_1.contains(this.td, target));
+    };
+    TableResize.prototype.calcAndShowHandle = function () {
+        if (this.td) {
+            var tr = roosterjs_editor_api_1.getNodeAtCursor(this.editor, 'TR', this.td);
+            var table = roosterjs_editor_api_1.getNodeAtCursor(this.editor, 'TABLE', tr);
+            if (tr && table) {
+                var _a = this.getPosition(table), left = _a[0], top_1 = _a[1];
+                var handle = this.getResizeHandle();
+                left +=
+                    this.td.offsetLeft +
+                        (this.isRtl(table) ? 0 : this.td.offsetWidth - HANDLE_WIDTH);
+                handle.style.display = '';
+                handle.style.top = top_1 + 'px';
+                handle.style.height = table.offsetHeight + 'px';
+                handle.style.left = left + 'px';
+            }
+        }
+        else {
+            this.getResizeHandle().style.display = 'none';
+        }
+    };
+    TableResize.prototype.adjustHandle = function (pageX) {
+        var handle = this.getResizeHandle();
+        handle.style.left = handle.offsetLeft + pageX - this.pageX + 'px';
+        this.pageX = pageX;
+    };
+    TableResize.prototype.getPosition = function (e) {
+        var parent = e.offsetParent;
+        var _a = parent ? this.getPosition(parent) : [0, 0], left = _a[0], top = _a[1];
+        return [left + e.offsetLeft - e.scrollLeft, top + e.offsetTop - e.scrollTop];
+    };
+    TableResize.prototype.getResizeHandle = function () {
+        var _this = this;
+        return this.editor.getCustomData(TABLE_RESIZE_HANDLE_KEY, function () {
+            var document = _this.editor.getDocument();
+            var handle = roosterjs_editor_dom_1.fromHtml(CONTAINER_HTML, document)[0];
+            document.body.appendChild(handle);
+            handle.addEventListener('mousedown', _this.onMouseDown);
+            return handle;
+        }, function (handle) {
+            handle.removeEventListener('mousedown', _this.onMouseDown);
+            handle.parentNode.removeChild(handle);
+        });
+    };
+    TableResize.prototype.cancelEvent = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+    };
+    TableResize.prototype.setTableColumnWidth = function (width) {
+        var _this = this;
+        var vtable = new roosterjs_editor_dom_1.VTable(this.td);
+        vtable.table.style.width = '';
+        vtable.forEachCellOfCurrentColumn(function (cell) {
+            if (cell.td) {
+                cell.td.style.width = cell.td == _this.td ? width : '';
+            }
+        });
+        vtable.writeBack();
+        return this.editor.contains(this.td) ? this.td : vtable.getCurrentTd();
+    };
+    TableResize.prototype.isRtl = function (element) {
+        return roosterjs_editor_dom_1.getComputedStyle(element, 'direction')[0] == 'rtl';
+    };
+    return TableResize;
+}());
+exports.default = TableResize;
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var TableResize_1 = __webpack_require__(50);
+exports.TableResize = TableResize_1.default;
+
+
+/***/ }),
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3523,19 +3784,19 @@ exports.ImageResizePlugin = ImageResizePlugin;
 
 
 /***/ }),
-/* 49 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var ImageResize_1 = __webpack_require__(48);
+var ImageResize_1 = __webpack_require__(52);
 exports.ImageResize = ImageResize_1.default;
 exports.ImageResizePlugin = ImageResize_1.ImageResizePlugin;
 
 
 /***/ }),
-/* 50 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3544,250 +3805,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 
 
 /***/ }),
-/* 51 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(0);
-var roosterjs_editor_api_1 = __webpack_require__(3);
-var TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
-var HANDLE_WIDTH = 6;
-var CONTAINER_HTML = "<div style=\"position: absolute; cursor: col-resize; width: " + HANDLE_WIDTH + "px; border: solid 0 #C6C6C6;\"></div>";
-var TableResize = /** @class */ (function () {
-    function TableResize(isRtl) {
-        var _this = this;
-        this.pageX = -1;
-        this.onMouseOver = function (e) {
-            var node = (e.srcElement || e.target);
-            if (_this.pageX < 0 && node && node.tagName == 'TD' && node != _this.td) {
-                _this.td = node;
-                _this.calcAndShowHandle();
-            }
-        };
-        this.onMouseDown = function (e) {
-            _this.pageX = e.pageX;
-            _this.initialPageX = e.pageX;
-            var document = _this.editor.getDocument();
-            document.addEventListener('mousemove', _this.onMouseMove, true);
-            document.addEventListener('mouseup', _this.onMouseUp, true);
-            var handle = _this.getResizeHandle();
-            handle.style.borderWidth = '0 1px';
-            _this.cancelEvent(e);
-        };
-        this.onMouseMove = function (e) {
-            _this.adjustHandle(e.pageX);
-            _this.cancelEvent(e);
-        };
-        this.onMouseUp = function (e) {
-            var document = _this.editor.getDocument();
-            document.removeEventListener('mousemove', _this.onMouseMove, true);
-            document.removeEventListener('mouseup', _this.onMouseUp, true);
-            var handle = _this.getResizeHandle();
-            handle.style.borderWidth = '0';
-            var table = roosterjs_editor_api_1.getNodeAtCursor(_this.editor, 'TABLE', _this.td);
-            var cellPadding = parseInt(table.cellPadding);
-            cellPadding = isNaN(cellPadding) ? 0 : cellPadding;
-            if (e.pageX != _this.initialPageX) {
-                var newWidth_1 = _this.td.clientWidth -
-                    cellPadding * 2 +
-                    (e.pageX - _this.initialPageX) * (_this.isRtl(table) ? -1 : 1);
-                _this.editor.formatWithUndo(function () { return _this.setTableColumnWidth(newWidth_1 + 'px'); }, true /*preserveSelection*/);
-            }
-            _this.pageX = -1;
-            _this.calcAndShowHandle();
-            _this.editor.focus();
-            _this.cancelEvent(e);
-        };
-    }
-    TableResize.prototype.initialize = function (editor) {
-        this.editor = editor;
-        this.onMouseOverDisposer = this.editor.addDomEventHandler('mouseover', this.onMouseOver);
-    };
-    TableResize.prototype.dispose = function () {
-        this.editor = null;
-        this.onMouseOverDisposer();
-    };
-    TableResize.prototype.onPluginEvent = function (event) {
-        if (this.td &&
-            (event.eventType == 0 /* KeyDown */ ||
-                event.eventType == 6 /* ContentChanged */ ||
-                (event.eventType == 4 /* MouseDown */ &&
-                    !this.clickIntoCurrentTd(event)))) {
-            this.td = null;
-            this.calcAndShowHandle();
-        }
-    };
-    TableResize.prototype.clickIntoCurrentTd = function (event) {
-        var mouseEvent = event.rawEvent;
-        var target = mouseEvent.target;
-        return target instanceof Node && (this.td == target || roosterjs_editor_dom_1.contains(this.td, target));
-    };
-    TableResize.prototype.calcAndShowHandle = function () {
-        if (this.td) {
-            var tr = roosterjs_editor_api_1.getNodeAtCursor(this.editor, 'TR', this.td);
-            var table = roosterjs_editor_api_1.getNodeAtCursor(this.editor, 'TABLE', tr);
-            if (tr && table) {
-                var _a = this.getPosition(table), left = _a[0], top_1 = _a[1];
-                var handle = this.getResizeHandle();
-                left +=
-                    this.td.offsetLeft +
-                        (this.isRtl(table) ? 0 : this.td.offsetWidth - HANDLE_WIDTH);
-                handle.style.display = '';
-                handle.style.top = top_1 + 'px';
-                handle.style.height = table.offsetHeight + 'px';
-                handle.style.left = left + 'px';
-            }
-        }
-        else {
-            this.getResizeHandle().style.display = 'none';
-        }
-    };
-    TableResize.prototype.adjustHandle = function (pageX) {
-        var handle = this.getResizeHandle();
-        handle.style.left = handle.offsetLeft + pageX - this.pageX + 'px';
-        this.pageX = pageX;
-    };
-    TableResize.prototype.getPosition = function (e) {
-        var parent = e.offsetParent;
-        var _a = parent ? this.getPosition(parent) : [0, 0], left = _a[0], top = _a[1];
-        return [left + e.offsetLeft - e.scrollLeft, top + e.offsetTop - e.scrollTop];
-    };
-    TableResize.prototype.getResizeHandle = function () {
-        var _this = this;
-        return this.editor.getCustomData(TABLE_RESIZE_HANDLE_KEY, function () {
-            var document = _this.editor.getDocument();
-            var handle = roosterjs_editor_dom_1.fromHtml(CONTAINER_HTML, document)[0];
-            document.body.appendChild(handle);
-            handle.addEventListener('mousedown', _this.onMouseDown);
-            return handle;
-        }, function (handle) {
-            handle.removeEventListener('mousedown', _this.onMouseDown);
-            handle.parentNode.removeChild(handle);
-        });
-    };
-    TableResize.prototype.cancelEvent = function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-    };
-    TableResize.prototype.setTableColumnWidth = function (width) {
-        var _this = this;
-        var vtable = new roosterjs_editor_dom_1.VTable(this.td);
-        vtable.table.style.width = '';
-        vtable.forEachCellOfCurrentColumn(function (cell) {
-            if (cell.td) {
-                cell.td.style.width = cell.td == _this.td ? width : '';
-            }
-        });
-        vtable.writeBack();
-        return this.editor.contains(this.td) ? this.td : vtable.getCurrentTd();
-    };
-    TableResize.prototype.isRtl = function (element) {
-        return roosterjs_editor_dom_1.getComputedStyle(element, 'direction')[0] == 'rtl';
-    };
-    return TableResize;
-}());
-exports.default = TableResize;
-
-
-/***/ }),
-/* 52 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(0);
-var WATERMARK_SPAN_ID = '_rooster_watermarkSpan';
-var WATERMARK_REGEX = new RegExp("<span[^>]*id=['\"]?" + WATERMARK_SPAN_ID + "['\"]?[^>]*>[^<]*</span>", 'ig');
-/**
- * A watermark plugin to manage watermark string for roosterjs
- */
-var Watermark = /** @class */ (function () {
-    /**
-     * Create an instance of Watermark plugin
-     * @param watermark The watermark string
-     */
-    function Watermark(watermark, format) {
-        var _this = this;
-        this.watermark = watermark;
-        this.format = format;
-        this.handleWatermark = function () {
-            _this.showHideWatermark(false /*ignoreCachedState*/);
-        };
-        this.format = this.format || {
-            fontSize: '14px',
-            textColor: '#aaa',
-        };
-    }
-    Watermark.prototype.initialize = function (editor) {
-        this.editor = editor;
-        this.showHideWatermark(false /*ignoreCachedState*/);
-        this.focusDisposer = this.editor.addDomEventHandler('focus', this.handleWatermark);
-        this.blurDisposer = this.editor.addDomEventHandler('blur', this.handleWatermark);
-    };
-    Watermark.prototype.dispose = function () {
-        this.focusDisposer();
-        this.blurDisposer();
-        this.focusDisposer = null;
-        this.blurDisposer = null;
-        this.hideWatermark();
-        this.editor = null;
-    };
-    Watermark.prototype.onPluginEvent = function (event) {
-        if (event.eventType == 6 /* ContentChanged */) {
-            // When content is changed from setContent() API, current cached state
-            // may not be accurate, so we ignore it
-            this.showHideWatermark(event.source == "SetContent" /* SetContent */);
-        }
-        else if (event.eventType == 7 /* ExtractContent */ && this.isWatermarkShowing) {
-            this.removeWartermarkFromHtml(event);
-        }
-    };
-    Watermark.prototype.showHideWatermark = function (ignoreCachedState) {
-        var hasFocus = this.editor.hasFocus();
-        if (hasFocus && (ignoreCachedState || this.isWatermarkShowing)) {
-            this.hideWatermark();
-        }
-        else if (!hasFocus &&
-            (ignoreCachedState || !this.isWatermarkShowing) &&
-            this.editor.isEmpty(true /*trim*/)) {
-            this.showWatermark();
-        }
-    };
-    Watermark.prototype.showWatermark = function () {
-        var document = this.editor.getDocument();
-        var watermarkNode = roosterjs_editor_dom_1.wrap(document.createTextNode(this.watermark), "<span id=\"" + WATERMARK_SPAN_ID + "\"></span>");
-        roosterjs_editor_dom_1.applyFormat(watermarkNode, this.format);
-        this.editor.insertNode(watermarkNode, {
-            position: 0 /* Begin */,
-            updateCursor: false,
-            replaceSelection: false,
-            insertOnNewLine: false,
-        });
-        this.isWatermarkShowing = true;
-    };
-    Watermark.prototype.hideWatermark = function () {
-        var nodes = this.editor.queryNodes("span[id=\"" + WATERMARK_SPAN_ID + "\"]");
-        for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
-            var node = nodes_1[_i];
-            this.editor.deleteNode(node);
-        }
-        this.isWatermarkShowing = false;
-    };
-    Watermark.prototype.removeWartermarkFromHtml = function (event) {
-        var content = event.content;
-        content = content.replace(WATERMARK_REGEX, '');
-        event.content = content;
-    };
-    return Watermark;
-}());
-exports.default = Watermark;
-
-
-/***/ }),
-/* 53 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3880,7 +3898,7 @@ exports.default = removeUselessCss;
 
 
 /***/ }),
-/* 54 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3919,7 +3937,7 @@ exports.default = removeUnsafeTags;
 
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4406,7 +4424,7 @@ function resetCurrentLists(args) {
 
 
 /***/ }),
-/* 56 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4429,7 +4447,7 @@ exports.createWordConverterArguments = createWordConverterArguments;
 
 
 /***/ }),
-/* 57 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4451,15 +4469,15 @@ exports.createWordConverter = createWordConverter;
 
 
 /***/ }),
-/* 58 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var wordConverter_1 = __webpack_require__(57);
-var WordConverterArguments_1 = __webpack_require__(56);
-var converterUtils_1 = __webpack_require__(55);
+var wordConverter_1 = __webpack_require__(59);
+var WordConverterArguments_1 = __webpack_require__(58);
+var converterUtils_1 = __webpack_require__(57);
 /** Converts all the Word generated list items in the specified node into standard HTML UL and OL tags */
 function convertPastedContentFromWord(root) {
     var wordConverter = wordConverter_1.createWordConverter();
@@ -4480,7 +4498,7 @@ exports.default = convertPastedContentFromWord;
 
 
 /***/ }),
-/* 59 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4613,7 +4631,7 @@ function normalizeContent(content) {
 
 
 /***/ }),
-/* 60 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4622,10 +4640,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var roosterjs_editor_core_1 = __webpack_require__(1);
 var roosterjs_editor_api_1 = __webpack_require__(3);
-var buildClipboardData_1 = __webpack_require__(59);
-var convertPastedContentFromWord_1 = __webpack_require__(58);
-var removeUnsafeTags_1 = __webpack_require__(54);
-var removeUselessCss_1 = __webpack_require__(53);
+var buildClipboardData_1 = __webpack_require__(61);
+var convertPastedContentFromWord_1 = __webpack_require__(60);
+var removeUnsafeTags_1 = __webpack_require__(56);
+var removeUselessCss_1 = __webpack_require__(55);
 /**
  * Paste plugin, handles onPaste event and paste content into editor
  */
@@ -4767,7 +4785,7 @@ exports.default = Paste;
 
 
 /***/ }),
-/* 61 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4848,7 +4866,7 @@ function isAutoBulletInput(input) {
 
 
 /***/ }),
-/* 62 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4857,7 +4875,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_api_1 = __webpack_require__(3);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var ContentEditFeatures_1 = __webpack_require__(26);
-var autoBullet_1 = __webpack_require__(61);
+var autoBullet_1 = __webpack_require__(63);
 var KEY_TAB = 9;
 var KEY_BACKSPACE = 8;
 var KEY_ENTER = 13;
@@ -5064,7 +5082,7 @@ exports.default = ContentEdit;
 
 
 /***/ }),
-/* 63 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5221,7 +5239,7 @@ exports.default = HyperLink;
 
 
 /***/ }),
-/* 64 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5273,7 +5291,7 @@ exports.default = toggleHeader;
 
 
 /***/ }),
-/* 65 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5297,7 +5315,7 @@ exports.default = toggleUnderline;
 
 
 /***/ }),
-/* 66 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5323,7 +5341,7 @@ exports.default = toggleSuperscript;
 
 
 /***/ }),
-/* 67 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5349,7 +5367,7 @@ exports.default = toggleSubscript;
 
 
 /***/ }),
-/* 68 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5373,7 +5391,7 @@ exports.default = toggleStrikethrough;
 
 
 /***/ }),
-/* 69 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5499,7 +5517,7 @@ function isListElement(node) {
 
 
 /***/ }),
-/* 70 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5526,7 +5544,7 @@ exports.default = toggleNumbering;
 
 
 /***/ }),
-/* 71 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5550,7 +5568,7 @@ exports.default = toggleItalic;
 
 
 /***/ }),
-/* 72 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5574,7 +5592,7 @@ exports.default = toggleBold;
 
 
 /***/ }),
-/* 73 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5609,7 +5627,7 @@ exports.default = setIndentation;
 
 
 /***/ }),
-/* 74 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5641,7 +5659,7 @@ exports.default = setImageAltText;
 
 
 /***/ }),
-/* 75 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5702,7 +5720,7 @@ exports.default = setDirection;
 
 
 /***/ }),
-/* 76 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5728,7 +5746,7 @@ exports.default = setAlignment;
 
 
 /***/ }),
-/* 77 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5758,7 +5776,7 @@ exports.default = removeLink;
 
 
 /***/ }),
-/* 78 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5887,7 +5905,7 @@ exports.default = editTable;
 
 
 /***/ }),
-/* 79 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5946,7 +5964,7 @@ function getTableCellWidth(columns) {
 
 
 /***/ }),
-/* 80 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5976,7 +5994,7 @@ exports.default = insertImage;
 
 
 /***/ }),
-/* 81 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6007,7 +6025,7 @@ exports.default = cacheGetHeaderLevel;
 
 
 /***/ }),
-/* 82 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6107,7 +6125,7 @@ function applyLinkPrefix(url) {
 
 
 /***/ }),
-/* 83 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6144,7 +6162,7 @@ exports.default = clearFormat;
 
 
 /***/ }),
-/* 84 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6254,7 +6272,7 @@ exports.default = replaceTextBeforeCursorWithNode;
 
 
 /***/ }),
-/* 85 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6345,7 +6363,7 @@ function getRectFromClientRect(clientRect) {
 
 
 /***/ }),
-/* 86 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6379,7 +6397,7 @@ exports.clearCursorEventDataCache = clearCursorEventDataCache;
 
 
 /***/ }),
-/* 87 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6408,7 +6426,7 @@ exports.cacheGetEventData = cacheGetEventData;
 
 
 /***/ }),
-/* 88 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6577,7 +6595,7 @@ function insertNodeAtSelection(core, node, option) {
 
 
 /***/ }),
-/* 89 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6613,7 +6631,7 @@ exports.default = getContentTraverser;
 
 
 /***/ }),
-/* 90 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6641,7 +6659,7 @@ exports.default = attachDomEvent;
 
 
 /***/ }),
-/* 91 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6677,7 +6695,7 @@ exports.default = formatWithUndo;
 
 
 /***/ }),
-/* 92 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6843,7 +6861,7 @@ function getBorderStyle(style) {
 
 
 /***/ }),
-/* 93 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6874,7 +6892,7 @@ exports.default = wrapAll;
 
 
 /***/ }),
-/* 94 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6897,7 +6915,7 @@ exports.default = unwrap;
 
 
 /***/ }),
-/* 95 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6920,7 +6938,7 @@ exports.default = textToHtml;
 
 
 /***/ }),
-/* 96 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6960,7 +6978,7 @@ exports.default = splitParentNode;
 
 
 /***/ }),
-/* 97 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6979,7 +6997,7 @@ exports.default = matchWhiteSpaces;
 
 
 /***/ }),
-/* 98 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7014,7 +7032,7 @@ exports.default = isNodeEmpty;
 
 
 /***/ }),
-/* 99 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7111,7 +7129,7 @@ exports.default = convertInlineCss;
 
 
 /***/ }),
-/* 100 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7153,7 +7171,7 @@ exports.default = changeElementTag;
 
 
 /***/ }),
-/* 101 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7189,7 +7207,7 @@ exports.default = applyFormat;
 
 
 /***/ }),
-/* 102 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7226,7 +7244,7 @@ exports.default = SelectionScoper;
 
 
 /***/ }),
-/* 103 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7313,7 +7331,7 @@ exports.default = SelectionBlockScoper;
 
 
 /***/ }),
-/* 104 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7348,7 +7366,7 @@ exports.default = BodyScoper;
 
 
 /***/ }),
-/* 105 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7369,7 +7387,7 @@ exports.default = InlineElementFactory;
 
 
 /***/ }),
-/* 106 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7502,7 +7520,7 @@ exports.default = ContentTraverser;
 
 
 /***/ }),
-/* 107 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7565,7 +7583,7 @@ exports.default = UndoSnapshots;
 
 
 /***/ }),
-/* 108 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7606,21 +7624,21 @@ function calcDefaultFormat(node, baseFormat) {
 
 
 /***/ }),
-/* 109 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorCore_1 = __webpack_require__(108);
-var formatWithUndo_1 = __webpack_require__(91);
-var attachDomEvent_1 = __webpack_require__(90);
+var EditorCore_1 = __webpack_require__(110);
+var formatWithUndo_1 = __webpack_require__(93);
+var attachDomEvent_1 = __webpack_require__(92);
 var BrowserData_1 = __webpack_require__(23);
 var focus_1 = __webpack_require__(38);
-var getContentTraverser_1 = __webpack_require__(89);
+var getContentTraverser_1 = __webpack_require__(91);
 var getLiveRange_1 = __webpack_require__(6);
 var hasFocus_1 = __webpack_require__(17);
-var insertNode_1 = __webpack_require__(88);
+var insertNode_1 = __webpack_require__(90);
 var select_1 = __webpack_require__(8);
 var triggerEvent_1 = __webpack_require__(39);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
@@ -8092,7 +8110,7 @@ exports.default = Editor;
 
 
 /***/ }),
-/* 110 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8225,7 +8243,7 @@ exports.default = DefaultShortcut;
 
 
 /***/ }),
-/* 111 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8266,7 +8284,7 @@ exports.default = createEditor;
 
 
 /***/ }),
-/* 112 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8275,13 +8293,15 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-var createEditor_1 = __webpack_require__(111);
+var createEditor_1 = __webpack_require__(113);
 exports.createEditor = createEditor_1.default;
-__export(__webpack_require__(50));
+__export(__webpack_require__(54));
 __export(__webpack_require__(0));
 __export(__webpack_require__(1));
 __export(__webpack_require__(3));
 __export(__webpack_require__(47));
+__export(__webpack_require__(53));
+__export(__webpack_require__(51));
 __export(__webpack_require__(49));
 
 

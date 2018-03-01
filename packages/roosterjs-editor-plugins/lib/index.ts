@@ -6,5 +6,3 @@ export {
     default as ContentEditFeatures,
     getDefaultContentEditFeatures,
 } from './ContentEdit/ContentEditFeatures';
-export { default as Watermark } from './Watermark/Watermark';
-export { default as TableResize } from './TableResize/TableResize';

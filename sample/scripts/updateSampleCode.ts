@@ -1,12 +1,7 @@
-import {
-    DefaultShortcut,
-    HyperLink,
-    Paste,
-    ContentEdit,
-    Watermark,
-    TableResize,
-} from 'roosterjs-editor-plugins';
+import { DefaultShortcut, HyperLink, Paste, ContentEdit } from 'roosterjs-editor-plugins';
 import { ImageResize } from 'roosterjs-plugin-image-resize';
+import { TableResize } from 'roosterjs-plugin-table-resize';
+import { Watermark } from 'roosterjs-plugin-watermark';
 import { EditorPlugin } from 'roosterjs-editor-core';
 import { DefaultFormat } from 'roosterjs-editor-types';
 
@@ -56,11 +51,7 @@ function updateJsSampleCode(plugins: EditorPlugin[], defaultFormat: DefaultForma
     let optionsString = assembleOptionsString(pluginsString, formatString);
     let endString = assembleEndString(optionsString);
 
-    let jsCodeString = startString +
-        pluginsString +
-        formatString +
-        optionsString +
-        endString;
+    let jsCodeString = startString + pluginsString + formatString + optionsString + endString;
     jsSampleCode.appendChild(createElementFromContent('jsSampleCode', jsCodeString));
 }
 
@@ -79,7 +70,8 @@ function assemblePluginsString(plugins: EditorPlugin[]): string {
         let pluginsString = 'var plugins = [\n';
         plugins.forEach(plugin => {
             if (plugin instanceof Watermark) {
-                pluginsString += "  new roosterjsPlugins.Watermark('Type content here...'),\n";
+                pluginsString +=
+                    "  new roosterjsWatermarkPlugin.Watermark('Type content here...'),\n";
             } else if (plugin instanceof ImageResize) {
                 pluginsString += '  new roosterjsImageResizePlugin.ImageResize(),\n';
             } else if (plugin instanceof DefaultShortcut) {
@@ -91,7 +83,7 @@ function assemblePluginsString(plugins: EditorPlugin[]): string {
             } else if (plugin instanceof ContentEdit) {
                 pluginsString += '  new roosterjsPlugins.ContentEdit(),\n';
             } else if (plugin instanceof TableResize) {
-                pluginsString += '  new roosterjsPlugins.TableResize(),\n';
+                pluginsString += '  new roosterjsTableResizePlugin.TableResize(),\n';
             }
         });
         pluginsString += '];\n';
@@ -137,6 +129,18 @@ function assembleRequireString(plugins: EditorPlugin[], defaultFormat: DefaultFo
         if (plugin instanceof ImageResize) {
             requireString = requireString.concat(
                 "var roosterjsImageResizePlugin = require('roosterjs-plugin-image-resize');\n"
+            );
+            return;
+        }
+        if (plugin instanceof TableResize) {
+            requireString = requireString.concat(
+                "var roosterjsTableResizePlugin = require('roosterjs-plugin-table-resize');\n"
+            );
+            return;
+        }
+        if (plugin instanceof Watermark) {
+            requireString = requireString.concat(
+                "var roosterjsWatermarkPlugin = require('roosterjs-plugin-watermark');\n"
             );
             return;
         }

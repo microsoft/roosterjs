@@ -1602,55 +1602,6 @@ export interface ContentEditFeatures {
  */
 export function getDefaultContentEditFeatures(): ContentEditFeatures;
 
-/**
- * A watermark plugin to manage watermark string for roosterjs
- */
-export class Watermark implements EditorPlugin {
-    private watermark;
-    private format;
-    private editor;
-    private isWatermarkShowing;
-    private focusDisposer;
-    private blurDisposer;
-    /**
-     * Create an instance of Watermark plugin
-     * @param watermark The watermark string
-     */
-    constructor(watermark: string, format?: DefaultFormat);
-    initialize(editor: Editor): void;
-    dispose(): void;
-    onPluginEvent(event: PluginEvent): void;
-    private handleWatermark;
-    private showHideWatermark(ignoreCachedState);
-    private showWatermark();
-    private hideWatermark();
-    private removeWartermarkFromHtml(event);
-}
-
-export class TableResize implements EditorPlugin {
-    private editor;
-    private onMouseOverDisposer;
-    private td;
-    private pageX;
-    private initialPageX;
-    constructor(isRtl?: boolean);
-    initialize(editor: Editor): void;
-    dispose(): void;
-    onPluginEvent(event: PluginEvent): void;
-    private clickIntoCurrentTd(event);
-    private onMouseOver;
-    private calcAndShowHandle();
-    private adjustHandle(pageX);
-    private getPosition(e);
-    private getResizeHandle();
-    private cancelEvent(e);
-    private onMouseDown;
-    private onMouseMove;
-    private onMouseUp;
-    private setTableColumnWidth(width);
-    private isRtl(element);
-}
-
 export class ImageResize implements EditorPlugin {
     private minWidth;
     private minHeight;
@@ -1695,5 +1646,54 @@ export class ImageResizePlugin extends ImageResize {
      * @deprecated Use ImageResize instead
      */
     constructor(minWidth?: number, minHeight?: number, selectionBorderColor?: string, forcePreserveRatio?: boolean);
+}
+
+export class TableResize implements EditorPlugin {
+    private editor;
+    private onMouseOverDisposer;
+    private td;
+    private pageX;
+    private initialPageX;
+    constructor(isRtl?: boolean);
+    initialize(editor: Editor): void;
+    dispose(): void;
+    onPluginEvent(event: PluginEvent): void;
+    private clickIntoCurrentTd(event);
+    private onMouseOver;
+    private calcAndShowHandle();
+    private adjustHandle(pageX);
+    private getPosition(e);
+    private getResizeHandle();
+    private cancelEvent(e);
+    private onMouseDown;
+    private onMouseMove;
+    private onMouseUp;
+    private setTableColumnWidth(width);
+    private isRtl(element);
+}
+
+/**
+ * A watermark plugin to manage watermark string for roosterjs
+ */
+export class Watermark implements EditorPlugin {
+    private watermark;
+    private format;
+    private editor;
+    private isWatermarkShowing;
+    private focusDisposer;
+    private blurDisposer;
+    /**
+     * Create an instance of Watermark plugin
+     * @param watermark The watermark string
+     */
+    constructor(watermark: string, format?: DefaultFormat);
+    initialize(editor: Editor): void;
+    dispose(): void;
+    onPluginEvent(event: PluginEvent): void;
+    private handleWatermark;
+    private showHideWatermark(ignoreCachedState);
+    private showWatermark();
+    private hideWatermark();
+    private removeWartermarkFromHtml(event);
 }
 
