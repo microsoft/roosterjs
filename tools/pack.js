@@ -48,19 +48,9 @@ var webpackConfig = {
         }]
     },
     stats: 'minimal',
-    plugins: isProduction ? [
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            compress: {
-                dead_code: true,
-                warnings: true,
-                screw_ie8: true,
-                drop_debugger: true,
-                drop_console: true,
-                unsafe: false,
-            },
-        })
-    ] : []
+    optimization: {
+        minimize: isProduction
+    }
 };
 
 console.log('Packing file: ' + path.resolve(distPath, filename));

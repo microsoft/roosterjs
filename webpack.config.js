@@ -14,10 +14,12 @@ module.exports = {
             './node_modules'
         ]
     },
+    mode: 'development',
     module: {
-        loaders: [
-            { test: /\.ts$/, loader: 'ts-loader' }
-        ]
+        rules: [{
+            test: /\.ts$/,
+            loader: 'ts-loader'
+        }]
     },
     watch: true,
     stats: "minimal",
