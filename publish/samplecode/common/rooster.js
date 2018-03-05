@@ -2300,10 +2300,6 @@ function getFormatState(editor, event) {
     if (!nodeAtCursor) {
         return null;
     }
-    nodeAtCursor =
-        nodeAtCursor && nodeAtCursor.nodeType == 3 /* Text */
-            ? nodeAtCursor.parentNode
-            : nodeAtCursor;
     var styles = roosterjs_editor_dom_1.getComputedStyle(nodeAtCursor);
     var listState = cacheGetListState_1.default(editor, event);
     var headerLevel = cacheGetHeaderLevel_1.default(editor, event);

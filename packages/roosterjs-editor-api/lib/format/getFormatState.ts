@@ -1,5 +1,5 @@
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
-import { FormatState, ListState, NodeType, PluginEvent } from 'roosterjs-editor-types';
+import { FormatState, ListState, PluginEvent } from 'roosterjs-editor-types';
 import { getComputedStyle } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 import cacheGetListState from './cacheGetListState';
