@@ -8,13 +8,7 @@ import {
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-import {
-    VTable,
-    contains,
-    getTagOfNode,
-    isNodeEmpty,
-    splitParentNode
-} from 'roosterjs-editor-dom';
+import { VTable, contains, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     Indentation,
@@ -107,10 +101,10 @@ export default class ContentEdit implements EditorPlugin {
             let range = this.editor.getDocument().createRange();
             for (
                 let td = this.cacheGetTd(event),
-                vtable = new VTable(td),
-                step = keyboardEvent.shiftKey ? -1 : 1,
-                row = vtable.row,
-                col = vtable.col + step;
+                    vtable = new VTable(td),
+                    step = keyboardEvent.shiftKey ? -1 : 1,
+                    row = vtable.row,
+                    col = vtable.col + step;
                 ;
                 col += step
             ) {
@@ -200,10 +194,12 @@ export default class ContentEdit implements EditorPlugin {
 
     private isTabInTable(event: PluginEvent): boolean {
         let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
-        return this.features.tabInTable &&
+        return (
+            this.features.tabInTable &&
             event.eventType == PluginEventType.KeyDown &&
             keyboardEvent.which == KEY_TAB &&
-            !!this.cacheGetTd(event);
+            !!this.cacheGetTd(event)
+        );
     }
 
     private cacheGetTd(event: PluginEvent): HTMLTableCellElement {

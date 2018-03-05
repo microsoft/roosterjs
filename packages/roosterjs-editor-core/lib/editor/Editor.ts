@@ -114,8 +114,7 @@ export default class Editor {
         try {
             this.core.document.execCommand('enableObjectResizing', false, false);
             this.core.document.execCommand('enableInlineTableEditing', false, false);
-        } catch (e) {
-        }
+        } catch (e) {}
     }
 
     /**

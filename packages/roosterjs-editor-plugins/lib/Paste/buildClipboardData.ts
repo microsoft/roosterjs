@@ -1,12 +1,8 @@
 import { ClipboardData, ContentPosition, DefaultFormat } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { convertInlineCss, fromHtml } from 'roosterjs-editor-dom';
+import { fromHtml } from 'roosterjs-editor-dom';
 import { getFormatState } from 'roosterjs-editor-api';
 
-const INLINE_POSITION_STYLE = /(<\w+[^>]*style=['"][^>]*)position:[^>;'"]*/gi;
-const TEXT_WITH_BR_ONLY = /^[^<]*(<br>[^<]*)+$/i;
-const COMMENT = /<!--([\s\S]*?)-->/gi;
-const HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
 const CONTAINER_HTML =
     '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
 
@@ -25,7 +21,7 @@ export default function buildClipboardData(
     event: ClipboardEvent,
     editor: Editor,
     callback: (clipboardData: ClipboardData) => void,
-    unsafeHtmlFilter?: (html: string) => string
+    useDirectPaste?: boolean
 ) {
     let dataTransfer =
         event.clipboardData || (<WindowForIE>editor.getDocument().defaultView).clipboardData;
@@ -38,31 +34,30 @@ export default function buildClipboardData(
     };
 
     let retrieveHtmlCallback = (html: string) => {
-        let matches = HTML_REGEX.exec(html);
-        html = matches ? matches[0] : html;
-        html = unsafeHtmlFilter ? unsafeHtmlFilter(html) : html;
-        html = convertInlineCss(html);
-        html = normalizeContent(html);
         clipboardData.html = html;
         callback(clipboardData);
     };
 
-    if (!unsafeHtmlFilter || !directRetrieveHtml(event, retrieveHtmlCallback)) {
+    if (useDirectPaste && event.clipboardData && event.clipboardData.items) {
+        directRetrieveHtml(event, retrieveHtmlCallback);
+    } else {
         retrieveHtmlViaTempDiv(editor, retrieveHtmlCallback);
     }
 }
 
 function getCurrentFormat(editor: Editor): DefaultFormat {
     let format = getFormatState(editor);
-    return format ? {
-        fontFamily: format.fontName,
-        fontSize: format.fontSize,
-        textColor: format.textColor,
-        backgroundColor: format.backgroundColor,
-        bold: format.isBold,
-        italic: format.isItalic,
-        underline: format.isUnderline,
-    } : {};
+    return format
+        ? {
+              fontFamily: format.fontName,
+              fontSize: format.fontSize,
+              textColor: format.textColor,
+              backgroundColor: format.backgroundColor,
+              bold: format.isBold,
+              italic: format.isItalic,
+              underline: format.isUnderline,
+          }
+        : {};
 }
 
 function getImage(dataTransfer: DataTransfer): File {
@@ -85,19 +80,17 @@ function getImage(dataTransfer: DataTransfer): File {
     return null;
 }
 
-function directRetrieveHtml(event: ClipboardEvent, callback: (html: string) => void): boolean {
-    let clipboardData = event.clipboardData;
-    let fileCount = clipboardData && clipboardData.items ? clipboardData.items.length : 0;
-    for (let i = 0; i < fileCount; i++) {
-        let item = clipboardData.items[i];
+function directRetrieveHtml(event: ClipboardEvent, callback: (html: string) => void) {
+    event.preventDefault();
+    let items = event.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+        let item = items[i];
         if (item.type && item.type.indexOf('text/html') == 0) {
-            event.preventDefault();
             item.getAsString(callback);
-            return true;
+            return;
         }
     }
-
-    return false;
+    callback(null);
 }
 
 function retrieveHtmlViaTempDiv(editor: Editor, callback: (html: string) => void) {
@@ -136,17 +129,4 @@ function getTempDivForPaste(editor: Editor): HTMLElement {
     );
     tempDiv.style.display = '';
     return tempDiv;
-}
-
-function normalizeContent(content: string): string {
-    // Remove 'position' style from source HTML
-    content = content.replace(INLINE_POSITION_STYLE, '$1');
-    content = content.replace(COMMENT, '');
-
-    // Replace <BR> with <DIV>
-    if (TEXT_WITH_BR_ONLY.test(content)) {
-        content = '<div>' + content.replace(/<br>/gi, '</div><div>') + '<br></div>';
-    }
-
-    return content;
 }

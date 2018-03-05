@@ -14,7 +14,7 @@ const ZERO_WIDTH_SPACE = '&#8203;';
 export function workaroundForEdge(editor: Editor): HTMLElement {
     if (browserData.isEdge) {
         let node = getNodeAtCursor(editor) as Element;
-        if (node.nodeType == NodeType.Element && node.textContent == '') {
+        if (node && node.nodeType == NodeType.Element && node.textContent == '') {
             let span = editor.getDocument().createElement('span');
             node.insertBefore(span, node.firstChild);
             span.innerHTML = ZERO_WIDTH_SPACE;

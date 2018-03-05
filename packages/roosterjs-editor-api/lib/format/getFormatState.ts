@@ -1,6 +1,5 @@
-import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import { FormatState, ListState, NodeType, PluginEvent } from 'roosterjs-editor-types';
-import { getComputedStyle } from 'roosterjs-editor-dom';
+import { getComputedStyle, normalizeEditorPoint } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 import cacheGetListState from './cacheGetListState';
 import cacheGetHeaderLevel from './cacheGetHeaderLevel';
@@ -59,10 +58,15 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
     // TODO: for BIU etc., we're using queryCommandState. Reason is users may do a Bold without first selecting anything
     // in that case, the change is not DOM and querying DOM won't give us anything. queryCommandState can read into browser
     // to figure out the state. It can be discussed if there is a better way since it has been seen that queryCommandState may throw error
-    let nodeAtCursor = getNodeAtCursor(editor);
+    let range = editor.getSelectionRange();
+    let nodeAtCursor = range ? normalizeEditorPoint(range.startContainer, range.startOffset).containerNode : null;
 
     if (!nodeAtCursor) {
         return null;
+    }
+
+    if (nodeAtCursor.nodeType == NodeType.Text) {
+        nodeAtCursor = nodeAtCursor.parentNode;
     }
 
     let listState = cacheGetListState(editor, event);

@@ -573,9 +573,19 @@ export function changeElementTag(element: HTMLElement, newTag: string, range?: R
 export function contains(container: Node, contained: Node): boolean;
 
 /**
- * Convert CSS from header or external, to inline CSS
+ * @deprecated Use sanitizeHtml() instead
  */
 export function convertInlineCss(sourceHtml: string, additionalStyleNodes?: HTMLStyleElement[]): string;
+
+/**
+ * Sanitize HTML string
+ * This function will do the following work:
+ * 1. Convert global CSS into inline CSS
+ * 2. Remove dangerous HTML tags and attributes
+ * 3. Remove useless CSS properties
+ * @param html The input HTML
+ */
+export function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean): string;
 
 export function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[];
 
@@ -1508,7 +1518,7 @@ export class Paste implements EditorPlugin {
      * Paste into editor using passed in clipboardData with original format
      * @param clipboardData The clipboardData to paste
      */
-    pasteOriginal: (clipboardData: ClipboardData) => void;
+    pasteOriginal(clipboardData: ClipboardData): void;
     /**
      * Paste plain text into editor using passed in clipboardData
      * @param clipboardData The clipboardData to paste
@@ -1523,7 +1533,6 @@ export class Paste implements EditorPlugin {
     private paste(clipboardData, pasteOption, mergeCurrentFormat?);
     private internalPaste(event);
     private applyTextFormat(node, format);
-    private documentFragmentToHtml(fragment);
 }
 
 /**

@@ -3,7 +3,11 @@ import getTagOfNode from './getTagOfNode';
 import normalizeEditorPoint from './normalizeEditorPoint';
 import { EditorPoint } from 'roosterjs-editor-types';
 
-export default function changeElementTag(element: HTMLElement, newTag: string, range?: Range): HTMLElement {
+export default function changeElementTag(
+    element: HTMLElement,
+    newTag: string,
+    range?: Range
+): HTMLElement {
     let start: EditorPoint;
     let end: EditorPoint;
 
@@ -36,8 +40,7 @@ export default function changeElementTag(element: HTMLElement, newTag: string, r
         try {
             range.setStart(start.containerNode, start.offset);
             range.setEnd(end.containerNode, end.offset);
-        } catch (e) {
-        }
+        } catch (e) {}
     }
 
     return newElement;

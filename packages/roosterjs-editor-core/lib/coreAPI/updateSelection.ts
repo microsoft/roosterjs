@@ -11,8 +11,7 @@ export default function updateSelection(core: EditorCore, range: Range): boolean
             // Workaround IE exception 800a025e
             try {
                 selection.removeAllRanges();
-            } catch (e) {
-            }
+            } catch (e) {}
 
             selection.addRange(range);
             if (!hasFocus(core)) {

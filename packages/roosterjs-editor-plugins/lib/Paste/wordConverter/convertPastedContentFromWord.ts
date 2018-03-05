@@ -3,7 +3,7 @@ import { createWordConverterArguments } from './WordConverterArguments';
 import { processNodesDiscovery, processNodeConvert } from './converterUtils';
 
 /** Converts all the Word generated list items in the specified node into standard HTML UL and OL tags */
-export default function convertPastedContentFromWord(root: NodeSelector): boolean {
+export default function convertPastedContentFromWord(root: NodeSelector) {
     let wordConverter = createWordConverter();
 
     // First find all the nodes that we need to check for list item information
@@ -14,9 +14,6 @@ export default function convertPastedContentFromWord(root: NodeSelector): boolea
         wordConverter.wordConverterArgs = createWordConverterArguments(elements);
         if (processNodesDiscovery(wordConverter)) {
             processNodeConvert(wordConverter);
-            return true;
         }
     }
-
-    return false;
 }
