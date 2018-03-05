@@ -28,10 +28,6 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
         return null;
     }
 
-    nodeAtCursor =
-        nodeAtCursor && nodeAtCursor.nodeType == NodeType.Text
-            ? nodeAtCursor.parentNode
-            : nodeAtCursor;
     let styles = getComputedStyle(nodeAtCursor);
 
     let listState = cacheGetListState(editor, event);
