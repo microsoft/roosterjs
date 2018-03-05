@@ -6926,11 +6926,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @returns HTML string to present the input text
  */
 function textToHtml(text) {
-    text = (text || '').replace(/</g, '&lt;');
+    text = text || '';
+    text = text.replace(/&/g, '&amp;');
+    text = text.replace(/</g, '&lt;');
     text = text.replace(/>/g, '&gt;');
-    text = text.replace(/(\n|\r\n)/g, '<br></div><div>');
+    text = text.replace(/'/g, '&#39;');
+    text = text.replace(/"/g, '&quot;');
+    text = text.replace(/(\n|\r\n)/g, '<br>');
     text = text.replace(/\s/g, '&nbsp;');
-    text = "<div>" + text + "<br></div>";
     return text;
 }
 exports.default = textToHtml;
@@ -7098,7 +7101,7 @@ function convertInlineCss(sourceHtml, additionalStyleNodes) {
                 }
                 // Make sure the selector is not empty
                 var selectors = styleRule.selectorText ? styleRule.selectorText.split(',') : null;
-                for (var _i = 0, _a = selectors || []; _i < _a.length; _i++) {
+                for (var _i = 0, _a = (selectors || []); _i < _a.length; _i++) {
                     var selector = _a[_i];
                     if (!selector || !selector.trim() || selector.match(PSEUDOSELECTOR_REGEX)) {
                         continue;

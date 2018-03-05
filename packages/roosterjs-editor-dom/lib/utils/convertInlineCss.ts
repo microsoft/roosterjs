@@ -77,7 +77,7 @@ export default function convertInlineCss(
                 }
                 // Make sure the selector is not empty
                 let selectors = styleRule.selectorText ? styleRule.selectorText.split(',') : null;
-                for (let selector of selectors || []) {
+                for (let selector of (selectors || [])) {
                     if (!selector || !selector.trim() || selector.match(PSEUDOSELECTOR_REGEX)) {
                         continue;
                     }
