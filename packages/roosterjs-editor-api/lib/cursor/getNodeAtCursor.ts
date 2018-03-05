@@ -47,10 +47,3 @@ export function cacheGetNodeAtCursor(
         getNodeAtCursor(editor, expectedTag)
     );
 }
-
-/**
- * @deprecated Use cacheGetNodeAtCursor instead
- */
-export function cacheGetListElement(editor: Editor, event?: PluginEvent): Node {
-    return cacheGetNodeAtCursor(editor, event, 'LI');
-}

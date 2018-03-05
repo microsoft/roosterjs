@@ -34,7 +34,7 @@ export { default as SelectionScoper } from './scopers/SelectionScoper';
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
 export { default as contains } from './utils/contains';
-export { default as convertInlineCss } from './utils/convertInlineCss';
+export { default as sanitizeHtml } from './utils/sanitizeHtml';
 export { default as fromHtml } from './utils/fromHtml';
 export { default as getComputedStyle } from './utils/getComputedStyle';
 export { default as getTagOfNode } from './utils/getTagOfNode';
