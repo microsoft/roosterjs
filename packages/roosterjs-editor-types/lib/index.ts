@@ -25,4 +25,3 @@ export { default as TraversingScoper } from './editor/TraversingScoper';
 export { default as ClipboardData } from './clipboard/ClipboardData';
 export { default as BeforePasteEvent } from './clipboard/BeforePasteEvent';
 export { default as PasteOption } from './clipboard/PasteOption';
-export { default as SanitizeHtmlPropertyCallback } from './types/SanitizeHtmlPropertyCallback';

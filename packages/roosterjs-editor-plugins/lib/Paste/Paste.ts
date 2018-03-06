@@ -7,9 +7,9 @@ import {
     PasteOption,
     PluginEvent,
     PluginEventType,
-    SanitizeHtmlPropertyCallback,
 } from 'roosterjs-editor-types';
 import {
+    SanitizeHtmlPropertyCallback,
     applyFormat,
     fromHtml,
     getFirstLeafNode,

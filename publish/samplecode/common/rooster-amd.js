@@ -3135,7 +3135,7 @@ function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propert
         if (element.hasAttribute('style')) {
             removeUnusedCss(element, thisStyle);
         }
-        removeDangerousAttributes(element, callbackPropertyNames, propertyCallbacks);
+        removeDisallowedAttributes(element, callbackPropertyNames, propertyCallbacks);
         var child = element.firstChild;
         var next = void 0;
         for (; child; child = next) {
@@ -3185,15 +3185,21 @@ function isDangerousCss(name, value) {
     }
     return false;
 }
-function removeDangerousAttributes(element, callbackPropertyNames, propertyCallbacks) {
+function removeDisallowedAttributes(element, callbackPropertyNames, propertyCallbacks) {
     for (var i = element.attributes.length - 1; i >= 0; i--) {
         var attribute = element.attributes[i];
         var name_2 = attribute.name.toLowerCase().trim();
-        var value = attribute.value.toLowerCase().trim();
+        var value = attribute.value.trim();
         if (callbackPropertyNames.indexOf(name_2) >= 0) {
-            attribute.value = propertyCallbacks[name_2](value);
+            value = propertyCallbacks[name_2](value);
+            if (value != null) {
+                attribute.value = value;
+            }
+            else {
+                element.removeAttribute(name_2);
+            }
         }
-        else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name_2) < 0 || value.indexOf('script:') >= 0) {
+        else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name_2) < 0 || value.toLowerCase().indexOf('script:') >= 0) {
             element.removeAttribute(attribute.name);
         }
     }
@@ -7837,6 +7843,7 @@ function buildClipboardData(event, editor, callback, useDirectPaste) {
         retrieveHtmlViaTempDiv(editor, function (html) {
             clipboardData.html = html;
             clipboardData.isHtmlFromTempDiv = true;
+            callback(clipboardData);
         });
     }
 }

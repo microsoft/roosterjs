@@ -368,10 +368,6 @@ declare namespace roosterjs {
         PasteImage = 2,
     }
 
-    type SanitizeHtmlPropertyCallback = {
-        [name: string]: (value: string) => string;
-    };
-
     class NodeBlockElement implements BlockElement {
         private containerNode;
         private inlineElementFactory;
@@ -595,6 +591,10 @@ declare namespace roosterjs {
      * @param propertyCallbacks A callback function map to handle HTML properties
      */
     function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback): string;
+
+    type SanitizeHtmlPropertyCallback = {
+        [name: string]: (value: string) => string;
+    };
 
     function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[];
 

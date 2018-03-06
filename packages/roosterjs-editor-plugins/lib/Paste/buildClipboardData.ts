@@ -42,6 +42,7 @@ export default function buildClipboardData(
         retrieveHtmlViaTempDiv(editor, html => {
             clipboardData.html = html;
             clipboardData.isHtmlFromTempDiv = true;
+            callback(clipboardData);
         });
     }
 }

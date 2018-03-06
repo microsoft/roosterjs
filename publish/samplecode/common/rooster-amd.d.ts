@@ -367,10 +367,6 @@ export const enum PasteOption {
     PasteImage = 2,
 }
 
-export type SanitizeHtmlPropertyCallback = {
-    [name: string]: (value: string) => string;
-};
-
 export class NodeBlockElement implements BlockElement {
     private containerNode;
     private inlineElementFactory;
@@ -594,6 +590,10 @@ export function convertInlineCss(sourceHtml: string, additionalStyleNodes?: HTML
  * @param propertyCallbacks A callback function map to handle HTML properties
  */
 export function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback): string;
+
+export type SanitizeHtmlPropertyCallback = {
+    [name: string]: (value: string) => string;
+};
 
 export function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[];
 

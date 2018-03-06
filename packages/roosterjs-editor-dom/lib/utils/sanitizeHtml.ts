@@ -1,8 +1,9 @@
-import { NodeType, SanitizeHtmlPropertyCallback } from 'roosterjs-editor-types';
+import { NodeType } from 'roosterjs-editor-types';
 import getTagOfNode from './getTagOfNode';
 
 const HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
 
+export type SanitizeHtmlPropertyCallback = { [name: string]: (value: string) => string };
 
 /**
  * Sanitize HTML string
@@ -322,7 +323,7 @@ function removeUnusedCssAndDangerousContent(
             removeUnusedCss(element, thisStyle);
         }
 
-        removeDangerousAttributes(element, callbackPropertyNames, propertyCallbacks);
+        removeDisallowedAttributes(element, callbackPropertyNames, propertyCallbacks);
 
         let child = element.firstChild;
         let next: Node;
@@ -382,7 +383,7 @@ function isDangerousCss(name: string, value: string) {
     return false;
 }
 
-function removeDangerousAttributes(
+function removeDisallowedAttributes(
     element: HTMLElement,
     callbackPropertyNames: string[],
     propertyCallbacks: SanitizeHtmlPropertyCallback
@@ -390,15 +391,15 @@ function removeDangerousAttributes(
     for (let i = element.attributes.length - 1; i >= 0; i--) {
         let attribute = element.attributes[i];
         let name = attribute.name.toLowerCase().trim();
-        let value = attribute.value.toLowerCase().trim();
+        let value = attribute.value.trim();
         if (callbackPropertyNames.indexOf(name) >= 0) {
             value = propertyCallbacks[name](value);
-            if (value) {
+            if (value != null) {
                 attribute.value = value;
             } else {
                 element.removeAttribute(name);
             }
-        } else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name) < 0 || value.indexOf('script:') >= 0) {
+        } else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name) < 0 || value.toLowerCase().indexOf('script:') >= 0) {
             element.removeAttribute(attribute.name);
         }
     }
