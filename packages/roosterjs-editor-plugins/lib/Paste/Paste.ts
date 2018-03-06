@@ -7,6 +7,7 @@ import {
     PasteOption,
     PluginEvent,
     PluginEventType,
+    SanitizeHtmlPropertyCallback,
 } from 'roosterjs-editor-types';
 import {
     applyFormat,
@@ -36,7 +37,10 @@ export default class Paste implements EditorPlugin {
      * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
      * this parameter if you don't have other XSS detecting logic outside the edtior.
      */
-    constructor(private useDirectPaste?: boolean) {}
+    constructor(
+        private useDirectPaste?: boolean,
+        private htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback
+    ) {}
 
     public initialize(editor: Editor) {
         this.editor = editor;
@@ -68,7 +72,14 @@ export default class Paste implements EditorPlugin {
                 if (!clipboardData.html && clipboardData.text) {
                     clipboardData.html = textToHtml(clipboardData.text);
                 }
-                clipboardData.html = sanitizeHtml(clipboardData.html);
+                if (!clipboardData.isHtmlFromTempDiv) {
+                    clipboardData.html = sanitizeHtml(
+                        clipboardData.html,
+                        null /*additionalStyleNodes*/,
+                        false /*convertInlineCssOnly*/,
+                        this.htmlPropertyCallbacks
+                    );
+                }
                 this.pasteOriginal(clipboardData);
             },
             this.useDirectPaste

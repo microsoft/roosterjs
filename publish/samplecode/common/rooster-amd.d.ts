@@ -340,6 +340,7 @@ export interface ClipboardData {
     image: File;
     text: string;
     html: string;
+    isHtmlFromTempDiv?: boolean;
 }
 
 export interface BeforePasteEvent extends PluginEvent {
@@ -365,6 +366,10 @@ export const enum PasteOption {
      */
     PasteImage = 2,
 }
+
+export type SanitizeHtmlPropertyCallback = {
+    [name: string]: (value: string) => string;
+};
 
 export class NodeBlockElement implements BlockElement {
     private containerNode;
@@ -584,8 +589,11 @@ export function convertInlineCss(sourceHtml: string, additionalStyleNodes?: HTML
  * 2. Remove dangerous HTML tags and attributes
  * 3. Remove useless CSS properties
  * @param html The input HTML
+ * @param additionalStyleNodes additional style nodes for inline css converting
+ * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
+ * @param propertyCallbacks A callback function map to handle HTML properties
  */
-export function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean): string;
+export function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback): string;
 
 export function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[];
 
@@ -1499,6 +1507,7 @@ export class ContentEdit implements EditorPlugin {
  */
 export class Paste implements EditorPlugin {
     private useDirectPaste;
+    private htmlPropertyCallbacks;
     private editor;
     private pasteDisposer;
     /**
@@ -1509,7 +1518,7 @@ export class Paste implements EditorPlugin {
      * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
      * this parameter if you don't have other XSS detecting logic outside the edtior.
      */
-    constructor(useDirectPaste?: boolean);
+    constructor(useDirectPaste?: boolean, htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback);
     initialize(editor: Editor): void;
     dispose(): void;
     onPluginEvent(event: PluginEvent): void;

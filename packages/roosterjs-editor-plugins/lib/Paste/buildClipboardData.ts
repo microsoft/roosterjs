@@ -33,15 +33,16 @@ export default function buildClipboardData(
         html: null,
     };
 
-    let retrieveHtmlCallback = (html: string) => {
-        clipboardData.html = html;
-        callback(clipboardData);
-    };
-
     if (useDirectPaste && event.clipboardData && event.clipboardData.items) {
-        directRetrieveHtml(event, retrieveHtmlCallback);
+        directRetrieveHtml(event, html => {
+            clipboardData.html = html;
+            callback(clipboardData);
+        });
     } else {
-        retrieveHtmlViaTempDiv(editor, retrieveHtmlCallback);
+        retrieveHtmlViaTempDiv(editor, html => {
+            clipboardData.html = html;
+            clipboardData.isHtmlFromTempDiv = true;
+        });
     }
 }
 

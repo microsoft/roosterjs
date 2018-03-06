@@ -2843,8 +2843,11 @@ var HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
  * 2. Remove dangerous HTML tags and attributes
  * 3. Remove useless CSS properties
  * @param html The input HTML
+ * @param additionalStyleNodes additional style nodes for inline css converting
+ * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
+ * @param propertyCallbacks A callback function map to handle HTML properties
  */
-function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly) {
+function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, propertyCallbacks) {
     var parser = new DOMParser();
     var matches = HTML_REGEX.exec(html);
     html = matches ? matches[0] : html;
@@ -2860,7 +2863,8 @@ function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly) {
     applyInlineStyle(doc, additionalStyleNodes);
     // 2, 3: Remove dangerous HTML tags and attributes, remove useless CSS properties
     if (!convertInlineCssOnly) {
-        removeUnusedCssAndDangerousContent(doc.body);
+        var callbackPropertyNames = (propertyCallbacks ? Object.keys(propertyCallbacks) : []).map(function (name) { return name.toLowerCase(); });
+        removeUnusedCssAndDangerousContent(doc.body, callbackPropertyNames, propertyCallbacks);
     }
     return doc.body.innerHTML;
 }
@@ -2961,6 +2965,7 @@ var ALLOWED_HTML_TAGS = [
     'U',
     'VAR',
     'WBR',
+    'XMP',
     'INPUT',
     'TEXTAREA',
     'BUTTON',
@@ -3020,7 +3025,6 @@ var ALLOWED_HTML_ATTRIBUTES = [
     'alt',
     'checked',
     'cite',
-    'class',
     'cols',
     'colspan',
     'contextmenu',
@@ -3116,7 +3120,7 @@ function applyInlineStyle(doc, additionalStyleNodes) {
         }
     }
 }
-function removeUnusedCssAndDangerousContent(node, currentStyle) {
+function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propertyCallbacks, currentStyle) {
     if (currentStyle === void 0) { currentStyle = {}; }
     var thisStyle = Object.assign ? Object.assign({}, currentStyle) : {};
     var nodeType = node.nodeType;
@@ -3131,12 +3135,12 @@ function removeUnusedCssAndDangerousContent(node, currentStyle) {
         if (element.hasAttribute('style')) {
             removeUnusedCss(element, thisStyle);
         }
-        removeDangerousAttributes(element);
+        removeDangerousAttributes(element, callbackPropertyNames, propertyCallbacks);
         var child = element.firstChild;
         var next = void 0;
         for (; child; child = next) {
             next = child.nextSibling;
-            removeUnusedCssAndDangerousContent(child, thisStyle);
+            removeUnusedCssAndDangerousContent(child, callbackPropertyNames, propertyCallbacks, thisStyle);
         }
     }
 }
@@ -3181,12 +3185,15 @@ function isDangerousCss(name, value) {
     }
     return false;
 }
-function removeDangerousAttributes(element) {
+function removeDangerousAttributes(element, callbackPropertyNames, propertyCallbacks) {
     for (var i = element.attributes.length - 1; i >= 0; i--) {
         var attribute = element.attributes[i];
         var name_2 = attribute.name.toLowerCase().trim();
         var value = attribute.value.toLowerCase().trim();
-        if (ALLOWED_HTML_ATTRIBUTES.indexOf(name_2) < 0 || value.indexOf('script:') >= 0) {
+        if (callbackPropertyNames.indexOf(name_2) >= 0) {
+            attribute.value = propertyCallbacks[name_2](value);
+        }
+        else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name_2) < 0 || value.indexOf('script:') >= 0) {
             element.removeAttribute(attribute.name);
         }
     }
@@ -3657,7 +3664,9 @@ function getFormatState(editor, event) {
     // in that case, the change is not DOM and querying DOM won't give us anything. queryCommandState can read into browser
     // to figure out the state. It can be discussed if there is a better way since it has been seen that queryCommandState may throw error
     var range = editor.getSelectionRange();
-    var nodeAtCursor = range ? roosterjs_editor_dom_1.normalizeEditorPoint(range.startContainer, range.startOffset).containerNode : null;
+    var nodeAtCursor = range
+        ? roosterjs_editor_dom_1.normalizeEditorPoint(range.startContainer, range.startOffset).containerNode
+        : null;
     if (!nodeAtCursor) {
         return null;
     }
@@ -7664,16 +7673,19 @@ var Paste = /** @class */ (function () {
      * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
      * this parameter if you don't have other XSS detecting logic outside the edtior.
      */
-    function Paste(useDirectPaste) {
+    function Paste(useDirectPaste, htmlPropertyCallbacks) {
         var _this = this;
         this.useDirectPaste = useDirectPaste;
+        this.htmlPropertyCallbacks = htmlPropertyCallbacks;
         this.onPaste = function (event) {
             _this.editor.addUndoSnapshot();
             buildClipboardData_1.default(event, _this.editor, function (clipboardData) {
                 if (!clipboardData.html && clipboardData.text) {
                     clipboardData.html = roosterjs_editor_dom_1.textToHtml(clipboardData.text);
                 }
-                clipboardData.html = roosterjs_editor_dom_1.sanitizeHtml(clipboardData.html);
+                if (!clipboardData.isHtmlFromTempDiv) {
+                    clipboardData.html = roosterjs_editor_dom_1.sanitizeHtml(clipboardData.html, null /*additionalStyleNodes*/, false /*convertInlineCssOnly*/, _this.htmlPropertyCallbacks);
+                }
                 _this.pasteOriginal(clipboardData);
             }, _this.useDirectPaste);
         };
@@ -7815,15 +7827,17 @@ function buildClipboardData(event, editor, callback, useDirectPaste) {
         text: dataTransfer.getData('text'),
         html: null,
     };
-    var retrieveHtmlCallback = function (html) {
-        clipboardData.html = html;
-        callback(clipboardData);
-    };
     if (useDirectPaste && event.clipboardData && event.clipboardData.items) {
-        directRetrieveHtml(event, retrieveHtmlCallback);
+        directRetrieveHtml(event, function (html) {
+            clipboardData.html = html;
+            callback(clipboardData);
+        });
     }
     else {
-        retrieveHtmlViaTempDiv(editor, retrieveHtmlCallback);
+        retrieveHtmlViaTempDiv(editor, function (html) {
+            clipboardData.html = html;
+            clipboardData.isHtmlFromTempDiv = true;
+        });
     }
 }
 exports.default = buildClipboardData;

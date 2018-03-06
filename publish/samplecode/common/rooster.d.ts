@@ -341,6 +341,7 @@ declare namespace roosterjs {
         image: File;
         text: string;
         html: string;
+        isHtmlFromTempDiv?: boolean;
     }
 
     interface BeforePasteEvent extends PluginEvent {
@@ -366,6 +367,10 @@ declare namespace roosterjs {
          */
         PasteImage = 2,
     }
+
+    type SanitizeHtmlPropertyCallback = {
+        [name: string]: (value: string) => string;
+    };
 
     class NodeBlockElement implements BlockElement {
         private containerNode;
@@ -585,8 +590,11 @@ declare namespace roosterjs {
      * 2. Remove dangerous HTML tags and attributes
      * 3. Remove useless CSS properties
      * @param html The input HTML
+     * @param additionalStyleNodes additional style nodes for inline css converting
+     * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
+     * @param propertyCallbacks A callback function map to handle HTML properties
      */
-    function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean): string;
+    function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback): string;
 
     function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[];
 
@@ -1500,6 +1508,7 @@ declare namespace roosterjs {
      */
     class Paste implements EditorPlugin {
         private useDirectPaste;
+        private htmlPropertyCallbacks;
         private editor;
         private pasteDisposer;
         /**
@@ -1510,7 +1519,7 @@ declare namespace roosterjs {
          * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
          * this parameter if you don't have other XSS detecting logic outside the edtior.
          */
-        constructor(useDirectPaste?: boolean);
+        constructor(useDirectPaste?: boolean, htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback);
         initialize(editor: Editor): void;
         dispose(): void;
         onPluginEvent(event: PluginEvent): void;

@@ -1,7 +1,8 @@
-import { NodeType } from 'roosterjs-editor-types';
+import { NodeType, SanitizeHtmlPropertyCallback } from 'roosterjs-editor-types';
 import getTagOfNode from './getTagOfNode';
 
 const HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
+
 
 /**
  * Sanitize HTML string
@@ -10,11 +11,15 @@ const HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
  * 2. Remove dangerous HTML tags and attributes
  * 3. Remove useless CSS properties
  * @param html The input HTML
+ * @param additionalStyleNodes additional style nodes for inline css converting
+ * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
+ * @param propertyCallbacks A callback function map to handle HTML properties
  */
 export default function sanitizeHtml(
     html: string,
     additionalStyleNodes?: HTMLStyleElement[],
-    convertInlineCssOnly?: boolean
+    convertInlineCssOnly?: boolean,
+    propertyCallbacks?: SanitizeHtmlPropertyCallback
 ): string {
     let parser = new DOMParser();
     let matches = HTML_REGEX.exec(html);
@@ -36,7 +41,10 @@ export default function sanitizeHtml(
 
     // 2, 3: Remove dangerous HTML tags and attributes, remove useless CSS properties
     if (!convertInlineCssOnly) {
-        removeUnusedCssAndDangerousContent(doc.body);
+        let callbackPropertyNames = (propertyCallbacks ? Object.keys(propertyCallbacks) : []).map(
+            name => name.toLowerCase()
+        );
+        removeUnusedCssAndDangerousContent(doc.body, callbackPropertyNames, propertyCallbacks);
     }
 
     return doc.body.innerHTML;
@@ -200,7 +208,6 @@ const ALLOWED_HTML_ATTRIBUTES = [
     'alt',
     'checked',
     'cite',
-    'class',
     'cols',
     'colspan',
     'contextmenu',
@@ -295,6 +302,8 @@ function applyInlineStyle(doc: Document, additionalStyleNodes: HTMLStyleElement[
 
 function removeUnusedCssAndDangerousContent(
     node: Node,
+    callbackPropertyNames: string[],
+    propertyCallbacks: SanitizeHtmlPropertyCallback,
     currentStyle: { [name: string]: string } = {}
 ) {
     let thisStyle = Object.assign ? Object.assign({}, currentStyle) : {};
@@ -313,13 +322,18 @@ function removeUnusedCssAndDangerousContent(
             removeUnusedCss(element, thisStyle);
         }
 
-        removeDangerousAttributes(element);
+        removeDangerousAttributes(element, callbackPropertyNames, propertyCallbacks);
 
         let child = element.firstChild;
         let next: Node;
         for (; child; child = next) {
             next = child.nextSibling;
-            removeUnusedCssAndDangerousContent(child, thisStyle);
+            removeUnusedCssAndDangerousContent(
+                child,
+                callbackPropertyNames,
+                propertyCallbacks,
+                thisStyle
+            );
         }
     }
 }
@@ -368,12 +382,23 @@ function isDangerousCss(name: string, value: string) {
     return false;
 }
 
-function removeDangerousAttributes(element: HTMLElement) {
+function removeDangerousAttributes(
+    element: HTMLElement,
+    callbackPropertyNames: string[],
+    propertyCallbacks: SanitizeHtmlPropertyCallback
+) {
     for (let i = element.attributes.length - 1; i >= 0; i--) {
         let attribute = element.attributes[i];
         let name = attribute.name.toLowerCase().trim();
         let value = attribute.value.toLowerCase().trim();
-        if (ALLOWED_HTML_ATTRIBUTES.indexOf(name) < 0 || value.indexOf('script:') >= 0) {
+        if (callbackPropertyNames.indexOf(name) >= 0) {
+            value = propertyCallbacks[name](value);
+            if (value) {
+                attribute.value = value;
+            } else {
+                element.removeAttribute(name);
+            }
+        } else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name) < 0 || value.indexOf('script:') >= 0) {
             element.removeAttribute(attribute.name);
         }
     }

@@ -59,7 +59,9 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
     // in that case, the change is not DOM and querying DOM won't give us anything. queryCommandState can read into browser
     // to figure out the state. It can be discussed if there is a better way since it has been seen that queryCommandState may throw error
     let range = editor.getSelectionRange();
-    let nodeAtCursor = range ? normalizeEditorPoint(range.startContainer, range.startOffset).containerNode : null;
+    let nodeAtCursor = range
+        ? normalizeEditorPoint(range.startContainer, range.startOffset).containerNode
+        : null;
 
     if (!nodeAtCursor) {
         return null;

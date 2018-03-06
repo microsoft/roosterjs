@@ -6,6 +6,7 @@ interface ClipboardData {
     image: File;
     text: string;
     html: string;
+    isHtmlFromTempDiv?: boolean;
 }
 
 export default ClipboardData;

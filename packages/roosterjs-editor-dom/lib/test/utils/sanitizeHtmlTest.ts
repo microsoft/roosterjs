@@ -31,7 +31,7 @@ describe('sanitizeHtml', () => {
         );
         runTest(
             '<html><head><style>.a .b{color: red} .b:hover {color:blue}</style></head><body><div class=a>a<div class=b style="font-size:10px">test</div></div></body></html>',
-            '<div class="a">a<div class="b" style="color: red;font-size:10px">test</div></div>'
+            '<div>a<div style="color: red;font-size:10px">test</div></div>'
         );
     });
     it('Html contains script', () => {
