@@ -9,18 +9,18 @@ import {
     PluginEventType,
 } from 'roosterjs-editor-types';
 import {
+    SanitizeHtmlPropertyCallback,
     applyFormat,
     fromHtml,
     getFirstLeafNode,
     getNextLeafSibling,
+    sanitizeHtml,
     textToHtml,
 } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin, buildSnapshot, restoreSnapshot } from 'roosterjs-editor-core';
 import { insertImage } from 'roosterjs-editor-api';
 import buildClipboardData from './buildClipboardData';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
-import removeUnsafeTags from './removeUnsafeTags';
-import removeUselessCss from './removeUselessCss';
 
 /**
  * Paste plugin, handles onPaste event and paste content into editor
@@ -37,7 +37,10 @@ export default class Paste implements EditorPlugin {
      * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
      * this parameter if you don't have other XSS detecting logic outside the edtior.
      */
-    constructor(private useDirectPaste?: boolean) {}
+    constructor(
+        private useDirectPaste?: boolean,
+        private htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback
+    ) {}
 
     public initialize(editor: Editor) {
         this.editor = editor;
@@ -55,13 +58,7 @@ export default class Paste implements EditorPlugin {
             let beforePasteEvent = <BeforePasteEvent>event;
 
             if (beforePasteEvent.pasteOption == PasteOption.PasteHtml) {
-                let changed = convertPastedContentFromWord(beforePasteEvent.fragment);
-                changed = removeUselessCss(beforePasteEvent.fragment) || changed;
-                if (changed) {
-                    beforePasteEvent.clipboardData.html = this.documentFragmentToHtml(
-                        beforePasteEvent.fragment
-                    );
-                }
+                convertPastedContentFromWord(beforePasteEvent.fragment);
             }
         }
     }
@@ -70,8 +67,21 @@ export default class Paste implements EditorPlugin {
         buildClipboardData(
             <ClipboardEvent>event,
             this.editor,
-            this.pasteOriginal,
-            this.useDirectPaste ? removeUnsafeTags : null
+            clipboardData => {
+                if (!clipboardData.html && clipboardData.text) {
+                    clipboardData.html = textToHtml(clipboardData.text);
+                }
+                if (!clipboardData.isHtmlFromTempDiv) {
+                    clipboardData.html = sanitizeHtml(
+                        clipboardData.html,
+                        null /*additionalStyleNodes*/,
+                        false /*convertInlineCssOnly*/,
+                        this.htmlPropertyCallbacks
+                    );
+                }
+                this.pasteOriginal(clipboardData);
+            },
+            this.useDirectPaste
         );
     };
 
@@ -79,9 +89,9 @@ export default class Paste implements EditorPlugin {
      * Paste into editor using passed in clipboardData with original format
      * @param clipboardData The clipboardData to paste
      */
-    public pasteOriginal = (clipboardData: ClipboardData) => {
+    public pasteOriginal(clipboardData: ClipboardData) {
         this.paste(clipboardData, this.detectPasteOption(clipboardData));
-    };
+    }
 
     /**
      * Paste plain text into editor using passed in clipboardData
@@ -184,11 +194,5 @@ export default class Paste implements EditorPlugin {
         for (let parent of parents) {
             applyFormat(parent, format);
         }
-    }
-
-    private documentFragmentToHtml(fragment: DocumentFragment): string {
-        let span = this.editor.getDocument().createElement('span');
-        span.appendChild(fragment.cloneNode(true /*deep*/));
-        return span.innerHTML;
     }
 }

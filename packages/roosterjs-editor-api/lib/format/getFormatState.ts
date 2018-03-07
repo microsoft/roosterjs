@@ -1,5 +1,5 @@
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
-import { FormatState, ListState, NodeType, PluginEvent } from 'roosterjs-editor-types';
+import { FormatState, ListState, PluginEvent } from 'roosterjs-editor-types';
 import { getComputedStyle } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 import cacheGetListState from './cacheGetListState';
@@ -28,12 +28,7 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
         return null;
     }
 
-    nodeAtCursor =
-        nodeAtCursor && nodeAtCursor.nodeType == NodeType.Text
-            ? nodeAtCursor.parentNode
-            : nodeAtCursor;
     let styles = getComputedStyle(nodeAtCursor);
-
     let listState = cacheGetListState(editor, event);
     let headerLevel = cacheGetHeaderLevel(editor, event);
     return {

@@ -128,6 +128,7 @@ declare namespace roosterjs {
         image: File;
         text: string;
         html: string;
+        isHtmlFromTempDiv?: boolean;
     }
 
     /**
@@ -542,9 +543,26 @@ declare namespace roosterjs {
     function contains(container: Node, contained: Node, treatSameNodeAsContain?: boolean): boolean;
 
     /**
-     * Convert CSS from header or external, to inline CSS
+     * @deprecated Use sanitizeHtml() instead
      */
     function convertInlineCss(sourceHtml: string, additionalStyleNodes?: HTMLStyleElement[]): string;
+
+    /**
+     * Sanitize HTML string
+     * This function will do the following work:
+     * 1. Convert global CSS into inline CSS
+     * 2. Remove dangerous HTML tags and attributes
+     * 3. Remove useless CSS properties
+     * @param html The input HTML
+     * @param additionalStyleNodes additional style nodes for inline css converting
+     * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
+     * @param propertyCallbacks A callback function map to handle HTML properties
+     */
+    function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback): string;
+
+    type SanitizeHtmlPropertyCallback = {
+        [name: string]: (value: string) => string;
+    };
 
     function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[];
 
@@ -1509,6 +1527,7 @@ declare namespace roosterjs {
      */
     class Paste implements EditorPlugin {
         private useDirectPaste;
+        private htmlPropertyCallbacks;
         private editor;
         private pasteDisposer;
         /**
@@ -1519,7 +1538,7 @@ declare namespace roosterjs {
          * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
          * this parameter if you don't have other XSS detecting logic outside the edtior.
          */
-        constructor(useDirectPaste?: boolean);
+        constructor(useDirectPaste?: boolean, htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback);
         initialize(editor: Editor): void;
         dispose(): void;
         onPluginEvent(event: PluginEvent): void;
@@ -1528,7 +1547,7 @@ declare namespace roosterjs {
          * Paste into editor using passed in clipboardData with original format
          * @param clipboardData The clipboardData to paste
          */
-        pasteOriginal: (clipboardData: ClipboardData) => void;
+        pasteOriginal(clipboardData: ClipboardData): void;
         /**
          * Paste plain text into editor using passed in clipboardData
          * @param clipboardData The clipboardData to paste
@@ -1543,7 +1562,6 @@ declare namespace roosterjs {
         private paste(clipboardData, pasteOption, mergeCurrentFormat?);
         private internalPaste(event);
         private applyTextFormat(node, format);
-        private documentFragmentToHtml(fragment);
     }
 
     /**
