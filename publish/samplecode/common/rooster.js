@@ -104,12 +104,10 @@ var InlineElementFactory_1 = __webpack_require__(105);
 exports.InlineElementFactory = InlineElementFactory_1.default;
 var NodeInlineElement_1 = __webpack_require__(42);
 exports.NodeInlineElement = NodeInlineElement_1.default;
-var PartialInlineElement_1 = __webpack_require__(22);
+var PartialInlineElement_1 = __webpack_require__(21);
 exports.PartialInlineElement = PartialInlineElement_1.default;
 var BodyScoper_1 = __webpack_require__(104);
 exports.BodyScoper = BodyScoper_1.default;
-var EditorSelection_1 = __webpack_require__(18);
-exports.EditorSelection = EditorSelection_1.default;
 var SelectionBlockScoper_1 = __webpack_require__(103);
 exports.SelectionBlockScoper = SelectionBlockScoper_1.default;
 var SelectionScoper_1 = __webpack_require__(102);
@@ -122,7 +120,7 @@ var contains_1 = __webpack_require__(12);
 exports.contains = contains_1.default;
 var sanitizeHtml_1 = __webpack_require__(99);
 exports.sanitizeHtml = sanitizeHtml_1.default;
-var fromHtml_1 = __webpack_require__(19);
+var fromHtml_1 = __webpack_require__(18);
 exports.fromHtml = fromHtml_1.default;
 var getComputedStyle_1 = __webpack_require__(11);
 exports.getComputedStyle = getComputedStyle_1.default;
@@ -165,7 +163,7 @@ var Editor_1 = __webpack_require__(109);
 exports.Editor = Editor_1.default;
 var Undo_1 = __webpack_require__(46);
 exports.Undo = Undo_1.default;
-var BrowserData_1 = __webpack_require__(23);
+var BrowserData_1 = __webpack_require__(22);
 exports.browserData = BrowserData_1.default;
 var eventDataCacheUtils_1 = __webpack_require__(87);
 exports.clearEventDataCache = eventDataCacheUtils_1.clearEventDataCache;
@@ -236,18 +234,18 @@ exports.getNodeAtCursor = getNodeAtCursor_1.default;
 exports.cacheGetNodeAtCursor = getNodeAtCursor_1.cacheGetNodeAtCursor;
 var queryNodesWithSelection_1 = __webpack_require__(2);
 exports.queryNodesWithSelection = queryNodesWithSelection_1.default;
-var replaceRangeWithNode_1 = __webpack_require__(36);
+var replaceRangeWithNode_1 = __webpack_require__(35);
 exports.replaceRangeWithNode = replaceRangeWithNode_1.default;
 var replaceTextBeforeCursorWithNode_1 = __webpack_require__(84);
 exports.replaceTextBeforeCursorWithNode = replaceTextBeforeCursorWithNode_1.default;
 exports.validateAndGetRangeForTextBeforeCursor = replaceTextBeforeCursorWithNode_1.validateAndGetRangeForTextBeforeCursor;
-var cacheGetListState_1 = __webpack_require__(35);
+var cacheGetListState_1 = __webpack_require__(34);
 exports.cacheGetListState = cacheGetListState_1.default;
 var clearFormat_1 = __webpack_require__(83);
 exports.clearFormat = clearFormat_1.default;
 var createLink_1 = __webpack_require__(82);
 exports.createLink = createLink_1.default;
-var getFormatState_1 = __webpack_require__(29);
+var getFormatState_1 = __webpack_require__(28);
 exports.getFormatState = getFormatState_1.default;
 var insertImage_1 = __webpack_require__(80);
 exports.insertImage = insertImage_1.default;
@@ -255,21 +253,21 @@ var insertTable_1 = __webpack_require__(79);
 exports.insertTable = insertTable_1.default;
 var editTable_1 = __webpack_require__(78);
 exports.editTable = editTable_1.default;
-var formatTable_1 = __webpack_require__(28);
+var formatTable_1 = __webpack_require__(27);
 exports.formatTable = formatTable_1.default;
 var removeLink_1 = __webpack_require__(77);
 exports.removeLink = removeLink_1.default;
 var setAlignment_1 = __webpack_require__(76);
 exports.setAlignment = setAlignment_1.default;
-var setBackgroundColor_1 = __webpack_require__(34);
+var setBackgroundColor_1 = __webpack_require__(33);
 exports.setBackgroundColor = setBackgroundColor_1.default;
-var setTextColor_1 = __webpack_require__(31);
+var setTextColor_1 = __webpack_require__(30);
 exports.setTextColor = setTextColor_1.default;
 var setDirection_1 = __webpack_require__(75);
 exports.setDirection = setDirection_1.default;
-var setFontName_1 = __webpack_require__(33);
+var setFontName_1 = __webpack_require__(32);
 exports.setFontName = setFontName_1.default;
-var setFontSize_1 = __webpack_require__(32);
+var setFontSize_1 = __webpack_require__(31);
 exports.setFontSize = setFontSize_1.default;
 var setImageAltText_1 = __webpack_require__(74);
 exports.setImageAltText = setImageAltText_1.default;
@@ -277,7 +275,7 @@ var setIndentation_1 = __webpack_require__(73);
 exports.setIndentation = setIndentation_1.default;
 var toggleBold_1 = __webpack_require__(72);
 exports.toggleBold = toggleBold_1.default;
-var toggleBullet_1 = __webpack_require__(27);
+var toggleBullet_1 = __webpack_require__(26);
 exports.toggleBullet = toggleBullet_1.default;
 var toggleItalic_1 = __webpack_require__(71);
 exports.toggleItalic = toggleItalic_1.default;
@@ -295,7 +293,7 @@ var toggleUnderline_1 = __webpack_require__(65);
 exports.toggleUnderline = toggleUnderline_1.default;
 var toggleHeader_1 = __webpack_require__(64);
 exports.toggleHeader = toggleHeader_1.default;
-var matchLink_1 = __webpack_require__(30);
+var matchLink_1 = __webpack_require__(29);
 exports.matchLink = matchLink_1.default;
 
 
@@ -377,7 +375,7 @@ exports.default = isDocumentPosition;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var isRangeInContainer_1 = __webpack_require__(40);
+var isRangeInContainer_1 = __webpack_require__(39);
 function getLiveRange(core) {
     var selection = core.document.defaultView.getSelection();
     if (selection && selection.rangeCount > 0) {
@@ -492,7 +490,7 @@ exports.default = applyInlineStyle;
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var hasFocus_1 = __webpack_require__(17);
-var isRangeInContainer_1 = __webpack_require__(40);
+var isRangeInContainer_1 = __webpack_require__(39);
 function select(core, arg1, arg2, arg3, arg4) {
     var rawRange;
     if (arg1 instanceof Range) {
@@ -550,7 +548,7 @@ exports.default = select;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(12);
-var shouldSkipNode_1 = __webpack_require__(20);
+var shouldSkipNode_1 = __webpack_require__(19);
 function getLeafSibling(rootNode, startNode, isNext) {
     var result = null;
     var getSibling = isNext
@@ -687,7 +685,7 @@ exports.default = SelectionRange;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var isNodeAfter_1 = __webpack_require__(21);
+var isNodeAfter_1 = __webpack_require__(20);
 var Position = /** @class */ (function () {
     function Position(nodeOrPosition, offsetOrPosType) {
         if (nodeOrPosition.node) {
@@ -783,13 +781,13 @@ function getEndOffset(node) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var PartialInlineElement_1 = __webpack_require__(22);
+var PartialInlineElement_1 = __webpack_require__(21);
 var contains_1 = __webpack_require__(12);
 var getTagOfNode_1 = __webpack_require__(7);
 var isBlockElement_1 = __webpack_require__(44);
 var isDocumentPosition_1 = __webpack_require__(5);
-var isNodeAfter_1 = __webpack_require__(21);
-var shouldSkipNode_1 = __webpack_require__(20);
+var isNodeAfter_1 = __webpack_require__(20);
+var shouldSkipNode_1 = __webpack_require__(19);
 var getLeafNode_1 = __webpack_require__(43);
 var getLeafSibling_1 = __webpack_require__(10);
 // Get the inline element at a node
@@ -1588,7 +1586,884 @@ exports.default = hasFocus;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var PartialInlineElement_1 = __webpack_require__(22);
+// Creates a HTMLElement array from html
+function fromHtml(htmlFragment, ownerDocument) {
+    var element = ownerDocument.createElement('DIV');
+    element.innerHTML = htmlFragment;
+    var children = [];
+    for (var index = 0; index < element.childNodes.length; index++) {
+        children.push(element.childNodes.item(index));
+    }
+    return children;
+}
+exports.default = fromHtml;
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getComputedStyle_1 = __webpack_require__(11);
+// Check if it is an empty text node
+function isEmptyTextNode(node) {
+    return !!(node &&
+        node.nodeType == 3 /* Text */ &&
+        (!node.nodeValue || node.textContent == ''));
+}
+// Checks if it is text node that contains only CRLF
+// Use case: Edge/IE often injects some CRLF text node in-between elements i.e.
+// <div>{CRLF}<div>hello world</div></div>, those {CRLF} is not shown but creates noise
+// that we want to skip
+function isCRLFOnlyTextNode(node) {
+    var isCRLF = false;
+    if (node && node.nodeType == 3 /* Text */ && node.nodeValue) {
+        var reg = /^[\r\n]+$/gm;
+        isCRLF = reg.test(node.nodeValue);
+    }
+    return isCRLF;
+}
+// Checks if the element has a display: none or empty if it is not an element
+function isDisplayNone(node) {
+    return getComputedStyle_1.default(node, 'display')[0] == 'none';
+}
+// Skip a node when any of following conditions are true
+// - it is neither Element nor Text
+// - it is a text node but is empty
+// - it is a text node but contains just CRLF (noisy text node that often comes in-between elements)
+// - has a display:none
+function shouldSkipNode(node) {
+    return ((node.nodeType != 1 /* Element */ && node.nodeType != 3 /* Text */) ||
+        isEmptyTextNode(node) ||
+        isCRLFOnlyTextNode(node) ||
+        isDisplayNone(node));
+}
+exports.default = shouldSkipNode;
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var isDocumentPosition_1 = __webpack_require__(5);
+// Checks if node1 is after node2
+function isNodeAfter(node1, node2) {
+    return !!(node1 &&
+        node2 &&
+        isDocumentPosition_1.default(node2.compareDocumentPosition(node1), 4 /* Following */));
+}
+exports.default = isNodeAfter;
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Position_1 = __webpack_require__(14);
+var SelectionRange_1 = __webpack_require__(13);
+var isDocumentPosition_1 = __webpack_require__(5);
+// This is a special version of inline element that identifies a section of an inline element
+// We often have the need to cut an inline element in half and perform some operation only on half of an inline element
+// i.e. users select only some text of a text node and apply format, in that case, format has to happen on partial of an inline element
+// PartialInlineElement is implemented in a way that decorate another full inline element with its own override on methods like isAfter
+// It also offers some special methods that others don't have, i.e. nextInlineElement etc.
+var PartialInlineElement = /** @class */ (function () {
+    function PartialInlineElement(inlineElement, start, end) {
+        this.inlineElement = inlineElement;
+        this.start = start;
+        this.end = end;
+    }
+    // Get the full inline element that this partial inline decorates
+    PartialInlineElement.prototype.getDecoratedInline = function () {
+        return this.inlineElement;
+    };
+    // Gets the container node
+    PartialInlineElement.prototype.getContainerNode = function () {
+        return this.inlineElement.getContainerNode();
+    };
+    // Gets the parent block
+    PartialInlineElement.prototype.getParentBlock = function () {
+        return this.inlineElement.getParentBlock();
+    };
+    // Gets the text content
+    PartialInlineElement.prototype.getTextContent = function () {
+        var node = this.inlineElement.getContainerNode();
+        return new SelectionRange_1.default(this.start || new Position_1.default(node, Position_1.default.Before), this.end || new Position_1.default(node, Position_1.default.After))
+            .getRange()
+            .toString();
+    };
+    // Gets the start position
+    PartialInlineElement.prototype.getStartPosition = function () {
+        return this.start || this.inlineElement.getStartPosition();
+    };
+    // Gets the end position
+    PartialInlineElement.prototype.getEndPosition = function () {
+        return this.end || this.inlineElement.getEndPosition();
+    };
+    // Checks if the partial is on start point
+    PartialInlineElement.prototype.isStartPartial = function () {
+        return !!this.start;
+    };
+    // Checks if the partial is on the end point
+    PartialInlineElement.prototype.isEndPartial = function () {
+        return !!this.end;
+    };
+    Object.defineProperty(PartialInlineElement.prototype, "nextInlineElement", {
+        // Get next partial inline element if it is not at the end boundary yet
+        get: function () {
+            return this.end && new PartialInlineElement(this.inlineElement, this.end, null);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PartialInlineElement.prototype, "previousInlineElement", {
+        // Get previous partial inline element if it is not at the begin boundary yet
+        get: function () {
+            return this.start && new PartialInlineElement(this.inlineElement, null, this.start);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    // Checks if it contains a position
+    PartialInlineElement.prototype.contains = function (p) {
+        return p.isAfter(this.getStartPosition()) && this.getEndPosition().isAfter(p);
+    };
+    // Check if this inline element is after the other inline element
+    PartialInlineElement.prototype.isAfter = function (inlineElement) {
+        // First node level check to see if this element's container node is after (following) the other element (inlineElement)
+        // If node level says after (following), it is really "is after"
+        var documentPosition = inlineElement
+            .getContainerNode()
+            .compareDocumentPosition(this.getContainerNode());
+        var isAfter = isDocumentPosition_1.default(documentPosition, 4 /* Following */);
+        // If node level is not "is after", need to do extra check if the other inline element is also a partial that decorates same inline element
+        // and this partical is partial on start (this.startPosition != null)
+        // The idea here is to take this partial's start to compare with the other inline end. We consider "is after" only when
+        // this partial's start is after or same as the other inline's end
+        if (!isAfter &&
+            documentPosition == 0 /* Same */ &&
+            inlineElement instanceof PartialInlineElement &&
+            this.start) {
+            // get partial's end
+            var otherInline = inlineElement;
+            var otherInlineEndPosition = otherInline.getEndPosition();
+            // this partial's start
+            var thisStartPosition = this.getStartPosition();
+            isAfter =
+                thisStartPosition.isAfter(otherInlineEndPosition) ||
+                    thisStartPosition.equalTo(otherInlineEndPosition);
+        }
+        return isAfter;
+    };
+    // apply style
+    PartialInlineElement.prototype.applyStyle = function (styler, from, to) {
+        this.inlineElement.applyStyle(styler, from || this.start, to || this.end);
+    };
+    return PartialInlineElement;
+}());
+exports.default = PartialInlineElement;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function getBrowserData(userAgent, appVersion) {
+    // In case universal render somehow hits this code path
+    if (typeof window == 'undefined') {
+        return {
+            isMac: false,
+            isWin: false,
+            isWebKit: false,
+            isIE: false,
+            isIE11OrGreater: false,
+            isSafari: false,
+            isChrome: false,
+            isFirefox: false,
+            isEdge: false,
+        };
+    }
+    var rawValue = userAgent || window.navigator.userAgent;
+    var appVer = appVersion || window.navigator.appVersion;
+    // checks whether the browser is running in IE
+    // IE11 will use rv in UA instead of MSIE. Unfortunately Firefox also uses this. We should also look for "Trident" to confirm this.
+    // There have been cases where companies using older version of IE and custom UserAgents have broken this logic (e.g. IE 10 and KellyServices)
+    // therefore we should check that the Trident/rv combo is not just from an older IE browser
+    var isIE11OrGreater = rawValue.indexOf('rv:') != -1 && rawValue.indexOf('Trident') != -1;
+    var isIE = rawValue.indexOf('MSIE') != -1 || isIE11OrGreater;
+    var isWebKit = rawValue.indexOf('WebKit') != -1;
+    // IE11+ may also send Chrome, Firefox and Safari. But it will send trident also
+    var isChrome = false;
+    var isFirefox = false;
+    var isSafari = false;
+    var isEdge = false;
+    if (!isIE) {
+        isChrome = rawValue.indexOf('Chrome') != -1;
+        isFirefox = rawValue.indexOf('Firefox') != -1;
+        if (rawValue.indexOf('Safari') != -1) {
+            // Android and Chrome have Safari in the user string
+            isSafari = rawValue.indexOf('Chrome') == -1 && rawValue.indexOf('Android') == -1;
+        }
+        // Sample Edge UA: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10121
+        isEdge = rawValue.indexOf('Edge') != -1;
+        // When it is edge, it should not be chrome or firefox. and it is also not webkit
+        if (isEdge) {
+            isWebKit = isChrome = isFirefox = false;
+        }
+    }
+    var isMac = appVer.indexOf('Mac') != -1;
+    var isWin = appVer.indexOf('Win') != -1 || appVer.indexOf('NT') != -1;
+    return {
+        isMac: isMac,
+        isWin: isWin,
+        isWebKit: isWebKit,
+        isIE: isIE,
+        isIE11OrGreater: isIE11OrGreater,
+        isSafari: isSafari,
+        isChrome: isChrome,
+        isFirefox: isFirefox,
+        isEdge: isEdge,
+    };
+}
+exports.getBrowserData = getBrowserData;
+var browserData = getBrowserData();
+exports.default = browserData;
+
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+;
+/** create an empty LevelLists */
+function createLevelLists() {
+    return {
+        listsMetadata: {},
+        currentUniqueListId: -1,
+    };
+}
+exports.createLevelLists = createLevelLists;
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/** NodeId attribute */
+var NODE_ID_ATTRIBUTE_NAME = 'NodeId';
+;
+/** create an empty CustomData */
+function createCustomData() {
+    return {
+        dict: {},
+        nextNodeId: 1,
+    };
+}
+exports.createCustomData = createCustomData;
+/**
+ * Sets the specified object data
+ */
+function setObject(customData, element, key, value) {
+    // Get the id for the element
+    if (element.nodeType == 1 /* Element */) {
+        var id = getAndSetNodeId(customData, element);
+        if (id != '') {
+            // Get the values for the element
+            if (!customData.dict[id]) {
+                // First time dictionary creation
+                customData.dict[id] = {};
+            }
+            customData.dict[id][key] = value;
+        }
+    }
+}
+exports.setObject = setObject;
+/**
+ * Reads the specified object data
+ */
+function getObject(customData, element, key) {
+    if (element.nodeType == 1 /* Element */) {
+        var id = getAndSetNodeId(customData, element);
+        if (id != '') {
+            return customData.dict[id] && customData.dict[id][key];
+        }
+    }
+    return null;
+}
+exports.getObject = getObject;
+/** Get the unique id for the specified node... */
+function getAndSetNodeId(customData, element) {
+    var id = element.getAttribute(NODE_ID_ATTRIBUTE_NAME);
+    if (!id) {
+        id = customData.nextNodeId.toString();
+        customData.nextNodeId++;
+        element.setAttribute(NODE_ID_ATTRIBUTE_NAME, id);
+    }
+    return id;
+}
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Get default feature set of ContentEdit plugin
+ */
+function getDefaultContentEditFeatures() {
+    return {
+        indentWhenTab: true,
+        outdentWhenShiftTab: true,
+        outdentWhenBackspaceOnEmptyFirstLine: true,
+        outdentWhenEnterOnEmptyLine: true,
+        mergeInNewLineWhenBackspaceOnFirstChar: false,
+        unquoteWhenBackspaceOnEmptyFirstLine: true,
+        unquoteWhenEnterOnEmptyLine: true,
+        autoBullet: true,
+        tabInTable: true,
+    };
+}
+exports.getDefaultContentEditFeatures = getDefaultContentEditFeatures;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getNodeAtCursor_1 = __webpack_require__(4);
+var roosterjs_editor_core_1 = __webpack_require__(1);
+var ZERO_WIDTH_SPACE = '&#8203;';
+/**
+ * Edge may incorrectly put cursor after toggle bullet, workaround it by adding a space.
+ * The space will be removed by Edge after toggle bullet
+ * @param editor The editor instance
+ * @param callback The real callback function
+ */
+function workaroundForEdge(editor, callback) {
+    var node = roosterjs_editor_core_1.browserData.isEdge ? getNodeAtCursor_1.default(editor) : null;
+    if (node && node.nodeType == 1 /* Element */ && node.textContent == '') {
+        var span = editor.getDocument().createElement('span');
+        node.insertBefore(span, node.firstChild);
+        span.innerHTML = ZERO_WIDTH_SPACE;
+        callback();
+        if (span.parentNode) {
+            span.parentNode.removeChild(span);
+        }
+    }
+    else {
+        callback();
+    }
+}
+exports.workaroundForEdge = workaroundForEdge;
+/**
+ * Toggle bullet at selection
+ * If selection contains bullet in deep level, toggle bullet will decrease the bullet level by one
+ * If selection contains number list, toggle bullet will convert the number list into bullet list
+ * If selection contains both bullet/numbering and normal text, the behavior is decided by corresponding
+ * browser execCommand API
+ * @param editor The editor instance
+ */
+function toggleBullet(editor) {
+    editor.focus();
+    editor.formatWithUndo(function () {
+        workaroundForEdge(editor, function () {
+            editor.getDocument().execCommand('insertUnorderedList', false, null);
+        });
+    });
+}
+exports.default = toggleBullet;
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getNodeAtCursor_1 = __webpack_require__(4);
+var roosterjs_editor_dom_1 = __webpack_require__(0);
+/**
+ * Format table
+ * @param table The table to format
+ * @param formatName Name of the format to use
+ */
+function formatTable(editor, format, table) {
+    var td = table
+        ? table.rows[0].cells[0]
+        : getNodeAtCursor_1.default(editor, 'TD');
+    if (td) {
+        editor.formatWithUndo(function () {
+            var vtable = new roosterjs_editor_dom_1.VTable(td);
+            vtable.applyFormat(format);
+            vtable.writeBack();
+            td = editor.contains(td) ? td : vtable.getCurrentTd();
+            editor.focus();
+            return td;
+        }, true /*preserveSelection*/);
+    }
+}
+exports.default = formatTable;
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getNodeAtCursor_1 = __webpack_require__(4);
+var roosterjs_editor_dom_1 = __webpack_require__(0);
+var cacheGetListState_1 = __webpack_require__(34);
+var cacheGetHeaderLevel_1 = __webpack_require__(81);
+var queryNodesWithSelection_1 = __webpack_require__(2);
+// Query command state, used for query Bold, Italic, Underline state
+function queryCommandState(editor, command) {
+    return editor.getDocument().queryCommandState(command);
+}
+/**
+ * Get format state at cursor
+ * A format state is a collection of all format related states, e.g.,
+ * bold, italic, underline, font name, font size, etc.
+ * @param editor The editor
+ * @param (Optional) The plugin event, it stores the event cached data for looking up.
+ * In this function the event cache is used to get list state and header level. If not passed,
+ * it will query the node within selection to get the info
+ * @returns The format state at cursor
+ */
+function getFormatState(editor, event) {
+    var nodeAtCursor = getNodeAtCursor_1.default(editor);
+    if (!nodeAtCursor) {
+        return null;
+    }
+    var styles = roosterjs_editor_dom_1.getComputedStyle(nodeAtCursor);
+    var listState = cacheGetListState_1.default(editor, event);
+    var headerLevel = cacheGetHeaderLevel_1.default(editor, event);
+    return {
+        fontName: styles[0],
+        fontSize: styles[1],
+        isBold: queryCommandState(editor, 'bold'),
+        isItalic: queryCommandState(editor, 'italic'),
+        isUnderline: queryCommandState(editor, 'underline'),
+        isStrikeThrough: queryCommandState(editor, 'strikeThrough'),
+        isSubscript: queryCommandState(editor, 'subscript'),
+        isSuperscript: queryCommandState(editor, 'superscript'),
+        textColor: styles[2],
+        backgroundColor: styles[3],
+        isBullet: listState == 1 /* Bullets */,
+        isNumbering: listState == 2 /* Numbering */,
+        canUnlink: queryNodesWithSelection_1.default(editor, 'a[href]').length > 0,
+        canAddImageAltText: queryNodesWithSelection_1.default(editor, 'img').length > 0,
+        canUndo: editor.canUndo(),
+        canRedo: editor.canRedo(),
+        isBlockQuote: queryNodesWithSelection_1.default(editor, 'blockquote').length > 0,
+        headerLevel: headerLevel,
+    };
+}
+exports.default = getFormatState;
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+// http exclude matching regex
+// invalid URL example (in paricular on IE and Edge):
+// - http://www.bing.com%00, %00 before ? (question mark) is considered invalid. IE/Edge throws invalid argument exception
+// - http://www.bing.com%1, %1 is invalid
+// - http://www.bing.com%g, %g is invalid (IE and Edge expects a two hex value after a %)
+// - http://www.bing.com%, % as ending is invalid (IE and Edge expects a two hex value after a %)
+// All above % cases if they're after ? (question mark) is then considered valid again
+// Similar for @, it needs to be after / (forward slash), or ? (question mark). Otherwise IE/Edge will throw security exception
+// - http://www.bing.com@name, @name before ? (question mark) is considered invalid
+// - http://www.bing.com/@name, is valid sine it is after / (forward slash)
+// - http://www.bing.com?@name, is also valid sinve it is after ? (question mark)
+// The regex below is essentially a break down of:
+// ^[^?]+%[^0-9a-f]+ => to exclude URL like www.bing.com%%
+// ^[^?]+%[0-9a-f][^0-9a-f]+ => to exclude URL like www.bing.com%1
+// ^[^?]+%00 => to exclude URL like www.bing.com%00
+// ^[^?]+%$ => to exclude URL like www.bing.com%
+// ^https?:\/\/[^?\/]+@ => to exclude URL like http://www.bing.com@name
+// ^www\.[^?\/]+@ => to exclude URL like www.bing.com@name
+var httpExcludeRegEx = /^[^?]+%[^0-9a-f]+|^[^?]+%[0-9a-f][^0-9a-f]+|^[^?]+%00|^[^?]+%$|^https?:\/\/[^?\/]+@|^www\.[^?\/]+@/i;
+var linkMatchRules = {
+    http: {
+        match: /^(microsoft-edge:)?http:\/\/\S+|www\.\S+/i,
+        except: httpExcludeRegEx,
+        normalizeUrl: function (url) { return (/^(microsoft-edge:)?http:\/\//i.test(url) ? url : 'http://' + url); },
+    },
+    https: {
+        match: /^(microsoft-edge:)?https:\/\/\S+/i,
+        except: httpExcludeRegEx,
+    },
+    mailto: { match: /^mailto:\S+@\S+\.\S+/i },
+    notes: { match: /^notes:\/\/\S+/i },
+    file: { match: /^file:\/\/\/?\S+/i },
+    unc: { match: /^\\\\\S+/i },
+    ftp: {
+        match: /^ftp:\/\/\S+|ftp\.\S+/i,
+        normalizeUrl: function (url) { return (/^ftp:\/\//i.test(url) ? url : 'ftp://' + url); },
+    },
+    news: { match: /^news:(\/\/)?\S+/i },
+    telnet: { match: /^telnet:\S+/i },
+    gopher: { match: /^gopher:\/\/\S+/i },
+    wais: { match: /^wais:\S+/i },
+};
+/**
+ * Try to match a given string with link match rules, return matched link
+ * @param url Input url to match
+ * @param option Link match option, exact or partial. If it is exact match, we need
+ * to check the length of matched link and url
+ * @param rules Optional link match rules, if not passed, only the default link match
+ * rules will be applied
+ * @returns The matched link data, or null if no match found.
+ * The link data includes an original url and a normalized url
+ */
+function matchLink(url) {
+    if (url) {
+        for (var _i = 0, _a = Object.keys(linkMatchRules); _i < _a.length; _i++) {
+            var schema = _a[_i];
+            var rule = linkMatchRules[schema];
+            var matches = url.match(rule.match);
+            if (matches && matches[0] == url && (!rule.except || !rule.except.test(url))) {
+                return {
+                    scheme: schema,
+                    originalUrl: url,
+                    normalizedUrl: rule.normalizeUrl ? rule.normalizeUrl(url) : url,
+                };
+            }
+        }
+    }
+    return null;
+}
+exports.default = matchLink;
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var applyInlineStyle_1 = __webpack_require__(8);
+/**
+ * Set text color at selection
+ * @param editor The editor instance
+ * @param color The color string, can be any of the predefined color names (e.g, 'red')
+ * or hexadecimal color string (e.g, '#FF0000') or rgb value (e.g, 'rgb(255, 0, 0)') supported by browser.
+ * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
+ */
+function setTextColor(editor, color) {
+    applyInlineStyle_1.default(editor, function (element) { return (element.style.color = color); });
+}
+exports.default = setTextColor;
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var applyInlineStyle_1 = __webpack_require__(8);
+/**
+ * Set font size at selection
+ * @param editor The editor instance
+ * @param fontSize The fontSize string, should be a valid CSS font-size style.
+ * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
+ */
+function setFontSize(editor, fontSize) {
+    // The browser provided execCommand only accepts 1-7 point value. In addition, it uses HTML <font> tag with size attribute.
+    // <font> is not HTML5 standard (http://www.w3schools.com/tags/tag_font.asp). Use editor.applyInlineStyle which gives flexibility on applying inline style
+    // for here, we use CSS font-size style
+    applyInlineStyle_1.default(editor, function (element) { return (element.style.fontSize = fontSize); });
+}
+exports.default = setFontSize;
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var applyInlineStyle_1 = __webpack_require__(8);
+/**
+ * Set font name at selection
+ * @param editor The editor instance
+ * @param fontName The fontName string, should be a valid CSS font-family style.
+ * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
+ */
+function setFontName(editor, fontName) {
+    // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
+    // (http://www.w3schools.com/tags/tag_font.asp). Use editor.applyInlineStyle which gives flexibility on applying inline style
+    // for here, we use CSS font-family style
+    applyInlineStyle_1.default(editor, function (element) { return (element.style.fontFamily = fontName); });
+}
+exports.default = setFontName;
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var applyInlineStyle_1 = __webpack_require__(8);
+/**
+ * Set background color at current selection
+ * @param editor The editor instance
+ * @param color The color string, can be any of the predefined color names (e.g, 'red')
+ * or hexadecimal color string (e.g, '#FF0000') or rgb value (e.g, 'rgb(255, 0, 0)') supported by browser.
+ * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
+ */
+function setBackgroundColor(editor, color) {
+    applyInlineStyle_1.default(editor, function (element) { return (element.style.backgroundColor = color); });
+}
+exports.default = setBackgroundColor;
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var queryNodesWithSelection_1 = __webpack_require__(2);
+var roosterjs_editor_core_1 = __webpack_require__(1);
+var roosterjs_editor_dom_1 = __webpack_require__(0);
+var EVENTDATACACHE_LISTSTATE = 'LISTSTATE';
+/**
+ * Get the list state at selection
+ * The list state refers to the HTML elements <OL> or <UL>
+ * @param editor The editor instance
+ * @param event (Optional) The plugin event, it stores the event cached data for looking up.
+ * If not passed, we will query the first <LI> node in selection and return the list state of its direct parent
+ * @returns The list state. ListState.Numbering indicates <OL>, ListState.Bullets indicates <UL>,
+ * ListState.None indicates no <OL> or <UL> elements found at current selection
+ */
+function cacheGetListState(editor, event) {
+    return roosterjs_editor_core_1.cacheGetEventData(event, EVENTDATACACHE_LISTSTATE, function () {
+        var itemNodes = queryNodesWithSelection_1.default(editor, 'li');
+        if (itemNodes.length > 0) {
+            var tagName = roosterjs_editor_dom_1.getTagOfNode(itemNodes[0].parentNode);
+            if (tagName == 'OL') {
+                return 2 /* Numbering */;
+            }
+            else if (tagName == 'UL') {
+                return 1 /* Bullets */;
+            }
+        }
+        return 0 /* None */;
+    });
+}
+exports.default = cacheGetListState;
+
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(0);
+/**
+ * Replace the specified range with a node
+ * @param editor The editor instance
+ * @param range The range in which content needs to be replaced
+ * @param node The node to be inserted
+ * @param exactMatch exactMatch is to match exactly, i.e.
+ * In auto linkification, users could type URL followed by some punctuation and hit space. The auto link will kick in on space,
+ * at the moment, what is before cursor could be "<URL>,", however, only "<URL>" makes the link. by setting exactMatch = false, it does not match
+ * from right before cursor, but can scan through till first same char is seen. On the other hand if set exactMatch = true, it starts the match right
+ * before cursor.
+ * @returns True if we complete the replacement, false otherwise
+ */
+function replaceRangeWithNode(editor, range, node, exactMatch) {
+    // Make sure the range and node is valid
+    if (!range || !node) {
+        return false;
+    }
+    range.deleteContents();
+    range.insertNode(node);
+    if (exactMatch) {
+        editor.select(node, roosterjs_editor_dom_1.Position.After);
+    }
+    return true;
+}
+exports.default = replaceRangeWithNode;
+
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(0);
+// HTML void elements
+// Per https://www.w3.org/TR/html/syntax.html#syntax-elements, cannot have child nodes
+// This regex is used when we move focus to very begin of editor. We should avoid putting focus inside
+// void elements so users don't accidently create child nodes in them
+var HTML_VOID_ELEMENTS_REGEX = /^(AREA|BASE|BR|COL|COMMAND|EMBED|HR|IMG|INPUT|KEYGEN|LINK|META|PARAM|SOURCE|TRACK|WBR)$/i;
+// check if it is html void element. void element cannot have childen
+function isVoidHtmlElement(element) {
+    return element && HTML_VOID_ELEMENTS_REGEX.test(roosterjs_editor_dom_1.getTagOfNode(element)) ? true : false;
+}
+exports.default = isVoidHtmlElement;
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getLiveRange_1 = __webpack_require__(6);
+var hasFocus_1 = __webpack_require__(17);
+var isVoidHtmlElement_1 = __webpack_require__(36);
+var select_1 = __webpack_require__(9);
+var roosterjs_editor_dom_1 = __webpack_require__(0);
+function focus(core) {
+    if (!hasFocus_1.default(core) || !getLiveRange_1.default(core)) {
+        // Focus (document.activeElement indicates) and selection are mostly in sync, but could be out of sync in some extreme cases.
+        // i.e. if you programmatically change window selection to point to a non-focusable DOM element (i.e. tabindex=-1 etc.).
+        // On Chrome/Firefox, it does not change document.activeElement. On Edge/IE, it change document.activeElement to be body
+        // Although on Chrome/Firefox, document.activeElement points to editor, you cannot really type which we don't want (no cursor).
+        // So here we always do a live selection pull on DOM and make it point in Editor. The pitfall is, the cursor could be reset
+        // to very begin to of editor since we don't really have last saved selection (created on blur which does not fire in this case).
+        // It should be better than the case you cannot type
+        if (!(core.cachedRange && select_1.default(core, core.cachedRange))) {
+            setSelectionToBegin(core);
+        }
+    }
+    // remember to clear cachedRange
+    core.cachedRange = null;
+    // This is more a fallback to ensure editor gets focus if it didn't manage to move focus to editor
+    if (!hasFocus_1.default(core)) {
+        core.contentDiv.focus();
+    }
+}
+exports.default = focus;
+function setSelectionToBegin(core) {
+    var firstNode = roosterjs_editor_dom_1.getFirstLeafNode(core.contentDiv);
+    if (firstNode) {
+        if (firstNode.nodeType == 3 /* Text */) {
+            // First node is text, move selection to the begin
+            select_1.default(core, firstNode, 0);
+        }
+        else if (firstNode.nodeType == 1 /* Element */) {
+            if (isVoidHtmlElement_1.default(firstNode)) {
+                // First node is a html void element (void elements cannot have child nodes), move selection before it
+                select_1.default(core, firstNode, roosterjs_editor_dom_1.Position.Before);
+            }
+            else {
+                // Other html element, move selection inside it
+                select_1.default(core, firstNode, 0);
+            }
+        }
+    }
+    else {
+        // No first node, likely we have an empty content DIV, move selection inside it
+        select_1.default(core, core.contentDiv, 0);
+    }
+}
+
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function triggerEvent(core, pluginEvent, broadcast) {
+    var isHandledExclusively = false;
+    if (!broadcast) {
+        for (var i = 0; i < core.plugins.length; i++) {
+            var plugin = core.plugins[i];
+            if (plugin.willHandleEventExclusively &&
+                plugin.onPluginEvent &&
+                plugin.willHandleEventExclusively(pluginEvent)) {
+                plugin.onPluginEvent(pluginEvent);
+                isHandledExclusively = true;
+                break;
+            }
+        }
+    }
+    if (!isHandledExclusively) {
+        core.plugins.forEach(function (plugin) {
+            if (plugin.onPluginEvent) {
+                plugin.onPluginEvent(pluginEvent);
+            }
+        });
+    }
+}
+exports.default = triggerEvent;
+
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(0);
+function isRangeInContainer(range, container) {
+    var ancestorContainer = range ? range.commonAncestorContainer : null;
+    // use the parentNode if ancestorContainer is a text node
+    if (ancestorContainer && ancestorContainer.nodeType == 3 /* Text */) {
+        ancestorContainer = ancestorContainer.parentNode;
+    }
+    return roosterjs_editor_dom_1.contains(container, ancestorContainer, true /*treatSameNodeAsContain*/);
+}
+exports.default = isRangeInContainer;
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var PartialInlineElement_1 = __webpack_require__(21);
 var BlockElement_1 = __webpack_require__(15);
 // This is a utility like class that produces editor point/inline/block element around or within a selection range
 var EditorSelection = /** @class */ (function () {
@@ -1812,890 +2687,13 @@ exports.default = EditorSelection;
 
 
 /***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-// Creates a HTMLElement array from html
-function fromHtml(htmlFragment, ownerDocument) {
-    var element = ownerDocument.createElement('DIV');
-    element.innerHTML = htmlFragment;
-    var children = [];
-    for (var index = 0; index < element.childNodes.length; index++) {
-        children.push(element.childNodes.item(index));
-    }
-    return children;
-}
-exports.default = fromHtml;
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(11);
-// Check if it is an empty text node
-function isEmptyTextNode(node) {
-    return !!(node &&
-        node.nodeType == 3 /* Text */ &&
-        (!node.nodeValue || node.textContent == ''));
-}
-// Checks if it is text node that contains only CRLF
-// Use case: Edge/IE often injects some CRLF text node in-between elements i.e.
-// <div>{CRLF}<div>hello world</div></div>, those {CRLF} is not shown but creates noise
-// that we want to skip
-function isCRLFOnlyTextNode(node) {
-    var isCRLF = false;
-    if (node && node.nodeType == 3 /* Text */ && node.nodeValue) {
-        var reg = /^[\r\n]+$/gm;
-        isCRLF = reg.test(node.nodeValue);
-    }
-    return isCRLF;
-}
-// Checks if the element has a display: none or empty if it is not an element
-function isDisplayNone(node) {
-    return getComputedStyle_1.default(node, 'display')[0] == 'none';
-}
-// Skip a node when any of following conditions are true
-// - it is neither Element nor Text
-// - it is a text node but is empty
-// - it is a text node but contains just CRLF (noisy text node that often comes in-between elements)
-// - has a display:none
-function shouldSkipNode(node) {
-    return ((node.nodeType != 1 /* Element */ && node.nodeType != 3 /* Text */) ||
-        isEmptyTextNode(node) ||
-        isCRLFOnlyTextNode(node) ||
-        isDisplayNone(node));
-}
-exports.default = shouldSkipNode;
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var isDocumentPosition_1 = __webpack_require__(5);
-// Checks if node1 is after node2
-function isNodeAfter(node1, node2) {
-    return !!(node1 &&
-        node2 &&
-        isDocumentPosition_1.default(node2.compareDocumentPosition(node1), 4 /* Following */));
-}
-exports.default = isNodeAfter;
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Position_1 = __webpack_require__(14);
-var SelectionRange_1 = __webpack_require__(13);
-var isDocumentPosition_1 = __webpack_require__(5);
-// This is a special version of inline element that identifies a section of an inline element
-// We often have the need to cut an inline element in half and perform some operation only on half of an inline element
-// i.e. users select only some text of a text node and apply format, in that case, format has to happen on partial of an inline element
-// PartialInlineElement is implemented in a way that decorate another full inline element with its own override on methods like isAfter
-// It also offers some special methods that others don't have, i.e. nextInlineElement etc.
-var PartialInlineElement = /** @class */ (function () {
-    function PartialInlineElement(inlineElement, start, end) {
-        this.inlineElement = inlineElement;
-        this.start = start;
-        this.end = end;
-    }
-    // Get the full inline element that this partial inline decorates
-    PartialInlineElement.prototype.getDecoratedInline = function () {
-        return this.inlineElement;
-    };
-    // Gets the container node
-    PartialInlineElement.prototype.getContainerNode = function () {
-        return this.inlineElement.getContainerNode();
-    };
-    // Gets the parent block
-    PartialInlineElement.prototype.getParentBlock = function () {
-        return this.inlineElement.getParentBlock();
-    };
-    // Gets the text content
-    PartialInlineElement.prototype.getTextContent = function () {
-        var node = this.inlineElement.getContainerNode();
-        return new SelectionRange_1.default(this.start || new Position_1.default(node, Position_1.default.Before), this.end || new Position_1.default(node, Position_1.default.After))
-            .getRange()
-            .toString();
-    };
-    // Gets the start position
-    PartialInlineElement.prototype.getStartPosition = function () {
-        return this.start || this.inlineElement.getStartPosition();
-    };
-    // Gets the end position
-    PartialInlineElement.prototype.getEndPosition = function () {
-        return this.end || this.inlineElement.getEndPosition();
-    };
-    // Checks if the partial is on start point
-    PartialInlineElement.prototype.isStartPartial = function () {
-        return !!this.start;
-    };
-    // Checks if the partial is on the end point
-    PartialInlineElement.prototype.isEndPartial = function () {
-        return !!this.end;
-    };
-    Object.defineProperty(PartialInlineElement.prototype, "nextInlineElement", {
-        // Get next partial inline element if it is not at the end boundary yet
-        get: function () {
-            return this.end && new PartialInlineElement(this.inlineElement, this.end, null);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PartialInlineElement.prototype, "previousInlineElement", {
-        // Get previous partial inline element if it is not at the begin boundary yet
-        get: function () {
-            return this.start && new PartialInlineElement(this.inlineElement, null, this.start);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    // Checks if it contains a position
-    PartialInlineElement.prototype.contains = function (p) {
-        return p.isAfter(this.getStartPosition()) && this.getEndPosition().isAfter(p);
-    };
-    // Check if this inline element is after the other inline element
-    PartialInlineElement.prototype.isAfter = function (inlineElement) {
-        // First node level check to see if this element's container node is after (following) the other element (inlineElement)
-        // If node level says after (following), it is really "is after"
-        var documentPosition = inlineElement
-            .getContainerNode()
-            .compareDocumentPosition(this.getContainerNode());
-        var isAfter = isDocumentPosition_1.default(documentPosition, 4 /* Following */);
-        // If node level is not "is after", need to do extra check if the other inline element is also a partial that decorates same inline element
-        // and this partical is partial on start (this.startPosition != null)
-        // The idea here is to take this partial's start to compare with the other inline end. We consider "is after" only when
-        // this partial's start is after or same as the other inline's end
-        if (!isAfter &&
-            documentPosition == 0 /* Same */ &&
-            inlineElement instanceof PartialInlineElement &&
-            this.start) {
-            // get partial's end
-            var otherInline = inlineElement;
-            var otherInlineEndPosition = otherInline.getEndPosition();
-            // this partial's start
-            var thisStartPosition = this.getStartPosition();
-            isAfter =
-                thisStartPosition.isAfter(otherInlineEndPosition) ||
-                    thisStartPosition.equalTo(otherInlineEndPosition);
-        }
-        return isAfter;
-    };
-    // apply style
-    PartialInlineElement.prototype.applyStyle = function (styler, from, to) {
-        this.inlineElement.applyStyle(styler, from || this.start, to || this.end);
-    };
-    return PartialInlineElement;
-}());
-exports.default = PartialInlineElement;
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-function getBrowserData(userAgent, appVersion) {
-    // In case universal render somehow hits this code path
-    if (typeof window == 'undefined') {
-        return {
-            isMac: false,
-            isWin: false,
-            isWebKit: false,
-            isIE: false,
-            isIE11OrGreater: false,
-            isSafari: false,
-            isChrome: false,
-            isFirefox: false,
-            isEdge: false,
-        };
-    }
-    var rawValue = userAgent || window.navigator.userAgent;
-    var appVer = appVersion || window.navigator.appVersion;
-    // checks whether the browser is running in IE
-    // IE11 will use rv in UA instead of MSIE. Unfortunately Firefox also uses this. We should also look for "Trident" to confirm this.
-    // There have been cases where companies using older version of IE and custom UserAgents have broken this logic (e.g. IE 10 and KellyServices)
-    // therefore we should check that the Trident/rv combo is not just from an older IE browser
-    var isIE11OrGreater = rawValue.indexOf('rv:') != -1 && rawValue.indexOf('Trident') != -1;
-    var isIE = rawValue.indexOf('MSIE') != -1 || isIE11OrGreater;
-    var isWebKit = rawValue.indexOf('WebKit') != -1;
-    // IE11+ may also send Chrome, Firefox and Safari. But it will send trident also
-    var isChrome = false;
-    var isFirefox = false;
-    var isSafari = false;
-    var isEdge = false;
-    if (!isIE) {
-        isChrome = rawValue.indexOf('Chrome') != -1;
-        isFirefox = rawValue.indexOf('Firefox') != -1;
-        if (rawValue.indexOf('Safari') != -1) {
-            // Android and Chrome have Safari in the user string
-            isSafari = rawValue.indexOf('Chrome') == -1 && rawValue.indexOf('Android') == -1;
-        }
-        // Sample Edge UA: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10121
-        isEdge = rawValue.indexOf('Edge') != -1;
-        // When it is edge, it should not be chrome or firefox. and it is also not webkit
-        if (isEdge) {
-            isWebKit = isChrome = isFirefox = false;
-        }
-    }
-    var isMac = appVer.indexOf('Mac') != -1;
-    var isWin = appVer.indexOf('Win') != -1 || appVer.indexOf('NT') != -1;
-    return {
-        isMac: isMac,
-        isWin: isWin,
-        isWebKit: isWebKit,
-        isIE: isIE,
-        isIE11OrGreater: isIE11OrGreater,
-        isSafari: isSafari,
-        isChrome: isChrome,
-        isFirefox: isFirefox,
-        isEdge: isEdge,
-    };
-}
-exports.getBrowserData = getBrowserData;
-var browserData = getBrowserData();
-exports.default = browserData;
-
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-;
-/** create an empty LevelLists */
-function createLevelLists() {
-    return {
-        listsMetadata: {},
-        currentUniqueListId: -1,
-    };
-}
-exports.createLevelLists = createLevelLists;
-
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/** NodeId attribute */
-var NODE_ID_ATTRIBUTE_NAME = 'NodeId';
-;
-/** create an empty CustomData */
-function createCustomData() {
-    return {
-        dict: {},
-        nextNodeId: 1,
-    };
-}
-exports.createCustomData = createCustomData;
-/**
- * Sets the specified object data
- */
-function setObject(customData, element, key, value) {
-    // Get the id for the element
-    if (element.nodeType == 1 /* Element */) {
-        var id = getAndSetNodeId(customData, element);
-        if (id != '') {
-            // Get the values for the element
-            if (!customData.dict[id]) {
-                // First time dictionary creation
-                customData.dict[id] = {};
-            }
-            customData.dict[id][key] = value;
-        }
-    }
-}
-exports.setObject = setObject;
-/**
- * Reads the specified object data
- */
-function getObject(customData, element, key) {
-    if (element.nodeType == 1 /* Element */) {
-        var id = getAndSetNodeId(customData, element);
-        if (id != '') {
-            return customData.dict[id] && customData.dict[id][key];
-        }
-    }
-    return null;
-}
-exports.getObject = getObject;
-/** Get the unique id for the specified node... */
-function getAndSetNodeId(customData, element) {
-    var id = element.getAttribute(NODE_ID_ATTRIBUTE_NAME);
-    if (!id) {
-        id = customData.nextNodeId.toString();
-        customData.nextNodeId++;
-        element.setAttribute(NODE_ID_ATTRIBUTE_NAME, id);
-    }
-    return id;
-}
-
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Get default feature set of ContentEdit plugin
- */
-function getDefaultContentEditFeatures() {
-    return {
-        indentWhenTab: true,
-        outdentWhenShiftTab: true,
-        outdentWhenBackspaceOnEmptyFirstLine: true,
-        outdentWhenEnterOnEmptyLine: true,
-        mergeInNewLineWhenBackspaceOnFirstChar: false,
-        unquoteWhenBackspaceOnEmptyFirstLine: true,
-        unquoteWhenEnterOnEmptyLine: true,
-        autoBullet: true,
-        tabInTable: true,
-    };
-}
-exports.getDefaultContentEditFeatures = getDefaultContentEditFeatures;
-
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var getNodeAtCursor_1 = __webpack_require__(4);
-var roosterjs_editor_core_1 = __webpack_require__(1);
-var ZERO_WIDTH_SPACE = '&#8203;';
-/**
- * Edge may incorrectly put cursor after toggle bullet, workaround it by adding a space.
- * The space will be removed by Edge after toggle bullet
- * @param editor The editor instance
- * @param callback The real callback function
- */
-function workaroundForEdge(editor, callback) {
-    var node = roosterjs_editor_core_1.browserData.isEdge ? getNodeAtCursor_1.default(editor) : null;
-    if (node && node.nodeType == 1 /* Element */ && node.textContent == '') {
-        var span = editor.getDocument().createElement('span');
-        node.insertBefore(span, node.firstChild);
-        span.innerHTML = ZERO_WIDTH_SPACE;
-        callback();
-        if (span.parentNode) {
-            span.parentNode.removeChild(span);
-        }
-    }
-    else {
-        callback();
-    }
-}
-exports.workaroundForEdge = workaroundForEdge;
-/**
- * Toggle bullet at selection
- * If selection contains bullet in deep level, toggle bullet will decrease the bullet level by one
- * If selection contains number list, toggle bullet will convert the number list into bullet list
- * If selection contains both bullet/numbering and normal text, the behavior is decided by corresponding
- * browser execCommand API
- * @param editor The editor instance
- */
-function toggleBullet(editor) {
-    editor.focus();
-    editor.formatWithUndo(function () {
-        workaroundForEdge(editor, function () {
-            editor.getDocument().execCommand('insertUnorderedList', false, null);
-        });
-    });
-}
-exports.default = toggleBullet;
-
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var getNodeAtCursor_1 = __webpack_require__(4);
-var roosterjs_editor_dom_1 = __webpack_require__(0);
-/**
- * Format table
- * @param table The table to format
- * @param formatName Name of the format to use
- */
-function formatTable(editor, format, table) {
-    var td = table
-        ? table.rows[0].cells[0]
-        : getNodeAtCursor_1.default(editor, 'TD');
-    if (td) {
-        editor.formatWithUndo(function () {
-            var vtable = new roosterjs_editor_dom_1.VTable(td);
-            vtable.applyFormat(format);
-            vtable.writeBack();
-            td = editor.contains(td) ? td : vtable.getCurrentTd();
-            editor.focus();
-            return td;
-        }, true /*preserveSelection*/);
-    }
-}
-exports.default = formatTable;
-
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var getNodeAtCursor_1 = __webpack_require__(4);
-var roosterjs_editor_dom_1 = __webpack_require__(0);
-var cacheGetListState_1 = __webpack_require__(35);
-var cacheGetHeaderLevel_1 = __webpack_require__(81);
-var queryNodesWithSelection_1 = __webpack_require__(2);
-// Query command state, used for query Bold, Italic, Underline state
-function queryCommandState(editor, command) {
-    return editor.getDocument().queryCommandState(command);
-}
-/**
- * Get format state at cursor
- * A format state is a collection of all format related states, e.g.,
- * bold, italic, underline, font name, font size, etc.
- * @param editor The editor
- * @param (Optional) The plugin event, it stores the event cached data for looking up.
- * In this function the event cache is used to get list state and header level. If not passed,
- * it will query the node within selection to get the info
- * @returns The format state at cursor
- */
-function getFormatState(editor, event) {
-    var nodeAtCursor = getNodeAtCursor_1.default(editor);
-    if (!nodeAtCursor) {
-        return null;
-    }
-    var styles = roosterjs_editor_dom_1.getComputedStyle(nodeAtCursor);
-    var listState = cacheGetListState_1.default(editor, event);
-    var headerLevel = cacheGetHeaderLevel_1.default(editor, event);
-    return {
-        fontName: styles[0],
-        fontSize: styles[1],
-        isBold: queryCommandState(editor, 'bold'),
-        isItalic: queryCommandState(editor, 'italic'),
-        isUnderline: queryCommandState(editor, 'underline'),
-        isStrikeThrough: queryCommandState(editor, 'strikeThrough'),
-        isSubscript: queryCommandState(editor, 'subscript'),
-        isSuperscript: queryCommandState(editor, 'superscript'),
-        textColor: styles[2],
-        backgroundColor: styles[3],
-        isBullet: listState == 1 /* Bullets */,
-        isNumbering: listState == 2 /* Numbering */,
-        canUnlink: queryNodesWithSelection_1.default(editor, 'a[href]').length > 0,
-        canAddImageAltText: queryNodesWithSelection_1.default(editor, 'img').length > 0,
-        canUndo: editor.canUndo(),
-        canRedo: editor.canRedo(),
-        isBlockQuote: queryNodesWithSelection_1.default(editor, 'blockquote').length > 0,
-        headerLevel: headerLevel,
-    };
-}
-exports.default = getFormatState;
-
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-// http exclude matching regex
-// invalid URL example (in paricular on IE and Edge):
-// - http://www.bing.com%00, %00 before ? (question mark) is considered invalid. IE/Edge throws invalid argument exception
-// - http://www.bing.com%1, %1 is invalid
-// - http://www.bing.com%g, %g is invalid (IE and Edge expects a two hex value after a %)
-// - http://www.bing.com%, % as ending is invalid (IE and Edge expects a two hex value after a %)
-// All above % cases if they're after ? (question mark) is then considered valid again
-// Similar for @, it needs to be after / (forward slash), or ? (question mark). Otherwise IE/Edge will throw security exception
-// - http://www.bing.com@name, @name before ? (question mark) is considered invalid
-// - http://www.bing.com/@name, is valid sine it is after / (forward slash)
-// - http://www.bing.com?@name, is also valid sinve it is after ? (question mark)
-// The regex below is essentially a break down of:
-// ^[^?]+%[^0-9a-f]+ => to exclude URL like www.bing.com%%
-// ^[^?]+%[0-9a-f][^0-9a-f]+ => to exclude URL like www.bing.com%1
-// ^[^?]+%00 => to exclude URL like www.bing.com%00
-// ^[^?]+%$ => to exclude URL like www.bing.com%
-// ^https?:\/\/[^?\/]+@ => to exclude URL like http://www.bing.com@name
-// ^www\.[^?\/]+@ => to exclude URL like www.bing.com@name
-var httpExcludeRegEx = /^[^?]+%[^0-9a-f]+|^[^?]+%[0-9a-f][^0-9a-f]+|^[^?]+%00|^[^?]+%$|^https?:\/\/[^?\/]+@|^www\.[^?\/]+@/i;
-var linkMatchRules = {
-    http: {
-        match: /^(microsoft-edge:)?http:\/\/\S+|www\.\S+/i,
-        except: httpExcludeRegEx,
-        normalizeUrl: function (url) { return (/^(microsoft-edge:)?http:\/\//i.test(url) ? url : 'http://' + url); },
-    },
-    https: {
-        match: /^(microsoft-edge:)?https:\/\/\S+/i,
-        except: httpExcludeRegEx,
-    },
-    mailto: { match: /^mailto:\S+@\S+\.\S+/i },
-    notes: { match: /^notes:\/\/\S+/i },
-    file: { match: /^file:\/\/\/?\S+/i },
-    unc: { match: /^\\\\\S+/i },
-    ftp: {
-        match: /^ftp:\/\/\S+|ftp\.\S+/i,
-        normalizeUrl: function (url) { return (/^ftp:\/\//i.test(url) ? url : 'ftp://' + url); },
-    },
-    news: { match: /^news:(\/\/)?\S+/i },
-    telnet: { match: /^telnet:\S+/i },
-    gopher: { match: /^gopher:\/\/\S+/i },
-    wais: { match: /^wais:\S+/i },
-};
-/**
- * Try to match a given string with link match rules, return matched link
- * @param url Input url to match
- * @param option Link match option, exact or partial. If it is exact match, we need
- * to check the length of matched link and url
- * @param rules Optional link match rules, if not passed, only the default link match
- * rules will be applied
- * @returns The matched link data, or null if no match found.
- * The link data includes an original url and a normalized url
- */
-function matchLink(url) {
-    if (url) {
-        for (var _i = 0, _a = Object.keys(linkMatchRules); _i < _a.length; _i++) {
-            var schema = _a[_i];
-            var rule = linkMatchRules[schema];
-            var matches = url.match(rule.match);
-            if (matches && matches[0] == url && (!rule.except || !rule.except.test(url))) {
-                return {
-                    scheme: schema,
-                    originalUrl: url,
-                    normalizedUrl: rule.normalizeUrl ? rule.normalizeUrl(url) : url,
-                };
-            }
-        }
-    }
-    return null;
-}
-exports.default = matchLink;
-
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var applyInlineStyle_1 = __webpack_require__(8);
-/**
- * Set text color at selection
- * @param editor The editor instance
- * @param color The color string, can be any of the predefined color names (e.g, 'red')
- * or hexadecimal color string (e.g, '#FF0000') or rgb value (e.g, 'rgb(255, 0, 0)') supported by browser.
- * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
- */
-function setTextColor(editor, color) {
-    applyInlineStyle_1.default(editor, function (element) { return (element.style.color = color); });
-}
-exports.default = setTextColor;
-
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var applyInlineStyle_1 = __webpack_require__(8);
-/**
- * Set font size at selection
- * @param editor The editor instance
- * @param fontSize The fontSize string, should be a valid CSS font-size style.
- * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
- */
-function setFontSize(editor, fontSize) {
-    // The browser provided execCommand only accepts 1-7 point value. In addition, it uses HTML <font> tag with size attribute.
-    // <font> is not HTML5 standard (http://www.w3schools.com/tags/tag_font.asp). Use editor.applyInlineStyle which gives flexibility on applying inline style
-    // for here, we use CSS font-size style
-    applyInlineStyle_1.default(editor, function (element) { return (element.style.fontSize = fontSize); });
-}
-exports.default = setFontSize;
-
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var applyInlineStyle_1 = __webpack_require__(8);
-/**
- * Set font name at selection
- * @param editor The editor instance
- * @param fontName The fontName string, should be a valid CSS font-family style.
- * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
- */
-function setFontName(editor, fontName) {
-    // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
-    // (http://www.w3schools.com/tags/tag_font.asp). Use editor.applyInlineStyle which gives flexibility on applying inline style
-    // for here, we use CSS font-family style
-    applyInlineStyle_1.default(editor, function (element) { return (element.style.fontFamily = fontName); });
-}
-exports.default = setFontName;
-
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var applyInlineStyle_1 = __webpack_require__(8);
-/**
- * Set background color at current selection
- * @param editor The editor instance
- * @param color The color string, can be any of the predefined color names (e.g, 'red')
- * or hexadecimal color string (e.g, '#FF0000') or rgb value (e.g, 'rgb(255, 0, 0)') supported by browser.
- * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
- */
-function setBackgroundColor(editor, color) {
-    applyInlineStyle_1.default(editor, function (element) { return (element.style.backgroundColor = color); });
-}
-exports.default = setBackgroundColor;
-
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var queryNodesWithSelection_1 = __webpack_require__(2);
-var roosterjs_editor_core_1 = __webpack_require__(1);
-var roosterjs_editor_dom_1 = __webpack_require__(0);
-var EVENTDATACACHE_LISTSTATE = 'LISTSTATE';
-/**
- * Get the list state at selection
- * The list state refers to the HTML elements <OL> or <UL>
- * @param editor The editor instance
- * @param event (Optional) The plugin event, it stores the event cached data for looking up.
- * If not passed, we will query the first <LI> node in selection and return the list state of its direct parent
- * @returns The list state. ListState.Numbering indicates <OL>, ListState.Bullets indicates <UL>,
- * ListState.None indicates no <OL> or <UL> elements found at current selection
- */
-function cacheGetListState(editor, event) {
-    return roosterjs_editor_core_1.cacheGetEventData(event, EVENTDATACACHE_LISTSTATE, function () {
-        var itemNodes = queryNodesWithSelection_1.default(editor, 'li');
-        if (itemNodes.length > 0) {
-            var tagName = roosterjs_editor_dom_1.getTagOfNode(itemNodes[0].parentNode);
-            if (tagName == 'OL') {
-                return 2 /* Numbering */;
-            }
-            else if (tagName == 'UL') {
-                return 1 /* Bullets */;
-            }
-        }
-        return 0 /* None */;
-    });
-}
-exports.default = cacheGetListState;
-
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(0);
-/**
- * Replace the specified range with a node
- * @param editor The editor instance
- * @param range The range in which content needs to be replaced
- * @param node The node to be inserted
- * @param exactMatch exactMatch is to match exactly, i.e.
- * In auto linkification, users could type URL followed by some punctuation and hit space. The auto link will kick in on space,
- * at the moment, what is before cursor could be "<URL>,", however, only "<URL>" makes the link. by setting exactMatch = false, it does not match
- * from right before cursor, but can scan through till first same char is seen. On the other hand if set exactMatch = true, it starts the match right
- * before cursor.
- * @returns True if we complete the replacement, false otherwise
- */
-function replaceRangeWithNode(editor, range, node, exactMatch) {
-    // Make sure the range and node is valid
-    if (!range || !node) {
-        return false;
-    }
-    range.deleteContents();
-    range.insertNode(node);
-    if (exactMatch) {
-        editor.select(node, roosterjs_editor_dom_1.Position.After);
-    }
-    return true;
-}
-exports.default = replaceRangeWithNode;
-
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(0);
-// HTML void elements
-// Per https://www.w3.org/TR/html/syntax.html#syntax-elements, cannot have child nodes
-// This regex is used when we move focus to very begin of editor. We should avoid putting focus inside
-// void elements so users don't accidently create child nodes in them
-var HTML_VOID_ELEMENTS_REGEX = /^(AREA|BASE|BR|COL|COMMAND|EMBED|HR|IMG|INPUT|KEYGEN|LINK|META|PARAM|SOURCE|TRACK|WBR)$/i;
-// check if it is html void element. void element cannot have childen
-function isVoidHtmlElement(element) {
-    return element && HTML_VOID_ELEMENTS_REGEX.test(roosterjs_editor_dom_1.getTagOfNode(element)) ? true : false;
-}
-exports.default = isVoidHtmlElement;
-
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var getLiveRange_1 = __webpack_require__(6);
-var hasFocus_1 = __webpack_require__(17);
-var isVoidHtmlElement_1 = __webpack_require__(37);
-var select_1 = __webpack_require__(9);
-var roosterjs_editor_dom_1 = __webpack_require__(0);
-function focus(core) {
-    if (!hasFocus_1.default(core) || !getLiveRange_1.default(core)) {
-        // Focus (document.activeElement indicates) and selection are mostly in sync, but could be out of sync in some extreme cases.
-        // i.e. if you programmatically change window selection to point to a non-focusable DOM element (i.e. tabindex=-1 etc.).
-        // On Chrome/Firefox, it does not change document.activeElement. On Edge/IE, it change document.activeElement to be body
-        // Although on Chrome/Firefox, document.activeElement points to editor, you cannot really type which we don't want (no cursor).
-        // So here we always do a live selection pull on DOM and make it point in Editor. The pitfall is, the cursor could be reset
-        // to very begin to of editor since we don't really have last saved selection (created on blur which does not fire in this case).
-        // It should be better than the case you cannot type
-        if (!(core.cachedRange && select_1.default(core, core.cachedRange))) {
-            setSelectionToBegin(core);
-        }
-    }
-    // remember to clear cachedRange
-    core.cachedRange = null;
-    // This is more a fallback to ensure editor gets focus if it didn't manage to move focus to editor
-    if (!hasFocus_1.default(core)) {
-        core.contentDiv.focus();
-    }
-}
-exports.default = focus;
-function setSelectionToBegin(core) {
-    var firstNode = roosterjs_editor_dom_1.getFirstLeafNode(core.contentDiv);
-    if (firstNode) {
-        if (firstNode.nodeType == 3 /* Text */) {
-            // First node is text, move selection to the begin
-            select_1.default(core, firstNode, 0);
-        }
-        else if (firstNode.nodeType == 1 /* Element */) {
-            if (isVoidHtmlElement_1.default(firstNode)) {
-                // First node is a html void element (void elements cannot have child nodes), move selection before it
-                select_1.default(core, firstNode, roosterjs_editor_dom_1.Position.Before);
-            }
-            else {
-                // Other html element, move selection inside it
-                select_1.default(core, firstNode, 0);
-            }
-        }
-    }
-    else {
-        // No first node, likely we have an empty content DIV, move selection inside it
-        select_1.default(core, core.contentDiv, 0);
-    }
-}
-
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-function triggerEvent(core, pluginEvent, broadcast) {
-    var isHandledExclusively = false;
-    if (!broadcast) {
-        for (var i = 0; i < core.plugins.length; i++) {
-            var plugin = core.plugins[i];
-            if (plugin.willHandleEventExclusively &&
-                plugin.onPluginEvent &&
-                plugin.willHandleEventExclusively(pluginEvent)) {
-                plugin.onPluginEvent(pluginEvent);
-                isHandledExclusively = true;
-                break;
-            }
-        }
-    }
-    if (!isHandledExclusively) {
-        core.plugins.forEach(function (plugin) {
-            if (plugin.onPluginEvent) {
-                plugin.onPluginEvent(pluginEvent);
-            }
-        });
-    }
-}
-exports.default = triggerEvent;
-
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(0);
-function isRangeInContainer(range, container) {
-    var ancestorContainer = range ? range.commonAncestorContainer : null;
-    // use the parentNode if ancestorContainer is a text node
-    if (ancestorContainer && ancestorContainer.nodeType == 3 /* Text */) {
-        ancestorContainer = ancestorContainer.parentNode;
-    }
-    return roosterjs_editor_dom_1.contains(container, ancestorContainer, true /*treatSameNodeAsContain*/);
-}
-exports.default = isRangeInContainer;
-
-
-/***/ }),
 /* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var fromHtml_1 = __webpack_require__(19);
+var fromHtml_1 = __webpack_require__(18);
 // Wrap the node with html and return the wrapped node
 function wrap(node, htmlFragment) {
     if (!node) {
@@ -2725,7 +2723,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(12);
 var getTagOfNode_1 = __webpack_require__(7);
 var isDocumentPosition_1 = __webpack_require__(5);
-var isNodeAfter_1 = __webpack_require__(21);
+var isNodeAfter_1 = __webpack_require__(20);
 var wrap_1 = __webpack_require__(41);
 var getLeafSibling_1 = __webpack_require__(10);
 var Position_1 = __webpack_require__(14);
@@ -2863,7 +2861,7 @@ exports.default = NodeInlineElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var shouldSkipNode_1 = __webpack_require__(20);
+var shouldSkipNode_1 = __webpack_require__(19);
 var getLeafSibling_1 = __webpack_require__(10);
 function getLeafNode(rootNode, isFirst) {
     var getChild = isFirst ? function (node) { return node.firstChild; } : function (node) { return node.lastChild; };
@@ -2920,7 +2918,7 @@ exports.default = isBlockElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var BrowserData_1 = __webpack_require__(23);
+var BrowserData_1 = __webpack_require__(22);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 // Undo cursor marker
 var CURSOR_START = 'cursor-start';
@@ -3237,7 +3235,7 @@ var ContentEdit_1 = __webpack_require__(62);
 exports.ContentEdit = ContentEdit_1.default;
 var Paste_1 = __webpack_require__(60);
 exports.Paste = Paste_1.default;
-var ContentEditFeatures_1 = __webpack_require__(26);
+var ContentEditFeatures_1 = __webpack_require__(25);
 exports.getDefaultContentEditFeatures = ContentEditFeatures_1.getDefaultContentEditFeatures;
 
 
@@ -3768,8 +3766,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var LevelLists_1 = __webpack_require__(24);
-var CustomData_1 = __webpack_require__(25);
+var LevelLists_1 = __webpack_require__(23);
+var CustomData_1 = __webpack_require__(24);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 /** Word list metadata style name */
 var LOOKUP_DEPTH = 5;
@@ -4255,7 +4253,7 @@ function resetCurrentLists(args) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var LevelLists_1 = __webpack_require__(24);
+var LevelLists_1 = __webpack_require__(23);
 ;
 /** create an empty WordConverterArguments */
 function createWordConverterArguments(nodes) {
@@ -4278,7 +4276,7 @@ exports.createWordConverterArguments = createWordConverterArguments;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CustomData_1 = __webpack_require__(25);
+var CustomData_1 = __webpack_require__(24);
 ;
 /** create an empty WordConverter */
 function createWordConverter() {
@@ -4681,7 +4679,7 @@ function isAutoBulletInput(input) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_api_1 = __webpack_require__(3);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var ContentEditFeatures_1 = __webpack_require__(26);
+var ContentEditFeatures_1 = __webpack_require__(25);
 var autoBullet_1 = __webpack_require__(61);
 var KEY_TAB = 9;
 var KEY_BACKSPACE = 8;
@@ -5330,7 +5328,7 @@ function isListElement(node) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var toggleBullet_1 = __webpack_require__(27);
+var toggleBullet_1 = __webpack_require__(26);
 /**
  * Toggle numbering at selection
  * If selection contains numbering in deep level, toggle numbering will decrease the numbering level by one
@@ -5405,7 +5403,7 @@ exports.default = toggleBold;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getFormatState_1 = __webpack_require__(29);
+var getFormatState_1 = __webpack_require__(28);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 /**
  * Set indentation at selection
@@ -5718,7 +5716,7 @@ exports.default = editTable;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var formatTable_1 = __webpack_require__(28);
+var formatTable_1 = __webpack_require__(27);
 /**
  * Insert table into editor at current selection
  * @param editor The editor instance
@@ -5838,7 +5836,7 @@ exports.default = cacheGetHeaderLevel;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var matchLink_1 = __webpack_require__(30);
+var matchLink_1 = __webpack_require__(29);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 // Regex matching Uri scheme
 var URI_REGEX = /^[a-zA-Z]+:/i;
@@ -5938,10 +5936,10 @@ function applyLinkPrefix(url) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var setBackgroundColor_1 = __webpack_require__(34);
-var setFontName_1 = __webpack_require__(33);
-var setFontSize_1 = __webpack_require__(32);
-var setTextColor_1 = __webpack_require__(31);
+var setBackgroundColor_1 = __webpack_require__(33);
+var setFontName_1 = __webpack_require__(32);
+var setFontSize_1 = __webpack_require__(31);
+var setTextColor_1 = __webpack_require__(30);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 /**
  * Clear the format in current selection, after cleaning, the format will be
@@ -5976,7 +5974,7 @@ exports.default = clearFormat;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var CursorData_1 = __webpack_require__(16);
-var replaceRangeWithNode_1 = __webpack_require__(36);
+var replaceRangeWithNode_1 = __webpack_require__(35);
 /**
  * Validate the text matches what's before the cursor, and return the range for it
  * @param editor The editor instance
@@ -6239,9 +6237,9 @@ exports.cacheGetEventData = cacheGetEventData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var focus_1 = __webpack_require__(38);
+var focus_1 = __webpack_require__(37);
 var getLiveRange_1 = __webpack_require__(6);
-var isVoidHtmlElement_1 = __webpack_require__(37);
+var isVoidHtmlElement_1 = __webpack_require__(36);
 var select_1 = __webpack_require__(9);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var HTML_EMPTY_DIV = '<div></div>';
@@ -6371,8 +6369,7 @@ function insertNodeAtSelection(core, node, option) {
         }
         // Create a clone (backup) for the selection first as we may need to restore to it later
         var clonedRange = new roosterjs_editor_dom_1.SelectionRange(rawRange);
-        var editorSelection = new roosterjs_editor_dom_1.EditorSelection(core.contentDiv, clonedRange, core.inlineElementFactory);
-        var blockElement = editorSelection.startBlockElement;
+        var blockElement = roosterjs_editor_dom_1.getBlockElementAtNode(core.contentDiv, rawRange.startContainer, core.inlineElementFactory);
         if (blockElement) {
             var endNode = blockElement.getEndNode();
             if (option.insertOnNewLine) {
@@ -6444,7 +6441,7 @@ exports.default = getContentTraverser;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var triggerEvent_1 = __webpack_require__(39);
+var triggerEvent_1 = __webpack_require__(38);
 function attachDomEvent(core, eventName, pluginEventType, beforeDispatch) {
     var onEvent = function (event) {
         if (beforeDispatch) {
@@ -6674,7 +6671,7 @@ function getBorderStyle(style) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var fromHtml_1 = __webpack_require__(19);
+var fromHtml_1 = __webpack_require__(18);
 // Wrap all the node with html and return the wrapped node
 // All nodes should be under same parent
 function wrapAll(nodes, htmlFragment) {
@@ -7326,7 +7323,7 @@ exports.default = applyFormat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorSelection_1 = __webpack_require__(18);
+var EditorSelection_1 = __webpack_require__(40);
 // This is selection scoper that provide a start inline as the start of the selection
 // and checks if a block falls in the selection (isBlockInScope)
 // last trimInlineElement to trim any inline element to return a partial that falls in the selection
@@ -7363,7 +7360,7 @@ exports.default = SelectionScoper;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorSelection_1 = __webpack_require__(18);
+var EditorSelection_1 = __webpack_require__(40);
 // This provides traversing content in a selection start block
 // This is commonly used for those cursor context sensitive plugin
 // i.e. Mentions, Hashtag etc. they want to know text being typed at cursor
@@ -7746,14 +7743,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var EditorCore_1 = __webpack_require__(108);
 var formatWithUndo_1 = __webpack_require__(91);
 var attachDomEvent_1 = __webpack_require__(90);
-var BrowserData_1 = __webpack_require__(23);
-var focus_1 = __webpack_require__(38);
+var BrowserData_1 = __webpack_require__(22);
+var focus_1 = __webpack_require__(37);
 var getContentTraverser_1 = __webpack_require__(89);
 var getLiveRange_1 = __webpack_require__(6);
 var hasFocus_1 = __webpack_require__(17);
 var insertNode_1 = __webpack_require__(88);
 var select_1 = __webpack_require__(9);
-var triggerEvent_1 = __webpack_require__(39);
+var triggerEvent_1 = __webpack_require__(38);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var IS_IE_OR_EDGE = BrowserData_1.default.isIE || BrowserData_1.default.isEdge;
 var Editor = /** @class */ (function () {
@@ -7779,8 +7776,7 @@ var Editor = /** @class */ (function () {
                 (focusNode == _this.core.contentDiv ||
                     (focusNode.nodeType == 3 /* Text */ &&
                         focusNode.parentNode == _this.core.contentDiv))) {
-                var editorSelection = new roosterjs_editor_dom_1.EditorSelection(_this.core.contentDiv, range, _this.core.inlineElementFactory);
-                var blockElement = editorSelection.startBlockElement;
+                var blockElement = roosterjs_editor_dom_1.getBlockElementAtNode(_this.core.contentDiv, range.start.node, _this.core.inlineElementFactory);
                 if (!blockElement) {
                     // Only reason we don't get the selection block is that we have an empty content div
                     // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)

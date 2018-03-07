@@ -4,10 +4,10 @@ import getLiveRange from './getLiveRange';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import select from './select';
 import {
-    EditorSelection,
     Position,
     SelectionRange,
     changeElementTag,
+    getBlockElementAtNode,
     getFirstBlockElement,
     getLastBlockElement,
     getTagOfNode,
@@ -149,12 +149,11 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
         // Create a clone (backup) for the selection first as we may need to restore to it later
         let clonedRange = new SelectionRange(rawRange);
 
-        let editorSelection = new EditorSelection(
+        let blockElement = getBlockElementAtNode(
             core.contentDiv,
-            clonedRange,
+            rawRange.startContainer,
             core.inlineElementFactory
         );
-        let blockElement = editorSelection.startBlockElement;
 
         if (blockElement) {
             let endNode = blockElement.getEndNode();

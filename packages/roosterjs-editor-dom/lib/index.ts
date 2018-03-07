@@ -27,7 +27,6 @@ export { default as NodeInlineElement } from './objectModel/NodeInlineElement';
 export { default as PartialInlineElement } from './objectModel/PartialInlineElement';
 
 export { default as BodyScoper } from './scopers/BodyScoper';
-export { default as EditorSelection } from './scopers/EditorSelection';
 export { default as SelectionBlockScoper } from './scopers/SelectionBlockScoper';
 export { default as SelectionScoper } from './scopers/SelectionScoper';
 

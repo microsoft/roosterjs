@@ -492,28 +492,6 @@ export class BodyScoper implements TraversingScoper {
     trimInlineElement(inlineElement: InlineElement): InlineElement;
 }
 
-export class EditorSelection {
-    private rootNode;
-    private selectionRange;
-    private inlineElementFactory;
-    private startInline;
-    private endInline;
-    private startEndCalculated;
-    private startBlock;
-    private endBlock;
-    constructor(rootNode: Node, selectionRange: SelectionRange, inlineElementFactory: InlineElementFactory);
-    readonly collapsed: boolean;
-    readonly inlineElementBeforeStart: InlineElement;
-    readonly startInlineElement: InlineElement;
-    readonly endInlineElement: InlineElement;
-    readonly startBlockElement: BlockElement;
-    readonly endBlockElement: BlockElement;
-    trimInlineElement(inlineElement: InlineElement): InlineElement;
-    isBlockInScope(blockElement: BlockElement): boolean;
-    private calculateStartEndIfNecessory();
-    private calculateStartEndInline();
-}
-
 export class SelectionBlockScoper implements TraversingScoper {
     private startPosition;
     private readonly editorSelection;

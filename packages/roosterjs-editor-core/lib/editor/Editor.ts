@@ -23,7 +23,6 @@ import {
 } from 'roosterjs-editor-types';
 import {
     ContentTraverser,
-    EditorSelection,
     NodeBlockElement,
     InlineElement,
     Position,
@@ -32,6 +31,7 @@ import {
     applyFormat,
     contains,
     fromHtml,
+    getBlockElementAtNode,
     getFirstBlockElement,
     getInlineElementAtNode,
     getTagOfNode,
@@ -576,12 +576,12 @@ export default class Editor {
                 (focusNode.nodeType == NodeType.Text &&
                     focusNode.parentNode == this.core.contentDiv))
         ) {
-            let editorSelection = new EditorSelection(
+            let blockElement = getBlockElementAtNode(
                 this.core.contentDiv,
-                range,
+                range.start.node,
                 this.core.inlineElementFactory
             );
-            let blockElement = editorSelection.startBlockElement;
+
             if (!blockElement) {
                 // Only reason we don't get the selection block is that we have an empty content div
                 // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
