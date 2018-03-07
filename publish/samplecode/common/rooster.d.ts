@@ -543,11 +543,6 @@ declare namespace roosterjs {
     function contains(container: Node, contained: Node, treatSameNodeAsContain?: boolean): boolean;
 
     /**
-     * @deprecated Use sanitizeHtml() instead
-     */
-    function convertInlineCss(sourceHtml: string, additionalStyleNodes?: HTMLStyleElement[]): string;
-
-    /**
      * Sanitize HTML string
      * This function will do the following work:
      * 1. Convert global CSS into inline CSS
@@ -1128,11 +1123,6 @@ declare namespace roosterjs {
     function getNodeAtCursor(editor: Editor, expectedTag?: string, startNode?: Node): Node;
 
     /**
-     * @deprecated Use cacheGetNodeAtCursor instead
-     */
-    function cacheGetListElement(editor: Editor, event?: PluginEvent): Node;
-
-    /**
      * Get the node at selection from event cache if it exists.
      * If an expectedTag is specified, return the nearest ancestor of current node
      * which matches the tag name, or null if no match found in editor.
@@ -1655,16 +1645,6 @@ declare namespace roosterjs {
         private getSelectedImage();
         private isNorth(direction);
         private isWest(direction);
-    }
-
-    /**
-     * @deprecated Use ImageResize instead
-     */
-    class ImageResizePlugin extends ImageResize {
-        /**
-         * @deprecated Use ImageResize instead
-         */
-        constructor(minWidth?: number, minHeight?: number, selectionBorderColor?: string, forcePreserveRatio?: boolean);
     }
 
     class TableResize implements EditorPlugin {

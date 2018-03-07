@@ -261,21 +261,3 @@ export default class ImageResize implements EditorPlugin {
         return direction && direction.substr(1, 1) == 'w';
     }
 }
-
-/**
- * @deprecated Use ImageResize instead
- */
-export class ImageResizePlugin extends ImageResize {
-    /**
-     * @deprecated Use ImageResize instead
-     */
-    constructor(
-        minWidth: number = 10,
-        minHeight: number = 10,
-        selectionBorderColor: string = '#DB626C',
-        forcePreserveRatio: boolean = false
-    ) {
-        super(minWidth, minHeight, selectionBorderColor, forcePreserveRatio);
-        console.warn('ImageResizePlugin class is deprecated. Use ImageResize class instead');
-    }
-}

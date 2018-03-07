@@ -542,11 +542,6 @@ export function changeElementTag(element: HTMLElement, newTag: string, range?: R
 export function contains(container: Node, contained: Node, treatSameNodeAsContain?: boolean): boolean;
 
 /**
- * @deprecated Use sanitizeHtml() instead
- */
-export function convertInlineCss(sourceHtml: string, additionalStyleNodes?: HTMLStyleElement[]): string;
-
-/**
  * Sanitize HTML string
  * This function will do the following work:
  * 1. Convert global CSS into inline CSS
@@ -1127,11 +1122,6 @@ export function getCursorRect(editor: Editor): Rect;
 export function getNodeAtCursor(editor: Editor, expectedTag?: string, startNode?: Node): Node;
 
 /**
- * @deprecated Use cacheGetNodeAtCursor instead
- */
-export function cacheGetListElement(editor: Editor, event?: PluginEvent): Node;
-
-/**
  * Get the node at selection from event cache if it exists.
  * If an expectedTag is specified, return the nearest ancestor of current node
  * which matches the tag name, or null if no match found in editor.
@@ -1654,16 +1644,6 @@ export class ImageResize implements EditorPlugin {
     private getSelectedImage();
     private isNorth(direction);
     private isWest(direction);
-}
-
-/**
- * @deprecated Use ImageResize instead
- */
-export class ImageResizePlugin extends ImageResize {
-    /**
-     * @deprecated Use ImageResize instead
-     */
-    constructor(minWidth?: number, minHeight?: number, selectionBorderColor?: string, forcePreserveRatio?: boolean);
 }
 
 export class TableResize implements EditorPlugin {
