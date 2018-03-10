@@ -1,20 +1,19 @@
-import InlineElementFactory from '../objectModel/InlineElementFactory';
 import { getFirstBlockElement, getFirstInlineElement } from '../objectModel/BlockElement';
 import { InlineElement, BlockElement } from '../objectModel/types';
 import TraversingScoper from './TraversingScoper';
 
 // This provides scoper for traversing the entire editor body starting from the beginning
 class BodyScoper implements TraversingScoper {
-    constructor(private rootNode: Node, private inlineElementFactory: InlineElementFactory) {}
+    constructor(private rootNode: Node) {}
 
     // Get the start block element
     public getStartBlockElement(): BlockElement {
-        return getFirstBlockElement(this.rootNode, this.inlineElementFactory);
+        return getFirstBlockElement(this.rootNode);
     }
 
     // Get the first inline element in the editor
     public getStartInlineElement(): InlineElement {
-        return getFirstInlineElement(this.rootNode, this.inlineElementFactory);
+        return getFirstInlineElement(this.rootNode);
     }
 
     // Since the scope is global, all blocks under the root node are in scope

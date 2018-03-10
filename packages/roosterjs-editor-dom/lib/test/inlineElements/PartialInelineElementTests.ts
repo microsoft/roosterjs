@@ -1,7 +1,7 @@
 import * as TestHelper from '../DomTestHelper';
 import { NodeBlockElement } from '../../objectModel/BlockElement';
+import NodeInlineElement from '../../objectModel/NodeInlineElement';
 import PartialInlineElement from '../../objectModel/PartialInlineElement';
-import InlineElementFactory from '../../objectModel/InlineElementFactory';
 import Position from '../../selection/Position';
 import { InlineElement } from '../../objectModel/types';
 
@@ -26,9 +26,8 @@ function createPartialInlineElementWithDiv(
     startOffset: number,
     endOffset: number
 ): [PartialInlineElement, InlineElement, NodeBlockElement] {
-    let testParentBlock = new NodeBlockElement(testDiv, null /*InlineElementFactory*/);
-    let inlineElementFactory = new InlineElementFactory();
-    let inlineElement = inlineElementFactory.resolve(testDiv.firstChild, testDiv, testParentBlock);
+    let testParentBlock = new NodeBlockElement(testDiv);
+    let inlineElement = new NodeInlineElement(testDiv.firstChild, testParentBlock);
     let startPosition = startOffset
         ? new Position(testDiv.firstChild.firstChild, startOffset)
         : null;
@@ -42,9 +41,8 @@ function createPartialInlineElementWithSpan(
     startOffset: number,
     endOffset: number
 ): [PartialInlineElement, InlineElement, NodeBlockElement] {
-    let testParentBlock = new NodeBlockElement(span.parentNode, null /*InlineElementFactory*/);
-    let inlineElementFactory = new InlineElementFactory();
-    let inlineElement = inlineElementFactory.resolve(span, span.parentNode, testParentBlock);
+    let testParentBlock = new NodeBlockElement(span.parentNode);
+    let inlineElement = new NodeInlineElement(span, testParentBlock);
     let startPosition = startOffset ? new Position(span.firstChild, startOffset) : null;
     let endPosition = endOffset ? new Position(span.firstChild, endOffset) : null;
     let partialInlineElement = new PartialInlineElement(inlineElement, startPosition, endPosition);

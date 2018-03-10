@@ -351,10 +351,9 @@ declare namespace roosterjs {
 
     class NodeBlockElement implements BlockElement {
         private containerNode;
-        private inlineElementFactory;
         private firstInline;
         private lastInline;
-        constructor(containerNode: Node, inlineElementFactory: InlineElementFactory);
+        constructor(containerNode: Node);
         getTextContent(): string;
         getStartNode(): Node;
         getEndNode(): Node;
@@ -372,10 +371,9 @@ declare namespace roosterjs {
         private rootNode;
         private startNode;
         private endNode;
-        private inlineElementFactory;
         private firstInline;
         private lastInline;
-        constructor(rootNode: Node, startNode: Node, endNode: Node, inlineElementFactory: InlineElementFactory);
+        constructor(rootNode: Node, startNode: Node, endNode: Node);
         getTextContent(): string;
         getContentNodes(): Node[];
         getStartNode(): Node;
@@ -389,29 +387,29 @@ declare namespace roosterjs {
         contains(node: Node): boolean;
     }
 
-    function getBlockElementAtNode(rootNode: Node, node: Node, inlineElementFactory: InlineElementFactory): BlockElement;
+    function getBlockElementAtNode(rootNode: Node, node: Node): BlockElement;
 
-    function getFirstBlockElement(rootNode: Node, inlineElementFactory: InlineElementFactory): BlockElement;
+    function getFirstBlockElement(rootNode: Node): BlockElement;
 
-    function getLastBlockElement(rootNode: Node, inlineElementFactory: InlineElementFactory): BlockElement;
+    function getLastBlockElement(rootNode: Node): BlockElement;
 
-    function getNextBlockElement(rootNode: Node, blockElement: BlockElement, inlineElementFactory: InlineElementFactory): BlockElement;
+    function getNextBlockElement(rootNode: Node, blockElement: BlockElement): BlockElement;
 
-    function getPreviousBlockElement(rootNode: Node, blockElement: BlockElement, inlineElementFactory: InlineElementFactory): BlockElement;
+    function getPreviousBlockElement(rootNode: Node, blockElement: BlockElement): BlockElement;
 
-    function getFirstInlineElement(rootNode: Node, inlineElementFactory: InlineElementFactory): InlineElement;
+    function getFirstInlineElement(rootNode: Node): InlineElement;
 
-    function getLastInlineElement(rootNode: Node, inlineElementFactory: InlineElementFactory): InlineElement;
+    function getLastInlineElement(rootNode: Node): InlineElement;
 
-    function getInlineElementAtNode(rootNode: Node, node: Node, inlineElementFactory: InlineElementFactory): InlineElement;
+    function getInlineElementAtNode(rootNode: Node, node: Node): InlineElement;
 
-    function getNextInlineElement(rootNode: Node, inlineElement: InlineElement, inlineElementFactory: InlineElementFactory): InlineElement;
+    function getNextInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement;
 
-    function getPreviousInlineElement(rootNode: Node, inlineElement: InlineElement, inlineElementFactory: InlineElementFactory): InlineElement;
+    function getPreviousInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement;
 
-    function getInlineElementBefore(rootNode: Node, position: Position, inlineElementFactory: InlineElementFactory): InlineElement;
+    function getInlineElementBefore(rootNode: Node, position: Position): InlineElement;
 
-    function getInlineElementAfter(rootNode: Node, position: Position, inlineElementFactory: InlineElementFactory): InlineElement;
+    function getInlineElementAfter(rootNode: Node, position: Position): InlineElement;
 
     interface TraversingScoper {
         getStartBlockElement: () => BlockElement;
@@ -425,10 +423,9 @@ declare namespace roosterjs {
     class ContentTraverser {
         private rootNode;
         private scoper;
-        private inlineElementFactory;
         private currentInline;
         private currentBlock;
-        constructor(rootNode: Node, scoper: TraversingScoper, inlineElementFactory: InlineElementFactory);
+        constructor(rootNode: Node, scoper: TraversingScoper);
         readonly currentBlockElement: BlockElement;
         getNextBlockElement(): BlockElement;
         getPreviousBlockElement(): BlockElement;
@@ -444,10 +441,6 @@ declare namespace roosterjs {
     function getFirstLeafNode(rootNode: Node): Node;
 
     function getLastLeafNode(rootNode: Node): Node;
-
-    class InlineElementFactory {
-        resolve(node: Node, rootNode: Node, parentBlock: BlockElement): InlineElement;
-    }
 
     class NodeInlineElement implements InlineElement {
         private containerNode;
@@ -485,8 +478,7 @@ declare namespace roosterjs {
 
     class BodyScoper implements TraversingScoper {
         private rootNode;
-        private inlineElementFactory;
-        constructor(rootNode: Node, inlineElementFactory: InlineElementFactory);
+        constructor(rootNode: Node);
         getStartBlockElement(): BlockElement;
         getStartInlineElement(): InlineElement;
         isBlockInScope(blockElement: BlockElement): boolean;
@@ -497,7 +489,7 @@ declare namespace roosterjs {
         private startPosition;
         private readonly editorSelection;
         private selectionBlock;
-        constructor(rootNode: Node, selectionRange: SelectionRange, startPosition: ContentPosition, inlineElementFactory: InlineElementFactory);
+        constructor(rootNode: Node, selectionRange: SelectionRange, startPosition: ContentPosition);
         getStartBlockElement(): BlockElement;
         getStartInlineElement(): InlineElement;
         getInlineElementBeforeStart(): InlineElement;
@@ -507,7 +499,7 @@ declare namespace roosterjs {
 
     class SelectionScoper implements TraversingScoper {
         private readonly editorSelection;
-        constructor(rootNode: Node, selectionRange: SelectionRange, inlineElementFactory: InlineElementFactory);
+        constructor(rootNode: Node, selectionRange: SelectionRange);
         getStartBlockElement(): BlockElement;
         getStartInlineElement(): InlineElement;
         isBlockInScope(blockElement: BlockElement): boolean;

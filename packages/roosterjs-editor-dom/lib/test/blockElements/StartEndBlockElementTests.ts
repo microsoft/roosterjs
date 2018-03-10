@@ -1,6 +1,5 @@
 import * as DomTestHelper from '../DomTestHelper';
 import { StartEndBlockElement, getNextInlineElement } from '../../objectModel/BlockElement';
-import InlineElementFactory from '../../objectModel/InlineElementFactory';
 import Position from '../../selection/Position';
 import { InlineElement } from '../../objectModel/types';
 
@@ -12,13 +11,7 @@ function createStartEndBlockElementWithContent(
     let testDiv = DomTestHelper.createElementFromContent(testID, content);
     let startNode = testDiv.firstChild;
     let endNode = testDiv.lastChild;
-    let inlineElementFactory = new InlineElementFactory();
-    let startEndBlockElement = new StartEndBlockElement(
-        testDiv,
-        startNode,
-        endNode,
-        inlineElementFactory
-    );
+    let startEndBlockElement = new StartEndBlockElement(testDiv, startNode, endNode);
     return [startEndBlockElement, testDiv];
 }
 
@@ -398,11 +391,9 @@ describe('StartEndBlockElement isInBlock()', () => {
         rootNode: HTMLElement,
         blockElement: StartEndBlockElement
     ): InlineElement {
-        let inlineElementFactory = new InlineElementFactory();
         let inlineElementAfterBlockElement = getNextInlineElement(
             rootNode,
-            blockElement.getLastInlineElement(),
-            inlineElementFactory
+            blockElement.getLastInlineElement()
         );
         return inlineElementAfterBlockElement;
     }

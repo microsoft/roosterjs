@@ -22,7 +22,6 @@ export { default as ContentTraverser } from './contentTraverser/ContentTraverser
 export { getNextLeafSibling, getPreviousLeafSibling } from './domWalker/getLeafSibling';
 export { getFirstLeafNode, getLastLeafNode } from './domWalker/getLeafNode';
 
-export { default as InlineElementFactory } from './objectModel/InlineElementFactory';
 export { default as NodeInlineElement } from './objectModel/NodeInlineElement';
 export { default as PartialInlineElement } from './objectModel/PartialInlineElement';
 

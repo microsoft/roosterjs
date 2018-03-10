@@ -1,5 +1,4 @@
 import EditorSelection from './EditorSelection';
-import InlineElementFactory from '../objectModel/InlineElementFactory';
 import { ContentPosition } from 'roosterjs-editor-types';
 import { InlineElement, BlockElement } from '../objectModel/types';
 import TraversingScoper from './TraversingScoper';
@@ -16,10 +15,9 @@ class SelectionBlockScoper implements TraversingScoper {
     constructor(
         rootNode: Node,
         selectionRange: SelectionRange,
-        private startPosition: ContentPosition,
-        inlineElementFactory: InlineElementFactory
+        private startPosition: ContentPosition
     ) {
-        this.editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        this.editorSelection = new EditorSelection(rootNode, selectionRange);
     }
 
     // Get the start block element

@@ -1,5 +1,4 @@
 import { InlineElement, BlockElement } from '../objectModel/types';
-import InlineElementFactory from '../objectModel/InlineElementFactory';
 import TraversingScoper from '../scopers/TraversingScoper';
 import {
     getNextBlockElement,
@@ -16,11 +15,7 @@ class ContentTraverser {
     private currentInline: InlineElement;
     private currentBlock: BlockElement;
 
-    constructor(
-        private rootNode: Node,
-        private scoper: TraversingScoper,
-        private inlineElementFactory: InlineElementFactory
-    ) {}
+    constructor(private rootNode: Node, private scoper: TraversingScoper) {}
 
     // Get current block
     public get currentBlockElement(): BlockElement {
@@ -35,9 +30,7 @@ class ContentTraverser {
     // Get next block element
     public getNextBlockElement(): BlockElement {
         let thisBlock = this.currentBlockElement;
-        let nextBlock = thisBlock
-            ? getNextBlockElement(this.rootNode, thisBlock, this.inlineElementFactory)
-            : null;
+        let nextBlock = thisBlock ? getNextBlockElement(this.rootNode, thisBlock) : null;
 
         // Make sure this is right block:
         // 1) the block is in scope per scoper
@@ -55,9 +48,7 @@ class ContentTraverser {
     // Get previous block element
     public getPreviousBlockElement(): BlockElement {
         let thisBlock = this.currentBlockElement;
-        let previousBlock = thisBlock
-            ? getPreviousBlockElement(this.rootNode, thisBlock, this.inlineElementFactory)
-            : null;
+        let previousBlock = thisBlock ? getPreviousBlockElement(this.rootNode, thisBlock) : null;
 
         // Make sure this is right block:
         // 1) the block is in scope per scoper
@@ -91,7 +82,7 @@ class ContentTraverser {
         let thisInline = this.currentInlineElement;
         let nextInline: InlineElement;
         if (thisInline) {
-            nextInline = getNextInlineElement(this.rootNode, thisInline, this.inlineElementFactory);
+            nextInline = getNextInlineElement(this.rootNode, thisInline);
         } else {
             nextInline = this.scoper.getInlineElementAfterStart
                 ? this.scoper.getInlineElementAfterStart()
@@ -120,11 +111,7 @@ class ContentTraverser {
         let thisInline = this.currentInlineElement;
         let previousInline: InlineElement;
         if (thisInline) {
-            previousInline = getPreviousInlineElement(
-                this.rootNode,
-                thisInline,
-                this.inlineElementFactory
-            );
+            previousInline = getPreviousInlineElement(this.rootNode, thisInline);
         } else {
             previousInline = this.scoper.getInlineElementBeforeStart
                 ? this.scoper.getInlineElementBeforeStart()

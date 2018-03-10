@@ -1,5 +1,4 @@
 import * as DomTestHelper from '../DomTestHelper';
-import InlineElementFactory from '../../objectModel/InlineElementFactory';
 import SelectionScoper from '../../scopers/SelectionScoper';
 import PositionType from '../../selection/PositionType';
 import Position from '../../selection/Position';
@@ -9,8 +8,7 @@ import { BlockElement } from '../../objectModel/types';
 let testID = 'SelectionScoper';
 
 function createSelectionScoper(rootNode: Node, selectionRange: SelectionRange) {
-    let inlineElementFactory = new InlineElementFactory();
-    return new SelectionScoper(rootNode, selectionRange, inlineElementFactory);
+    return new SelectionScoper(rootNode, selectionRange);
 }
 
 describe('SelectionScoper getStartBlockElement()', () => {

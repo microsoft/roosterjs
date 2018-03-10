@@ -24,27 +24,18 @@ export default function getContentTraverser(
     let scoper: TraversingScoper;
     switch (scope) {
         case ContentScope.Block:
-            scoper = new SelectionBlockScoper(
-                core.contentDiv,
-                new SelectionRange(range),
-                position,
-                core.inlineElementFactory
-            );
+            scoper = new SelectionBlockScoper(core.contentDiv, new SelectionRange(range), position);
             break;
         case ContentScope.Selection:
-            scoper = new SelectionScoper(
-                core.contentDiv,
-                new SelectionRange(range),
-                core.inlineElementFactory
-            );
+            scoper = new SelectionScoper(core.contentDiv, new SelectionRange(range));
             break;
         case ContentScope.Body:
-            scoper = new BodyScoper(core.contentDiv, core.inlineElementFactory);
+            scoper = new BodyScoper(core.contentDiv);
             break;
     }
 
     if (scoper) {
-        contentTraverser = new ContentTraverser(core.contentDiv, scoper, core.inlineElementFactory);
+        contentTraverser = new ContentTraverser(core.contentDiv, scoper);
     }
 
     return contentTraverser;

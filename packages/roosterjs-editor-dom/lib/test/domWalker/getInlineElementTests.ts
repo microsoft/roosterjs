@@ -1,5 +1,4 @@
 import * as DomTestHelper from '../DomTestHelper';
-import InlineElementFactory from '../../objectModel/InlineElementFactory';
 import {
     getInlineElementAtNode,
     getFirstInlineElement,
@@ -14,19 +13,10 @@ import { InlineElement } from '../../objectModel/types';
 import Position from '../../selection/Position';
 
 let testID = 'getInlineElement';
-let inlineElementFactory: InlineElementFactory;
 
 describe('getInlineElement getInlineElementAtNode()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory();
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     function runTest(
@@ -41,7 +31,7 @@ describe('getInlineElement getInlineElementAtNode()', () => {
         let endPosition = new Position(testNode, endOffset);
 
         // Act
-        let inlineElement = getInlineElementAtNode(rootNode, node, inlineElementFactory);
+        let inlineElement = getInlineElementAtNode(rootNode, node);
 
         // Assert
         expect(
@@ -79,16 +69,8 @@ describe('getInlineElement getInlineElementAtNode()', () => {
 });
 
 describe('getInlineElement getFirstInlineElement()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory();
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     function runTest(
@@ -102,7 +84,7 @@ describe('getInlineElement getFirstInlineElement()', () => {
         let endPosition = new Position(testNode, endOffset);
 
         // Act
-        let inlineElement = getFirstInlineElement(rootNode, inlineElementFactory);
+        let inlineElement = getFirstInlineElement(rootNode);
 
         // Assert
         expect(
@@ -140,16 +122,8 @@ describe('getInlineElement getFirstInlineElement()', () => {
 });
 
 describe('getInlineElement getLastInlineElement()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory();
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     function runTest(
@@ -163,7 +137,7 @@ describe('getInlineElement getLastInlineElement()', () => {
         let endPosition = new Position(testNode, endOffset);
 
         // Act
-        let inlineElement = getLastInlineElement(rootNode, inlineElementFactory);
+        let inlineElement = getLastInlineElement(rootNode);
 
         // Assert
         expect(
@@ -201,16 +175,8 @@ describe('getInlineElement getLastInlineElement()', () => {
 });
 
 describe('getInlineElement getNextInlineElement()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory();
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     function runTest(
@@ -225,7 +191,7 @@ describe('getInlineElement getNextInlineElement()', () => {
         let endPosition = new Position(testNode, endOffset);
 
         // Act
-        let inlineElement = getNextInlineElement(rootNode, currentInline, inlineElementFactory);
+        let inlineElement = getNextInlineElement(rootNode, currentInline);
 
         // Assert
         expect(
@@ -247,7 +213,7 @@ describe('getInlineElement getNextInlineElement()', () => {
         );
 
         // Act
-        let nextInline = getNextInlineElement(rootNode, currentInline, inlineElementFactory);
+        let nextInline = getNextInlineElement(rootNode, currentInline);
 
         // Assert
         expect(nextInline).toBe(null);
@@ -262,7 +228,7 @@ describe('getInlineElement getNextInlineElement()', () => {
         );
 
         // Act
-        let nextInline = getNextInlineElement(rootNode, currentInline, inlineElementFactory);
+        let nextInline = getNextInlineElement(rootNode, currentInline);
 
         // Assert
         expect(nextInline).toBe(null);
@@ -297,16 +263,8 @@ describe('getInlineElement getNextInlineElement()', () => {
 });
 
 describe('getInlineElement getPreviousInlineElement()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory();
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     function runTest(
@@ -321,7 +279,7 @@ describe('getInlineElement getPreviousInlineElement()', () => {
         let endPosition = new Position(testNode, endOffset);
 
         // Act
-        let inlineElement = getPreviousInlineElement(rootNode, currentInline, inlineElementFactory);
+        let inlineElement = getPreviousInlineElement(rootNode, currentInline);
 
         // Assert
         expect(
@@ -343,11 +301,7 @@ describe('getInlineElement getPreviousInlineElement()', () => {
         );
 
         // Act
-        let previousInline = getPreviousInlineElement(
-            rootNode,
-            currentInline,
-            inlineElementFactory
-        );
+        let previousInline = getPreviousInlineElement(rootNode, currentInline);
 
         // Assert
         expect(previousInline).toBe(null);
@@ -362,11 +316,7 @@ describe('getInlineElement getPreviousInlineElement()', () => {
         );
 
         // Act
-        let previousInline = getPreviousInlineElement(
-            rootNode,
-            currentInline,
-            inlineElementFactory
-        );
+        let previousInline = getPreviousInlineElement(rootNode, currentInline);
 
         // Assert
         expect(previousInline).toBe(null);
@@ -401,16 +351,8 @@ describe('getInlineElement getPreviousInlineElement()', () => {
 });
 
 describe('getInlineElement getInlineElementBeforePoint()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory();
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     function runTest(
@@ -425,11 +367,7 @@ describe('getInlineElement getInlineElementBeforePoint()', () => {
         let endPosition = new Position(node, endOffset);
 
         // Act
-        let inlineElementBeforePoint = getInlineElementBefore(
-            rootNode,
-            position,
-            inlineElementFactory
-        );
+        let inlineElementBeforePoint = getInlineElementBefore(rootNode, position);
 
         // Assert
         expect(
@@ -451,11 +389,7 @@ describe('getInlineElement getInlineElementBeforePoint()', () => {
         let position = new Position(rootNode.firstChild, 0);
 
         // Act
-        let inlineElementBeforePoint = getInlineElementBefore(
-            rootNode,
-            position,
-            inlineElementFactory
-        );
+        let inlineElementBeforePoint = getInlineElementBefore(rootNode, position);
 
         // Assert
         expect(inlineElementBeforePoint).toBe(null);
@@ -481,16 +415,8 @@ describe('getInlineElement getInlineElementBeforePoint()', () => {
 });
 
 describe('getInlineElement getInlineElementAfterPoint()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory();
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     function runTest(
@@ -505,11 +431,7 @@ describe('getInlineElement getInlineElementAfterPoint()', () => {
         let endPosition = new Position(node, endOffset);
 
         // Act
-        let inlineElementAfterPoint = getInlineElementAfter(
-            rootNode,
-            position,
-            inlineElementFactory
-        );
+        let inlineElementAfterPoint = getInlineElementAfter(rootNode, position);
 
         // Assert
         expect(
@@ -531,11 +453,7 @@ describe('getInlineElement getInlineElementAfterPoint()', () => {
         let position = new Position(rootNode.lastChild, Position.End);
 
         // Act
-        let inlineElementAfterPoint = getInlineElementAfter(
-            rootNode,
-            position,
-            inlineElementFactory
-        );
+        let inlineElementAfterPoint = getInlineElementAfter(rootNode, position);
 
         // Assert
         expect(inlineElementAfterPoint).toBe(null);

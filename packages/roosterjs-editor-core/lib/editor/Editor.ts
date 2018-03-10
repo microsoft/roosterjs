@@ -183,7 +183,7 @@ export default class Editor {
      * @requires The InlineElement result
      */
     public getInlineElementAtNode(node: Node): InlineElement {
-        return getInlineElementAtNode(this.core.contentDiv, node, this.core.inlineElementFactory);
+        return getInlineElementAtNode(this.core.contentDiv, node);
     }
 
     /**
@@ -576,11 +576,7 @@ export default class Editor {
                 (focusNode.nodeType == NodeType.Text &&
                     focusNode.parentNode == this.core.contentDiv))
         ) {
-            let blockElement = getBlockElementAtNode(
-                this.core.contentDiv,
-                range.start.node,
-                this.core.inlineElementFactory
-            );
+            let blockElement = getBlockElementAtNode(this.core.contentDiv, range.start.node);
 
             if (!blockElement) {
                 // Only reason we don't get the selection block is that we have an empty content div
@@ -616,7 +612,7 @@ export default class Editor {
             this.triggerContentChangedEvent();
         }
 
-        let firstBlock = getFirstBlockElement(this.core.contentDiv, this.core.inlineElementFactory);
+        let firstBlock = getFirstBlockElement(this.core.contentDiv);
         let defaultFormatBlockElement: HTMLElement;
 
         if (!firstBlock) {

@@ -350,10 +350,9 @@ export interface BlockElement {
 
 export class NodeBlockElement implements BlockElement {
     private containerNode;
-    private inlineElementFactory;
     private firstInline;
     private lastInline;
-    constructor(containerNode: Node, inlineElementFactory: InlineElementFactory);
+    constructor(containerNode: Node);
     getTextContent(): string;
     getStartNode(): Node;
     getEndNode(): Node;
@@ -371,10 +370,9 @@ export class StartEndBlockElement implements BlockElement {
     private rootNode;
     private startNode;
     private endNode;
-    private inlineElementFactory;
     private firstInline;
     private lastInline;
-    constructor(rootNode: Node, startNode: Node, endNode: Node, inlineElementFactory: InlineElementFactory);
+    constructor(rootNode: Node, startNode: Node, endNode: Node);
     getTextContent(): string;
     getContentNodes(): Node[];
     getStartNode(): Node;
@@ -388,29 +386,29 @@ export class StartEndBlockElement implements BlockElement {
     contains(node: Node): boolean;
 }
 
-export function getBlockElementAtNode(rootNode: Node, node: Node, inlineElementFactory: InlineElementFactory): BlockElement;
+export function getBlockElementAtNode(rootNode: Node, node: Node): BlockElement;
 
-export function getFirstBlockElement(rootNode: Node, inlineElementFactory: InlineElementFactory): BlockElement;
+export function getFirstBlockElement(rootNode: Node): BlockElement;
 
-export function getLastBlockElement(rootNode: Node, inlineElementFactory: InlineElementFactory): BlockElement;
+export function getLastBlockElement(rootNode: Node): BlockElement;
 
-export function getNextBlockElement(rootNode: Node, blockElement: BlockElement, inlineElementFactory: InlineElementFactory): BlockElement;
+export function getNextBlockElement(rootNode: Node, blockElement: BlockElement): BlockElement;
 
-export function getPreviousBlockElement(rootNode: Node, blockElement: BlockElement, inlineElementFactory: InlineElementFactory): BlockElement;
+export function getPreviousBlockElement(rootNode: Node, blockElement: BlockElement): BlockElement;
 
-export function getFirstInlineElement(rootNode: Node, inlineElementFactory: InlineElementFactory): InlineElement;
+export function getFirstInlineElement(rootNode: Node): InlineElement;
 
-export function getLastInlineElement(rootNode: Node, inlineElementFactory: InlineElementFactory): InlineElement;
+export function getLastInlineElement(rootNode: Node): InlineElement;
 
-export function getInlineElementAtNode(rootNode: Node, node: Node, inlineElementFactory: InlineElementFactory): InlineElement;
+export function getInlineElementAtNode(rootNode: Node, node: Node): InlineElement;
 
-export function getNextInlineElement(rootNode: Node, inlineElement: InlineElement, inlineElementFactory: InlineElementFactory): InlineElement;
+export function getNextInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement;
 
-export function getPreviousInlineElement(rootNode: Node, inlineElement: InlineElement, inlineElementFactory: InlineElementFactory): InlineElement;
+export function getPreviousInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement;
 
-export function getInlineElementBefore(rootNode: Node, position: Position, inlineElementFactory: InlineElementFactory): InlineElement;
+export function getInlineElementBefore(rootNode: Node, position: Position): InlineElement;
 
-export function getInlineElementAfter(rootNode: Node, position: Position, inlineElementFactory: InlineElementFactory): InlineElement;
+export function getInlineElementAfter(rootNode: Node, position: Position): InlineElement;
 
 export interface TraversingScoper {
     getStartBlockElement: () => BlockElement;
@@ -424,10 +422,9 @@ export interface TraversingScoper {
 export class ContentTraverser {
     private rootNode;
     private scoper;
-    private inlineElementFactory;
     private currentInline;
     private currentBlock;
-    constructor(rootNode: Node, scoper: TraversingScoper, inlineElementFactory: InlineElementFactory);
+    constructor(rootNode: Node, scoper: TraversingScoper);
     readonly currentBlockElement: BlockElement;
     getNextBlockElement(): BlockElement;
     getPreviousBlockElement(): BlockElement;
@@ -443,10 +440,6 @@ export function getPreviousLeafSibling(rootNode: Node, startNode: Node): Node;
 export function getFirstLeafNode(rootNode: Node): Node;
 
 export function getLastLeafNode(rootNode: Node): Node;
-
-export class InlineElementFactory {
-    resolve(node: Node, rootNode: Node, parentBlock: BlockElement): InlineElement;
-}
 
 export class NodeInlineElement implements InlineElement {
     private containerNode;
@@ -484,8 +477,7 @@ export class PartialInlineElement implements InlineElement {
 
 export class BodyScoper implements TraversingScoper {
     private rootNode;
-    private inlineElementFactory;
-    constructor(rootNode: Node, inlineElementFactory: InlineElementFactory);
+    constructor(rootNode: Node);
     getStartBlockElement(): BlockElement;
     getStartInlineElement(): InlineElement;
     isBlockInScope(blockElement: BlockElement): boolean;
@@ -496,7 +488,7 @@ export class SelectionBlockScoper implements TraversingScoper {
     private startPosition;
     private readonly editorSelection;
     private selectionBlock;
-    constructor(rootNode: Node, selectionRange: SelectionRange, startPosition: ContentPosition, inlineElementFactory: InlineElementFactory);
+    constructor(rootNode: Node, selectionRange: SelectionRange, startPosition: ContentPosition);
     getStartBlockElement(): BlockElement;
     getStartInlineElement(): InlineElement;
     getInlineElementBeforeStart(): InlineElement;
@@ -506,7 +498,7 @@ export class SelectionBlockScoper implements TraversingScoper {
 
 export class SelectionScoper implements TraversingScoper {
     private readonly editorSelection;
-    constructor(rootNode: Node, selectionRange: SelectionRange, inlineElementFactory: InlineElementFactory);
+    constructor(rootNode: Node, selectionRange: SelectionRange);
     getStartBlockElement(): BlockElement;
     getStartInlineElement(): InlineElement;
     isBlockInScope(blockElement: BlockElement): boolean;

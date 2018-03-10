@@ -1,5 +1,4 @@
 import * as DomTestHelper from '../DomTestHelper';
-import InlineElementFactory from '../../objectModel/InlineElementFactory';
 import {
     getBlockElementAtNode,
     getFirstBlockElement,
@@ -10,24 +9,15 @@ import {
 import { BlockElement } from '../../objectModel/types';
 
 let testID = 'getBlockElement';
-let inlineElementFactory: InlineElementFactory;
 
 describe('getBlockElement getBlockElementAtNode', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory();
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
     });
 
-    afterAll(() => {
-        inlineElementFactory = null;
-    });
-
     function runTest(rootNode: Node, node: Node, testBlockElement: BlockElement) {
         // Act
-        let blockElement = getBlockElementAtNode(rootNode, node, inlineElementFactory);
+        let blockElement = getBlockElementAtNode(rootNode, node);
 
         // Assert
         let isBlockElementEqual = blockElement.equals(testBlockElement);
@@ -79,21 +69,13 @@ describe('getBlockElement getBlockElementAtNode', () => {
 });
 
 describe('getBlockElement getFirstBlockElement', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory();
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
     });
 
-    afterAll(() => {
-        inlineElementFactory = null;
-    });
-
     function runTest(rootNode: Node, testBlockElement: BlockElement) {
         // Act
-        let blockElement = getFirstBlockElement(rootNode, inlineElementFactory);
+        let blockElement = getFirstBlockElement(rootNode);
 
         // Assert
         let isBlockElementEqual = blockElement.equals(testBlockElement);
@@ -145,21 +127,13 @@ describe('getBlockElement getFirstBlockElement', () => {
 });
 
 describe('getBlockElement getLastBlockElement', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory();
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
     });
 
-    afterAll(() => {
-        inlineElementFactory = null;
-    });
-
     function runTest(rootNode: Node, testBlockElement: BlockElement) {
         // Act
-        let blockElement = getLastBlockElement(rootNode, inlineElementFactory);
+        let blockElement = getLastBlockElement(rootNode);
 
         // Assert
         let isBlockElementEqual = blockElement.equals(testBlockElement);
@@ -211,16 +185,8 @@ describe('getBlockElement getLastBlockElement', () => {
 });
 
 describe('getBlockElement getNextBlockElement', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory();
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     function runTest(
@@ -229,7 +195,7 @@ describe('getBlockElement getNextBlockElement', () => {
         testBlockElement: BlockElement
     ) {
         // Act
-        let blockElement = getNextBlockElement(rootNode, currentBlockElement, inlineElementFactory);
+        let blockElement = getNextBlockElement(rootNode, currentBlockElement);
 
         // Assert
         let isBlockElementEqual = blockElement.equals(testBlockElement);
@@ -244,11 +210,7 @@ describe('getBlockElement getNextBlockElement', () => {
         );
 
         // Act
-        let nextBlockElement = getNextBlockElement(
-            rootNode,
-            currentBlockElement,
-            inlineElementFactory
-        );
+        let nextBlockElement = getNextBlockElement(rootNode, currentBlockElement);
 
         // Assert
         expect(nextBlockElement).toBe(null);
@@ -262,11 +224,7 @@ describe('getBlockElement getNextBlockElement', () => {
         );
 
         // Act
-        let nextBlockElement = getNextBlockElement(
-            rootNode,
-            currentBlockElement,
-            inlineElementFactory
-        );
+        let nextBlockElement = getNextBlockElement(rootNode, currentBlockElement);
 
         // Assert
         expect(nextBlockElement).toBe(null);
@@ -309,16 +267,8 @@ describe('getBlockElement getNextBlockElement', () => {
 });
 
 describe('getBlockElement getPreviousBlockElement', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory();
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     function runTest(
@@ -327,11 +277,7 @@ describe('getBlockElement getPreviousBlockElement', () => {
         testBlockElement: BlockElement
     ) {
         // Act
-        let blockElement = getPreviousBlockElement(
-            rootNode,
-            currentBlockElement,
-            inlineElementFactory
-        );
+        let blockElement = getPreviousBlockElement(rootNode, currentBlockElement);
 
         // Assert
         let isBlockElementEqual = blockElement.equals(testBlockElement);
@@ -346,11 +292,7 @@ describe('getBlockElement getPreviousBlockElement', () => {
         );
 
         // Act
-        let previousBlockElement = getPreviousBlockElement(
-            rootNode,
-            currentBlockElement,
-            inlineElementFactory
-        );
+        let previousBlockElement = getPreviousBlockElement(rootNode, currentBlockElement);
 
         // Assert
         expect(previousBlockElement).toBe(null);
@@ -364,11 +306,7 @@ describe('getBlockElement getPreviousBlockElement', () => {
         );
 
         // Act
-        let previousBlockElement = getPreviousBlockElement(
-            rootNode,
-            currentBlockElement,
-            inlineElementFactory
-        );
+        let previousBlockElement = getPreviousBlockElement(rootNode, currentBlockElement);
 
         // Assert
         expect(previousBlockElement).toBe(null);

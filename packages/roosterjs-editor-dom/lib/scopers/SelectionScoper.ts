@@ -1,5 +1,4 @@
 import EditorSelection from './EditorSelection';
-import InlineElementFactory from '../objectModel/InlineElementFactory';
 import { InlineElement, BlockElement } from '../objectModel/types';
 import TraversingScoper from './TraversingScoper';
 import SelectionRange from '../selection/SelectionRange';
@@ -10,12 +9,8 @@ import SelectionRange from '../selection/SelectionRange';
 class SelectionScoper implements TraversingScoper {
     private readonly editorSelection: EditorSelection;
 
-    constructor(
-        rootNode: Node,
-        selectionRange: SelectionRange,
-        inlineElementFactory: InlineElementFactory
-    ) {
-        this.editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+    constructor(rootNode: Node, selectionRange: SelectionRange) {
+        this.editorSelection = new EditorSelection(rootNode, selectionRange);
     }
 
     // Provide a start block as the first block after the cursor

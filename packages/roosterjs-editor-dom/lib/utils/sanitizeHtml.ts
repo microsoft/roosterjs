@@ -399,7 +399,10 @@ function removeDisallowedAttributes(
             } else {
                 element.removeAttribute(name);
             }
-        } else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name) < 0 || value.toLowerCase().indexOf('script:') >= 0) {
+        } else if (
+            ALLOWED_HTML_ATTRIBUTES.indexOf(name) < 0 ||
+            value.toLowerCase().indexOf('script:') >= 0
+        ) {
             element.removeAttribute(attribute.name);
         }
     }

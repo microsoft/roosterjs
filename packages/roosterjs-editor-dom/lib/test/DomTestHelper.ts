@@ -1,8 +1,8 @@
-import InlineElementFactory from '../objectModel/InlineElementFactory';
 import { NodeBlockElement, StartEndBlockElement } from '../objectModel/BlockElement';
 import Position from '../selection/Position';
 import SelectionRange from '../selection/SelectionRange';
 import { InlineElement } from '../objectModel/types';
+import NodeInlineElement from '../objectModel/NodeInlineElement';
 
 // Create element with content and id and insert the element in the DOM
 export function createElementFromContent(id: string, content: string): HTMLElement {
@@ -65,8 +65,7 @@ export function isPositionEqual(position1: Position, position2: Position): boole
 
 // Create NodeBlockElement from given HTMLElement
 export function createNodeBlockElementWithDiv(testDiv: HTMLElement): NodeBlockElement {
-    let inlineElementFactory = new InlineElementFactory();
-    let nodeBlockElement = new NodeBlockElement(testDiv, inlineElementFactory);
+    let nodeBlockElement = new NodeBlockElement(testDiv);
     return nodeBlockElement;
 }
 
@@ -76,21 +75,14 @@ export function createStartEndBlockElementWithStartEndNode(
     startNode: Node,
     endNode: Node
 ): StartEndBlockElement {
-    let inlineElementFactory = new InlineElementFactory();
-    let startEndBlockElement = new StartEndBlockElement(
-        rootNode,
-        startNode,
-        endNode,
-        inlineElementFactory
-    );
+    let startEndBlockElement = new StartEndBlockElement(rootNode, startNode, endNode);
     return startEndBlockElement;
 }
 
 // Create inlineElement from node
 export function createInlineElementFromNode(node: Node, rootNode: Node): InlineElement {
-    let inlineElementFactory = new InlineElementFactory();
-    let parentBlock = new NodeBlockElement(node, null);
-    let inlineElement = inlineElementFactory.resolve(node, rootNode, parentBlock);
+    let parentBlock = new NodeBlockElement(node);
+    let inlineElement = new NodeInlineElement(node, parentBlock);
     return inlineElement;
 }
 

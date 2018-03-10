@@ -50,7 +50,7 @@ export default function insertNode(core: EditorCore, node: Node, option?: Insert
 
 // Insert a node at begin of the editor
 function insertNodeAtBegin(core: EditorCore, node: Node, option: InsertOption) {
-    let firstBlock = getFirstBlockElement(core.contentDiv, core.inlineElementFactory);
+    let firstBlock = getFirstBlockElement(core.contentDiv);
     let insertedNode: Node;
     if (firstBlock) {
         let refNode = firstBlock.getStartNode();
@@ -95,7 +95,7 @@ function insertNodeAtBegin(core: EditorCore, node: Node, option: InsertOption) {
 
 // Insert a node at end of the editor
 function insertNodeAtEnd(core: EditorCore, node: Node, option: InsertOption) {
-    let lastBlock = getLastBlockElement(core.contentDiv, core.inlineElementFactory);
+    let lastBlock = getLastBlockElement(core.contentDiv);
     let insertedNode: Node;
     if (lastBlock) {
         let refNode = lastBlock.getEndNode();
@@ -149,11 +149,7 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
         // Create a clone (backup) for the selection first as we may need to restore to it later
         let clonedRange = new SelectionRange(rawRange);
 
-        let blockElement = getBlockElementAtNode(
-            core.contentDiv,
-            rawRange.startContainer,
-            core.inlineElementFactory
-        );
+        let blockElement = getBlockElementAtNode(core.contentDiv, rawRange.startContainer);
 
         if (blockElement) {
             let endNode = blockElement.getEndNode();
