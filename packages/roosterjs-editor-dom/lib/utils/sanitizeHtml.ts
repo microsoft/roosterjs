@@ -20,7 +20,8 @@ export default function sanitizeHtml(
     html: string,
     additionalStyleNodes?: HTMLStyleElement[],
     convertInlineCssOnly?: boolean,
-    propertyCallbacks?: SanitizeHtmlPropertyCallback
+    propertyCallbacks?: SanitizeHtmlPropertyCallback,
+    currentStyle?: {[name: string]: string}
 ): string {
     let parser = new DOMParser();
     let matches = HTML_REGEX.exec(html);
@@ -45,57 +46,11 @@ export default function sanitizeHtml(
         let callbackPropertyNames = (propertyCallbacks ? Object.keys(propertyCallbacks) : []).map(
             name => name.toLowerCase()
         );
-        removeUnusedCssAndDangerousContent(doc.body, callbackPropertyNames, propertyCallbacks);
+        removeUnusedCssAndDangerousContent(doc.body, callbackPropertyNames, propertyCallbacks, currentStyle || {});
     }
 
     return doc.body.innerHTML;
 }
-
-// Inheritable CSS properties
-// Ref: https://www.w3.org/TR/CSS21/propidx.html
-const INHERITABLE_PROPERTOES = [
-    'azimuth',
-    'border-collapse',
-    'border-spacing',
-    'caption-side',
-    'color',
-    'cursor',
-    'direction',
-    'elevation',
-    'empty-cells',
-    'font-family',
-    'font-size',
-    'font-style',
-    'font-variant',
-    'font-weight',
-    'font',
-    'letter-spacing',
-    'line-height',
-    'list-style-image',
-    'list-style-position',
-    'list-style-type',
-    'list-style',
-    'orphans',
-    'pitch-range',
-    'pitch',
-    'quotes',
-    'richness',
-    'speak-header',
-    'speak-numeral',
-    'speak-punctuation',
-    'speak',
-    'speech-rate',
-    'stress',
-    'text-align',
-    'text-indent',
-    'text-transform',
-    'visibility',
-    'voice-family',
-    'volume',
-    'white-space',
-    'widows',
-    'word-spacing',
-];
 
 const ALLOWED_HTML_TAGS = [
     'BODY',
@@ -305,7 +260,7 @@ function removeUnusedCssAndDangerousContent(
     node: Node,
     callbackPropertyNames: string[],
     propertyCallbacks: SanitizeHtmlPropertyCallback,
-    currentStyle: { [name: string]: string } = {}
+    currentStyle: { [name: string]: string }
 ) {
     let thisStyle = Object.assign ? Object.assign({}, currentStyle) : {};
     let nodeType = node.nodeType;
@@ -349,10 +304,10 @@ function removeUnusedCss(element: HTMLElement, thisStyle: { [name: string]: stri
         if (pair.length == 2) {
             let name = pair[0].trim().toLowerCase();
             let value = pair[1].trim().toLowerCase();
-            let isInheritable = INHERITABLE_PROPERTOES.indexOf(name) >= 0;
+            let isInheritable = thisStyle[name] != undefined;
             let keep =
                 value != 'inherit' &&
-                (value != thisStyle[name] || !isInheritable) &&
+                ((isInheritable && value != thisStyle[name]) || (!isInheritable && value != 'initial' && value != 'normal')) &&
                 !isDangerousCss(name, value);
             if (keep && isInheritable) {
                 thisStyle[name] = value;
