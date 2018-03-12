@@ -3127,8 +3127,10 @@ function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propert
     var nodeType = node.nodeType;
     var tag = getTagOfNode_1.default(node) || '';
     var isElement = nodeType == 1 /* Element */;
+    var isText = nodeType == 3 /* Text */;
     if ((isElement && ALLOWED_HTML_TAGS.indexOf(tag) < 0 && tag.indexOf(':') < 0) ||
-        (!isElement && nodeType != 3 /* Text */)) {
+        (isText && /^[\r\n]+$/gm.test(node.nodeValue)) ||
+        (!isElement && !isText)) {
         node.parentNode.removeChild(node);
     }
     else if (nodeType == 1 /* Element */) {
@@ -7827,9 +7829,11 @@ var CONTAINER_HTML = '<div contenteditable style="width: 1px; height: 1px; overf
  */
 function buildClipboardData(event, editor, callback, useDirectPaste) {
     var dataTransfer = event.clipboardData || editor.getDocument().defaultView.clipboardData;
+    var types = dataTransfer.types ? [].slice.call(dataTransfer.types) : [];
     var clipboardData = {
         snapshotBeforePaste: null,
         originalFormat: getCurrentFormat(editor),
+        types: types,
         image: getImage(dataTransfer),
         text: dataTransfer.getData('text'),
         html: null,

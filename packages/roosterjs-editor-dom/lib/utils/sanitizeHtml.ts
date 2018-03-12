@@ -311,10 +311,12 @@ function removeUnusedCssAndDangerousContent(
     let nodeType = node.nodeType;
     let tag = getTagOfNode(node) || '';
     let isElement = nodeType == NodeType.Element;
+    let isText = nodeType == NodeType.Text;
 
     if (
         (isElement && ALLOWED_HTML_TAGS.indexOf(tag) < 0 && tag.indexOf(':') < 0) ||
-        (!isElement && nodeType != NodeType.Text)
+        (isText &&  /^[\r\n]*$/g.test(node.nodeValue)) ||
+        (!isElement && !isText)
     ) {
         node.parentNode.removeChild(node);
     } else if (nodeType == NodeType.Element) {
