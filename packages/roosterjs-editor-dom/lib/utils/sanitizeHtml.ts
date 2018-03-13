@@ -280,7 +280,7 @@ function applyInlineStyle(doc: Document, additionalStyleNodes: HTMLStyleElement[
         for (let j = styleSheet.cssRules.length - 1; j >= 0; j--) {
             // Skip any none-style rule, i.e. @page
             let styleRule = styleSheet.cssRules[j] as CSSStyleRule;
-            let text = styleRule.style.cssText;
+            let text = styleRule && styleRule.style ? styleRule.style.cssText : null;
             if (styleRule.type != CSSRule.STYLE_RULE || !text || !styleRule.selectorText) {
                 continue;
             }
