@@ -43,6 +43,7 @@ export { default as getComputedStyle } from './utils/getComputedStyle';
 export { default as getTagOfNode } from './utils/getTagOfNode';
 export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isDocumentPosition } from './utils/isDocumentPosition';
+export { default as isEditorPointAfter } from './utils/isEditorPointAfter';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
 export { default as isTextualInlineElement } from './utils/isTextualInlineElement';
 export { default as matchWhiteSpaces } from './utils/matchWhiteSpaces';

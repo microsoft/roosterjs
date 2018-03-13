@@ -1,87 +1,57 @@
 import EditorCore from '../editor/EditorCore';
 import getSelection from './getSelection';
 import getSelectionRange from './getSelectionRange';
-import { DocumentPosition, Rect, NodeType, NodeBoundary } from 'roosterjs-editor-types';
-import { isDocumentPosition, normalizeEditorPoint } from 'roosterjs-editor-dom';
+import { Rect, NodeType } from 'roosterjs-editor-types';
+import { normalizeEditorPoint, isEditorPointAfter } from 'roosterjs-editor-dom';
 
-// Returns a rect representing the location of the cursor.
-// In case there is a uncollapsed selection witin editor, this returns
-// the position for focus node.
-// The returned rect structure has a left and right and they should be same
-// here since it is for cursor, not for a range.
+/**
+ * Returns a rect representing the location of the cursor.
+ * In case there is a uncollapsed selection witin editor, this returns
+ * the position for focus node.
+ * The returned rect structure has a left and right and they should be same
+ * here since it is for cursor, not for a range.
+ */
 export default function getCursorRect(core: EditorCore): Rect {
+    let selection = getSelection(core);
     let range = getSelectionRange(core, false /*tryGetFromCache*/);
 
-    if (!range) {
+    if (!range || !selection || !selection.focusNode || !selection.anchorNode) {
         return null;
     }
 
-    // There isn't a browser API that gets you position of cursor.
-    // Different browsers emit slightly different behaviours and there is no a single API that
-    // can help achieve the goal across all browsers. At high level, we try to achieve the goal
-    // by below approach:
-    // 1) first, obtain a collapsed range pointing to cursor
-    // 2) try to get rect using range.getBoundingClientRect()
-    // 3）fallback to a nearby range.getBoundingClientRect()
-    // 4) fallback range.getClientRects()
-    // 5) lastly fallback range.startContainer.getBoundingClientRect()
-
+    let focusPosition = normalizeEditorPoint(selection.focusNode, selection.focusOffset);
+    let node =  focusPosition.containerNode;
     // 1) obtain a collapsed range pointing to cursor
     if (!range.collapsed) {
-        // Range is not collapsed, collapse to cursor first
-        let selection = getSelection(core);
-        if (selection && selection.focusNode && selection.anchorNode) {
-            let forwardSelection =
-                selection.focusNode == selection.anchorNode
-                    ? selection.focusOffset > selection.anchorOffset
-                    : isDocumentPosition(
-                          selection.anchorNode.compareDocumentPosition(selection.focusNode),
-                          DocumentPosition.Following
-                      );
-            range = range.cloneRange();
-            range.collapse(!forwardSelection /*toStart*/);
-        }
+        let forwardSelection = isEditorPointAfter(
+            focusPosition,
+            normalizeEditorPoint(selection.anchorNode, selection.anchorOffset)
+        );
+        range = range.cloneRange();
+        range.collapse(!forwardSelection /*toStart*/);
     }
 
     // 2) try to get rect using range.getBoundingClientRect()
     let rect = getRectFromClientRect(range.getBoundingClientRect());
 
-    // 3）fallback to a nearby range.getBoundingClientRect()
-    if (!rect) {
-        // This is often the case the cursor runs in middle of two nodes.
-        // i.e. <p>{cursor}<br></p>, or <p><img ...>{cursor}text</p>.
-        // range.getBoundingClientRect mostly return a client rect of all 0
-        // Skip this if we're in middle of a text node
-        let editorPoint = normalizeEditorPoint(range.startContainer, range.startOffset);
-        if (
-            editorPoint.containerNode.nodeType != NodeType.Text ||
-            editorPoint.containerNode.nodeValue.length == editorPoint.offset
-        ) {
-            let nearbyRange = core.document.createRange();
-            nearbyRange.selectNode(editorPoint.containerNode);
-            rect = getRectFromClientRect(nearbyRange.getBoundingClientRect());
-            if (rect) {
-                // Fix the position to boundary of the nearby range
-                rect.left = rect.right =
-                    editorPoint.offset == NodeBoundary.Begin ? rect.left : rect.right;
-            }
-        }
+    // 3) if current cursor is inside text node, insert a SPAN and get the rect of SPAN
+    if (!rect && node.nodeType == NodeType.Text) {
+        let document = core.document;
+        let span = document.createElement('SPAN');
+        let range = document.createRange();
+        range.setStart(node, focusPosition.offset);
+        range.collapse(true /*toStart*/);
+        range.insertNode(span);
+        rect = getRectFromClientRect(span.getBoundingClientRect());
+        span.parentNode.removeChild(span);
     }
 
-    // 4) fallback range.getClientRects()
+    // 4) fallback to element.getBoundingClientRect()
     if (!rect) {
-        // This is often the case Safari when cursor runs in middle of text node
-        // range.getBoundingClientRect() returns a all 0 client rect.
-        // range.getClientRects() returns a good client rect
-        let clientRects = range.getClientRects();
-        if (clientRects && clientRects.length == 1) {
-            rect = getRectFromClientRect(clientRects[0]);
+        node = node.nodeType == NodeType.Element ? node : node.parentNode;
+        if (node && node.nodeType == NodeType.Element) {
+            rect = getRectFromClientRect((<Element>node).getBoundingClientRect());
         }
-    }
-
-    // 5) lastly fallback range.startContainer.getBoundingClientRect()
-    if (!rect && range.startContainer instanceof Element) {
-        rect = getRectFromClientRect((range.startContainer as Element).getBoundingClientRect());
     }
 
     return rect;

@@ -612,6 +612,8 @@ declare namespace roosterjs {
      */
     function isDocumentPosition(position: DocumentPosition, targets: DocumentPosition | DocumentPosition[]): boolean;
 
+    function isEditorPointAfter(point1: EditorPoint, point2: EditorPoint): boolean;
+
     /**
      * Check if a given node has visible content
      */

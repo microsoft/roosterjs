@@ -87,7 +87,7 @@ exports.getInlineElementBeforePoint = BlockElement_1.getInlineElementBeforePoint
 exports.getInlineElementAfterPoint = BlockElement_1.getInlineElementAfterPoint;
 var ContentTraverser_1 = __webpack_require__(62);
 exports.ContentTraverser = ContentTraverser_1.default;
-var getLeafSibling_1 = __webpack_require__(16);
+var getLeafSibling_1 = __webpack_require__(17);
 exports.getNextLeafSibling = getLeafSibling_1.getNextLeafSibling;
 exports.getPreviousLeafSibling = getLeafSibling_1.getPreviousLeafSibling;
 var getLeafNode_1 = __webpack_require__(34);
@@ -117,7 +117,7 @@ var applyFormat_1 = __webpack_require__(68);
 exports.applyFormat = applyFormat_1.default;
 var changeElementTag_1 = __webpack_require__(69);
 exports.changeElementTag = changeElementTag_1.default;
-var contains_1 = __webpack_require__(14);
+var contains_1 = __webpack_require__(15);
 exports.contains = contains_1.default;
 var convertInlineCss_1 = __webpack_require__(70);
 exports.convertInlineCss = convertInlineCss_1.default;
@@ -125,7 +125,7 @@ var sanitizeHtml_1 = __webpack_require__(38);
 exports.sanitizeHtml = sanitizeHtml_1.default;
 var fromHtml_1 = __webpack_require__(23);
 exports.fromHtml = fromHtml_1.default;
-var getComputedStyle_1 = __webpack_require__(15);
+var getComputedStyle_1 = __webpack_require__(16);
 exports.getComputedStyle = getComputedStyle_1.default;
 var getTagOfNode_1 = __webpack_require__(8);
 exports.getTagOfNode = getTagOfNode_1.default;
@@ -133,6 +133,8 @@ var isBlockElement_1 = __webpack_require__(33);
 exports.isBlockElement = isBlockElement_1.default;
 var isDocumentPosition_1 = __webpack_require__(7);
 exports.isDocumentPosition = isDocumentPosition_1.default;
+var isEditorPointAfter_1 = __webpack_require__(14);
+exports.isEditorPointAfter = isEditorPointAfter_1.default;
 var isNodeEmpty_1 = __webpack_require__(71);
 exports.isNodeEmpty = isNodeEmpty_1.default;
 var isTextualInlineElement_1 = __webpack_require__(72);
@@ -226,7 +228,7 @@ var Editor_1 = __webpack_require__(60);
 exports.Editor = Editor_1.default;
 var Undo_1 = __webpack_require__(30);
 exports.Undo = Undo_1.default;
-var BrowserData_1 = __webpack_require__(19);
+var BrowserData_1 = __webpack_require__(20);
 exports.browserData = BrowserData_1.default;
 var eventDataCacheUtils_1 = __webpack_require__(85);
 exports.clearEventDataCache = eventDataCacheUtils_1.clearEventDataCache;
@@ -370,8 +372,8 @@ exports.matchLink = matchLink_1.default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getSelection_1 = __webpack_require__(17);
-var hasFocus_1 = __webpack_require__(18);
+var getSelection_1 = __webpack_require__(18);
+var hasFocus_1 = __webpack_require__(19);
 var isRangeInContainer_1 = __webpack_require__(39);
 function getSelectionRange(core, tryGetFromCache) {
     var result = null;
@@ -456,13 +458,13 @@ exports.default = getTagOfNode;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var contains_1 = __webpack_require__(14);
+var contains_1 = __webpack_require__(15);
 var getTagOfNode_1 = __webpack_require__(8);
 var isDocumentPosition_1 = __webpack_require__(7);
-var isEditorPointAfter_1 = __webpack_require__(20);
+var isEditorPointAfter_1 = __webpack_require__(14);
 var isNodeAfter_1 = __webpack_require__(21);
 var wrap_1 = __webpack_require__(36);
-var getLeafSibling_1 = __webpack_require__(16);
+var getLeafSibling_1 = __webpack_require__(17);
 // This presents an inline element that can be reprented by a single html node.
 // This serves as base for most inline element as it contains most implentation
 // of all operations that can happen on an inline element. Other sub inline elements mostly
@@ -636,8 +638,8 @@ exports.default = NodeInlineElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getSelection_1 = __webpack_require__(17);
-var hasFocus_1 = __webpack_require__(18);
+var getSelection_1 = __webpack_require__(18);
+var hasFocus_1 = __webpack_require__(19);
 var isRangeInContainer_1 = __webpack_require__(39);
 function updateSelection(core, range) {
     var selectionUpdated = false;
@@ -736,14 +738,14 @@ exports.cacheGetListElement = cacheGetListElement;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(13);
-var contains_1 = __webpack_require__(14);
+var contains_1 = __webpack_require__(15);
 var getTagOfNode_1 = __webpack_require__(8);
 var isBlockElement_1 = __webpack_require__(33);
 var isDocumentPosition_1 = __webpack_require__(7);
 var isNodeAfter_1 = __webpack_require__(21);
 var shouldSkipNode_1 = __webpack_require__(22);
 var getLeafNode_1 = __webpack_require__(34);
-var getLeafSibling_1 = __webpack_require__(16);
+var getLeafSibling_1 = __webpack_require__(17);
 // Get the inline element at a node
 function getInlineElementAtNode(rootNode, node, inlineElementFactory) {
     // An inline element has to be in a block element, get the block first and then resolve through the factory
@@ -1325,7 +1327,7 @@ exports.getBlockElementAtNode = getBlockElementAtNode;
 Object.defineProperty(exports, "__esModule", { value: true });
 var editorPointEquals_1 = __webpack_require__(32);
 var isDocumentPosition_1 = __webpack_require__(7);
-var isEditorPointAfter_1 = __webpack_require__(20);
+var isEditorPointAfter_1 = __webpack_require__(14);
 // This is a special version of inline element that identifies a section of an inline element
 // We often have the need to cut an inline element in half and perform some operation only on half of an inline element
 // i.e. users select only some text of a text node and apply format, in that case, format has to happen on partial of an inline element
@@ -1461,6 +1463,23 @@ exports.default = PartialInlineElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var isNodeAfter_1 = __webpack_require__(21);
+// Checks if point1 is after point2
+function isEditorPointAfter(point1, point2) {
+    return point1.containerNode == point2.containerNode
+        ? point1.offset > point2.offset
+        : isNodeAfter_1.default(point1.containerNode, point2.containerNode);
+}
+exports.default = isEditorPointAfter;
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var isDocumentPosition_1 = __webpack_require__(7);
 // Test if a node contains another node
 function contains(container, contained) {
@@ -1472,7 +1491,7 @@ exports.default = contains;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1494,13 +1513,13 @@ exports.default = getComputedStyle;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var contains_1 = __webpack_require__(14);
+var contains_1 = __webpack_require__(15);
 var shouldSkipNode_1 = __webpack_require__(22);
 function getLeafSibling(rootNode, startNode, isNext) {
     var result = null;
@@ -1551,7 +1570,7 @@ exports.getPreviousLeafSibling = getPreviousLeafSibling;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1565,7 +1584,7 @@ exports.default = getSelection;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1581,7 +1600,7 @@ exports.default = hasFocus;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1650,23 +1669,6 @@ exports.default = browserData;
 
 
 /***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var isNodeAfter_1 = __webpack_require__(21);
-// Checks if point1 is after point2
-function isEditorPointAfter(point1, point2) {
-    return point1.containerNode == point2.containerNode
-        ? point1.offset > point2.offset
-        : isNodeAfter_1.default(point1.containerNode, point2.containerNode);
-}
-exports.default = isEditorPointAfter;
-
-
-/***/ }),
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1690,7 +1692,7 @@ exports.default = isNodeAfter;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(15);
+var getComputedStyle_1 = __webpack_require__(16);
 // Check if it is an empty text node
 function isEmptyTextNode(node) {
     return !!(node &&
@@ -1785,7 +1787,7 @@ exports.default = TextInlineElement;
 Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(13);
 var editorPointEquals_1 = __webpack_require__(32);
-var isEditorPointAfter_1 = __webpack_require__(20);
+var isEditorPointAfter_1 = __webpack_require__(14);
 var normalizeEditorPoint_1 = __webpack_require__(26);
 var BlockElement_1 = __webpack_require__(12);
 // This is a utility like class that produces editor point/inline/block element around or within a selection range
@@ -2061,7 +2063,7 @@ exports.default = normalizeEditorPoint;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var getSelectionRange_1 = __webpack_require__(5);
-var hasFocus_1 = __webpack_require__(18);
+var hasFocus_1 = __webpack_require__(19);
 var isVoidHtmlElement_1 = __webpack_require__(40);
 var restoreSelection_1 = __webpack_require__(41);
 var updateSelection_1 = __webpack_require__(10);
@@ -2550,7 +2552,7 @@ exports.default = Undo;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var BrowserData_1 = __webpack_require__(19);
+var BrowserData_1 = __webpack_require__(20);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 // Undo cursor marker
 var CURSOR_START = 'cursor-start';
@@ -2692,7 +2694,7 @@ exports.default = editorPointEquals;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(15);
+var getComputedStyle_1 = __webpack_require__(16);
 // Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.
 // TODO: should inline-block be considered as block?
 // Other block like style to consider: table-caption, table-header-group, table-footer-group etc.
@@ -2714,7 +2716,7 @@ exports.default = isBlockElement;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var shouldSkipNode_1 = __webpack_require__(22);
-var getLeafSibling_1 = __webpack_require__(16);
+var getLeafSibling_1 = __webpack_require__(17);
 function getLeafNode(rootNode, isFirst) {
     var getChild = isFirst ? function (node) { return node.firstChild; } : function (node) { return node.lastChild; };
     var result = getChild(rootNode);
@@ -3128,7 +3130,7 @@ function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propert
     var isElement = nodeType == 1 /* Element */;
     var isText = nodeType == 3 /* Text */;
     if ((isElement && ALLOWED_HTML_TAGS.indexOf(tag) < 0 && tag.indexOf(':') < 0) ||
-        (isText && /^[\r\n]+$/gm.test(node.nodeValue)) ||
+        (isText && /^[\r\n]*$/g.test(node.nodeValue)) ||
         (!isElement && !isText)) {
         node.parentNode.removeChild(node);
     }
@@ -4108,14 +4110,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Undo_1 = __webpack_require__(30);
 var applyInlineStyle_1 = __webpack_require__(79);
 var attachDomEvent_1 = __webpack_require__(80);
-var BrowserData_1 = __webpack_require__(19);
+var BrowserData_1 = __webpack_require__(20);
 var calcDefaultFormat_1 = __webpack_require__(81);
 var focus_1 = __webpack_require__(27);
 var getContentTraverser_1 = __webpack_require__(42);
 var getCursorRect_1 = __webpack_require__(82);
-var getSelection_1 = __webpack_require__(17);
+var getSelection_1 = __webpack_require__(18);
 var getSelectionRange_1 = __webpack_require__(5);
-var hasFocus_1 = __webpack_require__(18);
+var hasFocus_1 = __webpack_require__(19);
 var insertNode_1 = __webpack_require__(83);
 var restoreSelection_1 = __webpack_require__(41);
 var saveSelectionRange_1 = __webpack_require__(84);
@@ -5149,7 +5151,7 @@ exports.default = applyFormat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(15);
+var getComputedStyle_1 = __webpack_require__(16);
 var getTagOfNode_1 = __webpack_require__(8);
 var normalizeEditorPoint_1 = __webpack_require__(26);
 function changeElementTag(element, newTag, range) {
@@ -5732,74 +5734,49 @@ exports.default = calcDefaultFormat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getSelection_1 = __webpack_require__(17);
+var getSelection_1 = __webpack_require__(18);
 var getSelectionRange_1 = __webpack_require__(5);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-// Returns a rect representing the location of the cursor.
-// In case there is a uncollapsed selection witin editor, this returns
-// the position for focus node.
-// The returned rect structure has a left and right and they should be same
-// here since it is for cursor, not for a range.
+/**
+ * Returns a rect representing the location of the cursor.
+ * In case there is a uncollapsed selection witin editor, this returns
+ * the position for focus node.
+ * The returned rect structure has a left and right and they should be same
+ * here since it is for cursor, not for a range.
+ */
 function getCursorRect(core) {
+    var selection = getSelection_1.default(core);
     var range = getSelectionRange_1.default(core, false /*tryGetFromCache*/);
-    if (!range) {
+    if (!range || !selection || !selection.focusNode || !selection.anchorNode) {
         return null;
     }
-    // There isn't a browser API that gets you position of cursor.
-    // Different browsers emit slightly different behaviours and there is no a single API that
-    // can help achieve the goal across all browsers. At high level, we try to achieve the goal
-    // by below approach:
-    // 1) first, obtain a collapsed range pointing to cursor
-    // 2) try to get rect using range.getBoundingClientRect()
-    // 3）fallback to a nearby range.getBoundingClientRect()
-    // 4) fallback range.getClientRects()
-    // 5) lastly fallback range.startContainer.getBoundingClientRect()
+    var focusPosition = roosterjs_editor_dom_1.normalizeEditorPoint(selection.focusNode, selection.focusOffset);
+    var node = focusPosition.containerNode;
     // 1) obtain a collapsed range pointing to cursor
     if (!range.collapsed) {
-        // Range is not collapsed, collapse to cursor first
-        var selection = getSelection_1.default(core);
-        if (selection && selection.focusNode && selection.anchorNode) {
-            var forwardSelection = selection.focusNode == selection.anchorNode
-                ? selection.focusOffset > selection.anchorOffset
-                : roosterjs_editor_dom_1.isDocumentPosition(selection.anchorNode.compareDocumentPosition(selection.focusNode), 4 /* Following */);
-            range = range.cloneRange();
-            range.collapse(!forwardSelection /*toStart*/);
-        }
+        var forwardSelection = roosterjs_editor_dom_1.isEditorPointAfter(focusPosition, roosterjs_editor_dom_1.normalizeEditorPoint(selection.anchorNode, selection.anchorOffset));
+        range = range.cloneRange();
+        range.collapse(!forwardSelection /*toStart*/);
     }
     // 2) try to get rect using range.getBoundingClientRect()
     var rect = getRectFromClientRect(range.getBoundingClientRect());
-    // 3）fallback to a nearby range.getBoundingClientRect()
-    if (!rect) {
-        // This is often the case the cursor runs in middle of two nodes.
-        // i.e. <p>{cursor}<br></p>, or <p><img ...>{cursor}text</p>.
-        // range.getBoundingClientRect mostly return a client rect of all 0
-        // Skip this if we're in middle of a text node
-        var editorPoint = roosterjs_editor_dom_1.normalizeEditorPoint(range.startContainer, range.startOffset);
-        if (editorPoint.containerNode.nodeType != 3 /* Text */ ||
-            editorPoint.containerNode.nodeValue.length == editorPoint.offset) {
-            var nearbyRange = core.document.createRange();
-            nearbyRange.selectNode(editorPoint.containerNode);
-            rect = getRectFromClientRect(nearbyRange.getBoundingClientRect());
-            if (rect) {
-                // Fix the position to boundary of the nearby range
-                rect.left = rect.right =
-                    editorPoint.offset == 0 /* Begin */ ? rect.left : rect.right;
-            }
-        }
+    // 3) if current cursor is inside text node, insert a SPAN and get the rect of SPAN
+    if (!rect && node.nodeType == 3 /* Text */) {
+        var document_1 = core.document;
+        var span = document_1.createElement('SPAN');
+        var range_1 = document_1.createRange();
+        range_1.setStart(node, focusPosition.offset);
+        range_1.collapse(true /*toStart*/);
+        range_1.insertNode(span);
+        rect = getRectFromClientRect(span.getBoundingClientRect());
+        span.parentNode.removeChild(span);
     }
-    // 4) fallback range.getClientRects()
+    // 4) fallback to element.getBoundingClientRect()
     if (!rect) {
-        // This is often the case Safari when cursor runs in middle of text node
-        // range.getBoundingClientRect() returns a all 0 client rect.
-        // range.getClientRects() returns a good client rect
-        var clientRects = range.getClientRects();
-        if (clientRects && clientRects.length == 1) {
-            rect = getRectFromClientRect(clientRects[0]);
+        node = node.nodeType == 1 /* Element */ ? node : node.parentNode;
+        if (node && node.nodeType == 1 /* Element */) {
+            rect = getRectFromClientRect(node.getBoundingClientRect());
         }
-    }
-    // 5) lastly fallback range.startContainer.getBoundingClientRect()
-    if (!rect && range.startContainer instanceof Element) {
-        rect = getRectFromClientRect(range.startContainer.getBoundingClientRect());
     }
     return rect;
 }
