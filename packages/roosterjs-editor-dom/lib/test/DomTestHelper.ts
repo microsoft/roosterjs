@@ -1,8 +1,9 @@
-import { NodeBlockElement, StartEndBlockElement } from '../objectModel/BlockElement';
+import NodeBlockElement from '../blockElements/NodeBlockElement';
+import StartEndBlockElement from '../blockElements/StartEndBlockElement';
 import Position from '../selection/Position';
 import SelectionRange from '../selection/SelectionRange';
-import { InlineElement } from '../objectModel/types';
-import NodeInlineElement from '../objectModel/NodeInlineElement';
+import InlineElement from '../inlineElements/InlineElement';
+import NodeInlineElement from '../inlineElements/NodeInlineElement';
 
 // Create element with content and id and insert the element in the DOM
 export function createElementFromContent(id: string, content: string): HTMLElement {
@@ -75,14 +76,13 @@ export function createStartEndBlockElementWithStartEndNode(
     startNode: Node,
     endNode: Node
 ): StartEndBlockElement {
-    let startEndBlockElement = new StartEndBlockElement(rootNode, startNode, endNode);
+    let startEndBlockElement = new StartEndBlockElement(startNode, endNode);
     return startEndBlockElement;
 }
 
 // Create inlineElement from node
 export function createInlineElementFromNode(node: Node, rootNode: Node): InlineElement {
-    let parentBlock = new NodeBlockElement(node);
-    let inlineElement = new NodeInlineElement(node, parentBlock);
+    let inlineElement = new NodeInlineElement(node);
     return inlineElement;
 }
 

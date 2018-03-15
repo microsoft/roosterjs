@@ -1,11 +1,13 @@
-import { InlineElement, BlockElement } from '../objectModel/types';
+import InlineElement from '../inlineElements/InlineElement';
+import BlockElement from '../blockElements/BlockElement';
 import TraversingScoper from '../scopers/TraversingScoper';
 import {
-    getNextBlockElement,
-    getPreviousBlockElement,
     getNextInlineElement,
     getPreviousInlineElement,
-} from '../objectModel/BlockElement';
+} from '../inlineElements/getNextPreviousInlineElement';
+import {     getNextBlockElement,
+    getPreviousBlockElement,
+} from '../blockElements/getNextPreviousBlockElement';
 
 // The provides traversing of content inside editor.
 // There are two ways to traverse, block by block, or inline element by inline element

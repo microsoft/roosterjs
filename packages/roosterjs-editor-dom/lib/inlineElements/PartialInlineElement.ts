@@ -2,13 +2,15 @@ import Position from '../selection/Position';
 import SelectionRange from '../selection/SelectionRange';
 import isDocumentPosition from '../utils/isDocumentPosition';
 import { DocumentPosition } from 'roosterjs-editor-types';
-import { InlineElement, BlockElement } from './types';
+import InlineElement from './InlineElement';
 
-// This is a special version of inline element that identifies a section of an inline element
-// We often have the need to cut an inline element in half and perform some operation only on half of an inline element
-// i.e. users select only some text of a text node and apply format, in that case, format has to happen on partial of an inline element
-// PartialInlineElement is implemented in a way that decorate another full inline element with its own override on methods like isAfter
-// It also offers some special methods that others don't have, i.e. nextInlineElement etc.
+/**
+ * This is a special version of inline element that identifies a section of an inline element
+ * We often have the need to cut an inline element in half and perform some operation only on half of an inline element
+ * i.e. users select only some text of a text node and apply format, in that case, format has to happen on partial of an inline element
+ * PartialInlineElement is implemented in a way that decorate another full inline element with its own override on methods like isAfter
+ * It also offers some special methods that others don't have, i.e. nextInlineElement etc.
+ */
 class PartialInlineElement implements InlineElement {
     constructor(
         private inlineElement: InlineElement,
@@ -16,22 +18,23 @@ class PartialInlineElement implements InlineElement {
         private end?: Position
     ) {}
 
-    // Get the full inline element that this partial inline decorates
+    /**
+     * Get the full inline element that this partial inline decorates
+     */
     public getDecoratedInline(): InlineElement {
         return this.inlineElement;
     }
 
-    // Gets the container node
+    /**
+     * Gets the container node
+     */
     public getContainerNode(): Node {
         return this.inlineElement.getContainerNode();
     }
 
-    // Gets the parent block
-    public getParentBlock(): BlockElement {
-        return this.inlineElement.getParentBlock();
-    }
-
-    // Gets the text content
+    /**
+     * Gets the text content
+     */
     public getTextContent(): string {
         let node = this.inlineElement.getContainerNode();
         return new SelectionRange(
@@ -42,42 +45,58 @@ class PartialInlineElement implements InlineElement {
             .toString();
     }
 
-    // Gets the start position
+    /**
+     * Gets the start position
+     */
     public getStartPosition(): Position {
         return this.start || this.inlineElement.getStartPosition();
     }
 
-    // Gets the end position
+    /**
+     * Gets the end position
+     */
     public getEndPosition(): Position {
         return this.end || this.inlineElement.getEndPosition();
     }
 
-    // Checks if the partial is on start point
+    /**
+     * Checks if the partial is on start point
+     */
     public isStartPartial(): boolean {
         return !!this.start;
     }
 
-    // Checks if the partial is on the end point
+    /**
+     * Checks if the partial is on the end point
+     */
     public isEndPartial(): boolean {
         return !!this.end;
     }
 
-    // Get next partial inline element if it is not at the end boundary yet
+    /**
+     * Get next partial inline element if it is not at the end boundary yet
+     */
     public get nextInlineElement(): PartialInlineElement {
         return this.end && new PartialInlineElement(this.inlineElement, this.end, null);
     }
 
-    // Get previous partial inline element if it is not at the begin boundary yet
+    /**
+     * Get previous partial inline element if it is not at the begin boundary yet
+     */
     public get previousInlineElement(): PartialInlineElement {
         return this.start && new PartialInlineElement(this.inlineElement, null, this.start);
     }
 
-    // Checks if it contains a position
+    /**
+     * Checks if it contains a position
+     */
     public contains(p: Position): boolean {
         return p.isAfter(this.getStartPosition()) && this.getEndPosition().isAfter(p);
     }
 
-    // Check if this inline element is after the other inline element
+    /**
+     * Check if this inline element is after the other inline element
+     */
     public isAfter(inlineElement: InlineElement): boolean {
         // First node level check to see if this element's container node is after (following) the other element (inlineElement)
         // If node level says after (following), it is really "is after"
@@ -110,7 +129,9 @@ class PartialInlineElement implements InlineElement {
         return isAfter;
     }
 
-    // apply style
+    /**
+     * apply style
+     */
     public applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void {
         this.inlineElement.applyStyle(styler, from || this.start, to || this.end);
     }

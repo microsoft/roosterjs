@@ -285,41 +285,6 @@ describe('Editor replaceNode()', () => {
     });
 });
 
-describe('Editor getInlineElementAtNode()', () => {
-    let rootNode = TestHelper.createElementFromContent('testNode', '<p>abc</p><p>123</p>');
-
-    beforeEach(() => {
-        editor = TestHelper.initEditor(testID);
-        editor.insertNode(rootNode, {
-            position: ContentPosition.Begin,
-            updateCursor: true,
-            replaceSelection: true,
-            insertOnNewLine: false,
-        });
-    });
-
-    afterEach(() => {
-        editor.dispose();
-        TestHelper.removeElement(testID);
-    });
-
-    it('inlineElement = abc', () => {
-        // Act
-        let inlineElement = editor.getInlineElementAtNode(rootNode.firstChild);
-
-        // Assert
-        expect(inlineElement.getTextContent()).toBe('abc');
-    });
-
-    it('inlineElement = 123', () => {
-        // Act
-        let inlineElement = editor.getInlineElementAtNode(rootNode.lastChild);
-
-        // Assert
-        expect(inlineElement.getTextContent()).toBe('123');
-    });
-});
-
 describe('Editor select()', () => {
     let node = TestHelper.createElementFromContent('testNode', '<p>abc</p><p>123</p>');
 

@@ -1,9 +1,9 @@
 import * as TestHelper from '../DomTestHelper';
-import { NodeBlockElement } from '../../objectModel/BlockElement';
-import NodeInlineElement from '../../objectModel/NodeInlineElement';
-import PartialInlineElement from '../../objectModel/PartialInlineElement';
+import NodeBlockElement from '../../blockElements/NodeBlockElement';
+import NodeInlineElement from '../../inlineElements/NodeInlineElement';
+import PartialInlineElement from '../../inlineElements/PartialInlineElement';
 import Position from '../../selection/Position';
-import { InlineElement } from '../../objectModel/types';
+import InlineElement from '../../inlineElements/InlineElement';
 
 let testID = 'PartialInlineElement';
 
@@ -27,7 +27,7 @@ function createPartialInlineElementWithDiv(
     endOffset: number
 ): [PartialInlineElement, InlineElement, NodeBlockElement] {
     let testParentBlock = new NodeBlockElement(testDiv);
-    let inlineElement = new NodeInlineElement(testDiv.firstChild, testParentBlock);
+    let inlineElement = new NodeInlineElement(testDiv.firstChild);
     let startPosition = startOffset
         ? new Position(testDiv.firstChild.firstChild, startOffset)
         : null;
@@ -42,7 +42,7 @@ function createPartialInlineElementWithSpan(
     endOffset: number
 ): [PartialInlineElement, InlineElement, NodeBlockElement] {
     let testParentBlock = new NodeBlockElement(span.parentNode);
-    let inlineElement = new NodeInlineElement(span, testParentBlock);
+    let inlineElement = new NodeInlineElement(span);
     let startPosition = startOffset ? new Position(span.firstChild, startOffset) : null;
     let endPosition = endOffset ? new Position(span.firstChild, endOffset) : null;
     let partialInlineElement = new PartialInlineElement(inlineElement, startPosition, endPosition);
@@ -108,47 +108,6 @@ describe('PartialInlineElement getContainerNode()', () => {
 
         // Assert
         expect(containerNode).toBe(testDiv.firstChild);
-    }
-
-    it('Partial on start point', () => {
-        runTest(['<span>www.example.com</span>', 4, null /*endOffset*/]);
-    });
-
-    it('Partial on end point', () => {
-        runTest(['<span>www.example.com</span>', null /*startOffset*/, 11]);
-    });
-
-    it('Partial on start point and end point, startOffset < endOffset', () => {
-        runTest(['<span>www.example.com</span>', 4, 11]);
-    });
-
-    it('Partial on start point and end point, startOffset = endOffset', () => {
-        runTest(['<span>www.example.com</span>', 4, 4]);
-    });
-
-    it('Partial on start point and end point, startOffset > endOffset', () => {
-        runTest(['<span>www.example.com</span>', 4, 3]);
-    });
-});
-
-describe('PartialInlineElement getParentBlock()', () => {
-    afterEach(() => {
-        TestHelper.removeElement(testID);
-    });
-
-    function runTest(input: [string, number, number]) {
-        // Arrange
-        let [partialInlineElement, , testParentBlock] = createPartialInlineElementWithContent(
-            input[0],
-            input[1],
-            input[2]
-        );
-
-        // Act
-        let parentBlock = partialInlineElement.getParentBlock();
-
-        // Assert
-        expect(parentBlock).toBe(testParentBlock);
     }
 
     it('Partial on start point', () => {

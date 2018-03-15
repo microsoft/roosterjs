@@ -8,7 +8,7 @@ import Position from '../../selection/Position';
 import SelectionRange from '../../selection/SelectionRange';
 import PositionType from '../../selection/PositionType';
 import TraversingScoper from '../../scopers/TraversingScoper';
-import { BlockElement } from '../../objectModel/types';
+import BlockElement from '../../blockElements/BlockElement';
 
 let testID = 'ContentTraverser';
 

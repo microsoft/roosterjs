@@ -1,15 +1,10 @@
 import * as DomTestHelper from '../DomTestHelper';
-import {
-    getInlineElementAtNode,
-    getFirstInlineElement,
-    getLastInlineElement,
-    getNextInlineElement,
-    getPreviousInlineElement,
-    getInlineElementBefore,
-    getInlineElementAfter,
-} from '../../objectModel/BlockElement';
+import getInlineElementAtNode from '../../inlineElements/getInlineElementAtNode';
+import { getFirstInlineElement, getLastInlineElement } from '../../inlineElements/getFirstLastInlineElement';
+import { getNextInlineElement, getPreviousInlineElement } from '../../inlineElements/getNextPreviousInlineElement';
+import { getInlineElementBefore, getInlineElementAfter } from '../../inlineElements/getInlineElementBeforeAfter';
 import PositionType from '../../selection/PositionType';
-import { InlineElement } from '../../objectModel/types';
+import InlineElement from '../../inlineElements/InlineElement';
 import Position from '../../selection/Position';
 
 let testID = 'getInlineElement';
@@ -31,7 +26,7 @@ describe('getInlineElement getInlineElementAtNode()', () => {
         let endPosition = new Position(testNode, endOffset);
 
         // Act
-        let inlineElement = getInlineElementAtNode(rootNode, node);
+        let inlineElement = getInlineElementAtNode(node);
 
         // Assert
         expect(

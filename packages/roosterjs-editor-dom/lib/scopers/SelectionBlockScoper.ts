@@ -1,6 +1,7 @@
 import EditorSelection from './EditorSelection';
 import { ContentPosition } from 'roosterjs-editor-types';
-import { InlineElement, BlockElement } from '../objectModel/types';
+import InlineElement from '../inlineElements/InlineElement';
+import BlockElement from '../blockElements/BlockElement';
 import TraversingScoper from './TraversingScoper';
 import SelectionRange from '../selection/SelectionRange';
 
@@ -46,7 +47,7 @@ class SelectionBlockScoper implements TraversingScoper {
                 case ContentPosition.SelectionStart:
                     // Get the inline before selection start point, and ensure it falls in the selection block
                     startInline = this.editorSelection.startInlineElement;
-                    if (startInline && !theBlock.isInBlock(startInline)) {
+                    if (startInline && !theBlock.contains(startInline)) {
                         startInline = null;
                     }
                     break;
@@ -68,7 +69,7 @@ class SelectionBlockScoper implements TraversingScoper {
         if (theBlock && this.startPosition == ContentPosition.SelectionStart) {
             // Get the inline before selection start point, and ensure it falls in the selection block
             inlineBeforeStart = this.editorSelection.inlineElementBeforeStart;
-            if (inlineBeforeStart && !theBlock.isInBlock(inlineBeforeStart)) {
+            if (inlineBeforeStart && !theBlock.contains(inlineBeforeStart)) {
                 inlineBeforeStart = null;
             }
         }
@@ -87,7 +88,7 @@ class SelectionBlockScoper implements TraversingScoper {
     // A block scoper does not cut an inline in half
     public trimInlineElement(inlineElement: InlineElement): InlineElement {
         let theBlock = this.getStartBlockElement();
-        return theBlock && inlineElement && theBlock.isInBlock(inlineElement)
+        return theBlock && inlineElement && theBlock.contains(inlineElement)
             ? inlineElement
             : null;
     }

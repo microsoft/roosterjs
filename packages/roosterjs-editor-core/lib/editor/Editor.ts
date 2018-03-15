@@ -24,7 +24,7 @@ import {
 import {
     ContentTraverser,
     NodeBlockElement,
-    InlineElement,
+    BlockElement,
     Position,
     PositionType,
     SelectionRange,
@@ -32,8 +32,7 @@ import {
     contains,
     fromHtml,
     getBlockElementAtNode,
-    getFirstBlockElement,
-    getInlineElementAtNode,
+    getFirstLeafNode,
     getTagOfNode,
     isNodeEmpty,
     wrapAll,
@@ -178,12 +177,12 @@ export default class Editor {
     }
 
     /**
-     * Get InlineElement at given node
+     * Get BlockElement at given node
      * @param node The node to create InlineElement
-     * @requires The InlineElement result
+     * @requires The BlockElement result
      */
-    public getInlineElementAtNode(node: Node): InlineElement {
-        return getInlineElementAtNode(this.core.contentDiv, node);
+    public getBlockElementAtNode(node: Node): BlockElement {
+        return getBlockElementAtNode(this.core.contentDiv, node);
     }
 
     /**
@@ -612,7 +611,8 @@ export default class Editor {
             this.triggerContentChangedEvent();
         }
 
-        let firstBlock = getFirstBlockElement(this.core.contentDiv);
+        let contentDiv = this.core.contentDiv;
+        let firstBlock = getBlockElementAtNode(contentDiv, getFirstLeafNode(contentDiv));
         let defaultFormatBlockElement: HTMLElement;
 
         if (!firstBlock) {
@@ -622,9 +622,7 @@ export default class Editor {
         } else if (firstBlock instanceof NodeBlockElement) {
             // There is a first block and it is a Node (P, DIV etc.) block
             // Check if it is empty block and apply default format if so
-            // TODO: what about first block contains just an image? testing getTextContent won't tell that
-            // Probably it is no harm since apply default format on an image block won't change anything for the image
-            if (firstBlock.getTextContent() == '') {
+            if (isNodeEmpty(firstBlock.getStartNode())) {
                 defaultFormatBlockElement = firstBlock.getStartNode() as HTMLElement;
             }
         }

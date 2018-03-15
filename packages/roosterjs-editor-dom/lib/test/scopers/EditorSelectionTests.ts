@@ -3,7 +3,7 @@ import EditorSelection from '../../scopers/EditorSelection';
 import PositionType from '../../selection/PositionType';
 import Position from '../../selection/Position';
 import SelectionRange from '../../selection/SelectionRange';
-import { BlockElement } from '../../objectModel/types';
+import BlockElement from '../../blockElements/BlockElement';
 
 let testID = 'EditorSelection';
 

@@ -1,5 +1,6 @@
 import EditorSelection from './EditorSelection';
-import { InlineElement, BlockElement } from '../objectModel/types';
+import InlineElement from '../inlineElements/InlineElement';
+import BlockElement from '../blockElements/BlockElement';
 import TraversingScoper from './TraversingScoper';
 import SelectionRange from '../selection/SelectionRange';
 

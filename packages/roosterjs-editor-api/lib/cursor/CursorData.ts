@@ -3,9 +3,15 @@ import {
     ContentTraverser,
     InlineElement,
     PartialInlineElement,
-    matchWhiteSpaces,
 } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
+
+// White space matching regex. It matches following chars:
+// \s: white space
+// \u00A0: no-breaking white space
+// \u200B: zero width space
+// \u3000: full width space (which can come from JPN IME)
+const WHITESPACE_REGEX = /[\s\u00A0\u200B\u3000]+([^\s\u00A0\u200B\u3000]*)$/i;
 
 // The class that helps parse content around cursor
 export default class CursorData {
@@ -192,7 +198,7 @@ export default class CursorData {
                 if (!this.cachedWordBeforeCursor) {
                     // Match on the white space, the portion after space is on the index of 1 of the matched result
                     // (index at 0 is whole match result, index at 1 is the word)
-                    let matches = matchWhiteSpaces(textContent);
+                    let matches = WHITESPACE_REGEX.exec(textContent);
                     if (matches && matches.length == 2) {
                         this.cachedWordBeforeCursor = matches[1];
                         // if this.cachedTextBeforeCursor is not null, what we get is just a portion of it, need to append this.cachedTextBeforeCursor

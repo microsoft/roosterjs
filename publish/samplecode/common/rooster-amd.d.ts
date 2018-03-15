@@ -323,257 +323,6 @@ export const enum PasteOption {
     PasteImage = 2,
 }
 
-export interface InlineElement {
-    getTextContent: () => string;
-    getContainerNode: () => Node;
-    getParentBlock: () => BlockElement;
-    getStartPosition: () => Position;
-    getEndPosition: () => Position;
-    isAfter: (inlineElement: InlineElement) => boolean;
-    contains: (position: Position) => boolean;
-    applyStyle: (styler: (node: Node) => void, from?: Position, to?: Position) => void;
-}
-
-export interface BlockElement {
-    getTextContent: () => string;
-    getStartNode: () => Node;
-    getEndNode: () => Node;
-    getContentNodes: () => Node[];
-    getFirstInlineElement: () => InlineElement;
-    getLastInlineElement: () => InlineElement;
-    getInlineElements: () => InlineElement[];
-    equals: (blockElement: BlockElement) => boolean;
-    isAfter: (blockElement: BlockElement) => boolean;
-    isInBlock: (inlineElement: InlineElement) => boolean;
-    contains: (node: Node) => boolean;
-}
-
-export class NodeBlockElement implements BlockElement {
-    private containerNode;
-    private firstInline;
-    private lastInline;
-    constructor(containerNode: Node);
-    getTextContent(): string;
-    getStartNode(): Node;
-    getEndNode(): Node;
-    getContentNodes(): Node[];
-    getFirstInlineElement(): InlineElement;
-    getLastInlineElement(): InlineElement;
-    getInlineElements(): InlineElement[];
-    equals(blockElement: BlockElement): boolean;
-    isAfter(blockElement: BlockElement): boolean;
-    isInBlock(inlineElement: InlineElement): boolean;
-    contains(node: Node): boolean;
-}
-
-export class StartEndBlockElement implements BlockElement {
-    private rootNode;
-    private startNode;
-    private endNode;
-    private firstInline;
-    private lastInline;
-    constructor(rootNode: Node, startNode: Node, endNode: Node);
-    getTextContent(): string;
-    getContentNodes(): Node[];
-    getStartNode(): Node;
-    getEndNode(): Node;
-    getFirstInlineElement(): InlineElement;
-    getLastInlineElement(): InlineElement;
-    getInlineElements(): InlineElement[];
-    equals(blockElement: BlockElement): boolean;
-    isAfter(blockElement: BlockElement): boolean;
-    isInBlock(inlineElement: InlineElement): boolean;
-    contains(node: Node): boolean;
-}
-
-export function getBlockElementAtNode(rootNode: Node, node: Node): BlockElement;
-
-export function getFirstBlockElement(rootNode: Node): BlockElement;
-
-export function getLastBlockElement(rootNode: Node): BlockElement;
-
-export function getNextBlockElement(rootNode: Node, blockElement: BlockElement): BlockElement;
-
-export function getPreviousBlockElement(rootNode: Node, blockElement: BlockElement): BlockElement;
-
-export function getFirstInlineElement(rootNode: Node): InlineElement;
-
-export function getLastInlineElement(rootNode: Node): InlineElement;
-
-export function getInlineElementAtNode(rootNode: Node, node: Node): InlineElement;
-
-export function getNextInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement;
-
-export function getPreviousInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement;
-
-export function getInlineElementBefore(rootNode: Node, position: Position): InlineElement;
-
-export function getInlineElementAfter(rootNode: Node, position: Position): InlineElement;
-
-export interface TraversingScoper {
-    getStartBlockElement: () => BlockElement;
-    getStartInlineElement: () => InlineElement;
-    getInlineElementBeforeStart?: () => InlineElement;
-    getInlineElementAfterStart?: () => InlineElement;
-    isBlockInScope: (blockElement: BlockElement) => boolean;
-    trimInlineElement: (inlineElement: InlineElement) => InlineElement;
-}
-
-export class ContentTraverser {
-    private rootNode;
-    private scoper;
-    private currentInline;
-    private currentBlock;
-    constructor(rootNode: Node, scoper: TraversingScoper);
-    readonly currentBlockElement: BlockElement;
-    getNextBlockElement(): BlockElement;
-    getPreviousBlockElement(): BlockElement;
-    readonly currentInlineElement: InlineElement;
-    getNextInlineElement(): InlineElement;
-    getPreviousInlineElement(): InlineElement;
-}
-
-export function getNextLeafSibling(rootNode: Node, startNode: Node): Node;
-
-export function getPreviousLeafSibling(rootNode: Node, startNode: Node): Node;
-
-export function getFirstLeafNode(rootNode: Node): Node;
-
-export function getLastLeafNode(rootNode: Node): Node;
-
-export class NodeInlineElement implements InlineElement {
-    private containerNode;
-    private parentBlock;
-    constructor(containerNode: Node, parentBlock: BlockElement);
-    getTextContent(): string;
-    getContainerNode(): Node;
-    getParentBlock(): BlockElement;
-    getStartPosition(): Position;
-    getEndPosition(): Position;
-    isAfter(inlineElement: InlineElement): boolean;
-    contains(position: Position): boolean;
-    applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void;
-}
-
-export class PartialInlineElement implements InlineElement {
-    private inlineElement;
-    private start;
-    private end;
-    constructor(inlineElement: InlineElement, start?: Position, end?: Position);
-    getDecoratedInline(): InlineElement;
-    getContainerNode(): Node;
-    getParentBlock(): BlockElement;
-    getTextContent(): string;
-    getStartPosition(): Position;
-    getEndPosition(): Position;
-    isStartPartial(): boolean;
-    isEndPartial(): boolean;
-    readonly nextInlineElement: PartialInlineElement;
-    readonly previousInlineElement: PartialInlineElement;
-    contains(p: Position): boolean;
-    isAfter(inlineElement: InlineElement): boolean;
-    applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void;
-}
-
-export class BodyScoper implements TraversingScoper {
-    private rootNode;
-    constructor(rootNode: Node);
-    getStartBlockElement(): BlockElement;
-    getStartInlineElement(): InlineElement;
-    isBlockInScope(blockElement: BlockElement): boolean;
-    trimInlineElement(inlineElement: InlineElement): InlineElement;
-}
-
-export class SelectionBlockScoper implements TraversingScoper {
-    private startPosition;
-    private readonly editorSelection;
-    private selectionBlock;
-    constructor(rootNode: Node, selectionRange: SelectionRange, startPosition: ContentPosition);
-    getStartBlockElement(): BlockElement;
-    getStartInlineElement(): InlineElement;
-    getInlineElementBeforeStart(): InlineElement;
-    isBlockInScope(blockElement: BlockElement): boolean;
-    trimInlineElement(inlineElement: InlineElement): InlineElement;
-}
-
-export class SelectionScoper implements TraversingScoper {
-    private readonly editorSelection;
-    constructor(rootNode: Node, selectionRange: SelectionRange);
-    getStartBlockElement(): BlockElement;
-    getStartInlineElement(): InlineElement;
-    isBlockInScope(blockElement: BlockElement): boolean;
-    trimInlineElement(inlineElement: InlineElement): InlineElement;
-}
-
-export function applyFormat(element: HTMLElement, format: DefaultFormat): void;
-
-export function changeElementTag(element: HTMLElement, newTag: string, range?: Range): HTMLElement;
-
-export function contains(container: Node, contained: Node, treatSameNodeAsContain?: boolean): boolean;
-
-/**
- * Sanitize HTML string
- * This function will do the following work:
- * 1. Convert global CSS into inline CSS
- * 2. Remove dangerous HTML tags and attributes
- * 3. Remove useless CSS properties
- * @param html The input HTML
- * @param additionalStyleNodes additional style nodes for inline css converting
- * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
- * @param propertyCallbacks A callback function map to handle HTML properties
- */
-export function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback): string;
-
-export type SanitizeHtmlPropertyCallback = {
-    [name: string]: (value: string) => string;
-};
-
-export function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[];
-
-export function getComputedStyle(node: Node, styleNames?: string | string[]): string[];
-
-export function getTagOfNode(node: Node): string;
-
-export function isBlockElement(node: Node): boolean;
-
-/**
- * Check if position is or encompasses any of targets
- * @param position The doucment position to check
- * @param targets The target position or position array
- */
-export function isDocumentPosition(position: DocumentPosition, targets: DocumentPosition | DocumentPosition[]): boolean;
-
-/**
- * Check if a given node has visible content
- */
-export function isNodeEmpty(node: Node, trim?: boolean): boolean;
-
-export function matchWhiteSpaces(source: string): string[];
-
-/**
- * Split parent node of the given node before/after the given node.
- * When a parent node contains [A,B,C] and pass B as the given node,
- * If split before, the new nodes will be [A][B,C] and returns [A];
- * otherwise, it will be [A,B][C] and returns [C].
- * @param node The node to split before/after
- * @param splitBefore Whether split before or after
- * @returns The new parent node
- */
-export function splitParentNode(node: Node, splitBefore: boolean): Node;
-
-/**
- * Convert plain to HTML
- * @param text The plain text to convert
- * @returns HTML string to present the input text
- */
-export function textToHtml(text: string): string;
-
-export function unwrap(node: Node): Node;
-
-export function wrap(node: Node, htmlFragment: string): Node;
-
-export function wrapAll(nodes: Node[], htmlFragment?: string): Node;
-
 export class Position {
     static readonly Before: PositionType;
     static readonly Begin: PositionType;
@@ -626,6 +375,430 @@ export const enum PositionType {
     After = "a",
 }
 
+/**
+ * This walks forwards (from left to right) DOM tree to get next meaningful node
+ * A null is returned when it reaches the very end - beyond the scope as defined by rootNode
+ */
+export function getNextLeafSibling(rootNode: Node, startNode: Node): Node;
+
+/**
+ * This walks backwards (from right to left) DOM tree to get previous meaningful node
+ * A null is returned when it reaches the very first - beyond the scope as defined by rootNode
+ */
+export function getPreviousLeafSibling(rootNode: Node, startNode: Node): Node;
+
+/**
+ * Get the first meaningful leaf node
+ * This can return null for empty container or
+ * container that does not contain any meaningful node
+ */
+export function getFirstLeafNode(rootNode: Node): Node;
+
+/**
+ * Get the last meaningful leaf node
+ * This can return null for empty container or
+ * container that does not contain any meaningful node
+ */
+export function getLastLeafNode(rootNode: Node): Node;
+
+/**
+ * This refers to an inline element (as opposed to block) in editor
+ * Inline and block makes the "type" system in editor.
+ * An inline element is a maximum resolvable "entity" within the boundary of a block
+ * At minimum and also most commonly, it represents a text node.
+ * It can represent broader "content" depending on the resolvers that are available, i.e.
+ * it can be anchor link, image, emoji, ...
+ * Two rules:
+ * 1) every inline element must have a container node (text or span, a etc.)
+ * 2) inline element cannot be nested
+ */
+export interface InlineElement {
+    /**
+     * Get the text content of this inline element
+     */
+    getTextContent: () => string;
+    /**
+     * Get the container node of this inline element
+     */
+    getContainerNode: () => Node;
+    /**
+     * Get the start position of this inline element
+     */
+    getStartPosition: () => Position;
+    /**
+     * Get the end position of this inline element
+     */
+    getEndPosition: () => Position;
+    /**
+     * Checks if the given inline element is after this inline element
+     */
+    isAfter: (inlineElement: InlineElement) => boolean;
+    /**
+     * Checks if the given editor position is contained in this inline element
+     */
+    contains: (position: Position) => boolean;
+    /**
+     * Apply inline style to a region of an inline element. The region is identified thorugh the from and to point
+     * The fromPosition and toPosition are optional and when bing missed, it indicates the boundary of the element
+     * The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
+     * when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
+     * The actuall styling is done by consumer through the styler callback
+     */
+    applyStyle: (styler: (node: Node) => void, from?: Position, to?: Position) => void;
+}
+
+/**
+ * This presents an inline element that can be reprented by a single html node.
+ * This serves as base for most inline element as it contains most implentation
+ * of all operations that can happen on an inline element. Other sub inline elements mostly
+ * just identify themself for a certain type
+ */
+export class NodeInlineElement implements InlineElement {
+    private containerNode;
+    constructor(containerNode: Node);
+    /**
+     * The text content for this inline element
+     */
+    getTextContent(): string;
+    /**
+     * Get the container node
+     */
+    getContainerNode(): Node;
+    /**
+     * Get the start point of the inline element
+     */
+    getStartPosition(): Position;
+    /**
+     * Get the end point of the inline element
+     */
+    getEndPosition(): Position;
+    /**
+     * Checks if an inline element is after the current inline element
+     */
+    isAfter(inlineElement: InlineElement): boolean;
+    /**
+     * Checks if an editor point is contained in the inline element
+     */
+    contains(position: Position): boolean;
+    /**
+     * Apply inline style to a region of an inline element. The region is identified thorugh the from and to point
+     * The fromPosition and toPosition are optional and when bing missed, it indicates the boundary of the element
+     * The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
+     * when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
+     * The actuall styling is done by consumer through the styler callback
+     */
+    applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void;
+}
+
+/**
+ * This is a special version of inline element that identifies a section of an inline element
+ * We often have the need to cut an inline element in half and perform some operation only on half of an inline element
+ * i.e. users select only some text of a text node and apply format, in that case, format has to happen on partial of an inline element
+ * PartialInlineElement is implemented in a way that decorate another full inline element with its own override on methods like isAfter
+ * It also offers some special methods that others don't have, i.e. nextInlineElement etc.
+ */
+export class PartialInlineElement implements InlineElement {
+    private inlineElement;
+    private start;
+    private end;
+    constructor(inlineElement: InlineElement, start?: Position, end?: Position);
+    /**
+     * Get the full inline element that this partial inline decorates
+     */
+    getDecoratedInline(): InlineElement;
+    /**
+     * Gets the container node
+     */
+    getContainerNode(): Node;
+    /**
+     * Gets the text content
+     */
+    getTextContent(): string;
+    /**
+     * Gets the start position
+     */
+    getStartPosition(): Position;
+    /**
+     * Gets the end position
+     */
+    getEndPosition(): Position;
+    /**
+     * Checks if the partial is on start point
+     */
+    isStartPartial(): boolean;
+    /**
+     * Checks if the partial is on the end point
+     */
+    isEndPartial(): boolean;
+    /**
+     * Get next partial inline element if it is not at the end boundary yet
+     */
+    readonly nextInlineElement: PartialInlineElement;
+    /**
+     * Get previous partial inline element if it is not at the begin boundary yet
+     */
+    readonly previousInlineElement: PartialInlineElement;
+    /**
+     * Checks if it contains a position
+     */
+    contains(p: Position): boolean;
+    /**
+     * Check if this inline element is after the other inline element
+     */
+    isAfter(inlineElement: InlineElement): boolean;
+    /**
+     * apply style
+     */
+    applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void;
+}
+
+/**
+ * Get the inline element at a node
+ * @param node The node to get InlineElement froms
+ */
+export function getInlineElementAtNode(node: Node): InlineElement;
+
+/**
+ * Get first inline element
+ */
+export function getFirstInlineElement(rootNode: Node): InlineElement;
+
+/**
+ * Get last inline element
+ */
+export function getLastInlineElement(rootNode: Node): InlineElement;
+
+/**
+ * Get next inline element
+ */
+export function getNextInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement;
+
+/**
+ * Get previous inline element
+ */
+export function getPreviousInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement;
+
+/**
+ * This refers to a "content block" in editor that serves as a content parsing boundary
+ * It is most those html block like tags, i.e. <p>, <div>, <li>, <td> etc.
+ * but can also be just a text node, followed by a <br>, i.e.
+ * for html fragment <div>abc<br>123</div>, abc<br> is a block, 123 is another block
+ */
+export interface BlockElement {
+    /**
+     * Get text content of this block element
+     */
+    getTextContent(): string;
+    /**
+     * Get start node of this block element
+     */
+    getStartNode(): Node;
+    /**
+     * Get end node of this block element
+     */
+    getEndNode(): Node;
+    /**
+     * Get content nodes of this block element as node array
+     */
+    getContentNodes(): Node[];
+    /**
+     * Get the first inline element of this block element
+     */
+    getFirstInlineElement(): InlineElement;
+    /**
+     * Get the last inline element of this block element
+     */
+    getLastInlineElement(): InlineElement;
+    /**
+     * Check whether this block element equals to the given block element
+     */
+    equals(blockElement: BlockElement): boolean;
+    /**
+     * Checks if this block element is after another block element
+     */
+    isAfter(blockElement: BlockElement): boolean;
+    /**
+     * Check if the given inline element falls within this block element
+     */
+    contains(inlineElement: InlineElement): boolean;
+    /**
+     * Check if the given node is within this block element
+     */
+    contains(node: Node): boolean;
+}
+
+/**
+ * This presents a content block that can be reprented by a single html block type element.
+ * In most cases, it corresponds to an HTML block level element, i.e. P, DIV, LI, TD etc.
+ */
+export class NodeBlockElement extends StartEndBlockElement {
+    /**
+     * Create a new instance of NodeBlockElement class
+     * @param containerNode The container DOM Node of this NodeBlockElement
+     */
+    constructor(containerNode: Node);
+    /**
+     * Gets first inline
+     */
+    getFirstInlineElement(): InlineElement;
+    /**
+     * Gets last inline
+     */
+    getLastInlineElement(): InlineElement;
+    contains(arg: InlineElement | Node): boolean;
+}
+
+/**
+ * This reprents a block that is identified by a start and end node
+ * This is for cases like <ced>Hello<BR>World</ced>
+ * in that case, Hello<BR> is a block, World is another block
+ * Such block cannot be represented by a NodeBlockElement since they don't chained up
+ * to a single parent node, instead they have a start and end
+ * This start and end must be in same sibling level and have same parent in DOM tree
+ */
+export class StartEndBlockElement implements BlockElement {
+    private startNode;
+    private endNode;
+    protected firstInline: InlineElement;
+    protected lastInline: InlineElement;
+    /**
+     * Create a new instance of StartEndBlockElement class
+     * @param rootNode rootNode of current scope
+     * @param startNode startNode of this block element
+     * @param endNode end nod of this block element
+     */
+    constructor(startNode: Node, endNode: Node);
+    /**
+     * Gets the text content
+     */
+    getTextContent(): string;
+    /**
+     * Get all nodes represented in a Node array
+     * This only works for balanced node -- start and end is at same level
+     */
+    getContentNodes(): Node[];
+    /**
+     * Gets the start node
+     */
+    getStartNode(): Node;
+    /**
+     * Gets the end node
+     */
+    getEndNode(): Node;
+    /**
+     * Gets first inline
+     */
+    getFirstInlineElement(): InlineElement;
+    /**
+     * Gets last inline
+     */
+    getLastInlineElement(): InlineElement;
+    /**
+     * Checks equals of two blocks
+     */
+    equals(blockElement: BlockElement): boolean;
+    /**
+     * Checks if this block element is after another block element
+     */
+    isAfter(blockElement: BlockElement): boolean;
+    /**
+     * Checks if an inline falls inside me
+     */
+    contains(inlineElement: InlineElement): boolean;
+    /**
+     * Checks if an Html node is contained within the block
+     */
+    contains(node: Node): boolean;
+}
+
+/**
+ * This produces a block element from a a node
+ * It needs to account for various HTML structure. Examples:
+ * 1) <ced><div>abc</div></ced>
+ *   This is most common the case, user passes in a node pointing to abc, and get back a block representing <div>abc</div>
+ * 2) <ced><p><br></p></ced>
+ *   Common content for empty block, user passes node pointing to <br>, and get back a block representing <p><br></p>
+ * 3) <ced>abc</ced>
+ *   Not common, but does happen. It is still a block in user's view. User passes in abc, and get back a start-end block representing abc
+ *   NOTE: abc could be just one node. However, since it is not a html block, it is more appropriate to use start-end block although they point to same node
+ * 4) <ced><div>abc<br>123</div></ced>
+ *   A bit tricky, but can happen when user use Ctrl+Enter which simply inserts a <BR> to create a link break. There're two blocks:
+ *   block1: 1) abc<br> block2: 123
+ * 5) <ced><div>abc<div>123</div></div></ced>
+ *   Nesting div and there is text node in same level as a DIV. Two blocks: 1) abc 2) <div>123</div>
+ * 6) <ced><div>abc<span>123<br>456</span></div></ced>
+ *   This is really tricky. Essentially there is a <BR> in middle of a span breaking the span into two blocks;
+ *   block1: abc<span>123<br> block2: 456
+ * In summary, given any arbitary node (leaf), to identify the head and tail of the block, following rules need to be followed:
+ * 1) to identify the head, it needs to crawl DOM tre left/up till a block node or BR is encountered
+ * 2) same for identifying tail
+ * 3) should also apply a block ceiling, meaning as it crawls up, it should stop at a block node
+ */
+export function getBlockElementAtNode(rootNode: Node, node: Node): BlockElement;
+
+/**
+ * Get next block
+ */
+export function getNextBlockElement(rootNode: Node, blockElement: BlockElement): BlockElement;
+
+/**
+ * Get previous block
+ */
+export function getPreviousBlockElement(rootNode: Node, blockElement: BlockElement): BlockElement;
+
+export interface TraversingScoper {
+    getStartBlockElement: () => BlockElement;
+    getStartInlineElement: () => InlineElement;
+    getInlineElementBeforeStart?: () => InlineElement;
+    getInlineElementAfterStart?: () => InlineElement;
+    isBlockInScope: (blockElement: BlockElement) => boolean;
+    trimInlineElement: (inlineElement: InlineElement) => InlineElement;
+}
+
+export class ContentTraverser {
+    private rootNode;
+    private scoper;
+    private currentInline;
+    private currentBlock;
+    constructor(rootNode: Node, scoper: TraversingScoper);
+    readonly currentBlockElement: BlockElement;
+    getNextBlockElement(): BlockElement;
+    getPreviousBlockElement(): BlockElement;
+    readonly currentInlineElement: InlineElement;
+    getNextInlineElement(): InlineElement;
+    getPreviousInlineElement(): InlineElement;
+}
+
+export class BodyScoper implements TraversingScoper {
+    private rootNode;
+    constructor(rootNode: Node);
+    getStartBlockElement(): BlockElement;
+    getStartInlineElement(): InlineElement;
+    isBlockInScope(blockElement: BlockElement): boolean;
+    trimInlineElement(inlineElement: InlineElement): InlineElement;
+}
+
+export class SelectionBlockScoper implements TraversingScoper {
+    private startPosition;
+    private readonly editorSelection;
+    private selectionBlock;
+    constructor(rootNode: Node, selectionRange: SelectionRange, startPosition: ContentPosition);
+    getStartBlockElement(): BlockElement;
+    getStartInlineElement(): InlineElement;
+    getInlineElementBeforeStart(): InlineElement;
+    isBlockInScope(blockElement: BlockElement): boolean;
+    trimInlineElement(inlineElement: InlineElement): InlineElement;
+}
+
+export class SelectionScoper implements TraversingScoper {
+    private readonly editorSelection;
+    constructor(rootNode: Node, selectionRange: SelectionRange);
+    getStartBlockElement(): BlockElement;
+    getStartInlineElement(): InlineElement;
+    isBlockInScope(blockElement: BlockElement): boolean;
+    trimInlineElement(inlineElement: InlineElement): InlineElement;
+}
+
 export class VTable {
     table: HTMLTableElement;
     cells: VCell[][];
@@ -650,6 +823,75 @@ export interface VCell {
     spanLeft?: boolean;
     spanAbove?: boolean;
 }
+
+export function applyFormat(element: HTMLElement, format: DefaultFormat): void;
+
+export function changeElementTag(element: HTMLElement, newTag: string, range?: Range): HTMLElement;
+
+export function contains(container: Node, contained: Node, treatSameNodeAsContain?: boolean): boolean;
+
+/**
+ * Sanitize HTML string
+ * This function will do the following work:
+ * 1. Convert global CSS into inline CSS
+ * 2. Remove dangerous HTML tags and attributes
+ * 3. Remove useless CSS properties
+ * @param html The input HTML
+ * @param additionalStyleNodes additional style nodes for inline css converting
+ * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
+ * @param propertyCallbacks A callback function map to handle HTML properties
+ */
+export function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback): string;
+
+export type SanitizeHtmlPropertyCallback = {
+    [name: string]: (value: string) => string;
+};
+
+export function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[];
+
+export function getComputedStyle(node: Node, styleNames?: string | string[]): string[];
+
+export function getTagOfNode(node: Node): string;
+
+export function intersectWithNodeRange(node: Node, start: Node, end: Node, containOnly: boolean): boolean;
+
+export function isBlockElement(node: Node): boolean;
+
+/**
+ * Check if position is or encompasses any of targets
+ * @param position The doucment position to check
+ * @param targets The target position or position array
+ */
+export function isDocumentPosition(position: DocumentPosition, targets: DocumentPosition | DocumentPosition[]): boolean;
+
+/**
+ * Check if a given node has visible content
+ */
+export function isNodeEmpty(node: Node, trim?: boolean): boolean;
+
+/**
+ * Split parent node of the given node before/after the given node.
+ * When a parent node contains [A,B,C] and pass B as the given node,
+ * If split before, the new nodes will be [A][B,C] and returns [A];
+ * otherwise, it will be [A,B][C] and returns [C].
+ * @param node The node to split before/after
+ * @param splitBefore Whether split before or after
+ * @returns The new parent node
+ */
+export function splitParentNode(node: Node, splitBefore: boolean): Node;
+
+/**
+ * Convert plain to HTML
+ * @param text The plain text to convert
+ * @returns HTML string to present the input text
+ */
+export function textToHtml(text: string): string;
+
+export function unwrap(node: Node): Node;
+
+export function wrap(node: Node, htmlFragment: string): Node;
+
+export function wrapAll(nodes: Node[], htmlFragment?: string): Node;
 
 export class Editor {
     private omitContentEditable;
@@ -698,11 +940,11 @@ export class Editor {
      */
     replaceNode(existingNode: Node, toNode: Node): boolean;
     /**
-     * Get InlineElement at given node
+     * Get BlockElement at given node
      * @param node The node to create InlineElement
-     * @requires The InlineElement result
+     * @requires The BlockElement result
      */
-    getInlineElementAtNode(node: Node): InlineElement;
+    getBlockElementAtNode(node: Node): BlockElement;
     /**
      * Check if the node falls in the editor content
      * @param node The node to check

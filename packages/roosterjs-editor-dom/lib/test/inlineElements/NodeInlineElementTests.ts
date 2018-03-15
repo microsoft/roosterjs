@@ -1,15 +1,13 @@
 import * as DomTestHelper from '../DomTestHelper';
-import { NodeBlockElement } from '../../objectModel/BlockElement';
-import { InlineElement } from '../../objectModel/types';
-import NodeInlineElement from '../../objectModel/NodeInlineElement';
+import InlineElement from '../../inlineElements/InlineElement';
+import NodeInlineElement from '../../inlineElements/NodeInlineElement';
 import Position from '../../selection/Position';
 
 let testID = 'NodeInlineElement';
 
 function createNodeInlineElement(inlineElementContent: string): InlineElement {
     let testDiv = DomTestHelper.createElementFromContent(testID, inlineElementContent);
-    let parentBlock = new NodeBlockElement(testDiv);
-    let inlineElement = new NodeInlineElement(testDiv.firstChild, parentBlock);
+    let inlineElement = new NodeInlineElement(testDiv.firstChild);
 
     return inlineElement;
 }
@@ -140,9 +138,8 @@ describe('NodeInlineElement isAfter()', () => {
             testID,
             '<span>node1</span><span>text</span><span>node2</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv);
-        let element1 = new NodeInlineElement(testDiv.firstChild, parentBlock);
-        let element2 = new NodeInlineElement(testDiv.lastChild, parentBlock);
+        let element1 = new NodeInlineElement(testDiv.firstChild);
+        let element2 = new NodeInlineElement(testDiv.lastChild);
 
         // Act
         let isElement2AfterElement1 = element2.isAfter(element1);
@@ -163,10 +160,8 @@ describe('NodeInlineElement isAfter()', () => {
         let testDiv2 = DomTestHelper.createElementFromContent('testDiv2', '<span>node2</span>');
         div.appendChild(testDiv2);
         div.insertBefore(testDiv1, testDiv2);
-        let parentBlock1 = new NodeBlockElement(testDiv1);
-        let parentBlock2 = new NodeBlockElement(testDiv2);
-        let element1 = new NodeInlineElement(testDiv1.firstChild, parentBlock1);
-        let element2 = new NodeInlineElement(testDiv2.firstChild, parentBlock2);
+        let element1 = new NodeInlineElement(testDiv1.firstChild);
+        let element2 = new NodeInlineElement(testDiv2.firstChild);
 
         // Act
         let isElement2AfterElement1 = element2.isAfter(element1);
@@ -189,8 +184,7 @@ describe('NodeInlineElement contains()', () => {
             testID,
             '<span><a><span>part1</span>text</a>text<span>part2</span>part3</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv);
-        let element = new NodeInlineElement(testDiv.firstChild, parentBlock);
+        let element = new NodeInlineElement(testDiv.firstChild);
         let position = new Position(testDiv.firstChild.lastChild, 3);
 
         // Act
@@ -206,8 +200,7 @@ describe('NodeInlineElement contains()', () => {
             testID,
             '<span><a><span>part1</span>text</a>text<span>part2</span>part3</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv);
-        let element = new NodeInlineElement(testDiv.firstChild.firstChild, parentBlock);
+        let element = new NodeInlineElement(testDiv.firstChild.firstChild);
         let position = new Position(testDiv.firstChild.lastChild, Position.End);
 
         // Act
@@ -251,8 +244,7 @@ describe('NodeInlineElement applyStyle()', () => {
             testID,
             '<span>www.example.com</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv);
-        let element = new NodeInlineElement(testDiv.firstChild, parentBlock);
+        let element = new NodeInlineElement(testDiv.firstChild);
         let fromPosition = new Position(testDiv.firstChild.firstChild, 3);
         let toPosition = new Position(testDiv.firstChild.lastChild, 11);
         let mockColor = 'red';
@@ -277,8 +269,7 @@ describe('NodeInlineElement applyStyle()', () => {
             testID,
             '<span>www.example.com</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv);
-        let element = new NodeInlineElement(testDiv.firstChild, parentBlock);
+        let element = new NodeInlineElement(testDiv.firstChild);
         let fromPosition = new Position(testDiv.firstChild.firstChild, 3);
         let mockColor = 'red';
 
@@ -302,8 +293,7 @@ describe('NodeInlineElement applyStyle()', () => {
             testID,
             '<span>www.example.com</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv);
-        let element = new NodeInlineElement(testDiv.firstChild, parentBlock);
+        let element = new NodeInlineElement(testDiv.firstChild);
         let toPosition = new Position(testDiv.firstChild.firstChild, 11);
         let mockColor = 'red';
 
@@ -327,8 +317,7 @@ describe('NodeInlineElement applyStyle()', () => {
             testID,
             '<span>www.example.com</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv);
-        let element = new NodeInlineElement(testDiv.firstChild, parentBlock);
+        let element = new NodeInlineElement(testDiv.firstChild);
         let fromPosition = new Position(testDiv.firstChild.firstChild, 3);
         let toPosition = new Position(testDiv.firstChild.firstChild, 3);
         let mockColor = 'red';
@@ -353,8 +342,7 @@ describe('NodeInlineElement applyStyle()', () => {
             testID,
             '<span>www.example.com</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv);
-        let element = new NodeInlineElement(testDiv.firstChild, parentBlock);
+        let element = new NodeInlineElement(testDiv.firstChild);
         let fromPosition = new Position(testDiv.firstChild.firstChild, 4);
         let toPosition = new Position(testDiv.firstChild.firstChild, 3);
         let mockColor = 'red';

@@ -1,10 +1,8 @@
-import PartialInlineElement from '../objectModel/PartialInlineElement';
-import {
-    getBlockElementAtNode,
-    getInlineElementAfter,
-    getInlineElementBefore,
-} from '../objectModel/BlockElement';
-import { InlineElement, BlockElement } from '../objectModel/types';
+import PartialInlineElement from '../inlineElements/PartialInlineElement';
+import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
+import { getInlineElementAfter, getInlineElementBefore } from '../inlineElements/getInlineElementBeforeAfter';
+import InlineElement from '../inlineElements/InlineElement';
+import BlockElement from '../blockElements/BlockElement';
 import Position from '../selection/Position';
 import SelectionRange from '../selection/SelectionRange';
 

@@ -1,5 +1,8 @@
-import { getFirstBlockElement, getFirstInlineElement } from '../objectModel/BlockElement';
-import { InlineElement, BlockElement } from '../objectModel/types';
+import { getFirstInlineElement } from '../inlineElements/getFirstLastInlineElement';
+import { getFirstLeafNode } from '../domWalker/getLeafNode';
+import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
+import InlineElement from '../inlineElements/InlineElement';
+import BlockElement from '../blockElements/BlockElement';
 import TraversingScoper from './TraversingScoper';
 
 // This provides scoper for traversing the entire editor body starting from the beginning
@@ -8,7 +11,7 @@ class BodyScoper implements TraversingScoper {
 
     // Get the start block element
     public getStartBlockElement(): BlockElement {
-        return getFirstBlockElement(this.rootNode);
+        return getBlockElementAtNode(this.rootNode, getFirstLeafNode(this.rootNode));
     }
 
     // Get the first inline element in the editor

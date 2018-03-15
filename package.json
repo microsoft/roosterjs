@@ -8,6 +8,7 @@
   },
   "license": "MIT",
   "scripts": {
+    "checkDependency": "node tools/checkDependency.js",
     "clean": "rimraf dist",
     "copysample": "node tools/copy-sample-code.js",
     "dts": "node tools/dts.js",
@@ -15,8 +16,8 @@
     "normalize": "node tools/normalize-packages.js",
     "pack": "node tools/pack.js && node tools/pack.js -amd -e",
     "pack:prod": "node tools/pack.js -p && node tools/pack.js -p -amd -e",
-    "b": "npm run clean && npm run normalize && npm run tslint && node tools/build-all.js",
-    "build": "npm run b && npm run pack && npm run pack:prod && npm run dts && npm run copysample",
+    "b": "npm run clean && npm run normalize && node tools/build-all.js",
+    "build": "npm run b && npm run tslint && npm run pack && npm run pack:prod && npm run dts && npm run copysample",
     "start": "webpack-dev-server",
     "test": "npm run b && karma start",
     "test:debug": "npm run b && karma start --no-single-run",

@@ -1,8 +1,6 @@
 import * as DomTestHelper from '../DomTestHelper';
-import NodeInlineElement from '../../objectModel/NodeInlineElement';
 import Position from '../../selection/Position';
-import { NodeBlockElement } from '../../objectModel/BlockElement';
-import { InlineElement } from '../../objectModel/types';
+import NodeBlockElement from '../../blockElements/NodeblockElement';
 
 let testID = 'NodeBlockElement';
 
@@ -233,45 +231,6 @@ describe('NodeBlockElement getLastInlineElement()', () => {
     });
 });
 
-describe('NodeBlockElement getInlineElements()', () => {
-    afterEach(() => {
-        DomTestHelper.removeElement(testID);
-    });
-
-    function runTest(
-        inlineElement: InlineElement,
-        startOffset: number,
-        endOffset: number,
-        node: Node
-    ) {
-        let startPosition = new Position(node, startOffset);
-        let endPosition = new Position(node, endOffset);
-        expect(
-            DomTestHelper.isInlineElementEqual(
-                inlineElement,
-                startPosition,
-                endPosition,
-                node.textContent
-            )
-        ).toBe(true);
-    }
-
-    it('input = <img><span>part1</span><a>part2</a>', () => {
-        // Arrange
-        let [nodeBlockElement] = createNodeBlockElementWithContent(
-            '<img><span>part1</span><a>part2</a>'
-        );
-
-        // Act
-        let inlineElements = nodeBlockElement.getInlineElements();
-
-        // Assert
-        runTest(inlineElements[0], 0, 1, document.createElement('img'));
-        runTest(inlineElements[1], 0, 5, document.createTextNode('part1'));
-        runTest(inlineElements[2], 0, 5, document.createTextNode('part2'));
-    });
-});
-
 describe('NodeBlockElement equals()', () => {
     afterEach(() => {
         DomTestHelper.removeElement(testID);
@@ -350,40 +309,6 @@ describe('NodeBlockElement isAfter()', () => {
     it('input = <div>www.example.com</div>, nodeBlockElement1 equals to nodeBlockElement2', () => {
         let testDiv = DomTestHelper.createElementFromContent(testID, '<div>www.example.com</div>');
         runTest([testDiv, testDiv], [false, false]);
-    });
-});
-
-describe('NodeBlockElement isInBlock()', () => {
-    afterEach(() => {
-        DomTestHelper.removeElement(testID);
-    });
-
-    function createNodeInlineElement(inlineElementContent: string): InlineElement {
-        let testDiv = DomTestHelper.createElementFromContent(testID, inlineElementContent);
-        let parentBlock = new NodeBlockElement(testDiv);
-        let inlineElement = new NodeInlineElement(testDiv.firstChild, parentBlock);
-        return inlineElement;
-    }
-
-    it('input = <img><span>part1</span><a>part2</a>', () => {
-        // Arrange
-        let [nodeBlockElement] = createNodeBlockElementWithContent(
-            '<img><span>part1</span><a>part2</a>'
-        );
-        let inlineElements = nodeBlockElement.getInlineElements();
-        let myInlineElement = createNodeInlineElement('<span>www.example.com</span>');
-
-        // Act
-        let isElement1InBlock = nodeBlockElement.isInBlock(inlineElements[0]);
-        let isElement2InBlock = nodeBlockElement.isInBlock(inlineElements[1]);
-        let isElement3InBlock = nodeBlockElement.isInBlock(inlineElements[2]);
-        let isElement4InBlock = nodeBlockElement.isInBlock(myInlineElement);
-
-        // Assert
-        expect(isElement1InBlock).toEqual(true);
-        expect(isElement2InBlock).toEqual(true);
-        expect(isElement3InBlock).toEqual(true);
-        expect(isElement4InBlock).toEqual(false);
     });
 });
 

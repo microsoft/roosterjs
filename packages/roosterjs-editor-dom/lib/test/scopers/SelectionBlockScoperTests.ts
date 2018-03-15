@@ -3,7 +3,7 @@ import SelectionBlockScoper from '../../scopers/SelectionBlockScoper';
 import { ContentPosition } from 'roosterjs-editor-types';
 import Position from '../../selection/Position';
 import SelectionRange from '../../selection/SelectionRange';
-import { BlockElement } from '../../objectModel/types';
+import BlockElement from '../../blockElements/BlockElement';
 import PositionType from '../../selection/PositionType';
 
 let testID = 'SelectionBlockScoper';
