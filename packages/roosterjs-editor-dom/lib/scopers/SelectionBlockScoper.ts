@@ -88,9 +88,7 @@ class SelectionBlockScoper implements TraversingScoper {
     // A block scoper does not cut an inline in half
     public trimInlineElement(inlineElement: InlineElement): InlineElement {
         let theBlock = this.getStartBlockElement();
-        return theBlock && inlineElement && theBlock.contains(inlineElement)
-            ? inlineElement
-            : null;
+        return theBlock && inlineElement && theBlock.contains(inlineElement) ? inlineElement : null;
     }
 }
 

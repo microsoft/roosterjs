@@ -1,6 +1,9 @@
 import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
-import { getInlineElementAfter, getInlineElementBefore } from '../inlineElements/getInlineElementBeforeAfter';
+import {
+    getInlineElementAfter,
+    getInlineElementBefore,
+} from '../inlineElements/getInlineElementBeforeAfter';
 import InlineElement from '../inlineElements/InlineElement';
 import BlockElement from '../blockElements/BlockElement';
 import Position from '../selection/Position';

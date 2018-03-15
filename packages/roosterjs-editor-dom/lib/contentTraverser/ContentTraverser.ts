@@ -5,7 +5,8 @@ import {
     getNextInlineElement,
     getPreviousInlineElement,
 } from '../inlineElements/getNextPreviousInlineElement';
-import {     getNextBlockElement,
+import {
+    getNextBlockElement,
     getPreviousBlockElement,
 } from '../blockElements/getNextPreviousBlockElement';
 

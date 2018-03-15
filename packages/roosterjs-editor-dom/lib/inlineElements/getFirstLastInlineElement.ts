@@ -21,4 +21,3 @@ export function getLastInlineElement(rootNode: Node): InlineElement {
     let node = getLastLeafNode(rootNode);
     return getInlineElementAtNode(node);
 }
-

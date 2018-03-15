@@ -43,13 +43,12 @@ function getInlineElementBeforeAfterPoint(rootNode: Node, position: Position, is
     let node = position.node;
     let isPartial = false;
     let traverseFunc = isAfter ? getNextLeafSibling : getPreviousLeafSibling;
-    if (
-        (!isAfter && position.offset == 0 && !position.isAtEnd) ||
-        (isAfter && position.isAtEnd)
-     ) {
+    if ((!isAfter && position.offset == 0 && !position.isAtEnd) || (isAfter && position.isAtEnd)) {
         node = traverseFunc(rootNode, node);
-    } else if (node.nodeType == NodeType.Text && (
-        (!isAfter && !position.isAtEnd) || (isAfter && position.offset > 0))) {
+    } else if (
+        node.nodeType == NodeType.Text &&
+        ((!isAfter && !position.isAtEnd) || (isAfter && position.offset > 0))
+    ) {
         isPartial = true;
     }
 
@@ -60,9 +59,9 @@ function getInlineElementBeforeAfterPoint(rootNode: Node, position: Position, is
     let inlineElement = getInlineElementAtNode(node);
 
     if (inlineElement && (inlineElement.contains(position) || isPartial)) {
-        inlineElement = isAfter ?
-            new PartialInlineElement(inlineElement, position, null) :
-            new PartialInlineElement(inlineElement, null, position);
+        inlineElement = isAfter
+            ? new PartialInlineElement(inlineElement, position, null)
+            : new PartialInlineElement(inlineElement, null, position);
     }
 
     return inlineElement;

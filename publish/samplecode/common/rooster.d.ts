@@ -125,6 +125,7 @@ declare namespace roosterjs {
     interface ClipboardData {
         snapshotBeforePaste: string;
         originalFormat: DefaultFormat;
+        types: string[];
         image: File;
         text: string;
         html: string;
@@ -1326,6 +1327,13 @@ declare namespace roosterjs {
         private continueTraversingBackwardTill(stopFunc);
     }
 
+    /**
+     * Returns a rect representing the location of the cursor.
+     * In case there is a uncollapsed selection witin editor, this returns
+     * the position for focus node.
+     * The returned rect structure has a left and right and they should be same
+     * here since it is for cursor, not for a range.
+     */
     function getCursorRect(editor: Editor): Rect;
 
     /**

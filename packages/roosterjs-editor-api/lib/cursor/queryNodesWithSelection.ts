@@ -12,7 +12,14 @@ export default function queryNodesWithSelection(editor: Editor, selector: string
     let nodes = editor.queryNodes(selector);
     let range = editor.getSelectionRange();
     for (let i = 0; i < nodes.length; i++) {
-        if (intersectWithNodeRange(nodes[i], range.start.node, range.end.node, false /*containOnly*/)) {
+        if (
+            intersectWithNodeRange(
+                nodes[i],
+                range.start.node,
+                range.end.node,
+                false /*containOnly*/
+            )
+        ) {
             result.push(nodes[i]);
         }
     }

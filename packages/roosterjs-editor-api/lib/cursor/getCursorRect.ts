@@ -1,78 +1,57 @@
 import { Editor } from 'roosterjs-editor-core';
-import { DocumentPosition, Rect, NodeType } from 'roosterjs-editor-types';
-import { isDocumentPosition, Position } from 'roosterjs-editor-dom';
+import { Position } from 'roosterjs-editor-dom';
+import { Rect, NodeType } from 'roosterjs-editor-types';
 
-// Returns a rect representing the location of the cursor.
-// In case there is a uncollapsed selection witin editor, this returns
-// the position for focus node.
-// The returned rect structure has a left and right and they should be same
-// here since it is for cursor, not for a range.
+/**
+ * Returns a rect representing the location of the cursor.
+ * In case there is a uncollapsed selection witin editor, this returns
+ * the position for focus node.
+ * The returned rect structure has a left and right and they should be same
+ * here since it is for cursor, not for a range.
+ */
 export default function getCursorRect(editor: Editor): Rect {
-    let selectionRange = editor.getSelectionRange();
-    let range = selectionRange.getRange();
-
-    // There isn't a browser API that gets you position of cursor.
-    // Different browsers emit slightly different behaviours and there is no a single API that
-    // can help achieve the goal across all browsers. At high level, we try to achieve the goal
-    // by below approach:
-    // 1) first, obtain a collapsed range pointing to cursor
-    // 2) try to get rect using range.getBoundingClientRect()
-    // 3）fallback to a nearby range.getBoundingClientRect()
-    // 4) fallback range.getClientRects()
-    // 5) lastly fallback range.startContainer.getBoundingClientRect()
+    let range = editor.getSelectionRange().getRange();
+    let document = editor.getDocument();
 
     // 1) obtain a collapsed range pointing to cursor
-    if (!selectionRange.collapsed) {
-        // Range is not collapsed, collapse to cursor first
-        let selection = editor.getDocument().defaultView.getSelection();
-        if (selection && selection.focusNode && selection.anchorNode) {
-            let forwardSelection =
-                selection.focusNode == selection.anchorNode
-                    ? selection.focusOffset > selection.anchorOffset
-                    : isDocumentPosition(
-                          selection.anchorNode.compareDocumentPosition(selection.focusNode),
-                          DocumentPosition.Following
-                      );
-            range = range.cloneRange();
-            range.collapse(!forwardSelection /*toStart*/);
+    if (!range.collapsed) {
+        let selection = document.defaultView.getSelection();
+
+        if (!selection || !selection.focusNode) {
+            return null;
         }
+
+        let forwardSelection =
+            range.endContainer == selection.focusNode && range.endOffset == selection.focusOffset;
+        range = range.cloneRange();
+        range.collapse(!forwardSelection /*toStart*/);
     }
 
     // 2) try to get rect using range.getBoundingClientRect()
     let rect = getRectFromClientRect(range.getBoundingClientRect());
 
-    // 3）fallback to a nearby range.getBoundingClientRect()
     if (!rect) {
-        // This is often the case the cursor runs in middle of two nodes.
-        // i.e. <p>{cursor}<br></p>, or <p><img ...>{cursor}text</p>.
-        // range.getBoundingClientRect mostly return a client rect of all 0
-        // Skip this if we're in middle of a text node
         let position = new Position(range.startContainer, range.startOffset).normalize();
-        if (position.node.nodeType != NodeType.Text || position.isAtEnd) {
-            let nearbyRange = editor.getDocument().createRange();
-            nearbyRange.selectNode(position.node);
-            rect = getRectFromClientRect(nearbyRange.getBoundingClientRect());
-            if (rect) {
-                // Fix the position to boundary of the nearby range
-                rect.left = rect.right = position.offset == 0 ? rect.left : rect.right;
+        let node = position.node;
+
+        // 3) if current cursor is inside text node, insert a SPAN and get the rect of SPAN
+        if (node.nodeType == NodeType.Text) {
+            let span = document.createElement('SPAN');
+            range = document.createRange();
+            range.setStart(node, position.offset);
+            range.collapse(true /*toStart*/);
+            range.insertNode(span);
+            rect = getRectFromClientRect(span.getBoundingClientRect());
+            span.parentNode.removeChild(span);
+        }
+
+        // 4) fallback to element.getBoundingClientRect()
+        if (!rect) {
+            node = node.nodeType == NodeType.Element ? node : node.parentNode;
+            if (node && node.nodeType == NodeType.Element) {
+                rect = getRectFromClientRect((<Element>node).getBoundingClientRect());
             }
         }
-    }
-
-    // 4) fallback range.getClientRects()
-    if (!rect) {
-        // This is often the case Safari when cursor runs in middle of text node
-        // range.getBoundingClientRect() returns a all 0 client rect.
-        // range.getClientRects() returns a good client rect
-        let clientRects = range.getClientRects();
-        if (clientRects && clientRects.length == 1) {
-            rect = getRectFromClientRect(clientRects[0]);
-        }
-    }
-
-    // 5) lastly fallback range.startContainer.getBoundingClientRect()
-    if (!rect && range.startContainer instanceof Element) {
-        rect = getRectFromClientRect((range.startContainer as Element).getBoundingClientRect());
     }
 
     return rect;
@@ -81,16 +60,16 @@ export default function getCursorRect(editor: Editor): Rect {
 function getRectFromClientRect(clientRect: ClientRect): Rect {
     // A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p
     // We validate that and only return a rect when the passed in ClientRect is valid
-    return clientRect &&
-        (clientRect.left != 0 ||
-            clientRect.right != 0 ||
-            clientRect.left != 0 ||
-            clientRect.right != 0)
+    if (!clientRect) {
+        return null;
+    }
+    let { left, right, top, bottom } = clientRect;
+    return left + right + top + bottom > 0
         ? {
-              left: Math.round(clientRect.left),
-              right: Math.round(clientRect.right),
-              top: Math.round(clientRect.top),
-              bottom: Math.round(clientRect.bottom),
+              left: Math.round(left),
+              right: Math.round(right),
+              top: Math.round(top),
+              bottom: Math.round(bottom),
           }
         : null;
 }

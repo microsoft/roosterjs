@@ -50,7 +50,7 @@ export default function insertNode(core: EditorCore, node: Node, option?: Insert
 
 // Insert a node at begin of the editor
 function insertNodeAtBegin(core: EditorCore, node: Node, option: InsertOption) {
-    let contentDiv = core.contentDiv
+    let contentDiv = core.contentDiv;
     let firstBlock = getBlockElementAtNode(contentDiv, getFirstLeafNode(contentDiv));
     let insertedNode: Node;
     if (firstBlock) {
@@ -96,7 +96,7 @@ function insertNodeAtBegin(core: EditorCore, node: Node, option: InsertOption) {
 
 // Insert a node at end of the editor
 function insertNodeAtEnd(core: EditorCore, node: Node, option: InsertOption) {
-    let contentDiv = core.contentDiv
+    let contentDiv = core.contentDiv;
     let lastBlock = getBlockElementAtNode(contentDiv, getLastLeafNode(contentDiv));
     let insertedNode: Node;
     if (lastBlock) {

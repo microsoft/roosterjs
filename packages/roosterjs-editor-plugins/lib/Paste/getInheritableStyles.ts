@@ -38,7 +38,7 @@ const INHERITABLE_PROPERTIES = [
 export default function getInheritableStyles(editor: Editor): StyleMap {
     let node = getNodeAtCursor(editor);
     let styles = node ? getComputedStyle(node, INHERITABLE_PROPERTIES) : [];
-    let result: {[name: string]: string} = {};
+    let result: StyleMap = {};
 
     for (let i = 0; i < INHERITABLE_PROPERTIES.length; i++) {
         result[INHERITABLE_PROPERTIES[i]] = styles[i] || '';

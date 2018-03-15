@@ -28,6 +28,10 @@ function getNextPreviousBlockElement(
     // Get a leaf node after block's end element and use that base to find next block
     // TODO: this code is used to identify block, maybe we shouldn't exclude those empty nodes
     // We can improve this later on
-    let leaf = getLeafSibling(rootNode, isNext ? blockElement.getEndNode() : blockElement.getStartNode(), isNext);
+    let leaf = getLeafSibling(
+        rootNode,
+        isNext ? blockElement.getEndNode() : blockElement.getStartNode(),
+        isNext
+    );
     return getBlockElementAtNode(rootNode, leaf);
 }

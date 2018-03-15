@@ -20,7 +20,7 @@ export function getLastLeafNode(rootNode: Node): Node {
 }
 
 function getLeafNode(rootNode: Node, isFirst: boolean): Node {
-    let getChild = (node: Node) => isFirst ? node.firstChild : node.lastChild;
+    let getChild = (node: Node) => (isFirst ? node.firstChild : node.lastChild);
     let result = getChild(rootNode);
     while (result && getChild(result)) {
         result = getChild(result);

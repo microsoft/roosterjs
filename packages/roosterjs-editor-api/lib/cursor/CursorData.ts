@@ -1,9 +1,5 @@
 import { ContentPosition, ContentScope, NodeType } from 'roosterjs-editor-types';
-import {
-    ContentTraverser,
-    InlineElement,
-    PartialInlineElement,
-} from 'roosterjs-editor-dom';
+import { ContentTraverser, InlineElement, PartialInlineElement } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
 // White space matching regex. It matches following chars:

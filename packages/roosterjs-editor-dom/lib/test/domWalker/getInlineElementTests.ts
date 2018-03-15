@@ -1,8 +1,17 @@
 import * as DomTestHelper from '../DomTestHelper';
 import getInlineElementAtNode from '../../inlineElements/getInlineElementAtNode';
-import { getFirstInlineElement, getLastInlineElement } from '../../inlineElements/getFirstLastInlineElement';
-import { getNextInlineElement, getPreviousInlineElement } from '../../inlineElements/getNextPreviousInlineElement';
-import { getInlineElementBefore, getInlineElementAfter } from '../../inlineElements/getInlineElementBeforeAfter';
+import {
+    getFirstInlineElement,
+    getLastInlineElement,
+} from '../../inlineElements/getFirstLastInlineElement';
+import {
+    getNextInlineElement,
+    getPreviousInlineElement,
+} from '../../inlineElements/getNextPreviousInlineElement';
+import {
+    getInlineElementBefore,
+    getInlineElementAfter,
+} from '../../inlineElements/getInlineElementBeforeAfter';
 import PositionType from '../../selection/PositionType';
 import InlineElement from '../../inlineElements/InlineElement';
 import Position from '../../selection/Position';

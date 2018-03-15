@@ -1,6 +1,9 @@
 import StartEndBlockElement from './StartEndBlockElement';
 import InlineElement from '../inlineElements/InlineElement';
-import { getFirstInlineElement, getLastInlineElement } from '../inlineElements/getFirstLastInlineElement';
+import {
+    getFirstInlineElement,
+    getLastInlineElement,
+} from '../inlineElements/getFirstLastInlineElement';
 
 /**
  * This presents a content block that can be reprented by a single html block type element.

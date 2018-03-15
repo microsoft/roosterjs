@@ -17,16 +17,21 @@ export function getPreviousLeafSibling(rootNode: Node, startNode: Node): Node {
     return getLeafSibling(rootNode, startNode, false /*isNext*/);
 }
 
-export function getLeafSibling(rootNode: Node, startNode: Node, isNext: boolean, stop?: (node: Node) => boolean): Node {
-    let getSibling = (node: Node) => isNext ? node.nextSibling : node.previousSibling;
-    let getChild = (node: Node) => isNext ? node.firstChild : node.lastChild;
+export function getLeafSibling(
+    rootNode: Node,
+    startNode: Node,
+    isNext: boolean,
+    stop?: (node: Node) => boolean
+): Node {
+    let getSibling = (node: Node) => (isNext ? node.nextSibling : node.previousSibling);
+    let getChild = (node: Node) => (isNext ? node.firstChild : node.lastChild);
 
     if (!contains(rootNode, startNode)) {
         return null;
     }
 
     let curNode: Node;
-    for (curNode = startNode; curNode;) {
+    for (curNode = startNode; curNode; ) {
         // Find next/previous node, starting from next/previous sibling, then one level up to find next/previous sibling from parent
         // till a non-null nextSibling/previousSibling is found or the ceiling is encountered (rootNode)
         let parentNode = curNode.parentNode;
