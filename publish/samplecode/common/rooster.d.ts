@@ -636,13 +636,6 @@ declare namespace roosterjs {
      */
     function splitParentNode(node: Node, splitBefore: boolean): Node;
 
-    /**
-     * Convert plain to HTML
-     * @param text The plain text to convert
-     * @returns HTML string to present the input text
-     */
-    function textToHtml(text: string): string;
-
     function unwrap(node: Node): Node;
 
     function wrap(node: Node, htmlFragment: string): Node;

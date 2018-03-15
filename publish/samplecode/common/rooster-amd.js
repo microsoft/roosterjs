@@ -145,15 +145,13 @@ var normalizeEditorPoint_1 = __webpack_require__(26);
 exports.normalizeEditorPoint = normalizeEditorPoint_1.default;
 var splitParentNode_1 = __webpack_require__(74);
 exports.splitParentNode = splitParentNode_1.default;
-var textToHtml_1 = __webpack_require__(75);
-exports.textToHtml = textToHtml_1.default;
-var unwrap_1 = __webpack_require__(76);
+var unwrap_1 = __webpack_require__(75);
 exports.unwrap = unwrap_1.default;
 var wrap_1 = __webpack_require__(36);
 exports.wrap = wrap_1.default;
-var wrapAll_1 = __webpack_require__(77);
+var wrapAll_1 = __webpack_require__(76);
 exports.wrapAll = wrapAll_1.default;
-var VTable_1 = __webpack_require__(78);
+var VTable_1 = __webpack_require__(77);
 exports.VTable = VTable_1.default;
 
 
@@ -230,7 +228,7 @@ var Undo_1 = __webpack_require__(30);
 exports.Undo = Undo_1.default;
 var BrowserData_1 = __webpack_require__(20);
 exports.browserData = BrowserData_1.default;
-var eventDataCacheUtils_1 = __webpack_require__(85);
+var eventDataCacheUtils_1 = __webpack_require__(84);
 exports.clearEventDataCache = eventDataCacheUtils_1.clearEventDataCache;
 exports.cacheGetEventData = eventDataCacheUtils_1.cacheGetEventData;
 var snapshotUtils_1 = __webpack_require__(31);
@@ -289,7 +287,7 @@ function isIntersectWithNodeRange(node, range) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cacheGetCursorEventData_1 = __webpack_require__(86);
+var cacheGetCursorEventData_1 = __webpack_require__(85);
 exports.cacheGetCursorEventData = cacheGetCursorEventData_1.default;
 exports.clearCursorEventDataCache = cacheGetCursorEventData_1.clearCursorEventDataCache;
 var CursorData_1 = __webpack_require__(28);
@@ -302,64 +300,64 @@ var queryNodesWithSelection_1 = __webpack_require__(3);
 exports.queryNodesWithSelection = queryNodesWithSelection_1.default;
 var replaceRangeWithNode_1 = __webpack_require__(44);
 exports.replaceRangeWithNode = replaceRangeWithNode_1.default;
-var replaceTextBeforeCursorWithNode_1 = __webpack_require__(87);
+var replaceTextBeforeCursorWithNode_1 = __webpack_require__(86);
 exports.replaceTextBeforeCursorWithNode = replaceTextBeforeCursorWithNode_1.default;
 exports.validateAndGetRangeForTextBeforeCursor = replaceTextBeforeCursorWithNode_1.validateAndGetRangeForTextBeforeCursor;
 var cacheGetListState_1 = __webpack_require__(45);
 exports.cacheGetListState = cacheGetListState_1.default;
-var clearFormat_1 = __webpack_require__(88);
+var clearFormat_1 = __webpack_require__(87);
 exports.clearFormat = clearFormat_1.default;
-var createLink_1 = __webpack_require__(89);
+var createLink_1 = __webpack_require__(88);
 exports.createLink = createLink_1.default;
 var execFormatWithUndo_1 = __webpack_require__(1);
 exports.execFormatWithUndo = execFormatWithUndo_1.default;
 var getFormatState_1 = __webpack_require__(51);
 exports.getFormatState = getFormatState_1.default;
-var insertImage_1 = __webpack_require__(91);
+var insertImage_1 = __webpack_require__(90);
 exports.insertImage = insertImage_1.default;
-var insertTable_1 = __webpack_require__(92);
+var insertTable_1 = __webpack_require__(91);
 exports.insertTable = insertTable_1.default;
-var editTable_1 = __webpack_require__(93);
+var editTable_1 = __webpack_require__(92);
 exports.editTable = editTable_1.default;
 var formatTable_1 = __webpack_require__(52);
 exports.formatTable = formatTable_1.default;
-var removeLink_1 = __webpack_require__(94);
+var removeLink_1 = __webpack_require__(93);
 exports.removeLink = removeLink_1.default;
-var setAlignment_1 = __webpack_require__(95);
+var setAlignment_1 = __webpack_require__(94);
 exports.setAlignment = setAlignment_1.default;
 var setBackgroundColor_1 = __webpack_require__(46);
 exports.setBackgroundColor = setBackgroundColor_1.default;
 var setTextColor_1 = __webpack_require__(49);
 exports.setTextColor = setTextColor_1.default;
-var setDirection_1 = __webpack_require__(96);
+var setDirection_1 = __webpack_require__(95);
 exports.setDirection = setDirection_1.default;
 var setFontName_1 = __webpack_require__(47);
 exports.setFontName = setFontName_1.default;
 var setFontSize_1 = __webpack_require__(48);
 exports.setFontSize = setFontSize_1.default;
-var setImageAltText_1 = __webpack_require__(97);
+var setImageAltText_1 = __webpack_require__(96);
 exports.setImageAltText = setImageAltText_1.default;
-var setIndentation_1 = __webpack_require__(98);
+var setIndentation_1 = __webpack_require__(97);
 exports.setIndentation = setIndentation_1.default;
-var toggleBold_1 = __webpack_require__(99);
+var toggleBold_1 = __webpack_require__(98);
 exports.toggleBold = toggleBold_1.default;
 var toggleBullet_1 = __webpack_require__(53);
 exports.toggleBullet = toggleBullet_1.default;
-var toggleItalic_1 = __webpack_require__(100);
+var toggleItalic_1 = __webpack_require__(99);
 exports.toggleItalic = toggleItalic_1.default;
-var toggleNumbering_1 = __webpack_require__(101);
+var toggleNumbering_1 = __webpack_require__(100);
 exports.toggleNumbering = toggleNumbering_1.default;
-var toggleBlockQuote_1 = __webpack_require__(102);
+var toggleBlockQuote_1 = __webpack_require__(101);
 exports.toggleBlockQuote = toggleBlockQuote_1.default;
-var toggleStrikethrough_1 = __webpack_require__(103);
+var toggleStrikethrough_1 = __webpack_require__(102);
 exports.toggleStrikethrough = toggleStrikethrough_1.default;
-var toggleSubscript_1 = __webpack_require__(104);
+var toggleSubscript_1 = __webpack_require__(103);
 exports.toggleSubscript = toggleSubscript_1.default;
-var toggleSuperscript_1 = __webpack_require__(105);
+var toggleSuperscript_1 = __webpack_require__(104);
 exports.toggleSuperscript = toggleSuperscript_1.default;
-var toggleUnderline_1 = __webpack_require__(106);
+var toggleUnderline_1 = __webpack_require__(105);
 exports.toggleUnderline = toggleUnderline_1.default;
-var toggleHeader_1 = __webpack_require__(107);
+var toggleHeader_1 = __webpack_require__(106);
 exports.toggleHeader = toggleHeader_1.default;
 var matchLink_1 = __webpack_require__(50);
 exports.matchLink = matchLink_1.default;
@@ -2334,11 +2332,11 @@ exports.default = CursorData;
 Object.defineProperty(exports, "__esModule", { value: true });
 var DefaultShortcut_1 = __webpack_require__(59);
 exports.DefaultShortcut = DefaultShortcut_1.default;
-var HyperLink_1 = __webpack_require__(108);
+var HyperLink_1 = __webpack_require__(107);
 exports.HyperLink = HyperLink_1.default;
-var ContentEdit_1 = __webpack_require__(109);
+var ContentEdit_1 = __webpack_require__(108);
 exports.ContentEdit = ContentEdit_1.default;
-var Paste_1 = __webpack_require__(111);
+var Paste_1 = __webpack_require__(110);
 exports.Paste = Paste_1.default;
 var ContentEditFeatures_1 = __webpack_require__(54);
 exports.getDefaultContentEditFeatures = ContentEditFeatures_1.getDefaultContentEditFeatures;
@@ -3098,7 +3096,7 @@ function applyInlineStyle(doc, additionalStyleNodes) {
         var _loop_1 = function (j) {
             // Skip any none-style rule, i.e. @page
             var styleRule = styleSheet.cssRules[j];
-            var text = styleRule.style.cssText;
+            var text = styleRule && styleRule.style ? styleRule.style.cssText : null;
             if (styleRule.type != CSSRule.STYLE_RULE || !text || !styleRule.selectorText) {
                 return "continue";
             }
@@ -3624,7 +3622,7 @@ exports.default = matchLink;
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var cacheGetListState_1 = __webpack_require__(45);
-var cacheGetHeaderLevel_1 = __webpack_require__(90);
+var cacheGetHeaderLevel_1 = __webpack_require__(89);
 var queryNodesWithSelection_1 = __webpack_require__(3);
 // Get certain style of a node
 // useComputed controls from where to get the style, from computed style or crawl DOM tree to find inline style
@@ -4108,19 +4106,19 @@ exports.default = DefaultShortcut;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Undo_1 = __webpack_require__(30);
-var applyInlineStyle_1 = __webpack_require__(79);
-var attachDomEvent_1 = __webpack_require__(80);
+var applyInlineStyle_1 = __webpack_require__(78);
+var attachDomEvent_1 = __webpack_require__(79);
 var BrowserData_1 = __webpack_require__(20);
-var calcDefaultFormat_1 = __webpack_require__(81);
+var calcDefaultFormat_1 = __webpack_require__(80);
 var focus_1 = __webpack_require__(27);
 var getContentTraverser_1 = __webpack_require__(42);
-var getCursorRect_1 = __webpack_require__(82);
+var getCursorRect_1 = __webpack_require__(81);
 var getSelection_1 = __webpack_require__(18);
 var getSelectionRange_1 = __webpack_require__(5);
 var hasFocus_1 = __webpack_require__(19);
-var insertNode_1 = __webpack_require__(83);
+var insertNode_1 = __webpack_require__(82);
 var restoreSelection_1 = __webpack_require__(41);
-var saveSelectionRange_1 = __webpack_require__(84);
+var saveSelectionRange_1 = __webpack_require__(83);
 var triggerEvent_1 = __webpack_require__(43);
 var updateSelection_1 = __webpack_require__(10);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
@@ -5332,50 +5330,6 @@ exports.default = splitParentNode;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Convert plain to HTML
- * @param text The plain text to convert
- * @returns HTML string to present the input text
- */
-function textToHtml(text) {
-    text = (text || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/'/g, '&#39;')
-        .replace(/"/g, '&quot;');
-    var lines = text.split('\n');
-    if (lines.length == 2) {
-        text = "<span>" + lines[0] + "<br></span><span>" + lines[1] + "</span>";
-    }
-    else if (lines.length > 2) {
-        text = '';
-        lines.forEach(function (line, i) {
-            line = line || '\u200B'; // Use ZeroWidthSpace for empty line
-            if (i == 0) {
-                text += "<span>" + line + "<br></span>";
-            }
-            else if (i == lines.length - 1) {
-                text += "<span>" + line + "</span>";
-            }
-            else {
-                text += "<div>" + line + "</div>";
-            }
-        });
-    }
-    text = text.replace(/\s/g, '&nbsp;');
-    return text;
-}
-exports.default = textToHtml;
-
-
-/***/ }),
-/* 76 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
 // Removes the node and keep all children in place, return the parentNode where the children are attached
 function unwrap(node) {
     // Unwrap requires a parentNode
@@ -5393,7 +5347,7 @@ exports.default = unwrap;
 
 
 /***/ }),
-/* 77 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5424,7 +5378,7 @@ exports.default = wrapAll;
 
 
 /***/ }),
-/* 78 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5590,7 +5544,7 @@ function getBorderStyle(style) {
 
 
 /***/ }),
-/* 79 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5677,7 +5631,7 @@ exports.default = applyInlineStyle;
 
 
 /***/ }),
-/* 80 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5705,7 +5659,7 @@ exports.default = attachDomEvent;
 
 
 /***/ }),
-/* 81 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5728,7 +5682,7 @@ exports.default = calcDefaultFormat;
 
 
 /***/ }),
-/* 82 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5800,7 +5754,7 @@ function getRectFromClientRect(clientRect) {
 
 
 /***/ }),
-/* 83 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5971,7 +5925,7 @@ function insertNodeAtSelection(core, node, option) {
 
 
 /***/ }),
-/* 84 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5985,7 +5939,7 @@ exports.default = saveSelectionRange;
 
 
 /***/ }),
-/* 85 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6014,7 +5968,7 @@ exports.cacheGetEventData = cacheGetEventData;
 
 
 /***/ }),
-/* 86 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6048,7 +6002,7 @@ exports.clearCursorEventDataCache = clearCursorEventDataCache;
 
 
 /***/ }),
-/* 87 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6158,7 +6112,7 @@ exports.default = replaceTextBeforeCursorWithNode;
 
 
 /***/ }),
-/* 88 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6200,7 +6154,7 @@ exports.default = clearFormat;
 
 
 /***/ }),
-/* 89 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6303,7 +6257,7 @@ function getAnchorNodeAtCursor(editor) {
 
 
 /***/ }),
-/* 90 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6334,7 +6288,7 @@ exports.default = cacheGetHeaderLevel;
 
 
 /***/ }),
-/* 91 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6365,7 +6319,7 @@ exports.default = insertImage;
 
 
 /***/ }),
-/* 92 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6427,7 +6381,7 @@ function getTableCellWidth(columns) {
 
 
 /***/ }),
-/* 93 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6557,7 +6511,7 @@ exports.default = editTable;
 
 
 /***/ }),
-/* 94 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6601,7 +6555,7 @@ exports.default = removeLink;
 
 
 /***/ }),
-/* 95 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6631,7 +6585,7 @@ exports.default = setAlignment;
 
 
 /***/ }),
-/* 96 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6693,7 +6647,7 @@ exports.default = setDirection;
 
 
 /***/ }),
-/* 97 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6726,7 +6680,7 @@ exports.default = setImageAltText;
 
 
 /***/ }),
-/* 98 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6762,7 +6716,7 @@ exports.default = setIndentation;
 
 
 /***/ }),
-/* 99 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6792,7 +6746,7 @@ exports.default = toggleBold;
 
 
 /***/ }),
-/* 100 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6822,7 +6776,7 @@ exports.default = toggleItalic;
 
 
 /***/ }),
-/* 101 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6850,7 +6804,7 @@ exports.default = toggleNumbering;
 
 
 /***/ }),
-/* 102 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6980,7 +6934,7 @@ function isListElement(node) {
 
 
 /***/ }),
-/* 103 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7010,7 +6964,7 @@ exports.default = toggleStrikethrough;
 
 
 /***/ }),
-/* 104 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7042,7 +6996,7 @@ exports.default = toggleSubscript;
 
 
 /***/ }),
-/* 105 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7074,7 +7028,7 @@ exports.default = toggleSuperscript;
 
 
 /***/ }),
-/* 106 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7104,7 +7058,7 @@ exports.default = toggleUnderline;
 
 
 /***/ }),
-/* 107 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7157,7 +7111,7 @@ exports.default = toggleHeader;
 
 
 /***/ }),
-/* 108 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7317,7 +7271,7 @@ exports.default = HyperLink;
 
 
 /***/ }),
-/* 109 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7326,7 +7280,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_api_1 = __webpack_require__(4);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var ContentEditFeatures_1 = __webpack_require__(54);
-var autoBullet_1 = __webpack_require__(110);
+var autoBullet_1 = __webpack_require__(109);
 var KEY_TAB = 9;
 var KEY_BACKSPACE = 8;
 var KEY_ENTER = 13;
@@ -7552,7 +7506,7 @@ exports.default = ContentEdit;
 
 
 /***/ }),
-/* 110 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7635,7 +7589,7 @@ function isAutoBulletInput(input) {
 
 
 /***/ }),
-/* 111 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7644,8 +7598,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var roosterjs_editor_core_1 = __webpack_require__(2);
 var roosterjs_editor_api_1 = __webpack_require__(4);
-var buildClipboardData_1 = __webpack_require__(112);
-var convertPastedContentFromWord_1 = __webpack_require__(113);
+var buildClipboardData_1 = __webpack_require__(111);
+var convertPastedContentFromWord_1 = __webpack_require__(112);
+var textToHtml_1 = __webpack_require__(116);
 /**
  * Paste plugin, handles onPaste event and paste content into editor
  */
@@ -7666,7 +7621,7 @@ var Paste = /** @class */ (function () {
             _this.editor.addUndoSnapshot();
             buildClipboardData_1.default(event, _this.editor, function (clipboardData) {
                 if (!clipboardData.html && clipboardData.text) {
-                    clipboardData.html = roosterjs_editor_dom_1.textToHtml(clipboardData.text);
+                    clipboardData.html = textToHtml_1.default(clipboardData.text);
                 }
                 if (!clipboardData.isHtmlFromTempDiv) {
                     clipboardData.html = roosterjs_editor_dom_1.sanitizeHtml(clipboardData.html, null /*additionalStyleNodes*/, false /*convertInlineCssOnly*/, _this.htmlPropertyCallbacks);
@@ -7755,7 +7710,7 @@ var Paste = /** @class */ (function () {
                 this.editor.insertNode(fragment);
                 break;
             case 1 /* PasteText */:
-                var html = roosterjs_editor_dom_1.textToHtml(clipboardData.text);
+                var html = textToHtml_1.default(clipboardData.text);
                 this.editor.insertContent(html);
                 break;
             case 2 /* PasteImage */:
@@ -7787,7 +7742,7 @@ exports.default = Paste;
 
 
 /***/ }),
-/* 112 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7908,15 +7863,15 @@ function getTempDivForPaste(editor) {
 
 
 /***/ }),
-/* 113 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var wordConverter_1 = __webpack_require__(114);
-var WordConverterArguments_1 = __webpack_require__(115);
-var converterUtils_1 = __webpack_require__(116);
+var wordConverter_1 = __webpack_require__(113);
+var WordConverterArguments_1 = __webpack_require__(114);
+var converterUtils_1 = __webpack_require__(115);
 /** Converts all the Word generated list items in the specified node into standard HTML UL and OL tags */
 function convertPastedContentFromWord(root) {
     var wordConverter = wordConverter_1.createWordConverter();
@@ -7935,7 +7890,7 @@ exports.default = convertPastedContentFromWord;
 
 
 /***/ }),
-/* 114 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7957,7 +7912,7 @@ exports.createWordConverter = createWordConverter;
 
 
 /***/ }),
-/* 115 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7980,7 +7935,7 @@ exports.createWordConverterArguments = createWordConverterArguments;
 
 
 /***/ }),
-/* 116 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8464,6 +8419,54 @@ function resetCurrentLists(args) {
         }
     }
 }
+
+
+/***/ }),
+/* 116 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_core_1 = __webpack_require__(2);
+var ZERO_WIDTH_SPACE = '&#8203;';
+/**
+ * Convert plain to HTML
+ * @param text The plain text to convert
+ * @returns HTML string to present the input text
+ */
+function textToHtml(text) {
+    text = (text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/'/g, '&#39;')
+        .replace(/"/g, '&quot;')
+        .replace(/^ /gm, '&nbsp;')
+        .replace(/\r/g, '');
+    var lines = text.split('\n');
+    if (lines.length == 2) {
+        text = "<span>" + lines[0] + "<br></span><span>" + lines[1] + "</span>";
+    }
+    else if (lines.length > 2) {
+        text = '';
+        var lineEnd_1 = roosterjs_editor_core_1.browserData.isEdge || roosterjs_editor_core_1.browserData.isIE ? ZERO_WIDTH_SPACE : '<br>';
+        lines.forEach(function (line, i) {
+            if (i == 0) {
+                text += "<span>" + line + "<br></span>";
+            }
+            else if (i == lines.length - 1) {
+                text += "<span>" + line + "</span>";
+            }
+            else {
+                text += "<div>" + line + lineEnd_1 + "</div>";
+            }
+        });
+    }
+    text = text.replace(/\s\s/g, ' &nbsp;');
+    return text;
+}
+exports.default = textToHtml;
 
 
 /***/ }),

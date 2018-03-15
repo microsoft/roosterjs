@@ -15,12 +15,12 @@ import {
     getFirstLeafNode,
     getNextLeafSibling,
     sanitizeHtml,
-    textToHtml,
 } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin, buildSnapshot, restoreSnapshot } from 'roosterjs-editor-core';
 import { insertImage } from 'roosterjs-editor-api';
 import buildClipboardData from './buildClipboardData';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
+import textToHtml from './textToHtml';
 
 /**
  * Paste plugin, handles onPaste event and paste content into editor

@@ -635,13 +635,6 @@ export function normalizeEditorPoint(container: Node, offset: number): EditorPoi
  */
 export function splitParentNode(node: Node, splitBefore: boolean): Node;
 
-/**
- * Convert plain to HTML
- * @param text The plain text to convert
- * @returns HTML string to present the input text
- */
-export function textToHtml(text: string): string;
-
 export function unwrap(node: Node): Node;
 
 export function wrap(node: Node, htmlFragment: string): Node;
