@@ -841,10 +841,14 @@ export function contains(container: Node, contained: Node, treatSameNodeAsContai
  * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
  * @param propertyCallbacks A callback function map to handle HTML properties
  */
-export function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback): string;
+export function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback, currentStyle?: StyleMap): string;
 
 export type SanitizeHtmlPropertyCallback = {
     [name: string]: (value: string) => string;
+};
+
+export type StyleMap = {
+    [name: string]: string;
 };
 
 export function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[];

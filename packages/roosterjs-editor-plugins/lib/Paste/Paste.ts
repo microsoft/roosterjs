@@ -19,6 +19,7 @@ import {
 } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin, buildSnapshot, restoreSnapshot } from 'roosterjs-editor-core';
 import { insertImage } from 'roosterjs-editor-api';
+import getInheritableStyles from './getInheritableStyles';
 import buildClipboardData from './buildClipboardData';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 
@@ -68,16 +69,20 @@ export default class Paste implements EditorPlugin {
             <ClipboardEvent>event,
             this.editor,
             clipboardData => {
+                if (!this.editor) {
+                    return;
+                }
                 if (!clipboardData.html && clipboardData.text) {
                     clipboardData.html = textToHtml(clipboardData.text);
                 }
                 if (!clipboardData.isHtmlFromTempDiv) {
+                    let currentStyles = getInheritableStyles(this.editor);
                     clipboardData.html = sanitizeHtml(
                         clipboardData.html,
                         null /*additionalStyleNodes*/,
                         false /*convertInlineCssOnly*/,
                         this.htmlPropertyCallbacks,
-                        clipboardData.currentStyles
+                        currentStyles
                     );
                 }
                 this.pasteOriginal(clipboardData);

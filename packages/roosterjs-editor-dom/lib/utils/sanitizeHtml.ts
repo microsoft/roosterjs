@@ -4,6 +4,7 @@ import getTagOfNode from './getTagOfNode';
 const HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
 
 export type SanitizeHtmlPropertyCallback = { [name: string]: (value: string) => string };
+export type StyleMap = { [name: string]: string };
 
 /**
  * Sanitize HTML string
@@ -21,7 +22,7 @@ export default function sanitizeHtml(
     additionalStyleNodes?: HTMLStyleElement[],
     convertInlineCssOnly?: boolean,
     propertyCallbacks?: SanitizeHtmlPropertyCallback,
-    currentStyle?: {[name: string]: string}
+    currentStyle?: StyleMap
 ): string {
     let parser = new DOMParser();
     let matches = HTML_REGEX.exec(html);
@@ -260,7 +261,7 @@ function removeUnusedCssAndDangerousContent(
     node: Node,
     callbackPropertyNames: string[],
     propertyCallbacks: SanitizeHtmlPropertyCallback,
-    currentStyle: { [name: string]: string }
+    currentStyle: StyleMap
 ) {
     let thisStyle = Object.assign ? Object.assign({}, currentStyle) : {};
     let nodeType = node.nodeType;
@@ -294,7 +295,7 @@ function removeUnusedCssAndDangerousContent(
     }
 }
 
-function removeUnusedCss(element: HTMLElement, thisStyle: { [name: string]: string }) {
+function removeUnusedCss(element: HTMLElement, thisStyle: StyleMap) {
     let source = element
         .getAttribute('style')
         .split(';')

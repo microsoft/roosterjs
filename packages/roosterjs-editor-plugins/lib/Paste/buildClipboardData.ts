@@ -1,57 +1,10 @@
 import { ClipboardData, ContentPosition, DefaultFormat } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { fromHtml, getComputedStyle } from 'roosterjs-editor-dom';
-import { getFormatState, getNodeAtCursor } from 'roosterjs-editor-api';
+import { fromHtml } from 'roosterjs-editor-dom';
+import { getFormatState } from 'roosterjs-editor-api';
 
 const CONTAINER_HTML =
     '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
-
-// Inheritable CSS properties
-// Ref: https://www.w3.org/TR/CSS21/propidx.html
-const INHERITABLE_PROPERTOES = [
-    'azimuth',
-    'border-collapse',
-    'border-spacing',
-    'caption-side',
-    'color',
-    'cursor',
-    'direction',
-    'elevation',
-    'empty-cells',
-    'font-family',
-    'font-size',
-    'font-style',
-    'font-variant',
-    'font-weight',
-    'font',
-    'letter-spacing',
-    'line-height',
-    'list-style-image',
-    'list-style-position',
-    'list-style-type',
-    'list-style',
-    'orphans',
-    'pitch-range',
-    'pitch',
-    'quotes',
-    'richness',
-    'speak-header',
-    'speak-numeral',
-    'speak-punctuation',
-    'speak',
-    'speech-rate',
-    'stress',
-    'text-align',
-    'text-indent',
-    'text-transform',
-    'visibility',
-    'voice-family',
-    'volume',
-    'white-space',
-    'widows',
-    'word-spacing',
-];
-
 
 interface WindowForIE extends Window {
     clipboardData: DataTransfer;
@@ -75,7 +28,6 @@ export default function buildClipboardData(
     let clipboardData: ClipboardData = {
         snapshotBeforePaste: null,
         originalFormat: getCurrentFormat(editor),
-        currentStyles: getCurrentStyles(editor),
         image: getImage(dataTransfer),
         text: dataTransfer.getData('text'),
         html: null,
@@ -93,18 +45,6 @@ export default function buildClipboardData(
             callback(clipboardData);
         });
     }
-}
-
-function getCurrentStyles(editor: Editor): {[name: string]: string} {
-    let node = getNodeAtCursor(editor);
-    let styles = node ? getComputedStyle(node, INHERITABLE_PROPERTOES) : [];
-    let result: {[name: string]: string} = {};
-
-    for (let i = 0; i < INHERITABLE_PROPERTOES.length; i++) {
-        result[INHERITABLE_PROPERTOES[i]] = styles[i] || '';
-    }
-
-    return result;
 }
 
 function getCurrentFormat(editor: Editor): DefaultFormat {

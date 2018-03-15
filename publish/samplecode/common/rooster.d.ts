@@ -842,10 +842,14 @@ declare namespace roosterjs {
      * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
      * @param propertyCallbacks A callback function map to handle HTML properties
      */
-    function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback): string;
+    function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback, currentStyle?: StyleMap): string;
 
     type SanitizeHtmlPropertyCallback = {
         [name: string]: (value: string) => string;
+    };
+
+    type StyleMap = {
+        [name: string]: string;
     };
 
     function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[];
