@@ -146,13 +146,11 @@ var isNodeEmpty_1 = __webpack_require__(104);
 exports.isNodeEmpty = isNodeEmpty_1.default;
 var splitParentNode_1 = __webpack_require__(103);
 exports.splitParentNode = splitParentNode_1.default;
-var textToHtml_1 = __webpack_require__(102);
-exports.textToHtml = textToHtml_1.default;
-var unwrap_1 = __webpack_require__(101);
+var unwrap_1 = __webpack_require__(102);
 exports.unwrap = unwrap_1.default;
 var wrap_1 = __webpack_require__(50);
 exports.wrap = wrap_1.default;
-var wrapAll_1 = __webpack_require__(100);
+var wrapAll_1 = __webpack_require__(101);
 exports.wrapAll = wrapAll_1.default;
 
 
@@ -169,7 +167,7 @@ var Undo_1 = __webpack_require__(53);
 exports.Undo = Undo_1.default;
 var BrowserData_1 = __webpack_require__(26);
 exports.browserData = BrowserData_1.default;
-var eventDataCacheUtils_1 = __webpack_require__(95);
+var eventDataCacheUtils_1 = __webpack_require__(96);
 exports.clearEventDataCache = eventDataCacheUtils_1.clearEventDataCache;
 exports.cacheGetEventData = eventDataCacheUtils_1.cacheGetEventData;
 var snapshotUtils_1 = __webpack_require__(52);
@@ -212,12 +210,12 @@ exports.default = queryNodesWithSelection;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cacheGetCursorEventData_1 = __webpack_require__(94);
+var cacheGetCursorEventData_1 = __webpack_require__(95);
 exports.cacheGetCursorEventData = cacheGetCursorEventData_1.default;
 exports.clearCursorEventDataCache = cacheGetCursorEventData_1.clearCursorEventDataCache;
 var CursorData_1 = __webpack_require__(18);
 exports.CursorData = CursorData_1.default;
-var getCursorRect_1 = __webpack_require__(93);
+var getCursorRect_1 = __webpack_require__(94);
 exports.getCursorRect = getCursorRect_1.default;
 var getNodeAtCursor_1 = __webpack_require__(5);
 exports.getNodeAtCursor = getNodeAtCursor_1.default;
@@ -226,62 +224,62 @@ var queryNodesWithSelection_1 = __webpack_require__(2);
 exports.queryNodesWithSelection = queryNodesWithSelection_1.default;
 var replaceRangeWithNode_1 = __webpack_require__(39);
 exports.replaceRangeWithNode = replaceRangeWithNode_1.default;
-var replaceTextBeforeCursorWithNode_1 = __webpack_require__(92);
+var replaceTextBeforeCursorWithNode_1 = __webpack_require__(93);
 exports.replaceTextBeforeCursorWithNode = replaceTextBeforeCursorWithNode_1.default;
 exports.validateAndGetRangeForTextBeforeCursor = replaceTextBeforeCursorWithNode_1.validateAndGetRangeForTextBeforeCursor;
 var cacheGetListState_1 = __webpack_require__(38);
 exports.cacheGetListState = cacheGetListState_1.default;
-var clearFormat_1 = __webpack_require__(91);
+var clearFormat_1 = __webpack_require__(92);
 exports.clearFormat = clearFormat_1.default;
-var createLink_1 = __webpack_require__(90);
+var createLink_1 = __webpack_require__(91);
 exports.createLink = createLink_1.default;
 var getFormatState_1 = __webpack_require__(32);
 exports.getFormatState = getFormatState_1.default;
-var insertImage_1 = __webpack_require__(88);
+var insertImage_1 = __webpack_require__(89);
 exports.insertImage = insertImage_1.default;
-var insertTable_1 = __webpack_require__(87);
+var insertTable_1 = __webpack_require__(88);
 exports.insertTable = insertTable_1.default;
-var editTable_1 = __webpack_require__(86);
+var editTable_1 = __webpack_require__(87);
 exports.editTable = editTable_1.default;
 var formatTable_1 = __webpack_require__(31);
 exports.formatTable = formatTable_1.default;
-var removeLink_1 = __webpack_require__(85);
+var removeLink_1 = __webpack_require__(86);
 exports.removeLink = removeLink_1.default;
-var setAlignment_1 = __webpack_require__(84);
+var setAlignment_1 = __webpack_require__(85);
 exports.setAlignment = setAlignment_1.default;
 var setBackgroundColor_1 = __webpack_require__(37);
 exports.setBackgroundColor = setBackgroundColor_1.default;
 var setTextColor_1 = __webpack_require__(34);
 exports.setTextColor = setTextColor_1.default;
-var setDirection_1 = __webpack_require__(83);
+var setDirection_1 = __webpack_require__(84);
 exports.setDirection = setDirection_1.default;
 var setFontName_1 = __webpack_require__(36);
 exports.setFontName = setFontName_1.default;
 var setFontSize_1 = __webpack_require__(35);
 exports.setFontSize = setFontSize_1.default;
-var setImageAltText_1 = __webpack_require__(82);
+var setImageAltText_1 = __webpack_require__(83);
 exports.setImageAltText = setImageAltText_1.default;
-var setIndentation_1 = __webpack_require__(81);
+var setIndentation_1 = __webpack_require__(82);
 exports.setIndentation = setIndentation_1.default;
-var toggleBold_1 = __webpack_require__(80);
+var toggleBold_1 = __webpack_require__(81);
 exports.toggleBold = toggleBold_1.default;
 var toggleBullet_1 = __webpack_require__(30);
 exports.toggleBullet = toggleBullet_1.default;
-var toggleItalic_1 = __webpack_require__(79);
+var toggleItalic_1 = __webpack_require__(80);
 exports.toggleItalic = toggleItalic_1.default;
-var toggleNumbering_1 = __webpack_require__(78);
+var toggleNumbering_1 = __webpack_require__(79);
 exports.toggleNumbering = toggleNumbering_1.default;
-var toggleBlockQuote_1 = __webpack_require__(77);
+var toggleBlockQuote_1 = __webpack_require__(78);
 exports.toggleBlockQuote = toggleBlockQuote_1.default;
-var toggleStrikethrough_1 = __webpack_require__(76);
+var toggleStrikethrough_1 = __webpack_require__(77);
 exports.toggleStrikethrough = toggleStrikethrough_1.default;
-var toggleSubscript_1 = __webpack_require__(75);
+var toggleSubscript_1 = __webpack_require__(76);
 exports.toggleSubscript = toggleSubscript_1.default;
-var toggleSuperscript_1 = __webpack_require__(74);
+var toggleSuperscript_1 = __webpack_require__(75);
 exports.toggleSuperscript = toggleSuperscript_1.default;
-var toggleUnderline_1 = __webpack_require__(73);
+var toggleUnderline_1 = __webpack_require__(74);
 exports.toggleUnderline = toggleUnderline_1.default;
-var toggleHeader_1 = __webpack_require__(72);
+var toggleHeader_1 = __webpack_require__(73);
 exports.toggleHeader = toggleHeader_1.default;
 var matchLink_1 = __webpack_require__(33);
 exports.matchLink = matchLink_1.default;
@@ -313,8 +311,8 @@ function getPreviousLeafSibling(rootNode, startNode) {
 }
 exports.getPreviousLeafSibling = getPreviousLeafSibling;
 function getLeafSibling(rootNode, startNode, isNext, stop) {
-    var getSibling = function (node) { return isNext ? node.nextSibling : node.previousSibling; };
-    var getChild = function (node) { return isNext ? node.firstChild : node.lastChild; };
+    var getSibling = function (node) { return (isNext ? node.nextSibling : node.previousSibling); };
+    var getChild = function (node) { return (isNext ? node.firstChild : node.lastChild); };
     if (!contains_1.default(rootNode, startNode)) {
         return null;
     }
@@ -1468,7 +1466,7 @@ function getLastLeafNode(rootNode) {
 }
 exports.getLastLeafNode = getLastLeafNode;
 function getLeafNode(rootNode, isFirst) {
-    var getChild = function (node) { return isFirst ? node.firstChild : node.lastChild; };
+    var getChild = function (node) { return (isFirst ? node.firstChild : node.lastChild); };
     var result = getChild(rootNode);
     while (result && getChild(result)) {
         result = getChild(result);
@@ -1793,7 +1791,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var getNodeAtCursor_1 = __webpack_require__(5);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var cacheGetListState_1 = __webpack_require__(38);
-var cacheGetHeaderLevel_1 = __webpack_require__(89);
+var cacheGetHeaderLevel_1 = __webpack_require__(90);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 // Query command state, used for query Bold, Italic, Underline state
 function queryCommandState(editor, command) {
@@ -2507,18 +2505,16 @@ var isDocumentPosition_1 = __webpack_require__(9);
 function intersectWithNodeRange(node, start, end, containOnly) {
     var startPosition = node.compareDocumentPosition(start);
     var endPosition = node.compareDocumentPosition(end);
-    var targetPositions = [
-        0 /* Same */,
-        8 /* Contains */,
-    ];
+    var targetPositions = [0 /* Same */, 8 /* Contains */];
     if (!containOnly) {
         targetPositions.push(16 /* ContainedBy */);
     }
     var intersectStart = isDocumentPosition_1.default(startPosition, targetPositions);
     var intersectEnd = isDocumentPosition_1.default(endPosition, targetPositions);
-    return intersectStart || intersectEnd ||
+    return (intersectStart ||
+        intersectEnd ||
         (isDocumentPosition_1.default(startPosition, 2 /* Preceding */) &&
-            isDocumentPosition_1.default(endPosition, 4 /* Following */));
+            isDocumentPosition_1.default(endPosition, 4 /* Following */)));
 }
 exports.default = intersectWithNodeRange;
 
@@ -2607,8 +2603,9 @@ function getPreviousInlineElement(rootNode, inlineElement) {
 }
 exports.getPreviousInlineElement = getPreviousInlineElement;
 function getNextPreviousInlineElement(rootNode, inlineElement, isNext) {
-    return (inlineElement instanceof PartialInlineElement_1.default && (isNext ? inlineElement.nextInlineElement : inlineElement.previousInlineElement)) ||
-        getInlineElementAtNode_1.default(getLeafSibling_1.getLeafSibling(rootNode, inlineElement.getContainerNode(), isNext));
+    return ((inlineElement instanceof PartialInlineElement_1.default &&
+        (isNext ? inlineElement.nextInlineElement : inlineElement.previousInlineElement)) ||
+        getInlineElementAtNode_1.default(getLeafSibling_1.getLeafSibling(rootNode, inlineElement.getContainerNode(), isNext)));
 }
 
 
@@ -3110,11 +3107,11 @@ exports.default = Undo;
 Object.defineProperty(exports, "__esModule", { value: true });
 var DefaultShortcut_1 = __webpack_require__(117);
 exports.DefaultShortcut = DefaultShortcut_1.default;
-var HyperLink_1 = __webpack_require__(71);
+var HyperLink_1 = __webpack_require__(72);
 exports.HyperLink = HyperLink_1.default;
-var ContentEdit_1 = __webpack_require__(70);
+var ContentEdit_1 = __webpack_require__(71);
 exports.ContentEdit = ContentEdit_1.default;
-var Paste_1 = __webpack_require__(68);
+var Paste_1 = __webpack_require__(69);
 exports.Paste = Paste_1.default;
 var ContentEditFeatures_1 = __webpack_require__(29);
 exports.getDefaultContentEditFeatures = ContentEditFeatures_1.getDefaultContentEditFeatures;
@@ -3647,6 +3644,54 @@ Object.defineProperty(exports, "__esModule", { value: true });
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_core_1 = __webpack_require__(1);
+var ZERO_WIDTH_SPACE = '&#8203;';
+/**
+ * Convert plain to HTML
+ * @param text The plain text to convert
+ * @returns HTML string to present the input text
+ */
+function textToHtml(text) {
+    text = (text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/'/g, '&#39;')
+        .replace(/"/g, '&quot;')
+        .replace(/^ /gm, '&nbsp;')
+        .replace(/\r/g, '');
+    var lines = text.split('\n');
+    if (lines.length == 2) {
+        text = "<span>" + lines[0] + "<br></span><span>" + lines[1] + "</span>";
+    }
+    else if (lines.length > 2) {
+        text = '';
+        var lineEnd_1 = roosterjs_editor_core_1.browserData.isEdge || roosterjs_editor_core_1.browserData.isIE ? ZERO_WIDTH_SPACE : '<br>';
+        lines.forEach(function (line, i) {
+            if (i == 0) {
+                text += "<span>" + line + "<br></span>";
+            }
+            else if (i == lines.length - 1) {
+                text += "<span>" + line + "</span>";
+            }
+            else {
+                text += "<div>" + line + lineEnd_1 + "</div>";
+            }
+        });
+    }
+    text = text.replace(/\s\s/g, ' &nbsp;');
+    return text;
+}
+exports.default = textToHtml;
+
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var LevelLists_1 = __webpack_require__(27);
 var CustomData_1 = __webpack_require__(28);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
@@ -4128,7 +4173,7 @@ function resetCurrentLists(args) {
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4151,7 +4196,7 @@ exports.createWordConverterArguments = createWordConverterArguments;
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4173,15 +4218,15 @@ exports.createWordConverter = createWordConverter;
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var wordConverter_1 = __webpack_require__(64);
-var WordConverterArguments_1 = __webpack_require__(63);
-var converterUtils_1 = __webpack_require__(62);
+var wordConverter_1 = __webpack_require__(65);
+var WordConverterArguments_1 = __webpack_require__(64);
+var converterUtils_1 = __webpack_require__(63);
 /** Converts all the Word generated list items in the specified node into standard HTML UL and OL tags */
 function convertPastedContentFromWord(root) {
     var wordConverter = wordConverter_1.createWordConverter();
@@ -4200,7 +4245,7 @@ exports.default = convertPastedContentFromWord;
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4321,7 +4366,7 @@ function getTempDivForPaste(editor) {
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4374,7 +4419,7 @@ exports.default = getInheritableStyles;
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4383,9 +4428,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var roosterjs_editor_core_1 = __webpack_require__(1);
 var roosterjs_editor_api_1 = __webpack_require__(3);
-var getInheritableStyles_1 = __webpack_require__(67);
-var buildClipboardData_1 = __webpack_require__(66);
-var convertPastedContentFromWord_1 = __webpack_require__(65);
+var getInheritableStyles_1 = __webpack_require__(68);
+var buildClipboardData_1 = __webpack_require__(67);
+var convertPastedContentFromWord_1 = __webpack_require__(66);
+var textToHtml_1 = __webpack_require__(62);
 /**
  * Paste plugin, handles onPaste event and paste content into editor
  */
@@ -4408,7 +4454,7 @@ var Paste = /** @class */ (function () {
                     return;
                 }
                 if (!clipboardData.html && clipboardData.text) {
-                    clipboardData.html = roosterjs_editor_dom_1.textToHtml(clipboardData.text);
+                    clipboardData.html = textToHtml_1.default(clipboardData.text);
                 }
                 if (!clipboardData.isHtmlFromTempDiv) {
                     var currentStyles = getInheritableStyles_1.default(_this.editor);
@@ -4500,7 +4546,7 @@ var Paste = /** @class */ (function () {
                     _this.editor.insertNode(fragment);
                     break;
                 case 1 /* PasteText */:
-                    var html = roosterjs_editor_dom_1.textToHtml(clipboardData.text);
+                    var html = textToHtml_1.default(clipboardData.text);
                     _this.editor.insertContent(html);
                     break;
                 case 2 /* PasteImage */:
@@ -4531,7 +4577,7 @@ exports.default = Paste;
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4612,7 +4658,7 @@ function isAutoBulletInput(input) {
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4621,7 +4667,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_api_1 = __webpack_require__(3);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var ContentEditFeatures_1 = __webpack_require__(29);
-var autoBullet_1 = __webpack_require__(69);
+var autoBullet_1 = __webpack_require__(70);
 var KEY_TAB = 9;
 var KEY_BACKSPACE = 8;
 var KEY_ENTER = 13;
@@ -4828,7 +4874,7 @@ exports.default = ContentEdit;
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4985,7 +5031,7 @@ exports.default = HyperLink;
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5037,7 +5083,7 @@ exports.default = toggleHeader;
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5061,7 +5107,7 @@ exports.default = toggleUnderline;
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5087,7 +5133,7 @@ exports.default = toggleSuperscript;
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5113,7 +5159,7 @@ exports.default = toggleSubscript;
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5137,7 +5183,7 @@ exports.default = toggleStrikethrough;
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5263,7 +5309,7 @@ function isListElement(node) {
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5290,7 +5336,7 @@ exports.default = toggleNumbering;
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5314,7 +5360,7 @@ exports.default = toggleItalic;
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5338,7 +5384,7 @@ exports.default = toggleBold;
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5373,7 +5419,7 @@ exports.default = setIndentation;
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5405,7 +5451,7 @@ exports.default = setImageAltText;
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5466,7 +5512,7 @@ exports.default = setDirection;
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5492,7 +5538,7 @@ exports.default = setAlignment;
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5522,7 +5568,7 @@ exports.default = removeLink;
 
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5651,7 +5697,7 @@ exports.default = editTable;
 
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5710,7 +5756,7 @@ function getTableCellWidth(columns) {
 
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5740,7 +5786,7 @@ exports.default = insertImage;
 
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5771,7 +5817,7 @@ exports.default = cacheGetHeaderLevel;
 
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5871,7 +5917,7 @@ function applyLinkPrefix(url) {
 
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5908,7 +5954,7 @@ exports.default = clearFormat;
 
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6018,7 +6064,7 @@ exports.default = replaceTextBeforeCursorWithNode;
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6090,7 +6136,7 @@ function getRectFromClientRect(clientRect) {
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6124,7 +6170,7 @@ exports.clearCursorEventDataCache = clearCursorEventDataCache;
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6153,7 +6199,7 @@ exports.cacheGetEventData = cacheGetEventData;
 
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6323,7 +6369,7 @@ function insertNodeAtSelection(core, node, option) {
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6359,7 +6405,7 @@ exports.default = getContentTraverser;
 
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6387,7 +6433,7 @@ exports.default = attachDomEvent;
 
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6432,7 +6478,7 @@ exports.default = formatWithUndo;
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6463,7 +6509,7 @@ exports.default = wrapAll;
 
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6483,50 +6529,6 @@ function unwrap(node) {
     return parentNode;
 }
 exports.default = unwrap;
-
-
-/***/ }),
-/* 102 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Convert plain to HTML
- * @param text The plain text to convert
- * @returns HTML string to present the input text
- */
-function textToHtml(text) {
-    text = (text || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/'/g, '&#39;')
-        .replace(/"/g, '&quot;');
-    var lines = text.split('\n');
-    if (lines.length == 2) {
-        text = "<span>" + lines[0] + "<br></span><span>" + lines[1] + "</span>";
-    }
-    else if (lines.length > 2) {
-        text = '';
-        lines.forEach(function (line, i) {
-            line = line || '\u200B'; // Use ZeroWidthSpace for empty line
-            if (i == 0) {
-                text += "<span>" + line + "<br></span>";
-            }
-            else if (i == lines.length - 1) {
-                text += "<span>" + line + "</span>";
-            }
-            else {
-                text += "<div>" + line + "</div>";
-            }
-        });
-    }
-    text = text.replace(/\s/g, '&nbsp;');
-    return text;
-}
-exports.default = textToHtml;
 
 
 /***/ }),
@@ -6889,7 +6891,8 @@ function removeUnusedCss(element, thisStyle) {
             var value = pair[1].trim().toLowerCase();
             var isInheritable = thisStyle[name_1] != undefined;
             var keep = value != 'inherit' &&
-                ((isInheritable && value != thisStyle[name_1]) || (!isInheritable && value != 'initial' && value != 'normal')) &&
+                ((isInheritable && value != thisStyle[name_1]) ||
+                    (!isInheritable && value != 'initial' && value != 'normal')) &&
                 !isDangerousCss(name_1, value);
             if (keep && isInheritable) {
                 thisStyle[name_1] = value;
@@ -7269,11 +7272,11 @@ function getInlineElementBeforeAfterPoint(rootNode, position, isAfter) {
     var node = position.node;
     var isPartial = false;
     var traverseFunc = isAfter ? getLeafSibling_1.getNextLeafSibling : getLeafSibling_1.getPreviousLeafSibling;
-    if ((!isAfter && position.offset == 0 && !position.isAtEnd) ||
-        (isAfter && position.isAtEnd)) {
+    if ((!isAfter && position.offset == 0 && !position.isAtEnd) || (isAfter && position.isAtEnd)) {
         node = traverseFunc(rootNode, node);
     }
-    else if (node.nodeType == 3 /* Text */ && ((!isAfter && !position.isAtEnd) || (isAfter && position.offset > 0))) {
+    else if (node.nodeType == 3 /* Text */ &&
+        ((!isAfter && !position.isAtEnd) || (isAfter && position.offset > 0))) {
         isPartial = true;
     }
     while (node && shouldSkipNode_1.default(node)) {
@@ -7281,9 +7284,9 @@ function getInlineElementBeforeAfterPoint(rootNode, position, isAfter) {
     }
     var inlineElement = getInlineElementAtNode_1.default(node);
     if (inlineElement && (inlineElement.contains(position) || isPartial)) {
-        inlineElement = isAfter ?
-            new PartialInlineElement_1.default(inlineElement, position, null) :
-            new PartialInlineElement_1.default(inlineElement, null, position);
+        inlineElement = isAfter
+            ? new PartialInlineElement_1.default(inlineElement, position, null)
+            : new PartialInlineElement_1.default(inlineElement, null, position);
     }
     return inlineElement;
 }
@@ -7367,9 +7370,7 @@ var SelectionBlockScoper = /** @class */ (function () {
     // A block scoper does not cut an inline in half
     SelectionBlockScoper.prototype.trimInlineElement = function (inlineElement) {
         var theBlock = this.getStartBlockElement();
-        return theBlock && inlineElement && theBlock.contains(inlineElement)
-            ? inlineElement
-            : null;
+        return theBlock && inlineElement && theBlock.contains(inlineElement) ? inlineElement : null;
     };
     return SelectionBlockScoper;
 }());
@@ -7651,14 +7652,14 @@ function calcDefaultFormat(node, baseFormat) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var EditorCore_1 = __webpack_require__(115);
-var formatWithUndo_1 = __webpack_require__(99);
-var attachDomEvent_1 = __webpack_require__(98);
+var formatWithUndo_1 = __webpack_require__(100);
+var attachDomEvent_1 = __webpack_require__(99);
 var BrowserData_1 = __webpack_require__(26);
 var focus_1 = __webpack_require__(41);
-var getContentTraverser_1 = __webpack_require__(97);
+var getContentTraverser_1 = __webpack_require__(98);
 var getLiveRange_1 = __webpack_require__(6);
 var hasFocus_1 = __webpack_require__(19);
-var insertNode_1 = __webpack_require__(96);
+var insertNode_1 = __webpack_require__(97);
 var select_1 = __webpack_require__(11);
 var triggerEvent_1 = __webpack_require__(42);
 var roosterjs_editor_dom_1 = __webpack_require__(0);

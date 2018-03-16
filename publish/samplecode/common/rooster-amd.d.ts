@@ -885,13 +885,6 @@ export function isNodeEmpty(node: Node, trim?: boolean): boolean;
  */
 export function splitParentNode(node: Node, splitBefore: boolean): Node;
 
-/**
- * Convert plain to HTML
- * @param text The plain text to convert
- * @returns HTML string to present the input text
- */
-export function textToHtml(text: string): string;
-
 export function unwrap(node: Node): Node;
 
 export function wrap(node: Node, htmlFragment: string): Node;

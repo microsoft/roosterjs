@@ -58,7 +58,6 @@ export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isDocumentPosition } from './utils/isDocumentPosition';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
 export { default as splitParentNode } from './utils/splitParentNode';
-export { default as textToHtml } from './utils/textToHtml';
 export { default as unwrap } from './utils/unwrap';
 export { default as wrap } from './utils/wrap';
 export { default as wrapAll } from './utils/wrapAll';
