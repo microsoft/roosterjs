@@ -13,60 +13,79 @@ declare namespace roosterjs {
      */
     function createEditor(contentDiv: HTMLDivElement, additionalPlugins?: EditorPlugin[], initialContent?: string): Editor;
 
+    /**
+     * enum for setting block alignment, used by setAlignment API
+     */
     const enum Alignment {
+        /**
+         * Align left
+         */
         Left = 0,
+        /**
+         * Align center
+         */
         Center = 1,
+        /**
+         * Align right
+         */
         Right = 2,
     }
 
+    /**
+     * enum for setting block direction, used by setDirection API
+     */
     const enum Direction {
+        /**
+         * Left to right
+         */
         LeftToRight = 0,
+        /**
+         * Right to left
+         */
         RightToLeft = 1,
     }
 
+    /**
+     * The enum used for increase or decrease indentation of a block
+     * Used by setIndentation API
+     */
     const enum Indentation {
+        /**
+         * Increase indentation
+         */
         Increase = 0,
+        /**
+         * Decrease indentation
+         */
         Decrease = 1,
     }
 
-    interface LinkData {
-        scheme: string;
-        originalUrl: string;
-        normalizedUrl: string;
-    }
+    /**
+     * List tag
+     */
+    type ListTag = 'OL' | 'UL' | '';
 
-    const enum ListState {
-        None = 0,
-        Bullets = 1,
-        Numbering = 2,
+    /**
+     * Paste option
+     */
+    const enum PasteOption {
+        /**
+         * Paste html with content type "text/html"
+         */
+        PasteHtml = 0,
+        /**
+         * Paste plain text with content type "text/plain"
+         */
+        PasteText = 1,
+        /**
+         * Paste image from clipboard with content type "image/*"
+         */
+        PasteImage = 2,
     }
 
     /**
-     * Table format
+     * TableOperation used by editTable API
      */
-    interface TableFormat {
-        /**
-         * Background color for even rows
-         */
-        bgColorEven: string;
-        /**
-         * Background color for odd rows
-         */
-        bgColorOdd: string;
-        /**
-         * Top border color for each row
-         */
-        topBorderColor: string;
-        /**
-         * Bottom border color for each row
-         */
-        bottomBorderColor: string;
-        /**
-         * Vertical border color for each row
-         */
-        verticalBorderColor: string;
-    }
-
     const enum TableOperation {
         /**
          * Insert a row above current row
@@ -122,14 +141,216 @@ declare namespace roosterjs {
         SplitVertically = 12,
     }
 
+    /**
+     * An object contains all related data for pasting
+     */
     interface ClipboardData {
+        /**
+         * An editor content snapshot before pasting happens. This is used for changing paste format
+         */
         snapshotBeforePaste: string;
+        /**
+         * The format state at cursor before pasting. This is used for changing paste format
+         */
         originalFormat: DefaultFormat;
+        /**
+         * Types of content included by the original onpaste event
+         */
         types: string[];
+        /**
+         * If the copied data contains image format, this will be the image blob. Otherwise it is null.
+         */
         image: File;
+        /**
+         * If the copied data contains plain text format, this will be the plain text string. Otherwise it is null.
+         */
         text: string;
+        /**
+         * If the copied data contains HTML format, this will be the html string. Otherwise it is null.
+         */
         html: string;
+        /**
+         * Whether the HTML content is retrieved from temp DIV
+         */
         isHtmlFromTempDiv?: boolean;
+    }
+
+    /**
+     * Default format settings
+     */
+    interface DefaultFormat {
+        /**
+         * Font family
+         */
+        fontFamily?: string;
+        /**
+         * Font size
+         */
+        fontSize?: string;
+        /**
+         * Text color
+         */
+        textColor?: string;
+        /**
+         * Background Color
+         */
+        backgroundColor?: string;
+        /**
+         * Whether is bold
+         */
+        bold?: boolean;
+        /**
+         * Whether is italic
+         */
+        italic?: boolean;
+        /**
+         * Whether has underline
+         */
+        underline?: boolean;
+    }
+
+    /**
+     * The format state
+     */
+    interface FormatState {
+        /**
+         * Font name
+         */
+        fontName?: string;
+        /**
+         * Font size
+         */
+        fontSize?: string;
+        /**
+         * Whether the text is bolded
+         */
+        isBold?: boolean;
+        /**
+         * Whether the text is italic
+         */
+        isItalic?: boolean;
+        /**
+         * Whether the text has underline
+         */
+        isUnderline?: boolean;
+        /**
+         * Background color
+         */
+        backgroundColor?: string;
+        /**
+         * Text color
+         */
+        textColor?: string;
+        /**
+         * Whether the text is in bullet mode
+         */
+        isBullet?: boolean;
+        /**
+         * Whether the text is in numbering mode
+         */
+        isNumbering?: boolean;
+        /**
+         * Whether the text has strike through line
+         */
+        isStrikeThrough?: boolean;
+        /**
+         * Whether the text is in block quote
+         */
+        isBlockQuote?: boolean;
+        /**
+         * Whether the text is in subscript mode
+         */
+        isSubscript?: boolean;
+        /**
+         * Whether the text is in superscript mode
+         */
+        isSuperscript?: boolean;
+        /**
+         * Whether unlink command can be called to the text
+         */
+        canUnlink?: boolean;
+        /**
+         * Whether add image alt text command can be called to the text
+         */
+        canAddImageAltText?: boolean;
+        /**
+         * Whether the content can be undone
+         */
+        canUndo?: boolean;
+        /**
+         * Whether the content ca nbe redone
+         */
+        canRedo?: boolean;
+        /**
+         * Header level (0-6, 0 means no header)
+         */
+        headerLevel?: number;
+    }
+
+    /**
+     * LinkData represents a link match result
+     */
+    interface LinkData {
+        /**
+         * Schema of a hyperlink
+         */
+        scheme: string;
+        /**
+         * Original url of a hyperlink
+         */
+        originalUrl: string;
+        /**
+         * Normalized url of a hyperlink
+         */
+        normalizedUrl: string;
+    }
+
+    /**
+     * This represents a rect inside editor
+     */
+    interface Rect {
+        /**
+         * Top
+         */
+        top: number;
+        /**
+         * Bottom
+         */
+        bottom: number;
+        /**
+         * Left
+         */
+        left: number;
+        /**
+         * Right
+         */
+        right: number;
+    }
+
+    /**
+     * Table format
+     */
+    interface TableFormat {
+        /**
+         * Background color for even rows
+         */
+        bgColorEven: string;
+        /**
+         * Background color for odd rows
+         */
+        bgColorOdd: string;
+        /**
+         * Top border color for each row
+         */
+        topBorderColor: string;
+        /**
+         * Bottom border color for each row
+         */
+        bottomBorderColor: string;
+        /**
+         * Vertical border color for each row
+         */
+        verticalBorderColor: string;
     }
 
     /**
@@ -156,44 +377,125 @@ declare namespace roosterjs {
         Outside = 3,
     }
 
+    /**
+     * Indicates the scope of a traversing
+     */
     const enum ContentScope {
+        /**
+         * Scope to a block
+         */
         Block = 0,
+        /**
+         * Scope to current selection
+         */
         Selection = 1,
+        /**
+         * Scope to the whole body
+         */
         Body = 2,
     }
 
+    /**
+     * Options for insertContent API
+     */
     interface InsertOption {
+        /**
+         * Target position
+         */
         position: ContentPosition;
+        /**
+         * Whether need to update cursor
+         */
         updateCursor: boolean;
+        /**
+         * Whether need to replace current selection
+         */
         replaceSelection: boolean;
+        /**
+         * Whether need to insert the content into a new line
+         */
         insertOnNewLine: boolean;
     }
 
+    /**
+     * Represents a custom PluginEvent for content change
+     */
     interface ContentChangedEvent extends PluginEvent {
+        /**
+         * Source of the change
+         */
         source: ChangeSource | string;
+        /**
+         * Optional related data
+         */
         data?: any;
     }
 
+    /**
+     * Possible change sources. Here are the predefined sources.
+     * It can also be other string if the change source can't fall into these sources.
+     */
     const enum ChangeSource {
+        /**
+         * Content changed by auto link
+         */
         AutoLink = "AutoLink",
+        /**
+         * Content changed by create link
+         */
         CreateLink = "CreateLink",
+        /**
+         * Content changed by format
+         */
         Format = "Format",
+        /**
+         * Content changed by image resize
+         */
         ImageResize = "ImageResize",
+        /**
+         * Content changed by paste
+         */
         Paste = "Paste",
+        /**
+         * Content changed by setContent API
+         */
         SetContent = "SetContent",
-        Undo = "Undo",
     }
 
+    /**
+     * Represents a custom PluginEvent for extracting content
+     */
     interface ExtractContentEvent extends PluginEvent {
+        /**
+         * Current content string
+         * Plugin can change this string to clean up the markups it added before
+         */
         content: string;
     }
 
+    /**
+     * This represents a PluginEvent for a DOM event
+     */
     interface PluginDomEvent extends PluginEvent {
+        /**
+         * original DOM event
+         */
         rawEvent: Event;
     }
 
+    /**
+     * Editor plugin event interface
+     */
     interface PluginEvent {
+        /**
+         * Type of this event
+         */
         eventType: PluginEventType;
+        /**
+         * An optional event cache.
+         * This will be consumed by event cache API to store some expensive calculation result.
+         * So that for the same event across plugins, the result doesn't need to be calculated again
+         */
         eventDataCache?: {
             [key: string]: any;
         };
@@ -243,86 +545,87 @@ declare namespace roosterjs {
         BeforePaste = 8,
     }
 
+    /**
+     * Provides a chance for plugin to change the content before it is pasted into editor.
+     */
     interface BeforePasteEvent extends PluginEvent {
+        /**
+         * An object contains all related data for pasting
+         */
         clipboardData: ClipboardData;
+        /**
+         * HTML Document Fragment which will be inserted into content if pasteOption is set to PasteHtml
+         */
         fragment: DocumentFragment;
+        /**
+         * Paste option: html, text or image
+         */
         pasteOption: PasteOption;
     }
 
+    /**
+     * The is essentially an enum representing result from browser compareDocumentPosition API
+     * https: */
     const enum DocumentPosition {
+        /**
+         * Same node
+         */
         Same = 0,
+        /**
+         * Node is disconnected from document
+         */
         Disconnected = 1,
+        /**
+         * Node is preceding the comparing node
+         */
         Preceding = 2,
+        /**
+         * Node is following the comparing node
+         */
         Following = 4,
+        /**
+         * Node contains the comparing node
+         */
         Contains = 8,
+        /**
+         * Node is contained by the comparing node
+         */
         ContainedBy = 16,
-        ImplementationSpecific = 32,
-    }
-
-    const enum NodeType {
-        Element = 1,
-        Text = 3,
-        ProcessingInstruction = 7,
-        Comment = 8,
-        Document = 9,
-        DocumentType = 10,
-        DocumentFragment = 11,
-    }
-
-    interface DefaultFormat {
-        fontFamily?: string;
-        fontSize?: string;
-        textColor?: string;
-        backgroundColor?: string;
-        bold?: boolean;
-        italic?: boolean;
-        underline?: boolean;
-    }
-
-    interface FormatState {
-        fontName?: string;
-        fontSize?: string;
-        isBold?: boolean;
-        isItalic?: boolean;
-        isUnderline?: boolean;
-        backgroundColor?: string;
-        textColor?: string;
-        isBullet?: boolean;
-        isNumbering?: boolean;
-        isStrikeThrough?: boolean;
-        isBlockQuote?: boolean;
-        isSubscript?: boolean;
-        isSuperscript?: boolean;
-        canUnlink?: boolean;
-        canAddImageAltText?: boolean;
-        canUndo?: boolean;
-        canRedo?: boolean;
-        headerLevel?: number;
-    }
-
-    interface Rect {
-        top: number;
-        bottom: number;
-        left: number;
-        right: number;
     }
 
     /**
-     * Paste option
+     * The is essentially an enum represents the type of the node
+     * https: * Values not listed here are deprecated.
      */
-    const enum PasteOption {
+    const enum NodeType {
         /**
-         * Paste html with content type "text/html"
+         * An Element node such as <p> or <div>.
          */
-        PasteHtml = 0,
+        Element = 1,
         /**
-         * Paste plain text with content type "text/plain"
+         * The actual Text of Element or Attr.
          */
-        PasteText = 1,
+        Text = 3,
         /**
-         * Paste image from clipboard with content type "image/*"
+         * A ProcessingInstruction of an XML document such as <?xml-stylesheet ... ?> declaration.
          */
-        PasteImage = 2,
+        ProcessingInstruction = 7,
+        /**
+         * A Comment node.
+         */
+        Comment = 8,
+        /**
+         * A Document node.
+         */
+        Document = 9,
+        /**
+         * A DocumentType node e.g. <!DOCTYPE html> for HTML5 documents.
+         */
+        DocumentType = 10,
+        /**
+         * A DocumentFragment node.
+         */
+        DocumentFragment = 11,
     }
 
     class Position {
@@ -1470,10 +1773,9 @@ declare namespace roosterjs {
      * @param editor The editor instance
      * @param event (Optional) The plugin event, it stores the event cached data for looking up.
      * If not passed, we will query the first <LI> node in selection and return the list state of its direct parent
-     * @returns The list state. ListState.Numbering indicates <OL>, ListState.Bullets indicates <UL>,
-     * ListState.None indicates no <OL> or <UL> elements found at current selection
+     * @returns The list tag, OL, UL or empty when cursor is not inside a list
      */
-    function cacheGetListState(editor: Editor, event?: PluginEvent): ListState;
+    function cacheGetListTag(editor: Editor, event?: PluginEvent): ListTag;
 
     /**
      * Clear the format in current selection, after cleaning, the format will be

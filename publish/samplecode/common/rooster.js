@@ -83,7 +83,7 @@ exports.Position = Position_1.default;
 var SelectionRange_1 = __webpack_require__(23);
 exports.SelectionRange = SelectionRange_1.default;
 // DOM Walker
-var getLeafSibling_1 = __webpack_require__(4);
+var getLeafSibling_1 = __webpack_require__(5);
 exports.getNextLeafSibling = getLeafSibling_1.getNextLeafSibling;
 exports.getPreviousLeafSibling = getLeafSibling_1.getPreviousLeafSibling;
 var getLeafNode_1 = __webpack_require__(20);
@@ -215,7 +215,7 @@ var CursorData_1 = __webpack_require__(16);
 exports.CursorData = CursorData_1.default;
 var getCursorRect_1 = __webpack_require__(95);
 exports.getCursorRect = getCursorRect_1.default;
-var getNodeAtCursor_1 = __webpack_require__(5);
+var getNodeAtCursor_1 = __webpack_require__(4);
 exports.getNodeAtCursor = getNodeAtCursor_1.default;
 exports.cacheGetNodeAtCursor = getNodeAtCursor_1.cacheGetNodeAtCursor;
 var queryNodesWithSelection_1 = __webpack_require__(2);
@@ -225,8 +225,8 @@ exports.replaceRangeWithNode = replaceRangeWithNode_1.default;
 var replaceTextBeforeCursorWithNode_1 = __webpack_require__(94);
 exports.replaceTextBeforeCursorWithNode = replaceTextBeforeCursorWithNode_1.default;
 exports.validateAndGetRangeForTextBeforeCursor = replaceTextBeforeCursorWithNode_1.validateAndGetRangeForTextBeforeCursor;
-var cacheGetListState_1 = __webpack_require__(37);
-exports.cacheGetListState = cacheGetListState_1.default;
+var cacheGetListTag_1 = __webpack_require__(37);
+exports.cacheGetListTag = cacheGetListTag_1.default;
 var clearFormat_1 = __webpack_require__(93);
 exports.clearFormat = clearFormat_1.default;
 var createLink_1 = __webpack_require__(92);
@@ -290,6 +290,54 @@ exports.matchLink = matchLink_1.default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_core_1 = __webpack_require__(1);
+var roosterjs_editor_dom_1 = __webpack_require__(0);
+/**
+ * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
+ * which matches the tag name, or null if no match found in editor.
+ * @param editor The editor instance
+ * @param expectedTag The expected tag name. If null, return the element at cursor
+ * @param startNode If specified, use this node as start node to search instead of current node
+ * @returns The node at cursor or the nearest ancestor with the tag name is specified
+ */
+function getNodeAtCursor(editor, expectedTag, startNode) {
+    var node = startNode || editor.getSelectionRange().start.normalize().node;
+    node = node && node.nodeType == 3 /* Text */ ? node.parentNode : node;
+    if (expectedTag) {
+        while (editor.contains(node)) {
+            if (roosterjs_editor_dom_1.getTagOfNode(node) == expectedTag.toUpperCase()) {
+                return node;
+            }
+            node = node.parentNode;
+        }
+    }
+    return editor.contains(node) ? node : null;
+}
+exports.default = getNodeAtCursor;
+/**
+ * Get the node at selection from event cache if it exists.
+ * If an expectedTag is specified, return the nearest ancestor of current node
+ * which matches the tag name, or null if no match found in editor.
+ * @param editor The editor instance
+ * @param event Event object to get cached object from
+ * @param expectedTag The expected tag name. If null, return the element at cursor
+ * @returns The element at cursor or the nearest ancestor with the tag name is specified
+ */
+function cacheGetNodeAtCursor(editor, event, expectedTag) {
+    return roosterjs_editor_core_1.cacheGetEventData(event, 'GET_NODE_AT_CURSOR_' + expectedTag, function () {
+        return getNodeAtCursor(editor, expectedTag);
+    });
+}
+exports.cacheGetNodeAtCursor = cacheGetNodeAtCursor;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(14);
 var shouldSkipNode_1 = __webpack_require__(22);
 /**
@@ -341,54 +389,6 @@ function getLeafSibling(rootNode, startNode, isNext, stop) {
     return curNode;
 }
 exports.getLeafSibling = getLeafSibling;
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_core_1 = __webpack_require__(1);
-var roosterjs_editor_dom_1 = __webpack_require__(0);
-/**
- * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
- * which matches the tag name, or null if no match found in editor.
- * @param editor The editor instance
- * @param expectedTag The expected tag name. If null, return the element at cursor
- * @param startNode If specified, use this node as start node to search instead of current node
- * @returns The node at cursor or the nearest ancestor with the tag name is specified
- */
-function getNodeAtCursor(editor, expectedTag, startNode) {
-    var node = startNode || editor.getSelectionRange().start.normalize().node;
-    node = node && node.nodeType == 3 /* Text */ ? node.parentNode : node;
-    if (expectedTag) {
-        while (editor.contains(node)) {
-            if (roosterjs_editor_dom_1.getTagOfNode(node) == expectedTag.toUpperCase()) {
-                return node;
-            }
-            node = node.parentNode;
-        }
-    }
-    return editor.contains(node) ? node : null;
-}
-exports.default = getNodeAtCursor;
-/**
- * Get the node at selection from event cache if it exists.
- * If an expectedTag is specified, return the nearest ancestor of current node
- * which matches the tag name, or null if no match found in editor.
- * @param editor The editor instance
- * @param event Event object to get cached object from
- * @param expectedTag The expected tag name. If null, return the element at cursor
- * @returns The element at cursor or the nearest ancestor with the tag name is specified
- */
-function cacheGetNodeAtCursor(editor, event, expectedTag) {
-    return roosterjs_editor_core_1.cacheGetEventData(event, 'GET_NODE_AT_CURSOR_' + expectedTag, function () {
-        return getNodeAtCursor(editor, expectedTag);
-    });
-}
-exports.cacheGetNodeAtCursor = cacheGetNodeAtCursor;
 
 
 /***/ }),
@@ -618,7 +618,7 @@ var contains_1 = __webpack_require__(14);
 var isBlockElement_1 = __webpack_require__(45);
 var NodeBlockElement_1 = __webpack_require__(47);
 var StartEndBlockElement_1 = __webpack_require__(18);
-var getLeafSibling_1 = __webpack_require__(4);
+var getLeafSibling_1 = __webpack_require__(5);
 var getTagOfNode_1 = __webpack_require__(6);
 /**
  * This produces a block element from a a node
@@ -1372,7 +1372,7 @@ exports.getLastInlineElement = getLastInlineElement;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var shouldSkipNode_1 = __webpack_require__(22);
-var getLeafSibling_1 = __webpack_require__(4);
+var getLeafSibling_1 = __webpack_require__(5);
 /**
  * Get the first meaningful leaf node
  * This can return null for empty container or
@@ -1705,7 +1705,7 @@ exports.getDefaultContentEditFeatures = getDefaultContentEditFeatures;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getNodeAtCursor_1 = __webpack_require__(5);
+var getNodeAtCursor_1 = __webpack_require__(4);
 var roosterjs_editor_core_1 = __webpack_require__(1);
 var ZERO_WIDTH_SPACE = '&#8203;';
 /**
@@ -1756,7 +1756,7 @@ exports.default = toggleBullet;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getNodeAtCursor_1 = __webpack_require__(5);
+var getNodeAtCursor_1 = __webpack_require__(4);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 /**
  * Format table
@@ -1788,9 +1788,9 @@ exports.default = formatTable;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getNodeAtCursor_1 = __webpack_require__(5);
+var getNodeAtCursor_1 = __webpack_require__(4);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var cacheGetListState_1 = __webpack_require__(37);
+var cacheGetListTag_1 = __webpack_require__(37);
 var cacheGetHeaderLevel_1 = __webpack_require__(91);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 // Query command state, used for query Bold, Italic, Underline state
@@ -1813,27 +1813,26 @@ function getFormatState(editor, event) {
         return null;
     }
     var styles = roosterjs_editor_dom_1.getComputedStyle(nodeAtCursor);
-    var listState = cacheGetListState_1.default(editor, event);
-    var headerLevel = cacheGetHeaderLevel_1.default(editor, event);
+    var tag = cacheGetListTag_1.default(editor, event);
     return {
         fontName: styles[0],
         fontSize: styles[1],
+        textColor: styles[2],
+        backgroundColor: styles[3],
+        isBullet: tag == 'UL',
+        isNumbering: tag == 'OL',
         isBold: queryCommandState(editor, 'bold'),
         isItalic: queryCommandState(editor, 'italic'),
         isUnderline: queryCommandState(editor, 'underline'),
         isStrikeThrough: queryCommandState(editor, 'strikeThrough'),
         isSubscript: queryCommandState(editor, 'subscript'),
         isSuperscript: queryCommandState(editor, 'superscript'),
-        textColor: styles[2],
-        backgroundColor: styles[3],
-        isBullet: listState == 1 /* Bullets */,
-        isNumbering: listState == 2 /* Numbering */,
         canUnlink: queryNodesWithSelection_1.default(editor, 'a[href]').length > 0,
         canAddImageAltText: queryNodesWithSelection_1.default(editor, 'img').length > 0,
+        isBlockQuote: queryNodesWithSelection_1.default(editor, 'blockquote').length > 0,
         canUndo: editor.canUndo(),
         canRedo: editor.canRedo(),
-        isBlockQuote: queryNodesWithSelection_1.default(editor, 'blockquote').length > 0,
-        headerLevel: headerLevel,
+        headerLevel: cacheGetHeaderLevel_1.default(editor, event),
     };
 }
 exports.default = getFormatState;
@@ -2013,35 +2012,22 @@ exports.default = setBackgroundColor;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var queryNodesWithSelection_1 = __webpack_require__(2);
-var roosterjs_editor_core_1 = __webpack_require__(1);
+var getNodeAtCursor_1 = __webpack_require__(4);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var EVENTDATACACHE_LISTSTATE = 'LISTSTATE';
 /**
  * Get the list state at selection
  * The list state refers to the HTML elements <OL> or <UL>
  * @param editor The editor instance
  * @param event (Optional) The plugin event, it stores the event cached data for looking up.
  * If not passed, we will query the first <LI> node in selection and return the list state of its direct parent
- * @returns The list state. ListState.Numbering indicates <OL>, ListState.Bullets indicates <UL>,
- * ListState.None indicates no <OL> or <UL> elements found at current selection
+ * @returns The list tag, OL, UL or empty when cursor is not inside a list
  */
-function cacheGetListState(editor, event) {
-    return roosterjs_editor_core_1.cacheGetEventData(event, EVENTDATACACHE_LISTSTATE, function () {
-        var itemNodes = queryNodesWithSelection_1.default(editor, 'li');
-        if (itemNodes.length > 0) {
-            var tagName = roosterjs_editor_dom_1.getTagOfNode(itemNodes[0].parentNode);
-            if (tagName == 'OL') {
-                return 2 /* Numbering */;
-            }
-            else if (tagName == 'UL') {
-                return 1 /* Bullets */;
-            }
-        }
-        return 0 /* None */;
-    });
+function cacheGetListTag(editor, event) {
+    var li = getNodeAtCursor_1.cacheGetNodeAtCursor(editor, event, 'LI');
+    var tag = li && roosterjs_editor_dom_1.getTagOfNode(li.parentNode);
+    return tag == 'OL' || tag == 'UL' ? tag : '';
 }
-exports.default = cacheGetListState;
+exports.default = cacheGetListTag;
 
 
 /***/ }),
@@ -2445,7 +2431,7 @@ exports.default = EditorSelection;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getLeafSibling_1 = __webpack_require__(4);
+var getLeafSibling_1 = __webpack_require__(5);
 var getBlockElementAtNode_1 = __webpack_require__(12);
 /**
  * Get next block
@@ -2637,7 +2623,7 @@ exports.default = NodeBlockElement;
 Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(13);
 var getInlineElementAtNode_1 = __webpack_require__(8);
-var getLeafSibling_1 = __webpack_require__(4);
+var getLeafSibling_1 = __webpack_require__(5);
 /**
  * Get next inline element
  */
@@ -3072,7 +3058,7 @@ var getTagOfNode_1 = __webpack_require__(6);
 var isDocumentPosition_1 = __webpack_require__(9);
 var isNodeAfter_1 = __webpack_require__(24);
 var wrap_1 = __webpack_require__(51);
-var getLeafSibling_1 = __webpack_require__(4);
+var getLeafSibling_1 = __webpack_require__(5);
 var Position_1 = __webpack_require__(15);
 var SelectionRange_1 = __webpack_require__(23);
 /**
@@ -5033,7 +5019,7 @@ function tryHandleAutoBullet(editor, event, keyboardEvent) {
             // 2. Cursor is not in html list
             // 3. There's no non-text inline entities before cursor
             if (isAutoBulletInput(textBeforeCursor) &&
-                roosterjs_editor_api_1.cacheGetListState(editor, event) == 0 /* None */ &&
+                roosterjs_editor_api_1.cacheGetListTag(editor, event) == '' &&
                 !cursorData.getFirstNonTextInlineBeforeCursor()) {
                 handleAutoBulletOrNumbering(textBeforeCursor, editor);
                 return true;
@@ -5219,9 +5205,8 @@ var ContentEdit = /** @class */ (function () {
                 !keyboardEvent.altKey &&
                 !keyboardEvent.metaKey) {
                 // Checks if cursor on a list
-                var listState = roosterjs_editor_api_1.cacheGetListState(this.editor, event);
-                if (listState &&
-                    (listState == 1 /* Bullets */ || listState == 2 /* Numbering */)) {
+                var tag = roosterjs_editor_api_1.cacheGetListTag(this.editor, event);
+                if (tag == 'UL' || tag == 'OL') {
                     return true;
                 }
             }
@@ -5277,12 +5262,12 @@ var ContentEdit = /** @class */ (function () {
     };
     ContentEdit.prototype.toggleList = function (event) {
         var keyboardEvent = event.rawEvent;
-        var listState = roosterjs_editor_api_1.cacheGetListState(this.editor, event);
+        var tag = roosterjs_editor_api_1.cacheGetListTag(this.editor, event);
         keyboardEvent.preventDefault();
-        if (listState == 1 /* Bullets */) {
+        if (tag == 'UL') {
             roosterjs_editor_api_1.toggleBullet(this.editor);
         }
-        else if (listState == 2 /* Numbering */) {
+        else if (tag == 'OL') {
             roosterjs_editor_api_1.toggleNumbering(this.editor);
         }
     };
@@ -5614,7 +5599,7 @@ exports.default = toggleStrikethrough;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var queryNodesWithSelection_1 = __webpack_require__(2);
-var getNodeAtCursor_1 = __webpack_require__(5);
+var getNodeAtCursor_1 = __webpack_require__(4);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var roosterjs_editor_core_1 = __webpack_require__(1);
 var ZERO_WIDTH_SPACE = '\u200b';
@@ -5998,7 +5983,7 @@ exports.default = removeLink;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getNodeAtCursor_1 = __webpack_require__(5);
+var getNodeAtCursor_1 = __webpack_require__(4);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 /**
  * Edit table with given operation. If there is no table at cursor then no op.
@@ -7309,7 +7294,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(13);
 var getInlineElementAtNode_1 = __webpack_require__(8);
 var shouldSkipNode_1 = __webpack_require__(22);
-var getLeafSibling_1 = __webpack_require__(4);
+var getLeafSibling_1 = __webpack_require__(5);
 /**
  * Get inline element before a position
  * This is mostly used when we want to get the inline element before selection/cursor

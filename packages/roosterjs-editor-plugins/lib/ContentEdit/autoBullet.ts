@@ -1,7 +1,7 @@
-import { ListState, PluginEvent, PluginEventType, ContentPosition } from 'roosterjs-editor-types';
+import { PluginEvent, PluginEventType, ContentPosition } from 'roosterjs-editor-types';
 import {
     cacheGetCursorEventData,
-    cacheGetListState,
+    cacheGetListTag,
     toggleBullet,
     toggleNumbering,
     validateAndGetRangeForTextBeforeCursor,
@@ -43,7 +43,7 @@ export default function tryHandleAutoBullet(
             // 3. There's no non-text inline entities before cursor
             if (
                 isAutoBulletInput(textBeforeCursor) &&
-                cacheGetListState(editor, event) == ListState.None &&
+                cacheGetListTag(editor, event) == '' &&
                 !cursorData.getFirstNonTextInlineBeforeCursor()
             ) {
                 handleAutoBulletOrNumbering(textBeforeCursor, editor);

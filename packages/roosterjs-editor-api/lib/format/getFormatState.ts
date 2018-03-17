@@ -1,8 +1,8 @@
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
-import { FormatState, ListState, PluginEvent } from 'roosterjs-editor-types';
+import { FormatState, PluginEvent } from 'roosterjs-editor-types';
 import { getComputedStyle } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
-import cacheGetListState from './cacheGetListState';
+import cacheGetListTag from '../cursor/cacheGetListTag';
 import cacheGetHeaderLevel from './cacheGetHeaderLevel';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 
@@ -29,26 +29,29 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
     }
 
     let styles = getComputedStyle(nodeAtCursor);
-    let listState = cacheGetListState(editor, event);
-    let headerLevel = cacheGetHeaderLevel(editor, event);
+    let tag = cacheGetListTag(editor, event);
     return {
         fontName: styles[0],
         fontSize: styles[1],
+        textColor: styles[2],
+        backgroundColor: styles[3],
+
+        isBullet: tag == 'UL',
+        isNumbering: tag == 'OL',
+
         isBold: queryCommandState(editor, 'bold'),
         isItalic: queryCommandState(editor, 'italic'),
         isUnderline: queryCommandState(editor, 'underline'),
         isStrikeThrough: queryCommandState(editor, 'strikeThrough'),
         isSubscript: queryCommandState(editor, 'subscript'),
         isSuperscript: queryCommandState(editor, 'superscript'),
-        textColor: styles[2],
-        backgroundColor: styles[3],
-        isBullet: listState == ListState.Bullets,
-        isNumbering: listState == ListState.Numbering,
+
         canUnlink: queryNodesWithSelection(editor, 'a[href]').length > 0,
         canAddImageAltText: queryNodesWithSelection(editor, 'img').length > 0,
+        isBlockQuote: queryNodesWithSelection(editor, 'blockquote').length > 0,
+
         canUndo: editor.canUndo(),
         canRedo: editor.canRedo(),
-        isBlockQuote: queryNodesWithSelection(editor, 'blockquote').length > 0,
-        headerLevel: headerLevel,
+        headerLevel: cacheGetHeaderLevel(editor, event),
     };
 }

@@ -1,3 +1,6 @@
+/**
+ * TableOperation used by editTable API
+ */
 const enum TableOperation {
     /**
      * Insert a row above current row

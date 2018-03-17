@@ -11,7 +11,7 @@ export {
     default as replaceTextBeforeCursorWithNode,
     validateAndGetRangeForTextBeforeCursor,
 } from './cursor/replaceTextBeforeCursorWithNode';
-export { default as cacheGetListState } from './format/cacheGetListState';
+export { default as cacheGetListTag } from './cursor/cacheGetListTag';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
 export { default as getFormatState } from './format/getFormatState';

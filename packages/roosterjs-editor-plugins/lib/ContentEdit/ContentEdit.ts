@@ -1,7 +1,7 @@
 import {
     setIndentation,
     cacheGetNodeAtCursor,
-    cacheGetListState,
+    cacheGetListTag,
     getNodeAtCursor,
     queryNodesWithSelection,
     toggleBullet,
@@ -11,7 +11,6 @@ import { Position, VTable, getTagOfNode, isNodeEmpty, splitParentNode } from 'ro
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     Indentation,
-    ListState,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
@@ -167,11 +166,8 @@ export default class ContentEdit implements EditorPlugin {
                 !keyboardEvent.metaKey
             ) {
                 // Checks if cursor on a list
-                let listState = cacheGetListState(this.editor, event);
-                if (
-                    listState &&
-                    (listState == ListState.Bullets || listState == ListState.Numbering)
-                ) {
+                let tag = cacheGetListTag(this.editor, event);
+                if (tag == 'UL' || tag == 'OL') {
                     return true;
                 }
             }
@@ -248,12 +244,12 @@ export default class ContentEdit implements EditorPlugin {
 
     private toggleList(event: PluginEvent) {
         let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
-        let listState = cacheGetListState(this.editor, event);
+        let tag = cacheGetListTag(this.editor, event);
 
         keyboardEvent.preventDefault();
-        if (listState == ListState.Bullets) {
+        if (tag == 'UL') {
             toggleBullet(this.editor);
-        } else if (listState == ListState.Numbering) {
+        } else if (tag == 'OL') {
             toggleNumbering(this.editor);
         }
     }
