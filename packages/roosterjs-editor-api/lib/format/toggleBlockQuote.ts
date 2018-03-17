@@ -1,6 +1,6 @@
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
-import { getTagOfNode, splitParentNode, unwrap, wrapAll, wrap } from 'roosterjs-editor-dom';
+import { getTagOfNode, splitParentNode, unwrap, wrap } from 'roosterjs-editor-dom';
 import { ContentScope } from 'roosterjs-editor-types';
 import { Editor, browserData } from 'roosterjs-editor-core';
 
@@ -37,7 +37,7 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
             // Step 3: Handle some special cases
             nodes = getNodesWithSpecialCaseHandled(editor, nodes);
 
-            let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLElement;
+            let quoteElement = wrap(nodes, '<blockquote></blockqupte>') as HTMLElement;
             (styler || defaultStyler)(quoteElement);
 
             // Return a fallback to select in case original selection is not valid any more

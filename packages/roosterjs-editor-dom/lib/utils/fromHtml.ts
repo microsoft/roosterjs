@@ -1,12 +1,19 @@
-// Creates a HTMLElement array from html
-export default function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[] {
+import sanitizeHtml from './sanitizeHtml';
+
+/**
+ * Creates an HTML node array from html
+ * @param html the html string to create HTML elements from
+ * @param ownerDocument Owner document of the result HTML elements
+ * @param sanitize Whether do sanitization before create elements to avoid XSS. Default value is false
+ * @returns An HTML node array to represent the given html string
+ */
+export default function fromHtml(
+    html: string,
+    ownerDocument: HTMLDocument,
+    sanitize?: boolean
+): Node[] {
     let element = ownerDocument.createElement('DIV');
-    element.innerHTML = htmlFragment;
+    element.innerHTML = sanitize ? sanitizeHtml(html) : html;
 
-    let children: Node[] = [];
-    for (let index = 0; index < element.childNodes.length; index++) {
-        children.push(element.childNodes.item(index));
-    }
-
-    return children;
+    return [].slice.call(element.childNodes);
 }

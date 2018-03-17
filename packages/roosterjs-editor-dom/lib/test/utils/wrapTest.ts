@@ -10,7 +10,7 @@ describe('EditorUitls wrap()', () => {
     });
 
     it('node = <p></p>, htmlFragment = ""', () => {
-        runTest(['<p></p>', ''], '<p></p>');
+        runTest(['<p></p>', ''], '<div><p></p></div>');
     });
 
     it('node = text, htmlFragment = "<div style="font-size:6px"></div>"', () => {

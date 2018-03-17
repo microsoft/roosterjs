@@ -1,16 +1,56 @@
-import getComputedStyle from './getComputedStyle';
-import { NodeType } from 'roosterjs-editor-types';
+import getTagOfNode from './getTagOfNode';
 
-// Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.
-// TODO: should inline-block be considered as block?
-// Other block like style to consider: table-caption, table-header-group, table-footer-group etc.
+const BLOCK_ELEMENT_TAGS = [
+    'ADDRESS',
+    'ARTICLE',
+    'ASIDE',
+    'BLOCKQUOTE',
+    'CANVAS',
+    'DD',
+    'DIV',
+    'DL',
+    'DT',
+    'FIELDSET',
+    'FIGCAPTION',
+    'FIGURE',
+    'FOOTER',
+    'FORM',
+    'H1',
+    'H2',
+    'H3',
+    'H4',
+    'H5',
+    'H6',
+    'HEADER',
+    'HR',
+    'LI',
+    'MAIN',
+    'NAV',
+    'NOSCRIPT',
+    'OL',
+    'OUTPUT',
+    'P',
+    'PRE',
+    'SECTION',
+    'TABLE',
+    'TD',
+    'TFOOT',
+    'UL',
+    'VIDEO',
+];
+
+const BLOCK_DISPLAY_STYLES = ['block', 'list-item', 'table-cell'];
+
+/**
+ * Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.
+ * @param node The node to check
+ * @returns True if the node is a block element, otherwise false
+ */
 export default function isBlockElement(node: Node): boolean {
-    if (node && node.nodeType == NodeType.Element) {
-        let displayStyle = getComputedStyle(node, 'display')[0];
-        return (
-            displayStyle == 'block' || displayStyle == 'list-item' || displayStyle == 'table-cell'
-        );
-    }
-
-    return false;
+    let tag = getTagOfNode(node);
+    return !!(
+        tag &&
+        (BLOCK_DISPLAY_STYLES.indexOf((<HTMLElement>node).style.display) >= 0 ||
+            BLOCK_ELEMENT_TAGS.indexOf(tag) >= 0)
+    );
 }

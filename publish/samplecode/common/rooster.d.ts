@@ -826,10 +826,30 @@ declare namespace roosterjs {
         spanAbove?: boolean;
     }
 
+    /**
+     * Apply format to an HTML element
+     * @param element The HTML element to apply format to
+     * @param format The format to apply
+     */
     function applyFormat(element: HTMLElement, format: DefaultFormat): void;
 
-    function changeElementTag(element: HTMLElement, newTag: string, range?: Range): HTMLElement;
+    /**
+     * Change tag of ab HTML Element to a new one, and replace it from DOM tree
+     * @param element The element to change tag
+     * @param newTag New tag to change to
+     * @returns The new Node with new tag
+     */
+    function changeElementTag(element: HTMLElement, newTag: string): HTMLElement;
 
+    /**
+     * Test if a node contains another node
+     * @param container The container node
+     * @param contained The node to check if it is insied container
+     * @param treatSameNodeAsContain When container and contained are the same node,
+     * return true if this param is set to true, otherwise return false. Default value is false
+     * @returns True if contained is insied container, or they are the same node when treatSameNodeAsContain is true.
+     * Otherwise false.
+     */
     function contains(container: Node, contained: Node, treatSameNodeAsContain?: boolean): boolean;
 
     /**
@@ -853,14 +873,48 @@ declare namespace roosterjs {
         [name: string]: string;
     };
 
-    function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[];
+    /**
+     * Creates an HTML node array from html
+     * @param html the html string to create HTML elements from
+     * @param ownerDocument Owner document of the result HTML elements
+     * @param sanitize Whether do sanitization before create elements to avoid XSS. Default value is false
+     * @returns An HTML node array to represent the given html string
+     */
+    function fromHtml(html: string, ownerDocument: HTMLDocument, sanitize?: boolean): Node[];
 
+    /**
+     * Get computed styles of a node
+     * @param node The node to get computed styles from
+     * @param styleNames Names of style to get, can be a single name or an array.
+     * Default value is font-family, font-size, color, background-color
+     * @returns An array of the computed styles
+     */
     function getComputedStyle(node: Node, styleNames?: string | string[]): string[];
 
+    /**
+     * Get the html tag of a node, or empty if it is not an element
+     * @param node The node to get tag of
+     * @returns Tag name in upper case if the given node is an Element, or empty string otherwise
+     */
     function getTagOfNode(node: Node): string;
 
-    function intersectWithNodeRange(node: Node, start: Node, end: Node, containOnly: boolean): boolean;
+    /**
+     * Check if a given node has intersection with the given node range
+     * @param node The node to check
+     * @param start Start node of the range
+     * @param end End node of the range
+     * @param containOnly When set to true, will return true only when the node is between
+     * start and end nodes or contained by start or end node. When set to false, also return true
+     * if the node contains both start and end node
+     * @return True if the node has intersection with the range. Otherwise false
+     */
+    function intersectWithNodeRange(node: Node, start: Node, end: Node, containOnly?: boolean): boolean;
 
+    /**
+     * Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.
+     * @param node The node to check
+     * @returns True if the node is a block element, otherwise false
+     */
     function isBlockElement(node: Node): boolean;
 
     /**
@@ -871,9 +925,13 @@ declare namespace roosterjs {
     function isDocumentPosition(position: DocumentPosition, targets: DocumentPosition | DocumentPosition[]): boolean;
 
     /**
-     * Check if a given node has visible content
+     * Check if a given node has no visible content
+     * @param node The node to check
+     * @param trimContent Whether trim the text content so that spaces will be treated as empty.
+     * Default value is false
+     * @returns True if there isn't any visible element inside node, otherwise false
      */
-    function isNodeEmpty(node: Node, trim?: boolean): boolean;
+    function isNodeEmpty(node: Node, trimContent?: boolean): boolean;
 
     /**
      * Split parent node of the given node before/after the given node.
@@ -886,11 +944,21 @@ declare namespace roosterjs {
      */
     function splitParentNode(node: Node, splitBefore: boolean): Node;
 
+    /**
+     * Removes the node and keep all children in place, return the parentNode where the children are attached
+     * @param node the node to remove
+     */
     function unwrap(node: Node): Node;
 
-    function wrap(node: Node, htmlFragment: string): Node;
-
-    function wrapAll(nodes: Node[], htmlFragment?: string): Node;
+    /**
+     * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
+     * @param nodes The node or node array to wrap
+     * @param wrapper The wrapper node or HTML string, default value is <div></div>
+     * @param sanitize Whether do sanitization of wrapper string before create node to avoid XSS,
+     * default value is false
+     * @returns The wrapper element
+     */
+    function wrap(nodes: Node | Node[], wrapper?: string | Node, sanitize?: boolean): Node;
 
     class Editor {
         private omitContentEditable;

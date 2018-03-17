@@ -1,16 +1,16 @@
 import * as DomTestHelper from '../DomTestHelper';
-import wrapAll from '../../utils/wrapAll';
+import wrap from '../../utils/wrap';
 
-describe('wrapAll()', () => {
-    let testID = 'wrapAll';
+describe('wrap all()', () => {
+    let testID = 'wrap';
 
     it('node = null, htmlFragment = ""', () => {
-        let result = wrapAll(null, '');
+        let result = wrap(null, '');
         expect(result).toBeNull();
     });
 
     it('node = <p></p>, htmlFragment = ""', () => {
-        runTest(['<p></p>', ''], '<div id="wrapAll"><p></p></div>');
+        runTest(['<p></p>', ''], '<div><p></p></div>');
     });
 
     it('node = <p></p>, htmlFragment = "<div style="font-size:6px"></div>"', () => {
@@ -29,7 +29,7 @@ describe('wrapAll()', () => {
 
     it('node = disconnected <p></p>, htmlFragment = "<div></div>"', () => {
         let node = document.createElement('p');
-        let result = wrapAll([node], '<div></div>') as HTMLElement;
+        let result = wrap([node], '<div></div>') as HTMLElement;
         expect(result.outerHTML).toBe('<div><p></p></div>');
     });
 
@@ -40,7 +40,7 @@ describe('wrapAll()', () => {
             children.push(testDiv.children.item(index) as HTMLElement);
         }
 
-        let result = wrapAll(children, input[1]) as HTMLElement;
+        let result = wrap(children, input[1]) as HTMLElement;
         expect(result.outerHTML).toBe(output);
 
         DomTestHelper.removeElement(testID);

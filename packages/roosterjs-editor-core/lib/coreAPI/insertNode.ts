@@ -7,6 +7,7 @@ import {
     Position,
     SelectionRange,
     changeElementTag,
+    contains,
     getBlockElementAtNode,
     getFirstLeafNode,
     getLastLeafNode,
@@ -165,7 +166,18 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
             } else if (getTagOfNode(endNode) == 'P') {
                 // Insert into a P tag may cause issues when the inserted content contains any block element.
                 // Change P tag to DIV to make sure it works well
-                changeElementTag(endNode as HTMLElement, 'div', rawRange);
+                let rangeCache = new SelectionRange(rawRange).normalize();
+                let div = changeElementTag(endNode as HTMLElement, 'div');
+                let start = rangeCache.start.node;
+                let end = rangeCache.end.node;
+                if (
+                    start != div &&
+                    end != div &&
+                    contains(core.contentDiv, start) &&
+                    contains(core.contentDiv, end)
+                ) {
+                    rawRange = rangeCache.getRange();
+                }
             }
         }
 

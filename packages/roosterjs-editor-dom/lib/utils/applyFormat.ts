@@ -1,5 +1,10 @@
 import { DefaultFormat } from 'roosterjs-editor-types';
 
+/**
+ * Apply format to an HTML element
+ * @param element The HTML element to apply format to
+ * @param format The format to apply
+ */
 export default function applyFormat(element: HTMLElement, format: DefaultFormat) {
     if (format) {
         let elementStyle = element.style;

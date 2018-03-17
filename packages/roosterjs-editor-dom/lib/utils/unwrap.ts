@@ -1,4 +1,7 @@
-// Removes the node and keep all children in place, return the parentNode where the children are attached
+/**
+ * Removes the node and keep all children in place, return the parentNode where the children are attached
+ * @param node the node to remove
+ */
 export default function unwrap(node: Node): Node {
     // Unwrap requires a parentNode
     let parentNode = node ? node.parentNode : null;

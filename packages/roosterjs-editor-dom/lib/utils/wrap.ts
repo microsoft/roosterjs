@@ -1,19 +1,34 @@
 import fromHtml from './fromHtml';
 
-// Wrap the node with html and return the wrapped node
-export default function wrap(node: Node, htmlFragment: string): Node {
-    if (!node) {
+/**
+ * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
+ * @param nodes The node or node array to wrap
+ * @param wrapper The wrapper node or HTML string, default value is <div></div>
+ * @param sanitize Whether do sanitization of wrapper string before create node to avoid XSS,
+ * default value is false
+ * @returns The wrapper element
+ */
+export default function wrap(
+    nodes: Node | Node[],
+    wrapper?: string | Node,
+    sanitize?: boolean
+): Node {
+    nodes = !nodes ? [] : nodes instanceof Node ? [nodes] : nodes;
+    if (nodes.length == 0 || !nodes[0]) {
         return null;
     }
 
-    let wrapper = node;
+    wrapper =
+        wrapper instanceof Node
+            ? wrapper
+            : fromHtml(wrapper || '<div></div>', nodes[0].ownerDocument, sanitize)[0];
+    let parentNode = nodes[0].parentNode;
 
-    if (htmlFragment) {
-        wrapper = fromHtml(htmlFragment, node.ownerDocument)[0];
-        if (node.parentNode) {
-            node.parentNode.insertBefore(wrapper, node);
-            node.parentNode.removeChild(node);
-        }
+    if (parentNode) {
+        parentNode.insertBefore(wrapper, nodes[0]);
+    }
+
+    for (let node of nodes) {
         wrapper.appendChild(node);
     }
 

@@ -67,7 +67,7 @@ var roosterjs =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 119);
+/******/ 	return __webpack_require__(__webpack_require__.s = 118);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -78,67 +78,67 @@ var roosterjs =
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // Selections
-var Position_1 = __webpack_require__(17);
+var Position_1 = __webpack_require__(15);
 exports.Position = Position_1.default;
-var SelectionRange_1 = __webpack_require__(16);
+var SelectionRange_1 = __webpack_require__(23);
 exports.SelectionRange = SelectionRange_1.default;
 // DOM Walker
 var getLeafSibling_1 = __webpack_require__(4);
 exports.getNextLeafSibling = getLeafSibling_1.getNextLeafSibling;
 exports.getPreviousLeafSibling = getLeafSibling_1.getPreviousLeafSibling;
-var getLeafNode_1 = __webpack_require__(23);
+var getLeafNode_1 = __webpack_require__(20);
 exports.getFirstLeafNode = getLeafNode_1.getFirstLeafNode;
 exports.getLastLeafNode = getLeafNode_1.getLastLeafNode;
-var NodeInlineElement_1 = __webpack_require__(51);
+var NodeInlineElement_1 = __webpack_require__(52);
 exports.NodeInlineElement = NodeInlineElement_1.default;
 var PartialInlineElement_1 = __webpack_require__(13);
 exports.PartialInlineElement = PartialInlineElement_1.default;
-var getInlineElementAtNode_1 = __webpack_require__(7);
+var getInlineElementAtNode_1 = __webpack_require__(8);
 exports.getInlineElementAtNode = getInlineElementAtNode_1.default;
-var getFirstLastInlineElement_1 = __webpack_require__(21);
+var getFirstLastInlineElement_1 = __webpack_require__(19);
 exports.getFirstInlineElement = getFirstLastInlineElement_1.getFirstInlineElement;
 exports.getLastInlineElement = getFirstLastInlineElement_1.getLastInlineElement;
-var getNextPreviousInlineElement_1 = __webpack_require__(49);
+var getNextPreviousInlineElement_1 = __webpack_require__(48);
 exports.getNextInlineElement = getNextPreviousInlineElement_1.getNextInlineElement;
 exports.getPreviousInlineElement = getNextPreviousInlineElement_1.getPreviousInlineElement;
-var NodeBlockElement_1 = __webpack_require__(48);
+var NodeBlockElement_1 = __webpack_require__(47);
 exports.NodeBlockElement = NodeBlockElement_1.default;
-var StartEndBlockElement_1 = __webpack_require__(20);
+var StartEndBlockElement_1 = __webpack_require__(18);
 exports.StartEndBlockElement = StartEndBlockElement_1.default;
 var getBlockElementAtNode_1 = __webpack_require__(12);
 exports.getBlockElementAtNode = getBlockElementAtNode_1.default;
-var getNextPreviousBlockElement_1 = __webpack_require__(45);
+var getNextPreviousBlockElement_1 = __webpack_require__(44);
 exports.getNextBlockElement = getNextPreviousBlockElement_1.getNextBlockElement;
 exports.getPreviousBlockElement = getNextPreviousBlockElement_1.getPreviousBlockElement;
-var ContentTraverser_1 = __webpack_require__(113);
+var ContentTraverser_1 = __webpack_require__(112);
 exports.ContentTraverser = ContentTraverser_1.default;
-var BodyScoper_1 = __webpack_require__(112);
+var BodyScoper_1 = __webpack_require__(111);
 exports.BodyScoper = BodyScoper_1.default;
-var SelectionBlockScoper_1 = __webpack_require__(111);
+var SelectionBlockScoper_1 = __webpack_require__(110);
 exports.SelectionBlockScoper = SelectionBlockScoper_1.default;
-var SelectionScoper_1 = __webpack_require__(109);
+var SelectionScoper_1 = __webpack_require__(108);
 exports.SelectionScoper = SelectionScoper_1.default;
 // Table
-var VTable_1 = __webpack_require__(108);
+var VTable_1 = __webpack_require__(107);
 exports.VTable = VTable_1.default;
 // Utils
-var applyFormat_1 = __webpack_require__(107);
+var applyFormat_1 = __webpack_require__(106);
 exports.applyFormat = applyFormat_1.default;
-var changeElementTag_1 = __webpack_require__(106);
+var changeElementTag_1 = __webpack_require__(105);
 exports.changeElementTag = changeElementTag_1.default;
-var contains_1 = __webpack_require__(15);
+var contains_1 = __webpack_require__(14);
 exports.contains = contains_1.default;
-var sanitizeHtml_1 = __webpack_require__(105);
+var sanitizeHtml_1 = __webpack_require__(49);
 exports.sanitizeHtml = sanitizeHtml_1.default;
-var fromHtml_1 = __webpack_require__(22);
+var fromHtml_1 = __webpack_require__(50);
 exports.fromHtml = fromHtml_1.default;
-var getComputedStyle_1 = __webpack_require__(14);
+var getComputedStyle_1 = __webpack_require__(21);
 exports.getComputedStyle = getComputedStyle_1.default;
-var getTagOfNode_1 = __webpack_require__(8);
+var getTagOfNode_1 = __webpack_require__(6);
 exports.getTagOfNode = getTagOfNode_1.default;
-var intersectWithNodeRange_1 = __webpack_require__(47);
+var intersectWithNodeRange_1 = __webpack_require__(46);
 exports.intersectWithNodeRange = intersectWithNodeRange_1.default;
-var isBlockElement_1 = __webpack_require__(46);
+var isBlockElement_1 = __webpack_require__(45);
 exports.isBlockElement = isBlockElement_1.default;
 var isDocumentPosition_1 = __webpack_require__(9);
 exports.isDocumentPosition = isDocumentPosition_1.default;
@@ -148,10 +148,8 @@ var splitParentNode_1 = __webpack_require__(103);
 exports.splitParentNode = splitParentNode_1.default;
 var unwrap_1 = __webpack_require__(102);
 exports.unwrap = unwrap_1.default;
-var wrap_1 = __webpack_require__(50);
+var wrap_1 = __webpack_require__(51);
 exports.wrap = wrap_1.default;
-var wrapAll_1 = __webpack_require__(101);
-exports.wrapAll = wrapAll_1.default;
 
 
 /***/ }),
@@ -161,16 +159,16 @@ exports.wrapAll = wrapAll_1.default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Editor_1 = __webpack_require__(116);
+var Editor_1 = __webpack_require__(115);
 exports.Editor = Editor_1.default;
-var Undo_1 = __webpack_require__(53);
+var Undo_1 = __webpack_require__(54);
 exports.Undo = Undo_1.default;
-var BrowserData_1 = __webpack_require__(26);
+var BrowserData_1 = __webpack_require__(25);
 exports.browserData = BrowserData_1.default;
-var eventDataCacheUtils_1 = __webpack_require__(96);
+var eventDataCacheUtils_1 = __webpack_require__(97);
 exports.clearEventDataCache = eventDataCacheUtils_1.clearEventDataCache;
 exports.cacheGetEventData = eventDataCacheUtils_1.cacheGetEventData;
-var snapshotUtils_1 = __webpack_require__(52);
+var snapshotUtils_1 = __webpack_require__(53);
 exports.buildSnapshot = snapshotUtils_1.buildSnapshot;
 exports.restoreSnapshot = snapshotUtils_1.restoreSnapshot;
 
@@ -210,78 +208,78 @@ exports.default = queryNodesWithSelection;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cacheGetCursorEventData_1 = __webpack_require__(95);
+var cacheGetCursorEventData_1 = __webpack_require__(96);
 exports.cacheGetCursorEventData = cacheGetCursorEventData_1.default;
 exports.clearCursorEventDataCache = cacheGetCursorEventData_1.clearCursorEventDataCache;
-var CursorData_1 = __webpack_require__(18);
+var CursorData_1 = __webpack_require__(16);
 exports.CursorData = CursorData_1.default;
-var getCursorRect_1 = __webpack_require__(94);
+var getCursorRect_1 = __webpack_require__(95);
 exports.getCursorRect = getCursorRect_1.default;
 var getNodeAtCursor_1 = __webpack_require__(5);
 exports.getNodeAtCursor = getNodeAtCursor_1.default;
 exports.cacheGetNodeAtCursor = getNodeAtCursor_1.cacheGetNodeAtCursor;
 var queryNodesWithSelection_1 = __webpack_require__(2);
 exports.queryNodesWithSelection = queryNodesWithSelection_1.default;
-var replaceRangeWithNode_1 = __webpack_require__(39);
+var replaceRangeWithNode_1 = __webpack_require__(38);
 exports.replaceRangeWithNode = replaceRangeWithNode_1.default;
-var replaceTextBeforeCursorWithNode_1 = __webpack_require__(93);
+var replaceTextBeforeCursorWithNode_1 = __webpack_require__(94);
 exports.replaceTextBeforeCursorWithNode = replaceTextBeforeCursorWithNode_1.default;
 exports.validateAndGetRangeForTextBeforeCursor = replaceTextBeforeCursorWithNode_1.validateAndGetRangeForTextBeforeCursor;
-var cacheGetListState_1 = __webpack_require__(38);
+var cacheGetListState_1 = __webpack_require__(37);
 exports.cacheGetListState = cacheGetListState_1.default;
-var clearFormat_1 = __webpack_require__(92);
+var clearFormat_1 = __webpack_require__(93);
 exports.clearFormat = clearFormat_1.default;
-var createLink_1 = __webpack_require__(91);
+var createLink_1 = __webpack_require__(92);
 exports.createLink = createLink_1.default;
-var getFormatState_1 = __webpack_require__(32);
+var getFormatState_1 = __webpack_require__(31);
 exports.getFormatState = getFormatState_1.default;
-var insertImage_1 = __webpack_require__(89);
+var insertImage_1 = __webpack_require__(90);
 exports.insertImage = insertImage_1.default;
-var insertTable_1 = __webpack_require__(88);
+var insertTable_1 = __webpack_require__(89);
 exports.insertTable = insertTable_1.default;
-var editTable_1 = __webpack_require__(87);
+var editTable_1 = __webpack_require__(88);
 exports.editTable = editTable_1.default;
-var formatTable_1 = __webpack_require__(31);
+var formatTable_1 = __webpack_require__(30);
 exports.formatTable = formatTable_1.default;
-var removeLink_1 = __webpack_require__(86);
+var removeLink_1 = __webpack_require__(87);
 exports.removeLink = removeLink_1.default;
-var setAlignment_1 = __webpack_require__(85);
+var setAlignment_1 = __webpack_require__(86);
 exports.setAlignment = setAlignment_1.default;
-var setBackgroundColor_1 = __webpack_require__(37);
+var setBackgroundColor_1 = __webpack_require__(36);
 exports.setBackgroundColor = setBackgroundColor_1.default;
-var setTextColor_1 = __webpack_require__(34);
+var setTextColor_1 = __webpack_require__(33);
 exports.setTextColor = setTextColor_1.default;
-var setDirection_1 = __webpack_require__(84);
+var setDirection_1 = __webpack_require__(85);
 exports.setDirection = setDirection_1.default;
-var setFontName_1 = __webpack_require__(36);
+var setFontName_1 = __webpack_require__(35);
 exports.setFontName = setFontName_1.default;
-var setFontSize_1 = __webpack_require__(35);
+var setFontSize_1 = __webpack_require__(34);
 exports.setFontSize = setFontSize_1.default;
-var setImageAltText_1 = __webpack_require__(83);
+var setImageAltText_1 = __webpack_require__(84);
 exports.setImageAltText = setImageAltText_1.default;
-var setIndentation_1 = __webpack_require__(82);
+var setIndentation_1 = __webpack_require__(83);
 exports.setIndentation = setIndentation_1.default;
-var toggleBold_1 = __webpack_require__(81);
+var toggleBold_1 = __webpack_require__(82);
 exports.toggleBold = toggleBold_1.default;
-var toggleBullet_1 = __webpack_require__(30);
+var toggleBullet_1 = __webpack_require__(29);
 exports.toggleBullet = toggleBullet_1.default;
-var toggleItalic_1 = __webpack_require__(80);
+var toggleItalic_1 = __webpack_require__(81);
 exports.toggleItalic = toggleItalic_1.default;
-var toggleNumbering_1 = __webpack_require__(79);
+var toggleNumbering_1 = __webpack_require__(80);
 exports.toggleNumbering = toggleNumbering_1.default;
-var toggleBlockQuote_1 = __webpack_require__(78);
+var toggleBlockQuote_1 = __webpack_require__(79);
 exports.toggleBlockQuote = toggleBlockQuote_1.default;
-var toggleStrikethrough_1 = __webpack_require__(77);
+var toggleStrikethrough_1 = __webpack_require__(78);
 exports.toggleStrikethrough = toggleStrikethrough_1.default;
-var toggleSubscript_1 = __webpack_require__(76);
+var toggleSubscript_1 = __webpack_require__(77);
 exports.toggleSubscript = toggleSubscript_1.default;
-var toggleSuperscript_1 = __webpack_require__(75);
+var toggleSuperscript_1 = __webpack_require__(76);
 exports.toggleSuperscript = toggleSuperscript_1.default;
-var toggleUnderline_1 = __webpack_require__(74);
+var toggleUnderline_1 = __webpack_require__(75);
 exports.toggleUnderline = toggleUnderline_1.default;
-var toggleHeader_1 = __webpack_require__(73);
+var toggleHeader_1 = __webpack_require__(74);
 exports.toggleHeader = toggleHeader_1.default;
-var matchLink_1 = __webpack_require__(33);
+var matchLink_1 = __webpack_require__(32);
 exports.matchLink = matchLink_1.default;
 
 
@@ -292,8 +290,8 @@ exports.matchLink = matchLink_1.default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var contains_1 = __webpack_require__(15);
-var shouldSkipNode_1 = __webpack_require__(24);
+var contains_1 = __webpack_require__(14);
+var shouldSkipNode_1 = __webpack_require__(22);
 /**
  * This walks forwards (from left to right) DOM tree to get next meaningful node
  * A null is returned when it reaches the very end - beyond the scope as defined by rootNode
@@ -400,7 +398,25 @@ exports.cacheGetNodeAtCursor = cacheGetNodeAtCursor;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var isRangeInContainer_1 = __webpack_require__(43);
+/**
+ * Get the html tag of a node, or empty if it is not an element
+ * @param node The node to get tag of
+ * @returns Tag name in upper case if the given node is an Element, or empty string otherwise
+ */
+function getTagOfNode(node) {
+    return node && node.nodeType == 1 /* Element */ ? node.tagName.toUpperCase() : '';
+}
+exports.default = getTagOfNode;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var isRangeInContainer_1 = __webpack_require__(42);
 function getLiveRange(core) {
     var selection = core.document.defaultView.getSelection();
     if (selection && selection.rangeCount > 0) {
@@ -415,13 +431,13 @@ exports.default = getLiveRange;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var NodeInlineElement_1 = __webpack_require__(51);
+var NodeInlineElement_1 = __webpack_require__(52);
 /**
  * Get the inline element at a node
  * @param node The node to get InlineElement froms
@@ -430,21 +446,6 @@ function getInlineElementAtNode(node) {
     return node ? new NodeInlineElement_1.default(node) : null;
 }
 exports.default = getInlineElementAtNode;
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-// Returns the html tag of a node, or empty if it is not an element
-function getTagOfNode(node) {
-    // TODO: we need to standardize on use of lower or upper case
-    return node && node.nodeType == 1 /* Element */ ? node.tagName.toUpperCase() : '';
-}
-exports.default = getTagOfNode;
 
 
 /***/ }),
@@ -555,8 +556,8 @@ exports.default = applyInlineStyle;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var hasFocus_1 = __webpack_require__(19);
-var isRangeInContainer_1 = __webpack_require__(43);
+var hasFocus_1 = __webpack_require__(17);
+var isRangeInContainer_1 = __webpack_require__(42);
 function select(core, arg1, arg2, arg3, arg4) {
     var rawRange;
     if (arg1 instanceof Range) {
@@ -613,12 +614,12 @@ exports.default = select;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var contains_1 = __webpack_require__(15);
-var isBlockElement_1 = __webpack_require__(46);
-var NodeBlockElement_1 = __webpack_require__(48);
-var StartEndBlockElement_1 = __webpack_require__(20);
+var contains_1 = __webpack_require__(14);
+var isBlockElement_1 = __webpack_require__(45);
+var NodeBlockElement_1 = __webpack_require__(47);
+var StartEndBlockElement_1 = __webpack_require__(18);
 var getLeafSibling_1 = __webpack_require__(4);
-var getTagOfNode_1 = __webpack_require__(8);
+var getTagOfNode_1 = __webpack_require__(6);
 /**
  * This produces a block element from a a node
  * It needs to account for various HTML structure. Examples:
@@ -752,8 +753,8 @@ function findHeadTailLeafNodeInBlock(node, container, isTail) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Position_1 = __webpack_require__(17);
-var SelectionRange_1 = __webpack_require__(16);
+var Position_1 = __webpack_require__(15);
+var SelectionRange_1 = __webpack_require__(23);
 var isDocumentPosition_1 = __webpack_require__(9);
 /**
  * This is a special version of inline element that identifies a section of an inline element
@@ -886,21 +887,21 @@ exports.default = PartialInlineElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-function getComputedStyle(node, styleNames) {
-    if (styleNames === void 0) { styleNames = ['font-family', 'font-size', 'color', 'background-color']; }
-    var result = [];
-    styleNames = styleNames instanceof Array ? styleNames : [styleNames];
-    if (node && node.nodeType == 1 /* Element */) {
-        var win = node.ownerDocument.defaultView || window;
-        var styles = win.getComputedStyle(node);
-        for (var _i = 0, styleNames_1 = styleNames; _i < styleNames_1.length; _i++) {
-            var style = styleNames_1[_i];
-            result.push(((styles && styles.getPropertyValue(style)) || '').toLowerCase());
-        }
-    }
-    return result;
+/**
+ * Test if a node contains another node
+ * @param container The container node
+ * @param contained The node to check if it is insied container
+ * @param treatSameNodeAsContain When container and contained are the same node,
+ * return true if this param is set to true, otherwise return false. Default value is false
+ * @returns True if contained is insied container, or they are the same node when treatSameNodeAsContain is true.
+ * Otherwise false.
+ */
+function contains(container, contained, treatSameNodeAsContain) {
+    return !!(container &&
+        (treatSameNodeAsContain || container != contained) &&
+        container.contains(contained));
 }
-exports.default = getComputedStyle;
+exports.default = contains;
 
 
 /***/ }),
@@ -910,62 +911,7 @@ exports.default = getComputedStyle;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-// Test if a node contains another node
-function contains(container, contained, treatSameNodeAsContain) {
-    if (treatSameNodeAsContain === void 0) { treatSameNodeAsContain = false; }
-    return !!(container &&
-        (treatSameNodeAsContain || container != contained) &&
-        container.contains(contained));
-}
-exports.default = contains;
-
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Position_1 = __webpack_require__(17);
-var SelectionRange = /** @class */ (function () {
-    function SelectionRange(startOrRawRange, end) {
-        if (startOrRawRange instanceof Range) {
-            this.rawRange = startOrRawRange;
-            this.start = new Position_1.default(startOrRawRange.startContainer, startOrRawRange.startOffset);
-            this.end = new Position_1.default(startOrRawRange.endContainer, startOrRawRange.endOffset);
-        }
-        else {
-            this.start = startOrRawRange;
-            this.end = end || this.start;
-        }
-        this.collapsed = this.start.node == this.end.node && this.start.offset == this.end.offset;
-    }
-    SelectionRange.prototype.getRange = function () {
-        if (!this.rawRange) {
-            var document_1 = this.start.node.ownerDocument;
-            this.rawRange = document_1.createRange();
-            this.rawRange.setStart(this.start.node, this.start.offset);
-            this.rawRange.setEnd(this.end.node, this.end.offset);
-        }
-        return this.rawRange;
-    };
-    SelectionRange.prototype.normalize = function () {
-        return new SelectionRange(this.start.normalize(), this.end.normalize());
-    };
-    return SelectionRange;
-}());
-exports.default = SelectionRange;
-
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var isNodeAfter_1 = __webpack_require__(25);
+var isNodeAfter_1 = __webpack_require__(24);
 var Position = /** @class */ (function () {
     function Position(nodeOrPosition, offsetOrPosType) {
         if (nodeOrPosition.node) {
@@ -1055,7 +1001,7 @@ function getEndOffset(node) {
 
 
 /***/ }),
-/* 18 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1270,7 +1216,7 @@ function isTextualInlineElement(inlineElement) {
 
 
 /***/ }),
-/* 19 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1284,15 +1230,15 @@ exports.default = hasFocus;
 
 
 /***/ }),
-/* 20 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getInlineElementAtNode_1 = __webpack_require__(7);
-var intersectWithNodeRange_1 = __webpack_require__(47);
-var isNodeAfter_1 = __webpack_require__(25);
+var getInlineElementAtNode_1 = __webpack_require__(8);
+var intersectWithNodeRange_1 = __webpack_require__(46);
+var isNodeAfter_1 = __webpack_require__(24);
 /**
  * This reprents a block that is identified by a start and end node
  * This is for cases like <ced>Hello<BR>World</ced>
@@ -1388,14 +1334,14 @@ exports.default = StartEndBlockElement;
 
 
 /***/ }),
-/* 21 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getInlineElementAtNode_1 = __webpack_require__(7);
-var getLeafNode_1 = __webpack_require__(23);
+var getInlineElementAtNode_1 = __webpack_require__(8);
+var getLeafNode_1 = __webpack_require__(20);
 /**
  * Get first inline element
  */
@@ -1419,33 +1365,13 @@ exports.getLastInlineElement = getLastInlineElement;
 
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-// Creates a HTMLElement array from html
-function fromHtml(htmlFragment, ownerDocument) {
-    var element = ownerDocument.createElement('DIV');
-    element.innerHTML = htmlFragment;
-    var children = [];
-    for (var index = 0; index < element.childNodes.length; index++) {
-        children.push(element.childNodes.item(index));
-    }
-    return children;
-}
-exports.default = fromHtml;
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var shouldSkipNode_1 = __webpack_require__(24);
+var shouldSkipNode_1 = __webpack_require__(22);
 var getLeafSibling_1 = __webpack_require__(4);
 /**
  * Get the first meaningful leaf node
@@ -1479,13 +1405,44 @@ function getLeafNode(rootNode, isFirst) {
 
 
 /***/ }),
-/* 24 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(14);
+/**
+ * Get computed styles of a node
+ * @param node The node to get computed styles from
+ * @param styleNames Names of style to get, can be a single name or an array.
+ * Default value is font-family, font-size, color, background-color
+ * @returns An array of the computed styles
+ */
+function getComputedStyle(node, styleNames) {
+    if (styleNames === void 0) { styleNames = ['font-family', 'font-size', 'color', 'background-color']; }
+    var result = [];
+    styleNames = styleNames instanceof Array ? styleNames : [styleNames];
+    if (node && node.nodeType == 1 /* Element */) {
+        var win = node.ownerDocument.defaultView || window;
+        var styles = win.getComputedStyle(node);
+        for (var _i = 0, styleNames_1 = styleNames; _i < styleNames_1.length; _i++) {
+            var style = styleNames_1[_i];
+            result.push(((styles && styles.getPropertyValue(style)) || '').toLowerCase());
+        }
+    }
+    return result;
+}
+exports.default = getComputedStyle;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getComputedStyle_1 = __webpack_require__(21);
 /**
  * Skip a node when any of following conditions are true
  * - it is neither Element nor Text
@@ -1508,14 +1465,57 @@ exports.default = shouldSkipNode;
 
 
 /***/ }),
-/* 25 */
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Position_1 = __webpack_require__(15);
+var SelectionRange = /** @class */ (function () {
+    function SelectionRange(startOrRawRange, end) {
+        if (startOrRawRange instanceof Range) {
+            this.rawRange = startOrRawRange;
+            this.start = new Position_1.default(startOrRawRange.startContainer, startOrRawRange.startOffset);
+            this.end = new Position_1.default(startOrRawRange.endContainer, startOrRawRange.endOffset);
+        }
+        else {
+            this.start = startOrRawRange;
+            this.end = end || this.start;
+        }
+        this.collapsed = this.start.node == this.end.node && this.start.offset == this.end.offset;
+    }
+    SelectionRange.prototype.getRange = function () {
+        if (!this.rawRange) {
+            var document_1 = this.start.node.ownerDocument;
+            this.rawRange = document_1.createRange();
+            this.rawRange.setStart(this.start.node, this.start.offset);
+            this.rawRange.setEnd(this.end.node, this.end.offset);
+        }
+        return this.rawRange;
+    };
+    SelectionRange.prototype.normalize = function () {
+        return new SelectionRange(this.start.normalize(), this.end.normalize());
+    };
+    return SelectionRange;
+}());
+exports.default = SelectionRange;
+
+
+/***/ }),
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var isDocumentPosition_1 = __webpack_require__(9);
-// Checks if node1 is after node2
+/**
+ * Checks if node1 is after node2
+ * @param node1 The node to check if it is after another node
+ * @param node2 The node to check if another node is after this one
+ * @returns True if node1 is after node2, otherwise false
+ */
 function isNodeAfter(node1, node2) {
     return !!(node1 &&
         node2 &&
@@ -1525,7 +1525,7 @@ exports.default = isNodeAfter;
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1594,7 +1594,7 @@ exports.default = browserData;
 
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1612,7 +1612,7 @@ exports.createLevelLists = createLevelLists;
 
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1673,7 +1673,7 @@ function getAndSetNodeId(customData, element) {
 
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1699,7 +1699,7 @@ exports.getDefaultContentEditFeatures = getDefaultContentEditFeatures;
 
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1750,7 +1750,7 @@ exports.default = toggleBullet;
 
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1782,7 +1782,7 @@ exports.default = formatTable;
 
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1790,8 +1790,8 @@ exports.default = formatTable;
 Object.defineProperty(exports, "__esModule", { value: true });
 var getNodeAtCursor_1 = __webpack_require__(5);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var cacheGetListState_1 = __webpack_require__(38);
-var cacheGetHeaderLevel_1 = __webpack_require__(90);
+var cacheGetListState_1 = __webpack_require__(37);
+var cacheGetHeaderLevel_1 = __webpack_require__(91);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 // Query command state, used for query Bold, Italic, Underline state
 function queryCommandState(editor, command) {
@@ -1840,7 +1840,7 @@ exports.default = getFormatState;
 
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1919,7 +1919,7 @@ exports.default = matchLink;
 
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1940,7 +1940,7 @@ exports.default = setTextColor;
 
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1963,7 +1963,7 @@ exports.default = setFontSize;
 
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1986,7 +1986,7 @@ exports.default = setFontName;
 
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2007,7 +2007,7 @@ exports.default = setBackgroundColor;
 
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2045,7 +2045,7 @@ exports.default = cacheGetListState;
 
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2080,7 +2080,7 @@ exports.default = replaceRangeWithNode;
 
 
 /***/ }),
-/* 40 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2100,15 +2100,15 @@ exports.default = isVoidHtmlElement;
 
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getLiveRange_1 = __webpack_require__(6);
-var hasFocus_1 = __webpack_require__(19);
-var isVoidHtmlElement_1 = __webpack_require__(40);
+var getLiveRange_1 = __webpack_require__(7);
+var hasFocus_1 = __webpack_require__(17);
+var isVoidHtmlElement_1 = __webpack_require__(39);
 var select_1 = __webpack_require__(11);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 function focus(core) {
@@ -2158,7 +2158,7 @@ function setSelectionToBegin(core) {
 
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2190,7 +2190,7 @@ exports.default = triggerEvent;
 
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2209,7 +2209,7 @@ exports.default = isRangeInContainer;
 
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2217,7 +2217,7 @@ exports.default = isRangeInContainer;
 Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(13);
 var getBlockElementAtNode_1 = __webpack_require__(12);
-var getInlineElementBeforeAfter_1 = __webpack_require__(110);
+var getInlineElementBeforeAfter_1 = __webpack_require__(109);
 // This is a utility like class that produces editor point/inline/block element around or within a selection range
 var EditorSelection = /** @class */ (function () {
     function EditorSelection(rootNode, selectionRange) {
@@ -2439,7 +2439,7 @@ exports.default = EditorSelection;
 
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2474,34 +2474,84 @@ function getNextPreviousBlockElement(rootNode, blockElement, isNext) {
 
 
 /***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getTagOfNode_1 = __webpack_require__(6);
+var BLOCK_ELEMENT_TAGS = [
+    'ADDRESS',
+    'ARTICLE',
+    'ASIDE',
+    'BLOCKQUOTE',
+    'CANVAS',
+    'DD',
+    'DIV',
+    'DL',
+    'DT',
+    'FIELDSET',
+    'FIGCAPTION',
+    'FIGURE',
+    'FOOTER',
+    'FORM',
+    'H1',
+    'H2',
+    'H3',
+    'H4',
+    'H5',
+    'H6',
+    'HEADER',
+    'HR',
+    'LI',
+    'MAIN',
+    'NAV',
+    'NOSCRIPT',
+    'OL',
+    'OUTPUT',
+    'P',
+    'PRE',
+    'SECTION',
+    'TABLE',
+    'TD',
+    'TFOOT',
+    'UL',
+    'VIDEO',
+];
+var BLOCK_DISPLAY_STYLES = ['block', 'list-item', 'table-cell'];
+/**
+ * Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.
+ * @param node The node to check
+ * @returns True if the node is a block element, otherwise false
+ */
+function isBlockElement(node) {
+    var tag = getTagOfNode_1.default(node);
+    return !!(tag &&
+        (BLOCK_DISPLAY_STYLES.indexOf(node.style.display) >= 0 ||
+            BLOCK_ELEMENT_TAGS.indexOf(tag) >= 0));
+}
+exports.default = isBlockElement;
+
+
+/***/ }),
 /* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(14);
-// Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.
-// TODO: should inline-block be considered as block?
-// Other block like style to consider: table-caption, table-header-group, table-footer-group etc.
-function isBlockElement(node) {
-    if (node && node.nodeType == 1 /* Element */) {
-        var displayStyle = getComputedStyle_1.default(node, 'display')[0];
-        return (displayStyle == 'block' || displayStyle == 'list-item' || displayStyle == 'table-cell');
-    }
-    return false;
-}
-exports.default = isBlockElement;
-
-
-/***/ }),
-/* 47 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
 var isDocumentPosition_1 = __webpack_require__(9);
+/**
+ * Check if a given node has intersection with the given node range
+ * @param node The node to check
+ * @param start Start node of the range
+ * @param end End node of the range
+ * @param containOnly When set to true, will return true only when the node is between
+ * start and end nodes or contained by start or end node. When set to false, also return true
+ * if the node contains both start and end node
+ * @return True if the node has intersection with the range. Otherwise false
+ */
 function intersectWithNodeRange(node, start, end, containOnly) {
     var startPosition = node.compareDocumentPosition(start);
     var endPosition = node.compareDocumentPosition(end);
@@ -2520,7 +2570,7 @@ exports.default = intersectWithNodeRange;
 
 
 /***/ }),
-/* 48 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2536,8 +2586,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var StartEndBlockElement_1 = __webpack_require__(20);
-var getFirstLastInlineElement_1 = __webpack_require__(21);
+var StartEndBlockElement_1 = __webpack_require__(18);
+var getFirstLastInlineElement_1 = __webpack_require__(19);
 /**
  * This presents a content block that can be reprented by a single html block type element.
  * In most cases, it corresponds to an HTML block level element, i.e. P, DIV, LI, TD etc.
@@ -2579,14 +2629,14 @@ exports.default = NodeBlockElement;
 
 
 /***/ }),
-/* 49 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(13);
-var getInlineElementAtNode_1 = __webpack_require__(7);
+var getInlineElementAtNode_1 = __webpack_require__(8);
 var getLeafSibling_1 = __webpack_require__(4);
 /**
  * Get next inline element
@@ -2610,30 +2660,366 @@ function getNextPreviousInlineElement(rootNode, inlineElement, isNext) {
 
 
 /***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getTagOfNode_1 = __webpack_require__(6);
+var HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
+/**
+ * Sanitize HTML string
+ * This function will do the following work:
+ * 1. Convert global CSS into inline CSS
+ * 2. Remove dangerous HTML tags and attributes
+ * 3. Remove useless CSS properties
+ * @param html The input HTML
+ * @param additionalStyleNodes additional style nodes for inline css converting
+ * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
+ * @param propertyCallbacks A callback function map to handle HTML properties
+ */
+function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, propertyCallbacks, currentStyle) {
+    var parser = new DOMParser();
+    var matches = HTML_REGEX.exec(html);
+    html = matches ? matches[0] : html;
+    var doc;
+    if (!html ||
+        !html.trim() ||
+        !(doc = parser.parseFromString(html, 'text/html')) ||
+        !doc.body ||
+        !doc.body.firstChild) {
+        return '';
+    }
+    // 1. Convert global CSS into inline CSS
+    applyInlineStyle(doc, additionalStyleNodes);
+    // 2, 3: Remove dangerous HTML tags and attributes, remove useless CSS properties
+    if (!convertInlineCssOnly) {
+        var callbackPropertyNames = (propertyCallbacks ? Object.keys(propertyCallbacks) : []).map(function (name) { return name.toLowerCase(); });
+        removeUnusedCssAndDangerousContent(doc.body, callbackPropertyNames, propertyCallbacks, currentStyle || {});
+    }
+    return doc.body.innerHTML;
+}
+exports.default = sanitizeHtml;
+var ALLOWED_HTML_TAGS = [
+    'BODY',
+    'H1',
+    'H2',
+    'H3',
+    'H4',
+    'H5',
+    'H6',
+    'FORM',
+    'P',
+    'BR',
+    'HR',
+    'ACRONYM',
+    'ABBR',
+    'ADDRESS',
+    'B',
+    'BDI',
+    'BDO',
+    'BIG',
+    'BLOCKQUOTE',
+    'CENTER',
+    'CITE',
+    'CODE',
+    'DEL',
+    'DFN',
+    'EM',
+    'FONT',
+    'I',
+    'INS',
+    'KBD',
+    'MARK',
+    'METER',
+    'PRE',
+    'PROGRESS',
+    'Q',
+    'RP',
+    'RT',
+    'RUBY',
+    'S',
+    'SAMP',
+    'SMALL',
+    'STRIKE',
+    'STRONG',
+    'SUB',
+    'SUP',
+    'TEMPLATE',
+    'TIME',
+    'TT',
+    'U',
+    'VAR',
+    'WBR',
+    'XMP',
+    'INPUT',
+    'TEXTAREA',
+    'BUTTON',
+    'SELECT',
+    'OPTGROUP',
+    'OPTION',
+    'LABEL',
+    'FIELDSET',
+    'LEGEND',
+    'DATALIST',
+    'OUTPUT',
+    'IMG',
+    'MAP',
+    'AREA',
+    'CANVAS',
+    'FIGCAPTION',
+    'FIGURE',
+    'PICTURE',
+    'A',
+    'NAV',
+    'UL',
+    'OL',
+    'LI',
+    'DIR',
+    'UL',
+    'DL',
+    'DT',
+    'DD',
+    'MENU',
+    'MENUITEM',
+    'TABLE',
+    'CAPTION',
+    'TH',
+    'TR',
+    'TD',
+    'THEAD',
+    'TBODY',
+    'TFOOT',
+    'COL',
+    'COLGROUP',
+    'DIV',
+    'SPAN',
+    'HEADER',
+    'FOOTER',
+    'MAIN',
+    'SECTION',
+    'ARTICLE',
+    'ASIDE',
+    'DETAILS',
+    'DIALOG',
+    'SUMMARY',
+    'DATA',
+];
+var ALLOWED_HTML_ATTRIBUTES = [
+    'accept',
+    'align',
+    'alt',
+    'checked',
+    'cite',
+    'cols',
+    'colspan',
+    'contextmenu',
+    'coords',
+    'datetime',
+    'default',
+    'dir',
+    'dirname',
+    'disabled',
+    'download',
+    'headers',
+    'height',
+    'hidden',
+    'high',
+    'href',
+    'hreflang',
+    'ismap',
+    'kind',
+    'label',
+    'lang',
+    'list',
+    'low',
+    'max',
+    'maxlength',
+    'media',
+    'min',
+    'multiple',
+    'open',
+    'optimum',
+    'pattern',
+    'placeholder',
+    'readonly',
+    'rel',
+    'required',
+    'reversed',
+    'rows',
+    'rowspan',
+    'scope',
+    'selected',
+    'shape',
+    'size',
+    'sizes',
+    'span',
+    'spellcheck',
+    'src',
+    'srclang',
+    'srcset',
+    'start',
+    'step',
+    'style',
+    'tabindex',
+    'target',
+    'title',
+    'translate',
+    'type',
+    'usemap',
+    'value',
+    'width',
+    'wrap',
+];
+function applyInlineStyle(doc, additionalStyleNodes) {
+    var styleNodes = toArray(doc.querySelectorAll('style'));
+    var styleSheets = (additionalStyleNodes || [])
+        .reverse()
+        .map(function (node) { return node.sheet; })
+        .concat(styleNodes.map(function (node) { return node.sheet; }).reverse());
+    for (var _i = 0, styleSheets_1 = styleSheets; _i < styleSheets_1.length; _i++) {
+        var styleSheet = styleSheets_1[_i];
+        var _loop_1 = function (j) {
+            // Skip any none-style rule, i.e. @page
+            var styleRule = styleSheet.cssRules[j];
+            var text = styleRule && styleRule.style ? styleRule.style.cssText : null;
+            if (styleRule.type != CSSRule.STYLE_RULE || !text || !styleRule.selectorText) {
+                return "continue";
+            }
+            // Make sure the selector is not empty
+            for (var _i = 0, _a = styleRule.selectorText.split(','); _i < _a.length; _i++) {
+                var selector = _a[_i];
+                if (!selector || !selector.trim() || selector.indexOf(':') >= 0) {
+                    continue;
+                }
+                var nodes = toArray(doc.querySelectorAll(selector));
+                // Always put existing styles after so that they have higher priority
+                // Which means if both global style and inline style apply to the same element,
+                // inline style will have higher priority
+                nodes.forEach(function (node) {
+                    return node.setAttribute('style', text + (node.getAttribute('style') || ''));
+                });
+            }
+        };
+        for (var j = styleSheet.cssRules.length - 1; j >= 0; j--) {
+            _loop_1(j);
+        }
+    }
+}
+function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propertyCallbacks, currentStyle) {
+    var thisStyle = Object.assign ? Object.assign({}, currentStyle) : {};
+    var nodeType = node.nodeType;
+    var tag = getTagOfNode_1.default(node) || '';
+    var isElement = nodeType == 1 /* Element */;
+    var isText = nodeType == 3 /* Text */;
+    if ((isElement && ALLOWED_HTML_TAGS.indexOf(tag) < 0 && tag.indexOf(':') < 0) ||
+        (isText && /^[\r\n]*$/g.test(node.nodeValue)) ||
+        (!isElement && !isText)) {
+        node.parentNode.removeChild(node);
+    }
+    else if (nodeType == 1 /* Element */) {
+        var element = node;
+        if (element.hasAttribute('style')) {
+            removeUnusedCss(element, thisStyle);
+        }
+        removeDisallowedAttributes(element, callbackPropertyNames, propertyCallbacks);
+        var child = element.firstChild;
+        var next = void 0;
+        for (; child; child = next) {
+            next = child.nextSibling;
+            removeUnusedCssAndDangerousContent(child, callbackPropertyNames, propertyCallbacks, thisStyle);
+        }
+    }
+}
+function removeUnusedCss(element, thisStyle) {
+    var source = element
+        .getAttribute('style')
+        .split(';')
+        .filter(function (style) { return style && style.trim() != ''; });
+    var result = source.filter(function (style) {
+        var pair = style.split(':');
+        if (pair.length == 2) {
+            var name_1 = pair[0].trim().toLowerCase();
+            var value = pair[1].trim().toLowerCase();
+            var isInheritable = thisStyle[name_1] != undefined;
+            var keep = value != 'inherit' &&
+                ((isInheritable && value != thisStyle[name_1]) ||
+                    (!isInheritable && value != 'initial' && value != 'normal')) &&
+                !isDangerousCss(name_1, value);
+            if (keep && isInheritable) {
+                thisStyle[name_1] = value;
+            }
+            return keep;
+        }
+        else {
+            return false;
+        }
+    });
+    if (source.length != result.length) {
+        if (result.length > 0) {
+            element.setAttribute('style', result.join(';'));
+        }
+        else {
+            element.removeAttribute('style');
+        }
+    }
+}
+function isDangerousCss(name, value) {
+    if (name == 'position') {
+        return true;
+    }
+    if (value.indexOf('expression') >= 0) {
+        return true;
+    }
+    return false;
+}
+function removeDisallowedAttributes(element, callbackPropertyNames, propertyCallbacks) {
+    for (var i = element.attributes.length - 1; i >= 0; i--) {
+        var attribute = element.attributes[i];
+        var name_2 = attribute.name.toLowerCase().trim();
+        var value = attribute.value.trim();
+        if (callbackPropertyNames.indexOf(name_2) >= 0) {
+            value = propertyCallbacks[name_2](value);
+            if (value != null) {
+                attribute.value = value;
+            }
+            else {
+                element.removeAttribute(name_2);
+            }
+        }
+        else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name_2) < 0 ||
+            value.toLowerCase().indexOf('script:') >= 0) {
+            element.removeAttribute(attribute.name);
+        }
+    }
+}
+function toArray(list) {
+    return [].slice.call(list);
+}
+
+
+/***/ }),
 /* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var fromHtml_1 = __webpack_require__(22);
-// Wrap the node with html and return the wrapped node
-function wrap(node, htmlFragment) {
-    if (!node) {
-        return null;
-    }
-    var wrapper = node;
-    if (htmlFragment) {
-        wrapper = fromHtml_1.default(htmlFragment, node.ownerDocument)[0];
-        if (node.parentNode) {
-            node.parentNode.insertBefore(wrapper, node);
-            node.parentNode.removeChild(node);
-        }
-        wrapper.appendChild(node);
-    }
-    return wrapper;
+var sanitizeHtml_1 = __webpack_require__(49);
+/**
+ * Creates an HTML node array from html
+ * @param html the html string to create HTML elements from
+ * @param ownerDocument Owner document of the result HTML elements
+ * @param sanitize Whether do sanitization before create elements to avoid XSS. Default value is false
+ * @returns An HTML node array to represent the given html string
+ */
+function fromHtml(html, ownerDocument, sanitize) {
+    var element = ownerDocument.createElement('DIV');
+    element.innerHTML = sanitize ? sanitizeHtml_1.default(html) : html;
+    return [].slice.call(element.childNodes);
 }
-exports.default = wrap;
+exports.default = fromHtml;
 
 
 /***/ }),
@@ -2643,14 +3029,52 @@ exports.default = wrap;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var contains_1 = __webpack_require__(15);
-var getTagOfNode_1 = __webpack_require__(8);
+var fromHtml_1 = __webpack_require__(50);
+/**
+ * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
+ * @param nodes The node or node array to wrap
+ * @param wrapper The wrapper node or HTML string, default value is <div></div>
+ * @param sanitize Whether do sanitization of wrapper string before create node to avoid XSS,
+ * default value is false
+ * @returns The wrapper element
+ */
+function wrap(nodes, wrapper, sanitize) {
+    nodes = !nodes ? [] : nodes instanceof Node ? [nodes] : nodes;
+    if (nodes.length == 0 || !nodes[0]) {
+        return null;
+    }
+    wrapper =
+        wrapper instanceof Node
+            ? wrapper
+            : fromHtml_1.default(wrapper || '<div></div>', nodes[0].ownerDocument, sanitize)[0];
+    var parentNode = nodes[0].parentNode;
+    if (parentNode) {
+        parentNode.insertBefore(wrapper, nodes[0]);
+    }
+    for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
+        var node = nodes_1[_i];
+        wrapper.appendChild(node);
+    }
+    return wrapper;
+}
+exports.default = wrap;
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var contains_1 = __webpack_require__(14);
+var getTagOfNode_1 = __webpack_require__(6);
 var isDocumentPosition_1 = __webpack_require__(9);
-var isNodeAfter_1 = __webpack_require__(25);
-var wrap_1 = __webpack_require__(50);
+var isNodeAfter_1 = __webpack_require__(24);
+var wrap_1 = __webpack_require__(51);
 var getLeafSibling_1 = __webpack_require__(4);
-var Position_1 = __webpack_require__(17);
-var SelectionRange_1 = __webpack_require__(16);
+var Position_1 = __webpack_require__(15);
+var SelectionRange_1 = __webpack_require__(23);
 /**
  * This presents an inline element that can be reprented by a single html node.
  * This serves as base for most inline element as it contains most implentation
@@ -2790,13 +3214,13 @@ exports.default = NodeInlineElement;
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var BrowserData_1 = __webpack_require__(26);
+var BrowserData_1 = __webpack_require__(25);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 // Undo cursor marker
 var CURSOR_START = 'cursor-start';
@@ -2897,14 +3321,14 @@ function getCursorMarkNodes(editor, id) {
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var UndoSnapshots_1 = __webpack_require__(114);
-var snapshotUtils_1 = __webpack_require__(52);
+var UndoSnapshots_1 = __webpack_require__(113);
+var snapshotUtils_1 = __webpack_require__(53);
 var KEY_BACKSPACE = 8;
 var KEY_DELETE = 46;
 var KEY_SPACE = 32;
@@ -3099,26 +3523,26 @@ exports.default = Undo;
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DefaultShortcut_1 = __webpack_require__(117);
+var DefaultShortcut_1 = __webpack_require__(116);
 exports.DefaultShortcut = DefaultShortcut_1.default;
-var HyperLink_1 = __webpack_require__(72);
+var HyperLink_1 = __webpack_require__(73);
 exports.HyperLink = HyperLink_1.default;
-var ContentEdit_1 = __webpack_require__(71);
+var ContentEdit_1 = __webpack_require__(72);
 exports.ContentEdit = ContentEdit_1.default;
-var Paste_1 = __webpack_require__(69);
+var Paste_1 = __webpack_require__(70);
 exports.Paste = Paste_1.default;
-var ContentEditFeatures_1 = __webpack_require__(29);
+var ContentEditFeatures_1 = __webpack_require__(28);
 exports.getDefaultContentEditFeatures = ContentEditFeatures_1.getDefaultContentEditFeatures;
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3213,18 +3637,18 @@ exports.default = Watermark;
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Watermark_1 = __webpack_require__(55);
+var Watermark_1 = __webpack_require__(56);
 exports.Watermark = Watermark_1.default;
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3372,18 +3796,18 @@ exports.default = TableResize;
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var TableResize_1 = __webpack_require__(57);
+var TableResize_1 = __webpack_require__(58);
 exports.TableResize = TableResize_1.default;
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3618,27 +4042,27 @@ exports.default = ImageResize;
 
 
 /***/ }),
-/* 60 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var ImageResize_1 = __webpack_require__(59);
-exports.ImageResize = ImageResize_1.default;
-
-
-/***/ }),
 /* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var ImageResize_1 = __webpack_require__(60);
+exports.ImageResize = ImageResize_1.default;
 
 
 /***/ }),
 /* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+
+
+/***/ }),
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3686,14 +4110,14 @@ exports.default = textToHtml;
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var LevelLists_1 = __webpack_require__(27);
-var CustomData_1 = __webpack_require__(28);
+var LevelLists_1 = __webpack_require__(26);
+var CustomData_1 = __webpack_require__(27);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 /** Word list metadata style name */
 var LOOKUP_DEPTH = 5;
@@ -4173,13 +4597,13 @@ function resetCurrentLists(args) {
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var LevelLists_1 = __webpack_require__(27);
+var LevelLists_1 = __webpack_require__(26);
 ;
 /** create an empty WordConverterArguments */
 function createWordConverterArguments(nodes) {
@@ -4196,13 +4620,13 @@ exports.createWordConverterArguments = createWordConverterArguments;
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CustomData_1 = __webpack_require__(28);
+var CustomData_1 = __webpack_require__(27);
 ;
 /** create an empty WordConverter */
 function createWordConverter() {
@@ -4218,15 +4642,15 @@ exports.createWordConverter = createWordConverter;
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var wordConverter_1 = __webpack_require__(65);
-var WordConverterArguments_1 = __webpack_require__(64);
-var converterUtils_1 = __webpack_require__(63);
+var wordConverter_1 = __webpack_require__(66);
+var WordConverterArguments_1 = __webpack_require__(65);
+var converterUtils_1 = __webpack_require__(64);
 /** Converts all the Word generated list items in the specified node into standard HTML UL and OL tags */
 function convertPastedContentFromWord(root) {
     var wordConverter = wordConverter_1.createWordConverter();
@@ -4245,7 +4669,7 @@ exports.default = convertPastedContentFromWord;
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4366,7 +4790,7 @@ function getTempDivForPaste(editor) {
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4419,7 +4843,7 @@ exports.default = getInheritableStyles;
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4428,10 +4852,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var roosterjs_editor_core_1 = __webpack_require__(1);
 var roosterjs_editor_api_1 = __webpack_require__(3);
-var getInheritableStyles_1 = __webpack_require__(68);
-var buildClipboardData_1 = __webpack_require__(67);
-var convertPastedContentFromWord_1 = __webpack_require__(66);
-var textToHtml_1 = __webpack_require__(62);
+var getInheritableStyles_1 = __webpack_require__(69);
+var buildClipboardData_1 = __webpack_require__(68);
+var convertPastedContentFromWord_1 = __webpack_require__(67);
+var textToHtml_1 = __webpack_require__(63);
 /**
  * Paste plugin, handles onPaste event and paste content into editor
  */
@@ -4577,7 +5001,7 @@ exports.default = Paste;
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4658,7 +5082,7 @@ function isAutoBulletInput(input) {
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4666,8 +5090,8 @@ function isAutoBulletInput(input) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_api_1 = __webpack_require__(3);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var ContentEditFeatures_1 = __webpack_require__(29);
-var autoBullet_1 = __webpack_require__(70);
+var ContentEditFeatures_1 = __webpack_require__(28);
+var autoBullet_1 = __webpack_require__(71);
 var KEY_TAB = 9;
 var KEY_BACKSPACE = 8;
 var KEY_ENTER = 13;
@@ -4874,7 +5298,7 @@ exports.default = ContentEdit;
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5031,7 +5455,7 @@ exports.default = HyperLink;
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5083,7 +5507,7 @@ exports.default = toggleHeader;
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5107,7 +5531,7 @@ exports.default = toggleUnderline;
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5133,7 +5557,7 @@ exports.default = toggleSuperscript;
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5159,7 +5583,7 @@ exports.default = toggleSubscript;
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5183,7 +5607,7 @@ exports.default = toggleStrikethrough;
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5222,7 +5646,7 @@ function toggleBlockQuote(editor, styler) {
             nodes = getSplittedListNodes(nodes);
             // Step 3: Handle some special cases
             nodes = getNodesWithSpecialCaseHandled(editor, nodes);
-            var quoteElement = roosterjs_editor_dom_1.wrapAll(nodes, '<blockquote></blockqupte>');
+            var quoteElement = roosterjs_editor_dom_1.wrap(nodes, '<blockquote></blockqupte>');
             (styler || defaultStyler)(quoteElement);
             // Return a fallback to select in case original selection is not valid any more
             return nodes[0];
@@ -5309,13 +5733,13 @@ function isListElement(node) {
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var toggleBullet_1 = __webpack_require__(30);
+var toggleBullet_1 = __webpack_require__(29);
 /**
  * Toggle numbering at selection
  * If selection contains numbering in deep level, toggle numbering will decrease the numbering level by one
@@ -5336,7 +5760,7 @@ exports.default = toggleNumbering;
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5360,7 +5784,7 @@ exports.default = toggleItalic;
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5384,13 +5808,13 @@ exports.default = toggleBold;
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getFormatState_1 = __webpack_require__(32);
+var getFormatState_1 = __webpack_require__(31);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 /**
  * Set indentation at selection
@@ -5419,7 +5843,7 @@ exports.default = setIndentation;
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5451,7 +5875,7 @@ exports.default = setImageAltText;
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5502,7 +5926,7 @@ function setDirection(editor, dir) {
                     // the start node "abc" is not in same level as the end node <br> (the <br> is in a span)
                     // Some html suffling is required to properly wrap the content before applying dir
                     var allNodes = block.getContentNodes();
-                    roosterjs_editor_dom_1.wrapAll(allNodes, "<div dir='" + dirValue + "', style='text-align:" + styleValue + ";'></div>");
+                    roosterjs_editor_dom_1.wrap(allNodes, "<div dir='" + dirValue + "', style='text-align:" + styleValue + ";'></div>");
                 }
             }
         });
@@ -5512,7 +5936,7 @@ exports.default = setDirection;
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5538,7 +5962,7 @@ exports.default = setAlignment;
 
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5568,7 +5992,7 @@ exports.default = removeLink;
 
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5697,13 +6121,13 @@ exports.default = editTable;
 
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var formatTable_1 = __webpack_require__(31);
+var formatTable_1 = __webpack_require__(30);
 /**
  * Insert table into editor at current selection
  * @param editor The editor instance
@@ -5756,7 +6180,7 @@ function getTableCellWidth(columns) {
 
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5786,7 +6210,7 @@ exports.default = insertImage;
 
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5817,13 +6241,13 @@ exports.default = cacheGetHeaderLevel;
 
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var matchLink_1 = __webpack_require__(33);
+var matchLink_1 = __webpack_require__(32);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 // Regex matching Uri scheme
 var URI_REGEX = /^[a-zA-Z]+:/i;
@@ -5917,16 +6341,16 @@ function applyLinkPrefix(url) {
 
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var setBackgroundColor_1 = __webpack_require__(37);
-var setFontName_1 = __webpack_require__(36);
-var setFontSize_1 = __webpack_require__(35);
-var setTextColor_1 = __webpack_require__(34);
+var setBackgroundColor_1 = __webpack_require__(36);
+var setFontName_1 = __webpack_require__(35);
+var setFontSize_1 = __webpack_require__(34);
+var setTextColor_1 = __webpack_require__(33);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 /**
  * Clear the format in current selection, after cleaning, the format will be
@@ -5954,14 +6378,14 @@ exports.default = clearFormat;
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CursorData_1 = __webpack_require__(18);
-var replaceRangeWithNode_1 = __webpack_require__(39);
+var CursorData_1 = __webpack_require__(16);
+var replaceRangeWithNode_1 = __webpack_require__(38);
 /**
  * Validate the text matches what's before the cursor, and return the range for it
  * @param editor The editor instance
@@ -6064,7 +6488,7 @@ exports.default = replaceTextBeforeCursorWithNode;
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6136,13 +6560,13 @@ function getRectFromClientRect(clientRect) {
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CursorData_1 = __webpack_require__(18);
+var CursorData_1 = __webpack_require__(16);
 var roosterjs_editor_core_1 = __webpack_require__(1);
 var EVENTDATACACHE_CURSORDATA = 'CURSORDATA';
 /**
@@ -6170,7 +6594,7 @@ exports.clearCursorEventDataCache = clearCursorEventDataCache;
 
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6199,15 +6623,15 @@ exports.cacheGetEventData = cacheGetEventData;
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var focus_1 = __webpack_require__(41);
-var getLiveRange_1 = __webpack_require__(6);
-var isVoidHtmlElement_1 = __webpack_require__(40);
+var focus_1 = __webpack_require__(40);
+var getLiveRange_1 = __webpack_require__(7);
+var isVoidHtmlElement_1 = __webpack_require__(39);
 var select_1 = __webpack_require__(11);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var HTML_EMPTY_DIV = '<div></div>';
@@ -6353,7 +6777,16 @@ function insertNodeAtSelection(core, node, option) {
             else if (roosterjs_editor_dom_1.getTagOfNode(endNode) == 'P') {
                 // Insert into a P tag may cause issues when the inserted content contains any block element.
                 // Change P tag to DIV to make sure it works well
-                roosterjs_editor_dom_1.changeElementTag(endNode, 'div', rawRange);
+                var rangeCache = new roosterjs_editor_dom_1.SelectionRange(rawRange).normalize();
+                var div = roosterjs_editor_dom_1.changeElementTag(endNode, 'div');
+                var start = rangeCache.start.node;
+                var end = rangeCache.end.node;
+                if (start != div &&
+                    end != div &&
+                    roosterjs_editor_dom_1.contains(core.contentDiv, start) &&
+                    roosterjs_editor_dom_1.contains(core.contentDiv, end)) {
+                    rawRange = rangeCache.getRange();
+                }
             }
         }
         var nodeForCursor = node.nodeType == 11 /* DocumentFragment */ ? node.lastChild : node;
@@ -6369,13 +6802,13 @@ function insertNodeAtSelection(core, node, option) {
 
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getLiveRange_1 = __webpack_require__(6);
+var getLiveRange_1 = __webpack_require__(7);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 function getContentTraverser(core, scope, position) {
     if (position === void 0) { position = 2 /* SelectionStart */; }
@@ -6405,13 +6838,13 @@ exports.default = getContentTraverser;
 
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var triggerEvent_1 = __webpack_require__(42);
+var triggerEvent_1 = __webpack_require__(41);
 function attachDomEvent(core, eventName, pluginEventType, beforeDispatch) {
     var onEvent = function (event) {
         if (beforeDispatch) {
@@ -6433,13 +6866,13 @@ exports.default = attachDomEvent;
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getLiveRange_1 = __webpack_require__(6);
+var getLiveRange_1 = __webpack_require__(7);
 var select_1 = __webpack_require__(11);
 var lib_1 = __webpack_require__(0);
 function formatWithUndo(core, callback, preserveSelection, skipAddingUndoAfterFormat) {
@@ -6478,44 +6911,16 @@ exports.default = formatWithUndo;
 
 
 /***/ }),
-/* 101 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var fromHtml_1 = __webpack_require__(22);
-// Wrap all the node with html and return the wrapped node
-// All nodes should be under same parent
-function wrapAll(nodes, htmlFragment) {
-    if (htmlFragment === void 0) { htmlFragment = '<div></div>'; }
-    if (!nodes || nodes.length == 0) {
-        return null;
-    }
-    var parentNode = nodes[0].parentNode;
-    var wrapper = parentNode;
-    if (htmlFragment) {
-        wrapper = fromHtml_1.default(htmlFragment, nodes[0].ownerDocument)[0];
-        if (parentNode) {
-            parentNode.insertBefore(wrapper, nodes[0]);
-        }
-        for (var i = 0; i < nodes.length; i++) {
-            wrapper.appendChild(nodes[i]);
-        }
-    }
-    return wrapper;
-}
-exports.default = wrapAll;
-
-
-/***/ }),
 /* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-// Removes the node and keep all children in place, return the parentNode where the children are attached
+/**
+ * Removes the node and keep all children in place, return the parentNode where the children are attached
+ * @param node the node to remove
+ */
 function unwrap(node) {
     // Unwrap requires a parentNode
     var parentNode = node ? node.parentNode : null;
@@ -6581,16 +6986,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var VISIBLE_ELEMENT_SELECTORS = ['table', 'img', 'li'];
 var ZERO_WIDTH_SPACE = '\u200b';
 /**
- * Check if a given node has visible content
+ * Check if a given node has no visible content
+ * @param node The node to check
+ * @param trimContent Whether trim the text content so that spaces will be treated as empty.
+ * Default value is false
+ * @returns True if there isn't any visible element inside node, otherwise false
  */
-function isNodeEmpty(node, trim) {
-    var trimmer = trim ? function (text) { return text.trim(); } : function (text) { return text; };
+function isNodeEmpty(node, trimContent) {
     if (node.nodeType == 3 /* Text */) {
-        return trimmer(node.data) != '';
+        return trim(node.nodeValue, trimContent) != '';
     }
     else if (node.nodeType == 1 /* Element */) {
         var element = node;
-        var textContent = trimmer(element.textContent);
+        var textContent = trim(element.textContent, trimContent);
         if (textContent != '' && textContent != ZERO_WIDTH_SPACE) {
             return false;
         }
@@ -6604,6 +7012,10 @@ function isNodeEmpty(node, trim) {
     return true;
 }
 exports.default = isNodeEmpty;
+function trim(s, trim) {
+    s = s.replace(ZERO_WIDTH_SPACE, '');
+    return trim ? s.trim() : s;
+}
 
 
 /***/ }),
@@ -6613,351 +7025,15 @@ exports.default = isNodeEmpty;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getTagOfNode_1 = __webpack_require__(8);
-var HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
+var getComputedStyle_1 = __webpack_require__(21);
+var getTagOfNode_1 = __webpack_require__(6);
 /**
- * Sanitize HTML string
- * This function will do the following work:
- * 1. Convert global CSS into inline CSS
- * 2. Remove dangerous HTML tags and attributes
- * 3. Remove useless CSS properties
- * @param html The input HTML
- * @param additionalStyleNodes additional style nodes for inline css converting
- * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
- * @param propertyCallbacks A callback function map to handle HTML properties
+ * Change tag of ab HTML Element to a new one, and replace it from DOM tree
+ * @param element The element to change tag
+ * @param newTag New tag to change to
+ * @returns The new Node with new tag
  */
-function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, propertyCallbacks, currentStyle) {
-    var parser = new DOMParser();
-    var matches = HTML_REGEX.exec(html);
-    html = matches ? matches[0] : html;
-    var doc;
-    if (!html ||
-        !html.trim() ||
-        !(doc = parser.parseFromString(html, 'text/html')) ||
-        !doc.body ||
-        !doc.body.firstChild) {
-        return '';
-    }
-    // 1. Convert global CSS into inline CSS
-    applyInlineStyle(doc, additionalStyleNodes);
-    // 2, 3: Remove dangerous HTML tags and attributes, remove useless CSS properties
-    if (!convertInlineCssOnly) {
-        var callbackPropertyNames = (propertyCallbacks ? Object.keys(propertyCallbacks) : []).map(function (name) { return name.toLowerCase(); });
-        removeUnusedCssAndDangerousContent(doc.body, callbackPropertyNames, propertyCallbacks, currentStyle || {});
-    }
-    return doc.body.innerHTML;
-}
-exports.default = sanitizeHtml;
-var ALLOWED_HTML_TAGS = [
-    'BODY',
-    'H1',
-    'H2',
-    'H3',
-    'H4',
-    'H5',
-    'H6',
-    'FORM',
-    'P',
-    'BR',
-    'HR',
-    'ACRONYM',
-    'ABBR',
-    'ADDRESS',
-    'B',
-    'BDI',
-    'BDO',
-    'BIG',
-    'BLOCKQUOTE',
-    'CENTER',
-    'CITE',
-    'CODE',
-    'DEL',
-    'DFN',
-    'EM',
-    'FONT',
-    'I',
-    'INS',
-    'KBD',
-    'MARK',
-    'METER',
-    'PRE',
-    'PROGRESS',
-    'Q',
-    'RP',
-    'RT',
-    'RUBY',
-    'S',
-    'SAMP',
-    'SMALL',
-    'STRIKE',
-    'STRONG',
-    'SUB',
-    'SUP',
-    'TEMPLATE',
-    'TIME',
-    'TT',
-    'U',
-    'VAR',
-    'WBR',
-    'XMP',
-    'INPUT',
-    'TEXTAREA',
-    'BUTTON',
-    'SELECT',
-    'OPTGROUP',
-    'OPTION',
-    'LABEL',
-    'FIELDSET',
-    'LEGEND',
-    'DATALIST',
-    'OUTPUT',
-    'IMG',
-    'MAP',
-    'AREA',
-    'CANVAS',
-    'FIGCAPTION',
-    'FIGURE',
-    'PICTURE',
-    'A',
-    'NAV',
-    'UL',
-    'OL',
-    'LI',
-    'DIR',
-    'UL',
-    'DL',
-    'DT',
-    'DD',
-    'MENU',
-    'MENUITEM',
-    'TABLE',
-    'CAPTION',
-    'TH',
-    'TR',
-    'TD',
-    'THEAD',
-    'TBODY',
-    'TFOOT',
-    'COL',
-    'COLGROUP',
-    'DIV',
-    'SPAN',
-    'HEADER',
-    'FOOTER',
-    'MAIN',
-    'SECTION',
-    'ARTICLE',
-    'ASIDE',
-    'DETAILS',
-    'DIALOG',
-    'SUMMARY',
-    'DATA',
-];
-var ALLOWED_HTML_ATTRIBUTES = [
-    'accept',
-    'align',
-    'alt',
-    'checked',
-    'cite',
-    'cols',
-    'colspan',
-    'contextmenu',
-    'coords',
-    'datetime',
-    'default',
-    'dir',
-    'dirname',
-    'disabled',
-    'download',
-    'headers',
-    'height',
-    'hidden',
-    'high',
-    'href',
-    'hreflang',
-    'ismap',
-    'kind',
-    'label',
-    'lang',
-    'list',
-    'low',
-    'max',
-    'maxlength',
-    'media',
-    'min',
-    'multiple',
-    'open',
-    'optimum',
-    'pattern',
-    'placeholder',
-    'readonly',
-    'rel',
-    'required',
-    'reversed',
-    'rows',
-    'rowspan',
-    'scope',
-    'selected',
-    'shape',
-    'size',
-    'sizes',
-    'span',
-    'spellcheck',
-    'src',
-    'srclang',
-    'srcset',
-    'start',
-    'step',
-    'style',
-    'tabindex',
-    'target',
-    'title',
-    'translate',
-    'type',
-    'usemap',
-    'value',
-    'width',
-    'wrap',
-];
-function applyInlineStyle(doc, additionalStyleNodes) {
-    var styleNodes = toArray(doc.querySelectorAll('style'));
-    var styleSheets = (additionalStyleNodes || [])
-        .reverse()
-        .map(function (node) { return node.sheet; })
-        .concat(styleNodes.map(function (node) { return node.sheet; }).reverse());
-    for (var _i = 0, styleSheets_1 = styleSheets; _i < styleSheets_1.length; _i++) {
-        var styleSheet = styleSheets_1[_i];
-        var _loop_1 = function (j) {
-            // Skip any none-style rule, i.e. @page
-            var styleRule = styleSheet.cssRules[j];
-            var text = styleRule && styleRule.style ? styleRule.style.cssText : null;
-            if (styleRule.type != CSSRule.STYLE_RULE || !text || !styleRule.selectorText) {
-                return "continue";
-            }
-            // Make sure the selector is not empty
-            for (var _i = 0, _a = styleRule.selectorText.split(','); _i < _a.length; _i++) {
-                var selector = _a[_i];
-                if (!selector || !selector.trim() || selector.indexOf(':') >= 0) {
-                    continue;
-                }
-                var nodes = toArray(doc.querySelectorAll(selector));
-                // Always put existing styles after so that they have higher priority
-                // Which means if both global style and inline style apply to the same element,
-                // inline style will have higher priority
-                nodes.forEach(function (node) {
-                    return node.setAttribute('style', text + (node.getAttribute('style') || ''));
-                });
-            }
-        };
-        for (var j = styleSheet.cssRules.length - 1; j >= 0; j--) {
-            _loop_1(j);
-        }
-    }
-}
-function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propertyCallbacks, currentStyle) {
-    var thisStyle = Object.assign ? Object.assign({}, currentStyle) : {};
-    var nodeType = node.nodeType;
-    var tag = getTagOfNode_1.default(node) || '';
-    var isElement = nodeType == 1 /* Element */;
-    var isText = nodeType == 3 /* Text */;
-    if ((isElement && ALLOWED_HTML_TAGS.indexOf(tag) < 0 && tag.indexOf(':') < 0) ||
-        (isText && /^[\r\n]*$/g.test(node.nodeValue)) ||
-        (!isElement && !isText)) {
-        node.parentNode.removeChild(node);
-    }
-    else if (nodeType == 1 /* Element */) {
-        var element = node;
-        if (element.hasAttribute('style')) {
-            removeUnusedCss(element, thisStyle);
-        }
-        removeDisallowedAttributes(element, callbackPropertyNames, propertyCallbacks);
-        var child = element.firstChild;
-        var next = void 0;
-        for (; child; child = next) {
-            next = child.nextSibling;
-            removeUnusedCssAndDangerousContent(child, callbackPropertyNames, propertyCallbacks, thisStyle);
-        }
-    }
-}
-function removeUnusedCss(element, thisStyle) {
-    var source = element
-        .getAttribute('style')
-        .split(';')
-        .filter(function (style) { return style && style.trim() != ''; });
-    var result = source.filter(function (style) {
-        var pair = style.split(':');
-        if (pair.length == 2) {
-            var name_1 = pair[0].trim().toLowerCase();
-            var value = pair[1].trim().toLowerCase();
-            var isInheritable = thisStyle[name_1] != undefined;
-            var keep = value != 'inherit' &&
-                ((isInheritable && value != thisStyle[name_1]) ||
-                    (!isInheritable && value != 'initial' && value != 'normal')) &&
-                !isDangerousCss(name_1, value);
-            if (keep && isInheritable) {
-                thisStyle[name_1] = value;
-            }
-            return keep;
-        }
-        else {
-            return false;
-        }
-    });
-    if (source.length != result.length) {
-        if (result.length > 0) {
-            element.setAttribute('style', result.join(';'));
-        }
-        else {
-            element.removeAttribute('style');
-        }
-    }
-}
-function isDangerousCss(name, value) {
-    if (name == 'position') {
-        return true;
-    }
-    if (value.indexOf('expression') >= 0) {
-        return true;
-    }
-    return false;
-}
-function removeDisallowedAttributes(element, callbackPropertyNames, propertyCallbacks) {
-    for (var i = element.attributes.length - 1; i >= 0; i--) {
-        var attribute = element.attributes[i];
-        var name_2 = attribute.name.toLowerCase().trim();
-        var value = attribute.value.trim();
-        if (callbackPropertyNames.indexOf(name_2) >= 0) {
-            value = propertyCallbacks[name_2](value);
-            if (value != null) {
-                attribute.value = value;
-            }
-            else {
-                element.removeAttribute(name_2);
-            }
-        }
-        else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name_2) < 0 ||
-            value.toLowerCase().indexOf('script:') >= 0) {
-            element.removeAttribute(attribute.name);
-        }
-    }
-}
-function toArray(list) {
-    return [].slice.call(list);
-}
-
-
-/***/ }),
-/* 106 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var SelectionRange_1 = __webpack_require__(16);
-var getComputedStyle_1 = __webpack_require__(14);
-var getTagOfNode_1 = __webpack_require__(8);
-function changeElementTag(element, newTag, range) {
-    var selectionRange = range ? new SelectionRange_1.default(range).normalize() : null;
+function changeElementTag(element, newTag) {
     var newElement = element.ownerDocument.createElement(newTag);
     for (var i = 0; i < element.attributes.length; i++) {
         var attr = element.attributes[i];
@@ -6974,27 +7050,23 @@ function changeElementTag(element, newTag, range) {
     if (element.parentNode) {
         element.parentNode.replaceChild(newElement, element);
     }
-    if (selectionRange &&
-        selectionRange.start.node != element &&
-        selectionRange.end.node != element) {
-        try {
-            range.setStart(selectionRange.start.node, selectionRange.start.offset);
-            range.setEnd(selectionRange.end.node, selectionRange.end.offset);
-        }
-        catch (e) { }
-    }
     return newElement;
 }
 exports.default = changeElementTag;
 
 
 /***/ }),
-/* 107 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Apply format to an HTML element
+ * @param element The HTML element to apply format to
+ * @param format The format to apply
+ */
 function applyFormat(element, format) {
     if (format) {
         var elementStyle = element.style;
@@ -7025,7 +7097,7 @@ exports.default = applyFormat;
 
 
 /***/ }),
-/* 108 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7191,13 +7263,13 @@ function getBorderStyle(style) {
 
 
 /***/ }),
-/* 109 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorSelection_1 = __webpack_require__(44);
+var EditorSelection_1 = __webpack_require__(43);
 // This is selection scoper that provide a start inline as the start of the selection
 // and checks if a block falls in the selection (isBlockInScope)
 // last trimInlineElement to trim any inline element to return a partial that falls in the selection
@@ -7228,15 +7300,15 @@ exports.default = SelectionScoper;
 
 
 /***/ }),
-/* 110 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(13);
-var getInlineElementAtNode_1 = __webpack_require__(7);
-var shouldSkipNode_1 = __webpack_require__(24);
+var getInlineElementAtNode_1 = __webpack_require__(8);
+var shouldSkipNode_1 = __webpack_require__(22);
 var getLeafSibling_1 = __webpack_require__(4);
 /**
  * Get inline element before a position
@@ -7293,13 +7365,13 @@ function getInlineElementBeforeAfterPoint(rootNode, position, isAfter) {
 
 
 /***/ }),
-/* 111 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorSelection_1 = __webpack_require__(44);
+var EditorSelection_1 = __webpack_require__(43);
 // This provides traversing content in a selection start block
 // This is commonly used for those cursor context sensitive plugin
 // i.e. Mentions, Hashtag etc. they want to know text being typed at cursor
@@ -7378,14 +7450,14 @@ exports.default = SelectionBlockScoper;
 
 
 /***/ }),
-/* 112 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getFirstLastInlineElement_1 = __webpack_require__(21);
-var getLeafNode_1 = __webpack_require__(23);
+var getFirstLastInlineElement_1 = __webpack_require__(19);
+var getLeafNode_1 = __webpack_require__(20);
 var getBlockElementAtNode_1 = __webpack_require__(12);
 // This provides scoper for traversing the entire editor body starting from the beginning
 var BodyScoper = /** @class */ (function () {
@@ -7414,14 +7486,14 @@ exports.default = BodyScoper;
 
 
 /***/ }),
-/* 113 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getNextPreviousInlineElement_1 = __webpack_require__(49);
-var getNextPreviousBlockElement_1 = __webpack_require__(45);
+var getNextPreviousInlineElement_1 = __webpack_require__(48);
+var getNextPreviousBlockElement_1 = __webpack_require__(44);
 // The provides traversing of content inside editor.
 // There are two ways to traverse, block by block, or inline element by inline element
 // Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
@@ -7543,7 +7615,7 @@ exports.default = ContentTraverser;
 
 
 /***/ }),
-/* 114 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7606,13 +7678,13 @@ exports.default = UndoSnapshots;
 
 
 /***/ }),
-/* 115 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Undo_1 = __webpack_require__(53);
+var Undo_1 = __webpack_require__(54);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var EditorCore = {
     create: function (contentDiv, options) {
@@ -7645,23 +7717,23 @@ function calcDefaultFormat(node, baseFormat) {
 
 
 /***/ }),
-/* 116 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorCore_1 = __webpack_require__(115);
-var formatWithUndo_1 = __webpack_require__(100);
-var attachDomEvent_1 = __webpack_require__(99);
-var BrowserData_1 = __webpack_require__(26);
-var focus_1 = __webpack_require__(41);
-var getContentTraverser_1 = __webpack_require__(98);
-var getLiveRange_1 = __webpack_require__(6);
-var hasFocus_1 = __webpack_require__(19);
-var insertNode_1 = __webpack_require__(97);
+var EditorCore_1 = __webpack_require__(114);
+var formatWithUndo_1 = __webpack_require__(101);
+var attachDomEvent_1 = __webpack_require__(100);
+var BrowserData_1 = __webpack_require__(25);
+var focus_1 = __webpack_require__(40);
+var getContentTraverser_1 = __webpack_require__(99);
+var getLiveRange_1 = __webpack_require__(7);
+var hasFocus_1 = __webpack_require__(17);
+var insertNode_1 = __webpack_require__(98);
 var select_1 = __webpack_require__(11);
-var triggerEvent_1 = __webpack_require__(42);
+var triggerEvent_1 = __webpack_require__(41);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var IS_IE_OR_EDGE = BrowserData_1.default.isIE || BrowserData_1.default.isEdge;
 var Editor = /** @class */ (function () {
@@ -7702,7 +7774,7 @@ var Editor = /** @class */ (function () {
                     // Only fix the balanced start-end block where start and end node is under same parent
                     // The focus node could be pointing to the content div, normalize it to have it point to a child first
                     var focusOffset = range.start.offset;
-                    var element = roosterjs_editor_dom_1.wrapAll(blockElement.getContentNodes());
+                    var element = roosterjs_editor_dom_1.wrap(blockElement.getContentNodes());
                     if (roosterjs_editor_dom_1.getTagOfNode(blockElement.getStartNode()) == 'BR') {
                         // if the block is just BR, apply default format
                         // Otherwise, leave it as it is as we don't want to change the style for existing data
@@ -7893,7 +7965,7 @@ var Editor = /** @class */ (function () {
             // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
             // separately to show up on its own line
             if (option && option.insertOnNewLine && allNodes.length > 0) {
-                allNodes = [roosterjs_editor_dom_1.wrapAll(allNodes)];
+                allNodes = [roosterjs_editor_dom_1.wrap(allNodes)];
             }
             for (var i = 0; i < allNodes.length; i++) {
                 this.insertNode(allNodes[i], option);
@@ -8129,7 +8201,7 @@ exports.default = Editor;
 
 
 /***/ }),
-/* 117 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8262,13 +8334,13 @@ exports.default = DefaultShortcut;
 
 
 /***/ }),
-/* 118 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_plugins_1 = __webpack_require__(54);
+var roosterjs_editor_plugins_1 = __webpack_require__(55);
 var roosterjs_editor_core_1 = __webpack_require__(1);
 /**
  * Create an editor instance with most common options
@@ -8303,7 +8375,7 @@ exports.default = createEditor;
 
 
 /***/ }),
-/* 119 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8312,16 +8384,16 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-var createEditor_1 = __webpack_require__(118);
+var createEditor_1 = __webpack_require__(117);
 exports.createEditor = createEditor_1.default;
-__export(__webpack_require__(61));
+__export(__webpack_require__(62));
 __export(__webpack_require__(0));
 __export(__webpack_require__(1));
 __export(__webpack_require__(3));
-__export(__webpack_require__(54));
-__export(__webpack_require__(60));
-__export(__webpack_require__(58));
-__export(__webpack_require__(56));
+__export(__webpack_require__(55));
+__export(__webpack_require__(61));
+__export(__webpack_require__(59));
+__export(__webpack_require__(57));
 
 
 /***/ })

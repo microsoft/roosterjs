@@ -60,4 +60,3 @@ export { default as isNodeEmpty } from './utils/isNodeEmpty';
 export { default as splitParentNode } from './utils/splitParentNode';
 export { default as unwrap } from './utils/unwrap';
 export { default as wrap } from './utils/wrap';
-export { default as wrapAll } from './utils/wrapAll';
