@@ -66,7 +66,7 @@ define(function() { return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 118);
+/******/ 	return __webpack_require__(__webpack_require__.s = 117);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -104,26 +104,21 @@ var NodeBlockElement_1 = __webpack_require__(47);
 exports.NodeBlockElement = NodeBlockElement_1.default;
 var StartEndBlockElement_1 = __webpack_require__(18);
 exports.StartEndBlockElement = StartEndBlockElement_1.default;
-var getBlockElementAtNode_1 = __webpack_require__(12);
+var getBlockElementAtNode_1 = __webpack_require__(7);
 exports.getBlockElementAtNode = getBlockElementAtNode_1.default;
 var getNextPreviousBlockElement_1 = __webpack_require__(44);
 exports.getNextBlockElement = getNextPreviousBlockElement_1.getNextBlockElement;
 exports.getPreviousBlockElement = getNextPreviousBlockElement_1.getPreviousBlockElement;
-var ContentTraverser_1 = __webpack_require__(112);
+// Content Traverser
+var ContentTraverser_1 = __webpack_require__(111);
 exports.ContentTraverser = ContentTraverser_1.default;
-var BodyScoper_1 = __webpack_require__(111);
-exports.BodyScoper = BodyScoper_1.default;
-var SelectionBlockScoper_1 = __webpack_require__(110);
-exports.SelectionBlockScoper = SelectionBlockScoper_1.default;
-var SelectionScoper_1 = __webpack_require__(108);
-exports.SelectionScoper = SelectionScoper_1.default;
 // Table
-var VTable_1 = __webpack_require__(107);
+var VTable_1 = __webpack_require__(106);
 exports.VTable = VTable_1.default;
 // Utils
-var applyFormat_1 = __webpack_require__(106);
+var applyFormat_1 = __webpack_require__(105);
 exports.applyFormat = applyFormat_1.default;
-var changeElementTag_1 = __webpack_require__(105);
+var changeElementTag_1 = __webpack_require__(104);
 exports.changeElementTag = changeElementTag_1.default;
 var contains_1 = __webpack_require__(14);
 exports.contains = contains_1.default;
@@ -141,11 +136,11 @@ var isBlockElement_1 = __webpack_require__(45);
 exports.isBlockElement = isBlockElement_1.default;
 var isDocumentPosition_1 = __webpack_require__(9);
 exports.isDocumentPosition = isDocumentPosition_1.default;
-var isNodeEmpty_1 = __webpack_require__(104);
+var isNodeEmpty_1 = __webpack_require__(103);
 exports.isNodeEmpty = isNodeEmpty_1.default;
-var splitParentNode_1 = __webpack_require__(103);
+var splitParentNode_1 = __webpack_require__(102);
 exports.splitParentNode = splitParentNode_1.default;
-var unwrap_1 = __webpack_require__(102);
+var unwrap_1 = __webpack_require__(101);
 exports.unwrap = unwrap_1.default;
 var wrap_1 = __webpack_require__(51);
 exports.wrap = wrap_1.default;
@@ -158,7 +153,7 @@ exports.wrap = wrap_1.default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Editor_1 = __webpack_require__(115);
+var Editor_1 = __webpack_require__(114);
 exports.Editor = Editor_1.default;
 var Undo_1 = __webpack_require__(54);
 exports.Undo = Undo_1.default;
@@ -415,18 +410,136 @@ exports.default = getTagOfNode;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var isRangeInContainer_1 = __webpack_require__(42);
-function getLiveRange(core) {
-    var selection = core.document.defaultView.getSelection();
-    if (selection && selection.rangeCount > 0) {
-        var range = selection.getRangeAt(0);
-        if (isRangeInContainer_1.default(range, core.contentDiv)) {
-            return range;
-        }
+var contains_1 = __webpack_require__(14);
+var isBlockElement_1 = __webpack_require__(45);
+var NodeBlockElement_1 = __webpack_require__(47);
+var StartEndBlockElement_1 = __webpack_require__(18);
+var getLeafSibling_1 = __webpack_require__(5);
+var getTagOfNode_1 = __webpack_require__(6);
+/**
+ * This produces a block element from a a node
+ * It needs to account for various HTML structure. Examples:
+ * 1) <ced><div>abc</div></ced>
+ *   This is most common the case, user passes in a node pointing to abc, and get back a block representing <div>abc</div>
+ * 2) <ced><p><br></p></ced>
+ *   Common content for empty block, user passes node pointing to <br>, and get back a block representing <p><br></p>
+ * 3) <ced>abc</ced>
+ *   Not common, but does happen. It is still a block in user's view. User passes in abc, and get back a start-end block representing abc
+ *   NOTE: abc could be just one node. However, since it is not a html block, it is more appropriate to use start-end block although they point to same node
+ * 4) <ced><div>abc<br>123</div></ced>
+ *   A bit tricky, but can happen when user use Ctrl+Enter which simply inserts a <BR> to create a link break. There're two blocks:
+ *   block1: 1) abc<br> block2: 123
+ * 5) <ced><div>abc<div>123</div></div></ced>
+ *   Nesting div and there is text node in same level as a DIV. Two blocks: 1) abc 2) <div>123</div>
+ * 6) <ced><div>abc<span>123<br>456</span></div></ced>
+ *   This is really tricky. Essentially there is a <BR> in middle of a span breaking the span into two blocks;
+ *   block1: abc<span>123<br> block2: 456
+ * In summary, given any arbitary node (leaf), to identify the head and tail of the block, following rules need to be followed:
+ * 1) to identify the head, it needs to crawl DOM tre left/up till a block node or BR is encountered
+ * 2) same for identifying tail
+ * 3) should also apply a block ceiling, meaning as it crawls up, it should stop at a block node
+ */
+function getBlockElementAtNode(rootNode, node) {
+    if (!node || !contains_1.default(rootNode, node)) {
+        return null;
     }
-    return null;
+    else if (isBlockElement_1.default(node)) {
+        return new NodeBlockElement_1.default(node);
+    }
+    else {
+        var blockElement = void 0;
+        // Identify the containing block. This serves as ceiling for traversing down below
+        // NOTE: this container block could be just the rootNode,
+        // which cannot be used to create block element. We will special case handle it later on
+        var containerBlockNode = node.parentNode;
+        while (contains_1.default(rootNode, containerBlockNode) && !isBlockElement_1.default(containerBlockNode)) {
+            containerBlockNode = containerBlockNode.parentNode;
+        }
+        // Find the head and leaf node in the block
+        var headNode = findHeadTailLeafNodeInBlock(node, containerBlockNode, false /*isTail*/);
+        var tailNode = findHeadTailLeafNodeInBlock(node, containerBlockNode, true /*isTail*/);
+        // TODO: assert headNode and tailNode to be leaf, and are within containerBlockNode
+        // At this point, we have the head and tail of a block, here are some examples and where head and tail point to
+        // 1) <ced><div>hello<br></div></ced>, head: hello, tail: <br>
+        // 2) <ced><div>hello<span style="font-family: Arial">world</span></div></ced>, head: hello, tail: world
+        // Both are actually completely and exclusively wrapped in a parent div, and can be represented with a Node block
+        // So we shall try to collapse as much as we can to the nearest common ancester
+        var parentNode = headNode.parentNode;
+        while (parentNode.firstChild == headNode && parentNode != containerBlockNode) {
+            if (contains_1.default(parentNode, tailNode)) {
+                // this is an indication that the nearest common ancester has been reached
+                break;
+            }
+            else {
+                headNode = parentNode;
+                parentNode = parentNode.parentNode;
+            }
+        }
+        // Do same for the tail
+        parentNode = tailNode.parentNode;
+        while (parentNode.lastChild == tailNode && parentNode != containerBlockNode) {
+            if (contains_1.default(parentNode, headNode)) {
+                // this is an indication that the nearest common ancester has been reached
+                break;
+            }
+            else {
+                tailNode = parentNode;
+                parentNode = parentNode.parentNode;
+            }
+        }
+        if (headNode.parentNode != tailNode.parentNode) {
+            // Un-balanced start and end, create a start-end block
+            blockElement = new StartEndBlockElement_1.default(headNode, tailNode);
+        }
+        else {
+            // Balanced start and end (point to same parent), need to see if further collapsing can be done
+            parentNode = headNode.parentNode;
+            while (parentNode.firstChild == headNode && parentNode.lastChild == tailNode) {
+                if (parentNode == containerBlockNode) {
+                    // Has reached the container block
+                    if (containerBlockNode != rootNode) {
+                        // If the container block is not the root, use the container block
+                        headNode = tailNode = parentNode;
+                    }
+                    break;
+                }
+                else {
+                    // Continue collapsing to parent
+                    headNode = tailNode = parentNode;
+                    parentNode = parentNode.parentNode;
+                }
+            }
+            // If head and tail are same and it is a block element, create NodeBlock, otherwise start-end block
+            blockElement =
+                headNode == tailNode && isBlockElement_1.default(headNode)
+                    ? new NodeBlockElement_1.default(headNode)
+                    : new StartEndBlockElement_1.default(headNode, tailNode);
+        }
+        return blockElement;
+    }
 }
-exports.default = getLiveRange;
+exports.default = getBlockElementAtNode;
+// Given a node and container block, identify the first leaf (head) node
+// A leaf node is defined as deepest first node in a block
+// i.e. <div><span style="font-family: Arial">abc</span></div>, abc is the head leaf of the block
+// Often <br> or a child <div> is used to create a block. In that case, the leaf after the sibling div or br should be the head leaf
+// i.e. <div>123<br>abc</div>, abc is the head of a block because of a previous sibling <br>
+// i.e. <div><div>123</div>abc</div>, abc is also the head of a block because of a previous sibling <div>
+// To identify the head leaf of a block, we basically start from a node, go all the way towards left till a sibling <div> or <br>
+// in DOM tree traversal, it is three traversal:
+// 1) previous sibling traversal
+// 2) parent traversal looking for a previous sibling from parent
+// 3) last child traversal, repeat from 1-3
+function findHeadTailLeafNodeInBlock(node, container, isTail) {
+    var sibling = node;
+    var isBr = false;
+    do {
+        node = sibling;
+        sibling = getLeafSibling_1.getLeafSibling(container, node, isTail, isBlockElement_1.default);
+        isBr = getTagOfNode_1.default(sibling) == 'BR';
+    } while (sibling && !isBlockElement_1.default(sibling) && !isBr);
+    return isBr && isTail ? sibling : node;
+}
 
 
 /***/ }),
@@ -613,136 +726,18 @@ exports.default = select;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var contains_1 = __webpack_require__(14);
-var isBlockElement_1 = __webpack_require__(45);
-var NodeBlockElement_1 = __webpack_require__(47);
-var StartEndBlockElement_1 = __webpack_require__(18);
-var getLeafSibling_1 = __webpack_require__(5);
-var getTagOfNode_1 = __webpack_require__(6);
-/**
- * This produces a block element from a a node
- * It needs to account for various HTML structure. Examples:
- * 1) <ced><div>abc</div></ced>
- *   This is most common the case, user passes in a node pointing to abc, and get back a block representing <div>abc</div>
- * 2) <ced><p><br></p></ced>
- *   Common content for empty block, user passes node pointing to <br>, and get back a block representing <p><br></p>
- * 3) <ced>abc</ced>
- *   Not common, but does happen. It is still a block in user's view. User passes in abc, and get back a start-end block representing abc
- *   NOTE: abc could be just one node. However, since it is not a html block, it is more appropriate to use start-end block although they point to same node
- * 4) <ced><div>abc<br>123</div></ced>
- *   A bit tricky, but can happen when user use Ctrl+Enter which simply inserts a <BR> to create a link break. There're two blocks:
- *   block1: 1) abc<br> block2: 123
- * 5) <ced><div>abc<div>123</div></div></ced>
- *   Nesting div and there is text node in same level as a DIV. Two blocks: 1) abc 2) <div>123</div>
- * 6) <ced><div>abc<span>123<br>456</span></div></ced>
- *   This is really tricky. Essentially there is a <BR> in middle of a span breaking the span into two blocks;
- *   block1: abc<span>123<br> block2: 456
- * In summary, given any arbitary node (leaf), to identify the head and tail of the block, following rules need to be followed:
- * 1) to identify the head, it needs to crawl DOM tre left/up till a block node or BR is encountered
- * 2) same for identifying tail
- * 3) should also apply a block ceiling, meaning as it crawls up, it should stop at a block node
- */
-function getBlockElementAtNode(rootNode, node) {
-    if (!node || !contains_1.default(rootNode, node)) {
-        return null;
+var isRangeInContainer_1 = __webpack_require__(42);
+function getLiveRange(core) {
+    var selection = core.document.defaultView.getSelection();
+    if (selection && selection.rangeCount > 0) {
+        var range = selection.getRangeAt(0);
+        if (isRangeInContainer_1.default(range, core.contentDiv)) {
+            return range;
+        }
     }
-    else if (isBlockElement_1.default(node)) {
-        return new NodeBlockElement_1.default(node);
-    }
-    else {
-        var blockElement = void 0;
-        // Identify the containing block. This serves as ceiling for traversing down below
-        // NOTE: this container block could be just the rootNode,
-        // which cannot be used to create block element. We will special case handle it later on
-        var containerBlockNode = node.parentNode;
-        while (contains_1.default(rootNode, containerBlockNode) && !isBlockElement_1.default(containerBlockNode)) {
-            containerBlockNode = containerBlockNode.parentNode;
-        }
-        // Find the head and leaf node in the block
-        var headNode = findHeadTailLeafNodeInBlock(node, containerBlockNode, false /*isTail*/);
-        var tailNode = findHeadTailLeafNodeInBlock(node, containerBlockNode, true /*isTail*/);
-        // TODO: assert headNode and tailNode to be leaf, and are within containerBlockNode
-        // At this point, we have the head and tail of a block, here are some examples and where head and tail point to
-        // 1) <ced><div>hello<br></div></ced>, head: hello, tail: <br>
-        // 2) <ced><div>hello<span style="font-family: Arial">world</span></div></ced>, head: hello, tail: world
-        // Both are actually completely and exclusively wrapped in a parent div, and can be represented with a Node block
-        // So we shall try to collapse as much as we can to the nearest common ancester
-        var parentNode = headNode.parentNode;
-        while (parentNode.firstChild == headNode && parentNode != containerBlockNode) {
-            if (contains_1.default(parentNode, tailNode)) {
-                // this is an indication that the nearest common ancester has been reached
-                break;
-            }
-            else {
-                headNode = parentNode;
-                parentNode = parentNode.parentNode;
-            }
-        }
-        // Do same for the tail
-        parentNode = tailNode.parentNode;
-        while (parentNode.lastChild == tailNode && parentNode != containerBlockNode) {
-            if (contains_1.default(parentNode, headNode)) {
-                // this is an indication that the nearest common ancester has been reached
-                break;
-            }
-            else {
-                tailNode = parentNode;
-                parentNode = parentNode.parentNode;
-            }
-        }
-        if (headNode.parentNode != tailNode.parentNode) {
-            // Un-balanced start and end, create a start-end block
-            blockElement = new StartEndBlockElement_1.default(headNode, tailNode);
-        }
-        else {
-            // Balanced start and end (point to same parent), need to see if further collapsing can be done
-            parentNode = headNode.parentNode;
-            while (parentNode.firstChild == headNode && parentNode.lastChild == tailNode) {
-                if (parentNode == containerBlockNode) {
-                    // Has reached the container block
-                    if (containerBlockNode != rootNode) {
-                        // If the container block is not the root, use the container block
-                        headNode = tailNode = parentNode;
-                    }
-                    break;
-                }
-                else {
-                    // Continue collapsing to parent
-                    headNode = tailNode = parentNode;
-                    parentNode = parentNode.parentNode;
-                }
-            }
-            // If head and tail are same and it is a block element, create NodeBlock, otherwise start-end block
-            blockElement =
-                headNode == tailNode && isBlockElement_1.default(headNode)
-                    ? new NodeBlockElement_1.default(headNode)
-                    : new StartEndBlockElement_1.default(headNode, tailNode);
-        }
-        return blockElement;
-    }
+    return null;
 }
-exports.default = getBlockElementAtNode;
-// Given a node and container block, identify the first leaf (head) node
-// A leaf node is defined as deepest first node in a block
-// i.e. <div><span style="font-family: Arial">abc</span></div>, abc is the head leaf of the block
-// Often <br> or a child <div> is used to create a block. In that case, the leaf after the sibling div or br should be the head leaf
-// i.e. <div>123<br>abc</div>, abc is the head of a block because of a previous sibling <br>
-// i.e. <div><div>123</div>abc</div>, abc is also the head of a block because of a previous sibling <div>
-// To identify the head leaf of a block, we basically start from a node, go all the way towards left till a sibling <div> or <br>
-// in DOM tree traversal, it is three traversal:
-// 1) previous sibling traversal
-// 2) parent traversal looking for a previous sibling from parent
-// 3) last child traversal, repeat from 1-3
-function findHeadTailLeafNodeInBlock(node, container, isTail) {
-    var sibling = node;
-    var isBr = false;
-    do {
-        node = sibling;
-        sibling = getLeafSibling_1.getLeafSibling(container, node, isTail, isBlockElement_1.default);
-        isBr = getTagOfNode_1.default(sibling) == 'BR';
-    } while (sibling && !isBlockElement_1.default(sibling) && !isBr);
-    return isBr && isTail ? sibling : node;
-}
+exports.default = getLiveRange;
 
 
 /***/ }),
@@ -2091,7 +2086,7 @@ exports.default = isVoidHtmlElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getLiveRange_1 = __webpack_require__(7);
+var getLiveRange_1 = __webpack_require__(12);
 var hasFocus_1 = __webpack_require__(17);
 var isVoidHtmlElement_1 = __webpack_require__(39);
 var select_1 = __webpack_require__(11);
@@ -2201,226 +2196,61 @@ exports.default = isRangeInContainer;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(13);
-var getBlockElementAtNode_1 = __webpack_require__(12);
-var getInlineElementBeforeAfter_1 = __webpack_require__(109);
-// This is a utility like class that produces editor point/inline/block element around or within a selection range
-var EditorSelection = /** @class */ (function () {
-    function EditorSelection(rootNode, selectionRange) {
-        this.rootNode = rootNode;
-        this.selectionRange = selectionRange;
-        this.startEndCalculated = false;
-        this.selectionRange = selectionRange.normalize();
+var getInlineElementAtNode_1 = __webpack_require__(8);
+var shouldSkipNode_1 = __webpack_require__(22);
+var getLeafSibling_1 = __webpack_require__(5);
+/**
+ * Get inline element before a position
+ * This is mostly used when we want to get the inline element before selection/cursor
+ * There is a possible that the cursor is in middle of an inline element (i.e. mid of a text node)
+ * in this case, we only want to return what is before cursor (a partial of an inline) to indicate
+ * that we're in middle.
+ * @param rootNode Root node of current scope, use for create InlineElement
+ * @param position The position to get InlineElement before
+ */
+function getInlineElementBefore(rootNode, position) {
+    return getInlineElementBeforeAfterPoint(rootNode, position, false /*isAfter*/);
+}
+exports.getInlineElementBefore = getInlineElementBefore;
+/**
+ * Get inline element after a position
+ * This is mostly used when we want to get the inline element after selection/cursor
+ * There is a possible that the cursor is in middle of an inline element (i.e. mid of a text node)
+ * in this case, we only want to return what is before cursor (a partial of an inline) to indicate
+ * that we're in middle.
+ * @param rootNode Root node of current scope, use for create InlineElement
+ * @param position The position to get InlineElement after
+ */
+function getInlineElementAfter(rootNode, position) {
+    return getInlineElementBeforeAfterPoint(rootNode, position, true /*isAfter*/);
+}
+exports.getInlineElementAfter = getInlineElementAfter;
+function getInlineElementBeforeAfterPoint(rootNode, position, isAfter) {
+    if (!position || !position.node) {
+        return null;
     }
-    Object.defineProperty(EditorSelection.prototype, "collapsed", {
-        // Get the collapsed state of the selection
-        get: function () {
-            return this.selectionRange.collapsed;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(EditorSelection.prototype, "inlineElementBeforeStart", {
-        // Get the inline element before start of the selection
-        get: function () {
-            return getInlineElementBeforeAfter_1.getInlineElementBefore(this.rootNode, this.selectionRange.start);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(EditorSelection.prototype, "startInlineElement", {
-        // Get the start inline element of the selection (the first inline after the selection)
-        get: function () {
-            this.calculateStartEndIfNecessory();
-            return this.startInline;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(EditorSelection.prototype, "endInlineElement", {
-        // Get the inline element at the end of the selection
-        get: function () {
-            this.calculateStartEndIfNecessory();
-            return this.endInline;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(EditorSelection.prototype, "startBlockElement", {
-        // Get start block element
-        get: function () {
-            if (!this.startBlock) {
-                this.startBlock = getBlockElementAtNode_1.default(this.rootNode, this.selectionRange.start.node);
-            }
-            return this.startBlock;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(EditorSelection.prototype, "endBlockElement", {
-        // Get end block element
-        get: function () {
-            if (!this.endBlock) {
-                this.endBlock = getBlockElementAtNode_1.default(this.rootNode, this.selectionRange.end.node);
-            }
-            return this.endBlock;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    // Trim an inline element to ensure it fits in the selection boundary
-    // Return null if the inline element completely falls out of the selection
-    EditorSelection.prototype.trimInlineElement = function (inlineElement) {
-        this.calculateStartEndIfNecessory();
-        // Always return null for collapsed selection
-        if (this.collapsed) {
-            return null;
-        }
-        var trimmedInline;
-        if (inlineElement && this.startInline && this.endInline) {
-            // Start with the decorated inline, and trim first by startInline, and then endInline
-            // if we end up getting a trimmed trimmedstartPosition or trimmedendPosition, we know the new element
-            // has to be partial. otherwise return a full inline
-            var decoratedInline = void 0;
-            var trimmedStartPosition = void 0;
-            var trimmedEndPosition = void 0;
-            // First unwrap inlineElement if it is partial
-            if (inlineElement instanceof PartialInlineElement_1.default) {
-                decoratedInline = inlineElement.getDecoratedInline();
-                trimmedStartPosition = inlineElement.isStartPartial()
-                    ? inlineElement.getStartPosition()
-                    : null;
-                trimmedEndPosition = inlineElement.isEndPartial()
-                    ? inlineElement.getEndPosition()
-                    : null;
-            }
-            else {
-                decoratedInline = inlineElement;
-            }
-            // Trim by start point
-            if (this.startInline.isAfter(decoratedInline)) {
-                // Out of scope
-                decoratedInline = null;
-            }
-            else if (decoratedInline.getContainerNode() == this.startInline.getContainerNode() &&
-                this.startInline instanceof PartialInlineElement_1.default &&
-                this.startInline.isStartPartial()) {
-                // On same container, and startInline is a partial, compare start point
-                if (!trimmedStartPosition ||
-                    this.startInline.getStartPosition().isAfter(trimmedStartPosition)) {
-                    // selection start is after the element, use selection start's as new start point
-                    trimmedStartPosition = this.startInline.getStartPosition();
-                }
-            }
-            // Trim by the end point
-            if (decoratedInline != null) {
-                if (decoratedInline.isAfter(this.endInline)) {
-                    // Out of scope
-                    decoratedInline = null;
-                }
-                else if (decoratedInline.getContainerNode() == this.endInline.getContainerNode() &&
-                    this.endInline instanceof PartialInlineElement_1.default &&
-                    this.endInline.isEndPartial()) {
-                    // On same container, and endInline is a partial, compare end point
-                    if (!trimmedEndPosition ||
-                        trimmedEndPosition.isAfter(this.endInline.getEndPosition())) {
-                        // selection end is before the element, use selection end's as new end point
-                        trimmedEndPosition = this.endInline.getEndPosition();
-                    }
-                }
-            }
-            // Conclusion
-            if (decoratedInline != null) {
-                // testing following conditions:
-                // 1) both points are null, means it is full node, no need to decorate
-                // 2) both points are not null and they actually point to same point, this isn't an invalid inline element, set null
-                // 3) rest, create a new partial inline element
-                if (!trimmedStartPosition && !trimmedEndPosition) {
-                    trimmedInline = decoratedInline;
-                }
-                else {
-                    trimmedInline =
-                        trimmedStartPosition &&
-                            trimmedEndPosition &&
-                            trimmedStartPosition.equalTo(trimmedEndPosition)
-                            ? null
-                            : new PartialInlineElement_1.default(decoratedInline, trimmedStartPosition, trimmedEndPosition);
-                }
-            }
-        }
-        return trimmedInline;
-    };
-    // Check if a block is in scope
-    // A block is considered in scope as long as it falls in the selection
-    // or overlap with the selection start or end block
-    EditorSelection.prototype.isBlockInScope = function (blockElement) {
-        this.calculateStartEndIfNecessory();
-        var inScope = false;
-        var selStartBlock = this.startBlockElement;
-        if (this.collapsed) {
-            inScope = !selStartBlock && selStartBlock.equals(blockElement);
-        }
-        else {
-            var selEndBlock = this.endBlockElement;
-            // There are three cases that are considered as "block in scope"
-            // 1) The start of selection falls on the block
-            // 2) The end of selection falls on the block
-            // 3) the block falls in-between selection start and end
-            inScope =
-                selStartBlock &&
-                    selEndBlock &&
-                    (blockElement.equals(selStartBlock) ||
-                        blockElement.equals(selEndBlock) ||
-                        (blockElement.isAfter(selStartBlock) && selEndBlock.isAfter(blockElement)));
-        }
-        return inScope;
-    };
-    // Check if start and end inline has been calculated and do so if not
-    EditorSelection.prototype.calculateStartEndIfNecessory = function () {
-        if (!this.startEndCalculated) {
-            this.calculateStartEndInline();
-            this.startEndCalculated = true;
-        }
-    };
-    // calculate start and end inline element
-    EditorSelection.prototype.calculateStartEndInline = function () {
-        // Compute the start point
-        this.startInline = getInlineElementBeforeAfter_1.getInlineElementAfter(this.rootNode, this.selectionRange.start);
-        if (this.collapsed) {
-            // For collapsed range, set end to be same as start
-            this.endInline = this.startInline;
-        }
-        else {
-            // For non-collapsed range, get same for end point
-            this.endInline = getInlineElementBeforeAfter_1.getInlineElementBefore(this.rootNode, this.selectionRange.end);
-            // it is possible that start and end points to same inline element, which
-            // is often the case where users select partial text of a text node
-            // in that case, we want to fix startInline and endInline to be a partial inline element
-            if (this.startInline &&
-                this.endInline &&
-                this.startInline.getContainerNode() == this.endInline.getContainerNode()) {
-                var fromPosition = void 0;
-                var decoratedInline = void 0;
-                if (this.startInline instanceof PartialInlineElement_1.default) {
-                    fromPosition = this.startInline.getStartPosition();
-                    decoratedInline = this
-                        .startInline.getDecoratedInline();
-                }
-                else {
-                    decoratedInline = this.startInline;
-                }
-                var toPosition = this.endInline instanceof PartialInlineElement_1.default
-                    ? this.endInline.getEndPosition()
-                    : null;
-                this.startInline = this.endInline =
-                    !fromPosition && !toPosition
-                        ? decoratedInline
-                        : new PartialInlineElement_1.default(decoratedInline, fromPosition, toPosition);
-            }
-        }
-    };
-    return EditorSelection;
-}());
-exports.default = EditorSelection;
+    position = position.normalize();
+    var node = position.node;
+    var isPartial = false;
+    var traverseFunc = isAfter ? getLeafSibling_1.getNextLeafSibling : getLeafSibling_1.getPreviousLeafSibling;
+    if ((!isAfter && position.offset == 0 && !position.isAtEnd) || (isAfter && position.isAtEnd)) {
+        node = traverseFunc(rootNode, node);
+    }
+    else if (node.nodeType == 3 /* Text */ &&
+        ((!isAfter && !position.isAtEnd) || (isAfter && position.offset > 0))) {
+        isPartial = true;
+    }
+    while (node && shouldSkipNode_1.default(node)) {
+        node = traverseFunc(rootNode, node);
+    }
+    var inlineElement = getInlineElementAtNode_1.default(node);
+    if (inlineElement && (inlineElement.contains(position) || isPartial)) {
+        inlineElement = isAfter
+            ? new PartialInlineElement_1.default(inlineElement, position, null)
+            : new PartialInlineElement_1.default(inlineElement, null, position);
+    }
+    return inlineElement;
+}
 
 
 /***/ }),
@@ -2431,7 +2261,7 @@ exports.default = EditorSelection;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var getLeafSibling_1 = __webpack_require__(5);
-var getBlockElementAtNode_1 = __webpack_require__(12);
+var getBlockElementAtNode_1 = __webpack_require__(7);
 /**
  * Get next block
  */
@@ -3312,7 +3142,7 @@ function getCursorMarkNodes(editor, id) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var UndoSnapshots_1 = __webpack_require__(113);
+var UndoSnapshots_1 = __webpack_require__(112);
 var snapshotUtils_1 = __webpack_require__(53);
 var KEY_BACKSPACE = 8;
 var KEY_DELETE = 46;
@@ -3514,7 +3344,7 @@ exports.default = Undo;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DefaultShortcut_1 = __webpack_require__(116);
+var DefaultShortcut_1 = __webpack_require__(115);
 exports.DefaultShortcut = DefaultShortcut_1.default;
 var HyperLink_1 = __webpack_require__(73);
 exports.HyperLink = HyperLink_1.default;
@@ -6614,7 +6444,7 @@ exports.cacheGetEventData = cacheGetEventData;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var focus_1 = __webpack_require__(40);
-var getLiveRange_1 = __webpack_require__(7);
+var getLiveRange_1 = __webpack_require__(12);
 var isVoidHtmlElement_1 = __webpack_require__(39);
 var select_1 = __webpack_require__(11);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
@@ -6792,42 +6622,6 @@ function insertNodeAtSelection(core, node, option) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getLiveRange_1 = __webpack_require__(7);
-var roosterjs_editor_dom_1 = __webpack_require__(0);
-function getContentTraverser(core, scope, position) {
-    if (position === void 0) { position = 2 /* SelectionStart */; }
-    var range = getLiveRange_1.default(core) || core.cachedRange;
-    if (scope != 2 /* Body */ && !range) {
-        return null;
-    }
-    var contentTraverser;
-    var scoper;
-    switch (scope) {
-        case 0 /* Block */:
-            scoper = new roosterjs_editor_dom_1.SelectionBlockScoper(core.contentDiv, new roosterjs_editor_dom_1.SelectionRange(range), position);
-            break;
-        case 1 /* Selection */:
-            scoper = new roosterjs_editor_dom_1.SelectionScoper(core.contentDiv, new roosterjs_editor_dom_1.SelectionRange(range));
-            break;
-        case 2 /* Body */:
-            scoper = new roosterjs_editor_dom_1.BodyScoper(core.contentDiv);
-            break;
-    }
-    if (scoper) {
-        contentTraverser = new roosterjs_editor_dom_1.ContentTraverser(core.contentDiv, scoper);
-    }
-    return contentTraverser;
-}
-exports.default = getContentTraverser;
-
-
-/***/ }),
-/* 100 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
 var triggerEvent_1 = __webpack_require__(41);
 function attachDomEvent(core, eventName, pluginEventType, beforeDispatch) {
     var onEvent = function (event) {
@@ -6850,13 +6644,13 @@ exports.default = attachDomEvent;
 
 
 /***/ }),
-/* 101 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getLiveRange_1 = __webpack_require__(7);
+var getLiveRange_1 = __webpack_require__(12);
 var select_1 = __webpack_require__(11);
 var lib_1 = __webpack_require__(0);
 function formatWithUndo(core, callback, preserveSelection, skipAddingUndoAfterFormat) {
@@ -6895,7 +6689,7 @@ exports.default = formatWithUndo;
 
 
 /***/ }),
-/* 102 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6921,7 +6715,7 @@ exports.default = unwrap;
 
 
 /***/ }),
-/* 103 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6961,7 +6755,7 @@ exports.default = splitParentNode;
 
 
 /***/ }),
-/* 104 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7003,7 +6797,7 @@ function trim(s, trim) {
 
 
 /***/ }),
-/* 105 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7040,7 +6834,7 @@ exports.default = changeElementTag;
 
 
 /***/ }),
-/* 106 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7081,7 +6875,7 @@ exports.default = applyFormat;
 
 
 /***/ }),
-/* 107 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7164,7 +6958,7 @@ var VTable = /** @class */ (function () {
         }
     };
     VTable.prototype.getCell = function (row, col) {
-        return (this.cells[row] && this.cells[row][col]) || {};
+        return (this.cells && this.cells[row] && this.cells[row][col]) || {};
     };
     VTable.prototype.getCurrentTd = function () {
         if (this.cells) {
@@ -7247,13 +7041,278 @@ function getBorderStyle(style) {
 
 
 /***/ }),
+/* 107 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getFirstLastInlineElement_1 = __webpack_require__(19);
+var getLeafNode_1 = __webpack_require__(20);
+var getBlockElementAtNode_1 = __webpack_require__(7);
+// This provides scoper for traversing the entire editor body starting from the beginning
+var BodyScoper = /** @class */ (function () {
+    function BodyScoper(rootNode) {
+        this.rootNode = rootNode;
+    }
+    // Get the start block element
+    BodyScoper.prototype.getStartBlockElement = function () {
+        return getBlockElementAtNode_1.default(this.rootNode, getLeafNode_1.getFirstLeafNode(this.rootNode));
+    };
+    // Get the first inline element in the editor
+    BodyScoper.prototype.getStartInlineElement = function () {
+        return getFirstLastInlineElement_1.getFirstInlineElement(this.rootNode);
+    };
+    // Since the scope is global, all blocks under the root node are in scope
+    BodyScoper.prototype.isBlockInScope = function (blockElement) {
+        return this.rootNode.contains(blockElement.getStartNode());
+    };
+    // Since we're at body scope, inline elements never need to be trimmed
+    BodyScoper.prototype.trimInlineElement = function (inlineElement) {
+        return inlineElement;
+    };
+    return BodyScoper;
+}());
+exports.default = BodyScoper;
+
+
+/***/ }),
 /* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorSelection_1 = __webpack_require__(43);
+var PartialInlineElement_1 = __webpack_require__(13);
+var getBlockElementAtNode_1 = __webpack_require__(7);
+var getInlineElementBeforeAfter_1 = __webpack_require__(43);
+// This is a utility like class that produces editor point/inline/block element around or within a selection range
+var EditorSelection = /** @class */ (function () {
+    function EditorSelection(rootNode, selectionRange) {
+        this.rootNode = rootNode;
+        this.selectionRange = selectionRange;
+        this.startEndCalculated = false;
+        this.selectionRange = selectionRange.normalize();
+    }
+    Object.defineProperty(EditorSelection.prototype, "collapsed", {
+        // Get the collapsed state of the selection
+        get: function () {
+            return this.selectionRange.collapsed;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(EditorSelection.prototype, "inlineElementBeforeStart", {
+        // Get the inline element before start of the selection
+        get: function () {
+            return getInlineElementBeforeAfter_1.getInlineElementBefore(this.rootNode, this.selectionRange.start);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(EditorSelection.prototype, "startInlineElement", {
+        // Get the start inline element of the selection (the first inline after the selection)
+        get: function () {
+            this.calculateStartEndIfNecessory();
+            return this.startInline;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(EditorSelection.prototype, "endInlineElement", {
+        // Get the inline element at the end of the selection
+        get: function () {
+            this.calculateStartEndIfNecessory();
+            return this.endInline;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(EditorSelection.prototype, "startBlockElement", {
+        // Get start block element
+        get: function () {
+            if (!this.startBlock) {
+                this.startBlock = getBlockElementAtNode_1.default(this.rootNode, this.selectionRange.start.node);
+            }
+            return this.startBlock;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(EditorSelection.prototype, "endBlockElement", {
+        // Get end block element
+        get: function () {
+            if (!this.endBlock) {
+                this.endBlock = getBlockElementAtNode_1.default(this.rootNode, this.selectionRange.end.node);
+            }
+            return this.endBlock;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    // Trim an inline element to ensure it fits in the selection boundary
+    // Return null if the inline element completely falls out of the selection
+    EditorSelection.prototype.trimInlineElement = function (inlineElement) {
+        this.calculateStartEndIfNecessory();
+        // Always return null for collapsed selection
+        if (this.collapsed) {
+            return null;
+        }
+        var trimmedInline;
+        if (inlineElement && this.startInline && this.endInline) {
+            // Start with the decorated inline, and trim first by startInline, and then endInline
+            // if we end up getting a trimmed trimmedstartPosition or trimmedendPosition, we know the new element
+            // has to be partial. otherwise return a full inline
+            var decoratedInline = void 0;
+            var trimmedStartPosition = void 0;
+            var trimmedEndPosition = void 0;
+            // First unwrap inlineElement if it is partial
+            if (inlineElement instanceof PartialInlineElement_1.default) {
+                decoratedInline = inlineElement.getDecoratedInline();
+                trimmedStartPosition = inlineElement.isStartPartial()
+                    ? inlineElement.getStartPosition()
+                    : null;
+                trimmedEndPosition = inlineElement.isEndPartial()
+                    ? inlineElement.getEndPosition()
+                    : null;
+            }
+            else {
+                decoratedInline = inlineElement;
+            }
+            // Trim by start point
+            if (this.startInline.isAfter(decoratedInline)) {
+                // Out of scope
+                decoratedInline = null;
+            }
+            else if (decoratedInline.getContainerNode() == this.startInline.getContainerNode() &&
+                this.startInline instanceof PartialInlineElement_1.default &&
+                this.startInline.isStartPartial()) {
+                // On same container, and startInline is a partial, compare start point
+                if (!trimmedStartPosition ||
+                    this.startInline.getStartPosition().isAfter(trimmedStartPosition)) {
+                    // selection start is after the element, use selection start's as new start point
+                    trimmedStartPosition = this.startInline.getStartPosition();
+                }
+            }
+            // Trim by the end point
+            if (decoratedInline != null) {
+                if (decoratedInline.isAfter(this.endInline)) {
+                    // Out of scope
+                    decoratedInline = null;
+                }
+                else if (decoratedInline.getContainerNode() == this.endInline.getContainerNode() &&
+                    this.endInline instanceof PartialInlineElement_1.default &&
+                    this.endInline.isEndPartial()) {
+                    // On same container, and endInline is a partial, compare end point
+                    if (!trimmedEndPosition ||
+                        trimmedEndPosition.isAfter(this.endInline.getEndPosition())) {
+                        // selection end is before the element, use selection end's as new end point
+                        trimmedEndPosition = this.endInline.getEndPosition();
+                    }
+                }
+            }
+            // Conclusion
+            if (decoratedInline != null) {
+                // testing following conditions:
+                // 1) both points are null, means it is full node, no need to decorate
+                // 2) both points are not null and they actually point to same point, this isn't an invalid inline element, set null
+                // 3) rest, create a new partial inline element
+                if (!trimmedStartPosition && !trimmedEndPosition) {
+                    trimmedInline = decoratedInline;
+                }
+                else {
+                    trimmedInline =
+                        trimmedStartPosition &&
+                            trimmedEndPosition &&
+                            trimmedStartPosition.equalTo(trimmedEndPosition)
+                            ? null
+                            : new PartialInlineElement_1.default(decoratedInline, trimmedStartPosition, trimmedEndPosition);
+                }
+            }
+        }
+        return trimmedInline;
+    };
+    // Check if a block is in scope
+    // A block is considered in scope as long as it falls in the selection
+    // or overlap with the selection start or end block
+    EditorSelection.prototype.isBlockInScope = function (blockElement) {
+        this.calculateStartEndIfNecessory();
+        var inScope = false;
+        var selStartBlock = this.startBlockElement;
+        if (this.collapsed) {
+            inScope = !selStartBlock && selStartBlock.equals(blockElement);
+        }
+        else {
+            var selEndBlock = this.endBlockElement;
+            // There are three cases that are considered as "block in scope"
+            // 1) The start of selection falls on the block
+            // 2) The end of selection falls on the block
+            // 3) the block falls in-between selection start and end
+            inScope =
+                selStartBlock &&
+                    selEndBlock &&
+                    (blockElement.equals(selStartBlock) ||
+                        blockElement.equals(selEndBlock) ||
+                        (blockElement.isAfter(selStartBlock) && selEndBlock.isAfter(blockElement)));
+        }
+        return inScope;
+    };
+    // Check if start and end inline has been calculated and do so if not
+    EditorSelection.prototype.calculateStartEndIfNecessory = function () {
+        if (!this.startEndCalculated) {
+            this.calculateStartEndInline();
+            this.startEndCalculated = true;
+        }
+    };
+    // calculate start and end inline element
+    EditorSelection.prototype.calculateStartEndInline = function () {
+        // Compute the start point
+        this.startInline = getInlineElementBeforeAfter_1.getInlineElementAfter(this.rootNode, this.selectionRange.start);
+        if (this.collapsed) {
+            // For collapsed range, set end to be same as start
+            this.endInline = this.startInline;
+        }
+        else {
+            // For non-collapsed range, get same for end point
+            this.endInline = getInlineElementBeforeAfter_1.getInlineElementBefore(this.rootNode, this.selectionRange.end);
+            // it is possible that start and end points to same inline element, which
+            // is often the case where users select partial text of a text node
+            // in that case, we want to fix startInline and endInline to be a partial inline element
+            if (this.startInline &&
+                this.endInline &&
+                this.startInline.getContainerNode() == this.endInline.getContainerNode()) {
+                var fromPosition = void 0;
+                var decoratedInline = void 0;
+                if (this.startInline instanceof PartialInlineElement_1.default) {
+                    fromPosition = this.startInline.getStartPosition();
+                    decoratedInline = this.startInline.getDecoratedInline();
+                }
+                else {
+                    decoratedInline = this.startInline;
+                }
+                var toPosition = this.endInline instanceof PartialInlineElement_1.default
+                    ? this.endInline.getEndPosition()
+                    : null;
+                this.startInline = this.endInline =
+                    !fromPosition && !toPosition
+                        ? decoratedInline
+                        : new PartialInlineElement_1.default(decoratedInline, fromPosition, toPosition);
+            }
+        }
+    };
+    return EditorSelection;
+}());
+exports.default = EditorSelection;
+
+
+/***/ }),
+/* 109 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var EditorSelection_1 = __webpack_require__(108);
 // This is selection scoper that provide a start inline as the start of the selection
 // and checks if a block falls in the selection (isBlockInScope)
 // last trimInlineElement to trim any inline element to return a partial that falls in the selection
@@ -7284,113 +7343,54 @@ exports.default = SelectionScoper;
 
 
 /***/ }),
-/* 109 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var PartialInlineElement_1 = __webpack_require__(13);
-var getInlineElementAtNode_1 = __webpack_require__(8);
-var shouldSkipNode_1 = __webpack_require__(22);
-var getLeafSibling_1 = __webpack_require__(5);
-/**
- * Get inline element before a position
- * This is mostly used when we want to get the inline element before selection/cursor
- * There is a possible that the cursor is in middle of an inline element (i.e. mid of a text node)
- * in this case, we only want to return what is before cursor (a partial of an inline) to indicate
- * that we're in middle.
- * @param rootNode Root node of current scope, use for create InlineElement
- * @param position The position to get InlineElement before
- */
-function getInlineElementBefore(rootNode, position) {
-    return getInlineElementBeforeAfterPoint(rootNode, position, false /*isAfter*/);
-}
-exports.getInlineElementBefore = getInlineElementBefore;
-/**
- * Get inline element after a position
- * This is mostly used when we want to get the inline element after selection/cursor
- * There is a possible that the cursor is in middle of an inline element (i.e. mid of a text node)
- * in this case, we only want to return what is before cursor (a partial of an inline) to indicate
- * that we're in middle.
- * @param rootNode Root node of current scope, use for create InlineElement
- * @param position The position to get InlineElement after
- */
-function getInlineElementAfter(rootNode, position) {
-    return getInlineElementBeforeAfterPoint(rootNode, position, true /*isAfter*/);
-}
-exports.getInlineElementAfter = getInlineElementAfter;
-function getInlineElementBeforeAfterPoint(rootNode, position, isAfter) {
-    if (!position || !position.node) {
-        return null;
-    }
-    position = position.normalize();
-    var node = position.node;
-    var isPartial = false;
-    var traverseFunc = isAfter ? getLeafSibling_1.getNextLeafSibling : getLeafSibling_1.getPreviousLeafSibling;
-    if ((!isAfter && position.offset == 0 && !position.isAtEnd) || (isAfter && position.isAtEnd)) {
-        node = traverseFunc(rootNode, node);
-    }
-    else if (node.nodeType == 3 /* Text */ &&
-        ((!isAfter && !position.isAtEnd) || (isAfter && position.offset > 0))) {
-        isPartial = true;
-    }
-    while (node && shouldSkipNode_1.default(node)) {
-        node = traverseFunc(rootNode, node);
-    }
-    var inlineElement = getInlineElementAtNode_1.default(node);
-    if (inlineElement && (inlineElement.contains(position) || isPartial)) {
-        inlineElement = isAfter
-            ? new PartialInlineElement_1.default(inlineElement, position, null)
-            : new PartialInlineElement_1.default(inlineElement, null, position);
-    }
-    return inlineElement;
-}
-
-
-/***/ }),
 /* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorSelection_1 = __webpack_require__(43);
-// This provides traversing content in a selection start block
-// This is commonly used for those cursor context sensitive plugin
-// i.e. Mentions, Hashtag etc. they want to know text being typed at cursor
-// This provides a scope for parsing from cursor position up to begin of the selection block
-var SelectionBlockScoper = /** @class */ (function () {
-    function SelectionBlockScoper(rootNode, selectionRange, startPosition) {
+var getBlockElementAtNode_1 = __webpack_require__(7);
+var getInlineElementBeforeAfter_1 = __webpack_require__(43);
+/**
+ * This provides traversing content in a selection start block
+ * This is commonly used for those cursor context sensitive plugin,
+ * they want to know text being typed at cursor
+ * This provides a scope for parsing from cursor position up to begin of the selection block
+ */
+var BlockScoper = /** @class */ (function () {
+    function BlockScoper(rootNode, position, startPosition) {
+        this.rootNode = rootNode;
+        this.position = position;
         this.startPosition = startPosition;
-        this.editorSelection = new EditorSelection_1.default(rootNode, selectionRange);
+        this.position = this.position.normalize();
+        this.block = getBlockElementAtNode_1.default(rootNode, this.position.node);
     }
-    // Get the start block element
-    SelectionBlockScoper.prototype.getStartBlockElement = function () {
-        if (!this.selectionBlock) {
-            this.selectionBlock = this.editorSelection.startBlockElement;
-        }
-        return this.selectionBlock;
+    /**
+     * Get the start block element
+     */
+    BlockScoper.prototype.getStartBlockElement = function () {
+        return this.block;
     };
-    // Get the start inline element
-    // The start inline refers to inline before the selection start
-    // The reason why we choose the one before rather after is, when cursor is at the end of a paragragh,
-    // the one after likely will point to inline in next paragragh which may be null if the cursor is at bottom of editor
-    SelectionBlockScoper.prototype.getStartInlineElement = function () {
-        var theBlock = this.getStartBlockElement();
+    /**
+     * Get the start inline element
+     * The start inline refers to inline before the selection start
+     *  The reason why we choose the one before rather after is, when cursor is at the end of a paragragh,
+     * the one after likely will point to inline in next paragragh which may be null if the cursor is at bottom of editor
+     */
+    BlockScoper.prototype.getStartInlineElement = function () {
         var startInline;
-        if (theBlock) {
+        if (this.block) {
             switch (this.startPosition) {
                 case 0 /* Begin */:
-                    startInline = theBlock.getFirstInlineElement();
+                    startInline = this.block.getFirstInlineElement();
                     break;
                 case 1 /* End */:
-                    startInline = theBlock.getLastInlineElement();
+                    startInline = this.block.getLastInlineElement();
                     break;
                 case 2 /* SelectionStart */:
                     // Get the inline before selection start point, and ensure it falls in the selection block
-                    startInline = this.editorSelection.startInlineElement;
-                    if (startInline && !theBlock.contains(startInline)) {
+                    startInline = getInlineElementBeforeAfter_1.getInlineElementAfter(this.rootNode, this.position);
+                    if (startInline && !this.block.contains(startInline)) {
                         startInline = null;
                     }
                     break;
@@ -7398,39 +7398,44 @@ var SelectionBlockScoper = /** @class */ (function () {
         }
         return startInline;
     };
-    // This is special case to support when startInlineElement is null
-    // startInlineElement being null can happen when cursor is in the end of block. In that case, there
-    // isn't anything after the cursor so you get a null startInlineElement. The scoper works together
-    // with content traverser. When users ask for a previous inline element and content traverser sees
-    // a null startInline element, it will fall back to call this getInlineElementBeforeStart to get a
-    // a previous inline element
-    SelectionBlockScoper.prototype.getInlineElementBeforeStart = function () {
+    /**
+     * This is special case to support when startInlineElement is null
+     * startInlineElement being null can happen when cursor is in the end of block. In that case, there
+     * isn't anything after the cursor so you get a null startInlineElement. The scoper works together
+     * with content traverser. When users ask for a previous inline element and content traverser sees
+     * a null startInline element, it will fall back to call this getInlineElementBeforeStart to get a
+     * a previous inline element
+     */
+    BlockScoper.prototype.getInlineElementBeforeStart = function () {
         var inlineBeforeStart;
-        var theBlock = this.getStartBlockElement();
-        if (theBlock && this.startPosition == 2 /* SelectionStart */) {
+        if (this.block && this.startPosition == 2 /* SelectionStart */) {
             // Get the inline before selection start point, and ensure it falls in the selection block
-            inlineBeforeStart = this.editorSelection.inlineElementBeforeStart;
-            if (inlineBeforeStart && !theBlock.contains(inlineBeforeStart)) {
+            inlineBeforeStart = getInlineElementBeforeAfter_1.getInlineElementBefore(this.rootNode, this.position);
+            if (inlineBeforeStart && !this.block.contains(inlineBeforeStart)) {
                 inlineBeforeStart = null;
             }
         }
         return inlineBeforeStart;
     };
-    SelectionBlockScoper.prototype.isBlockInScope = function (blockElement) {
-        var theBlock = this.getStartBlockElement();
-        return theBlock && blockElement ? theBlock.equals(blockElement) : false;
+    /**
+     * Check if the given block element is in current scope
+     * @param blockElement The block element to check
+     */
+    BlockScoper.prototype.isBlockInScope = function (blockElement) {
+        return this.block && blockElement ? this.block.equals(blockElement) : false;
     };
-    // Trim the incoming inline element, and return an inline element
-    // This just tests and return the inline element if it is in block
-    // This is a block scoper, which is not like selection scoper where it may cut an inline element in half
-    // A block scoper does not cut an inline in half
-    SelectionBlockScoper.prototype.trimInlineElement = function (inlineElement) {
-        var theBlock = this.getStartBlockElement();
-        return theBlock && inlineElement && theBlock.contains(inlineElement) ? inlineElement : null;
+    /**
+     * Trim the incoming inline element, and return an inline element
+     * This just tests and return the inline element if it is in block
+     * This is a block scoper, which is not like selection scoper where it may cut an inline element in half
+     * A block scoper does not cut an inline in half
+     */
+    BlockScoper.prototype.trimInlineElement = function (inlineElement) {
+        return this.block && inlineElement && this.block.contains(inlineElement) ? inlineElement : null;
     };
-    return SelectionBlockScoper;
+    return BlockScoper;
 }());
-exports.default = SelectionBlockScoper;
+exports.default = BlockScoper;
 
 
 /***/ }),
@@ -7440,55 +7445,43 @@ exports.default = SelectionBlockScoper;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getFirstLastInlineElement_1 = __webpack_require__(19);
-var getLeafNode_1 = __webpack_require__(20);
-var getBlockElementAtNode_1 = __webpack_require__(12);
-// This provides scoper for traversing the entire editor body starting from the beginning
-var BodyScoper = /** @class */ (function () {
-    function BodyScoper(rootNode) {
-        this.rootNode = rootNode;
-    }
-    // Get the start block element
-    BodyScoper.prototype.getStartBlockElement = function () {
-        return getBlockElementAtNode_1.default(this.rootNode, getLeafNode_1.getFirstLeafNode(this.rootNode));
-    };
-    // Get the first inline element in the editor
-    BodyScoper.prototype.getStartInlineElement = function () {
-        return getFirstLastInlineElement_1.getFirstInlineElement(this.rootNode);
-    };
-    // Since the scope is global, all blocks under the root node are in scope
-    BodyScoper.prototype.isBlockInScope = function (blockElement) {
-        return this.rootNode.contains(blockElement.getStartNode());
-    };
-    // Since we're at body scope, inline elements never need to be trimmed
-    BodyScoper.prototype.trimInlineElement = function (inlineElement) {
-        return inlineElement;
-    };
-    return BodyScoper;
-}());
-exports.default = BodyScoper;
-
-
-/***/ }),
-/* 112 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
 var getNextPreviousInlineElement_1 = __webpack_require__(48);
 var getNextPreviousBlockElement_1 = __webpack_require__(44);
-// The provides traversing of content inside editor.
-// There are two ways to traverse, block by block, or inline element by inline element
-// Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
-// the current inline element position
+var BlockScoper_1 = __webpack_require__(110);
+var SelectionScoper_1 = __webpack_require__(109);
+var BodyScoper_1 = __webpack_require__(107);
+/**
+ * The provides traversing of content inside editor.
+ * There are two ways to traverse, block by block, or inline element by inline element
+ * Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
+ * the current inline element position
+ */
 var ContentTraverser = /** @class */ (function () {
-    function ContentTraverser(rootNode, scoper) {
+    /**
+     * Create a new instance of ContentTraverser class
+     * @param rootNode Root node of the content
+     * @param scope The scope type, can be Body, Block, Selection
+     * @param range A range used for scope the content. This can be null when scope set to ContentScope.Body
+     * @param position Position type, must be set when scope is set to Block. The value can be Begin, End, SelectionStart
+     */
+    function ContentTraverser(rootNode, scope, range, position) {
         this.rootNode = rootNode;
-        this.scoper = scoper;
+        switch (scope) {
+            case 0 /* Block */:
+                this.scoper = new BlockScoper_1.default(rootNode, range.start, position);
+                break;
+            case 1 /* Selection */:
+                this.scoper = new SelectionScoper_1.default(rootNode, range);
+                break;
+            case 2 /* Body */:
+                this.scoper = new BodyScoper_1.default(rootNode);
+                break;
+        }
     }
     Object.defineProperty(ContentTraverser.prototype, "currentBlockElement", {
-        // Get current block
+        /**
+         * Get current block
+         */
         get: function () {
             // Prepare currentBlock from the scoper
             if (!this.currentBlock) {
@@ -7499,7 +7492,9 @@ var ContentTraverser = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    // Get next block element
+    /**
+     * Get next block element
+     */
     ContentTraverser.prototype.getNextBlockElement = function () {
         var thisBlock = this.currentBlockElement;
         var nextBlock = thisBlock ? getNextPreviousBlockElement_1.getNextBlockElement(this.rootNode, thisBlock) : null;
@@ -7514,7 +7509,9 @@ var ContentTraverser = /** @class */ (function () {
         }
         return null;
     };
-    // Get previous block element
+    /**
+     * Get previous block element
+     */
     ContentTraverser.prototype.getPreviousBlockElement = function () {
         var thisBlock = this.currentBlockElement;
         var previousBlock = thisBlock ? getNextPreviousBlockElement_1.getPreviousBlockElement(this.rootNode, thisBlock) : null;
@@ -7532,7 +7529,9 @@ var ContentTraverser = /** @class */ (function () {
         return null;
     };
     Object.defineProperty(ContentTraverser.prototype, "currentInlineElement", {
-        // Current inline element getter
+        /**
+         * Current inline element getter
+         */
         get: function () {
             // Retrieve a start inline from scoper
             if (!this.currentInline) {
@@ -7543,7 +7542,9 @@ var ContentTraverser = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    // Get next inline element
+    /**
+     * Get next inline element
+     */
     ContentTraverser.prototype.getNextInlineElement = function () {
         var thisInline = this.currentInlineElement;
         var nextInline;
@@ -7568,7 +7569,9 @@ var ContentTraverser = /** @class */ (function () {
         }
         return null;
     };
-    // Get previous inline element
+    /**
+     * Get previous inline element
+     */
     ContentTraverser.prototype.getPreviousInlineElement = function () {
         var thisInline = this.currentInlineElement;
         var previousInline;
@@ -7599,7 +7602,7 @@ exports.default = ContentTraverser;
 
 
 /***/ }),
-/* 113 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7662,7 +7665,7 @@ exports.default = UndoSnapshots;
 
 
 /***/ }),
-/* 114 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7701,19 +7704,18 @@ function calcDefaultFormat(node, baseFormat) {
 
 
 /***/ }),
-/* 115 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorCore_1 = __webpack_require__(114);
-var formatWithUndo_1 = __webpack_require__(101);
-var attachDomEvent_1 = __webpack_require__(100);
+var EditorCore_1 = __webpack_require__(113);
+var formatWithUndo_1 = __webpack_require__(100);
+var attachDomEvent_1 = __webpack_require__(99);
 var BrowserData_1 = __webpack_require__(25);
 var focus_1 = __webpack_require__(40);
-var getContentTraverser_1 = __webpack_require__(99);
-var getLiveRange_1 = __webpack_require__(7);
+var getLiveRange_1 = __webpack_require__(12);
 var hasFocus_1 = __webpack_require__(17);
 var insertNode_1 = __webpack_require__(98);
 var select_1 = __webpack_require__(11);
@@ -8121,7 +8123,7 @@ var Editor = /** @class */ (function () {
      */
     Editor.prototype.getContentTraverser = function (scope, position) {
         if (position === void 0) { position = 2 /* SelectionStart */; }
-        return getContentTraverser_1.default(this.core, scope, position);
+        return new roosterjs_editor_dom_1.ContentTraverser(this.core.contentDiv, scope, this.getSelectionRange(), position);
     };
     //#endregion
     //#region Private functions
@@ -8185,7 +8187,7 @@ exports.default = Editor;
 
 
 /***/ }),
-/* 116 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8318,7 +8320,7 @@ exports.default = DefaultShortcut;
 
 
 /***/ }),
-/* 117 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8359,7 +8361,7 @@ exports.default = createEditor;
 
 
 /***/ }),
-/* 118 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8368,7 +8370,7 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-var createEditor_1 = __webpack_require__(117);
+var createEditor_1 = __webpack_require__(116);
 exports.createEditor = createEditor_1.default;
 __export(__webpack_require__(62));
 __export(__webpack_require__(0));

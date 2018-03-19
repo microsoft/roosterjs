@@ -1,5 +1,5 @@
 import * as DomTestHelper from '../DomTestHelper';
-import SelectionScoper from '../../scopers/SelectionScoper';
+import SelectionScoper from '../../contentTraverser/SelectionScoper';
 import PositionType from '../../selection/PositionType';
 import Position from '../../selection/Position';
 import SelectionRange from '../../selection/SelectionRange';

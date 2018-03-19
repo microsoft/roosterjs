@@ -1,6 +1,6 @@
 import InlineElement from '../inlineElements/InlineElement';
 import BlockElement from '../blockElements/BlockElement';
-import TraversingScoper from '../scopers/TraversingScoper';
+import TraversingScoper from './TraversingScoper';
 import {
     getNextInlineElement,
     getPreviousInlineElement,
@@ -9,18 +9,47 @@ import {
     getNextBlockElement,
     getPreviousBlockElement,
 } from '../blockElements/getNextPreviousBlockElement';
+import SelectionRange from '../selection/SelectionRange';
+import { ContentPosition, ContentScope } from 'roosterjs-editor-types';
+import BlockScoper from './BlockScoper';
+import SelectionScoper from './SelectionScoper';
+import BodyScoper  from './BodyScoper';
 
-// The provides traversing of content inside editor.
-// There are two ways to traverse, block by block, or inline element by inline element
-// Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
-// the current inline element position
+/**
+ * The provides traversing of content inside editor.
+ * There are two ways to traverse, block by block, or inline element by inline element
+ * Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
+ * the current inline element position
+ */
 class ContentTraverser {
     private currentInline: InlineElement;
     private currentBlock: BlockElement;
+    private scoper: TraversingScoper;
 
-    constructor(private rootNode: Node, private scoper: TraversingScoper) {}
+    /**
+     * Create a new instance of ContentTraverser class
+     * @param rootNode Root node of the content
+     * @param scope The scope type, can be Body, Block, Selection
+     * @param range A range used for scope the content. This can be null when scope set to ContentScope.Body
+     * @param position Position type, must be set when scope is set to Block. The value can be Begin, End, SelectionStart
+     */
+    constructor(private rootNode: Node, scope: ContentScope, range: SelectionRange, position: ContentPosition) {
+        switch (scope) {
+            case ContentScope.Block:
+                this.scoper = new BlockScoper(rootNode, range.start, position);
+                break;
+            case ContentScope.Selection:
+                this.scoper = new SelectionScoper(rootNode, range);
+                break;
+            case ContentScope.Body:
+                this.scoper = new BodyScoper(rootNode);
+                break;
+        }
+    }
 
-    // Get current block
+    /**
+     * Get current block
+     */
     public get currentBlockElement(): BlockElement {
         // Prepare currentBlock from the scoper
         if (!this.currentBlock) {
@@ -30,7 +59,9 @@ class ContentTraverser {
         return this.currentBlock;
     }
 
-    // Get next block element
+    /**
+     * Get next block element
+     */
     public getNextBlockElement(): BlockElement {
         let thisBlock = this.currentBlockElement;
         let nextBlock = thisBlock ? getNextBlockElement(this.rootNode, thisBlock) : null;
@@ -48,7 +79,9 @@ class ContentTraverser {
         return null;
     }
 
-    // Get previous block element
+    /**
+     * Get previous block element
+     */
     public getPreviousBlockElement(): BlockElement {
         let thisBlock = this.currentBlockElement;
         let previousBlock = thisBlock ? getPreviousBlockElement(this.rootNode, thisBlock) : null;
@@ -70,7 +103,9 @@ class ContentTraverser {
         return null;
     }
 
-    // Current inline element getter
+    /**
+     * Current inline element getter
+     */
     public get currentInlineElement(): InlineElement {
         // Retrieve a start inline from scoper
         if (!this.currentInline) {
@@ -80,7 +115,9 @@ class ContentTraverser {
         return this.currentInline;
     }
 
-    // Get next inline element
+    /**
+     * Get next inline element
+     */
     public getNextInlineElement(): InlineElement {
         let thisInline = this.currentInlineElement;
         let nextInline: InlineElement;
@@ -109,7 +146,9 @@ class ContentTraverser {
         return null;
     }
 
-    // Get previous inline element
+    /**
+     * Get previous inline element
+     */
     public getPreviousInlineElement(): InlineElement {
         let thisInline = this.currentInlineElement;
         let previousInline: InlineElement;

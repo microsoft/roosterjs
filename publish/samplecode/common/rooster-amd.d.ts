@@ -1050,57 +1050,49 @@ export function getNextBlockElement(rootNode: Node, blockElement: BlockElement):
  */
 export function getPreviousBlockElement(rootNode: Node, blockElement: BlockElement): BlockElement;
 
-export interface TraversingScoper {
-    getStartBlockElement: () => BlockElement;
-    getStartInlineElement: () => InlineElement;
-    getInlineElementBeforeStart?: () => InlineElement;
-    getInlineElementAfterStart?: () => InlineElement;
-    isBlockInScope: (blockElement: BlockElement) => boolean;
-    trimInlineElement: (inlineElement: InlineElement) => InlineElement;
-}
-
+/**
+ * The provides traversing of content inside editor.
+ * There are two ways to traverse, block by block, or inline element by inline element
+ * Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
+ * the current inline element position
+ */
 export class ContentTraverser {
     private rootNode;
-    private scoper;
     private currentInline;
     private currentBlock;
-    constructor(rootNode: Node, scoper: TraversingScoper);
+    private scoper;
+    /**
+     * Create a new instance of ContentTraverser class
+     * @param rootNode Root node of the content
+     * @param scope The scope type, can be Body, Block, Selection
+     * @param range A range used for scope the content. This can be null when scope set to ContentScope.Body
+     * @param position Position type, must be set when scope is set to Block. The value can be Begin, End, SelectionStart
+     */
+    constructor(rootNode: Node, scope: ContentScope, range: SelectionRange, position: ContentPosition);
+    /**
+     * Get current block
+     */
     readonly currentBlockElement: BlockElement;
+    /**
+     * Get next block element
+     */
     getNextBlockElement(): BlockElement;
+    /**
+     * Get previous block element
+     */
     getPreviousBlockElement(): BlockElement;
+    /**
+     * Current inline element getter
+     */
     readonly currentInlineElement: InlineElement;
+    /**
+     * Get next inline element
+     */
     getNextInlineElement(): InlineElement;
+    /**
+     * Get previous inline element
+     */
     getPreviousInlineElement(): InlineElement;
-}
-
-export class BodyScoper implements TraversingScoper {
-    private rootNode;
-    constructor(rootNode: Node);
-    getStartBlockElement(): BlockElement;
-    getStartInlineElement(): InlineElement;
-    isBlockInScope(blockElement: BlockElement): boolean;
-    trimInlineElement(inlineElement: InlineElement): InlineElement;
-}
-
-export class SelectionBlockScoper implements TraversingScoper {
-    private startPosition;
-    private readonly editorSelection;
-    private selectionBlock;
-    constructor(rootNode: Node, selectionRange: SelectionRange, startPosition: ContentPosition);
-    getStartBlockElement(): BlockElement;
-    getStartInlineElement(): InlineElement;
-    getInlineElementBeforeStart(): InlineElement;
-    isBlockInScope(blockElement: BlockElement): boolean;
-    trimInlineElement(inlineElement: InlineElement): InlineElement;
-}
-
-export class SelectionScoper implements TraversingScoper {
-    private readonly editorSelection;
-    constructor(rootNode: Node, selectionRange: SelectionRange);
-    getStartBlockElement(): BlockElement;
-    getStartInlineElement(): InlineElement;
-    isBlockInScope(blockElement: BlockElement): boolean;
-    trimInlineElement(inlineElement: InlineElement): InlineElement;
 }
 
 export class VTable {

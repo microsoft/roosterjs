@@ -101,7 +101,7 @@ class EditorSelection {
             } else if (
                 decoratedInline.getContainerNode() == this.startInline.getContainerNode() &&
                 this.startInline instanceof PartialInlineElement &&
-                (this.startInline as PartialInlineElement).isStartPartial()
+                this.startInline.isStartPartial()
             ) {
                 // On same container, and startInline is a partial, compare start point
                 if (
@@ -219,16 +219,15 @@ class EditorSelection {
                 let fromPosition: Position;
                 let decoratedInline: InlineElement;
                 if (this.startInline instanceof PartialInlineElement) {
-                    fromPosition = (this.startInline as PartialInlineElement).getStartPosition();
-                    decoratedInline = (this
-                        .startInline as PartialInlineElement).getDecoratedInline();
+                    fromPosition = this.startInline.getStartPosition();
+                    decoratedInline = this.startInline.getDecoratedInline();
                 } else {
                     decoratedInline = this.startInline;
                 }
 
                 let toPosition =
                     this.endInline instanceof PartialInlineElement
-                        ? (this.endInline as PartialInlineElement).getEndPosition()
+                        ? this.endInline.getEndPosition()
                         : null;
                 this.startInline = this.endInline =
                     !fromPosition && !toPosition

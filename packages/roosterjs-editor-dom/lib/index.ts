@@ -31,12 +31,8 @@ export {
     getPreviousBlockElement,
 } from './blockElements/getNextPreviousBlockElement';
 
-// Content Traverser and Scoper
-export { default as TraversingScoper } from './scopers/TraversingScoper';
+// Content Traverser
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
-export { default as BodyScoper } from './scopers/BodyScoper';
-export { default as SelectionBlockScoper } from './scopers/SelectionBlockScoper';
-export { default as SelectionScoper } from './scopers/SelectionScoper';
 
 // Table
 export { default as VTable, VCell } from './table/VTable';

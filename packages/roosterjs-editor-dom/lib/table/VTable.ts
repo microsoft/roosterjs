@@ -92,7 +92,7 @@ export default class VTable {
     }
 
     getCell(row: number, col: number): VCell {
-        return (this.cells[row] && this.cells[row][col]) || {};
+        return (this.cells && this.cells[row] && this.cells[row][col]) || {};
     }
 
     getCurrentTd(): HTMLTableCellElement {

@@ -4,7 +4,6 @@ import formatWithUndo from '../coreAPI/formatWithUndo';
 import attachDomEvent from '../coreAPI/attachDomEvent';
 import browserData from '../utils/BrowserData';
 import focus from '../coreAPI/focus';
-import getContentTraverser from '../coreAPI/getContentTraverser';
 import getLiveRange from '../coreAPI/getLiveRange';
 import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
@@ -526,7 +525,7 @@ export default class Editor {
         scope: ContentScope,
         position: ContentPosition = ContentPosition.SelectionStart
     ): ContentTraverser {
-        return getContentTraverser(this.core, scope, position);
+        return new ContentTraverser(this.core.contentDiv, scope, this.getSelectionRange(), position);
     }
 
     //#endregion
