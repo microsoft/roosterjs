@@ -34,9 +34,6 @@ export {
 // Content Traverser
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
 
-// Table
-export { default as VTable, VCell } from './table/VTable';
-
 // Utils
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';

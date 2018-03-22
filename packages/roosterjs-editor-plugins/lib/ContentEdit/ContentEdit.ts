@@ -1,4 +1,5 @@
 import {
+    VTable,
     setIndentation,
     cacheGetNodeAtCursor,
     cacheGetListTag,
@@ -7,7 +8,7 @@ import {
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-import { Position, VTable, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
+import { Position, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     Indentation,

@@ -1149,104 +1149,6 @@ export class ContentTraverser {
 }
 
 /**
- * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
- */
-export class VTable {
-    /**
-     * The HTML table object
-     */
-    table: HTMLTableElement;
-    /**
-     * Virtual cells
-     */
-    cells: VCell[][];
-    /**
-     * Current row index
-     */
-    row: number;
-    /**
-     * Current column index
-     */
-    col: number;
-    private trs;
-    /**
-     * Create a new instance of VTable object using HTML table node
-     * @param node The HTML Table node
-     */
-    constructor(table: HTMLTableElement);
-    /**
-     * Create a new instance of VTable object using one of its table cell
-     * @param td The HTML table cell node
-     */
-    constructor(td: HTMLTableCellElement);
-    /**
-     * Write the virtual table back to DOM tree to represent the change of VTable
-     */
-    writeBack(): void;
-    /**
-     * Apply the given table format to this virtual table
-     * @param format Table format to apply
-     */
-    applyFormat(format: TableFormat): void;
-    /**
-     * Loop each cell of current column and invoke a callback function
-     * @param callback The callback function to invoke
-     */
-    forEachCellOfCurrentColumn(callback: (cell: VCell, row: VCell[], i: number) => void): void;
-    /**
-     * Loop each cell of current row and invoke a callback function
-     * @param callback The callback function to invoke
-     */
-    forEachCellOfCurrentRow(callback: (cell: VCell, i: number) => void): void;
-    /**
-     * Get a table cell using its row and column index. This function will always return an object
-     * even if the given indexes don't exist in table.
-     * @param row The row index
-     * @param col The column index
-     */
-    getCell(row: number, col: number): VCell;
-    /**
-     * Get current HTML table cell object. If the current table cell is a virtual expanded cell, return its root cell
-     */
-    getCurrentTd(): HTMLTableCellElement;
-    /**
-     * Move all children from one node to another
-     * @param fromNode The source node to move children from
-     * @param toNode Target node. If not passed, children nodes of source node will be removed
-     */
-    static moveChildren(fromNode: Node, toNode?: Node): void;
-    /**
-     * Clone a node without its children.
-     * @param node The node to clone
-     */
-    static cloneNode<T extends Node>(node: T): T;
-    /**
-     * Clone a table cell
-     * @param cell The cell to clone
-     */
-    static cloneCell(cell: VCell): VCell;
-    private recalcSpans(row, col);
-}
-
-/**
- * Represent a virtual cell of a virtual table
- */
-export interface VCell {
-    /**
-     * The table cell object. The value will be null if this is an expanded virtual cell
-     */
-    td?: HTMLTableCellElement;
-    /**
-     * Whether this cell is spanned from left
-     */
-    spanLeft?: boolean;
-    /**
-     * Whether this cell is spanned from above
-     */
-    spanAbove?: boolean;
-}
-
-/**
  * Apply format to an HTML element
  * @param element The HTML element to apply format to
  * @param format The format to apply
@@ -1935,6 +1837,104 @@ export function getFormatState(editor: Editor, event?: PluginEvent): FormatState
  * From local file, from clipboard data, from drag-and-drop
  */
 export function insertImage(editor: Editor, imageFile: File): void;
+
+/**
+ * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
+ */
+export class VTable {
+    /**
+     * The HTML table object
+     */
+    table: HTMLTableElement;
+    /**
+     * Virtual cells
+     */
+    cells: VCell[][];
+    /**
+     * Current row index
+     */
+    row: number;
+    /**
+     * Current column index
+     */
+    col: number;
+    private trs;
+    /**
+     * Create a new instance of VTable object using HTML table node
+     * @param node The HTML Table node
+     */
+    constructor(table: HTMLTableElement);
+    /**
+     * Create a new instance of VTable object using one of its table cell
+     * @param td The HTML table cell node
+     */
+    constructor(td: HTMLTableCellElement);
+    /**
+     * Write the virtual table back to DOM tree to represent the change of VTable
+     */
+    writeBack(): void;
+    /**
+     * Apply the given table format to this virtual table
+     * @param format Table format to apply
+     */
+    applyFormat(format: TableFormat): void;
+    /**
+     * Loop each cell of current column and invoke a callback function
+     * @param callback The callback function to invoke
+     */
+    forEachCellOfCurrentColumn(callback: (cell: VCell, row: VCell[], i: number) => void): void;
+    /**
+     * Loop each cell of current row and invoke a callback function
+     * @param callback The callback function to invoke
+     */
+    forEachCellOfCurrentRow(callback: (cell: VCell, i: number) => void): void;
+    /**
+     * Get a table cell using its row and column index. This function will always return an object
+     * even if the given indexes don't exist in table.
+     * @param row The row index
+     * @param col The column index
+     */
+    getCell(row: number, col: number): VCell;
+    /**
+     * Get current HTML table cell object. If the current table cell is a virtual expanded cell, return its root cell
+     */
+    getCurrentTd(): HTMLTableCellElement;
+    /**
+     * Move all children from one node to another
+     * @param fromNode The source node to move children from
+     * @param toNode Target node. If not passed, children nodes of source node will be removed
+     */
+    static moveChildren(fromNode: Node, toNode?: Node): void;
+    /**
+     * Clone a node without its children.
+     * @param node The node to clone
+     */
+    static cloneNode<T extends Node>(node: T): T;
+    /**
+     * Clone a table cell
+     * @param cell The cell to clone
+     */
+    static cloneCell(cell: VCell): VCell;
+    private recalcSpans(row, col);
+}
+
+/**
+ * Represent a virtual cell of a virtual table
+ */
+export interface VCell {
+    /**
+     * The table cell object. The value will be null if this is an expanded virtual cell
+     */
+    td?: HTMLTableCellElement;
+    /**
+     * Whether this cell is spanned from left
+     */
+    spanLeft?: boolean;
+    /**
+     * Whether this cell is spanned from above
+     */
+    spanAbove?: boolean;
+}
 
 /**
  * Insert table into editor at current selection

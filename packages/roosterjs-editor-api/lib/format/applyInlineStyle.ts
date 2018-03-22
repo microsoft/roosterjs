@@ -32,7 +32,7 @@ function applyInlineStyleToCollapsedSelection(
 // Apply style to non collapsed selection
 // It does that by looping through all inline element that can be found in the selection
 // and apply style on each individual inline element
-function applyInlineStyleToNonCollapsedSelection(
+function applyInlineStyleToExpandedSelection(
     editor: Editor,
     styler: (element: HTMLElement) => void
 ): void {
@@ -79,7 +79,7 @@ export default function applyInlineStyle(
             if (collapsed) {
                 applyInlineStyleToCollapsedSelection(editor, styler);
             } else {
-                applyInlineStyleToNonCollapsedSelection(editor, styler);
+                applyInlineStyleToExpandedSelection(editor, styler);
             }
         },
         false /*preserveSelection*/,
