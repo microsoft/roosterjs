@@ -8,26 +8,27 @@ import { DefaultFormat } from 'roosterjs-editor-types';
 export default function applyFormat(element: HTMLElement, format: DefaultFormat) {
     if (format) {
         let elementStyle = element.style;
+        let { fontFamily, fontSize, textColor, backgroundColor, bold, italic, underline} = format;
 
-        if (format.fontFamily) {
-            elementStyle.fontFamily = format.fontFamily;
+        if (fontFamily) {
+            elementStyle.fontFamily = fontFamily;
         }
-        if (format.fontSize) {
-            elementStyle.fontSize = format.fontSize;
+        if (fontSize) {
+            elementStyle.fontSize = fontSize;
         }
-        if (format.textColor) {
-            elementStyle.color = format.textColor;
+        if (textColor) {
+            elementStyle.color = textColor;
         }
-        if (format.backgroundColor) {
-            elementStyle.backgroundColor = format.backgroundColor;
+        if (backgroundColor) {
+            elementStyle.backgroundColor = backgroundColor;
         }
-        if (format.bold) {
+        if (bold) {
             elementStyle.fontWeight = 'bold';
         }
-        if (format.italic) {
+        if (italic) {
             elementStyle.fontStyle = 'italic';
         }
-        if (format.underline) {
+        if (underline) {
             elementStyle.textDecoration = 'underline';
         }
     }

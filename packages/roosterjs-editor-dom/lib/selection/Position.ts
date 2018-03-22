@@ -2,6 +2,9 @@ import { NodeType } from 'roosterjs-editor-types';
 import PositionType from './PositionType';
 import isNodeAfter from '../utils/isNodeAfter';
 
+/**
+ * Represent a position in DOM tree by the node and its offset index
+ */
 export default class Position {
     static readonly Before = PositionType.Before;
     static readonly Begin = PositionType.Begin;
@@ -69,6 +72,10 @@ export default class Position {
         }
     }
 
+    /**
+     * Normalize this position the leaf node, return the normalize result.
+     * If current position is already using leaf node, return this position object itself
+     */
     normalize(): Position {
         if (this.node.nodeType == NodeType.Text || !this.node.firstChild) {
             return this;
@@ -90,6 +97,10 @@ export default class Position {
         return new Position(node, newOffset);
     }
 
+    /**
+     * Check if this position is equal to the given position
+     * @param p The position to check
+     */
     equalTo(p: Position): boolean {
         return this == p || (this.node == p.node && this.offset == p.offset);
     }

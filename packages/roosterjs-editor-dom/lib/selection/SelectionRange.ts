@@ -1,12 +1,37 @@
 import Position from './Position';
 
+/**
+ * Represent a selection range in DOM tree
+ */
 export default class SelectionRange {
+    /**
+     * Check if this selection range is collapsed
+     */
     readonly collapsed: boolean;
+
+    /**
+     * Get the start position
+     */
     readonly start: Position;
+
+    /**
+     * Get the end position
+     */
     readonly end: Position;
+
     private rawRange: Range;
 
+    /**
+     * Create a SelectionRange object using a browser range object
+     * @param rawRange The browser range object
+     */
     constructor(rawRange: Range);
+
+    /**
+     * Create a SelectionRange object using start and end position
+     * @param start The start position
+     * @param end The end position
+     */
     constructor(start: Position, end?: Position);
 
     constructor(startOrRawRange: Position | Range, end?: Position) {
@@ -21,6 +46,9 @@ export default class SelectionRange {
         this.collapsed = this.start.node == this.end.node && this.start.offset == this.end.offset;
     }
 
+    /**
+     * Retrieve the browser range object
+     */
     getRange(): Range {
         if (!this.rawRange) {
             let document = this.start.node.ownerDocument;
@@ -31,6 +59,9 @@ export default class SelectionRange {
         return this.rawRange;
     }
 
+    /**
+     * Normal this selction range by normalizing its start and end position
+     */
     normalize(): SelectionRange {
         return new SelectionRange(this.start.normalize(), this.end.normalize());
     }

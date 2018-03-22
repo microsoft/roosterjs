@@ -628,6 +628,9 @@ declare namespace roosterjs {
         DocumentFragment = 11,
     }
 
+    /**
+     * Represent a position in DOM tree by the node and its offset index
+     */
     class Position {
         static readonly Before: PositionType;
         static readonly Begin: PositionType;
@@ -654,7 +657,15 @@ declare namespace roosterjs {
          * @param positionType Type of the postion, can be Begin, End, Before, After
          */
         constructor(node: Node, positionType: PositionType);
+        /**
+         * Normalize this position the leaf node, return the normalize result.
+         * If current position is already using leaf node, return this position object itself
+         */
         normalize(): Position;
+        /**
+         * Check if this position is equal to the given position
+         * @param p The position to check
+         */
         equalTo(p: Position): boolean;
         /**
          * Checks if position 1 is after position 2
@@ -662,21 +673,63 @@ declare namespace roosterjs {
         isAfter(p: Position): boolean;
     }
 
+    /**
+     * Represent a selection range in DOM tree
+     */
     class SelectionRange {
+        /**
+         * Check if this selection range is collapsed
+         */
         readonly collapsed: boolean;
+        /**
+         * Get the start position
+         */
         readonly start: Position;
+        /**
+         * Get the end position
+         */
         readonly end: Position;
         private rawRange;
+        /**
+         * Create a SelectionRange object using a browser range object
+         * @param rawRange The browser range object
+         */
         constructor(rawRange: Range);
+        /**
+         * Create a SelectionRange object using start and end position
+         * @param start The start position
+         * @param end The end position
+         */
         constructor(start: Position, end?: Position);
+        /**
+         * Retrieve the browser range object
+         */
         getRange(): Range;
+        /**
+         * Normal this selction range by normalizing its start and end position
+         */
         normalize(): SelectionRange;
     }
 
+    /**
+     * Represent the type of a position
+     */
     const enum PositionType {
+        /**
+         * Before a node
+         */
         Before = "b",
+        /**
+         * At the begninning of a node
+         */
         Begin = 0,
+        /**
+         * At the endo of a node
+         */
         End = "e",
+        /**
+         * After a node
+         */
         After = "a",
     }
 
@@ -1096,28 +1149,101 @@ declare namespace roosterjs {
         getPreviousInlineElement(): InlineElement;
     }
 
+    /**
+     * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
+     */
     class VTable {
+        /**
+         * The HTML table object
+         */
         table: HTMLTableElement;
+        /**
+         * Virtual cells
+         */
         cells: VCell[][];
+        /**
+         * Current row index
+         */
         row: number;
+        /**
+         * Current column index
+         */
         col: number;
         private trs;
-        constructor(node: HTMLTableElement | HTMLTableCellElement);
+        /**
+         * Create a new instance of VTable object using HTML table node
+         * @param node The HTML Table node
+         */
+        constructor(table: HTMLTableElement);
+        /**
+         * Create a new instance of VTable object using one of its table cell
+         * @param td The HTML table cell node
+         */
+        constructor(td: HTMLTableCellElement);
+        /**
+         * Write the virtual table back to DOM tree to represent the change of VTable
+         */
         writeBack(): void;
+        /**
+         * Apply the given table format to this virtual table
+         * @param format Table format to apply
+         */
         applyFormat(format: TableFormat): void;
+        /**
+         * Loop each cell of current column and invoke a callback function
+         * @param callback The callback function to invoke
+         */
         forEachCellOfCurrentColumn(callback: (cell: VCell, row: VCell[], i: number) => void): void;
+        /**
+         * Loop each cell of current row and invoke a callback function
+         * @param callback The callback function to invoke
+         */
         forEachCellOfCurrentRow(callback: (cell: VCell, i: number) => void): void;
+        /**
+         * Get a table cell using its row and column index. This function will always return an object
+         * even if the given indexes don't exist in table.
+         * @param row The row index
+         * @param col The column index
+         */
         getCell(row: number, col: number): VCell;
+        /**
+         * Get current HTML table cell object. If the current table cell is a virtual expanded cell, return its root cell
+         */
         getCurrentTd(): HTMLTableCellElement;
+        /**
+         * Move all children from one node to another
+         * @param fromNode The source node to move children from
+         * @param toNode Target node. If not passed, children nodes of source node will be removed
+         */
         static moveChildren(fromNode: Node, toNode?: Node): void;
+        /**
+         * Clone a node without its children.
+         * @param node The node to clone
+         */
         static cloneNode<T extends Node>(node: T): T;
+        /**
+         * Clone a table cell
+         * @param cell The cell to clone
+         */
         static cloneCell(cell: VCell): VCell;
         private recalcSpans(row, col);
     }
 
+    /**
+     * Represent a virtual cell of a virtual table
+     */
     interface VCell {
+        /**
+         * The table cell object. The value will be null if this is an expanded virtual cell
+         */
         td?: HTMLTableCellElement;
+        /**
+         * Whether this cell is spanned from left
+         */
         spanLeft?: boolean;
+        /**
+         * Whether this cell is spanned from above
+         */
         spanAbove?: boolean;
     }
 

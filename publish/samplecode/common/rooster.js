@@ -907,6 +907,9 @@ exports.default = contains;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var isNodeAfter_1 = __webpack_require__(24);
+/**
+ * Represent a position in DOM tree by the node and its offset index
+ */
 var Position = /** @class */ (function () {
     function Position(nodeOrPosition, offsetOrPosType) {
         if (nodeOrPosition.node) {
@@ -940,6 +943,10 @@ var Position = /** @class */ (function () {
                 break;
         }
     }
+    /**
+     * Normalize this position the leaf node, return the normalize result.
+     * If current position is already using leaf node, return this position object itself
+     */
     Position.prototype.normalize = function () {
         if (this.node.nodeType == 3 /* Text */ || !this.node.firstChild) {
             return this;
@@ -959,6 +966,10 @@ var Position = /** @class */ (function () {
         }
         return new Position(node, newOffset);
     };
+    /**
+     * Check if this position is equal to the given position
+     * @param p The position to check
+     */
     Position.prototype.equalTo = function (p) {
         return this == p || (this.node == p.node && this.offset == p.offset);
     };
@@ -1467,6 +1478,9 @@ exports.default = shouldSkipNode;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Position_1 = __webpack_require__(15);
+/**
+ * Represent a selection range in DOM tree
+ */
 var SelectionRange = /** @class */ (function () {
     function SelectionRange(startOrRawRange, end) {
         if (startOrRawRange instanceof Range) {
@@ -1480,6 +1494,9 @@ var SelectionRange = /** @class */ (function () {
         }
         this.collapsed = this.start.node == this.end.node && this.start.offset == this.end.offset;
     }
+    /**
+     * Retrieve the browser range object
+     */
     SelectionRange.prototype.getRange = function () {
         if (!this.rawRange) {
             var document_1 = this.start.node.ownerDocument;
@@ -1489,6 +1506,9 @@ var SelectionRange = /** @class */ (function () {
         }
         return this.rawRange;
     };
+    /**
+     * Normal this selction range by normalizing its start and end position
+     */
     SelectionRange.prototype.normalize = function () {
         return new SelectionRange(this.start.normalize(), this.end.normalize());
     };
@@ -6849,25 +6869,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function applyFormat(element, format) {
     if (format) {
         var elementStyle = element.style;
-        if (format.fontFamily) {
-            elementStyle.fontFamily = format.fontFamily;
+        var fontFamily = format.fontFamily, fontSize = format.fontSize, textColor = format.textColor, backgroundColor = format.backgroundColor, bold = format.bold, italic = format.italic, underline = format.underline;
+        if (fontFamily) {
+            elementStyle.fontFamily = fontFamily;
         }
-        if (format.fontSize) {
-            elementStyle.fontSize = format.fontSize;
+        if (fontSize) {
+            elementStyle.fontSize = fontSize;
         }
-        if (format.textColor) {
-            elementStyle.color = format.textColor;
+        if (textColor) {
+            elementStyle.color = textColor;
         }
-        if (format.backgroundColor) {
-            elementStyle.backgroundColor = format.backgroundColor;
+        if (backgroundColor) {
+            elementStyle.backgroundColor = backgroundColor;
         }
-        if (format.bold) {
+        if (bold) {
             elementStyle.fontWeight = 'bold';
         }
-        if (format.italic) {
+        if (italic) {
             elementStyle.fontStyle = 'italic';
         }
-        if (format.underline) {
+        if (underline) {
             elementStyle.textDecoration = 'underline';
         }
     }
@@ -6882,6 +6903,9 @@ exports.default = applyFormat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
+ */
 var VTable = /** @class */ (function () {
     function VTable(node) {
         var _this = this;
@@ -6914,6 +6938,9 @@ var VTable = /** @class */ (function () {
             });
         }
     }
+    /**
+     * Write the virtual table back to DOM tree to represent the change of VTable
+     */
     VTable.prototype.writeBack = function () {
         var _this = this;
         if (this.cells) {
@@ -6934,6 +6961,10 @@ var VTable = /** @class */ (function () {
             this.table.parentNode.removeChild(this.table);
         }
     };
+    /**
+     * Apply the given table format to this virtual table
+     * @param format Table format to apply
+     */
     VTable.prototype.applyFormat = function (format) {
         this.trs[0].style.backgroundColor = format.bgColorOdd || 'transparent';
         if (this.trs[1]) {
@@ -6948,19 +6979,36 @@ var VTable = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Loop each cell of current column and invoke a callback function
+     * @param callback The callback function to invoke
+     */
     VTable.prototype.forEachCellOfCurrentColumn = function (callback) {
         for (var i = 0; i < this.cells.length; i++) {
             callback(this.getCell(i, this.col), this.cells[i], i);
         }
     };
+    /**
+     * Loop each cell of current row and invoke a callback function
+     * @param callback The callback function to invoke
+     */
     VTable.prototype.forEachCellOfCurrentRow = function (callback) {
         for (var i = 0; i < this.cells[this.row].length; i++) {
             callback(this.getCell(this.row, i), i);
         }
     };
+    /**
+     * Get a table cell using its row and column index. This function will always return an object
+     * even if the given indexes don't exist in table.
+     * @param row The row index
+     * @param col The column index
+     */
     VTable.prototype.getCell = function (row, col) {
         return (this.cells && this.cells[row] && this.cells[row][col]) || {};
     };
+    /**
+     * Get current HTML table cell object. If the current table cell is a virtual expanded cell, return its root cell
+     */
     VTable.prototype.getCurrentTd = function () {
         if (this.cells) {
             var row = Math.min(this.cells.length - 1, this.row);
@@ -6983,6 +7031,11 @@ var VTable = /** @class */ (function () {
         }
         return null;
     };
+    /**
+     * Move all children from one node to another
+     * @param fromNode The source node to move children from
+     * @param toNode Target node. If not passed, children nodes of source node will be removed
+     */
     VTable.moveChildren = function (fromNode, toNode) {
         while (fromNode.firstChild) {
             if (toNode) {
@@ -6993,6 +7046,10 @@ var VTable = /** @class */ (function () {
             }
         }
     };
+    /**
+     * Clone a node without its children.
+     * @param node The node to clone
+     */
     VTable.cloneNode = function (node) {
         var newNode = node ? node.cloneNode(false /*deep*/) : null;
         if (newNode && newNode instanceof HTMLTableCellElement && !newNode.firstChild) {
@@ -7000,6 +7057,10 @@ var VTable = /** @class */ (function () {
         }
         return newNode;
     };
+    /**
+     * Clone a table cell
+     * @param cell The cell to clone
+     */
     VTable.cloneCell = function (cell) {
         return {
             td: VTable.cloneNode(cell.td),
