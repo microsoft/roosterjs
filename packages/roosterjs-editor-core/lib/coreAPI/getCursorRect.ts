@@ -20,7 +20,7 @@ export default function getCursorRect(core: EditorCore): Rect {
     }
 
     let focusPosition = normalizeEditorPoint(selection.focusNode, selection.focusOffset);
-    let node =  focusPosition.containerNode;
+    let node = focusPosition.containerNode;
     // 1) obtain a collapsed range pointing to cursor
     if (!range.collapsed) {
         let forwardSelection = isEditorPointAfter(

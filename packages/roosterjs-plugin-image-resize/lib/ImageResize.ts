@@ -1,5 +1,6 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
+    ContentChangedEvent,
     ChangeSource,
     NodeType,
     PluginEvent,
@@ -78,7 +79,8 @@ export default class ImageResize implements EditorPlugin {
             let event = <KeyboardEvent>(<PluginDomEvent>e).rawEvent;
             if (event.which == DELETE_KEYCODE || event.which == BACKSPACE_KEYCODE) {
                 execFormatWithUndo(this.editor, () => {
-                    this.removeResizeDiv();
+                    this.removeResizeDiv(this.resizeDiv);
+                    this.resizeDiv = null;
                 });
                 event.preventDefault();
             } else if (
@@ -88,6 +90,15 @@ export default class ImageResize implements EditorPlugin {
             ) {
                 this.unselect(true /*selectImageAfterUnSelect*/);
             }
+        } else if (
+            e.eventType == PluginEventType.ContentChanged &&
+            (<ContentChangedEvent>e).source != ChangeSource.ImageResize
+        ) {
+            let images = [].slice.call(this.editor.queryContent('img'));
+            for (let image of images) {
+                this.removeResizeDivIfAny(image);
+            }
+            this.resizeDiv = null;
         } else if (e.eventType == PluginEventType.ExtractContent) {
             let event = <ExtractContentEvent>e;
             event.content = this.extractHtml(event.content);
@@ -122,7 +133,8 @@ export default class ImageResize implements EditorPlugin {
                     this.editor.updateSelection(range);
                 }
             }
-            this.removeResizeDiv();
+            this.removeResizeDiv(this.resizeDiv);
+            this.resizeDiv = null;
         }
     }
 
@@ -242,16 +254,31 @@ export default class ImageResize implements EditorPlugin {
         return resizeDiv;
     }
 
-    private removeResizeDiv() {
-        if (this.resizeDiv) {
-            let parent = this.resizeDiv.parentNode;
-            [this.resizeDiv.previousSibling, this.resizeDiv.nextSibling].forEach(comment => {
+    private removeResizeDiv(resizeDiv: HTMLElement) {
+        if (this.editor && this.editor.contains(resizeDiv)) {
+            [resizeDiv.previousSibling, resizeDiv.nextSibling].forEach(comment => {
                 if (comment && comment.nodeType == NodeType.Comment) {
-                    parent.removeChild(comment);
+                    this.editor.deleteNode(comment);
                 }
             });
-            parent.removeChild(this.resizeDiv);
-            this.resizeDiv = null;
+            this.editor.deleteNode(resizeDiv);
+        }
+    }
+
+    private removeResizeDivIfAny(img: HTMLImageElement) {
+        let div = img && (img.parentNode as HTMLElement);
+        let previous = div && div.previousSibling;
+        let next = div && div.nextSibling;
+        if (
+            previous &&
+            previous.nodeType == NodeType.Comment &&
+            previous.nodeValue == BEGIN_TAG &&
+            next &&
+            next.nodeType == NodeType.Comment &&
+            next.nodeValue == END_TAG
+        ) {
+            div.parentNode.insertBefore(img, div);
+            this.removeResizeDiv(div);
         }
     }
 

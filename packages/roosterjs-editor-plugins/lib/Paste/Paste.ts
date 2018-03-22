@@ -77,7 +77,8 @@ export default class Paste implements EditorPlugin {
                         clipboardData.html,
                         null /*additionalStyleNodes*/,
                         false /*convertInlineCssOnly*/,
-                        this.htmlPropertyCallbacks
+                        this.htmlPropertyCallbacks,
+                        true /*preserveFragmentOnly*/
                     );
                 }
                 this.pasteOriginal(clipboardData);

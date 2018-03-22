@@ -248,15 +248,16 @@ var roosterjs_editor_dom_1 = __webpack_require__(0);
  * Query nodes intersected with current selection using a selector
  * @param editor The editor
  * @param selector The selector to query
+ * @param nodeContainedByRangeOnly When set to true, only return the nodes contained by current selection. Default value is false
  * @returns The nodes intersected with current selection, returns an empty array if no result is found
  */
-function queryNodesWithSelection(editor, selector) {
+function queryNodesWithSelection(editor, selector, nodeContainedByRangeOnly) {
     var result = [];
     var nodes = editor.queryContent(selector);
     var range = editor.getSelectionRange();
     if (range) {
         for (var i = 0; i < nodes.length; i++) {
-            if (isIntersectWithNodeRange(nodes[i], range)) {
+            if (isIntersectWithNodeRange(nodes[i], range, nodeContainedByRangeOnly)) {
                 result.push(nodes[i]);
             }
         }
@@ -264,19 +265,18 @@ function queryNodesWithSelection(editor, selector) {
     return result;
 }
 exports.default = queryNodesWithSelection;
-function isIntersectWithNodeRange(node, range) {
+function isIntersectWithNodeRange(node, range, nodeContainedByRangeOnly) {
     var startPosition = node.compareDocumentPosition(range.startContainer);
     var endPosition = node.compareDocumentPosition(range.endContainer);
-    var targetPositions = [
-        0 /* Same */,
-        16 /* ContainedBy */,
-        8 /* Contains */,
-    ];
-    var intersectStart = roosterjs_editor_dom_1.isDocumentPosition(startPosition, targetPositions);
-    var intersectEnd = roosterjs_editor_dom_1.isDocumentPosition(endPosition, targetPositions);
-    var inner = roosterjs_editor_dom_1.isDocumentPosition(startPosition, 2 /* Preceding */) &&
-        roosterjs_editor_dom_1.isDocumentPosition(endPosition, 4 /* Following */);
-    return intersectStart || intersectEnd || inner;
+    var targetPositions = [0 /* Same */, 8 /* Contains */];
+    if (!nodeContainedByRangeOnly) {
+        targetPositions.push(16 /* ContainedBy */);
+    }
+    return (roosterjs_editor_dom_1.isDocumentPosition(startPosition, targetPositions) // intersectStart
+        || roosterjs_editor_dom_1.isDocumentPosition(endPosition, targetPositions) // intersectEnd
+        || (roosterjs_editor_dom_1.isDocumentPosition(startPosition, 2 /* Preceding */) &&
+            roosterjs_editor_dom_1.isDocumentPosition(endPosition, 4 /* Following */) &&
+            !roosterjs_editor_dom_1.isDocumentPosition(endPosition, 16 /* ContainedBy */)));
 }
 
 
@@ -2836,6 +2836,12 @@ exports.default = LinkInlineElement;
 Object.defineProperty(exports, "__esModule", { value: true });
 var getTagOfNode_1 = __webpack_require__(8);
 var HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
+var START_FRAGMENT = '<!--StartFragment-->';
+var END_FRAGMENT = '<!--EndFragment-->';
+var LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
+var LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
+var LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
+var LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
 /**
  * Sanitize HTML string
  * This function will do the following work:
@@ -2846,8 +2852,9 @@ var HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
  * @param additionalStyleNodes additional style nodes for inline css converting
  * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
  * @param propertyCallbacks A callback function map to handle HTML properties
+ * @param preserveFragmentOnly If set to true, only preserve the html content between <!--StartFragment--> and <!--Endfragment-->
  */
-function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, propertyCallbacks) {
+function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, propertyCallbacks, preserveFragmentOnly) {
     var parser = new DOMParser();
     var matches = HTML_REGEX.exec(html);
     html = matches ? matches[0] : html;
@@ -2859,9 +2866,14 @@ function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, property
         !doc.body.firstChild) {
         return '';
     }
-    // 1. Convert global CSS into inline CSS
+    // 1. Filter out html code outside of Fragment tags if need
+    if (preserveFragmentOnly) {
+        html = trimWithFragment(html);
+        doc.body.innerHTML = html;
+    }
+    // 2. Convert global CSS into inline CSS
     applyInlineStyle(doc, additionalStyleNodes);
-    // 2, 3: Remove dangerous HTML tags and attributes, remove useless CSS properties
+    // 3, 4: Remove dangerous HTML tags and attributes, remove useless CSS properties
     if (!convertInlineCssOnly) {
         var callbackPropertyNames = (propertyCallbacks ? Object.keys(propertyCallbacks) : []).map(function (name) { return name.toLowerCase(); });
         removeUnusedCssAndDangerousContent(doc.body, callbackPropertyNames, propertyCallbacks);
@@ -2925,6 +2937,7 @@ var ALLOWED_HTML_TAGS = [
     'FORM',
     'P',
     'BR',
+    'NOBR',
     'HR',
     'ACRONYM',
     'ABBR',
@@ -3201,13 +3214,34 @@ function removeDisallowedAttributes(element, callbackPropertyNames, propertyCall
                 element.removeAttribute(name_2);
             }
         }
-        else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name_2) < 0 || value.toLowerCase().indexOf('script:') >= 0) {
+        else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name_2) < 0 ||
+            value.toLowerCase().indexOf('script:') >= 0) {
             element.removeAttribute(attribute.name);
         }
     }
 }
 function toArray(list) {
     return [].slice.call(list);
+}
+function trimWithFragment(html) {
+    var startIndex = html.indexOf(START_FRAGMENT);
+    var endIndex = html.lastIndexOf(END_FRAGMENT);
+    if (startIndex >= 0 && endIndex >= 0 && endIndex >= startIndex + START_FRAGMENT.length) {
+        var before = html.substr(0, startIndex);
+        html = html.substring(startIndex + START_FRAGMENT.length, endIndex);
+        // Fix up table for Excel
+        if (html.match(LAST_TD_END_REGEX)) {
+            var trMatch = before.match(LAST_TR_REGEX);
+            var tr = trMatch ? trMatch[0] : '<TR>';
+            html = tr + html + '</TR>';
+        }
+        if (html.match(LAST_TR_END_REGEX)) {
+            var tableMatch = before.match(LAST_TABLE_REGEX);
+            var table = tableMatch ? tableMatch[0] : '<TABLE>';
+            html = table + html + '</TABLE>';
+        }
+    }
+    return html;
 }
 
 
@@ -6124,6 +6158,12 @@ var setFontName_1 = __webpack_require__(47);
 var setFontSize_1 = __webpack_require__(48);
 var setTextColor_1 = __webpack_require__(49);
 var queryNodesWithSelection_1 = __webpack_require__(3);
+var STYLES_TO_REMOVE = [
+    'font',
+    'text-decoration',
+    'color',
+    'background',
+];
 /**
  * Clear the format in current selection, after cleaning, the format will be
  * changed to default format. The format that get cleaned include B/I/U/font name/
@@ -6141,6 +6181,14 @@ function clearFormat(editor) {
             for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
                 var node = nodes_1[_i];
                 node.removeAttribute('class');
+            }
+            nodes = queryNodesWithSelection_1.default(editor, '[style]', true /*nodeContainedByRangeOnly*/);
+            var _loop_1 = function (node) {
+                STYLES_TO_REMOVE.forEach(function (style) { return node.style.removeProperty(style); });
+            };
+            for (var _a = 0, nodes_2 = nodes; _a < nodes_2.length; _a++) {
+                var node = nodes_2[_a];
+                _loop_1(node);
             }
             var defaultFormat = editor.getDefaultFormat();
             setFontName_1.default(editor, defaultFormat.fontFamily);
@@ -7624,7 +7672,7 @@ var Paste = /** @class */ (function () {
                     clipboardData.html = textToHtml_1.default(clipboardData.text);
                 }
                 if (!clipboardData.isHtmlFromTempDiv) {
-                    clipboardData.html = roosterjs_editor_dom_1.sanitizeHtml(clipboardData.html, null /*additionalStyleNodes*/, false /*convertInlineCssOnly*/, _this.htmlPropertyCallbacks);
+                    clipboardData.html = roosterjs_editor_dom_1.sanitizeHtml(clipboardData.html, null /*additionalStyleNodes*/, false /*convertInlineCssOnly*/, _this.htmlPropertyCallbacks, true /*preserveFragmentOnly*/);
                 }
                 _this.pasteOriginal(clipboardData);
             }, _this.useDirectPaste);
@@ -8873,7 +8921,8 @@ var ImageResize = /** @class */ (function () {
             var event_2 = e.rawEvent;
             if (event_2.which == DELETE_KEYCODE || event_2.which == BACKSPACE_KEYCODE) {
                 roosterjs_editor_api_1.execFormatWithUndo(this.editor, function () {
-                    _this.removeResizeDiv();
+                    _this.removeResizeDiv(_this.resizeDiv);
+                    _this.resizeDiv = null;
                 });
                 event_2.preventDefault();
             }
@@ -8882,6 +8931,15 @@ var ImageResize = /** @class */ (function () {
                 event_2.which != ALT_KEYCODE) {
                 this.unselect(true /*selectImageAfterUnSelect*/);
             }
+        }
+        else if (e.eventType == 6 /* ContentChanged */ &&
+            e.source != "ImageResize" /* ImageResize */) {
+            var images = [].slice.call(this.editor.queryContent('img'));
+            for (var _i = 0, images_1 = images; _i < images_1.length; _i++) {
+                var image = images_1[_i];
+                this.removeResizeDivIfAny(image);
+            }
+            this.resizeDiv = null;
         }
         else if (e.eventType == 7 /* ExtractContent */) {
             var event_3 = e;
@@ -8913,7 +8971,8 @@ var ImageResize = /** @class */ (function () {
                     this.editor.updateSelection(range);
                 }
             }
-            this.removeResizeDiv();
+            this.removeResizeDiv(this.resizeDiv);
+            this.resizeDiv = null;
         }
     };
     ImageResize.prototype.createResizeDiv = function (target) {
@@ -8960,16 +9019,29 @@ var ImageResize = /** @class */ (function () {
         div.style.border = 'solid 1px ' + this.selectionBorderColor;
         return resizeDiv;
     };
-    ImageResize.prototype.removeResizeDiv = function () {
-        if (this.resizeDiv) {
-            var parent_1 = this.resizeDiv.parentNode;
-            [this.resizeDiv.previousSibling, this.resizeDiv.nextSibling].forEach(function (comment) {
+    ImageResize.prototype.removeResizeDiv = function (resizeDiv) {
+        var _this = this;
+        if (this.editor && this.editor.contains(resizeDiv)) {
+            [resizeDiv.previousSibling, resizeDiv.nextSibling].forEach(function (comment) {
                 if (comment && comment.nodeType == 8 /* Comment */) {
-                    parent_1.removeChild(comment);
+                    _this.editor.deleteNode(comment);
                 }
             });
-            parent_1.removeChild(this.resizeDiv);
-            this.resizeDiv = null;
+            this.editor.deleteNode(resizeDiv);
+        }
+    };
+    ImageResize.prototype.removeResizeDivIfAny = function (img) {
+        var div = img && img.parentNode;
+        var previous = div && div.previousSibling;
+        var next = div && div.nextSibling;
+        if (previous &&
+            previous.nodeType == 8 /* Comment */ &&
+            previous.nodeValue == BEGIN_TAG &&
+            next &&
+            next.nodeType == 8 /* Comment */ &&
+            next.nodeValue == END_TAG) {
+            div.parentNode.insertBefore(img, div);
+            this.removeResizeDiv(div);
         }
     };
     ImageResize.prototype.extractHtml = function (html) {

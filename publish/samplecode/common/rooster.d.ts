@@ -590,8 +590,9 @@ declare namespace roosterjs {
      * @param additionalStyleNodes additional style nodes for inline css converting
      * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
      * @param propertyCallbacks A callback function map to handle HTML properties
+     * @param preserveFragmentOnly If set to true, only preserve the html content between <!--StartFragment--> and <!--Endfragment-->
      */
-    function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback): string;
+    function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback, preserveFragmentOnly?: boolean): string;
 
     type SanitizeHtmlPropertyCallback = {
         [name: string]: (value: string) => string;
@@ -1104,9 +1105,10 @@ declare namespace roosterjs {
      * Query nodes intersected with current selection using a selector
      * @param editor The editor
      * @param selector The selector to query
+     * @param nodeContainedByRangeOnly When set to true, only return the nodes contained by current selection. Default value is false
      * @returns The nodes intersected with current selection, returns an empty array if no result is found
      */
-    function queryNodesWithSelection(editor: Editor, selector: string): Node[];
+    function queryNodesWithSelection(editor: Editor, selector: string, nodeContainedByRangeOnly?: boolean): Node[];
 
     /**
      * Replace the specified range with a node
@@ -1676,7 +1678,8 @@ declare namespace roosterjs {
         private doResize;
         private finishResize;
         private createResizeDiv(target);
-        private removeResizeDiv();
+        private removeResizeDiv(resizeDiv);
+        private removeResizeDivIfAny(img);
         private extractHtml(html);
         private getSelectedImage();
         private isNorth(direction);

@@ -2,6 +2,12 @@ import { NodeType } from 'roosterjs-editor-types';
 import getTagOfNode from './getTagOfNode';
 
 const HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
+const START_FRAGMENT = '<!--StartFragment-->';
+const END_FRAGMENT = '<!--EndFragment-->';
+const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
+const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
+const LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
+const LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
 
 export type SanitizeHtmlPropertyCallback = { [name: string]: (value: string) => string };
 
@@ -15,12 +21,14 @@ export type SanitizeHtmlPropertyCallback = { [name: string]: (value: string) => 
  * @param additionalStyleNodes additional style nodes for inline css converting
  * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
  * @param propertyCallbacks A callback function map to handle HTML properties
+ * @param preserveFragmentOnly If set to true, only preserve the html content between <!--StartFragment--> and <!--Endfragment-->
  */
 export default function sanitizeHtml(
     html: string,
     additionalStyleNodes?: HTMLStyleElement[],
     convertInlineCssOnly?: boolean,
-    propertyCallbacks?: SanitizeHtmlPropertyCallback
+    propertyCallbacks?: SanitizeHtmlPropertyCallback,
+    preserveFragmentOnly?: boolean
 ): string {
     let parser = new DOMParser();
     let matches = HTML_REGEX.exec(html);
@@ -37,10 +45,16 @@ export default function sanitizeHtml(
         return '';
     }
 
-    // 1. Convert global CSS into inline CSS
+    // 1. Filter out html code outside of Fragment tags if need
+    if (preserveFragmentOnly) {
+        html = trimWithFragment(html);
+        doc.body.innerHTML = html;
+    }
+
+    // 2. Convert global CSS into inline CSS
     applyInlineStyle(doc, additionalStyleNodes);
 
-    // 2, 3: Remove dangerous HTML tags and attributes, remove useless CSS properties
+    // 3, 4: Remove dangerous HTML tags and attributes, remove useless CSS properties
     if (!convertInlineCssOnly) {
         let callbackPropertyNames = (propertyCallbacks ? Object.keys(propertyCallbacks) : []).map(
             name => name.toLowerCase()
@@ -108,6 +122,7 @@ const ALLOWED_HTML_TAGS = [
     'FORM',
     'P',
     'BR',
+    'NOBR',
     'HR',
     'ACRONYM',
     'ABBR',
@@ -315,7 +330,7 @@ function removeUnusedCssAndDangerousContent(
 
     if (
         (isElement && ALLOWED_HTML_TAGS.indexOf(tag) < 0 && tag.indexOf(':') < 0) ||
-        (isText &&  /^[\r\n]*$/g.test(node.nodeValue)) ||
+        (isText && /^[\r\n]*$/g.test(node.nodeValue)) ||
         (!isElement && !isText)
     ) {
         node.parentNode.removeChild(node);
@@ -401,7 +416,10 @@ function removeDisallowedAttributes(
             } else {
                 element.removeAttribute(name);
             }
-        } else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name) < 0 || value.toLowerCase().indexOf('script:') >= 0) {
+        } else if (
+            ALLOWED_HTML_ATTRIBUTES.indexOf(name) < 0 ||
+            value.toLowerCase().indexOf('script:') >= 0
+        ) {
             element.removeAttribute(attribute.name);
         }
     }
@@ -409,4 +427,27 @@ function removeDisallowedAttributes(
 
 function toArray<T extends Node>(list: NodeListOf<T>): T[] {
     return [].slice.call(list) as T[];
+}
+
+function trimWithFragment(html: string): string {
+    let startIndex = html.indexOf(START_FRAGMENT);
+    let endIndex = html.lastIndexOf(END_FRAGMENT);
+    if (startIndex >= 0 && endIndex >= 0 && endIndex >= startIndex + START_FRAGMENT.length) {
+        let before = html.substr(0, startIndex);
+        html = html.substring(startIndex + START_FRAGMENT.length, endIndex);
+
+        // Fix up table for Excel
+        if (html.match(LAST_TD_END_REGEX)) {
+            let trMatch = before.match(LAST_TR_REGEX);
+            let tr = trMatch ? trMatch[0] : '<TR>';
+            html = tr + html + '</TR>';
+        }
+        if (html.match(LAST_TR_END_REGEX)) {
+            let tableMatch = before.match(LAST_TABLE_REGEX);
+            let table = tableMatch ? tableMatch[0] : '<TABLE>';
+            html = table + html + '</TABLE>';
+        }
+    }
+
+    return html;
 }
