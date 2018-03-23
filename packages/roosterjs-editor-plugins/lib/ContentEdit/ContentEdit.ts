@@ -10,12 +10,7 @@ import {
 } from 'roosterjs-editor-api';
 import { Position, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import {
-    Indentation,
-    PluginDomEvent,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import { Indentation, PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import ContentEditFeatures, { getDefaultContentEditFeatures } from './ContentEditFeatures';
 import tryHandleAutoBullet from './autoBullet';
 

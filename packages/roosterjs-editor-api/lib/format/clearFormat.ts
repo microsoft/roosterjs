@@ -5,6 +5,8 @@ import setTextColor from './setTextColor';
 import { Editor } from 'roosterjs-editor-core';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 
+const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
+
 /**
  * Clear the format in current selection, after cleaning, the format will be
  * changed to default format. The format that get cleaned include B/I/U/font name/
@@ -19,6 +21,11 @@ export default function clearFormat(editor: Editor) {
         let nodes = queryNodesWithSelection(editor, '[class]');
         for (let node of nodes) {
             (<HTMLElement>node).removeAttribute('class');
+        }
+
+        nodes = queryNodesWithSelection(editor, '[style]', true /*nodeContainedByRangeOnly*/);
+        for (let node of nodes) {
+            STYLES_TO_REMOVE.forEach(style => (<HTMLElement>node).style.removeProperty(style));
         }
 
         let defaultFormat = editor.getDefaultFormat();

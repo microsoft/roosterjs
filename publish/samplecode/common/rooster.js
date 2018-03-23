@@ -177,18 +177,13 @@ var roosterjs_editor_dom_1 = __webpack_require__(0);
  * Query nodes intersected with current selection using a selector
  * @param editor The editor
  * @param selector The selector to query
+ * @param nodeContainedByRangeOnly When set to true, only return the nodes contained by current selection. Default value is false
  * @returns The nodes intersected with current selection, returns an empty array if no result is found
  */
-function queryNodesWithSelection(editor, selector) {
-    var result = [];
+function queryNodesWithSelection(editor, selector, nodeContainedByRangeOnly) {
     var nodes = editor.queryNodes(selector);
     var range = editor.getSelectionRange();
-    for (var i = 0; i < nodes.length; i++) {
-        if (roosterjs_editor_dom_1.intersectWithNodeRange(nodes[i], range.start.node, range.end.node, false /*containOnly*/)) {
-            result.push(nodes[i]);
-        }
-    }
-    return result;
+    return nodes.filter(function (node) { return roosterjs_editor_dom_1.intersectWithNodeRange(node, range.start.node, range.end.node, nodeContainedByRangeOnly); });
 }
 exports.default = queryNodesWithSelection;
 
@@ -2588,24 +2583,23 @@ var isDocumentPosition_1 = __webpack_require__(9);
  * @param node The node to check
  * @param start Start node of the range
  * @param end End node of the range
- * @param containOnly When set to true, will return true only when the node is between
+ * @param nodeContainedByRangeOnly When set to true, will return true only when the node is between
  * start and end nodes or contained by start or end node. When set to false, also return true
  * if the node contains both start and end node
  * @return True if the node has intersection with the range. Otherwise false
  */
-function intersectWithNodeRange(node, start, end, containOnly) {
+function intersectWithNodeRange(node, start, end, nodeContainedByRangeOnly) {
     var startPosition = node.compareDocumentPosition(start);
     var endPosition = node.compareDocumentPosition(end);
     var targetPositions = [0 /* Same */, 8 /* Contains */];
-    if (!containOnly) {
+    if (!nodeContainedByRangeOnly) {
         targetPositions.push(16 /* ContainedBy */);
     }
-    var intersectStart = isDocumentPosition_1.default(startPosition, targetPositions);
-    var intersectEnd = isDocumentPosition_1.default(endPosition, targetPositions);
-    return (intersectStart ||
-        intersectEnd ||
-        (isDocumentPosition_1.default(startPosition, 2 /* Preceding */) &&
-            isDocumentPosition_1.default(endPosition, 4 /* Following */)));
+    return (isDocumentPosition_1.default(startPosition, targetPositions) || // intersectStart
+        isDocumentPosition_1.default(endPosition, targetPositions) || // intersectEnd
+        (isDocumentPosition_1.default(startPosition, 2 /* Preceding */) && // Contains
+            isDocumentPosition_1.default(endPosition, 4 /* Following */) &&
+            !isDocumentPosition_1.default(endPosition, 16 /* ContainedBy */)));
 }
 exports.default = intersectWithNodeRange;
 
@@ -2709,6 +2703,12 @@ function getNextPreviousInlineElement(rootNode, inlineElement, isNext) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var getTagOfNode_1 = __webpack_require__(6);
 var HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
+var START_FRAGMENT = '<!--StartFragment-->';
+var END_FRAGMENT = '<!--EndFragment-->';
+var LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
+var LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
+var LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
+var LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
 /**
  * Sanitize HTML string
  * This function will do the following work:
@@ -2719,8 +2719,9 @@ var HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
  * @param additionalStyleNodes additional style nodes for inline css converting
  * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
  * @param propertyCallbacks A callback function map to handle HTML properties
+ * @param preserveFragmentOnly If set to true, only preserve the html content between <!--StartFragment--> and <!--Endfragment-->
  */
-function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, propertyCallbacks, currentStyle) {
+function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, propertyCallbacks, currentStyle, preserveFragmentOnly) {
     var parser = new DOMParser();
     var matches = HTML_REGEX.exec(html);
     html = matches ? matches[0] : html;
@@ -2732,9 +2733,14 @@ function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, property
         !doc.body.firstChild) {
         return '';
     }
-    // 1. Convert global CSS into inline CSS
+    // 1. Filter out html code outside of Fragment tags if need
+    if (preserveFragmentOnly) {
+        html = trimWithFragment(html);
+        doc.body.innerHTML = html;
+    }
+    // 2. Convert global CSS into inline CSS
     applyInlineStyle(doc, additionalStyleNodes);
-    // 2, 3: Remove dangerous HTML tags and attributes, remove useless CSS properties
+    // 3, 4: Remove dangerous HTML tags and attributes, remove useless CSS properties
     if (!convertInlineCssOnly) {
         var callbackPropertyNames = (propertyCallbacks ? Object.keys(propertyCallbacks) : []).map(function (name) { return name.toLowerCase(); });
         removeUnusedCssAndDangerousContent(doc.body, callbackPropertyNames, propertyCallbacks, currentStyle || {});
@@ -2753,6 +2759,7 @@ var ALLOWED_HTML_TAGS = [
     'FORM',
     'P',
     'BR',
+    'NOBR',
     'HR',
     'ACRONYM',
     'ABBR',
@@ -3037,6 +3044,26 @@ function removeDisallowedAttributes(element, callbackPropertyNames, propertyCall
 }
 function toArray(list) {
     return [].slice.call(list);
+}
+function trimWithFragment(html) {
+    var startIndex = html.indexOf(START_FRAGMENT);
+    var endIndex = html.lastIndexOf(END_FRAGMENT);
+    if (startIndex >= 0 && endIndex >= 0 && endIndex >= startIndex + START_FRAGMENT.length) {
+        var before = html.substr(0, startIndex);
+        html = html.substring(startIndex + START_FRAGMENT.length, endIndex);
+        // Fix up table for Excel
+        if (html.match(LAST_TD_END_REGEX)) {
+            var trMatch = before.match(LAST_TR_REGEX);
+            var tr = trMatch ? trMatch[0] : '<TR>';
+            html = tr + html + '</TR>';
+        }
+        if (html.match(LAST_TR_END_REGEX)) {
+            var tableMatch = before.match(LAST_TABLE_REGEX);
+            var table = tableMatch ? tableMatch[0] : '<TABLE>';
+            html = table + html + '</TABLE>';
+        }
+    }
+    return html;
 }
 
 
@@ -3940,16 +3967,18 @@ var ImageResize = /** @class */ (function () {
             _this.editor.formatWithUndo(null, false, "ImageResize" /* ImageResize */);
             e.preventDefault();
         };
-        this.removeResizeDiv = function () {
-            if (_this.resizeDiv) {
-                var parent_1 = _this.resizeDiv.parentNode;
-                [_this.resizeDiv.previousSibling, _this.resizeDiv.nextSibling].forEach(function (comment) {
-                    if (comment && comment.nodeType == 8 /* Comment */) {
-                        parent_1.removeChild(comment);
-                    }
-                });
-                parent_1.removeChild(_this.resizeDiv);
-                _this.resizeDiv = null;
+        this.removeResizeDivIfAny = function (img) {
+            var div = img && img.parentNode;
+            var previous = div && div.previousSibling;
+            var next = div && div.nextSibling;
+            if (previous &&
+                previous.nodeType == 8 /* Comment */ &&
+                previous.nodeValue == BEGIN_TAG &&
+                next &&
+                next.nodeType == 8 /* Comment */ &&
+                next.nodeValue == END_TAG) {
+                div.parentNode.insertBefore(img, div);
+                _this.removeResizeDiv(div);
             }
         };
     }
@@ -3964,6 +3993,7 @@ var ImageResize = /** @class */ (function () {
         this.editor = null;
     };
     ImageResize.prototype.onPluginEvent = function (e) {
+        var _this = this;
         if (e.eventType == 4 /* MouseDown */) {
             var event_1 = e.rawEvent;
             var target = (event_1.srcElement || event_1.target);
@@ -3984,7 +4014,10 @@ var ImageResize = /** @class */ (function () {
         else if (e.eventType == 0 /* KeyDown */ && this.resizeDiv) {
             var event_2 = e.rawEvent;
             if (event_2.which == DELETE_KEYCODE || event_2.which == BACKSPACE_KEYCODE) {
-                this.editor.formatWithUndo(this.removeResizeDiv);
+                this.editor.formatWithUndo(function () {
+                    _this.removeResizeDiv(_this.resizeDiv);
+                    _this.resizeDiv = null;
+                });
                 event_2.preventDefault();
             }
             else if (event_2.which != SHIFT_KEYCODE &&
@@ -3992,6 +4025,12 @@ var ImageResize = /** @class */ (function () {
                 event_2.which != ALT_KEYCODE) {
                 this.unselect(true /*selectImageAfterUnselect*/);
             }
+        }
+        else if (e.eventType == 6 /* ContentChanged */ &&
+            e.source != "ImageResize" /* ImageResize */) {
+            var images = [].slice.call(this.editor.queryNodes('img'));
+            images.forEach(this.removeResizeDivIfAny);
+            this.resizeDiv = null;
         }
         else if (e.eventType == 7 /* ExtractContent */) {
             var event_3 = e;
@@ -4018,7 +4057,8 @@ var ImageResize = /** @class */ (function () {
                     this.editor.select(img);
                 }
             }
-            this.removeResizeDiv();
+            this.removeResizeDiv(this.resizeDiv);
+            this.resizeDiv = null;
         }
     };
     ImageResize.prototype.createResizeDiv = function (target) {
@@ -4064,6 +4104,17 @@ var ImageResize = /** @class */ (function () {
         div.style.bottom = '0';
         div.style.border = 'solid 1px ' + this.selectionBorderColor;
         return resizeDiv;
+    };
+    ImageResize.prototype.removeResizeDiv = function (resizeDiv) {
+        var _this = this;
+        if (this.editor && this.editor.contains(resizeDiv)) {
+            [resizeDiv.previousSibling, resizeDiv.nextSibling].forEach(function (comment) {
+                if (comment && comment.nodeType == 8 /* Comment */) {
+                    _this.editor.deleteNode(comment);
+                }
+            });
+            this.editor.deleteNode(resizeDiv);
+        }
     };
     ImageResize.prototype.extractHtml = function (html) {
         return html.replace(EXTRACT_HTML_REGEX, '$1');
@@ -4923,7 +4974,7 @@ var Paste = /** @class */ (function () {
                 }
                 if (!clipboardData.isHtmlFromTempDiv) {
                     var currentStyles = getInheritableStyles_1.default(_this.editor);
-                    clipboardData.html = roosterjs_editor_dom_1.sanitizeHtml(clipboardData.html, null /*additionalStyleNodes*/, false /*convertInlineCssOnly*/, _this.htmlPropertyCallbacks, currentStyles);
+                    clipboardData.html = roosterjs_editor_dom_1.sanitizeHtml(clipboardData.html, null /*additionalStyleNodes*/, false /*convertInlineCssOnly*/, _this.htmlPropertyCallbacks, currentStyles, true /*preserveFragmentOnly*/);
                 }
                 _this.pasteOriginal(clipboardData);
             }, _this.useDirectPaste);
@@ -6392,6 +6443,7 @@ var setFontName_1 = __webpack_require__(36);
 var setFontSize_1 = __webpack_require__(35);
 var setTextColor_1 = __webpack_require__(34);
 var queryNodesWithSelection_1 = __webpack_require__(2);
+var STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
 /**
  * Clear the format in current selection, after cleaning, the format will be
  * changed to default format. The format that get cleaned include B/I/U/font name/
@@ -6406,6 +6458,14 @@ function clearFormat(editor) {
         for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
             var node = nodes_1[_i];
             node.removeAttribute('class');
+        }
+        nodes = queryNodesWithSelection_1.default(editor, '[style]', true /*nodeContainedByRangeOnly*/);
+        var _loop_1 = function (node) {
+            STYLES_TO_REMOVE.forEach(function (style) { return node.style.removeProperty(style); });
+        };
+        for (var _a = 0, nodes_2 = nodes; _a < nodes_2.length; _a++) {
+            var node = nodes_2[_a];
+            _loop_1(node);
         }
         var defaultFormat = editor.getDefaultFormat();
         setFontName_1.default(editor, defaultFormat.fontFamily);

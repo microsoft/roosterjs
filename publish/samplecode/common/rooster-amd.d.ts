@@ -1184,8 +1184,9 @@ export function contains(container: Node, contained: Node, treatSameNodeAsContai
  * @param additionalStyleNodes additional style nodes for inline css converting
  * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
  * @param propertyCallbacks A callback function map to handle HTML properties
+ * @param preserveFragmentOnly If set to true, only preserve the html content between <!--StartFragment--> and <!--Endfragment-->
  */
-export function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback, currentStyle?: StyleMap): string;
+export function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback, currentStyle?: StyleMap, preserveFragmentOnly?: boolean): string;
 
 export type SanitizeHtmlPropertyCallback = {
     [name: string]: (value: string) => string;
@@ -1225,12 +1226,12 @@ export function getTagOfNode(node: Node): string;
  * @param node The node to check
  * @param start Start node of the range
  * @param end End node of the range
- * @param containOnly When set to true, will return true only when the node is between
+ * @param nodeContainedByRangeOnly When set to true, will return true only when the node is between
  * start and end nodes or contained by start or end node. When set to false, also return true
  * if the node contains both start and end node
  * @return True if the node has intersection with the range. Otherwise false
  */
-export function intersectWithNodeRange(node: Node, start: Node, end: Node, containOnly?: boolean): boolean;
+export function intersectWithNodeRange(node: Node, start: Node, end: Node, nodeContainedByRangeOnly?: boolean): boolean;
 
 /**
  * Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.
@@ -1744,9 +1745,10 @@ export function cacheGetNodeAtCursor(editor: Editor, event: PluginEvent, expecte
  * Query nodes intersected with current selection using a selector
  * @param editor The editor
  * @param selector The selector to query
+ * @param nodeContainedByRangeOnly When set to true, only return the nodes contained by current selection. Default value is false
  * @returns The nodes intersected with current selection, returns an empty array if no result is found
  */
-export function queryNodesWithSelection(editor: Editor, selector: string): Node[];
+export function queryNodesWithSelection(editor: Editor, selector: string, nodeContainedByRangeOnly?: boolean): Node[];
 
 /**
  * Replace the specified range with a node
@@ -2344,7 +2346,8 @@ export class ImageResize implements EditorPlugin {
     private doResize;
     private finishResize;
     private createResizeDiv(target);
-    private removeResizeDiv;
+    private removeResizeDiv(resizeDiv);
+    private removeResizeDivIfAny;
     private extractHtml(html);
     private getSelectedImage();
     private isNorth(direction);

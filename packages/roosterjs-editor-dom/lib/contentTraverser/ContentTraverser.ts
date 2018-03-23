@@ -13,7 +13,7 @@ import SelectionRange from '../selection/SelectionRange';
 import { ContentPosition, ContentScope } from 'roosterjs-editor-types';
 import BlockScoper from './BlockScoper';
 import SelectionScoper from './SelectionScoper';
-import BodyScoper  from './BodyScoper';
+import BodyScoper from './BodyScoper';
 
 /**
  * The provides traversing of content inside editor.
@@ -33,7 +33,12 @@ class ContentTraverser {
      * @param range A range used for scope the content. This can be null when scope set to ContentScope.Body
      * @param position Position type, must be set when scope is set to Block. The value can be Begin, End, SelectionStart
      */
-    constructor(private rootNode: Node, scope: ContentScope, range: SelectionRange, position: ContentPosition) {
+    constructor(
+        private rootNode: Node,
+        scope: ContentScope,
+        range: SelectionRange,
+        position: ContentPosition
+    ) {
         switch (scope) {
             case ContentScope.Block:
                 this.scoper = new BlockScoper(rootNode, range.start, position);

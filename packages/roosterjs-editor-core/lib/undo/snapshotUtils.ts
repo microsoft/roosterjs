@@ -29,11 +29,11 @@ export function buildSnapshot(editor: Editor): string {
 
 // Restore a snapshot
 export function restoreSnapshot(editor: Editor, snapshot: string): void {
-    editor.setContent(snapshot);
-
-    // Restore the selection and delete the cursor marker afterwards
-    updateSelectionToCursorMarkers(editor);
-    removeCursorMarkers(editor);
+    editor.setContent(snapshot, () => {
+        // Restore the selection and delete the cursor marker afterwards
+        updateSelectionToCursorMarkers(editor);
+        removeCursorMarkers(editor);
+    });
 }
 
 // Remove the temporarily added cursor markers

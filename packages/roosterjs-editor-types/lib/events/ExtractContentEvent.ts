@@ -1,4 +1,4 @@
-import PluginEvent from './PluginEvent'
+import PluginEvent from './PluginEvent';
 
 /**
  * Represents a custom PluginEvent for extracting content

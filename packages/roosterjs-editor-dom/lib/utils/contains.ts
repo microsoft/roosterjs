@@ -1,3 +1,5 @@
+import { NodeType } from 'roosterjs-editor-types';
+
 /**
  * Test if a node contains another node
  * @param container The container node
@@ -12,9 +14,18 @@ export default function contains(
     contained: Node,
     treatSameNodeAsContain?: boolean
 ): boolean {
-    return !!(
-        container &&
-        (treatSameNodeAsContain || container != contained) &&
-        container.contains(contained)
-    );
+    if (!container || !contained) {
+        return false;
+    }
+
+    if (container.nodeType != NodeType.Element) {
+        return treatSameNodeAsContain && container == contained;
+    }
+
+    if (contained.nodeType == NodeType.Text) {
+        contained = contained.parentNode;
+        treatSameNodeAsContain = true;
+    }
+
+    return (treatSameNodeAsContain || container != contained) && container.contains(contained);
 }

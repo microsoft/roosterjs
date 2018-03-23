@@ -30,4 +30,3 @@ export { default as BeforePasteEvent } from './events/BeforePasteEvent';
 // Browser Constants
 export { default as DocumentPosition } from './browser/DocumentPosition';
 export { default as NodeType } from './browser/NodeType';
-

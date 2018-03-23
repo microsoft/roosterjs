@@ -238,9 +238,11 @@ export default class Editor {
     /**
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * @param content HTML content to set in
+     * @param callbackBeforeTriggerContentChangedEvent An optional callback function, will be called before ContentChangedEvent is triggered
      */
-    public setContent(content: string) {
+    public setContent(content: string, callbackBeforeTriggerContentChangedEvent?: () => void) {
         this.core.contentDiv.innerHTML = content || '';
+        callbackBeforeTriggerContentChangedEvent && callbackBeforeTriggerContentChangedEvent();
         this.triggerContentChangedEvent();
     }
 
@@ -525,7 +527,12 @@ export default class Editor {
         scope: ContentScope,
         position: ContentPosition = ContentPosition.SelectionStart
     ): ContentTraverser {
-        return new ContentTraverser(this.core.contentDiv, scope, this.getSelectionRange(), position);
+        return new ContentTraverser(
+            this.core.contentDiv,
+            scope,
+            this.getSelectionRange(),
+            position
+        );
     }
 
     //#endregion

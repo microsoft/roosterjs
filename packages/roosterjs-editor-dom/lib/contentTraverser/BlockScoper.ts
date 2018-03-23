@@ -4,7 +4,10 @@ import BlockElement from '../blockElements/BlockElement';
 import TraversingScoper from './TraversingScoper';
 import Position from '../selection/Position';
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
-import { getInlineElementAfter, getInlineElementBefore } from '../inlineElements/getInlineElementBeforeAfter';
+import {
+    getInlineElementAfter,
+    getInlineElementBefore,
+} from '../inlineElements/getInlineElementBeforeAfter';
 
 /**
  * This provides traversing content in a selection start block
@@ -72,7 +75,7 @@ class BlockScoper implements TraversingScoper {
         let inlineBeforeStart: InlineElement;
         if (this.block && this.startPosition == ContentPosition.SelectionStart) {
             // Get the inline before selection start point, and ensure it falls in the selection block
-            inlineBeforeStart =  getInlineElementBefore(this.rootNode, this.position);
+            inlineBeforeStart = getInlineElementBefore(this.rootNode, this.position);
             if (inlineBeforeStart && !this.block.contains(inlineBeforeStart)) {
                 inlineBeforeStart = null;
             }
@@ -96,7 +99,9 @@ class BlockScoper implements TraversingScoper {
      * A block scoper does not cut an inline in half
      */
     public trimInlineElement(inlineElement: InlineElement): InlineElement {
-        return this.block && inlineElement && this.block.contains(inlineElement) ? inlineElement : null;
+        return this.block && inlineElement && this.block.contains(inlineElement)
+            ? inlineElement
+            : null;
     }
 }
 
