@@ -4,6 +4,7 @@ import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
 import InlineElement from '../inlineElements/InlineElement';
 import BlockElement from '../blockElements/BlockElement';
 import TraversingScoper from './TraversingScoper';
+import contains from '../utils/contains';
 
 // This provides scoper for traversing the entire editor body starting from the beginning
 class BodyScoper implements TraversingScoper {
@@ -21,7 +22,7 @@ class BodyScoper implements TraversingScoper {
 
     // Since the scope is global, all blocks under the root node are in scope
     public isBlockInScope(blockElement: BlockElement): boolean {
-        return this.rootNode.contains(blockElement.getStartNode());
+        return contains(this.rootNode, blockElement.getStartNode());
     }
 
     // Since we're at body scope, inline elements never need to be trimmed

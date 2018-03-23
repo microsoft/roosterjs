@@ -4,6 +4,7 @@ import {
     getFirstInlineElement,
     getLastInlineElement,
 } from '../inlineElements/getFirstLastInlineElement';
+import contains from '../utils/contains';
 
 /**
  * This presents a content block that can be reprented by a single html block type element.
@@ -42,6 +43,6 @@ export default class NodeBlockElement extends StartEndBlockElement {
 
     public contains(arg: InlineElement | Node): boolean {
         let node = arg instanceof Node ? arg : arg.getContainerNode();
-        return this.getStartNode().contains(node);
+        return contains(this.getStartNode(), node);
     }
 }
