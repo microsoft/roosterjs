@@ -80,34 +80,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Selections
 var Position_1 = __webpack_require__(15);
 exports.Position = Position_1.default;
-var SelectionRange_1 = __webpack_require__(24);
+var SelectionRange_1 = __webpack_require__(25);
 exports.SelectionRange = SelectionRange_1.default;
 // DOM Walker
 var getLeafSibling_1 = __webpack_require__(5);
 exports.getNextLeafSibling = getLeafSibling_1.getNextLeafSibling;
 exports.getPreviousLeafSibling = getLeafSibling_1.getPreviousLeafSibling;
-var getLeafNode_1 = __webpack_require__(21);
+var getLeafNode_1 = __webpack_require__(22);
 exports.getFirstLeafNode = getLeafNode_1.getFirstLeafNode;
 exports.getLastLeafNode = getLeafNode_1.getLastLeafNode;
-var NodeInlineElement_1 = __webpack_require__(53);
+var NodeInlineElement_1 = __webpack_require__(21);
 exports.NodeInlineElement = NodeInlineElement_1.default;
 var PartialInlineElement_1 = __webpack_require__(13);
 exports.PartialInlineElement = PartialInlineElement_1.default;
-var getInlineElementAtNode_1 = __webpack_require__(8);
+var getInlineElementAtNode_1 = __webpack_require__(9);
 exports.getInlineElementAtNode = getInlineElementAtNode_1.default;
 var getFirstLastInlineElement_1 = __webpack_require__(20);
 exports.getFirstInlineElement = getFirstLastInlineElement_1.getFirstInlineElement;
 exports.getLastInlineElement = getFirstLastInlineElement_1.getLastInlineElement;
-var getNextPreviousInlineElement_1 = __webpack_require__(49);
+var getNextPreviousInlineElement_1 = __webpack_require__(50);
 exports.getNextInlineElement = getNextPreviousInlineElement_1.getNextInlineElement;
 exports.getPreviousInlineElement = getNextPreviousInlineElement_1.getPreviousInlineElement;
-var NodeBlockElement_1 = __webpack_require__(48);
+var NodeBlockElement_1 = __webpack_require__(49);
 exports.NodeBlockElement = NodeBlockElement_1.default;
 var StartEndBlockElement_1 = __webpack_require__(19);
 exports.StartEndBlockElement = StartEndBlockElement_1.default;
-var getBlockElementAtNode_1 = __webpack_require__(7);
+var getBlockElementAtNode_1 = __webpack_require__(8);
 exports.getBlockElementAtNode = getBlockElementAtNode_1.default;
-var getNextPreviousBlockElement_1 = __webpack_require__(45);
+var getNextPreviousBlockElement_1 = __webpack_require__(46);
 exports.getNextBlockElement = getNextPreviousBlockElement_1.getNextBlockElement;
 exports.getPreviousBlockElement = getNextPreviousBlockElement_1.getPreviousBlockElement;
 // Content Traverser
@@ -118,21 +118,21 @@ var applyFormat_1 = __webpack_require__(106);
 exports.applyFormat = applyFormat_1.default;
 var changeElementTag_1 = __webpack_require__(105);
 exports.changeElementTag = changeElementTag_1.default;
-var contains_1 = __webpack_require__(14);
+var contains_1 = __webpack_require__(7);
 exports.contains = contains_1.default;
-var sanitizeHtml_1 = __webpack_require__(50);
+var sanitizeHtml_1 = __webpack_require__(51);
 exports.sanitizeHtml = sanitizeHtml_1.default;
-var fromHtml_1 = __webpack_require__(51);
+var fromHtml_1 = __webpack_require__(52);
 exports.fromHtml = fromHtml_1.default;
-var getComputedStyle_1 = __webpack_require__(22);
+var getComputedStyle_1 = __webpack_require__(23);
 exports.getComputedStyle = getComputedStyle_1.default;
 var getTagOfNode_1 = __webpack_require__(6);
 exports.getTagOfNode = getTagOfNode_1.default;
-var intersectWithNodeRange_1 = __webpack_require__(47);
+var intersectWithNodeRange_1 = __webpack_require__(48);
 exports.intersectWithNodeRange = intersectWithNodeRange_1.default;
-var isBlockElement_1 = __webpack_require__(46);
+var isBlockElement_1 = __webpack_require__(47);
 exports.isBlockElement = isBlockElement_1.default;
-var isDocumentPosition_1 = __webpack_require__(9);
+var isDocumentPosition_1 = __webpack_require__(14);
 exports.isDocumentPosition = isDocumentPosition_1.default;
 var isNodeEmpty_1 = __webpack_require__(104);
 exports.isNodeEmpty = isNodeEmpty_1.default;
@@ -140,7 +140,7 @@ var splitParentNode_1 = __webpack_require__(103);
 exports.splitParentNode = splitParentNode_1.default;
 var unwrap_1 = __webpack_require__(102);
 exports.unwrap = unwrap_1.default;
-var wrap_1 = __webpack_require__(52);
+var wrap_1 = __webpack_require__(53);
 exports.wrap = wrap_1.default;
 
 
@@ -155,7 +155,7 @@ var Editor_1 = __webpack_require__(113);
 exports.Editor = Editor_1.default;
 var Undo_1 = __webpack_require__(55);
 exports.Undo = Undo_1.default;
-var BrowserData_1 = __webpack_require__(26);
+var BrowserData_1 = __webpack_require__(27);
 exports.browserData = BrowserData_1.default;
 var eventDataCacheUtils_1 = __webpack_require__(98);
 exports.clearEventDataCache = eventDataCacheUtils_1.clearEventDataCache;
@@ -183,7 +183,9 @@ var roosterjs_editor_dom_1 = __webpack_require__(0);
 function queryNodesWithSelection(editor, selector, nodeContainedByRangeOnly) {
     var nodes = editor.queryNodes(selector);
     var range = editor.getSelectionRange();
-    return nodes.filter(function (node) { return roosterjs_editor_dom_1.intersectWithNodeRange(node, range.start.node, range.end.node, nodeContainedByRangeOnly); });
+    return nodes.filter(function (node) {
+        return roosterjs_editor_dom_1.intersectWithNodeRange(node, range.start.node, range.end.node, nodeContainedByRangeOnly);
+    });
 }
 exports.default = queryNodesWithSelection;
 
@@ -207,18 +209,18 @@ exports.getNodeAtCursor = getNodeAtCursor_1.default;
 exports.cacheGetNodeAtCursor = getNodeAtCursor_1.cacheGetNodeAtCursor;
 var queryNodesWithSelection_1 = __webpack_require__(2);
 exports.queryNodesWithSelection = queryNodesWithSelection_1.default;
-var replaceRangeWithNode_1 = __webpack_require__(39);
+var replaceRangeWithNode_1 = __webpack_require__(40);
 exports.replaceRangeWithNode = replaceRangeWithNode_1.default;
 var replaceTextBeforeCursorWithNode_1 = __webpack_require__(95);
 exports.replaceTextBeforeCursorWithNode = replaceTextBeforeCursorWithNode_1.default;
 exports.validateAndGetRangeForTextBeforeCursor = replaceTextBeforeCursorWithNode_1.validateAndGetRangeForTextBeforeCursor;
-var cacheGetListTag_1 = __webpack_require__(38);
+var cacheGetListTag_1 = __webpack_require__(39);
 exports.cacheGetListTag = cacheGetListTag_1.default;
 var clearFormat_1 = __webpack_require__(94);
 exports.clearFormat = clearFormat_1.default;
 var createLink_1 = __webpack_require__(93);
 exports.createLink = createLink_1.default;
-var getFormatState_1 = __webpack_require__(32);
+var getFormatState_1 = __webpack_require__(33);
 exports.getFormatState = getFormatState_1.default;
 var insertImage_1 = __webpack_require__(91);
 exports.insertImage = insertImage_1.default;
@@ -228,21 +230,21 @@ var insertTable_1 = __webpack_require__(90);
 exports.insertTable = insertTable_1.default;
 var editTable_1 = __webpack_require__(89);
 exports.editTable = editTable_1.default;
-var formatTable_1 = __webpack_require__(31);
+var formatTable_1 = __webpack_require__(32);
 exports.formatTable = formatTable_1.default;
 var removeLink_1 = __webpack_require__(88);
 exports.removeLink = removeLink_1.default;
 var setAlignment_1 = __webpack_require__(87);
 exports.setAlignment = setAlignment_1.default;
-var setBackgroundColor_1 = __webpack_require__(37);
+var setBackgroundColor_1 = __webpack_require__(38);
 exports.setBackgroundColor = setBackgroundColor_1.default;
-var setTextColor_1 = __webpack_require__(34);
+var setTextColor_1 = __webpack_require__(35);
 exports.setTextColor = setTextColor_1.default;
 var setDirection_1 = __webpack_require__(86);
 exports.setDirection = setDirection_1.default;
-var setFontName_1 = __webpack_require__(36);
+var setFontName_1 = __webpack_require__(37);
 exports.setFontName = setFontName_1.default;
-var setFontSize_1 = __webpack_require__(35);
+var setFontSize_1 = __webpack_require__(36);
 exports.setFontSize = setFontSize_1.default;
 var setImageAltText_1 = __webpack_require__(85);
 exports.setImageAltText = setImageAltText_1.default;
@@ -250,7 +252,7 @@ var setIndentation_1 = __webpack_require__(84);
 exports.setIndentation = setIndentation_1.default;
 var toggleBold_1 = __webpack_require__(83);
 exports.toggleBold = toggleBold_1.default;
-var toggleBullet_1 = __webpack_require__(30);
+var toggleBullet_1 = __webpack_require__(31);
 exports.toggleBullet = toggleBullet_1.default;
 var toggleItalic_1 = __webpack_require__(82);
 exports.toggleItalic = toggleItalic_1.default;
@@ -268,7 +270,7 @@ var toggleUnderline_1 = __webpack_require__(76);
 exports.toggleUnderline = toggleUnderline_1.default;
 var toggleHeader_1 = __webpack_require__(75);
 exports.toggleHeader = toggleHeader_1.default;
-var matchLink_1 = __webpack_require__(33);
+var matchLink_1 = __webpack_require__(34);
 exports.matchLink = matchLink_1.default;
 
 
@@ -327,8 +329,8 @@ exports.cacheGetNodeAtCursor = cacheGetNodeAtCursor;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var contains_1 = __webpack_require__(14);
-var shouldSkipNode_1 = __webpack_require__(23);
+var contains_1 = __webpack_require__(7);
+var shouldSkipNode_1 = __webpack_require__(24);
 /**
  * This walks forwards (from left to right) DOM tree to get next meaningful node
  * A null is returned when it reaches the very end - beyond the scope as defined by rootNode
@@ -405,9 +407,41 @@ exports.default = getTagOfNode;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var contains_1 = __webpack_require__(14);
-var isBlockElement_1 = __webpack_require__(46);
-var NodeBlockElement_1 = __webpack_require__(48);
+/**
+ * Test if a node contains another node
+ * @param container The container node
+ * @param contained The node to check if it is insied container
+ * @param treatSameNodeAsContain When container and contained are the same node,
+ * return true if this param is set to true, otherwise return false. Default value is false
+ * @returns True if contained is insied container, or they are the same node when treatSameNodeAsContain is true.
+ * Otherwise false.
+ */
+function contains(container, contained, treatSameNodeAsContain) {
+    if (!container || !contained) {
+        return false;
+    }
+    if (container.nodeType != 1 /* Element */) {
+        return !!treatSameNodeAsContain && container == contained;
+    }
+    if (contained.nodeType == 3 /* Text */) {
+        contained = contained.parentNode;
+        treatSameNodeAsContain = true;
+    }
+    return !!(treatSameNodeAsContain || container != contained) && container.contains(contained);
+}
+exports.default = contains;
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var contains_1 = __webpack_require__(7);
+var isBlockElement_1 = __webpack_require__(47);
+var NodeBlockElement_1 = __webpack_require__(49);
 var StartEndBlockElement_1 = __webpack_require__(19);
 var getLeafSibling_1 = __webpack_require__(5);
 var getTagOfNode_1 = __webpack_require__(6);
@@ -538,13 +572,13 @@ function findHeadTailLeafNodeInBlock(node, container, isTail) {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var NodeInlineElement_1 = __webpack_require__(53);
+var NodeInlineElement_1 = __webpack_require__(21);
 /**
  * Get the inline element at a node
  * @param node The node to get InlineElement froms
@@ -553,29 +587,6 @@ function getInlineElementAtNode(node) {
     return node ? new NodeInlineElement_1.default(node) : null;
 }
 exports.default = getInlineElementAtNode;
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Check if position is or encompasses any of targets
- * @param position The doucment position to check
- * @param targets The target position or position array
- */
-function isDocumentPosition(position, targets) {
-    targets = targets instanceof Array ? targets : [targets];
-    return targets.some(function (target) {
-        return target == 0 /* Same */
-            ? position == 0 /* Same */
-            : (position & target) == target;
-    });
-}
-exports.default = isDocumentPosition;
 
 
 /***/ }),
@@ -664,7 +675,7 @@ exports.default = applyInlineStyle;
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var hasFocus_1 = __webpack_require__(18);
-var isRangeInContainer_1 = __webpack_require__(43);
+var isRangeInContainer_1 = __webpack_require__(44);
 function select(core, arg1, arg2, arg3, arg4) {
     var rawRange;
     if (arg1 instanceof Range) {
@@ -721,7 +732,7 @@ exports.default = select;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var isRangeInContainer_1 = __webpack_require__(43);
+var isRangeInContainer_1 = __webpack_require__(44);
 function getLiveRange(core) {
     var selection = core.document.defaultView.getSelection();
     if (selection && selection.rangeCount > 0) {
@@ -743,8 +754,8 @@ exports.default = getLiveRange;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Position_1 = __webpack_require__(15);
-var SelectionRange_1 = __webpack_require__(24);
-var isDocumentPosition_1 = __webpack_require__(9);
+var SelectionRange_1 = __webpack_require__(25);
+var NodeInlineElement_1 = __webpack_require__(21);
 /**
  * This is a special version of inline element that identifies a section of an inline element
  * We often have the need to cut an inline element in half and perform some operation only on half of an inline element
@@ -753,116 +764,62 @@ var isDocumentPosition_1 = __webpack_require__(9);
  * It also offers some special methods that others don't have, i.e. nextInlineElement etc.
  */
 var PartialInlineElement = /** @class */ (function () {
-    function PartialInlineElement(inlineElement, start, end) {
-        this.inlineElement = inlineElement;
-        this.start = start;
-        this.end = end;
+    function PartialInlineElement(decoratedInline, start, end) {
+        this.decoratedInline = decoratedInline instanceof NodeInlineElement_1.default ?
+            decoratedInline :
+            decoratedInline.getDecoratedInline();
+        var node = this.decoratedInline.getContainerNode();
+        this.start = (start || new Position_1.default(node, Position_1.default.Begin)).normalize();
+        this.end = (end || new Position_1.default(node, Position_1.default.End)).normalize();
     }
     /**
      * Get the full inline element that this partial inline decorates
      */
     PartialInlineElement.prototype.getDecoratedInline = function () {
-        return this.inlineElement;
+        return this.decoratedInline;
     };
     /**
      * Gets the container node
      */
     PartialInlineElement.prototype.getContainerNode = function () {
-        return this.inlineElement.getContainerNode();
+        return this.decoratedInline.getContainerNode();
     };
     /**
      * Gets the text content
      */
     PartialInlineElement.prototype.getTextContent = function () {
-        var node = this.inlineElement.getContainerNode();
-        return new SelectionRange_1.default(this.start || new Position_1.default(node, Position_1.default.Before), this.end || new Position_1.default(node, Position_1.default.After))
-            .getRange()
-            .toString();
+        return new SelectionRange_1.default(this.start, this.end).getRange().toString();
     };
     /**
      * Gets the start position
      */
     PartialInlineElement.prototype.getStartPosition = function () {
-        return this.start || this.inlineElement.getStartPosition();
+        return this.start;
     };
     /**
      * Gets the end position
      */
     PartialInlineElement.prototype.getEndPosition = function () {
-        return this.end || this.inlineElement.getEndPosition();
+        return this.end;
     };
-    /**
-     * Checks if the partial is on start point
-     */
-    PartialInlineElement.prototype.isStartPartial = function () {
-        return !!this.start;
-    };
-    /**
-     * Checks if the partial is on the end point
-     */
-    PartialInlineElement.prototype.isEndPartial = function () {
-        return !!this.end;
-    };
-    Object.defineProperty(PartialInlineElement.prototype, "nextInlineElement", {
-        /**
-         * Get next partial inline element if it is not at the end boundary yet
-         */
-        get: function () {
-            return this.end && new PartialInlineElement(this.inlineElement, this.end, null);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PartialInlineElement.prototype, "previousInlineElement", {
-        /**
-         * Get previous partial inline element if it is not at the begin boundary yet
-         */
-        get: function () {
-            return this.start && new PartialInlineElement(this.inlineElement, null, this.start);
-        },
-        enumerable: true,
-        configurable: true
-    });
     /**
      * Checks if it contains a position
      */
     PartialInlineElement.prototype.contains = function (p) {
-        return p.isAfter(this.getStartPosition()) && this.getEndPosition().isAfter(p);
+        return p.isAfter(this.start) && this.end.isAfter(p);
     };
     /**
      * Check if this inline element is after the other inline element
      */
     PartialInlineElement.prototype.isAfter = function (inlineElement) {
-        // First node level check to see if this element's container node is after (following) the other element (inlineElement)
-        // If node level says after (following), it is really "is after"
-        var documentPosition = inlineElement
-            .getContainerNode()
-            .compareDocumentPosition(this.getContainerNode());
-        var isAfter = isDocumentPosition_1.default(documentPosition, 4 /* Following */);
-        // If node level is not "is after", need to do extra check if the other inline element is also a partial that decorates same inline element
-        // and this partical is partial on start (this.startPosition != null)
-        // The idea here is to take this partial's start to compare with the other inline end. We consider "is after" only when
-        // this partial's start is after or same as the other inline's end
-        if (!isAfter &&
-            documentPosition == 0 /* Same */ &&
-            inlineElement instanceof PartialInlineElement &&
-            this.start) {
-            // get partial's end
-            var otherInline = inlineElement;
-            var otherInlineEndPosition = otherInline.getEndPosition();
-            // this partial's start
-            var thisStartPosition = this.getStartPosition();
-            isAfter =
-                thisStartPosition.isAfter(otherInlineEndPosition) ||
-                    thisStartPosition.equalTo(otherInlineEndPosition);
-        }
-        return isAfter;
+        var end = inlineElement.getEndPosition();
+        return this.start.equalTo(end) || this.start.isAfter(end);
     };
     /**
      * apply style
      */
     PartialInlineElement.prototype.applyStyle = function (styler, from, to) {
-        this.inlineElement.applyStyle(styler, from || this.start, to || this.end);
+        this.decoratedInline.applyStyle(styler, from || this.start, to || this.end);
     };
     return PartialInlineElement;
 }());
@@ -877,20 +834,19 @@ exports.default = PartialInlineElement;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * Test if a node contains another node
- * @param container The container node
- * @param contained The node to check if it is insied container
- * @param treatSameNodeAsContain When container and contained are the same node,
- * return true if this param is set to true, otherwise return false. Default value is false
- * @returns True if contained is insied container, or they are the same node when treatSameNodeAsContain is true.
- * Otherwise false.
+ * Check if position is or encompasses any of targets
+ * @param position The doucment position to check
+ * @param targets The target position or position array
  */
-function contains(container, contained, treatSameNodeAsContain) {
-    return !!(container &&
-        (treatSameNodeAsContain || container != contained) &&
-        container.contains(contained));
+function isDocumentPosition(position, targets) {
+    targets = targets instanceof Array ? targets : [targets];
+    return targets.some(function (target) {
+        return target == 0 /* Same */
+            ? position == 0 /* Same */
+            : (position & target) == target;
+    });
 }
-exports.default = contains;
+exports.default = isDocumentPosition;
 
 
 /***/ }),
@@ -900,7 +856,7 @@ exports.default = contains;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var isNodeAfter_1 = __webpack_require__(25);
+var isNodeAfter_1 = __webpack_require__(26);
 /**
  * Represent a position in DOM tree by the node and its offset index
  */
@@ -965,13 +921,13 @@ var Position = /** @class */ (function () {
      * @param p The position to check
      */
     Position.prototype.equalTo = function (p) {
-        return this == p || (this.node == p.node && this.offset == p.offset);
+        return this == p || (this.node == p.node && this.offset == p.offset && this.isAtEnd == p.isAtEnd);
     };
     /**
      * Checks if position 1 is after position 2
      */
     Position.prototype.isAfter = function (p) {
-        return this.node == p.node ? this.offset > p.offset : isNodeAfter_1.default(this.node, p.node);
+        return this.node == p.node ? (this.isAtEnd && !p.isAtEnd || this.offset > p.offset) : isNodeAfter_1.default(this.node, p.node);
     };
     Position.Before = "b" /* Before */;
     Position.Begin = 0 /* Begin */;
@@ -1442,9 +1398,9 @@ exports.default = hasFocus;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getInlineElementAtNode_1 = __webpack_require__(8);
-var intersectWithNodeRange_1 = __webpack_require__(47);
-var isNodeAfter_1 = __webpack_require__(25);
+var getInlineElementAtNode_1 = __webpack_require__(9);
+var intersectWithNodeRange_1 = __webpack_require__(48);
+var isNodeAfter_1 = __webpack_require__(26);
 /**
  * This reprents a block that is identified by a start and end node
  * This is for cases like <ced>Hello<BR>World</ced>
@@ -1546,8 +1502,8 @@ exports.default = StartEndBlockElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getInlineElementAtNode_1 = __webpack_require__(8);
-var getLeafNode_1 = __webpack_require__(21);
+var getInlineElementAtNode_1 = __webpack_require__(9);
+var getLeafNode_1 = __webpack_require__(22);
 /**
  * Get first inline element
  */
@@ -1577,7 +1533,160 @@ exports.getLastInlineElement = getLastInlineElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var shouldSkipNode_1 = __webpack_require__(23);
+var contains_1 = __webpack_require__(7);
+var getTagOfNode_1 = __webpack_require__(6);
+var isDocumentPosition_1 = __webpack_require__(14);
+var isNodeAfter_1 = __webpack_require__(26);
+var wrap_1 = __webpack_require__(53);
+var getLeafSibling_1 = __webpack_require__(5);
+var Position_1 = __webpack_require__(15);
+var SelectionRange_1 = __webpack_require__(25);
+/**
+ * This presents an inline element that can be reprented by a single html node.
+ * This serves as base for most inline element as it contains most implentation
+ * of all operations that can happen on an inline element. Other sub inline elements mostly
+ * just identify themself for a certain type
+ */
+var NodeInlineElement = /** @class */ (function () {
+    function NodeInlineElement(containerNode) {
+        this.containerNode = containerNode;
+    }
+    /**
+     * The text content for this inline element
+     */
+    NodeInlineElement.prototype.getTextContent = function () {
+        // nodeValue is better way to retrieve content for a text. Others, just use textContent
+        return this.containerNode.nodeType == 3 /* Text */
+            ? this.containerNode.nodeValue
+            : this.containerNode.textContent;
+    };
+    /**
+     * Get the container node
+     */
+    NodeInlineElement.prototype.getContainerNode = function () {
+        return this.containerNode;
+    };
+    /**
+     * Get the start point of the inline element
+     */
+    NodeInlineElement.prototype.getStartPosition = function () {
+        // For an editor point, we always want it to point to a leaf node
+        // We should try to go get the lowest first child node from the container
+        return new Position_1.default(this.containerNode, 0).normalize();
+    };
+    /**
+     * Get the end point of the inline element
+     */
+    NodeInlineElement.prototype.getEndPosition = function () {
+        // For an editor point, we always want it to point to a leaf node
+        // We should try to go get the lowest last child node from the container
+        return new Position_1.default(this.containerNode, Position_1.default.End).normalize();
+    };
+    /**
+     * Checks if an inline element is after the current inline element
+     */
+    NodeInlineElement.prototype.isAfter = function (inlineElement) {
+        return isNodeAfter_1.default(this.containerNode, inlineElement.getContainerNode());
+    };
+    /**
+     * Checks if an editor point is contained in the inline element
+     */
+    NodeInlineElement.prototype.contains = function (position) {
+        var start = this.getStartPosition();
+        var end = this.getEndPosition();
+        return position.isAfter(start) && end.isAfter(position);
+    };
+    /**
+     * Apply inline style to a region of an inline element. The region is identified thorugh the from and to point
+     * The fromPosition and toPosition are optional and when bing missed, it indicates the boundary of the element
+     * The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
+     * when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
+     * The actuall styling is done by consumer through the styler callback
+     */
+    NodeInlineElement.prototype.applyStyle = function (styler, from, to) {
+        var ownerDoc = this.containerNode.ownerDocument;
+        // Adjust the start point
+        if (!from) {
+            from = new Position_1.default(this.containerNode, 0);
+        }
+        else if (from.isAtEnd) {
+            var nextNode = getLeafSibling_1.getNextLeafSibling(this.containerNode, from.node);
+            from = nextNode ? new Position_1.default(nextNode, 0) : null;
+        }
+        // Adjust the end point
+        if (!to) {
+            to = new Position_1.default(this.containerNode, Position_1.default.End);
+        }
+        else if (to.offset == 0) {
+            var prevNode = getLeafSibling_1.getPreviousLeafSibling(this.containerNode, to.node);
+            to = prevNode ? new Position_1.default(prevNode, Position_1.default.End) : null;
+        }
+        if (!from || !to) {
+            // we need a valid start and end node, if either one is null, we will just exit
+            // this isn't an error, it just tells the fact we don't see a good node to apply a style
+            return;
+        }
+        from = from.normalize();
+        to = to.normalize();
+        var fromNode = from.node;
+        var toNode = to.node;
+        var fromOffset = from.offset;
+        while (contains_1.default(this.containerNode, fromNode, true /*treatSameNodeAsContain*/)) {
+            // The code below modifies DOM. Need to get the next sibling first otherwise
+            // you won't be able to reliably get a good next sibling node
+            var nextLeafNode = getLeafSibling_1.getNextLeafSibling(this.containerNode, fromNode);
+            var withinRange = fromNode == toNode ||
+                isDocumentPosition_1.default(fromNode.compareDocumentPosition(toNode), 4 /* Following */);
+            if (!withinRange) {
+                break;
+            }
+            // Apply the style
+            // If a node has only white space and new line and is in table, we ignore it,
+            // otherwise the table will be distorted
+            if (fromNode.nodeType == 3 /* Text */ && getTagOfNode_1.default(fromNode.parentNode) != 'TR') {
+                var adjustedEndOffset = fromNode == toNode ? to.offset : fromNode.nodeValue.length;
+                if (adjustedEndOffset > fromOffset) {
+                    var len = adjustedEndOffset - fromOffset;
+                    var parentNode = fromNode.parentNode;
+                    if (getTagOfNode_1.default(parentNode) == 'SPAN' &&
+                        parentNode.textContent.length == len) {
+                        // If the element is in a span and this element is everything of the parent
+                        // apply the style on parent span
+                        styler(parentNode);
+                    }
+                    else if (len == fromNode.nodeValue.length) {
+                        // It is whole text node
+                        styler(wrap_1.default(fromNode, '<span></span>'));
+                    }
+                    else {
+                        // It is partial of a text node
+                        var newNode = ownerDoc.createElement('SPAN');
+                        newNode.textContent = fromNode.nodeValue.substring(fromOffset, adjustedEndOffset);
+                        var selectionRange = new SelectionRange_1.default(new Position_1.default(fromNode, fromOffset), new Position_1.default(fromNode, adjustedEndOffset));
+                        var range = selectionRange.getRange();
+                        range.deleteContents();
+                        range.insertNode(newNode);
+                        styler(newNode);
+                    }
+                }
+            }
+            fromNode = nextLeafNode;
+            fromOffset = 0;
+        }
+    };
+    return NodeInlineElement;
+}());
+exports.default = NodeInlineElement;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var shouldSkipNode_1 = __webpack_require__(24);
 var getLeafSibling_1 = __webpack_require__(5);
 /**
  * Get the first meaningful leaf node
@@ -1611,7 +1720,7 @@ function getLeafNode(rootNode, isFirst) {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1642,13 +1751,13 @@ exports.default = getComputedStyle;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(22);
+var getComputedStyle_1 = __webpack_require__(23);
 /**
  * Skip a node when any of following conditions are true
  * - it is neither Element nor Text
@@ -1671,7 +1780,7 @@ exports.default = shouldSkipNode;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1718,13 +1827,13 @@ exports.default = SelectionRange;
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var isDocumentPosition_1 = __webpack_require__(9);
+var isDocumentPosition_1 = __webpack_require__(14);
 /**
  * Checks if node1 is after node2
  * @param node1 The node to check if it is after another node
@@ -1740,7 +1849,7 @@ exports.default = isNodeAfter;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1809,7 +1918,7 @@ exports.default = browserData;
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1827,7 +1936,7 @@ exports.createLevelLists = createLevelLists;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1888,7 +1997,7 @@ function getAndSetNodeId(customData, element) {
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1914,7 +2023,7 @@ exports.getDefaultContentEditFeatures = getDefaultContentEditFeatures;
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1965,7 +2074,7 @@ exports.default = toggleBullet;
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1997,7 +2106,7 @@ exports.default = formatTable;
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2005,7 +2114,7 @@ exports.default = formatTable;
 Object.defineProperty(exports, "__esModule", { value: true });
 var getNodeAtCursor_1 = __webpack_require__(4);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var cacheGetListTag_1 = __webpack_require__(38);
+var cacheGetListTag_1 = __webpack_require__(39);
 var cacheGetHeaderLevel_1 = __webpack_require__(92);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 // Query command state, used for query Bold, Italic, Underline state
@@ -2054,7 +2163,7 @@ exports.default = getFormatState;
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2133,7 +2242,7 @@ exports.default = matchLink;
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2154,7 +2263,7 @@ exports.default = setTextColor;
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2177,7 +2286,7 @@ exports.default = setFontSize;
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2200,7 +2309,7 @@ exports.default = setFontName;
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2221,7 +2330,7 @@ exports.default = setBackgroundColor;
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2246,7 +2355,7 @@ exports.default = cacheGetListTag;
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2281,7 +2390,7 @@ exports.default = replaceRangeWithNode;
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2301,7 +2410,7 @@ exports.default = isVoidHtmlElement;
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2309,7 +2418,7 @@ exports.default = isVoidHtmlElement;
 Object.defineProperty(exports, "__esModule", { value: true });
 var getLiveRange_1 = __webpack_require__(12);
 var hasFocus_1 = __webpack_require__(18);
-var isVoidHtmlElement_1 = __webpack_require__(40);
+var isVoidHtmlElement_1 = __webpack_require__(41);
 var select_1 = __webpack_require__(11);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 function focus(core) {
@@ -2359,7 +2468,7 @@ function setSelectionToBegin(core) {
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2391,7 +2500,7 @@ exports.default = triggerEvent;
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2410,15 +2519,15 @@ exports.default = isRangeInContainer;
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(13);
-var getInlineElementAtNode_1 = __webpack_require__(8);
-var shouldSkipNode_1 = __webpack_require__(23);
+var getInlineElementAtNode_1 = __webpack_require__(9);
+var shouldSkipNode_1 = __webpack_require__(24);
 var getLeafSibling_1 = __webpack_require__(5);
 /**
  * Get inline element before a position
@@ -2475,14 +2584,14 @@ function getInlineElementBeforeAfterPoint(rootNode, position, isAfter) {
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var getLeafSibling_1 = __webpack_require__(5);
-var getBlockElementAtNode_1 = __webpack_require__(7);
+var getBlockElementAtNode_1 = __webpack_require__(8);
 /**
  * Get next block
  */
@@ -2510,7 +2619,7 @@ function getNextPreviousBlockElement(rootNode, blockElement, isNext) {
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2571,13 +2680,13 @@ exports.default = isBlockElement;
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var isDocumentPosition_1 = __webpack_require__(9);
+var isDocumentPosition_1 = __webpack_require__(14);
 /**
  * Check if a given node has intersection with the given node range
  * @param node The node to check
@@ -2605,7 +2714,7 @@ exports.default = intersectWithNodeRange;
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2623,6 +2732,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var StartEndBlockElement_1 = __webpack_require__(19);
 var getFirstLastInlineElement_1 = __webpack_require__(20);
+var contains_1 = __webpack_require__(7);
 /**
  * This presents a content block that can be reprented by a single html block type element.
  * In most cases, it corresponds to an HTML block level element, i.e. P, DIV, LI, TD etc.
@@ -2656,7 +2766,7 @@ var NodeBlockElement = /** @class */ (function (_super) {
     };
     NodeBlockElement.prototype.contains = function (arg) {
         var node = arg instanceof Node ? arg : arg.getContainerNode();
-        return this.getStartNode().contains(node);
+        return contains_1.default(this.getStartNode(), node, true /*treatSameNodeAsContain*/);
     };
     return NodeBlockElement;
 }(StartEndBlockElement_1.default));
@@ -2664,38 +2774,39 @@ exports.default = NodeBlockElement;
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(13);
-var getInlineElementAtNode_1 = __webpack_require__(8);
+var getInlineElementAtNode_1 = __webpack_require__(9);
 var getLeafSibling_1 = __webpack_require__(5);
 /**
  * Get next inline element
  */
 function getNextInlineElement(rootNode, inlineElement) {
-    return getNextPreviousInlineElement(rootNode, inlineElement, true /*isNext*/);
+    var end = inlineElement.getEndPosition();
+    return end.isAtEnd ?
+        getInlineElementAtNode_1.default(getLeafSibling_1.getLeafSibling(rootNode, inlineElement.getContainerNode(), true /*isNext*/)) :
+        new PartialInlineElement_1.default(inlineElement, end, null);
 }
 exports.getNextInlineElement = getNextInlineElement;
 /**
  * Get previous inline element
  */
 function getPreviousInlineElement(rootNode, inlineElement) {
-    return getNextPreviousInlineElement(rootNode, inlineElement, false /*isNext*/);
+    var start = inlineElement.getStartPosition();
+    return start.offset == 0 ?
+        getInlineElementAtNode_1.default(getLeafSibling_1.getLeafSibling(rootNode, inlineElement.getContainerNode(), false /*isNext*/)) :
+        new PartialInlineElement_1.default(inlineElement, null, start);
 }
 exports.getPreviousInlineElement = getPreviousInlineElement;
-function getNextPreviousInlineElement(rootNode, inlineElement, isNext) {
-    return ((inlineElement instanceof PartialInlineElement_1.default &&
-        (isNext ? inlineElement.nextInlineElement : inlineElement.previousInlineElement)) ||
-        getInlineElementAtNode_1.default(getLeafSibling_1.getLeafSibling(rootNode, inlineElement.getContainerNode(), isNext)));
-}
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3068,13 +3179,13 @@ function trimWithFragment(html) {
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var sanitizeHtml_1 = __webpack_require__(50);
+var sanitizeHtml_1 = __webpack_require__(51);
 /**
  * Creates an HTML node array from html
  * @param html the html string to create HTML elements from
@@ -3091,13 +3202,13 @@ exports.default = fromHtml;
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var fromHtml_1 = __webpack_require__(51);
+var fromHtml_1 = __webpack_require__(52);
 /**
  * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
  * @param nodes The node or node array to wrap
@@ -3129,166 +3240,13 @@ exports.default = wrap;
 
 
 /***/ }),
-/* 53 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var contains_1 = __webpack_require__(14);
-var getTagOfNode_1 = __webpack_require__(6);
-var isDocumentPosition_1 = __webpack_require__(9);
-var isNodeAfter_1 = __webpack_require__(25);
-var wrap_1 = __webpack_require__(52);
-var getLeafSibling_1 = __webpack_require__(5);
-var Position_1 = __webpack_require__(15);
-var SelectionRange_1 = __webpack_require__(24);
-/**
- * This presents an inline element that can be reprented by a single html node.
- * This serves as base for most inline element as it contains most implentation
- * of all operations that can happen on an inline element. Other sub inline elements mostly
- * just identify themself for a certain type
- */
-var NodeInlineElement = /** @class */ (function () {
-    function NodeInlineElement(containerNode) {
-        this.containerNode = containerNode;
-    }
-    /**
-     * The text content for this inline element
-     */
-    NodeInlineElement.prototype.getTextContent = function () {
-        // nodeValue is better way to retrieve content for a text. Others, just use textContent
-        return this.containerNode.nodeType == 3 /* Text */
-            ? this.containerNode.nodeValue
-            : this.containerNode.textContent;
-    };
-    /**
-     * Get the container node
-     */
-    NodeInlineElement.prototype.getContainerNode = function () {
-        return this.containerNode;
-    };
-    /**
-     * Get the start point of the inline element
-     */
-    NodeInlineElement.prototype.getStartPosition = function () {
-        // For an editor point, we always want it to point to a leaf node
-        // We should try to go get the lowest first child node from the container
-        return new Position_1.default(this.containerNode, 0).normalize();
-    };
-    /**
-     * Get the end point of the inline element
-     */
-    NodeInlineElement.prototype.getEndPosition = function () {
-        // For an editor point, we always want it to point to a leaf node
-        // We should try to go get the lowest last child node from the container
-        return new Position_1.default(this.containerNode, Position_1.default.End).normalize();
-    };
-    /**
-     * Checks if an inline element is after the current inline element
-     */
-    NodeInlineElement.prototype.isAfter = function (inlineElement) {
-        return isNodeAfter_1.default(this.containerNode, inlineElement.getContainerNode());
-    };
-    /**
-     * Checks if an editor point is contained in the inline element
-     */
-    NodeInlineElement.prototype.contains = function (position) {
-        var start = this.getStartPosition();
-        var end = this.getEndPosition();
-        return position.isAfter(start) && end.isAfter(position);
-    };
-    /**
-     * Apply inline style to a region of an inline element. The region is identified thorugh the from and to point
-     * The fromPosition and toPosition are optional and when bing missed, it indicates the boundary of the element
-     * The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
-     * when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
-     * The actuall styling is done by consumer through the styler callback
-     */
-    NodeInlineElement.prototype.applyStyle = function (styler, from, to) {
-        var ownerDoc = this.containerNode.ownerDocument;
-        // Adjust the start point
-        if (!from) {
-            from = new Position_1.default(this.containerNode, 0);
-        }
-        else if (from.isAtEnd) {
-            var nextNode = getLeafSibling_1.getNextLeafSibling(this.containerNode, from.node);
-            from = nextNode ? new Position_1.default(nextNode, 0) : null;
-        }
-        // Adjust the end point
-        if (!to) {
-            to = new Position_1.default(this.containerNode, Position_1.default.End);
-        }
-        else if (to.offset == 0) {
-            var prevNode = getLeafSibling_1.getPreviousLeafSibling(this.containerNode, to.node);
-            to = prevNode ? new Position_1.default(prevNode, Position_1.default.End) : null;
-        }
-        if (!from || !to) {
-            // we need a valid start and end node, if either one is null, we will just exit
-            // this isn't an error, it just tells the fact we don't see a good node to apply a style
-            return;
-        }
-        from = from.normalize();
-        to = to.normalize();
-        var fromNode = from.node;
-        var toNode = to.node;
-        var fromOffset = from.offset;
-        while (contains_1.default(this.containerNode, fromNode, true /*treatSameNodeAsContain*/)) {
-            // The code below modifies DOM. Need to get the next sibling first otherwise
-            // you won't be able to reliably get a good next sibling node
-            var nextLeafNode = getLeafSibling_1.getNextLeafSibling(this.containerNode, fromNode);
-            var withinRange = fromNode == toNode ||
-                isDocumentPosition_1.default(fromNode.compareDocumentPosition(toNode), 4 /* Following */);
-            if (!withinRange) {
-                break;
-            }
-            // Apply the style
-            // If a node has only white space and new line and is in table, we ignore it,
-            // otherwise the table will be distorted
-            if (fromNode.nodeType == 3 /* Text */ && getTagOfNode_1.default(fromNode.parentNode) != 'TR') {
-                var adjustedEndOffset = fromNode == toNode ? to.offset : fromNode.nodeValue.length;
-                if (adjustedEndOffset > fromOffset) {
-                    var len = adjustedEndOffset - fromOffset;
-                    var parentNode = fromNode.parentNode;
-                    if (getTagOfNode_1.default(parentNode) == 'SPAN' &&
-                        parentNode.textContent.length == len) {
-                        // If the element is in a span and this element is everything of the parent
-                        // apply the style on parent span
-                        styler(parentNode);
-                    }
-                    else if (len == fromNode.nodeValue.length) {
-                        // It is whole text node
-                        styler(wrap_1.default(fromNode, '<span></span>'));
-                    }
-                    else {
-                        // It is partial of a text node
-                        var newNode = ownerDoc.createElement('SPAN');
-                        newNode.textContent = fromNode.nodeValue.substring(fromOffset, adjustedEndOffset);
-                        var selectionRange = new SelectionRange_1.default(new Position_1.default(fromNode, fromOffset), new Position_1.default(fromNode, adjustedEndOffset));
-                        var range = selectionRange.getRange();
-                        range.deleteContents();
-                        range.insertNode(newNode);
-                        styler(newNode);
-                    }
-                }
-            }
-            fromNode = nextLeafNode;
-            fromOffset = 0;
-        }
-    };
-    return NodeInlineElement;
-}());
-exports.default = NodeInlineElement;
-
-
-/***/ }),
 /* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var BrowserData_1 = __webpack_require__(26);
+var BrowserData_1 = __webpack_require__(27);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 // Undo cursor marker
 var CURSOR_START = 'cursor-start';
@@ -3313,10 +3271,11 @@ function buildSnapshot(editor) {
 exports.buildSnapshot = buildSnapshot;
 // Restore a snapshot
 function restoreSnapshot(editor, snapshot) {
-    editor.setContent(snapshot);
-    // Restore the selection and delete the cursor marker afterwards
-    updateSelectionToCursorMarkers(editor);
-    removeCursorMarkers(editor);
+    editor.setContent(snapshot, function () {
+        // Restore the selection and delete the cursor marker afterwards
+        updateSelectionToCursorMarkers(editor);
+        removeCursorMarkers(editor);
+    });
 }
 exports.restoreSnapshot = restoreSnapshot;
 // Remove the temporarily added cursor markers
@@ -3605,7 +3564,7 @@ var ContentEdit_1 = __webpack_require__(73);
 exports.ContentEdit = ContentEdit_1.default;
 var Paste_1 = __webpack_require__(71);
 exports.Paste = Paste_1.default;
-var ContentEditFeatures_1 = __webpack_require__(29);
+var ContentEditFeatures_1 = __webpack_require__(30);
 exports.getDefaultContentEditFeatures = ContentEditFeatures_1.getDefaultContentEditFeatures;
 
 
@@ -3915,7 +3874,7 @@ var ImageResize = /** @class */ (function () {
                 _this.startPageY = e.pageY;
                 _this.startWidth = img.clientWidth;
                 _this.startHeight = img.clientHeight;
-                _this.editor.formatWithUndo(null);
+                _this.editor.formatWithUndo(null, false /*preserveSelection*/, "ImageResize" /* ImageResize */);
                 var document_1 = _this.editor.getDocument();
                 document_1.addEventListener('mousemove', _this.doResize, true /*useCapture*/);
                 document_1.addEventListener('mouseup', _this.finishResize, true /*useCapture*/);
@@ -4017,7 +3976,7 @@ var ImageResize = /** @class */ (function () {
                 this.editor.formatWithUndo(function () {
                     _this.removeResizeDiv(_this.resizeDiv);
                     _this.resizeDiv = null;
-                });
+                }, false /*preserveSelection*/, "ImageResize" /* ImageResize */);
                 event_2.preventDefault();
             }
             else if (event_2.which != SHIFT_KEYCODE &&
@@ -4208,8 +4167,8 @@ exports.default = textToHtml;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var LevelLists_1 = __webpack_require__(27);
-var CustomData_1 = __webpack_require__(28);
+var LevelLists_1 = __webpack_require__(28);
+var CustomData_1 = __webpack_require__(29);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 /** Word list metadata style name */
 var LOOKUP_DEPTH = 5;
@@ -4695,7 +4654,7 @@ function resetCurrentLists(args) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var LevelLists_1 = __webpack_require__(27);
+var LevelLists_1 = __webpack_require__(28);
 ;
 /** create an empty WordConverterArguments */
 function createWordConverterArguments(nodes) {
@@ -4718,7 +4677,7 @@ exports.createWordConverterArguments = createWordConverterArguments;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CustomData_1 = __webpack_require__(28);
+var CustomData_1 = __webpack_require__(29);
 ;
 /** create an empty WordConverter */
 function createWordConverter() {
@@ -5182,7 +5141,7 @@ function isAutoBulletInput(input) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_api_1 = __webpack_require__(3);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var ContentEditFeatures_1 = __webpack_require__(29);
+var ContentEditFeatures_1 = __webpack_require__(30);
 var autoBullet_1 = __webpack_require__(72);
 var KEY_TAB = 9;
 var KEY_BACKSPACE = 8;
@@ -5830,7 +5789,7 @@ function isListElement(node) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var toggleBullet_1 = __webpack_require__(30);
+var toggleBullet_1 = __webpack_require__(31);
 /**
  * Toggle numbering at selection
  * If selection contains numbering in deep level, toggle numbering will decrease the numbering level by one
@@ -5905,7 +5864,7 @@ exports.default = toggleBold;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getFormatState_1 = __webpack_require__(32);
+var getFormatState_1 = __webpack_require__(33);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 /**
  * Set indentation at selection
@@ -6218,7 +6177,7 @@ exports.default = editTable;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var formatTable_1 = __webpack_require__(31);
+var formatTable_1 = __webpack_require__(32);
 /**
  * Insert table into editor at current selection
  * @param editor The editor instance
@@ -6338,7 +6297,7 @@ exports.default = cacheGetHeaderLevel;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var matchLink_1 = __webpack_require__(33);
+var matchLink_1 = __webpack_require__(34);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 // Regex matching Uri scheme
 var URI_REGEX = /^[a-zA-Z]+:/i;
@@ -6438,10 +6397,10 @@ function applyLinkPrefix(url) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var setBackgroundColor_1 = __webpack_require__(37);
-var setFontName_1 = __webpack_require__(36);
-var setFontSize_1 = __webpack_require__(35);
-var setTextColor_1 = __webpack_require__(34);
+var setBackgroundColor_1 = __webpack_require__(38);
+var setFontName_1 = __webpack_require__(37);
+var setFontSize_1 = __webpack_require__(36);
+var setTextColor_1 = __webpack_require__(35);
 var queryNodesWithSelection_1 = __webpack_require__(2);
 var STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
 /**
@@ -6485,7 +6444,7 @@ exports.default = clearFormat;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var CursorData_1 = __webpack_require__(17);
-var replaceRangeWithNode_1 = __webpack_require__(39);
+var replaceRangeWithNode_1 = __webpack_require__(40);
 /**
  * Validate the text matches what's before the cursor, and return the range for it
  * @param editor The editor instance
@@ -6729,9 +6688,9 @@ exports.cacheGetEventData = cacheGetEventData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var focus_1 = __webpack_require__(41);
+var focus_1 = __webpack_require__(42);
 var getLiveRange_1 = __webpack_require__(12);
-var isVoidHtmlElement_1 = __webpack_require__(40);
+var isVoidHtmlElement_1 = __webpack_require__(41);
 var select_1 = __webpack_require__(11);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var HTML_EMPTY_DIV = '<div></div>';
@@ -6908,7 +6867,7 @@ function insertNodeAtSelection(core, node, option) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var triggerEvent_1 = __webpack_require__(42);
+var triggerEvent_1 = __webpack_require__(43);
 function attachDomEvent(core, eventName, pluginEventType, beforeDispatch) {
     var onEvent = function (event) {
         if (beforeDispatch) {
@@ -7089,7 +7048,7 @@ function trim(s, trim) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(22);
+var getComputedStyle_1 = __webpack_require__(23);
 var getTagOfNode_1 = __webpack_require__(6);
 /**
  * Change tag of ab HTML Element to a new one, and replace it from DOM tree
@@ -7169,8 +7128,9 @@ exports.default = applyFormat;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var getFirstLastInlineElement_1 = __webpack_require__(20);
-var getLeafNode_1 = __webpack_require__(21);
-var getBlockElementAtNode_1 = __webpack_require__(7);
+var getLeafNode_1 = __webpack_require__(22);
+var getBlockElementAtNode_1 = __webpack_require__(8);
+var contains_1 = __webpack_require__(7);
 // This provides scoper for traversing the entire editor body starting from the beginning
 var BodyScoper = /** @class */ (function () {
     function BodyScoper(rootNode) {
@@ -7186,7 +7146,7 @@ var BodyScoper = /** @class */ (function () {
     };
     // Since the scope is global, all blocks under the root node are in scope
     BodyScoper.prototype.isBlockInScope = function (blockElement) {
-        return this.rootNode.contains(blockElement.getStartNode());
+        return contains_1.default(this.rootNode, blockElement.getStartNode());
     };
     // Since we're at body scope, inline elements never need to be trimmed
     BodyScoper.prototype.trimInlineElement = function (inlineElement) {
@@ -7205,8 +7165,8 @@ exports.default = BodyScoper;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(13);
-var getBlockElementAtNode_1 = __webpack_require__(7);
-var getInlineElementBeforeAfter_1 = __webpack_require__(44);
+var getBlockElementAtNode_1 = __webpack_require__(8);
+var getInlineElementBeforeAfter_1 = __webpack_require__(45);
 /**
  * This is selection scoper that provide a start inline as the start of the selection
  * and checks if a block falls in the selection (isBlockInScope)
@@ -7220,8 +7180,7 @@ var SelectionScoper = /** @class */ (function () {
      */
     function SelectionScoper(rootNode, range) {
         this.rootNode = rootNode;
-        this.range = range;
-        this.range = this.range.normalize();
+        this.range = range.normalize();
     }
     /**
      * Provide a start block as the first block after the cursor
@@ -7237,7 +7196,7 @@ var SelectionScoper = /** @class */ (function () {
      */
     SelectionScoper.prototype.getStartInlineElement = function () {
         if (!this.startInline) {
-            this.calculateStartEndInline();
+            this.startInline = this.trimInlineElement(getInlineElementBeforeAfter_1.getInlineElementAfter(this.rootNode, this.range.start));
         }
         return this.startInline;
     };
@@ -7247,9 +7206,6 @@ var SelectionScoper = /** @class */ (function () {
     SelectionScoper.prototype.isBlockInScope = function (blockElement) {
         if (!blockElement) {
             return false;
-        }
-        if (!this.startInline || !this.endInline) {
-            this.calculateStartEndInline();
         }
         var inScope = false;
         var selStartBlock = this.getStartBlockElement();
@@ -7276,124 +7232,21 @@ var SelectionScoper = /** @class */ (function () {
      * otherwise return a partial that represents the portion that falls in the selection
      */
     SelectionScoper.prototype.trimInlineElement = function (inlineElement) {
-        // Always return null for collapsed selection
-        if (!inlineElement || this.range.collapsed) {
+        var start = inlineElement.getStartPosition();
+        var end = inlineElement.getEndPosition();
+        if (start.isAfter(this.range.end) || this.range.start.isAfter(end)) {
             return null;
         }
-        if (!this.startInline || !this.endInline) {
-            this.calculateStartEndInline();
+        if (this.range.start.isAfter(start)) {
+            start = this.range.start;
         }
-        var trimmedInline;
-        if (inlineElement && this.startInline && this.endInline) {
-            // Start with the decorated inline, and trim first by startInline, and then endInline
-            // if we end up getting a trimmed trimmedstartPosition or trimmedendPosition, we know the new element
-            // has to be partial. otherwise return a full inline
-            var decoratedInline = void 0;
-            var trimmedStartPosition = void 0;
-            var trimmedEndPosition = void 0;
-            // First unwrap inlineElement if it is partial
-            if (inlineElement instanceof PartialInlineElement_1.default) {
-                decoratedInline = inlineElement.getDecoratedInline();
-                trimmedStartPosition = inlineElement.isStartPartial()
-                    ? inlineElement.getStartPosition()
-                    : null;
-                trimmedEndPosition = inlineElement.isEndPartial()
-                    ? inlineElement.getEndPosition()
-                    : null;
-            }
-            else {
-                decoratedInline = inlineElement;
-            }
-            // Trim by start point
-            if (this.startInline.isAfter(decoratedInline)) {
-                // Out of scope
-                decoratedInline = null;
-            }
-            else if (decoratedInline.getContainerNode() == this.startInline.getContainerNode() &&
-                this.startInline instanceof PartialInlineElement_1.default &&
-                this.startInline.isStartPartial()) {
-                // On same container, and startInline is a partial, compare start point
-                if (!trimmedStartPosition ||
-                    this.startInline.getStartPosition().isAfter(trimmedStartPosition)) {
-                    // selection start is after the element, use selection start's as new start point
-                    trimmedStartPosition = this.startInline.getStartPosition();
-                }
-            }
-            // Trim by the end point
-            if (decoratedInline != null) {
-                if (decoratedInline.isAfter(this.endInline)) {
-                    // Out of scope
-                    decoratedInline = null;
-                }
-                else if (decoratedInline.getContainerNode() == this.endInline.getContainerNode() &&
-                    this.endInline instanceof PartialInlineElement_1.default &&
-                    this.endInline.isEndPartial()) {
-                    // On same container, and endInline is a partial, compare end point
-                    if (!trimmedEndPosition ||
-                        trimmedEndPosition.isAfter(this.endInline.getEndPosition())) {
-                        // selection end is before the element, use selection end's as new end point
-                        trimmedEndPosition = this.endInline.getEndPosition();
-                    }
-                }
-            }
-            // Conclusion
-            if (decoratedInline != null) {
-                // testing following conditions:
-                // 1) both points are null, means it is full node, no need to decorate
-                // 2) both points are not null and they actually point to same point, this isn't an invalid inline element, set null
-                // 3) rest, create a new partial inline element
-                if (!trimmedStartPosition && !trimmedEndPosition) {
-                    trimmedInline = decoratedInline;
-                }
-                else {
-                    trimmedInline =
-                        trimmedStartPosition &&
-                            trimmedEndPosition &&
-                            trimmedStartPosition.equalTo(trimmedEndPosition)
-                            ? null
-                            : new PartialInlineElement_1.default(decoratedInline, trimmedStartPosition, trimmedEndPosition);
-                }
-            }
+        if (end.isAfter(this.range.end)) {
+            end = this.range.end;
         }
-        return trimmedInline;
-    };
-    /**
-     * calculate start and end inline element
-     */
-    SelectionScoper.prototype.calculateStartEndInline = function () {
-        // Compute the start point
-        this.startInline = getInlineElementBeforeAfter_1.getInlineElementAfter(this.rootNode, this.range.start);
-        if (this.range.collapsed) {
-            // For collapsed range, set end to be same as start
-            this.endInline = this.startInline;
-        }
-        else {
-            // For non-collapsed range, get same for end point
-            this.endInline = getInlineElementBeforeAfter_1.getInlineElementBefore(this.rootNode, this.range.end);
-            // it is possible that start and end points to same inline element, which
-            // is often the case where users select partial text of a text node
-            // in that case, we want to fix startInline and endInline to be a partial inline element
-            if (this.startInline &&
-                this.endInline &&
-                this.startInline.getContainerNode() == this.endInline.getContainerNode()) {
-                var fromPosition = void 0;
-                var decoratedInline = void 0;
-                if (this.startInline instanceof PartialInlineElement_1.default) {
-                    fromPosition = this.startInline.getStartPosition();
-                    decoratedInline = this.startInline.getDecoratedInline();
-                }
-                else {
-                    decoratedInline = this.startInline;
-                }
-                var toPosition = this.endInline instanceof PartialInlineElement_1.default
-                    ? this.endInline.getEndPosition()
-                    : null;
-                this.startInline = this.endInline =
-                    !fromPosition && !toPosition
-                        ? decoratedInline
-                        : new PartialInlineElement_1.default(decoratedInline, fromPosition, toPosition);
-            }
-        }
+        return start.equalTo(end) ? null :
+            start.offset > 0 || !end.isAtEnd ?
+                new PartialInlineElement_1.default(inlineElement, start, end) :
+                inlineElement;
     };
     return SelectionScoper;
 }());
@@ -7407,8 +7260,8 @@ exports.default = SelectionScoper;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getBlockElementAtNode_1 = __webpack_require__(7);
-var getInlineElementBeforeAfter_1 = __webpack_require__(44);
+var getBlockElementAtNode_1 = __webpack_require__(8);
+var getInlineElementBeforeAfter_1 = __webpack_require__(45);
 /**
  * This provides traversing content in a selection start block
  * This is commonly used for those cursor context sensitive plugin,
@@ -7489,7 +7342,9 @@ var BlockScoper = /** @class */ (function () {
      * A block scoper does not cut an inline in half
      */
     BlockScoper.prototype.trimInlineElement = function (inlineElement) {
-        return this.block && inlineElement && this.block.contains(inlineElement) ? inlineElement : null;
+        return this.block && inlineElement && this.block.contains(inlineElement)
+            ? inlineElement
+            : null;
     };
     return BlockScoper;
 }());
@@ -7503,8 +7358,8 @@ exports.default = BlockScoper;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getNextPreviousInlineElement_1 = __webpack_require__(49);
-var getNextPreviousBlockElement_1 = __webpack_require__(45);
+var getNextPreviousInlineElement_1 = __webpack_require__(50);
+var getNextPreviousBlockElement_1 = __webpack_require__(46);
 var BlockScoper_1 = __webpack_require__(109);
 var SelectionScoper_1 = __webpack_require__(108);
 var BodyScoper_1 = __webpack_require__(107);
@@ -7604,55 +7459,33 @@ var ContentTraverser = /** @class */ (function () {
      * Get next inline element
      */
     ContentTraverser.prototype.getNextInlineElement = function () {
-        var thisInline = this.currentInlineElement;
-        var nextInline;
-        if (thisInline) {
-            nextInline = getNextPreviousInlineElement_1.getNextInlineElement(this.rootNode, thisInline);
-        }
-        else {
-            nextInline = this.scoper.getInlineElementAfterStart
-                ? this.scoper.getInlineElementAfterStart()
-                : null;
-        }
-        // For inline, we need to make sure:
-        // 1) it is really next to current, unless current is null
-        // 2) pass on the new inline to this.scoper to do the triming and we still get back an inline
-        // Then
-        // 1) re-position current inline
-        if (nextInline &&
-            (!thisInline || nextInline.isAfter(thisInline)) &&
-            (nextInline = this.scoper.trimInlineElement(nextInline))) {
-            this.currentInline = nextInline;
-            return this.currentInline;
-        }
-        return null;
+        var nextInline = this.getValidInlineElement(true /*isNext*/);
+        this.currentInline = nextInline || this.currentInline;
+        return nextInline;
     };
     /**
      * Get previous inline element
      */
     ContentTraverser.prototype.getPreviousInlineElement = function () {
+        var previousInline = this.getValidInlineElement(false /*isNext*/);
+        this.currentInline = previousInline || this.currentInline;
+        return previousInline;
+    };
+    ContentTraverser.prototype.getValidInlineElement = function (isNext) {
+        var _this = this;
         var thisInline = this.currentInlineElement;
-        var previousInline;
-        if (thisInline) {
-            previousInline = getNextPreviousInlineElement_1.getPreviousInlineElement(this.rootNode, thisInline);
-        }
-        else {
-            previousInline = this.scoper.getInlineElementBeforeStart
-                ? this.scoper.getInlineElementBeforeStart()
+        var getPreviousNextFunc = isNext ? getNextPreviousInlineElement_1.getNextInlineElement : getNextPreviousInlineElement_1.getPreviousInlineElement;
+        var getBeforeAfterStartFunc = function () { return isNext ? _this.scoper.getInlineElementAfterStart() : _this.scoper.getInlineElementBeforeStart(); };
+        var candidate = thisInline ?
+            getPreviousNextFunc(this.rootNode, thisInline) :
+            getBeforeAfterStartFunc
+                ? getBeforeAfterStartFunc()
                 : null;
-        }
-        // For inline, we need to make sure:
-        // 1) it is really previous to current
-        // 2) pass on the new inline to this.scoper to do the trimming and we still get back an inline
-        // Then
-        // 1) re-position current inline
-        if (previousInline &&
-            (!thisInline || thisInline.isAfter(previousInline)) &&
-            (previousInline = this.scoper.trimInlineElement(previousInline))) {
-            this.currentInline = previousInline;
-            return this.currentInline;
-        }
-        return null;
+        // For inline, we need to make sure it is really next/previous to current, unless current is null.
+        // Then trim it if necessary
+        return candidate && (!thisInline || (candidate.isAfter(thisInline) == isNext)) ?
+            this.scoper.trimInlineElement(candidate) :
+            null;
     };
     return ContentTraverser;
 }());
@@ -7771,13 +7604,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var EditorCore_1 = __webpack_require__(112);
 var formatWithUndo_1 = __webpack_require__(101);
 var attachDomEvent_1 = __webpack_require__(100);
-var BrowserData_1 = __webpack_require__(26);
-var focus_1 = __webpack_require__(41);
+var BrowserData_1 = __webpack_require__(27);
+var focus_1 = __webpack_require__(42);
 var getLiveRange_1 = __webpack_require__(12);
 var hasFocus_1 = __webpack_require__(18);
 var insertNode_1 = __webpack_require__(99);
 var select_1 = __webpack_require__(11);
-var triggerEvent_1 = __webpack_require__(42);
+var triggerEvent_1 = __webpack_require__(43);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var IS_IE_OR_EDGE = BrowserData_1.default.isIE || BrowserData_1.default.isEdge;
 var Editor = /** @class */ (function () {
@@ -7988,9 +7821,13 @@ var Editor = /** @class */ (function () {
     /**
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * @param content HTML content to set in
+     * @param callbackBeforeTriggerContentChangedEvent An optional callback function, will be called before ContentChangedEvent is triggered
      */
-    Editor.prototype.setContent = function (content) {
+    Editor.prototype.setContent = function (content, callbackBeforeTriggerContentChangedEvent) {
         this.core.contentDiv.innerHTML = content || '';
+        if (callbackBeforeTriggerContentChangedEvent) {
+            callbackBeforeTriggerContentChangedEvent();
+        }
         this.triggerContentChangedEvent();
     };
     /**

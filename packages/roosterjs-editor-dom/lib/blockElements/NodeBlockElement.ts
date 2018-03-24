@@ -43,6 +43,6 @@ export default class NodeBlockElement extends StartEndBlockElement {
 
     public contains(arg: InlineElement | Node): boolean {
         let node = arg instanceof Node ? arg : arg.getContainerNode();
-        return contains(this.getStartNode(), node);
+        return contains(this.getStartNode(), node, true /*treatSameNodeAsContain*/);
     }
 }

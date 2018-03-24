@@ -142,7 +142,7 @@ describe('intersectWithNodeRange()', () => {
             'start',
             'end',
             true,
-            true,
+            false,
             '3'
         );
     });

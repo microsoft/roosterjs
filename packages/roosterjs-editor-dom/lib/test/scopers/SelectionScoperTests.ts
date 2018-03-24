@@ -118,7 +118,7 @@ describe('SelectionScoper getStartInlineElement()', () => {
         ).toBe(true);
     }
 
-    it('input = www.example.com<br>, startInlineElment is TextInlineElement', () => {
+    it('input = www.example.com<br>, startInlineElement is text InlineElement', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, 'www.example.com<br>');
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
         let node = document.createTextNode('www.example.com');
@@ -135,7 +135,7 @@ describe('SelectionScoper getStartInlineElement()', () => {
         runTest(rootNode, range, 0, 5, node);
     });
 
-    it('input = <img>www.example.com, startInlineElment is ImageInlineElement', () => {
+    it('input = <img>www.example.com, startInlineElement is image InlineElement', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<img>www.example.com');
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
         let node = rootNode.firstChild;
@@ -276,7 +276,7 @@ describe('SelectionScoper trimInlineElement()', () => {
         let trimmedElement = scoper.trimInlineElement(inlineElement);
 
         // Assert
-        expect(trimmedElement).toBeUndefined();
+        expect(trimmedElement).toBeFalsy();
     });
 
     it('input = <span>part1,part2</span>, part of inlineElement is out of scope', () => {

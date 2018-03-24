@@ -19,7 +19,7 @@ export default function contains(
     }
 
     if (container.nodeType != NodeType.Element) {
-        return treatSameNodeAsContain && container == contained;
+        return !!treatSameNodeAsContain && container == contained;
     }
 
     if (contained.nodeType == NodeType.Text) {
@@ -27,5 +27,5 @@ export default function contains(
         treatSameNodeAsContain = true;
     }
 
-    return (treatSameNodeAsContain || container != contained) && container.contains(contained);
+    return !!(treatSameNodeAsContain || container != contained) && container.contains(contained);
 }

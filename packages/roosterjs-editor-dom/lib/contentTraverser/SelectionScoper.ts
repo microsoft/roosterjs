@@ -1,14 +1,10 @@
 import BlockElement from '../blockElements/BlockElement';
 import InlineElement from '../inlineElements/InlineElement';
 import PartialInlineElement from '../inlineElements/PartialInlineElement';
-import Position from '../selection/Position';
 import SelectionRange from '../selection/SelectionRange';
 import TraversingScoper from './TraversingScoper';
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
-import {
-    getInlineElementAfter,
-    getInlineElementBefore,
-} from '../inlineElements/getInlineElementBeforeAfter';
+import { getInlineElementAfter } from '../inlineElements/getInlineElementBeforeAfter';
 
 /**
  * This is selection scoper that provide a start inline as the start of the selection
@@ -18,15 +14,15 @@ import {
 class SelectionScoper implements TraversingScoper {
     private startBlock: BlockElement;
     private startInline: InlineElement;
-    private endInline: InlineElement;
+    private range: SelectionRange;
 
     /**
      * Create a new instance of SelectionScoper class
      * @param rootNode The root node of the content
      * @param range The selection range to scope to
      */
-    constructor(private rootNode: Node, private range: SelectionRange) {
-        this.range = this.range.normalize();
+    constructor(private rootNode: Node, range: SelectionRange) {
+        this.range = range.normalize();
     }
 
     /**
@@ -44,7 +40,7 @@ class SelectionScoper implements TraversingScoper {
      */
     public getStartInlineElement(): InlineElement {
         if (!this.startInline) {
-            this.calculateStartEndInline();
+            this.startInline = this.trimInlineElement(getInlineElementAfter(this.rootNode, this.range.start));
         }
         return this.startInline;
     }
@@ -55,10 +51,6 @@ class SelectionScoper implements TraversingScoper {
     public isBlockInScope(blockElement: BlockElement): boolean {
         if (!blockElement) {
             return false;
-        }
-
-        if (!this.startInline || !this.endInline) {
-            this.calculateStartEndInline();
         }
 
         let inScope = false;
@@ -88,144 +80,25 @@ class SelectionScoper implements TraversingScoper {
      * otherwise return a partial that represents the portion that falls in the selection
      */
     public trimInlineElement(inlineElement: InlineElement): InlineElement {
-        // Always return null for collapsed selection
-        if (!inlineElement || this.range.collapsed) {
+        let start = inlineElement.getStartPosition();
+        let end = inlineElement.getEndPosition();
+
+        if (start.isAfter(this.range.end) || this.range.start.isAfter(end)) {
             return null;
         }
 
-        if (!this.startInline || !this.endInline) {
-            this.calculateStartEndInline();
+        if (this.range.start.isAfter(start)) {
+            start = this.range.start;
         }
 
-        let trimmedInline: InlineElement;
-        if (inlineElement && this.startInline && this.endInline) {
-            // Start with the decorated inline, and trim first by startInline, and then endInline
-            // if we end up getting a trimmed trimmedstartPosition or trimmedendPosition, we know the new element
-            // has to be partial. otherwise return a full inline
-            let decoratedInline: InlineElement;
-            let trimmedStartPosition: Position;
-            let trimmedEndPosition: Position;
-
-            // First unwrap inlineElement if it is partial
-            if (inlineElement instanceof PartialInlineElement) {
-                decoratedInline = inlineElement.getDecoratedInline();
-                trimmedStartPosition = inlineElement.isStartPartial()
-                    ? inlineElement.getStartPosition()
-                    : null;
-                trimmedEndPosition = inlineElement.isEndPartial()
-                    ? inlineElement.getEndPosition()
-                    : null;
-            } else {
-                decoratedInline = inlineElement;
-            }
-
-            // Trim by start point
-            if (this.startInline.isAfter(decoratedInline)) {
-                // Out of scope
-                decoratedInline = null;
-            } else if (
-                decoratedInline.getContainerNode() == this.startInline.getContainerNode() &&
-                this.startInline instanceof PartialInlineElement &&
-                this.startInline.isStartPartial()
-            ) {
-                // On same container, and startInline is a partial, compare start point
-                if (
-                    !trimmedStartPosition ||
-                    this.startInline.getStartPosition().isAfter(trimmedStartPosition)
-                ) {
-                    // selection start is after the element, use selection start's as new start point
-                    trimmedStartPosition = this.startInline.getStartPosition();
-                }
-            }
-
-            // Trim by the end point
-            if (decoratedInline != null) {
-                if (decoratedInline.isAfter(this.endInline)) {
-                    // Out of scope
-                    decoratedInline = null;
-                } else if (
-                    decoratedInline.getContainerNode() == this.endInline.getContainerNode() &&
-                    this.endInline instanceof PartialInlineElement &&
-                    (this.endInline as PartialInlineElement).isEndPartial()
-                ) {
-                    // On same container, and endInline is a partial, compare end point
-                    if (
-                        !trimmedEndPosition ||
-                        trimmedEndPosition.isAfter(this.endInline.getEndPosition())
-                    ) {
-                        // selection end is before the element, use selection end's as new end point
-                        trimmedEndPosition = this.endInline.getEndPosition();
-                    }
-                }
-            }
-
-            // Conclusion
-            if (decoratedInline != null) {
-                // testing following conditions:
-                // 1) both points are null, means it is full node, no need to decorate
-                // 2) both points are not null and they actually point to same point, this isn't an invalid inline element, set null
-                // 3) rest, create a new partial inline element
-                if (!trimmedStartPosition && !trimmedEndPosition) {
-                    trimmedInline = decoratedInline;
-                } else {
-                    trimmedInline =
-                        trimmedStartPosition &&
-                        trimmedEndPosition &&
-                        trimmedStartPosition.equalTo(trimmedEndPosition)
-                            ? null
-                            : new PartialInlineElement(
-                                  decoratedInline,
-                                  trimmedStartPosition,
-                                  trimmedEndPosition
-                              );
-                }
-            }
+        if (end.isAfter(this.range.end)) {
+            end = this.range.end;
         }
 
-        return trimmedInline;
-    }
-
-    /**
-     * calculate start and end inline element
-     */
-    private calculateStartEndInline() {
-        // Compute the start point
-        this.startInline = getInlineElementAfter(this.rootNode, this.range.start);
-
-        if (this.range.collapsed) {
-            // For collapsed range, set end to be same as start
-            this.endInline = this.startInline;
-        } else {
-            // For non-collapsed range, get same for end point
-            this.endInline = getInlineElementBefore(this.rootNode, this.range.end);
-
-            // it is possible that start and end points to same inline element, which
-            // is often the case where users select partial text of a text node
-            // in that case, we want to fix startInline and endInline to be a partial inline element
-            if (
-                this.startInline &&
-                this.endInline &&
-                this.startInline.getContainerNode() == this.endInline.getContainerNode()
-            ) {
-                let fromPosition: Position;
-                let decoratedInline: InlineElement;
-                if (this.startInline instanceof PartialInlineElement) {
-                    fromPosition = this.startInline.getStartPosition();
-                    decoratedInline = this.startInline.getDecoratedInline();
-                } else {
-                    decoratedInline = this.startInline;
-                }
-
-                let toPosition =
-                    this.endInline instanceof PartialInlineElement
-                        ? this.endInline.getEndPosition()
-                        : null;
-                this.startInline = this.endInline =
-                    !fromPosition && !toPosition
-                        ? decoratedInline
-                        : new PartialInlineElement(decoratedInline, fromPosition, toPosition);
-            }
-        }
+        return start.equalTo(end) ? null :
+            start.offset > 0 || !end.isAtEnd ?
+                new PartialInlineElement(inlineElement, start, end) :
+                inlineElement;
     }
 }
 

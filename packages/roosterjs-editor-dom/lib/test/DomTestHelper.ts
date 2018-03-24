@@ -1,9 +1,9 @@
 import NodeBlockElement from '../blockElements/NodeBlockElement';
-import StartEndBlockElement from '../blockElements/StartEndBlockElement';
+import NodeInlineElement from '../inlineElements/NodeInlineElement';
+import InlineElement from '../inlineElements/InlineElement';
 import Position from '../selection/Position';
 import SelectionRange from '../selection/SelectionRange';
-import InlineElement from '../inlineElements/InlineElement';
-import NodeInlineElement from '../inlineElements/NodeInlineElement';
+import StartEndBlockElement from '../blockElements/StartEndBlockElement';
 
 // Create element with content and id and insert the element in the DOM
 export function createElementFromContent(id: string, content: string): HTMLElement {

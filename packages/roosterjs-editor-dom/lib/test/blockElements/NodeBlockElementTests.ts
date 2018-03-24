@@ -1,6 +1,6 @@
 import * as DomTestHelper from '../DomTestHelper';
 import Position from '../../selection/Position';
-import NodeBlockElement from '../../blockElements/NodeblockElement';
+import NodeBlockElement from '../../blockElements/NodeBlockElement';
 
 let testID = 'NodeBlockElement';
 

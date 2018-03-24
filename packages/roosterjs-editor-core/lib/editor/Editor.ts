@@ -242,7 +242,9 @@ export default class Editor {
      */
     public setContent(content: string, callbackBeforeTriggerContentChangedEvent?: () => void) {
         this.core.contentDiv.innerHTML = content || '';
-        callbackBeforeTriggerContentChangedEvent && callbackBeforeTriggerContentChangedEvent();
+        if (callbackBeforeTriggerContentChangedEvent) {
+            callbackBeforeTriggerContentChangedEvent();
+        }
         this.triggerContentChangedEvent();
     }
 

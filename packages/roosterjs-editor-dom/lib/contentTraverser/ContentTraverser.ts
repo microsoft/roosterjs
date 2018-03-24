@@ -124,62 +124,35 @@ class ContentTraverser {
      * Get next inline element
      */
     public getNextInlineElement(): InlineElement {
-        let thisInline = this.currentInlineElement;
-        let nextInline: InlineElement;
-        if (thisInline) {
-            nextInline = getNextInlineElement(this.rootNode, thisInline);
-        } else {
-            nextInline = this.scoper.getInlineElementAfterStart
-                ? this.scoper.getInlineElementAfterStart()
-                : null;
-        }
-
-        // For inline, we need to make sure:
-        // 1) it is really next to current, unless current is null
-        // 2) pass on the new inline to this.scoper to do the triming and we still get back an inline
-        // Then
-        // 1) re-position current inline
-        if (
-            nextInline &&
-            (!thisInline || nextInline.isAfter(thisInline)) &&
-            (nextInline = this.scoper.trimInlineElement(nextInline))
-        ) {
-            this.currentInline = nextInline;
-            return this.currentInline;
-        }
-
-        return null;
+        let nextInline = this.getValidInlineElement(true /*isNext*/);
+        this.currentInline = nextInline || this.currentInline;
+        return nextInline;
     }
 
     /**
      * Get previous inline element
      */
     public getPreviousInlineElement(): InlineElement {
+        let previousInline = this.getValidInlineElement(false /*isNext*/);
+        this.currentInline = previousInline || this.currentInline;
+        return previousInline;
+    }
+
+    private getValidInlineElement(isNext: boolean) {
         let thisInline = this.currentInlineElement;
-        let previousInline: InlineElement;
-        if (thisInline) {
-            previousInline = getPreviousInlineElement(this.rootNode, thisInline);
-        } else {
-            previousInline = this.scoper.getInlineElementBeforeStart
-                ? this.scoper.getInlineElementBeforeStart()
+        let getPreviousNextFunc = isNext ? getNextInlineElement : getPreviousInlineElement;
+        let getBeforeAfterStartFunc = () => isNext ? this.scoper.getInlineElementAfterStart() : this.scoper.getInlineElementBeforeStart();
+        let candidate = thisInline ?
+            getPreviousNextFunc(this.rootNode, thisInline) :
+            getBeforeAfterStartFunc
+                ? getBeforeAfterStartFunc()
                 : null;
-        }
 
-        // For inline, we need to make sure:
-        // 1) it is really previous to current
-        // 2) pass on the new inline to this.scoper to do the trimming and we still get back an inline
-        // Then
-        // 1) re-position current inline
-        if (
-            previousInline &&
-            (!thisInline || thisInline.isAfter(previousInline)) &&
-            (previousInline = this.scoper.trimInlineElement(previousInline))
-        ) {
-            this.currentInline = previousInline;
-            return this.currentInline;
-        }
-
-        return null;
+        // For inline, we need to make sure it is really next/previous to current, unless current is null.
+        // Then trim it if necessary
+        return candidate && (!thisInline || (candidate.isAfter(thisInline) == isNext)) ?
+            this.scoper.trimInlineElement(candidate) :
+            null
     }
 }
 

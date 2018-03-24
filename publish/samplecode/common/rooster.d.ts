@@ -856,14 +856,14 @@ declare namespace roosterjs {
      * It also offers some special methods that others don't have, i.e. nextInlineElement etc.
      */
     class PartialInlineElement implements InlineElement {
-        private inlineElement;
+        private decoratedInline;
         private start;
         private end;
-        constructor(inlineElement: InlineElement, start?: Position, end?: Position);
+        constructor(decoratedInline: InlineElement, start?: Position, end?: Position);
         /**
          * Get the full inline element that this partial inline decorates
          */
-        getDecoratedInline(): InlineElement;
+        getDecoratedInline(): NodeInlineElement;
         /**
          * Gets the container node
          */
@@ -880,22 +880,6 @@ declare namespace roosterjs {
          * Gets the end position
          */
         getEndPosition(): Position;
-        /**
-         * Checks if the partial is on start point
-         */
-        isStartPartial(): boolean;
-        /**
-         * Checks if the partial is on the end point
-         */
-        isEndPartial(): boolean;
-        /**
-         * Get next partial inline element if it is not at the end boundary yet
-         */
-        readonly nextInlineElement: PartialInlineElement;
-        /**
-         * Get previous partial inline element if it is not at the begin boundary yet
-         */
-        readonly previousInlineElement: PartialInlineElement;
         /**
          * Checks if it contains a position
          */
@@ -1147,6 +1131,7 @@ declare namespace roosterjs {
          * Get previous inline element
          */
         getPreviousInlineElement(): InlineElement;
+        private getValidInlineElement(isNext);
     }
 
     /**
@@ -1363,8 +1348,9 @@ declare namespace roosterjs {
         /**
          * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
          * @param content HTML content to set in
+         * @param callbackBeforeTriggerContentChangedEvent An optional callback function, will be called before ContentChangedEvent is triggered
          */
-        setContent(content: string): void;
+        setContent(content: string, callbackBeforeTriggerContentChangedEvent?: () => void): void;
         /**
          * Insert HTML content into editor
          * @param HTML content to insert
