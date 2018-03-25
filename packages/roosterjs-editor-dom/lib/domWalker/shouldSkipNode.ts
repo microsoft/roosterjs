@@ -1,4 +1,4 @@
-import getComputedStyle from '../utils/getComputedStyle';
+import getComputedStyles from '../utils/getComputedStyles';
 import { NodeType } from 'roosterjs-editor-types';
 
 /**
@@ -12,7 +12,7 @@ export default function shouldSkipNode(node: Node): boolean {
     if (node && node.nodeType == NodeType.Text) {
         return /^[\r\n]*$/.test(node.nodeValue);
     } else if (node && node.nodeType == NodeType.Element) {
-        return getComputedStyle(node, 'display')[0] == 'none';
+        return getComputedStyles(node, 'display')[0] == 'none';
     } else {
         return true;
     }

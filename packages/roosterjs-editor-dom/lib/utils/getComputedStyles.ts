@@ -7,7 +7,7 @@ import { NodeType } from 'roosterjs-editor-types';
  * Default value is font-family, font-size, color, background-color
  * @returns An array of the computed styles
  */
-export default function getComputedStyle(
+export default function getComputedStyles(
     node: Node,
     styleNames: string | string[] = ['font-family', 'font-size', 'color', 'background-color']
 ): string[] {

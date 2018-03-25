@@ -1,6 +1,6 @@
 import { getNodeAtCursor } from 'roosterjs-editor-api';
 import { Editor } from 'roosterjs-editor-core';
-import { StyleMap, getComputedStyle } from 'roosterjs-editor-dom';
+import { StyleMap, getComputedStyles } from 'roosterjs-editor-dom';
 
 // Inheritable CSS properties
 // Ref: https://www.w3.org/TR/CSS21/propidx.html
@@ -37,7 +37,7 @@ const INHERITABLE_PROPERTIES = [
 
 export default function getInheritableStyles(editor: Editor): StyleMap {
     let node = getNodeAtCursor(editor);
-    let styles = node ? getComputedStyle(node, INHERITABLE_PROPERTIES) : [];
+    let styles = node ? getComputedStyles(node, INHERITABLE_PROPERTIES) : [];
     let result: StyleMap = {};
 
     for (let i = 0; i < INHERITABLE_PROPERTIES.length; i++) {

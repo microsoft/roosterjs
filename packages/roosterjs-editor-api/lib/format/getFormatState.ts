@@ -1,6 +1,6 @@
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import { FormatState, PluginEvent } from 'roosterjs-editor-types';
-import { getComputedStyle } from 'roosterjs-editor-dom';
+import { getComputedStyles } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 import cacheGetListTag from '../cursor/cacheGetListTag';
 import cacheGetHeaderLevel from './cacheGetHeaderLevel';
@@ -28,7 +28,7 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
         return null;
     }
 
-    let styles = getComputedStyle(nodeAtCursor);
+    let styles = getComputedStyles(nodeAtCursor);
     let tag = cacheGetListTag(editor, event);
     return {
         fontName: styles[0],

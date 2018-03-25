@@ -3,7 +3,7 @@ import EditorPlugin from '../editor/EditorPlugin';
 import Undo from '../undo/Undo';
 import UndoService from './UndoService';
 import { DefaultFormat } from 'roosterjs-editor-types';
-import { getComputedStyle } from 'roosterjs-editor-dom';
+import { getComputedStyles } from 'roosterjs-editor-dom';
 
 interface EditorCore {
     document: Document;
@@ -40,7 +40,7 @@ export default EditorCore;
 
 function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat {
     baseFormat = baseFormat || <DefaultFormat>{};
-    let computedStyle = getComputedStyle(node);
+    let computedStyle = getComputedStyles(node);
     return {
         fontFamily: baseFormat.fontFamily || computedStyle[0],
         fontSize: baseFormat.fontSize || computedStyle[1],

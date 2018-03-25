@@ -1238,7 +1238,7 @@ export function fromHtml(html: string, ownerDocument: HTMLDocument, sanitize?: b
  * Default value is font-family, font-size, color, background-color
  * @returns An array of the computed styles
  */
-export function getComputedStyle(node: Node, styleNames?: string | string[]): string[];
+export function getComputedStyles(node: Node, styleNames?: string | string[]): string[];
 
 /**
  * Get the html tag of a node, or empty if it is not an element

@@ -1,5 +1,5 @@
 import * as DomTestHelper from '../DomTestHelper';
-import getComputedStyle from '../../utils/getComputedStyle';
+import getComputedStyles from '../../utils/getComputedStyles';
 
 describe('getComputedStyle()', () => {
     let testID = 'getComputedStyle';
@@ -21,7 +21,7 @@ describe('getComputedStyle()', () => {
         let testDiv = DomTestHelper.createElementFromContent(testID, input[0]);
 
         // Act
-        DomTestHelper.runTestMethod2([testDiv.firstChild, input[1]], output, getComputedStyle);
+        DomTestHelper.runTestMethod2([testDiv.firstChild, input[1]], output, getComputedStyles);
 
         // Remove the element
         DomTestHelper.removeElement(testID);

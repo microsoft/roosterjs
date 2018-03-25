@@ -1,4 +1,4 @@
-import getComputedStyle from './getComputedStyle';
+import getComputedStyles from './getComputedStyles';
 import getTagOfNode from './getTagOfNode';
 
 /**
@@ -20,7 +20,7 @@ export default function changeElementTag(element: HTMLElement, newTag: string): 
     }
 
     if (getTagOfNode(element) == 'P') {
-        let styles = getComputedStyle(element, ['margin-top', 'margin-bottom']);
+        let styles = getComputedStyles(element, ['margin-top', 'margin-bottom']);
         newElement.style.marginTop = styles[0];
         newElement.style.marginBottom = styles[1];
     }

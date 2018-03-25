@@ -1,7 +1,7 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { PluginEvent, PluginEventType, PluginDomEvent } from 'roosterjs-editor-types';
 import { VTable, getNodeAtCursor } from 'roosterjs-editor-api';
-import { contains, fromHtml, getComputedStyle } from 'roosterjs-editor-dom';
+import { contains, fromHtml, getComputedStyles } from 'roosterjs-editor-dom';
 
 const TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
 const HANDLE_WIDTH = 6;
@@ -181,6 +181,6 @@ export default class TableResize implements EditorPlugin {
     }
 
     private isRtl(element: HTMLElement) {
-        return getComputedStyle(element, 'direction')[0] == 'rtl';
+        return getComputedStyles(element, 'direction')[0] == 'rtl';
     }
 }

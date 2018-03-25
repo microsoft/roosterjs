@@ -126,8 +126,8 @@ var sanitizeHtml_1 = __webpack_require__(52);
 exports.sanitizeHtml = sanitizeHtml_1.default;
 var fromHtml_1 = __webpack_require__(53);
 exports.fromHtml = fromHtml_1.default;
-var getComputedStyle_1 = __webpack_require__(23);
-exports.getComputedStyle = getComputedStyle_1.default;
+var getComputedStyles_1 = __webpack_require__(23);
+exports.getComputedStyles = getComputedStyles_1.default;
 var getTagOfNode_1 = __webpack_require__(6);
 exports.getTagOfNode = getTagOfNode_1.default;
 var intersectWithNodeRange_1 = __webpack_require__(49);
@@ -1733,7 +1733,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Default value is font-family, font-size, color, background-color
  * @returns An array of the computed styles
  */
-function getComputedStyle(node, styleNames) {
+function getComputedStyles(node, styleNames) {
     if (styleNames === void 0) { styleNames = ['font-family', 'font-size', 'color', 'background-color']; }
     var result = [];
     styleNames = styleNames instanceof Array ? styleNames : [styleNames];
@@ -1747,7 +1747,7 @@ function getComputedStyle(node, styleNames) {
     }
     return result;
 }
-exports.default = getComputedStyle;
+exports.default = getComputedStyles;
 
 
 /***/ }),
@@ -1757,7 +1757,7 @@ exports.default = getComputedStyle;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(23);
+var getComputedStyles_1 = __webpack_require__(23);
 /**
  * Skip a node when any of following conditions are true
  * - it is neither Element nor Text
@@ -1770,7 +1770,7 @@ function shouldSkipNode(node) {
         return /^[\r\n]*$/.test(node.nodeValue);
     }
     else if (node && node.nodeType == 1 /* Element */) {
-        return getComputedStyle_1.default(node, 'display')[0] == 'none';
+        return getComputedStyles_1.default(node, 'display')[0] == 'none';
     }
     else {
         return true;
@@ -2067,7 +2067,7 @@ function getFormatState(editor, event) {
     if (!nodeAtCursor) {
         return null;
     }
-    var styles = roosterjs_editor_dom_1.getComputedStyle(nodeAtCursor);
+    var styles = roosterjs_editor_dom_1.getComputedStyles(nodeAtCursor);
     var tag = cacheGetListTag_1.default(editor, event);
     return {
         fontName: styles[0],
@@ -3783,7 +3783,7 @@ var TableResize = /** @class */ (function () {
         return this.editor.contains(this.td) ? this.td : vtable.getCurrentTd();
     };
     TableResize.prototype.isRtl = function (element) {
-        return roosterjs_editor_dom_1.getComputedStyle(element, 'direction')[0] == 'rtl';
+        return roosterjs_editor_dom_1.getComputedStyles(element, 'direction')[0] == 'rtl';
     };
     return TableResize;
 }());
@@ -4861,7 +4861,7 @@ var INHERITABLE_PROPERTIES = [
 ];
 function getInheritableStyles(editor) {
     var node = roosterjs_editor_api_1.getNodeAtCursor(editor);
-    var styles = node ? roosterjs_editor_dom_1.getComputedStyle(node, INHERITABLE_PROPERTIES) : [];
+    var styles = node ? roosterjs_editor_dom_1.getComputedStyles(node, INHERITABLE_PROPERTIES) : [];
     var result = {};
     for (var i = 0; i < INHERITABLE_PROPERTIES.length; i++) {
         result[INHERITABLE_PROPERTIES[i]] = styles[i] || '';
@@ -6986,7 +6986,7 @@ var EditorCore = {
 exports.default = EditorCore;
 function calcDefaultFormat(node, baseFormat) {
     baseFormat = baseFormat || {};
-    var computedStyle = roosterjs_editor_dom_1.getComputedStyle(node);
+    var computedStyle = roosterjs_editor_dom_1.getComputedStyles(node);
     return {
         fontFamily: baseFormat.fontFamily || computedStyle[0],
         fontSize: baseFormat.fontSize || computedStyle[1],
@@ -7637,7 +7637,7 @@ function trim(s, trim) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(23);
+var getComputedStyles_1 = __webpack_require__(23);
 var getTagOfNode_1 = __webpack_require__(6);
 /**
  * Change tag of ab HTML Element to a new one, and replace it from DOM tree
@@ -7655,7 +7655,7 @@ function changeElementTag(element, newTag) {
         newElement.appendChild(element.firstChild);
     }
     if (getTagOfNode_1.default(element) == 'P') {
-        var styles = getComputedStyle_1.default(element, ['margin-top', 'margin-bottom']);
+        var styles = getComputedStyles_1.default(element, ['margin-top', 'margin-bottom']);
         newElement.style.marginTop = styles[0];
         newElement.style.marginBottom = styles[1];
     }
