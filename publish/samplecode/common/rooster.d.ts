@@ -169,10 +169,6 @@ declare namespace roosterjs {
          * If the copied data contains HTML format, this will be the html string. Otherwise it is null.
          */
         html: string;
-        /**
-         * Whether the HTML content is retrieved from temp DIV
-         */
-        isHtmlFromTempDiv?: boolean;
     }
 
     /**
@@ -1134,6 +1130,42 @@ declare namespace roosterjs {
         private getValidInlineElement(isNext);
     }
 
+    const Browser: BrowserInfo;
+
+    /**
+     * Information of current OS and web browser
+     */
+    interface BrowserInfo {
+        /**
+         * Wether current OS is Mac
+         */
+        isMac?: boolean;
+        /**
+         * Whether current OS is Windows
+         */
+        isWin?: boolean;
+        /**
+         * Whether current browser is Internet Explorer
+         */
+        isIE?: boolean;
+        /**
+         * Whether current browser is Safari
+         */
+        isSafari?: boolean;
+        /**
+         * Whether current browser is Chrome
+         */
+        isChrome?: boolean;
+        /**
+         * Whether current browser is Firfox
+         */
+        isFirefox?: boolean;
+        /**
+         * Whether current browser is Edge
+         */
+        isEdge?: boolean;
+    }
+
     /**
      * Apply format to an HTML element
      * @param element The HTML element to apply format to
@@ -1174,10 +1206,19 @@ declare namespace roosterjs {
      */
     function sanitizeHtml(html: string, additionalStyleNodes?: HTMLStyleElement[], convertInlineCssOnly?: boolean, propertyCallbacks?: SanitizeHtmlPropertyCallback, currentStyle?: StyleMap, preserveFragmentOnly?: boolean): string;
 
+    /**
+     * Callback function set for sanitizeHtml().
+     * sanitizeHtml() will check if there is a callback function for a given property name,
+     * it will call this function to decide what value to set for this property.
+     * Return null will cause this property be deleted, otherwise return the value of the property
+     */
     type SanitizeHtmlPropertyCallback = {
         [name: string]: (value: string) => string;
     };
 
+    /**
+     * A map from CSS style name to its value
+     */
     type StyleMap = {
         [name: string]: string;
     };
@@ -1269,6 +1310,9 @@ declare namespace roosterjs {
      */
     function wrap(nodes: Node | Node[], wrapper?: string | Node, sanitize?: boolean): Node;
 
+    /**
+     * RoosterJs core editor class
+     */
     class Editor {
         private omitContentEditable;
         private disableRestoreSelectionOnFocus;
@@ -1516,19 +1560,77 @@ declare namespace roosterjs {
         private createDefaultRange();
     }
 
+    /**
+     * The options to specify parameters customizing an editor, used by ctor of Editor class
+     */
     interface EditorOptions {
+        /**
+         * List of plugins.
+         * The order of plugins here determines in what order each event will be dispatched.
+         * Plugins not appear in t his list will not be added to editor, including bulit-in plugins.
+         * Default value is empty array.
+         */
         plugins?: EditorPlugin[];
+        /**
+         * Default format of editor content. This will be applied to empty content.
+         * If there is already content inside editor, format of existing content will not be changed.
+         * Default value is the computed style of editor content DIV
+         */
         defaultFormat?: DefaultFormat;
+        /**
+         * Undo service object. Use this parameter to customize the undo service.
+         * Default value is a new instance of Undo object
+         */
         undo?: UndoService;
+        /**
+         * Initial HTML content
+         * Default value is whatever already inside the editor content DIV
+         */
         initialContent?: string;
+        /**
+         * Whether auto restore previous selection when focus to editor
+         * Default value is false
+         */
         disableRestoreSelectionOnFocus?: boolean;
+        /**
+         * Whether skip setting contenteditable attribute to content DIV
+         * Default value is false
+         */
         omitContentEditableAttributeChanges?: boolean;
     }
 
+    /**
+     * Interface of an editor plugin
+     */
     interface EditorPlugin {
+        /**
+         * The first method that editor will call to a plugin when editor is initializing.
+         * It will pass in the editor instance, plugin should take this chance to save the
+         * editor reference so that it can call to any editor method or format API later.
+         * @param editor The editor object
+         */
         initialize: (editor: Editor) => void;
+        /**
+         * The last method that editor will call to a plugin before it is disposed.
+         * Plugin can take this chance to clear the reference to editor. After this method is
+         * called, plugin should not call to any editor method since it will result in error.
+         */
         dispose: () => void;
+        /**
+         * Check if the plugin should handle the given event exclusively.
+         * Handle an event exclusively means other plugin will not receive this event in
+         * onPluginEvent method.
+         * If two plugins will return true in willHandleEventExclusively() for the same event,
+         * the final result depends on the order of the plugins are added into editor
+         * @param event The event to check:
+         */
         willHandleEventExclusively?: (event: PluginEvent) => boolean;
+        /**
+         * Core method for a plugin. Once an event happens in editor, editor will call this
+         * method of each plugin to handle the event as long as the event is not handled
+         * exclusively by another plugin.
+         * @param event The event to handle:
+         */
         onPluginEvent?: (event: PluginEvent) => void;
     }
 
@@ -1594,35 +1696,53 @@ declare namespace roosterjs {
         private getSnapshotsManager();
     }
 
+    /**
+     * Defines replaceable undo service for editor
+     */
     interface UndoService extends EditorPlugin {
+        /**
+         * Undo last change if any
+         */
         undo: () => void;
+        /**
+         * Redo next change if any
+         */
         redo: () => void;
+        /**
+         * Add an undo snapshot for current content inside editor
+         * This method will not trigger ExtractContent event, so any temporary content will be
+         * added into undo snapshot
+         */
         addUndoSnapshot: () => void;
+        /**
+         * Whether there is snapshot for undo
+         */
         canUndo: () => boolean;
+        /**
+         * Whether there is snapshot for redo
+         */
         canRedo: () => boolean;
+        /**
+         * Clear all existing undo snapshots
+         */
         clear: () => void;
-    }
-
-    const browserData: BrowserData;
-
-    interface BrowserData {
-        isMac: boolean;
-        isWin: boolean;
-        isWebKit: boolean;
-        isIE: boolean;
-        isIE11OrGreater: boolean;
-        isSafari: boolean;
-        isChrome: boolean;
-        isFirefox: boolean;
-        isEdge: boolean;
     }
 
     function clearEventDataCache(event: PluginEvent, key: string): void;
 
     function cacheGetEventData<T>(event: PluginEvent, key: string, getter: () => T): T;
 
+    /**
+     * Build undo snapshot, remember current cursor position by inserting start and end cursor mark SPANs
+     * @param editor The editor instance
+     * @returns The snapshot HTML string
+     */
     function buildSnapshot(editor: Editor): string;
 
+    /**
+     * Restore a snapshot, set the cursor selection back to the position stored in the snapshot
+     * @param editor The editor instance
+     */
     function restoreSnapshot(editor: Editor, snapshot: string): void;
 
     /**
@@ -2142,11 +2262,28 @@ declare namespace roosterjs {
      */
     function matchLink(url: string): LinkData;
 
+    /**
+     * An editor plugin to respond to default common keyboard short
+     * i.e. Ctrl+B, Ctrl+I, Ctrl+U, Ctrl+Z, Ctrl+Y
+     */
     class DefaultShortcut implements EditorPlugin {
         private editor;
+        /**
+         * Initialize this plugin
+         * @param editor The editor instance
+         */
         initialize(editor: Editor): void;
+        /**
+         * Dispose this plugin
+         */
         dispose(): void;
+        /**
+         * Handle the event if it is a tab event, and cursor is at begin of a list
+         */
         willHandleEventExclusively(event: PluginEvent): boolean;
+        /**
+         * Handle the event
+         */
         onPluginEvent(event: PluginEvent): void;
     }
 
@@ -2165,8 +2302,19 @@ declare namespace roosterjs {
          * @param linkMatchRules (Optional) Rules for matching hyperlink. If null, will use defaultLinkMatchRules
          */
         constructor(getTooltipCallback?: (href: string) => string, target?: string);
+        /**
+         * Initialize this plugin
+         * @param editor The editor instance
+         */
         initialize(editor: Editor): void;
+        /**
+         * Dispose this plugin
+         */
         dispose(): void;
+        /**
+         * Handle plugin events
+         * @param event The event object
+         */
         onPluginEvent(event: PluginEvent): void;
         private resetAnchor(a);
         private autoLink(event);
@@ -2183,6 +2331,7 @@ declare namespace roosterjs {
      * 1. Auto increase/decrease indentation on Tab, Shift+tab
      * 2. Enter, Backspace on empty list item
      * 3. Enter, Backspace on empty blockquote line
+     * 4. Auto bullet/numbering
      */
     class ContentEdit implements EditorPlugin {
         private features;
@@ -2192,7 +2341,14 @@ declare namespace roosterjs {
          * @param features An optional feature set to determine which features the plugin should provide
          */
         constructor(features?: ContentEditFeatures);
+        /**
+         * Initialize this plugin
+         * @param editor The editor instance
+         */
         initialize(editor: Editor): void;
+        /**
+         * Dispose this plugin
+         */
         dispose(): void;
         willHandleEventExclusively(event: PluginEvent): boolean;
         onPluginEvent(event: PluginEvent): void;
@@ -2209,21 +2365,26 @@ declare namespace roosterjs {
      * Paste plugin, handles onPaste event and paste content into editor
      */
     class Paste implements EditorPlugin {
-        private useDirectPaste;
         private htmlPropertyCallbacks;
         private editor;
         private pasteDisposer;
         /**
          * Create an instance of Paste
-         * @param useDirectPaste: This is a test parameter and may be removed in the future.
-         * When set to true, we retrieve HTML from clipboard directly rather than using a hidden pasting DIV,
-         * then filter out unsafe HTML tags and attributes. Although we removed some unsafe tags such as SCRIPT,
-         * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
-         * this parameter if you don't have other XSS detecting logic outside the edtior.
          */
-        constructor(useDirectPaste?: boolean, htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback);
+        constructor(htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback);
+        /**
+         * Initialize this plugin
+         * @param editor The editor instance
+         */
         initialize(editor: Editor): void;
+        /**
+         * Dispose this plugin
+         */
         dispose(): void;
+        /**
+         * Handle plugin events
+         * @param event The event object
+         */
         onPluginEvent(event: PluginEvent): void;
         private onPaste;
         /**
@@ -2304,6 +2465,9 @@ declare namespace roosterjs {
      */
     function getDefaultContentEditFeatures(): ContentEditFeatures;
 
+    /**
+     * A plugin to support the functionality of resizing an inline image inside editor.
+     */
     class ImageResize implements EditorPlugin {
         private minWidth;
         private minHeight;
@@ -2324,8 +2488,19 @@ declare namespace roosterjs {
          * @param forcePreserveRatio Whether always preserve width/height ratio when resize, default value is false
          */
         constructor(minWidth?: number, minHeight?: number, selectionBorderColor?: string, forcePreserveRatio?: boolean);
+        /**
+         * Initialize this plugin
+         * @param editor The editor instance
+         */
         initialize(editor: Editor): void;
+        /**
+         * Dispose this plugin
+         */
         dispose(): void;
+        /**
+         * Handle plugin events
+         * @param event The event object
+         */
         onPluginEvent(e: PluginEvent): void;
         private select(target);
         private unselect(selectImageAfterUnselect);
@@ -2341,15 +2516,28 @@ declare namespace roosterjs {
         private isWest(direction);
     }
 
+    /**
+     * A plugin to support the functionality of resizing a table inside editor.
+     */
     class TableResize implements EditorPlugin {
         private editor;
         private onMouseOverDisposer;
         private td;
         private pageX;
         private initialPageX;
-        constructor(isRtl?: boolean);
+        /**
+         * Initialize this plugin
+         * @param editor The editor instance
+         */
         initialize(editor: Editor): void;
+        /**
+         * Dispose this plugin
+         */
         dispose(): void;
+        /**
+         * Handle plugin events
+         * @param event The event object
+         */
         onPluginEvent(event: PluginEvent): void;
         private clickIntoCurrentTd(event);
         private onMouseOver;
@@ -2380,8 +2568,19 @@ declare namespace roosterjs {
          * @param watermark The watermark string
          */
         constructor(watermark: string, format?: DefaultFormat);
+        /**
+         * Initialize this plugin
+         * @param editor The editor instance
+         */
         initialize(editor: Editor): void;
+        /**
+         * Dispose this plugin
+         */
         dispose(): void;
+        /**
+         * Handle plugin events
+         * @param event The event object
+         */
         onPluginEvent(event: PluginEvent): void;
         private handleWatermark;
         private showHideWatermark(ignoreCachedState);

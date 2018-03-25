@@ -35,6 +35,7 @@ export {
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
 
 // Utils
+export { default as Browser, BrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
 export { default as contains } from './utils/contains';

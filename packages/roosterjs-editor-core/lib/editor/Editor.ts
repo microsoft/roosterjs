@@ -2,7 +2,6 @@ import EditorCore from './EditorCore';
 import EditorOptions from './EditorOptions';
 import formatWithUndo from '../coreAPI/formatWithUndo';
 import attachDomEvent from '../coreAPI/attachDomEvent';
-import browserData from '../utils/BrowserData';
 import focus from '../coreAPI/focus';
 import getLiveRange from '../coreAPI/getLiveRange';
 import hasFocus from '../coreAPI/hasFocus';
@@ -21,6 +20,7 @@ import {
     PluginEventType,
 } from 'roosterjs-editor-types';
 import {
+    Browser,
     ContentTraverser,
     NodeBlockElement,
     BlockElement,
@@ -37,8 +37,11 @@ import {
     wrap,
 } from 'roosterjs-editor-dom';
 
-const IS_IE_OR_EDGE = browserData.isIE || browserData.isEdge;
+const IS_IE_OR_EDGE = Browser.isIE || Browser.isEdge;
 
+/**
+ * RoosterJs core editor class
+ */
 export default class Editor {
     private omitContentEditable: boolean;
     private disableRestoreSelectionOnFocus: boolean;

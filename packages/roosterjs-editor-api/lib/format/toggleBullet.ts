@@ -1,5 +1,6 @@
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
-import { Editor, browserData } from 'roosterjs-editor-core';
+import { Browser } from 'roosterjs-editor-dom';
+import { Editor } from 'roosterjs-editor-core';
 import { NodeType } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
@@ -11,7 +12,7 @@ const ZERO_WIDTH_SPACE = '&#8203;';
  * @param callback The real callback function
  */
 export function workaroundForEdge(editor: Editor, callback: () => void) {
-    let node = browserData.isEdge ? (getNodeAtCursor(editor) as Element) : null;
+    let node = Browser.isEdge ? (getNodeAtCursor(editor) as Element) : null;
     if (node && node.nodeType == NodeType.Element && node.textContent == '') {
         let span = editor.getDocument().createElement('span');
         node.insertBefore(span, node.firstChild);

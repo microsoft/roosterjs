@@ -1,13 +1,16 @@
 import Editor from '../editor/Editor';
-import browserData from '../utils/BrowserData';
-import { fromHtml, Position } from 'roosterjs-editor-dom';
+import { Browser, fromHtml, Position } from 'roosterjs-editor-dom';
 
 // Undo cursor marker
 const CURSOR_START = 'cursor-start';
 const CURSOR_END = 'cursor-end';
 const CURSOR_MARKER_HTML = `<span id='${CURSOR_START}'></span><span id='${CURSOR_END}'></span>`;
 
-// Build undo snapshot
+/**
+ * Build undo snapshot, remember current cursor position by inserting start and end cursor mark SPANs
+ * @param editor The editor instance
+ * @returns The snapshot HTML string
+ */
 export function buildSnapshot(editor: Editor): string {
     // Build the snapshot in-between adding and removing cursor marker
     addCursorMarkersToSelection(editor);
@@ -19,7 +22,7 @@ export function buildSnapshot(editor: Editor): string {
     // The insertion of cursor marker for some reasons has caused the selection maintained in browser to be lost.
     // This restores the selection prior to removing the cursor marker.
     // The code may throw error for Firefox and IE, hence keep it only for Mac Safari
-    if (browserData.isSafari) {
+    if (Browser.isSafari) {
         updateSelectionToCursorMarkers(editor);
     }
 
@@ -27,8 +30,11 @@ export function buildSnapshot(editor: Editor): string {
     return htmlContent;
 }
 
-// Restore a snapshot
-export function restoreSnapshot(editor: Editor, snapshot: string): void {
+/**
+ * Restore a snapshot, set the cursor selection back to the position stored in the snapshot
+ * @param editor The editor instance
+ */
+export function restoreSnapshot(editor: Editor, snapshot: string) {
     editor.setContent(snapshot, () => {
         // Restore the selection and delete the cursor marker afterwards
         updateSelectionToCursorMarkers(editor);

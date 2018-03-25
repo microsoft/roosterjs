@@ -49,7 +49,7 @@ export function initEditorForOptions() {
         plugins.push(new HyperLink());
     }
     if ((document.getElementById('pasteCheckbox') as HTMLInputElement).checked) {
-        plugins.push(new Paste(true));
+        plugins.push(new Paste());
     }
     if ((document.getElementById('contentEditCheckbox') as HTMLInputElement).checked) {
         plugins.push(new ContentEdit());

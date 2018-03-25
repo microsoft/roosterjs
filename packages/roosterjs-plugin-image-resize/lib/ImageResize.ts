@@ -22,6 +22,9 @@ const SHIFT_KEYCODE = 16;
 const CTRL_KEYCODE = 17;
 const ALT_KEYCODE = 18;
 
+/**
+ * A plugin to support the functionality of resizing an inline image inside editor.
+ */
 export default class ImageResize implements EditorPlugin {
     private editor: Editor;
     private startPageX: number;
@@ -45,11 +48,18 @@ export default class ImageResize implements EditorPlugin {
         private forcePreserveRatio: boolean = false
     ) {}
 
+    /**
+     * Initialize this plugin
+     * @param editor The editor instance
+     */
     initialize(editor: Editor) {
         this.editor = editor;
         this.editor.getDocument().execCommand('enableObjectResizing', false, false);
     }
 
+    /**
+     * Dispose this plugin
+     */
     dispose() {
         if (this.resizeDiv) {
             this.unselect(false /*selectImageAfterUnselect*/);
@@ -57,6 +67,10 @@ export default class ImageResize implements EditorPlugin {
         this.editor = null;
     }
 
+    /**
+     * Handle plugin events
+     * @param event The event object
+     */
     onPluginEvent(e: PluginEvent) {
         if (e.eventType == PluginEventType.MouseDown) {
             let event = (<PluginDomEvent>e).rawEvent;

@@ -25,6 +25,7 @@ const BLOCKQUOTE_TAG_NAME = 'BLOCKQUOTE';
  * 1. Auto increase/decrease indentation on Tab, Shift+tab
  * 2. Enter, Backspace on empty list item
  * 3. Enter, Backspace on empty blockquote line
+ * 4. Auto bullet/numbering
  */
 export default class ContentEdit implements EditorPlugin {
     private editor: Editor;
@@ -37,11 +38,19 @@ export default class ContentEdit implements EditorPlugin {
         this.features = this.features || getDefaultContentEditFeatures();
     }
 
-    public initialize(editor: Editor): void {
+
+    /**
+     * Initialize this plugin
+     * @param editor The editor instance
+     */
+    public initialize(editor: Editor) {
         this.editor = editor;
     }
 
-    public dispose(): void {
+    /**
+     * Dispose this plugin
+     */
+    public dispose() {
         this.editor = null;
     }
 

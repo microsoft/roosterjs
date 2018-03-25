@@ -1,4 +1,5 @@
-import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
+import { Browser } from 'roosterjs-editor-dom';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
     toggleBold,
@@ -184,7 +185,7 @@ let winCommands: ShortcutCommand[] = [
 // Try get command from the event
 function tryGetCommandFromEvent(event: PluginEvent): Command {
     if (event.eventType == PluginEventType.KeyDown) {
-        let commands = browserData.isMac ? macCommands : winCommands;
+        let commands = Browser.isMac ? macCommands : winCommands;
         let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
         for (let cmd of commands) {
             if (
@@ -202,26 +203,39 @@ function tryGetCommandFromEvent(event: PluginEvent): Command {
     return Command.None;
 }
 
-// An editor plugin to respond to default common keyboard short
-// i.e. Ctrl+B, Ctrl+I, Ctrl+U, Ctrl+Z, Ctrl+Y
+/**
+ * An editor plugin to respond to default common keyboard short
+ * i.e. Ctrl+B, Ctrl+I, Ctrl+U, Ctrl+Z, Ctrl+Y
+ */
 export default class DefaultShortcut implements EditorPlugin {
     private editor: Editor;
 
+    /**
+     * Initialize this plugin
+     * @param editor The editor instance
+     */
     public initialize(editor: Editor): void {
         this.editor = editor;
     }
 
+    /**
+     * Dispose this plugin
+     */
     public dispose(): void {
         this.editor = null;
     }
 
-    // Handle the event if it is a tab event, and cursor is at begin of a list
+    /**
+     * Handle the event if it is a tab event, and cursor is at begin of a list
+     */
     public willHandleEventExclusively(event: PluginEvent): boolean {
         let command = tryGetCommandFromEvent(event);
         return command != Command.None;
     }
 
-    // Handle the event
+    /**
+     * Handle the event
+     */
     public onPluginEvent(event: PluginEvent): void {
         let command = tryGetCommandFromEvent(event);
         if (!command) {

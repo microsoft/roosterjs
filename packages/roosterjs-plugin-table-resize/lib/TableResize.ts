@@ -7,6 +7,9 @@ const TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
 const HANDLE_WIDTH = 6;
 const CONTAINER_HTML = `<div style="position: absolute; cursor: col-resize; width: ${HANDLE_WIDTH}px; border: solid 0 #C6C6C6;"></div>`;
 
+/**
+ * A plugin to support the functionality of resizing a table inside editor.
+ */
 export default class TableResize implements EditorPlugin {
     private editor: Editor;
     private onMouseOverDisposer: () => void;
@@ -14,18 +17,27 @@ export default class TableResize implements EditorPlugin {
     private pageX = -1;
     private initialPageX: number;
 
-    constructor(isRtl?: boolean) {}
-
+    /**
+     * Initialize this plugin
+     * @param editor The editor instance
+     */
     initialize(editor: Editor) {
         this.editor = editor;
         this.onMouseOverDisposer = this.editor.addDomEventHandler('mouseover', this.onMouseOver);
     }
 
+    /**
+     * Dispose this plugin
+     */
     dispose() {
         this.editor = null;
         this.onMouseOverDisposer();
     }
 
+    /**
+     * Handle plugin events
+     * @param event The event object
+     */
     onPluginEvent(event: PluginEvent) {
         if (
             this.td &&

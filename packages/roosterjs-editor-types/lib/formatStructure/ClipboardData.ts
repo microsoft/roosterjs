@@ -33,11 +33,6 @@ interface ClipboardData {
      * If the copied data contains HTML format, this will be the html string. Otherwise it is null.
      */
     html: string;
-
-    /**
-     * Whether the HTML content is retrieved from temp DIV
-     */
-    isHtmlFromTempDiv?: boolean;
 }
 
 export default ClipboardData;

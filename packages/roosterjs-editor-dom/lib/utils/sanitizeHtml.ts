@@ -9,7 +9,17 @@ const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
 const LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
 const LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
 
+/**
+ * Callback function set for sanitizeHtml().
+ * sanitizeHtml() will check if there is a callback function for a given property name,
+ * it will call this function to decide what value to set for this property.
+ * Return null will cause this property be deleted, otherwise return the value of the property
+ */
 export type SanitizeHtmlPropertyCallback = { [name: string]: (value: string) => string };
+
+/**
+ * A map from CSS style name to its value
+ */
 export type StyleMap = { [name: string]: string };
 
 /**

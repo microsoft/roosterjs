@@ -1,3 +1,4 @@
+import { Browser } from 'roosterjs-editor-dom';
 import { PluginEvent, PluginEventType, ContentPosition } from 'roosterjs-editor-types';
 import {
     cacheGetCursorEventData,
@@ -7,7 +8,7 @@ import {
     validateAndGetRangeForTextBeforeCursor,
     CursorData,
 } from 'roosterjs-editor-api';
-import { Editor, browserData } from 'roosterjs-editor-core';
+import { Editor } from 'roosterjs-editor-core';
 
 const KEY_SPACE = 32;
 
@@ -79,7 +80,7 @@ function handleAutoBulletOrNumbering(identifier: string, editor: Editor) {
         }
 
         // If not explicitly insert br, Chrome will operate on the previous line
-        if (browserData.isChrome) {
+        if (Browser.isChrome) {
             let brNode = document.createElement('br');
             editor.insertNode(brNode, {
                 position: ContentPosition.SelectionStart,

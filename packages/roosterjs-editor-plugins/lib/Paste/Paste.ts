@@ -32,28 +32,33 @@ export default class Paste implements EditorPlugin {
 
     /**
      * Create an instance of Paste
-     * @param useDirectPaste: This is a test parameter and may be removed in the future.
-     * When set to true, we retrieve HTML from clipboard directly rather than using a hidden pasting DIV,
-     * then filter out unsafe HTML tags and attributes. Although we removed some unsafe tags such as SCRIPT,
-     * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
-     * this parameter if you don't have other XSS detecting logic outside the edtior.
      */
     constructor(
-        private useDirectPaste?: boolean,
         private htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback
     ) {}
 
+    /**
+     * Initialize this plugin
+     * @param editor The editor instance
+     */
     public initialize(editor: Editor) {
         this.editor = editor;
         this.pasteDisposer = editor.addDomEventHandler('paste', this.onPaste);
     }
 
+    /**
+     * Dispose this plugin
+     */
     public dispose() {
         this.pasteDisposer();
         this.pasteDisposer = null;
         this.editor = null;
     }
 
+    /**
+     * Handle plugin events
+     * @param event The event object
+     */
     public onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.BeforePaste) {
             let beforePasteEvent = <BeforePasteEvent>event;
@@ -75,20 +80,17 @@ export default class Paste implements EditorPlugin {
                 if (!clipboardData.html && clipboardData.text) {
                     clipboardData.html = textToHtml(clipboardData.text);
                 }
-                if (!clipboardData.isHtmlFromTempDiv) {
-                    let currentStyles = getInheritableStyles(this.editor);
-                    clipboardData.html = sanitizeHtml(
-                        clipboardData.html,
-                        null /*additionalStyleNodes*/,
-                        false /*convertInlineCssOnly*/,
-                        this.htmlPropertyCallbacks,
-                        currentStyles,
-                        true /*preserveFragmentOnly*/
-                    );
-                }
+                let currentStyles = getInheritableStyles(this.editor);
+                clipboardData.html = sanitizeHtml(
+                    clipboardData.html,
+                    null /*additionalStyleNodes*/,
+                    false /*convertInlineCssOnly*/,
+                    this.htmlPropertyCallbacks,
+                    currentStyles,
+                    true /*preserveFragmentOnly*/
+                );
                 this.pasteOriginal(clipboardData);
-            },
-            this.useDirectPaste
+            }
         );
     };
 

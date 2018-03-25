@@ -36,6 +36,10 @@ class Watermark implements EditorPlugin {
         };
     }
 
+    /**
+     * Initialize this plugin
+     * @param editor The editor instance
+     */
     initialize(editor: Editor) {
         this.editor = editor;
         this.showHideWatermark(false /*ignoreCachedState*/);
@@ -43,6 +47,9 @@ class Watermark implements EditorPlugin {
         this.blurDisposer = this.editor.addDomEventHandler('blur', this.handleWatermark);
     }
 
+    /**
+     * Dispose this plugin
+     */
     dispose() {
         this.focusDisposer();
         this.blurDisposer();
@@ -52,6 +59,10 @@ class Watermark implements EditorPlugin {
         this.editor = null;
     }
 
+    /**
+     * Handle plugin events
+     * @param event The event object
+     */
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.ContentChanged) {
             // When content is changed from setContent() API, current cached state

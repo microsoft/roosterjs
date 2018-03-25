@@ -1,18 +1,17 @@
-import { BrowserData, getBrowserData } from '../../utils/BrowserData';
+import { BrowserInfo, getBrowserInfo } from '../../utils/Browser';
 
-function runBrowserDataTest(userAgent: string, appVersion: string, expected: BrowserData): void {
-    let b = getBrowserData(userAgent, appVersion);
+function runBrowserDataTest(userAgent: string, appVersion: string, expected: BrowserInfo): void {
+    let b = getBrowserInfo(userAgent, appVersion);
     expect(b.isChrome).toBe(expected.isChrome);
     expect(b.isEdge).toBe(expected.isEdge);
     expect(b.isFirefox).toBe(expected.isFirefox);
     expect(b.isIE).toBe(expected.isIE);
     expect(b.isMac).toBe(expected.isMac);
     expect(b.isSafari).toBe(expected.isSafari);
-    expect(b.isWebKit).toBe(expected.isWebKit);
     expect(b.isWin).toBe(expected.isWin);
 }
 
-describe('getBrowserData', () => {
+describe('getBrowserInfo', () => {
     it('Safrai 9.0.3 on Mac', () => {
         runBrowserDataTest(
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/601.4.4 (KHTML, like Gecko) Version/9.0.3 Safari/601.4.4',
@@ -22,10 +21,8 @@ describe('getBrowserData', () => {
                 isEdge: false,
                 isFirefox: false,
                 isIE: false,
-                isIE11OrGreater: false,
                 isMac: true,
                 isSafari: true,
-                isWebKit: true,
                 isWin: false,
             }
         );
@@ -40,10 +37,8 @@ describe('getBrowserData', () => {
                 isEdge: false,
                 isFirefox: true,
                 isIE: false,
-                isIE11OrGreater: false,
                 isMac: false,
                 isSafari: false,
-                isWebKit: false,
                 isWin: true,
             }
         );
@@ -58,10 +53,8 @@ describe('getBrowserData', () => {
                 isEdge: false,
                 isFirefox: false,
                 isIE: false,
-                isIE11OrGreater: false,
                 isMac: false,
                 isSafari: false,
-                isWebKit: true,
                 isWin: true,
             }
         );
@@ -76,10 +69,8 @@ describe('getBrowserData', () => {
                 isEdge: true,
                 isFirefox: false,
                 isIE: false,
-                isIE11OrGreater: false,
                 isMac: false,
                 isSafari: false,
-                isWebKit: false,
                 isWin: true,
             }
         );
@@ -94,10 +85,8 @@ describe('getBrowserData', () => {
                 isEdge: false,
                 isFirefox: false,
                 isIE: true,
-                isIE11OrGreater: true,
                 isMac: false,
                 isSafari: false,
-                isWebKit: false,
                 isWin: true,
             }
         );
@@ -112,10 +101,8 @@ describe('getBrowserData', () => {
                 isEdge: false,
                 isFirefox: false,
                 isIE: true,
-                isIE11OrGreater: false,
                 isMac: false,
                 isSafari: false,
-                isWebKit: false,
                 isWin: true,
             }
         );

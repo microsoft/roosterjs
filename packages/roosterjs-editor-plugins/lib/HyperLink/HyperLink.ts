@@ -1,3 +1,4 @@
+import { Browser } from 'roosterjs-editor-dom';
 import {
     matchLink,
     replaceTextBeforeCursorWithNode,
@@ -12,7 +13,7 @@ import {
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
 // we need to trim off the trailing puncatuation before turning it to link match
@@ -41,10 +42,14 @@ export default class HyperLink implements EditorPlugin {
         private target?: string
     ) {}
 
+    /**
+     * Initialize this plugin
+     * @param editor The editor instance
+     */
     public initialize(editor: Editor): void {
         this.editor = editor;
 
-        if (browserData.isIE) {
+        if (Browser.isIE) {
             this.editor
                 .getDocument()
                 .execCommand(
@@ -55,12 +60,18 @@ export default class HyperLink implements EditorPlugin {
         }
     }
 
+    /**
+     * Dispose this plugin
+     */
     public dispose(): void {
         this.forEachHyperLink(this.resetAnchor.bind(this));
         this.editor = null;
     }
 
-    // Handle the event
+    /**
+     * Handle plugin events
+     * @param event The event object
+     */
     public onPluginEvent(event: PluginEvent): void {
         switch (event.eventType) {
             case PluginEventType.KeyDown:
@@ -162,9 +173,9 @@ export default class HyperLink implements EditorPlugin {
     private onClickLink = (keyboardEvent: KeyboardEvent) => {
         let href: string;
         if (
-            !browserData.isFirefox &&
+            !Browser.isFirefox &&
             (href = this.tryGetHref(keyboardEvent.srcElement)) &&
-            (browserData.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey)
+            (Browser.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey)
         ) {
             let target = this.target || '_blank';
             this.editor.getDocument().defaultView.window.open(href, target);
