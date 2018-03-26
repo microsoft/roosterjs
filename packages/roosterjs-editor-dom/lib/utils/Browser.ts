@@ -89,8 +89,8 @@ export function getBrowserInfo(userAgent: string, appVersion: string): BrowserIn
     };
 }
 
-const Browser = window ?
-    getBrowserInfo(window.navigator.userAgent, window.navigator.appVersion) :
-    {};
+const Browser = window
+    ? getBrowserInfo(window.navigator.userAgent, window.navigator.appVersion)
+    : {};
 
 export default Browser;

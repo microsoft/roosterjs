@@ -33,9 +33,7 @@ export default class Paste implements EditorPlugin {
     /**
      * Create an instance of Paste
      */
-    constructor(
-        private htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback
-    ) {}
+    constructor(private htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback) {}
 
     /**
      * Initialize this plugin
@@ -70,28 +68,24 @@ export default class Paste implements EditorPlugin {
     }
 
     private onPaste = (event: Event) => {
-        buildClipboardData(
-            <ClipboardEvent>event,
-            this.editor,
-            clipboardData => {
-                if (!this.editor) {
-                    return;
-                }
-                if (!clipboardData.html && clipboardData.text) {
-                    clipboardData.html = textToHtml(clipboardData.text);
-                }
-                let currentStyles = getInheritableStyles(this.editor);
-                clipboardData.html = sanitizeHtml(
-                    clipboardData.html,
-                    null /*additionalStyleNodes*/,
-                    false /*convertInlineCssOnly*/,
-                    this.htmlPropertyCallbacks,
-                    currentStyles,
-                    true /*preserveFragmentOnly*/
-                );
-                this.pasteOriginal(clipboardData);
+        buildClipboardData(<ClipboardEvent>event, this.editor, clipboardData => {
+            if (!this.editor) {
+                return;
             }
-        );
+            if (!clipboardData.html && clipboardData.text) {
+                clipboardData.html = textToHtml(clipboardData.text);
+            }
+            let currentStyles = getInheritableStyles(this.editor);
+            clipboardData.html = sanitizeHtml(
+                clipboardData.html,
+                null /*additionalStyleNodes*/,
+                false /*convertInlineCssOnly*/,
+                this.htmlPropertyCallbacks,
+                currentStyles,
+                true /*preserveFragmentOnly*/
+            );
+            this.pasteOriginal(clipboardData);
+        });
     };
 
     /**

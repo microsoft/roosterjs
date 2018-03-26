@@ -419,10 +419,7 @@ exports.default = getCursorRect;
 function getRectFromClientRect(clientRect) {
     // A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p
     // We validate that and only return a rect when the passed in ClientRect is valid
-    if (!clientRect) {
-        return null;
-    }
-    var left = clientRect.left, right = clientRect.right, top = clientRect.top, bottom = clientRect.bottom;
+    var _a = clientRect || {}, left = _a.left, right = _a.right, top = _a.top, bottom = _a.bottom;
     return left + right + top + bottom > 0
         ? {
             left: Math.round(left),
@@ -432,6 +429,90 @@ function getRectFromClientRect(clientRect) {
         }
         : null;
 }
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-api/lib/cursor/getFormatState.ts":
+/*!********************************************************************!*\
+  !*** ./packages/roosterjs-editor-api/lib/cursor/getFormatState.ts ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var cacheGetListTag_1 = __webpack_require__(/*! ../cursor/cacheGetListTag */ "./packages/roosterjs-editor-api/lib/cursor/cacheGetListTag.ts");
+var getNodeAtCursor_1 = __webpack_require__(/*! ../cursor/getNodeAtCursor */ "./packages/roosterjs-editor-api/lib/cursor/getNodeAtCursor.ts");
+var queryNodesWithSelection_1 = __webpack_require__(/*! ../cursor/queryNodesWithSelection */ "./packages/roosterjs-editor-api/lib/cursor/queryNodesWithSelection.ts");
+var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+/**
+ * Get the header level in current selection. The header level refers to the HTML <H1> to <H6> elements,
+ * level 1 indicates <H1>, level 2 indicates <H2>, etc
+ * @param editor The editor instance
+ * @param event (Optional) The plugin event, it stores the event cached data for looking up.
+ * If not passed, we will query the node within selection
+ * @returns The header level, 0 if there is no HTML heading elements
+ */
+function cacheGetHeaderLevel(editor, event) {
+    return roosterjs_editor_core_1.cacheGetEventData(event, 'HeaderLevel', function () {
+        for (var i = 1; i <= 6; i++) {
+            if (queryNodesWithSelection_1.default(editor, 'H' + i).length > 0) {
+                return i;
+            }
+        }
+        return 0;
+    });
+}
+/**
+ * Query command state, used for query Bold, Italic, Underline state
+ * @param editor The editor instance
+ * @param command The command to query
+ */
+function queryCommandState(editor, command) {
+    return editor.getDocument().queryCommandState(command);
+}
+/**
+ * Get format state at cursor
+ * A format state is a collection of all format related states, e.g.,
+ * bold, italic, underline, font name, font size, etc.
+ * @param editor The editor
+ * @param (Optional) The plugin event, it stores the event cached data for looking up.
+ * In this function the event cache is used to get list state and header level. If not passed,
+ * it will query the node within selection to get the info
+ * @returns The format state at cursor
+ */
+function getFormatState(editor, event) {
+    var nodeAtCursor = getNodeAtCursor_1.default(editor);
+    if (!nodeAtCursor) {
+        return null;
+    }
+    var styles = roosterjs_editor_dom_1.getComputedStyles(nodeAtCursor);
+    var tag = cacheGetListTag_1.default(editor, event);
+    return {
+        fontName: styles[0],
+        fontSize: styles[1],
+        textColor: styles[2],
+        backgroundColor: styles[3],
+        isBullet: tag == 'UL',
+        isNumbering: tag == 'OL',
+        isBold: queryCommandState(editor, 'bold'),
+        isItalic: queryCommandState(editor, 'italic'),
+        isUnderline: queryCommandState(editor, 'underline'),
+        isStrikeThrough: queryCommandState(editor, 'strikeThrough'),
+        isSubscript: queryCommandState(editor, 'subscript'),
+        isSuperscript: queryCommandState(editor, 'superscript'),
+        canUnlink: queryNodesWithSelection_1.default(editor, 'a[href]').length > 0,
+        canAddImageAltText: queryNodesWithSelection_1.default(editor, 'img').length > 0,
+        isBlockQuote: queryNodesWithSelection_1.default(editor, 'blockquote').length > 0,
+        canUndo: editor.canUndo(),
+        canRedo: editor.canRedo(),
+        headerLevel: cacheGetHeaderLevel(editor, event),
+    };
+}
+exports.default = getFormatState;
 
 
 /***/ }),
@@ -505,14 +586,19 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
  * @param editor The editor
  * @param selector The selector to query
  * @param nodeContainedByRangeOnly When set to true, only return the nodes contained by current selection. Default value is false
+ * @param forEachCallback An optional callback to be invoked on each node in query result
  * @returns The nodes intersected with current selection, returns an empty array if no result is found
  */
-function queryNodesWithSelection(editor, selector, nodeContainedByRangeOnly) {
+function queryNodesWithSelection(editor, selector, nodeContainedByRangeOnly, forEachCallback) {
     var nodes = editor.queryNodes(selector);
     var range = editor.getSelectionRange();
-    return nodes.filter(function (node) {
+    nodes = nodes.filter(function (node) {
         return roosterjs_editor_dom_1.intersectWithNodeRange(node, range.start.node, range.end.node, nodeContainedByRangeOnly);
     });
+    if (forEachCallback) {
+        nodes.forEach(forEachCallback);
+    }
+    return nodes;
 }
 exports.default = queryNodesWithSelection;
 
@@ -737,42 +823,6 @@ exports.default = applyInlineStyle;
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-api/lib/format/cacheGetHeaderLevel.ts":
-/*!*************************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/format/cacheGetHeaderLevel.ts ***!
-  \*************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var queryNodesWithSelection_1 = __webpack_require__(/*! ../cursor/queryNodesWithSelection */ "./packages/roosterjs-editor-api/lib/cursor/queryNodesWithSelection.ts");
-var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
-var EVENTDATACACHE_HEADER_LEVEL = 'HeaderLevel';
-/**
- * Get the header level in current selection. The header level refers to the HTML <H1> to <H6> elements,
- * level 1 indicates <H1>, level 2 indicates <H2>, etc
- * @param editor The editor instance
- * @param event (Optional) The plugin event, it stores the event cached data for looking up.
- * If not passed, we will query the node within selection
- * @returns The header level, 0 if there is no HTML heading elements
- */
-function cacheGetHeaderLevel(editor, event) {
-    return roosterjs_editor_core_1.cacheGetEventData(event, EVENTDATACACHE_HEADER_LEVEL, function () {
-        for (var i = 1; i <= 6; i++) {
-            if (queryNodesWithSelection_1.default(editor, 'H' + i).length > 0) {
-                return i;
-            }
-        }
-        return 0;
-    });
-}
-exports.default = cacheGetHeaderLevel;
-
-
-/***/ }),
-
 /***/ "./packages/roosterjs-editor-api/lib/format/clearFormat.ts":
 /*!*****************************************************************!*\
   !*** ./packages/roosterjs-editor-api/lib/format/clearFormat.ts ***!
@@ -799,19 +849,10 @@ function clearFormat(editor) {
     editor.focus();
     editor.formatWithUndo(function () {
         editor.getDocument().execCommand('removeFormat', false, null);
-        var nodes = queryNodesWithSelection_1.default(editor, '[class]');
-        for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
-            var node = nodes_1[_i];
-            node.removeAttribute('class');
-        }
-        nodes = queryNodesWithSelection_1.default(editor, '[style]', true /*nodeContainedByRangeOnly*/);
-        var _loop_1 = function (node) {
-            STYLES_TO_REMOVE.forEach(function (style) { return node.style.removeProperty(style); });
-        };
-        for (var _a = 0, nodes_2 = nodes; _a < nodes_2.length; _a++) {
-            var node = nodes_2[_a];
-            _loop_1(node);
-        }
+        queryNodesWithSelection_1.default(editor, '[class]', false /*containsOnly*/, function (node) {
+            return node.removeAttribute('class');
+        });
+        queryNodesWithSelection_1.default(editor, '[style]', true /*nodeContainedByRangeOnly*/, function (node) { return STYLES_TO_REMOVE.forEach(function (style) { return node.style.removeProperty(style); }); });
         var defaultFormat = editor.getDefaultFormat();
         setFontName_1.default(editor, defaultFormat.fontFamily);
         setFontSize_1.default(editor, defaultFormat.fontSize);
@@ -834,8 +875,8 @@ exports.default = clearFormat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var matchLink_1 = __webpack_require__(/*! ../linkMatch/matchLink */ "./packages/roosterjs-editor-api/lib/linkMatch/matchLink.ts");
 var queryNodesWithSelection_1 = __webpack_require__(/*! ../cursor/queryNodesWithSelection */ "./packages/roosterjs-editor-api/lib/cursor/queryNodesWithSelection.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 // Regex matching Uri scheme
 var URI_REGEX = /^[a-zA-Z]+:/i;
 // Regex matching begin of email address
@@ -859,7 +900,7 @@ function createLink(editor, link, altText, displayText) {
     editor.focus();
     var url = link ? link.trim() : '';
     if (url) {
-        var linkData = matchLink_1.default(url);
+        var linkData = roosterjs_editor_dom_1.matchLink(url);
         // matchLink can match most links, but not all, i.e. if you pass link a link as "abc", it won't match
         // we know in that case, users will want to insert a link like http://abc
         // so we have separate logic in applyLinkPrefix to add link prefix depending on the format of the link
@@ -925,68 +966,6 @@ function applyLinkPrefix(url) {
     }
     return prefix + url;
 }
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-api/lib/format/getFormatState.ts":
-/*!********************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/format/getFormatState.ts ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var getNodeAtCursor_1 = __webpack_require__(/*! ../cursor/getNodeAtCursor */ "./packages/roosterjs-editor-api/lib/cursor/getNodeAtCursor.ts");
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var cacheGetListTag_1 = __webpack_require__(/*! ../cursor/cacheGetListTag */ "./packages/roosterjs-editor-api/lib/cursor/cacheGetListTag.ts");
-var cacheGetHeaderLevel_1 = __webpack_require__(/*! ./cacheGetHeaderLevel */ "./packages/roosterjs-editor-api/lib/format/cacheGetHeaderLevel.ts");
-var queryNodesWithSelection_1 = __webpack_require__(/*! ../cursor/queryNodesWithSelection */ "./packages/roosterjs-editor-api/lib/cursor/queryNodesWithSelection.ts");
-// Query command state, used for query Bold, Italic, Underline state
-function queryCommandState(editor, command) {
-    return editor.getDocument().queryCommandState(command);
-}
-/**
- * Get format state at cursor
- * A format state is a collection of all format related states, e.g.,
- * bold, italic, underline, font name, font size, etc.
- * @param editor The editor
- * @param (Optional) The plugin event, it stores the event cached data for looking up.
- * In this function the event cache is used to get list state and header level. If not passed,
- * it will query the node within selection to get the info
- * @returns The format state at cursor
- */
-function getFormatState(editor, event) {
-    var nodeAtCursor = getNodeAtCursor_1.default(editor);
-    if (!nodeAtCursor) {
-        return null;
-    }
-    var styles = roosterjs_editor_dom_1.getComputedStyles(nodeAtCursor);
-    var tag = cacheGetListTag_1.default(editor, event);
-    return {
-        fontName: styles[0],
-        fontSize: styles[1],
-        textColor: styles[2],
-        backgroundColor: styles[3],
-        isBullet: tag == 'UL',
-        isNumbering: tag == 'OL',
-        isBold: queryCommandState(editor, 'bold'),
-        isItalic: queryCommandState(editor, 'italic'),
-        isUnderline: queryCommandState(editor, 'underline'),
-        isStrikeThrough: queryCommandState(editor, 'strikeThrough'),
-        isSubscript: queryCommandState(editor, 'subscript'),
-        isSuperscript: queryCommandState(editor, 'superscript'),
-        canUnlink: queryNodesWithSelection_1.default(editor, 'a[href]').length > 0,
-        canAddImageAltText: queryNodesWithSelection_1.default(editor, 'img').length > 0,
-        isBlockQuote: queryNodesWithSelection_1.default(editor, 'blockquote').length > 0,
-        canUndo: editor.canUndo(),
-        canRedo: editor.canRedo(),
-        headerLevel: cacheGetHeaderLevel_1.default(editor, event),
-    };
-}
-exports.default = getFormatState;
 
 
 /***/ }),
@@ -1287,7 +1266,7 @@ exports.default = setImageAltText;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getFormatState_1 = __webpack_require__(/*! ../format/getFormatState */ "./packages/roosterjs-editor-api/lib/format/getFormatState.ts");
+var getFormatState_1 = __webpack_require__(/*! ../cursor/getFormatState */ "./packages/roosterjs-editor-api/lib/cursor/getFormatState.ts");
 var queryNodesWithSelection_1 = __webpack_require__(/*! ../cursor/queryNodesWithSelection */ "./packages/roosterjs-editor-api/lib/cursor/queryNodesWithSelection.ts");
 /**
  * Set indentation at selection
@@ -1304,8 +1283,7 @@ function setIndentation(editor, indentation) {
         var format = getFormatState_1.default(editor);
         editor.getDocument().execCommand(command, false, null);
         if (!format.isBullet && !format.isNumbering) {
-            var nodes = queryNodesWithSelection_1.default(editor, 'blockquote');
-            nodes.forEach(function (node) {
+            queryNodesWithSelection_1.default(editor, 'blockquote', false /*containsOnly*/, function (node) {
                 node.style.marginTop = '0px';
                 node.style.marginBottom = '0px';
             });
@@ -1343,6 +1321,32 @@ exports.default = setTextColor;
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-api/lib/format/toggle.ts":
+/*!************************************************************!*\
+  !*** ./packages/roosterjs-editor-api/lib/format/toggle.ts ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Toggle state using execCommand function
+ * @param editor The editor instance
+ * @param command The command to execute
+ */
+function toggle(editor, command) {
+    editor.focus();
+    editor.formatWithUndo(function () {
+        editor.getDocument().execCommand(command, false, null);
+    });
+}
+exports.default = toggle;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-api/lib/format/toggleBlockQuote.ts":
 /*!**********************************************************************!*\
   !*** ./packages/roosterjs-editor-api/lib/format/toggleBlockQuote.ts ***!
@@ -1372,13 +1376,10 @@ var defaultStyler = function (element) {
  */
 function toggleBlockQuote(editor, styler) {
     editor.focus();
-    var blockquoteNodes = queryNodesWithSelection_1.default(editor, 'blockquote');
     editor.formatWithUndo(function () {
-        if (blockquoteNodes.length) {
-            // There are already blockquote nodes, unwrap them
-            blockquoteNodes.forEach(function (node) { return roosterjs_editor_dom_1.unwrap(node); });
-        }
-        else {
+        // There are already blockquote nodes, unwrap them
+        if (queryNodesWithSelection_1.default(editor, 'blockquote', false /*containsOnly*/, roosterjs_editor_dom_1.unwrap).length ==
+            0) {
             // Step 1: Find all block elements and their content nodes
             var nodes = getContentNodes(editor);
             // Step 2: Split existing list container if necessary
@@ -1483,6 +1484,7 @@ function isListElement(node) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var toggle_1 = __webpack_require__(/*! ./toggle */ "./packages/roosterjs-editor-api/lib/format/toggle.ts");
 /**
  * Toggle bold at selection
  * If selection is collapsed, it will only affect the following input after caret
@@ -1492,10 +1494,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @param editor The editor instance
  */
 function toggleBold(editor) {
-    editor.focus();
-    editor.formatWithUndo(function () {
-        editor.getDocument().execCommand('bold', false, null);
-    });
+    toggle_1.default(editor, 'bold');
 }
 exports.default = toggleBold;
 
@@ -1598,8 +1597,7 @@ function toggleHeader(editor, level) {
         else {
             editor.getDocument().execCommand('formatBlock', false, '<DIV>');
             for (var i = 1; i <= 6; i++) {
-                var headers = queryNodesWithSelection_1.default(editor, 'H' + i);
-                headers.forEach(function (header) {
+                queryNodesWithSelection_1.default(editor, 'H' + i, false /*containsOnly*/, function (header) {
                     var div = editor.getDocument().createElement('div');
                     while (header.firstChild) {
                         div.appendChild(header.firstChild);
@@ -1625,6 +1623,7 @@ exports.default = toggleHeader;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var toggle_1 = __webpack_require__(/*! ./toggle */ "./packages/roosterjs-editor-api/lib/format/toggle.ts");
 /**
  * Toggle italic at selection
  * If selection is collapsed, it will only affect the input after caret
@@ -1634,10 +1633,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @param editor The editor instance
  */
 function toggleItalic(editor) {
-    editor.focus();
-    editor.formatWithUndo(function () {
-        editor.getDocument().execCommand('italic', false, null);
-    });
+    toggle_1.default(editor, 'italic');
 }
 exports.default = toggleItalic;
 
@@ -1686,6 +1682,7 @@ exports.default = toggleNumbering;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var toggle_1 = __webpack_require__(/*! ./toggle */ "./packages/roosterjs-editor-api/lib/format/toggle.ts");
 /**
  * Toggle strikethrough at selection
  * If selection is collapsed, it will only affect the input after caret
@@ -1695,10 +1692,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @param editor The editor instance
  */
 function toggleStrikethrough(editor) {
-    editor.focus();
-    editor.formatWithUndo(function () {
-        editor.getDocument().execCommand('strikeThrough', false, null);
-    });
+    toggle_1.default(editor, 'strikeThrough');
 }
 exports.default = toggleStrikethrough;
 
@@ -1715,6 +1709,7 @@ exports.default = toggleStrikethrough;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var toggle_1 = __webpack_require__(/*! ./toggle */ "./packages/roosterjs-editor-api/lib/format/toggle.ts");
 /**
  * Toggle subscript at selection
  * If selection is collapsed, it will only affect the input after caret
@@ -1726,10 +1721,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @param editor The editor instance
  */
 function toggleSubscript(editor) {
-    editor.focus();
-    editor.formatWithUndo(function () {
-        editor.getDocument().execCommand('subscript', false, null);
-    });
+    toggle_1.default(editor, 'subscript');
 }
 exports.default = toggleSubscript;
 
@@ -1746,6 +1738,7 @@ exports.default = toggleSubscript;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var toggle_1 = __webpack_require__(/*! ./toggle */ "./packages/roosterjs-editor-api/lib/format/toggle.ts");
 /**
  * Toggle superscript at selection
  * If selection is collapsed, it will only affect the input after caret
@@ -1757,10 +1750,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @param editor The editor instance
  */
 function toggleSuperscript(editor) {
-    editor.focus();
-    editor.formatWithUndo(function () {
-        editor.getDocument().execCommand('superscript', false, null);
-    });
+    toggle_1.default(editor, 'superscript');
 }
 exports.default = toggleSuperscript;
 
@@ -1777,6 +1767,7 @@ exports.default = toggleSuperscript;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var toggle_1 = __webpack_require__(/*! ./toggle */ "./packages/roosterjs-editor-api/lib/format/toggle.ts");
 /**
  * Toggle underline at selection
  * If selection is collapsed, it will only affect the input after caret
@@ -1786,10 +1777,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @param editor The editor instance
  */
 function toggleUnderline(editor) {
-    editor.focus();
-    editor.formatWithUndo(function () {
-        editor.getDocument().execCommand('underline', false, null);
-    });
+    toggle_1.default(editor, 'underline');
 }
 exports.default = toggleUnderline;
 
@@ -1823,24 +1811,16 @@ exports.replaceRangeWithNode = replaceRangeWithNode_1.default;
 var replaceTextBeforeCursorWithNode_1 = __webpack_require__(/*! ./cursor/replaceTextBeforeCursorWithNode */ "./packages/roosterjs-editor-api/lib/cursor/replaceTextBeforeCursorWithNode.ts");
 exports.replaceTextBeforeCursorWithNode = replaceTextBeforeCursorWithNode_1.default;
 exports.validateAndGetRangeForTextBeforeCursor = replaceTextBeforeCursorWithNode_1.validateAndGetRangeForTextBeforeCursor;
+var getFormatState_1 = __webpack_require__(/*! ./cursor/getFormatState */ "./packages/roosterjs-editor-api/lib/cursor/getFormatState.ts");
+exports.getFormatState = getFormatState_1.default;
 var cacheGetListTag_1 = __webpack_require__(/*! ./cursor/cacheGetListTag */ "./packages/roosterjs-editor-api/lib/cursor/cacheGetListTag.ts");
 exports.cacheGetListTag = cacheGetListTag_1.default;
 var clearFormat_1 = __webpack_require__(/*! ./format/clearFormat */ "./packages/roosterjs-editor-api/lib/format/clearFormat.ts");
 exports.clearFormat = clearFormat_1.default;
 var createLink_1 = __webpack_require__(/*! ./format/createLink */ "./packages/roosterjs-editor-api/lib/format/createLink.ts");
 exports.createLink = createLink_1.default;
-var getFormatState_1 = __webpack_require__(/*! ./format/getFormatState */ "./packages/roosterjs-editor-api/lib/format/getFormatState.ts");
-exports.getFormatState = getFormatState_1.default;
 var insertImage_1 = __webpack_require__(/*! ./format/insertImage */ "./packages/roosterjs-editor-api/lib/format/insertImage.ts");
 exports.insertImage = insertImage_1.default;
-var VTable_1 = __webpack_require__(/*! ./table/VTable */ "./packages/roosterjs-editor-api/lib/table/VTable.ts");
-exports.VTable = VTable_1.default;
-var insertTable_1 = __webpack_require__(/*! ./table/insertTable */ "./packages/roosterjs-editor-api/lib/table/insertTable.ts");
-exports.insertTable = insertTable_1.default;
-var editTable_1 = __webpack_require__(/*! ./table/editTable */ "./packages/roosterjs-editor-api/lib/table/editTable.ts");
-exports.editTable = editTable_1.default;
-var formatTable_1 = __webpack_require__(/*! ./table/formatTable */ "./packages/roosterjs-editor-api/lib/table/formatTable.ts");
-exports.formatTable = formatTable_1.default;
 var removeLink_1 = __webpack_require__(/*! ./format/removeLink */ "./packages/roosterjs-editor-api/lib/format/removeLink.ts");
 exports.removeLink = removeLink_1.default;
 var setAlignment_1 = __webpack_require__(/*! ./format/setAlignment */ "./packages/roosterjs-editor-api/lib/format/setAlignment.ts");
@@ -1879,92 +1859,14 @@ var toggleUnderline_1 = __webpack_require__(/*! ./format/toggleUnderline */ "./p
 exports.toggleUnderline = toggleUnderline_1.default;
 var toggleHeader_1 = __webpack_require__(/*! ./format/toggleHeader */ "./packages/roosterjs-editor-api/lib/format/toggleHeader.ts");
 exports.toggleHeader = toggleHeader_1.default;
-var matchLink_1 = __webpack_require__(/*! ./linkMatch/matchLink */ "./packages/roosterjs-editor-api/lib/linkMatch/matchLink.ts");
-exports.matchLink = matchLink_1.default;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-api/lib/linkMatch/matchLink.ts":
-/*!******************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/linkMatch/matchLink.ts ***!
-  \******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-// http exclude matching regex
-// invalid URL example (in paricular on IE and Edge):
-// - http://www.bing.com%00, %00 before ? (question mark) is considered invalid. IE/Edge throws invalid argument exception
-// - http://www.bing.com%1, %1 is invalid
-// - http://www.bing.com%g, %g is invalid (IE and Edge expects a two hex value after a %)
-// - http://www.bing.com%, % as ending is invalid (IE and Edge expects a two hex value after a %)
-// All above % cases if they're after ? (question mark) is then considered valid again
-// Similar for @, it needs to be after / (forward slash), or ? (question mark). Otherwise IE/Edge will throw security exception
-// - http://www.bing.com@name, @name before ? (question mark) is considered invalid
-// - http://www.bing.com/@name, is valid sine it is after / (forward slash)
-// - http://www.bing.com?@name, is also valid sinve it is after ? (question mark)
-// The regex below is essentially a break down of:
-// ^[^?]+%[^0-9a-f]+ => to exclude URL like www.bing.com%%
-// ^[^?]+%[0-9a-f][^0-9a-f]+ => to exclude URL like www.bing.com%1
-// ^[^?]+%00 => to exclude URL like www.bing.com%00
-// ^[^?]+%$ => to exclude URL like www.bing.com%
-// ^https?:\/\/[^?\/]+@ => to exclude URL like http://www.bing.com@name
-// ^www\.[^?\/]+@ => to exclude URL like www.bing.com@name
-var httpExcludeRegEx = /^[^?]+%[^0-9a-f]+|^[^?]+%[0-9a-f][^0-9a-f]+|^[^?]+%00|^[^?]+%$|^https?:\/\/[^?\/]+@|^www\.[^?\/]+@/i;
-var linkMatchRules = {
-    http: {
-        match: /^(microsoft-edge:)?http:\/\/\S+|www\.\S+/i,
-        except: httpExcludeRegEx,
-        normalizeUrl: function (url) { return (/^(microsoft-edge:)?http:\/\//i.test(url) ? url : 'http://' + url); },
-    },
-    https: {
-        match: /^(microsoft-edge:)?https:\/\/\S+/i,
-        except: httpExcludeRegEx,
-    },
-    mailto: { match: /^mailto:\S+@\S+\.\S+/i },
-    notes: { match: /^notes:\/\/\S+/i },
-    file: { match: /^file:\/\/\/?\S+/i },
-    unc: { match: /^\\\\\S+/i },
-    ftp: {
-        match: /^ftp:\/\/\S+|ftp\.\S+/i,
-        normalizeUrl: function (url) { return (/^ftp:\/\//i.test(url) ? url : 'ftp://' + url); },
-    },
-    news: { match: /^news:(\/\/)?\S+/i },
-    telnet: { match: /^telnet:\S+/i },
-    gopher: { match: /^gopher:\/\/\S+/i },
-    wais: { match: /^wais:\S+/i },
-};
-/**
- * Try to match a given string with link match rules, return matched link
- * @param url Input url to match
- * @param option Link match option, exact or partial. If it is exact match, we need
- * to check the length of matched link and url
- * @param rules Optional link match rules, if not passed, only the default link match
- * rules will be applied
- * @returns The matched link data, or null if no match found.
- * The link data includes an original url and a normalized url
- */
-function matchLink(url) {
-    if (url) {
-        for (var _i = 0, _a = Object.keys(linkMatchRules); _i < _a.length; _i++) {
-            var schema = _a[_i];
-            var rule = linkMatchRules[schema];
-            var matches = url.match(rule.match);
-            if (matches && matches[0] == url && (!rule.except || !rule.except.test(url))) {
-                return {
-                    scheme: schema,
-                    originalUrl: url,
-                    normalizedUrl: rule.normalizeUrl ? rule.normalizeUrl(url) : url,
-                };
-            }
-        }
-    }
-    return null;
-}
-exports.default = matchLink;
+var VTable_1 = __webpack_require__(/*! ./table/VTable */ "./packages/roosterjs-editor-api/lib/table/VTable.ts");
+exports.VTable = VTable_1.default;
+var insertTable_1 = __webpack_require__(/*! ./table/insertTable */ "./packages/roosterjs-editor-api/lib/table/insertTable.ts");
+exports.insertTable = insertTable_1.default;
+var editTable_1 = __webpack_require__(/*! ./table/editTable */ "./packages/roosterjs-editor-api/lib/table/editTable.ts");
+exports.editTable = editTable_1.default;
+var formatTable_1 = __webpack_require__(/*! ./table/formatTable */ "./packages/roosterjs-editor-api/lib/table/formatTable.ts");
+exports.formatTable = formatTable_1.default;
 
 
 /***/ }),
@@ -3158,11 +3060,15 @@ var Editor = /** @class */ (function () {
     /**
      * DOM query nodes in editor
      * @param selector Selector string to query
+     * @param forEachCallback An optional callback to be invoked on each node in query result
      * @returns Node list of the query result
      */
-    Editor.prototype.queryNodes = function (selector) {
-        var nodes = this.core.contentDiv.querySelectorAll(selector);
-        return Array.apply(null, nodes);
+    Editor.prototype.queryNodes = function (selector, forEachCallback) {
+        var nodes = [].slice.call(this.core.contentDiv.querySelectorAll(selector));
+        if (forEachCallback) {
+            nodes.forEach(forEachCallback);
+        }
+        return nodes;
     };
     //#endregion
     //#region Focus and Selection
@@ -3923,7 +3829,22 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
  * void elements so users don't accidently create child nodes in them
  */
 var HTML_VOID_ELEMENTS = [
-    'AREA', 'BASE', 'BR', 'COL', 'COMMAND', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'
+    'AREA',
+    'BASE',
+    'BR',
+    'COL',
+    'COMMAND',
+    'EMBED',
+    'HR',
+    'IMG',
+    'INPUT',
+    'KEYGEN',
+    'LINK',
+    'META',
+    'PARAM',
+    'SOURCE',
+    'TRACK',
+    'WBR',
 ];
 /**
  * check if it is html void element. void element cannot have childen
@@ -4566,17 +4487,19 @@ var ContentTraverser = /** @class */ (function () {
         var _this = this;
         var thisInline = this.currentInlineElement;
         var getPreviousNextFunc = isNext ? getNextPreviousInlineElement_1.getNextInlineElement : getNextPreviousInlineElement_1.getPreviousInlineElement;
-        var getBeforeAfterStartFunc = function () { return isNext ? _this.scoper.getInlineElementAfterStart() : _this.scoper.getInlineElementBeforeStart(); };
-        var candidate = thisInline ?
-            getPreviousNextFunc(this.rootNode, thisInline) :
-            getBeforeAfterStartFunc
-                ? getBeforeAfterStartFunc()
-                : null;
+        var getBeforeAfterStartFunc = function () {
+            return isNext
+                ? _this.scoper.getInlineElementAfterStart()
+                : _this.scoper.getInlineElementBeforeStart();
+        };
+        var candidate = thisInline
+            ? getPreviousNextFunc(this.rootNode, thisInline)
+            : getBeforeAfterStartFunc ? getBeforeAfterStartFunc() : null;
         // For inline, we need to make sure it is really next/previous to current, unless current is null.
         // Then trim it if necessary
-        return candidate && (!thisInline || (candidate.isAfter(thisInline) == isNext)) ?
-            this.scoper.trimInlineElement(candidate) :
-            null;
+        return candidate && (!thisInline || candidate.isAfter(thisInline) == isNext)
+            ? this.scoper.trimInlineElement(candidate)
+            : null;
     };
     return ContentTraverser;
 }());
@@ -4674,10 +4597,11 @@ var SelectionScoper = /** @class */ (function () {
         if (end.isAfter(this.range.end)) {
             end = this.range.end;
         }
-        return start.equalTo(end) ? null :
-            start.offset > 0 || !end.isAtEnd ?
-                new PartialInlineElement_1.default(inlineElement, start, end) :
-                inlineElement;
+        return start.equalTo(end)
+            ? null
+            : start.offset > 0 || !end.isAtEnd
+                ? new PartialInlineElement_1.default(inlineElement, start, end)
+                : inlineElement;
     };
     return SelectionScoper;
 }());
@@ -4901,6 +4825,8 @@ var isDocumentPosition_1 = __webpack_require__(/*! ./utils/isDocumentPosition */
 exports.isDocumentPosition = isDocumentPosition_1.default;
 var isNodeEmpty_1 = __webpack_require__(/*! ./utils/isNodeEmpty */ "./packages/roosterjs-editor-dom/lib/utils/isNodeEmpty.ts");
 exports.isNodeEmpty = isNodeEmpty_1.default;
+var matchLink_1 = __webpack_require__(/*! ./utils/matchLink */ "./packages/roosterjs-editor-dom/lib/utils/matchLink.ts");
+exports.matchLink = matchLink_1.default;
 var splitParentNode_1 = __webpack_require__(/*! ./utils/splitParentNode */ "./packages/roosterjs-editor-dom/lib/utils/splitParentNode.ts");
 exports.splitParentNode = splitParentNode_1.default;
 var unwrap_1 = __webpack_require__(/*! ./utils/unwrap */ "./packages/roosterjs-editor-dom/lib/utils/unwrap.ts");
@@ -5054,9 +4980,10 @@ var getLeafSibling_1 = __webpack_require__(/*! ../domWalker/getLeafSibling */ ".
  */
 var PartialInlineElement = /** @class */ (function () {
     function PartialInlineElement(decoratedInline, start, end) {
-        this.decoratedInline = decoratedInline instanceof NodeInlineElement_1.default ?
-            decoratedInline :
-            decoratedInline.getDecoratedInline();
+        this.decoratedInline =
+            decoratedInline instanceof NodeInlineElement_1.default
+                ? decoratedInline
+                : decoratedInline.getDecoratedInline();
         var node = this.decoratedInline.getContainerNode();
         this.start = (start || new Position_1.default(node, Position_1.default.Begin)).normalize();
         this.end = (end || new Position_1.default(node, Position_1.default.End)).normalize();
@@ -5112,7 +5039,8 @@ var PartialInlineElement = /** @class */ (function () {
         var currentNode = this.start.node;
         var offset = this.start.offset;
         while (contains_1.default(containerNode, currentNode, true /*treatSameNodeAsContain*/) &&
-            (currentNode == this.end.node || isDocumentPosition_1.default(currentNode.compareDocumentPosition(this.end.node), 4 /* Following */))) {
+            (currentNode == this.end.node ||
+                isDocumentPosition_1.default(currentNode.compareDocumentPosition(this.end.node), 4 /* Following */))) {
             // The code below modifies DOM. Need to get the next sibling first otherwise
             // you won't be able to reliably get a good next sibling node
             var nextLeafNode = getLeafSibling_1.getNextLeafSibling(containerNode, currentNode);
@@ -5277,9 +5205,9 @@ var getLeafSibling_1 = __webpack_require__(/*! ../domWalker/getLeafSibling */ ".
  */
 function getNextInlineElement(rootNode, inlineElement) {
     var end = inlineElement.getEndPosition();
-    return end.isAtEnd ?
-        getInlineElementAtNode_1.default(getLeafSibling_1.getLeafSibling(rootNode, inlineElement.getContainerNode(), true /*isNext*/)) :
-        new PartialInlineElement_1.default(inlineElement, end, null);
+    return end.isAtEnd
+        ? getInlineElementAtNode_1.default(getLeafSibling_1.getLeafSibling(rootNode, inlineElement.getContainerNode(), true /*isNext*/))
+        : new PartialInlineElement_1.default(inlineElement, end, null);
 }
 exports.getNextInlineElement = getNextInlineElement;
 /**
@@ -5287,9 +5215,9 @@ exports.getNextInlineElement = getNextInlineElement;
  */
 function getPreviousInlineElement(rootNode, inlineElement) {
     var start = inlineElement.getStartPosition();
-    return start.offset == 0 ?
-        getInlineElementAtNode_1.default(getLeafSibling_1.getLeafSibling(rootNode, inlineElement.getContainerNode(), false /*isNext*/)) :
-        new PartialInlineElement_1.default(inlineElement, null, start);
+    return start.offset == 0
+        ? getInlineElementAtNode_1.default(getLeafSibling_1.getLeafSibling(rootNode, inlineElement.getContainerNode(), false /*isNext*/))
+        : new PartialInlineElement_1.default(inlineElement, null, start);
 }
 exports.getPreviousInlineElement = getPreviousInlineElement;
 
@@ -5371,13 +5299,16 @@ var Position = /** @class */ (function () {
      * @param p The position to check
      */
     Position.prototype.equalTo = function (p) {
-        return this == p || (this.node == p.node && this.offset == p.offset && this.isAtEnd == p.isAtEnd);
+        return (this == p ||
+            (this.node == p.node && this.offset == p.offset && this.isAtEnd == p.isAtEnd));
     };
     /**
      * Checks if position 1 is after position 2
      */
     Position.prototype.isAfter = function (p) {
-        return this.node == p.node ? (this.isAtEnd && !p.isAtEnd || this.offset > p.offset) : isNodeAfter_1.default(this.node, p.node);
+        return this.node == p.node
+            ? (this.isAtEnd && !p.isAtEnd) || this.offset > p.offset
+            : isNodeAfter_1.default(this.node, p.node);
     };
     Position.Before = "b" /* Before */;
     Position.Begin = 0 /* Begin */;
@@ -5515,9 +5446,9 @@ function getBrowserInfo(userAgent, appVersion) {
     };
 }
 exports.getBrowserInfo = getBrowserInfo;
-var Browser = window ?
-    getBrowserInfo(window.navigator.userAgent, window.navigator.appVersion) :
-    {};
+var Browser = window
+    ? getBrowserInfo(window.navigator.userAgent, window.navigator.appVersion)
+    : {};
 exports.default = Browser;
 
 
@@ -5939,6 +5870,90 @@ function trim(s, trim) {
     s = s.replace(ZERO_WIDTH_SPACE, '');
     return trim ? s.trim() : s;
 }
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-dom/lib/utils/matchLink.ts":
+/*!**************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/utils/matchLink.ts ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+// http exclude matching regex
+// invalid URL example (in paricular on IE and Edge):
+// - http://www.bing.com%00, %00 before ? (question mark) is considered invalid. IE/Edge throws invalid argument exception
+// - http://www.bing.com%1, %1 is invalid
+// - http://www.bing.com%g, %g is invalid (IE and Edge expects a two hex value after a %)
+// - http://www.bing.com%, % as ending is invalid (IE and Edge expects a two hex value after a %)
+// All above % cases if they're after ? (question mark) is then considered valid again
+// Similar for @, it needs to be after / (forward slash), or ? (question mark). Otherwise IE/Edge will throw security exception
+// - http://www.bing.com@name, @name before ? (question mark) is considered invalid
+// - http://www.bing.com/@name, is valid sine it is after / (forward slash)
+// - http://www.bing.com?@name, is also valid sinve it is after ? (question mark)
+// The regex below is essentially a break down of:
+// ^[^?]+%[^0-9a-f]+ => to exclude URL like www.bing.com%%
+// ^[^?]+%[0-9a-f][^0-9a-f]+ => to exclude URL like www.bing.com%1
+// ^[^?]+%00 => to exclude URL like www.bing.com%00
+// ^[^?]+%$ => to exclude URL like www.bing.com%
+// ^https?:\/\/[^?\/]+@ => to exclude URL like http://www.bing.com@name
+// ^www\.[^?\/]+@ => to exclude URL like www.bing.com@name
+var httpExcludeRegEx = /^[^?]+%[^0-9a-f]+|^[^?]+%[0-9a-f][^0-9a-f]+|^[^?]+%00|^[^?]+%$|^https?:\/\/[^?\/]+@|^www\.[^?\/]+@/i;
+var linkMatchRules = {
+    http: {
+        match: /^(microsoft-edge:)?http:\/\/\S+|www\.\S+/i,
+        except: httpExcludeRegEx,
+        normalizeUrl: function (url) { return (/^(microsoft-edge:)?http:\/\//i.test(url) ? url : 'http://' + url); },
+    },
+    https: {
+        match: /^(microsoft-edge:)?https:\/\/\S+/i,
+        except: httpExcludeRegEx,
+    },
+    mailto: { match: /^mailto:\S+@\S+\.\S+/i },
+    notes: { match: /^notes:\/\/\S+/i },
+    file: { match: /^file:\/\/\/?\S+/i },
+    unc: { match: /^\\\\\S+/i },
+    ftp: {
+        match: /^ftp:\/\/\S+|ftp\.\S+/i,
+        normalizeUrl: function (url) { return (/^ftp:\/\//i.test(url) ? url : 'ftp://' + url); },
+    },
+    news: { match: /^news:(\/\/)?\S+/i },
+    telnet: { match: /^telnet:\S+/i },
+    gopher: { match: /^gopher:\/\/\S+/i },
+    wais: { match: /^wais:\S+/i },
+};
+/**
+ * Try to match a given string with link match rules, return matched link
+ * @param url Input url to match
+ * @param option Link match option, exact or partial. If it is exact match, we need
+ * to check the length of matched link and url
+ * @param rules Optional link match rules, if not passed, only the default link match
+ * rules will be applied
+ * @returns The matched link data, or null if no match found.
+ * The link data includes an original url and a normalized url
+ */
+function matchLink(url) {
+    if (url) {
+        for (var _i = 0, _a = Object.keys(linkMatchRules); _i < _a.length; _i++) {
+            var schema = _a[_i];
+            var rule = linkMatchRules[schema];
+            var matches = url.match(rule.match);
+            if (matches && matches[0] == url && (!rule.except || !rule.except.test(url))) {
+                return {
+                    scheme: schema,
+                    originalUrl: url,
+                    normalizedUrl: rule.normalizeUrl ? rule.normalizeUrl(url) : url,
+                };
+            }
+        }
+    }
+    return null;
+}
+exports.default = matchLink;
 
 
 /***/ }),
@@ -6615,15 +6630,13 @@ var ContentEdit = /** @class */ (function () {
     // 4. is Enter or Backspace
     // 5. Any of ctrl/meta/alt is not pressed
     ContentEdit.prototype.getBlockQuoteElementFromEvent = function (event, keyboardEvent) {
-        if (event.eventType == 0 /* KeyDown */) {
-            if ((keyboardEvent.which == KEY_BACKSPACE || keyboardEvent.which == KEY_ENTER) &&
-                !keyboardEvent.ctrlKey &&
-                !keyboardEvent.altKey &&
-                !keyboardEvent.metaKey) {
-                return roosterjs_editor_api_1.queryNodesWithSelection(this.editor, BLOCKQUOTE_TAG_NAME)[0];
-            }
-        }
-        return null;
+        return event.eventType == 0 /* KeyDown */ &&
+            (keyboardEvent.which == KEY_BACKSPACE || keyboardEvent.which == KEY_ENTER) &&
+            !keyboardEvent.ctrlKey &&
+            !keyboardEvent.altKey &&
+            !keyboardEvent.metaKey
+            ? roosterjs_editor_api_1.queryNodesWithSelection(this.editor, BLOCKQUOTE_TAG_NAME)[0]
+            : null;
     };
     ContentEdit.prototype.shouldToggleState = function (event, node) {
         var isEmpty = roosterjs_editor_dom_1.isNodeEmpty(node);
@@ -6972,6 +6985,23 @@ var HyperLink = /** @class */ (function () {
         var _this = this;
         this.getTooltipCallback = getTooltipCallback;
         this.target = target;
+        this.resetAnchor = function (a) {
+            try {
+                if (a.getAttribute(TEMP_TITLE)) {
+                    a.removeAttribute(TEMP_TITLE);
+                    a.removeAttribute('title');
+                }
+                a.removeEventListener('mouseup', _this.onClickLink);
+            }
+            catch (e) { }
+        };
+        this.processLink = function (a) {
+            if (!a.title && _this.getTooltipCallback) {
+                a.setAttribute(TEMP_TITLE, 'true');
+                a.title = _this.getTooltipCallback(_this.tryGetHref(a));
+            }
+            a.addEventListener('mouseup', _this.onClickLink);
+        };
         this.onClickLink = function (keyboardEvent) {
             var href;
             if (!roosterjs_editor_dom_1.Browser.isFirefox &&
@@ -6998,7 +7028,7 @@ var HyperLink = /** @class */ (function () {
      * Dispose this plugin
      */
     HyperLink.prototype.dispose = function () {
-        this.forEachHyperLink(this.resetAnchor.bind(this));
+        this.editor.queryNodes('a[href]', this.resetAnchor);
         this.editor = null;
     };
     /**
@@ -7021,23 +7051,13 @@ var HyperLink = /** @class */ (function () {
                 else if (contentChangedEvent.source == "CreateLink" /* CreateLink */) {
                     this.resetAnchor(contentChangedEvent.data);
                 }
-                this.forEachHyperLink(this.processLink.bind(this));
+                this.editor.queryNodes('a[href]', this.processLink);
                 break;
             case 7 /* ExtractContent */:
                 var extractContentEvent = event;
                 extractContentEvent.content = this.removeTempTooltip(extractContentEvent.content);
                 break;
         }
-    };
-    HyperLink.prototype.resetAnchor = function (a) {
-        try {
-            if (a.getAttribute(TEMP_TITLE)) {
-                a.removeAttribute(TEMP_TITLE);
-                a.removeAttribute('title');
-            }
-            a.removeEventListener('mouseup', this.onClickLink);
-        }
-        catch (e) { }
     };
     HyperLink.prototype.autoLink = function (event) {
         var _this = this;
@@ -7054,7 +7074,7 @@ var HyperLink = /** @class */ (function () {
                 ? wordBeforeCursor.length - trailingPunctuation_1.length
                 : wordBeforeCursor.length);
             // Match and replace in editor
-            var linkData_1 = roosterjs_editor_api_1.matchLink(linkCandidate);
+            var linkData_1 = roosterjs_editor_dom_1.matchLink(linkCandidate);
             if (linkData_1) {
                 var anchor_1 = this.editor.getDocument().createElement('A');
                 anchor_1.textContent = linkData_1.originalUrl;
@@ -7067,13 +7087,6 @@ var HyperLink = /** @class */ (function () {
                 }, false /*preserveSelection*/, "AutoLink" /* AutoLink */, function () { return anchor_1; });
             }
         }
-    };
-    HyperLink.prototype.processLink = function (a) {
-        if (!a.title && this.getTooltipCallback) {
-            a.setAttribute(TEMP_TITLE, 'true');
-            a.title = this.getTooltipCallback(this.tryGetHref(a));
-        }
-        a.addEventListener('mouseup', this.onClickLink);
     };
     HyperLink.prototype.removeTempTooltip = function (content) {
         return content.replace(TEMP_TITLE_REGEX, '<a $1$3$5>');
@@ -7096,10 +7109,6 @@ var HyperLink = /** @class */ (function () {
             // Not do anything for the moment
         }
         return href;
-    };
-    HyperLink.prototype.forEachHyperLink = function (callback) {
-        var anchors = this.editor.queryNodes('a[href]');
-        anchors.forEach(callback);
     };
     return HyperLink;
 }());
@@ -8384,8 +8393,7 @@ var ImageResize = /** @class */ (function () {
         }
         else if (e.eventType == 6 /* ContentChanged */ &&
             e.source != "ImageResize" /* ImageResize */) {
-            var images = [].slice.call(this.editor.queryNodes('img'));
-            images.forEach(this.removeResizeDivIfAny);
+            this.editor.queryNodes('img', this.removeResizeDivIfAny);
             this.resizeDiv = null;
         }
         else if (e.eventType == 7 /* ExtractContent */) {
@@ -8782,11 +8790,10 @@ var Watermark = /** @class */ (function () {
         this.isWatermarkShowing = true;
     };
     Watermark.prototype.hideWatermark = function () {
-        var nodes = this.editor.queryNodes("span[id=\"" + WATERMARK_SPAN_ID + "\"]");
-        for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
-            var node = nodes_1[_i];
-            this.editor.deleteNode(node);
-        }
+        var _this = this;
+        this.editor.queryNodes("span[id=\"" + WATERMARK_SPAN_ID + "\"]", function (node) {
+            return _this.editor.deleteNode(node);
+        });
         this.isWatermarkShowing = false;
     };
     Watermark.prototype.removeWartermarkFromHtml = function (event) {

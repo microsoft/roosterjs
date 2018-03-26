@@ -1276,6 +1276,18 @@ declare namespace roosterjs {
     function isNodeEmpty(node: Node, trimContent?: boolean): boolean;
 
     /**
+     * Try to match a given string with link match rules, return matched link
+     * @param url Input url to match
+     * @param option Link match option, exact or partial. If it is exact match, we need
+     * to check the length of matched link and url
+     * @param rules Optional link match rules, if not passed, only the default link match
+     * rules will be applied
+     * @returns The matched link data, or null if no match found.
+     * The link data includes an original url and a normalized url
+     */
+    function matchLink(url: string): LinkData;
+
+    /**
      * Split parent node of the given node before/after the given node.
      * When a parent node contains [A,B,C] and pass B as the given node,
      * If split before, the new nodes will be [A][B,C] and returns [A];
@@ -1400,9 +1412,10 @@ declare namespace roosterjs {
         /**
          * DOM query nodes in editor
          * @param selector Selector string to query
+         * @param forEachCallback An optional callback to be invoked on each node in query result
          * @returns Node list of the query result
          */
-        queryNodes(selector: string): Node[];
+        queryNodes<T extends Node = Node>(selector: string, forEachCallback?: (node: T) => void): T[];
         getSelectionRange(): SelectionRange;
         /**
          * Check if focus is in editor now
@@ -1845,9 +1858,10 @@ declare namespace roosterjs {
      * @param editor The editor
      * @param selector The selector to query
      * @param nodeContainedByRangeOnly When set to true, only return the nodes contained by current selection. Default value is false
+     * @param forEachCallback An optional callback to be invoked on each node in query result
      * @returns The nodes intersected with current selection, returns an empty array if no result is found
      */
-    function queryNodesWithSelection(editor: Editor, selector: string, nodeContainedByRangeOnly?: boolean): Node[];
+    function queryNodesWithSelection<T extends Node = Node>(editor: Editor, selector: string, nodeContainedByRangeOnly?: boolean, forEachCallback?: (node: T) => void): T[];
 
     /**
      * Replace the specified range with a node
@@ -1888,6 +1902,18 @@ declare namespace roosterjs {
     function validateAndGetRangeForTextBeforeCursor(editor: Editor, text: string, exactMatch: boolean, cursorData: CursorData): Range;
 
     /**
+     * Get format state at cursor
+     * A format state is a collection of all format related states, e.g.,
+     * bold, italic, underline, font name, font size, etc.
+     * @param editor The editor
+     * @param (Optional) The plugin event, it stores the event cached data for looking up.
+     * In this function the event cache is used to get list state and header level. If not passed,
+     * it will query the node within selection to get the info
+     * @returns The format state at cursor
+     */
+    function getFormatState(editor: Editor, event?: PluginEvent): FormatState;
+
+    /**
      * Get the list state at selection
      * The list state refers to the HTML elements <OL> or <UL>
      * @param editor The editor instance
@@ -1920,147 +1946,12 @@ declare namespace roosterjs {
     function createLink(editor: Editor, link: string, altText?: string, displayText?: string): void;
 
     /**
-     * Get format state at cursor
-     * A format state is a collection of all format related states, e.g.,
-     * bold, italic, underline, font name, font size, etc.
-     * @param editor The editor
-     * @param (Optional) The plugin event, it stores the event cached data for looking up.
-     * In this function the event cache is used to get list state and header level. If not passed,
-     * it will query the node within selection to get the info
-     * @returns The format state at cursor
-     */
-    function getFormatState(editor: Editor, event?: PluginEvent): FormatState;
-
-    /**
      * Insert an image to editor at current selection
      * @param editor The editor instance
      * @param imageFile The image file. There are at least 3 ways to obtain the file object:
      * From local file, from clipboard data, from drag-and-drop
      */
     function insertImage(editor: Editor, imageFile: File): void;
-
-    /**
-     * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
-     */
-    class VTable {
-        /**
-         * The HTML table object
-         */
-        table: HTMLTableElement;
-        /**
-         * Virtual cells
-         */
-        cells: VCell[][];
-        /**
-         * Current row index
-         */
-        row: number;
-        /**
-         * Current column index
-         */
-        col: number;
-        private trs;
-        /**
-         * Create a new instance of VTable object using HTML table node
-         * @param node The HTML Table node
-         */
-        constructor(table: HTMLTableElement);
-        /**
-         * Create a new instance of VTable object using one of its table cell
-         * @param td The HTML table cell node
-         */
-        constructor(td: HTMLTableCellElement);
-        /**
-         * Write the virtual table back to DOM tree to represent the change of VTable
-         */
-        writeBack(): void;
-        /**
-         * Apply the given table format to this virtual table
-         * @param format Table format to apply
-         */
-        applyFormat(format: TableFormat): void;
-        /**
-         * Loop each cell of current column and invoke a callback function
-         * @param callback The callback function to invoke
-         */
-        forEachCellOfCurrentColumn(callback: (cell: VCell, row: VCell[], i: number) => void): void;
-        /**
-         * Loop each cell of current row and invoke a callback function
-         * @param callback The callback function to invoke
-         */
-        forEachCellOfCurrentRow(callback: (cell: VCell, i: number) => void): void;
-        /**
-         * Get a table cell using its row and column index. This function will always return an object
-         * even if the given indexes don't exist in table.
-         * @param row The row index
-         * @param col The column index
-         */
-        getCell(row: number, col: number): VCell;
-        /**
-         * Get current HTML table cell object. If the current table cell is a virtual expanded cell, return its root cell
-         */
-        getCurrentTd(): HTMLTableCellElement;
-        /**
-         * Move all children from one node to another
-         * @param fromNode The source node to move children from
-         * @param toNode Target node. If not passed, children nodes of source node will be removed
-         */
-        static moveChildren(fromNode: Node, toNode?: Node): void;
-        /**
-         * Clone a node without its children.
-         * @param node The node to clone
-         */
-        static cloneNode<T extends Node>(node: T): T;
-        /**
-         * Clone a table cell
-         * @param cell The cell to clone
-         */
-        static cloneCell(cell: VCell): VCell;
-        private recalcSpans(row, col);
-    }
-
-    /**
-     * Represent a virtual cell of a virtual table
-     */
-    interface VCell {
-        /**
-         * The table cell object. The value will be null if this is an expanded virtual cell
-         */
-        td?: HTMLTableCellElement;
-        /**
-         * Whether this cell is spanned from left
-         */
-        spanLeft?: boolean;
-        /**
-         * Whether this cell is spanned from above
-         */
-        spanAbove?: boolean;
-    }
-
-    /**
-     * Insert table into editor at current selection
-     * @param editor The editor instance
-     * @param columns Number of columns in table, it also controls the default table cell width:
-     * if columns <= 4, width = 120px; if columns <= 6, width = 100px; else width = 70px
-     * @param rows Number of rows in table
-     * @param format (Optional) The table format. If not passed, the default format will be applied:
-     * background color: #FFF; border color: #ABABAB
-     */
-    function insertTable(editor: Editor, columns: number, rows: number, format?: TableFormat): void;
-
-    /**
-     * Edit table with given operation. If there is no table at cursor then no op.
-     * @param editor The editor instance
-     * @param operation Table operation
-     */
-    function editTable(editor: Editor, operation: TableOperation): void;
-
-    /**
-     * Format table
-     * @param table The table to format
-     * @param formatName Name of the format to use
-     */
-    function formatTable(editor: Editor, format: TableFormat, table?: HTMLTableElement): void;
 
     /**
      * Remove link at selection. If no links at selection, do nothing.
@@ -2243,16 +2134,127 @@ declare namespace roosterjs {
     function toggleHeader(editor: Editor, level: number): void;
 
     /**
-     * Try to match a given string with link match rules, return matched link
-     * @param url Input url to match
-     * @param option Link match option, exact or partial. If it is exact match, we need
-     * to check the length of matched link and url
-     * @param rules Optional link match rules, if not passed, only the default link match
-     * rules will be applied
-     * @returns The matched link data, or null if no match found.
-     * The link data includes an original url and a normalized url
+     * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
      */
-    function matchLink(url: string): LinkData;
+    class VTable {
+        /**
+         * The HTML table object
+         */
+        table: HTMLTableElement;
+        /**
+         * Virtual cells
+         */
+        cells: VCell[][];
+        /**
+         * Current row index
+         */
+        row: number;
+        /**
+         * Current column index
+         */
+        col: number;
+        private trs;
+        /**
+         * Create a new instance of VTable object using HTML table node
+         * @param node The HTML Table node
+         */
+        constructor(table: HTMLTableElement);
+        /**
+         * Create a new instance of VTable object using one of its table cell
+         * @param td The HTML table cell node
+         */
+        constructor(td: HTMLTableCellElement);
+        /**
+         * Write the virtual table back to DOM tree to represent the change of VTable
+         */
+        writeBack(): void;
+        /**
+         * Apply the given table format to this virtual table
+         * @param format Table format to apply
+         */
+        applyFormat(format: TableFormat): void;
+        /**
+         * Loop each cell of current column and invoke a callback function
+         * @param callback The callback function to invoke
+         */
+        forEachCellOfCurrentColumn(callback: (cell: VCell, row: VCell[], i: number) => void): void;
+        /**
+         * Loop each cell of current row and invoke a callback function
+         * @param callback The callback function to invoke
+         */
+        forEachCellOfCurrentRow(callback: (cell: VCell, i: number) => void): void;
+        /**
+         * Get a table cell using its row and column index. This function will always return an object
+         * even if the given indexes don't exist in table.
+         * @param row The row index
+         * @param col The column index
+         */
+        getCell(row: number, col: number): VCell;
+        /**
+         * Get current HTML table cell object. If the current table cell is a virtual expanded cell, return its root cell
+         */
+        getCurrentTd(): HTMLTableCellElement;
+        /**
+         * Move all children from one node to another
+         * @param fromNode The source node to move children from
+         * @param toNode Target node. If not passed, children nodes of source node will be removed
+         */
+        static moveChildren(fromNode: Node, toNode?: Node): void;
+        /**
+         * Clone a node without its children.
+         * @param node The node to clone
+         */
+        static cloneNode<T extends Node>(node: T): T;
+        /**
+         * Clone a table cell
+         * @param cell The cell to clone
+         */
+        static cloneCell(cell: VCell): VCell;
+        private recalcSpans(row, col);
+    }
+
+    /**
+     * Represent a virtual cell of a virtual table
+     */
+    interface VCell {
+        /**
+         * The table cell object. The value will be null if this is an expanded virtual cell
+         */
+        td?: HTMLTableCellElement;
+        /**
+         * Whether this cell is spanned from left
+         */
+        spanLeft?: boolean;
+        /**
+         * Whether this cell is spanned from above
+         */
+        spanAbove?: boolean;
+    }
+
+    /**
+     * Insert table into editor at current selection
+     * @param editor The editor instance
+     * @param columns Number of columns in table, it also controls the default table cell width:
+     * if columns <= 4, width = 120px; if columns <= 6, width = 100px; else width = 70px
+     * @param rows Number of rows in table
+     * @param format (Optional) The table format. If not passed, the default format will be applied:
+     * background color: #FFF; border color: #ABABAB
+     */
+    function insertTable(editor: Editor, columns: number, rows: number, format?: TableFormat): void;
+
+    /**
+     * Edit table with given operation. If there is no table at cursor then no op.
+     * @param editor The editor instance
+     * @param operation Table operation
+     */
+    function editTable(editor: Editor, operation: TableOperation): void;
+
+    /**
+     * Format table
+     * @param table The table to format
+     * @param formatName Name of the format to use
+     */
+    function formatTable(editor: Editor, format: TableFormat, table?: HTMLTableElement): void;
 
     /**
      * An editor plugin to respond to default common keyboard short
@@ -2308,13 +2310,12 @@ declare namespace roosterjs {
          * @param event The event object
          */
         onPluginEvent(event: PluginEvent): void;
-        private resetAnchor(a);
+        private resetAnchor;
         private autoLink(event);
-        private processLink(a);
+        private processLink;
         private removeTempTooltip(content);
         private onClickLink;
         private tryGetHref(element);
-        private forEachHyperLink(callback);
     }
 
     /**

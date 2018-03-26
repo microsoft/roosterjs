@@ -51,6 +51,7 @@ export { default as intersectWithNodeRange } from './utils/intersectWithNodeRang
 export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isDocumentPosition } from './utils/isDocumentPosition';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
+export { default as matchLink } from './utils/matchLink';
 export { default as splitParentNode } from './utils/splitParentNode';
 export { default as unwrap } from './utils/unwrap';
 export { default as wrap } from './utils/wrap';

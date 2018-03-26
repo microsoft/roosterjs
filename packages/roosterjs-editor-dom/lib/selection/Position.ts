@@ -102,14 +102,19 @@ export default class Position {
      * @param p The position to check
      */
     equalTo(p: Position): boolean {
-        return this == p || (this.node == p.node && this.offset == p.offset && this.isAtEnd == p.isAtEnd);
+        return (
+            this == p ||
+            (this.node == p.node && this.offset == p.offset && this.isAtEnd == p.isAtEnd)
+        );
     }
 
     /**
      * Checks if position 1 is after position 2
      */
     isAfter(p: Position): boolean {
-        return this.node == p.node ? (this.isAtEnd && !p.isAtEnd || this.offset > p.offset) : isNodeAfter(this.node, p.node);
+        return this.node == p.node
+            ? (this.isAtEnd && !p.isAtEnd) || this.offset > p.offset
+            : isNodeAfter(this.node, p.node);
     }
 }
 

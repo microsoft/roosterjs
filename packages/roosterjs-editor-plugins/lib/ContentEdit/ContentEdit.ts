@@ -38,7 +38,6 @@ export default class ContentEdit implements EditorPlugin {
         this.features = this.features || getDefaultContentEditFeatures();
     }
 
-
     /**
      * Initialize this plugin
      * @param editor The editor instance
@@ -206,18 +205,13 @@ export default class ContentEdit implements EditorPlugin {
         event: PluginEvent,
         keyboardEvent: KeyboardEvent
     ): Element {
-        if (event.eventType == PluginEventType.KeyDown) {
-            if (
-                (keyboardEvent.which == KEY_BACKSPACE || keyboardEvent.which == KEY_ENTER) &&
-                !keyboardEvent.ctrlKey &&
-                !keyboardEvent.altKey &&
-                !keyboardEvent.metaKey
-            ) {
-                return queryNodesWithSelection(this.editor, BLOCKQUOTE_TAG_NAME)[0] as Element;
-            }
-        }
-
-        return null;
+        return event.eventType == PluginEventType.KeyDown &&
+            (keyboardEvent.which == KEY_BACKSPACE || keyboardEvent.which == KEY_ENTER) &&
+            !keyboardEvent.ctrlKey &&
+            !keyboardEvent.altKey &&
+            !keyboardEvent.metaKey
+            ? queryNodesWithSelection<Element>(this.editor, BLOCKQUOTE_TAG_NAME)[0]
+            : null;
     }
 
     private shouldToggleState(event: PluginEvent, node: Node) {

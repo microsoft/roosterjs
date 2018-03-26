@@ -18,15 +18,15 @@ export default function clearFormat(editor: Editor) {
     editor.formatWithUndo(() => {
         editor.getDocument().execCommand('removeFormat', false, null);
 
-        let nodes = queryNodesWithSelection(editor, '[class]');
-        for (let node of nodes) {
-            (<HTMLElement>node).removeAttribute('class');
-        }
-
-        nodes = queryNodesWithSelection(editor, '[style]', true /*nodeContainedByRangeOnly*/);
-        for (let node of nodes) {
-            STYLES_TO_REMOVE.forEach(style => (<HTMLElement>node).style.removeProperty(style));
-        }
+        queryNodesWithSelection<HTMLElement>(editor, '[class]', false /*containsOnly*/, node =>
+            node.removeAttribute('class')
+        );
+        queryNodesWithSelection<HTMLElement>(
+            editor,
+            '[style]',
+            true /*nodeContainedByRangeOnly*/,
+            node => STYLES_TO_REMOVE.forEach(style => node.style.removeProperty(style))
+        );
 
         let defaultFormat = editor.getDefaultFormat();
         setFontName(editor, defaultFormat.fontFamily);

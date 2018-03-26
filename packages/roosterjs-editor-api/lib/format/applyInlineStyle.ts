@@ -9,10 +9,7 @@ const ZERO_WIDTH_SPACE = '\u200B';
  * @param editor The editor instance
  * @param styler The callback function to apply style to each element inside selection
  */
-export default function applyInlineStyle(
-    editor: Editor,
-    styler: (element: HTMLElement) => void
-) {
+export default function applyInlineStyle(editor: Editor, styler: (element: HTMLElement) => void) {
     editor.focus();
     let collapsed = editor.getSelectionRange().collapsed;
     editor.formatWithUndo(
@@ -21,7 +18,10 @@ export default function applyInlineStyle(
                 // Create a new span to hold the style.
                 // Some content is needed to position selection into the span
                 // for here, we inject ZWS - zero width space
-                let element = fromHtml(`<SPAN>${ZERO_WIDTH_SPACE}</SPAN>`, editor.getDocument())[0] as HTMLElement;
+                let element = fromHtml(
+                    `<SPAN>${ZERO_WIDTH_SPACE}</SPAN>`,
+                    editor.getDocument()
+                )[0] as HTMLElement;
                 styler(element);
                 editor.insertNode(element);
 

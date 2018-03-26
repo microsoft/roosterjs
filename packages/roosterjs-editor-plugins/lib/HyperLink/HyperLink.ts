@@ -1,6 +1,5 @@
-import { Browser } from 'roosterjs-editor-dom';
+import { Browser, matchLink } from 'roosterjs-editor-dom';
 import {
-    matchLink,
     replaceTextBeforeCursorWithNode,
     cacheGetCursorEventData,
     clearCursorEventDataCache,
@@ -64,7 +63,7 @@ export default class HyperLink implements EditorPlugin {
      * Dispose this plugin
      */
     public dispose() {
-        this.forEachHyperLink(this.resetAnchor.bind(this));
+        this.editor.queryNodes('a[href]', this.resetAnchor);
         this.editor = null;
     }
 
@@ -89,7 +88,7 @@ export default class HyperLink implements EditorPlugin {
                     this.resetAnchor(contentChangedEvent.data as HTMLAnchorElement);
                 }
 
-                this.forEachHyperLink(this.processLink.bind(this));
+                this.editor.queryNodes('a[href]', this.processLink);
                 break;
 
             case PluginEventType.ExtractContent:
@@ -99,7 +98,7 @@ export default class HyperLink implements EditorPlugin {
         }
     }
 
-    private resetAnchor(a: HTMLAnchorElement) {
+    private resetAnchor = (a: HTMLAnchorElement) => {
         try {
             if (a.getAttribute(TEMP_TITLE)) {
                 a.removeAttribute(TEMP_TITLE);
@@ -107,7 +106,7 @@ export default class HyperLink implements EditorPlugin {
             }
             a.removeEventListener('mouseup', this.onClickLink);
         } catch (e) {}
-    }
+    };
 
     private autoLink(event: PluginEvent) {
         let cursorData = cacheGetCursorEventData(event, this.editor);
@@ -158,13 +157,13 @@ export default class HyperLink implements EditorPlugin {
         }
     }
 
-    private processLink(a: HTMLAnchorElement) {
+    private processLink = (a: HTMLAnchorElement) => {
         if (!a.title && this.getTooltipCallback) {
             a.setAttribute(TEMP_TITLE, 'true');
             a.title = this.getTooltipCallback(this.tryGetHref(a));
         }
         a.addEventListener('mouseup', this.onClickLink);
-    }
+    };
 
     private removeTempTooltip(content: string): string {
         return content.replace(TEMP_TITLE_REGEX, '<a $1$3$5>');
@@ -200,10 +199,5 @@ export default class HyperLink implements EditorPlugin {
         }
 
         return href;
-    }
-
-    private forEachHyperLink(callback: (a: HTMLAnchorElement) => void) {
-        let anchors = this.editor.queryNodes('a[href]') as HTMLAnchorElement[];
-        anchors.forEach(callback);
     }
 }

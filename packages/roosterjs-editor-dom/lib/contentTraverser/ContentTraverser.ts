@@ -141,18 +141,19 @@ class ContentTraverser {
     private getValidInlineElement(isNext: boolean) {
         let thisInline = this.currentInlineElement;
         let getPreviousNextFunc = isNext ? getNextInlineElement : getPreviousInlineElement;
-        let getBeforeAfterStartFunc = () => isNext ? this.scoper.getInlineElementAfterStart() : this.scoper.getInlineElementBeforeStart();
-        let candidate = thisInline ?
-            getPreviousNextFunc(this.rootNode, thisInline) :
-            getBeforeAfterStartFunc
-                ? getBeforeAfterStartFunc()
-                : null;
+        let getBeforeAfterStartFunc = () =>
+            isNext
+                ? this.scoper.getInlineElementAfterStart()
+                : this.scoper.getInlineElementBeforeStart();
+        let candidate = thisInline
+            ? getPreviousNextFunc(this.rootNode, thisInline)
+            : getBeforeAfterStartFunc ? getBeforeAfterStartFunc() : null;
 
         // For inline, we need to make sure it is really next/previous to current, unless current is null.
         // Then trim it if necessary
-        return candidate && (!thisInline || (candidate.isAfter(thisInline) == isNext)) ?
-            this.scoper.trimInlineElement(candidate) :
-            null
+        return candidate && (!thisInline || candidate.isAfter(thisInline) == isNext)
+            ? this.scoper.trimInlineElement(candidate)
+            : null;
     }
 }
 

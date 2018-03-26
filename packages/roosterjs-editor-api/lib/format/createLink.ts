@@ -1,7 +1,7 @@
-import matchLink from '../linkMatch/matchLink';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
+import { matchLink } from 'roosterjs-editor-dom';
 
 // Regex matching Uri scheme
 const URI_REGEX = /^[a-zA-Z]+:/i;

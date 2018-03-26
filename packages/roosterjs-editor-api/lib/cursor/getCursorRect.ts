@@ -60,10 +60,7 @@ export default function getCursorRect(editor: Editor): Rect {
 function getRectFromClientRect(clientRect: ClientRect): Rect {
     // A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p
     // We validate that and only return a rect when the passed in ClientRect is valid
-    if (!clientRect) {
-        return null;
-    }
-    let { left, right, top, bottom } = clientRect;
+    let { left, right, top, bottom } = clientRect || <ClientRect>{};
     return left + right + top + bottom > 0
         ? {
               left: Math.round(left),

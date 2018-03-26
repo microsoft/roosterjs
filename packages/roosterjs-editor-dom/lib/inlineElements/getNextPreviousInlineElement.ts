@@ -8,9 +8,11 @@ import { getLeafSibling } from '../domWalker/getLeafSibling';
  */
 export function getNextInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement {
     let end = inlineElement.getEndPosition();
-    return end.isAtEnd ?
-        getInlineElementAtNode(getLeafSibling(rootNode, inlineElement.getContainerNode(), true /*isNext*/)) :
-        new PartialInlineElement(inlineElement, end, null);
+    return end.isAtEnd
+        ? getInlineElementAtNode(
+              getLeafSibling(rootNode, inlineElement.getContainerNode(), true /*isNext*/)
+          )
+        : new PartialInlineElement(inlineElement, end, null);
 }
 
 /**
@@ -21,7 +23,9 @@ export function getPreviousInlineElement(
     inlineElement: InlineElement
 ): InlineElement {
     let start = inlineElement.getStartPosition();
-    return start.offset == 0 ?
-        getInlineElementAtNode(getLeafSibling(rootNode, inlineElement.getContainerNode(), false /*isNext*/)) :
-        new PartialInlineElement(inlineElement, null, start);
+    return start.offset == 0
+        ? getInlineElementAtNode(
+              getLeafSibling(rootNode, inlineElement.getContainerNode(), false /*isNext*/)
+          )
+        : new PartialInlineElement(inlineElement, null, start);
 }

@@ -1,12 +1,35 @@
-import getNodeAtCursor from '../cursor/getNodeAtCursor';
-import { FormatState, PluginEvent } from 'roosterjs-editor-types';
-import { getComputedStyles } from 'roosterjs-editor-dom';
-import { Editor } from 'roosterjs-editor-core';
 import cacheGetListTag from '../cursor/cacheGetListTag';
-import cacheGetHeaderLevel from './cacheGetHeaderLevel';
+import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
+import { Editor } from 'roosterjs-editor-core';
+import { FormatState, PluginEvent } from 'roosterjs-editor-types';
+import { cacheGetEventData } from 'roosterjs-editor-core';
+import { getComputedStyles } from 'roosterjs-editor-dom';
 
-// Query command state, used for query Bold, Italic, Underline state
+/**
+ * Get the header level in current selection. The header level refers to the HTML <H1> to <H6> elements,
+ * level 1 indicates <H1>, level 2 indicates <H2>, etc
+ * @param editor The editor instance
+ * @param event (Optional) The plugin event, it stores the event cached data for looking up.
+ * If not passed, we will query the node within selection
+ * @returns The header level, 0 if there is no HTML heading elements
+ */
+function cacheGetHeaderLevel(editor: Editor, event?: PluginEvent): number {
+    return cacheGetEventData<number>(event, 'HeaderLevel', () => {
+        for (let i = 1; i <= 6; i++) {
+            if (queryNodesWithSelection(editor, 'H' + i).length > 0) {
+                return i;
+            }
+        }
+        return 0;
+    });
+}
+
+/**
+ * Query command state, used for query Bold, Italic, Underline state
+ * @param editor The editor instance
+ * @param command The command to query
+ */
 function queryCommandState(editor: Editor, command: string): boolean {
     return editor.getDocument().queryCommandState(command);
 }

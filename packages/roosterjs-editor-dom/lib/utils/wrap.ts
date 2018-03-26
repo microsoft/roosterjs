@@ -21,7 +21,11 @@ export default function wrap(
     wrapper =
         wrapper instanceof Element
             ? wrapper
-            : fromHtml(wrapper || '<div></div>', nodes[0].ownerDocument, sanitize)[0] as HTMLElement;
+            : (fromHtml(
+                  wrapper || '<div></div>',
+                  nodes[0].ownerDocument,
+                  sanitize
+              )[0] as HTMLElement);
     let parentNode = nodes[0].parentNode;
 
     if (parentNode) {

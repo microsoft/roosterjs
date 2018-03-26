@@ -15,18 +15,15 @@ import { getNextLeafSibling } from '../domWalker/getLeafSibling';
  * It also offers some special methods that others don't have, i.e. nextInlineElement etc.
  */
 class PartialInlineElement implements InlineElement {
-    private decoratedInline: NodeInlineElement
+    private decoratedInline: NodeInlineElement;
     private start: Position;
     private end: Position;
 
-    constructor(
-        decoratedInline: InlineElement,
-        start?: Position,
-        end?: Position
-    ) {
-        this.decoratedInline = decoratedInline instanceof NodeInlineElement ?
-            decoratedInline :
-            (<PartialInlineElement>decoratedInline).getDecoratedInline();
+    constructor(decoratedInline: InlineElement, start?: Position, end?: Position) {
+        this.decoratedInline =
+            decoratedInline instanceof NodeInlineElement
+                ? decoratedInline
+                : (<PartialInlineElement>decoratedInline).getDecoratedInline();
         let node = this.decoratedInline.getContainerNode();
         this.start = (start || new Position(node, Position.Begin)).normalize();
         this.end = (end || new Position(node, Position.End)).normalize();
@@ -91,10 +88,11 @@ class PartialInlineElement implements InlineElement {
         let offset = this.start.offset;
         while (
             contains(containerNode, currentNode, true /*treatSameNodeAsContain*/) &&
-            (currentNode == this.end.node || isDocumentPosition(
-                currentNode.compareDocumentPosition(this.end.node),
-                DocumentPosition.Following
-            ))
+            (currentNode == this.end.node ||
+                isDocumentPosition(
+                    currentNode.compareDocumentPosition(this.end.node),
+                    DocumentPosition.Following
+                ))
         ) {
             // The code below modifies DOM. Need to get the next sibling first otherwise
             // you won't be able to reliably get a good next sibling node

@@ -22,12 +22,12 @@ let defaultStyler = (element: HTMLElement) => {
  */
 export default function toggleBlockQuote(editor: Editor, styler?: (element: HTMLElement) => void) {
     editor.focus();
-    let blockquoteNodes = queryNodesWithSelection(editor, 'blockquote');
     editor.formatWithUndo(() => {
-        if (blockquoteNodes.length) {
-            // There are already blockquote nodes, unwrap them
-            blockquoteNodes.forEach(node => unwrap(node));
-        } else {
+        // There are already blockquote nodes, unwrap them
+        if (
+            queryNodesWithSelection(editor, 'blockquote', false /*containsOnly*/, unwrap).length ==
+            0
+        ) {
             // Step 1: Find all block elements and their content nodes
             let nodes = getContentNodes(editor);
 

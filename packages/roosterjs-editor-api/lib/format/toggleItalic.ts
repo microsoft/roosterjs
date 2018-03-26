@@ -1,3 +1,4 @@
+import toggle from './toggle';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -9,8 +10,5 @@ import { Editor } from 'roosterjs-editor-core';
  * @param editor The editor instance
  */
 export default function toggleItalic(editor: Editor) {
-    editor.focus();
-    editor.formatWithUndo(() => {
-        editor.getDocument().execCommand('italic', false, null);
-    });
+    toggle(editor, 'italic');
 }

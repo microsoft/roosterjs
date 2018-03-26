@@ -32,8 +32,7 @@ export default function toggleHeader(editor: Editor, level: number) {
         } else {
             editor.getDocument().execCommand('formatBlock', false, '<DIV>');
             for (let i = 1; i <= 6; i++) {
-                let headers = queryNodesWithSelection(editor, 'H' + i);
-                headers.forEach(header => {
+                queryNodesWithSelection(editor, 'H' + i, false /*containsOnly*/, header => {
                     let div = editor.getDocument().createElement('div');
                     while (header.firstChild) {
                         div.appendChild(header.firstChild);

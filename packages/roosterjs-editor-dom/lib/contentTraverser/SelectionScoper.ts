@@ -40,7 +40,9 @@ class SelectionScoper implements TraversingScoper {
      */
     public getStartInlineElement(): InlineElement {
         if (!this.startInline) {
-            this.startInline = this.trimInlineElement(getInlineElementAfter(this.rootNode, this.range.start));
+            this.startInline = this.trimInlineElement(
+                getInlineElementAfter(this.rootNode, this.range.start)
+            );
         }
         return this.startInline;
     }
@@ -95,10 +97,11 @@ class SelectionScoper implements TraversingScoper {
             end = this.range.end;
         }
 
-        return start.equalTo(end) ? null :
-            start.offset > 0 || !end.isAtEnd ?
-                new PartialInlineElement(inlineElement, start, end) :
-                inlineElement;
+        return start.equalTo(end)
+            ? null
+            : start.offset > 0 || !end.isAtEnd
+                ? new PartialInlineElement(inlineElement, start, end)
+                : inlineElement;
     }
 }
 

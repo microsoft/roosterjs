@@ -278,11 +278,18 @@ export default class Editor {
     /**
      * DOM query nodes in editor
      * @param selector Selector string to query
+     * @param forEachCallback An optional callback to be invoked on each node in query result
      * @returns Node list of the query result
      */
-    public queryNodes(selector: string): Node[] {
-        let nodes = this.core.contentDiv.querySelectorAll(selector);
-        return <Node[]>Array.apply(null, nodes);
+    public queryNodes<T extends Node = Node>(
+        selector: string,
+        forEachCallback?: (node: T) => void
+    ): T[] {
+        let nodes = [].slice.call(this.core.contentDiv.querySelectorAll(selector)) as T[];
+        if (forEachCallback) {
+            nodes.forEach(forEachCallback);
+        }
+        return nodes;
     }
 
     //#endregion

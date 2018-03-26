@@ -240,7 +240,10 @@ describe('NodeInlineElement applyStyle()', () => {
 
     it('applyStyle to Text node', () => {
         // Arrange
-        let testDiv = DomTestHelper.createElementFromContent(testID, '<span>www.example.com</span>');
+        let testDiv = DomTestHelper.createElementFromContent(
+            testID,
+            '<span>www.example.com</span>'
+        );
         let element = new NodeInlineElement(testDiv.firstChild.firstChild);
         let mockColor = 'red';
 
@@ -262,21 +265,13 @@ describe('applyStyleToTextNode', () => {
 
     it('start > 0, end < len - 1', () => {
         // Arrange
-        let testDiv = DomTestHelper.createElementFromContent(
-            testID,
-            'www.example.com'
-        );
+        let testDiv = DomTestHelper.createElementFromContent(testID, 'www.example.com');
         let mockColor = 'red';
 
         // Act
-        applyStyleToTextNode(
-            testDiv.firstChild as Text,
-            3,
-            11,
-            function (node: HTMLElement) {
-                node.style.color = mockColor;
-            }
-        );
+        applyStyleToTextNode(testDiv.firstChild as Text, 3, 11, function(node: HTMLElement) {
+            node.style.color = mockColor;
+        });
 
         // Assert
         let innerHTML = testDiv.innerHTML;
@@ -285,21 +280,13 @@ describe('applyStyleToTextNode', () => {
 
     it('start > 0, end = len - 1', () => {
         // Arrange
-        let testDiv = DomTestHelper.createElementFromContent(
-            testID,
-            'www.example.com'
-        );
+        let testDiv = DomTestHelper.createElementFromContent(testID, 'www.example.com');
         let mockColor = 'red';
 
         // Act
-        applyStyleToTextNode(
-            testDiv.firstChild as Text,
-            3,
-            15,
-            function(node: HTMLElement) {
-                node.style.color = mockColor;
-            },
-        );
+        applyStyleToTextNode(testDiv.firstChild as Text, 3, 15, function(node: HTMLElement) {
+            node.style.color = mockColor;
+        });
 
         // Assert
         let innerHTML = testDiv.innerHTML;
@@ -308,21 +295,13 @@ describe('applyStyleToTextNode', () => {
 
     it('start = 0, end <  len - 1', () => {
         // Arrange
-        let testDiv = DomTestHelper.createElementFromContent(
-            testID,
-            'www.example.com'
-        );
+        let testDiv = DomTestHelper.createElementFromContent(testID, 'www.example.com');
         let mockColor = 'red';
 
         // Act
-        applyStyleToTextNode(
-            testDiv.firstChild as Text,
-            0,
-            11,
-            function(node: HTMLElement) {
-                node.style.color = mockColor;
-            },
-        );
+        applyStyleToTextNode(testDiv.firstChild as Text, 0, 11, function(node: HTMLElement) {
+            node.style.color = mockColor;
+        });
 
         // Assert
         let innerHTML = testDiv.innerHTML;
@@ -331,21 +310,13 @@ describe('applyStyleToTextNode', () => {
 
     it('start = end', () => {
         // Arrange
-        let testDiv = DomTestHelper.createElementFromContent(
-            testID,
-            'www.example.com'
-        );
+        let testDiv = DomTestHelper.createElementFromContent(testID, 'www.example.com');
         let mockColor = 'red';
 
         // Act
-        applyStyleToTextNode(
-            testDiv.firstChild as Text,
-            3,
-            3,
-            function(node: HTMLElement) {
-                node.style.color = mockColor;
-            },
-        );
+        applyStyleToTextNode(testDiv.firstChild as Text, 3, 3, function(node: HTMLElement) {
+            node.style.color = mockColor;
+        });
 
         // Assert
         let innerHTML = testDiv.innerHTML;
@@ -354,21 +325,13 @@ describe('applyStyleToTextNode', () => {
 
     it('start > end', () => {
         // Arrange
-        let testDiv = DomTestHelper.createElementFromContent(
-            testID,
-            'www.example.com'
-        );
+        let testDiv = DomTestHelper.createElementFromContent(testID, 'www.example.com');
         let mockColor = 'red';
 
         // Act
-        applyStyleToTextNode(
-            testDiv.firstChild as Text,
-            4,
-            3,
-            function(node: HTMLElement) {
-                node.style.color = mockColor;
-            },
-        );
+        applyStyleToTextNode(testDiv.firstChild as Text, 4, 3, function(node: HTMLElement) {
+            node.style.color = mockColor;
+        });
 
         // Assert
         let innerHTML = testDiv.innerHTML;
