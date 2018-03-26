@@ -234,8 +234,6 @@ export default class CursorData {
                 }
 
                 // When a non-textual inline element, or null is seen, we consider parsing complete
-                // TODO: we may need to change this if there is a future need to parse beyond text, i.e.
-                // we have aaa @someone bbb<cursor>, and we want to read the text before @someone
                 break;
             }
 

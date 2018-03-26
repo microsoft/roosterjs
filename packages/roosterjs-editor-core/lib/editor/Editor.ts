@@ -98,7 +98,7 @@ export default class Editor {
     /**
      * Dispose this editor, dispose all plugins and custom data
      */
-    public dispose(): void {
+    public dispose() {
         this.core.plugins.forEach(plugin => {
             plugin.dispose();
         });
