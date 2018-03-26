@@ -46,7 +46,7 @@ export default class HyperLink implements EditorPlugin {
      * Initialize this plugin
      * @param editor The editor instance
      */
-    public initialize(editor: Editor): void {
+    public initialize(editor: Editor) {
         this.editor = editor;
 
         if (Browser.isIE) {
@@ -63,7 +63,7 @@ export default class HyperLink implements EditorPlugin {
     /**
      * Dispose this plugin
      */
-    public dispose(): void {
+    public dispose() {
         this.forEachHyperLink(this.resetAnchor.bind(this));
         this.editor = null;
     }
@@ -72,7 +72,7 @@ export default class HyperLink implements EditorPlugin {
      * Handle plugin events
      * @param event The event object
      */
-    public onPluginEvent(event: PluginEvent): void {
+    public onPluginEvent(event: PluginEvent) {
         switch (event.eventType) {
             case PluginEventType.KeyDown:
                 let keyboardEvt = (event as PluginDomEvent).rawEvent as KeyboardEvent;

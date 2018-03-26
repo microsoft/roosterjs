@@ -43,7 +43,7 @@ export function restoreSnapshot(editor: Editor, snapshot: string) {
 }
 
 // Remove the temporarily added cursor markers
-function removeCursorMarkers(editor: Editor): void {
+function removeCursorMarkers(editor: Editor) {
     [CURSOR_START, CURSOR_END].forEach(id => {
         let nodes = getCursorMarkNodes(editor, id);
         if (nodes) {
@@ -56,7 +56,7 @@ function removeCursorMarkers(editor: Editor): void {
 
 // Temporarily inject a SPAN marker to the selection which is used to remember where the selection is
 // The marker is used on restore selection on undo
-function addCursorMarkersToSelection(editor: Editor): void {
+function addCursorMarkersToSelection(editor: Editor) {
     let range = editor.getSelectionRange();
     let markers = fromHtml(CURSOR_MARKER_HTML, editor.getDocument());
 
@@ -90,7 +90,7 @@ function updateSelectionToCursorMarkers(editor: Editor) {
 // will cause indentation to behave really weirdly
 // This revised version uses DOM parentNode.insertBefore when it sees the insertion point is in node boundary_begin
 // which gives precise control over DOM structure and solves the chrome issue
-function insertCursorMarker(editor: Editor, position: Position, cursorMaker: Node): void {
+function insertCursorMarker(editor: Editor, position: Position, cursorMaker: Node) {
     position = position.normalize();
     let parentNode = position.node.parentNode;
     if (position.offset == 0) {

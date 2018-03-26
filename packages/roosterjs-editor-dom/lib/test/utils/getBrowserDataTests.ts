@@ -1,6 +1,6 @@
 import { BrowserInfo, getBrowserInfo } from '../../utils/Browser';
 
-function runBrowserDataTest(userAgent: string, appVersion: string, expected: BrowserInfo): void {
+function runBrowserDataTest(userAgent: string, appVersion: string, expected: BrowserInfo) {
     let b = getBrowserInfo(userAgent, appVersion);
     expect(b.isChrome).toBe(expected.isChrome);
     expect(b.isEdge).toBe(expected.isEdge);

@@ -1,6 +1,6 @@
 import * as DomTestHelper from '../DomTestHelper';
 import InlineElement from '../../inlineElements/InlineElement';
-import NodeInlineElement from '../../inlineElements/NodeInlineElement';
+import NodeInlineElement, { applyStyleToTextNode } from '../../inlineElements/NodeInlineElement';
 import Position from '../../selection/Position';
 
 let testID = 'NodeInlineElement';
@@ -223,7 +223,7 @@ describe('NodeInlineElement applyStyle()', () => {
         return wrapper.innerHTML;
     }
 
-    it('fromPosition = null, toPosition = null', () => {
+    it('applyStyle to SPAN', () => {
         // Arrange
         let element = createNodeInlineElement('<span>www.example.com</span>');
         let mockColor = 'red';
@@ -238,126 +238,140 @@ describe('NodeInlineElement applyStyle()', () => {
         expect(innerHTML).toBe('<span style="color: red;">www.example.com</span>');
     });
 
-    it('fromPosition != null, toPosition != null', () => {
+    it('applyStyle to Text node', () => {
         // Arrange
-        let testDiv = DomTestHelper.createElementFromContent(
-            testID,
-            '<span>www.example.com</span>'
-        );
-        let element = new NodeInlineElement(testDiv.firstChild);
-        let fromPosition = new Position(testDiv.firstChild.firstChild, 3);
-        let toPosition = new Position(testDiv.firstChild.lastChild, 11);
+        let testDiv = DomTestHelper.createElementFromContent(testID, '<span>www.example.com</span>');
+        let element = new NodeInlineElement(testDiv.firstChild.firstChild);
         let mockColor = 'red';
 
         // Act
-        element.applyStyle(
-            function(node: HTMLElement) {
-                node.style.color = mockColor;
-            },
-            fromPosition,
-            toPosition
-        );
+        element.applyStyle(function(node: HTMLElement) {
+            node.style.color = mockColor;
+        });
 
         // Assert
-        let innerHTML = getInnerHTML(element);
-        expect(innerHTML).toBe('<span>www<span style="color: red;">.example</span>.com</span>');
+        let innerHTML = testDiv.innerHTML;
+        expect(innerHTML).toBe('<span style="color: red;">www.example.com</span>');
+    });
+});
+
+describe('applyStyleToTextNode', () => {
+    afterEach(() => {
+        DomTestHelper.removeElement(testID);
     });
 
-    it('fromPosition != null, toPosition = null', () => {
+    it('start > 0, end < len - 1', () => {
         // Arrange
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
-            '<span>www.example.com</span>'
+            'www.example.com'
         );
-        let element = new NodeInlineElement(testDiv.firstChild);
-        let fromPosition = new Position(testDiv.firstChild.firstChild, 3);
         let mockColor = 'red';
 
         // Act
-        element.applyStyle(
-            function(node: HTMLElement) {
+        applyStyleToTextNode(
+            testDiv.firstChild as Text,
+            3,
+            11,
+            function (node: HTMLElement) {
                 node.style.color = mockColor;
-            },
-            fromPosition,
-            null /*toPosition*/
+            }
         );
 
         // Assert
-        let innerHTML = getInnerHTML(element);
-        expect(innerHTML).toBe('<span>www<span style="color: red;">.example.com</span></span>');
+        let innerHTML = testDiv.innerHTML;
+        expect(innerHTML).toBe('www<span style="color: red;">.example</span>.com');
     });
 
-    it('fromPosition = null, toPosition != null', () => {
+    it('start > 0, end = len - 1', () => {
         // Arrange
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
-            '<span>www.example.com</span>'
+            'www.example.com'
         );
-        let element = new NodeInlineElement(testDiv.firstChild);
-        let toPosition = new Position(testDiv.firstChild.firstChild, 11);
         let mockColor = 'red';
 
         // Act
-        element.applyStyle(
+        applyStyleToTextNode(
+            testDiv.firstChild as Text,
+            3,
+            15,
             function(node: HTMLElement) {
                 node.style.color = mockColor;
             },
-            null /*fromPosition*/,
-            toPosition
         );
 
         // Assert
-        let innerHTML = getInnerHTML(element);
-        expect(innerHTML).toBe('<span><span style="color: red;">www.example</span>.com</span>');
+        let innerHTML = testDiv.innerHTML;
+        expect(innerHTML).toBe('www<span style="color: red;">.example.com</span>');
     });
 
-    it('fromPosition != null, toPosition != null, fromPosition = toPosition', () => {
+    it('start = 0, end <  len - 1', () => {
         // Arrange
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
-            '<span>www.example.com</span>'
+            'www.example.com'
         );
-        let element = new NodeInlineElement(testDiv.firstChild);
-        let fromPosition = new Position(testDiv.firstChild.firstChild, 3);
-        let toPosition = new Position(testDiv.firstChild.firstChild, 3);
         let mockColor = 'red';
 
         // Act
-        element.applyStyle(
+        applyStyleToTextNode(
+            testDiv.firstChild as Text,
+            0,
+            11,
             function(node: HTMLElement) {
                 node.style.color = mockColor;
             },
-            fromPosition,
-            toPosition
         );
 
         // Assert
-        let innerHTML = getInnerHTML(element);
-        expect(innerHTML).toBe('<span>www.example.com</span>');
+        let innerHTML = testDiv.innerHTML;
+        expect(innerHTML).toBe('<span style="color: red;">www.example</span>.com');
     });
 
-    it('fromPosition != null, toPosition != null, fromPosition is after toPosition', () => {
+    it('start = end', () => {
         // Arrange
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
-            '<span>www.example.com</span>'
+            'www.example.com'
         );
-        let element = new NodeInlineElement(testDiv.firstChild);
-        let fromPosition = new Position(testDiv.firstChild.firstChild, 4);
-        let toPosition = new Position(testDiv.firstChild.firstChild, 3);
         let mockColor = 'red';
 
         // Act
-        element.applyStyle(
+        applyStyleToTextNode(
+            testDiv.firstChild as Text,
+            3,
+            3,
             function(node: HTMLElement) {
                 node.style.color = mockColor;
             },
-            fromPosition,
-            toPosition
         );
 
         // Assert
-        let innerHTML = getInnerHTML(element);
-        expect(innerHTML).toBe('<span>www.example.com</span>');
+        let innerHTML = testDiv.innerHTML;
+        expect(innerHTML).toBe('www.example.com');
+    });
+
+    it('start > end', () => {
+        // Arrange
+        let testDiv = DomTestHelper.createElementFromContent(
+            testID,
+            'www.example.com'
+        );
+        let mockColor = 'red';
+
+        // Act
+        applyStyleToTextNode(
+            testDiv.firstChild as Text,
+            4,
+            3,
+            function(node: HTMLElement) {
+                node.style.color = mockColor;
+            },
+        );
+
+        // Assert
+        let innerHTML = testDiv.innerHTML;
+        expect(innerHTML).toBe('www.example.com');
     });
 });

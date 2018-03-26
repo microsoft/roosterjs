@@ -214,14 +214,14 @@ export default class DefaultShortcut implements EditorPlugin {
      * Initialize this plugin
      * @param editor The editor instance
      */
-    public initialize(editor: Editor): void {
+    public initialize(editor: Editor) {
         this.editor = editor;
     }
 
     /**
      * Dispose this plugin
      */
-    public dispose(): void {
+    public dispose() {
         this.editor = null;
     }
 
@@ -236,7 +236,7 @@ export default class DefaultShortcut implements EditorPlugin {
     /**
      * Handle the event
      */
-    public onPluginEvent(event: PluginEvent): void {
+    public onPluginEvent(event: PluginEvent) {
         let command = tryGetCommandFromEvent(event);
         if (!command) {
             return;

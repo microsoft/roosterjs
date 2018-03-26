@@ -64,7 +64,7 @@ export default function sanitizeHtml(
     }
 
     // 2. Convert global CSS into inline CSS
-    applyInlineStyle(doc, additionalStyleNodes);
+    convertInlineCss(doc, additionalStyleNodes);
 
     // 3, 4: Remove dangerous HTML tags and attributes, remove useless CSS properties
     if (!convertInlineCssOnly) {
@@ -256,7 +256,7 @@ const ALLOWED_HTML_ATTRIBUTES = [
     'wrap',
 ];
 
-function applyInlineStyle(doc: Document, additionalStyleNodes: HTMLStyleElement[]) {
+function convertInlineCss(doc: Document, additionalStyleNodes: HTMLStyleElement[]) {
     let styleNodes = toArray(doc.querySelectorAll('style'));
     let styleSheets = (additionalStyleNodes || [])
         .reverse()

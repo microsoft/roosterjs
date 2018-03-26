@@ -33,7 +33,7 @@ export default class Undo implements UndoService {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    public initialize(editor: Editor): void {
+    public initialize(editor: Editor) {
         this.editor = editor;
         this.onDropDisposer = this.editor.addDomEventHandler('drop', () => {
             this.addUndoSnapshot();
@@ -63,7 +63,7 @@ export default class Undo implements UndoService {
      * Handle events triggered from editor
      * @param event PluginEvent object
      */
-    public onPluginEvent(event: PluginEvent): void {
+    public onPluginEvent(event: PluginEvent) {
         // if editor is in IME, don't do anything
         if (this.editor.isInIME()) {
             return;
@@ -98,7 +98,7 @@ export default class Undo implements UndoService {
     /**
      * Restore an undo snapshot to editor
      */
-    public undo(): void {
+    public undo() {
         if (this.hasNewContent) {
             this.addUndoSnapshot();
         }
@@ -109,7 +109,7 @@ export default class Undo implements UndoService {
     /**
      * Restore a redo snapshot to editor
      */
-    public redo(): void {
+    public redo() {
         this.restoreSnapshot(1 /*nextSnapshot*/);
     }
 
@@ -130,7 +130,7 @@ export default class Undo implements UndoService {
     /**
      * Add an undo snapshot
      */
-    public addUndoSnapshot(): void {
+    public addUndoSnapshot() {
         let snapshot = buildSnapshot(this.editor);
         this.getSnapshotsManager().addSnapshot(snapshot);
         this.hasNewContent = false;
@@ -149,7 +149,7 @@ export default class Undo implements UndoService {
         }
     }
 
-    private onKeyDown(pluginEvent: PluginDomEvent): void {
+    private onKeyDown(pluginEvent: PluginDomEvent) {
         // Handle backspace/delete when there is a selection to take a snapshot
         // since we want the state prior to deletion restorable
         let evt = pluginEvent.rawEvent as KeyboardEvent;
@@ -181,7 +181,7 @@ export default class Undo implements UndoService {
         }
     }
 
-    private onKeyPress(pluginEvent: PluginDomEvent): void {
+    private onKeyPress(pluginEvent: PluginDomEvent) {
         let evt = pluginEvent.rawEvent as KeyboardEvent;
         if (evt.metaKey) {
             // if metaKey is pressed, simply return since no actual effect will be taken on the editor.

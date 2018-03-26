@@ -1,7 +1,11 @@
+import InlineElement from './InlineElement';
+import NodeInlineElement, { applyStyleToTextNode } from './NodeInlineElement';
 import Position from '../selection/Position';
 import SelectionRange from '../selection/SelectionRange';
-import InlineElement from './InlineElement';
-import NodeInlineElement from './NodeInlineElement';
+import contains from '../utils/contains';
+import isDocumentPosition from '../utils/isDocumentPosition';
+import { DocumentPosition, NodeType } from 'roosterjs-editor-types';
+import { getNextLeafSibling } from '../domWalker/getLeafSibling';
 
 /**
  * This is a special version of inline element that identifies a section of an inline element
@@ -81,8 +85,32 @@ class PartialInlineElement implements InlineElement {
     /**
      * apply style
      */
-    public applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void {
-        this.decoratedInline.applyStyle(styler, from || this.start, to || this.end);
+    public applyStyle(styler: (element: HTMLElement) => void) {
+        let containerNode = this.getContainerNode();
+        let currentNode = this.start.node;
+        let offset = this.start.offset;
+        while (
+            contains(containerNode, currentNode, true /*treatSameNodeAsContain*/) &&
+            (currentNode == this.end.node || isDocumentPosition(
+                currentNode.compareDocumentPosition(this.end.node),
+                DocumentPosition.Following
+            ))
+        ) {
+            // The code below modifies DOM. Need to get the next sibling first otherwise
+            // you won't be able to reliably get a good next sibling node
+            let nextLeafNode = getNextLeafSibling(containerNode, currentNode);
+            if (currentNode.nodeType == NodeType.Text) {
+                applyStyleToTextNode(
+                    currentNode as Text,
+                    offset,
+                    currentNode == this.end.node ? this.end.offset : currentNode.nodeValue.length,
+                    styler
+                );
+            }
+
+            currentNode = nextLeafNode;
+            offset = 0;
+        }
     }
 }
 

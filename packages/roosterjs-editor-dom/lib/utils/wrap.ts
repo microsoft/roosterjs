@@ -10,18 +10,18 @@ import fromHtml from './fromHtml';
  */
 export default function wrap(
     nodes: Node | Node[],
-    wrapper?: string | Node,
+    wrapper?: string | HTMLElement,
     sanitize?: boolean
-): Node {
+): HTMLElement {
     nodes = !nodes ? [] : nodes instanceof Node ? [nodes] : nodes;
     if (nodes.length == 0 || !nodes[0]) {
         return null;
     }
 
     wrapper =
-        wrapper instanceof Node
+        wrapper instanceof Element
             ? wrapper
-            : fromHtml(wrapper || '<div></div>', nodes[0].ownerDocument, sanitize)[0];
+            : fromHtml(wrapper || '<div></div>', nodes[0].ownerDocument, sanitize)[0] as HTMLElement;
     let parentNode = nodes[0].parentNode;
 
     if (parentNode) {

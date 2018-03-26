@@ -48,6 +48,7 @@ var webpackConfig = {
         }]
     },
     stats: 'minimal',
+    mode: isProduction ? 'production' : 'development',
     optimization: {
         minimize: isProduction
     }

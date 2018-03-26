@@ -1,7 +1,7 @@
 import { LinkData } from 'roosterjs-editor-types';
 import matchLink from '../../linkMatch/matchLink';
 
-function runMatchTestWithValidLink(link: string, expected: LinkData): void {
+function runMatchTestWithValidLink(link: string, expected: LinkData) {
     let resultData = matchLink(link);
     expect(resultData).not.toBe(null);
     expect(resultData.scheme).toBe(expected.scheme);
@@ -9,7 +9,7 @@ function runMatchTestWithValidLink(link: string, expected: LinkData): void {
     expect(resultData.normalizedUrl).toBe(expected.normalizedUrl);
 }
 
-function runMatchTestWithBadLink(link: string): void {
+function runMatchTestWithBadLink(link: string) {
     let linkData = matchLink(link);
     expect(linkData).toBeNull();
 }

@@ -1,13 +1,9 @@
-import contains from '../utils/contains';
-import getTagOfNode from '../utils/getTagOfNode';
-import isDocumentPosition from '../utils/isDocumentPosition';
-import isNodeAfter from '../utils/isNodeAfter';
-import wrap from '../utils/wrap';
-import { DocumentPosition, NodeType } from 'roosterjs-editor-types';
-import { getNextLeafSibling, getPreviousLeafSibling } from '../domWalker/getLeafSibling';
+import InlineElement from './InlineElement';
 import Position from '../selection/Position';
 import SelectionRange from '../selection/SelectionRange';
-import InlineElement from './InlineElement';
+import getTagOfNode from '../utils/getTagOfNode';
+import isNodeAfter from '../utils/isNodeAfter';
+import { NodeType } from 'roosterjs-editor-types';
 
 /**
  * This presents an inline element that can be reprented by a single html node.
@@ -70,100 +66,56 @@ class NodeInlineElement implements InlineElement {
     }
 
     /**
-     * Apply inline style to a region of an inline element. The region is identified thorugh the from and to point
-     * The fromPosition and toPosition are optional and when bing missed, it indicates the boundary of the element
-     * The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
-     * when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
-     * The actuall styling is done by consumer through the styler callback
+     * Apply inline style to an inline element
      */
-    public applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void {
-        let ownerDoc = this.containerNode.ownerDocument;
-
-        // Adjust the start point
-        if (!from) {
-            from = new Position(this.containerNode, 0);
-        } else if (from.isAtEnd) {
-            let nextNode = getNextLeafSibling(this.containerNode, from.node);
-            from = nextNode ? new Position(nextNode, 0) : null;
-        }
-
-        // Adjust the end point
-        if (!to) {
-            to = new Position(this.containerNode, Position.End);
-        } else if (to.offset == 0) {
-            let prevNode = getPreviousLeafSibling(this.containerNode, to.node);
-            to = prevNode ? new Position(prevNode, Position.End) : null;
-        }
-
-        if (!from || !to) {
-            // we need a valid start and end node, if either one is null, we will just exit
-            // this isn't an error, it just tells the fact we don't see a good node to apply a style
-            return;
-        }
-
-        from = from.normalize();
-        to = to.normalize();
-
-        let fromNode = from.node;
-        let toNode = to.node;
-        let fromOffset = from.offset;
-        while (contains(this.containerNode, fromNode, true /*treatSameNodeAsContain*/)) {
-            // The code below modifies DOM. Need to get the next sibling first otherwise
-            // you won't be able to reliably get a good next sibling node
-            let nextLeafNode = getNextLeafSibling(this.containerNode, fromNode);
-
-            let withinRange =
-                fromNode == toNode ||
-                isDocumentPosition(
-                    fromNode.compareDocumentPosition(toNode),
-                    DocumentPosition.Following
-                );
-            if (!withinRange) {
-                break;
-            }
-
-            // Apply the style
-            // If a node has only white space and new line and is in table, we ignore it,
-            // otherwise the table will be distorted
-            if (fromNode.nodeType == NodeType.Text && getTagOfNode(fromNode.parentNode) != 'TR') {
-                let adjustedEndOffset = fromNode == toNode ? to.offset : fromNode.nodeValue.length;
-                if (adjustedEndOffset > fromOffset) {
-                    let len = adjustedEndOffset - fromOffset;
-                    let parentNode = fromNode.parentNode;
-                    if (
-                        getTagOfNode(parentNode) == 'SPAN' &&
-                        parentNode.textContent.length == len
-                    ) {
-                        // If the element is in a span and this element is everything of the parent
-                        // apply the style on parent span
-                        styler(parentNode);
-                    } else if (len == fromNode.nodeValue.length) {
-                        // It is whole text node
-                        styler(wrap(fromNode, '<span></span>'));
-                    } else {
-                        // It is partial of a text node
-                        let newNode = ownerDoc.createElement('SPAN');
-                        newNode.textContent = fromNode.nodeValue.substring(
-                            fromOffset,
-                            adjustedEndOffset
-                        );
-
-                        let selectionRange = new SelectionRange(
-                            new Position(fromNode, fromOffset),
-                            new Position(fromNode, adjustedEndOffset)
-                        );
-                        let range = selectionRange.getRange();
-                        range.deleteContents();
-                        range.insertNode(newNode);
-                        styler(newNode);
-                    }
-                }
-            }
-
-            fromNode = nextLeafNode;
-            fromOffset = 0;
+    public applyStyle(styler: (element: HTMLElement) => void) {
+        let node = this.containerNode;
+        if (node.nodeType == NodeType.Text) {
+            applyStyleToTextNode(node as Text, 0, node.nodeValue.length, styler);
+        } else if (node.nodeType == NodeType.Element) {
+            styler(node as HTMLElement);
         }
     }
 }
 
 export default NodeInlineElement;
+
+/**
+ * Apply style to a text node with start and end offsets
+ * @param node Text node
+ * @param start Start offset
+ * @param end end offset
+ * @param styler Style function
+ */
+export function applyStyleToTextNode(
+    textNode: Text,
+    start: number,
+    end: number,
+    styler: (element: HTMLElement) => void
+) {
+    let parentNode = textNode.parentNode;
+
+    // Ignore text node direct under TR/TABLE or empty range
+    let parentTag = getTagOfNode(parentNode);
+    if (parentTag == 'TR' || parentTag == 'TABLE' || end <= start) {
+        return;
+    }
+
+    if (parentNode.textContent.length == end - start) {
+        // If the element is in a span and this element is everything of the parent
+        // apply the style on parent span
+        styler(parentNode as HTMLElement);
+    } else if (end > start) {
+        // It is partial of a text node
+        let newNode = textNode.ownerDocument.createElement('SPAN');
+        newNode.textContent = textNode.nodeValue.substring(start, end);
+
+        let range = new SelectionRange(
+            new Position(textNode, start),
+            new Position(textNode, end)
+        ).getRange();
+        range.deleteContents();
+        range.insertNode(newNode);
+        styler(newNode);
+    }
+}

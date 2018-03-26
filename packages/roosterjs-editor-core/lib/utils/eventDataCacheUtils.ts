@@ -1,7 +1,7 @@
 import { PluginEvent } from 'roosterjs-editor-types';
 
 // Clear a specifc cached data (as specified by a key) in a plugin event
-function clearEventDataCache(event: PluginEvent, key: string): void {
+function clearEventDataCache(event: PluginEvent, key: string) {
     if (event && event.eventDataCache && event.eventDataCache.hasOwnProperty(key)) {
         delete event.eventDataCache[key];
     }

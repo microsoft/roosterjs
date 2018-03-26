@@ -60,7 +60,7 @@ export default class ContentEdit implements EditorPlugin {
     }
 
     // Handle the event
-    public onPluginEvent(event: PluginEvent): void {
+    public onPluginEvent(event: PluginEvent) {
         let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
         let blockQuoteElement: Element = null;
         if (this.isListEvent(event, [KEY_TAB, KEY_BACKSPACE, KEY_ENTER])) {

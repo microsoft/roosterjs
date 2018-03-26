@@ -792,13 +792,9 @@ declare namespace roosterjs {
          */
         contains: (position: Position) => boolean;
         /**
-         * Apply inline style to a region of an inline element. The region is identified thorugh the from and to point
-         * The fromPosition and toPosition are optional and when bing missed, it indicates the boundary of the element
-         * The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
-         * when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
-         * The actuall styling is done by consumer through the styler callback
+         * Apply inline style to an inline element
          */
-        applyStyle: (styler: (node: Node) => void, from?: Position, to?: Position) => void;
+        applyStyle: (styler: (element: HTMLElement) => void) => void;
     }
 
     /**
@@ -835,13 +831,9 @@ declare namespace roosterjs {
          */
         contains(position: Position): boolean;
         /**
-         * Apply inline style to a region of an inline element. The region is identified thorugh the from and to point
-         * The fromPosition and toPosition are optional and when bing missed, it indicates the boundary of the element
-         * The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
-         * when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
-         * The actuall styling is done by consumer through the styler callback
+         * Apply inline style to an inline element
          */
-        applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void;
+        applyStyle(styler: (element: HTMLElement) => void): void;
     }
 
     /**
@@ -887,7 +879,7 @@ declare namespace roosterjs {
         /**
          * apply style
          */
-        applyStyle(styler: (node: Node) => void, from?: Position, to?: Position): void;
+        applyStyle(styler: (element: HTMLElement) => void): void;
     }
 
     /**
@@ -1308,7 +1300,7 @@ declare namespace roosterjs {
      * default value is false
      * @returns The wrapper element
      */
-    function wrap(nodes: Node | Node[], wrapper?: string | Node, sanitize?: boolean): Node;
+    function wrap(nodes: Node | Node[], wrapper?: string | HTMLElement, sanitize?: boolean): HTMLElement;
 
     /**
      * RoosterJs core editor class
