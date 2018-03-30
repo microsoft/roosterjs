@@ -2388,21 +2388,15 @@ function focus(core) {
 exports.default = focus;
 function setSelectionToBegin(core) {
     var firstNode = roosterjs_editor_dom_1.getFirstLeafNode(core.contentDiv);
-    if (firstNode) {
-        if (firstNode.nodeType == 3 /* Text */) {
-            // First node is text, move selection to the begin
-            select_1.default(core, firstNode, 0);
-        }
-        else if (firstNode.nodeType == 1 /* Element */) {
-            if (isVoidHtmlElement_1.default(firstNode)) {
-                // First node is a html void element (void elements cannot have child nodes), move selection before it
-                select_1.default(core, firstNode, roosterjs_editor_dom_1.Position.Before);
-            }
-            else {
-                // Other html element, move selection inside it
-                select_1.default(core, firstNode, 0);
-            }
-        }
+    var nodeType = firstNode ? firstNode.nodeType : null;
+    if (nodeType == 3 /* Text */) {
+        // First node is text, move selection to the begin
+        select_1.default(core, firstNode, 0);
+    }
+    else if (nodeType == 1 /* Element */) {
+        // If first node is a html void element (void elements cannot have child nodes),
+        // move selection before it, otherwise move selection inside it
+        select_1.default(core, firstNode, isVoidHtmlElement_1.default(firstNode) ? roosterjs_editor_dom_1.Position.Before : 0);
     }
     else {
         // No first node, likely we have an empty content DIV, move selection inside it
@@ -2436,11 +2430,9 @@ function formatWithUndo(core, callback, preserveSelection, skipAddingUndoAfterFo
         if (callback) {
             if (preserveSelection) {
                 var range = getLiveRange_1.default(core) || core.cachedRange;
-                var selectionRange = new lib_1.SelectionRange(range);
-                var start = selectionRange.start.normalize();
-                var end = selectionRange.end.normalize();
+                var selectionRange = range && new lib_1.SelectionRange(range).normalize();
                 var fallbackNode = callback();
-                if (!select_1.default(core, start, end) && fallbackNode instanceof Node) {
+                if (!select_1.default(core, selectionRange) && fallbackNode instanceof Node) {
                     select_1.default(core, fallbackNode);
                 }
             }
@@ -2473,12 +2465,12 @@ exports.default = formatWithUndo;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var isRangeInContainer_1 = __webpack_require__(/*! ../utils/isRangeInContainer */ "./packages/roosterjs-editor-core/lib/utils/isRangeInContainer.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 function getLiveRange(core) {
     var selection = core.document.defaultView.getSelection();
     if (selection && selection.rangeCount > 0) {
         var range = selection.getRangeAt(0);
-        if (isRangeInContainer_1.default(range, core.contentDiv)) {
+        if (roosterjs_editor_dom_1.contains(core.contentDiv, range)) {
             return range;
         }
     }
@@ -2525,24 +2517,88 @@ var select_1 = __webpack_require__(/*! ./select */ "./packages/roosterjs-editor-
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var HTML_EMPTY_DIV = '<div></div>';
 function insertNode(core, node, option) {
-    option = option || {
-        position: 2 /* SelectionStart */,
-        updateCursor: true,
-        replaceSelection: true,
-        insertOnNewLine: false,
-    };
-    if (option.updateCursor) {
+    var position = option ? option.position : 2 /* SelectionStart */;
+    var updateCursor = option ? option.updateCursor : true;
+    var replaceSelection = option ? option.replaceSelection : true;
+    var insertOnNewLine = option ? option.insertOnNewLine : false;
+    if (updateCursor) {
         focus_1.default(core);
     }
-    switch (option.position) {
+    switch (position) {
         case 0 /* Begin */:
-            insertNodeAtBegin(core, node, option);
-            break;
         case 1 /* End */:
-            insertNodeAtEnd(core, node, option);
+            var isBegin = position == 0 /* Begin */;
+            var contentDiv = core.contentDiv;
+            var block = roosterjs_editor_dom_1.getBlockElementAtNode(contentDiv, roosterjs_editor_dom_1.getLeafNode(contentDiv, isBegin));
+            var insertedNode = void 0;
+            if (block) {
+                var refNode = isBegin ? block.getStartNode() : block.getEndNode();
+                var refParentNode = refNode.parentNode;
+                if (insertOnNewLine ||
+                    refNode.nodeType == 3 /* Text */ ||
+                    isVoidHtmlElement_1.default(refNode)) {
+                    // For insert on new line, or refNode is text or void html element (HR, BR etc.)
+                    // which cannot have children, i.e. <div>hello<br>world</div>. 'hello', 'world' are the
+                    // first and last node. Insert before 'hello' or after 'world', but still inside DIV
+                    insertedNode = refParentNode.insertBefore(node, isBegin ? refNode : refNode.nextSibling);
+                }
+                else {
+                    // if the refNode can have child, use appendChild (which is like to insert as first/last child)
+                    // i.e. <div>hello</div>, the content will be inserted before/after hello
+                    insertedNode = refNode.insertBefore(node, isBegin ? refNode.firstChild : null);
+                }
+            }
+            else {
+                // No last block, editor is likely empty, use appendChild
+                insertedNode = core.contentDiv.appendChild(node);
+            }
+            // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
+            // add a DIV wrapping
+            if (insertedNode && insertOnNewLine && !roosterjs_editor_dom_1.isBlockElement(insertedNode)) {
+                roosterjs_editor_dom_1.wrap(insertedNode, HTML_EMPTY_DIV);
+            }
             break;
         case 2 /* SelectionStart */:
-            insertNodeAtSelection(core, node, option);
+            var rawRange = getLiveRange_1.default(core) || core.cachedRange;
+            if (rawRange) {
+                // if to replace the selection and the selection is not collapsed, remove the the content at selection first
+                if (replaceSelection && !rawRange.collapsed) {
+                    rawRange.deleteContents();
+                }
+                // Create a clone (backup) for the selection first as we may need to restore to it later
+                var clonedRange = new roosterjs_editor_dom_1.SelectionRange(rawRange);
+                var blockElement = roosterjs_editor_dom_1.getBlockElementAtNode(core.contentDiv, rawRange.startContainer);
+                if (blockElement) {
+                    var endNode = blockElement.getEndNode();
+                    if (insertOnNewLine) {
+                        // Adjust the insertion point
+                        // insertOnNewLine means to insert on a block after the selection, not really right at the selection
+                        // This is commonly used when users want to insert signature. They could place cursor somewhere mid of a line
+                        // and insert signature, they actually want signature to be inserted the line after the selection
+                        rawRange.setEndAfter(endNode);
+                        rawRange.collapse(false /*toStart*/);
+                    }
+                    else if (roosterjs_editor_dom_1.getTagOfNode(endNode) == 'P') {
+                        // Insert into a P tag may cause issues when the inserted content contains any block element.
+                        // Change P tag to DIV to make sure it works well
+                        var rangeCache = new roosterjs_editor_dom_1.SelectionRange(rawRange).normalize();
+                        var div = roosterjs_editor_dom_1.changeElementTag(endNode, 'div');
+                        if (rangeCache.start.node != div &&
+                            rangeCache.end.node != div &&
+                            roosterjs_editor_dom_1.contains(core.contentDiv, rangeCache)) {
+                            rawRange = rangeCache.getRange();
+                        }
+                    }
+                }
+                var nodeForCursor = node.nodeType == 11 /* DocumentFragment */ ? node.lastChild : node;
+                rawRange.insertNode(node);
+                if (updateCursor && nodeForCursor) {
+                    select_1.default(core, nodeForCursor, roosterjs_editor_dom_1.Position.After);
+                }
+                else {
+                    select_1.default(core, clonedRange);
+                }
+            }
             break;
         case 3 /* Outside */:
             core.contentDiv.parentNode.insertBefore(node, core.contentDiv.nextSibling);
@@ -2551,143 +2607,6 @@ function insertNode(core, node, option) {
     return true;
 }
 exports.default = insertNode;
-// Insert a node at begin of the editor
-function insertNodeAtBegin(core, node, option) {
-    var contentDiv = core.contentDiv;
-    var firstBlock = roosterjs_editor_dom_1.getBlockElementAtNode(contentDiv, roosterjs_editor_dom_1.getFirstLeafNode(contentDiv));
-    var insertedNode;
-    if (firstBlock) {
-        var refNode = firstBlock.getStartNode();
-        var refParentNode = refNode.parentNode;
-        if (option.insertOnNewLine) {
-            // For insert on new line, insert it before the start of block
-            insertedNode = refParentNode.insertBefore(node, refNode);
-        }
-        else {
-            // not to insert on new line (to insert inline)
-            // we shall try to insert the node in the block
-            if (refNode.firstChild) {
-                // if the refNode has firstChild, insert the new node before first child
-                // i.e. <div>hello</div>, first child will be hello. We want to insert the content
-                // before hello, but still within the DIV
-                insertedNode = refNode.insertBefore(node, refNode.firstChild);
-            }
-            else if (refNode.nodeType == 3 /* Text */ ||
-                isVoidHtmlElement_1.default(refNode)) {
-                // refNode is text or void html element (HR, BR etc.) which cannot have children
-                // i.e. <div>hello<br>world</div>, first block is hello<br>
-                // we want to insert the node before hello, but still within the DIV
-                insertedNode = refParentNode.insertBefore(node, refNode);
-            }
-            else {
-                // refNode is element type. It does not have children, but can have children
-                // i.e. empty block <div></div>
-                // Use appendChild to append it into refNode
-                insertedNode = refNode.appendChild(node);
-            }
-        }
-    }
-    else {
-        // No first block, this can happen when editor is empty. Use appendChild to insert the content in contentDiv
-        insertedNode = core.contentDiv.appendChild(node);
-    }
-    // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
-    // add a DIV wrapping
-    if (insertedNode && option.insertOnNewLine && !roosterjs_editor_dom_1.isBlockElement(insertedNode)) {
-        roosterjs_editor_dom_1.wrap(insertedNode, HTML_EMPTY_DIV);
-    }
-}
-// Insert a node at end of the editor
-function insertNodeAtEnd(core, node, option) {
-    var contentDiv = core.contentDiv;
-    var lastBlock = roosterjs_editor_dom_1.getBlockElementAtNode(contentDiv, roosterjs_editor_dom_1.getLastLeafNode(contentDiv));
-    var insertedNode;
-    if (lastBlock) {
-        var refNode = lastBlock.getEndNode();
-        var refParentNode = refNode.parentNode;
-        if (option.insertOnNewLine) {
-            // For insert on new line, insert it after the refNode (before refNode's next sibling)
-            // The second param to insertBefore can be null, which means to insert at the end
-            // refNode.nextSibling can be null, which ok and in that case, insertBefore behaves just like appendChild
-            insertedNode = refParentNode.insertBefore(node, refNode.nextSibling);
-        }
-        else {
-            // not to insert on new line (to insert inline)
-            // the node needs to be inserted within the block
-            if (refNode.lastChild) {
-                // if the refNode has lastChild, use appendChild (which is like to insert as last child)
-                // i.e. <div>hello</div>, the content will be inserted after hello
-                insertedNode = refNode.appendChild(node);
-            }
-            else if (refNode.nodeType == 3 /* Text */ ||
-                isVoidHtmlElement_1.default(refNode)) {
-                // refNode is text or void html element (HR, BR etc.) which cannot have children
-                // i.e. <div>hello<br>world</div>, world is the last block
-                insertedNode = refParentNode.insertBefore(node, refNode.nextSibling);
-            }
-            else {
-                // refNode is element type (other than void element), insert it as a child to refNode
-                // i.e. <div></div>
-                insertedNode = refNode.appendChild(node);
-            }
-        }
-    }
-    else {
-        // No last block, editor is likely empty, use appendChild
-        insertedNode = core.contentDiv.appendChild(node);
-    }
-    // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
-    // add a DIV wrapping
-    if (insertedNode && option.insertOnNewLine && !roosterjs_editor_dom_1.isBlockElement(insertedNode)) {
-        roosterjs_editor_dom_1.wrap(insertedNode, HTML_EMPTY_DIV);
-    }
-}
-// Insert node at selection
-function insertNodeAtSelection(core, node, option) {
-    var rawRange = getLiveRange_1.default(core) || core.cachedRange;
-    if (rawRange) {
-        // if to replace the selection and the selection is not collapsed, remove the the content at selection first
-        if (option.replaceSelection && !rawRange.collapsed) {
-            rawRange.deleteContents();
-        }
-        // Create a clone (backup) for the selection first as we may need to restore to it later
-        var clonedRange = new roosterjs_editor_dom_1.SelectionRange(rawRange);
-        var blockElement = roosterjs_editor_dom_1.getBlockElementAtNode(core.contentDiv, rawRange.startContainer);
-        if (blockElement) {
-            var endNode = blockElement.getEndNode();
-            if (option.insertOnNewLine) {
-                // Adjust the insertion point
-                // option.insertOnNewLine means to insert on a block after the selection, not really right at the selection
-                // This is commonly used when users want to insert signature. They could place cursor somewhere mid of a line
-                // and insert signature, they actually want signature to be inserted the line after the selection
-                rawRange.setEndAfter(endNode);
-                rawRange.collapse(false /*toStart*/);
-            }
-            else if (roosterjs_editor_dom_1.getTagOfNode(endNode) == 'P') {
-                // Insert into a P tag may cause issues when the inserted content contains any block element.
-                // Change P tag to DIV to make sure it works well
-                var rangeCache = new roosterjs_editor_dom_1.SelectionRange(rawRange).normalize();
-                var div = roosterjs_editor_dom_1.changeElementTag(endNode, 'div');
-                var start = rangeCache.start.node;
-                var end = rangeCache.end.node;
-                if (start != div &&
-                    end != div &&
-                    roosterjs_editor_dom_1.contains(core.contentDiv, start) &&
-                    roosterjs_editor_dom_1.contains(core.contentDiv, end)) {
-                    rawRange = rangeCache.getRange();
-                }
-            }
-        }
-        var nodeForCursor = node.nodeType == 11 /* DocumentFragment */ ? node.lastChild : node;
-        rawRange.insertNode(node);
-        if (option.updateCursor && nodeForCursor) {
-            select_1.default(core, nodeForCursor, roosterjs_editor_dom_1.Position.After);
-        }
-        else {
-            select_1.default(core, clonedRange);
-        }
-    }
-}
 
 
 /***/ }),
@@ -2704,10 +2623,13 @@ function insertNodeAtSelection(core, node, option) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var hasFocus_1 = __webpack_require__(/*! ./hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
-var isRangeInContainer_1 = __webpack_require__(/*! ../utils/isRangeInContainer */ "./packages/roosterjs-editor-core/lib/utils/isRangeInContainer.ts");
+var roosterjs_editor_dom_2 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 function select(core, arg1, arg2, arg3, arg4) {
     var rawRange;
-    if (arg1 instanceof Range) {
+    if (!arg1) {
+        return false;
+    }
+    else if (arg1 instanceof Range) {
         rawRange = arg1;
     }
     else {
@@ -2736,7 +2658,7 @@ function select(core, arg1, arg2, arg3, arg4) {
         }
         rawRange = range.getRange();
     }
-    if (isRangeInContainer_1.default(rawRange, core.contentDiv)) {
+    if (roosterjs_editor_dom_2.contains(core.contentDiv, rawRange)) {
         var selection = core.document.defaultView.getSelection();
         if (selection) {
             if (selection.rangeCount > 0) {
@@ -2845,7 +2767,7 @@ var Editor = /** @class */ (function () {
                     // Only reason we don't get the selection block is that we have an empty content div
                     // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
                     // The fix is to add a DIV wrapping, apply default format and move cursor over
-                    var nodes = roosterjs_editor_dom_1.fromHtml('<div><br></div>', _this.core.document);
+                    var nodes = roosterjs_editor_dom_1.fromHtml('<div><br></div>', _this.getDocument());
                     var element = _this.core.contentDiv.appendChild(nodes[0]);
                     roosterjs_editor_dom_1.applyFormat(element, _this.core.defaultFormat);
                     // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
@@ -2878,7 +2800,8 @@ var Editor = /** @class */ (function () {
         // 3. Initialize plugins
         this.core.plugins.forEach(function (plugin) { return plugin.initialize(_this); });
         // 4. Ensure initial content and its format
-        this.ensureInitialContent(options.initialContent);
+        this.setContent(options.initialContent || this.core.contentDiv.innerHTML);
+        this.ensureInitialContent();
         // 5. Initialize undo service
         this.core.undo.initialize(this);
         this.core.plugins.push(this.core.undo);
@@ -2893,8 +2816,9 @@ var Editor = /** @class */ (function () {
         // 8. Disable these operations for firefox since its behavior is usually wrong
         // Catch any possible exception since this should not block the initialization of editor
         try {
-            this.core.document.execCommand('enableObjectResizing', false, false);
-            this.core.document.execCommand('enableInlineTableEditing', false, false);
+            var document_1 = this.core.document;
+            document_1.execCommand('enableObjectResizing', false, false);
+            document_1.execCommand('enableInlineTableEditing', false, false);
         }
         catch (e) { }
     }
@@ -2976,15 +2900,10 @@ var Editor = /** @class */ (function () {
      * @requires The BlockElement result
      */
     Editor.prototype.getBlockElementAtNode = function (node) {
-        return roosterjs_editor_dom_1.getBlockElementAtNode(this.core.contentDiv, node);
+        return this.contains(node) ? roosterjs_editor_dom_1.getBlockElementAtNode(this.core.contentDiv, node) : null;
     };
-    /**
-     * Check if the node falls in the editor content
-     * @param node The node to check
-     * @returns True if the given node is in editor content, otherwise false
-     */
-    Editor.prototype.contains = function (node) {
-        return roosterjs_editor_dom_1.contains(this.core.contentDiv, node);
+    Editor.prototype.contains = function (arg) {
+        return roosterjs_editor_dom_1.contains(this.core.contentDiv, arg);
     };
     //#endregion
     //#region Content API
@@ -3042,10 +2961,11 @@ var Editor = /** @class */ (function () {
      *  updateCursor: true
      *  replaceSelection: true
      *  insertOnNewLine: false
+     * @param sanitize True to do sanitizeHtml before insert, otherwise false
      */
-    Editor.prototype.insertContent = function (content, option) {
+    Editor.prototype.insertContent = function (content, option, sanitize) {
         if (content) {
-            var allNodes = roosterjs_editor_dom_1.fromHtml(content, this.core.document);
+            var allNodes = roosterjs_editor_dom_1.fromHtml(content, this.getDocument(), sanitize);
             // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with
             // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
             // separately to show up on its own line
@@ -3252,19 +3172,13 @@ var Editor = /** @class */ (function () {
             }),
         ];
     };
-    Editor.prototype.ensureInitialContent = function (initialContent) {
-        if (initialContent) {
-            this.setContent(initialContent);
-        }
-        else if (this.core.contentDiv.innerHTML != '') {
-            this.triggerContentChangedEvent();
-        }
+    Editor.prototype.ensureInitialContent = function () {
         var contentDiv = this.core.contentDiv;
         var firstBlock = roosterjs_editor_dom_1.getBlockElementAtNode(contentDiv, roosterjs_editor_dom_1.getFirstLeafNode(contentDiv));
         var defaultFormatBlockElement;
         if (!firstBlock) {
             // No first block, let's create one
-            var nodes = roosterjs_editor_dom_1.fromHtml('<div><br></div>', this.core.document);
+            var nodes = roosterjs_editor_dom_1.fromHtml('<div><br></div>', this.getDocument());
             defaultFormatBlockElement = this.core.contentDiv.appendChild(nodes[0]);
         }
         else if (firstBlock instanceof roosterjs_editor_dom_1.NodeBlockElement) {
@@ -3279,7 +3193,7 @@ var Editor = /** @class */ (function () {
         }
     };
     Editor.prototype.createDefaultRange = function () {
-        var range = this.core.document.createRange();
+        var range = this.getDocument().createRange();
         range.setStart(this.core.contentDiv, 0);
         range.collapse(true);
         return range;
@@ -3787,30 +3701,6 @@ exports.cacheGetEventData = cacheGetEventData;
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-core/lib/utils/isRangeInContainer.ts":
-/*!************************************************************************!*\
-  !*** ./packages/roosterjs-editor-core/lib/utils/isRangeInContainer.ts ***!
-  \************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-function isRangeInContainer(range, container) {
-    var ancestorContainer = range ? range.commonAncestorContainer : null;
-    // use the parentNode if ancestorContainer is a text node
-    if (ancestorContainer && ancestorContainer.nodeType == 3 /* Text */) {
-        ancestorContainer = ancestorContainer.parentNode;
-    }
-    return roosterjs_editor_dom_1.contains(container, ancestorContainer, true /*treatSameNodeAsContain*/);
-}
-exports.default = isRangeInContainer;
-
-
-/***/ }),
-
 /***/ "./packages/roosterjs-editor-core/lib/utils/isVoidHtmlElement.ts":
 /*!***********************************************************************!*\
   !*** ./packages/roosterjs-editor-core/lib/utils/isVoidHtmlElement.ts ***!
@@ -4078,7 +3968,6 @@ function getBlockElementAtNode(rootNode, node) {
         return new NodeBlockElement_1.default(node);
     }
     else {
-        var blockElement = void 0;
         // Identify the containing block. This serves as ceiling for traversing down below
         // NOTE: this container block could be just the rootNode,
         // which cannot be used to create block element. We will special case handle it later on
@@ -4089,78 +3978,54 @@ function getBlockElementAtNode(rootNode, node) {
         // Find the head and leaf node in the block
         var headNode = findHeadTailLeafNodeInBlock(node, containerBlockNode, false /*isTail*/);
         var tailNode = findHeadTailLeafNodeInBlock(node, containerBlockNode, true /*isTail*/);
-        // TODO: assert headNode and tailNode to be leaf, and are within containerBlockNode
         // At this point, we have the head and tail of a block, here are some examples and where head and tail point to
         // 1) <ced><div>hello<br></div></ced>, head: hello, tail: <br>
         // 2) <ced><div>hello<span style="font-family: Arial">world</span></div></ced>, head: hello, tail: world
         // Both are actually completely and exclusively wrapped in a parent div, and can be represented with a Node block
         // So we shall try to collapse as much as we can to the nearest common ancester
-        var parentNode = headNode.parentNode;
-        while (parentNode.firstChild == headNode && parentNode != containerBlockNode) {
-            if (contains_1.default(parentNode, tailNode)) {
-                // this is an indication that the nearest common ancester has been reached
-                break;
-            }
-            else {
-                headNode = parentNode;
-                parentNode = parentNode.parentNode;
-            }
-        }
-        // Do same for the tail
-        parentNode = tailNode.parentNode;
-        while (parentNode.lastChild == tailNode && parentNode != containerBlockNode) {
-            if (contains_1.default(parentNode, headNode)) {
-                // this is an indication that the nearest common ancester has been reached
-                break;
-            }
-            else {
-                tailNode = parentNode;
-                parentNode = parentNode.parentNode;
-            }
-        }
+        headNode = getParentNearCommonAncestor(containerBlockNode, headNode, tailNode, true);
+        tailNode = getParentNearCommonAncestor(containerBlockNode, tailNode, headNode, false);
         if (headNode.parentNode != tailNode.parentNode) {
             // Un-balanced start and end, create a start-end block
-            blockElement = new StartEndBlockElement_1.default(headNode, tailNode);
+            return new StartEndBlockElement_1.default(headNode, tailNode);
         }
         else {
             // Balanced start and end (point to same parent), need to see if further collapsing can be done
-            parentNode = headNode.parentNode;
+            var parentNode = headNode.parentNode;
             while (parentNode.firstChild == headNode && parentNode.lastChild == tailNode) {
-                if (parentNode == containerBlockNode) {
-                    // Has reached the container block
-                    if (containerBlockNode != rootNode) {
-                        // If the container block is not the root, use the container block
-                        headNode = tailNode = parentNode;
-                    }
-                    break;
-                }
-                else {
+                if (parentNode != containerBlockNode) {
                     // Continue collapsing to parent
                     headNode = tailNode = parentNode;
                     parentNode = parentNode.parentNode;
                 }
+                else if (containerBlockNode != rootNode) {
+                    // Has reached the container block
+                    // If the container block is not the root, use the container block
+                    headNode = tailNode = parentNode;
+                    break;
+                }
             }
             // If head and tail are same and it is a block element, create NodeBlock, otherwise start-end block
-            blockElement =
-                headNode == tailNode && isBlockElement_1.default(headNode)
-                    ? new NodeBlockElement_1.default(headNode)
-                    : new StartEndBlockElement_1.default(headNode, tailNode);
+            return headNode == tailNode && isBlockElement_1.default(headNode)
+                ? new NodeBlockElement_1.default(headNode)
+                : new StartEndBlockElement_1.default(headNode, tailNode);
         }
-        return blockElement;
     }
 }
 exports.default = getBlockElementAtNode;
-// Given a node and container block, identify the first leaf (head) node
-// A leaf node is defined as deepest first node in a block
-// i.e. <div><span style="font-family: Arial">abc</span></div>, abc is the head leaf of the block
-// Often <br> or a child <div> is used to create a block. In that case, the leaf after the sibling div or br should be the head leaf
-// i.e. <div>123<br>abc</div>, abc is the head of a block because of a previous sibling <br>
-// i.e. <div><div>123</div>abc</div>, abc is also the head of a block because of a previous sibling <div>
-// To identify the head leaf of a block, we basically start from a node, go all the way towards left till a sibling <div> or <br>
-// in DOM tree traversal, it is three traversal:
-// 1) previous sibling traversal
-// 2) parent traversal looking for a previous sibling from parent
-// 3) last child traversal, repeat from 1-3
+/**
+ * Given a node and container block, identify the first leaf (head) node
+ * A leaf node is defined as deepest first node in a block
+ * i.e. <div><span style="font-family: Arial">abc</span></div>, abc is the head leaf of the block
+ * Often <br> or a child <div> is used to create a block. In that case, the leaf after the sibling div or br should be the head leaf
+ * i.e. <div>123<br>abc</div>, abc is the head of a block because of a previous sibling <br>
+ * i.e. <div><div>123</div>abc</div>, abc is also the head of a block because of a previous sibling <div>
+ * To identify the head leaf of a block, we basically start from a node, go all the way towards left till a sibling <div> or <br>
+ * in DOM tree traversal, it is three traversal:
+ * 1) previous sibling traversal
+ * 2) parent traversal looking for a previous sibling from parent
+ * 3) last child traversal, repeat from 1-3
+ */
 function findHeadTailLeafNodeInBlock(node, container, isTail) {
     var sibling = node;
     var isBr = false;
@@ -4170,6 +4035,16 @@ function findHeadTailLeafNodeInBlock(node, container, isTail) {
         isBr = getTagOfNode_1.default(sibling) == 'BR';
     } while (sibling && !isBlockElement_1.default(sibling) && !isBr);
     return isBr && isTail ? sibling : node;
+}
+function getParentNearCommonAncestor(containerBlockNode, thisNode, otherNode, checkFirstNode) {
+    var parentNode = thisNode.parentNode;
+    while ((checkFirstNode ? parentNode.firstChild : parentNode.lastChild) == thisNode &&
+        parentNode != containerBlockNode &&
+        !contains_1.default(parentNode, otherNode)) {
+        thisNode = parentNode;
+        parentNode = parentNode.parentNode;
+    }
+    return thisNode;
 }
 
 
@@ -4626,6 +4501,7 @@ var getLeafSibling_1 = __webpack_require__(/*! ./getLeafSibling */ "./packages/r
  * Get the first meaningful leaf node
  * This can return null for empty container or
  * container that does not contain any meaningful node
+ * @param rootNode The root node to get leaf node from
  */
 function getFirstLeafNode(rootNode) {
     return getLeafNode(rootNode, true /*isFirst*/);
@@ -4635,11 +4511,19 @@ exports.getFirstLeafNode = getFirstLeafNode;
  * Get the last meaningful leaf node
  * This can return null for empty container or
  * container that does not contain any meaningful node
+ * @param rootNode The root node to get leaf node from
  */
 function getLastLeafNode(rootNode) {
     return getLeafNode(rootNode, false /*isFirst*/);
 }
 exports.getLastLeafNode = getLastLeafNode;
+/**
+ * Get the first or last meaningful leaf node
+ * This can return null for empty container or
+ * container that does not contain any meaningful node
+ * @param rootNode The root node to get leaf node from
+ * @param isFirst True to get first leaf node, false to get last leaf node
+ */
 function getLeafNode(rootNode, isFirst) {
     var getChild = function (node) { return (isFirst ? node.firstChild : node.lastChild); };
     var result = getChild(rootNode);
@@ -4651,6 +4535,7 @@ function getLeafNode(rootNode, isFirst) {
     }
     return result;
 }
+exports.getLeafNode = getLeafNode;
 
 
 /***/ }),
@@ -4709,7 +4594,7 @@ function getLeafSibling(rootNode, startNode, isNext, stop) {
                 return curNode;
             }
         }
-        if (!shouldSkipNode_1.default(curNode)) {
+        if (!curNode || !shouldSkipNode_1.default(curNode)) {
             break;
         }
     }
@@ -4740,7 +4625,7 @@ var getComputedStyles_1 = __webpack_require__(/*! ../utils/getComputedStyles */ 
  */
 function shouldSkipNode(node) {
     if (node && node.nodeType == 3 /* Text */) {
-        return /^[\r\n]*$/.test(node.nodeValue);
+        return /^[\r\n]+$/.test(node.nodeValue);
     }
     else if (node && node.nodeType == 1 /* Element */) {
         return getComputedStyles_1.default(node, 'display')[0] == 'none';
@@ -4776,6 +4661,7 @@ exports.getPreviousLeafSibling = getLeafSibling_1.getPreviousLeafSibling;
 var getLeafNode_1 = __webpack_require__(/*! ./domWalker/getLeafNode */ "./packages/roosterjs-editor-dom/lib/domWalker/getLeafNode.ts");
 exports.getFirstLeafNode = getLeafNode_1.getFirstLeafNode;
 exports.getLastLeafNode = getLeafNode_1.getLastLeafNode;
+exports.getLeafNode = getLeafNode_1.getLeafNode;
 var NodeInlineElement_1 = __webpack_require__(/*! ./inlineElements/NodeInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts");
 exports.NodeInlineElement = NodeInlineElement_1.default;
 var PartialInlineElement_1 = __webpack_require__(/*! ./inlineElements/PartialInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts");
@@ -5553,25 +5439,21 @@ exports.default = changeElementTag;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Test if a node contains another node
- * @param container The container node
- * @param contained The node to check if it is insied container
- * @param treatSameNodeAsContain When container and contained are the same node,
- * return true if this param is set to true, otherwise return false. Default value is false
- * @returns True if contained is insied container, or they are the same node when treatSameNodeAsContain is true.
- * Otherwise false.
- */
 function contains(container, contained, treatSameNodeAsContain) {
     if (!container || !contained) {
         return false;
     }
-    if (container.nodeType != 1 /* Element */) {
-        return !!treatSameNodeAsContain && container == contained;
+    if (!(contained instanceof Node)) {
+        var range = contained instanceof Range ? contained : contained.getRange();
+        contained = range ? range.commonAncestorContainer : null;
+        treatSameNodeAsContain = true;
     }
-    if (contained.nodeType == 3 /* Text */) {
+    if (contained && contained.nodeType == 3 /* Text */) {
         contained = contained.parentNode;
         treatSameNodeAsContain = true;
+    }
+    if (container.nodeType != 1 /* Element */) {
+        return !!treatSameNodeAsContain && container == contained;
     }
     return !!(treatSameNodeAsContain || container != contained) && container.contains(contained);
 }

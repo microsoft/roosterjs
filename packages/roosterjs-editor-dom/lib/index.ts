@@ -5,7 +5,7 @@ export { default as PositionType } from './selection/PositionType';
 
 // DOM Walker
 export { getNextLeafSibling, getPreviousLeafSibling } from './domWalker/getLeafSibling';
-export { getFirstLeafNode, getLastLeafNode } from './domWalker/getLeafNode';
+export { getFirstLeafNode, getLastLeafNode, getLeafNode } from './domWalker/getLeafNode';
 
 // Inline Element
 export { default as InlineElement } from './inlineElements/InlineElement';

@@ -16,7 +16,7 @@ describe('shouldSkipNode, shouldSkipNode()', () => {
         let shouldSkip = shouldSkipNode(node);
 
         // Assert
-        expect(shouldSkip).toBe(true);
+        expect(shouldSkip).toBe(false);
     });
 
     it('CRLFOnly textNode', () => {

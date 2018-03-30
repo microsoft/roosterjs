@@ -71,7 +71,8 @@ export default class Editor {
         this.core.plugins.forEach(plugin => plugin.initialize(this));
 
         // 4. Ensure initial content and its format
-        this.ensureInitialContent(options.initialContent);
+        this.setContent(options.initialContent || this.core.contentDiv.innerHTML);
+        this.ensureInitialContent();
 
         // 5. Initialize undo service
         this.core.undo.initialize(this);
@@ -90,8 +91,9 @@ export default class Editor {
         // 8. Disable these operations for firefox since its behavior is usually wrong
         // Catch any possible exception since this should not block the initialization of editor
         try {
-            this.core.document.execCommand('enableObjectResizing', false, false);
-            this.core.document.execCommand('enableInlineTableEditing', false, false);
+            let document = this.core.document;
+            document.execCommand('enableObjectResizing', false, false);
+            document.execCommand('enableInlineTableEditing', false, false);
         } catch (e) {}
     }
 
@@ -184,7 +186,7 @@ export default class Editor {
      * @requires The BlockElement result
      */
     public getBlockElementAtNode(node: Node): BlockElement {
-        return getBlockElementAtNode(this.core.contentDiv, node);
+        return this.contains(node) ? getBlockElementAtNode(this.core.contentDiv, node) : null;
     }
 
     /**
@@ -192,8 +194,24 @@ export default class Editor {
      * @param node The node to check
      * @returns True if the given node is in editor content, otherwise false
      */
-    public contains(node: Node): boolean {
-        return contains(this.core.contentDiv, node);
+    public contains(node: Node): boolean;
+
+    /**
+     * Check if the range falls in the editor content
+     * @param range The range to check
+     * @returns True if the given range is in editor content, otherwise false
+     */
+    public contains(range: Range): boolean;
+
+    /**
+     * Check if the selection range falls in the editor content
+     * @param range The range to check
+     * @returns True if the given range is in editor content, otherwise false
+     */
+    public contains(range: SelectionRange): boolean;
+
+    public contains(arg: Node | Range | SelectionRange): boolean {
+        return contains(this.core.contentDiv, <Node>arg);
     }
 
     //#endregion
@@ -259,10 +277,11 @@ export default class Editor {
      *  updateCursor: true
      *  replaceSelection: true
      *  insertOnNewLine: false
+     * @param sanitize True to do sanitizeHtml before insert, otherwise false
      */
-    public insertContent(content: string, option?: InsertOption) {
+    public insertContent(content: string, option?: InsertOption, sanitize?: boolean) {
         if (content) {
-            let allNodes = fromHtml(content, this.core.document);
+            let allNodes = fromHtml(content, this.getDocument(), sanitize);
             // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with
             // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
             // separately to show up on its own line
@@ -599,7 +618,7 @@ export default class Editor {
                 // Only reason we don't get the selection block is that we have an empty content div
                 // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
                 // The fix is to add a DIV wrapping, apply default format and move cursor over
-                let nodes = fromHtml('<div><br></div>', this.core.document);
+                let nodes = fromHtml('<div><br></div>', this.getDocument());
                 let element = this.core.contentDiv.appendChild(nodes[0]) as HTMLElement;
                 applyFormat(element, this.core.defaultFormat);
                 // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
@@ -622,36 +641,30 @@ export default class Editor {
         }
     };
 
-    private ensureInitialContent(initialContent: string) {
-        if (initialContent) {
-            this.setContent(initialContent);
-        } else if (this.core.contentDiv.innerHTML != '') {
-            this.triggerContentChangedEvent();
-        }
-
+    private ensureInitialContent() {
         let contentDiv = this.core.contentDiv;
         let firstBlock = getBlockElementAtNode(contentDiv, getFirstLeafNode(contentDiv));
-        let defaultFormatBlockElement: HTMLElement;
+        let defaultFormatBlockElement: Node;
 
         if (!firstBlock) {
             // No first block, let's create one
-            let nodes = fromHtml('<div><br></div>', this.core.document);
-            defaultFormatBlockElement = this.core.contentDiv.appendChild(nodes[0]) as HTMLElement;
+            let nodes = fromHtml('<div><br></div>', this.getDocument());
+            defaultFormatBlockElement = this.core.contentDiv.appendChild(nodes[0]);
         } else if (firstBlock instanceof NodeBlockElement) {
             // There is a first block and it is a Node (P, DIV etc.) block
             // Check if it is empty block and apply default format if so
             if (isNodeEmpty(firstBlock.getStartNode())) {
-                defaultFormatBlockElement = firstBlock.getStartNode() as HTMLElement;
+                defaultFormatBlockElement = firstBlock.getStartNode();
             }
         }
 
         if (defaultFormatBlockElement) {
-            applyFormat(defaultFormatBlockElement, this.core.defaultFormat);
+            applyFormat(defaultFormatBlockElement as HTMLElement, this.core.defaultFormat);
         }
     }
 
     private createDefaultRange() {
-        let range = this.core.document.createRange();
+        let range = this.getDocument().createRange();
         range.setStart(this.core.contentDiv, 0);
         range.collapse(true);
         return range;

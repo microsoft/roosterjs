@@ -53,7 +53,7 @@ export function getLeafSibling(
             }
         }
 
-        if (!shouldSkipNode(curNode)) {
+        if (!curNode || !shouldSkipNode(curNode)) {
             break;
         }
     }

@@ -10,7 +10,7 @@ import { NodeType } from 'roosterjs-editor-types';
  */
 export default function shouldSkipNode(node: Node): boolean {
     if (node && node.nodeType == NodeType.Text) {
-        return /^[\r\n]*$/.test(node.nodeValue);
+        return /^[\r\n]+$/.test(node.nodeValue);
     } else if (node && node.nodeType == NodeType.Element) {
         return getComputedStyles(node, 'display')[0] == 'none';
     } else {

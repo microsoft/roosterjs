@@ -1,7 +1,7 @@
 import { Position, SelectionRange, PositionType } from 'roosterjs-editor-dom';
 import EditorCore from '../editor/EditorCore';
 import hasFocus from './hasFocus';
-import isRangeInContainer from '../utils/isRangeInContainer';
+import { contains } from 'roosterjs-editor-dom';
 
 export default function select(
     core: EditorCore,
@@ -12,7 +12,9 @@ export default function select(
 ): boolean {
     let rawRange: Range;
 
-    if (arg1 instanceof Range) {
+    if (!arg1) {
+        return false;
+    } else if (arg1 instanceof Range) {
         rawRange = arg1;
     } else {
         let range: SelectionRange;
@@ -41,7 +43,7 @@ export default function select(
         rawRange = range.getRange();
     }
 
-    if (isRangeInContainer(rawRange, core.contentDiv)) {
+    if (contains(core.contentDiv, rawRange)) {
         let selection = core.document.defaultView.getSelection();
         if (selection) {
             if (selection.rangeCount > 0) {

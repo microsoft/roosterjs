@@ -31,19 +31,15 @@ export default function focus(core: EditorCore) {
 
 function setSelectionToBegin(core: EditorCore) {
     let firstNode = getFirstLeafNode(core.contentDiv);
-    if (firstNode) {
-        if (firstNode.nodeType == NodeType.Text) {
-            // First node is text, move selection to the begin
-            select(core, firstNode, 0);
-        } else if (firstNode.nodeType == NodeType.Element) {
-            if (isVoidHtmlElement(firstNode as HTMLElement)) {
-                // First node is a html void element (void elements cannot have child nodes), move selection before it
-                select(core, firstNode, Position.Before);
-            } else {
-                // Other html element, move selection inside it
-                select(core, firstNode, 0);
-            }
-        }
+    let nodeType = firstNode ? firstNode.nodeType : null;
+
+    if (nodeType == NodeType.Text) {
+        // First node is text, move selection to the begin
+        select(core, firstNode, 0);
+    } else if (nodeType == NodeType.Element) {
+        // If first node is a html void element (void elements cannot have child nodes),
+        // move selection before it, otherwise move selection inside it
+        select(core, firstNode, isVoidHtmlElement(firstNode as HTMLElement) ? Position.Before : 0);
     } else {
         // No first node, likely we have an empty content DIV, move selection inside it
         select(core, core.contentDiv, 0);

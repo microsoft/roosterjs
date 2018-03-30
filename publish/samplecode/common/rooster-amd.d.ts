@@ -744,6 +744,7 @@ export function getPreviousLeafSibling(rootNode: Node, startNode: Node): Node;
  * Get the first meaningful leaf node
  * This can return null for empty container or
  * container that does not contain any meaningful node
+ * @param rootNode The root node to get leaf node from
  */
 export function getFirstLeafNode(rootNode: Node): Node;
 
@@ -751,8 +752,18 @@ export function getFirstLeafNode(rootNode: Node): Node;
  * Get the last meaningful leaf node
  * This can return null for empty container or
  * container that does not contain any meaningful node
+ * @param rootNode The root node to get leaf node from
  */
 export function getLastLeafNode(rootNode: Node): Node;
+
+/**
+ * Get the first or last meaningful leaf node
+ * This can return null for empty container or
+ * container that does not contain any meaningful node
+ * @param rootNode The root node to get leaf node from
+ * @param isFirst True to get first leaf node, false to get last leaf node
+ */
+export function getLeafNode(rootNode: Node, isFirst: boolean): Node;
 
 /**
  * This refers to an inline element (as opposed to block) in editor
@@ -1175,13 +1186,29 @@ export function changeElementTag(element: HTMLElement, newTag: string): HTMLElem
 /**
  * Test if a node contains another node
  * @param container The container node
- * @param contained The node to check if it is insied container
+ * @param contained The node to check if it is inside container
  * @param treatSameNodeAsContain When container and contained are the same node,
  * return true if this param is set to true, otherwise return false. Default value is false
  * @returns True if contained is insied container, or they are the same node when treatSameNodeAsContain is true.
  * Otherwise false.
  */
 export function contains(container: Node, contained: Node, treatSameNodeAsContain?: boolean): boolean;
+
+/**
+ * Test if a node contains a given range
+ * @param container The container node
+ * @param contained The range to check if it is inside container
+ * @returns True if contained is insied container, otherwise false
+ */
+export function contains(container: Node, contained: Range): boolean;
+
+/**
+ * Test if a node contains a given range
+ * @param container The container node
+ * @param contained The selection range to check if it is inside container
+ * @returns True if contained is insied container, otherwise false
+ */
+export function contains(container: Node, contained: SelectionRange): boolean;
 
 /**
  * Sanitize HTML string
@@ -1375,6 +1402,18 @@ export class Editor {
      */
     contains(node: Node): boolean;
     /**
+     * Check if the range falls in the editor content
+     * @param range The range to check
+     * @returns True if the given range is in editor content, otherwise false
+     */
+    contains(range: Range): boolean;
+    /**
+     * Check if the selection range falls in the editor content
+     * @param range The range to check
+     * @returns True if the given range is in editor content, otherwise false
+     */
+    contains(range: SelectionRange): boolean;
+    /**
      * Check whether the editor contains any visible content
      * @param trim Whether trime the content string before check. Default is false
      * @returns True if there's no visible content, otherwise false
@@ -1406,8 +1445,9 @@ export class Editor {
      *  updateCursor: true
      *  replaceSelection: true
      *  insertOnNewLine: false
+     * @param sanitize True to do sanitizeHtml before insert, otherwise false
      */
-    insertContent(content: string, option?: InsertOption): void;
+    insertContent(content: string, option?: InsertOption, sanitize?: boolean): void;
     /**
      * DOM query nodes in editor
      * @param selector Selector string to query
@@ -1560,7 +1600,7 @@ export class Editor {
     getContentTraverser(scope: ContentScope, position?: ContentPosition): ContentTraverser;
     private createEventHandlers();
     private onKeyPress;
-    private ensureInitialContent(initialContent);
+    private ensureInitialContent();
     private createDefaultRange();
 }
 

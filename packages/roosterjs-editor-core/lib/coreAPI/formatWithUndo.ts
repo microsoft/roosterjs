@@ -20,11 +20,9 @@ export default function formatWithUndo(
         if (callback) {
             if (preserveSelection) {
                 let range = getLiveRange(core) || core.cachedRange;
-                let selectionRange = new SelectionRange(range);
-                let start = selectionRange.start.normalize();
-                let end = selectionRange.end.normalize();
+                let selectionRange = range && new SelectionRange(range).normalize();
                 let fallbackNode = callback();
-                if (!select(core, start, end) && fallbackNode instanceof Node) {
+                if (!select(core, selectionRange) && fallbackNode instanceof Node) {
                     select(core, fallbackNode);
                 }
             } else {
