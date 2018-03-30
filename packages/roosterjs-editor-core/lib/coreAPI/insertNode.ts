@@ -38,14 +38,18 @@ export default function insertNode(core: EditorCore, node: Node, option?: Insert
             if (block) {
                 let refNode = isBegin ? block.getStartNode() : block.getEndNode();
                 let refParentNode = refNode.parentNode;
-                if (insertOnNewLine ||
+                if (
+                    insertOnNewLine ||
                     refNode.nodeType == NodeType.Text ||
                     isVoidHtmlElement(refNode as HTMLElement)
                 ) {
                     // For insert on new line, or refNode is text or void html element (HR, BR etc.)
                     // which cannot have children, i.e. <div>hello<br>world</div>. 'hello', 'world' are the
                     // first and last node. Insert before 'hello' or after 'world', but still inside DIV
-                    insertedNode = refParentNode.insertBefore(node, isBegin ? refNode : refNode.nextSibling);
+                    insertedNode = refParentNode.insertBefore(
+                        node,
+                        isBegin ? refNode : refNode.nextSibling
+                    );
                 } else {
                     // if the refNode can have child, use appendChild (which is like to insert as first/last child)
                     // i.e. <div>hello</div>, the content will be inserted before/after hello
@@ -85,22 +89,28 @@ export default function insertNode(core: EditorCore, node: Node, option?: Insert
                         // and insert signature, they actually want signature to be inserted the line after the selection
                         rawRange.setEndAfter(endNode);
                         rawRange.collapse(false /*toStart*/);
-                    } else if (getTagOfNode(endNode) == 'P') {
-                        // Insert into a P tag may cause issues when the inserted content contains any block element.
-                        // Change P tag to DIV to make sure it works well
-                        let rangeCache = new SelectionRange(rawRange).normalize();
-                        let div = changeElementTag(endNode as HTMLElement, 'div');
-                        if (
-                            rangeCache.start.node != div &&
-                            rangeCache.end.node != div &&
-                            contains(core.contentDiv, rangeCache)
-                        ) {
-                            rawRange = rangeCache.getRange();
+                    } else {
+                        if (getTagOfNode(endNode) == 'P') {
+                            // Insert into a P tag may cause issues when the inserted content contains any block element.
+                            // Change P tag to DIV to make sure it works well
+                            let rangeCache = new SelectionRange(rawRange).normalize();
+                            let div = changeElementTag(endNode as HTMLElement, 'div');
+                            if (
+                                rangeCache.start.node != div &&
+                                rangeCache.end.node != div &&
+                                contains(core.contentDiv, rangeCache)
+                            ) {
+                                rawRange = rangeCache.getRange();
+                            }
+                        }
+                        if (isVoidHtmlElement(rawRange.endContainer as HTMLElement)) {
+                            rawRange.setEndBefore(rawRange.endContainer);
                         }
                     }
                 }
 
-                let nodeForCursor = node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
+                let nodeForCursor =
+                    node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
                 rawRange.insertNode(node);
 
                 if (updateCursor && nodeForCursor) {

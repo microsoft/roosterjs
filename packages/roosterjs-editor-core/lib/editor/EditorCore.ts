@@ -19,6 +19,8 @@ interface EditorCore {
             disposer: (value: any) => void;
         };
     };
+    idleLoopHandle: number;
+    ignoreIdleEvent: boolean;
 }
 
 let EditorCore = {
@@ -32,6 +34,8 @@ let EditorCore = {
             undo: options.undo || new Undo(),
             suspendAddingUndoSnapshot: false,
             plugins: (options.plugins || []).filter(plugin => !!plugin),
+            idleLoopHandle: 0,
+            ignoreIdleEvent: false,
         };
     },
 };

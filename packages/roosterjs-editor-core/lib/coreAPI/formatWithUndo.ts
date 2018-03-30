@@ -2,11 +2,15 @@ import EditorCore from '../editor/EditorCore';
 import getLiveRange from '../coreAPI/getLiveRange';
 import select from '../coreAPI/select';
 import { SelectionRange } from 'roosterjs-editor-dom/lib';
+import { ChangeSource, ContentChangedEvent, PluginEventType } from 'roosterjs-editor-types';
+import triggerEvent from './triggerEvent';
 
 export default function formatWithUndo(
     core: EditorCore,
     callback: () => void | Node,
     preserveSelection: boolean,
+    changeSource: ChangeSource | string,
+    dataCallback: () => any,
     skipAddingUndoAfterFormat: boolean
 ) {
     let isNested = core.suspendAddingUndoSnapshot;
@@ -27,6 +31,15 @@ export default function formatWithUndo(
                 }
             } else {
                 callback();
+            }
+
+            if (changeSource) {
+                let event: ContentChangedEvent = {
+                    eventType: PluginEventType.ContentChanged,
+                    source: changeSource,
+                    data: dataCallback ? dataCallback() : null,
+                };
+                triggerEvent(core, event, true /*broadcast*/);
             }
             if (!isNested && !skipAddingUndoAfterFormat) {
                 core.undo.addUndoSnapshot();

@@ -1,5 +1,6 @@
 import {
     VTable,
+    cacheGetCursorEventData,
     setIndentation,
     cacheGetNodeAtCursor,
     cacheGetListTag,
@@ -7,16 +8,30 @@ import {
     queryNodesWithSelection,
     toggleBullet,
     toggleNumbering,
+    validateAndGetRangeForTextBeforeCursor,
 } from 'roosterjs-editor-api';
-import { Position, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
+import {
+    Browser,
+    Position,
+    getTagOfNode,
+    isNodeEmpty,
+    splitParentNode,
+} from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { Indentation, PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    ContentChangedEvent,
+    ChangeSource,
+    Indentation,
+    PluginDomEvent,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 import ContentEditFeatures, { getDefaultContentEditFeatures } from './ContentEditFeatures';
-import tryHandleAutoBullet from './autoBullet';
 
 const KEY_TAB = 9;
 const KEY_BACKSPACE = 8;
 const KEY_ENTER = 13;
+const KEY_SPACE = 32;
 const BLOCKQUOTE_TAG_NAME = 'BLOCKQUOTE';
 
 /**
@@ -29,6 +44,7 @@ const BLOCKQUOTE_TAG_NAME = 'BLOCKQUOTE';
  */
 export default class ContentEdit implements EditorPlugin {
     private editor: Editor;
+    private backspaceToUndo: boolean;
 
     /**
      * Create instance of ContentEdit plugin
@@ -62,6 +78,23 @@ export default class ContentEdit implements EditorPlugin {
     public onPluginEvent(event: PluginEvent) {
         let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
         let blockQuoteElement: Element = null;
+        if (
+            this.backspaceToUndo &&
+            (event.eventType == PluginEventType.KeyDown ||
+                event.eventType == PluginEventType.MouseDown ||
+                (event.eventType == PluginEventType.ContentChanged &&
+                    (<ContentChangedEvent>event).source != ChangeSource.AutoBullet))
+        ) {
+            this.backspaceToUndo = false;
+            if (
+                event.eventType == PluginEventType.KeyDown &&
+                keyboardEvent.which == KEY_BACKSPACE
+            ) {
+                keyboardEvent.preventDefault();
+                this.editor.undo();
+            }
+        }
+
         if (this.isListEvent(event, [KEY_TAB, KEY_BACKSPACE, KEY_ENTER])) {
             // Tab: increase indent
             // Shift+ Tab: decrease indent
@@ -149,9 +182,67 @@ export default class ContentEdit implements EditorPlugin {
             }
         } else if (
             this.features.autoBullet &&
-            tryHandleAutoBullet(this.editor, event, keyboardEvent)
+            event.eventType == PluginEventType.KeyDown &&
+            keyboardEvent.which == KEY_SPACE &&
+            !cacheGetListTag(this.editor, event) &&
+            !keyboardEvent.ctrlKey &&
+            !keyboardEvent.altKey &&
+            !keyboardEvent.metaKey
         ) {
-            keyboardEvent.preventDefault();
+            this.handleAutoBullet(event);
+        }
+    }
+
+    private handleAutoBullet(event: PluginEvent) {
+        let cursorData = cacheGetCursorEventData(event, this.editor);
+
+        // We pick 3 characters before cursor so that if any characters exist before "1." or "*",
+        // we do not fire auto list.
+        let textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
+
+        // Auto list is triggered if:
+        // 1. Text before cursor exactly mathces '*', '-' or '1.'
+        // 2. There's no non-text inline entities before cursor
+        if (
+            ['*', '-', '1.'].indexOf(textBeforeCursor) >= 0 &&
+            !cursorData.getFirstNonTextInlineBeforeCursor()
+        ) {
+            this.editor.runAsync(() => {
+                let listNode: Node;
+
+                // editor.insertContent(NBSP);
+                this.editor.formatWithUndo(
+                    () => {
+                        // Remove the user input '*', '-' or '1.'
+                        let rangeToDelete = validateAndGetRangeForTextBeforeCursor(
+                            this.editor,
+                            textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
+                            true /*exactMatch*/,
+                            cursorData
+                        );
+                        if (rangeToDelete) {
+                            rangeToDelete.deleteContents();
+                        }
+
+                        // If not explicitly insert br, Chrome will operate on the previous line
+                        if (Browser.isChrome) {
+                            this.editor.insertContent('<BR>');
+                        }
+
+                        if (textBeforeCursor == '1.') {
+                            toggleNumbering(this.editor);
+                            listNode = getNodeAtCursor(this.editor, 'OL');
+                        } else {
+                            toggleBullet(this.editor);
+                            listNode = getNodeAtCursor(this.editor, 'UL');
+                        }
+                        this.backspaceToUndo = true;
+                    },
+                    false /*preserveSelection*/,
+                    ChangeSource.AutoBullet,
+                    () => listNode
+                );
+            });
         }
     }
 

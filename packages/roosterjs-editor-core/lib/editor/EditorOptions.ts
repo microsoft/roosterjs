@@ -34,6 +34,11 @@ interface EditorOptions {
     initialContent?: string;
 
     /**
+     * Time interval for Idle event, in seconds. If not passed or 0, Idle event will not be fired.
+     */
+    idleEventTimeSpanInSecond?: number;
+
+    /**
      * Whether auto restore previous selection when focus to editor
      * Default value is false
      */

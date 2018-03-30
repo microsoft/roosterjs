@@ -22,10 +22,7 @@ export default function contains(
  * @param contained The range to check if it is inside container
  * @returns True if contained is insied container, otherwise false
  */
-export default function contains(
-    container: Node,
-    contained: Range
-): boolean;
+export default function contains(container: Node, contained: Range): boolean;
 
 /**
  * Test if a node contains a given range
@@ -33,10 +30,7 @@ export default function contains(
  * @param contained The selection range to check if it is inside container
  * @returns True if contained is insied container, otherwise false
  */
-export default function contains(
-    container: Node,
-    contained: SelectionRange
-): boolean;
+export default function contains(container: Node, contained: SelectionRange): boolean;
 
 export default function contains(
     container: Node,

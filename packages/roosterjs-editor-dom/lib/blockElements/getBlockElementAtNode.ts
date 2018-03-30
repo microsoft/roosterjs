@@ -62,22 +62,24 @@ export default function getBlockElementAtNode(rootNode: Node, node: Node): Block
             // Balanced start and end (point to same parent), need to see if further collapsing can be done
             let parentNode = headNode.parentNode;
             while (parentNode.firstChild == headNode && parentNode.lastChild == tailNode) {
-                if (parentNode != containerBlockNode) {
+                if (parentNode == containerBlockNode) {
+                    // Has reached the container block
+                    if (containerBlockNode != rootNode) {
+                        // If the container block is not the root, use the container block
+                        headNode = tailNode = parentNode;
+                    }
+                    break;
+                } else {
                     // Continue collapsing to parent
                     headNode = tailNode = parentNode;
                     parentNode = parentNode.parentNode;
-                } else if (containerBlockNode != rootNode) {
-                    // Has reached the container block
-                    // If the container block is not the root, use the container block
-                    headNode = tailNode = parentNode;
-                    break;
                 }
             }
 
             // If head and tail are same and it is a block element, create NodeBlock, otherwise start-end block
-            return  headNode == tailNode && isBlockElement(headNode)
-                    ? new NodeBlockElement(headNode)
-                    : new StartEndBlockElement(headNode, tailNode);
+            return headNode == tailNode && isBlockElement(headNode)
+                ? new NodeBlockElement(headNode)
+                : new StartEndBlockElement(headNode, tailNode);
         }
     }
 }

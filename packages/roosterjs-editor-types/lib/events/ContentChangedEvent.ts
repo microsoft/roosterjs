@@ -6,6 +6,11 @@ import PluginEvent from './PluginEvent';
  */
 export const enum ChangeSource {
     /**
+     * Content changed by auto bullet
+     */
+    AutoBullet = 'AutoBullet',
+
+    /**
      * Content changed by auto link
      */
     AutoLink = 'AutoLink',
