@@ -13,6 +13,8 @@ var isProduction = checkParam('-p', '-prod');
 var isAmd = checkParam('-amd');
 var preserveEnum = checkParam('-e', '-enum');
 var filename = isAmd ? 'rooster-amd' : 'rooster';
+var fs = require('fs');
+
 if (isProduction) {
     filename += '-min';
 }
@@ -62,10 +64,17 @@ var webpackConfig = {
     ] : []
 };
 
-console.log('Packing file: ' + path.resolve(distPath, filename));
+var version = JSON.stringify(require(path.join(__dirname, '..', 'package.json')).version).replace(/"/g, '');
+var license = fs.readFileSync(path.join(__dirname, '..', 'LICENSE')).toString();
+var targetFile = path.resolve(distPath, filename);
+
+console.log('Packing file: ' + targetFile);
 webpack(webpackConfig).run((err, stat) => {
     if (err) {
         console.error(err);
+    } else {
+        var fileContent = fs.readFileSync(targetFile).toString();
+        fs.writeFileSync(targetFile, `/*\r\n    VERSION: ${version}\r\n\r\n${license}\r\n*/\r\n${fileContent}`);
     }
 });
 

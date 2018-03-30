@@ -20,6 +20,7 @@ const TRAILING_PUNCTUATION_REGEX = /[.()+={}\[\]\s:;"',>]+$/i;
 const TEMP_TITLE_REGEX = /<a\s+([^>]*\s+)?(title|istemptitle)="[^"]*"\s*([^>]*)\s+(title|istemptitle)="[^"]*"(\s+[^>]*)?>/gm;
 const TEMP_TITLE = 'istemptitle';
 const MINIMUM_LENGTH = 5;
+const KEY_BACKSPACE = 8;
 const KEY_SPACE = 32;
 const KEY_ENTER = 13;
 
@@ -28,6 +29,7 @@ const KEY_ENTER = 13;
  */
 export default class HyperLink implements EditorPlugin {
     private editor: Editor;
+    private backspaceToUndo: boolean;
 
     /**
      * Create a new instance of HyperLink class
@@ -62,10 +64,26 @@ export default class HyperLink implements EditorPlugin {
 
     // Handle the event
     public onPluginEvent(event: PluginEvent): void {
+        let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+        if (
+            this.backspaceToUndo &&
+            (event.eventType == PluginEventType.KeyDown ||
+                event.eventType == PluginEventType.MouseDown ||
+                event.eventType == PluginEventType.ContentChanged)
+        ) {
+            this.backspaceToUndo = false;
+            if (
+                event.eventType == PluginEventType.KeyDown &&
+                keyboardEvent.which == KEY_BACKSPACE
+            ) {
+                keyboardEvent.preventDefault();
+                this.editor.undo();
+            }
+        }
+
         switch (event.eventType) {
             case PluginEventType.KeyDown:
-                let keyboardEvt = (event as PluginDomEvent).rawEvent as KeyboardEvent;
-                if (keyboardEvt.which == KEY_ENTER || keyboardEvt.which == KEY_SPACE) {
+                if (keyboardEvent.which == KEY_ENTER || keyboardEvent.which == KEY_SPACE) {
                     this.autoLink(event);
                 }
                 break;
@@ -124,20 +142,23 @@ export default class HyperLink implements EditorPlugin {
                 anchor.textContent = linkData.originalUrl;
                 anchor.href = linkData.normalizedUrl;
 
-                this.editor.addUndoSnapshot();
-                let replaced = replaceTextBeforeCursorWithNode(
-                    this.editor,
-                    linkData.originalUrl,
-                    anchor,
-                    trailingPunctuation ? false : true /* exactMatch */,
-                    cursorData
-                );
-                if (replaced) {
-                    // The content at cursor has changed. Should also clear the cursor data cache
-                    clearCursorEventDataCache(event);
-                    this.editor.triggerContentChangedEvent(ChangeSource.AutoLink, anchor);
+                this.editor.runAsync(() => {
                     this.editor.addUndoSnapshot();
-                }
+                    let replaced = replaceTextBeforeCursorWithNode(
+                        this.editor,
+                        linkData.originalUrl,
+                        anchor,
+                        false /* exactMatch */,
+                        cursorData
+                    );
+                    if (replaced) {
+                        // The content at cursor has changed. Should also clear the cursor data cache
+                        clearCursorEventDataCache(event);
+                        this.editor.triggerContentChangedEvent(ChangeSource.AutoLink, anchor);
+                        this.editor.addUndoSnapshot();
+                        this.backspaceToUndo = true;
+                    }
+                });
             }
         }
     }

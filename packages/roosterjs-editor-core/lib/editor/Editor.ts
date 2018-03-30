@@ -15,6 +15,7 @@ import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
 import restoreSelection from '../coreAPI/restoreSelection';
 import saveSelectionRange from '../coreAPI/saveSelectionRange';
+import startIdleLoop from '../coreAPI/startIdleLoop';
 import triggerEvent from '../coreAPI/triggerEvent';
 import updateSelection from '../coreAPI/updateSelection';
 import {
@@ -78,6 +79,8 @@ export default class Editor {
             customData: {},
             cachedSelectionRange: null,
             plugins: (options.plugins || []).filter(plugin => !!plugin),
+            idleLoopHandle: 0,
+            ignoreIdleEvent: false,
         };
         this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus;
         this.omitContentEditable = options.omitContentEditableAttributeChanges;
@@ -115,12 +118,23 @@ export default class Editor {
             this.core.document.execCommand('enableObjectResizing', false, false);
             this.core.document.execCommand('enableInlineTableEditing', false, false);
         } catch (e) {}
+
+        // 9. Start a timer loop if required
+        if (options.idleEventTimeSpanInSecond > 0) {
+            startIdleLoop(this.core, options.idleEventTimeSpanInSecond * 1000);
+        }
     }
 
     /**
      * Dispose this editor, dispose all plugins and custom data
      */
     public dispose(): void {
+        if (this.core.idleLoopHandle > 0) {
+            let win = this.core.contentDiv.ownerDocument.defaultView || window;
+            win.clearInterval(this.core.idleLoopHandle);
+            this.core.idleLoopHandle = 0;
+        }
+
         this.core.plugins.forEach(plugin => {
             plugin.dispose();
         });
@@ -527,6 +541,19 @@ export default class Editor {
         position: ContentPosition = ContentPosition.SelectionStart
     ): ContentTraverser {
         return getContentTraverser(this.core, scope, position);
+    }
+
+    /**
+     * Run a callback function asynchronously
+     * @param callback The callback function to run
+     */
+    public runAsync(callback: () => void) {
+        let win = this.core.contentDiv.ownerDocument.defaultView || window;
+        win.requestAnimationFrame(() => {
+            if (!this.isDisposed() && callback) {
+                callback();
+            }
+        });
     }
 
     //#endregion

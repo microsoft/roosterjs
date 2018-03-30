@@ -3,6 +3,7 @@ import PluginEvent from './PluginEvent';
 // Possible change sources. Here are the predefined sources.
 // It can also be other string if the change source can't fall into these sources.
 export const enum ChangeSource {
+    AutoBullet = 'AutoBullet',
     AutoLink = 'AutoLink',
     CreateLink = 'CreateLink',
     Format = 'Format',

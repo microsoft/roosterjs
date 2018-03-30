@@ -15,6 +15,8 @@ interface EditorCore {
         };
     };
     cachedSelectionRange: Range;
+    idleLoopHandle: number;
+    ignoreIdleEvent: boolean;
 }
 
 export default EditorCore;

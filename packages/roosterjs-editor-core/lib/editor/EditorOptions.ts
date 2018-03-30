@@ -8,6 +8,7 @@ interface EditorOptions {
     defaultFormat?: DefaultFormat;
     undo?: UndoService;
     initialContent?: string;
+    idleEventTimeSpanInSecond?: number;
     disableRestoreSelectionOnFocus?: boolean;
     omitContentEditableAttributeChanges?: boolean;
 }

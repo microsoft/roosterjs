@@ -163,10 +163,15 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
                 // and insert signature, they actually want signature to be inserted the line after the selection
                 selectionRange.setEndAfter(endNode);
                 selectionRange.collapse(false /*toStart*/);
-            } else if (getTagOfNode(endNode) == 'P') {
-                // Insert into a P tag may cause issues when the inserted content contains any block element.
-                // Change P tag to DIV to make sure it works well
-                changeElementTag(endNode as HTMLElement, 'div', selectionRange);
+            } else {
+                if (getTagOfNode(endNode) == 'P') {
+                    // Insert into a P tag may cause issues when the inserted content contains any block element.
+                    // Change P tag to DIV to make sure it works well
+                    changeElementTag(endNode as HTMLElement, 'div', selectionRange);
+                }
+                if (isVoidHtmlElement(selectionRange.endContainer as HTMLElement)) {
+                    selectionRange.setEndBefore(selectionRange.endContainer);
+                }
             }
         }
 

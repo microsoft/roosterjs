@@ -7,7 +7,7 @@
     "build": "node node_modules/webpack/bin/webpack"
   },
   "dependencies": {
-    "roosterjs": "^6.8.0"
+    "roosterjs": "^6.9.0"
   },
   "devDependencies": {
     "ts-loader": "^2.3.7",
