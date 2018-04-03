@@ -221,7 +221,7 @@ export default class ContentEdit implements EditorPlugin {
                     }
 
                     // If not explicitly insert br, Chrome will operate on the previous line
-                    if (browserData.isChrome) {
+                    if (browserData.isChrome || browserData.isSafari) {
                         this.editor.insertContent('<BR>');
                     }
 
