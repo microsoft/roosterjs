@@ -35,16 +35,16 @@ export default function getCursorRect(core: EditorCore): Rect {
     let rect = getRectFromClientRect(range.getBoundingClientRect());
 
     // 3) if current cursor is inside text node, insert a SPAN and get the rect of SPAN
-    if (!rect && node.nodeType == NodeType.Text) {
-        let document = core.document;
-        let span = document.createElement('SPAN');
-        let range = document.createRange();
-        range.setStart(node, focusPosition.offset);
-        range.collapse(true /*toStart*/);
-        range.insertNode(span);
-        rect = getRectFromClientRect(span.getBoundingClientRect());
-        span.parentNode.removeChild(span);
-    }
+    // if (!rect && node.nodeType == NodeType.Text) {
+    //     let document = core.document;
+    //     let span = document.createElement('SPAN');
+    //     let range = document.createRange();
+    //     range.setStart(node, focusPosition.offset);
+    //     range.collapse(true /*toStart*/);
+    //     range.insertNode(span);
+    //     rect = getRectFromClientRect(span.getBoundingClientRect());
+    //     span.parentNode.removeChild(span);
+    // }
 
     // 4) fallback to element.getBoundingClientRect()
     if (!rect) {

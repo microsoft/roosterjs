@@ -23,7 +23,7 @@ function replaceRangeWithNode(
         return false;
     }
 
-    let currentSelection = editor.getSelectionRange();
+    let backupRange = editor.getSelectionRange();
 
     range.deleteContents();
     range.insertNode(node);
@@ -32,8 +32,8 @@ function replaceRangeWithNode(
         range.setEndAfter(node);
         range.collapse(false /*toStart*/);
         editor.updateSelection(range);
-    } else if (editor.contains(currentSelection.startContainer)) {
-        editor.updateSelection(currentSelection);
+    } else if (backupRange && editor.contains(backupRange.startContainer)) {
+        editor.updateSelection(backupRange);
     }
 
     return true;

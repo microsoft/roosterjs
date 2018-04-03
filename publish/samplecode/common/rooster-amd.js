@@ -1,5 +1,5 @@
 /*
-    VERSION: 6.9.0
+    VERSION: 6.9.1
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -3424,12 +3424,16 @@ function replaceRangeWithNode(editor, range, node, exactMatch) {
     if (!range || !node) {
         return false;
     }
+    var backupRange = editor.getSelectionRange();
     range.deleteContents();
     range.insertNode(node);
     if (exactMatch) {
         range.setEndAfter(node);
         range.collapse(false /*toStart*/);
         editor.updateSelection(range);
+    }
+    else if (backupRange && editor.contains(backupRange.startContainer)) {
+        editor.updateSelection(backupRange);
     }
     return true;
 }
@@ -5806,16 +5810,16 @@ function getCursorRect(core) {
     // 2) try to get rect using range.getBoundingClientRect()
     var rect = getRectFromClientRect(range.getBoundingClientRect());
     // 3) if current cursor is inside text node, insert a SPAN and get the rect of SPAN
-    if (!rect && node.nodeType == 3 /* Text */) {
-        var document_1 = core.document;
-        var span = document_1.createElement('SPAN');
-        var range_1 = document_1.createRange();
-        range_1.setStart(node, focusPosition.offset);
-        range_1.collapse(true /*toStart*/);
-        range_1.insertNode(span);
-        rect = getRectFromClientRect(span.getBoundingClientRect());
-        span.parentNode.removeChild(span);
-    }
+    // if (!rect && node.nodeType == NodeType.Text) {
+    //     let document = core.document;
+    //     let span = document.createElement('SPAN');
+    //     let range = document.createRange();
+    //     range.setStart(node, focusPosition.offset);
+    //     range.collapse(true /*toStart*/);
+    //     range.insertNode(span);
+    //     rect = getRectFromClientRect(span.getBoundingClientRect());
+    //     span.parentNode.removeChild(span);
+    // }
     // 4) fallback to element.getBoundingClientRect()
     if (!rect) {
         node = node.nodeType == 1 /* Element */ ? node : node.parentNode;
