@@ -101,7 +101,7 @@ var roosterjs =
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var BlockElement_1 = __webpack_require__(12);
+var BlockElement_1 = __webpack_require__(13);
 exports.NodeBlockElement = BlockElement_1.NodeBlockElement;
 exports.StartEndBlockElement = BlockElement_1.StartEndBlockElement;
 exports.getBlockElementAtNode = BlockElement_1.getBlockElementAtNode;
@@ -118,7 +118,7 @@ exports.getInlineElementBeforePoint = BlockElement_1.getInlineElementBeforePoint
 exports.getInlineElementAfterPoint = BlockElement_1.getInlineElementAfterPoint;
 var ContentTraverser_1 = __webpack_require__(62);
 exports.ContentTraverser = ContentTraverser_1.default;
-var getLeafSibling_1 = __webpack_require__(17);
+var getLeafSibling_1 = __webpack_require__(18);
 exports.getNextLeafSibling = getLeafSibling_1.getNextLeafSibling;
 exports.getPreviousLeafSibling = getLeafSibling_1.getPreviousLeafSibling;
 var getLeafNode_1 = __webpack_require__(35);
@@ -132,7 +132,7 @@ var LinkInlineElement_1 = __webpack_require__(38);
 exports.LinkInlineElement = LinkInlineElement_1.default;
 var NodeInlineElement_1 = __webpack_require__(9);
 exports.NodeInlineElement = NodeInlineElement_1.default;
-var PartialInlineElement_1 = __webpack_require__(13);
+var PartialInlineElement_1 = __webpack_require__(14);
 exports.PartialInlineElement = PartialInlineElement_1.default;
 var TextInlineElement_1 = __webpack_require__(24);
 exports.TextInlineElement = TextInlineElement_1.default;
@@ -148,7 +148,7 @@ var applyFormat_1 = __webpack_require__(68);
 exports.applyFormat = applyFormat_1.default;
 var changeElementTag_1 = __webpack_require__(69);
 exports.changeElementTag = changeElementTag_1.default;
-var contains_1 = __webpack_require__(15);
+var contains_1 = __webpack_require__(16);
 exports.contains = contains_1.default;
 var convertInlineCss_1 = __webpack_require__(70);
 exports.convertInlineCss = convertInlineCss_1.default;
@@ -156,7 +156,7 @@ var sanitizeHtml_1 = __webpack_require__(39);
 exports.sanitizeHtml = sanitizeHtml_1.default;
 var fromHtml_1 = __webpack_require__(23);
 exports.fromHtml = fromHtml_1.default;
-var getComputedStyle_1 = __webpack_require__(16);
+var getComputedStyle_1 = __webpack_require__(17);
 exports.getComputedStyle = getComputedStyle_1.default;
 var getTagOfNode_1 = __webpack_require__(8);
 exports.getTagOfNode = getTagOfNode_1.default;
@@ -164,7 +164,7 @@ var isBlockElement_1 = __webpack_require__(34);
 exports.isBlockElement = isBlockElement_1.default;
 var isDocumentPosition_1 = __webpack_require__(7);
 exports.isDocumentPosition = isDocumentPosition_1.default;
-var isEditorPointAfter_1 = __webpack_require__(14);
+var isEditorPointAfter_1 = __webpack_require__(15);
 exports.isEditorPointAfter = isEditorPointAfter_1.default;
 var isNodeEmpty_1 = __webpack_require__(71);
 exports.isNodeEmpty = isNodeEmpty_1.default;
@@ -257,7 +257,7 @@ var Editor_1 = __webpack_require__(60);
 exports.Editor = Editor_1.default;
 var Undo_1 = __webpack_require__(31);
 exports.Undo = Undo_1.default;
-var BrowserData_1 = __webpack_require__(20);
+var BrowserData_1 = __webpack_require__(12);
 exports.browserData = BrowserData_1.default;
 var eventDataCacheUtils_1 = __webpack_require__(85);
 exports.clearEventDataCache = eventDataCacheUtils_1.clearEventDataCache;
@@ -401,8 +401,8 @@ exports.matchLink = matchLink_1.default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getSelection_1 = __webpack_require__(18);
-var hasFocus_1 = __webpack_require__(19);
+var getSelection_1 = __webpack_require__(19);
+var hasFocus_1 = __webpack_require__(20);
 var isRangeInContainer_1 = __webpack_require__(40);
 function getSelectionRange(core, tryGetFromCache) {
     var result = null;
@@ -487,13 +487,13 @@ exports.default = getTagOfNode;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var contains_1 = __webpack_require__(15);
+var contains_1 = __webpack_require__(16);
 var getTagOfNode_1 = __webpack_require__(8);
 var isDocumentPosition_1 = __webpack_require__(7);
-var isEditorPointAfter_1 = __webpack_require__(14);
+var isEditorPointAfter_1 = __webpack_require__(15);
 var isNodeAfter_1 = __webpack_require__(21);
 var wrap_1 = __webpack_require__(37);
-var getLeafSibling_1 = __webpack_require__(17);
+var getLeafSibling_1 = __webpack_require__(18);
 // This presents an inline element that can be reprented by a single html node.
 // This serves as base for most inline element as it contains most implentation
 // of all operations that can happen on an inline element. Other sub inline elements mostly
@@ -667,8 +667,8 @@ exports.default = NodeInlineElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getSelection_1 = __webpack_require__(18);
-var hasFocus_1 = __webpack_require__(19);
+var getSelection_1 = __webpack_require__(19);
+var hasFocus_1 = __webpack_require__(20);
 var isRangeInContainer_1 = __webpack_require__(40);
 function updateSelection(core, range) {
     var selectionUpdated = false;
@@ -766,15 +766,84 @@ exports.cacheGetListElement = cacheGetListElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var PartialInlineElement_1 = __webpack_require__(13);
-var contains_1 = __webpack_require__(15);
+function getBrowserData(userAgent, appVersion) {
+    // In case universal render somehow hits this code path
+    if (typeof window == 'undefined') {
+        return {
+            isMac: false,
+            isWin: false,
+            isWebKit: false,
+            isIE: false,
+            isIE11OrGreater: false,
+            isSafari: false,
+            isChrome: false,
+            isFirefox: false,
+            isEdge: false,
+        };
+    }
+    var rawValue = userAgent || window.navigator.userAgent;
+    var appVer = appVersion || window.navigator.appVersion;
+    // checks whether the browser is running in IE
+    // IE11 will use rv in UA instead of MSIE. Unfortunately Firefox also uses this. We should also look for "Trident" to confirm this.
+    // There have been cases where companies using older version of IE and custom UserAgents have broken this logic (e.g. IE 10 and KellyServices)
+    // therefore we should check that the Trident/rv combo is not just from an older IE browser
+    var isIE11OrGreater = rawValue.indexOf('rv:') != -1 && rawValue.indexOf('Trident') != -1;
+    var isIE = rawValue.indexOf('MSIE') != -1 || isIE11OrGreater;
+    var isWebKit = rawValue.indexOf('WebKit') != -1;
+    // IE11+ may also send Chrome, Firefox and Safari. But it will send trident also
+    var isChrome = false;
+    var isFirefox = false;
+    var isSafari = false;
+    var isEdge = false;
+    if (!isIE) {
+        isChrome = rawValue.indexOf('Chrome') != -1;
+        isFirefox = rawValue.indexOf('Firefox') != -1;
+        if (rawValue.indexOf('Safari') != -1) {
+            // Android and Chrome have Safari in the user string
+            isSafari = rawValue.indexOf('Chrome') == -1 && rawValue.indexOf('Android') == -1;
+        }
+        // Sample Edge UA: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10121
+        isEdge = rawValue.indexOf('Edge') != -1;
+        // When it is edge, it should not be chrome or firefox. and it is also not webkit
+        if (isEdge) {
+            isWebKit = isChrome = isFirefox = false;
+        }
+    }
+    var isMac = appVer.indexOf('Mac') != -1;
+    var isWin = appVer.indexOf('Win') != -1 || appVer.indexOf('NT') != -1;
+    return {
+        isMac: isMac,
+        isWin: isWin,
+        isWebKit: isWebKit,
+        isIE: isIE,
+        isIE11OrGreater: isIE11OrGreater,
+        isSafari: isSafari,
+        isChrome: isChrome,
+        isFirefox: isFirefox,
+        isEdge: isEdge,
+    };
+}
+exports.getBrowserData = getBrowserData;
+var browserData = getBrowserData();
+exports.default = browserData;
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var PartialInlineElement_1 = __webpack_require__(14);
+var contains_1 = __webpack_require__(16);
 var getTagOfNode_1 = __webpack_require__(8);
 var isBlockElement_1 = __webpack_require__(34);
 var isDocumentPosition_1 = __webpack_require__(7);
 var isNodeAfter_1 = __webpack_require__(21);
 var shouldSkipNode_1 = __webpack_require__(22);
 var getLeafNode_1 = __webpack_require__(35);
-var getLeafSibling_1 = __webpack_require__(17);
+var getLeafSibling_1 = __webpack_require__(18);
 // Get the inline element at a node
 function getInlineElementAtNode(rootNode, node, inlineElementFactory) {
     // An inline element has to be in a block element, get the block first and then resolve through the factory
@@ -1348,7 +1417,7 @@ exports.getBlockElementAtNode = getBlockElementAtNode;
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1356,7 +1425,7 @@ exports.getBlockElementAtNode = getBlockElementAtNode;
 Object.defineProperty(exports, "__esModule", { value: true });
 var editorPointEquals_1 = __webpack_require__(33);
 var isDocumentPosition_1 = __webpack_require__(7);
-var isEditorPointAfter_1 = __webpack_require__(14);
+var isEditorPointAfter_1 = __webpack_require__(15);
 // This is a special version of inline element that identifies a section of an inline element
 // We often have the need to cut an inline element in half and perform some operation only on half of an inline element
 // i.e. users select only some text of a text node and apply format, in that case, format has to happen on partial of an inline element
@@ -1486,7 +1555,7 @@ exports.default = PartialInlineElement;
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1503,7 +1572,7 @@ exports.default = isEditorPointAfter;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1520,7 +1589,7 @@ exports.default = contains;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1542,13 +1611,13 @@ exports.default = getComputedStyle;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var contains_1 = __webpack_require__(15);
+var contains_1 = __webpack_require__(16);
 var shouldSkipNode_1 = __webpack_require__(22);
 function getLeafSibling(rootNode, startNode, isNext) {
     var result = null;
@@ -1599,7 +1668,7 @@ exports.getPreviousLeafSibling = getPreviousLeafSibling;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1613,7 +1682,7 @@ exports.default = getSelection;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1626,75 +1695,6 @@ function hasFocus(core) {
         (core.contentDiv == activeElement || roosterjs_editor_dom_1.contains(core.contentDiv, activeElement)));
 }
 exports.default = hasFocus;
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-function getBrowserData(userAgent, appVersion) {
-    // In case universal render somehow hits this code path
-    if (typeof window == 'undefined') {
-        return {
-            isMac: false,
-            isWin: false,
-            isWebKit: false,
-            isIE: false,
-            isIE11OrGreater: false,
-            isSafari: false,
-            isChrome: false,
-            isFirefox: false,
-            isEdge: false,
-        };
-    }
-    var rawValue = userAgent || window.navigator.userAgent;
-    var appVer = appVersion || window.navigator.appVersion;
-    // checks whether the browser is running in IE
-    // IE11 will use rv in UA instead of MSIE. Unfortunately Firefox also uses this. We should also look for "Trident" to confirm this.
-    // There have been cases where companies using older version of IE and custom UserAgents have broken this logic (e.g. IE 10 and KellyServices)
-    // therefore we should check that the Trident/rv combo is not just from an older IE browser
-    var isIE11OrGreater = rawValue.indexOf('rv:') != -1 && rawValue.indexOf('Trident') != -1;
-    var isIE = rawValue.indexOf('MSIE') != -1 || isIE11OrGreater;
-    var isWebKit = rawValue.indexOf('WebKit') != -1;
-    // IE11+ may also send Chrome, Firefox and Safari. But it will send trident also
-    var isChrome = false;
-    var isFirefox = false;
-    var isSafari = false;
-    var isEdge = false;
-    if (!isIE) {
-        isChrome = rawValue.indexOf('Chrome') != -1;
-        isFirefox = rawValue.indexOf('Firefox') != -1;
-        if (rawValue.indexOf('Safari') != -1) {
-            // Android and Chrome have Safari in the user string
-            isSafari = rawValue.indexOf('Chrome') == -1 && rawValue.indexOf('Android') == -1;
-        }
-        // Sample Edge UA: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10121
-        isEdge = rawValue.indexOf('Edge') != -1;
-        // When it is edge, it should not be chrome or firefox. and it is also not webkit
-        if (isEdge) {
-            isWebKit = isChrome = isFirefox = false;
-        }
-    }
-    var isMac = appVer.indexOf('Mac') != -1;
-    var isWin = appVer.indexOf('Win') != -1 || appVer.indexOf('NT') != -1;
-    return {
-        isMac: isMac,
-        isWin: isWin,
-        isWebKit: isWebKit,
-        isIE: isIE,
-        isIE11OrGreater: isIE11OrGreater,
-        isSafari: isSafari,
-        isChrome: isChrome,
-        isFirefox: isFirefox,
-        isEdge: isEdge,
-    };
-}
-exports.getBrowserData = getBrowserData;
-var browserData = getBrowserData();
-exports.default = browserData;
 
 
 /***/ }),
@@ -1721,7 +1721,7 @@ exports.default = isNodeAfter;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(16);
+var getComputedStyle_1 = __webpack_require__(17);
 // Check if it is an empty text node
 function isEmptyTextNode(node) {
     return !!(node &&
@@ -1814,11 +1814,11 @@ exports.default = TextInlineElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var PartialInlineElement_1 = __webpack_require__(13);
+var PartialInlineElement_1 = __webpack_require__(14);
 var editorPointEquals_1 = __webpack_require__(33);
-var isEditorPointAfter_1 = __webpack_require__(14);
+var isEditorPointAfter_1 = __webpack_require__(15);
 var normalizeEditorPoint_1 = __webpack_require__(26);
-var BlockElement_1 = __webpack_require__(12);
+var BlockElement_1 = __webpack_require__(13);
 // This is a utility like class that produces editor point/inline/block element around or within a selection range
 var EditorSelection = /** @class */ (function () {
     function EditorSelection(rootNode, selectionRange, inlineElementFactory) {
@@ -2092,7 +2092,7 @@ exports.default = normalizeEditorPoint;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var getSelectionRange_1 = __webpack_require__(5);
-var hasFocus_1 = __webpack_require__(19);
+var hasFocus_1 = __webpack_require__(20);
 var isVoidHtmlElement_1 = __webpack_require__(41);
 var restoreSelection_1 = __webpack_require__(42);
 var updateSelection_1 = __webpack_require__(10);
@@ -2613,7 +2613,7 @@ exports.default = Undo;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var BrowserData_1 = __webpack_require__(20);
+var BrowserData_1 = __webpack_require__(12);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 // Undo cursor marker
 var CURSOR_START = 'cursor-start';
@@ -2755,7 +2755,7 @@ exports.default = editorPointEquals;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(16);
+var getComputedStyle_1 = __webpack_require__(17);
 // Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.
 // TODO: should inline-block be considered as block?
 // Other block like style to consider: table-caption, table-header-group, table-footer-group etc.
@@ -2777,7 +2777,7 @@ exports.default = isBlockElement;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var shouldSkipNode_1 = __webpack_require__(22);
-var getLeafSibling_1 = __webpack_require__(17);
+var getLeafSibling_1 = __webpack_require__(18);
 function getLeafNode(rootNode, isFirst) {
     var getChild = isFirst ? function (node) { return node.firstChild; } : function (node) { return node.lastChild; };
     var result = getChild(rootNode);
@@ -4177,14 +4177,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Undo_1 = __webpack_require__(31);
 var applyInlineStyle_1 = __webpack_require__(78);
 var attachDomEvent_1 = __webpack_require__(79);
-var BrowserData_1 = __webpack_require__(20);
+var BrowserData_1 = __webpack_require__(12);
 var calcDefaultFormat_1 = __webpack_require__(80);
 var focus_1 = __webpack_require__(27);
 var getContentTraverser_1 = __webpack_require__(43);
 var getCursorRect_1 = __webpack_require__(81);
-var getSelection_1 = __webpack_require__(18);
+var getSelection_1 = __webpack_require__(19);
 var getSelectionRange_1 = __webpack_require__(5);
-var hasFocus_1 = __webpack_require__(19);
+var hasFocus_1 = __webpack_require__(20);
 var insertNode_1 = __webpack_require__(82);
 var restoreSelection_1 = __webpack_require__(42);
 var saveSelectionRange_1 = __webpack_require__(83);
@@ -4811,7 +4811,7 @@ exports.default = UndoSnapshots;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var BlockElement_1 = __webpack_require__(12);
+var BlockElement_1 = __webpack_require__(13);
 // The provides traversing of content inside editor.
 // There are two ways to traverse, block by block, or inline element by inline element
 // Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
@@ -5048,7 +5048,7 @@ exports.default = DefaultInlineElementResolver;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var BlockElement_1 = __webpack_require__(12);
+var BlockElement_1 = __webpack_require__(13);
 // This provides scoper for traversing the entire editor body starting from the beginning
 var BodyScoper = /** @class */ (function () {
     function BodyScoper(rootNode, inlineElementFactory) {
@@ -5243,7 +5243,7 @@ exports.default = applyFormat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getComputedStyle_1 = __webpack_require__(16);
+var getComputedStyle_1 = __webpack_require__(17);
 var getTagOfNode_1 = __webpack_require__(8);
 var normalizeEditorPoint_1 = __webpack_require__(26);
 function changeElementTag(element, newTag, range) {
@@ -5339,7 +5339,7 @@ exports.default = isNodeEmpty;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var PartialInlineElement_1 = __webpack_require__(13);
+var PartialInlineElement_1 = __webpack_require__(14);
 var TextInlineElement_1 = __webpack_require__(24);
 // Check if the inline is a text type inline element
 // This essentially test if the inline is TextInlineElement
@@ -5784,9 +5784,10 @@ exports.default = calcDefaultFormat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getSelection_1 = __webpack_require__(18);
+var getSelection_1 = __webpack_require__(19);
 var getSelectionRange_1 = __webpack_require__(5);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
+var BrowserData_1 = __webpack_require__(12);
 /**
  * Returns a rect representing the location of the cursor.
  * In case there is a uncollapsed selection witin editor, this returns
@@ -5810,17 +5811,27 @@ function getCursorRect(core) {
     }
     // 2) try to get rect using range.getBoundingClientRect()
     var rect = getRectFromClientRect(range.getBoundingClientRect());
-    // 3) if current cursor is inside text node, insert a SPAN and get the rect of SPAN
-    // if (!rect && node.nodeType == NodeType.Text) {
-    //     let document = core.document;
-    //     let span = document.createElement('SPAN');
-    //     let range = document.createRange();
-    //     range.setStart(node, focusPosition.offset);
-    //     range.collapse(true /*toStart*/);
-    //     range.insertNode(span);
-    //     rect = getRectFromClientRect(span.getBoundingClientRect());
-    //     span.parentNode.removeChild(span);
-    // }
+    // 3) if current cursor is inside text node, use range.getClientRects() for safari or insert a SPAN and get the rect of SPAN for others
+    if (!rect) {
+        if (BrowserData_1.default.isSafari) {
+            var rects = range.getClientRects();
+            if (rects && rects.length == 1) {
+                rect = getRectFromClientRect(rects[0]);
+            }
+        }
+        else {
+            if (!rect && node.nodeType == 3 /* Text */) {
+                var document_1 = core.document;
+                var span = document_1.createElement('SPAN');
+                var range_1 = document_1.createRange();
+                range_1.setStart(node, focusPosition.offset);
+                range_1.collapse(true /*toStart*/);
+                range_1.insertNode(span);
+                rect = getRectFromClientRect(span.getBoundingClientRect());
+                span.parentNode.removeChild(span);
+            }
+        }
+    }
     // 4) fallback to element.getBoundingClientRect()
     if (!rect) {
         node = node.nodeType == 1 /* Element */ ? node : node.parentNode;
