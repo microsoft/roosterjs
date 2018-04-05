@@ -374,15 +374,15 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
 /**
  * Get the list state at selection
  * The list state refers to the HTML elements <OL> or <UL>
- * @param editor The editor instance
  * @param event (Optional) The plugin event, it stores the event cached data for looking up.
+ * @param editor The editor instance
  * If not passed, we will query the first <LI> node in selection and return the list state of its direct parent
  * @returns The list tag, OL, UL or empty when cursor is not inside a list
  */
-function cacheGetListTag(editor, event) {
+function cacheGetListTag(event, editor) {
     var li = getNodeAtCursor_1.cacheGetNodeAtCursor(editor, event, 'LI');
     var tag = li && roosterjs_editor_dom_1.getTagOfNode(li.parentNode);
-    return tag == 'OL' || tag == 'UL' ? tag : '';
+    return tag == 'OL' || tag == 'UL' ? tag : null;
 }
 exports.default = cacheGetListTag;
 
@@ -424,7 +424,7 @@ function getCursorRect(editor) {
     var rect = getRectFromClientRect(range.getBoundingClientRect());
     if (!rect) {
         var position = new roosterjs_editor_dom_1.Position(range.startContainer, range.startOffset).normalize();
-        var node = position.node;
+        var node = position.node, element = position.element;
         // 3) if current cursor is inside text node, insert a SPAN and get the rect of SPAN
         if (node.nodeType == 3 /* Text */) {
             var span = document.createElement('SPAN');
@@ -436,11 +436,8 @@ function getCursorRect(editor) {
             span.parentNode.removeChild(span);
         }
         // 4) fallback to element.getBoundingClientRect()
-        if (!rect) {
-            node = node.nodeType == 1 /* Element */ ? node : node.parentNode;
-            if (node && node.nodeType == 1 /* Element */) {
-                rect = getRectFromClientRect(node.getBoundingClientRect());
-            }
+        if (!rect && element) {
+            rect = getRectFromClientRect(element.getBoundingClientRect());
         }
     }
     return rect;
@@ -520,7 +517,7 @@ function getFormatState(editor, event) {
         return null;
     }
     var styles = roosterjs_editor_dom_1.getComputedStyles(nodeAtCursor);
-    var tag = cacheGetListTag_1.default(editor, event);
+    var tag = cacheGetListTag_1.default(event, editor);
     return {
         fontName: styles[0],
         fontSize: styles[1],
@@ -568,8 +565,8 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
  * @returns The node at cursor or the nearest ancestor with the tag name is specified
  */
 function getNodeAtCursor(editor, expectedTag, startNode) {
-    var node = startNode || editor.getSelectionRange().start.normalize().node;
-    node = node && node.nodeType == 3 /* Text */ ? node.parentNode : node;
+    var node = roosterjs_editor_dom_1.getElementOrParentElement(startNode) ||
+        editor.getSelectionRange().start.normalize().element;
     if (expectedTag) {
         while (editor.contains(node)) {
             if (roosterjs_editor_dom_1.getTagOfNode(node) == expectedTag.toUpperCase()) {
@@ -1598,6 +1595,7 @@ exports.default = toggleBullet;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var queryNodesWithSelection_1 = __webpack_require__(/*! ../cursor/queryNodesWithSelection */ "./packages/roosterjs-editor-api/lib/cursor/queryNodesWithSelection.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 /**
  * Toggle header at selection
  * @param editor The editor instance
@@ -1613,10 +1611,7 @@ function toggleHeader(editor, level) {
             var traverser = editor.getContentTraverser(1 /* Selection */);
             var inlineElement = traverser ? traverser.currentInlineElement : null;
             while (inlineElement) {
-                var node = inlineElement.getContainerNode();
-                if (node.nodeType == 3 /* Text */) {
-                    node = node.parentNode;
-                }
+                var node = roosterjs_editor_dom_1.getElementOrParentElement(inlineElement.getContainerNode());
                 if (node.nodeType == 1 /* Element */) {
                     node.style.fontSize = '';
                 }
@@ -2472,7 +2467,7 @@ function formatWithUndo(core, callback, preserveSelection, changeSource, dataCal
             else {
                 callback();
             }
-            if (changeSource) {
+            if (!isNested && changeSource) {
                 var event_1 = {
                     eventType: 6 /* ContentChanged */,
                     source: changeSource,
@@ -2821,6 +2816,7 @@ var IS_IE_OR_EDGE = roosterjs_editor_dom_1.Browser.isIE || roosterjs_editor_dom_
  * RoosterJs core editor class
  */
 var Editor = /** @class */ (function () {
+    //#region Editor Lifecycle
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
@@ -2829,44 +2825,18 @@ var Editor = /** @class */ (function () {
     function Editor(contentDiv, options) {
         if (options === void 0) { options = {}; }
         var _this = this;
-        // Check if user is typing right under the content div
-        // When typing goes directly under content div, many things can go wrong
-        // We fix it by wrapping it with a div and reposition cursor within the div
-        // TODO: we only fix the case when selection is collapsed
-        // When selection is not collapsed, i.e. users press ctrl+A, and then type
-        // We don't have a good way to fix that for the moment
+        /**
+         * Check if user is typing right under the content div
+         * When typing goes directly under content div, many things can go wrong
+         * We fix it by wrapping it with a div and reposition cursor within the div
+         */
         this.onKeyPress = function () {
-            var range = _this.getSelectionRange();
-            var focusNode;
-            if (range.collapsed &&
-                (focusNode = range.start.node) &&
-                (focusNode == _this.core.contentDiv ||
-                    (focusNode.nodeType == 3 /* Text */ &&
-                        focusNode.parentNode == _this.core.contentDiv))) {
-                var blockElement = roosterjs_editor_dom_1.getBlockElementAtNode(_this.core.contentDiv, range.start.node);
-                if (!blockElement) {
-                    // Only reason we don't get the selection block is that we have an empty content div
-                    // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
-                    // The fix is to add a DIV wrapping, apply default format and move cursor over
-                    var nodes = roosterjs_editor_dom_1.fromHtml('<div><br></div>', _this.getDocument());
-                    var element = _this.core.contentDiv.appendChild(nodes[0]);
-                    roosterjs_editor_dom_1.applyFormat(element, _this.core.defaultFormat);
-                    // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
-                    _this.select(element.firstChild, 0);
-                }
-                else if (blockElement.getStartNode().parentNode == blockElement.getEndNode().parentNode) {
-                    // Only fix the balanced start-end block where start and end node is under same parent
-                    // The focus node could be pointing to the content div, normalize it to have it point to a child first
-                    var focusOffset = range.start.offset;
-                    var element = roosterjs_editor_dom_1.wrap(blockElement.getContentNodes());
-                    if (roosterjs_editor_dom_1.getTagOfNode(blockElement.getStartNode()) == 'BR') {
-                        // if the block is just BR, apply default format
-                        // Otherwise, leave it as it is as we don't want to change the style for existing data
-                        roosterjs_editor_dom_1.applyFormat(element, _this.core.defaultFormat);
-                    }
-                    // Last restore the selection using the normalized editor point
-                    _this.select(new roosterjs_editor_dom_1.Position(focusNode, focusOffset).normalize());
-                }
+            var range = getLiveRange_1.default(_this.core);
+            if (range &&
+                range.collapsed &&
+                roosterjs_editor_dom_1.getElementOrParentElement(range.startContainer) == _this.core.contentDiv &&
+                !_this.select(_this.fixContentStructure(range.startContainer), 0)) {
+                _this.select(range);
             }
         };
         // 1. Make sure all parameters are valid
@@ -2877,12 +2847,13 @@ var Editor = /** @class */ (function () {
         this.core = EditorCore_1.default.create(contentDiv, options);
         this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus;
         this.omitContentEditable = options.omitContentEditableAttributeChanges;
-        this.defaultRange = this.createDefaultRange();
+        this.defaultRange = this.getDocument().createRange();
+        this.defaultRange.setStart(this.core.contentDiv, 0);
         // 3. Initialize plugins
         this.core.plugins.forEach(function (plugin) { return plugin.initialize(_this); });
         // 4. Ensure initial content and its format
         this.setContent(options.initialContent || this.core.contentDiv.innerHTML);
-        this.ensureInitialContent();
+        this.fixContentStructure(roosterjs_editor_dom_1.getFirstLeafNode(contentDiv));
         // 5. Initialize undo service
         this.core.undo.initialize(this);
         this.core.plugins.push(this.core.undo);
@@ -2943,6 +2914,7 @@ var Editor = /** @class */ (function () {
     Editor.prototype.isDisposed = function () {
         return !this.core;
     };
+    //#endregion
     //#region Node API
     /**
      * Insert node into editor
@@ -3259,7 +3231,10 @@ var Editor = /** @class */ (function () {
             attachDomEvent_1.default(this.core, 'mousedown', 4 /* MouseDown */),
             attachDomEvent_1.default(this.core, 'mouseup', 5 /* MouseUp */),
             attachDomEvent_1.default(this.core, 'compositionstart', null, function () { return (_this.inIME = true); }),
-            attachDomEvent_1.default(this.core, 'compositionend', 3 /* CompositionEnd */, function () { return (_this.inIME = false); }),
+            attachDomEvent_1.default(this.core, 'compositionend', 3 /* CompositionEnd */, function () {
+                _this.inIME = false;
+                _this.onKeyPress();
+            }),
             attachDomEvent_1.default(this.core, 'focus', null, function () {
                 // Restore the last saved selection first
                 if (_this.core.cachedRange && !_this.disableRestoreSelectionOnFocus) {
@@ -3270,33 +3245,45 @@ var Editor = /** @class */ (function () {
             attachDomEvent_1.default(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, function () {
                 _this.core.cachedRange = getLiveRange_1.default(_this.core);
             }),
+            attachDomEvent_1.default(this.core, 'drop', null, function () {
+                _this.formatWithUndo(null, false /*preserveSelection*/, "Drop" /* Drop */);
+            }),
         ];
     };
-    Editor.prototype.ensureInitialContent = function () {
-        var contentDiv = this.core.contentDiv;
-        var firstBlock = roosterjs_editor_dom_1.getBlockElementAtNode(contentDiv, roosterjs_editor_dom_1.getFirstLeafNode(contentDiv));
-        var defaultFormatBlockElement;
-        if (!firstBlock) {
-            // No first block, let's create one
-            var nodes = roosterjs_editor_dom_1.fromHtml('<div><br></div>', this.getDocument());
-            defaultFormatBlockElement = this.core.contentDiv.appendChild(nodes[0]);
+    /**
+     * Check if user will type right under the content div
+     * When typing goes directly under content div, many things can go wrong
+     * We fix it by wrapping it with a div and reposition cursor within the div
+     */
+    Editor.prototype.fixContentStructure = function (node) {
+        var block = this.getBlockElementAtNode(node);
+        var startNode = block ? block.getStartNode() : null;
+        var formatElement;
+        var nodeToSelect;
+        if (!block) {
+            // Only reason we can't get the selection block is that we have an empty content div
+            // which can happen when nothing is set to initial content, or user removes everything
+            // (i.e. select all and DEL, or backspace from very end to begin).
+            // The fix is to add a DIV wrapping, apply default format and move cursor over
+            formatElement = roosterjs_editor_dom_1.fromHtml('<div><br></div>', this.getDocument())[0];
+            this.core.contentDiv.appendChild(formatElement);
+            // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
+            nodeToSelect = formatElement.firstChild;
         }
-        else if (firstBlock instanceof roosterjs_editor_dom_1.NodeBlockElement) {
-            // There is a first block and it is a Node (P, DIV etc.) block
-            // Check if it is empty block and apply default format if so
-            if (roosterjs_editor_dom_1.isNodeEmpty(firstBlock.getStartNode())) {
-                defaultFormatBlockElement = firstBlock.getStartNode();
-            }
+        else if (block instanceof roosterjs_editor_dom_1.NodeBlockElement) {
+            // if the block is empty, apply default format
+            // Otherwise, leave it as it is as we don't want to change the style for existing data
+            formatElement = roosterjs_editor_dom_1.isNodeEmpty(startNode) ? startNode : null;
         }
-        if (defaultFormatBlockElement) {
-            roosterjs_editor_dom_1.applyFormat(defaultFormatBlockElement, this.core.defaultFormat);
+        else if (startNode.parentNode == block.getEndNode().parentNode) {
+            // Only fix the balanced start-end block where start and end node is under same parent
+            // The focus node could be pointing to the content div, normalize it to have it point to a child first
+            formatElement = roosterjs_editor_dom_1.wrap(block.getContentNodes());
         }
-    };
-    Editor.prototype.createDefaultRange = function () {
-        var range = this.getDocument().createRange();
-        range.setStart(this.core.contentDiv, 0);
-        range.collapse(true);
-        return range;
+        if (formatElement) {
+            roosterjs_editor_dom_1.applyFormat(formatElement, this.core.defaultFormat);
+        }
+        return nodeToSelect;
     };
     return Editor;
 }());
@@ -3413,11 +3400,10 @@ var Undo = /** @class */ (function () {
         var _this = this;
         this.editor = editor;
         this.onDropDisposer = this.editor.addDomEventHandler('drop', function () {
-            _this.addUndoSnapshot();
             _this.hasNewContent = true;
         });
         // Add an initial snapshot if snapshotsManager isn't created yet
-        if (!this.undoSnapshots) {
+        if (!this.getSnapshotsManager().canMove(0)) {
             this.addUndoSnapshot();
         }
     };
@@ -4095,16 +4081,18 @@ function getBlockElementAtNode(rootNode, node) {
             // Balanced start and end (point to same parent), need to see if further collapsing can be done
             var parentNode = headNode.parentNode;
             while (parentNode.firstChild == headNode && parentNode.lastChild == tailNode) {
-                if (parentNode != containerBlockNode) {
+                if (parentNode == containerBlockNode) {
+                    // Has reached the container block
+                    if (containerBlockNode != rootNode) {
+                        // If the container block is not the root, use the container block
+                        headNode = tailNode = parentNode;
+                    }
+                    break;
+                }
+                else {
                     // Continue collapsing to parent
                     headNode = tailNode = parentNode;
                     parentNode = parentNode.parentNode;
-                }
-                else if (containerBlockNode != rootNode) {
-                    // Has reached the container block
-                    // If the container block is not the root, use the container block
-                    headNode = tailNode = parentNode;
-                    break;
                 }
             }
             // If head and tail are same and it is a block element, create NodeBlock, otherwise start-end block
@@ -4803,6 +4791,8 @@ var fromHtml_1 = __webpack_require__(/*! ./utils/fromHtml */ "./packages/rooster
 exports.fromHtml = fromHtml_1.default;
 var getComputedStyles_1 = __webpack_require__(/*! ./utils/getComputedStyles */ "./packages/roosterjs-editor-dom/lib/utils/getComputedStyles.ts");
 exports.getComputedStyles = getComputedStyles_1.default;
+var getElementOrParentElement_1 = __webpack_require__(/*! ./utils/getElementOrParentElement */ "./packages/roosterjs-editor-dom/lib/utils/getElementOrParentElement.ts");
+exports.getElementOrParentElement = getElementOrParentElement_1.default;
 var getTagOfNode_1 = __webpack_require__(/*! ./utils/getTagOfNode */ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts");
 exports.getTagOfNode = getTagOfNode_1.default;
 var intersectWithNodeRange_1 = __webpack_require__(/*! ./utils/intersectWithNodeRange */ "./packages/roosterjs-editor-dom/lib/utils/intersectWithNodeRange.ts");
@@ -5222,6 +5212,7 @@ exports.getPreviousInlineElement = getPreviousInlineElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var getElementOrParentElement_1 = __webpack_require__(/*! ../utils/getElementOrParentElement */ "./packages/roosterjs-editor-dom/lib/utils/getElementOrParentElement.ts");
 var isNodeAfter_1 = __webpack_require__(/*! ../utils/isNodeAfter */ "./packages/roosterjs-editor-dom/lib/utils/isNodeAfter.ts");
 /**
  * Represent a position in DOM tree by the node and its offset index
@@ -5258,6 +5249,7 @@ var Position = /** @class */ (function () {
                         (this.offset > 0 && this.offset == endOffset);
                 break;
         }
+        this.element = getElementOrParentElement_1.default(this.node);
     }
     /**
      * Normalize this position the leaf node, return the normalize result.
@@ -5628,6 +5620,30 @@ exports.default = getComputedStyles;
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-dom/lib/utils/getElementOrParentElement.ts":
+/*!******************************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/utils/getElementOrParentElement.ts ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Get element from node or its parent
+ * @param node The node to get element from
+ * @returns node itself if the node is an element, or its parent node
+ */
+function getElementOrParentElement(node) {
+    node = !node ? null : node.nodeType == 1 /* Element */ ? node : node.parentNode;
+    return node && node.nodeType == 1 /* Element */ ? node : null;
+}
+exports.default = getElementOrParentElement;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts":
 /*!*****************************************************************!*\
   !*** ./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts ***!
@@ -5821,8 +5837,8 @@ exports.default = isNodeAfter;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var VISIBLE_ELEMENT_SELECTORS = ['table', 'img', 'li'];
-var ZERO_WIDTH_SPACE = '\u200b';
+var VISIBLE_ELEMENT_SELECTOR = ['table', 'img', 'li'].join(',');
+var ZERO_WIDTH_SPACE = /\u200b/g;
 /**
  * Check if a given node has no visible content
  * @param node The node to check
@@ -5837,14 +5853,8 @@ function isNodeEmpty(node, trimContent) {
     else if (node.nodeType == 1 /* Element */) {
         var element = node;
         var textContent = trim(element.textContent, trimContent);
-        if (textContent != '' && textContent != ZERO_WIDTH_SPACE) {
+        if (textContent != '' || element.querySelectorAll(VISIBLE_ELEMENT_SELECTOR)[0]) {
             return false;
-        }
-        for (var _i = 0, VISIBLE_ELEMENT_SELECTORS_1 = VISIBLE_ELEMENT_SELECTORS; _i < VISIBLE_ELEMENT_SELECTORS_1.length; _i++) {
-            var selector = VISIBLE_ELEMENT_SELECTORS_1[_i];
-            if (element.querySelectorAll(selector).length > 0) {
-                return false;
-            }
         }
     }
     return true;
@@ -6449,14 +6459,13 @@ exports.default = wrap;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var ContentEditFeatures_1 = __webpack_require__(/*! ./ContentEditFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/ContentEditFeatures.ts");
-var KEY_TAB = 9;
+var autoBulletFeatures_1 = __webpack_require__(/*! ./autoBulletFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/autoBulletFeatures.ts");
+var autoLinkFeatures_1 = __webpack_require__(/*! ./autoLinkFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/autoLinkFeatures.ts");
+var ListFeatures_1 = __webpack_require__(/*! ./ListFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/ListFeatures.ts");
+var quoteFeatures_1 = __webpack_require__(/*! ./quoteFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/quoteFeatures.ts");
+var tableFeatures_1 = __webpack_require__(/*! ./tableFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/tableFeatures.ts");
 var KEY_BACKSPACE = 8;
-var KEY_ENTER = 13;
-var KEY_SPACE = 32;
-var BLOCKQUOTE_TAG_NAME = 'BLOCKQUOTE';
 /**
  * An editor plugin to handle content edit event.
  * The following cases are included:
@@ -6464,15 +6473,29 @@ var BLOCKQUOTE_TAG_NAME = 'BLOCKQUOTE';
  * 2. Enter, Backspace on empty list item
  * 3. Enter, Backspace on empty blockquote line
  * 4. Auto bullet/numbering
+ * 5. Auto link
+ * 6. Tab in table
  */
 var ContentEdit = /** @class */ (function () {
     /**
      * Create instance of ContentEdit plugin
      * @param features An optional feature set to determine which features the plugin should provide
      */
-    function ContentEdit(features) {
-        this.features = features;
-        this.features = this.features || ContentEditFeatures_1.getDefaultContentEditFeatures();
+    function ContentEdit(featureSet) {
+        this.features = [];
+        this.keys = [];
+        featureSet = featureSet || ContentEditFeatures_1.getDefaultContentEditFeatures();
+        this.addFeature(featureSet.indentOutdentWhenTab, ListFeatures_1.IndentOutdentWhenTab);
+        this.addFeature(featureSet.outdentWhenBackspaceOnEmptyFirstLine, ListFeatures_1.OutdentBSEmptyLine1);
+        this.addFeature(featureSet.outdentWhenEnterOnEmptyLine, ListFeatures_1.OutdentWhenEnterOnEmptyLine);
+        this.addFeature(featureSet.mergeInNewLineWhenBackspaceOnFirstChar, ListFeatures_1.MergeInNewLine);
+        this.addFeature(featureSet.unquoteWhenBackspaceOnEmptyFirstLine, quoteFeatures_1.UnquoteBSEmptyLine1);
+        this.addFeature(featureSet.unquoteWhenEnterOnEmptyLine, quoteFeatures_1.UnquoteWhenEnterOnEmptyLine);
+        this.addFeature(featureSet.tabInTable, tableFeatures_1.TabInTable);
+        this.addFeature(featureSet.autoBullet, autoBulletFeatures_1.AutoBullet);
+        this.addFeature(featureSet.autoLink, autoLinkFeatures_1.AutoLink1);
+        this.addFeature(featureSet.autoLink, autoLinkFeatures_1.AutoLink2);
+        this.autoLinkEnabled = featureSet.autoLink;
     }
     /**
      * Initialize this plugin
@@ -6487,231 +6510,62 @@ var ContentEdit = /** @class */ (function () {
     ContentEdit.prototype.dispose = function () {
         this.editor = null;
     };
-    // Handle the event if it is a tab event, and cursor is at begin of a list
+    /**
+     * Check whether the event should be handled exclusively by this plugin
+     */
     ContentEdit.prototype.willHandleEventExclusively = function (event) {
-        return this.isListEvent(event, [KEY_TAB]) || this.isTabInTable(event);
-    };
-    // Handle the event
-    ContentEdit.prototype.onPluginEvent = function (event) {
-        var _this = this;
         var keyboardEvent = event.rawEvent;
-        var blockQuoteElement = null;
-        if (this.backspaceToUndo &&
-            (event.eventType == 0 /* KeyDown */ ||
-                event.eventType == 4 /* MouseDown */ ||
-                (event.eventType == 6 /* ContentChanged */ &&
-                    event.source != "AutoBullet" /* AutoBullet */))) {
-            this.backspaceToUndo = false;
-            if (event.eventType == 0 /* KeyDown */ &&
-                keyboardEvent.which == KEY_BACKSPACE) {
-                keyboardEvent.preventDefault();
-                this.editor.undo();
-            }
-        }
-        if (this.isListEvent(event, [KEY_TAB, KEY_BACKSPACE, KEY_ENTER])) {
-            // Tab: increase indent
-            // Shift+ Tab: decrease indent
-            if (keyboardEvent.which == KEY_TAB) {
-                if (this.features.indentWhenTab && !keyboardEvent.shiftKey) {
-                    roosterjs_editor_api_1.setIndentation(this.editor, 0 /* Increase */);
-                    keyboardEvent.preventDefault();
-                }
-                else if (this.features.outdentWhenShiftTab && keyboardEvent.shiftKey) {
-                    roosterjs_editor_api_1.setIndentation(this.editor, 1 /* Decrease */);
-                    keyboardEvent.preventDefault();
-                }
-            }
-            else {
-                var listElement = roosterjs_editor_api_1.cacheGetNodeAtCursor(this.editor, event, 'LI');
-                if (listElement && this.shouldToggleState(event, listElement)) {
-                    this.toggleList(event);
-                }
-                else if (this.features.mergeInNewLineWhenBackspaceOnFirstChar &&
-                    keyboardEvent.which == KEY_BACKSPACE &&
-                    this.isCursorAtBeginningOf(listElement)) {
-                    if (listElement == listElement.parentElement.firstChild) {
-                        this.toggleList(event);
-                    }
-                    else {
-                        var document_1 = this.editor.getDocument();
-                        document_1.defaultView.requestAnimationFrame(function () {
-                            if (_this.editor) {
-                                var br = document_1.createElement('br');
-                                _this.editor.insertNode(br);
-                                _this.editor.select(br, roosterjs_editor_dom_1.Position.After);
-                            }
-                        });
-                    }
-                }
-            }
-        }
-        else if (this.isTabInTable(event)) {
-            for (var td = this.cacheGetTd(event), vtable = new roosterjs_editor_api_1.VTable(td), step = keyboardEvent.shiftKey ? -1 : 1, row = vtable.row, col = vtable.col + step;; col += step) {
-                if (col < 0 || col >= vtable.cells[row].length) {
-                    row += step;
-                    if (row < 0 || row >= vtable.cells.length) {
-                        this.editor.select(vtable.table, keyboardEvent.shiftKey ? roosterjs_editor_dom_1.Position.Before : roosterjs_editor_dom_1.Position.After);
-                        break;
-                    }
-                    col = keyboardEvent.shiftKey ? vtable.cells[row].length - 1 : 0;
-                }
-                var cell = vtable.getCell(row, col);
-                if (cell.td) {
-                    this.editor.select(cell.td, roosterjs_editor_dom_1.Position.Begin);
-                    break;
-                }
-            }
-            keyboardEvent.preventDefault();
-        }
-        else if ((blockQuoteElement = this.getBlockQuoteElementFromEvent(event, keyboardEvent))) {
-            var node_1 = roosterjs_editor_api_1.getNodeAtCursor(this.editor);
-            if (node_1 && node_1 != blockQuoteElement) {
-                while (this.editor.contains(node_1) && node_1.parentNode != blockQuoteElement) {
-                    node_1 = node_1.parentNode;
-                }
-                if (node_1.parentNode == blockQuoteElement && this.shouldToggleState(event, node_1)) {
-                    keyboardEvent.preventDefault();
-                    this.editor.formatWithUndo(function () {
-                        roosterjs_editor_dom_1.splitParentNode(node_1, false /*splitBefore*/);
-                        blockQuoteElement.parentNode.insertBefore(node_1, blockQuoteElement.nextSibling);
-                        if (!blockQuoteElement.firstChild) {
-                            blockQuoteElement.parentNode.removeChild(blockQuoteElement);
-                        }
-                        _this.editor.select(node_1, roosterjs_editor_dom_1.Position.Before);
-                    });
-                }
-            }
-        }
-        else if (this.features.autoBullet &&
-            event.eventType == 0 /* KeyDown */ &&
-            keyboardEvent.which == KEY_SPACE &&
-            !roosterjs_editor_api_1.cacheGetListTag(this.editor, event) &&
+        if (event.eventType == 0 /* KeyDown */ &&
+            this.keys.indexOf(keyboardEvent.which) >= 0 &&
             !keyboardEvent.ctrlKey &&
             !keyboardEvent.altKey &&
             !keyboardEvent.metaKey) {
-            this.handleAutoBullet(event);
-        }
-    };
-    ContentEdit.prototype.handleAutoBullet = function (event) {
-        var _this = this;
-        var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, this.editor);
-        // We pick 3 characters before cursor so that if any characters exist before "1." or "*",
-        // we do not fire auto list.
-        var textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
-        // Auto list is triggered if:
-        // 1. Text before cursor exactly mathces '*', '-' or '1.'
-        // 2. There's no non-text inline entities before cursor
-        if (['*', '-', '1.'].indexOf(textBeforeCursor) >= 0 &&
-            !cursorData.getFirstNonTextInlineBeforeCursor()) {
-            this.editor.runAsync(function () {
-                var listNode;
-                // editor.insertContent(NBSP);
-                _this.editor.formatWithUndo(function () {
-                    // Remove the user input '*', '-' or '1.'
-                    var rangeToDelete = roosterjs_editor_api_1.validateAndGetRangeForTextBeforeCursor(_this.editor, textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
-                    true /*exactMatch*/, cursorData);
-                    if (rangeToDelete) {
-                        rangeToDelete.deleteContents();
-                    }
-                    // If not explicitly insert br, Chrome will operate on the previous line
-                    if (roosterjs_editor_dom_1.Browser.isChrome) {
-                        _this.editor.insertContent('<BR>');
-                    }
-                    if (textBeforeCursor == '1.') {
-                        roosterjs_editor_api_1.toggleNumbering(_this.editor);
-                        listNode = roosterjs_editor_api_1.getNodeAtCursor(_this.editor, 'OL');
-                    }
-                    else {
-                        roosterjs_editor_api_1.toggleBullet(_this.editor);
-                        listNode = roosterjs_editor_api_1.getNodeAtCursor(_this.editor, 'UL');
-                    }
-                    _this.backspaceToUndo = true;
-                }, false /*preserveSelection*/, "AutoBullet" /* AutoBullet */, function () { return listNode; });
-            });
-        }
-    };
-    // Check if it is a tab or shift+tab / Enter / Backspace event
-    // This tests following:
-    // 1) is keydown
-    // 2) is Tab / Enter / Backspace
-    // 3) any of ctrl/meta/alt is not pressed
-    ContentEdit.prototype.isListEvent = function (event, interestedKeyCodes) {
-        if (event.eventType == 0 /* KeyDown */) {
-            var keyboardEvent = event.rawEvent;
-            if (interestedKeyCodes.indexOf(keyboardEvent.which) >= 0 &&
-                !keyboardEvent.ctrlKey &&
-                !keyboardEvent.altKey &&
-                !keyboardEvent.metaKey) {
-                // Checks if cursor on a list
-                var tag = roosterjs_editor_api_1.cacheGetListTag(this.editor, event);
-                if (tag == 'UL' || tag == 'OL') {
+            for (var _i = 0, _a = this.features; _i < _a.length; _i++) {
+                var feature = _a[_i];
+                if (feature.key == keyboardEvent.which &&
+                    feature.shouldHandleEvent(event, this.editor)) {
+                    this.currentFeature = feature;
                     return true;
                 }
             }
         }
         return false;
     };
-    ContentEdit.prototype.isTabInTable = function (event) {
+    /**
+     * Handle the event
+     */
+    ContentEdit.prototype.onPluginEvent = function (event) {
         var keyboardEvent = event.rawEvent;
-        return (this.features.tabInTable &&
-            event.eventType == 0 /* KeyDown */ &&
-            keyboardEvent.which == KEY_TAB &&
-            !!this.cacheGetTd(event));
-    };
-    ContentEdit.prototype.cacheGetTd = function (event) {
-        return roosterjs_editor_api_1.cacheGetNodeAtCursor(this.editor, event, 'TD');
-    };
-    // Check if it is a blockquote event, if it is true, return the blockquote element where the cursor resides
-    // To qualify a blockquote event:
-    // 1. Cursor is in blockquote element
-    // 2. Current block has no content
-    // 3. is keyDown
-    // 4. is Enter or Backspace
-    // 5. Any of ctrl/meta/alt is not pressed
-    ContentEdit.prototype.getBlockQuoteElementFromEvent = function (event, keyboardEvent) {
-        return event.eventType == 0 /* KeyDown */ &&
-            (keyboardEvent.which == KEY_BACKSPACE || keyboardEvent.which == KEY_ENTER) &&
-            !keyboardEvent.ctrlKey &&
-            !keyboardEvent.altKey &&
-            !keyboardEvent.metaKey
-            ? roosterjs_editor_api_1.queryNodesWithSelection(this.editor, BLOCKQUOTE_TAG_NAME)[0]
-            : null;
-    };
-    ContentEdit.prototype.shouldToggleState = function (event, node) {
-        var isEmpty = roosterjs_editor_dom_1.isNodeEmpty(node);
-        var keyboardEvent = event.rawEvent;
-        var isList = roosterjs_editor_dom_1.getTagOfNode(node) == 'LI';
-        if (((isList && this.features.outdentWhenBackspaceOnEmptyFirstLine) ||
-            (!isList && this.features.unquoteWhenBackspaceOnEmptyFirstLine)) &&
-            isEmpty &&
-            keyboardEvent.which == KEY_BACKSPACE &&
-            node == node.parentNode.firstChild) {
-            return true;
+        if (event.eventType == 0 /* KeyDown */ && this.backspaceUndoEventSource) {
+            this.backspaceUndoEventSource = null;
+            if (keyboardEvent.which == KEY_BACKSPACE) {
+                keyboardEvent.preventDefault();
+                this.editor.undo();
+            }
         }
-        if (((isList && this.features.outdentWhenEnterOnEmptyLine) ||
-            (!isList && this.features.unquoteWhenEnterOnEmptyLine)) &&
-            isEmpty &&
-            keyboardEvent.which == KEY_ENTER) {
-            return true;
+        else if (this.currentFeature) {
+            var feature = this.currentFeature;
+            this.currentFeature = null;
+            this.backspaceUndoEventSource = feature.handleEvent(event, this.editor);
         }
-        return false;
-    };
-    ContentEdit.prototype.toggleList = function (event) {
-        var keyboardEvent = event.rawEvent;
-        var tag = roosterjs_editor_api_1.cacheGetListTag(this.editor, event);
-        keyboardEvent.preventDefault();
-        if (tag == 'UL') {
-            roosterjs_editor_api_1.toggleBullet(this.editor);
-        }
-        else if (tag == 'OL') {
-            roosterjs_editor_api_1.toggleNumbering(this.editor);
+        else if (event.eventType == 6 /* ContentChanged */) {
+            var contentChangedEvent = event;
+            if (this.backspaceUndoEventSource &&
+                contentChangedEvent.source != this.backspaceUndoEventSource) {
+                this.backspaceUndoEventSource = null;
+            }
+            if (contentChangedEvent.source == "Paste" /* Paste */ && this.autoLinkEnabled && autoLinkFeatures_1.AutoLink1.shouldHandleEvent(event, this.editor)) {
+                autoLinkFeatures_1.AutoLink1.handleEvent(event, this.editor);
+            }
         }
     };
-    ContentEdit.prototype.isCursorAtBeginningOf = function (node) {
-        var range = this.editor.getSelectionRange();
-        return (range.collapsed &&
-            range.start.offset == 0 &&
-            new roosterjs_editor_dom_1.Position(node, 0).normalize().equalTo(range.start.normalize()));
+    ContentEdit.prototype.addFeature = function (add, feature) {
+        if (add) {
+            this.features.push(feature);
+            if (this.keys.indexOf(feature.key) < 0) {
+                this.keys.push(feature.key);
+            }
+        }
     };
     return ContentEdit;
 }());
@@ -6735,18 +6589,327 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 function getDefaultContentEditFeatures() {
     return {
-        indentWhenTab: true,
-        outdentWhenShiftTab: true,
+        indentOutdentWhenTab: true,
         outdentWhenBackspaceOnEmptyFirstLine: true,
         outdentWhenEnterOnEmptyLine: true,
         mergeInNewLineWhenBackspaceOnFirstChar: false,
         unquoteWhenBackspaceOnEmptyFirstLine: true,
         unquoteWhenEnterOnEmptyLine: true,
         autoBullet: true,
+        autoLink: true,
         tabInTable: true,
     };
 }
 exports.getDefaultContentEditFeatures = getDefaultContentEditFeatures;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/ListFeatures.ts":
+/*!***************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/ListFeatures.ts ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
+var KEY_BACKSPACE = 8;
+var KEY_TAB = 9;
+var KEY_ENTER = 13;
+exports.IndentOutdentWhenTab = {
+    key: KEY_TAB,
+    shouldHandleEvent: roosterjs_editor_api_1.cacheGetListTag,
+    handleEvent: function (event, editor) {
+        var shift = event.rawEvent.shiftKey;
+        roosterjs_editor_api_1.setIndentation(editor, shift ? 1 /* Decrease */ : 0 /* Increase */);
+        event.rawEvent.preventDefault();
+    },
+};
+exports.MergeInNewLine = {
+    key: KEY_BACKSPACE,
+    shouldHandleEvent: function (event, editor) {
+        var range;
+        var li = roosterjs_editor_api_1.cacheGetNodeAtCursor(editor, event, 'LI');
+        return (li &&
+            (range = editor.getSelectionRange()) &&
+            range.collapsed &&
+            range.start.offset == 0 &&
+            new roosterjs_editor_dom_1.Position(li, 0).normalize().equalTo(range.start.normalize()));
+    },
+    handleEvent: function (event, editor) {
+        var li = roosterjs_editor_api_1.cacheGetNodeAtCursor(editor, event, 'LI');
+        if (li.previousSibling) {
+            editor.runAsync(function () {
+                var document = editor.getDocument();
+                var br = document.createElement('br');
+                editor.insertNode(br);
+                editor.select(br, roosterjs_editor_dom_1.Position.After);
+            });
+        }
+        else {
+            toggleListAndPreventDefault(event, editor);
+        }
+    },
+};
+exports.OutdentBSEmptyLine1 = {
+    key: KEY_BACKSPACE,
+    shouldHandleEvent: function (event, editor) {
+        var li = roosterjs_editor_api_1.cacheGetNodeAtCursor(editor, event, 'LI');
+        return li && roosterjs_editor_dom_1.isNodeEmpty(li) && !li.previousSibling;
+    },
+    handleEvent: toggleListAndPreventDefault,
+};
+exports.OutdentWhenEnterOnEmptyLine = {
+    key: KEY_ENTER,
+    shouldHandleEvent: function (event, editor) {
+        var li = roosterjs_editor_api_1.cacheGetNodeAtCursor(editor, event, 'LI');
+        return li && roosterjs_editor_dom_1.isNodeEmpty(li);
+    },
+    handleEvent: toggleListAndPreventDefault,
+};
+function toggleListAndPreventDefault(event, editor) {
+    var tag = roosterjs_editor_api_1.cacheGetListTag(event, editor);
+    if (tag == 'UL') {
+        roosterjs_editor_api_1.toggleBullet(editor);
+    }
+    else if (tag == 'OL') {
+        roosterjs_editor_api_1.toggleNumbering(editor);
+    }
+    event.rawEvent.preventDefault();
+}
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/autoBulletFeatures.ts":
+/*!*********************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/autoBulletFeatures.ts ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
+var KEY_SPACE = 32;
+exports.AutoBullet = {
+    key: KEY_SPACE,
+    shouldHandleEvent: function (event, editor) {
+        if (!roosterjs_editor_api_1.cacheGetListTag(event, editor)) {
+            var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
+            var textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
+            // Auto list is triggered if:
+            // 1. Text before cursor exactly mathces '*', '-' or '1.'
+            // 2. There's no non-text inline entities before cursor
+            return (['*', '-', '1.'].indexOf(textBeforeCursor) >= 0 &&
+                !cursorData.getFirstNonTextInlineBeforeCursor());
+        }
+        return false;
+    },
+    handleEvent: function (event, editor) {
+        editor.runAsync(function () {
+            var listNode;
+            var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
+            var textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
+            // editor.insertContent(NBSP);
+            editor.formatWithUndo(function () {
+                // Remove the user input '*', '-' or '1.'
+                var rangeToDelete = roosterjs_editor_api_1.validateAndGetRangeForTextBeforeCursor(editor, textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
+                true /*exactMatch*/, cursorData);
+                if (rangeToDelete) {
+                    rangeToDelete.deleteContents();
+                }
+                // If not explicitly insert br, Chrome will operate on the previous line
+                if (roosterjs_editor_dom_1.Browser.isChrome) {
+                    editor.insertContent('<BR>');
+                }
+                if (textBeforeCursor == '1.') {
+                    roosterjs_editor_api_1.toggleNumbering(editor);
+                    listNode = roosterjs_editor_api_1.getNodeAtCursor(editor, 'OL');
+                }
+                else {
+                    roosterjs_editor_api_1.toggleBullet(editor);
+                    listNode = roosterjs_editor_api_1.getNodeAtCursor(editor, 'UL');
+                }
+            }, false /*preserveSelection*/, "AutoBullet" /* AutoBullet */, function () { return listNode; });
+        });
+        return "AutoBullet" /* AutoBullet */;
+    },
+};
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/autoLinkFeatures.ts":
+/*!*******************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/autoLinkFeatures.ts ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
+// When user type, they may end a link with a puncatuation, i.e. www.bing.com;
+// we need to trim off the trailing puncatuation before turning it to link match
+var TRAILING_PUNCTUATION_REGEX = /[.()+={}\[\]\s:;"',>]+$/i;
+var MINIMUM_LENGTH = 5;
+var KEY_ENTER = 13;
+var KEY_SPACE = 32;
+exports.AutoLink1 = {
+    key: KEY_ENTER,
+    shouldHandleEvent: cacheGetLinkData,
+    handleEvent: autoLink,
+};
+exports.AutoLink2 = {
+    key: KEY_SPACE,
+    shouldHandleEvent: cacheGetLinkData,
+    handleEvent: autoLink,
+};
+function cacheGetLinkData(event, editor) {
+    return roosterjs_editor_core_1.cacheGetEventData(event, 'LINK_DATA', function () {
+        var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
+        var wordBeforeCursor = cursorData ? cursorData.wordBeforeCursor : null;
+        if (wordBeforeCursor && wordBeforeCursor.length > MINIMUM_LENGTH) {
+            // Check for trailing punctuation
+            var trailingPunctuations = wordBeforeCursor.match(TRAILING_PUNCTUATION_REGEX);
+            var trailingPunctuation = trailingPunctuations && trailingPunctuations.length > 0
+                ? trailingPunctuations[0]
+                : null;
+            // Compute the link candidate
+            var linkCandidate = wordBeforeCursor.substring(0, trailingPunctuation
+                ? wordBeforeCursor.length - trailingPunctuation.length
+                : wordBeforeCursor.length);
+            // Match and replace in editor
+            return roosterjs_editor_dom_1.matchLink(linkCandidate);
+        }
+        return null;
+    });
+}
+function autoLink(event, editor) {
+    var anchor = editor.getDocument().createElement('a');
+    var linkData = cacheGetLinkData(event, editor);
+    anchor.textContent = linkData.originalUrl;
+    anchor.href = linkData.normalizedUrl;
+    editor.runAsync(function () {
+        editor.formatWithUndo(function () {
+            if (roosterjs_editor_api_1.replaceTextBeforeCursorWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */, roosterjs_editor_api_1.cacheGetCursorEventData(event, editor))) {
+                // The content at cursor has changed. Should also clear the cursor data cache
+                roosterjs_editor_api_1.clearCursorEventDataCache(event);
+            }
+        }, false /*preserveSelection*/, "AutoLink" /* AutoLink */, function () { return anchor; });
+    });
+    return "AutoLink" /* AutoLink */;
+}
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/quoteFeatures.ts":
+/*!****************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/quoteFeatures.ts ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
+var KEY_BACKSPACE = 8;
+var KEY_ENTER = 13;
+exports.UnquoteBSEmptyLine1 = {
+    key: KEY_BACKSPACE,
+    shouldHandleEvent: function (event, editor) {
+        var childOfQuote = cacheGetQuoteChild(event, editor);
+        return childOfQuote && roosterjs_editor_dom_1.isNodeEmpty(childOfQuote) && !childOfQuote.previousSibling;
+    },
+    handleEvent: splitQuote,
+};
+exports.UnquoteWhenEnterOnEmptyLine = {
+    key: KEY_ENTER,
+    shouldHandleEvent: function (event, editor) {
+        var childOfQuote = cacheGetQuoteChild(event, editor);
+        return childOfQuote && roosterjs_editor_dom_1.isNodeEmpty(childOfQuote);
+    },
+    handleEvent: splitQuote,
+};
+function cacheGetQuoteChild(event, editor) {
+    return roosterjs_editor_core_1.cacheGetEventData(event, 'QUOTE_CHILD', function () {
+        var node = roosterjs_editor_api_1.getNodeAtCursor(editor);
+        while (editor.contains(node) && roosterjs_editor_dom_1.getTagOfNode(node.parentNode) != 'BLOCKQUOTE') {
+            node = node.parentNode;
+        }
+        return roosterjs_editor_dom_1.getTagOfNode(node.parentNode) == 'BLOCKQUOTE' ? node : null;
+    });
+}
+function splitQuote(event, editor) {
+    editor.formatWithUndo(function () {
+        var childOfQuote = cacheGetQuoteChild(event, editor);
+        var blockQuoteElement = childOfQuote.parentNode;
+        roosterjs_editor_dom_1.splitParentNode(childOfQuote, false /*splitBefore*/);
+        blockQuoteElement.parentNode.insertBefore(childOfQuote, blockQuoteElement.nextSibling);
+        if (!blockQuoteElement.firstChild) {
+            blockQuoteElement.parentNode.removeChild(blockQuoteElement);
+        }
+        editor.select(childOfQuote, roosterjs_editor_dom_1.Position.Begin);
+    });
+    event.rawEvent.preventDefault();
+}
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/tableFeatures.ts":
+/*!****************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/tableFeatures.ts ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
+var KEY_TAB = 9;
+exports.TabInTable = {
+    key: KEY_TAB,
+    shouldHandleEvent: function (event, editor) {
+        return roosterjs_editor_api_1.cacheGetNodeAtCursor(editor, event, 'TD');
+    },
+    handleEvent: function (event, editor) {
+        var shift = event.rawEvent.shiftKey;
+        var td = roosterjs_editor_api_1.cacheGetNodeAtCursor(editor, event, 'TD');
+        for (var vtable = new roosterjs_editor_api_1.VTable(td), step = shift ? -1 : 1, row = vtable.row, col = vtable.col + step;; col += step) {
+            if (col < 0 || col >= vtable.cells[row].length) {
+                row += step;
+                if (row < 0 || row >= vtable.cells.length) {
+                    editor.select(vtable.table, shift ? roosterjs_editor_dom_1.Position.Before : roosterjs_editor_dom_1.Position.After);
+                    break;
+                }
+                col = shift ? vtable.cells[row].length - 1 : 0;
+            }
+            var cell = vtable.getCell(row, col);
+            if (cell.td) {
+                editor.select(cell.td, roosterjs_editor_dom_1.Position.Begin);
+                break;
+            }
+        }
+        event.rawEvent.preventDefault();
+    },
+};
 
 
 /***/ }),
@@ -6913,18 +7076,10 @@ exports.default = DefaultShortcut;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
-// When user type, they may end a link with a puncatuation, i.e. www.bing.com;
-// we need to trim off the trailing puncatuation before turning it to link match
-var TRAILING_PUNCTUATION_REGEX = /[.()+={}\[\]\s:;"',>]+$/i;
 var TEMP_TITLE_REGEX = /<a\s+([^>]*\s+)?(title|istemptitle)="[^"]*"\s*([^>]*)\s+(title|istemptitle)="[^"]*"(\s+[^>]*)?>/gm;
 var TEMP_TITLE = 'istemptitle';
-var MINIMUM_LENGTH = 5;
-var KEY_BACKSPACE = 8;
-var KEY_SPACE = 32;
-var KEY_ENTER = 13;
 /**
- * An editor plugin that auto linkify text as users type and show a tooltip for existing link
+ * An editor plugin to show a tooltip for existing link and handle Ctrl+Click on a link
  */
 var HyperLink = /** @class */ (function () {
     /**
@@ -6990,31 +7145,10 @@ var HyperLink = /** @class */ (function () {
      * @param event The event object
      */
     HyperLink.prototype.onPluginEvent = function (event) {
-        var keyboardEvent = event.rawEvent;
-        if (this.backspaceToUndo &&
-            (event.eventType == 0 /* KeyDown */ ||
-                event.eventType == 4 /* MouseDown */ ||
-                (event.eventType == 6 /* ContentChanged */ &&
-                    event.source != "AutoLink" /* AutoLink */))) {
-            this.backspaceToUndo = false;
-            if (event.eventType == 0 /* KeyDown */ &&
-                keyboardEvent.which == KEY_BACKSPACE) {
-                keyboardEvent.preventDefault();
-                this.editor.undo();
-            }
-        }
         switch (event.eventType) {
-            case 0 /* KeyDown */:
-                if (keyboardEvent.which == KEY_ENTER || keyboardEvent.which == KEY_SPACE) {
-                    this.autoLink(event);
-                }
-                break;
             case 6 /* ContentChanged */:
                 var contentChangedEvent = event;
-                if (contentChangedEvent.source == "Paste" /* Paste */) {
-                    this.autoLink(event);
-                }
-                else if (contentChangedEvent.source == "CreateLink" /* CreateLink */) {
+                if (contentChangedEvent.source == "CreateLink" /* CreateLink */) {
                     this.resetAnchor(contentChangedEvent.data);
                 }
                 this.editor.queryNodes('a[href]', this.processLink);
@@ -7023,38 +7157,6 @@ var HyperLink = /** @class */ (function () {
                 var extractContentEvent = event;
                 extractContentEvent.content = this.removeTempTooltip(extractContentEvent.content);
                 break;
-        }
-    };
-    HyperLink.prototype.autoLink = function (event) {
-        var _this = this;
-        var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, this.editor);
-        var wordBeforeCursor = cursorData ? cursorData.wordBeforeCursor : null;
-        if (wordBeforeCursor && wordBeforeCursor.length > MINIMUM_LENGTH) {
-            // Check for trailing punctuation
-            var trailingPunctuations = wordBeforeCursor.match(TRAILING_PUNCTUATION_REGEX);
-            var trailingPunctuation = trailingPunctuations && trailingPunctuations.length > 0
-                ? trailingPunctuations[0]
-                : null;
-            // Compute the link candidate
-            var linkCandidate = wordBeforeCursor.substring(0, trailingPunctuation
-                ? wordBeforeCursor.length - trailingPunctuation.length
-                : wordBeforeCursor.length);
-            // Match and replace in editor
-            var linkData_1 = roosterjs_editor_dom_1.matchLink(linkCandidate);
-            if (linkData_1) {
-                var anchor_1 = this.editor.getDocument().createElement('A');
-                anchor_1.textContent = linkData_1.originalUrl;
-                anchor_1.href = linkData_1.normalizedUrl;
-                this.editor.runAsync(function () {
-                    _this.editor.formatWithUndo(function () {
-                        if (roosterjs_editor_api_1.replaceTextBeforeCursorWithNode(_this.editor, linkData_1.originalUrl, anchor_1, false /* exactMatch */, cursorData)) {
-                            // The content at cursor has changed. Should also clear the cursor data cache
-                            roosterjs_editor_api_1.clearCursorEventDataCache(event);
-                            _this.backspaceToUndo = true;
-                        }
-                    }, false /*preserveSelection*/, "AutoLink" /* AutoLink */, function () { return anchor_1; });
-                });
-            }
         }
     };
     HyperLink.prototype.removeTempTooltip = function (content) {
@@ -7344,14 +7446,12 @@ function retrieveHtmlViaTempDiv(editor, callback) {
     var originalSelectionRange = editor.getSelectionRange();
     var tempDiv = getTempDivForPaste(editor);
     tempDiv.focus();
-    window.requestAnimationFrame(function () {
-        if (editor) {
-            // restore original selection range in editor
-            editor.select(originalSelectionRange);
-            callback(tempDiv.innerHTML);
-            tempDiv.style.display = 'none';
-            tempDiv.innerHTML = '';
-        }
+    editor.runAsync(function () {
+        // restore original selection range in editor
+        editor.select(originalSelectionRange);
+        callback(tempDiv.innerHTML);
+        tempDiv.style.display = 'none';
+        tempDiv.innerHTML = '';
     });
 }
 function getTempDivForPaste(editor) {

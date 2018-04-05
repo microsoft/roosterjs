@@ -98,15 +98,12 @@ function retrieveHtmlViaTempDiv(editor: Editor, callback: (html: string) => void
     let originalSelectionRange = editor.getSelectionRange();
     let tempDiv = getTempDivForPaste(editor);
     tempDiv.focus();
-
-    window.requestAnimationFrame(() => {
-        if (editor) {
-            // restore original selection range in editor
-            editor.select(originalSelectionRange);
-            callback(tempDiv.innerHTML);
-            tempDiv.style.display = 'none';
-            tempDiv.innerHTML = '';
-        }
+    editor.runAsync(() => {
+        // restore original selection range in editor
+        editor.select(originalSelectionRange);
+        callback(tempDiv.innerHTML);
+        tempDiv.style.display = 'none';
+        tempDiv.innerHTML = '';
     });
 }
 

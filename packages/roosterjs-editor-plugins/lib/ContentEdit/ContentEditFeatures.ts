@@ -1,19 +1,16 @@
+import { ChangeSource, PluginDomEvent } from 'roosterjs-editor-types';
+import { Editor } from 'roosterjs-editor-core';
+
 /**
  * Feature set for ContentEdit plugin.
  * Call getDefaultContentEditFeatures() to get default feature set.
  */
 interface ContentEditFeatures {
     /**
-     * When press Tab in a list, indent current list item
+     * When press Tab/Shift+Tab in a list, indent/outdent current list item
      * @default true
      */
-    indentWhenTab: boolean;
-
-    /**
-     * When press Shift+Tab in a list, outdent current list item
-     * @default true
-     */
-    outdentWhenShiftTab: boolean;
+    indentOutdentWhenTab: boolean;
 
     /**
      * When press BaskSpace on empty line which is the first item of a list, outdent current list item
@@ -46,10 +43,15 @@ interface ContentEditFeatures {
     unquoteWhenEnterOnEmptyLine: boolean;
 
     /**
-     * When press space after an asterik or number in an empty line, toggle bullet/numbering
+     * When press Space after an asterik in an empty line, create a bullet list
      * @default true
      */
     autoBullet: boolean;
+
+    /**
+     * When press Space or Enter after a hyperlink-like string, convert the string to a hyperlink
+     */
+    autoLink: boolean;
 
     /**
      * When press TAB or SHIFT+TAB key in table cell, jump to next/previous table cell
@@ -60,19 +62,25 @@ interface ContentEditFeatures {
 
 export default ContentEditFeatures;
 
+export interface ContentEditFeature {
+    key: number;
+    shouldHandleEvent: (event: PluginDomEvent, editor: Editor) => any;
+    handleEvent: (event: PluginDomEvent, editor: Editor) => ChangeSource | void;
+}
+
 /**
  * Get default feature set of ContentEdit plugin
  */
 export function getDefaultContentEditFeatures(): ContentEditFeatures {
     return {
-        indentWhenTab: true,
-        outdentWhenShiftTab: true,
+        indentOutdentWhenTab: true,
         outdentWhenBackspaceOnEmptyFirstLine: true,
         outdentWhenEnterOnEmptyLine: true,
         mergeInNewLineWhenBackspaceOnFirstChar: false,
         unquoteWhenBackspaceOnEmptyFirstLine: true,
         unquoteWhenEnterOnEmptyLine: true,
         autoBullet: true,
+        autoLink: true,
         tabInTable: true,
     };
 }

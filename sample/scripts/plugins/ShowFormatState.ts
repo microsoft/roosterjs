@@ -71,6 +71,9 @@ export default class ShowFormatState implements EditorPlugin {
             if (formatState.headerLevel > 0) {
                 result += ` <b>Header${formatState.headerLevel}</b>`;
             }
+            if (this.editor.isInIME()) {
+                result += ' <b>IME</b>';
+            }
 
             this.resultContainer.innerHTML = result;
         }

@@ -1,5 +1,6 @@
 import { NodeType } from 'roosterjs-editor-types';
 import PositionType from './PositionType';
+import getElementOrParentElement from '../utils/getElementOrParentElement';
 import isNodeAfter from '../utils/isNodeAfter';
 
 /**
@@ -12,6 +13,7 @@ export default class Position {
     static readonly After = PositionType.After;
 
     readonly node: Node;
+    readonly element: HTMLElement;
     readonly offset: number;
     readonly isAtEnd: boolean;
 
@@ -70,6 +72,8 @@ export default class Position {
                     (this.offset > 0 && this.offset == endOffset);
                 break;
         }
+
+        this.element = getElementOrParentElement(this.node);
     }
 
     /**

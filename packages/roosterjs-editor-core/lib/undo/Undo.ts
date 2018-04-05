@@ -36,12 +36,11 @@ export default class Undo implements UndoService {
     public initialize(editor: Editor) {
         this.editor = editor;
         this.onDropDisposer = this.editor.addDomEventHandler('drop', () => {
-            this.addUndoSnapshot();
             this.hasNewContent = true;
         });
 
         // Add an initial snapshot if snapshotsManager isn't created yet
-        if (!this.undoSnapshots) {
+        if (!this.getSnapshotsManager().canMove(0)) {
             this.addUndoSnapshot();
         }
     }

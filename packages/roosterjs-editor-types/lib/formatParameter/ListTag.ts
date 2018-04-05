@@ -1,6 +1,6 @@
 /**
  * List tag
  */
-type ListTag = 'OL' | 'UL' | '';
+type ListTag = 'OL' | 'UL' | null;
 
 export default ListTag;

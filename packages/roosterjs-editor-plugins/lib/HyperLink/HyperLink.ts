@@ -1,35 +1,21 @@
-import { Browser, matchLink } from 'roosterjs-editor-dom';
-import {
-    replaceTextBeforeCursorWithNode,
-    cacheGetCursorEventData,
-    clearCursorEventDataCache,
-} from 'roosterjs-editor-api';
+import { Browser } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ContentChangedEvent,
     ExtractContentEvent,
-    PluginDomEvent,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 
-// When user type, they may end a link with a puncatuation, i.e. www.bing.com;
-// we need to trim off the trailing puncatuation before turning it to link match
-const TRAILING_PUNCTUATION_REGEX = /[.()+={}\[\]\s:;"',>]+$/i;
 const TEMP_TITLE_REGEX = /<a\s+([^>]*\s+)?(title|istemptitle)="[^"]*"\s*([^>]*)\s+(title|istemptitle)="[^"]*"(\s+[^>]*)?>/gm;
 const TEMP_TITLE = 'istemptitle';
-const MINIMUM_LENGTH = 5;
-const KEY_BACKSPACE = 8;
-const KEY_SPACE = 32;
-const KEY_ENTER = 13;
 
 /**
- * An editor plugin that auto linkify text as users type and show a tooltip for existing link
+ * An editor plugin to show a tooltip for existing link and handle Ctrl+Click on a link
  */
 export default class HyperLink implements EditorPlugin {
     private editor: Editor;
-    private backspaceToUndo: boolean;
 
     /**
      * Create a new instance of HyperLink class
@@ -74,36 +60,10 @@ export default class HyperLink implements EditorPlugin {
      * @param event The event object
      */
     public onPluginEvent(event: PluginEvent) {
-        let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
-        if (
-            this.backspaceToUndo &&
-            (event.eventType == PluginEventType.KeyDown ||
-                event.eventType == PluginEventType.MouseDown ||
-                (event.eventType == PluginEventType.ContentChanged &&
-                    (<ContentChangedEvent>event).source != ChangeSource.AutoLink))
-        ) {
-            this.backspaceToUndo = false;
-            if (
-                event.eventType == PluginEventType.KeyDown &&
-                keyboardEvent.which == KEY_BACKSPACE
-            ) {
-                keyboardEvent.preventDefault();
-                this.editor.undo();
-            }
-        }
-
         switch (event.eventType) {
-            case PluginEventType.KeyDown:
-                if (keyboardEvent.which == KEY_ENTER || keyboardEvent.which == KEY_SPACE) {
-                    this.autoLink(event);
-                }
-                break;
-
             case PluginEventType.ContentChanged:
                 let contentChangedEvent = event as ContentChangedEvent;
-                if (contentChangedEvent.source == ChangeSource.Paste) {
-                    this.autoLink(event);
-                } else if (contentChangedEvent.source == ChangeSource.CreateLink) {
+                if (contentChangedEvent.source == ChangeSource.CreateLink) {
                     this.resetAnchor(contentChangedEvent.data as HTMLAnchorElement);
                 }
 
@@ -126,58 +86,6 @@ export default class HyperLink implements EditorPlugin {
             a.removeEventListener('mouseup', this.onClickLink);
         } catch (e) {}
     };
-
-    private autoLink(event: PluginEvent) {
-        let cursorData = cacheGetCursorEventData(event, this.editor);
-        let wordBeforeCursor = cursorData ? cursorData.wordBeforeCursor : null;
-        if (wordBeforeCursor && wordBeforeCursor.length > MINIMUM_LENGTH) {
-            // Check for trailing punctuation
-            let trailingPunctuations = wordBeforeCursor.match(TRAILING_PUNCTUATION_REGEX);
-            let trailingPunctuation =
-                trailingPunctuations && trailingPunctuations.length > 0
-                    ? trailingPunctuations[0]
-                    : null;
-
-            // Compute the link candidate
-            let linkCandidate = wordBeforeCursor.substring(
-                0,
-                trailingPunctuation
-                    ? wordBeforeCursor.length - trailingPunctuation.length
-                    : wordBeforeCursor.length
-            );
-
-            // Match and replace in editor
-            let linkData = matchLink(linkCandidate);
-            if (linkData) {
-                let anchor = this.editor.getDocument().createElement('A') as HTMLAnchorElement;
-                anchor.textContent = linkData.originalUrl;
-                anchor.href = linkData.normalizedUrl;
-
-                this.editor.runAsync(() => {
-                    this.editor.formatWithUndo(
-                        () => {
-                            if (
-                                replaceTextBeforeCursorWithNode(
-                                    this.editor,
-                                    linkData.originalUrl,
-                                    anchor,
-                                    false /* exactMatch */,
-                                    cursorData
-                                )
-                            ) {
-                                // The content at cursor has changed. Should also clear the cursor data cache
-                                clearCursorEventDataCache(event);
-                                this.backspaceToUndo = true;
-                            }
-                        },
-                        false /*preserveSelection*/,
-                        ChangeSource.AutoLink,
-                        () => anchor
-                    );
-                });
-            }
-        }
-    }
 
     private processLink = (a: HTMLAnchorElement) => {
         if (!a.title && this.getTooltipCallback) {

@@ -46,6 +46,7 @@ export {
 } from './utils/sanitizeHtml';
 export { default as fromHtml } from './utils/fromHtml';
 export { default as getComputedStyles } from './utils/getComputedStyles';
+export { default as getElementOrParentElement } from './utils/getElementOrParentElement';
 export { default as getTagOfNode } from './utils/getTagOfNode';
 export { default as intersectWithNodeRange } from './utils/intersectWithNodeRange';
 export { default as isBlockElement } from './utils/isBlockElement';

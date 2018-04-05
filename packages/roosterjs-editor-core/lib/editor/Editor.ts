@@ -16,7 +16,6 @@ import {
     DefaultFormat,
     ExtractContentEvent,
     InsertOption,
-    NodeType,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
@@ -32,6 +31,7 @@ import {
     contains,
     fromHtml,
     getBlockElementAtNode,
+    getElementOrParentElement,
     getFirstLeafNode,
     getTagOfNode,
     isNodeEmpty,
@@ -51,6 +51,8 @@ export default class Editor {
     private eventDisposers: (() => void)[];
     private defaultRange: Range;
 
+    //#region Editor Lifecycle
+
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
@@ -66,14 +68,15 @@ export default class Editor {
         this.core = EditorCore.create(contentDiv, options);
         this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus;
         this.omitContentEditable = options.omitContentEditableAttributeChanges;
-        this.defaultRange = this.createDefaultRange();
+        this.defaultRange = this.getDocument().createRange();
+        this.defaultRange.setStart(this.core.contentDiv, 0);
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
 
         // 4. Ensure initial content and its format
         this.setContent(options.initialContent || this.core.contentDiv.innerHTML);
-        this.ensureInitialContent();
+        this.fixContentStructure(getFirstLeafNode(contentDiv));
 
         // 5. Initialize undo service
         this.core.undo.initialize(this);
@@ -144,6 +147,8 @@ export default class Editor {
     public isDisposed(): boolean {
         return !this.core;
     }
+
+    //#endregion
 
     //#region Node API
 
@@ -606,12 +611,10 @@ export default class Editor {
             attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
             attachDomEvent(this.core, 'mouseup', PluginEventType.MouseUp),
             attachDomEvent(this.core, 'compositionstart', null, () => (this.inIME = true)),
-            attachDomEvent(
-                this.core,
-                'compositionend',
-                PluginEventType.CompositionEnd,
-                () => (this.inIME = false)
-            ),
+            attachDomEvent(this.core, 'compositionend', PluginEventType.CompositionEnd, () => {
+                this.inIME = false;
+                this.onKeyPress();
+            }),
             attachDomEvent(this.core, 'focus', null, () => {
                 // Restore the last saved selection first
                 if (this.core.cachedRange && !this.disableRestoreSelectionOnFocus) {
@@ -622,81 +625,66 @@ export default class Editor {
             attachDomEvent(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, () => {
                 this.core.cachedRange = getLiveRange(this.core);
             }),
+            attachDomEvent(this.core, 'drop', null, () => {
+                this.formatWithUndo(null, false /*preserveSelection*/, ChangeSource.Drop);
+            }),
         ];
     }
 
-    // Check if user is typing right under the content div
-    // When typing goes directly under content div, many things can go wrong
-    // We fix it by wrapping it with a div and reposition cursor within the div
-    // TODO: we only fix the case when selection is collapsed
-    // When selection is not collapsed, i.e. users press ctrl+A, and then type
-    // We don't have a good way to fix that for the moment
+    /**
+     * Check if user is typing right under the content div
+     * When typing goes directly under content div, many things can go wrong
+     * We fix it by wrapping it with a div and reposition cursor within the div
+     */
     private onKeyPress = () => {
-        let range = this.getSelectionRange();
-        let focusNode: Node;
+        let range = getLiveRange(this.core);
         if (
+            range &&
             range.collapsed &&
-            (focusNode = range.start.node) &&
-            (focusNode == this.core.contentDiv ||
-                (focusNode.nodeType == NodeType.Text &&
-                    focusNode.parentNode == this.core.contentDiv))
+            getElementOrParentElement(range.startContainer) == this.core.contentDiv &&
+            !this.select(this.fixContentStructure(range.startContainer), 0)
         ) {
-            let blockElement = getBlockElementAtNode(this.core.contentDiv, range.start.node);
-
-            if (!blockElement) {
-                // Only reason we don't get the selection block is that we have an empty content div
-                // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
-                // The fix is to add a DIV wrapping, apply default format and move cursor over
-                let nodes = fromHtml('<div><br></div>', this.getDocument());
-                let element = this.core.contentDiv.appendChild(nodes[0]) as HTMLElement;
-                applyFormat(element, this.core.defaultFormat);
-                // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
-                this.select(element.firstChild, 0);
-            } else if (
-                blockElement.getStartNode().parentNode == blockElement.getEndNode().parentNode
-            ) {
-                // Only fix the balanced start-end block where start and end node is under same parent
-                // The focus node could be pointing to the content div, normalize it to have it point to a child first
-                let focusOffset = range.start.offset;
-                let element = wrap(blockElement.getContentNodes()) as HTMLElement;
-                if (getTagOfNode(blockElement.getStartNode()) == 'BR') {
-                    // if the block is just BR, apply default format
-                    // Otherwise, leave it as it is as we don't want to change the style for existing data
-                    applyFormat(element, this.core.defaultFormat);
-                }
-                // Last restore the selection using the normalized editor point
-                this.select(new Position(focusNode, focusOffset).normalize());
-            }
+            this.select(range);
         }
     };
 
-    private ensureInitialContent() {
-        let contentDiv = this.core.contentDiv;
-        let firstBlock = getBlockElementAtNode(contentDiv, getFirstLeafNode(contentDiv));
-        let defaultFormatBlockElement: Node;
+    /**
+     * Check if user will type right under the content div
+     * When typing goes directly under content div, many things can go wrong
+     * We fix it by wrapping it with a div and reposition cursor within the div
+     */
+    private fixContentStructure(node: Node): Node {
+        let block = this.getBlockElementAtNode(node);
+        let startNode = block ? block.getStartNode() : null;
+        let formatElement: HTMLElement;
+        let nodeToSelect: Node;
 
-        if (!firstBlock) {
-            // No first block, let's create one
-            let nodes = fromHtml('<div><br></div>', this.getDocument());
-            defaultFormatBlockElement = this.core.contentDiv.appendChild(nodes[0]);
-        } else if (firstBlock instanceof NodeBlockElement) {
-            // There is a first block and it is a Node (P, DIV etc.) block
-            // Check if it is empty block and apply default format if so
-            if (isNodeEmpty(firstBlock.getStartNode())) {
-                defaultFormatBlockElement = firstBlock.getStartNode();
-            }
+        if (!block) {
+            // Only reason we can't get the selection block is that we have an empty content div
+            // which can happen when nothing is set to initial content, or user removes everything
+            // (i.e. select all and DEL, or backspace from very end to begin).
+            // The fix is to add a DIV wrapping, apply default format and move cursor over
+            formatElement = fromHtml('<div><br></div>', this.getDocument())[0] as HTMLElement;
+            this.core.contentDiv.appendChild(formatElement);
+
+            // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
+            nodeToSelect = formatElement.firstChild;
+        } else if (block instanceof NodeBlockElement) {
+            // if the block is empty, apply default format
+            // Otherwise, leave it as it is as we don't want to change the style for existing data
+            formatElement = isNodeEmpty(startNode) ? (startNode as HTMLElement) : null;
+        } else if (startNode.parentNode == block.getEndNode().parentNode) {
+            // Only fix the balanced start-end block where start and end node is under same parent
+            // The focus node could be pointing to the content div, normalize it to have it point to a child first
+            formatElement = wrap(block.getContentNodes());
         }
 
-        if (defaultFormatBlockElement) {
-            applyFormat(defaultFormatBlockElement as HTMLElement, this.core.defaultFormat);
+        if (formatElement) {
+            applyFormat(formatElement, this.core.defaultFormat);
         }
+
+        return nodeToSelect;
     }
 
-    private createDefaultRange() {
-        let range = this.getDocument().createRange();
-        range.setStart(this.core.contentDiv, 0);
-        range.collapse(true);
-        return range;
-    }
     //#endregion
 }

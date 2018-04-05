@@ -39,6 +39,11 @@ export const enum ChangeSource {
      * Content changed by setContent API
      */
     SetContent = 'SetContent',
+
+    /**
+     * Content changed by drag & drop operation
+     */
+    Drop = 'Drop',
 }
 
 /**

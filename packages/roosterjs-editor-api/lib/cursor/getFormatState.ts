@@ -52,7 +52,7 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
     }
 
     let styles = getComputedStyles(nodeAtCursor);
-    let tag = cacheGetListTag(editor, event);
+    let tag = cacheGetListTag(event, editor);
     return {
         fontName: styles[0],
         fontSize: styles[1],

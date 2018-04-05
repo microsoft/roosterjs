@@ -33,7 +33,7 @@ export default function formatWithUndo(
                 callback();
             }
 
-            if (changeSource) {
+            if (!isNested && changeSource) {
                 let event: ContentChangedEvent = {
                     eventType: PluginEventType.ContentChanged,
                     source: changeSource,

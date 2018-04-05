@@ -63,7 +63,7 @@ declare namespace roosterjs {
     /**
      * List tag
      */
-    type ListTag = 'OL' | 'UL' | '';
+    type ListTag = 'OL' | 'UL' | null;
 
     /**
      * Paste option
@@ -460,6 +460,10 @@ declare namespace roosterjs {
          * Content changed by setContent API
          */
         SetContent = "SetContent",
+        /**
+         * Content changed by drag & drop operation
+         */
+        Drop = "Drop",
     }
 
     /**
@@ -641,6 +645,7 @@ declare namespace roosterjs {
         static readonly End: PositionType;
         static readonly After: PositionType;
         readonly node: Node;
+        readonly element: HTMLElement;
         readonly offset: number;
         readonly isAtEnd: boolean;
         /**
@@ -1269,6 +1274,13 @@ declare namespace roosterjs {
     function getComputedStyles(node: Node, styleNames?: string | string[]): string[];
 
     /**
+     * Get element from node or its parent
+     * @param node The node to get element from
+     * @returns node itself if the node is an element, or its parent node
+     */
+    function getElementOrParentElement(node: Node): HTMLElement;
+
+    /**
      * Get the html tag of a node, or empty if it is not an element
      * @param node The node to get tag of
      * @returns Tag name in upper case if the given node is an Element, or empty string otherwise
@@ -1613,9 +1625,18 @@ declare namespace roosterjs {
          */
         runAsync(callback: () => void): void;
         private createEventHandlers();
+        /**
+         * Check if user is typing right under the content div
+         * When typing goes directly under content div, many things can go wrong
+         * We fix it by wrapping it with a div and reposition cursor within the div
+         */
         private onKeyPress;
-        private ensureInitialContent();
-        private createDefaultRange();
+        /**
+         * Check if user will type right under the content div
+         * When typing goes directly under content div, many things can go wrong
+         * We fix it by wrapping it with a div and reposition cursor within the div
+         */
+        private fixContentStructure(node);
     }
 
     /**
@@ -1973,12 +1994,12 @@ declare namespace roosterjs {
     /**
      * Get the list state at selection
      * The list state refers to the HTML elements <OL> or <UL>
-     * @param editor The editor instance
      * @param event (Optional) The plugin event, it stores the event cached data for looking up.
+     * @param editor The editor instance
      * If not passed, we will query the first <LI> node in selection and return the list state of its direct parent
      * @returns The list tag, OL, UL or empty when cursor is not inside a list
      */
-    function cacheGetListTag(editor: Editor, event?: PluginEvent): ListTag;
+    function cacheGetListTag(event: PluginEvent, editor: Editor): ListTag;
 
     /**
      * Clear the format in current selection, after cleaning, the format will be
@@ -2339,13 +2360,12 @@ declare namespace roosterjs {
     }
 
     /**
-     * An editor plugin that auto linkify text as users type and show a tooltip for existing link
+     * An editor plugin to show a tooltip for existing link and handle Ctrl+Click on a link
      */
     class HyperLink implements EditorPlugin {
         private getTooltipCallback;
         private target;
         private editor;
-        private backspaceToUndo;
         /**
          * Create a new instance of HyperLink class
          * @param getTooltipCallback A callback function to get tooltip text for an existing hyperlink.
@@ -2369,7 +2389,6 @@ declare namespace roosterjs {
          */
         onPluginEvent(event: PluginEvent): void;
         private resetAnchor;
-        private autoLink(event);
         private processLink;
         private removeTempTooltip(content);
         private onClickLink;
@@ -2383,16 +2402,21 @@ declare namespace roosterjs {
      * 2. Enter, Backspace on empty list item
      * 3. Enter, Backspace on empty blockquote line
      * 4. Auto bullet/numbering
+     * 5. Auto link
+     * 6. Tab in table
      */
     class ContentEdit implements EditorPlugin {
-        private features;
         private editor;
-        private backspaceToUndo;
+        private features;
+        private keys;
+        private backspaceUndoEventSource;
+        private currentFeature;
+        private autoLinkEnabled;
         /**
          * Create instance of ContentEdit plugin
          * @param features An optional feature set to determine which features the plugin should provide
          */
-        constructor(features?: ContentEditFeatures);
+        constructor(featureSet?: ContentEditFeatures);
         /**
          * Initialize this plugin
          * @param editor The editor instance
@@ -2402,16 +2426,15 @@ declare namespace roosterjs {
          * Dispose this plugin
          */
         dispose(): void;
+        /**
+         * Check whether the event should be handled exclusively by this plugin
+         */
         willHandleEventExclusively(event: PluginEvent): boolean;
+        /**
+         * Handle the event
+         */
         onPluginEvent(event: PluginEvent): void;
-        private handleAutoBullet(event);
-        private isListEvent(event, interestedKeyCodes);
-        private isTabInTable(event);
-        private cacheGetTd(event);
-        private getBlockQuoteElementFromEvent(event, keyboardEvent);
-        private shouldToggleState(event, node);
-        private toggleList(event);
-        private isCursorAtBeginningOf(node);
+        private addFeature(add, feature);
     }
 
     /**
@@ -2467,15 +2490,10 @@ declare namespace roosterjs {
      */
     interface ContentEditFeatures {
         /**
-         * When press Tab in a list, indent current list item
+         * When press Tab/Shift+Tab in a list, indent/outdent current list item
          * @default true
          */
-        indentWhenTab: boolean;
-        /**
-         * When press Shift+Tab in a list, outdent current list item
-         * @default true
-         */
-        outdentWhenShiftTab: boolean;
+        indentOutdentWhenTab: boolean;
         /**
          * When press BaskSpace on empty line which is the first item of a list, outdent current list item
          * @default true
@@ -2502,10 +2520,14 @@ declare namespace roosterjs {
          */
         unquoteWhenEnterOnEmptyLine: boolean;
         /**
-         * When press space after an asterik or number in an empty line, toggle bullet/numbering
+         * When press Space after an asterik in an empty line, create a bullet list
          * @default true
          */
         autoBullet: boolean;
+        /**
+         * When press Space or Enter after a hyperlink-like string, convert the string to a hyperlink
+         */
+        autoLink: boolean;
         /**
          * When press TAB or SHIFT+TAB key in table cell, jump to next/previous table cell
          * @default true

@@ -1,4 +1,5 @@
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
+import { getElementOrParentElement } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 import { ContentScope, NodeType } from 'roosterjs-editor-types';
 
@@ -19,10 +20,7 @@ export default function toggleHeader(editor: Editor, level: number) {
             let traverser = editor.getContentTraverser(ContentScope.Selection);
             let inlineElement = traverser ? traverser.currentInlineElement : null;
             while (inlineElement) {
-                let node = inlineElement.getContainerNode();
-                if (node.nodeType == NodeType.Text) {
-                    node = node.parentNode;
-                }
+                let node = getElementOrParentElement(inlineElement.getContainerNode());
                 if (node.nodeType == NodeType.Element) {
                     (<HTMLElement>node).style.fontSize = '';
                 }

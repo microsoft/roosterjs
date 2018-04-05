@@ -32,7 +32,7 @@ export default function getCursorRect(editor: Editor): Rect {
 
     if (!rect) {
         let position = new Position(range.startContainer, range.startOffset).normalize();
-        let node = position.node;
+        let { node, element } = position;
 
         // 3) if current cursor is inside text node, insert a SPAN and get the rect of SPAN
         if (node.nodeType == NodeType.Text) {
@@ -46,11 +46,8 @@ export default function getCursorRect(editor: Editor): Rect {
         }
 
         // 4) fallback to element.getBoundingClientRect()
-        if (!rect) {
-            node = node.nodeType == NodeType.Element ? node : node.parentNode;
-            if (node && node.nodeType == NodeType.Element) {
-                rect = getRectFromClientRect((<Element>node).getBoundingClientRect());
-            }
+        if (!rect && element) {
+            rect = getRectFromClientRect(element.getBoundingClientRect());
         }
     }
 
