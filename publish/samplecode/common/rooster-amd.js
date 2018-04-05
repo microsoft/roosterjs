@@ -424,15 +424,24 @@ function getCursorRect(editor) {
     if (!rect) {
         var position = new roosterjs_editor_dom_1.Position(range.startContainer, range.startOffset).normalize();
         var node = position.node, element = position.element;
-        // 3) if current cursor is inside text node, insert a SPAN and get the rect of SPAN
-        if (node.nodeType == 3 /* Text */) {
-            var span = document.createElement('SPAN');
-            range = document.createRange();
-            range.setStart(node, position.offset);
-            range.collapse(true /*toStart*/);
-            range.insertNode(span);
-            rect = getRectFromClientRect(span.getBoundingClientRect());
-            span.parentNode.removeChild(span);
+        // 3) if current cursor is inside text node, use range.getClientRects() for safari or insert a SPAN and get the rect of SPAN for others
+        if (roosterjs_editor_dom_1.Browser.isSafari) {
+            var rects = range.getClientRects();
+            if (rects && rects.length == 1) {
+                rect = getRectFromClientRect(rects[0]);
+            }
+        }
+        else {
+            if (node.nodeType == 3 /* Text */) {
+                var document_1 = editor.getDocument();
+                var span = document_1.createElement('SPAN');
+                var range_1 = document_1.createRange();
+                range_1.setStart(node, position.offset);
+                range_1.collapse(true /*toStart*/);
+                range_1.insertNode(span);
+                rect = getRectFromClientRect(span.getBoundingClientRect());
+                span.parentNode.removeChild(span);
+            }
         }
         // 4) fallback to element.getBoundingClientRect()
         if (!rect && element) {
@@ -647,11 +656,7 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
  * @param editor The editor instance
  * @param range The range in which content needs to be replaced
  * @param node The node to be inserted
- * @param exactMatch exactMatch is to match exactly, i.e.
- * In auto linkification, users could type URL followed by some punctuation and hit space. The auto link will kick in on space,
- * at the moment, what is before cursor could be "<URL>,", however, only "<URL>" makes the link. by setting exactMatch = false, it does not match
- * from right before cursor, but can scan through till first same char is seen. On the other hand if set exactMatch = true, it starts the match right
- * before cursor.
+ * @param exactMatch exactMatch is to match exactly
  * @returns True if we complete the replacement, false otherwise
  */
 function replaceRangeWithNode(editor, range, node, exactMatch) {
@@ -659,10 +664,14 @@ function replaceRangeWithNode(editor, range, node, exactMatch) {
     if (!range || !node) {
         return false;
     }
+    var backupRange = editor.getSelectionRange();
     range.deleteContents();
     range.insertNode(node);
     if (exactMatch) {
         editor.select(node, roosterjs_editor_dom_1.Position.After);
+    }
+    else if (backupRange && editor.contains(backupRange)) {
+        editor.select(backupRange);
     }
     return true;
 }
@@ -6725,7 +6734,7 @@ exports.AutoBullet = {
                     rangeToDelete.deleteContents();
                 }
                 // If not explicitly insert br, Chrome will operate on the previous line
-                if (roosterjs_editor_dom_1.Browser.isChrome) {
+                if (roosterjs_editor_dom_1.Browser.isChrome || roosterjs_editor_dom_1.Browser.isChrome) {
                     editor.insertContent('<BR>');
                 }
                 if (textBeforeCursor == '1.') {

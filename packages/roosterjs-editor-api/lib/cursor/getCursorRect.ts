@@ -1,5 +1,5 @@
 import { Editor } from 'roosterjs-editor-core';
-import { Position } from 'roosterjs-editor-dom';
+import { Browser, Position } from 'roosterjs-editor-dom';
 import { Rect, NodeType } from 'roosterjs-editor-types';
 
 /**
@@ -34,15 +34,23 @@ export default function getCursorRect(editor: Editor): Rect {
         let position = new Position(range.startContainer, range.startOffset).normalize();
         let { node, element } = position;
 
-        // 3) if current cursor is inside text node, insert a SPAN and get the rect of SPAN
-        if (node.nodeType == NodeType.Text) {
-            let span = document.createElement('SPAN');
-            range = document.createRange();
-            range.setStart(node, position.offset);
-            range.collapse(true /*toStart*/);
-            range.insertNode(span);
-            rect = getRectFromClientRect(span.getBoundingClientRect());
-            span.parentNode.removeChild(span);
+        // 3) if current cursor is inside text node, use range.getClientRects() for safari or insert a SPAN and get the rect of SPAN for others
+        if (Browser.isSafari) {
+            let rects = range.getClientRects();
+            if (rects && rects.length == 1) {
+                rect = getRectFromClientRect(rects[0]);
+            }
+        } else {
+            if (node.nodeType == NodeType.Text) {
+                let document = editor.getDocument();
+                let span = document.createElement('SPAN');
+                let range = document.createRange();
+                range.setStart(node, position.offset);
+                range.collapse(true /*toStart*/);
+                range.insertNode(span);
+                rect = getRectFromClientRect(span.getBoundingClientRect());
+                span.parentNode.removeChild(span);
+            }
         }
 
         // 4) fallback to element.getBoundingClientRect()

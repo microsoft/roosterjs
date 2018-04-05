@@ -50,7 +50,7 @@ export const AutoBullet: ContentEditFeature = {
                     }
 
                     // If not explicitly insert br, Chrome will operate on the previous line
-                    if (Browser.isChrome) {
+                    if (Browser.isChrome || Browser.isChrome) {
                         editor.insertContent('<BR>');
                     }
 
