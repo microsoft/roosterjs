@@ -1,5 +1,5 @@
 import { ChangeSource, LinkData, PluginDomEvent } from 'roosterjs-editor-types';
-import { ContentEditFeature } from './ContentEditFeatures';
+import { ContentEditFeature } from '../ContentEditFeatures';
 import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
 import { matchLink } from 'roosterjs-editor-dom';
 import {

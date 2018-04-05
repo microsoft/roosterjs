@@ -7,11 +7,11 @@ import {
     PluginEventType,
 } from 'roosterjs-editor-types';
 import ContentEditFeatures, { ContentEditFeature, getDefaultContentEditFeatures } from './ContentEditFeatures';
-import { AutoBullet } from './autoBulletFeatures';
-import { AutoLink1, AutoLink2 } from './autoLinkFeatures';
-import { IndentOutdentWhenTab, MergeInNewLine, OutdentBSEmptyLine1, OutdentWhenEnterOnEmptyLine, } from './ListFeatures';
-import { UnquoteBSEmptyLine1, UnquoteWhenEnterOnEmptyLine } from './quoteFeatures';
-import { TabInTable } from './tableFeatures';
+import { AutoBullet } from './features/autoBulletFeatures';
+import { AutoLink1, AutoLink2 } from './features/autoLinkFeatures';
+import { IndentOutdentWhenTab, MergeInNewLine, OutdentBSEmptyLine1, OutdentWhenEnterOnEmptyLine, } from './features/ListFeatures';
+import { UnquoteBSEmptyLine1, UnquoteWhenEnterOnEmptyLine } from './features/quoteFeatures';
+import { TabInTable } from './features/tableFeatures';
 
 const KEY_BACKSPACE = 8;
 

@@ -1,4 +1,4 @@
-import { ContentEditFeature } from './ContentEditFeatures';
+import { ContentEditFeature } from '../ContentEditFeatures';
 import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
 import { PluginDomEvent } from 'roosterjs-editor-types';
 import { Position, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';

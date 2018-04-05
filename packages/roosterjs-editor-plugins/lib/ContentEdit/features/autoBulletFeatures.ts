@@ -1,6 +1,6 @@
 import { Browser } from 'roosterjs-editor-dom';
 import { ChangeSource } from 'roosterjs-editor-types';
-import { ContentEditFeature } from './ContentEditFeatures';
+import { ContentEditFeature } from '../ContentEditFeatures';
 import {
     cacheGetCursorEventData,
     cacheGetListTag,

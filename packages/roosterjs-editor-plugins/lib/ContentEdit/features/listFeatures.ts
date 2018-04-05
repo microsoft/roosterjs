@@ -1,4 +1,4 @@
-import { ContentEditFeature } from './ContentEditFeatures';
+import { ContentEditFeature } from '../ContentEditFeatures';
 import { Editor } from 'roosterjs-editor-core';
 import { Indentation, PluginDomEvent } from 'roosterjs-editor-types';
 import { Position, SelectionRange, isNodeEmpty } from 'roosterjs-editor-dom';

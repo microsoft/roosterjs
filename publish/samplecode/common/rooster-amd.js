@@ -6468,11 +6468,11 @@ exports.default = wrap;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var ContentEditFeatures_1 = __webpack_require__(/*! ./ContentEditFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/ContentEditFeatures.ts");
-var autoBulletFeatures_1 = __webpack_require__(/*! ./autoBulletFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/autoBulletFeatures.ts");
-var autoLinkFeatures_1 = __webpack_require__(/*! ./autoLinkFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/autoLinkFeatures.ts");
-var ListFeatures_1 = __webpack_require__(/*! ./ListFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/ListFeatures.ts");
-var quoteFeatures_1 = __webpack_require__(/*! ./quoteFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/quoteFeatures.ts");
-var tableFeatures_1 = __webpack_require__(/*! ./tableFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/tableFeatures.ts");
+var autoBulletFeatures_1 = __webpack_require__(/*! ./features/autoBulletFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/autoBulletFeatures.ts");
+var autoLinkFeatures_1 = __webpack_require__(/*! ./features/autoLinkFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/autoLinkFeatures.ts");
+var ListFeatures_1 = __webpack_require__(/*! ./features/ListFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/ListFeatures.ts");
+var quoteFeatures_1 = __webpack_require__(/*! ./features/quoteFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/quoteFeatures.ts");
+var tableFeatures_1 = __webpack_require__(/*! ./features/tableFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/tableFeatures.ts");
 var KEY_BACKSPACE = 8;
 /**
  * An editor plugin to handle content edit event.
@@ -6613,10 +6613,10 @@ exports.getDefaultContentEditFeatures = getDefaultContentEditFeatures;
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/ListFeatures.ts":
-/*!***************************************************************************!*\
-  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/ListFeatures.ts ***!
-  \***************************************************************************/
+/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/ListFeatures.ts":
+/*!************************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/features/ListFeatures.ts ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6693,10 +6693,10 @@ function toggleListAndPreventDefault(event, editor) {
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/autoBulletFeatures.ts":
-/*!*********************************************************************************!*\
-  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/autoBulletFeatures.ts ***!
-  \*********************************************************************************/
+/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/autoBulletFeatures.ts":
+/*!******************************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/features/autoBulletFeatures.ts ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6754,10 +6754,10 @@ exports.AutoBullet = {
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/autoLinkFeatures.ts":
-/*!*******************************************************************************!*\
-  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/autoLinkFeatures.ts ***!
-  \*******************************************************************************/
+/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/autoLinkFeatures.ts":
+/*!****************************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/features/autoLinkFeatures.ts ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6822,10 +6822,10 @@ function autoLink(event, editor) {
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/quoteFeatures.ts":
-/*!****************************************************************************!*\
-  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/quoteFeatures.ts ***!
-  \****************************************************************************/
+/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/quoteFeatures.ts":
+/*!*************************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/features/quoteFeatures.ts ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6879,10 +6879,10 @@ function splitQuote(event, editor) {
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/tableFeatures.ts":
-/*!****************************************************************************!*\
-  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/tableFeatures.ts ***!
-  \****************************************************************************/
+/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/tableFeatures.ts":
+/*!*************************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/features/tableFeatures.ts ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 

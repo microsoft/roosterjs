@@ -1,4 +1,4 @@
-import { ContentEditFeature } from './ContentEditFeatures';
+import { ContentEditFeature } from '../ContentEditFeatures';
 import { Position } from 'roosterjs-editor-dom';
 import {
     VTable,
