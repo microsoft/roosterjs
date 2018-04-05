@@ -20,13 +20,16 @@ export default class Undo implements UndoService {
     private hasNewContent: boolean;
     private undoSnapshots: UndoSnapshots;
     private lastKeyPress: number;
+    private onDropDisposer: () => void;
+    private onCutDisposer: () => void;
 
     /**
      * Create an instance of Undo
      * @param preserveSnapshots True to preserve the snapshots after dispose, this allows
      * this object to be reused when editor is disposed and created again
+     * @param maxBufferSize The max buffer size for snapshots. Default value is 10MB
      */
-    constructor(private preserveSnapshots?: boolean) {}
+    constructor(private preserveSnapshots?: boolean, private maxBufferSize: number = 1e7) {}
 
     /**
      * Initialize this plugin. This should only be called from Editor
@@ -34,6 +37,8 @@ export default class Undo implements UndoService {
      */
     public initialize(editor: Editor): void {
         this.editor = editor;
+        this.onDropDisposer = this.editor.addDomEventHandler('drop', this.onNativeEvent);
+        this.onCutDisposer = this.editor.addDomEventHandler('cut', this.onNativeEvent);
 
         // Add an initial snapshot if snapshotsManager isn't created yet
         if (!this.undoSnapshots) {
@@ -45,6 +50,10 @@ export default class Undo implements UndoService {
      * Dispose this plugin
      */
     public dispose() {
+        this.onDropDisposer();
+        this.onCutDisposer();
+        this.onDropDisposer = null;
+        this.onCutDisposer = null;
         this.editor = null;
 
         if (!this.preserveSnapshots) {
@@ -212,8 +221,13 @@ export default class Undo implements UndoService {
 
     private getSnapshotsManager() {
         if (!this.undoSnapshots) {
-            this.undoSnapshots = new UndoSnapshots();
+            this.undoSnapshots = new UndoSnapshots(this.maxBufferSize);
         }
         return this.undoSnapshots;
+    }
+
+    private onNativeEvent = () => {
+        this.addUndoSnapshot();
+        this.hasNewContent = true;
     }
 }
