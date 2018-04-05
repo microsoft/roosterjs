@@ -1,10 +1,9 @@
-import cacheGetListTag from '../cursor/cacheGetListTag';
-import getNodeAtCursor from '../cursor/getNodeAtCursor';
+import getNodeAtCursor, { cacheGetNodeAtCursor } from '../cursor/getNodeAtCursor';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { Editor } from 'roosterjs-editor-core';
 import { FormatState, PluginEvent } from 'roosterjs-editor-types';
 import { cacheGetEventData } from 'roosterjs-editor-core';
-import { getComputedStyles } from 'roosterjs-editor-dom';
+import { getTagOfNode, getComputedStyles } from 'roosterjs-editor-dom';
 
 /**
  * Get the header level in current selection. The header level refers to the HTML <H1> to <H6> elements,
@@ -52,7 +51,8 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
     }
 
     let styles = getComputedStyles(nodeAtCursor);
-    let tag = cacheGetListTag(event, editor);
+    let listNode = cacheGetNodeAtCursor(editor, event, 'LI');
+    let tag = listNode ? getTagOfNode(listNode.parentNode) : null;
     return {
         fontName: styles[0],
         fontSize: styles[1],

@@ -1,9 +1,6 @@
 import { ContentEditFeature } from '../ContentEditFeatures';
 import { Position } from 'roosterjs-editor-dom';
-import {
-    VTable,
-    cacheGetNodeAtCursor,
-} from 'roosterjs-editor-api';
+import { VTable, cacheGetNodeAtCursor } from 'roosterjs-editor-api';
 
 const KEY_TAB = 9;
 

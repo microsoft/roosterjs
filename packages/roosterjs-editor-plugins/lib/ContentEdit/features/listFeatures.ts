@@ -1,18 +1,23 @@
 import { ContentEditFeature } from '../ContentEditFeatures';
 import { Editor } from 'roosterjs-editor-core';
 import { Indentation, PluginDomEvent } from 'roosterjs-editor-types';
-import { Position, SelectionRange, isNodeEmpty } from 'roosterjs-editor-dom';
+import { Position, SelectionRange, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
 import {
-    cacheGetListTag,
+    cacheGetCursorEventData,
     cacheGetNodeAtCursor,
+    getNodeAtCursor,
     setIndentation,
     toggleBullet,
     toggleNumbering,
+    validateAndGetRangeForTextBeforeCursor,
 } from 'roosterjs-editor-api';
+import { Browser } from 'roosterjs-editor-dom';
+import { ChangeSource } from 'roosterjs-editor-types';
 
 const KEY_BACKSPACE = 8;
 const KEY_TAB = 9;
 const KEY_ENTER = 13;
+const KEY_SPACE = 32;
 
 export const IndentOutdentWhenTab: ContentEditFeature = {
     key: KEY_TAB,
@@ -70,6 +75,65 @@ export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
     handleEvent: toggleListAndPreventDefault,
 };
 
+export const AutoBullet: ContentEditFeature = {
+    key: KEY_SPACE,
+    shouldHandleEvent: (event, editor) => {
+        if (!cacheGetListTag(event, editor)) {
+            let cursorData = cacheGetCursorEventData(event, editor);
+            let textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
+
+            // Auto list is triggered if:
+            // 1. Text before cursor exactly mathces '*', '-' or '1.'
+            // 2. There's no non-text inline entities before cursor
+            return (
+                ['*', '-', '1.'].indexOf(textBeforeCursor) >= 0 &&
+                !cursorData.getFirstNonTextInlineBeforeCursor()
+            );
+        }
+        return false;
+    },
+    handleEvent: (event, editor) => {
+        editor.runAsync(() => {
+            let listNode: Node;
+            let cursorData = cacheGetCursorEventData(event, editor);
+            let textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
+
+            // editor.insertContent(NBSP);
+            editor.formatWithUndo(
+                () => {
+                    // Remove the user input '*', '-' or '1.'
+                    let rangeToDelete = validateAndGetRangeForTextBeforeCursor(
+                        editor,
+                        textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
+                        true /*exactMatch*/,
+                        cursorData
+                    );
+                    if (rangeToDelete) {
+                        rangeToDelete.deleteContents();
+                    }
+
+                    // If not explicitly insert br, Chrome will operate on the previous line
+                    if (Browser.isChrome || Browser.isChrome) {
+                        editor.insertContent('<BR>');
+                    }
+
+                    if (textBeforeCursor == '1.') {
+                        toggleNumbering(editor);
+                        listNode = getNodeAtCursor(editor, 'OL');
+                    } else {
+                        toggleBullet(editor);
+                        listNode = getNodeAtCursor(editor, 'UL');
+                    }
+                },
+                false /*preserveSelection*/,
+                ChangeSource.AutoBullet,
+                () => listNode
+            );
+        });
+        return ChangeSource.AutoBullet;
+    },
+};
+
 function toggleListAndPreventDefault(event: PluginDomEvent, editor: Editor) {
     let tag = cacheGetListTag(event, editor);
 
@@ -79,4 +143,10 @@ function toggleListAndPreventDefault(event: PluginDomEvent, editor: Editor) {
         toggleNumbering(editor);
     }
     event.rawEvent.preventDefault();
+}
+
+function cacheGetListTag(event: PluginDomEvent, editor: Editor) {
+    let li = cacheGetNodeAtCursor(editor, event, 'LI');
+    let tag = li && getTagOfNode(li.parentNode);
+    return tag == 'OL' || tag == 'UL' ? tag : null;
 }

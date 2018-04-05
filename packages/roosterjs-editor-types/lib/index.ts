@@ -2,7 +2,6 @@
 export { default as Alignment } from './formatParameter/Alignment';
 export { default as Direction } from './formatParameter/Direction';
 export { default as Indentation } from './formatParameter/Indentation';
-export { default as ListTag } from './formatParameter/ListTag';
 export { default as PasteOption } from './formatParameter/PasteOption';
 export { default as TableOperation } from './formatParameter/TableOperation';
 

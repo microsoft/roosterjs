@@ -61,11 +61,6 @@ declare namespace roosterjs {
     }
 
     /**
-     * List tag
-     */
-    type ListTag = 'OL' | 'UL' | null;
-
-    /**
      * Paste option
      */
     const enum PasteOption {
@@ -460,6 +455,10 @@ declare namespace roosterjs {
          * Content changed by setContent API
          */
         SetContent = "SetContent",
+        /**
+         * Content changed by cut operation
+         */
+        Cut = "Cut",
         /**
          * Content changed by drag & drop operation
          */
@@ -1722,18 +1721,21 @@ declare namespace roosterjs {
      */
     class Undo implements UndoService {
         private preserveSnapshots;
+        private maxBufferSize;
         private editor;
         private isRestoring;
         private hasNewContent;
         private undoSnapshots;
         private lastKeyPress;
         private onDropDisposer;
+        private onCutDisposer;
         /**
          * Create an instance of Undo
          * @param preserveSnapshots True to preserve the snapshots after dispose, this allows
          * this object to be reused when editor is disposed and created again
+         * @param maxBufferSize The max buffer size for snapshots. Default value is 10MB
          */
-        constructor(preserveSnapshots?: boolean);
+        constructor(preserveSnapshots?: boolean, maxBufferSize?: number);
         /**
          * Initialize this plugin. This should only be called from Editor
          * @param editor Editor instance
@@ -1777,6 +1779,7 @@ declare namespace roosterjs {
         private onKeyPress(pluginEvent);
         private clearRedoForInput();
         private getSnapshotsManager();
+        private onNativeEvent;
     }
 
     /**
@@ -1986,16 +1989,6 @@ declare namespace roosterjs {
      * @returns The format state at cursor
      */
     function getFormatState(editor: Editor, event?: PluginEvent): FormatState;
-
-    /**
-     * Get the list state at selection
-     * The list state refers to the HTML elements <OL> or <UL>
-     * @param event (Optional) The plugin event, it stores the event cached data for looking up.
-     * @param editor The editor instance
-     * If not passed, we will query the first <LI> node in selection and return the list state of its direct parent
-     * @returns The list tag, OL, UL or empty when cursor is not inside a list
-     */
-    function cacheGetListTag(event: PluginEvent, editor: Editor): ListTag;
 
     /**
      * Clear the format in current selection, after cleaning, the format will be

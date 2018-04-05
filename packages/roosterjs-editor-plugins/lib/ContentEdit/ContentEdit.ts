@@ -6,10 +6,18 @@ import {
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import ContentEditFeatures, { ContentEditFeature, getDefaultContentEditFeatures } from './ContentEditFeatures';
-import { AutoBullet } from './features/autoBulletFeatures';
+import ContentEditFeatures, {
+    ContentEditFeature,
+    getDefaultContentEditFeatures,
+} from './ContentEditFeatures';
+import {
+    AutoBullet,
+    IndentOutdentWhenTab,
+    MergeInNewLine,
+    OutdentBSEmptyLine1,
+    OutdentWhenEnterOnEmptyLine,
+} from './features/ListFeatures';
 import { AutoLink1, AutoLink2 } from './features/autoLinkFeatures';
-import { IndentOutdentWhenTab, MergeInNewLine, OutdentBSEmptyLine1, OutdentWhenEnterOnEmptyLine, } from './features/ListFeatures';
 import { UnquoteBSEmptyLine1, UnquoteWhenEnterOnEmptyLine } from './features/quoteFeatures';
 import { TabInTable } from './features/tableFeatures';
 
@@ -104,10 +112,13 @@ export default class ContentEdit implements EditorPlugin {
                 keyboardEvent.preventDefault();
                 this.editor.undo();
             }
-        } else if (this.currentFeature) {
+        } else if (event.eventType == PluginEventType.KeyDown && this.currentFeature) {
             let feature = this.currentFeature;
             this.currentFeature = null;
-            this.backspaceUndoEventSource = <ChangeSource>feature.handleEvent(event as PluginDomEvent, this.editor);
+            this.backspaceUndoEventSource = <ChangeSource>feature.handleEvent(
+                event as PluginDomEvent,
+                this.editor
+            );
         } else if (event.eventType == PluginEventType.ContentChanged) {
             let contentChangedEvent = <ContentChangedEvent>event;
             if (
@@ -116,7 +127,11 @@ export default class ContentEdit implements EditorPlugin {
             ) {
                 this.backspaceUndoEventSource = null;
             }
-            if (contentChangedEvent.source == ChangeSource.Paste && this.autoLinkEnabled && AutoLink1.shouldHandleEvent(event as PluginDomEvent, this.editor)) {
+            if (
+                contentChangedEvent.source == ChangeSource.Paste &&
+                this.autoLinkEnabled &&
+                AutoLink1.shouldHandleEvent(event as PluginDomEvent, this.editor)
+            ) {
                 AutoLink1.handleEvent(event as PluginDomEvent, this.editor);
             }
         }

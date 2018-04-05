@@ -625,9 +625,6 @@ export default class Editor {
             attachDomEvent(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, () => {
                 this.core.cachedRange = getLiveRange(this.core);
             }),
-            attachDomEvent(this.core, 'drop', null, () => {
-                this.formatWithUndo(null, false /*preserveSelection*/, ChangeSource.Drop);
-            }),
         ];
     }
 

@@ -41,6 +41,11 @@ export const enum ChangeSource {
     SetContent = 'SetContent',
 
     /**
+     * Content changed by cut operation
+     */
+    Cut = 'Cut',
+
+    /**
      * Content changed by drag & drop operation
      */
     Drop = 'Drop',
