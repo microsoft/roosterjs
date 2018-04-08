@@ -50,6 +50,13 @@ class NodeInlineElement implements InlineElement {
     }
 
     /**
+     * Get a value to indicate whether this element contains text only
+     */
+    public isText() {
+        return this.containerNode.nodeType == NodeType.Text;
+    }
+
+    /**
      * Checks if an inline element is after the current inline element
      */
     public isAfter(inlineElement: InlineElement): boolean {

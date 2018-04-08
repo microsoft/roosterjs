@@ -31,7 +31,7 @@ function cacheGetQuoteChild(event: PluginDomEvent, editor: Editor): Node {
         while (editor.contains(node) && getTagOfNode(node.parentNode) != 'BLOCKQUOTE') {
             node = node.parentNode;
         }
-        return getTagOfNode(node.parentNode) == 'BLOCKQUOTE' ? node : null;
+        return node && getTagOfNode(node.parentNode) == 'BLOCKQUOTE' ? node : null;
     });
 }
 

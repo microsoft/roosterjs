@@ -65,4 +65,22 @@ export default class SelectionRange {
     normalize(): SelectionRange {
         return new SelectionRange(this.start.normalize(), this.end.normalize());
     }
+
+    /**
+     * Replace this range with a node
+     * @param node The node to be inserted
+     * @returns True if we complete the replacement, false otherwise
+     */
+    replaceWithNode(node: Node): boolean {
+        // Make sure the range and node is valid
+        if (!node) {
+            return false;
+        }
+
+        let range = this.getRange();
+        range.deleteContents();
+        range.insertNode(node);
+
+        return true;
+    }
 }

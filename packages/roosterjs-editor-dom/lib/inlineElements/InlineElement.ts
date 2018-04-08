@@ -33,6 +33,11 @@ interface InlineElement {
     getEndPosition: () => Position;
 
     /**
+     * Get a value to indicate whether this element contains text only
+     */
+    isText: () => boolean;
+
+    /**
      * Checks if the given inline element is after this inline element
      */
     isAfter: (inlineElement: InlineElement) => boolean;

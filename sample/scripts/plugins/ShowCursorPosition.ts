@@ -1,6 +1,5 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { PluginEvent } from 'roosterjs-editor-types';
-import { getCursorRect } from 'roosterjs-editor-api';
 
 // An editor plugin to show cursor position in demo page
 export default class ShowCursorPosition implements EditorPlugin {
@@ -17,7 +16,7 @@ export default class ShowCursorPosition implements EditorPlugin {
     }
 
     public onPluginEvent(event: PluginEvent) {
-        let rect = getCursorRect(this.editor);
+        let rect = this.editor.getCursorRect();
         if (rect) {
             let result =
                 'top=' +

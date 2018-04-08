@@ -72,6 +72,13 @@ class PartialInlineElement implements InlineElement {
     }
 
     /**
+     * Get a value to indicate whether this element contains text only
+     */
+    public isText() {
+        return this.decoratedInline.isText();
+    }
+
+    /**
      * Check if this inline element is after the other inline element
      */
     public isAfter(inlineElement: InlineElement): boolean {

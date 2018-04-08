@@ -9,7 +9,6 @@ import {
     setIndentation,
     toggleBullet,
     toggleNumbering,
-    validateAndGetRangeForTextBeforeCursor,
 } from 'roosterjs-editor-api';
 import { Browser } from 'roosterjs-editor-dom';
 import { ChangeSource } from 'roosterjs-editor-types';
@@ -80,14 +79,14 @@ export const AutoBullet: ContentEditFeature = {
     shouldHandleEvent: (event, editor) => {
         if (!cacheGetListTag(event, editor)) {
             let cursorData = cacheGetCursorEventData(event, editor);
-            let textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
+            let textBeforeCursor = cursorData.getSubStringBeforeCursor(3);
 
             // Auto list is triggered if:
             // 1. Text before cursor exactly mathces '*', '-' or '1.'
             // 2. There's no non-text inline entities before cursor
             return (
                 ['*', '-', '1.'].indexOf(textBeforeCursor) >= 0 &&
-                !cursorData.getFirstNonTextInlineBeforeCursor()
+                !cursorData.getNearestNonTextInlineElement()
             );
         }
         return false;
@@ -96,20 +95,18 @@ export const AutoBullet: ContentEditFeature = {
         editor.runAsync(() => {
             let listNode: Node;
             let cursorData = cacheGetCursorEventData(event, editor);
-            let textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
+            let textBeforeCursor = cursorData.getSubStringBeforeCursor(3);
 
             // editor.insertContent(NBSP);
             editor.formatWithUndo(
                 () => {
                     // Remove the user input '*', '-' or '1.'
-                    let rangeToDelete = validateAndGetRangeForTextBeforeCursor(
-                        editor,
+                    let rangeToDelete = cursorData.getRangeWithTextBeforeCursor(
                         textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
-                        true /*exactMatch*/,
-                        cursorData
+                        true /*exactMatch*/
                     );
                     if (rangeToDelete) {
-                        rangeToDelete.deleteContents();
+                        rangeToDelete.getRange().deleteContents();
                     }
 
                     // If not explicitly insert br, Chrome will operate on the previous line

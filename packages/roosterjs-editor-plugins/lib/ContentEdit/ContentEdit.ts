@@ -16,12 +16,21 @@ import {
     MergeInNewLine,
     OutdentBSEmptyLine1,
     OutdentWhenEnterOnEmptyLine,
-} from './features/ListFeatures';
+} from './features/listFeatures';
 import { AutoLink1, AutoLink2 } from './features/autoLinkFeatures';
 import { UnquoteBSEmptyLine1, UnquoteWhenEnterOnEmptyLine } from './features/quoteFeatures';
 import { TabInTable } from './features/tableFeatures';
 
 const KEY_BACKSPACE = 8;
+
+const BackspaceToUndo: ContentEditFeature = {
+    key: KEY_BACKSPACE,
+    shouldHandleEvent: (event, editor, backspaceUndoEventSource) => backspaceUndoEventSource,
+    handleEvent: (event, editor) => {
+        event.rawEvent.preventDefault();
+        editor.undo();
+    }
+}
 
 /**
  * An editor plugin to handle content edit event.
@@ -35,7 +44,7 @@ const KEY_BACKSPACE = 8;
  */
 export default class ContentEdit implements EditorPlugin {
     private editor: Editor;
-    private features: ContentEditFeature[] = [];
+    private features: ContentEditFeature[] = [BackspaceToUndo];
     private keys: number[] = [];
     private backspaceUndoEventSource: ChangeSource;
     private currentFeature: ContentEditFeature;
@@ -90,7 +99,7 @@ export default class ContentEdit implements EditorPlugin {
             for (let feature of this.features) {
                 if (
                     feature.key == keyboardEvent.which &&
-                    feature.shouldHandleEvent(event as PluginDomEvent, this.editor)
+                    feature.shouldHandleEvent(event as PluginDomEvent, this.editor, this.backspaceUndoEventSource)
                 ) {
                     this.currentFeature = feature;
                     return true;
@@ -105,35 +114,28 @@ export default class ContentEdit implements EditorPlugin {
      * Handle the event
      */
     public onPluginEvent(event: PluginEvent) {
-        let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
-        if (event.eventType == PluginEventType.KeyDown && this.backspaceUndoEventSource) {
+        let changeSource = (<ContentChangedEvent>event).source;
+        if (
+            (event.eventType == PluginEventType.KeyDown && this.backspaceUndoEventSource) ||
+            (event.eventType == PluginEventType.ContentChanged && changeSource != this.backspaceUndoEventSource)
+        ) {
             this.backspaceUndoEventSource = null;
-            if (keyboardEvent.which == KEY_BACKSPACE) {
-                keyboardEvent.preventDefault();
-                this.editor.undo();
-            }
-        } else if (event.eventType == PluginEventType.KeyDown && this.currentFeature) {
+        }
+
+        if (event.eventType == PluginEventType.KeyDown && this.currentFeature) {
             let feature = this.currentFeature;
             this.currentFeature = null;
             this.backspaceUndoEventSource = <ChangeSource>feature.handleEvent(
                 event as PluginDomEvent,
                 this.editor
             );
-        } else if (event.eventType == PluginEventType.ContentChanged) {
-            let contentChangedEvent = <ContentChangedEvent>event;
-            if (
-                this.backspaceUndoEventSource &&
-                contentChangedEvent.source != this.backspaceUndoEventSource
-            ) {
-                this.backspaceUndoEventSource = null;
-            }
-            if (
-                contentChangedEvent.source == ChangeSource.Paste &&
-                this.autoLinkEnabled &&
-                AutoLink1.shouldHandleEvent(event as PluginDomEvent, this.editor)
-            ) {
-                AutoLink1.handleEvent(event as PluginDomEvent, this.editor);
-            }
+        } else if (
+            event.eventType == PluginEventType.ContentChanged &&
+            changeSource == ChangeSource.Paste &&
+            this.autoLinkEnabled &&
+            AutoLink1.shouldHandleEvent(event as PluginDomEvent, this.editor, this.backspaceUndoEventSource)
+        ) {
+            AutoLink1.handleEvent(event as PluginDomEvent, this.editor);
         }
     }
 

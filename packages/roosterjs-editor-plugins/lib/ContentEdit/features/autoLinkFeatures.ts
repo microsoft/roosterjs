@@ -3,7 +3,6 @@ import { ContentEditFeature } from '../ContentEditFeatures';
 import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
 import { matchLink } from 'roosterjs-editor-dom';
 import {
-    replaceTextBeforeCursorWithNode,
     cacheGetCursorEventData,
     clearCursorEventDataCache,
 } from 'roosterjs-editor-api';
@@ -30,7 +29,7 @@ export const AutoLink2: ContentEditFeature = {
 function cacheGetLinkData(event: PluginDomEvent, editor: Editor): LinkData {
     return cacheGetEventData(event, 'LINK_DATA', () => {
         let cursorData = cacheGetCursorEventData(event, editor);
-        let wordBeforeCursor = cursorData ? cursorData.wordBeforeCursor : null;
+        let wordBeforeCursor = cursorData ? cursorData.getWordBeforeCursor() : null;
         if (wordBeforeCursor && wordBeforeCursor.length > MINIMUM_LENGTH) {
             // Check for trailing punctuation
             let trailingPunctuations = wordBeforeCursor.match(TRAILING_PUNCTUATION_REGEX);
@@ -63,20 +62,14 @@ function autoLink(event: PluginDomEvent, editor: Editor) {
     editor.runAsync(() => {
         editor.formatWithUndo(
             () => {
-                if (
-                    replaceTextBeforeCursorWithNode(
-                        editor,
-                        linkData.originalUrl,
-                        anchor,
-                        false /* exactMatch */,
-                        cacheGetCursorEventData(event, editor)
-                    )
-                ) {
+                let cursorData = cacheGetCursorEventData(event, editor);
+                let range = cursorData.getRangeWithTextBeforeCursor(linkData.originalUrl, false /*exactMatch*/);
+                if (range && range.replaceWithNode(anchor)) {
                     // The content at cursor has changed. Should also clear the cursor data cache
                     clearCursorEventDataCache(event);
                 }
             },
-            false /*preserveSelection*/,
+            true /*preserveSelection*/,
             ChangeSource.AutoLink,
             () => anchor
         );

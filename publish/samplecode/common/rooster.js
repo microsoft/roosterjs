@@ -113,98 +113,108 @@ var roosterjs =
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 // White space matching regex. It matches following chars:
 // \s: white space
 // \u00A0: no-breaking white space
 // \u200B: zero width space
 // \u3000: full width space (which can come from JPN IME)
 var WHITESPACE_REGEX = /[\s\u00A0\u200B\u3000]+([^\s\u00A0\u200B\u3000]*)$/i;
+var EVENTDATACACHE_CURSORDATA = 'CURSORDATA';
 // The class that helps parse content around cursor
 var CursorData = /** @class */ (function () {
     /**
      * Create a new CursorData instance
      * @param editor The editor instance
      */
-    function CursorData(editor) {
-        this.editor = editor;
+    function CursorData(traverser) {
+        this.traverser = traverser;
+        // All inline elements before cursor that have been read so far
+        this.inlineElements = [];
     }
-    Object.defineProperty(CursorData.prototype, "wordBeforeCursor", {
-        /**
-         * Get the word before cursor. The word is determined by scanning backwards till the first white space, the portion
-         * between cursor and the white space is the word before cursor
-         * @returns The word before cursor
-         */
-        get: function () {
-            var _this = this;
-            if (!this.cachedWordBeforeCursor && !this.backwardTraversingComplete) {
-                this.continueTraversingBackwardTill(function () { return _this.cachedWordBeforeCursor != null; });
-            }
-            return this.cachedWordBeforeCursor;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CursorData.prototype, "inlineElementBeforeCursor", {
-        /**
-         * Get the inline element before cursor
-         * @returns The inlineElement before cursor
-         */
-        get: function () {
-            if (!this.inlineBeforeCursor && !this.backwardTraversingComplete) {
-                // Just return after it moves the needle by one step
-                this.continueTraversingBackwardTill(function () { return true; });
-            }
-            return this.inlineBeforeCursor;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CursorData.prototype, "inlineElementAfterCursor", {
-        /**
-         * Get the inline element after cursor
-         * @returns The inline element after cursor
-         */
-        get: function () {
-            if (!this.inlineAfterCursor && !this.forwardTraversingComplete) {
-                // TODO: this may needs to be extended to support read more than just one inline element after cursor
-                if (!this.forwardTraverser) {
-                    this.forwardTraverser = this.editor.getContentTraverser(0 /* Block */, 2 /* SelectionStart */);
-                }
-                if (this.forwardTraverser) {
-                    this.inlineAfterCursor = this.forwardTraverser.currentInlineElement;
-                }
-                // Set traversing to be complete once we read
-                this.forwardTraversingComplete = true;
-            }
-            return this.inlineAfterCursor;
-        },
-        enumerable: true,
-        configurable: true
-    });
+    /**
+     * Get the word before cursor. The word is determined by scanning backwards till the first white space, the portion
+     * between cursor and the white space is the word before cursor
+     * @returns The word before cursor
+     */
+    CursorData.prototype.getWordBeforeCursor = function () {
+        var _this = this;
+        if (!this.word) {
+            this.travel(function () { return !!_this.word; });
+        }
+        return this.word;
+    };
+    /**
+     * Get the inline element before cursor
+     * @returns The inlineElement before cursor
+     */
+    CursorData.prototype.getInlineElementBeforeCursor = function () {
+        if (!this.inlineElement) {
+            // Just return after it moves the needle by one step
+            this.travel(function () { return true; });
+        }
+        return this.inlineElement;
+    };
     /**
      * Get X number of chars before cursor
-     * The actual returned chars may be less than what is requested. e.g, length of text before cursor is less then X
-     * @param numChars The X number of chars user want to get
-     * @returns The actual chars we get as a string
+     * The actual returned chars may be less than what is requested.
+     * @param length The length of string user want to get, the string always ends at the cursor,
+     * so this length determins the start position of the string
+     * @returns The actual string we get as a sub string, or the whole string before cursor when
+     * there is not enough chars in the string
      */
-    CursorData.prototype.getXCharsBeforeCursor = function (numChars) {
+    CursorData.prototype.getSubStringBeforeCursor = function (length) {
         var _this = this;
-        if ((!this.cachedTextBeforeCursor || this.cachedTextBeforeCursor.length < numChars) &&
-            !this.backwardTraversingComplete) {
+        if (!this.text || this.text.length < length) {
             // The cache is not built yet or not to the point the client asked for
-            this.continueTraversingBackwardTill(function () {
-                return _this.cachedTextBeforeCursor != null &&
-                    _this.cachedTextBeforeCursor.length >= numChars;
+            this.travel(function () {
+                return _this.text &&
+                    _this.text.length >= length;
             });
         }
-        if (this.cachedTextBeforeCursor) {
-            return this.cachedTextBeforeCursor.length >= numChars
-                ? this.cachedTextBeforeCursor.substr(this.cachedTextBeforeCursor.length - numChars)
-                : this.cachedTextBeforeCursor;
+        var text = this.text || '';
+        return text.substr(Math.max(0, text.length - length));
+    };
+    /**
+     * Try to get a range matches the given text before the cursor
+     * @param text The text to match against
+     * @param exactMatch Whether it is an exact match
+     * @returns The range for the matched text, null if unable to find a match
+     */
+    CursorData.prototype.getRangeWithTextBeforeCursor = function (text, exactMatch) {
+        if (!text) {
+            return null;
         }
-        else {
-            return '';
-        }
+        var startPosition;
+        var endPosition;
+        var textIndex = text.length - 1;
+        var endMatched = exactMatch;
+        this.forEachTextInlineElement(function (textInline) {
+            var nodeContent = textInline.getTextContent() || '';
+            var nodeIndex = nodeContent.length - 1;
+            for (; nodeIndex >= 0 && textIndex >= 0; nodeIndex--) {
+                if (text.charCodeAt(textIndex) == nodeContent.charCodeAt(nodeIndex)) {
+                    endMatched = true;
+                    textIndex--;
+                    // on first time when end is matched, set the end of range
+                    if (!endPosition) {
+                        endPosition = textInline.getStartPosition().move(nodeIndex + 1);
+                    }
+                }
+                else if (exactMatch || endMatched) {
+                    // Mismatch found when exact match or end already match, so return since matching failed
+                    return true;
+                }
+            }
+            // when textIndex == -1, we have a successful complete match
+            if (textIndex == -1) {
+                startPosition = textInline.getStartPosition().move(nodeIndex + 1);
+                return true;
+            }
+            return false;
+        });
+        // textIndex == -1 means a successful complete match
+        return startPosition && endPosition ? new roosterjs_editor_dom_1.SelectionRange(startPosition, endPosition) : null;
     };
     /**
      * Get text section before cursor till stop condition is met.
@@ -212,77 +222,55 @@ var CursorData = /** @class */ (function () {
      * The section essentially is just an inline element which has Container element
      * so that the consumer can remember it for anchoring popup or verification purpose
      * when cursor moves out of context etc.
-     * @param stopFunc The callback stop function
+     * @param callback The callback function of each inline element.
+     * Return true from this callback to stop the loop
      */
-    CursorData.prototype.getTextSectionBeforeCursorTill = function (stopFunc) {
+    CursorData.prototype.forEachTextInlineElement = function (callback) {
         // We cache all text sections read so far
         // Every time when you ask for textSection, we start with the cached first
         // and resort to further reading once we exhausted with the cache
-        var shouldStop = false;
-        if (this.inlineElementsBeforeCursor && this.inlineElementsBeforeCursor.length > 0) {
-            for (var i = 0; i < this.inlineElementsBeforeCursor.length; i++) {
-                shouldStop = stopFunc(this.inlineElementsBeforeCursor[i]);
-                if (shouldStop) {
-                    break;
-                }
-            }
-        }
-        // The cache does not completely fulfill the need, resort to extra parsing
-        if (!shouldStop && !this.backwardTraversingComplete) {
-            this.continueTraversingBackwardTill(stopFunc);
+        if (!this.inlineElements.some(callback)) {
+            this.travel(callback);
         }
     };
     /**
      * Get first non textual inline element before cursor
      * @returns First non textutal inline element before cursor or null if no such element exists
      */
-    CursorData.prototype.getFirstNonTextInlineBeforeCursor = function () {
-        if (!this.firstNonTextInlineBeforeCursor && !this.backwardTraversingComplete) {
-            this.continueTraversingBackwardTill(function () {
+    CursorData.prototype.getNearestNonTextInlineElement = function () {
+        if (!this.nearestNonTextInlineElement) {
+            this.travel(function () {
                 return false;
             });
         }
-        return this.firstNonTextInlineBeforeCursor;
+        return this.nearestNonTextInlineElement;
     };
-    /// Continue traversing backward till stop condition is met or begin of block is reached
-    CursorData.prototype.continueTraversingBackwardTill = function (stopFunc) {
-        if (!this.backwardTraverser) {
-            this.backwardTraverser = this.editor.getContentTraverser(0 /* Block */, 2 /* SelectionStart */);
-        }
-        if (!this.backwardTraverser) {
+    /**
+     * Continue traversing backward till stop condition is met or begin of block is reached
+     */
+    CursorData.prototype.travel = function (stopFunc) {
+        if (this.traversingCompleted || !this.traverser) {
             return;
         }
-        var previousInline = this.backwardTraverser.getPreviousInlineElement();
-        while (!this.backwardTraversingComplete) {
-            if (previousInline && isTextualInlineElement(previousInline)) {
+        var previousInline = this.traverser.getPreviousInlineElement();
+        while (!this.traversingCompleted) {
+            if (!this.inlineElement) {
+                // Make sure the inline before cursor is a non-empty text inline
+                this.inlineElement = previousInline;
+            }
+            if (previousInline && previousInline.isText()) {
                 var textContent = previousInline.getTextContent();
-                if (!this.inlineBeforeCursor) {
-                    // Make sure the inline before cursor is a non-empty text inline
-                    this.inlineBeforeCursor = previousInline;
-                }
                 // build the word before cursor if it is not built yet
-                if (!this.cachedWordBeforeCursor) {
+                if (!this.word) {
                     // Match on the white space, the portion after space is on the index of 1 of the matched result
                     // (index at 0 is whole match result, index at 1 is the word)
                     var matches = WHITESPACE_REGEX.exec(textContent);
                     if (matches && matches.length == 2) {
-                        this.cachedWordBeforeCursor = matches[1];
-                        // if this.cachedTextBeforeCursor is not null, what we get is just a portion of it, need to append this.cachedTextBeforeCursor
-                        if (this.cachedTextBeforeCursor) {
-                            this.cachedWordBeforeCursor =
-                                this.cachedWordBeforeCursor + this.cachedTextBeforeCursor;
-                        }
+                        this.word = matches[1] + (this.text || '');
                     }
                 }
-                this.cachedTextBeforeCursor = !this.cachedTextBeforeCursor
-                    ? textContent
-                    : textContent + this.cachedTextBeforeCursor;
-                if (!this.inlineElementsBeforeCursor) {
-                    this.inlineElementsBeforeCursor = [previousInline];
-                }
-                else {
-                    this.inlineElementsBeforeCursor.push(previousInline);
-                }
+                this.text = textContent + (this.text || '');
+                this.inlineElements.push(previousInline);
                 // Check if stop condition is met
                 if (stopFunc && stopFunc(previousInline)) {
                     break;
@@ -290,49 +278,21 @@ var CursorData = /** @class */ (function () {
             }
             else {
                 /* non-textual inline or null is seen */
-                if (!this.inlineBeforeCursor) {
-                    // When we're here, it means we first hit a non-text inline node
-                    // Make sure to set inlineBeforeCursor if it is not set
-                    this.inlineBeforeCursor = previousInline;
-                }
-                this.firstNonTextInlineBeforeCursor = previousInline;
-                this.backwardTraversingComplete = true;
-                if (!this.cachedWordBeforeCursor) {
+                this.nearestNonTextInlineElement = previousInline;
+                this.traversingCompleted = true;
+                if (!this.word) {
                     // if parsing is done, whatever we get so far in this.cachedText should also be in this.cachedWordBeforeCursor
-                    this.cachedWordBeforeCursor = this.cachedTextBeforeCursor;
+                    this.word = this.text;
                 }
                 // When a non-textual inline element, or null is seen, we consider parsing complete
                 break;
             }
-            previousInline = this.backwardTraverser.getPreviousInlineElement();
+            previousInline = this.traverser.getPreviousInlineElement();
         }
     };
     return CursorData;
 }());
 exports.default = CursorData;
-function isTextualInlineElement(inlineElement) {
-    return (inlineElement &&
-        (inlineElement.getContainerNode().nodeType == 3 /* Text */ ||
-            (inlineElement instanceof roosterjs_editor_dom_1.PartialInlineElement &&
-                inlineElement.getDecoratedInline().getContainerNode().nodeType == 3 /* Text */)));
-}
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-api/lib/cursor/cacheGetCursorEventData.ts":
-/*!*****************************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/cursor/cacheGetCursorEventData.ts ***!
-  \*****************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var CursorData_1 = __webpack_require__(/*! ./CursorData */ "./packages/roosterjs-editor-api/lib/cursor/CursorData.ts");
-var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
-var EVENTDATACACHE_CURSORDATA = 'CURSORDATA';
 /**
  * Read CursorData from plugin event cache. If not, create one
  * @param event The plugin event, it stores the event cached data for looking up.
@@ -341,11 +301,9 @@ var EVENTDATACACHE_CURSORDATA = 'CURSORDATA';
  * @returns The cursor data
  */
 function cacheGetCursorEventData(event, editor) {
-    return roosterjs_editor_core_1.cacheGetEventData(event, EVENTDATACACHE_CURSORDATA, function () {
-        return new CursorData_1.default(editor);
-    });
+    return roosterjs_editor_core_1.cacheGetEventData(event, EVENTDATACACHE_CURSORDATA, function () { return new CursorData(editor.getContentTraverser(0 /* Block */, 2 /* SelectionStart */)); });
 }
-exports.default = cacheGetCursorEventData;
+exports.cacheGetCursorEventData = cacheGetCursorEventData;
 /**
  * Clear the cursor data in a plugin event.
  * This is called when the cursor data is changed, e.g, the text is replace with HyperLink
@@ -355,86 +313,6 @@ function clearCursorEventDataCache(event) {
     roosterjs_editor_core_1.clearEventDataCache(event, EVENTDATACACHE_CURSORDATA);
 }
 exports.clearCursorEventDataCache = clearCursorEventDataCache;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-api/lib/cursor/getCursorRect.ts":
-/*!*******************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/cursor/getCursorRect.ts ***!
-  \*******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * Returns a rect representing the location of the cursor.
- * In case there is a uncollapsed selection witin editor, this returns
- * the position for focus node.
- * The returned rect structure has a left and right and they should be same
- * here since it is for cursor, not for a range.
- */
-function getCursorRect(editor) {
-    var range = editor.getSelectionRange().getRange();
-    var document = editor.getDocument();
-    // 1) obtain a collapsed range pointing to cursor
-    if (!range.collapsed) {
-        var selection = document.defaultView.getSelection();
-        if (!selection || !selection.focusNode) {
-            return null;
-        }
-        var forwardSelection = range.endContainer == selection.focusNode && range.endOffset == selection.focusOffset;
-        range = range.cloneRange();
-        range.collapse(!forwardSelection /*toStart*/);
-    }
-    // 2) try to get rect using range.getBoundingClientRect()
-    var rect = getRectFromClientRect(range.getBoundingClientRect());
-    if (!rect) {
-        var position = new roosterjs_editor_dom_1.Position(range.startContainer, range.startOffset).normalize();
-        var node = position.node, element = position.element;
-        // 3) if current cursor is inside text node, use range.getClientRects() for safari or insert a SPAN and get the rect of SPAN for others
-        if (roosterjs_editor_dom_1.Browser.isSafari) {
-            var rects = range.getClientRects();
-            if (rects && rects.length == 1) {
-                rect = getRectFromClientRect(rects[0]);
-            }
-        }
-        else {
-            if (node.nodeType == 3 /* Text */) {
-                var document_1 = editor.getDocument();
-                var span = document_1.createElement('SPAN');
-                var range_1 = document_1.createRange();
-                range_1.setStart(node, position.offset);
-                range_1.collapse(true /*toStart*/);
-                range_1.insertNode(span);
-                rect = getRectFromClientRect(span.getBoundingClientRect());
-                span.parentNode.removeChild(span);
-            }
-        }
-        // 4) fallback to element.getBoundingClientRect()
-        if (!rect && element) {
-            rect = getRectFromClientRect(element.getBoundingClientRect());
-        }
-    }
-    return rect;
-}
-exports.default = getCursorRect;
-function getRectFromClientRect(clientRect) {
-    // A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p
-    // We validate that and only return a rect when the passed in ClientRect is valid
-    var _a = clientRect || {}, left = _a.left, right = _a.right, top = _a.top, bottom = _a.bottom;
-    return left + right + top + bottom > 0
-        ? {
-            left: Math.round(left),
-            right: Math.round(right),
-            top: Math.round(top),
-            bottom: Math.round(bottom),
-        }
-        : null;
-}
 
 
 /***/ }),
@@ -607,161 +485,6 @@ function queryNodesWithSelection(editor, selector, nodeContainedByRangeOnly, for
     return nodes;
 }
 exports.default = queryNodesWithSelection;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-api/lib/cursor/replaceRangeWithNode.ts":
-/*!**************************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/cursor/replaceRangeWithNode.ts ***!
-  \**************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * Replace the specified range with a node
- * @param editor The editor instance
- * @param range The range in which content needs to be replaced
- * @param node The node to be inserted
- * @param exactMatch exactMatch is to match exactly
- * @returns True if we complete the replacement, false otherwise
- */
-function replaceRangeWithNode(editor, range, node, exactMatch) {
-    // Make sure the range and node is valid
-    if (!range || !node) {
-        return false;
-    }
-    var backupRange = editor.getSelectionRange();
-    range.deleteContents();
-    range.insertNode(node);
-    if (exactMatch) {
-        editor.select(node, roosterjs_editor_dom_1.Position.After);
-    }
-    else if (backupRange && editor.contains(backupRange)) {
-        editor.select(backupRange);
-    }
-    return true;
-}
-exports.default = replaceRangeWithNode;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-api/lib/cursor/replaceTextBeforeCursorWithNode.ts":
-/*!*************************************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/cursor/replaceTextBeforeCursorWithNode.ts ***!
-  \*************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var CursorData_1 = __webpack_require__(/*! ./CursorData */ "./packages/roosterjs-editor-api/lib/cursor/CursorData.ts");
-var replaceRangeWithNode_1 = __webpack_require__(/*! ./replaceRangeWithNode */ "./packages/roosterjs-editor-api/lib/cursor/replaceRangeWithNode.ts");
-/**
- * Validate the text matches what's before the cursor, and return the range for it
- * @param editor The editor instance
- * @param text The text to match against
- * @param exactMatch Whether it is an exact match
- * @param cursorData The cursor data
- * @returns The range for the matched text, null if unable to find a match
- */
-function validateAndGetRangeForTextBeforeCursor(editor, text, exactMatch, cursorData) {
-    if (!text || text.length == 0) {
-        return;
-    }
-    // This function works backwards to do match as text node is found. We used two set of "text" and "index"
-    // text, textIndex is for the whole text to be matched
-    // nodeContent, nodeIndex is for current text node found before cursor
-    // Every time a new node is found, nodeContent and nodeIndex will be reset, while text remains, and textIndex
-    // keep decreasing till it reaches -1 (on a match case) or mismatch half way
-    var matchComplete = false;
-    // The range for the matched text
-    var range = editor.getDocument().createRange();
-    // This is the start index, which points to last char from text. We match from end to begin
-    var textIndex = text.length - 1;
-    // endMatched to indicate if the end of text is matched
-    // For exactMatch, since we need to match from last char, endMatched should just be true right away
-    // For exactMatch == false, endMatched is set when first same char is seen from the text node that
-    // can match last char from text as we walk backwards
-    var endMatched = exactMatch;
-    // The end of range is set or not
-    var endOfRangeSet = false;
-    // The cursor data, create a new one from editor when not supplied
-    var cursor = cursorData || new CursorData_1.default(editor);
-    cursor.getTextSectionBeforeCursorTill(function (textInline) {
-        var nodeContent = textInline.getTextContent();
-        var nodeIndex = nodeContent ? nodeContent.length - 1 : -1;
-        while (nodeIndex >= 0 && textIndex >= 0) {
-            if (text.charCodeAt(textIndex) == nodeContent.charCodeAt(nodeIndex)) {
-                if (!endMatched) {
-                    endMatched = true;
-                }
-                // on first time when end is matched, set the end of range
-                if (endMatched && !endOfRangeSet) {
-                    range.setEnd(textInline.getContainerNode(), textInline.getStartPosition().offset + nodeIndex + 1);
-                    endOfRangeSet = true;
-                }
-                // Move both index one char backward
-                nodeIndex--;
-                textIndex--;
-            }
-            else {
-                // We have a mis-match here
-                // if exactMatch is desired or endMatched is already matched,
-                // we should just call it an unsuccessful match and return
-                if (exactMatch || endMatched) {
-                    matchComplete = true;
-                    break;
-                }
-                else {
-                    // This is the case where exactMatch == false, and end is not matched yet
-                    // minus just nodeIndex, since we're still trying to match the end char
-                    nodeIndex--;
-                }
-            }
-        }
-        // when textIndex == -1, we have a successful complete match
-        if (textIndex == -1) {
-            matchComplete = true;
-            range.setStart(textInline.getContainerNode(), textInline.getStartPosition().offset + nodeIndex + 1);
-        }
-        return matchComplete;
-    });
-    // textIndex == -1 means a successful complete match
-    return textIndex == -1 ? range : null;
-}
-exports.validateAndGetRangeForTextBeforeCursor = validateAndGetRangeForTextBeforeCursor;
-/**
- * Replace text before cursor with a node
- * @param editor The editor instance
- * @param text The text for matching. We will try to match the text with the text before cursor
- * @param node The node to replace the text with
- * @param exactMatch exactMatch is to match exactly, i.e.
- * In auto linkification, users could type URL followed by some punctuation and hit space. The auto link will kick in on space,
- * at the moment, what is before cursor could be "<URL>,", however, only "<URL>" makes the link. by setting exactMatch = false, it does not match
- * from right before cursor, but can scan through till first same char is seen. On the other hand if set exactMatch = true, it starts the match right
- * before cursor.
- * @param cursorData
- */
-function replaceTextBeforeCursorWithNode(editor, text, node, exactMatch, cursorData) {
-    // Make sure the text and node is valid
-    if (!text || text.length == 0 || !node) {
-        return false;
-    }
-    var replaced = false;
-    var range = validateAndGetRangeForTextBeforeCursor(editor, text, exactMatch, cursorData);
-    if (range) {
-        replaced = replaceRangeWithNode_1.default(editor, range, node, exactMatch);
-    }
-    return replaced;
-}
-exports.default = replaceTextBeforeCursorWithNode;
 
 
 /***/ }),
@@ -1798,23 +1521,15 @@ exports.default = toggleUnderline;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cacheGetCursorEventData_1 = __webpack_require__(/*! ./cursor/cacheGetCursorEventData */ "./packages/roosterjs-editor-api/lib/cursor/cacheGetCursorEventData.ts");
-exports.cacheGetCursorEventData = cacheGetCursorEventData_1.default;
-exports.clearCursorEventDataCache = cacheGetCursorEventData_1.clearCursorEventDataCache;
 var CursorData_1 = __webpack_require__(/*! ./cursor/CursorData */ "./packages/roosterjs-editor-api/lib/cursor/CursorData.ts");
 exports.CursorData = CursorData_1.default;
-var getCursorRect_1 = __webpack_require__(/*! ./cursor/getCursorRect */ "./packages/roosterjs-editor-api/lib/cursor/getCursorRect.ts");
-exports.getCursorRect = getCursorRect_1.default;
+exports.cacheGetCursorEventData = CursorData_1.cacheGetCursorEventData;
+exports.clearCursorEventDataCache = CursorData_1.clearCursorEventDataCache;
 var getNodeAtCursor_1 = __webpack_require__(/*! ./cursor/getNodeAtCursor */ "./packages/roosterjs-editor-api/lib/cursor/getNodeAtCursor.ts");
 exports.getNodeAtCursor = getNodeAtCursor_1.default;
 exports.cacheGetNodeAtCursor = getNodeAtCursor_1.cacheGetNodeAtCursor;
 var queryNodesWithSelection_1 = __webpack_require__(/*! ./cursor/queryNodesWithSelection */ "./packages/roosterjs-editor-api/lib/cursor/queryNodesWithSelection.ts");
 exports.queryNodesWithSelection = queryNodesWithSelection_1.default;
-var replaceRangeWithNode_1 = __webpack_require__(/*! ./cursor/replaceRangeWithNode */ "./packages/roosterjs-editor-api/lib/cursor/replaceRangeWithNode.ts");
-exports.replaceRangeWithNode = replaceRangeWithNode_1.default;
-var replaceTextBeforeCursorWithNode_1 = __webpack_require__(/*! ./cursor/replaceTextBeforeCursorWithNode */ "./packages/roosterjs-editor-api/lib/cursor/replaceTextBeforeCursorWithNode.ts");
-exports.replaceTextBeforeCursorWithNode = replaceTextBeforeCursorWithNode_1.default;
-exports.validateAndGetRangeForTextBeforeCursor = replaceTextBeforeCursorWithNode_1.validateAndGetRangeForTextBeforeCursor;
 var getFormatState_1 = __webpack_require__(/*! ./cursor/getFormatState */ "./packages/roosterjs-editor-api/lib/cursor/getFormatState.ts");
 exports.getFormatState = getFormatState_1.default;
 var clearFormat_1 = __webpack_require__(/*! ./format/clearFormat */ "./packages/roosterjs-editor-api/lib/format/clearFormat.ts");
@@ -2435,9 +2150,9 @@ function formatWithUndo(core, callback, preserveSelection, changeSource, dataCal
         if (callback) {
             if (preserveSelection) {
                 var range = getLiveRange_1.default(core) || core.cachedRange;
-                var selectionRange = range && new lib_1.SelectionRange(range).normalize();
+                range = range && new lib_1.SelectionRange(range).normalize().getRange();
                 var fallbackNode = callback();
-                if (!select_1.default(core, selectionRange) && fallbackNode instanceof Node) {
+                if (!select_1.default(core, range) && fallbackNode) {
                     select_1.default(core, fallbackNode);
                 }
             }
@@ -3031,8 +2746,26 @@ var Editor = /** @class */ (function () {
     };
     //#endregion
     //#region Focus and Selection
+    /**
+     * Get a SelectionRange object represents current selection in editor.
+     * When editor has a live selection, this will return the selection.
+     * When editor doesn't have a live selection, but it has a cached selection, this will return the cached selection.
+     * Otherwise, return a selection of beginning of editor
+     */
     Editor.prototype.getSelectionRange = function () {
         return new roosterjs_editor_dom_1.SelectionRange(getLiveRange_1.default(this.core) || this.core.cachedRange || this.defaultRange);
+    };
+    /**
+     * Get a Rect object represents the bounding rect of current focus point in editor.
+     * If the editor doesn't have a live focus point, returns null
+     */
+    Editor.prototype.getCursorRect = function () {
+        var selection = document.defaultView.getSelection();
+        if (selection && this.contains(selection.focusNode)) {
+            var position = new roosterjs_editor_dom_1.Position(selection.focusNode, selection.focusOffset);
+            return position.getRect();
+        }
+        return null;
     };
     /**
      * Check if focus is in editor now
@@ -4856,6 +4589,12 @@ var NodeInlineElement = /** @class */ (function () {
         return new Position_1.default(this.containerNode, Position_1.default.End).normalize();
     };
     /**
+     * Get a value to indicate whether this element contains text only
+     */
+    NodeInlineElement.prototype.isText = function () {
+        return this.containerNode.nodeType == 3 /* Text */;
+    };
+    /**
      * Checks if an inline element is after the current inline element
      */
     NodeInlineElement.prototype.isAfter = function (inlineElement) {
@@ -4986,6 +4725,12 @@ var PartialInlineElement = /** @class */ (function () {
      */
     PartialInlineElement.prototype.contains = function (p) {
         return p.isAfter(this.start) && this.end.isAfter(p);
+    };
+    /**
+     * Get a value to indicate whether this element contains text only
+     */
+    PartialInlineElement.prototype.isText = function () {
+        return this.decoratedInline.isText();
     };
     /**
      * Check if this inline element is after the other inline element
@@ -5197,6 +4942,7 @@ exports.getPreviousInlineElement = getPreviousInlineElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var Browser_1 = __webpack_require__(/*! ../utils/Browser */ "./packages/roosterjs-editor-dom/lib/utils/Browser.ts");
 var getElementOrParentElement_1 = __webpack_require__(/*! ../utils/getElementOrParentElement */ "./packages/roosterjs-editor-dom/lib/utils/getElementOrParentElement.ts");
 var isNodeAfter_1 = __webpack_require__(/*! ../utils/isNodeAfter */ "./packages/roosterjs-editor-dom/lib/utils/isNodeAfter.ts");
 /**
@@ -5275,6 +5021,52 @@ var Position = /** @class */ (function () {
             ? (this.isAtEnd && !p.isAtEnd) || this.offset > p.offset
             : isNodeAfter_1.default(this.node, p.node);
     };
+    /**
+     * Get bounding rect of this position
+     */
+    Position.prototype.getRect = function () {
+        var document = this.node && this.node.ownerDocument;
+        if (!document) {
+            return null;
+        }
+        var range = document.createRange();
+        range.setStart(this.node, this.offset);
+        // 1) try to get rect using range.getBoundingClientRect()
+        var rect = normalizeRect(range.getBoundingClientRect());
+        if (!rect) {
+            var _a = this.normalize(), node = _a.node, element = _a.element, offset = _a.offset;
+            // 2) if current cursor is inside text node, use range.getClientRects() for safari
+            // or insert a SPAN and get the rect of SPAN for others
+            if (Browser_1.default.isSafari) {
+                var rects = range.getClientRects();
+                if (rects && rects.length == 1) {
+                    rect = normalizeRect(rects[0]);
+                }
+            }
+            else {
+                if (node.nodeType == 3 /* Text */) {
+                    var span = document.createElement('SPAN');
+                    range.setStart(node, offset);
+                    range.collapse(true /*toStart*/);
+                    range.insertNode(span);
+                    rect = normalizeRect(span.getBoundingClientRect());
+                    span.parentNode.removeChild(span);
+                }
+            }
+            // 4) fallback to element.getBoundingClientRect()
+            if (!rect && element) {
+                rect = normalizeRect(element.getBoundingClientRect());
+            }
+        }
+        return rect;
+    };
+    /**
+     * Move this position with offset, returns a new position with a valid offset in the same node
+     * @param offset Offset to move with
+     */
+    Position.prototype.move = function (offset) {
+        return new Position(this.node, this.offset + offset);
+    };
     Position.Before = "b" /* Before */;
     Position.Begin = 0 /* Begin */;
     Position.End = "e" /* End */;
@@ -5299,6 +5091,19 @@ function getEndOffset(node) {
     else {
         return 1;
     }
+}
+function normalizeRect(clientRect) {
+    // A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p
+    // We validate that and only return a rect when the passed in ClientRect is valid
+    var _a = clientRect || {}, left = _a.left, right = _a.right, top = _a.top, bottom = _a.bottom;
+    return left + right + top + bottom > 0
+        ? {
+            left: Math.round(left),
+            right: Math.round(right),
+            top: Math.round(top),
+            bottom: Math.round(bottom),
+        }
+        : null;
 }
 
 
@@ -5348,6 +5153,21 @@ var SelectionRange = /** @class */ (function () {
      */
     SelectionRange.prototype.normalize = function () {
         return new SelectionRange(this.start.normalize(), this.end.normalize());
+    };
+    /**
+     * Replace this range with a node
+     * @param node The node to be inserted
+     * @returns True if we complete the replacement, false otherwise
+     */
+    SelectionRange.prototype.replaceWithNode = function (node) {
+        // Make sure the range and node is valid
+        if (!node) {
+            return false;
+        }
+        var range = this.getRange();
+        range.deleteContents();
+        range.insertNode(node);
+        return true;
     };
     return SelectionRange;
 }());
@@ -6445,11 +6265,19 @@ exports.default = wrap;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var ContentEditFeatures_1 = __webpack_require__(/*! ./ContentEditFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/ContentEditFeatures.ts");
-var ListFeatures_1 = __webpack_require__(/*! ./features/ListFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/ListFeatures.ts");
+var listFeatures_1 = __webpack_require__(/*! ./features/listFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/listFeatures.ts");
 var autoLinkFeatures_1 = __webpack_require__(/*! ./features/autoLinkFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/autoLinkFeatures.ts");
 var quoteFeatures_1 = __webpack_require__(/*! ./features/quoteFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/quoteFeatures.ts");
 var tableFeatures_1 = __webpack_require__(/*! ./features/tableFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/tableFeatures.ts");
 var KEY_BACKSPACE = 8;
+var BackspaceToUndo = {
+    key: KEY_BACKSPACE,
+    shouldHandleEvent: function (event, editor, backspaceUndoEventSource) { return backspaceUndoEventSource; },
+    handleEvent: function (event, editor) {
+        event.rawEvent.preventDefault();
+        editor.undo();
+    }
+};
 /**
  * An editor plugin to handle content edit event.
  * The following cases are included:
@@ -6466,17 +6294,17 @@ var ContentEdit = /** @class */ (function () {
      * @param features An optional feature set to determine which features the plugin should provide
      */
     function ContentEdit(featureSet) {
-        this.features = [];
+        this.features = [BackspaceToUndo];
         this.keys = [];
         featureSet = featureSet || ContentEditFeatures_1.getDefaultContentEditFeatures();
-        this.addFeature(featureSet.indentOutdentWhenTab, ListFeatures_1.IndentOutdentWhenTab);
-        this.addFeature(featureSet.outdentWhenBackspaceOnEmptyFirstLine, ListFeatures_1.OutdentBSEmptyLine1);
-        this.addFeature(featureSet.outdentWhenEnterOnEmptyLine, ListFeatures_1.OutdentWhenEnterOnEmptyLine);
-        this.addFeature(featureSet.mergeInNewLineWhenBackspaceOnFirstChar, ListFeatures_1.MergeInNewLine);
+        this.addFeature(featureSet.indentOutdentWhenTab, listFeatures_1.IndentOutdentWhenTab);
+        this.addFeature(featureSet.outdentWhenBackspaceOnEmptyFirstLine, listFeatures_1.OutdentBSEmptyLine1);
+        this.addFeature(featureSet.outdentWhenEnterOnEmptyLine, listFeatures_1.OutdentWhenEnterOnEmptyLine);
+        this.addFeature(featureSet.mergeInNewLineWhenBackspaceOnFirstChar, listFeatures_1.MergeInNewLine);
         this.addFeature(featureSet.unquoteWhenBackspaceOnEmptyFirstLine, quoteFeatures_1.UnquoteBSEmptyLine1);
         this.addFeature(featureSet.unquoteWhenEnterOnEmptyLine, quoteFeatures_1.UnquoteWhenEnterOnEmptyLine);
         this.addFeature(featureSet.tabInTable, tableFeatures_1.TabInTable);
-        this.addFeature(featureSet.autoBullet, ListFeatures_1.AutoBullet);
+        this.addFeature(featureSet.autoBullet, listFeatures_1.AutoBullet);
         this.addFeature(featureSet.autoLink, autoLinkFeatures_1.AutoLink1);
         this.addFeature(featureSet.autoLink, autoLinkFeatures_1.AutoLink2);
         this.autoLinkEnabled = featureSet.autoLink;
@@ -6507,7 +6335,7 @@ var ContentEdit = /** @class */ (function () {
             for (var _i = 0, _a = this.features; _i < _a.length; _i++) {
                 var feature = _a[_i];
                 if (feature.key == keyboardEvent.which &&
-                    feature.shouldHandleEvent(event, this.editor)) {
+                    feature.shouldHandleEvent(event, this.editor, this.backspaceUndoEventSource)) {
                     this.currentFeature = feature;
                     return true;
                 }
@@ -6519,30 +6347,21 @@ var ContentEdit = /** @class */ (function () {
      * Handle the event
      */
     ContentEdit.prototype.onPluginEvent = function (event) {
-        var keyboardEvent = event.rawEvent;
-        if (event.eventType == 0 /* KeyDown */ && this.backspaceUndoEventSource) {
+        var changeSource = event.source;
+        if ((event.eventType == 0 /* KeyDown */ && this.backspaceUndoEventSource) ||
+            (event.eventType == 6 /* ContentChanged */ && changeSource != this.backspaceUndoEventSource)) {
             this.backspaceUndoEventSource = null;
-            if (keyboardEvent.which == KEY_BACKSPACE) {
-                keyboardEvent.preventDefault();
-                this.editor.undo();
-            }
         }
-        else if (event.eventType == 0 /* KeyDown */ && this.currentFeature) {
+        if (event.eventType == 0 /* KeyDown */ && this.currentFeature) {
             var feature = this.currentFeature;
             this.currentFeature = null;
             this.backspaceUndoEventSource = feature.handleEvent(event, this.editor);
         }
-        else if (event.eventType == 6 /* ContentChanged */) {
-            var contentChangedEvent = event;
-            if (this.backspaceUndoEventSource &&
-                contentChangedEvent.source != this.backspaceUndoEventSource) {
-                this.backspaceUndoEventSource = null;
-            }
-            if (contentChangedEvent.source == "Paste" /* Paste */ &&
-                this.autoLinkEnabled &&
-                autoLinkFeatures_1.AutoLink1.shouldHandleEvent(event, this.editor)) {
-                autoLinkFeatures_1.AutoLink1.handleEvent(event, this.editor);
-            }
+        else if (event.eventType == 6 /* ContentChanged */ &&
+            changeSource == "Paste" /* Paste */ &&
+            this.autoLinkEnabled &&
+            autoLinkFeatures_1.AutoLink1.shouldHandleEvent(event, this.editor, this.backspaceUndoEventSource)) {
+            autoLinkFeatures_1.AutoLink1.handleEvent(event, this.editor);
         }
     };
     ContentEdit.prototype.addFeature = function (add, feature) {
@@ -6591,9 +6410,79 @@ exports.getDefaultContentEditFeatures = getDefaultContentEditFeatures;
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/ListFeatures.ts":
+/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/autoLinkFeatures.ts":
+/*!****************************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/features/autoLinkFeatures.ts ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
+// When user type, they may end a link with a puncatuation, i.e. www.bing.com;
+// we need to trim off the trailing puncatuation before turning it to link match
+var TRAILING_PUNCTUATION_REGEX = /[.()+={}\[\]\s:;"',>]+$/i;
+var MINIMUM_LENGTH = 5;
+var KEY_ENTER = 13;
+var KEY_SPACE = 32;
+exports.AutoLink1 = {
+    key: KEY_ENTER,
+    shouldHandleEvent: cacheGetLinkData,
+    handleEvent: autoLink,
+};
+exports.AutoLink2 = {
+    key: KEY_SPACE,
+    shouldHandleEvent: cacheGetLinkData,
+    handleEvent: autoLink,
+};
+function cacheGetLinkData(event, editor) {
+    return roosterjs_editor_core_1.cacheGetEventData(event, 'LINK_DATA', function () {
+        var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
+        var wordBeforeCursor = cursorData ? cursorData.getWordBeforeCursor() : null;
+        if (wordBeforeCursor && wordBeforeCursor.length > MINIMUM_LENGTH) {
+            // Check for trailing punctuation
+            var trailingPunctuations = wordBeforeCursor.match(TRAILING_PUNCTUATION_REGEX);
+            var trailingPunctuation = trailingPunctuations && trailingPunctuations.length > 0
+                ? trailingPunctuations[0]
+                : null;
+            // Compute the link candidate
+            var linkCandidate = wordBeforeCursor.substring(0, trailingPunctuation
+                ? wordBeforeCursor.length - trailingPunctuation.length
+                : wordBeforeCursor.length);
+            // Match and replace in editor
+            return roosterjs_editor_dom_1.matchLink(linkCandidate);
+        }
+        return null;
+    });
+}
+function autoLink(event, editor) {
+    var anchor = editor.getDocument().createElement('a');
+    var linkData = cacheGetLinkData(event, editor);
+    anchor.textContent = linkData.originalUrl;
+    anchor.href = linkData.normalizedUrl;
+    editor.runAsync(function () {
+        editor.formatWithUndo(function () {
+            var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
+            var range = cursorData.getRangeWithTextBeforeCursor(linkData.originalUrl, false /*exactMatch*/);
+            if (range && range.replaceWithNode(anchor)) {
+                // The content at cursor has changed. Should also clear the cursor data cache
+                roosterjs_editor_api_1.clearCursorEventDataCache(event);
+            }
+        }, true /*preserveSelection*/, "AutoLink" /* AutoLink */, function () { return anchor; });
+    });
+    return "AutoLink" /* AutoLink */;
+}
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/listFeatures.ts":
 /*!************************************************************************************!*\
-  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/features/ListFeatures.ts ***!
+  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/features/listFeatures.ts ***!
   \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -6664,12 +6553,12 @@ exports.AutoBullet = {
     shouldHandleEvent: function (event, editor) {
         if (!cacheGetListTag(event, editor)) {
             var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
-            var textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
+            var textBeforeCursor = cursorData.getSubStringBeforeCursor(3);
             // Auto list is triggered if:
             // 1. Text before cursor exactly mathces '*', '-' or '1.'
             // 2. There's no non-text inline entities before cursor
             return (['*', '-', '1.'].indexOf(textBeforeCursor) >= 0 &&
-                !cursorData.getFirstNonTextInlineBeforeCursor());
+                !cursorData.getNearestNonTextInlineElement());
         }
         return false;
     },
@@ -6677,14 +6566,14 @@ exports.AutoBullet = {
         editor.runAsync(function () {
             var listNode;
             var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
-            var textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
+            var textBeforeCursor = cursorData.getSubStringBeforeCursor(3);
             // editor.insertContent(NBSP);
             editor.formatWithUndo(function () {
                 // Remove the user input '*', '-' or '1.'
-                var rangeToDelete = roosterjs_editor_api_1.validateAndGetRangeForTextBeforeCursor(editor, textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
-                true /*exactMatch*/, cursorData);
+                var rangeToDelete = cursorData.getRangeWithTextBeforeCursor(textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
+                true /*exactMatch*/);
                 if (rangeToDelete) {
-                    rangeToDelete.deleteContents();
+                    rangeToDelete.getRange().deleteContents();
                 }
                 // If not explicitly insert br, Chrome will operate on the previous line
                 if (roosterjs_editor_dom_2.Browser.isChrome || roosterjs_editor_dom_2.Browser.isChrome) {
@@ -6717,74 +6606,6 @@ function cacheGetListTag(event, editor) {
     var li = roosterjs_editor_api_1.cacheGetNodeAtCursor(editor, event, 'LI');
     var tag = li && roosterjs_editor_dom_1.getTagOfNode(li.parentNode);
     return tag == 'OL' || tag == 'UL' ? tag : null;
-}
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/autoLinkFeatures.ts":
-/*!****************************************************************************************!*\
-  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/features/autoLinkFeatures.ts ***!
-  \****************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
-// When user type, they may end a link with a puncatuation, i.e. www.bing.com;
-// we need to trim off the trailing puncatuation before turning it to link match
-var TRAILING_PUNCTUATION_REGEX = /[.()+={}\[\]\s:;"',>]+$/i;
-var MINIMUM_LENGTH = 5;
-var KEY_ENTER = 13;
-var KEY_SPACE = 32;
-exports.AutoLink1 = {
-    key: KEY_ENTER,
-    shouldHandleEvent: cacheGetLinkData,
-    handleEvent: autoLink,
-};
-exports.AutoLink2 = {
-    key: KEY_SPACE,
-    shouldHandleEvent: cacheGetLinkData,
-    handleEvent: autoLink,
-};
-function cacheGetLinkData(event, editor) {
-    return roosterjs_editor_core_1.cacheGetEventData(event, 'LINK_DATA', function () {
-        var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
-        var wordBeforeCursor = cursorData ? cursorData.wordBeforeCursor : null;
-        if (wordBeforeCursor && wordBeforeCursor.length > MINIMUM_LENGTH) {
-            // Check for trailing punctuation
-            var trailingPunctuations = wordBeforeCursor.match(TRAILING_PUNCTUATION_REGEX);
-            var trailingPunctuation = trailingPunctuations && trailingPunctuations.length > 0
-                ? trailingPunctuations[0]
-                : null;
-            // Compute the link candidate
-            var linkCandidate = wordBeforeCursor.substring(0, trailingPunctuation
-                ? wordBeforeCursor.length - trailingPunctuation.length
-                : wordBeforeCursor.length);
-            // Match and replace in editor
-            return roosterjs_editor_dom_1.matchLink(linkCandidate);
-        }
-        return null;
-    });
-}
-function autoLink(event, editor) {
-    var anchor = editor.getDocument().createElement('a');
-    var linkData = cacheGetLinkData(event, editor);
-    anchor.textContent = linkData.originalUrl;
-    anchor.href = linkData.normalizedUrl;
-    editor.runAsync(function () {
-        editor.formatWithUndo(function () {
-            if (roosterjs_editor_api_1.replaceTextBeforeCursorWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */, roosterjs_editor_api_1.cacheGetCursorEventData(event, editor))) {
-                // The content at cursor has changed. Should also clear the cursor data cache
-                roosterjs_editor_api_1.clearCursorEventDataCache(event);
-            }
-        }, false /*preserveSelection*/, "AutoLink" /* AutoLink */, function () { return anchor; });
-    });
-    return "AutoLink" /* AutoLink */;
 }
 
 
@@ -6827,7 +6648,7 @@ function cacheGetQuoteChild(event, editor) {
         while (editor.contains(node) && roosterjs_editor_dom_1.getTagOfNode(node.parentNode) != 'BLOCKQUOTE') {
             node = node.parentNode;
         }
-        return roosterjs_editor_dom_1.getTagOfNode(node.parentNode) == 'BLOCKQUOTE' ? node : null;
+        return node && roosterjs_editor_dom_1.getTagOfNode(node.parentNode) == 'BLOCKQUOTE' ? node : null;
     });
 }
 function splitQuote(event, editor) {

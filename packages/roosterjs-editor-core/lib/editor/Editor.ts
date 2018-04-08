@@ -18,6 +18,7 @@ import {
     InsertOption,
     PluginEvent,
     PluginEventType,
+    Rect,
 } from 'roosterjs-editor-types';
 import {
     Browser,
@@ -332,10 +333,29 @@ export default class Editor {
 
     //#region Focus and Selection
 
+    /**
+     * Get a SelectionRange object represents current selection in editor.
+     * When editor has a live selection, this will return the selection.
+     * When editor doesn't have a live selection, but it has a cached selection, this will return the cached selection.
+     * Otherwise, return a selection of beginning of editor
+     */
     public getSelectionRange(): SelectionRange {
         return new SelectionRange(
             getLiveRange(this.core) || this.core.cachedRange || this.defaultRange
         );
+    }
+
+    /**
+     * Get a Rect object represents the bounding rect of current focus point in editor.
+     * If the editor doesn't have a live focus point, returns null
+     */
+    public getCursorRect(): Rect {
+        let selection = document.defaultView.getSelection();
+        if (selection && this.contains(selection.focusNode)) {
+            let position = new Position(selection.focusNode, selection.focusOffset);
+            return position.getRect();
+        }
+        return null;
     }
 
     /**

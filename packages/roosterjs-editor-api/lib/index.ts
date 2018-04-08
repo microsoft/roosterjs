@@ -1,16 +1,6 @@
-export {
-    default as cacheGetCursorEventData,
-    clearCursorEventDataCache,
-} from './cursor/cacheGetCursorEventData';
-export { default as CursorData } from './cursor/CursorData';
-export { default as getCursorRect } from './cursor/getCursorRect';
+export { default as CursorData, cacheGetCursorEventData, clearCursorEventDataCache } from './cursor/CursorData';
 export { default as getNodeAtCursor, cacheGetNodeAtCursor } from './cursor/getNodeAtCursor';
 export { default as queryNodesWithSelection } from './cursor/queryNodesWithSelection';
-export { default as replaceRangeWithNode } from './cursor/replaceRangeWithNode';
-export {
-    default as replaceTextBeforeCursorWithNode,
-    validateAndGetRangeForTextBeforeCursor,
-} from './cursor/replaceTextBeforeCursorWithNode';
 export { default as getFormatState } from './cursor/getFormatState';
 
 export { default as clearFormat } from './format/clearFormat';

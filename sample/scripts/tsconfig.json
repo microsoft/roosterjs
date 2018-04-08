@@ -6,6 +6,63 @@
         "lib": [
             "es6",
             "dom"
-        ]
+        ],
+        "paths": {
+            "roosterjs": [
+                "packages/roosterjs/lib/index"
+            ],
+            "roosterjs/lib/*": [
+                "packages/roosterjs/lib/*"
+            ],
+
+            "roosterjs-editor-dom": [
+                "packages/roosterjs-editor-dom/lib/index"
+            ],
+            "roosterjs-editor-dom/lib/*": [
+                "packages/roosterjs-editor-dom/lib/*"
+            ],
+            "roosterjs-editor-core": [
+                "packages/roosterjs-editor-core/lib/index"
+            ],
+            "roosterjs-editor-core/lib/*": [
+                "packages/roosterjs-editor-core/lib/*"
+            ],
+            "roosterjs-editor-api": [
+                "packages/roosterjs-editor-api/lib/index"
+            ],
+            "roosterjs-editor-api/lib/*": [
+                "packages/roosterjs-editor-api/lib/*"
+            ],
+            "roosterjs-editor-plugins": [
+                "packages/roosterjs-editor-plugins/lib/index"
+            ],
+            "roosterjs-editor-plugins/lib/*": [
+                "packages/roosterjs-editor-plugins/lib/*"
+            ],
+            "roosterjs-editor-types": [
+                "packages/roosterjs-editor-types/lib/index"
+            ],
+            "roosterjs-editor-types/lib/*": [
+                "packages/roosterjs-editor-types/lib/*"
+            ],
+            "roosterjs-plugin-table-resize": [
+                "packages/roosterjs-plugin-table-resize/lib/index"
+            ],
+            "roosterjs-plugin-table-resize/lib/*": [
+                "packages/roosterjs-plugin-table-resize/lib/*"
+            ],
+            "roosterjs-plugin-image-resize": [
+                "packages-plugin-image-resize/roosterjs/lib/index"
+            ],
+            "roosterjs-plugin-image-resize/lib/*": [
+                "packages/roosterjs-plugin-image-resize/lib/*"
+            ],
+            "roosterjs-plugin-watermark": [
+                "packages/roosterjs-plugin-watermark/lib/index"
+            ],
+            "roosterjs-plugin-watermark/lib/*": [
+                "packages/roosterjs-plugin-watermark/lib/*"
+            ]
+        }
     }
 }

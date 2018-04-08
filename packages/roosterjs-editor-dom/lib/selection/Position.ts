@@ -1,4 +1,5 @@
-import { NodeType } from 'roosterjs-editor-types';
+import { NodeType, Rect } from 'roosterjs-editor-types';
+import Browser from '../utils/Browser';
 import PositionType from './PositionType';
 import getElementOrParentElement from '../utils/getElementOrParentElement';
 import isNodeAfter from '../utils/isNodeAfter';
@@ -120,6 +121,60 @@ export default class Position {
             ? (this.isAtEnd && !p.isAtEnd) || this.offset > p.offset
             : isNodeAfter(this.node, p.node);
     }
+
+    /**
+     * Get bounding rect of this position
+     */
+    getRect(): Rect {
+        let document = this.node && this.node.ownerDocument;
+
+        if (!document) {
+            return null;
+        }
+
+        let range = document.createRange();
+        range.setStart(this.node, this.offset);
+
+        // 1) try to get rect using range.getBoundingClientRect()
+        let rect = normalizeRect(range.getBoundingClientRect());
+
+        if (!rect) {
+            let { node, element, offset } = this.normalize();
+
+            // 2) if current cursor is inside text node, use range.getClientRects() for safari
+            // or insert a SPAN and get the rect of SPAN for others
+            if (Browser.isSafari) {
+                let rects = range.getClientRects();
+                if (rects && rects.length == 1) {
+                    rect = normalizeRect(rects[0]);
+                }
+            } else {
+                if (node.nodeType == NodeType.Text) {
+                    let span = document.createElement('SPAN');
+                    range.setStart(node, offset);
+                    range.collapse(true /*toStart*/);
+                    range.insertNode(span);
+                    rect = normalizeRect(span.getBoundingClientRect());
+                    span.parentNode.removeChild(span);
+                }
+            }
+
+            // 4) fallback to element.getBoundingClientRect()
+            if (!rect && element) {
+                rect = normalizeRect(element.getBoundingClientRect());
+            }
+        }
+
+        return rect;
+    }
+
+    /**
+     * Move this position with offset, returns a new position with a valid offset in the same node
+     * @param offset Offset to move with
+     */
+    move(offset: number) {
+        return new Position(this.node, this.offset + offset);
+    }
 }
 
 function getIndexOfNode(node: Node): number {
@@ -138,4 +193,18 @@ function getEndOffset(node: Node): number {
     } else {
         return 1;
     }
+}
+
+function normalizeRect(clientRect: ClientRect): Rect {
+    // A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p
+    // We validate that and only return a rect when the passed in ClientRect is valid
+    let { left, right, top, bottom } = clientRect || <ClientRect>{};
+    return left + right + top + bottom > 0
+        ? {
+              left: Math.round(left),
+              right: Math.round(right),
+              top: Math.round(top),
+              bottom: Math.round(bottom),
+          }
+        : null;
 }

@@ -679,6 +679,15 @@ declare namespace roosterjs {
          * Checks if position 1 is after position 2
          */
         isAfter(p: Position): boolean;
+        /**
+         * Get bounding rect of this position
+         */
+        getRect(): Rect;
+        /**
+         * Move this position with offset, returns a new position with a valid offset in the same node
+         * @param offset Offset to move with
+         */
+        move(offset: number): Position;
     }
 
     /**
@@ -717,6 +726,12 @@ declare namespace roosterjs {
          * Normal this selction range by normalizing its start and end position
          */
         normalize(): SelectionRange;
+        /**
+         * Replace this range with a node
+         * @param node The node to be inserted
+         * @returns True if we complete the replacement, false otherwise
+         */
+        replaceWithNode(node: Node): boolean;
     }
 
     /**
@@ -807,6 +822,10 @@ declare namespace roosterjs {
          */
         getEndPosition: () => Position;
         /**
+         * Get a value to indicate whether this element contains text only
+         */
+        isText: () => boolean;
+        /**
          * Checks if the given inline element is after this inline element
          */
         isAfter: (inlineElement: InlineElement) => boolean;
@@ -845,6 +864,10 @@ declare namespace roosterjs {
          * Get the end point of the inline element
          */
         getEndPosition(): Position;
+        /**
+         * Get a value to indicate whether this element contains text only
+         */
+        isText(): boolean;
         /**
          * Checks if an inline element is after the current inline element
          */
@@ -895,6 +918,10 @@ declare namespace roosterjs {
          * Checks if it contains a position
          */
         contains(p: Position): boolean;
+        /**
+         * Get a value to indicate whether this element contains text only
+         */
+        isText(): boolean;
         /**
          * Check if this inline element is after the other inline element
          */
@@ -1475,7 +1502,18 @@ declare namespace roosterjs {
          * @returns Node list of the query result
          */
         queryNodes<T extends Node = Node>(selector: string, forEachCallback?: (node: T) => void): T[];
+        /**
+         * Get a SelectionRange object represents current selection in editor.
+         * When editor has a live selection, this will return the selection.
+         * When editor doesn't have a live selection, but it has a cached selection, this will return the cached selection.
+         * Otherwise, return a selection of beginning of editor
+         */
         getSelectionRange(): SelectionRange;
+        /**
+         * Get a Rect object represents the bounding rect of current focus point in editor.
+         * If the editor doesn't have a live focus point, returns null
+         */
+        getCursorRect(): Rect;
         /**
          * Check if focus is in editor now
          * @returns true if focus is in editor, otherwise false
@@ -1831,6 +1869,67 @@ declare namespace roosterjs {
      */
     function restoreSnapshot(editor: Editor, snapshot: string): void;
 
+    class CursorData {
+        private traverser;
+        private text;
+        private word;
+        private inlineElement;
+        private traversingCompleted;
+        private inlineElements;
+        private nearestNonTextInlineElement;
+        /**
+         * Create a new CursorData instance
+         * @param editor The editor instance
+         */
+        constructor(traverser: ContentTraverser);
+        /**
+         * Get the word before cursor. The word is determined by scanning backwards till the first white space, the portion
+         * between cursor and the white space is the word before cursor
+         * @returns The word before cursor
+         */
+        getWordBeforeCursor(): string;
+        /**
+         * Get the inline element before cursor
+         * @returns The inlineElement before cursor
+         */
+        getInlineElementBeforeCursor(): InlineElement;
+        /**
+         * Get X number of chars before cursor
+         * The actual returned chars may be less than what is requested.
+         * @param length The length of string user want to get, the string always ends at the cursor,
+         * so this length determins the start position of the string
+         * @returns The actual string we get as a sub string, or the whole string before cursor when
+         * there is not enough chars in the string
+         */
+        getSubStringBeforeCursor(length: number): string;
+        /**
+         * Try to get a range matches the given text before the cursor
+         * @param text The text to match against
+         * @param exactMatch Whether it is an exact match
+         * @returns The range for the matched text, null if unable to find a match
+         */
+        getRangeWithTextBeforeCursor(text: string, exactMatch: boolean): SelectionRange;
+        /**
+         * Get text section before cursor till stop condition is met.
+         * This offers consumers to retrieve text section by section
+         * The section essentially is just an inline element which has Container element
+         * so that the consumer can remember it for anchoring popup or verification purpose
+         * when cursor moves out of context etc.
+         * @param callback The callback function of each inline element.
+         * Return true from this callback to stop the loop
+         */
+        forEachTextInlineElement(callback: (textInlineElement: InlineElement) => boolean): void;
+        /**
+         * Get first non textual inline element before cursor
+         * @returns First non textutal inline element before cursor or null if no such element exists
+         */
+        getNearestNonTextInlineElement(): InlineElement;
+        /**
+         * Continue traversing backward till stop condition is met or begin of block is reached
+         */
+        private travel(stopFunc);
+    }
+
     /**
      * Read CursorData from plugin event cache. If not, create one
      * @param event The plugin event, it stores the event cached data for looking up.
@@ -1846,72 +1945,6 @@ declare namespace roosterjs {
      * @param event The plugin event
      */
     function clearCursorEventDataCache(event: PluginEvent): void;
-
-    class CursorData {
-        private editor;
-        private cachedTextBeforeCursor;
-        private cachedWordBeforeCursor;
-        private inlineBeforeCursor;
-        private inlineAfterCursor;
-        private backwardTraverser;
-        private forwardTraverser;
-        private backwardTraversingComplete;
-        private forwardTraversingComplete;
-        private inlineElementsBeforeCursor;
-        private firstNonTextInlineBeforeCursor;
-        /**
-         * Create a new CursorData instance
-         * @param editor The editor instance
-         */
-        constructor(editor: Editor);
-        /**
-         * Get the word before cursor. The word is determined by scanning backwards till the first white space, the portion
-         * between cursor and the white space is the word before cursor
-         * @returns The word before cursor
-         */
-        readonly wordBeforeCursor: string;
-        /**
-         * Get the inline element before cursor
-         * @returns The inlineElement before cursor
-         */
-        readonly inlineElementBeforeCursor: InlineElement;
-        /**
-         * Get the inline element after cursor
-         * @returns The inline element after cursor
-         */
-        readonly inlineElementAfterCursor: InlineElement;
-        /**
-         * Get X number of chars before cursor
-         * The actual returned chars may be less than what is requested. e.g, length of text before cursor is less then X
-         * @param numChars The X number of chars user want to get
-         * @returns The actual chars we get as a string
-         */
-        getXCharsBeforeCursor(numChars: number): string;
-        /**
-         * Get text section before cursor till stop condition is met.
-         * This offers consumers to retrieve text section by section
-         * The section essentially is just an inline element which has Container element
-         * so that the consumer can remember it for anchoring popup or verification purpose
-         * when cursor moves out of context etc.
-         * @param stopFunc The callback stop function
-         */
-        getTextSectionBeforeCursorTill(stopFunc: (textInlineElement: InlineElement) => boolean): void;
-        /**
-         * Get first non textual inline element before cursor
-         * @returns First non textutal inline element before cursor or null if no such element exists
-         */
-        getFirstNonTextInlineBeforeCursor(): InlineElement;
-        private continueTraversingBackwardTill(stopFunc);
-    }
-
-    /**
-     * Returns a rect representing the location of the cursor.
-     * In case there is a uncollapsed selection witin editor, this returns
-     * the position for focus node.
-     * The returned rect structure has a left and right and they should be same
-     * here since it is for cursor, not for a range.
-     */
-    function getCursorRect(editor: Editor): Rect;
 
     /**
      * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
@@ -1943,40 +1976,6 @@ declare namespace roosterjs {
      * @returns The nodes intersected with current selection, returns an empty array if no result is found
      */
     function queryNodesWithSelection<T extends Node = Node>(editor: Editor, selector: string, nodeContainedByRangeOnly?: boolean, forEachCallback?: (node: T) => void): T[];
-
-    /**
-     * Replace the specified range with a node
-     * @param editor The editor instance
-     * @param range The range in which content needs to be replaced
-     * @param node The node to be inserted
-     * @param exactMatch exactMatch is to match exactly
-     * @returns True if we complete the replacement, false otherwise
-     */
-    function replaceRangeWithNode(editor: Editor, range: Range, node: Node, exactMatch: boolean): boolean;
-
-    /**
-     * Replace text before cursor with a node
-     * @param editor The editor instance
-     * @param text The text for matching. We will try to match the text with the text before cursor
-     * @param node The node to replace the text with
-     * @param exactMatch exactMatch is to match exactly, i.e.
-     * In auto linkification, users could type URL followed by some punctuation and hit space. The auto link will kick in on space,
-     * at the moment, what is before cursor could be "<URL>,", however, only "<URL>" makes the link. by setting exactMatch = false, it does not match
-     * from right before cursor, but can scan through till first same char is seen. On the other hand if set exactMatch = true, it starts the match right
-     * before cursor.
-     * @param cursorData
-     */
-    function replaceTextBeforeCursorWithNode(editor: Editor, text: string, node: Node, exactMatch: boolean, cursorData?: CursorData): boolean;
-
-    /**
-     * Validate the text matches what's before the cursor, and return the range for it
-     * @param editor The editor instance
-     * @param text The text to match against
-     * @param exactMatch Whether it is an exact match
-     * @param cursorData The cursor data
-     * @returns The range for the matched text, null if unable to find a match
-     */
-    function validateAndGetRangeForTextBeforeCursor(editor: Editor, text: string, exactMatch: boolean, cursorData: CursorData): Range;
 
     /**
      * Get format state at cursor
