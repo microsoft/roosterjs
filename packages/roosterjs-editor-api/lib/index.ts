@@ -1,4 +1,3 @@
-export { default as CursorData, cacheGetCursorEventData, clearCursorEventDataCache } from './cursor/CursorData';
 export { default as getNodeAtCursor, cacheGetNodeAtCursor } from './cursor/getNodeAtCursor';
 export { default as queryNodesWithSelection } from './cursor/queryNodesWithSelection';
 export { default as getFormatState } from './cursor/getFormatState';

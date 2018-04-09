@@ -368,24 +368,6 @@ export const enum ContentPosition {
 }
 
 /**
- * Indicates the scope of a traversing
- */
-export const enum ContentScope {
-    /**
-     * Scope to a block
-     */
-    Block = 0,
-    /**
-     * Scope to current selection
-     */
-    Selection = 1,
-    /**
-     * Scope to the whole body
-     */
-    Body = 2,
-}
-
-/**
  * Options for insertContent API
  */
 export interface InsertOption {
@@ -1137,13 +1119,23 @@ export class ContentTraverser {
     private currentBlock;
     private scoper;
     /**
-     * Create a new instance of ContentTraverser class
-     * @param rootNode Root node of the content
-     * @param scope The scope type, can be Body, Block, Selection
-     * @param range A range used for scope the content. This can be null when scope set to ContentScope.Body
-     * @param position Position type, must be set when scope is set to Block. The value can be Begin, End, SelectionStart
+     * Create a content traverser for the whole body of given root node
+     * @param rootNode The root node to traverse in
      */
-    constructor(rootNode: Node, scope: ContentScope, range: SelectionRange, position: ContentPosition);
+    constructor(rootNode: Node);
+    /**
+     * Create a content traverser for the given selection
+     * @param rootNode The root node to traverse in
+     * @param range The selection range to scope the traversing
+     */
+    constructor(rootNode: Node, range: SelectionRange);
+    /**
+     * Create a content traverser for a block element which contains the given position
+     * @param rootNode The root node to traverse in
+     * @param positionInBlock A position inside a block, traversing will be scoped within this block
+     * @param startFrom Start position of traversing. The value can be Begin, End, SelectionStart
+     */
+    constructor(rootNode: Node, positionInBlock: Position, startFrom: ContentPosition);
     /**
      * Get current block
      */
@@ -1169,6 +1161,70 @@ export class ContentTraverser {
      */
     getPreviousInlineElement(): InlineElement;
     private getValidInlineElement(isNext);
+}
+
+/**
+ * A helper class to traverse text inline elements before a position
+ */
+export class TextBeforePositionTraverser {
+    private traverser;
+    private text;
+    private word;
+    private inlineElement;
+    private traversingCompleted;
+    private inlineElements;
+    private nearestNonTextInlineElement;
+    /**
+     * Create a new TextBeforePositionTraverser instance
+     * @param traverser The content traverser to help find data before position
+     */
+    constructor(traverser: ContentTraverser);
+    /**
+     * Get the word before cursor. The word is determined by scanning backwards till the first white space, the portion
+     * between cursor and the white space is the word before cursor
+     * @returns The word before cursor
+     */
+    getWordBeforeCursor(): string;
+    /**
+     * Get the inline element before cursor
+     * @returns The inlineElement before cursor
+     */
+    getInlineElementBeforeCursor(): InlineElement;
+    /**
+     * Get X number of chars before cursor
+     * The actual returned chars may be less than what is requested.
+     * @param length The length of string user want to get, the string always ends at the cursor,
+     * so this length determins the start position of the string
+     * @returns The actual string we get as a sub string, or the whole string before cursor when
+     * there is not enough chars in the string
+     */
+    getSubStringBeforeCursor(length: number): string;
+    /**
+     * Try to get a range matches the given text before the cursor
+     * @param text The text to match against
+     * @param exactMatch Whether it is an exact match
+     * @returns The range for the matched text, null if unable to find a match
+     */
+    getRangeWithForTextBeforeCursor(text: string, exactMatch: boolean): SelectionRange;
+    /**
+     * Get text section before cursor till stop condition is met.
+     * This offers consumers to retrieve text section by section
+     * The section essentially is just an inline element which has Container element
+     * so that the consumer can remember it for anchoring popup or verification purpose
+     * when cursor moves out of context etc.
+     * @param callback The callback function of each inline element.
+     * Return true from this callback to stop the loop
+     */
+    forEachTextInlineElement(callback: (textInlineElement: InlineElement) => boolean): void;
+    /**
+     * Get first non textual inline element before cursor
+     * @returns First non textutal inline element before cursor or null if no such element exists
+     */
+    getNearestNonTextInlineElement(): InlineElement;
+    /**
+     * Continue traversing backward till stop condition is met or begin of block is reached
+     */
+    private travel(callback);
 }
 
 export const Browser: BrowserInfo;
@@ -1346,6 +1402,11 @@ export function isDocumentPosition(position: DocumentPosition, targets: Document
  * @returns True if there isn't any visible element inside node, otherwise false
  */
 export function isNodeEmpty(node: Node, trimContent?: boolean): boolean;
+
+/**
+ * check if it is html void element. void element cannot have childen
+ */
+export function isVoidHtmlElement(element: HTMLElement): boolean;
 
 /**
  * Try to match a given string with link match rules, return matched link
@@ -1644,17 +1705,22 @@ export class Editor {
      */
     getDefaultFormat(): DefaultFormat;
     /**
-     * Get a content traverser that can be used to travse content within editor
-     * @param scope Content scope type. There are 3 kinds of scoper:
-     * 1) SelectionBlockScoper is a block based scoper that restrict traversing within the block where the selection is
-     *    it allows traversing from start, end or selection start position
-     *    this is commonly used to parse content from cursor as user type up to the begin or end of block
-     * 2) SelectionScoper restricts traversing within the selection. It is commonly used for applying style to selection
-     * 3) BodyScoper will traverse the entire editor body from the beginning (ignoring the passed in position parameter)
-     * @param position Start position of the traverser
-     * @returns A content traverser to help travse among InlineElemnt/BlockElement within scope
+     * Get a content traverser for the whole editor
      */
-    getContentTraverser(scope: ContentScope, position?: ContentPosition): ContentTraverser;
+    getBodyTraverser(): ContentTraverser;
+    /**
+     * Get a content traverser for current selection
+     */
+    getSelectionTraverser(): ContentTraverser;
+    /**
+     * Get a content traverser for current block element start from specified position
+     * @param startFrom Start position of the traverser
+     */
+    getBlockTraverser(startFrom?: ContentPosition): ContentTraverser;
+    /**
+     * Get a text traverser to help get text before current focused position
+     */
+    getTextBeforePositionTraverser(): TextBeforePositionTraverser;
     /**
      * Run a callback function asynchronously
      * @param callback The callback function to run
@@ -1851,8 +1917,36 @@ export interface UndoService extends EditorPlugin {
     clear: () => void;
 }
 
+/**
+ * Read CursorData from plugin event cache. If not, create one
+ * @param event The plugin event, it stores the event cached data for looking up.
+ * If passed as null, we will create a new cursor data
+ * @param editor The editor instance
+ * @returns The cursor data
+ */
+export function cacheGetCursorEventData(event: PluginEvent, editor: Editor): TextBeforePositionTraverser;
+
+/**
+ * Clear the cursor data in a plugin event.
+ * This is called when the cursor data is changed, e.g, the text is replace with HyperLink
+ * @param event The plugin event
+ */
+export function clearCursorEventDataCache(event: PluginEvent): void;
+
+/**
+ * Clear a cached object by its key from an event object
+ * @param event The event object
+ * @param key The cache key
+ */
 export function clearEventDataCache(event: PluginEvent, key: string): void;
 
+/**
+ * Gets the cached event data by cache key from event object if there is already one.
+ * Otherwise, call getter function to create one, and cache it.
+ * @param event The event object
+ * @param key Cache key string, need to be unique
+ * @param getter Getter function to get the object when it is not in cache yet
+ */
 export function cacheGetEventData<T>(event: PluginEvent, key: string, getter: () => T): T;
 
 /**
@@ -1867,83 +1961,6 @@ export function buildSnapshot(editor: Editor): string;
  * @param editor The editor instance
  */
 export function restoreSnapshot(editor: Editor, snapshot: string): void;
-
-export class CursorData {
-    private traverser;
-    private text;
-    private word;
-    private inlineElement;
-    private traversingCompleted;
-    private inlineElements;
-    private nearestNonTextInlineElement;
-    /**
-     * Create a new CursorData instance
-     * @param editor The editor instance
-     */
-    constructor(traverser: ContentTraverser);
-    /**
-     * Get the word before cursor. The word is determined by scanning backwards till the first white space, the portion
-     * between cursor and the white space is the word before cursor
-     * @returns The word before cursor
-     */
-    getWordBeforeCursor(): string;
-    /**
-     * Get the inline element before cursor
-     * @returns The inlineElement before cursor
-     */
-    getInlineElementBeforeCursor(): InlineElement;
-    /**
-     * Get X number of chars before cursor
-     * The actual returned chars may be less than what is requested.
-     * @param length The length of string user want to get, the string always ends at the cursor,
-     * so this length determins the start position of the string
-     * @returns The actual string we get as a sub string, or the whole string before cursor when
-     * there is not enough chars in the string
-     */
-    getSubStringBeforeCursor(length: number): string;
-    /**
-     * Try to get a range matches the given text before the cursor
-     * @param text The text to match against
-     * @param exactMatch Whether it is an exact match
-     * @returns The range for the matched text, null if unable to find a match
-     */
-    getRangeWithTextBeforeCursor(text: string, exactMatch: boolean): SelectionRange;
-    /**
-     * Get text section before cursor till stop condition is met.
-     * This offers consumers to retrieve text section by section
-     * The section essentially is just an inline element which has Container element
-     * so that the consumer can remember it for anchoring popup or verification purpose
-     * when cursor moves out of context etc.
-     * @param callback The callback function of each inline element.
-     * Return true from this callback to stop the loop
-     */
-    forEachTextInlineElement(callback: (textInlineElement: InlineElement) => boolean): void;
-    /**
-     * Get first non textual inline element before cursor
-     * @returns First non textutal inline element before cursor or null if no such element exists
-     */
-    getNearestNonTextInlineElement(): InlineElement;
-    /**
-     * Continue traversing backward till stop condition is met or begin of block is reached
-     */
-    private travel(stopFunc);
-}
-
-/**
- * Read CursorData from plugin event cache. If not, create one
- * @param event The plugin event, it stores the event cached data for looking up.
- * If passed as null, we will create a new cursor data
- * @param editor The editor instance
- * @returns The cursor data
- */
-export function cacheGetCursorEventData(event: PluginEvent, editor: Editor): CursorData;
-
-/**
- * Clear the cursor data in a plugin event.
- * This is called when the cursor data is changed, e.g, the text is replace with HyperLink
- * @param event The plugin event
- */
-export function clearCursorEventDataCache(event: PluginEvent): void;
 
 /**
  * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node

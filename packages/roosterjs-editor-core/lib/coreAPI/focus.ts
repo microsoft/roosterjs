@@ -1,10 +1,9 @@
 import EditorCore from '../editor/EditorCore';
 import getLiveRange from './getLiveRange';
 import hasFocus from './hasFocus';
-import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import select from './select';
 import { NodeType } from 'roosterjs-editor-types';
-import { getFirstLeafNode, Position } from 'roosterjs-editor-dom';
+import { getFirstLeafNode, Position, isVoidHtmlElement } from 'roosterjs-editor-dom';
 
 export default function focus(core: EditorCore) {
     if (!hasFocus(core) || !getLiveRange(core)) {

@@ -1,11 +1,12 @@
 import { ChangeSource, LinkData, PluginDomEvent } from 'roosterjs-editor-types';
 import { ContentEditFeature } from '../ContentEditFeatures';
-import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
-import { matchLink } from 'roosterjs-editor-dom';
 import {
+    Editor,
+    cacheGetEventData,
     cacheGetCursorEventData,
     clearCursorEventDataCache,
-} from 'roosterjs-editor-api';
+} from 'roosterjs-editor-core';
+import { matchLink } from 'roosterjs-editor-dom';
 
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
 // we need to trim off the trailing puncatuation before turning it to link match
@@ -63,7 +64,10 @@ function autoLink(event: PluginDomEvent, editor: Editor) {
         editor.formatWithUndo(
             () => {
                 let cursorData = cacheGetCursorEventData(event, editor);
-                let range = cursorData.getRangeWithTextBeforeCursor(linkData.originalUrl, false /*exactMatch*/);
+                let range = cursorData.getRangeWithForTextBeforeCursor(
+                    linkData.originalUrl,
+                    false /*exactMatch*/
+                );
                 if (range && range.replaceWithNode(anchor)) {
                     // The content at cursor has changed. Should also clear the cursor data cache
                     clearCursorEventDataCache(event);

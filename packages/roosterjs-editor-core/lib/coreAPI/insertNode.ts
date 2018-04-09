@@ -1,7 +1,6 @@
 import EditorCore from '../editor/EditorCore';
 import focus from './focus';
 import getLiveRange from './getLiveRange';
-import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import select from './select';
 import {
     Position,
@@ -12,6 +11,7 @@ import {
     getLeafNode,
     getTagOfNode,
     isBlockElement,
+    isVoidHtmlElement,
     wrap,
 } from 'roosterjs-editor-dom';
 import { ContentPosition, InsertOption, NodeType } from 'roosterjs-editor-types';

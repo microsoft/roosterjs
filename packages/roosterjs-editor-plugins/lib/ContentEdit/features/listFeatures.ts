@@ -1,16 +1,14 @@
 import { ContentEditFeature } from '../ContentEditFeatures';
-import { Editor } from 'roosterjs-editor-core';
+import { Editor, cacheGetCursorEventData } from 'roosterjs-editor-core';
 import { Indentation, PluginDomEvent } from 'roosterjs-editor-types';
-import { Position, SelectionRange, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
+import { Browser, Position, SelectionRange, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
 import {
-    cacheGetCursorEventData,
     cacheGetNodeAtCursor,
     getNodeAtCursor,
     setIndentation,
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-import { Browser } from 'roosterjs-editor-dom';
 import { ChangeSource } from 'roosterjs-editor-types';
 
 const KEY_BACKSPACE = 8;
@@ -101,7 +99,7 @@ export const AutoBullet: ContentEditFeature = {
             editor.formatWithUndo(
                 () => {
                     // Remove the user input '*', '-' or '1.'
-                    let rangeToDelete = cursorData.getRangeWithTextBeforeCursor(
+                    let rangeToDelete = cursorData.getRangeWithForTextBeforeCursor(
                         textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
                         true /*exactMatch*/
                     );

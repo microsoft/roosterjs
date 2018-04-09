@@ -1,6 +1,7 @@
-import { ContentPosition, ContentScope, PluginEvent } from 'roosterjs-editor-types';
-import { ContentTraverser, InlineElement, Position, SelectionRange } from 'roosterjs-editor-dom';
-import { Editor, cacheGetEventData, clearEventDataCache } from 'roosterjs-editor-core';
+import ContentTraverser from './ContentTraverser';
+import InlineElement from '../inlineElements/InlineElement';
+import Position from '../selection/Position';
+import SelectionRange from '../selection/SelectionRange';
 
 // White space matching regex. It matches following chars:
 // \s: white space
@@ -8,12 +9,13 @@ import { Editor, cacheGetEventData, clearEventDataCache } from 'roosterjs-editor
 // \u200B: zero width space
 // \u3000: full width space (which can come from JPN IME)
 const WHITESPACE_REGEX = /[\s\u00A0\u200B\u3000]+([^\s\u00A0\u200B\u3000]*)$/i;
-const EVENTDATACACHE_CURSORDATA = 'CURSORDATA';
 
-// The class that helps parse content around cursor
-export default class CursorData {
+/**
+ * A helper class to traverse text inline elements before a position
+ */
+export default class TextBeforePositionTraverser {
     // The cached text before cursor that has been read so far
-    private text: string;
+    private text = '';
 
     // The cached word before cursor
     private word: string;
@@ -31,8 +33,8 @@ export default class CursorData {
     private nearestNonTextInlineElement: InlineElement;
 
     /**
-     * Create a new CursorData instance
-     * @param traverser The content traverser to help find data before cursor
+     * Create a new TextBeforePositionTraverser instance
+     * @param traverser The content traverser to help find data before position
      */
     constructor(private traverser: ContentTraverser) {}
 
@@ -71,17 +73,12 @@ export default class CursorData {
      * there is not enough chars in the string
      */
     public getSubStringBeforeCursor(length: number): string {
-        if (!this.text || this.text.length < length) {
+        if (this.text.length < length) {
             // The cache is not built yet or not to the point the client asked for
-            this.travel(
-                () =>
-                    this.text &&
-                    this.text.length >= length
-            );
+            this.travel(() => this.text.length >= length);
         }
 
-        let text = this.text || '';
-        return text.substr(Math.max(0, text.length - length));
+        return this.text.substr(Math.max(0, this.text.length - length));
     }
 
     /**
@@ -90,7 +87,7 @@ export default class CursorData {
      * @param exactMatch Whether it is an exact match
      * @returns The range for the matched text, null if unable to find a match
      */
-    public getRangeWithTextBeforeCursor(text: string, exactMatch: boolean): SelectionRange {
+    public getRangeWithForTextBeforeCursor(text: string, exactMatch: boolean): SelectionRange {
         if (!text) {
             return null;
         }
@@ -98,21 +95,19 @@ export default class CursorData {
         let startPosition: Position;
         let endPosition: Position;
         let textIndex = text.length - 1;
-        let endMatched = exactMatch;
 
         this.forEachTextInlineElement(textInline => {
             let nodeContent = textInline.getTextContent() || '';
             let nodeIndex = nodeContent.length - 1;
             for (; nodeIndex >= 0 && textIndex >= 0; nodeIndex--) {
                 if (text.charCodeAt(textIndex) == nodeContent.charCodeAt(nodeIndex)) {
-                    endMatched = true;
                     textIndex--;
 
                     // on first time when end is matched, set the end of range
                     if (!endPosition) {
                         endPosition = textInline.getStartPosition().move(nodeIndex + 1);
                     }
-                } else if (exactMatch || endMatched) {
+                } else if (exactMatch || endPosition) {
                     // Mismatch found when exact match or end already match, so return since matching failed
                     return true;
                 }
@@ -127,10 +122,8 @@ export default class CursorData {
             return false;
         });
 
-        // textIndex == -1 means a successful complete match
         return startPosition && endPosition ? new SelectionRange(startPosition, endPosition) : null;
     }
-
 
     /**
      * Get text section before cursor till stop condition is met.
@@ -156,9 +149,7 @@ export default class CursorData {
      */
     public getNearestNonTextInlineElement(): InlineElement {
         if (!this.nearestNonTextInlineElement) {
-            this.travel(() => {
-                return false;
-            });
+            this.travel(() => !!this.nearestNonTextInlineElement);
         }
 
         return this.nearestNonTextInlineElement;
@@ -167,7 +158,7 @@ export default class CursorData {
     /**
      * Continue traversing backward till stop condition is met or begin of block is reached
      */
-    private travel(stopFunc: (inlineElement: InlineElement) => boolean) {
+    private travel(callback: (inlineElement: InlineElement) => boolean) {
         if (this.traversingCompleted || !this.traverser) {
             return;
         }
@@ -187,15 +178,15 @@ export default class CursorData {
                     // (index at 0 is whole match result, index at 1 is the word)
                     let matches = WHITESPACE_REGEX.exec(textContent);
                     if (matches && matches.length == 2) {
-                        this.word = matches[1] + (this.text || '');
+                        this.word = matches[1] + this.text;
                     }
                 }
 
-                this.text = textContent + (this.text || '');
+                this.text = textContent + this.text;
                 this.inlineElements.push(previousInline);
 
                 // Check if stop condition is met
-                if (stopFunc && stopFunc(previousInline)) {
+                if (callback && callback(previousInline)) {
                     break;
                 }
             } else {
@@ -214,29 +205,4 @@ export default class CursorData {
             previousInline = this.traverser.getPreviousInlineElement();
         }
     }
-}
-
-/**
- * Read CursorData from plugin event cache. If not, create one
- * @param event The plugin event, it stores the event cached data for looking up.
- * If passed as null, we will create a new cursor data
- * @param editor The editor instance
- * @returns The cursor data
- */
-export function cacheGetCursorEventData(event: PluginEvent, editor: Editor): CursorData {
-    return cacheGetEventData(event, EVENTDATACACHE_CURSORDATA, () => new CursorData(
-        editor.getContentTraverser(
-            ContentScope.Block,
-            ContentPosition.SelectionStart
-        )
-    ));
-}
-
-/**
- * Clear the cursor data in a plugin event.
- * This is called when the cursor data is changed, e.g, the text is replace with HyperLink
- * @param event The plugin event
- */
-export function clearCursorEventDataCache(event: PluginEvent) {
-    clearEventDataCache(event, EVENTDATACACHE_CURSORDATA);
 }

@@ -3,6 +3,7 @@ import EditorOptions from './EditorOptions';
 import formatWithUndo from '../coreAPI/formatWithUndo';
 import attachDomEvent from '../coreAPI/attachDomEvent';
 import focus from '../coreAPI/focus';
+import getFocusPosition from '../coreAPI/getFocusPosition';
 import getLiveRange from '../coreAPI/getLiveRange';
 import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
@@ -12,7 +13,6 @@ import triggerEvent from '../coreAPI/triggerEvent';
 import {
     ChangeSource,
     ContentPosition,
-    ContentScope,
     DefaultFormat,
     ExtractContentEvent,
     InsertOption,
@@ -21,10 +21,11 @@ import {
     Rect,
 } from 'roosterjs-editor-types';
 import {
+    BlockElement,
     Browser,
     ContentTraverser,
     NodeBlockElement,
-    BlockElement,
+    TextBeforePositionTraverser,
     Position,
     PositionType,
     SelectionRange,
@@ -350,12 +351,8 @@ export default class Editor {
      * If the editor doesn't have a live focus point, returns null
      */
     public getCursorRect(): Rect {
-        let selection = document.defaultView.getSelection();
-        if (selection && this.contains(selection.focusNode)) {
-            let position = new Position(selection.focusNode, selection.focusOffset);
-            return position.getRect();
-        }
-        return null;
+        let position = getFocusPosition(this.core);
+        return position ? position.getRect() : null;
     }
 
     /**
@@ -585,26 +582,34 @@ export default class Editor {
     }
 
     /**
-     * Get a content traverser that can be used to travse content within editor
-     * @param scope Content scope type. There are 3 kinds of scoper:
-     * 1) SelectionBlockScoper is a block based scoper that restrict traversing within the block where the selection is
-     *    it allows traversing from start, end or selection start position
-     *    this is commonly used to parse content from cursor as user type up to the begin or end of block
-     * 2) SelectionScoper restricts traversing within the selection. It is commonly used for applying style to selection
-     * 3) BodyScoper will traverse the entire editor body from the beginning (ignoring the passed in position parameter)
-     * @param position Start position of the traverser
-     * @returns A content traverser to help travse among InlineElemnt/BlockElement within scope
+     * Get a content traverser for the whole editor
      */
-    public getContentTraverser(
-        scope: ContentScope,
-        position: ContentPosition = ContentPosition.SelectionStart
+    public getBodyTraverser(): ContentTraverser {
+        return new ContentTraverser(this.core.contentDiv);
+    }
+
+    /**
+     * Get a content traverser for current selection
+     */
+    public getSelectionTraverser(): ContentTraverser {
+        return new ContentTraverser(this.core.contentDiv, this.getSelectionRange());
+    }
+
+    /**
+     * Get a content traverser for current block element start from specified position
+     * @param startFrom Start position of the traverser
+     */
+    public getBlockTraverser(
+        startFrom: ContentPosition = ContentPosition.SelectionStart
     ): ContentTraverser {
-        return new ContentTraverser(
-            this.core.contentDiv,
-            scope,
-            this.getSelectionRange(),
-            position
-        );
+        return new ContentTraverser(this.core.contentDiv, getFocusPosition(this.core), startFrom);
+    }
+
+    /**
+     * Get a text traverser to help get text before current focused position
+     */
+    public getTextBeforePositionTraverser(): TextBeforePositionTraverser {
+        return new TextBeforePositionTraverser(this.getBlockTraverser());
     }
 
     /**

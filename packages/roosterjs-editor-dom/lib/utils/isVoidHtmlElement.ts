@@ -1,4 +1,4 @@
-import { getTagOfNode } from 'roosterjs-editor-dom';
+import getTagOfNode from './getTagOfNode';
 
 /**
  * HTML void elements

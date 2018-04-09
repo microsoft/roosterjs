@@ -1,4 +1,4 @@
-import { ContentScope, ChangeSource } from 'roosterjs-editor-types';
+import { ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { Position, fromHtml } from 'roosterjs-editor-dom';
 
@@ -34,7 +34,7 @@ export default function applyInlineStyle(editor: Editor, styler: (element: HTMLE
                 // can be re-applied post-applying style
                 let firstNode: Node;
                 let lastNode: Node;
-                let contentTraverser = editor.getContentTraverser(ContentScope.Selection);
+                let contentTraverser = editor.getSelectionTraverser();
                 // Just loop through all inline elements in the selection and apply style for each
                 let inlineElement = contentTraverser.currentInlineElement;
                 while (inlineElement) {

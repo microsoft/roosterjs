@@ -1,7 +1,7 @@
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { getElementOrParentElement } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
-import { ContentScope, NodeType } from 'roosterjs-editor-types';
+import { NodeType } from 'roosterjs-editor-types';
 
 /**
  * Toggle header at selection
@@ -17,7 +17,7 @@ export default function toggleHeader(editor: Editor, level: number) {
         editor.focus();
 
         if (level > 0) {
-            let traverser = editor.getContentTraverser(ContentScope.Selection);
+            let traverser = editor.getSelectionTraverser();
             let inlineElement = traverser ? traverser.currentInlineElement : null;
             while (inlineElement) {
                 let node = getElementOrParentElement(inlineElement.getContainerNode());

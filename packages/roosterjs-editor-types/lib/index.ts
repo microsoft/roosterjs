@@ -15,7 +15,6 @@ export { default as TableFormat } from './formatStructure/TableFormat';
 
 // Editor API parameters
 export { default as ContentPosition } from './editorAPI/ContentPosition';
-export { default as ContentScope } from './editorAPI/ContentScope';
 export { default as InsertOption } from './editorAPI/InsertOption';
 
 // Plugin Events

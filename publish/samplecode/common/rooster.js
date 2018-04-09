@@ -102,221 +102,6 @@ var roosterjs =
 /************************************************************************/
 /******/ ({
 
-/***/ "./packages/roosterjs-editor-api/lib/cursor/CursorData.ts":
-/*!****************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/cursor/CursorData.ts ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
-// White space matching regex. It matches following chars:
-// \s: white space
-// \u00A0: no-breaking white space
-// \u200B: zero width space
-// \u3000: full width space (which can come from JPN IME)
-var WHITESPACE_REGEX = /[\s\u00A0\u200B\u3000]+([^\s\u00A0\u200B\u3000]*)$/i;
-var EVENTDATACACHE_CURSORDATA = 'CURSORDATA';
-// The class that helps parse content around cursor
-var CursorData = /** @class */ (function () {
-    /**
-     * Create a new CursorData instance
-     * @param editor The editor instance
-     */
-    function CursorData(traverser) {
-        this.traverser = traverser;
-        // All inline elements before cursor that have been read so far
-        this.inlineElements = [];
-    }
-    /**
-     * Get the word before cursor. The word is determined by scanning backwards till the first white space, the portion
-     * between cursor and the white space is the word before cursor
-     * @returns The word before cursor
-     */
-    CursorData.prototype.getWordBeforeCursor = function () {
-        var _this = this;
-        if (!this.word) {
-            this.travel(function () { return !!_this.word; });
-        }
-        return this.word;
-    };
-    /**
-     * Get the inline element before cursor
-     * @returns The inlineElement before cursor
-     */
-    CursorData.prototype.getInlineElementBeforeCursor = function () {
-        if (!this.inlineElement) {
-            // Just return after it moves the needle by one step
-            this.travel(function () { return true; });
-        }
-        return this.inlineElement;
-    };
-    /**
-     * Get X number of chars before cursor
-     * The actual returned chars may be less than what is requested.
-     * @param length The length of string user want to get, the string always ends at the cursor,
-     * so this length determins the start position of the string
-     * @returns The actual string we get as a sub string, or the whole string before cursor when
-     * there is not enough chars in the string
-     */
-    CursorData.prototype.getSubStringBeforeCursor = function (length) {
-        var _this = this;
-        if (!this.text || this.text.length < length) {
-            // The cache is not built yet or not to the point the client asked for
-            this.travel(function () {
-                return _this.text &&
-                    _this.text.length >= length;
-            });
-        }
-        var text = this.text || '';
-        return text.substr(Math.max(0, text.length - length));
-    };
-    /**
-     * Try to get a range matches the given text before the cursor
-     * @param text The text to match against
-     * @param exactMatch Whether it is an exact match
-     * @returns The range for the matched text, null if unable to find a match
-     */
-    CursorData.prototype.getRangeWithTextBeforeCursor = function (text, exactMatch) {
-        if (!text) {
-            return null;
-        }
-        var startPosition;
-        var endPosition;
-        var textIndex = text.length - 1;
-        var endMatched = exactMatch;
-        this.forEachTextInlineElement(function (textInline) {
-            var nodeContent = textInline.getTextContent() || '';
-            var nodeIndex = nodeContent.length - 1;
-            for (; nodeIndex >= 0 && textIndex >= 0; nodeIndex--) {
-                if (text.charCodeAt(textIndex) == nodeContent.charCodeAt(nodeIndex)) {
-                    endMatched = true;
-                    textIndex--;
-                    // on first time when end is matched, set the end of range
-                    if (!endPosition) {
-                        endPosition = textInline.getStartPosition().move(nodeIndex + 1);
-                    }
-                }
-                else if (exactMatch || endMatched) {
-                    // Mismatch found when exact match or end already match, so return since matching failed
-                    return true;
-                }
-            }
-            // when textIndex == -1, we have a successful complete match
-            if (textIndex == -1) {
-                startPosition = textInline.getStartPosition().move(nodeIndex + 1);
-                return true;
-            }
-            return false;
-        });
-        // textIndex == -1 means a successful complete match
-        return startPosition && endPosition ? new roosterjs_editor_dom_1.SelectionRange(startPosition, endPosition) : null;
-    };
-    /**
-     * Get text section before cursor till stop condition is met.
-     * This offers consumers to retrieve text section by section
-     * The section essentially is just an inline element which has Container element
-     * so that the consumer can remember it for anchoring popup or verification purpose
-     * when cursor moves out of context etc.
-     * @param callback The callback function of each inline element.
-     * Return true from this callback to stop the loop
-     */
-    CursorData.prototype.forEachTextInlineElement = function (callback) {
-        // We cache all text sections read so far
-        // Every time when you ask for textSection, we start with the cached first
-        // and resort to further reading once we exhausted with the cache
-        if (!this.inlineElements.some(callback)) {
-            this.travel(callback);
-        }
-    };
-    /**
-     * Get first non textual inline element before cursor
-     * @returns First non textutal inline element before cursor or null if no such element exists
-     */
-    CursorData.prototype.getNearestNonTextInlineElement = function () {
-        if (!this.nearestNonTextInlineElement) {
-            this.travel(function () {
-                return false;
-            });
-        }
-        return this.nearestNonTextInlineElement;
-    };
-    /**
-     * Continue traversing backward till stop condition is met or begin of block is reached
-     */
-    CursorData.prototype.travel = function (stopFunc) {
-        if (this.traversingCompleted || !this.traverser) {
-            return;
-        }
-        var previousInline = this.traverser.getPreviousInlineElement();
-        while (!this.traversingCompleted) {
-            if (!this.inlineElement) {
-                // Make sure the inline before cursor is a non-empty text inline
-                this.inlineElement = previousInline;
-            }
-            if (previousInline && previousInline.isText()) {
-                var textContent = previousInline.getTextContent();
-                // build the word before cursor if it is not built yet
-                if (!this.word) {
-                    // Match on the white space, the portion after space is on the index of 1 of the matched result
-                    // (index at 0 is whole match result, index at 1 is the word)
-                    var matches = WHITESPACE_REGEX.exec(textContent);
-                    if (matches && matches.length == 2) {
-                        this.word = matches[1] + (this.text || '');
-                    }
-                }
-                this.text = textContent + (this.text || '');
-                this.inlineElements.push(previousInline);
-                // Check if stop condition is met
-                if (stopFunc && stopFunc(previousInline)) {
-                    break;
-                }
-            }
-            else {
-                /* non-textual inline or null is seen */
-                this.nearestNonTextInlineElement = previousInline;
-                this.traversingCompleted = true;
-                if (!this.word) {
-                    // if parsing is done, whatever we get so far in this.cachedText should also be in this.cachedWordBeforeCursor
-                    this.word = this.text;
-                }
-                // When a non-textual inline element, or null is seen, we consider parsing complete
-                break;
-            }
-            previousInline = this.traverser.getPreviousInlineElement();
-        }
-    };
-    return CursorData;
-}());
-exports.default = CursorData;
-/**
- * Read CursorData from plugin event cache. If not, create one
- * @param event The plugin event, it stores the event cached data for looking up.
- * If passed as null, we will create a new cursor data
- * @param editor The editor instance
- * @returns The cursor data
- */
-function cacheGetCursorEventData(event, editor) {
-    return roosterjs_editor_core_1.cacheGetEventData(event, EVENTDATACACHE_CURSORDATA, function () { return new CursorData(editor.getContentTraverser(0 /* Block */, 2 /* SelectionStart */)); });
-}
-exports.cacheGetCursorEventData = cacheGetCursorEventData;
-/**
- * Clear the cursor data in a plugin event.
- * This is called when the cursor data is changed, e.g, the text is replace with HyperLink
- * @param event The plugin event
- */
-function clearCursorEventDataCache(event) {
-    roosterjs_editor_core_1.clearEventDataCache(event, EVENTDATACACHE_CURSORDATA);
-}
-exports.clearCursorEventDataCache = clearCursorEventDataCache;
-
-
-/***/ }),
-
 /***/ "./packages/roosterjs-editor-api/lib/cursor/getFormatState.ts":
 /*!********************************************************************!*\
   !*** ./packages/roosterjs-editor-api/lib/cursor/getFormatState.ts ***!
@@ -527,7 +312,7 @@ function applyInlineStyle(editor, styler) {
             // can be re-applied post-applying style
             var firstNode_1;
             var lastNode_1;
-            var contentTraverser = editor.getContentTraverser(1 /* Selection */);
+            var contentTraverser = editor.getSelectionTraverser();
             // Just loop through all inline elements in the selection and apply style for each
             var inlineElement = contentTraverser.currentInlineElement;
             while (inlineElement) {
@@ -854,7 +639,7 @@ function setDirection(editor, dir) {
     // Otherwise (i.e. <ced><div>abc<span>12<br>34</span><div></ced>, abc<span>12<br> is a block) do nothing since there isn't
     // really a way to change direction for such blocks (some HTML shuffling is needed)
     var blockElements = [];
-    var contentTraverser = editor.getContentTraverser(1 /* Selection */);
+    var contentTraverser = editor.getSelectionTraverser();
     var startBlock = contentTraverser.currentBlockElement;
     while (startBlock) {
         blockElements.push(startBlock);
@@ -1125,7 +910,7 @@ function toggleBlockQuote(editor, styler) {
 exports.default = toggleBlockQuote;
 function getContentNodes(editor) {
     var result = [];
-    var contentTraverser = editor.getContentTraverser(1 /* Selection */);
+    var contentTraverser = editor.getSelectionTraverser();
     var blockElement = contentTraverser ? contentTraverser.currentBlockElement : null;
     while (blockElement) {
         var nodes = blockElement.getContentNodes();
@@ -1310,7 +1095,7 @@ function toggleHeader(editor, level) {
     editor.formatWithUndo(function () {
         editor.focus();
         if (level > 0) {
-            var traverser = editor.getContentTraverser(1 /* Selection */);
+            var traverser = editor.getSelectionTraverser();
             var inlineElement = traverser ? traverser.currentInlineElement : null;
             while (inlineElement) {
                 var node = roosterjs_editor_dom_1.getElementOrParentElement(inlineElement.getContainerNode());
@@ -1521,10 +1306,6 @@ exports.default = toggleUnderline;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CursorData_1 = __webpack_require__(/*! ./cursor/CursorData */ "./packages/roosterjs-editor-api/lib/cursor/CursorData.ts");
-exports.CursorData = CursorData_1.default;
-exports.cacheGetCursorEventData = CursorData_1.cacheGetCursorEventData;
-exports.clearCursorEventDataCache = CursorData_1.clearCursorEventDataCache;
 var getNodeAtCursor_1 = __webpack_require__(/*! ./cursor/getNodeAtCursor */ "./packages/roosterjs-editor-api/lib/cursor/getNodeAtCursor.ts");
 exports.getNodeAtCursor = getNodeAtCursor_1.default;
 exports.cacheGetNodeAtCursor = getNodeAtCursor_1.cacheGetNodeAtCursor;
@@ -2081,7 +1862,6 @@ exports.default = attachDomEvent;
 Object.defineProperty(exports, "__esModule", { value: true });
 var getLiveRange_1 = __webpack_require__(/*! ./getLiveRange */ "./packages/roosterjs-editor-core/lib/coreAPI/getLiveRange.ts");
 var hasFocus_1 = __webpack_require__(/*! ./hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
-var isVoidHtmlElement_1 = __webpack_require__(/*! ../utils/isVoidHtmlElement */ "./packages/roosterjs-editor-core/lib/utils/isVoidHtmlElement.ts");
 var select_1 = __webpack_require__(/*! ./select */ "./packages/roosterjs-editor-core/lib/coreAPI/select.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 function focus(core) {
@@ -2115,7 +1895,7 @@ function setSelectionToBegin(core) {
     else if (nodeType == 1 /* Element */) {
         // If first node is a html void element (void elements cannot have child nodes),
         // move selection before it, otherwise move selection inside it
-        select_1.default(core, firstNode, isVoidHtmlElement_1.default(firstNode) ? roosterjs_editor_dom_1.Position.Before : 0);
+        select_1.default(core, firstNode, roosterjs_editor_dom_1.isVoidHtmlElement(firstNode) ? roosterjs_editor_dom_1.Position.Before : 0);
     }
     else {
         // No first node, likely we have an empty content DIV, move selection inside it
@@ -2183,6 +1963,28 @@ exports.default = formatWithUndo;
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-core/lib/coreAPI/getFocusPosition.ts":
+/*!************************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/coreAPI/getFocusPosition.ts ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+function getFocusPosition(core) {
+    var selection = core.document.defaultView.getSelection();
+    return selection && roosterjs_editor_dom_1.contains(core.contentDiv, selection.focusNode) ?
+        new roosterjs_editor_dom_1.Position(selection.focusNode, selection.focusOffset) :
+        null;
+}
+exports.default = getFocusPosition;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-core/lib/coreAPI/getLiveRange.ts":
 /*!********************************************************************!*\
   !*** ./packages/roosterjs-editor-core/lib/coreAPI/getLiveRange.ts ***!
@@ -2240,7 +2042,6 @@ exports.default = hasFocus;
 Object.defineProperty(exports, "__esModule", { value: true });
 var focus_1 = __webpack_require__(/*! ./focus */ "./packages/roosterjs-editor-core/lib/coreAPI/focus.ts");
 var getLiveRange_1 = __webpack_require__(/*! ./getLiveRange */ "./packages/roosterjs-editor-core/lib/coreAPI/getLiveRange.ts");
-var isVoidHtmlElement_1 = __webpack_require__(/*! ../utils/isVoidHtmlElement */ "./packages/roosterjs-editor-core/lib/utils/isVoidHtmlElement.ts");
 var select_1 = __webpack_require__(/*! ./select */ "./packages/roosterjs-editor-core/lib/coreAPI/select.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var HTML_EMPTY_DIV = '<div></div>';
@@ -2264,7 +2065,7 @@ function insertNode(core, node, option) {
                 var refParentNode = refNode.parentNode;
                 if (insertOnNewLine ||
                     refNode.nodeType == 3 /* Text */ ||
-                    isVoidHtmlElement_1.default(refNode)) {
+                    roosterjs_editor_dom_1.isVoidHtmlElement(refNode)) {
                     // For insert on new line, or refNode is text or void html element (HR, BR etc.)
                     // which cannot have children, i.e. <div>hello<br>world</div>. 'hello', 'world' are the
                     // first and last node. Insert before 'hello' or after 'world', but still inside DIV
@@ -2318,7 +2119,7 @@ function insertNode(core, node, option) {
                                 rawRange = rangeCache.getRange();
                             }
                         }
-                        if (isVoidHtmlElement_1.default(rawRange.endContainer)) {
+                        if (roosterjs_editor_dom_1.isVoidHtmlElement(rawRange.endContainer)) {
                             rawRange.setEndBefore(rawRange.endContainer);
                         }
                     }
@@ -2496,6 +2297,7 @@ var EditorCore_1 = __webpack_require__(/*! ./EditorCore */ "./packages/roosterjs
 var formatWithUndo_1 = __webpack_require__(/*! ../coreAPI/formatWithUndo */ "./packages/roosterjs-editor-core/lib/coreAPI/formatWithUndo.ts");
 var attachDomEvent_1 = __webpack_require__(/*! ../coreAPI/attachDomEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/attachDomEvent.ts");
 var focus_1 = __webpack_require__(/*! ../coreAPI/focus */ "./packages/roosterjs-editor-core/lib/coreAPI/focus.ts");
+var getFocusPosition_1 = __webpack_require__(/*! ../coreAPI/getFocusPosition */ "./packages/roosterjs-editor-core/lib/coreAPI/getFocusPosition.ts");
 var getLiveRange_1 = __webpack_require__(/*! ../coreAPI/getLiveRange */ "./packages/roosterjs-editor-core/lib/coreAPI/getLiveRange.ts");
 var hasFocus_1 = __webpack_require__(/*! ../coreAPI/hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
 var insertNode_1 = __webpack_require__(/*! ../coreAPI/insertNode */ "./packages/roosterjs-editor-core/lib/coreAPI/insertNode.ts");
@@ -2760,12 +2562,8 @@ var Editor = /** @class */ (function () {
      * If the editor doesn't have a live focus point, returns null
      */
     Editor.prototype.getCursorRect = function () {
-        var selection = document.defaultView.getSelection();
-        if (selection && this.contains(selection.focusNode)) {
-            var position = new roosterjs_editor_dom_1.Position(selection.focusNode, selection.focusOffset);
-            return position.getRect();
-        }
-        return null;
+        var position = getFocusPosition_1.default(this.core);
+        return position ? position.getRect() : null;
     };
     /**
      * Check if focus is in editor now
@@ -2903,19 +2701,30 @@ var Editor = /** @class */ (function () {
         return this.core.defaultFormat;
     };
     /**
-     * Get a content traverser that can be used to travse content within editor
-     * @param scope Content scope type. There are 3 kinds of scoper:
-     * 1) SelectionBlockScoper is a block based scoper that restrict traversing within the block where the selection is
-     *    it allows traversing from start, end or selection start position
-     *    this is commonly used to parse content from cursor as user type up to the begin or end of block
-     * 2) SelectionScoper restricts traversing within the selection. It is commonly used for applying style to selection
-     * 3) BodyScoper will traverse the entire editor body from the beginning (ignoring the passed in position parameter)
-     * @param position Start position of the traverser
-     * @returns A content traverser to help travse among InlineElemnt/BlockElement within scope
+     * Get a content traverser for the whole editor
      */
-    Editor.prototype.getContentTraverser = function (scope, position) {
-        if (position === void 0) { position = 2 /* SelectionStart */; }
-        return new roosterjs_editor_dom_1.ContentTraverser(this.core.contentDiv, scope, this.getSelectionRange(), position);
+    Editor.prototype.getBodyTraverser = function () {
+        return new roosterjs_editor_dom_1.ContentTraverser(this.core.contentDiv);
+    };
+    /**
+     * Get a content traverser for current selection
+     */
+    Editor.prototype.getSelectionTraverser = function () {
+        return new roosterjs_editor_dom_1.ContentTraverser(this.core.contentDiv, this.getSelectionRange());
+    };
+    /**
+     * Get a content traverser for current block element start from specified position
+     * @param startFrom Start position of the traverser
+     */
+    Editor.prototype.getBlockTraverser = function (startFrom) {
+        if (startFrom === void 0) { startFrom = 2 /* SelectionStart */; }
+        return new roosterjs_editor_dom_1.ContentTraverser(this.core.contentDiv, getFocusPosition_1.default(this.core), startFrom);
+    };
+    /**
+     * Get a text traverser to help get text before current focused position
+     */
+    Editor.prototype.getTextBeforePositionTraverser = function () {
+        return new roosterjs_editor_dom_1.TextBeforePositionTraverser(this.getBlockTraverser());
     };
     /**
      * Run a callback function asynchronously
@@ -3045,6 +2854,85 @@ function calcDefaultFormat(node, baseFormat) {
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-core/lib/editor/cacheGetCursorEventData.ts":
+/*!******************************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/editor/cacheGetCursorEventData.ts ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var eventDataCacheUtils_1 = __webpack_require__(/*! ./eventDataCacheUtils */ "./packages/roosterjs-editor-core/lib/editor/eventDataCacheUtils.ts");
+var EVENTDATACACHE_CURSORDATA = 'CURSORDATA';
+/**
+ * Read CursorData from plugin event cache. If not, create one
+ * @param event The plugin event, it stores the event cached data for looking up.
+ * If passed as null, we will create a new cursor data
+ * @param editor The editor instance
+ * @returns The cursor data
+ */
+function cacheGetCursorEventData(event, editor) {
+    return eventDataCacheUtils_1.cacheGetEventData(event, EVENTDATACACHE_CURSORDATA, function () { return editor.getTextBeforePositionTraverser(); });
+}
+exports.default = cacheGetCursorEventData;
+/**
+ * Clear the cursor data in a plugin event.
+ * This is called when the cursor data is changed, e.g, the text is replace with HyperLink
+ * @param event The plugin event
+ */
+function clearCursorEventDataCache(event) {
+    eventDataCacheUtils_1.clearEventDataCache(event, EVENTDATACACHE_CURSORDATA);
+}
+exports.clearCursorEventDataCache = clearCursorEventDataCache;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-core/lib/editor/eventDataCacheUtils.ts":
+/*!**************************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/editor/eventDataCacheUtils.ts ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Clear a cached object by its key from an event object
+ * @param event The event object
+ * @param key The cache key
+ */
+function clearEventDataCache(event, key) {
+    if (event && event.eventDataCache && event.eventDataCache.hasOwnProperty(key)) {
+        delete event.eventDataCache[key];
+    }
+}
+exports.clearEventDataCache = clearEventDataCache;
+/**
+ * Gets the cached event data by cache key from event object if there is already one.
+ * Otherwise, call getter function to create one, and cache it.
+ * @param event The event object
+ * @param key Cache key string, need to be unique
+ * @param getter Getter function to get the object when it is not in cache yet
+ */
+function cacheGetEventData(event, key, getter) {
+    var result = event && event.eventDataCache && event.eventDataCache.hasOwnProperty(key)
+        ? event.eventDataCache[key]
+        : getter();
+    if (event) {
+        event.eventDataCache = event.eventDataCache || {};
+        event.eventDataCache[key] = result;
+    }
+    return result;
+}
+exports.cacheGetEventData = cacheGetEventData;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-core/lib/index.ts":
 /*!*****************************************************!*\
   !*** ./packages/roosterjs-editor-core/lib/index.ts ***!
@@ -3059,7 +2947,10 @@ var Editor_1 = __webpack_require__(/*! ./editor/Editor */ "./packages/roosterjs-
 exports.Editor = Editor_1.default;
 var Undo_1 = __webpack_require__(/*! ./undo/Undo */ "./packages/roosterjs-editor-core/lib/undo/Undo.ts");
 exports.Undo = Undo_1.default;
-var eventDataCacheUtils_1 = __webpack_require__(/*! ./utils/eventDataCacheUtils */ "./packages/roosterjs-editor-core/lib/utils/eventDataCacheUtils.ts");
+var cacheGetCursorEventData_1 = __webpack_require__(/*! ./editor/cacheGetCursorEventData */ "./packages/roosterjs-editor-core/lib/editor/cacheGetCursorEventData.ts");
+exports.cacheGetCursorEventData = cacheGetCursorEventData_1.default;
+exports.clearCursorEventDataCache = cacheGetCursorEventData_1.clearCursorEventDataCache;
+var eventDataCacheUtils_1 = __webpack_require__(/*! ./editor/eventDataCacheUtils */ "./packages/roosterjs-editor-core/lib/editor/eventDataCacheUtils.ts");
 exports.clearEventDataCache = eventDataCacheUtils_1.clearEventDataCache;
 exports.cacheGetEventData = eventDataCacheUtils_1.cacheGetEventData;
 var snapshotUtils_1 = __webpack_require__(/*! ./undo/snapshotUtils */ "./packages/roosterjs-editor-core/lib/undo/snapshotUtils.ts");
@@ -3469,86 +3360,6 @@ function getCursorMarkerByUniqueId(editor, id) {
 function getCursorMarkNodes(editor, id) {
     return editor.queryNodes("span[id=\"" + id + "\"]:empty");
 }
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-core/lib/utils/eventDataCacheUtils.ts":
-/*!*************************************************************************!*\
-  !*** ./packages/roosterjs-editor-core/lib/utils/eventDataCacheUtils.ts ***!
-  \*************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-// Clear a specifc cached data (as specified by a key) in a plugin event
-function clearEventDataCache(event, key) {
-    if (event && event.eventDataCache && event.eventDataCache.hasOwnProperty(key)) {
-        delete event.eventDataCache[key];
-    }
-}
-exports.clearEventDataCache = clearEventDataCache;
-// Return the cached event data per cache key if there is already one.
-// If not, create one and put it in event data cache
-function cacheGetEventData(event, key, getter) {
-    var result = event && event.eventDataCache && event.eventDataCache.hasOwnProperty(key)
-        ? event.eventDataCache[key]
-        : getter();
-    if (event) {
-        event.eventDataCache = event.eventDataCache || {};
-        event.eventDataCache[key] = result;
-    }
-    return result;
-}
-exports.cacheGetEventData = cacheGetEventData;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-core/lib/utils/isVoidHtmlElement.ts":
-/*!***********************************************************************!*\
-  !*** ./packages/roosterjs-editor-core/lib/utils/isVoidHtmlElement.ts ***!
-  \***********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * HTML void elements
- * Per https://www.w3.org/TR/html/syntax.html#syntax-elements, cannot have child nodes
- * This regex is used when we move focus to very begin of editor. We should avoid putting focus inside
- * void elements so users don't accidently create child nodes in them
- */
-var HTML_VOID_ELEMENTS = [
-    'AREA',
-    'BASE',
-    'BR',
-    'COL',
-    'COMMAND',
-    'EMBED',
-    'HR',
-    'IMG',
-    'INPUT',
-    'KEYGEN',
-    'LINK',
-    'META',
-    'PARAM',
-    'SOURCE',
-    'TRACK',
-    'WBR',
-];
-/**
- * check if it is html void element. void element cannot have childen
- */
-function isVoidHtmlElement(element) {
-    return !!element && HTML_VOID_ELEMENTS.indexOf(roosterjs_editor_dom_1.getTagOfNode(element)) >= 0;
-}
-exports.default = isVoidHtmlElement;
 
 
 /***/ }),
@@ -4065,25 +3876,16 @@ var BodyScoper_1 = __webpack_require__(/*! ./BodyScoper */ "./packages/roosterjs
  * the current inline element position
  */
 var ContentTraverser = /** @class */ (function () {
-    /**
-     * Create a new instance of ContentTraverser class
-     * @param rootNode Root node of the content
-     * @param scope The scope type, can be Body, Block, Selection
-     * @param range A range used for scope the content. This can be null when scope set to ContentScope.Body
-     * @param position Position type, must be set when scope is set to Block. The value can be Begin, End, SelectionStart
-     */
-    function ContentTraverser(rootNode, scope, range, position) {
+    function ContentTraverser(rootNode, rangeOrPos, startFrom) {
         this.rootNode = rootNode;
-        switch (scope) {
-            case 0 /* Block */:
-                this.scoper = new BlockScoper_1.default(rootNode, range.start, position);
-                break;
-            case 1 /* Selection */:
-                this.scoper = new SelectionScoper_1.default(rootNode, range);
-                break;
-            case 2 /* Body */:
-                this.scoper = new BodyScoper_1.default(rootNode);
-                break;
+        if (typeof startFrom != 'undefined') {
+            this.scoper = new BlockScoper_1.default(rootNode, rangeOrPos, startFrom);
+        }
+        else if (rangeOrPos) {
+            this.scoper = new SelectionScoper_1.default(rootNode, rangeOrPos);
+        }
+        else {
+            this.scoper = new BodyScoper_1.default(rootNode);
         }
     }
     Object.defineProperty(ContentTraverser.prototype, "currentBlockElement", {
@@ -4293,6 +4095,195 @@ exports.default = SelectionScoper;
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-dom/lib/contentTraverser/TextBeforePositionTraverser.ts":
+/*!*******************************************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/contentTraverser/TextBeforePositionTraverser.ts ***!
+  \*******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var SelectionRange_1 = __webpack_require__(/*! ../selection/SelectionRange */ "./packages/roosterjs-editor-dom/lib/selection/SelectionRange.ts");
+// White space matching regex. It matches following chars:
+// \s: white space
+// \u00A0: no-breaking white space
+// \u200B: zero width space
+// \u3000: full width space (which can come from JPN IME)
+var WHITESPACE_REGEX = /[\s\u00A0\u200B\u3000]+([^\s\u00A0\u200B\u3000]*)$/i;
+/**
+ * A helper class to traverse text inline elements before a position
+ */
+var TextBeforePositionTraverser = /** @class */ (function () {
+    /**
+     * Create a new TextBeforePositionTraverser instance
+     * @param traverser The content traverser to help find data before position
+     */
+    function TextBeforePositionTraverser(traverser) {
+        this.traverser = traverser;
+        // The cached text before cursor that has been read so far
+        this.text = '';
+        // All inline elements before cursor that have been read so far
+        this.inlineElements = [];
+    }
+    /**
+     * Get the word before cursor. The word is determined by scanning backwards till the first white space, the portion
+     * between cursor and the white space is the word before cursor
+     * @returns The word before cursor
+     */
+    TextBeforePositionTraverser.prototype.getWordBeforeCursor = function () {
+        var _this = this;
+        if (!this.word) {
+            this.travel(function () { return !!_this.word; });
+        }
+        return this.word;
+    };
+    /**
+     * Get the inline element before cursor
+     * @returns The inlineElement before cursor
+     */
+    TextBeforePositionTraverser.prototype.getInlineElementBeforeCursor = function () {
+        if (!this.inlineElement) {
+            // Just return after it moves the needle by one step
+            this.travel(function () { return true; });
+        }
+        return this.inlineElement;
+    };
+    /**
+     * Get X number of chars before cursor
+     * The actual returned chars may be less than what is requested.
+     * @param length The length of string user want to get, the string always ends at the cursor,
+     * so this length determins the start position of the string
+     * @returns The actual string we get as a sub string, or the whole string before cursor when
+     * there is not enough chars in the string
+     */
+    TextBeforePositionTraverser.prototype.getSubStringBeforeCursor = function (length) {
+        var _this = this;
+        if (this.text.length < length) {
+            // The cache is not built yet or not to the point the client asked for
+            this.travel(function () { return _this.text.length >= length; });
+        }
+        return this.text.substr(Math.max(0, this.text.length - length));
+    };
+    /**
+     * Try to get a range matches the given text before the cursor
+     * @param text The text to match against
+     * @param exactMatch Whether it is an exact match
+     * @returns The range for the matched text, null if unable to find a match
+     */
+    TextBeforePositionTraverser.prototype.getRangeWithForTextBeforeCursor = function (text, exactMatch) {
+        if (!text) {
+            return null;
+        }
+        var startPosition;
+        var endPosition;
+        var textIndex = text.length - 1;
+        this.forEachTextInlineElement(function (textInline) {
+            var nodeContent = textInline.getTextContent() || '';
+            var nodeIndex = nodeContent.length - 1;
+            for (; nodeIndex >= 0 && textIndex >= 0; nodeIndex--) {
+                if (text.charCodeAt(textIndex) == nodeContent.charCodeAt(nodeIndex)) {
+                    textIndex--;
+                    // on first time when end is matched, set the end of range
+                    if (!endPosition) {
+                        endPosition = textInline.getStartPosition().move(nodeIndex + 1);
+                    }
+                }
+                else if (exactMatch || endPosition) {
+                    // Mismatch found when exact match or end already match, so return since matching failed
+                    return true;
+                }
+            }
+            // when textIndex == -1, we have a successful complete match
+            if (textIndex == -1) {
+                startPosition = textInline.getStartPosition().move(nodeIndex + 1);
+                return true;
+            }
+            return false;
+        });
+        return startPosition && endPosition ? new SelectionRange_1.default(startPosition, endPosition) : null;
+    };
+    /**
+     * Get text section before cursor till stop condition is met.
+     * This offers consumers to retrieve text section by section
+     * The section essentially is just an inline element which has Container element
+     * so that the consumer can remember it for anchoring popup or verification purpose
+     * when cursor moves out of context etc.
+     * @param callback The callback function of each inline element.
+     * Return true from this callback to stop the loop
+     */
+    TextBeforePositionTraverser.prototype.forEachTextInlineElement = function (callback) {
+        // We cache all text sections read so far
+        // Every time when you ask for textSection, we start with the cached first
+        // and resort to further reading once we exhausted with the cache
+        if (!this.inlineElements.some(callback)) {
+            this.travel(callback);
+        }
+    };
+    /**
+     * Get first non textual inline element before cursor
+     * @returns First non textutal inline element before cursor or null if no such element exists
+     */
+    TextBeforePositionTraverser.prototype.getNearestNonTextInlineElement = function () {
+        var _this = this;
+        if (!this.nearestNonTextInlineElement) {
+            this.travel(function () { return !!_this.nearestNonTextInlineElement; });
+        }
+        return this.nearestNonTextInlineElement;
+    };
+    /**
+     * Continue traversing backward till stop condition is met or begin of block is reached
+     */
+    TextBeforePositionTraverser.prototype.travel = function (callback) {
+        if (this.traversingCompleted || !this.traverser) {
+            return;
+        }
+        var previousInline = this.traverser.getPreviousInlineElement();
+        while (!this.traversingCompleted) {
+            if (!this.inlineElement) {
+                // Make sure the inline before cursor is a non-empty text inline
+                this.inlineElement = previousInline;
+            }
+            if (previousInline && previousInline.isText()) {
+                var textContent = previousInline.getTextContent();
+                // build the word before cursor if it is not built yet
+                if (!this.word) {
+                    // Match on the white space, the portion after space is on the index of 1 of the matched result
+                    // (index at 0 is whole match result, index at 1 is the word)
+                    var matches = WHITESPACE_REGEX.exec(textContent);
+                    if (matches && matches.length == 2) {
+                        this.word = matches[1] + this.text;
+                    }
+                }
+                this.text = textContent + this.text;
+                this.inlineElements.push(previousInline);
+                // Check if stop condition is met
+                if (callback && callback(previousInline)) {
+                    break;
+                }
+            }
+            else {
+                /* non-textual inline or null is seen */
+                this.nearestNonTextInlineElement = previousInline;
+                this.traversingCompleted = true;
+                if (!this.word) {
+                    // if parsing is done, whatever we get so far in this.cachedText should also be in this.cachedWordBeforeCursor
+                    this.word = this.text;
+                }
+                // When a non-textual inline element, or null is seen, we consider parsing complete
+                break;
+            }
+            previousInline = this.traverser.getPreviousInlineElement();
+        }
+    };
+    return TextBeforePositionTraverser;
+}());
+exports.default = TextBeforePositionTraverser;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-dom/lib/domWalker/getLeafNode.ts":
 /*!********************************************************************!*\
   !*** ./packages/roosterjs-editor-dom/lib/domWalker/getLeafNode.ts ***!
@@ -4494,6 +4485,8 @@ exports.getPreviousBlockElement = getNextPreviousBlockElement_1.getPreviousBlock
 // Content Traverser
 var ContentTraverser_1 = __webpack_require__(/*! ./contentTraverser/ContentTraverser */ "./packages/roosterjs-editor-dom/lib/contentTraverser/ContentTraverser.ts");
 exports.ContentTraverser = ContentTraverser_1.default;
+var TextBeforePositionTraverser_1 = __webpack_require__(/*! ./contentTraverser/TextBeforePositionTraverser */ "./packages/roosterjs-editor-dom/lib/contentTraverser/TextBeforePositionTraverser.ts");
+exports.TextBeforePositionTraverser = TextBeforePositionTraverser_1.default;
 // Utils
 var Browser_1 = __webpack_require__(/*! ./utils/Browser */ "./packages/roosterjs-editor-dom/lib/utils/Browser.ts");
 exports.Browser = Browser_1.default;
@@ -4521,6 +4514,8 @@ var isDocumentPosition_1 = __webpack_require__(/*! ./utils/isDocumentPosition */
 exports.isDocumentPosition = isDocumentPosition_1.default;
 var isNodeEmpty_1 = __webpack_require__(/*! ./utils/isNodeEmpty */ "./packages/roosterjs-editor-dom/lib/utils/isNodeEmpty.ts");
 exports.isNodeEmpty = isNodeEmpty_1.default;
+var isVoidHtmlElement_1 = __webpack_require__(/*! ./utils/isVoidHtmlElement */ "./packages/roosterjs-editor-dom/lib/utils/isVoidHtmlElement.ts");
+exports.isVoidHtmlElement = isVoidHtmlElement_1.default;
 var matchLink_1 = __webpack_require__(/*! ./utils/matchLink */ "./packages/roosterjs-editor-dom/lib/utils/matchLink.ts");
 exports.matchLink = matchLink_1.default;
 var splitParentNode_1 = __webpack_require__(/*! ./utils/splitParentNode */ "./packages/roosterjs-editor-dom/lib/utils/splitParentNode.ts");
@@ -5673,6 +5668,52 @@ function trim(s, trim) {
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-dom/lib/utils/isVoidHtmlElement.ts":
+/*!**********************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/utils/isVoidHtmlElement.ts ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getTagOfNode_1 = __webpack_require__(/*! ./getTagOfNode */ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts");
+/**
+ * HTML void elements
+ * Per https://www.w3.org/TR/html/syntax.html#syntax-elements, cannot have child nodes
+ * This regex is used when we move focus to very begin of editor. We should avoid putting focus inside
+ * void elements so users don't accidently create child nodes in them
+ */
+var HTML_VOID_ELEMENTS = [
+    'AREA',
+    'BASE',
+    'BR',
+    'COL',
+    'COMMAND',
+    'EMBED',
+    'HR',
+    'IMG',
+    'INPUT',
+    'KEYGEN',
+    'LINK',
+    'META',
+    'PARAM',
+    'SOURCE',
+    'TRACK',
+    'WBR',
+];
+/**
+ * check if it is html void element. void element cannot have childen
+ */
+function isVoidHtmlElement(element) {
+    return !!element && HTML_VOID_ELEMENTS.indexOf(getTagOfNode_1.default(element)) >= 0;
+}
+exports.default = isVoidHtmlElement;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-dom/lib/utils/matchLink.ts":
 /*!**************************************************************!*\
   !*** ./packages/roosterjs-editor-dom/lib/utils/matchLink.ts ***!
@@ -6422,7 +6463,6 @@ exports.getDefaultContentEditFeatures = getDefaultContentEditFeatures;
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
 // we need to trim off the trailing puncatuation before turning it to link match
 var TRAILING_PUNCTUATION_REGEX = /[.()+={}\[\]\s:;"',>]+$/i;
@@ -6441,7 +6481,7 @@ exports.AutoLink2 = {
 };
 function cacheGetLinkData(event, editor) {
     return roosterjs_editor_core_1.cacheGetEventData(event, 'LINK_DATA', function () {
-        var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
+        var cursorData = roosterjs_editor_core_1.cacheGetCursorEventData(event, editor);
         var wordBeforeCursor = cursorData ? cursorData.getWordBeforeCursor() : null;
         if (wordBeforeCursor && wordBeforeCursor.length > MINIMUM_LENGTH) {
             // Check for trailing punctuation
@@ -6466,11 +6506,11 @@ function autoLink(event, editor) {
     anchor.href = linkData.normalizedUrl;
     editor.runAsync(function () {
         editor.formatWithUndo(function () {
-            var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
-            var range = cursorData.getRangeWithTextBeforeCursor(linkData.originalUrl, false /*exactMatch*/);
+            var cursorData = roosterjs_editor_core_1.cacheGetCursorEventData(event, editor);
+            var range = cursorData.getRangeWithForTextBeforeCursor(linkData.originalUrl, false /*exactMatch*/);
             if (range && range.replaceWithNode(anchor)) {
                 // The content at cursor has changed. Should also clear the cursor data cache
-                roosterjs_editor_api_1.clearCursorEventDataCache(event);
+                roosterjs_editor_core_1.clearCursorEventDataCache(event);
             }
         }, true /*preserveSelection*/, "AutoLink" /* AutoLink */, function () { return anchor; });
     });
@@ -6490,9 +6530,9 @@ function autoLink(event, editor) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
-var roosterjs_editor_dom_2 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var KEY_BACKSPACE = 8;
 var KEY_TAB = 9;
 var KEY_ENTER = 13;
@@ -6552,7 +6592,7 @@ exports.AutoBullet = {
     key: KEY_SPACE,
     shouldHandleEvent: function (event, editor) {
         if (!cacheGetListTag(event, editor)) {
-            var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
+            var cursorData = roosterjs_editor_core_1.cacheGetCursorEventData(event, editor);
             var textBeforeCursor = cursorData.getSubStringBeforeCursor(3);
             // Auto list is triggered if:
             // 1. Text before cursor exactly mathces '*', '-' or '1.'
@@ -6565,18 +6605,18 @@ exports.AutoBullet = {
     handleEvent: function (event, editor) {
         editor.runAsync(function () {
             var listNode;
-            var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
+            var cursorData = roosterjs_editor_core_1.cacheGetCursorEventData(event, editor);
             var textBeforeCursor = cursorData.getSubStringBeforeCursor(3);
             // editor.insertContent(NBSP);
             editor.formatWithUndo(function () {
                 // Remove the user input '*', '-' or '1.'
-                var rangeToDelete = cursorData.getRangeWithTextBeforeCursor(textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
+                var rangeToDelete = cursorData.getRangeWithForTextBeforeCursor(textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
                 true /*exactMatch*/);
                 if (rangeToDelete) {
                     rangeToDelete.getRange().deleteContents();
                 }
                 // If not explicitly insert br, Chrome will operate on the previous line
-                if (roosterjs_editor_dom_2.Browser.isChrome || roosterjs_editor_dom_2.Browser.isChrome) {
+                if (roosterjs_editor_dom_1.Browser.isChrome || roosterjs_editor_dom_1.Browser.isChrome) {
                     editor.insertContent('<BR>');
                 }
                 if (textBeforeCursor == '1.') {

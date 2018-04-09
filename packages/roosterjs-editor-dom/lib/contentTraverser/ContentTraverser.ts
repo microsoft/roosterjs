@@ -10,7 +10,8 @@ import {
     getPreviousBlockElement,
 } from '../blockElements/getNextPreviousBlockElement';
 import SelectionRange from '../selection/SelectionRange';
-import { ContentPosition, ContentScope } from 'roosterjs-editor-types';
+import Position from '../selection/Position';
+import { ContentPosition } from 'roosterjs-editor-types';
 import BlockScoper from './BlockScoper';
 import SelectionScoper from './SelectionScoper';
 import BodyScoper from './BodyScoper';
@@ -27,28 +28,37 @@ class ContentTraverser {
     private scoper: TraversingScoper;
 
     /**
-     * Create a new instance of ContentTraverser class
-     * @param rootNode Root node of the content
-     * @param scope The scope type, can be Body, Block, Selection
-     * @param range A range used for scope the content. This can be null when scope set to ContentScope.Body
-     * @param position Position type, must be set when scope is set to Block. The value can be Begin, End, SelectionStart
+     * Create a content traverser for the whole body of given root node
+     * @param rootNode The root node to traverse in
      */
+    constructor(rootNode: Node);
+
+    /**
+     * Create a content traverser for the given selection
+     * @param rootNode The root node to traverse in
+     * @param range The selection range to scope the traversing
+     */
+    constructor(rootNode: Node, range: SelectionRange);
+
+    /**
+     * Create a content traverser for a block element which contains the given position
+     * @param rootNode The root node to traverse in
+     * @param positionInBlock A position inside a block, traversing will be scoped within this block
+     * @param startFrom Start position of traversing. The value can be Begin, End, SelectionStart
+     */
+    constructor(rootNode: Node, positionInBlock: Position, startFrom: ContentPosition);
+
     constructor(
         private rootNode: Node,
-        scope: ContentScope,
-        range: SelectionRange,
-        position: ContentPosition
+        rangeOrPos?: SelectionRange | Position,
+        startFrom?: ContentPosition
     ) {
-        switch (scope) {
-            case ContentScope.Block:
-                this.scoper = new BlockScoper(rootNode, range.start, position);
-                break;
-            case ContentScope.Selection:
-                this.scoper = new SelectionScoper(rootNode, range);
-                break;
-            case ContentScope.Body:
-                this.scoper = new BodyScoper(rootNode);
-                break;
+        if (typeof startFrom != 'undefined') {
+            this.scoper = new BlockScoper(rootNode, <Position>rangeOrPos, startFrom);
+        } else if (rangeOrPos) {
+            this.scoper = new SelectionScoper(rootNode, <SelectionRange>rangeOrPos);
+        } else {
+            this.scoper = new BodyScoper(rootNode);
         }
     }
 

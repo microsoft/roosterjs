@@ -33,6 +33,9 @@ export {
 
 // Content Traverser
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
+export {
+    default as TextBeforePositionTraverser,
+} from './contentTraverser/TextBeforePositionTraverser';
 
 // Utils
 export { default as Browser, BrowserInfo } from './utils/Browser';
@@ -52,6 +55,7 @@ export { default as intersectWithNodeRange } from './utils/intersectWithNodeRang
 export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isDocumentPosition } from './utils/isDocumentPosition';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
+export { default as isVoidHtmlElement } from './utils/isVoidHtmlElement';
 export { default as matchLink } from './utils/matchLink';
 export { default as splitParentNode } from './utils/splitParentNode';
 export { default as unwrap } from './utils/unwrap';

@@ -64,7 +64,11 @@ export default ContentEditFeatures;
 
 export interface ContentEditFeature {
     key: number;
-    shouldHandleEvent: (event: PluginDomEvent, editor: Editor, backspaceUndoEventSource: ChangeSource) => any;
+    shouldHandleEvent: (
+        event: PluginDomEvent,
+        editor: Editor,
+        backspaceUndoEventSource: ChangeSource
+    ) => any;
     handleEvent: (event: PluginDomEvent, editor: Editor) => ChangeSource | void;
 }
 

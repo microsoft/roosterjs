@@ -29,8 +29,8 @@ const BackspaceToUndo: ContentEditFeature = {
     handleEvent: (event, editor) => {
         event.rawEvent.preventDefault();
         editor.undo();
-    }
-}
+    },
+};
 
 /**
  * An editor plugin to handle content edit event.
@@ -99,7 +99,11 @@ export default class ContentEdit implements EditorPlugin {
             for (let feature of this.features) {
                 if (
                     feature.key == keyboardEvent.which &&
-                    feature.shouldHandleEvent(event as PluginDomEvent, this.editor, this.backspaceUndoEventSource)
+                    feature.shouldHandleEvent(
+                        event as PluginDomEvent,
+                        this.editor,
+                        this.backspaceUndoEventSource
+                    )
                 ) {
                     this.currentFeature = feature;
                     return true;
@@ -117,7 +121,8 @@ export default class ContentEdit implements EditorPlugin {
         let changeSource = (<ContentChangedEvent>event).source;
         if (
             (event.eventType == PluginEventType.KeyDown && this.backspaceUndoEventSource) ||
-            (event.eventType == PluginEventType.ContentChanged && changeSource != this.backspaceUndoEventSource)
+            (event.eventType == PluginEventType.ContentChanged &&
+                changeSource != this.backspaceUndoEventSource)
         ) {
             this.backspaceUndoEventSource = null;
         }
@@ -133,7 +138,11 @@ export default class ContentEdit implements EditorPlugin {
             event.eventType == PluginEventType.ContentChanged &&
             changeSource == ChangeSource.Paste &&
             this.autoLinkEnabled &&
-            AutoLink1.shouldHandleEvent(event as PluginDomEvent, this.editor, this.backspaceUndoEventSource)
+            AutoLink1.shouldHandleEvent(
+                event as PluginDomEvent,
+                this.editor,
+                this.backspaceUndoEventSource
+            )
         ) {
             AutoLink1.handleEvent(event as PluginDomEvent, this.editor);
         }
