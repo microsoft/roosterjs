@@ -29,8 +29,8 @@ export default function select(
             let start: Position;
             let end: Position;
             if (arg2 == undefined) {
-                start = new Position(<Node>arg1, Position.Before);
-                end = new Position(<Node>arg1, Position.After);
+                start = new Position(<Node>arg1, PositionType.Before);
+                end = new Position(<Node>arg1, PositionType.After);
             } else {
                 start = new Position(<Node>arg1, <number | PositionType>arg2);
                 end =

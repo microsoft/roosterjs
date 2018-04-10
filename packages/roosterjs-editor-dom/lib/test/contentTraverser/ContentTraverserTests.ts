@@ -129,7 +129,7 @@ describe('ContentTraverser getNextBlockElement()', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let startPosition = new Position(rootNode.firstChild, 0);
-        let endPosition = new Position(rootNode.firstChild, Position.End);
+        let endPosition = new Position(rootNode.firstChild, PositionType.End);
         let range = new SelectionRange(startPosition, endPosition);
         let contentTraverser = createContentTraverser(
             rootNode,
@@ -214,7 +214,7 @@ describe('ContentTraverser getPreviousBlockElement()', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let startPosition = new Position(rootNode.lastChild, 0);
-        let endPosition = new Position(rootNode.lastChild, Position.End);
+        let endPosition = new Position(rootNode.lastChild, PositionType.End);
 
         // range = '<p>part2</p>'
         let range = new SelectionRange(startPosition, endPosition);
@@ -374,7 +374,7 @@ describe('ContentTraverser getNextInlineElement()', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let startPosition = new Position(rootNode.firstChild, 0);
-        let endPosition = new Position(rootNode.firstChild, Position.End);
+        let endPosition = new Position(rootNode.firstChild, PositionType.End);
 
         // range = '<p>part1</p>'
         let range = new SelectionRange(startPosition, endPosition);
@@ -499,7 +499,7 @@ describe('ContentTraverser getPreviousInlineElement()', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let startPosition = new Position(rootNode.lastChild, 0);
-        let endPosition = new Position(rootNode.lastChild, Position.End);
+        let endPosition = new Position(rootNode.lastChild, PositionType.End);
 
         // range = '<p>part2</p>'
         let range = new SelectionRange(startPosition, endPosition);
@@ -530,7 +530,7 @@ describe('ContentTraverser getPreviousInlineElement()', () => {
             '<span>part1</span><span>part2</span>'
         );
         let startPosition = new Position(rootNode.firstChild.firstChild, 3);
-        let endPosition = new Position(rootNode.lastChild, Position.End);
+        let endPosition = new Position(rootNode.lastChild, PositionType.End);
 
         // range = 't1</span><span>part2</span>'
         let range = new SelectionRange(startPosition, endPosition);

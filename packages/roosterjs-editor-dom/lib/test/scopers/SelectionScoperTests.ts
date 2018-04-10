@@ -64,7 +64,7 @@ describe('SelectionScoper getStartBlockElement()', () => {
     it('input = <p>example</p>, scoper is part of NodeBlockElement', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>example</p>');
         let startPosition = new Position(rootNode.firstChild.firstChild, 0);
-        let endPosition = new Position(rootNode.firstChild.firstChild, Position.End);
+        let endPosition = new Position(rootNode.firstChild.firstChild, PositionType.End);
 
         // range is 'e'
         let range = new SelectionRange(startPosition, endPosition);
@@ -77,7 +77,7 @@ describe('SelectionScoper getStartBlockElement()', () => {
     it('input = <p>part1</p><p>part2</p>, scoper has multiple blockElements', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let startPosition = new Position(rootNode.firstChild, 0);
-        let endPosition = new Position(rootNode.lastChild, Position.End);
+        let endPosition = new Position(rootNode.lastChild, PositionType.End);
 
         let range = new SelectionRange(startPosition, endPosition);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
@@ -139,7 +139,7 @@ describe('SelectionScoper getStartInlineElement()', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<img>www.example.com');
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
         let node = rootNode.firstChild;
-        runTest(rootNode, range, 0, Position.End, node);
+        runTest(rootNode, range, 0, PositionType.End, node);
     });
 
     it('input = www.example.com, startInlineElment is PartialInlineElement', () => {
@@ -178,7 +178,7 @@ describe('SelectionScoper isBlockInScope()', () => {
     it('input = <p>part1</p><p>part2</p>, testBlockElement is in scope', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let startPosition = new Position(rootNode.firstChild, 0);
-        let endPosition = new Position(rootNode.lastChild, Position.End);
+        let endPosition = new Position(rootNode.lastChild, PositionType.End);
         let range = new SelectionRange(startPosition, endPosition);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.lastChild as HTMLElement
@@ -189,7 +189,7 @@ describe('SelectionScoper isBlockInScope()', () => {
     it('input = <p>part1</p><p>part2</p>, testBlockElement is out of scope', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let startPosition = new Position(rootNode.firstChild, 0);
-        let endPosition = new Position(rootNode.firstChild, Position.End);
+        let endPosition = new Position(rootNode.firstChild, PositionType.End);
         let range = new SelectionRange(startPosition, endPosition);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.lastChild as HTMLElement
@@ -237,7 +237,7 @@ describe('SelectionScoper trimInlineElement()', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let startPosition = new Position(rootNode.firstChild, 0);
-        let endPosition = new Position(rootNode.firstChild, Position.End);
+        let endPosition = new Position(rootNode.firstChild, PositionType.End);
 
         // range is '<p>part1</p>'
         let range = new SelectionRange(startPosition, endPosition);
@@ -260,7 +260,7 @@ describe('SelectionScoper trimInlineElement()', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let startPosition = new Position(rootNode.firstChild, 0);
-        let endPosition = new Position(rootNode.firstChild, Position.End);
+        let endPosition = new Position(rootNode.firstChild, PositionType.End);
 
         // range is '<p>part1</p>'
         let range = new SelectionRange(startPosition, endPosition);

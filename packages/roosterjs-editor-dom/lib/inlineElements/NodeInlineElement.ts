@@ -1,5 +1,6 @@
 import InlineElement from './InlineElement';
 import Position from '../selection/Position';
+import PositionType from '../selection/PositionType';
 import SelectionRange from '../selection/SelectionRange';
 import getTagOfNode from '../utils/getTagOfNode';
 import isNodeAfter from '../utils/isNodeAfter';
@@ -46,7 +47,7 @@ class NodeInlineElement implements InlineElement {
     public getEndPosition(): Position {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest last child node from the container
-        return new Position(this.containerNode, Position.End).normalize();
+        return new Position(this.containerNode, PositionType.End).normalize();
     }
 
     /**

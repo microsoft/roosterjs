@@ -1,7 +1,7 @@
 import { ContentEditFeature } from '../ContentEditFeatures';
 import { Editor } from 'roosterjs-editor-core';
 import { Indentation, PluginDomEvent } from 'roosterjs-editor-types';
-import { Browser, Position, SelectionRange, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
+import { Browser, Position, PositionType, SelectionRange, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
 import {
     cacheGetCursorEventData,
     cacheGetNodeAtCursor,
@@ -47,7 +47,7 @@ export const MergeInNewLine: ContentEditFeature = {
                 let document = editor.getDocument();
                 let br = document.createElement('br');
                 editor.insertNode(br);
-                editor.select(br, Position.After);
+                editor.select(br, PositionType.After);
             });
         } else {
             toggleListAndPreventDefault(event, editor);

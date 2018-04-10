@@ -1,5 +1,5 @@
 import { ContentEditFeature } from '../ContentEditFeatures';
-import { Position } from 'roosterjs-editor-dom';
+import { PositionType } from 'roosterjs-editor-dom';
 import { VTable, cacheGetNodeAtCursor } from 'roosterjs-editor-api';
 
 const KEY_TAB = 9;
@@ -23,14 +23,14 @@ export const TabInTable: ContentEditFeature = {
             if (col < 0 || col >= vtable.cells[row].length) {
                 row += step;
                 if (row < 0 || row >= vtable.cells.length) {
-                    editor.select(vtable.table, shift ? Position.Before : Position.After);
+                    editor.select(vtable.table, shift ? PositionType.Before : PositionType.After);
                     break;
                 }
                 col = shift ? vtable.cells[row].length - 1 : 0;
             }
             let cell = vtable.getCell(row, col);
             if (cell.td) {
-                editor.select(cell.td, Position.Begin);
+                editor.select(cell.td, PositionType.Begin);
                 break;
             }
         }

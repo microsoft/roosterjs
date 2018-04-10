@@ -3,7 +3,7 @@ import getLiveRange from './getLiveRange';
 import hasFocus from './hasFocus';
 import select from './select';
 import { NodeType } from 'roosterjs-editor-types';
-import { getFirstLeafNode, Position, isVoidHtmlElement } from 'roosterjs-editor-dom';
+import { getFirstLeafNode, PositionType, isVoidHtmlElement } from 'roosterjs-editor-dom';
 
 export default function focus(core: EditorCore) {
     if (!hasFocus(core) || !getLiveRange(core)) {
@@ -38,7 +38,7 @@ function setSelectionToBegin(core: EditorCore) {
     } else if (nodeType == NodeType.Element) {
         // If first node is a html void element (void elements cannot have child nodes),
         // move selection before it, otherwise move selection inside it
-        select(core, firstNode, isVoidHtmlElement(firstNode as HTMLElement) ? Position.Before : 0);
+        select(core, firstNode, isVoidHtmlElement(firstNode as HTMLElement) ? PositionType.Before : 0);
     } else {
         // No first node, likely we have an empty content DIV, move selection inside it
         select(core, core.contentDiv, 0);

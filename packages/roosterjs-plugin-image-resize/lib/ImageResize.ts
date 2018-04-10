@@ -8,7 +8,7 @@ import {
     PluginDomEvent,
     ExtractContentEvent,
 } from 'roosterjs-editor-types';
-import { Position, contains, getTagOfNode } from 'roosterjs-editor-dom';
+import { PositionType, contains, getTagOfNode } from 'roosterjs-editor-dom';
 
 const BEGIN_TAG = 'RoosterJsImageResizingBegin';
 const END_TAG = 'RoosterJsImageResizingEnd';
@@ -122,7 +122,7 @@ export default class ImageResize implements EditorPlugin {
     private select(target: HTMLElement) {
         this.resizeDiv = this.createResizeDiv(target);
         target.contentEditable = 'false';
-        this.editor.select(this.resizeDiv, Position.After);
+        this.editor.select(this.resizeDiv, PositionType.After);
     }
 
     private unselect(selectImageAfterUnselect: boolean) {

@@ -1,6 +1,6 @@
 import { ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { Position, fromHtml } from 'roosterjs-editor-dom';
+import { PositionType, fromHtml } from 'roosterjs-editor-dom';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
@@ -28,7 +28,7 @@ export default function applyInlineStyle(editor: Editor, styler: (element: HTMLE
                 // reset selection to be after the ZWS (rather than selecting it)
                 // This is needed so that the cursor still looks blinking inside editor
                 // This also means an extra ZWS will be in editor
-                editor.select(element, Position.End);
+                editor.select(element, PositionType.End);
             } else {
                 // This is start and end node that get the style. The start and end needs to be recorded so that selection
                 // can be re-applied post-applying style
@@ -51,7 +51,7 @@ export default function applyInlineStyle(editor: Editor, styler: (element: HTMLE
 
                 // When selectionStartNode/EndNode is set, it means there is DOM change. Re-create the selection
                 if (firstNode && lastNode) {
-                    editor.select(firstNode, Position.Before, lastNode, Position.After);
+                    editor.select(firstNode, PositionType.Before, lastNode, PositionType.After);
                 }
             }
         },

@@ -8,11 +8,6 @@ import isNodeAfter from '../utils/isNodeAfter';
  * Represent a position in DOM tree by the node and its offset index
  */
 export default class Position {
-    static readonly Before = PositionType.Before;
-    static readonly Begin = PositionType.Begin;
-    static readonly End = PositionType.End;
-    static readonly After = PositionType.After;
-
     readonly node: Node;
     readonly element: HTMLElement;
     readonly offset: number;

@@ -620,10 +620,6 @@ export const enum NodeType {
  * Represent a position in DOM tree by the node and its offset index
  */
 export class Position {
-    static readonly Before: PositionType;
-    static readonly Begin: PositionType;
-    static readonly End: PositionType;
-    static readonly After: PositionType;
     readonly node: Node;
     readonly element: HTMLElement;
     readonly offset: number;

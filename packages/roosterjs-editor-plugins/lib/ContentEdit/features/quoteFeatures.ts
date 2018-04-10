@@ -1,7 +1,7 @@
 import { ContentEditFeature } from '../ContentEditFeatures';
 import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
 import { PluginDomEvent } from 'roosterjs-editor-types';
-import { Position, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
+import { PositionType, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
 import { getNodeAtCursor } from 'roosterjs-editor-api';
 
 const KEY_BACKSPACE = 8;
@@ -46,7 +46,7 @@ function splitQuote(event: PluginDomEvent, editor: Editor) {
             blockQuoteElement.parentNode.removeChild(blockQuoteElement);
         }
 
-        editor.select(childOfQuote, Position.Begin);
+        editor.select(childOfQuote, PositionType.Begin);
     });
     event.rawEvent.preventDefault();
 }

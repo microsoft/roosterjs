@@ -2,6 +2,7 @@ import * as DomTestHelper from '../DomTestHelper';
 import InlineElement from '../../inlineElements/InlineElement';
 import NodeInlineElement, { applyStyleToTextNode } from '../../inlineElements/NodeInlineElement';
 import Position from '../../selection/Position';
+import PositionType from '../../selection/PositionType';
 
 let testID = 'NodeInlineElement';
 
@@ -201,7 +202,7 @@ describe('NodeInlineElement contains()', () => {
             '<span><a><span>part1</span>text</a>text<span>part2</span>part3</span>'
         );
         let element = new NodeInlineElement(testDiv.firstChild.firstChild);
-        let position = new Position(testDiv.firstChild.lastChild, Position.End);
+        let position = new Position(testDiv.firstChild.lastChild, PositionType.End);
 
         // Act
         let elementContainsPosition = element.contains(position);

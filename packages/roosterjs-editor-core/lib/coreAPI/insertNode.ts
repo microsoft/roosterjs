@@ -3,7 +3,7 @@ import focus from './focus';
 import getLiveRange from './getLiveRange';
 import select from './select';
 import {
-    Position,
+    PositionType,
     SelectionRange,
     changeElementTag,
     contains,
@@ -114,7 +114,7 @@ export default function insertNode(core: EditorCore, node: Node, option?: Insert
                 rawRange.insertNode(node);
 
                 if (updateCursor && nodeForCursor) {
-                    select(core, nodeForCursor, Position.After);
+                    select(core, nodeForCursor, PositionType.After);
                 } else {
                     select(core, clonedRange);
                 }

@@ -1,6 +1,7 @@
 import InlineElement from './InlineElement';
 import NodeInlineElement, { applyStyleToTextNode } from './NodeInlineElement';
 import Position from '../selection/Position';
+import PositionType from '../selection/PositionType';
 import SelectionRange from '../selection/SelectionRange';
 import contains from '../utils/contains';
 import isDocumentPosition from '../utils/isDocumentPosition';
@@ -25,8 +26,8 @@ class PartialInlineElement implements InlineElement {
                 ? decoratedInline
                 : (<PartialInlineElement>decoratedInline).getDecoratedInline();
         let node = this.decoratedInline.getContainerNode();
-        this.start = (start || new Position(node, Position.Begin)).normalize();
-        this.end = (end || new Position(node, Position.End)).normalize();
+        this.start = (start || new Position(node, PositionType.Begin)).normalize();
+        this.end = (end || new Position(node, PositionType.End)).normalize();
     }
 
     /**

@@ -1,5 +1,5 @@
 import Editor from '../editor/Editor';
-import { Browser, fromHtml, Position } from 'roosterjs-editor-dom';
+import { Browser, fromHtml, Position, PositionType } from 'roosterjs-editor-dom';
 
 // Undo cursor marker
 const CURSOR_START = 'cursor-start';
@@ -67,7 +67,7 @@ function addCursorMarkersToSelection(editor: Editor) {
     // the end marker is always placed after the start marker
     let rawRange = range.getRange();
     let endPosition = range.collapsed
-        ? new Position(markers[0], Position.After)
+        ? new Position(markers[0], PositionType.After)
         : new Position(rawRange.endContainer, rawRange.endOffset);
     insertCursorMarker(editor, endPosition, markers[1]);
 }
@@ -79,7 +79,7 @@ function updateSelectionToCursorMarkers(editor: Editor) {
     let endMarker = getCursorMarkerByUniqueId(editor, CURSOR_END);
 
     if (startMarker && endMarker) {
-        editor.select(startMarker, Position.After, endMarker, Position.Before);
+        editor.select(startMarker, PositionType.After, endMarker, PositionType.Before);
     }
 }
 

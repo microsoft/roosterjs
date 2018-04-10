@@ -342,7 +342,7 @@ function applyInlineStyle(editor, styler) {
             // reset selection to be after the ZWS (rather than selecting it)
             // This is needed so that the cursor still looks blinking inside editor
             // This also means an extra ZWS will be in editor
-            editor.select(element, roosterjs_editor_dom_1.Position.End);
+            editor.select(element, "e" /* End */);
         }
         else {
             // This is start and end node that get the style. The start and end needs to be recorded so that selection
@@ -364,7 +364,7 @@ function applyInlineStyle(editor, styler) {
             }
             // When selectionStartNode/EndNode is set, it means there is DOM change. Re-create the selection
             if (firstNode_1 && lastNode_1) {
-                editor.select(firstNode_1, roosterjs_editor_dom_1.Position.Before, lastNode_1, roosterjs_editor_dom_1.Position.After);
+                editor.select(firstNode_1, "b" /* Before */, lastNode_1, "a" /* After */);
             }
         }
     }, false /*preserveSelection*/, "Format" /* Format */, null /*dataCallback*/, collapsed /*skipAddingUndoAfterFormat*/);
@@ -1935,7 +1935,7 @@ function setSelectionToBegin(core) {
     else if (nodeType == 1 /* Element */) {
         // If first node is a html void element (void elements cannot have child nodes),
         // move selection before it, otherwise move selection inside it
-        select_1.default(core, firstNode, roosterjs_editor_dom_1.isVoidHtmlElement(firstNode) ? roosterjs_editor_dom_1.Position.Before : 0);
+        select_1.default(core, firstNode, roosterjs_editor_dom_1.isVoidHtmlElement(firstNode) ? "b" /* Before */ : 0);
     }
     else {
         // No first node, likely we have an empty content DIV, move selection inside it
@@ -2167,7 +2167,7 @@ function insertNode(core, node, option) {
                 var nodeForCursor = node.nodeType == 11 /* DocumentFragment */ ? node.lastChild : node;
                 rawRange.insertNode(node);
                 if (updateCursor && nodeForCursor) {
-                    select_1.default(core, nodeForCursor, roosterjs_editor_dom_1.Position.After);
+                    select_1.default(core, nodeForCursor, "a" /* After */);
                 }
                 else {
                     select_1.default(core, clonedRange);
@@ -2218,8 +2218,8 @@ function select(core, arg1, arg2, arg3, arg4) {
             var start = void 0;
             var end = void 0;
             if (arg2 == undefined) {
-                start = new roosterjs_editor_dom_1.Position(arg1, roosterjs_editor_dom_1.Position.Before);
-                end = new roosterjs_editor_dom_1.Position(arg1, roosterjs_editor_dom_1.Position.After);
+                start = new roosterjs_editor_dom_1.Position(arg1, "b" /* Before */);
+                end = new roosterjs_editor_dom_1.Position(arg1, "a" /* After */);
             }
             else {
                 start = new roosterjs_editor_dom_1.Position(arg1, arg2);
@@ -3316,7 +3316,7 @@ function addCursorMarkersToSelection(editor) {
     // the end marker is always placed after the start marker
     var rawRange = range.getRange();
     var endPosition = range.collapsed
-        ? new roosterjs_editor_dom_1.Position(markers[0], roosterjs_editor_dom_1.Position.After)
+        ? new roosterjs_editor_dom_1.Position(markers[0], "a" /* After */)
         : new roosterjs_editor_dom_1.Position(rawRange.endContainer, rawRange.endOffset);
     insertCursorMarker(editor, endPosition, markers[1]);
 }
@@ -3326,7 +3326,7 @@ function updateSelectionToCursorMarkers(editor) {
     var startMarker = getCursorMarkerByUniqueId(editor, CURSOR_START);
     var endMarker = getCursorMarkerByUniqueId(editor, CURSOR_END);
     if (startMarker && endMarker) {
-        editor.select(startMarker, roosterjs_editor_dom_1.Position.After, endMarker, roosterjs_editor_dom_1.Position.Before);
+        editor.select(startMarker, "a" /* After */, endMarker, "b" /* Before */);
     }
 }
 // Insert cursor marker to an editor point
@@ -4551,7 +4551,7 @@ var NodeInlineElement = /** @class */ (function () {
     NodeInlineElement.prototype.getEndPosition = function () {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest last child node from the container
-        return new Position_1.default(this.containerNode, Position_1.default.End).normalize();
+        return new Position_1.default(this.containerNode, "e" /* End */).normalize();
     };
     /**
      * Get a value to indicate whether this element contains text only
@@ -4652,8 +4652,8 @@ var PartialInlineElement = /** @class */ (function () {
                 ? decoratedInline
                 : decoratedInline.getDecoratedInline();
         var node = this.decoratedInline.getContainerNode();
-        this.start = (start || new Position_1.default(node, Position_1.default.Begin)).normalize();
-        this.end = (end || new Position_1.default(node, Position_1.default.End)).normalize();
+        this.start = (start || new Position_1.default(node, 0 /* Begin */)).normalize();
+        this.end = (end || new Position_1.default(node, "e" /* End */)).normalize();
     }
     /**
      * Get the full inline element that this partial inline decorates
@@ -5036,10 +5036,6 @@ var Position = /** @class */ (function () {
     Position.prototype.move = function (offset) {
         return new Position(this.node, this.offset + offset);
     };
-    Position.Before = "b" /* Before */;
-    Position.Begin = 0 /* Begin */;
-    Position.End = "e" /* End */;
-    Position.After = "a" /* After */;
     return Position;
 }());
 exports.default = Position;
@@ -6539,7 +6535,7 @@ exports.MergeInNewLine = {
                 var document = editor.getDocument();
                 var br = document.createElement('br');
                 editor.insertNode(br);
-                editor.select(br, roosterjs_editor_dom_1.Position.After);
+                editor.select(br, "a" /* After */);
             });
         }
         else {
@@ -6675,7 +6671,7 @@ function splitQuote(event, editor) {
         if (!blockQuoteElement.firstChild) {
             blockQuoteElement.parentNode.removeChild(blockQuoteElement);
         }
-        editor.select(childOfQuote, roosterjs_editor_dom_1.Position.Begin);
+        editor.select(childOfQuote, 0 /* Begin */);
     });
     event.rawEvent.preventDefault();
 }
@@ -6693,7 +6689,6 @@ function splitQuote(event, editor) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var KEY_TAB = 9;
 exports.TabInTable = {
@@ -6708,14 +6703,14 @@ exports.TabInTable = {
             if (col < 0 || col >= vtable.cells[row].length) {
                 row += step;
                 if (row < 0 || row >= vtable.cells.length) {
-                    editor.select(vtable.table, shift ? roosterjs_editor_dom_1.Position.Before : roosterjs_editor_dom_1.Position.After);
+                    editor.select(vtable.table, shift ? "b" /* Before */ : "a" /* After */);
                     break;
                 }
                 col = shift ? vtable.cells[row].length - 1 : 0;
             }
             var cell = vtable.getCell(row, col);
             if (cell.td) {
-                editor.select(cell.td, roosterjs_editor_dom_1.Position.Begin);
+                editor.select(cell.td, 0 /* Begin */);
                 break;
             }
         }
@@ -8285,7 +8280,7 @@ var ImageResize = /** @class */ (function () {
     ImageResize.prototype.select = function (target) {
         this.resizeDiv = this.createResizeDiv(target);
         target.contentEditable = 'false';
-        this.editor.select(this.resizeDiv, roosterjs_editor_dom_1.Position.After);
+        this.editor.select(this.resizeDiv, "a" /* After */);
     };
     ImageResize.prototype.unselect = function (selectImageAfterUnselect) {
         var img = this.getSelectedImage();

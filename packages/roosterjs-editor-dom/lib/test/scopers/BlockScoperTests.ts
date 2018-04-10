@@ -157,7 +157,7 @@ describe('BlockScoper getStartInlineElement()', () => {
             '<span>part1</span><span>part2</span>'
         );
         let startPosition = new Position(rootNode.firstChild.firstChild, 3);
-        let endPosition = new Position(rootNode.lastChild.firstChild, Position.End);
+        let endPosition = new Position(rootNode.lastChild.firstChild, PositionType.End);
 
         // range = 't1</span><span>part2</span>'
         let range = new SelectionRange(startPosition, endPosition);

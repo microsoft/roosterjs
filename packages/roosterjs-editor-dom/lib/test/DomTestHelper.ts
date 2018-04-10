@@ -2,6 +2,7 @@ import NodeBlockElement from '../blockElements/NodeBlockElement';
 import NodeInlineElement from '../inlineElements/NodeInlineElement';
 import InlineElement from '../inlineElements/InlineElement';
 import Position from '../selection/Position';
+import PositionType from '../selection/PositionType';
 import SelectionRange from '../selection/SelectionRange';
 import StartEndBlockElement from '../blockElements/StartEndBlockElement';
 
@@ -89,15 +90,15 @@ export function createInlineElementFromNode(node: Node, rootNode: Node): InlineE
 // Create range from child nodes of given node
 export function createRangeFromChildNodes(node: Node): SelectionRange {
     return new SelectionRange(
-        new Position(node.firstChild, Position.Before),
-        new Position(node.lastChild, Position.After)
+        new Position(node.firstChild, PositionType.Before),
+        new Position(node.lastChild, PositionType.After)
     );
 }
 
 // Create range from given HTMLElement
 export function createRangeWithDiv(testDiv: HTMLElement): SelectionRange {
     return new SelectionRange(
-        new Position(testDiv, Position.Before),
-        new Position(testDiv, Position.After)
+        new Position(testDiv, PositionType.Before),
+        new Position(testDiv, PositionType.After)
     );
 }

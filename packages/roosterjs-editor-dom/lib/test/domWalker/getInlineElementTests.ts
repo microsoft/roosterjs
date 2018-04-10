@@ -55,7 +55,7 @@ describe('getInlineElement getInlineElementAtNode()', () => {
 
     it('input = <p><br></p>, inlineElementAtNode = <br>', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p><br></p>');
-        runTest(rootNode, rootNode.firstChild, rootNode.firstChild.firstChild, 0, Position.End);
+        runTest(rootNode, rootNode.firstChild, rootNode.firstChild.firstChild, 0, PositionType.End);
     });
 
     it('input = <div>abc<br>123</div>, inlineElementAtNode = abc', () => {
@@ -108,7 +108,7 @@ describe('getInlineElement getFirstInlineElement()', () => {
 
     it('input = <p><br></p>, firstInlineElement = <br>', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p><br></p>');
-        runTest(rootNode, rootNode.firstChild.firstChild, 0, Position.End);
+        runTest(rootNode, rootNode.firstChild.firstChild, 0, PositionType.End);
     });
 
     it('input = <div>abc<br>123</div>, firstInlineElement = abc', () => {
@@ -161,7 +161,7 @@ describe('getInlineElement getLastInlineElement()', () => {
 
     it('input = <p><br></p>, lastInlineElement = <br>', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p><br></p>');
-        runTest(rootNode, rootNode.firstChild.firstChild, 0, Position.End);
+        runTest(rootNode, rootNode.firstChild.firstChild, 0, PositionType.End);
     });
 
     it('input = <div>abc<br>123</div>, lastInlineElement = 123', () => {
@@ -249,7 +249,7 @@ describe('getInlineElement getNextInlineElement()', () => {
             currentInline,
             rootNode.firstChild.firstChild.nextSibling,
             0,
-            Position.End
+            PositionType.End
         );
     });
 
@@ -337,7 +337,7 @@ describe('getInlineElement getPreviousInlineElement()', () => {
             currentInline,
             rootNode.firstChild.firstChild.nextSibling,
             0,
-            Position.End
+            PositionType.End
         );
     });
 
@@ -454,7 +454,7 @@ describe('getInlineElement getInlineElementAfterPoint()', () => {
             testID,
             '<span>abc</span><span>123</span>'
         );
-        let position = new Position(rootNode.lastChild, Position.End);
+        let position = new Position(rootNode.lastChild, PositionType.End);
 
         // Act
         let inlineElementAfterPoint = getInlineElementAfter(rootNode, position);
@@ -468,7 +468,7 @@ describe('getInlineElement getInlineElementAfterPoint()', () => {
             testID,
             '<span>abc</span><span>123</span>'
         );
-        let position = new Position(rootNode.firstChild, Position.End);
+        let position = new Position(rootNode.firstChild, PositionType.End);
         runTest(rootNode, position, 0, 3, rootNode.lastChild.firstChild);
     });
 
