@@ -1,11 +1,7 @@
 import { ChangeSource, LinkData, PluginDomEvent } from 'roosterjs-editor-types';
 import { ContentEditFeature } from '../ContentEditFeatures';
-import {
-    Editor,
-    cacheGetEventData,
-    cacheGetCursorEventData,
-    clearCursorEventDataCache,
-} from 'roosterjs-editor-core';
+import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
+import { cacheGetCursorEventData, clearCursorEventDataCache } from 'roosterjs-editor-api';
 import { matchLink } from 'roosterjs-editor-dom';
 
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;

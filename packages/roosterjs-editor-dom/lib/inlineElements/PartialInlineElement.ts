@@ -19,7 +19,7 @@ class PartialInlineElement implements InlineElement {
     private start: Position;
     private end: Position;
 
-    constructor(decoratedInline: InlineElement, start?: Position, end?: Position) {
+    constructor(decoratedInline: InlineElement, start: Position, end: Position) {
         this.decoratedInline =
             decoratedInline instanceof NodeInlineElement
                 ? decoratedInline
@@ -87,9 +87,13 @@ class PartialInlineElement implements InlineElement {
     }
 
     /**
-     * apply style
+     * Apply style to the content between start and end position
+     * @param styler A callback function to do styling change to an html element
      */
     public applyStyle(styler: (element: HTMLElement) => void) {
+        if (this.start.equalTo(this.end)) {
+            return;
+        }
         let containerNode = this.getContainerNode();
         let currentNode = this.start.node;
         let offset = this.start.offset;

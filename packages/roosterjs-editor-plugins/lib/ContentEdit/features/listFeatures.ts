@@ -1,8 +1,9 @@
 import { ContentEditFeature } from '../ContentEditFeatures';
-import { Editor, cacheGetCursorEventData } from 'roosterjs-editor-core';
+import { Editor } from 'roosterjs-editor-core';
 import { Indentation, PluginDomEvent } from 'roosterjs-editor-types';
 import { Browser, Position, SelectionRange, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
 import {
+    cacheGetCursorEventData,
     cacheGetNodeAtCursor,
     getNodeAtCursor,
     setIndentation,

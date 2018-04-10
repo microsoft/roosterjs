@@ -1,13 +1,12 @@
-import { ContentPosition } from 'roosterjs-editor-types';
-import InlineElement from '../inlineElements/InlineElement';
 import BlockElement from '../blockElements/BlockElement';
-import TraversingScoper from './TraversingScoper';
+import InlineElement from '../inlineElements/InlineElement';
+import NodeInlineElement from '../inlineElements/NodeInlineElement';
+import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import Position from '../selection/Position';
+import TraversingScoper from './TraversingScoper';
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
-import {
-    getInlineElementAfter,
-    getInlineElementBefore,
-} from '../inlineElements/getInlineElementBeforeAfter';
+import { ContentPosition } from 'roosterjs-editor-types';
+import { getInlineElementAfter } from '../inlineElements/getInlineElementBeforeAfter';
 
 /**
  * This provides traversing content in a selection start block
@@ -41,47 +40,25 @@ class BlockScoper implements TraversingScoper {
      * the one after likely will point to inline in next paragragh which may be null if the cursor is at bottom of editor
      */
     public getStartInlineElement(): InlineElement {
-        let startInline: InlineElement;
         if (this.block) {
             switch (this.startPosition) {
                 case ContentPosition.Begin:
-                    startInline = this.block.getFirstInlineElement();
-                    break;
+                    return this.block.getFirstInlineElement();
                 case ContentPosition.End:
-                    startInline = this.block.getLastInlineElement();
-                    break;
+                    return this.block.getLastInlineElement();
                 case ContentPosition.SelectionStart:
                     // Get the inline before selection start point, and ensure it falls in the selection block
-                    startInline = getInlineElementAfter(this.rootNode, this.position);
-                    if (startInline && !this.block.contains(startInline)) {
-                        startInline = null;
-                    }
-                    break;
+                    let startInline = getInlineElementAfter(this.rootNode, this.position);
+                    return startInline && this.block.contains(startInline)
+                        ? startInline
+                        : new PartialInlineElement(
+                              new NodeInlineElement(this.position.node),
+                              this.position,
+                              this.position
+                          );
             }
         }
-
-        return startInline;
-    }
-
-    /**
-     * This is special case to support when startInlineElement is null
-     * startInlineElement being null can happen when cursor is in the end of block. In that case, there
-     * isn't anything after the cursor so you get a null startInlineElement. The scoper works together
-     * with content traverser. When users ask for a previous inline element and content traverser sees
-     * a null startInline element, it will fall back to call this getInlineElementBeforeStart to get a
-     * a previous inline element
-     */
-    public getInlineElementBeforeStart(): InlineElement {
-        let inlineBeforeStart: InlineElement;
-        if (this.block && this.startPosition == ContentPosition.SelectionStart) {
-            // Get the inline before selection start point, and ensure it falls in the selection block
-            inlineBeforeStart = getInlineElementBefore(this.rootNode, this.position);
-            if (inlineBeforeStart && !this.block.contains(inlineBeforeStart)) {
-                inlineBeforeStart = null;
-            }
-        }
-
-        return inlineBeforeStart;
+        return null;
     }
 
     /**

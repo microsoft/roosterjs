@@ -875,7 +875,7 @@ declare namespace roosterjs {
         private decoratedInline;
         private start;
         private end;
-        constructor(decoratedInline: InlineElement, start?: Position, end?: Position);
+        constructor(decoratedInline: InlineElement, start: Position, end: Position);
         /**
          * Get the full inline element that this partial inline decorates
          */
@@ -909,7 +909,8 @@ declare namespace roosterjs {
          */
         isAfter(inlineElement: InlineElement): boolean;
         /**
-         * apply style
+         * Apply style to the content between start and end position
+         * @param styler A callback function to do styling change to an html element
          */
         applyStyle(styler: (element: HTMLElement) => void): void;
     }
@@ -1919,22 +1920,6 @@ declare namespace roosterjs {
     }
 
     /**
-     * Read CursorData from plugin event cache. If not, create one
-     * @param event The plugin event, it stores the event cached data for looking up.
-     * If passed as null, we will create a new cursor data
-     * @param editor The editor instance
-     * @returns The cursor data
-     */
-    function cacheGetCursorEventData(event: PluginEvent, editor: Editor): TextBeforePositionTraverser;
-
-    /**
-     * Clear the cursor data in a plugin event.
-     * This is called when the cursor data is changed, e.g, the text is replace with HyperLink
-     * @param event The plugin event
-     */
-    function clearCursorEventDataCache(event: PluginEvent): void;
-
-    /**
      * Clear a cached object by its key from an event object
      * @param event The event object
      * @param key The cache key
@@ -2005,6 +1990,22 @@ declare namespace roosterjs {
      * @returns The format state at cursor
      */
     function getFormatState(editor: Editor, event?: PluginEvent): FormatState;
+
+    /**
+     * Read CursorData from plugin event cache. If not, create one
+     * @param event The plugin event, it stores the event cached data for looking up.
+     * If passed as null, we will create a new cursor data
+     * @param editor The editor instance
+     * @returns The cursor data
+     */
+    function cacheGetCursorEventData(event: PluginEvent, editor: Editor): TextBeforePositionTraverser;
+
+    /**
+     * Clear the cursor data in a plugin event.
+     * This is called when the cursor data is changed, e.g, the text is replace with HyperLink
+     * @param event The plugin event
+     */
+    function clearCursorEventDataCache(event: PluginEvent): void;
 
     /**
      * Clear the format in current selection, after cleaning, the format will be

@@ -1,7 +1,6 @@
-import Editor from './Editor';
+import { Editor, cacheGetEventData, clearEventDataCache } from 'roosterjs-editor-core';
 import { PluginEvent } from 'roosterjs-editor-types';
 import { TextBeforePositionTraverser } from 'roosterjs-editor-dom';
-import { cacheGetEventData, clearEventDataCache } from './eventDataCacheUtils';
 
 const EVENTDATACACHE_CURSORDATA = 'CURSORDATA';
 

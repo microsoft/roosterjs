@@ -1,6 +1,10 @@
 export { default as getNodeAtCursor, cacheGetNodeAtCursor } from './cursor/getNodeAtCursor';
 export { default as queryNodesWithSelection } from './cursor/queryNodesWithSelection';
 export { default as getFormatState } from './cursor/getFormatState';
+export {
+    default as cacheGetCursorEventData,
+    clearCursorEventDataCache,
+} from './cursor/cacheGetCursorEventData';
 
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
