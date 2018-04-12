@@ -1,10 +1,8 @@
-import StartEndBlockElement from './StartEndBlockElement';
 import InlineElement from '../inlineElements/InlineElement';
-import {
-    getFirstInlineElement,
-    getLastInlineElement,
-} from '../inlineElements/getFirstLastInlineElement';
+import StartEndBlockElement from './StartEndBlockElement';
 import contains from '../utils/contains';
+import getInlineElementAtNode from '../inlineElements/getInlineElementAtNode';
+import { getFirstLeafNode, getLastLeafNode } from '../domWalker/getLeafNode';
 
 /**
  * This presents a content block that can be reprented by a single html block type element.
@@ -24,7 +22,8 @@ export default class NodeBlockElement extends StartEndBlockElement {
      */
     public getFirstInlineElement(): InlineElement {
         if (!this.firstInline) {
-            this.firstInline = getFirstInlineElement(this.getStartNode());
+            let node = getFirstLeafNode(this.startNode)
+            this.firstInline = getInlineElementAtNode(node);
         }
 
         return this.firstInline;
@@ -35,7 +34,8 @@ export default class NodeBlockElement extends StartEndBlockElement {
      */
     public getLastInlineElement(): InlineElement {
         if (!this.lastInline) {
-            this.lastInline = getLastInlineElement(this.getEndNode());
+            let node = getLastLeafNode(this.endNode);
+            this.lastInline = getInlineElementAtNode(node);
         }
 
         return this.lastInline;

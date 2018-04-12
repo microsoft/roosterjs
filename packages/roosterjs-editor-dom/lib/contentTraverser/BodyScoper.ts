@@ -1,10 +1,10 @@
-import { getFirstInlineElement } from '../inlineElements/getFirstLastInlineElement';
 import { getFirstLeafNode } from '../domWalker/getLeafNode';
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
 import InlineElement from '../inlineElements/InlineElement';
 import BlockElement from '../blockElements/BlockElement';
 import TraversingScoper from './TraversingScoper';
 import contains from '../utils/contains';
+import getInlineElementAtNode from '../inlineElements/getInlineElementAtNode';
 
 // This provides scoper for traversing the entire editor body starting from the beginning
 class BodyScoper implements TraversingScoper {
@@ -17,7 +17,8 @@ class BodyScoper implements TraversingScoper {
 
     // Get the first inline element in the editor
     public getStartInlineElement(): InlineElement {
-        return getFirstInlineElement(this.rootNode);
+        let node = getFirstLeafNode(this.rootNode)
+        return getInlineElementAtNode(node);
     }
 
     // Since the scope is global, all blocks under the root node are in scope

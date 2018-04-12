@@ -3387,8 +3387,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var StartEndBlockElement_1 = __webpack_require__(/*! ./StartEndBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/StartEndBlockElement.ts");
-var getFirstLastInlineElement_1 = __webpack_require__(/*! ../inlineElements/getFirstLastInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElement.ts");
 var contains_1 = __webpack_require__(/*! ../utils/contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
+var getInlineElementAtNode_1 = __webpack_require__(/*! ../inlineElements/getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
+var getLeafNode_1 = __webpack_require__(/*! ../domWalker/getLeafNode */ "./packages/roosterjs-editor-dom/lib/domWalker/getLeafNode.ts");
 /**
  * This presents a content block that can be reprented by a single html block type element.
  * In most cases, it corresponds to an HTML block level element, i.e. P, DIV, LI, TD etc.
@@ -3407,7 +3408,8 @@ var NodeBlockElement = /** @class */ (function (_super) {
      */
     NodeBlockElement.prototype.getFirstInlineElement = function () {
         if (!this.firstInline) {
-            this.firstInline = getFirstLastInlineElement_1.getFirstInlineElement(this.getStartNode());
+            var node = getLeafNode_1.getFirstLeafNode(this.startNode);
+            this.firstInline = getInlineElementAtNode_1.default(node);
         }
         return this.firstInline;
     };
@@ -3416,7 +3418,8 @@ var NodeBlockElement = /** @class */ (function (_super) {
      */
     NodeBlockElement.prototype.getLastInlineElement = function () {
         if (!this.lastInline) {
-            this.lastInline = getFirstLastInlineElement_1.getLastInlineElement(this.getEndNode());
+            var node = getLeafNode_1.getLastLeafNode(this.endNode);
+            this.lastInline = getInlineElementAtNode_1.default(node);
         }
         return this.lastInline;
     };
@@ -3671,46 +3674,6 @@ function getParentNearCommonAncestor(containerBlockNode, thisNode, otherNode, ch
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-dom/lib/blockElements/getNextPreviousBlockElement.ts":
-/*!****************************************************************************************!*\
-  !*** ./packages/roosterjs-editor-dom/lib/blockElements/getNextPreviousBlockElement.ts ***!
-  \****************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var getLeafSibling_1 = __webpack_require__(/*! ../domWalker/getLeafSibling */ "./packages/roosterjs-editor-dom/lib/domWalker/getLeafSibling.ts");
-var getBlockElementAtNode_1 = __webpack_require__(/*! ./getBlockElementAtNode */ "./packages/roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode.ts");
-/**
- * Get next block
- */
-function getNextBlockElement(rootNode, blockElement) {
-    return getNextPreviousBlockElement(rootNode, blockElement, true /*isNext*/);
-}
-exports.getNextBlockElement = getNextBlockElement;
-/**
- * Get previous block
- */
-function getPreviousBlockElement(rootNode, blockElement) {
-    return getNextPreviousBlockElement(rootNode, blockElement, false /*isNext*/);
-}
-exports.getPreviousBlockElement = getPreviousBlockElement;
-function getNextPreviousBlockElement(rootNode, blockElement, isNext) {
-    if (!blockElement) {
-        return null;
-    }
-    // Get a leaf node after block's end element and use that base to find next block
-    // TODO: this code is used to identify block, maybe we shouldn't exclude those empty nodes
-    // We can improve this later on
-    var leaf = getLeafSibling_1.getLeafSibling(rootNode, isNext ? blockElement.getEndNode() : blockElement.getStartNode(), isNext);
-    return getBlockElementAtNode_1.default(rootNode, leaf);
-}
-
-
-/***/ }),
-
 /***/ "./packages/roosterjs-editor-dom/lib/contentTraverser/BlockScoper.ts":
 /*!***************************************************************************!*\
   !*** ./packages/roosterjs-editor-dom/lib/contentTraverser/BlockScoper.ts ***!
@@ -3803,10 +3766,10 @@ exports.default = BlockScoper;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getFirstLastInlineElement_1 = __webpack_require__(/*! ../inlineElements/getFirstLastInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElement.ts");
 var getLeafNode_1 = __webpack_require__(/*! ../domWalker/getLeafNode */ "./packages/roosterjs-editor-dom/lib/domWalker/getLeafNode.ts");
 var getBlockElementAtNode_1 = __webpack_require__(/*! ../blockElements/getBlockElementAtNode */ "./packages/roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode.ts");
 var contains_1 = __webpack_require__(/*! ../utils/contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
+var getInlineElementAtNode_1 = __webpack_require__(/*! ../inlineElements/getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
 // This provides scoper for traversing the entire editor body starting from the beginning
 var BodyScoper = /** @class */ (function () {
     function BodyScoper(rootNode) {
@@ -3818,7 +3781,8 @@ var BodyScoper = /** @class */ (function () {
     };
     // Get the first inline element in the editor
     BodyScoper.prototype.getStartInlineElement = function () {
-        return getFirstLastInlineElement_1.getFirstInlineElement(this.rootNode);
+        var node = getLeafNode_1.getFirstLeafNode(this.rootNode);
+        return getInlineElementAtNode_1.default(node);
     };
     // Since the scope is global, all blocks under the root node are in scope
     BodyScoper.prototype.isBlockInScope = function (blockElement) {
@@ -3845,11 +3809,14 @@ exports.default = BodyScoper;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getNextPreviousInlineElement_1 = __webpack_require__(/*! ../inlineElements/getNextPreviousInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getNextPreviousInlineElement.ts");
-var getNextPreviousBlockElement_1 = __webpack_require__(/*! ../blockElements/getNextPreviousBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/getNextPreviousBlockElement.ts");
 var BlockScoper_1 = __webpack_require__(/*! ./BlockScoper */ "./packages/roosterjs-editor-dom/lib/contentTraverser/BlockScoper.ts");
+var PartialInlineElement_1 = __webpack_require__(/*! ../inlineElements/PartialInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts");
 var SelectionScoper_1 = __webpack_require__(/*! ./SelectionScoper */ "./packages/roosterjs-editor-dom/lib/contentTraverser/SelectionScoper.ts");
 var BodyScoper_1 = __webpack_require__(/*! ./BodyScoper */ "./packages/roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts");
+var getBlockElementAtNode_1 = __webpack_require__(/*! ../blockElements/getBlockElementAtNode */ "./packages/roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode.ts");
+var getInlineElementAtNode_1 = __webpack_require__(/*! ../inlineElements/getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
+var getLeafSibling_1 = __webpack_require__(/*! ../domWalker/getLeafSibling */ "./packages/roosterjs-editor-dom/lib/domWalker/getLeafSibling.ts");
+var getLeafSibling_2 = __webpack_require__(/*! ../domWalker/getLeafSibling */ "./packages/roosterjs-editor-dom/lib/domWalker/getLeafSibling.ts");
 /**
  * The provides traversing of content inside editor.
  * There are two ways to traverse, block by block, or inline element by inline element
@@ -3887,15 +3854,15 @@ var ContentTraverser = /** @class */ (function () {
      * Get next block element
      */
     ContentTraverser.prototype.getNextBlockElement = function () {
-        var thisBlock = this.currentBlockElement;
-        var nextBlock = thisBlock ? getNextPreviousBlockElement_1.getNextBlockElement(this.rootNode, thisBlock) : null;
+        var current = this.currentBlockElement;
+        var next = current && this.getNextPreviousBlockElement(current, true /*isNext*/);
         // Make sure this is right block:
         // 1) the block is in scope per scoper
         // 2) the block is after the current block
         // Then:
         // 1) Re-position current block to newly found block
-        if (nextBlock && this.scoper.isBlockInScope(nextBlock) && nextBlock.isAfter(thisBlock)) {
-            this.currentBlock = nextBlock;
+        if (next && this.scoper.isBlockInScope(next) && next.isAfter(current)) {
+            this.currentBlock = next;
             return this.currentBlock;
         }
         return null;
@@ -3904,17 +3871,17 @@ var ContentTraverser = /** @class */ (function () {
      * Get previous block element
      */
     ContentTraverser.prototype.getPreviousBlockElement = function () {
-        var thisBlock = this.currentBlockElement;
-        var previousBlock = thisBlock ? getNextPreviousBlockElement_1.getPreviousBlockElement(this.rootNode, thisBlock) : null;
+        var current = this.currentBlockElement;
+        var previous = current && this.getNextPreviousBlockElement(current, false /*isNext*/);
         // Make sure this is right block:
         // 1) the block is in scope per scoper
         // 2) the block is before the current block
         // Then:
         // 1) Re-position current block to newly found block
-        if (previousBlock &&
-            this.scoper.isBlockInScope(previousBlock) &&
-            thisBlock.isAfter(previousBlock)) {
-            this.currentBlock = previousBlock;
+        if (previous &&
+            this.scoper.isBlockInScope(previous) &&
+            current.isAfter(previous)) {
+            this.currentBlock = previous;
             return this.currentBlock;
         }
         return null;
@@ -3937,7 +3904,17 @@ var ContentTraverser = /** @class */ (function () {
      * Get next inline element
      */
     ContentTraverser.prototype.getNextInlineElement = function () {
-        var nextInline = this.getValidInlineElement(true /*isNext*/);
+        if (!this.currentInlineElement) {
+            return null;
+        }
+        var thisInline = this.currentInlineElement;
+        var position = thisInline.getEndPosition();
+        var candidate = position.isAtEnd
+            ? getInlineElementAtNode_1.default(getLeafSibling_2.getNextLeafSibling(this.rootNode, thisInline.getContainerNode()))
+            : new PartialInlineElement_1.default(thisInline, position, null);
+        var nextInline = candidate && (!thisInline || candidate.isAfter(thisInline))
+            ? this.scoper.trimInlineElement(candidate)
+            : null;
         this.currentInline = nextInline || this.currentInline;
         return nextInline;
     };
@@ -3945,19 +3922,29 @@ var ContentTraverser = /** @class */ (function () {
      * Get previous inline element
      */
     ContentTraverser.prototype.getPreviousInlineElement = function () {
-        var previousInline = this.getValidInlineElement(false /*isNext*/);
+        if (!this.currentInlineElement) {
+            return null;
+        }
+        var thisInline = this.currentInlineElement;
+        var position = thisInline.getStartPosition();
+        var candidate = position.offset == 0
+            ? getInlineElementAtNode_1.default(getLeafSibling_2.getPreviousLeafSibling(this.rootNode, thisInline.getContainerNode()))
+            : new PartialInlineElement_1.default(thisInline, null, position);
+        var previousInline = candidate && (!thisInline || thisInline.isAfter(candidate))
+            ? this.scoper.trimInlineElement(candidate)
+            : null;
         this.currentInline = previousInline || this.currentInline;
         return previousInline;
     };
-    ContentTraverser.prototype.getValidInlineElement = function (isNext) {
-        var thisInline = this.currentInlineElement;
-        var getPreviousNextFunc = isNext ? getNextPreviousInlineElement_1.getNextInlineElement : getNextPreviousInlineElement_1.getPreviousInlineElement;
-        var candidate = thisInline && getPreviousNextFunc(this.rootNode, thisInline);
-        // For inline, we need to make sure it is really next/previous to current, unless current is null.
-        // Then trim it if necessary
-        return candidate && (!thisInline || candidate.isAfter(thisInline) == isNext)
-            ? this.scoper.trimInlineElement(candidate)
-            : null;
+    ContentTraverser.prototype.getNextPreviousBlockElement = function (current, isNext) {
+        if (!current) {
+            return null;
+        }
+        // Get a leaf node after block's end element and use that base to find next block
+        // TODO: this code is used to identify block, maybe we shouldn't exclude those empty nodes
+        // We can improve this later on
+        var leaf = getLeafSibling_1.getLeafSibling(this.rootNode, isNext ? current.getEndNode() : current.getStartNode(), isNext);
+        return getBlockElementAtNode_1.default(this.rootNode, leaf);
     };
     return ContentTraverser;
 }());
@@ -4438,21 +4425,12 @@ var PartialInlineElement_1 = __webpack_require__(/*! ./inlineElements/PartialInl
 exports.PartialInlineElement = PartialInlineElement_1.default;
 var getInlineElementAtNode_1 = __webpack_require__(/*! ./inlineElements/getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
 exports.getInlineElementAtNode = getInlineElementAtNode_1.default;
-var getFirstLastInlineElement_1 = __webpack_require__(/*! ./inlineElements/getFirstLastInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElement.ts");
-exports.getFirstInlineElement = getFirstLastInlineElement_1.getFirstInlineElement;
-exports.getLastInlineElement = getFirstLastInlineElement_1.getLastInlineElement;
-var getNextPreviousInlineElement_1 = __webpack_require__(/*! ./inlineElements/getNextPreviousInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getNextPreviousInlineElement.ts");
-exports.getNextInlineElement = getNextPreviousInlineElement_1.getNextInlineElement;
-exports.getPreviousInlineElement = getNextPreviousInlineElement_1.getPreviousInlineElement;
 var NodeBlockElement_1 = __webpack_require__(/*! ./blockElements/NodeBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/NodeBlockElement.ts");
 exports.NodeBlockElement = NodeBlockElement_1.default;
 var StartEndBlockElement_1 = __webpack_require__(/*! ./blockElements/StartEndBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/StartEndBlockElement.ts");
 exports.StartEndBlockElement = StartEndBlockElement_1.default;
 var getBlockElementAtNode_1 = __webpack_require__(/*! ./blockElements/getBlockElementAtNode */ "./packages/roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode.ts");
 exports.getBlockElementAtNode = getBlockElementAtNode_1.default;
-var getNextPreviousBlockElement_1 = __webpack_require__(/*! ./blockElements/getNextPreviousBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/getNextPreviousBlockElement.ts");
-exports.getNextBlockElement = getNextPreviousBlockElement_1.getNextBlockElement;
-exports.getPreviousBlockElement = getNextPreviousBlockElement_1.getPreviousBlockElement;
 // Content Traverser
 var ContentTraverser_1 = __webpack_require__(/*! ./contentTraverser/ContentTraverser */ "./packages/roosterjs-editor-dom/lib/contentTraverser/ContentTraverser.ts");
 exports.ContentTraverser = ContentTraverser_1.default;
@@ -4736,42 +4714,6 @@ exports.default = PartialInlineElement;
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElement.ts":
-/*!***************************************************************************************!*\
-  !*** ./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElement.ts ***!
-  \***************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var getInlineElementAtNode_1 = __webpack_require__(/*! ./getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
-var getLeafNode_1 = __webpack_require__(/*! ../domWalker/getLeafNode */ "./packages/roosterjs-editor-dom/lib/domWalker/getLeafNode.ts");
-/**
- * Get first inline element
- */
-function getFirstInlineElement(rootNode) {
-    // getFirstLeafNode can return null for empty container
-    // do check null before passing on to get inline from the node
-    var node = getLeafNode_1.getFirstLeafNode(rootNode);
-    return getInlineElementAtNode_1.default(node);
-}
-exports.getFirstInlineElement = getFirstInlineElement;
-/**
- * Get last inline element
- */
-function getLastInlineElement(rootNode) {
-    // getLastLeafNode can return null for empty container
-    // do check null before passing on to get inline from the node
-    var node = getLeafNode_1.getLastLeafNode(rootNode);
-    return getInlineElementAtNode_1.default(node);
-}
-exports.getLastInlineElement = getLastInlineElement;
-
-
-/***/ }),
-
 /***/ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts":
 /*!************************************************************************************!*\
   !*** ./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts ***!
@@ -4861,43 +4803,6 @@ function getInlineElementBeforeAfterPoint(rootNode, position, isAfter) {
     }
     return inlineElement;
 }
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-dom/lib/inlineElements/getNextPreviousInlineElement.ts":
-/*!******************************************************************************************!*\
-  !*** ./packages/roosterjs-editor-dom/lib/inlineElements/getNextPreviousInlineElement.ts ***!
-  \******************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var PartialInlineElement_1 = __webpack_require__(/*! ./PartialInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts");
-var getInlineElementAtNode_1 = __webpack_require__(/*! ./getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
-var getLeafSibling_1 = __webpack_require__(/*! ../domWalker/getLeafSibling */ "./packages/roosterjs-editor-dom/lib/domWalker/getLeafSibling.ts");
-/**
- * Get next inline element
- */
-function getNextInlineElement(rootNode, inlineElement) {
-    var end = inlineElement.getEndPosition();
-    return end.isAtEnd
-        ? getInlineElementAtNode_1.default(getLeafSibling_1.getLeafSibling(rootNode, inlineElement.getContainerNode(), true /*isNext*/))
-        : new PartialInlineElement_1.default(inlineElement, end, null);
-}
-exports.getNextInlineElement = getNextInlineElement;
-/**
- * Get previous inline element
- */
-function getPreviousInlineElement(rootNode, inlineElement) {
-    var start = inlineElement.getStartPosition();
-    return start.offset == 0
-        ? getInlineElementAtNode_1.default(getLeafSibling_1.getLeafSibling(rootNode, inlineElement.getContainerNode(), false /*isNext*/))
-        : new PartialInlineElement_1.default(inlineElement, null, start);
-}
-exports.getPreviousInlineElement = getPreviousInlineElement;
 
 
 /***/ }),

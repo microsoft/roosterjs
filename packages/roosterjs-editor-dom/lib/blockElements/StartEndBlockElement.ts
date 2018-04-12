@@ -22,7 +22,7 @@ export default class StartEndBlockElement implements BlockElement {
      * @param startNode startNode of this block element
      * @param endNode end nod of this block element
      */
-    constructor(private startNode: Node, private endNode: Node) {}
+    constructor(protected startNode: Node, protected endNode: Node) {}
 
     /**
      * Gets the text content

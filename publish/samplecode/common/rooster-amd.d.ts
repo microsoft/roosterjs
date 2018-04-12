@@ -917,26 +917,6 @@ export class PartialInlineElement implements InlineElement {
 export function getInlineElementAtNode(node: Node): InlineElement;
 
 /**
- * Get first inline element
- */
-export function getFirstInlineElement(rootNode: Node): InlineElement;
-
-/**
- * Get last inline element
- */
-export function getLastInlineElement(rootNode: Node): InlineElement;
-
-/**
- * Get next inline element
- */
-export function getNextInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement;
-
-/**
- * Get previous inline element
- */
-export function getPreviousInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement;
-
-/**
  * This refers to a "content block" in editor that serves as a content parsing boundary
  * It is most those html block like tags, i.e. <p>, <div>, <li>, <td> etc.
  * but can also be just a text node, followed by a <br>, i.e.
@@ -1015,8 +995,8 @@ export class NodeBlockElement extends StartEndBlockElement {
  * This start and end must be in same sibling level and have same parent in DOM tree
  */
 export class StartEndBlockElement implements BlockElement {
-    private startNode;
-    private endNode;
+    protected startNode: Node;
+    protected endNode: Node;
     protected firstInline: InlineElement;
     protected lastInline: InlineElement;
     /**
@@ -1095,16 +1075,6 @@ export class StartEndBlockElement implements BlockElement {
 export function getBlockElementAtNode(rootNode: Node, node: Node): BlockElement;
 
 /**
- * Get next block
- */
-export function getNextBlockElement(rootNode: Node, blockElement: BlockElement): BlockElement;
-
-/**
- * Get previous block
- */
-export function getPreviousBlockElement(rootNode: Node, blockElement: BlockElement): BlockElement;
-
-/**
  * The provides traversing of content inside editor.
  * There are two ways to traverse, block by block, or inline element by inline element
  * Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
@@ -1157,7 +1127,7 @@ export class ContentTraverser {
      * Get previous inline element
      */
     getPreviousInlineElement(): InlineElement;
-    private getValidInlineElement(isNext);
+    private getNextPreviousBlockElement(current, isNext);
 }
 
 /**

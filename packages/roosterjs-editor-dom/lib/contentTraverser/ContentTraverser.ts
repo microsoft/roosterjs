@@ -1,20 +1,17 @@
 import InlineElement from '../inlineElements/InlineElement';
 import BlockElement from '../blockElements/BlockElement';
 import TraversingScoper from './TraversingScoper';
-import {
-    getNextInlineElement,
-    getPreviousInlineElement,
-} from '../inlineElements/getNextPreviousInlineElement';
-import {
-    getNextBlockElement,
-    getPreviousBlockElement,
-} from '../blockElements/getNextPreviousBlockElement';
 import SelectionRange from '../selection/SelectionRange';
 import Position from '../selection/Position';
 import { ContentPosition } from 'roosterjs-editor-types';
 import BlockScoper from './BlockScoper';
+import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import SelectionScoper from './SelectionScoper';
 import BodyScoper from './BodyScoper';
+import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
+import getInlineElementAtNode from '../inlineElements/getInlineElementAtNode';
+import { getLeafSibling } from '../domWalker/getLeafSibling';
+import { getNextLeafSibling, getPreviousLeafSibling } from '../domWalker/getLeafSibling';
 
 /**
  * The provides traversing of content inside editor.
@@ -78,16 +75,16 @@ class ContentTraverser {
      * Get next block element
      */
     public getNextBlockElement(): BlockElement {
-        let thisBlock = this.currentBlockElement;
-        let nextBlock = thisBlock ? getNextBlockElement(this.rootNode, thisBlock) : null;
+        let current = this.currentBlockElement;
+        let next = current && this.getNextPreviousBlockElement(current, true /*isNext*/);
 
         // Make sure this is right block:
         // 1) the block is in scope per scoper
         // 2) the block is after the current block
         // Then:
         // 1) Re-position current block to newly found block
-        if (nextBlock && this.scoper.isBlockInScope(nextBlock) && nextBlock.isAfter(thisBlock)) {
-            this.currentBlock = nextBlock;
+        if (next && this.scoper.isBlockInScope(next) && next.isAfter(current)) {
+            this.currentBlock = next;
             return this.currentBlock;
         }
 
@@ -98,8 +95,8 @@ class ContentTraverser {
      * Get previous block element
      */
     public getPreviousBlockElement(): BlockElement {
-        let thisBlock = this.currentBlockElement;
-        let previousBlock = thisBlock ? getPreviousBlockElement(this.rootNode, thisBlock) : null;
+        let current = this.currentBlockElement;
+        let previous = current && this.getNextPreviousBlockElement(current, false /*isNext*/);
 
         // Make sure this is right block:
         // 1) the block is in scope per scoper
@@ -107,11 +104,11 @@ class ContentTraverser {
         // Then:
         // 1) Re-position current block to newly found block
         if (
-            previousBlock &&
-            this.scoper.isBlockInScope(previousBlock) &&
-            thisBlock.isAfter(previousBlock)
+            previous &&
+            this.scoper.isBlockInScope(previous) &&
+            current.isAfter(previous)
         ) {
-            this.currentBlock = previousBlock;
+            this.currentBlock = previous;
             return this.currentBlock;
         }
 
@@ -134,7 +131,20 @@ class ContentTraverser {
      * Get next inline element
      */
     public getNextInlineElement(): InlineElement {
-        let nextInline = this.getValidInlineElement(true /*isNext*/);
+        if (!this.currentInlineElement) {
+            return null;
+        }
+
+        let thisInline = this.currentInlineElement;
+        let position = thisInline.getEndPosition();
+        let candidate = position.isAtEnd
+            ? getInlineElementAtNode(
+                getNextLeafSibling(this.rootNode, thisInline.getContainerNode())
+            )
+            : new PartialInlineElement(thisInline, position, null);
+        let nextInline = candidate && (!thisInline || candidate.isAfter(thisInline))
+            ? this.scoper.trimInlineElement(candidate)
+            : null;
         this.currentInline = nextInline || this.currentInline;
         return nextInline;
     }
@@ -143,22 +153,41 @@ class ContentTraverser {
      * Get previous inline element
      */
     public getPreviousInlineElement(): InlineElement {
-        let previousInline = this.getValidInlineElement(false /*isNext*/);
+        if (!this.currentInlineElement) {
+            return null;
+        }
+
+        let thisInline = this.currentInlineElement;
+        let position = thisInline.getStartPosition();
+        let candidate = position.offset == 0
+            ? getInlineElementAtNode(
+                getPreviousLeafSibling(this.rootNode, thisInline.getContainerNode())
+            )
+            : new PartialInlineElement(thisInline, null, position);
+        let previousInline = candidate && (!thisInline || thisInline.isAfter(candidate))
+            ? this.scoper.trimInlineElement(candidate)
+            : null;
+
         this.currentInline = previousInline || this.currentInline;
         return previousInline;
     }
 
-    private getValidInlineElement(isNext: boolean) {
-        let thisInline = this.currentInlineElement;
-        let getPreviousNextFunc = isNext ? getNextInlineElement : getPreviousInlineElement;
-        let candidate = thisInline && getPreviousNextFunc(this.rootNode, thisInline);
+    private getNextPreviousBlockElement(current: BlockElement, isNext: boolean): BlockElement {
+        if (!current) {
+            return null;
+        }
 
-        // For inline, we need to make sure it is really next/previous to current, unless current is null.
-        // Then trim it if necessary
-        return candidate && (!thisInline || candidate.isAfter(thisInline) == isNext)
-            ? this.scoper.trimInlineElement(candidate)
-            : null;
+        // Get a leaf node after block's end element and use that base to find next block
+        // TODO: this code is used to identify block, maybe we shouldn't exclude those empty nodes
+        // We can improve this later on
+        let leaf = getLeafSibling(
+            this.rootNode,
+            isNext ? current.getEndNode() : current.getStartNode(),
+            isNext
+        );
+        return getBlockElementAtNode(this.rootNode, leaf);
     }
+
 }
 
 export default ContentTraverser;
