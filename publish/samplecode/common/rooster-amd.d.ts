@@ -296,6 +296,28 @@ export interface LinkData {
 }
 
 /**
+ * Represent the type of a position
+ */
+export const enum PositionType {
+    /**
+     * Before a node
+     */
+    Before = "b",
+    /**
+     * At the begninning of a node
+     */
+    Begin = 0,
+    /**
+     * At the endo of a node
+     */
+    End = "e",
+    /**
+     * After a node
+     */
+    After = "a",
+}
+
+/**
  * This represents a rect inside editor
  */
 export interface Rect {
@@ -709,28 +731,6 @@ export class SelectionRange {
      * @returns True if we complete the replacement, false otherwise
      */
     replaceWithNode(node: Node): boolean;
-}
-
-/**
- * Represent the type of a position
- */
-export const enum PositionType {
-    /**
-     * Before a node
-     */
-    Before = "b",
-    /**
-     * At the begninning of a node
-     */
-    Begin = 0,
-    /**
-     * At the endo of a node
-     */
-    End = "e",
-    /**
-     * After a node
-     */
-    After = "a",
 }
 
 /**

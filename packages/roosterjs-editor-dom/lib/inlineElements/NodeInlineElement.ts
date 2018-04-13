@@ -1,10 +1,9 @@
 import InlineElement from './InlineElement';
 import Position from '../selection/Position';
-import PositionType from '../selection/PositionType';
 import SelectionRange from '../selection/SelectionRange';
 import getTagOfNode from '../utils/getTagOfNode';
 import isNodeAfter from '../utils/isNodeAfter';
-import { NodeType } from 'roosterjs-editor-types';
+import { NodeType, PositionType } from 'roosterjs-editor-types';
 
 /**
  * This presents an inline element that can be reprented by a single html node.

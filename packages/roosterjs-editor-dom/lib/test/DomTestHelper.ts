@@ -2,9 +2,9 @@ import NodeBlockElement from '../blockElements/NodeBlockElement';
 import NodeInlineElement from '../inlineElements/NodeInlineElement';
 import InlineElement from '../inlineElements/InlineElement';
 import Position from '../selection/Position';
-import PositionType from '../selection/PositionType';
 import SelectionRange from '../selection/SelectionRange';
 import StartEndBlockElement from '../blockElements/StartEndBlockElement';
+import { PositionType } from 'roosterjs-editor-types';
 
 // Create element with content and id and insert the element in the DOM
 export function createElementFromContent(id: string, content: string): HTMLElement {

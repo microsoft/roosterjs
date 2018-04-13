@@ -6,24 +6,7 @@ import getTagOfNode from './getTagOfNode';
  * This regex is used when we move focus to very begin of editor. We should avoid putting focus inside
  * void elements so users don't accidently create child nodes in them
  */
-const HTML_VOID_ELEMENTS = [
-    'AREA',
-    'BASE',
-    'BR',
-    'COL',
-    'COMMAND',
-    'EMBED',
-    'HR',
-    'IMG',
-    'INPUT',
-    'KEYGEN',
-    'LINK',
-    'META',
-    'PARAM',
-    'SOURCE',
-    'TRACK',
-    'WBR',
-];
+const HTML_VOID_ELEMENTS = 'AREA,BASE,BR,COL,COMMAND,EMBED,HR,IMG,INPUT,KEYGEN,LINK,META,PARAM,SOURCE,TRACK,WBR'.split(',');
 
 /**
  * check if it is html void element. void element cannot have childen

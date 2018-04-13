@@ -18,6 +18,7 @@ import {
     InsertOption,
     PluginEvent,
     PluginEventType,
+    PositionType,
     Rect,
 } from 'roosterjs-editor-types';
 import {
@@ -27,7 +28,6 @@ import {
     NodeBlockElement,
     TextBeforePositionTraverser,
     Position,
-    PositionType,
     SelectionRange,
     applyFormat,
     contains,

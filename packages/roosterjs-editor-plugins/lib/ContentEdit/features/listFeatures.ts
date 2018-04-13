@@ -1,7 +1,7 @@
 import { ContentEditFeature } from '../ContentEditFeatures';
 import { Editor } from 'roosterjs-editor-core';
 import { Indentation, PluginDomEvent } from 'roosterjs-editor-types';
-import { Browser, Position, PositionType, SelectionRange, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
+import { Browser, Position, SelectionRange, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
 import {
     cacheGetCursorEventData,
     cacheGetNodeAtCursor,
@@ -10,7 +10,7 @@ import {
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-import { ChangeSource } from 'roosterjs-editor-types';
+import { ChangeSource, PositionType } from 'roosterjs-editor-types';
 
 const KEY_BACKSPACE = 8;
 const KEY_TAB = 9;

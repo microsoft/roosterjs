@@ -1,11 +1,11 @@
 import InlineElement from './InlineElement';
 import NodeInlineElement, { applyStyleToTextNode } from './NodeInlineElement';
 import Position from '../selection/Position';
-import PositionType from '../selection/PositionType';
 import SelectionRange from '../selection/SelectionRange';
 import contains from '../utils/contains';
 import isDocumentPosition from '../utils/isDocumentPosition';
 import { DocumentPosition, NodeType } from 'roosterjs-editor-types';
+import { PositionType } from 'roosterjs-editor-types';
 import { getNextLeafSibling } from '../domWalker/getLeafSibling';
 
 /**

@@ -297,6 +297,28 @@ declare namespace roosterjs {
     }
 
     /**
+     * Represent the type of a position
+     */
+    const enum PositionType {
+        /**
+         * Before a node
+         */
+        Before = "b",
+        /**
+         * At the begninning of a node
+         */
+        Begin = 0,
+        /**
+         * At the endo of a node
+         */
+        End = "e",
+        /**
+         * After a node
+         */
+        After = "a",
+    }
+
+    /**
      * This represents a rect inside editor
      */
     interface Rect {
@@ -710,28 +732,6 @@ declare namespace roosterjs {
          * @returns True if we complete the replacement, false otherwise
          */
         replaceWithNode(node: Node): boolean;
-    }
-
-    /**
-     * Represent the type of a position
-     */
-    const enum PositionType {
-        /**
-         * Before a node
-         */
-        Before = "b",
-        /**
-         * At the begninning of a node
-         */
-        Begin = 0,
-        /**
-         * At the endo of a node
-         */
-        End = "e",
-        /**
-         * After a node
-         */
-        After = "a",
     }
 
     /**

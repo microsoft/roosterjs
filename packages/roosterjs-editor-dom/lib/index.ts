@@ -1,7 +1,6 @@
 // Selections
 export { default as Position } from './selection/Position';
 export { default as SelectionRange } from './selection/SelectionRange';
-export { default as PositionType } from './selection/PositionType';
 
 // DOM Walker
 export { getNextLeafSibling, getPreviousLeafSibling } from './domWalker/getLeafSibling';

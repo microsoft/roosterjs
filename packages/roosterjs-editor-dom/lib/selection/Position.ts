@@ -1,6 +1,5 @@
-import { NodeType, Rect } from 'roosterjs-editor-types';
+import { NodeType, PositionType, Rect } from 'roosterjs-editor-types';
 import Browser from '../utils/Browser';
-import PositionType from './PositionType';
 import getElementOrParentElement from '../utils/getElementOrParentElement';
 import isNodeAfter from '../utils/isNodeAfter';
 
