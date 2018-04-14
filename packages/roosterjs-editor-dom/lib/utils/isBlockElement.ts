@@ -1,45 +1,7 @@
 import getTagOfNode from './getTagOfNode';
 
-const BLOCK_ELEMENT_TAGS = [
-    'ADDRESS',
-    'ARTICLE',
-    'ASIDE',
-    'BLOCKQUOTE',
-    'CANVAS',
-    'DD',
-    'DIV',
-    'DL',
-    'DT',
-    'FIELDSET',
-    'FIGCAPTION',
-    'FIGURE',
-    'FOOTER',
-    'FORM',
-    'H1',
-    'H2',
-    'H3',
-    'H4',
-    'H5',
-    'H6',
-    'HEADER',
-    'HR',
-    'LI',
-    'MAIN',
-    'NAV',
-    'NOSCRIPT',
-    'OL',
-    'OUTPUT',
-    'P',
-    'PRE',
-    'SECTION',
-    'TABLE',
-    'TD',
-    'TFOOT',
-    'UL',
-    'VIDEO',
-];
-
-const BLOCK_DISPLAY_STYLES = ['block', 'list-item', 'table-cell'];
+const BLOCK_ELEMENT_TAGS = 'ADDRESS,ARTICLE,ASIDE,BLOCKQUOTE,CANVAS,DD,DIV,DL,DT,FIELDSET,FIGCAPTION,FIGURE,FOOTER,FORM,H1,H2,H3,H4,H5,H6,HEADER,HR,LI,MAIN,NAV,NOSCRIPT,OL,OUTPUT,P,PRE,SECTION,TABLE,TD,TFOOT,UL,VIDEO'.split(',');
+const BLOCK_DISPLAY_STYLES = 'block,list-item,table-cell'.split(',');
 
 /**
  * Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.

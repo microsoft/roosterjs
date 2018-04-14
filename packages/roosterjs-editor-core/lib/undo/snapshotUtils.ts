@@ -1,5 +1,6 @@
 import Editor from '../editor/Editor';
-import { Browser, fromHtml, Position, PositionType } from 'roosterjs-editor-dom';
+import { Browser, fromHtml, Position } from 'roosterjs-editor-dom';
+import { PositionType } from 'roosterjs-editor-types';
 
 // Undo cursor marker
 const CURSOR_START = 'cursor-start';

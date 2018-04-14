@@ -3,7 +3,6 @@ import focus from './focus';
 import getLiveRange from './getLiveRange';
 import select from './select';
 import {
-    PositionType,
     SelectionRange,
     changeElementTag,
     contains,
@@ -14,7 +13,7 @@ import {
     isVoidHtmlElement,
     wrap,
 } from 'roosterjs-editor-dom';
-import { ContentPosition, InsertOption, NodeType } from 'roosterjs-editor-types';
+import { ContentPosition, InsertOption, NodeType, PositionType } from 'roosterjs-editor-types';
 
 const HTML_EMPTY_DIV = '<div></div>';
 

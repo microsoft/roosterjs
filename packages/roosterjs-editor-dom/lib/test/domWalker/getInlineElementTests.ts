@@ -4,8 +4,8 @@ import {
     getInlineElementBefore,
     getInlineElementAfter,
 } from '../../inlineElements/getInlineElementBeforeAfter';
-import PositionType from '../../selection/PositionType';
 import Position from '../../selection/Position';
+import { PositionType } from 'roosterjs-editor-types';
 
 let testID = 'getInlineElement';
 

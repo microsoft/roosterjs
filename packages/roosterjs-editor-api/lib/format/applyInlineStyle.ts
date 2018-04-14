@@ -1,6 +1,6 @@
-import { ChangeSource } from 'roosterjs-editor-types';
+import { ChangeSource, PositionType } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { PositionType, fromHtml } from 'roosterjs-editor-dom';
+import { fromHtml } from 'roosterjs-editor-dom';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 

@@ -10,6 +10,7 @@ export { default as ClipboardData } from './formatStructure/ClipboardData';
 export { default as DefaultFormat } from './formatStructure/DefaultFormat';
 export { default as FormatState } from './formatStructure/FormatState';
 export { default as LinkData } from './formatStructure/LinkData';
+export { default as PositionType } from './formatStructure/PositionType';
 export { default as Rect } from './formatStructure/Rect';
 export { default as TableFormat } from './formatStructure/TableFormat';
 

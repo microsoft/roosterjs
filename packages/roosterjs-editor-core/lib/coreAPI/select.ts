@@ -1,7 +1,7 @@
-import { Position, SelectionRange, PositionType } from 'roosterjs-editor-dom';
 import EditorCore from '../editor/EditorCore';
 import hasFocus from './hasFocus';
-import { contains } from 'roosterjs-editor-dom';
+import { Position, SelectionRange, contains } from 'roosterjs-editor-dom';
+import { PositionType } from 'roosterjs-editor-types';
 
 export default function select(
     core: EditorCore,

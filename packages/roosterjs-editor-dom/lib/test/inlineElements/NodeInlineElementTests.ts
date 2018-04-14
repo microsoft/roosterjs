@@ -2,7 +2,7 @@ import * as DomTestHelper from '../DomTestHelper';
 import InlineElement from '../../inlineElements/InlineElement';
 import NodeInlineElement, { applyStyleToTextNode } from '../../inlineElements/NodeInlineElement';
 import Position from '../../selection/Position';
-import PositionType from '../../selection/PositionType';
+import { PositionType } from 'roosterjs-editor-types';
 
 let testID = 'NodeInlineElement';
 

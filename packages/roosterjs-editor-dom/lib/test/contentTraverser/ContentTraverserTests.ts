@@ -1,9 +1,8 @@
 import * as DomTestHelper from '../DomTestHelper';
 import ContentTraverser from '../../contentTraverser/ContentTraverser';
-import { ContentPosition } from 'roosterjs-editor-types';
+import { ContentPosition, PositionType } from 'roosterjs-editor-types';
 import Position from '../../selection/Position';
 import SelectionRange from '../../selection/SelectionRange';
-import PositionType from '../../selection/PositionType';
 import BlockElement from '../../blockElements/BlockElement';
 
 let testID = 'ContentTraverser';
