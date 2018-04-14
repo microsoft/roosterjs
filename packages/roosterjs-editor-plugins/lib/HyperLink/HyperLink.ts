@@ -51,7 +51,7 @@ export default class HyperLink implements EditorPlugin {
      * Dispose this plugin
      */
     public dispose() {
-        this.editor.queryNodes('a[href]', this.resetAnchor);
+        this.editor.queryElements('a[href]', this.resetAnchor);
         this.editor = null;
     }
 
@@ -67,7 +67,7 @@ export default class HyperLink implements EditorPlugin {
                     this.resetAnchor(contentChangedEvent.data as HTMLAnchorElement);
                 }
 
-                this.editor.queryNodes('a[href]', this.processLink);
+                this.editor.queryElements('a[href]', this.processLink);
                 break;
 
             case PluginEventType.ExtractContent:

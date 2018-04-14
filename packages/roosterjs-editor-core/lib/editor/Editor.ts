@@ -314,12 +314,12 @@ export default class Editor {
     }
 
     /**
-     * DOM query nodes in editor
+     * Query HTML elements in editor using querySelectorAll() method
      * @param selector Selector string to query
      * @param forEachCallback An optional callback to be invoked on each node in query result
-     * @returns Node list of the query result
+     * @returns HTML Element list of the query result
      */
-    public queryNodes<T extends Node = Node>(
+    public queryElements<T extends HTMLElement = HTMLElement>(
         selector: string,
         forEachCallback?: (node: T) => void
     ): T[] {

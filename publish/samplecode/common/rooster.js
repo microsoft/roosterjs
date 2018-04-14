@@ -297,7 +297,7 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
  * @returns The nodes intersected with current selection, returns an empty array if no result is found
  */
 function queryNodesWithSelection(editor, selector, nodeContainedByRangeOnly, forEachCallback) {
-    var nodes = editor.queryNodes(selector);
+    var nodes = editor.queryElements(selector);
     var range = editor.getSelectionRange();
     nodes = nodes.filter(function (node) {
         return roosterjs_editor_dom_1.intersectWithNodeRange(node, range.start.node, range.end.node, nodeContainedByRangeOnly);
@@ -2575,12 +2575,12 @@ var Editor = /** @class */ (function () {
         }
     };
     /**
-     * DOM query nodes in editor
+     * Query HTML elements in editor using querySelectorAll() method
      * @param selector Selector string to query
      * @param forEachCallback An optional callback to be invoked on each node in query result
-     * @returns Node list of the query result
+     * @returns HTML Element list of the query result
      */
-    Editor.prototype.queryNodes = function (selector, forEachCallback) {
+    Editor.prototype.queryElements = function (selector, forEachCallback) {
         var nodes = [].slice.call(this.core.contentDiv.querySelectorAll(selector));
         if (forEachCallback) {
             nodes.forEach(forEachCallback);
@@ -3360,7 +3360,7 @@ function getCursorMarkerByUniqueId(editor, id) {
     return nodes && nodes.length == 1 ? nodes[0] : null;
 }
 function getCursorMarkNodes(editor, id) {
-    return editor.queryNodes("span[id=\"" + id + "\"]:empty");
+    return editor.queryElements("span[id=\"" + id + "\"]:empty");
 }
 
 
@@ -6850,7 +6850,7 @@ var HyperLink = /** @class */ (function () {
      * Dispose this plugin
      */
     HyperLink.prototype.dispose = function () {
-        this.editor.queryNodes('a[href]', this.resetAnchor);
+        this.editor.queryElements('a[href]', this.resetAnchor);
         this.editor = null;
     };
     /**
@@ -6864,7 +6864,7 @@ var HyperLink = /** @class */ (function () {
                 if (contentChangedEvent.source == "CreateLink" /* CreateLink */) {
                     this.resetAnchor(contentChangedEvent.data);
                 }
-                this.editor.queryNodes('a[href]', this.processLink);
+                this.editor.queryElements('a[href]', this.processLink);
                 break;
             case 7 /* ExtractContent */:
                 var extractContentEvent = event;
@@ -8175,7 +8175,7 @@ var ImageResize = /** @class */ (function () {
         }
         else if (e.eventType == 6 /* ContentChanged */ &&
             e.source != "ImageResize" /* ImageResize */) {
-            this.editor.queryNodes('img', this.removeResizeDivIfAny);
+            this.editor.queryElements('img', this.removeResizeDivIfAny);
             this.resizeDiv = null;
         }
         else if (e.eventType == 7 /* ExtractContent */) {
@@ -8573,7 +8573,7 @@ var Watermark = /** @class */ (function () {
     };
     Watermark.prototype.hideWatermark = function () {
         var _this = this;
-        this.editor.queryNodes("span[id=\"" + WATERMARK_SPAN_ID + "\"]", function (node) {
+        this.editor.queryElements("span[id=\"" + WATERMARK_SPAN_ID + "\"]", function (node) {
             return _this.editor.deleteNode(node);
         });
         this.isWatermarkShowing = false;

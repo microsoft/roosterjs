@@ -111,7 +111,7 @@ export default class ImageResize implements EditorPlugin {
             e.eventType == PluginEventType.ContentChanged &&
             (<ContentChangedEvent>e).source != ChangeSource.ImageResize
         ) {
-            this.editor.queryNodes('img', this.removeResizeDivIfAny);
+            this.editor.queryElements('img', this.removeResizeDivIfAny);
             this.resizeDiv = null;
         } else if (e.eventType == PluginEventType.ExtractContent) {
             let event = <ExtractContentEvent>e;
