@@ -19,7 +19,7 @@ export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
 export { default as execFormatWithUndo, Formatter } from './format/execFormatWithUndo';
 export { default as getFormatState } from './format/getFormatState';
-export { default as insertImage } from './format/insertImage';
+export { default as insertImage, InsertImageHandler } from './format/insertImage';
 export { default as insertTable } from './table/insertTable';
 export { default as editTable } from './table/editTable';
 export { default as formatTable } from './table/formatTable';

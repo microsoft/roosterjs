@@ -1,6 +1,8 @@
 import { ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
+export type InsertImageHandler = (editor: Editor, imageFile: File) => void;
+
 /**
  * Insert an image to editor at current selection
  * @param editor The editor instance

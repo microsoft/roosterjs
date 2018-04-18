@@ -1,5 +1,5 @@
 /*
-    VERSION: 6.9.1
+    VERSION: 6.9.4
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -2431,9 +2431,17 @@ var Undo = /** @class */ (function () {
      * Create an instance of Undo
      * @param preserveSnapshots True to preserve the snapshots after dispose, this allows
      * this object to be reused when editor is disposed and created again
+     * @param maxBufferSize The max buffer size for snapshots. Default value is 10MB
      */
-    function Undo(preserveSnapshots) {
+    function Undo(preserveSnapshots, maxBufferSize) {
+        if (maxBufferSize === void 0) { maxBufferSize = 1e7; }
+        var _this = this;
         this.preserveSnapshots = preserveSnapshots;
+        this.maxBufferSize = maxBufferSize;
+        this.onNativeEvent = function () {
+            _this.addUndoSnapshot();
+            _this.hasNewContent = true;
+        };
     }
     /**
      * Initialize this plugin. This should only be called from Editor
@@ -2441,6 +2449,8 @@ var Undo = /** @class */ (function () {
      */
     Undo.prototype.initialize = function (editor) {
         this.editor = editor;
+        this.onDropDisposer = this.editor.addDomEventHandler('drop', this.onNativeEvent);
+        this.onCutDisposer = this.editor.addDomEventHandler('cut', this.onNativeEvent);
         // Add an initial snapshot if snapshotsManager isn't created yet
         if (!this.undoSnapshots) {
             this.addUndoSnapshot();
@@ -2450,6 +2460,10 @@ var Undo = /** @class */ (function () {
      * Dispose this plugin
      */
     Undo.prototype.dispose = function () {
+        this.onDropDisposer();
+        this.onCutDisposer();
+        this.onDropDisposer = null;
+        this.onCutDisposer = null;
         this.editor = null;
         if (!this.preserveSnapshots) {
             this.clear();
@@ -2596,7 +2610,7 @@ var Undo = /** @class */ (function () {
     };
     Undo.prototype.getSnapshotsManager = function () {
         if (!this.undoSnapshots) {
-            this.undoSnapshots = new UndoSnapshots_1.default();
+            this.undoSnapshots = new UndoSnapshots_1.default(this.maxBufferSize);
         }
         return this.undoSnapshots;
     };
@@ -3412,11 +3426,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @param editor The editor instance
  * @param range The range in which content needs to be replaced
  * @param node The node to be inserted
- * @param exactMatch exactMatch is to match exactly, i.e.
- * In auto linkification, users could type URL followed by some punctuation and hit space. The auto link will kick in on space,
- * at the moment, what is before cursor could be "<URL>,", however, only "<URL>" makes the link. by setting exactMatch = false, it does not match
- * from right before cursor, but can scan through till first same char is seen. On the other hand if set exactMatch = true, it starts the match right
- * before cursor.
+ * @param exactMatch exactMatch is to match exactly
  * @returns True if we complete the replacement, false otherwise
  */
 function replaceRangeWithNode(editor, range, node, exactMatch) {
@@ -7614,7 +7624,7 @@ var ContentEdit = /** @class */ (function () {
                         rangeToDelete.deleteContents();
                     }
                     // If not explicitly insert br, Chrome will operate on the previous line
-                    if (roosterjs_editor_core_1.browserData.isChrome) {
+                    if (roosterjs_editor_core_1.browserData.isChrome || roosterjs_editor_core_1.browserData.isSafari) {
                         _this.editor.insertContent('<BR>');
                     }
                     if (textBeforeCursor == '1.') {
@@ -7755,10 +7765,12 @@ var Paste = /** @class */ (function () {
      * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
      * this parameter if you don't have other XSS detecting logic outside the edtior.
      */
-    function Paste(useDirectPaste, htmlPropertyCallbacks) {
+    function Paste(useDirectPaste, htmlPropertyCallbacks, insertImageHandler) {
+        if (insertImageHandler === void 0) { insertImageHandler = roosterjs_editor_api_1.insertImage; }
         var _this = this;
         this.useDirectPaste = useDirectPaste;
         this.htmlPropertyCallbacks = htmlPropertyCallbacks;
+        this.insertImageHandler = insertImageHandler;
         this.onPaste = function (event) {
             _this.editor.addUndoSnapshot();
             buildClipboardData_1.default(event, _this.editor, function (clipboardData) {
@@ -7856,7 +7868,7 @@ var Paste = /** @class */ (function () {
                 this.editor.insertContent(html);
                 break;
             case 2 /* PasteImage */:
-                roosterjs_editor_api_1.insertImage(this.editor, clipboardData.image);
+                this.insertImageHandler(this.editor, clipboardData.image);
                 break;
         }
         this.editor.triggerContentChangedEvent("Paste" /* Paste */, clipboardData);
