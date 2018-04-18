@@ -1,5 +1,5 @@
 /*
-    VERSION: 6.9.1
+    VERSION: 6.9.4
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -2431,9 +2431,17 @@ var Undo = /** @class */ (function () {
      * Create an instance of Undo
      * @param preserveSnapshots True to preserve the snapshots after dispose, this allows
      * this object to be reused when editor is disposed and created again
+     * @param maxBufferSize The max buffer size for snapshots. Default value is 10MB
      */
-    function Undo(preserveSnapshots) {
+    function Undo(preserveSnapshots, maxBufferSize) {
+        if (maxBufferSize === void 0) { maxBufferSize = 1e7; }
+        var _this = this;
         this.preserveSnapshots = preserveSnapshots;
+        this.maxBufferSize = maxBufferSize;
+        this.onNativeEvent = function () {
+            _this.addUndoSnapshot();
+            _this.hasNewContent = true;
+        };
     }
     /**
      * Initialize this plugin. This should only be called from Editor
@@ -2441,6 +2449,8 @@ var Undo = /** @class */ (function () {
      */
     Undo.prototype.initialize = function (editor) {
         this.editor = editor;
+        this.onDropDisposer = this.editor.addDomEventHandler('drop', this.onNativeEvent);
+        this.onCutDisposer = this.editor.addDomEventHandler('cut', this.onNativeEvent);
         // Add an initial snapshot if snapshotsManager isn't created yet
         if (!this.undoSnapshots) {
             this.addUndoSnapshot();
@@ -2450,6 +2460,10 @@ var Undo = /** @class */ (function () {
      * Dispose this plugin
      */
     Undo.prototype.dispose = function () {
+        this.onDropDisposer();
+        this.onCutDisposer();
+        this.onDropDisposer = null;
+        this.onCutDisposer = null;
         this.editor = null;
         if (!this.preserveSnapshots) {
             this.clear();
@@ -2596,7 +2610,7 @@ var Undo = /** @class */ (function () {
     };
     Undo.prototype.getSnapshotsManager = function () {
         if (!this.undoSnapshots) {
-            this.undoSnapshots = new UndoSnapshots_1.default();
+            this.undoSnapshots = new UndoSnapshots_1.default(this.maxBufferSize);
         }
         return this.undoSnapshots;
     };
@@ -3412,11 +3426,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @param editor The editor instance
  * @param range The range in which content needs to be replaced
  * @param node The node to be inserted
- * @param exactMatch exactMatch is to match exactly, i.e.
- * In auto linkification, users could type URL followed by some punctuation and hit space. The auto link will kick in on space,
- * at the moment, what is before cursor could be "<URL>,", however, only "<URL>" makes the link. by setting exactMatch = false, it does not match
- * from right before cursor, but can scan through till first same char is seen. On the other hand if set exactMatch = true, it starts the match right
- * before cursor.
+ * @param exactMatch exactMatch is to match exactly
  * @returns True if we complete the replacement, false otherwise
  */
 function replaceRangeWithNode(editor, range, node, exactMatch) {
@@ -6458,8 +6468,8 @@ function insertImage(editor, imageFile) {
             image.src = event.target.result;
             image.style.maxWidth = '100%';
             editor.insertNode(image);
-            editor.triggerContentChangedEvent("Format" /* Format */);
             editor.addUndoSnapshot();
+            editor.triggerContentChangedEvent("Format" /* Format */);
         }
     };
     reader.readAsDataURL(imageFile);
@@ -7343,7 +7353,9 @@ var HyperLink = /** @class */ (function () {
                 else if (contentChangedEvent.source == "CreateLink" /* CreateLink */) {
                     this.resetAnchor(contentChangedEvent.data);
                 }
-                this.forEachHyperLink(this.processLink.bind(this));
+                if (contentChangedEvent.source != "AutoLink" /* AutoLink */) {
+                    this.forEachHyperLink(this.processLink.bind(this));
+                }
                 break;
             case 7 /* ExtractContent */:
                 var extractContentEvent = event;
@@ -7385,10 +7397,11 @@ var HyperLink = /** @class */ (function () {
                     _this.editor.addUndoSnapshot();
                     var replaced = roosterjs_editor_api_1.replaceTextBeforeCursorWithNode(_this.editor, linkData_1.originalUrl, anchor_1, false /* exactMatch */, cursorData);
                     if (replaced) {
+                        _this.processLink(anchor_1);
                         // The content at cursor has changed. Should also clear the cursor data cache
                         roosterjs_editor_api_1.clearCursorEventDataCache(event);
-                        _this.editor.triggerContentChangedEvent("AutoLink" /* AutoLink */, anchor_1);
                         _this.editor.addUndoSnapshot();
+                        _this.editor.triggerContentChangedEvent("AutoLink" /* AutoLink */, anchor_1);
                         _this.backspaceToUndo = true;
                     }
                 });
@@ -7614,7 +7627,7 @@ var ContentEdit = /** @class */ (function () {
                         rangeToDelete.deleteContents();
                     }
                     // If not explicitly insert br, Chrome will operate on the previous line
-                    if (roosterjs_editor_core_1.browserData.isChrome) {
+                    if (roosterjs_editor_core_1.browserData.isChrome || roosterjs_editor_core_1.browserData.isSafari) {
                         _this.editor.insertContent('<BR>');
                     }
                     if (textBeforeCursor == '1.') {
@@ -7859,8 +7872,8 @@ var Paste = /** @class */ (function () {
                 roosterjs_editor_api_1.insertImage(this.editor, clipboardData.image);
                 break;
         }
-        this.editor.triggerContentChangedEvent("Paste" /* Paste */, clipboardData);
         this.editor.addUndoSnapshot();
+        this.editor.triggerContentChangedEvent("Paste" /* Paste */, clipboardData);
     };
     Paste.prototype.applyTextFormat = function (node, format) {
         var leaf = roosterjs_editor_dom_1.getFirstLeafNode(node);

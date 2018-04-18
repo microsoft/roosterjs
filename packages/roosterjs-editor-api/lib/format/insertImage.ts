@@ -16,8 +16,8 @@ export default function insertImage(editor: Editor, imageFile: File) {
             image.src = (event.target as FileReader).result;
             image.style.maxWidth = '100%';
             editor.insertNode(image);
-            editor.triggerContentChangedEvent(ChangeSource.Format);
             editor.addUndoSnapshot();
+            editor.triggerContentChangedEvent(ChangeSource.Format);
         }
     };
     reader.readAsDataURL(imageFile);

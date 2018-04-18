@@ -172,8 +172,8 @@ export default class Paste implements EditorPlugin {
                 break;
         }
 
-        this.editor.triggerContentChangedEvent(ChangeSource.Paste, clipboardData);
         this.editor.addUndoSnapshot();
+        this.editor.triggerContentChangedEvent(ChangeSource.Paste, clipboardData);
     }
 
     private applyTextFormat(node: Node, format: DefaultFormat) {

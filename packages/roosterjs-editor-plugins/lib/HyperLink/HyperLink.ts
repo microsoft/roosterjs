@@ -96,7 +96,9 @@ export default class HyperLink implements EditorPlugin {
                     this.resetAnchor(contentChangedEvent.data as HTMLAnchorElement);
                 }
 
-                this.forEachHyperLink(this.processLink.bind(this));
+                if (contentChangedEvent.source != ChangeSource.AutoLink) {
+                    this.forEachHyperLink(this.processLink.bind(this));
+                }
                 break;
 
             case PluginEventType.ExtractContent:
@@ -152,10 +154,11 @@ export default class HyperLink implements EditorPlugin {
                         cursorData
                     );
                     if (replaced) {
+                        this.processLink(anchor);
                         // The content at cursor has changed. Should also clear the cursor data cache
                         clearCursorEventDataCache(event);
-                        this.editor.triggerContentChangedEvent(ChangeSource.AutoLink, anchor);
                         this.editor.addUndoSnapshot();
+                        this.editor.triggerContentChangedEvent(ChangeSource.AutoLink, anchor);
                         this.backspaceToUndo = true;
                     }
                 });
