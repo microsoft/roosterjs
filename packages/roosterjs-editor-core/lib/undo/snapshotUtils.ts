@@ -92,25 +92,27 @@ function insertCursorMarkerToEditorPoint(
     editorPoint: EditorPoint,
     cursorMaker: Element
 ): void {
-    let containerNode = editorPoint.containerNode;
-    let offset = editorPoint.offset;
-    let parentNode = containerNode.parentNode;
-    if (editorPoint.offset == NodeBoundary.Begin) {
-        // For boundary_begin, insert the marker before the node
-        parentNode.insertBefore(cursorMaker, containerNode);
-    } else if (
-        containerNode.nodeType == NodeType.Element ||
-        (containerNode.nodeType == NodeType.Text &&
-            editorPoint.offset == containerNode.nodeValue.length)
-    ) {
-        // otherwise, insert after
-        parentNode.insertBefore(cursorMaker, containerNode.nextSibling);
-    } else {
-        // This is for insertion in-between a text node
-        let insertionRange = editor.getDocument().createRange();
-        insertionRange.setStart(containerNode, offset);
-        insertionRange.collapse(true /* toStart */);
-        insertionRange.insertNode(cursorMaker);
+    if (editor.contains(editorPoint.containerNode)) {
+        let containerNode = editorPoint.containerNode;
+        let offset = editorPoint.offset;
+        let parentNode = containerNode.parentNode;
+        if (editorPoint.offset == NodeBoundary.Begin) {
+            // For boundary_begin, insert the marker before the node
+            parentNode.insertBefore(cursorMaker, containerNode);
+        } else if (
+            containerNode.nodeType == NodeType.Element ||
+            (containerNode.nodeType == NodeType.Text &&
+                editorPoint.offset == containerNode.nodeValue.length)
+        ) {
+            // otherwise, insert after
+            parentNode.insertBefore(cursorMaker, containerNode.nextSibling);
+        } else {
+            // This is for insertion in-between a text node
+            let insertionRange = editor.getDocument().createRange();
+            insertionRange.setStart(containerNode, offset);
+            insertionRange.collapse(true /* toStart */);
+            insertionRange.insertNode(cursorMaker);
+        }
     }
 }
 

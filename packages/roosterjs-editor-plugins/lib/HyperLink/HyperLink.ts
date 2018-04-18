@@ -154,9 +154,9 @@ export default class HyperLink implements EditorPlugin {
                         cursorData
                     );
                     if (replaced) {
-                        this.processLink(anchor);
                         // The content at cursor has changed. Should also clear the cursor data cache
                         clearCursorEventDataCache(event);
+                        this.processLink(anchor);
                         this.editor.addUndoSnapshot();
                         this.editor.triggerContentChangedEvent(ChangeSource.AutoLink, anchor);
                         this.backspaceToUndo = true;

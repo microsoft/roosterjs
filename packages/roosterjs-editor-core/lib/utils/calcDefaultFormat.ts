@@ -7,7 +7,7 @@ export default function calcDefaultFormat(node: Node, baseFormat: DefaultFormat)
         fontFamily: baseFormat.fontFamily || getComputedStyle(node, 'font-family'),
         fontSize: baseFormat.fontSize || getComputedStyle(node, 'font-size'),
         textColor: baseFormat.textColor || getComputedStyle(node, 'color'),
-        backgroundColor: baseFormat.backgroundColor || getComputedStyle(node, 'background-color'),
+        backgroundColor: baseFormat.backgroundColor || '',
         bold: baseFormat.bold,
         italic: baseFormat.italic,
         underline: baseFormat.underline,
