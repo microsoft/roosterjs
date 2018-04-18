@@ -2700,25 +2700,27 @@ function updateSelectionToCursorMarkers(editor) {
 // This revised version uses DOM parentNode.insertBefore when it sees the insertion point is in node boundary_begin
 // which gives precise control over DOM structure and solves the chrome issue
 function insertCursorMarkerToEditorPoint(editor, editorPoint, cursorMaker) {
-    var containerNode = editorPoint.containerNode;
-    var offset = editorPoint.offset;
-    var parentNode = containerNode.parentNode;
-    if (editorPoint.offset == 0 /* Begin */) {
-        // For boundary_begin, insert the marker before the node
-        parentNode.insertBefore(cursorMaker, containerNode);
-    }
-    else if (containerNode.nodeType == 1 /* Element */ ||
-        (containerNode.nodeType == 3 /* Text */ &&
-            editorPoint.offset == containerNode.nodeValue.length)) {
-        // otherwise, insert after
-        parentNode.insertBefore(cursorMaker, containerNode.nextSibling);
-    }
-    else {
-        // This is for insertion in-between a text node
-        var insertionRange = editor.getDocument().createRange();
-        insertionRange.setStart(containerNode, offset);
-        insertionRange.collapse(true /* toStart */);
-        insertionRange.insertNode(cursorMaker);
+    if (editor.contains(editorPoint.containerNode)) {
+        var containerNode = editorPoint.containerNode;
+        var offset = editorPoint.offset;
+        var parentNode = containerNode.parentNode;
+        if (editorPoint.offset == 0 /* Begin */) {
+            // For boundary_begin, insert the marker before the node
+            parentNode.insertBefore(cursorMaker, containerNode);
+        }
+        else if (containerNode.nodeType == 1 /* Element */ ||
+            (containerNode.nodeType == 3 /* Text */ &&
+                editorPoint.offset == containerNode.nodeValue.length)) {
+            // otherwise, insert after
+            parentNode.insertBefore(cursorMaker, containerNode.nextSibling);
+        }
+        else {
+            // This is for insertion in-between a text node
+            var insertionRange = editor.getDocument().createRange();
+            insertionRange.setStart(containerNode, offset);
+            insertionRange.collapse(true /* toStart */);
+            insertionRange.insertNode(cursorMaker);
+        }
     }
 }
 // Remove an element from editor by Id
@@ -5777,7 +5779,7 @@ function calcDefaultFormat(node, baseFormat) {
         fontFamily: baseFormat.fontFamily || roosterjs_editor_dom_1.getComputedStyle(node, 'font-family'),
         fontSize: baseFormat.fontSize || roosterjs_editor_dom_1.getComputedStyle(node, 'font-size'),
         textColor: baseFormat.textColor || roosterjs_editor_dom_1.getComputedStyle(node, 'color'),
-        backgroundColor: baseFormat.backgroundColor || roosterjs_editor_dom_1.getComputedStyle(node, 'background-color'),
+        backgroundColor: baseFormat.backgroundColor || '',
         bold: baseFormat.bold,
         italic: baseFormat.italic,
         underline: baseFormat.underline,
@@ -7397,9 +7399,9 @@ var HyperLink = /** @class */ (function () {
                     _this.editor.addUndoSnapshot();
                     var replaced = roosterjs_editor_api_1.replaceTextBeforeCursorWithNode(_this.editor, linkData_1.originalUrl, anchor_1, false /* exactMatch */, cursorData);
                     if (replaced) {
-                        _this.processLink(anchor_1);
                         // The content at cursor has changed. Should also clear the cursor data cache
                         roosterjs_editor_api_1.clearCursorEventDataCache(event);
+                        _this.processLink(anchor_1);
                         _this.editor.addUndoSnapshot();
                         _this.editor.triggerContentChangedEvent("AutoLink" /* AutoLink */, anchor_1);
                         _this.backspaceToUndo = true;
