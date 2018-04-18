@@ -17,7 +17,7 @@ import {
     sanitizeHtml,
 } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin, buildSnapshot, restoreSnapshot } from 'roosterjs-editor-core';
-import { insertImage } from 'roosterjs-editor-api';
+import { insertImage, InsertImageHandler } from 'roosterjs-editor-api';
 import buildClipboardData from './buildClipboardData';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import textToHtml from './textToHtml';
@@ -39,7 +39,8 @@ export default class Paste implements EditorPlugin {
      */
     constructor(
         private useDirectPaste?: boolean,
-        private htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback
+        private htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback,
+        private insertImageHandler: InsertImageHandler = insertImage
     ) {}
 
     public initialize(editor: Editor) {
@@ -168,7 +169,7 @@ export default class Paste implements EditorPlugin {
                 break;
 
             case PasteOption.PasteImage:
-                insertImage(this.editor, clipboardData.image);
+                this.insertImageHandler(this.editor, clipboardData.image);
                 break;
         }
 
