@@ -67,7 +67,9 @@ export default class HyperLink implements EditorPlugin {
                     this.resetAnchor(contentChangedEvent.data as HTMLAnchorElement);
                 }
 
-                this.editor.queryNodes('a[href]', this.processLink);
+                if (contentChangedEvent.source != ChangeSource.AutoLink) {
+                    this.editor.queryNodes('a[href]', this.processLink);
+                }
                 break;
 
             case PluginEventType.ExtractContent:

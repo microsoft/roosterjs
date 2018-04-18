@@ -92,18 +92,20 @@ function updateSelectionToCursorMarkers(editor: Editor) {
 // This revised version uses DOM parentNode.insertBefore when it sees the insertion point is in node boundary_begin
 // which gives precise control over DOM structure and solves the chrome issue
 function insertCursorMarker(editor: Editor, position: Position, cursorMaker: Node) {
-    position = position.normalize();
-    let parentNode = position.node.parentNode;
-    if (position.offset == 0) {
-        parentNode.insertBefore(cursorMaker, position.node);
-    } else if (position.isAtEnd) {
-        // otherwise, insert after
-        parentNode.insertBefore(cursorMaker, position.node.nextSibling);
-    } else {
-        // This is for insertion in-between a text node
-        let insertionRange = editor.getDocument().createRange();
-        insertionRange.setStart(position.node, position.offset);
-        insertionRange.insertNode(cursorMaker);
+    if (editor.contains(position.node)) {
+        position = position.normalize();
+        let parentNode = position.node.parentNode;
+        if (position.offset == 0) {
+            parentNode.insertBefore(cursorMaker, position.node);
+        } else if (position.isAtEnd) {
+            // otherwise, insert after
+            parentNode.insertBefore(cursorMaker, position.node.nextSibling);
+        } else {
+            // This is for insertion in-between a text node
+            let insertionRange = editor.getDocument().createRange();
+            insertionRange.setStart(position.node, position.offset);
+            insertionRange.insertNode(cursorMaker);
+        }
     }
 }
 

@@ -602,7 +602,8 @@ export default class Editor {
     public getBlockTraverser(
         startFrom: ContentPosition = ContentPosition.SelectionStart
     ): ContentTraverser {
-        return new ContentTraverser(this.core.contentDiv, getFocusPosition(this.core), startFrom);
+        let position = getFocusPosition(this.core)
+        return position ? new ContentTraverser(this.core.contentDiv, position, startFrom): null;
     }
 
     /**
