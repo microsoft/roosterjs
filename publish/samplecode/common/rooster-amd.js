@@ -2016,7 +2016,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 function getFocusPosition(core) {
     var selection = core.document.defaultView.getSelection();
-    return selection && roosterjs_editor_dom_1.contains(core.contentDiv, selection.focusNode)
+    return selection && roosterjs_editor_dom_1.contains(core.contentDiv, selection.focusNode, true /*treatSameNodeAsContain*/)
         ? new roosterjs_editor_dom_1.Position(selection.focusNode, selection.focusOffset)
         : null;
 }
@@ -2757,7 +2757,8 @@ var Editor = /** @class */ (function () {
      */
     Editor.prototype.getBlockTraverser = function (startFrom) {
         if (startFrom === void 0) { startFrom = 2 /* SelectionStart */; }
-        return new roosterjs_editor_dom_1.ContentTraverser(this.core.contentDiv, getFocusPosition_1.default(this.core), startFrom);
+        var position = getFocusPosition_1.default(this.core);
+        return position ? new roosterjs_editor_dom_1.ContentTraverser(this.core.contentDiv, position, startFrom) : null;
     };
     /**
      * Get a text traverser to help get text before current focused position
@@ -2883,7 +2884,7 @@ function calcDefaultFormat(node, baseFormat) {
         fontFamily: baseFormat.fontFamily || computedStyle[0],
         fontSize: baseFormat.fontSize || computedStyle[1],
         textColor: baseFormat.textColor || computedStyle[2],
-        backgroundColor: baseFormat.backgroundColor || computedStyle[3],
+        backgroundColor: baseFormat.backgroundColor || '',
         bold: baseFormat.bold,
         italic: baseFormat.italic,
         underline: baseFormat.underline,
@@ -6055,7 +6056,7 @@ var ContentEdit = /** @class */ (function () {
             changeSource == "Paste" /* Paste */ &&
             this.autoLinkEnabled &&
             autoLinkFeatures_1.AutoLink1.shouldHandleEvent(event, this.editor, this.backspaceUndoEventSource)) {
-            autoLinkFeatures_1.AutoLink1.handleEvent(event, this.editor);
+            this.backspaceUndoEventSource = autoLinkFeatures_1.AutoLink1.handleEvent(event, this.editor);
         }
     };
     ContentEdit.prototype.addFeature = function (add, feature) {

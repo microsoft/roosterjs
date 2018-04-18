@@ -603,7 +603,7 @@ export default class Editor {
         startFrom: ContentPosition = ContentPosition.SelectionStart
     ): ContentTraverser {
         let position = getFocusPosition(this.core)
-        return position ? new ContentTraverser(this.core.contentDiv, position, startFrom): null;
+        return position ? new ContentTraverser(this.core.contentDiv, position, startFrom) : null;
     }
 
     /**
