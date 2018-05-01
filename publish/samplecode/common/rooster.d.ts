@@ -1095,11 +1095,11 @@ declare namespace roosterjs {
      * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
      * which matches the tag name, or null if no match found in editor.
      * @param editor The editor instance
-     * @param expectedTag The expected tag name. If null, return the element at cursor
+     * @param expectedTags The expected tag names. If null, return the element at cursor
      * @param startNode If specified, use this node as start node to search instead of current node
      * @returns The node at cursor or the nearest ancestor with the tag name is specified
      */
-    function getNodeAtCursor(editor: Editor, expectedTag?: string, startNode?: Node): Node;
+    function getNodeAtCursor(editor: Editor, expectedTags?: string | string[], startNode?: Node): Node;
 
     /**
      * @deprecated Use cacheGetNodeAtCursor instead
@@ -1112,10 +1112,10 @@ declare namespace roosterjs {
      * which matches the tag name, or null if no match found in editor.
      * @param editor The editor instance
      * @param event Event object to get cached object from
-     * @param expectedTag The expected tag name. If null, return the element at cursor
+     * @param expectedTags The expected tag names. If null, return the element at cursor
      * @returns The element at cursor or the nearest ancestor with the tag name is specified
      */
-    function cacheGetNodeAtCursor(editor: Editor, event: PluginEvent, expectedTag: string): Node;
+    function cacheGetNodeAtCursor(editor: Editor, event: PluginEvent, expectedTags: string | string[]): Node;
 
     /**
      * Query nodes intersected with current selection using a selector

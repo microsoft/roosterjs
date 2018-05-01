@@ -49,7 +49,7 @@ export default class TableResize implements EditorPlugin {
 
     private onMouseOver = (e: MouseEvent) => {
         let node = <HTMLElement>(e.srcElement || e.target);
-        if (this.pageX < 0 && node && node.tagName == 'TD' && node != this.td) {
+        if (this.pageX < 0 && node && (node.tagName == 'TD' || node.tagName == 'TH') && node != this.td) {
             this.td = <HTMLTableCellElement>node;
             this.calcAndShowHandle();
         }

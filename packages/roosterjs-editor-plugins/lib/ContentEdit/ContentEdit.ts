@@ -283,7 +283,7 @@ export default class ContentEdit implements EditorPlugin {
     }
 
     private cacheGetTd(event: PluginEvent): HTMLTableCellElement {
-        return cacheGetNodeAtCursor(this.editor, event, 'TD') as HTMLTableCellElement;
+        return cacheGetNodeAtCursor(this.editor, event, ['TD', 'TH']) as HTMLTableCellElement;
     }
 
     // Check if it is a blockquote event, if it is true, return the blockquote element where the cursor resides

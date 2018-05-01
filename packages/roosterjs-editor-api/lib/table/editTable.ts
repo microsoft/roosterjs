@@ -10,7 +10,7 @@ import { VTable } from 'roosterjs-editor-dom';
  * @param operation Table operation
  */
 export default function editTable(editor: Editor, operation: TableOperation) {
-    let td = getNodeAtCursor(editor, 'TD') as HTMLTableCellElement;
+    let td = getNodeAtCursor(editor, ['TD', 'TH']) as HTMLTableCellElement;
     if (td) {
         execFormatWithUndo(
             editor,

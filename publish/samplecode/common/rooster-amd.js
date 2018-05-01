@@ -704,11 +704,11 @@ var roosterjs_editor_dom_1 = __webpack_require__(0);
  * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
  * which matches the tag name, or null if no match found in editor.
  * @param editor The editor instance
- * @param expectedTag The expected tag name. If null, return the element at cursor
+ * @param expectedTags The expected tag names. If null, return the element at cursor
  * @param startNode If specified, use this node as start node to search instead of current node
  * @returns The node at cursor or the nearest ancestor with the tag name is specified
  */
-function getNodeAtCursor(editor, expectedTag, startNode) {
+function getNodeAtCursor(editor, expectedTags, startNode) {
     var node = startNode;
     if (!node && editor.hasFocus()) {
         var sel = editor.getSelection();
@@ -723,9 +723,16 @@ function getNodeAtCursor(editor, expectedTag, startNode) {
         }
     }
     node = node && node.nodeType == 3 /* Text */ ? node.parentNode : node;
-    if (expectedTag) {
+    if (expectedTags) {
+        if (expectedTags instanceof Array) {
+            expectedTags = expectedTags.map(function (tag) { return tag ? tag.toUpperCase() : ''; });
+        }
+        else {
+            expectedTags = [expectedTags.toUpperCase()];
+        }
         while (editor.contains(node)) {
-            if (roosterjs_editor_dom_1.getTagOfNode(node) == expectedTag.toUpperCase()) {
+            var tag = roosterjs_editor_dom_1.getTagOfNode(node);
+            if (tag && expectedTags.indexOf(tag) >= 0) {
                 return node;
             }
             node = node.parentNode;
@@ -740,12 +747,13 @@ exports.default = getNodeAtCursor;
  * which matches the tag name, or null if no match found in editor.
  * @param editor The editor instance
  * @param event Event object to get cached object from
- * @param expectedTag The expected tag name. If null, return the element at cursor
+ * @param expectedTags The expected tag names. If null, return the element at cursor
  * @returns The element at cursor or the nearest ancestor with the tag name is specified
  */
-function cacheGetNodeAtCursor(editor, event, expectedTag) {
-    return roosterjs_editor_core_1.cacheGetEventData(event, 'GET_NODE_AT_CURSOR_' + expectedTag, function () {
-        return getNodeAtCursor(editor, expectedTag);
+function cacheGetNodeAtCursor(editor, event, expectedTags) {
+    var tagNames = expectedTags instanceof Array ? expectedTags.join() : expectedTags;
+    return roosterjs_editor_core_1.cacheGetEventData(event, 'GET_NODE_AT_CURSOR_' + tagNames, function () {
+        return getNodeAtCursor(editor, expectedTags);
     });
 }
 exports.cacheGetNodeAtCursor = cacheGetNodeAtCursor;
@@ -3805,7 +3813,7 @@ var roosterjs_editor_dom_1 = __webpack_require__(0);
 function formatTable(editor, format, table) {
     var td = table
         ? table.rows[0].cells[0]
-        : getNodeAtCursor_1.default(editor, 'TD');
+        : getNodeAtCursor_1.default(editor, ['TD', 'TH']);
     if (td) {
         execFormatWithUndo_1.default(editor, function () {
             var vtable = new roosterjs_editor_dom_1.VTable(td);
@@ -6557,7 +6565,7 @@ var roosterjs_editor_dom_1 = __webpack_require__(0);
  * @param operation Table operation
  */
 function editTable(editor, operation) {
-    var td = getNodeAtCursor_1.default(editor, 'TD');
+    var td = getNodeAtCursor_1.default(editor, ['TD', 'TH']);
     if (td) {
         execFormatWithUndo_1.default(editor, function () {
             var vtable = new roosterjs_editor_dom_1.VTable(td);
@@ -7679,7 +7687,7 @@ var ContentEdit = /** @class */ (function () {
             !!this.cacheGetTd(event));
     };
     ContentEdit.prototype.cacheGetTd = function (event) {
-        return roosterjs_editor_api_1.cacheGetNodeAtCursor(this.editor, event, 'TD');
+        return roosterjs_editor_api_1.cacheGetNodeAtCursor(this.editor, event, ['TD', 'TH']);
     };
     // Check if it is a blockquote event, if it is true, return the blockquote element where the cursor resides
     // To qualify a blockquote event:
@@ -8740,7 +8748,7 @@ var TableResize = /** @class */ (function () {
         this.pageX = -1;
         this.onMouseOver = function (e) {
             var node = (e.srcElement || e.target);
-            if (_this.pageX < 0 && node && node.tagName == 'TD' && node != _this.td) {
+            if (_this.pageX < 0 && node && (node.tagName == 'TD' || node.tagName == 'TH') && node != _this.td) {
                 _this.td = node;
                 _this.calcAndShowHandle();
             }
