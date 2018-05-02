@@ -899,6 +899,7 @@ declare namespace roosterjs {
          */
         runAsync(callback: () => void): void;
         private createEventHandlers();
+        private stopPropagation;
         private onKeyPress;
         private selectEditorPoint(container, offset);
         private ensureInitialContent();

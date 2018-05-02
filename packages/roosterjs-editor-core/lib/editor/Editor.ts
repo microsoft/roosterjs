@@ -561,9 +561,10 @@ export default class Editor {
     //#region Private functions
     private createEventHandlers() {
         this.eventDisposers = [
+            attachDomEvent(this.core, 'input', null, this.stopPropagation),
             attachDomEvent(this.core, 'keypress', PluginEventType.KeyPress, this.onKeyPress),
-            attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown),
-            attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp),
+            attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown, this.stopPropagation),
+            attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp, this.stopPropagation),
             attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
             attachDomEvent(this.core, 'mouseup', PluginEventType.MouseUp),
             attachDomEvent(this.core, 'compositionstart', null, () => (this.inIME = true)),
@@ -586,13 +587,30 @@ export default class Editor {
         ];
     }
 
+    private stopPropagation = (event: KeyboardEvent) => {
+        if (
+            !event.ctrlKey &&
+            !event.altKey &&
+            !event.metaKey &&
+            (event.which == 32 || // Space
+            (event.which >= 65 && event.which <= 90) || // A-Z
+            (event.which >= 48 && event.which <= 57) || // 0-9
+            (event.which >= 96 && event.which <= 105) || // 0-9 on num pad
+            (event.which >= 186 && event.which <= 192) || // ';', '=', ',', '-', '.', '/', '`'
+                (event.which >= 219 && event.which <= 222))
+        ) {
+            // '[', '\', ']', '''
+            event.stopPropagation();
+        }
+    };
+
     // Check if user is typing right under the content div
     // When typing goes directly under content div, many things can go wrong
     // We fix it by wrapping it with a div and reposition cursor within the div
     // TODO: we only fix the case when selection is collapsed
     // When selection is not collapsed, i.e. users press ctrl+A, and then type
     // We don't have a good way to fix that for the moment
-    private onKeyPress = () => {
+    private onKeyPress = (event: KeyboardEvent) => {
         let selectionRange = getSelectionRange(this.core, true /*tryGetFromCache*/);
         let focusNode: Node;
         if (
@@ -635,6 +653,7 @@ export default class Editor {
                 this.selectEditorPoint(editorPoint.containerNode, editorPoint.offset);
             }
         }
+        this.stopPropagation(event);
     };
 
     private selectEditorPoint(container: Node, offset: number): boolean {

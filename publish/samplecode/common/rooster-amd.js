@@ -725,7 +725,7 @@ function getNodeAtCursor(editor, expectedTags, startNode) {
     node = node && node.nodeType == 3 /* Text */ ? node.parentNode : node;
     if (expectedTags) {
         if (expectedTags instanceof Array) {
-            expectedTags = expectedTags.map(function (tag) { return tag ? tag.toUpperCase() : ''; });
+            expectedTags = expectedTags.map(function (tag) { return (tag ? tag.toUpperCase() : ''); });
         }
         else {
             expectedTags = [expectedTags.toUpperCase()];
@@ -4221,13 +4221,27 @@ var Editor = /** @class */ (function () {
     function Editor(contentDiv, options) {
         if (options === void 0) { options = {}; }
         var _this = this;
+        this.stopPropagation = function (event) {
+            if (!event.ctrlKey &&
+                !event.altKey &&
+                !event.metaKey &&
+                (event.which == 32 || // Space
+                    (event.which >= 65 && event.which <= 90) || // A-Z
+                    (event.which >= 48 && event.which <= 57) || // 0-9
+                    (event.which >= 96 && event.which <= 105) || // 0-9 on num pad
+                    (event.which >= 186 && event.which <= 192) || // ';', '=', ',', '-', '.', '/', '`'
+                    (event.which >= 219 && event.which <= 222))) {
+                // '[', '\', ']', '''
+                event.stopPropagation();
+            }
+        };
         // Check if user is typing right under the content div
         // When typing goes directly under content div, many things can go wrong
         // We fix it by wrapping it with a div and reposition cursor within the div
         // TODO: we only fix the case when selection is collapsed
         // When selection is not collapsed, i.e. users press ctrl+A, and then type
         // We don't have a good way to fix that for the moment
-        this.onKeyPress = function () {
+        this.onKeyPress = function (event) {
             var selectionRange = getSelectionRange_1.default(_this.core, true /*tryGetFromCache*/);
             var focusNode;
             if (selectionRange &&
@@ -4263,6 +4277,7 @@ var Editor = /** @class */ (function () {
                     _this.selectEditorPoint(editorPoint.containerNode, editorPoint.offset);
                 }
             }
+            _this.stopPropagation(event);
         };
         // 1. Make sure all parameters are valid
         if (roosterjs_editor_dom_1.getTagOfNode(contentDiv) != 'DIV') {
@@ -4698,9 +4713,10 @@ var Editor = /** @class */ (function () {
     Editor.prototype.createEventHandlers = function () {
         var _this = this;
         this.eventDisposers = [
+            attachDomEvent_1.default(this.core, 'input', null, this.stopPropagation),
             attachDomEvent_1.default(this.core, 'keypress', 1 /* KeyPress */, this.onKeyPress),
-            attachDomEvent_1.default(this.core, 'keydown', 0 /* KeyDown */),
-            attachDomEvent_1.default(this.core, 'keyup', 2 /* KeyUp */),
+            attachDomEvent_1.default(this.core, 'keydown', 0 /* KeyDown */, this.stopPropagation),
+            attachDomEvent_1.default(this.core, 'keyup', 2 /* KeyUp */, this.stopPropagation),
             attachDomEvent_1.default(this.core, 'mousedown', 4 /* MouseDown */),
             attachDomEvent_1.default(this.core, 'mouseup', 5 /* MouseUp */),
             attachDomEvent_1.default(this.core, 'compositionstart', null, function () { return (_this.inIME = true); }),
@@ -8748,7 +8764,10 @@ var TableResize = /** @class */ (function () {
         this.pageX = -1;
         this.onMouseOver = function (e) {
             var node = (e.srcElement || e.target);
-            if (_this.pageX < 0 && node && (node.tagName == 'TD' || node.tagName == 'TH') && node != _this.td) {
+            if (_this.pageX < 0 &&
+                node &&
+                (node.tagName == 'TD' || node.tagName == 'TH') &&
+                node != _this.td) {
                 _this.td = node;
                 _this.calcAndShowHandle();
             }

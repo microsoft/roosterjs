@@ -33,12 +33,12 @@ export default function getNodeAtCursor(
     node = node && node.nodeType == NodeType.Text ? node.parentNode : node;
     if (expectedTags) {
         if (expectedTags instanceof Array) {
-            expectedTags = expectedTags.map(tag => tag ? tag.toUpperCase() : '');
+            expectedTags = expectedTags.map(tag => (tag ? tag.toUpperCase() : ''));
         } else {
             expectedTags = [expectedTags.toUpperCase()];
         }
         while (editor.contains(node)) {
-            let tag = getTagOfNode(node)
+            let tag = getTagOfNode(node);
             if (tag && expectedTags.indexOf(tag) >= 0) {
                 return node;
             }

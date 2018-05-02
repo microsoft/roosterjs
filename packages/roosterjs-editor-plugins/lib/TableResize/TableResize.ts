@@ -5,9 +5,7 @@ import { PluginEvent, PluginEventType, PluginDomEvent } from 'roosterjs-editor-t
 
 const TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
 const HANDLE_WIDTH = 6;
-const CONTAINER_HTML = `<div style="position: absolute; cursor: col-resize; width: ${
-    HANDLE_WIDTH
-}px; border: solid 0 #C6C6C6;"></div>`;
+const CONTAINER_HTML = `<div style="position: absolute; cursor: col-resize; width: ${HANDLE_WIDTH}px; border: solid 0 #C6C6C6;"></div>`;
 
 export default class TableResize implements EditorPlugin {
     private editor: Editor;
@@ -49,7 +47,12 @@ export default class TableResize implements EditorPlugin {
 
     private onMouseOver = (e: MouseEvent) => {
         let node = <HTMLElement>(e.srcElement || e.target);
-        if (this.pageX < 0 && node && (node.tagName == 'TD' || node.tagName == 'TH') && node != this.td) {
+        if (
+            this.pageX < 0 &&
+            node &&
+            (node.tagName == 'TD' || node.tagName == 'TH') &&
+            node != this.td
+        ) {
             this.td = <HTMLTableCellElement>node;
             this.calcAndShowHandle();
         }
