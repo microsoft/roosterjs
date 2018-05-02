@@ -1,4 +1,4 @@
-import UndoSnapshots from './UndoSnapshots';
+import UndoSnapshots, { UndoSnapshotsService } from './UndoSnapshots';
 import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import Editor from '../editor/Editor';
 import UndoService from '../editor/UndoService';
@@ -138,6 +138,13 @@ export default class Undo implements UndoService {
         this.hasNewContent = false;
     }
 
+    protected getSnapshotsManager(): UndoSnapshotsService {
+        if (!this.undoSnapshots) {
+            this.undoSnapshots = new UndoSnapshots(this.maxBufferSize);
+        }
+        return this.undoSnapshots;
+    }
+
     private restoreSnapshot(delta: number) {
         let snapshot = this.getSnapshotsManager().move(delta);
 
@@ -219,12 +226,6 @@ export default class Undo implements UndoService {
         this.hasNewContent = true;
     }
 
-    private getSnapshotsManager() {
-        if (!this.undoSnapshots) {
-            this.undoSnapshots = new UndoSnapshots(this.maxBufferSize);
-        }
-        return this.undoSnapshots;
-    }
 
     private onNativeEvent = () => {
         this.addUndoSnapshot();
