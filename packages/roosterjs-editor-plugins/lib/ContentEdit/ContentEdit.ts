@@ -210,12 +210,19 @@ export default class ContentEdit implements EditorPlugin {
                 this.editor.addUndoSnapshot();
                 this.editor.runWithoutAddingUndoSnapshot(() => {
                     // Remove the user input '*', '-' or '1.'
-                    let rangeToDelete = validateAndGetRangeForTextBeforeCursor(
-                        this.editor,
-                        textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
-                        true /*exactMatch*/,
-                        cursorData
-                    );
+                    let rangeToDelete =
+                        validateAndGetRangeForTextBeforeCursor(
+                            this.editor,
+                            textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
+                            true /*exactMatch*/,
+                            cursorData
+                        ) ||
+                        validateAndGetRangeForTextBeforeCursor(
+                            this.editor,
+                            textBeforeCursor + ' ', // Add the &nbsp; we just inputted
+                            true /*exactMatch*/,
+                            cursorData
+                        );
                     if (rangeToDelete) {
                         rangeToDelete.deleteContents();
                     }

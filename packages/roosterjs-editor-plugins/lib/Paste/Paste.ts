@@ -21,6 +21,7 @@ import { insertImage } from 'roosterjs-editor-api';
 import buildClipboardData from './buildClipboardData';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import textToHtml from './textToHtml';
+import getInheritableStyles from './getInheritableStyles';
 
 /**
  * Paste plugin, handles onPaste event and paste content into editor
@@ -31,14 +32,11 @@ export default class Paste implements EditorPlugin {
 
     /**
      * Create an instance of Paste
-     * @param useDirectPaste: This is a test parameter and may be removed in the future.
-     * When set to true, we retrieve HTML from clipboard directly rather than using a hidden pasting DIV,
-     * then filter out unsafe HTML tags and attributes. Although we removed some unsafe tags such as SCRIPT,
-     * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
-     * this parameter if you don't have other XSS detecting logic outside the edtior.
+     * @param deprecated Deprecated parameter only used for compatibility with old code
+     * @param htmlPropertyCallbacks A callback to help handle html sanitization
      */
     constructor(
-        private useDirectPaste?: boolean,
+        deprecated?: boolean,
         private htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback
     ) {}
 
@@ -65,26 +63,23 @@ export default class Paste implements EditorPlugin {
 
     private onPaste = (event: Event) => {
         this.editor.addUndoSnapshot();
-        buildClipboardData(
-            <ClipboardEvent>event,
-            this.editor,
-            clipboardData => {
-                if (!clipboardData.html && clipboardData.text) {
-                    clipboardData.html = textToHtml(clipboardData.text);
-                }
-                if (!clipboardData.isHtmlFromTempDiv) {
-                    clipboardData.html = sanitizeHtml(
-                        clipboardData.html,
-                        null /*additionalStyleNodes*/,
-                        false /*convertInlineCssOnly*/,
-                        this.htmlPropertyCallbacks,
-                        true /*preserveFragmentOnly*/
-                    );
-                }
-                this.pasteOriginal(clipboardData);
-            },
-            this.useDirectPaste
-        );
+        buildClipboardData(<ClipboardEvent>event, this.editor, clipboardData => {
+            if (!clipboardData.html && clipboardData.text) {
+                clipboardData.html = textToHtml(clipboardData.text);
+            }
+            let currentStyles = getInheritableStyles(this.editor);
+            if (!clipboardData.isHtmlFromTempDiv) {
+                clipboardData.html = sanitizeHtml(
+                    clipboardData.html,
+                    null /*additionalStyleNodes*/,
+                    false /*convertInlineCssOnly*/,
+                    this.htmlPropertyCallbacks,
+                    true /*preserveFragmentOnly*/,
+                    currentStyles
+                );
+            }
+            this.pasteOriginal(clipboardData);
+        });
     };
 
     /**

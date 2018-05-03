@@ -6,10 +6,13 @@ import updateSelection from './updateSelection';
 import {
     EditorSelection,
     changeElementTag,
+    contains,
     getFirstBlockElement,
     getLastBlockElement,
     getTagOfNode,
     isBlockElement,
+    isNodeEmpty,
+    unwrap,
     wrap,
 } from 'roosterjs-editor-dom';
 import { ContentPosition, InsertOption, NodeType } from 'roosterjs-editor-types';
@@ -164,14 +167,7 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
                 selectionRange.setEndAfter(endNode);
                 selectionRange.collapse(false /*toStart*/);
             } else {
-                if (getTagOfNode(endNode) == 'P') {
-                    // Insert into a P tag may cause issues when the inserted content contains any block element.
-                    // Change P tag to DIV to make sure it works well
-                    changeElementTag(endNode as HTMLElement, 'div', selectionRange);
-                }
-                if (isVoidHtmlElement(selectionRange.endContainer as HTMLElement)) {
-                    selectionRange.setEndBefore(selectionRange.endContainer);
-                }
+                preprocessNode(core, selectionRange, node, endNode);
             }
         }
 
@@ -185,4 +181,82 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
             updateSelection(core, originalSelectionRange);
         }
     }
+}
+
+function preprocessNode(core: EditorCore, range: Range, nodeToInsert: Node, currentNode: Node) {
+    let rootNodeToInsert = nodeToInsert;
+
+    if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
+        let rootNodes = (<Node[]>[].slice.call(rootNodeToInsert.childNodes)).filter(
+            n => getTagOfNode(n) != 'BR'
+        );
+        rootNodeToInsert = rootNodes.length == 1 ? rootNodes[0] : null;
+    }
+
+    let tag = getTagOfNode(rootNodeToInsert);
+
+    if ((tag == 'OL' || tag == 'UL') && getTagOfNode(rootNodeToInsert.firstChild) == 'LI') {
+        let shouldInsertListAsText =
+            !rootNodeToInsert.firstChild.nextSibling &&
+            getTagOfNode(rootNodeToInsert.nextSibling) != 'BR';
+
+        if (getTagOfNode(rootNodeToInsert.nextSibling) == 'BR' && rootNodeToInsert.parentNode) {
+            rootNodeToInsert.parentNode.removeChild(rootNodeToInsert.nextSibling);
+        }
+
+        if (shouldInsertListAsText) {
+            unwrap(rootNodeToInsert.firstChild);
+            unwrap(rootNodeToInsert);
+        } else {
+            let listNode = currentNode;
+            while (
+                getTagOfNode(listNode.parentNode) != tag &&
+                contains(core.contentDiv, listNode)
+            ) {
+                listNode = listNode.parentNode;
+            }
+
+            if (getTagOfNode(listNode.parentNode) == tag) {
+                if (isNodeEmpty(listNode) || isSelectionAtBeginningOf(range, listNode)) {
+                    range.setEndBefore(listNode);
+                } else {
+                    range.setEndAfter(listNode);
+                }
+                range.collapse(false /*toStart*/);
+                unwrap(rootNodeToInsert);
+            }
+        }
+    }
+
+    if (getTagOfNode(currentNode) == 'P') {
+        // Insert into a P tag may cause issues when the inserted content contains any block element.
+        // Change P tag to DIV to make sure it works well
+        changeElementTag(<HTMLElement>currentNode, 'div', range);
+    }
+
+    if (isVoidHtmlElement(range.endContainer as HTMLElement)) {
+        range.setEndBefore(range.endContainer);
+    }
+}
+
+function isSelectionAtBeginningOf(range: Range, node: Node) {
+    if (range) {
+        if (range.startOffset > 0 && range.startContainer.nodeType == NodeType.Element && range.startContainer.childNodes[range.startOffset] == node) {
+            return true;
+        } else if (range.startOffset == 0) {
+            let container = range.startContainer;
+            while (
+                container != node &&
+                contains(node, container) &&
+                (!container.previousSibling || isNodeEmpty(container.previousSibling))
+            ) {
+                container = container.parentNode;
+            }
+
+            if (container == node) {
+                return true;
+            }
+        }
+    }
+    return false;
 }

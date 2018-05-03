@@ -15,13 +15,11 @@ interface WindowForIE extends Window {
  * @param event The paste event
  * @param editor The editor
  * @param callback Callback function when data is ready
- * @param useDirectPaste Whether use direct HTML instead of using temp DIV
  */
 export default function buildClipboardData(
     event: ClipboardEvent,
     editor: Editor,
-    callback: (clipboardData: ClipboardData) => void,
-    useDirectPaste?: boolean
+    callback: (clipboardData: ClipboardData) => void
 ) {
     let dataTransfer =
         event.clipboardData || (<WindowForIE>editor.getDocument().defaultView).clipboardData;
@@ -35,7 +33,7 @@ export default function buildClipboardData(
         html: null,
     };
 
-    if (useDirectPaste && event.clipboardData && event.clipboardData.items) {
+    if (event.clipboardData && event.clipboardData.items) {
         directRetrieveHtml(event, html => {
             clipboardData.html = html;
             callback(clipboardData);
