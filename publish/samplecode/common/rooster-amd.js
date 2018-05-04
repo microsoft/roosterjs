@@ -1,5 +1,5 @@
 /*
-    VERSION: 6.9.5
+    VERSION: 6.9.6
 
     RoosterJS
     Copyright (c) Microsoft Corporation
