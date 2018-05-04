@@ -8,7 +8,7 @@ const ZERO_WIDTH_SPACE = '\u200b';
 export default function isNodeEmpty(node: Node, trim?: boolean) {
     let trimmer = trim ? (text: string) => text.trim() : (text: string) => text;
     if (node.nodeType == NodeType.Text) {
-        return trimmer((node as Text).data) != '';
+        return trimmer((node as Text).data) == '';
     } else if (node.nodeType == NodeType.Element) {
         let element = node as Element;
         let textContent = trimmer(element.textContent);

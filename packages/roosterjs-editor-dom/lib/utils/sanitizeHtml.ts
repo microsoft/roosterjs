@@ -9,7 +9,18 @@ const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
 const LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
 const LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
 
+/**
+ * Callback function set for sanitizeHtml().
+ * sanitizeHtml() will check if there is a callback function for a given property name,
+ * it will call this function to decide what value to set for this property.
+ * Return null will cause this property be deleted, otherwise return the value of the property
+ */
 export type SanitizeHtmlPropertyCallback = { [name: string]: (value: string) => string };
+
+/**
+ * A map from CSS style name to its value
+ */
+export type StyleMap = { [name: string]: string };
 
 /**
  * Sanitize HTML string
@@ -28,7 +39,8 @@ export default function sanitizeHtml(
     additionalStyleNodes?: HTMLStyleElement[],
     convertInlineCssOnly?: boolean,
     propertyCallbacks?: SanitizeHtmlPropertyCallback,
-    preserveFragmentOnly?: boolean
+    preserveFragmentOnly?: boolean,
+    currentStyle?: StyleMap
 ): string {
     let parser = new DOMParser();
     let matches = HTML_REGEX.exec(html);
@@ -52,240 +64,33 @@ export default function sanitizeHtml(
     }
 
     // 2. Convert global CSS into inline CSS
-    applyInlineStyle(doc, additionalStyleNodes);
+    convertInlineCss(doc, additionalStyleNodes);
 
     // 3, 4: Remove dangerous HTML tags and attributes, remove useless CSS properties
     if (!convertInlineCssOnly) {
         let callbackPropertyNames = (propertyCallbacks ? Object.keys(propertyCallbacks) : []).map(
             name => name.toLowerCase()
         );
-        removeUnusedCssAndDangerousContent(doc.body, callbackPropertyNames, propertyCallbacks);
+        removeUnusedCssAndDangerousContent(
+            doc.body,
+            callbackPropertyNames,
+            propertyCallbacks,
+            currentStyle || {}
+        );
     }
 
     return doc.body.innerHTML;
 }
 
-// Inheritable CSS properties
-// Ref: https://www.w3.org/TR/CSS21/propidx.html
-const INHERITABLE_PROPERTOES = [
-    'azimuth',
-    'border-collapse',
-    'border-spacing',
-    'caption-side',
-    'color',
-    'cursor',
-    'direction',
-    'elevation',
-    'empty-cells',
-    'font-family',
-    'font-size',
-    'font-style',
-    'font-variant',
-    'font-weight',
-    'font',
-    'letter-spacing',
-    'line-height',
-    'list-style-image',
-    'list-style-position',
-    'list-style-type',
-    'list-style',
-    'orphans',
-    'pitch-range',
-    'pitch',
-    'quotes',
-    'richness',
-    'speak-header',
-    'speak-numeral',
-    'speak-punctuation',
-    'speak',
-    'speech-rate',
-    'stress',
-    'text-align',
-    'text-indent',
-    'text-transform',
-    'visibility',
-    'voice-family',
-    'volume',
-    'white-space',
-    'widows',
-    'word-spacing',
-];
+const ALLOWED_HTML_TAGS = 'BODY,H1,H2,H3,H4,H5,H6,FORM,P,BR,NOBR,HR,ACRONYM,ABBR,ADDRESS,B,BDI,BDO,BIG,BLOCKQUOTE,CENTER,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,WBR,XMP,INPUT,TEXTAREA,BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,IMG,MAP,AREA,CANVAS,FIGCAPTION,FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,TABLE,CAPTION,TH,TR,TD,THEAD,TBODY,TFOOT,COL,COLGROUP,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'.split(
+    ','
+);
+const ALLOWED_HTML_ATTRIBUTES = 'accept,align,alt,checked,cite,cols,colspan,contextmenu,coords,datetime,default,dir,dirname,disabled,download,headers,height,hidden,high,href,hreflang,ismap,kind,label,lang,list,low,max,maxlength,media,min,multiple,open,optimum,pattern,placeholder,readonly,rel,required,reversed,rows,rowspan,scope,selected,shape,size,sizes,span,spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,type,usemap,value,width,wrap'.split(
+    ','
+);
+const DROPPED_STYLE = ['white-space'];
 
-const ALLOWED_HTML_TAGS = [
-    'BODY',
-    'H1',
-    'H2',
-    'H3',
-    'H4',
-    'H5',
-    'H6',
-    'FORM',
-    'P',
-    'BR',
-    'NOBR',
-    'HR',
-    'ACRONYM',
-    'ABBR',
-    'ADDRESS',
-    'B',
-    'BDI',
-    'BDO',
-    'BIG',
-    'BLOCKQUOTE',
-    'CENTER',
-    'CITE',
-    'CODE',
-    'DEL',
-    'DFN',
-    'EM',
-    'FONT',
-    'I',
-    'INS',
-    'KBD',
-    'MARK',
-    'METER',
-    'PRE',
-    'PROGRESS',
-    'Q',
-    'RP',
-    'RT',
-    'RUBY',
-    'S',
-    'SAMP',
-    'SMALL',
-    'STRIKE',
-    'STRONG',
-    'SUB',
-    'SUP',
-    'TEMPLATE',
-    'TIME',
-    'TT',
-    'U',
-    'VAR',
-    'WBR',
-    'XMP',
-    'INPUT',
-    'TEXTAREA',
-    'BUTTON',
-    'SELECT',
-    'OPTGROUP',
-    'OPTION',
-    'LABEL',
-    'FIELDSET',
-    'LEGEND',
-    'DATALIST',
-    'OUTPUT',
-    'IMG',
-    'MAP',
-    'AREA',
-    'CANVAS',
-    'FIGCAPTION',
-    'FIGURE',
-    'PICTURE',
-    'A',
-    'NAV',
-    'UL',
-    'OL',
-    'LI',
-    'DIR',
-    'UL',
-    'DL',
-    'DT',
-    'DD',
-    'MENU',
-    'MENUITEM',
-    'TABLE',
-    'CAPTION',
-    'TH',
-    'TR',
-    'TD',
-    'THEAD',
-    'TBODY',
-    'TFOOT',
-    'COL',
-    'COLGROUP',
-    'DIV',
-    'SPAN',
-    'HEADER',
-    'FOOTER',
-    'MAIN',
-    'SECTION',
-    'ARTICLE',
-    'ASIDE',
-    'DETAILS',
-    'DIALOG',
-    'SUMMARY',
-    'DATA',
-];
-
-const ALLOWED_HTML_ATTRIBUTES = [
-    'accept',
-    'align',
-    'alt',
-    'checked',
-    'cite',
-    'cols',
-    'colspan',
-    'contextmenu',
-    'coords',
-    'datetime',
-    'default',
-    'dir',
-    'dirname',
-    'disabled',
-    'download',
-    'headers',
-    'height',
-    'hidden',
-    'high',
-    'href',
-    'hreflang',
-    'ismap',
-    'kind',
-    'label',
-    'lang',
-    'list',
-    'low',
-    'max',
-    'maxlength',
-    'media',
-    'min',
-    'multiple',
-    'open',
-    'optimum',
-    'pattern',
-    'placeholder',
-    'readonly',
-    'rel',
-    'required',
-    'reversed',
-    'rows',
-    'rowspan',
-    'scope',
-    'selected',
-    'shape',
-    'size',
-    'sizes',
-    'span',
-    'spellcheck',
-    'src',
-    'srclang',
-    'srcset',
-    'start',
-    'step',
-    'style',
-    'tabindex',
-    'target',
-    'title',
-    'translate',
-    'type',
-    'usemap',
-    'value',
-    'width',
-    'wrap',
-];
-
-function applyInlineStyle(doc: Document, additionalStyleNodes: HTMLStyleElement[]) {
+function convertInlineCss(doc: Document, additionalStyleNodes: HTMLStyleElement[]) {
     let styleNodes = toArray(doc.querySelectorAll('style'));
     let styleSheets = (additionalStyleNodes || [])
         .reverse()
@@ -316,13 +121,29 @@ function applyInlineStyle(doc: Document, additionalStyleNodes: HTMLStyleElement[
     }
 }
 
+type ObjectForAssign<T> = { [key: string]: T };
+
+function nativeAssign<T>(source: ObjectForAssign<T>): ObjectForAssign<T> {
+    return Object.assign({}, source);
+}
+
+function customAssign<T>(source: ObjectForAssign<T>): ObjectForAssign<T> {
+    let result: ObjectForAssign<T>;
+    for (let key of Object.keys(source)) {
+        result[key] = source[key];
+    }
+    return result;
+}
+
+const assign = Object.assign ? nativeAssign : customAssign;
+
 function removeUnusedCssAndDangerousContent(
     node: Node,
     callbackPropertyNames: string[],
     propertyCallbacks: SanitizeHtmlPropertyCallback,
-    currentStyle: { [name: string]: string } = {}
+    currentStyle: StyleMap
 ) {
-    let thisStyle = Object.assign ? Object.assign({}, currentStyle) : {};
+    let thisStyle = assign(currentStyle);
     let nodeType = node.nodeType;
     let tag = getTagOfNode(node) || '';
     let isElement = nodeType == NodeType.Element;
@@ -334,6 +155,9 @@ function removeUnusedCssAndDangerousContent(
         (!isElement && !isText)
     ) {
         node.parentNode.removeChild(node);
+    }
+    if (isText && currentStyle['white-space'] == 'pre') {
+        node.nodeValue = node.nodeValue.replace(/\s\s/g, ' \u00A0');
     } else if (nodeType == NodeType.Element) {
         let element = <HTMLElement>node;
         if (element.hasAttribute('style')) {
@@ -356,7 +180,8 @@ function removeUnusedCssAndDangerousContent(
     }
 }
 
-function removeUnusedCss(element: HTMLElement, thisStyle: { [name: string]: string }) {
+function removeUnusedCss(element: HTMLElement, thisStyle: StyleMap) {
+    let tag = getTagOfNode(element);
     let source = element
         .getAttribute('style')
         .split(';')
@@ -366,15 +191,16 @@ function removeUnusedCss(element: HTMLElement, thisStyle: { [name: string]: stri
         if (pair.length == 2) {
             let name = pair[0].trim().toLowerCase();
             let value = pair[1].trim().toLowerCase();
-            let isInheritable = INHERITABLE_PROPERTOES.indexOf(name) >= 0;
+            let isInheritable = thisStyle[name] != undefined;
             let keep =
                 value != 'inherit' &&
-                (value != thisStyle[name] || !isInheritable) &&
-                !isDangerousCss(name, value);
+                ((isInheritable && value != thisStyle[name]) ||
+                    (!isInheritable && value != 'initial' && value != 'normal')) &&
+                !shouldRemove(tag, name, value);
             if (keep && isInheritable) {
                 thisStyle[name] = value;
             }
-            return keep;
+            return keep && DROPPED_STYLE.indexOf(name) < 0;
         } else {
             return false;
         }
@@ -388,12 +214,16 @@ function removeUnusedCss(element: HTMLElement, thisStyle: { [name: string]: stri
     }
 }
 
-function isDangerousCss(name: string, value: string) {
+function shouldRemove(tag: string, name: string, value: string) {
     if (name == 'position') {
         return true;
     }
 
     if (value.indexOf('expression') >= 0) {
+        return true;
+    }
+
+    if (tag == 'LI' && name == 'width') {
         return true;
     }
 

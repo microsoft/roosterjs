@@ -1,5 +1,5 @@
 /*
-    VERSION: 6.9.5
+    VERSION: 6.9.6
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -157,6 +157,7 @@ var fromHtml_1 = __webpack_require__(23);
 exports.fromHtml = fromHtml_1.default;
 var getComputedStyle_1 = __webpack_require__(17);
 exports.getComputedStyle = getComputedStyle_1.default;
+exports.getComputedStyles = getComputedStyle_1.getComputedStyles;
 var getTagOfNode_1 = __webpack_require__(8);
 exports.getTagOfNode = getTagOfNode_1.default;
 var isBlockElement_1 = __webpack_require__(35);
@@ -1605,18 +1606,31 @@ exports.default = contains;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 function getComputedStyle(node, styleName) {
-    var styleValue = '';
+    return getComputedStyles(node, styleName)[0];
+}
+exports.default = getComputedStyle;
+/**
+ * Get computed styles of a node
+ * @param node The node to get computed styles from
+ * @param styleNames Names of style to get, can be a single name or an array.
+ * Default value is font-family, font-size, color, background-color
+ * @returns An array of the computed styles
+ */
+function getComputedStyles(node, styleNames) {
+    if (styleNames === void 0) { styleNames = ['font-family', 'font-size', 'color', 'background-color']; }
+    var result = [];
+    styleNames = styleNames instanceof Array ? styleNames : [styleNames];
     if (node && node.nodeType == 1 /* Element */) {
         var win = node.ownerDocument.defaultView || window;
         var styles = win.getComputedStyle(node);
-        styleValue = styles && styles.getPropertyValue(styleName);
-        if (styleValue) {
-            styleValue = styleValue.toLowerCase();
+        for (var _i = 0, styleNames_1 = styleNames; _i < styleNames_1.length; _i++) {
+            var style = styleNames_1[_i];
+            result.push(((styles && styles.getPropertyValue(style)) || '').toLowerCase());
         }
     }
-    return styleValue;
+    return result;
 }
-exports.default = getComputedStyle;
+exports.getComputedStyles = getComputedStyles;
 
 
 /***/ }),
@@ -2412,9 +2426,9 @@ var Paste_1 = __webpack_require__(110);
 exports.Paste = Paste_1.default;
 var ContentEditFeatures_1 = __webpack_require__(55);
 exports.getDefaultContentEditFeatures = ContentEditFeatures_1.getDefaultContentEditFeatures;
-var Watermark_1 = __webpack_require__(117);
+var Watermark_1 = __webpack_require__(118);
 exports.Watermark = Watermark_1.default;
-var TableResize_1 = __webpack_require__(118);
+var TableResize_1 = __webpack_require__(119);
 exports.TableResize = TableResize_1.default;
 
 
@@ -3005,7 +3019,7 @@ var LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
  * @param propertyCallbacks A callback function map to handle HTML properties
  * @param preserveFragmentOnly If set to true, only preserve the html content between <!--StartFragment--> and <!--Endfragment-->
  */
-function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, propertyCallbacks, preserveFragmentOnly) {
+function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, propertyCallbacks, preserveFragmentOnly, currentStyle) {
     var parser = new DOMParser();
     var matches = HTML_REGEX.exec(html);
     html = matches ? matches[0] : html;
@@ -3023,233 +3037,19 @@ function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, property
         doc.body.innerHTML = html;
     }
     // 2. Convert global CSS into inline CSS
-    applyInlineStyle(doc, additionalStyleNodes);
+    convertInlineCss(doc, additionalStyleNodes);
     // 3, 4: Remove dangerous HTML tags and attributes, remove useless CSS properties
     if (!convertInlineCssOnly) {
         var callbackPropertyNames = (propertyCallbacks ? Object.keys(propertyCallbacks) : []).map(function (name) { return name.toLowerCase(); });
-        removeUnusedCssAndDangerousContent(doc.body, callbackPropertyNames, propertyCallbacks);
+        removeUnusedCssAndDangerousContent(doc.body, callbackPropertyNames, propertyCallbacks, currentStyle || {});
     }
     return doc.body.innerHTML;
 }
 exports.default = sanitizeHtml;
-// Inheritable CSS properties
-// Ref: https://www.w3.org/TR/CSS21/propidx.html
-var INHERITABLE_PROPERTOES = [
-    'azimuth',
-    'border-collapse',
-    'border-spacing',
-    'caption-side',
-    'color',
-    'cursor',
-    'direction',
-    'elevation',
-    'empty-cells',
-    'font-family',
-    'font-size',
-    'font-style',
-    'font-variant',
-    'font-weight',
-    'font',
-    'letter-spacing',
-    'line-height',
-    'list-style-image',
-    'list-style-position',
-    'list-style-type',
-    'list-style',
-    'orphans',
-    'pitch-range',
-    'pitch',
-    'quotes',
-    'richness',
-    'speak-header',
-    'speak-numeral',
-    'speak-punctuation',
-    'speak',
-    'speech-rate',
-    'stress',
-    'text-align',
-    'text-indent',
-    'text-transform',
-    'visibility',
-    'voice-family',
-    'volume',
-    'white-space',
-    'widows',
-    'word-spacing',
-];
-var ALLOWED_HTML_TAGS = [
-    'BODY',
-    'H1',
-    'H2',
-    'H3',
-    'H4',
-    'H5',
-    'H6',
-    'FORM',
-    'P',
-    'BR',
-    'NOBR',
-    'HR',
-    'ACRONYM',
-    'ABBR',
-    'ADDRESS',
-    'B',
-    'BDI',
-    'BDO',
-    'BIG',
-    'BLOCKQUOTE',
-    'CENTER',
-    'CITE',
-    'CODE',
-    'DEL',
-    'DFN',
-    'EM',
-    'FONT',
-    'I',
-    'INS',
-    'KBD',
-    'MARK',
-    'METER',
-    'PRE',
-    'PROGRESS',
-    'Q',
-    'RP',
-    'RT',
-    'RUBY',
-    'S',
-    'SAMP',
-    'SMALL',
-    'STRIKE',
-    'STRONG',
-    'SUB',
-    'SUP',
-    'TEMPLATE',
-    'TIME',
-    'TT',
-    'U',
-    'VAR',
-    'WBR',
-    'XMP',
-    'INPUT',
-    'TEXTAREA',
-    'BUTTON',
-    'SELECT',
-    'OPTGROUP',
-    'OPTION',
-    'LABEL',
-    'FIELDSET',
-    'LEGEND',
-    'DATALIST',
-    'OUTPUT',
-    'IMG',
-    'MAP',
-    'AREA',
-    'CANVAS',
-    'FIGCAPTION',
-    'FIGURE',
-    'PICTURE',
-    'A',
-    'NAV',
-    'UL',
-    'OL',
-    'LI',
-    'DIR',
-    'UL',
-    'DL',
-    'DT',
-    'DD',
-    'MENU',
-    'MENUITEM',
-    'TABLE',
-    'CAPTION',
-    'TH',
-    'TR',
-    'TD',
-    'THEAD',
-    'TBODY',
-    'TFOOT',
-    'COL',
-    'COLGROUP',
-    'DIV',
-    'SPAN',
-    'HEADER',
-    'FOOTER',
-    'MAIN',
-    'SECTION',
-    'ARTICLE',
-    'ASIDE',
-    'DETAILS',
-    'DIALOG',
-    'SUMMARY',
-    'DATA',
-];
-var ALLOWED_HTML_ATTRIBUTES = [
-    'accept',
-    'align',
-    'alt',
-    'checked',
-    'cite',
-    'cols',
-    'colspan',
-    'contextmenu',
-    'coords',
-    'datetime',
-    'default',
-    'dir',
-    'dirname',
-    'disabled',
-    'download',
-    'headers',
-    'height',
-    'hidden',
-    'high',
-    'href',
-    'hreflang',
-    'ismap',
-    'kind',
-    'label',
-    'lang',
-    'list',
-    'low',
-    'max',
-    'maxlength',
-    'media',
-    'min',
-    'multiple',
-    'open',
-    'optimum',
-    'pattern',
-    'placeholder',
-    'readonly',
-    'rel',
-    'required',
-    'reversed',
-    'rows',
-    'rowspan',
-    'scope',
-    'selected',
-    'shape',
-    'size',
-    'sizes',
-    'span',
-    'spellcheck',
-    'src',
-    'srclang',
-    'srcset',
-    'start',
-    'step',
-    'style',
-    'tabindex',
-    'target',
-    'title',
-    'translate',
-    'type',
-    'usemap',
-    'value',
-    'width',
-    'wrap',
-];
-function applyInlineStyle(doc, additionalStyleNodes) {
+var ALLOWED_HTML_TAGS = 'BODY,H1,H2,H3,H4,H5,H6,FORM,P,BR,NOBR,HR,ACRONYM,ABBR,ADDRESS,B,BDI,BDO,BIG,BLOCKQUOTE,CENTER,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,WBR,XMP,INPUT,TEXTAREA,BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,IMG,MAP,AREA,CANVAS,FIGCAPTION,FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,TABLE,CAPTION,TH,TR,TD,THEAD,TBODY,TFOOT,COL,COLGROUP,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'.split(',');
+var ALLOWED_HTML_ATTRIBUTES = 'accept,align,alt,checked,cite,cols,colspan,contextmenu,coords,datetime,default,dir,dirname,disabled,download,headers,height,hidden,high,href,hreflang,ismap,kind,label,lang,list,low,max,maxlength,media,min,multiple,open,optimum,pattern,placeholder,readonly,rel,required,reversed,rows,rowspan,scope,selected,shape,size,sizes,span,spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,type,usemap,value,width,wrap'.split(',');
+var DROPPED_STYLE = ['white-space'];
+function convertInlineCss(doc, additionalStyleNodes) {
     var styleNodes = toArray(doc.querySelectorAll('style'));
     var styleSheets = (additionalStyleNodes || [])
         .reverse()
@@ -3284,9 +3084,20 @@ function applyInlineStyle(doc, additionalStyleNodes) {
         }
     }
 }
+function nativeAssign(source) {
+    return Object.assign({}, source);
+}
+function customAssign(source) {
+    var result;
+    for (var _i = 0, _a = Object.keys(source); _i < _a.length; _i++) {
+        var key = _a[_i];
+        result[key] = source[key];
+    }
+    return result;
+}
+var assign = Object.assign ? nativeAssign : customAssign;
 function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propertyCallbacks, currentStyle) {
-    if (currentStyle === void 0) { currentStyle = {}; }
-    var thisStyle = Object.assign ? Object.assign({}, currentStyle) : {};
+    var thisStyle = assign(currentStyle);
     var nodeType = node.nodeType;
     var tag = getTagOfNode_1.default(node) || '';
     var isElement = nodeType == 1 /* Element */;
@@ -3295,6 +3106,9 @@ function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propert
         (isText && /^[\r\n]*$/g.test(node.nodeValue)) ||
         (!isElement && !isText)) {
         node.parentNode.removeChild(node);
+    }
+    if (isText && currentStyle['white-space'] == 'pre') {
+        node.nodeValue = node.nodeValue.replace(/\s\s/g, ' \u00A0');
     }
     else if (nodeType == 1 /* Element */) {
         var element = node;
@@ -3311,6 +3125,7 @@ function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propert
     }
 }
 function removeUnusedCss(element, thisStyle) {
+    var tag = getTagOfNode_1.default(element);
     var source = element
         .getAttribute('style')
         .split(';')
@@ -3320,14 +3135,15 @@ function removeUnusedCss(element, thisStyle) {
         if (pair.length == 2) {
             var name_1 = pair[0].trim().toLowerCase();
             var value = pair[1].trim().toLowerCase();
-            var isInheritable = INHERITABLE_PROPERTOES.indexOf(name_1) >= 0;
+            var isInheritable = thisStyle[name_1] != undefined;
             var keep = value != 'inherit' &&
-                (value != thisStyle[name_1] || !isInheritable) &&
-                !isDangerousCss(name_1, value);
+                ((isInheritable && value != thisStyle[name_1]) ||
+                    (!isInheritable && value != 'initial' && value != 'normal')) &&
+                !shouldRemove(tag, name_1, value);
             if (keep && isInheritable) {
                 thisStyle[name_1] = value;
             }
-            return keep;
+            return keep && DROPPED_STYLE.indexOf(name_1) < 0;
         }
         else {
             return false;
@@ -3342,11 +3158,14 @@ function removeUnusedCss(element, thisStyle) {
         }
     }
 }
-function isDangerousCss(name, value) {
+function shouldRemove(tag, name, value) {
     if (name == 'position') {
         return true;
     }
     if (value.indexOf('expression') >= 0) {
+        return true;
+    }
+    if (tag == 'LI' && name == 'width') {
         return true;
     }
     return false;
@@ -4069,12 +3888,12 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var createEditor_1 = __webpack_require__(59);
 exports.createEditor = createEditor_1.default;
-__export(__webpack_require__(119));
+__export(__webpack_require__(120));
 __export(__webpack_require__(0));
 __export(__webpack_require__(2));
 __export(__webpack_require__(4));
 __export(__webpack_require__(30));
-__export(__webpack_require__(120));
+__export(__webpack_require__(121));
 
 
 /***/ }),
@@ -5349,7 +5168,7 @@ var ZERO_WIDTH_SPACE = '\u200b';
 function isNodeEmpty(node, trim) {
     var trimmer = trim ? function (text) { return text.trim(); } : function (text) { return text; };
     if (node.nodeType == 3 /* Text */) {
-        return trimmer(node.data) != '';
+        return trimmer(node.data) == '';
     }
     else if (node.nodeType == 1 /* Element */) {
         var element = node;
@@ -6049,14 +5868,7 @@ function insertNodeAtSelection(core, node, option) {
                 selectionRange.collapse(false /*toStart*/);
             }
             else {
-                if (roosterjs_editor_dom_1.getTagOfNode(endNode) == 'P') {
-                    // Insert into a P tag may cause issues when the inserted content contains any block element.
-                    // Change P tag to DIV to make sure it works well
-                    roosterjs_editor_dom_1.changeElementTag(endNode, 'div', selectionRange);
-                }
-                if (isVoidHtmlElement_1.default(selectionRange.endContainer)) {
-                    selectionRange.setEndBefore(selectionRange.endContainer);
-                }
+                preprocessNode(core, selectionRange, node, endNode);
             }
         }
         var nodeForCursor = node.nodeType == 11 /* DocumentFragment */ ? node.lastChild : node;
@@ -6070,6 +5882,69 @@ function insertNodeAtSelection(core, node, option) {
             updateSelection_1.default(core, originalSelectionRange);
         }
     }
+}
+function preprocessNode(core, range, nodeToInsert, currentNode) {
+    var rootNodeToInsert = nodeToInsert;
+    if (rootNodeToInsert.nodeType == 11 /* DocumentFragment */) {
+        var rootNodes = [].slice.call(rootNodeToInsert.childNodes).filter(function (n) { return roosterjs_editor_dom_1.getTagOfNode(n) != 'BR'; });
+        rootNodeToInsert = rootNodes.length == 1 ? rootNodes[0] : null;
+    }
+    var tag = roosterjs_editor_dom_1.getTagOfNode(rootNodeToInsert);
+    if ((tag == 'OL' || tag == 'UL') && roosterjs_editor_dom_1.getTagOfNode(rootNodeToInsert.firstChild) == 'LI') {
+        var shouldInsertListAsText = !rootNodeToInsert.firstChild.nextSibling &&
+            roosterjs_editor_dom_1.getTagOfNode(rootNodeToInsert.nextSibling) != 'BR';
+        if (roosterjs_editor_dom_1.getTagOfNode(rootNodeToInsert.nextSibling) == 'BR' && rootNodeToInsert.parentNode) {
+            rootNodeToInsert.parentNode.removeChild(rootNodeToInsert.nextSibling);
+        }
+        if (shouldInsertListAsText) {
+            roosterjs_editor_dom_1.unwrap(rootNodeToInsert.firstChild);
+            roosterjs_editor_dom_1.unwrap(rootNodeToInsert);
+        }
+        else {
+            var listNode = currentNode;
+            while (roosterjs_editor_dom_1.getTagOfNode(listNode.parentNode) != tag &&
+                roosterjs_editor_dom_1.contains(core.contentDiv, listNode)) {
+                listNode = listNode.parentNode;
+            }
+            if (roosterjs_editor_dom_1.getTagOfNode(listNode.parentNode) == tag) {
+                if (roosterjs_editor_dom_1.isNodeEmpty(listNode) || isSelectionAtBeginningOf(range, listNode)) {
+                    range.setEndBefore(listNode);
+                }
+                else {
+                    range.setEndAfter(listNode);
+                }
+                range.collapse(false /*toStart*/);
+                roosterjs_editor_dom_1.unwrap(rootNodeToInsert);
+            }
+        }
+    }
+    if (roosterjs_editor_dom_1.getTagOfNode(currentNode) == 'P') {
+        // Insert into a P tag may cause issues when the inserted content contains any block element.
+        // Change P tag to DIV to make sure it works well
+        roosterjs_editor_dom_1.changeElementTag(currentNode, 'div', range);
+    }
+    if (isVoidHtmlElement_1.default(range.endContainer)) {
+        range.setEndBefore(range.endContainer);
+    }
+}
+function isSelectionAtBeginningOf(range, node) {
+    if (range) {
+        if (range.startOffset > 0 && range.startContainer.nodeType == 1 /* Element */ && range.startContainer.childNodes[range.startOffset] == node) {
+            return true;
+        }
+        else if (range.startOffset == 0) {
+            var container = range.startContainer;
+            while (container != node &&
+                roosterjs_editor_dom_1.contains(node, container) &&
+                (!container.previousSibling || roosterjs_editor_dom_1.isNodeEmpty(container.previousSibling))) {
+                container = container.parentNode;
+            }
+            if (container == node) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 
@@ -7650,7 +7525,9 @@ var ContentEdit = /** @class */ (function () {
                 _this.editor.runWithoutAddingUndoSnapshot(function () {
                     // Remove the user input '*', '-' or '1.'
                     var rangeToDelete = roosterjs_editor_api_1.validateAndGetRangeForTextBeforeCursor(_this.editor, textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
-                    true /*exactMatch*/, cursorData);
+                    true /*exactMatch*/, cursorData) ||
+                        roosterjs_editor_api_1.validateAndGetRangeForTextBeforeCursor(_this.editor, textBeforeCursor + ' ', // Add the &nbsp; we just inputted
+                        true /*exactMatch*/, cursorData);
                     if (rangeToDelete) {
                         rangeToDelete.deleteContents();
                     }
@@ -7784,21 +7661,18 @@ var roosterjs_editor_api_1 = __webpack_require__(4);
 var buildClipboardData_1 = __webpack_require__(111);
 var convertPastedContentFromWord_1 = __webpack_require__(112);
 var textToHtml_1 = __webpack_require__(116);
+var getInheritableStyles_1 = __webpack_require__(117);
 /**
  * Paste plugin, handles onPaste event and paste content into editor
  */
 var Paste = /** @class */ (function () {
     /**
      * Create an instance of Paste
-     * @param useDirectPaste: This is a test parameter and may be removed in the future.
-     * When set to true, we retrieve HTML from clipboard directly rather than using a hidden pasting DIV,
-     * then filter out unsafe HTML tags and attributes. Although we removed some unsafe tags such as SCRIPT,
-     * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
-     * this parameter if you don't have other XSS detecting logic outside the edtior.
+     * @param deprecated Deprecated parameter only used for compatibility with old code
+     * @param htmlPropertyCallbacks A callback to help handle html sanitization
      */
-    function Paste(useDirectPaste, htmlPropertyCallbacks) {
+    function Paste(deprecated, htmlPropertyCallbacks) {
         var _this = this;
-        this.useDirectPaste = useDirectPaste;
         this.htmlPropertyCallbacks = htmlPropertyCallbacks;
         this.onPaste = function (event) {
             _this.editor.addUndoSnapshot();
@@ -7806,11 +7680,12 @@ var Paste = /** @class */ (function () {
                 if (!clipboardData.html && clipboardData.text) {
                     clipboardData.html = textToHtml_1.default(clipboardData.text);
                 }
+                var currentStyles = getInheritableStyles_1.default(_this.editor);
                 if (!clipboardData.isHtmlFromTempDiv) {
-                    clipboardData.html = roosterjs_editor_dom_1.sanitizeHtml(clipboardData.html, null /*additionalStyleNodes*/, false /*convertInlineCssOnly*/, _this.htmlPropertyCallbacks, true /*preserveFragmentOnly*/);
+                    clipboardData.html = roosterjs_editor_dom_1.sanitizeHtml(clipboardData.html, null /*additionalStyleNodes*/, false /*convertInlineCssOnly*/, _this.htmlPropertyCallbacks, true /*preserveFragmentOnly*/, currentStyles);
                 }
                 _this.pasteOriginal(clipboardData);
-            }, _this.useDirectPaste);
+            });
         };
     }
     Paste.prototype.initialize = function (editor) {
@@ -7939,9 +7814,8 @@ var CONTAINER_HTML = '<div contenteditable style="width: 1px; height: 1px; overf
  * @param event The paste event
  * @param editor The editor
  * @param callback Callback function when data is ready
- * @param useDirectPaste Whether use direct HTML instead of using temp DIV
  */
-function buildClipboardData(event, editor, callback, useDirectPaste) {
+function buildClipboardData(event, editor, callback) {
     var dataTransfer = event.clipboardData || editor.getDocument().defaultView.clipboardData;
     var types = dataTransfer.types ? [].slice.call(dataTransfer.types) : [];
     var clipboardData = {
@@ -7952,7 +7826,7 @@ function buildClipboardData(event, editor, callback, useDirectPaste) {
         text: dataTransfer.getData('text'),
         html: null,
     };
-    if (useDirectPaste && event.clipboardData && event.clipboardData.items) {
+    if (event.clipboardData && event.clipboardData.items) {
         directRetrieveHtml(event, function (html) {
             clipboardData.html = html;
             callback(clipboardData);
@@ -8659,6 +8533,30 @@ exports.default = textToHtml;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_api_1 = __webpack_require__(4);
+var roosterjs_editor_dom_1 = __webpack_require__(0);
+// Inheritable CSS properties
+// Ref: https://www.w3.org/TR/CSS21/propidx.html
+var INHERITABLE_PROPERTIES = 'border-collapse,border-spacing,caption-side,color,cursor,direction,empty-cells,font-family,font-size,font-style,font-variant,font-weight,font,letter-spacing,line-height,list-style-image,list-style-position,list-style-type,list-style,orphans,quotes,text-align,text-indent,text-transform,visibility,white-space,widows,word-spacing'.split(',');
+function getInheritableStyles(editor) {
+    var node = roosterjs_editor_api_1.getNodeAtCursor(editor);
+    var styles = node ? roosterjs_editor_dom_1.getComputedStyles(node, INHERITABLE_PROPERTIES) : [];
+    var result = {};
+    for (var i = 0; i < INHERITABLE_PROPERTIES.length; i++) {
+        result[INHERITABLE_PROPERTIES[i]] = styles[i] || '';
+    }
+    return result;
+}
+exports.default = getInheritableStyles;
+
+
+/***/ }),
+/* 118 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var WATERMARK_SPAN_ID = '_rooster_watermarkSpan';
 var WATERMARK_REGEX = new RegExp("<span[^>]*id=['\"]?" + WATERMARK_SPAN_ID + "['\"]?[^>]*>[^<]*</span>", 'ig');
@@ -8749,7 +8647,7 @@ exports.default = Watermark;
 
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8900,28 +8798,28 @@ exports.default = TableResize;
 
 
 /***/ }),
-/* 119 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-
-
-/***/ }),
 /* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var ImageResize_1 = __webpack_require__(121);
+
+
+/***/ }),
+/* 121 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ImageResize_1 = __webpack_require__(122);
 exports.ImageResize = ImageResize_1.default;
 exports.ImageResizePlugin = ImageResize_1.ImageResizePlugin;
 
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
