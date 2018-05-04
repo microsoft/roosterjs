@@ -1010,10 +1010,10 @@ declare namespace roosterjs {
         private editor;
         private isRestoring;
         private hasNewContent;
-        private undoSnapshots;
         private lastKeyPress;
         private onDropDisposer;
         private onCutDisposer;
+        protected undoSnapshots: UndoSnapshotsService;
         /**
          * Create an instance of Undo
          * @param preserveSnapshots True to preserve the snapshots after dispose, this allows

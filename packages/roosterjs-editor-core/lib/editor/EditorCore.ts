@@ -44,7 +44,12 @@ export type GetContentTraverser = (
     position?: ContentPosition
 ) => ContentTraverser;
 export type GetCursorRect = (core: EditorCore) => Rect;
-export type GetCustomData = <T>(core: EditorCore, key: string, getter: () => T, disposer?: (value: T) => void) => T;
+export type GetCustomData = <T>(
+    core: EditorCore,
+    key: string,
+    getter: () => T,
+    disposer?: (value: T) => void
+) => T;
 export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => Range;
 export type HasFocus = (core: EditorCore) => boolean;
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;

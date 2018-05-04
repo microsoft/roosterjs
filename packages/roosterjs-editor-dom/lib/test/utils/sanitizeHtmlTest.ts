@@ -2,7 +2,7 @@ import sanitizeHtml from '../../utils/sanitizeHtml';
 
 describe('sanitizeHtml', () => {
     function runTest(source: string, exp: string) {
-        let result = sanitizeHtml(source, null, false, null, false, {color: ''});
+        let result = sanitizeHtml(source, null, false, null, false, { color: '' });
         expect(result).toBe(exp);
     }
 
