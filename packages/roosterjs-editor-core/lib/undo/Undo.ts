@@ -18,10 +18,11 @@ export default class Undo implements UndoService {
     private editor: Editor;
     private isRestoring: boolean;
     private hasNewContent: boolean;
-    private undoSnapshots: UndoSnapshots;
     private lastKeyPress: number;
     private onDropDisposer: () => void;
     private onCutDisposer: () => void;
+
+    protected undoSnapshots: UndoSnapshotsService;
 
     /**
      * Create an instance of Undo
