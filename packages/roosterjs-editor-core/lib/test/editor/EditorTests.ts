@@ -1,34 +1,10 @@
 import Editor from '../../editor/Editor';
 import * as TestHelper from '../TestHelper';
 import { ContentPosition } from 'roosterjs-editor-types';
-import * as getSelection from '../../coreAPI/getSelection';
 import * as getSelectionRange from '../../coreAPI/getSelectionRange';
-import * as saveSelectionRange from '../../coreAPI/saveSelectionRange';
 
 let editor: Editor;
 let testID = 'EditorTest';
-
-describe('Editor getSelection()', () => {
-    beforeEach(() => {
-        editor = TestHelper.initEditor(testID);
-    });
-
-    afterEach(() => {
-        editor.dispose();
-        TestHelper.removeElement(testID);
-    });
-
-    it('getSelection shold invoke getSelection in Selection', () => {
-        // Arrange
-        spyOn(getSelection, 'default').and.callThrough();
-
-        // Act
-        editor.getSelection();
-
-        // Assery
-        expect(getSelection.default).toHaveBeenCalled();
-    });
-});
 
 describe('Editor getSelectionRange()', () => {
     beforeEach(() => {
@@ -40,16 +16,15 @@ describe('Editor getSelectionRange()', () => {
         TestHelper.removeElement(testID);
     });
 
-    it('getSelectionRange shold invoke getSelectionRange in Selection if in foucs', () => {
+    it('getSelectionRange should invoke getSelectionRange in Selection if in foucs', () => {
         // Arrange
-        spyOn(getSelectionRange, 'default').and.callThrough();
         editor.focus();
 
         // Act
-        editor.getSelectionRange();
+        let range = editor.getSelectionRange();
 
         // Assert
-        expect(getSelectionRange.default).toHaveBeenCalled();
+        expect(range.startContainer).not.toBeNull();
     });
 
     it('getSelectionRange shold return null if not in focus', () => {
@@ -481,27 +456,5 @@ describe('Editor contains()', () => {
 
         // Assert
         expect(containsNode).toBe(false);
-    });
-});
-
-describe('Editor saveSelectionRange()', () => {
-    beforeEach(() => {
-        editor = TestHelper.initEditor(testID);
-    });
-
-    afterEach(() => {
-        editor.dispose();
-        TestHelper.removeElement(testID);
-    });
-
-    it('saveSelectionRange should trigger the Selection.saveSelectionRange() method', () => {
-        // Arrange
-        spyOn(saveSelectionRange, 'default').and.callThrough();
-
-        // Act
-        editor.saveSelectionRange();
-
-        // Assert
-        expect(saveSelectionRange.default).toHaveBeenCalled();
     });
 });

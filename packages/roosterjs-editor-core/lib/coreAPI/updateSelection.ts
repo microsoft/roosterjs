@@ -1,12 +1,10 @@
-import EditorCore from '../editor/EditorCore';
-import getSelection from './getSelection';
-import hasFocus from './hasFocus';
+import EditorCore, { UpdateSelection } from '../editor/EditorCore';
 import isRangeInContainer from '../utils/isRangeInContainer';
 
-export default function updateSelection(core: EditorCore, range: Range): boolean {
+const updateSelection: UpdateSelection = (core: EditorCore, range: Range) => {
     let selectionUpdated = false;
     if (isRangeInContainer(range, core.contentDiv)) {
-        let selection = getSelection(core);
+        let selection = core.document.defaultView.getSelection();
         if (selection) {
             // Workaround IE exception 800a025e
             try {
@@ -14,7 +12,7 @@ export default function updateSelection(core: EditorCore, range: Range): boolean
             } catch (e) {}
 
             selection.addRange(range);
-            if (!hasFocus(core)) {
+            if (!core.api.hasFocus(core)) {
                 core.cachedSelectionRange = range;
             }
 
@@ -23,4 +21,6 @@ export default function updateSelection(core: EditorCore, range: Range): boolean
     }
 
     return selectionUpdated;
-}
+};
+
+export default updateSelection;

@@ -1,14 +1,10 @@
-import EditorCore from '../editor/EditorCore';
-import getSelectionRange from './getSelectionRange';
-import hasFocus from './hasFocus';
+import EditorCore, { Focus } from '../editor/EditorCore';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
-import restoreSelection from './restoreSelection';
-import updateSelection from './updateSelection';
 import { NodeType } from 'roosterjs-editor-types';
 import { getFirstLeafNode } from 'roosterjs-editor-dom';
 
-export default function focus(core: EditorCore) {
-    if (!hasFocus(core) || !getSelectionRange(core, false /*tryGetFromCache*/)) {
+const focus: Focus = (core: EditorCore) => {
+    if (!core.api.hasFocus(core) || !core.api.getSelectionRange(core, false /*tryGetFromCache*/)) {
         // Focus (document.activeElement indicates) and selection are mostly in sync, but could be out of sync in some extreme cases.
         // i.e. if you programmatically change window selection to point to a non-focusable DOM element (i.e. tabindex=-1 etc.).
         // On Chrome/Firefox, it does not change document.activeElement. On Edge/IE, it change document.activeElement to be body
@@ -16,7 +12,10 @@ export default function focus(core: EditorCore) {
         // So here we always do a live selection pull on DOM and make it point in Editor. The pitfall is, the cursor could be reset
         // to very begin to of editor since we don't really have last saved selection (created on blur which does not fire in this case).
         // It should be better than the case you cannot type
-        if (!restoreSelection(core)) {
+        if (
+            !core.cachedSelectionRange ||
+            !core.api.updateSelection(core, core.cachedSelectionRange)
+        ) {
             setSelectionToBegin(core);
         }
     }
@@ -25,10 +24,10 @@ export default function focus(core: EditorCore) {
     core.cachedSelectionRange = null;
 
     // This is more a fallback to ensure editor gets focus if it didn't manage to move focus to editor
-    if (!hasFocus(core)) {
+    if (!core.api.hasFocus(core)) {
         core.contentDiv.focus();
     }
-}
+};
 
 function setSelectionToBegin(core: EditorCore) {
     let range: Range;
@@ -56,6 +55,8 @@ function setSelectionToBegin(core: EditorCore) {
     }
 
     if (range) {
-        updateSelection(core, range);
+        core.api.updateSelection(core, range);
     }
 }
+
+export default focus;

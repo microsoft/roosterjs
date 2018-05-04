@@ -1,13 +1,11 @@
-import EditorCore from '../editor/EditorCore';
-import getSelection from './getSelection';
-import hasFocus from './hasFocus';
+import EditorCore, { GetSelectionRange } from '../editor/EditorCore';
 import isRangeInContainer from '../utils/isRangeInContainer';
 
-export default function getSelectionRange(core: EditorCore, tryGetFromCache: boolean): Range {
+const getSelectionRange: GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => {
     let result: Range = null;
 
-    if (!tryGetFromCache || hasFocus(core)) {
-        let selection = getSelection(core);
+    if (!tryGetFromCache || core.api.hasFocus(core)) {
+        let selection = core.document.defaultView.getSelection();
         if (selection && selection.rangeCount > 0) {
             let range = selection.getRangeAt(0);
             if (isRangeInContainer(range, core.contentDiv)) {
@@ -21,4 +19,6 @@ export default function getSelectionRange(core: EditorCore, tryGetFromCache: boo
     }
 
     return result;
-}
+};
+
+export default getSelectionRange;

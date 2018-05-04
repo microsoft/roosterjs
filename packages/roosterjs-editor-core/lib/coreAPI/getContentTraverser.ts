@@ -1,5 +1,4 @@
-import EditorCore from '../editor/EditorCore';
-import getSelectionRange from './getSelectionRange';
+import EditorCore, { GetContentTraverser } from '../editor/EditorCore';
 import { ContentScope, ContentPosition, TraversingScoper } from 'roosterjs-editor-types';
 import {
     ContentTraverser,
@@ -8,12 +7,12 @@ import {
     BodyScoper,
 } from 'roosterjs-editor-dom';
 
-export default function getContentTraverser(
+const getContentTraverser: GetContentTraverser = (
     core: EditorCore,
     scope: ContentScope,
     position: ContentPosition = ContentPosition.SelectionStart
-): ContentTraverser {
-    let selectionRange = getSelectionRange(core, true /*tryGetFromCache*/);
+) => {
+    let selectionRange = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
     if (scope != ContentScope.Body && !selectionRange) {
         return null;
     }
@@ -46,4 +45,6 @@ export default function getContentTraverser(
     }
 
     return contentTraverser;
-}
+};
+
+export default getContentTraverser;

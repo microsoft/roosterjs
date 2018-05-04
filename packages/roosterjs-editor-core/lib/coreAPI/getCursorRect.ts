@@ -1,6 +1,4 @@
-import EditorCore from '../editor/EditorCore';
-import getSelection from './getSelection';
-import getSelectionRange from './getSelectionRange';
+import EditorCore, { GetCursorRect } from '../editor/EditorCore';
 import { Rect, NodeType } from 'roosterjs-editor-types';
 import { normalizeEditorPoint, isEditorPointAfter } from 'roosterjs-editor-dom';
 import browserData from '../utils/BrowserData';
@@ -12,9 +10,9 @@ import browserData from '../utils/BrowserData';
  * The returned rect structure has a left and right and they should be same
  * here since it is for cursor, not for a range.
  */
-export default function getCursorRect(core: EditorCore): Rect {
-    let selection = getSelection(core);
-    let range = getSelectionRange(core, false /*tryGetFromCache*/);
+const getCursorRect: GetCursorRect = (core: EditorCore) => {
+    let selection = core.document.defaultView.getSelection();
+    let range = core.api.getSelectionRange(core, false /*tryGetFromCache*/);
 
     if (!range || !selection || !selection.focusNode || !selection.anchorNode) {
         return null;
@@ -65,7 +63,7 @@ export default function getCursorRect(core: EditorCore): Rect {
     }
 
     return rect;
-}
+};
 
 function getRectFromClientRect(clientRect: ClientRect): Rect {
     // A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p
@@ -83,3 +81,5 @@ function getRectFromClientRect(clientRect: ClientRect): Rect {
           }
         : null;
 }
+
+export default getCursorRect;

@@ -1,8 +1,4 @@
-import EditorCore from '../editor/EditorCore';
-import focus from './focus';
-import getContentTraverser from './getContentTraverser';
-import getSelectionRange from './getSelectionRange';
-import updateSelection from './updateSelection';
+import EditorCore, { ApplyInlineStyle } from '../editor/EditorCore';
 import { ContentScope } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
@@ -33,7 +29,7 @@ function applyInlineStyleToCollapsedSelection(
     let updatedRange = core.document.createRange();
     updatedRange.selectNodeContents(element);
     updatedRange.collapse(false /* toStart */);
-    updateSelection(core, updatedRange);
+    core.api.updateSelection(core, updatedRange);
 }
 
 // Apply style to non collapsed selection
@@ -48,7 +44,7 @@ function applyInlineStyleToNonCollapsedSelection(
     // can be re-applied post-applying style
     let startNode: Node;
     let endNode: Node;
-    let contentTraverser = getContentTraverser(core, ContentScope.Selection);
+    let contentTraverser = core.api.getContentTraverser(core, ContentScope.Selection);
     // Just loop through all inline elements in the selection and apply style for each
     let startInline = contentTraverser.currentInlineElement;
     while (startInline) {
@@ -71,17 +67,17 @@ function applyInlineStyleToNonCollapsedSelection(
         let updatedRange = core.document.createRange();
         updatedRange.setStartBefore(startNode);
         updatedRange.setEndAfter(endNode);
-        updateSelection(core, updatedRange);
+        core.api.updateSelection(core, updatedRange);
     }
 }
 
 // Apply inline style to current selection
-export default function applyInlineStyle(
+const applyInlineStyle: ApplyInlineStyle = (
     core: EditorCore,
     styler: (element: HTMLElement) => void
-): void {
-    focus(core);
-    let selectionRange = getSelectionRange(core, false /*tryGetFromCache*/);
+) => {
+    core.api.focus(core);
+    let selectionRange = core.api.getSelectionRange(core, false /*tryGetFromCache*/);
     if (selectionRange) {
         // TODO: Chrome has a bug that when the selection spans over several empty text nodes,
         // it may incorrectly report range not to be collapsed.
@@ -93,4 +89,6 @@ export default function applyInlineStyle(
             applyInlineStyleToNonCollapsedSelection(core, selectionRange, styler);
         }
     }
-}
+};
+
+export default applyInlineStyle;

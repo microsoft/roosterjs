@@ -1,8 +1,5 @@
-import EditorCore from '../editor/EditorCore';
-import focus from './focus';
-import getSelectionRange from './getSelectionRange';
+import EditorCore, { InsertNode } from '../editor/EditorCore';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
-import updateSelection from './updateSelection';
 import {
     EditorSelection,
     changeElementTag,
@@ -19,7 +16,7 @@ import { ContentPosition, InsertOption, NodeType } from 'roosterjs-editor-types'
 
 const HTML_EMPTY_DIV = '<div></div>';
 
-export default function insertNode(core: EditorCore, node: Node, option: InsertOption): boolean {
+const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOption) => {
     option = option || {
         position: ContentPosition.SelectionStart,
         updateCursor: true,
@@ -28,7 +25,7 @@ export default function insertNode(core: EditorCore, node: Node, option: InsertO
     };
 
     if (option.updateCursor) {
-        focus(core);
+        core.api.focus(core);
     }
 
     switch (option.position) {
@@ -47,7 +44,9 @@ export default function insertNode(core: EditorCore, node: Node, option: InsertO
     }
 
     return true;
-}
+};
+
+export default insertNode;
 
 // Insert a node at begin of the editor
 function insertNodeAtBegin(core: EditorCore, node: Node, option: InsertOption) {
@@ -140,7 +139,7 @@ function insertNodeAtEnd(core: EditorCore, node: Node, option: InsertOption) {
 
 // Insert node at selection
 function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOption) {
-    let selectionRange = getSelectionRange(core, true /*tryGetFromCache*/);
+    let selectionRange = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
     if (selectionRange) {
         // if to replace the selection and the selection is not collapsed, remove the the content at selection first
         if (option.replaceSelection && !selectionRange.collapsed) {
@@ -176,9 +175,9 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
         if (option.updateCursor && nodeForCursor) {
             selectionRange.setEndAfter(nodeForCursor);
             selectionRange.collapse(false /*toStart*/);
-            updateSelection(core, selectionRange);
+            core.api.updateSelection(core, selectionRange);
         } else {
-            updateSelection(core, originalSelectionRange);
+            core.api.updateSelection(core, originalSelectionRange);
         }
     }
 }
@@ -241,7 +240,11 @@ function preprocessNode(core: EditorCore, range: Range, nodeToInsert: Node, curr
 
 function isSelectionAtBeginningOf(range: Range, node: Node) {
     if (range) {
-        if (range.startOffset > 0 && range.startContainer.nodeType == NodeType.Element && range.startContainer.childNodes[range.startOffset] == node) {
+        if (
+            range.startOffset > 0 &&
+            range.startContainer.nodeType == NodeType.Element &&
+            range.startContainer.childNodes[range.startOffset] == node
+        ) {
             return true;
         } else if (range.startOffset == 0) {
             let container = range.startContainer;

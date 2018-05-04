@@ -1,19 +1,18 @@
-import EditorCore from '../editor/EditorCore';
-import triggerEvent from './triggerEvent';
+import EditorCore, { AttachDomEvent } from '../editor/EditorCore';
 import { PluginEventType, PluginDomEvent } from 'roosterjs-editor-types';
 
-export default function attachDomEvent(
+const attachDomEvent: AttachDomEvent = (
     core: EditorCore,
     eventName: string,
     pluginEventType?: PluginEventType,
     beforeDispatch?: (event: UIEvent) => void
-): () => void {
+) => {
     let onEvent = (event: UIEvent) => {
         if (beforeDispatch) {
             beforeDispatch(event);
         }
         if (pluginEventType != null) {
-            triggerEvent(
+            core.api.triggerEvent(
                 core,
                 <PluginDomEvent>{
                     eventType: pluginEventType,
@@ -30,4 +29,6 @@ export default function attachDomEvent(
     return () => {
         core.contentDiv.removeEventListener(eventName, onEvent);
     };
-}
+};
+
+export default attachDomEvent;

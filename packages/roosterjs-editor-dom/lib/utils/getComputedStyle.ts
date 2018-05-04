@@ -1,7 +1,7 @@
 import { NodeType } from 'roosterjs-editor-types';
 
 export default function getComputedStyle(node: Node, styleName: string): string {
-    return getComputedStyles(node, styleName)[0];
+    return getComputedStyles(node, styleName)[0] || '';
 }
 
 /**

@@ -226,7 +226,6 @@ export default class Undo implements UndoService {
         this.hasNewContent = true;
     }
 
-
     private onNativeEvent = () => {
         this.addUndoSnapshot();
         this.hasNewContent = true;

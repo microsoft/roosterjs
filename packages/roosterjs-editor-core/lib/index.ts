@@ -1,4 +1,19 @@
 export { default as Editor } from './editor/Editor';
+export {
+    default as EditorCore,
+    CoreApiMap,
+    ApplyInlineStyle,
+    AttachDomEvent,
+    Focus,
+    GetContentTraverser,
+    GetCustomData,
+    GetCursorRect,
+    GetSelectionRange,
+    HasFocus,
+    InsertNode,
+    TriggerEvent,
+    UpdateSelection,
+} from './editor/EditorCore';
 export { default as EditorOptions } from './editor/EditorOptions';
 export { default as EditorPlugin } from './editor/EditorPlugin';
 export { default as Undo } from './undo/Undo';
