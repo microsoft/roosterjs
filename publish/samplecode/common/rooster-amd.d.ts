@@ -1523,12 +1523,12 @@ export class Editor {
      */
     insertContent(content: string, option?: InsertOption, sanitize?: boolean): void;
     /**
-     * DOM query nodes in editor
+     * Query HTML elements in editor using querySelectorAll() method
      * @param selector Selector string to query
      * @param forEachCallback An optional callback to be invoked on each node in query result
-     * @returns Node list of the query result
+     * @returns HTML Element list of the query result
      */
-    queryNodes<T extends Node = Node>(selector: string, forEachCallback?: (node: T) => void): T[];
+    queryElements<T extends HTMLElement = HTMLElement>(selector: string, forEachCallback?: (node: T) => void): T[];
     /**
      * Get a SelectionRange object represents current selection in editor.
      * When editor has a live selection, this will return the selection.
@@ -2017,7 +2017,7 @@ export function cacheGetNodeAtCursor(editor: Editor, event: PluginEvent, expecte
  * @param forEachCallback An optional callback to be invoked on each node in query result
  * @returns The nodes intersected with current selection, returns an empty array if no result is found
  */
-export function queryNodesWithSelection<T extends Node = Node>(editor: Editor, selector: string, nodeContainedByRangeOnly?: boolean, forEachCallback?: (node: T) => void): T[];
+export function queryNodesWithSelection<T extends HTMLElement = HTMLElement>(editor: Editor, selector: string, nodeContainedByRangeOnly?: boolean, forEachCallback?: (node: T) => void): T[];
 
 /**
  * Get format state at cursor

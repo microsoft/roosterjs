@@ -116,5 +116,5 @@ function getCursorMarkerByUniqueId(editor: Editor, id: string): Node {
 }
 
 function getCursorMarkNodes(editor: Editor, id: string): Node[] {
-    return editor.queryNodes(`span[id="${id}"]:empty`);
+    return editor.queryElements(`span[id="${id}"]:empty`);
 }
