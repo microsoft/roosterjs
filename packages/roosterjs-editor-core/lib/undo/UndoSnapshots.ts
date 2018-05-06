@@ -2,7 +2,14 @@
 // to keep size under limit. This is kept at 10MB
 const MAXSIZELIMIT = 10000000;
 
-export default class UndoSnapshots {
+export interface UndoSnapshotsService {
+    canMove: (delta: number) => boolean;
+    move: (delta: number) => string;
+    addSnapshot: (snapshot: string) => void;
+    clearRedo: () => void;
+}
+
+export default class UndoSnapshots implements UndoSnapshotsService {
     private snapshots: string[];
     private totalSize: number;
     private currentIndex: number;

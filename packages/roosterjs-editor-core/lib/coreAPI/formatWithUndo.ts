@@ -1,18 +1,15 @@
-import EditorCore from '../editor/EditorCore';
-import getLiveRange from '../coreAPI/getLiveRange';
-import select from '../coreAPI/select';
+import EditorCore, { FormatWithUndo } from '../editor/EditorCore';
 import { SelectionRange } from 'roosterjs-editor-dom/lib';
 import { ChangeSource, ContentChangedEvent, PluginEventType } from 'roosterjs-editor-types';
-import triggerEvent from './triggerEvent';
 
-export default function formatWithUndo(
+const formatWithUndo: FormatWithUndo = (
     core: EditorCore,
     callback: () => void | Node,
     preserveSelection: boolean,
     changeSource: ChangeSource | string,
     dataCallback: () => any,
     skipAddingUndoAfterFormat: boolean
-) {
+) => {
     let isNested = core.suspendAddingUndoSnapshot;
 
     if (!isNested) {
@@ -23,11 +20,11 @@ export default function formatWithUndo(
     try {
         if (callback) {
             if (preserveSelection) {
-                let range = getLiveRange(core) || core.cachedRange;
+                let range = core.api.getLiveRange(core) || core.cachedRange;
                 range = range && new SelectionRange(range).normalize().getRange();
                 let fallbackNode = callback();
-                if (!select(core, range) && fallbackNode) {
-                    select(core, fallbackNode);
+                if (!core.api.select(core, range) && fallbackNode) {
+                    core.api.select(core, fallbackNode);
                 }
             } else {
                 callback();
@@ -43,7 +40,7 @@ export default function formatWithUndo(
                     source: changeSource,
                     data: dataCallback ? dataCallback() : null,
                 };
-                triggerEvent(core, event, true /*broadcast*/);
+                core.api.triggerEvent(core, event, true /*broadcast*/);
             }
         }
     } finally {
@@ -51,4 +48,6 @@ export default function formatWithUndo(
             core.suspendAddingUndoSnapshot = false;
         }
     }
-}
+};
+
+export default formatWithUndo;

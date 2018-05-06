@@ -1,15 +1,15 @@
-import EditorCore from '../editor/EditorCore';
+import EditorCore, { Select } from '../editor/EditorCore';
 import hasFocus from './hasFocus';
 import { Position, SelectionRange, contains } from 'roosterjs-editor-dom';
 import { PositionType } from 'roosterjs-editor-types';
 
-export default function select(
+const select: Select = (
     core: EditorCore,
     arg1: any,
     arg2?: any,
     arg3?: any,
     arg4?: any
-): boolean {
+) => {
     let rawRange: Range;
 
     if (!arg1) {
@@ -61,4 +61,6 @@ export default function select(
     }
 
     return false;
-}
+};
+
+export default select;

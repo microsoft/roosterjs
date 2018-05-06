@@ -1,7 +1,7 @@
-import UndoSnapshots from './UndoSnapshots';
-import { PluginDomEvent, PluginEvent, PluginEventType, ChangeSource } from 'roosterjs-editor-types';
 import Editor from '../editor/Editor';
 import UndoService from '../editor/UndoService';
+import UndoSnapshots, { UndoSnapshotsService } from './UndoSnapshots';
+import { PluginDomEvent, PluginEvent, PluginEventType, ChangeSource } from 'roosterjs-editor-types';
 import { buildSnapshot, restoreSnapshot } from './snapshotUtils';
 
 const KEY_BACKSPACE = 8;
@@ -18,10 +18,10 @@ export default class Undo implements UndoService {
     private editor: Editor;
     private isRestoring: boolean;
     private hasNewContent: boolean;
-    private undoSnapshots: UndoSnapshots;
     private lastKeyPress: number;
     private onDropDisposer: () => void;
     private onCutDisposer: () => void;
+    protected undoSnapshots: UndoSnapshotsService;
 
     /**
      * Create an instance of Undo
@@ -138,6 +138,13 @@ export default class Undo implements UndoService {
         this.hasNewContent = false;
     }
 
+    protected getSnapshotsManager(): UndoSnapshotsService {
+        if (!this.undoSnapshots) {
+            this.undoSnapshots = new UndoSnapshots(this.maxBufferSize);
+        }
+        return this.undoSnapshots;
+    }
+
     private restoreSnapshot(delta: number) {
         let snapshot = this.getSnapshotsManager().move(delta);
 
@@ -215,13 +222,6 @@ export default class Undo implements UndoService {
         this.getSnapshotsManager().clearRedo();
         this.lastKeyPress = 0;
         this.hasNewContent = true;
-    }
-
-    private getSnapshotsManager() {
-        if (!this.undoSnapshots) {
-            this.undoSnapshots = new UndoSnapshots(this.maxBufferSize);
-        }
-        return this.undoSnapshots;
     }
 
     private onNativeEvent = (e: UIEvent) => {

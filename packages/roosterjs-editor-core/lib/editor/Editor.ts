@@ -1,15 +1,6 @@
 import EditorCore from './EditorCore';
 import EditorOptions from './EditorOptions';
-import formatWithUndo from '../coreAPI/formatWithUndo';
-import attachDomEvent from '../coreAPI/attachDomEvent';
-import focus from '../coreAPI/focus';
-import getFocusPosition from '../coreAPI/getFocusPosition';
-import getLiveRange from '../coreAPI/getLiveRange';
-import hasFocus from '../coreAPI/hasFocus';
-import insertNode from '../coreAPI/insertNode';
-import select from '../coreAPI/select';
-import startIdleLoop from '../coreAPI/startIdleLoop';
-import triggerEvent from '../coreAPI/triggerEvent';
+import createEditorCore from './createEditorCore';
 import {
     ChangeSource,
     ContentPosition,
@@ -67,14 +58,19 @@ export default class Editor {
         }
 
         // 2. Store options values to local variables
-        this.core = EditorCore.create(contentDiv, options);
+        this.core = createEditorCore(contentDiv, options);
         this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus;
         this.omitContentEditable = options.omitContentEditableAttributeChanges;
         this.defaultRange = this.getDocument().createRange();
         this.defaultRange.setStart(this.core.contentDiv, 0);
 
         // 3. Initialize plugins
-        this.core.plugins.forEach(plugin => plugin.initialize(this));
+        this.core.plugins.forEach(plugin => {
+            if (!plugin.name) {
+                plugin.name = (<Object>plugin).constructor.name;
+            }
+            plugin.initialize(this);
+        });
 
         // 4. Ensure initial content and its format
         this.setContent(options.initialContent || this.core.contentDiv.innerHTML);
@@ -104,7 +100,7 @@ export default class Editor {
 
         // 9. Start a timer loop if required
         if (options.idleEventTimeSpanInSecond > 0) {
-            startIdleLoop(this.core, options.idleEventTimeSpanInSecond * 1000);
+            this.startIdleLoop(options.idleEventTimeSpanInSecond * 1000);
         }
     }
 
@@ -165,7 +161,7 @@ export default class Editor {
      * @returns true if node is inserted. Otherwise false
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
-        return node ? insertNode(this.core, node, option) : false;
+        return node ? this.core.api.insertNode(this.core, node, option) : false;
     }
 
     /**
@@ -342,7 +338,7 @@ export default class Editor {
      */
     public getSelectionRange(): SelectionRange {
         return new SelectionRange(
-            getLiveRange(this.core) || this.core.cachedRange || this.defaultRange
+            this.core.api.getLiveRange(this.core) || this.core.cachedRange || this.defaultRange
         );
     }
 
@@ -351,7 +347,7 @@ export default class Editor {
      * If the editor doesn't have a live focus point, returns null
      */
     public getCursorRect(): Rect {
-        let position = getFocusPosition(this.core);
+        let position = this.core.api.getFocusPosition(this.core);
         return position ? position.getRect() : null;
     }
 
@@ -360,14 +356,14 @@ export default class Editor {
      * @returns true if focus is in editor, otherwise false
      */
     public hasFocus(): boolean {
-        return hasFocus(this.core);
+        return this.core.api.hasFocus(this.core);
     }
 
     /**
      * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
      */
     public focus() {
-        focus(this.core);
+        this.core.api.focus(this.core);
     }
 
     /**
@@ -430,7 +426,7 @@ export default class Editor {
     ): boolean;
 
     public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
-        return select(this.core, arg1, arg2, arg3, arg4);
+        return this.core.api.select(this.core, arg1, arg2, arg3, arg4);
     }
 
     //#endregion
@@ -445,7 +441,7 @@ export default class Editor {
      * @returns A dispose function. Call the function to dispose this event handler
      */
     public addDomEventHandler(eventName: string, handler: (event: UIEvent) => void): () => void {
-        return attachDomEvent(this.core, eventName, null /*pluginEventType*/, handler);
+        return this.core.api.attachDomEvent(this.core, eventName, null /*pluginEventType*/, handler);
     }
 
     /**
@@ -455,7 +451,7 @@ export default class Editor {
      * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
      */
     public triggerEvent(pluginEvent: PluginEvent, broadcast: boolean = true) {
-        triggerEvent(this.core, pluginEvent, broadcast);
+        this.core.api.triggerEvent(this.core, pluginEvent, broadcast);
     }
 
     /**
@@ -513,7 +509,7 @@ export default class Editor {
         dataCallback?: () => any,
         skipAddingUndoAfterFormat: boolean = false
     ) {
-        formatWithUndo(
+        this.core.api.formatWithUndo(
             this.core,
             callback,
             preserveSelection,
@@ -602,7 +598,7 @@ export default class Editor {
     public getBlockTraverser(
         startFrom: ContentPosition = ContentPosition.SelectionStart
     ): ContentTraverser {
-        let position = getFocusPosition(this.core)
+        let position = this.core.api.getFocusPosition(this.core)
         return position ? new ContentTraverser(this.core.contentDiv, position, startFrom) : null;
     }
 
@@ -631,25 +627,26 @@ export default class Editor {
     //#region Private functions
     private createEventHandlers() {
         this.eventDisposers = [
-            attachDomEvent(this.core, 'keypress', PluginEventType.KeyPress, this.onKeyPress),
-            attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown),
-            attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp),
-            attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
-            attachDomEvent(this.core, 'mouseup', PluginEventType.MouseUp),
-            attachDomEvent(this.core, 'compositionstart', null, () => (this.inIME = true)),
-            attachDomEvent(this.core, 'compositionend', PluginEventType.CompositionEnd, () => {
+            this.core.api.attachDomEvent(this.core, 'input', null, this.stopPropagation),
+            this.core.api.attachDomEvent(this.core, 'keypress', PluginEventType.KeyPress, this.onKeyPress),
+            this.core.api.attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown),
+            this.core.api.attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp),
+            this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
+            this.core.api.attachDomEvent(this.core, 'mouseup', PluginEventType.MouseUp),
+            this.core.api.attachDomEvent(this.core, 'compositionstart', null, () => (this.inIME = true)),
+            this.core.api.attachDomEvent(this.core, 'compositionend', PluginEventType.CompositionEnd, (event: KeyboardEvent) => {
                 this.inIME = false;
-                this.onKeyPress();
+                this.onKeyPress(event);
             }),
-            attachDomEvent(this.core, 'focus', null, () => {
+            this.core.api.attachDomEvent(this.core, 'focus', null, () => {
                 // Restore the last saved selection first
                 if (this.core.cachedRange && !this.disableRestoreSelectionOnFocus) {
                     this.select(this.core.cachedRange);
                 }
                 this.core.cachedRange = null;
             }),
-            attachDomEvent(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, () => {
-                this.core.cachedRange = getLiveRange(this.core);
+            this.core.api.attachDomEvent(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, () => {
+                this.core.cachedRange = this.core.api.getLiveRange(this.core);
             }),
         ];
     }
@@ -659,8 +656,8 @@ export default class Editor {
      * When typing goes directly under content div, many things can go wrong
      * We fix it by wrapping it with a div and reposition cursor within the div
      */
-    private onKeyPress = () => {
-        let range = getLiveRange(this.core);
+    private onKeyPress = (event: KeyboardEvent) => {
+        let range = this.core.api.getLiveRange(this.core);
         if (
             range &&
             range.collapsed &&
@@ -668,6 +665,24 @@ export default class Editor {
             !this.select(this.fixContentStructure(range.startContainer), 0)
         ) {
             this.select(range);
+        }
+        this.stopPropagation(event);
+    };
+
+    private stopPropagation = (event: KeyboardEvent) => {
+        if (
+            !event.ctrlKey &&
+            !event.altKey &&
+            !event.metaKey &&
+            (event.which == 32 || // Space
+            (event.which >= 65 && event.which <= 90) || // A-Z
+            (event.which >= 48 && event.which <= 57) || // 0-9
+            (event.which >= 96 && event.which <= 105) || // 0-9 on num pad
+            (event.which >= 186 && event.which <= 192) || // ';', '=', ',', '-', '.', '/', '`'
+                (event.which >= 219 && event.which <= 222))
+        ) {
+            // '[', '\', ']', '''
+            event.stopPropagation();
         }
     };
 
@@ -707,6 +722,27 @@ export default class Editor {
         }
 
         return nodeToSelect;
+    }
+
+    /**
+     * Start a loop to trigger Idle event
+     * @param core EditorCore object
+     * @param interval Interval of idle event
+     */
+    private startIdleLoop(interval: number) {
+        let win = this.core.contentDiv.ownerDocument.defaultView || window;
+        this.core.idleLoopHandle = win.setInterval(() => {
+            if (this.core.ignoreIdleEvent) {
+                this.core.ignoreIdleEvent = false;
+            } else {
+                this.triggerEvent(
+                    {
+                        eventType: PluginEventType.Idle,
+                    },
+                    true /*broadcast*/
+                );
+            }
+        }, interval);
     }
 
     //#endregion

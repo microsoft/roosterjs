@@ -1701,13 +1701,72 @@ declare namespace roosterjs {
          * We fix it by wrapping it with a div and reposition cursor within the div
          */
         private onKeyPress;
+        private stopPropagation;
         /**
          * Check if user will type right under the content div
          * When typing goes directly under content div, many things can go wrong
          * We fix it by wrapping it with a div and reposition cursor within the div
          */
         private fixContentStructure(node);
+        /**
+         * Start a loop to trigger Idle event
+         * @param core EditorCore object
+         * @param interval Interval of idle event
+         */
+        private startIdleLoop(interval);
     }
+
+    interface EditorCore {
+        document: Document;
+        contentDiv: HTMLDivElement;
+        plugins: EditorPlugin[];
+        defaultFormat: DefaultFormat;
+        cachedRange: Range;
+        undo: UndoService;
+        suspendAddingUndoSnapshot: boolean;
+        customData: {
+            [Key: string]: {
+                value: any;
+                disposer: (value: any) => void;
+            };
+        };
+        idleLoopHandle: number;
+        ignoreIdleEvent: boolean;
+        api: CoreApiMap;
+    }
+
+    interface CoreApiMap {
+        attachDomEvent: AttachDomEvent;
+        focus: Focus;
+        formatWithUndo: FormatWithUndo;
+        getCustomData: GetCustomData;
+        getFocusPosition: GetFocusPosition;
+        getLiveRange: GetLiveRange;
+        hasFocus: HasFocus;
+        insertNode: InsertNode;
+        select: Select;
+        triggerEvent: TriggerEvent;
+    }
+
+    type AttachDomEvent = (core: EditorCore, eventName: string, pluginEventType?: PluginEventType, beforeDispatch?: (event: UIEvent) => void) => () => void;
+
+    type Focus = (core: EditorCore) => void;
+
+    type FormatWithUndo = (core: EditorCore, callback: () => void | Node, preserveSelection: boolean, changeSource: ChangeSource | string, dataCallback: () => any, skipAddingUndoAfterFormat: boolean) => void;
+
+    type GetCustomData = <T>(core: EditorCore, key: string, getter: () => T, disposer?: (value: T) => void) => T;
+
+    type GetFocusPosition = (core: EditorCore) => Position;
+
+    type GetLiveRange = (core: EditorCore) => Range;
+
+    type HasFocus = (core: EditorCore) => boolean;
+
+    type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
+
+    type Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => boolean;
+
+    type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcast: boolean) => void;
 
     /**
      * The options to specify parameters customizing an editor, used by ctor of Editor class
@@ -1750,12 +1809,21 @@ declare namespace roosterjs {
          * Default value is false
          */
         omitContentEditableAttributeChanges?: boolean;
+        /**
+         * A function map to override default core API implementation
+         * Default value is null
+         */
+        coreApiOverride?: Partial<CoreApiMap>;
     }
 
     /**
      * Interface of an editor plugin
      */
     interface EditorPlugin {
+        /**
+         * Name of a plugin. If null, editor will set its value with its class name
+         */
+        name?: string;
         /**
          * The first method that editor will call to a plugin when editor is initializing.
          * It will pass in the editor instance, plugin should take this chance to save the
@@ -1796,10 +1864,10 @@ declare namespace roosterjs {
         private editor;
         private isRestoring;
         private hasNewContent;
-        private undoSnapshots;
         private lastKeyPress;
         private onDropDisposer;
         private onCutDisposer;
+        protected undoSnapshots: UndoSnapshotsService;
         /**
          * Create an instance of Undo
          * @param preserveSnapshots True to preserve the snapshots after dispose, this allows
@@ -1845,11 +1913,11 @@ declare namespace roosterjs {
          * Add an undo snapshot
          */
         addUndoSnapshot(): void;
+        protected getSnapshotsManager(): UndoSnapshotsService;
         private restoreSnapshot(delta);
         private onKeyDown(pluginEvent);
         private onKeyPress(pluginEvent);
         private clearRedoForInput();
-        private getSnapshotsManager();
         private onNativeEvent;
     }
 
@@ -1885,6 +1953,13 @@ declare namespace roosterjs {
         clear: () => void;
     }
 
+    interface UndoSnapshotsService {
+        canMove: (delta: number) => boolean;
+        move: (delta: number) => string;
+        addSnapshot: (snapshot: string) => void;
+        clearRedo: () => void;
+    }
+
     /**
      * Clear a cached object by its key from an event object
      * @param event The event object
@@ -1918,11 +1993,11 @@ declare namespace roosterjs {
      * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
      * which matches the tag name, or null if no match found in editor.
      * @param editor The editor instance
-     * @param expectedTag The expected tag name. If null, return the element at cursor
+     * @param expectedTags The expected tags name. If null, return the element at cursor
      * @param startNode If specified, use this node as start node to search instead of current node
      * @returns The node at cursor or the nearest ancestor with the tag name is specified
      */
-    function getNodeAtCursor(editor: Editor, expectedTag?: string, startNode?: Node): Node;
+    function getNodeAtCursor(editor: Editor, expectedTags?: string | string[], startNode?: Node): Node;
 
     /**
      * Get the node at selection from event cache if it exists.
@@ -1930,10 +2005,10 @@ declare namespace roosterjs {
      * which matches the tag name, or null if no match found in editor.
      * @param editor The editor instance
      * @param event Event object to get cached object from
-     * @param expectedTag The expected tag name. If null, return the element at cursor
+     * @param expectedTags The expected tag names. If null, return the element at cursor
      * @returns The element at cursor or the nearest ancestor with the tag name is specified
      */
-    function cacheGetNodeAtCursor(editor: Editor, event: PluginEvent, expectedTag: string): Node;
+    function cacheGetNodeAtCursor(editor: Editor, event: PluginEvent, expectedTags: string | string[]): Node;
 
     /**
      * Query nodes intersected with current selection using a selector

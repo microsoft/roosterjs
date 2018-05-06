@@ -11,9 +11,9 @@
     "no-delete-expression": true,
     "no-document-write": true,
     "no-disable-auto-sanitization": true,
-    "no-duplicate-case": true,
+    "no-duplicate-switch-case": true,
     "no-duplicate-parameter-names": true,
-    "no-empty-interfaces": true,
+    "no-empty-interface": true,
     "no-exec-script": true,
     "no-function-constructor-with-string-args": true,
     "no-function-expression": false,
@@ -36,7 +36,6 @@
     "promise-must-complete": true,
     "react-no-dangerous-html": true,
     "use-named-parameter": true,
-    "valid-typeof": true,
     "class-name": true,
     "curly": true,
     "eofline": false,
@@ -104,5 +103,5 @@
   "rulesDirectory": [
         "node_modules/tslint-microsoft-contrib",
         "node_modules/tslint-eslint-rules/dist/rules"
-  ]  
+  ]
 }

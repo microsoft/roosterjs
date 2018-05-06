@@ -16,16 +16,15 @@ describe('Editor getSelectionRange()', () => {
         TestHelper.removeElement(testID);
     });
 
-    it('getSelectionRange shold invoke getSelectionRange in Selection if in foucs', () => {
+    it('getSelectionRange should invoke getSelectionRange in Selection if in foucs', () => {
         // Arrange
-        spyOn(getLiveRange, 'default').and.callThrough();
         editor.focus();
 
         // Act
-        editor.getSelectionRange();
+        let range = editor.getSelectionRange();
 
         // Assert
-        expect(getLiveRange.default).toHaveBeenCalled();
+        expect(range.start.node).not.toBeNull();
     });
 
     it('getSelectionRange shold return default selection if not in focus', () => {

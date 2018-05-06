@@ -1700,13 +1700,72 @@ export class Editor {
      * We fix it by wrapping it with a div and reposition cursor within the div
      */
     private onKeyPress;
+    private stopPropagation;
     /**
      * Check if user will type right under the content div
      * When typing goes directly under content div, many things can go wrong
      * We fix it by wrapping it with a div and reposition cursor within the div
      */
     private fixContentStructure(node);
+    /**
+     * Start a loop to trigger Idle event
+     * @param core EditorCore object
+     * @param interval Interval of idle event
+     */
+    private startIdleLoop(interval);
 }
+
+export interface EditorCore {
+    document: Document;
+    contentDiv: HTMLDivElement;
+    plugins: EditorPlugin[];
+    defaultFormat: DefaultFormat;
+    cachedRange: Range;
+    undo: UndoService;
+    suspendAddingUndoSnapshot: boolean;
+    customData: {
+        [Key: string]: {
+            value: any;
+            disposer: (value: any) => void;
+        };
+    };
+    idleLoopHandle: number;
+    ignoreIdleEvent: boolean;
+    api: CoreApiMap;
+}
+
+export interface CoreApiMap {
+    attachDomEvent: AttachDomEvent;
+    focus: Focus;
+    formatWithUndo: FormatWithUndo;
+    getCustomData: GetCustomData;
+    getFocusPosition: GetFocusPosition;
+    getLiveRange: GetLiveRange;
+    hasFocus: HasFocus;
+    insertNode: InsertNode;
+    select: Select;
+    triggerEvent: TriggerEvent;
+}
+
+export type AttachDomEvent = (core: EditorCore, eventName: string, pluginEventType?: PluginEventType, beforeDispatch?: (event: UIEvent) => void) => () => void;
+
+export type Focus = (core: EditorCore) => void;
+
+export type FormatWithUndo = (core: EditorCore, callback: () => void | Node, preserveSelection: boolean, changeSource: ChangeSource | string, dataCallback: () => any, skipAddingUndoAfterFormat: boolean) => void;
+
+export type GetCustomData = <T>(core: EditorCore, key: string, getter: () => T, disposer?: (value: T) => void) => T;
+
+export type GetFocusPosition = (core: EditorCore) => Position;
+
+export type GetLiveRange = (core: EditorCore) => Range;
+
+export type HasFocus = (core: EditorCore) => boolean;
+
+export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
+
+export type Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => boolean;
+
+export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcast: boolean) => void;
 
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class
@@ -1749,12 +1808,21 @@ export interface EditorOptions {
      * Default value is false
      */
     omitContentEditableAttributeChanges?: boolean;
+    /**
+     * A function map to override default core API implementation
+     * Default value is null
+     */
+    coreApiOverride?: Partial<CoreApiMap>;
 }
 
 /**
  * Interface of an editor plugin
  */
 export interface EditorPlugin {
+    /**
+     * Name of a plugin. If null, editor will set its value with its class name
+     */
+    name?: string;
     /**
      * The first method that editor will call to a plugin when editor is initializing.
      * It will pass in the editor instance, plugin should take this chance to save the
@@ -1795,10 +1863,10 @@ export class Undo implements UndoService {
     private editor;
     private isRestoring;
     private hasNewContent;
-    private undoSnapshots;
     private lastKeyPress;
     private onDropDisposer;
     private onCutDisposer;
+    protected undoSnapshots: UndoSnapshotsService;
     /**
      * Create an instance of Undo
      * @param preserveSnapshots True to preserve the snapshots after dispose, this allows
@@ -1844,11 +1912,11 @@ export class Undo implements UndoService {
      * Add an undo snapshot
      */
     addUndoSnapshot(): void;
+    protected getSnapshotsManager(): UndoSnapshotsService;
     private restoreSnapshot(delta);
     private onKeyDown(pluginEvent);
     private onKeyPress(pluginEvent);
     private clearRedoForInput();
-    private getSnapshotsManager();
     private onNativeEvent;
 }
 
@@ -1884,6 +1952,13 @@ export interface UndoService extends EditorPlugin {
     clear: () => void;
 }
 
+export interface UndoSnapshotsService {
+    canMove: (delta: number) => boolean;
+    move: (delta: number) => string;
+    addSnapshot: (snapshot: string) => void;
+    clearRedo: () => void;
+}
+
 /**
  * Clear a cached object by its key from an event object
  * @param event The event object
@@ -1917,11 +1992,11 @@ export function restoreSnapshot(editor: Editor, snapshot: string): void;
  * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
  * which matches the tag name, or null if no match found in editor.
  * @param editor The editor instance
- * @param expectedTag The expected tag name. If null, return the element at cursor
+ * @param expectedTags The expected tags name. If null, return the element at cursor
  * @param startNode If specified, use this node as start node to search instead of current node
  * @returns The node at cursor or the nearest ancestor with the tag name is specified
  */
-export function getNodeAtCursor(editor: Editor, expectedTag?: string, startNode?: Node): Node;
+export function getNodeAtCursor(editor: Editor, expectedTags?: string | string[], startNode?: Node): Node;
 
 /**
  * Get the node at selection from event cache if it exists.
@@ -1929,10 +2004,10 @@ export function getNodeAtCursor(editor: Editor, expectedTag?: string, startNode?
  * which matches the tag name, or null if no match found in editor.
  * @param editor The editor instance
  * @param event Event object to get cached object from
- * @param expectedTag The expected tag name. If null, return the element at cursor
+ * @param expectedTags The expected tag names. If null, return the element at cursor
  * @returns The element at cursor or the nearest ancestor with the tag name is specified
  */
-export function cacheGetNodeAtCursor(editor: Editor, event: PluginEvent, expectedTag: string): Node;
+export function cacheGetNodeAtCursor(editor: Editor, event: PluginEvent, expectedTags: string | string[]): Node;
 
 /**
  * Query nodes intersected with current selection using a selector

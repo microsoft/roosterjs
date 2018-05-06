@@ -36,13 +36,13 @@
     "ncp": "2.0.0",
     "rimraf": "2.6.2",
     "toposort": "1.0.4",
-    "ts-loader": "4.0.0",
-    "tslint": "5.7.0",
-    "tslint-eslint-rules": "4.1.1",
-    "tslint-microsoft-contrib": "5.0.1",
-    "typescript": "2.7.2",
-    "webpack": "4.0.1",
-    "webpack-cli": "2.0.9",
-    "webpack-dev-server": "3.1.0"
+    "ts-loader": "4.2.0",
+    "tslint": "5.9.1",
+    "tslint-eslint-rules": "5.1.0",
+    "tslint-microsoft-contrib": "5.0.3",
+    "typescript": "2.8.3",
+    "webpack": "4.5.0",
+    "webpack-cli": "2.0.14",
+    "webpack-dev-server": "3.1.3"
   }
 }

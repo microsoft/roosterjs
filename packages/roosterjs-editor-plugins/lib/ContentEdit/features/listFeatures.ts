@@ -9,6 +9,7 @@ import {
     setIndentation,
     toggleBullet,
     toggleNumbering,
+    clearCursorEventDataCache,
 } from 'roosterjs-editor-api';
 import { ChangeSource, PositionType } from 'roosterjs-editor-types';
 
@@ -91,17 +92,17 @@ export const AutoBullet: ContentEditFeature = {
         return false;
     },
     handleEvent: (event, editor) => {
+        clearCursorEventDataCache(event);
         editor.runAsync(() => {
             let listNode: Node;
             let cursorData = cacheGetCursorEventData(event, editor);
             let textBeforeCursor = cursorData.getSubStringBeforeCursor(3);
 
-            // editor.insertContent(NBSP);
             editor.formatWithUndo(
                 () => {
                     // Remove the user input '*', '-' or '1.'
                     let rangeToDelete = cursorData.getRangeWithForTextBeforeCursor(
-                        textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
+                        textBeforeCursor,
                         true /*exactMatch*/
                     );
                     if (rangeToDelete) {
@@ -113,7 +114,7 @@ export const AutoBullet: ContentEditFeature = {
                         editor.insertContent('<BR>');
                     }
 
-                    if (textBeforeCursor == '1.') {
+                    if (textBeforeCursor.indexOf('1.') == 0) {
                         toggleNumbering(editor);
                         listNode = getNodeAtCursor(editor, 'OL');
                     } else {

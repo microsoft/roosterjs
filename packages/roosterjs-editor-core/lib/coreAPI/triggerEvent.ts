@@ -1,32 +1,32 @@
-import EditorCore from '../editor/EditorCore';
+import EditorCore, { TriggerEvent } from '../editor/EditorCore';
+import EditorPlugin from '../editor/EditorPlugin';
 import { PluginEvent } from 'roosterjs-editor-types';
 
-export default function triggerEvent(
+const triggerEvent: TriggerEvent = (
     core: EditorCore,
     pluginEvent: PluginEvent,
     broadcast: boolean
-) {
-    let isHandledExclusively = false;
-    if (!broadcast) {
-        for (let i = 0; i < core.plugins.length; i++) {
-            let plugin = core.plugins[i];
-            if (
-                plugin.willHandleEventExclusively &&
-                plugin.onPluginEvent &&
-                plugin.willHandleEventExclusively(pluginEvent)
-            ) {
-                plugin.onPluginEvent(pluginEvent);
-                isHandledExclusively = true;
-                break;
-            }
-        }
-    }
-
-    if (!isHandledExclusively) {
+) => {
+    if (broadcast || !core.plugins.some(plugin => handledExclusively(pluginEvent, plugin))) {
         core.plugins.forEach(plugin => {
             if (plugin.onPluginEvent) {
                 plugin.onPluginEvent(pluginEvent);
             }
         });
     }
+};
+
+function handledExclusively(event: PluginEvent, plugin: EditorPlugin): boolean {
+    if (
+        plugin.onPluginEvent &&
+        plugin.willHandleEventExclusively &&
+        plugin.willHandleEventExclusively(event)
+    ) {
+        plugin.onPluginEvent(event);
+        return true;
+    }
+
+    return false;
 }
+
+export default triggerEvent;

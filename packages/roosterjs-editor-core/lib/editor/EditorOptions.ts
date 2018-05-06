@@ -1,5 +1,6 @@
 import EditorPlugin from './EditorPlugin';
 import UndoService from './UndoService';
+import { CoreApiMap } from './EditorCore';
 import { DefaultFormat } from 'roosterjs-editor-types';
 
 /**
@@ -49,6 +50,12 @@ interface EditorOptions {
      * Default value is false
      */
     omitContentEditableAttributeChanges?: boolean;
+
+    /**
+     * A function map to override default core API implementation
+     * Default value is null
+     */
+    coreApiOverride?: Partial<CoreApiMap>;
 }
 
 export default EditorOptions;

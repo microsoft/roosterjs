@@ -1,7 +1,4 @@
-import EditorCore from '../editor/EditorCore';
-import focus from './focus';
-import getLiveRange from './getLiveRange';
-import select from './select';
+import EditorCore, { InsertNode } from '../editor/EditorCore';
 import {
     SelectionRange,
     changeElementTag,
@@ -10,21 +7,23 @@ import {
     getLeafNode,
     getTagOfNode,
     isBlockElement,
+    isNodeEmpty,
     isVoidHtmlElement,
+    unwrap,
     wrap,
 } from 'roosterjs-editor-dom';
 import { ContentPosition, InsertOption, NodeType, PositionType } from 'roosterjs-editor-types';
 
 const HTML_EMPTY_DIV = '<div></div>';
 
-export default function insertNode(core: EditorCore, node: Node, option?: InsertOption): boolean {
+const insertNode: InsertNode = (core: EditorCore, node: Node, option?: InsertOption) => {
     let position = option ? option.position : ContentPosition.SelectionStart;
     let updateCursor = option ? option.updateCursor : true;
     let replaceSelection = option ? option.replaceSelection : true;
     let insertOnNewLine = option ? option.insertOnNewLine : false;
 
     if (updateCursor) {
-        focus(core);
+        core.api.focus(core);
     }
 
     switch (position) {
@@ -67,7 +66,7 @@ export default function insertNode(core: EditorCore, node: Node, option?: Insert
 
             break;
         case ContentPosition.SelectionStart:
-            let rawRange = getLiveRange(core) || core.cachedRange;
+            let rawRange = core.api.getLiveRange(core) || core.cachedRange;
             if (rawRange) {
                 // if to replace the selection and the selection is not collapsed, remove the the content at selection first
                 if (replaceSelection && !rawRange.collapsed) {
@@ -89,22 +88,7 @@ export default function insertNode(core: EditorCore, node: Node, option?: Insert
                         rawRange.setEndAfter(endNode);
                         rawRange.collapse(false /*toStart*/);
                     } else {
-                        if (getTagOfNode(endNode) == 'P') {
-                            // Insert into a P tag may cause issues when the inserted content contains any block element.
-                            // Change P tag to DIV to make sure it works well
-                            let rangeCache = new SelectionRange(rawRange).normalize();
-                            let div = changeElementTag(endNode as HTMLElement, 'div');
-                            if (
-                                rangeCache.start.node != div &&
-                                rangeCache.end.node != div &&
-                                contains(core.contentDiv, rangeCache)
-                            ) {
-                                rawRange = rangeCache.getRange();
-                            }
-                        }
-                        if (isVoidHtmlElement(rawRange.endContainer as HTMLElement)) {
-                            rawRange.setEndBefore(rawRange.endContainer);
-                        }
+                        preprocessNode(core, rawRange, node, endNode);
                     }
                 }
 
@@ -113,9 +97,9 @@ export default function insertNode(core: EditorCore, node: Node, option?: Insert
                 rawRange.insertNode(node);
 
                 if (updateCursor && nodeForCursor) {
-                    select(core, nodeForCursor, PositionType.After);
+                    core.api.select(core, nodeForCursor, PositionType.After);
                 } else {
-                    select(core, clonedRange);
+                    core.api.select(core, clonedRange);
                 }
             }
             break;
@@ -125,4 +109,95 @@ export default function insertNode(core: EditorCore, node: Node, option?: Insert
     }
 
     return true;
+};
+
+export default insertNode;
+
+function preprocessNode(core: EditorCore, rawRange: Range, nodeToInsert: Node, currentNode: Node) {
+    let rootNodeToInsert = nodeToInsert;
+
+    if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
+        let rootNodes = (<Node[]>[].slice.call(rootNodeToInsert.childNodes)).filter(
+            n => getTagOfNode(n) != 'BR'
+        );
+        rootNodeToInsert = rootNodes.length == 1 ? rootNodes[0] : null;
+    }
+
+    let tag = getTagOfNode(rootNodeToInsert);
+
+    if ((tag == 'OL' || tag == 'UL') && getTagOfNode(rootNodeToInsert.firstChild) == 'LI') {
+        let shouldInsertListAsText =
+            !rootNodeToInsert.firstChild.nextSibling &&
+            getTagOfNode(rootNodeToInsert.nextSibling) != 'BR';
+
+        if (getTagOfNode(rootNodeToInsert.nextSibling) == 'BR' && rootNodeToInsert.parentNode) {
+            rootNodeToInsert.parentNode.removeChild(rootNodeToInsert.nextSibling);
+        }
+
+        if (shouldInsertListAsText) {
+            unwrap(rootNodeToInsert.firstChild);
+            unwrap(rootNodeToInsert);
+        } else {
+            let listNode = currentNode;
+            while (
+                getTagOfNode(listNode.parentNode) != tag &&
+                contains(core.contentDiv, listNode)
+            ) {
+                listNode = listNode.parentNode;
+            }
+
+            if (getTagOfNode(listNode.parentNode) == tag) {
+                if (isNodeEmpty(listNode) || isSelectionAtBeginningOf(rawRange, listNode)) {
+                    rawRange.setEndBefore(listNode);
+                } else {
+                    rawRange.setEndAfter(listNode);
+                }
+                rawRange.collapse(false /*toStart*/);
+                unwrap(rootNodeToInsert);
+            }
+        }
+    }
+
+    if (getTagOfNode(currentNode) == 'P') {
+        // Insert into a P tag may cause issues when the inserted content contains any block element.
+        // Change P tag to DIV to make sure it works well
+        let rangeCache = new SelectionRange(rawRange).normalize();
+        let div = changeElementTag(currentNode as HTMLElement, 'div');
+        if (
+            rangeCache.start.node != div &&
+            rangeCache.end.node != div &&
+            contains(core.contentDiv, rangeCache)
+        ) {
+            rawRange = rangeCache.getRange();
+        }
+    }
+    if (isVoidHtmlElement(rawRange.endContainer as HTMLElement)) {
+        rawRange.setEndBefore(rawRange.endContainer);
+    }
+}
+
+function isSelectionAtBeginningOf(range: Range, node: Node) {
+    if (range) {
+        if (
+            range.startOffset > 0 &&
+            range.startContainer.nodeType == NodeType.Element &&
+            range.startContainer.childNodes[range.startOffset] == node
+        ) {
+            return true;
+        } else if (range.startOffset == 0) {
+            let container = range.startContainer;
+            while (
+                container != node &&
+                contains(node, container) &&
+                (!container.previousSibling || isNodeEmpty(container.previousSibling))
+            ) {
+                container = container.parentNode;
+            }
+
+            if (container == node) {
+                return true;
+            }
+        }
+    }
+    return false;
 }

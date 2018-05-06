@@ -7,11 +7,11 @@ const KEY_TAB = 9;
 export const TabInTable: ContentEditFeature = {
     key: KEY_TAB,
     shouldHandleEvent: (event, editor) => {
-        return cacheGetNodeAtCursor(editor, event, 'TD');
+        return cacheGetNodeAtCursor(editor, event, ['TD', 'TH']);
     },
     handleEvent: (event, editor) => {
         let shift = (event.rawEvent as KeyboardEvent).shiftKey;
-        let td = cacheGetNodeAtCursor(editor, event, 'TD') as HTMLTableCellElement;
+        let td = cacheGetNodeAtCursor(editor, event, ['TD', 'TH']) as HTMLTableCellElement;
         for (
             let vtable = new VTable(td),
                 step = shift ? -1 : 1,

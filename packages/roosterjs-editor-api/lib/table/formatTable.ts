@@ -11,7 +11,7 @@ import { TableFormat } from 'roosterjs-editor-types';
 export default function formatTable(editor: Editor, format: TableFormat, table?: HTMLTableElement) {
     let td = table
         ? table.rows[0].cells[0]
-        : (getNodeAtCursor(editor, 'TD') as HTMLTableCellElement);
+        : (getNodeAtCursor(editor, ['TD', 'TH']) as HTMLTableCellElement);
     if (td) {
         editor.formatWithUndo(() => {
             let vtable = new VTable(td);

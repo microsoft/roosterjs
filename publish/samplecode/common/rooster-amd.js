@@ -239,16 +239,23 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
  * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
  * which matches the tag name, or null if no match found in editor.
  * @param editor The editor instance
- * @param expectedTag The expected tag name. If null, return the element at cursor
+ * @param expectedTags The expected tags name. If null, return the element at cursor
  * @param startNode If specified, use this node as start node to search instead of current node
  * @returns The node at cursor or the nearest ancestor with the tag name is specified
  */
-function getNodeAtCursor(editor, expectedTag, startNode) {
+function getNodeAtCursor(editor, expectedTags, startNode) {
     var node = roosterjs_editor_dom_1.getElementOrParentElement(startNode) ||
         editor.getSelectionRange().start.normalize().element;
-    if (expectedTag) {
+    if (expectedTags) {
+        if (expectedTags instanceof Array) {
+            expectedTags = expectedTags.map(function (tag) { return (tag || '').toUpperCase(); });
+        }
+        else {
+            expectedTags = [expectedTags.toUpperCase()];
+        }
         while (editor.contains(node)) {
-            if (roosterjs_editor_dom_1.getTagOfNode(node) == expectedTag.toUpperCase()) {
+            var tag = roosterjs_editor_dom_1.getTagOfNode(node);
+            if (tag && expectedTags.indexOf(tag) >= 0) {
                 return node;
             }
             node = node.parentNode;
@@ -263,12 +270,13 @@ exports.default = getNodeAtCursor;
  * which matches the tag name, or null if no match found in editor.
  * @param editor The editor instance
  * @param event Event object to get cached object from
- * @param expectedTag The expected tag name. If null, return the element at cursor
+ * @param expectedTags The expected tag names. If null, return the element at cursor
  * @returns The element at cursor or the nearest ancestor with the tag name is specified
  */
-function cacheGetNodeAtCursor(editor, event, expectedTag) {
-    return roosterjs_editor_core_1.cacheGetEventData(event, 'GET_NODE_AT_CURSOR_' + expectedTag, function () {
-        return getNodeAtCursor(editor, expectedTag);
+function cacheGetNodeAtCursor(editor, event, expectedTags) {
+    var tagNames = expectedTags instanceof Array ? expectedTags.join() : expectedTags;
+    return roosterjs_editor_core_1.cacheGetEventData(event, 'GET_NODE_AT_CURSOR_' + tagNames, function () {
+        return getNodeAtCursor(editor, expectedTags);
     });
 }
 exports.cacheGetNodeAtCursor = cacheGetNodeAtCursor;
@@ -1638,7 +1646,7 @@ var getNodeAtCursor_1 = __webpack_require__(/*! ../cursor/getNodeAtCursor */ "./
  * @param operation Table operation
  */
 function editTable(editor, operation) {
-    var td = getNodeAtCursor_1.default(editor, 'TD');
+    var td = getNodeAtCursor_1.default(editor, ['TD', 'TH']);
     if (td) {
         editor.formatWithUndo(function () {
             var vtable = new VTable_1.default(td);
@@ -1774,7 +1782,7 @@ var getNodeAtCursor_1 = __webpack_require__(/*! ../cursor/getNodeAtCursor */ "./
 function formatTable(editor, format, table) {
     var td = table
         ? table.rows[0].cells[0]
-        : getNodeAtCursor_1.default(editor, 'TD');
+        : getNodeAtCursor_1.default(editor, ['TD', 'TH']);
     if (td) {
         editor.formatWithUndo(function () {
             var vtable = new VTable_1.default(td);
@@ -1865,14 +1873,13 @@ function getTableCellWidth(columns) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var triggerEvent_1 = __webpack_require__(/*! ./triggerEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/triggerEvent.ts");
-function attachDomEvent(core, eventName, pluginEventType, beforeDispatch) {
+var attachDomEvent = function (core, eventName, pluginEventType, beforeDispatch) {
     var onEvent = function (event) {
         if (beforeDispatch) {
             beforeDispatch(event);
         }
         if (pluginEventType != null) {
-            triggerEvent_1.default(core, {
+            core.api.triggerEvent(core, {
                 eventType: pluginEventType,
                 rawEvent: event,
             }, false /*broadcast*/);
@@ -1884,7 +1891,7 @@ function attachDomEvent(core, eventName, pluginEventType, beforeDispatch) {
     return function () {
         core.contentDiv.removeEventListener(eventName, onEvent);
     };
-}
+};
 exports.default = attachDomEvent;
 
 
@@ -1900,12 +1907,9 @@ exports.default = attachDomEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getLiveRange_1 = __webpack_require__(/*! ./getLiveRange */ "./packages/roosterjs-editor-core/lib/coreAPI/getLiveRange.ts");
-var hasFocus_1 = __webpack_require__(/*! ./hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
-var select_1 = __webpack_require__(/*! ./select */ "./packages/roosterjs-editor-core/lib/coreAPI/select.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-function focus(core) {
-    if (!hasFocus_1.default(core) || !getLiveRange_1.default(core)) {
+var focus = function (core) {
+    if (!core.api.hasFocus(core) || !core.api.getLiveRange(core)) {
         // Focus (document.activeElement indicates) and selection are mostly in sync, but could be out of sync in some extreme cases.
         // i.e. if you programmatically change window selection to point to a non-focusable DOM element (i.e. tabindex=-1 etc.).
         // On Chrome/Firefox, it does not change document.activeElement. On Edge/IE, it change document.activeElement to be body
@@ -1913,33 +1917,33 @@ function focus(core) {
         // So here we always do a live selection pull on DOM and make it point in Editor. The pitfall is, the cursor could be reset
         // to very begin to of editor since we don't really have last saved selection (created on blur which does not fire in this case).
         // It should be better than the case you cannot type
-        if (!(core.cachedRange && select_1.default(core, core.cachedRange))) {
+        if (!core.cachedRange || !core.api.select(core, core.cachedRange)) {
             setSelectionToBegin(core);
         }
     }
     // remember to clear cachedRange
     core.cachedRange = null;
     // This is more a fallback to ensure editor gets focus if it didn't manage to move focus to editor
-    if (!hasFocus_1.default(core)) {
+    if (!core.api.hasFocus(core)) {
         core.contentDiv.focus();
     }
-}
+};
 exports.default = focus;
 function setSelectionToBegin(core) {
     var firstNode = roosterjs_editor_dom_1.getFirstLeafNode(core.contentDiv);
     var nodeType = firstNode ? firstNode.nodeType : null;
     if (nodeType == 3 /* Text */) {
         // First node is text, move selection to the begin
-        select_1.default(core, firstNode, 0);
+        core.api.select(core, firstNode, 0);
     }
     else if (nodeType == 1 /* Element */) {
         // If first node is a html void element (void elements cannot have child nodes),
         // move selection before it, otherwise move selection inside it
-        select_1.default(core, firstNode, roosterjs_editor_dom_1.isVoidHtmlElement(firstNode) ? "b" /* Before */ : 0);
+        core.api.select(core, firstNode, roosterjs_editor_dom_1.isVoidHtmlElement(firstNode) ? "b" /* Before */ : 0);
     }
     else {
         // No first node, likely we have an empty content DIV, move selection inside it
-        select_1.default(core, core.contentDiv, 0);
+        core.api.select(core, core.contentDiv, 0);
     }
 }
 
@@ -1956,11 +1960,8 @@ function setSelectionToBegin(core) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getLiveRange_1 = __webpack_require__(/*! ../coreAPI/getLiveRange */ "./packages/roosterjs-editor-core/lib/coreAPI/getLiveRange.ts");
-var select_1 = __webpack_require__(/*! ../coreAPI/select */ "./packages/roosterjs-editor-core/lib/coreAPI/select.ts");
 var lib_1 = __webpack_require__(/*! roosterjs-editor-dom/lib */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var triggerEvent_1 = __webpack_require__(/*! ./triggerEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/triggerEvent.ts");
-function formatWithUndo(core, callback, preserveSelection, changeSource, dataCallback, skipAddingUndoAfterFormat) {
+var formatWithUndo = function (core, callback, preserveSelection, changeSource, dataCallback, skipAddingUndoAfterFormat) {
     var isNested = core.suspendAddingUndoSnapshot;
     if (!isNested) {
         core.undo.addUndoSnapshot();
@@ -1969,11 +1970,11 @@ function formatWithUndo(core, callback, preserveSelection, changeSource, dataCal
     try {
         if (callback) {
             if (preserveSelection) {
-                var range = getLiveRange_1.default(core) || core.cachedRange;
+                var range = core.api.getLiveRange(core) || core.cachedRange;
                 range = range && new lib_1.SelectionRange(range).normalize().getRange();
                 var fallbackNode = callback();
-                if (!select_1.default(core, range) && fallbackNode) {
-                    select_1.default(core, fallbackNode);
+                if (!core.api.select(core, range) && fallbackNode) {
+                    core.api.select(core, fallbackNode);
                 }
             }
             else {
@@ -1988,7 +1989,7 @@ function formatWithUndo(core, callback, preserveSelection, changeSource, dataCal
                     source: changeSource,
                     data: dataCallback ? dataCallback() : null,
                 };
-                triggerEvent_1.default(core, event_1, true /*broadcast*/);
+                core.api.triggerEvent(core, event_1, true /*broadcast*/);
             }
         }
     }
@@ -1997,8 +1998,30 @@ function formatWithUndo(core, callback, preserveSelection, changeSource, dataCal
             core.suspendAddingUndoSnapshot = false;
         }
     }
-}
+};
 exports.default = formatWithUndo;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-core/lib/coreAPI/getCustomData.ts":
+/*!*********************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/coreAPI/getCustomData.ts ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getCustomData = function (core, key, getter, disposer) {
+    var customData = core.customData;
+    return (customData[key] = customData[key] || {
+        value: getter(),
+        disposer: disposer,
+    }).value;
+};
+exports.default = getCustomData;
 
 
 /***/ }),
@@ -2014,12 +2037,12 @@ exports.default = formatWithUndo;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-function getFocusPosition(core) {
+var getFocusPosition = function (core) {
     var selection = core.document.defaultView.getSelection();
     return selection && roosterjs_editor_dom_1.contains(core.contentDiv, selection.focusNode, true /*treatSameNodeAsContain*/)
         ? new roosterjs_editor_dom_1.Position(selection.focusNode, selection.focusOffset)
         : null;
-}
+};
 exports.default = getFocusPosition;
 
 
@@ -2036,7 +2059,7 @@ exports.default = getFocusPosition;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-function getLiveRange(core) {
+var getLiveRange = function (core) {
     var selection = core.document.defaultView.getSelection();
     if (selection && selection.rangeCount > 0) {
         var range = selection.getRangeAt(0);
@@ -2045,7 +2068,7 @@ function getLiveRange(core) {
         }
     }
     return null;
-}
+};
 exports.default = getLiveRange;
 
 
@@ -2062,9 +2085,9 @@ exports.default = getLiveRange;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-function hasFocus(core) {
+var hasFocus = function (core) {
     return roosterjs_editor_dom_1.contains(core.contentDiv, core.document.activeElement, true /*treatSameNodeAsContain*/);
-}
+};
 exports.default = hasFocus;
 
 
@@ -2080,18 +2103,15 @@ exports.default = hasFocus;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var focus_1 = __webpack_require__(/*! ./focus */ "./packages/roosterjs-editor-core/lib/coreAPI/focus.ts");
-var getLiveRange_1 = __webpack_require__(/*! ./getLiveRange */ "./packages/roosterjs-editor-core/lib/coreAPI/getLiveRange.ts");
-var select_1 = __webpack_require__(/*! ./select */ "./packages/roosterjs-editor-core/lib/coreAPI/select.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var HTML_EMPTY_DIV = '<div></div>';
-function insertNode(core, node, option) {
+var insertNode = function (core, node, option) {
     var position = option ? option.position : 2 /* SelectionStart */;
     var updateCursor = option ? option.updateCursor : true;
     var replaceSelection = option ? option.replaceSelection : true;
     var insertOnNewLine = option ? option.insertOnNewLine : false;
     if (updateCursor) {
-        focus_1.default(core);
+        core.api.focus(core);
     }
     switch (position) {
         case 0 /* Begin */:
@@ -2128,7 +2148,7 @@ function insertNode(core, node, option) {
             }
             break;
         case 2 /* SelectionStart */:
-            var rawRange = getLiveRange_1.default(core) || core.cachedRange;
+            var rawRange = core.api.getLiveRange(core) || core.cachedRange;
             if (rawRange) {
                 // if to replace the selection and the selection is not collapsed, remove the the content at selection first
                 if (replaceSelection && !rawRange.collapsed) {
@@ -2148,29 +2168,16 @@ function insertNode(core, node, option) {
                         rawRange.collapse(false /*toStart*/);
                     }
                     else {
-                        if (roosterjs_editor_dom_1.getTagOfNode(endNode) == 'P') {
-                            // Insert into a P tag may cause issues when the inserted content contains any block element.
-                            // Change P tag to DIV to make sure it works well
-                            var rangeCache = new roosterjs_editor_dom_1.SelectionRange(rawRange).normalize();
-                            var div = roosterjs_editor_dom_1.changeElementTag(endNode, 'div');
-                            if (rangeCache.start.node != div &&
-                                rangeCache.end.node != div &&
-                                roosterjs_editor_dom_1.contains(core.contentDiv, rangeCache)) {
-                                rawRange = rangeCache.getRange();
-                            }
-                        }
-                        if (roosterjs_editor_dom_1.isVoidHtmlElement(rawRange.endContainer)) {
-                            rawRange.setEndBefore(rawRange.endContainer);
-                        }
+                        preprocessNode(core, rawRange, node, endNode);
                     }
                 }
                 var nodeForCursor = node.nodeType == 11 /* DocumentFragment */ ? node.lastChild : node;
                 rawRange.insertNode(node);
                 if (updateCursor && nodeForCursor) {
-                    select_1.default(core, nodeForCursor, "a" /* After */);
+                    core.api.select(core, nodeForCursor, "a" /* After */);
                 }
                 else {
-                    select_1.default(core, clonedRange);
+                    core.api.select(core, clonedRange);
                 }
             }
             break;
@@ -2179,8 +2186,79 @@ function insertNode(core, node, option) {
             break;
     }
     return true;
-}
+};
 exports.default = insertNode;
+function preprocessNode(core, rawRange, nodeToInsert, currentNode) {
+    var rootNodeToInsert = nodeToInsert;
+    if (rootNodeToInsert.nodeType == 11 /* DocumentFragment */) {
+        var rootNodes = [].slice.call(rootNodeToInsert.childNodes).filter(function (n) { return roosterjs_editor_dom_1.getTagOfNode(n) != 'BR'; });
+        rootNodeToInsert = rootNodes.length == 1 ? rootNodes[0] : null;
+    }
+    var tag = roosterjs_editor_dom_1.getTagOfNode(rootNodeToInsert);
+    if ((tag == 'OL' || tag == 'UL') && roosterjs_editor_dom_1.getTagOfNode(rootNodeToInsert.firstChild) == 'LI') {
+        var shouldInsertListAsText = !rootNodeToInsert.firstChild.nextSibling &&
+            roosterjs_editor_dom_1.getTagOfNode(rootNodeToInsert.nextSibling) != 'BR';
+        if (roosterjs_editor_dom_1.getTagOfNode(rootNodeToInsert.nextSibling) == 'BR' && rootNodeToInsert.parentNode) {
+            rootNodeToInsert.parentNode.removeChild(rootNodeToInsert.nextSibling);
+        }
+        if (shouldInsertListAsText) {
+            roosterjs_editor_dom_1.unwrap(rootNodeToInsert.firstChild);
+            roosterjs_editor_dom_1.unwrap(rootNodeToInsert);
+        }
+        else {
+            var listNode = currentNode;
+            while (roosterjs_editor_dom_1.getTagOfNode(listNode.parentNode) != tag &&
+                roosterjs_editor_dom_1.contains(core.contentDiv, listNode)) {
+                listNode = listNode.parentNode;
+            }
+            if (roosterjs_editor_dom_1.getTagOfNode(listNode.parentNode) == tag) {
+                if (roosterjs_editor_dom_1.isNodeEmpty(listNode) || isSelectionAtBeginningOf(rawRange, listNode)) {
+                    rawRange.setEndBefore(listNode);
+                }
+                else {
+                    rawRange.setEndAfter(listNode);
+                }
+                rawRange.collapse(false /*toStart*/);
+                roosterjs_editor_dom_1.unwrap(rootNodeToInsert);
+            }
+        }
+    }
+    if (roosterjs_editor_dom_1.getTagOfNode(currentNode) == 'P') {
+        // Insert into a P tag may cause issues when the inserted content contains any block element.
+        // Change P tag to DIV to make sure it works well
+        var rangeCache = new roosterjs_editor_dom_1.SelectionRange(rawRange).normalize();
+        var div = roosterjs_editor_dom_1.changeElementTag(currentNode, 'div');
+        if (rangeCache.start.node != div &&
+            rangeCache.end.node != div &&
+            roosterjs_editor_dom_1.contains(core.contentDiv, rangeCache)) {
+            rawRange = rangeCache.getRange();
+        }
+    }
+    if (roosterjs_editor_dom_1.isVoidHtmlElement(rawRange.endContainer)) {
+        rawRange.setEndBefore(rawRange.endContainer);
+    }
+}
+function isSelectionAtBeginningOf(range, node) {
+    if (range) {
+        if (range.startOffset > 0 &&
+            range.startContainer.nodeType == 1 /* Element */ &&
+            range.startContainer.childNodes[range.startOffset] == node) {
+            return true;
+        }
+        else if (range.startOffset == 0) {
+            var container = range.startContainer;
+            while (container != node &&
+                roosterjs_editor_dom_1.contains(node, container) &&
+                (!container.previousSibling || roosterjs_editor_dom_1.isNodeEmpty(container.previousSibling))) {
+                container = container.parentNode;
+            }
+            if (container == node) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 
 /***/ }),
@@ -2197,7 +2275,7 @@ exports.default = insertNode;
 Object.defineProperty(exports, "__esModule", { value: true });
 var hasFocus_1 = __webpack_require__(/*! ./hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-function select(core, arg1, arg2, arg3, arg4) {
+var select = function (core, arg1, arg2, arg3, arg4) {
     var rawRange;
     if (!arg1) {
         return false;
@@ -2245,42 +2323,8 @@ function select(core, arg1, arg2, arg3, arg4) {
         }
     }
     return false;
-}
+};
 exports.default = select;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-core/lib/coreAPI/startIdleLoop.ts":
-/*!*********************************************************************!*\
-  !*** ./packages/roosterjs-editor-core/lib/coreAPI/startIdleLoop.ts ***!
-  \*********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var triggerEvent_1 = __webpack_require__(/*! ./triggerEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/triggerEvent.ts");
-/**
- * Start a loop to trigger Idle event
- * @param core EditorCore object
- * @param interval Interval of idle event
- */
-function startIdleLoop(core, interval) {
-    var win = core.contentDiv.ownerDocument.defaultView || window;
-    core.idleLoopHandle = win.setInterval(function () {
-        if (core.ignoreIdleEvent) {
-            core.ignoreIdleEvent = false;
-        }
-        else {
-            triggerEvent_1.default(core, {
-                eventType: 9 /* Idle */,
-            }, true /*broadcast*/);
-        }
-    }, interval);
-}
-exports.default = startIdleLoop;
 
 
 /***/ }),
@@ -2295,27 +2339,23 @@ exports.default = startIdleLoop;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-function triggerEvent(core, pluginEvent, broadcast) {
-    var isHandledExclusively = false;
-    if (!broadcast) {
-        for (var i = 0; i < core.plugins.length; i++) {
-            var plugin = core.plugins[i];
-            if (plugin.willHandleEventExclusively &&
-                plugin.onPluginEvent &&
-                plugin.willHandleEventExclusively(pluginEvent)) {
-                plugin.onPluginEvent(pluginEvent);
-                isHandledExclusively = true;
-                break;
-            }
-        }
-    }
-    if (!isHandledExclusively) {
+var triggerEvent = function (core, pluginEvent, broadcast) {
+    if (broadcast || !core.plugins.some(function (plugin) { return handledExclusively(pluginEvent, plugin); })) {
         core.plugins.forEach(function (plugin) {
             if (plugin.onPluginEvent) {
                 plugin.onPluginEvent(pluginEvent);
             }
         });
     }
+};
+function handledExclusively(event, plugin) {
+    if (plugin.onPluginEvent &&
+        plugin.willHandleEventExclusively &&
+        plugin.willHandleEventExclusively(event)) {
+        plugin.onPluginEvent(event);
+        return true;
+    }
+    return false;
 }
 exports.default = triggerEvent;
 
@@ -2332,17 +2372,7 @@ exports.default = triggerEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorCore_1 = __webpack_require__(/*! ./EditorCore */ "./packages/roosterjs-editor-core/lib/editor/EditorCore.ts");
-var formatWithUndo_1 = __webpack_require__(/*! ../coreAPI/formatWithUndo */ "./packages/roosterjs-editor-core/lib/coreAPI/formatWithUndo.ts");
-var attachDomEvent_1 = __webpack_require__(/*! ../coreAPI/attachDomEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/attachDomEvent.ts");
-var focus_1 = __webpack_require__(/*! ../coreAPI/focus */ "./packages/roosterjs-editor-core/lib/coreAPI/focus.ts");
-var getFocusPosition_1 = __webpack_require__(/*! ../coreAPI/getFocusPosition */ "./packages/roosterjs-editor-core/lib/coreAPI/getFocusPosition.ts");
-var getLiveRange_1 = __webpack_require__(/*! ../coreAPI/getLiveRange */ "./packages/roosterjs-editor-core/lib/coreAPI/getLiveRange.ts");
-var hasFocus_1 = __webpack_require__(/*! ../coreAPI/hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
-var insertNode_1 = __webpack_require__(/*! ../coreAPI/insertNode */ "./packages/roosterjs-editor-core/lib/coreAPI/insertNode.ts");
-var select_1 = __webpack_require__(/*! ../coreAPI/select */ "./packages/roosterjs-editor-core/lib/coreAPI/select.ts");
-var startIdleLoop_1 = __webpack_require__(/*! ../coreAPI/startIdleLoop */ "./packages/roosterjs-editor-core/lib/coreAPI/startIdleLoop.ts");
-var triggerEvent_1 = __webpack_require__(/*! ../coreAPI/triggerEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/triggerEvent.ts");
+var createEditorCore_1 = __webpack_require__(/*! ./createEditorCore */ "./packages/roosterjs-editor-core/lib/editor/createEditorCore.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var IS_IE_OR_EDGE = roosterjs_editor_dom_1.Browser.isIE || roosterjs_editor_dom_1.Browser.isEdge;
 /**
@@ -2363,13 +2393,28 @@ var Editor = /** @class */ (function () {
          * When typing goes directly under content div, many things can go wrong
          * We fix it by wrapping it with a div and reposition cursor within the div
          */
-        this.onKeyPress = function () {
-            var range = getLiveRange_1.default(_this.core);
+        this.onKeyPress = function (event) {
+            var range = _this.core.api.getLiveRange(_this.core);
             if (range &&
                 range.collapsed &&
                 roosterjs_editor_dom_1.getElementOrParentElement(range.startContainer) == _this.core.contentDiv &&
                 !_this.select(_this.fixContentStructure(range.startContainer), 0)) {
                 _this.select(range);
+            }
+            _this.stopPropagation(event);
+        };
+        this.stopPropagation = function (event) {
+            if (!event.ctrlKey &&
+                !event.altKey &&
+                !event.metaKey &&
+                (event.which == 32 || // Space
+                    (event.which >= 65 && event.which <= 90) || // A-Z
+                    (event.which >= 48 && event.which <= 57) || // 0-9
+                    (event.which >= 96 && event.which <= 105) || // 0-9 on num pad
+                    (event.which >= 186 && event.which <= 192) || // ';', '=', ',', '-', '.', '/', '`'
+                    (event.which >= 219 && event.which <= 222))) {
+                // '[', '\', ']', '''
+                event.stopPropagation();
             }
         };
         // 1. Make sure all parameters are valid
@@ -2377,13 +2422,18 @@ var Editor = /** @class */ (function () {
             throw new Error('contentDiv must be an HTML DIV element');
         }
         // 2. Store options values to local variables
-        this.core = EditorCore_1.default.create(contentDiv, options);
+        this.core = createEditorCore_1.default(contentDiv, options);
         this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus;
         this.omitContentEditable = options.omitContentEditableAttributeChanges;
         this.defaultRange = this.getDocument().createRange();
         this.defaultRange.setStart(this.core.contentDiv, 0);
         // 3. Initialize plugins
-        this.core.plugins.forEach(function (plugin) { return plugin.initialize(_this); });
+        this.core.plugins.forEach(function (plugin) {
+            if (!plugin.name) {
+                plugin.name = plugin.constructor.name;
+            }
+            plugin.initialize(_this);
+        });
         // 4. Ensure initial content and its format
         this.setContent(options.initialContent || this.core.contentDiv.innerHTML);
         this.fixContentStructure(roosterjs_editor_dom_1.getFirstLeafNode(contentDiv));
@@ -2408,7 +2458,7 @@ var Editor = /** @class */ (function () {
         catch (e) { }
         // 9. Start a timer loop if required
         if (options.idleEventTimeSpanInSecond > 0) {
-            startIdleLoop_1.default(this.core, options.idleEventTimeSpanInSecond * 1000);
+            this.startIdleLoop(options.idleEventTimeSpanInSecond * 1000);
         }
     }
     /**
@@ -2460,7 +2510,7 @@ var Editor = /** @class */ (function () {
      * @returns true if node is inserted. Otherwise false
      */
     Editor.prototype.insertNode = function (node, option) {
-        return node ? insertNode_1.default(this.core, node, option) : false;
+        return node ? this.core.api.insertNode(this.core, node, option) : false;
     };
     /**
      * Delete a node from editor content
@@ -2594,14 +2644,14 @@ var Editor = /** @class */ (function () {
      * Otherwise, return a selection of beginning of editor
      */
     Editor.prototype.getSelectionRange = function () {
-        return new roosterjs_editor_dom_1.SelectionRange(getLiveRange_1.default(this.core) || this.core.cachedRange || this.defaultRange);
+        return new roosterjs_editor_dom_1.SelectionRange(this.core.api.getLiveRange(this.core) || this.core.cachedRange || this.defaultRange);
     };
     /**
      * Get a Rect object represents the bounding rect of current focus point in editor.
      * If the editor doesn't have a live focus point, returns null
      */
     Editor.prototype.getCursorRect = function () {
-        var position = getFocusPosition_1.default(this.core);
+        var position = this.core.api.getFocusPosition(this.core);
         return position ? position.getRect() : null;
     };
     /**
@@ -2609,16 +2659,16 @@ var Editor = /** @class */ (function () {
      * @returns true if focus is in editor, otherwise false
      */
     Editor.prototype.hasFocus = function () {
-        return hasFocus_1.default(this.core);
+        return this.core.api.hasFocus(this.core);
     };
     /**
      * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
      */
     Editor.prototype.focus = function () {
-        focus_1.default(this.core);
+        this.core.api.focus(this.core);
     };
     Editor.prototype.select = function (arg1, arg2, arg3, arg4) {
-        return select_1.default(this.core, arg1, arg2, arg3, arg4);
+        return this.core.api.select(this.core, arg1, arg2, arg3, arg4);
     };
     //#endregion
     //#region EVENT API
@@ -2630,7 +2680,7 @@ var Editor = /** @class */ (function () {
      * @returns A dispose function. Call the function to dispose this event handler
      */
     Editor.prototype.addDomEventHandler = function (eventName, handler) {
-        return attachDomEvent_1.default(this.core, eventName, null /*pluginEventType*/, handler);
+        return this.core.api.attachDomEvent(this.core, eventName, null /*pluginEventType*/, handler);
     };
     /**
      * Trigger an event to be dispatched to all plugins
@@ -2640,7 +2690,7 @@ var Editor = /** @class */ (function () {
      */
     Editor.prototype.triggerEvent = function (pluginEvent, broadcast) {
         if (broadcast === void 0) { broadcast = true; }
-        triggerEvent_1.default(this.core, pluginEvent, broadcast);
+        this.core.api.triggerEvent(this.core, pluginEvent, broadcast);
     };
     /**
      * Trigger a ContentChangedEvent
@@ -2687,7 +2737,7 @@ var Editor = /** @class */ (function () {
         if (preserveSelection === void 0) { preserveSelection = false; }
         if (changeSource === void 0) { changeSource = "Format" /* Format */; }
         if (skipAddingUndoAfterFormat === void 0) { skipAddingUndoAfterFormat = false; }
-        formatWithUndo_1.default(this.core, callback, preserveSelection, changeSource, dataCallback, skipAddingUndoAfterFormat);
+        this.core.api.formatWithUndo(this.core, callback, preserveSelection, changeSource, dataCallback, skipAddingUndoAfterFormat);
     };
     /**
      * Whether there is an available undo snapshot
@@ -2757,7 +2807,7 @@ var Editor = /** @class */ (function () {
      */
     Editor.prototype.getBlockTraverser = function (startFrom) {
         if (startFrom === void 0) { startFrom = 2 /* SelectionStart */; }
-        var position = getFocusPosition_1.default(this.core);
+        var position = this.core.api.getFocusPosition(this.core);
         return position ? new roosterjs_editor_dom_1.ContentTraverser(this.core.contentDiv, position, startFrom) : null;
     };
     /**
@@ -2784,25 +2834,26 @@ var Editor = /** @class */ (function () {
     Editor.prototype.createEventHandlers = function () {
         var _this = this;
         this.eventDisposers = [
-            attachDomEvent_1.default(this.core, 'keypress', 1 /* KeyPress */, this.onKeyPress),
-            attachDomEvent_1.default(this.core, 'keydown', 0 /* KeyDown */),
-            attachDomEvent_1.default(this.core, 'keyup', 2 /* KeyUp */),
-            attachDomEvent_1.default(this.core, 'mousedown', 4 /* MouseDown */),
-            attachDomEvent_1.default(this.core, 'mouseup', 5 /* MouseUp */),
-            attachDomEvent_1.default(this.core, 'compositionstart', null, function () { return (_this.inIME = true); }),
-            attachDomEvent_1.default(this.core, 'compositionend', 3 /* CompositionEnd */, function () {
+            this.core.api.attachDomEvent(this.core, 'input', null, this.stopPropagation),
+            this.core.api.attachDomEvent(this.core, 'keypress', 1 /* KeyPress */, this.onKeyPress),
+            this.core.api.attachDomEvent(this.core, 'keydown', 0 /* KeyDown */),
+            this.core.api.attachDomEvent(this.core, 'keyup', 2 /* KeyUp */),
+            this.core.api.attachDomEvent(this.core, 'mousedown', 4 /* MouseDown */),
+            this.core.api.attachDomEvent(this.core, 'mouseup', 5 /* MouseUp */),
+            this.core.api.attachDomEvent(this.core, 'compositionstart', null, function () { return (_this.inIME = true); }),
+            this.core.api.attachDomEvent(this.core, 'compositionend', 3 /* CompositionEnd */, function (event) {
                 _this.inIME = false;
-                _this.onKeyPress();
+                _this.onKeyPress(event);
             }),
-            attachDomEvent_1.default(this.core, 'focus', null, function () {
+            this.core.api.attachDomEvent(this.core, 'focus', null, function () {
                 // Restore the last saved selection first
                 if (_this.core.cachedRange && !_this.disableRestoreSelectionOnFocus) {
                     _this.select(_this.core.cachedRange);
                 }
                 _this.core.cachedRange = null;
             }),
-            attachDomEvent_1.default(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, function () {
-                _this.core.cachedRange = getLiveRange_1.default(_this.core);
+            this.core.api.attachDomEvent(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, function () {
+                _this.core.cachedRange = _this.core.api.getLiveRange(_this.core);
             }),
         ];
     };
@@ -2841,6 +2892,25 @@ var Editor = /** @class */ (function () {
         }
         return nodeToSelect;
     };
+    /**
+     * Start a loop to trigger Idle event
+     * @param core EditorCore object
+     * @param interval Interval of idle event
+     */
+    Editor.prototype.startIdleLoop = function (interval) {
+        var _this = this;
+        var win = this.core.contentDiv.ownerDocument.defaultView || window;
+        this.core.idleLoopHandle = win.setInterval(function () {
+            if (_this.core.ignoreIdleEvent) {
+                _this.core.ignoreIdleEvent = false;
+            }
+            else {
+                _this.triggerEvent({
+                    eventType: 9 /* Idle */,
+                }, true /*broadcast*/);
+            }
+        }, interval);
+    };
     return Editor;
 }());
 exports.default = Editor;
@@ -2848,10 +2918,10 @@ exports.default = Editor;
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-core/lib/editor/EditorCore.ts":
-/*!*****************************************************************!*\
-  !*** ./packages/roosterjs-editor-core/lib/editor/EditorCore.ts ***!
-  \*****************************************************************/
+/***/ "./packages/roosterjs-editor-core/lib/editor/createEditorCore.ts":
+/*!***********************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/editor/createEditorCore.ts ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2859,24 +2929,33 @@ exports.default = Editor;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Undo_1 = __webpack_require__(/*! ../undo/Undo */ "./packages/roosterjs-editor-core/lib/undo/Undo.ts");
+var attachDomEvent_1 = __webpack_require__(/*! ../coreAPI/attachDomEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/attachDomEvent.ts");
+var focus_1 = __webpack_require__(/*! ../coreAPI/focus */ "./packages/roosterjs-editor-core/lib/coreAPI/focus.ts");
+var formatWithUndo_1 = __webpack_require__(/*! ../coreAPI/formatWithUndo */ "./packages/roosterjs-editor-core/lib/coreAPI/formatWithUndo.ts");
+var getCustomData_1 = __webpack_require__(/*! ../coreAPI/getCustomData */ "./packages/roosterjs-editor-core/lib/coreAPI/getCustomData.ts");
+var getFocusPosition_1 = __webpack_require__(/*! ../coreAPI/getFocusPosition */ "./packages/roosterjs-editor-core/lib/coreAPI/getFocusPosition.ts");
+var getLiveRange_1 = __webpack_require__(/*! ../coreAPI/getLiveRange */ "./packages/roosterjs-editor-core/lib/coreAPI/getLiveRange.ts");
+var hasFocus_1 = __webpack_require__(/*! ../coreAPI/hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
+var insertNode_1 = __webpack_require__(/*! ../coreAPI/insertNode */ "./packages/roosterjs-editor-core/lib/coreAPI/insertNode.ts");
+var select_1 = __webpack_require__(/*! ../coreAPI/select */ "./packages/roosterjs-editor-core/lib/coreAPI/select.ts");
+var triggerEvent_1 = __webpack_require__(/*! ../coreAPI/triggerEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/triggerEvent.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var EditorCore = {
-    create: function (contentDiv, options) {
-        return {
-            contentDiv: contentDiv,
-            document: contentDiv.ownerDocument,
-            defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
-            customData: {},
-            cachedRange: null,
-            undo: options.undo || new Undo_1.default(),
-            suspendAddingUndoSnapshot: false,
-            plugins: (options.plugins || []).filter(function (plugin) { return !!plugin; }),
-            idleLoopHandle: 0,
-            ignoreIdleEvent: false,
-        };
-    },
-};
-exports.default = EditorCore;
+function createEditorCore(contentDiv, options) {
+    return {
+        contentDiv: contentDiv,
+        document: contentDiv.ownerDocument,
+        defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
+        customData: {},
+        cachedRange: null,
+        undo: options.undo || new Undo_1.default(),
+        suspendAddingUndoSnapshot: false,
+        plugins: (options.plugins || []).filter(function (plugin) { return !!plugin; }),
+        idleLoopHandle: 0,
+        ignoreIdleEvent: false,
+        api: createCoreApiMap(options.coreApiOverride),
+    };
+}
+exports.default = createEditorCore;
 function calcDefaultFormat(node, baseFormat) {
     baseFormat = baseFormat || {};
     var computedStyle = roosterjs_editor_dom_1.getComputedStyles(node);
@@ -2888,6 +2967,21 @@ function calcDefaultFormat(node, baseFormat) {
         bold: baseFormat.bold,
         italic: baseFormat.italic,
         underline: baseFormat.underline,
+    };
+}
+function createCoreApiMap(map) {
+    map = map || {};
+    return {
+        attachDomEvent: map.attachDomEvent || attachDomEvent_1.default,
+        focus: map.focus || focus_1.default,
+        formatWithUndo: map.formatWithUndo || formatWithUndo_1.default,
+        getCustomData: map.getCustomData || getCustomData_1.default,
+        getFocusPosition: map.getFocusPosition || getFocusPosition_1.default,
+        getLiveRange: map.getLiveRange || getLiveRange_1.default,
+        hasFocus: map.hasFocus || hasFocus_1.default,
+        insertNode: map.insertNode || insertNode_1.default,
+        select: map.select || select_1.default,
+        triggerEvent: map.triggerEvent || triggerEvent_1.default,
     };
 }
 
@@ -3096,6 +3190,12 @@ var Undo = /** @class */ (function () {
         this.getSnapshotsManager().addSnapshot(snapshot);
         this.hasNewContent = false;
     };
+    Undo.prototype.getSnapshotsManager = function () {
+        if (!this.undoSnapshots) {
+            this.undoSnapshots = new UndoSnapshots_1.default(this.maxBufferSize);
+        }
+        return this.undoSnapshots;
+    };
     Undo.prototype.restoreSnapshot = function (delta) {
         var snapshot = this.getSnapshotsManager().move(delta);
         if (snapshot != null) {
@@ -3164,12 +3264,6 @@ var Undo = /** @class */ (function () {
         this.getSnapshotsManager().clearRedo();
         this.lastKeyPress = 0;
         this.hasNewContent = true;
-    };
-    Undo.prototype.getSnapshotsManager = function () {
-        if (!this.undoSnapshots) {
-            this.undoSnapshots = new UndoSnapshots_1.default(this.maxBufferSize);
-        }
-        return this.undoSnapshots;
     };
     return Undo;
 }());
@@ -5395,7 +5489,7 @@ exports.default = intersectWithNodeRange;
 Object.defineProperty(exports, "__esModule", { value: true });
 var getTagOfNode_1 = __webpack_require__(/*! ./getTagOfNode */ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts");
 var BLOCK_ELEMENT_TAGS = 'ADDRESS,ARTICLE,ASIDE,BLOCKQUOTE,CANVAS,DD,DIV,DL,DT,FIELDSET,FIGCAPTION,FIGURE,FOOTER,FORM,H1,H2,H3,H4,H5,H6,HEADER,HR,LI,MAIN,NAV,NOSCRIPT,OL,OUTPUT,P,PRE,SECTION,TABLE,TD,TFOOT,UL,VIDEO'.split(',');
-var BLOCK_DISPLAY_STYLES = 'block,list-item,table-cell'.split(',');
+var BLOCK_DISPLAY_STYLES = ['block', 'list-item', 'table-cell'];
 /**
  * Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.
  * @param node The node to check
@@ -5488,7 +5582,7 @@ var ZERO_WIDTH_SPACE = /\u200b/g;
  */
 function isNodeEmpty(node, trimContent) {
     if (node.nodeType == 3 /* Text */) {
-        return trim(node.nodeValue, trimContent) != '';
+        return trim(node.nodeValue, trimContent) == '';
     }
     else if (node.nodeType == 1 /* Element */) {
         var element = node;
@@ -5680,6 +5774,7 @@ function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, property
 exports.default = sanitizeHtml;
 var ALLOWED_HTML_TAGS = 'BODY,H1,H2,H3,H4,H5,H6,FORM,P,BR,NOBR,HR,ACRONYM,ABBR,ADDRESS,B,BDI,BDO,BIG,BLOCKQUOTE,CENTER,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,WBR,XMP,INPUT,TEXTAREA,BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,IMG,MAP,AREA,CANVAS,FIGCAPTION,FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,TABLE,CAPTION,TH,TR,TD,THEAD,TBODY,TFOOT,COL,COLGROUP,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'.split(',');
 var ALLOWED_HTML_ATTRIBUTES = 'accept,align,alt,checked,cite,cols,colspan,contextmenu,coords,datetime,default,dir,dirname,disabled,download,headers,height,hidden,high,href,hreflang,ismap,kind,label,lang,list,low,max,maxlength,media,min,multiple,open,optimum,pattern,placeholder,readonly,rel,required,reversed,rows,rowspan,scope,selected,shape,size,sizes,span,spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,type,usemap,value,width,wrap'.split(',');
+var DROPPED_STYLE = ['white-space'];
 function convertInlineCss(doc, additionalStyleNodes) {
     var styleNodes = toArray(doc.querySelectorAll('style'));
     var styleSheets = (additionalStyleNodes || [])
@@ -5715,8 +5810,20 @@ function convertInlineCss(doc, additionalStyleNodes) {
         }
     }
 }
+function nativeAssign(source) {
+    return Object.assign({}, source);
+}
+function customAssign(source) {
+    var result;
+    for (var _i = 0, _a = Object.keys(source); _i < _a.length; _i++) {
+        var key = _a[_i];
+        result[key] = source[key];
+    }
+    return result;
+}
+var assign = Object.assign ? nativeAssign : customAssign;
 function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propertyCallbacks, currentStyle) {
-    var thisStyle = Object.assign ? Object.assign({}, currentStyle) : {};
+    var thisStyle = assign(currentStyle);
     var nodeType = node.nodeType;
     var tag = getTagOfNode_1.default(node) || '';
     var isElement = nodeType == 1 /* Element */;
@@ -5725,6 +5832,9 @@ function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propert
         (isText && /^[\r\n]*$/g.test(node.nodeValue)) ||
         (!isElement && !isText)) {
         node.parentNode.removeChild(node);
+    }
+    if (isText && currentStyle['white-space'] == 'pre') {
+        node.nodeValue = node.nodeValue.replace(/\s\s/g, ' \u00A0');
     }
     else if (nodeType == 1 /* Element */) {
         var element = node;
@@ -5741,6 +5851,7 @@ function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propert
     }
 }
 function removeUnusedCss(element, thisStyle) {
+    var tag = getTagOfNode_1.default(element);
     var source = element
         .getAttribute('style')
         .split(';')
@@ -5754,11 +5865,11 @@ function removeUnusedCss(element, thisStyle) {
             var keep = value != 'inherit' &&
                 ((isInheritable && value != thisStyle[name_1]) ||
                     (!isInheritable && value != 'initial' && value != 'normal')) &&
-                !isDangerousCss(name_1, value);
+                !shouldRemove(tag, name_1, value);
             if (keep && isInheritable) {
                 thisStyle[name_1] = value;
             }
-            return keep;
+            return keep && DROPPED_STYLE.indexOf(name_1) < 0;
         }
         else {
             return false;
@@ -5773,11 +5884,14 @@ function removeUnusedCss(element, thisStyle) {
         }
     }
 }
-function isDangerousCss(name, value) {
+function shouldRemove(tag, name, value) {
     if (name == 'position') {
         return true;
     }
     if (value.indexOf('expression') >= 0) {
+        return true;
+    }
+    if (tag == 'LI' && name == 'width') {
         return true;
     }
     return false;
@@ -6257,15 +6371,14 @@ exports.AutoBullet = {
         return false;
     },
     handleEvent: function (event, editor) {
+        roosterjs_editor_api_1.clearCursorEventDataCache(event);
         editor.runAsync(function () {
             var listNode;
             var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
             var textBeforeCursor = cursorData.getSubStringBeforeCursor(3);
-            // editor.insertContent(NBSP);
             editor.formatWithUndo(function () {
                 // Remove the user input '*', '-' or '1.'
-                var rangeToDelete = cursorData.getRangeWithForTextBeforeCursor(textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
-                true /*exactMatch*/);
+                var rangeToDelete = cursorData.getRangeWithForTextBeforeCursor(textBeforeCursor, true /*exactMatch*/);
                 if (rangeToDelete) {
                     rangeToDelete.getRange().deleteContents();
                 }
@@ -6273,7 +6386,7 @@ exports.AutoBullet = {
                 if (roosterjs_editor_dom_1.Browser.isChrome || roosterjs_editor_dom_1.Browser.isChrome) {
                     editor.insertContent('<BR>');
                 }
-                if (textBeforeCursor == '1.') {
+                if (textBeforeCursor.indexOf('1.') == 0) {
                     roosterjs_editor_api_1.toggleNumbering(editor);
                     listNode = roosterjs_editor_api_1.getNodeAtCursor(editor, 'OL');
                 }
@@ -6377,11 +6490,11 @@ var KEY_TAB = 9;
 exports.TabInTable = {
     key: KEY_TAB,
     shouldHandleEvent: function (event, editor) {
-        return roosterjs_editor_api_1.cacheGetNodeAtCursor(editor, event, 'TD');
+        return roosterjs_editor_api_1.cacheGetNodeAtCursor(editor, event, ['TD', 'TH']);
     },
     handleEvent: function (event, editor) {
         var shift = event.rawEvent.shiftKey;
-        var td = roosterjs_editor_api_1.cacheGetNodeAtCursor(editor, event, 'TD');
+        var td = roosterjs_editor_api_1.cacheGetNodeAtCursor(editor, event, ['TD', 'TH']);
         for (var vtable = new roosterjs_editor_api_1.VTable(td), step = shift ? -1 : 1, row = vtable.row, col = vtable.col + step;; col += step) {
             if (col < 0 || col >= vtable.cells[row].length) {
                 row += step;
@@ -7455,8 +7568,7 @@ function recurringGetOrCreateListAtNode(node, level, listMetadata) {
  * conversion is happening, we want to get rid of these elements
  */
 function cleanupListIgnore(node, levels) {
-    for (var i = 0; i < node.childNodes.length; i++) {
-        var child = node.childNodes[i];
+    for (var child = node.firstChild; child; child = child.nextSibling) {
         // Clean up the item internally first if we need to based on the number of levels
         if (child.nodeType == 1 /* Element */ && levels > 1) {
             cleanupListIgnore(child, levels - 1);
@@ -7465,8 +7577,9 @@ function cleanupListIgnore(node, levels) {
         child = fixWordListComments(child, true /*removeComments*/);
         // Check if we can remove this item out
         if (isEmptySpan(child) || isIgnoreNode(child)) {
-            node.removeChild(child);
-            i--;
+            var temp = child;
+            child = child.previousSibling;
+            node.removeChild(temp);
         }
     }
 }
@@ -8071,7 +8184,7 @@ var TableResize = /** @class */ (function () {
         this.pageX = -1;
         this.onMouseOver = function (e) {
             var node = (e.srcElement || e.target);
-            if (_this.pageX < 0 && node && node.tagName == 'TD' && node != _this.td) {
+            if (_this.pageX < 0 && node && ['TD', 'TH'].indexOf(node.tagName) >= 0 && node != _this.td) {
                 _this.td = node;
                 _this.calcAndShowHandle();
             }

@@ -84,6 +84,7 @@ export default function sanitizeHtml(
 
 const ALLOWED_HTML_TAGS = 'BODY,H1,H2,H3,H4,H5,H6,FORM,P,BR,NOBR,HR,ACRONYM,ABBR,ADDRESS,B,BDI,BDO,BIG,BLOCKQUOTE,CENTER,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,WBR,XMP,INPUT,TEXTAREA,BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,IMG,MAP,AREA,CANVAS,FIGCAPTION,FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,TABLE,CAPTION,TH,TR,TD,THEAD,TBODY,TFOOT,COL,COLGROUP,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'.split(',');
 const ALLOWED_HTML_ATTRIBUTES = 'accept,align,alt,checked,cite,cols,colspan,contextmenu,coords,datetime,default,dir,dirname,disabled,download,headers,height,hidden,high,href,hreflang,ismap,kind,label,lang,list,low,max,maxlength,media,min,multiple,open,optimum,pattern,placeholder,readonly,rel,required,reversed,rows,rowspan,scope,selected,shape,size,sizes,span,spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,type,usemap,value,width,wrap'.split(',');
+const DROPPED_STYLE = ['white-space'];
 
 function convertInlineCss(doc: Document, additionalStyleNodes: HTMLStyleElement[]) {
     let styleNodes = toArray(doc.querySelectorAll('style'));
@@ -116,13 +117,29 @@ function convertInlineCss(doc: Document, additionalStyleNodes: HTMLStyleElement[
     }
 }
 
+type ObjectForAssign<T> = { [key: string]: T };
+
+function nativeAssign<T>(source: ObjectForAssign<T>): ObjectForAssign<T> {
+    return Object.assign({}, source);
+}
+
+function customAssign<T>(source: ObjectForAssign<T>): ObjectForAssign<T> {
+    let result: ObjectForAssign<T>;
+    for (let key of Object.keys(source)) {
+        result[key] = source[key];
+    }
+    return result;
+}
+
+const assign = Object.assign ? nativeAssign : customAssign;
+
 function removeUnusedCssAndDangerousContent(
     node: Node,
     callbackPropertyNames: string[],
     propertyCallbacks: SanitizeHtmlPropertyCallback,
     currentStyle: StyleMap
 ) {
-    let thisStyle = Object.assign ? Object.assign({}, currentStyle) : {};
+    let thisStyle = assign(currentStyle);
     let nodeType = node.nodeType;
     let tag = getTagOfNode(node) || '';
     let isElement = nodeType == NodeType.Element;
@@ -134,6 +151,9 @@ function removeUnusedCssAndDangerousContent(
         (!isElement && !isText)
     ) {
         node.parentNode.removeChild(node);
+    }
+    if (isText && currentStyle['white-space'] == 'pre') {
+        node.nodeValue = node.nodeValue.replace(/\s\s/g, ' \u00A0');
     } else if (nodeType == NodeType.Element) {
         let element = <HTMLElement>node;
         if (element.hasAttribute('style')) {
@@ -157,6 +177,7 @@ function removeUnusedCssAndDangerousContent(
 }
 
 function removeUnusedCss(element: HTMLElement, thisStyle: StyleMap) {
+    let tag = getTagOfNode(element);
     let source = element
         .getAttribute('style')
         .split(';')
@@ -171,11 +192,11 @@ function removeUnusedCss(element: HTMLElement, thisStyle: StyleMap) {
                 value != 'inherit' &&
                 ((isInheritable && value != thisStyle[name]) ||
                     (!isInheritable && value != 'initial' && value != 'normal')) &&
-                !isDangerousCss(name, value);
+                !shouldRemove(tag, name, value);
             if (keep && isInheritable) {
                 thisStyle[name] = value;
             }
-            return keep;
+            return keep && DROPPED_STYLE.indexOf(name) < 0;
         } else {
             return false;
         }
@@ -189,12 +210,16 @@ function removeUnusedCss(element: HTMLElement, thisStyle: StyleMap) {
     }
 }
 
-function isDangerousCss(name: string, value: string) {
+function shouldRemove(tag: string, name: string, value: string) {
     if (name == 'position') {
         return true;
     }
 
     if (value.indexOf('expression') >= 0) {
+        return true;
+    }
+
+    if (tag == 'LI' && name == 'width') {
         return true;
     }
 
