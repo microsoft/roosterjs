@@ -2898,7 +2898,7 @@ function nativeAssign(source) {
     return Object.assign({}, source);
 }
 function customAssign(source) {
-    var result;
+    var result = {};
     for (var _i = 0, _a = Object.keys(source); _i < _a.length; _i++) {
         var key = _a[_i];
         result[key] = source[key];

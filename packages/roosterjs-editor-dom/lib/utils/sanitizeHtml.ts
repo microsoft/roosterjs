@@ -128,7 +128,7 @@ function nativeAssign<T>(source: ObjectForAssign<T>): ObjectForAssign<T> {
 }
 
 function customAssign<T>(source: ObjectForAssign<T>): ObjectForAssign<T> {
-    let result: ObjectForAssign<T>;
+    let result: ObjectForAssign<T> = {};
     for (let key of Object.keys(source)) {
         result[key] = source[key];
     }
