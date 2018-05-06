@@ -33,6 +33,10 @@ export default function formatWithUndo(
                 callback();
             }
 
+            if (!isNested && !skipAddingUndoAfterFormat) {
+                core.undo.addUndoSnapshot();
+            }
+
             if (!isNested && changeSource) {
                 let event: ContentChangedEvent = {
                     eventType: PluginEventType.ContentChanged,
@@ -40,9 +44,6 @@ export default function formatWithUndo(
                     data: dataCallback ? dataCallback() : null,
                 };
                 triggerEvent(core, event, true /*broadcast*/);
-            }
-            if (!isNested && !skipAddingUndoAfterFormat) {
-                core.undo.addUndoSnapshot();
             }
         }
     } finally {

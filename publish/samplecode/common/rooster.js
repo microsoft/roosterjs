@@ -1980,6 +1980,9 @@ function formatWithUndo(core, callback, preserveSelection, changeSource, dataCal
             else {
                 callback();
             }
+            if (!isNested && !skipAddingUndoAfterFormat) {
+                core.undo.addUndoSnapshot();
+            }
             if (!isNested && changeSource) {
                 var event_1 = {
                     eventType: 6 /* ContentChanged */,
@@ -1987,9 +1990,6 @@ function formatWithUndo(core, callback, preserveSelection, changeSource, dataCal
                     data: dataCallback ? dataCallback() : null,
                 };
                 triggerEvent_1.default(core, event_1, true /*broadcast*/);
-            }
-            if (!isNested && !skipAddingUndoAfterFormat) {
-                core.undo.addUndoSnapshot();
             }
         }
     }
@@ -2017,7 +2017,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 function getFocusPosition(core) {
     var selection = core.document.defaultView.getSelection();
-    return selection && roosterjs_editor_dom_1.contains(core.contentDiv, selection.focusNode)
+    return selection && roosterjs_editor_dom_1.contains(core.contentDiv, selection.focusNode, true /*treatSameNodeAsContain*/)
         ? new roosterjs_editor_dom_1.Position(selection.focusNode, selection.focusOffset)
         : null;
 }
@@ -2758,7 +2758,8 @@ var Editor = /** @class */ (function () {
      */
     Editor.prototype.getBlockTraverser = function (startFrom) {
         if (startFrom === void 0) { startFrom = 2 /* SelectionStart */; }
-        return new roosterjs_editor_dom_1.ContentTraverser(this.core.contentDiv, getFocusPosition_1.default(this.core), startFrom);
+        var position = getFocusPosition_1.default(this.core);
+        return position ? new roosterjs_editor_dom_1.ContentTraverser(this.core.contentDiv, position, startFrom) : null;
     };
     /**
      * Get a text traverser to help get text before current focused position
@@ -2884,7 +2885,7 @@ function calcDefaultFormat(node, baseFormat) {
         fontFamily: baseFormat.fontFamily || computedStyle[0],
         fontSize: baseFormat.fontSize || computedStyle[1],
         textColor: baseFormat.textColor || computedStyle[2],
-        backgroundColor: baseFormat.backgroundColor || computedStyle[3],
+        backgroundColor: baseFormat.backgroundColor || '',
         bold: baseFormat.bold,
         italic: baseFormat.italic,
         underline: baseFormat.underline,
@@ -3337,20 +3338,22 @@ function updateSelectionToCursorMarkers(editor) {
 // This revised version uses DOM parentNode.insertBefore when it sees the insertion point is in node boundary_begin
 // which gives precise control over DOM structure and solves the chrome issue
 function insertCursorMarker(editor, position, cursorMaker) {
-    position = position.normalize();
-    var parentNode = position.node.parentNode;
-    if (position.offset == 0) {
-        parentNode.insertBefore(cursorMaker, position.node);
-    }
-    else if (position.isAtEnd) {
-        // otherwise, insert after
-        parentNode.insertBefore(cursorMaker, position.node.nextSibling);
-    }
-    else {
-        // This is for insertion in-between a text node
-        var insertionRange = editor.getDocument().createRange();
-        insertionRange.setStart(position.node, position.offset);
-        insertionRange.insertNode(cursorMaker);
+    if (editor.contains(position.node)) {
+        position = position.normalize();
+        var parentNode = position.node.parentNode;
+        if (position.offset == 0) {
+            parentNode.insertBefore(cursorMaker, position.node);
+        }
+        else if (position.isAtEnd) {
+            // otherwise, insert after
+            parentNode.insertBefore(cursorMaker, position.node.nextSibling);
+        }
+        else {
+            // This is for insertion in-between a text node
+            var insertionRange = editor.getDocument().createRange();
+            insertionRange.setStart(position.node, position.offset);
+            insertionRange.insertNode(cursorMaker);
+        }
     }
 }
 // Get an element by unique id. If there is more than one element by the id, it should return null
@@ -5392,45 +5395,8 @@ exports.default = intersectWithNodeRange;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var getTagOfNode_1 = __webpack_require__(/*! ./getTagOfNode */ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts");
-var BLOCK_ELEMENT_TAGS = [
-    'ADDRESS',
-    'ARTICLE',
-    'ASIDE',
-    'BLOCKQUOTE',
-    'CANVAS',
-    'DD',
-    'DIV',
-    'DL',
-    'DT',
-    'FIELDSET',
-    'FIGCAPTION',
-    'FIGURE',
-    'FOOTER',
-    'FORM',
-    'H1',
-    'H2',
-    'H3',
-    'H4',
-    'H5',
-    'H6',
-    'HEADER',
-    'HR',
-    'LI',
-    'MAIN',
-    'NAV',
-    'NOSCRIPT',
-    'OL',
-    'OUTPUT',
-    'P',
-    'PRE',
-    'SECTION',
-    'TABLE',
-    'TD',
-    'TFOOT',
-    'UL',
-    'VIDEO',
-];
-var BLOCK_DISPLAY_STYLES = ['block', 'list-item', 'table-cell'];
+var BLOCK_ELEMENT_TAGS = 'ADDRESS,ARTICLE,ASIDE,BLOCKQUOTE,CANVAS,DD,DIV,DL,DT,FIELDSET,FIGCAPTION,FIGURE,FOOTER,FORM,H1,H2,H3,H4,H5,H6,HEADER,HR,LI,MAIN,NAV,NOSCRIPT,OL,OUTPUT,P,PRE,SECTION,TABLE,TD,TFOOT,UL,VIDEO'.split(',');
+var BLOCK_DISPLAY_STYLES = 'block,list-item,table-cell'.split(',');
 /**
  * Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.
  * @param node The node to check
@@ -5560,24 +5526,7 @@ var getTagOfNode_1 = __webpack_require__(/*! ./getTagOfNode */ "./packages/roost
  * This regex is used when we move focus to very begin of editor. We should avoid putting focus inside
  * void elements so users don't accidently create child nodes in them
  */
-var HTML_VOID_ELEMENTS = [
-    'AREA',
-    'BASE',
-    'BR',
-    'COL',
-    'COMMAND',
-    'EMBED',
-    'HR',
-    'IMG',
-    'INPUT',
-    'KEYGEN',
-    'LINK',
-    'META',
-    'PARAM',
-    'SOURCE',
-    'TRACK',
-    'WBR',
-];
+var HTML_VOID_ELEMENTS = 'AREA,BASE,BR,COL,COMMAND,EMBED,HR,IMG,INPUT,KEYGEN,LINK,META,PARAM,SOURCE,TRACK,WBR'.split(',');
 /**
  * check if it is html void element. void element cannot have childen
  */
@@ -6108,7 +6057,7 @@ var ContentEdit = /** @class */ (function () {
             changeSource == "Paste" /* Paste */ &&
             this.autoLinkEnabled &&
             autoLinkFeatures_1.AutoLink1.shouldHandleEvent(event, this.editor, this.backspaceUndoEventSource)) {
-            autoLinkFeatures_1.AutoLink1.handleEvent(event, this.editor);
+            this.backspaceUndoEventSource = autoLinkFeatures_1.AutoLink1.handleEvent(event, this.editor);
         }
     };
     ContentEdit.prototype.addFeature = function (add, feature) {
@@ -6693,7 +6642,9 @@ var HyperLink = /** @class */ (function () {
                 if (contentChangedEvent.source == "CreateLink" /* CreateLink */) {
                     this.resetAnchor(contentChangedEvent.data);
                 }
-                this.editor.queryElements('a[href]', this.processLink);
+                if (contentChangedEvent.source != "AutoLink" /* AutoLink */) {
+                    this.editor.queryElements('a[href]', this.processLink);
+                }
                 break;
             case 7 /* ExtractContent */:
                 var extractContentEvent = event;

@@ -49,7 +49,7 @@ function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat
         fontFamily: baseFormat.fontFamily || computedStyle[0],
         fontSize: baseFormat.fontSize || computedStyle[1],
         textColor: baseFormat.textColor || computedStyle[2],
-        backgroundColor: baseFormat.backgroundColor || computedStyle[3],
+        backgroundColor: baseFormat.backgroundColor || '',
         bold: baseFormat.bold,
         italic: baseFormat.italic,
         underline: baseFormat.underline,
