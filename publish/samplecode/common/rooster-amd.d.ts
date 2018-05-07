@@ -712,6 +712,11 @@ export class SelectionRange {
      */
     constructor(rawRange: Range);
     /**
+     * Create a SelectionRange object to select a node
+     * @param node The node to select;
+     */
+    constructor(node: Node);
+    /**
      * Create a SelectionRange object using start and end position
      * @param start The start position
      * @param end The end position
@@ -1598,6 +1603,12 @@ export class Editor {
      */
     select(startNode: Node, startOffset: number | PositionType, endNode: Node, endOffset: number | PositionType): boolean;
     /**
+     * Run a callback with selection kept.
+     * @param callback The callback function to run and we will try to preserve selection after it finishes.
+     * The callback can return an optional selection, it will be used if original selection is no longer avaiable
+     */
+    keepSelection(callback: () => SelectionRange | Node | void): void;
+    /**
      * Add a custom DOM event handler to handle events not handled by roosterjs.
      * Caller need to take the responsibility to dispose the handler properly
      * @param eventName DOM event name to handle
@@ -1631,14 +1642,13 @@ export class Editor {
      * addsnapshotAfterFormat is set to true, finally trigger ContentChangedEvent with given change source.
      * If this function is called nested, undo snapshot will only be added in the outside one
      * @param callback The callback function to perform formatting
-     * @param preserveSelection Set to true to try preserve the selection after format
      * @param addsnapshotAfterFormat Whether should add an undo snapshot after format callback is called
      * @param changeSource The change source to use when fire ContentChangedEvent. Default value is 'Format'
      * If pass null, the event will not be fired.
      * @param dataCallback A callback function to retrieve the data for ContentChangedEvent
      * @param skipAddingUndoAfterFormat Set to true to only add undo snapshot before format. Default value is false
      */
-    formatWithUndo(callback: () => void | Node, preserveSelection?: boolean, changeSource?: ChangeSource | string, dataCallback?: () => any, skipAddingUndoAfterFormat?: boolean): void;
+    runWithUndo(callback?: () => void | Node, changeSource?: ChangeSource | string, dataCallback?: () => any, skipAddingUndoAfterFormat?: boolean): void;
     /**
      * Whether there is an available undo snapshot
      */
@@ -1737,12 +1747,13 @@ export interface EditorCore {
 export interface CoreApiMap {
     attachDomEvent: AttachDomEvent;
     focus: Focus;
-    formatWithUndo: FormatWithUndo;
+    runWithUndo: RunWithUndo;
     getCustomData: GetCustomData;
     getFocusPosition: GetFocusPosition;
     getLiveRange: GetLiveRange;
     hasFocus: HasFocus;
     insertNode: InsertNode;
+    keepSelection: KeepSelection;
     select: Select;
     triggerEvent: TriggerEvent;
 }
@@ -1750,8 +1761,6 @@ export interface CoreApiMap {
 export type AttachDomEvent = (core: EditorCore, eventName: string, pluginEventType?: PluginEventType, beforeDispatch?: (event: UIEvent) => void) => () => void;
 
 export type Focus = (core: EditorCore) => void;
-
-export type FormatWithUndo = (core: EditorCore, callback: () => void | Node, preserveSelection: boolean, changeSource: ChangeSource | string, dataCallback: () => any, skipAddingUndoAfterFormat: boolean) => void;
 
 export type GetCustomData = <T>(core: EditorCore, key: string, getter: () => T, disposer?: (value: T) => void) => T;
 
@@ -1762,6 +1771,10 @@ export type GetLiveRange = (core: EditorCore) => Range;
 export type HasFocus = (core: EditorCore) => boolean;
 
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
+
+export type KeepSelection = (core: EditorCore, callback: () => SelectionRange | Node | void) => void;
+
+export type RunWithUndo = (core: EditorCore, callback: () => void, changeSource: ChangeSource | string, dataCallback: () => any, skipAddingUndoAfterFormat: boolean) => void;
 
 export type Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => boolean;
 

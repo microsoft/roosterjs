@@ -156,9 +156,8 @@ export default class TableResize implements EditorPlugin {
                 this.td.clientWidth -
                 cellPadding * 2 +
                 (e.pageX - this.initialPageX) * (this.isRtl(table) ? -1 : 1);
-            this.editor.formatWithUndo(
-                () => this.setTableColumnWidth(newWidth + 'px'),
-                true /*preserveSelection*/
+            this.editor.runWithUndo(() =>
+                this.editor.keepSelection(() => this.setTableColumnWidth(newWidth + 'px'))
             );
         }
 

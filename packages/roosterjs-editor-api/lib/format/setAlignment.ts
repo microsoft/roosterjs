@@ -9,7 +9,7 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function setAlignment(editor: Editor, alignment: Alignment) {
     editor.focus();
-    editor.formatWithUndo(() => {
+    editor.runWithUndo(() => {
         editor
             .getDocument()
             .execCommand(

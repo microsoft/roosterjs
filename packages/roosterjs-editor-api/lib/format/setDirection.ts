@@ -28,7 +28,7 @@ export default function setDirection(editor: Editor, dir: Direction) {
     }
 
     if (blockElements.length > 0) {
-        editor.formatWithUndo(() => {
+        editor.runWithUndo(() => {
             for (let block of blockElements) {
                 // Any DOM change in the loop might interfere with the traversing so we should try to
                 // get the next block first before running any logic that may change DOM

@@ -11,7 +11,7 @@ import { workaroundForEdge } from './toggleBullet';
  */
 export default function toggleNumbering(editor: Editor) {
     editor.focus();
-    editor.formatWithUndo(() => {
+    editor.runWithUndo(() => {
         workaroundForEdge(editor, () => {
             editor.getDocument().execCommand('insertOrderedList', false, null);
         });

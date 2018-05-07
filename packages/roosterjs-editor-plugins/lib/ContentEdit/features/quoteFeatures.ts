@@ -36,7 +36,7 @@ function cacheGetQuoteChild(event: PluginDomEvent, editor: Editor): Node {
 }
 
 function splitQuote(event: PluginDomEvent, editor: Editor) {
-    editor.formatWithUndo(() => {
+    editor.runWithUndo(() => {
         let childOfQuote = cacheGetQuoteChild(event, editor);
         let blockQuoteElement = childOfQuote.parentNode;
         splitParentNode(childOfQuote, false /*splitBefore*/);

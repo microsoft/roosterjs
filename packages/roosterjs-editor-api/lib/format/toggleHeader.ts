@@ -13,7 +13,7 @@ import { NodeType } from 'roosterjs-editor-types';
 export default function toggleHeader(editor: Editor, level: number) {
     level = Math.min(Math.max(Math.round(level), 0), 6);
 
-    editor.formatWithUndo(() => {
+    editor.runWithUndo(() => {
         editor.focus();
 
         if (level > 0) {

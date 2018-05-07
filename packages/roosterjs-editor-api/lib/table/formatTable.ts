@@ -13,13 +13,15 @@ export default function formatTable(editor: Editor, format: TableFormat, table?:
         ? table.rows[0].cells[0]
         : (getNodeAtCursor(editor, ['TD', 'TH']) as HTMLTableCellElement);
     if (td) {
-        editor.formatWithUndo(() => {
-            let vtable = new VTable(td);
-            vtable.applyFormat(format);
-            vtable.writeBack();
-            td = editor.contains(td) ? td : vtable.getCurrentTd();
-            editor.focus();
-            return td;
-        }, true /*preserveSelection*/);
+        editor.runWithUndo(() => {
+            editor.keepSelection(() => {
+                let vtable = new VTable(td);
+                vtable.applyFormat(format);
+                vtable.writeBack();
+                td = editor.contains(td) ? td : vtable.getCurrentTd();
+                editor.focus();
+                return td;
+            });
+        });
     }
 }

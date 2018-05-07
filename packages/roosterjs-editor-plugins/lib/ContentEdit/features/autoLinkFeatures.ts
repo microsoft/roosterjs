@@ -57,19 +57,20 @@ function autoLink(event: PluginDomEvent, editor: Editor) {
     anchor.href = linkData.normalizedUrl;
 
     editor.runAsync(() => {
-        editor.formatWithUndo(
+        editor.runWithUndo(
             () => {
-                let cursorData = cacheGetCursorEventData(event, editor);
-                let range = cursorData.getRangeWithForTextBeforeCursor(
-                    linkData.originalUrl,
-                    false /*exactMatch*/
-                );
-                if (range && range.replaceWithNode(anchor)) {
-                    // The content at cursor has changed. Should also clear the cursor data cache
-                    clearCursorEventDataCache(event);
-                }
+                editor.keepSelection(() => {
+                    let cursorData = cacheGetCursorEventData(event, editor);
+                    let range = cursorData.getRangeWithForTextBeforeCursor(
+                        linkData.originalUrl,
+                        false /*exactMatch*/
+                    );
+                    if (range && range.replaceWithNode(anchor)) {
+                        // The content at cursor has changed. Should also clear the cursor data cache
+                        clearCursorEventDataCache(event);
+                    }
+                });
             },
-            true /*preserveSelection*/,
             ChangeSource.AutoLink,
             () => anchor
         );

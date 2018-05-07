@@ -15,7 +15,7 @@ const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
  */
 export default function clearFormat(editor: Editor) {
     editor.focus();
-    editor.formatWithUndo(() => {
+    editor.runWithUndo(() => {
         editor.getDocument().execCommand('removeFormat', false, null);
 
         queryNodesWithSelection<HTMLElement>(editor, '[class]', false /*containsOnly*/, node =>

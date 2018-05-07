@@ -92,14 +92,10 @@ export default class ImageResize implements EditorPlugin {
         } else if (e.eventType == PluginEventType.KeyDown && this.resizeDiv) {
             let event = <KeyboardEvent>(<PluginDomEvent>e).rawEvent;
             if (event.which == DELETE_KEYCODE || event.which == BACKSPACE_KEYCODE) {
-                this.editor.formatWithUndo(
-                    () => {
-                        this.removeResizeDiv(this.resizeDiv);
-                        this.resizeDiv = null;
-                    },
-                    false /*preserveSelection*/,
-                    ChangeSource.ImageResize
-                );
+                this.editor.runWithUndo(() => {
+                    this.removeResizeDiv(this.resizeDiv);
+                    this.resizeDiv = null;
+                }, ChangeSource.ImageResize);
                 event.preventDefault();
             } else if (
                 event.which != SHIFT_KEYCODE &&
@@ -155,7 +151,7 @@ export default class ImageResize implements EditorPlugin {
             this.startPageY = e.pageY;
             this.startWidth = img.clientWidth;
             this.startHeight = img.clientHeight;
-            this.editor.formatWithUndo(null, false /*preserveSelection*/, ChangeSource.ImageResize);
+            this.editor.runWithUndo(null, ChangeSource.ImageResize);
             let document = this.editor.getDocument();
             document.addEventListener('mousemove', this.doResize, true /*useCapture*/);
             document.addEventListener('mouseup', this.finishResize, true /*useCapture*/);
@@ -215,7 +211,7 @@ export default class ImageResize implements EditorPlugin {
             this.resizeDiv.style.height = '';
         }
         this.direction = null;
-        this.editor.formatWithUndo(null, false, ChangeSource.ImageResize);
+        this.editor.runWithUndo(null, ChangeSource.ImageResize);
         e.preventDefault();
     };
 

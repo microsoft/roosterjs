@@ -429,6 +429,15 @@ export default class Editor {
         return this.core.api.select(this.core, arg1, arg2, arg3, arg4);
     }
 
+    /**
+     * Run a callback with selection kept.
+     * @param callback The callback function to run and we will try to preserve selection after it finishes.
+     * The callback can return an optional selection, it will be used if original selection is no longer avaiable
+     */
+    public keepSelection(callback: () => SelectionRange | Node | void) {
+        this.core.api.keepSelection(this.core, callback);
+    }
+
     //#endregion
 
     //#region EVENT API
@@ -441,7 +450,12 @@ export default class Editor {
      * @returns A dispose function. Call the function to dispose this event handler
      */
     public addDomEventHandler(eventName: string, handler: (event: UIEvent) => void): () => void {
-        return this.core.api.attachDomEvent(this.core, eventName, null /*pluginEventType*/, handler);
+        return this.core.api.attachDomEvent(
+            this.core,
+            eventName,
+            null /*pluginEventType*/,
+            handler
+        );
     }
 
     /**
@@ -495,24 +509,21 @@ export default class Editor {
      * addsnapshotAfterFormat is set to true, finally trigger ContentChangedEvent with given change source.
      * If this function is called nested, undo snapshot will only be added in the outside one
      * @param callback The callback function to perform formatting
-     * @param preserveSelection Set to true to try preserve the selection after format
      * @param addsnapshotAfterFormat Whether should add an undo snapshot after format callback is called
      * @param changeSource The change source to use when fire ContentChangedEvent. Default value is 'Format'
      * If pass null, the event will not be fired.
      * @param dataCallback A callback function to retrieve the data for ContentChangedEvent
      * @param skipAddingUndoAfterFormat Set to true to only add undo snapshot before format. Default value is false
      */
-    public formatWithUndo(
-        callback: () => void | Node,
-        preserveSelection: boolean = false,
+    public runWithUndo(
+        callback?: () => void | Node,
         changeSource: ChangeSource | string = ChangeSource.Format,
         dataCallback?: () => any,
         skipAddingUndoAfterFormat: boolean = false
     ) {
-        this.core.api.formatWithUndo(
+        this.core.api.runWithUndo(
             this.core,
             callback,
-            preserveSelection,
             changeSource,
             dataCallback,
             skipAddingUndoAfterFormat
@@ -598,7 +609,7 @@ export default class Editor {
     public getBlockTraverser(
         startFrom: ContentPosition = ContentPosition.SelectionStart
     ): ContentTraverser {
-        let position = this.core.api.getFocusPosition(this.core)
+        let position = this.core.api.getFocusPosition(this.core);
         return position ? new ContentTraverser(this.core.contentDiv, position, startFrom) : null;
     }
 
@@ -628,16 +639,31 @@ export default class Editor {
     private createEventHandlers() {
         this.eventDisposers = [
             this.core.api.attachDomEvent(this.core, 'input', null, this.stopPropagation),
-            this.core.api.attachDomEvent(this.core, 'keypress', PluginEventType.KeyPress, this.onKeyPress),
+            this.core.api.attachDomEvent(
+                this.core,
+                'keypress',
+                PluginEventType.KeyPress,
+                this.onKeyPress
+            ),
             this.core.api.attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown),
             this.core.api.attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp),
             this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
             this.core.api.attachDomEvent(this.core, 'mouseup', PluginEventType.MouseUp),
-            this.core.api.attachDomEvent(this.core, 'compositionstart', null, () => (this.inIME = true)),
-            this.core.api.attachDomEvent(this.core, 'compositionend', PluginEventType.CompositionEnd, (event: KeyboardEvent) => {
-                this.inIME = false;
-                this.onKeyPress(event);
-            }),
+            this.core.api.attachDomEvent(
+                this.core,
+                'compositionstart',
+                null,
+                () => (this.inIME = true)
+            ),
+            this.core.api.attachDomEvent(
+                this.core,
+                'compositionend',
+                PluginEventType.CompositionEnd,
+                (event: KeyboardEvent) => {
+                    this.inIME = false;
+                    this.onKeyPress(event);
+                }
+            ),
             this.core.api.attachDomEvent(this.core, 'focus', null, () => {
                 // Restore the last saved selection first
                 if (this.core.cachedRange && !this.disableRestoreSelectionOnFocus) {
@@ -645,9 +671,14 @@ export default class Editor {
                 }
                 this.core.cachedRange = null;
             }),
-            this.core.api.attachDomEvent(this.core, IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur', null, () => {
-                this.core.cachedRange = this.core.api.getLiveRange(this.core);
-            }),
+            this.core.api.attachDomEvent(
+                this.core,
+                IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur',
+                null,
+                () => {
+                    this.core.cachedRange = this.core.api.getLiveRange(this.core);
+                }
+            ),
         ];
     }
 
@@ -703,7 +734,7 @@ export default class Editor {
             // (i.e. select all and DEL, or backspace from very end to begin).
             // The fix is to add a DIV wrapping, apply default format and move cursor over
             formatElement = fromHtml('<div><br></div>', this.getDocument())[0] as HTMLElement;
-            this.core.contentDiv.appendChild(formatElement);
+            this.insertNode(formatElement);
 
             // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
             nodeToSelect = formatElement.firstChild;

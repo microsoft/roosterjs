@@ -103,11 +103,7 @@ class ContentTraverser {
         // 2) the block is before the current block
         // Then:
         // 1) Re-position current block to newly found block
-        if (
-            previous &&
-            this.scoper.isBlockInScope(previous) &&
-            current.isAfter(previous)
-        ) {
+        if (previous && this.scoper.isBlockInScope(previous) && current.isAfter(previous)) {
             this.currentBlock = previous;
             return this.currentBlock;
         }
@@ -139,12 +135,13 @@ class ContentTraverser {
         let position = thisInline.getEndPosition();
         let candidate = position.isAtEnd
             ? getInlineElementAtNode(
-                getNextLeafSibling(this.rootNode, thisInline.getContainerNode())
-            )
+                  getNextLeafSibling(this.rootNode, thisInline.getContainerNode())
+              )
             : new PartialInlineElement(thisInline, position, null);
-        let nextInline = candidate && (!thisInline || candidate.isAfter(thisInline))
-            ? this.scoper.trimInlineElement(candidate)
-            : null;
+        let nextInline =
+            candidate && (!thisInline || candidate.isAfter(thisInline))
+                ? this.scoper.trimInlineElement(candidate)
+                : null;
         this.currentInline = nextInline || this.currentInline;
         return nextInline;
     }
@@ -159,14 +156,16 @@ class ContentTraverser {
 
         let thisInline = this.currentInlineElement;
         let position = thisInline.getStartPosition();
-        let candidate = position.offset == 0
-            ? getInlineElementAtNode(
-                getPreviousLeafSibling(this.rootNode, thisInline.getContainerNode())
-            )
-            : new PartialInlineElement(thisInline, null, position);
-        let previousInline = candidate && (!thisInline || thisInline.isAfter(candidate))
-            ? this.scoper.trimInlineElement(candidate)
-            : null;
+        let candidate =
+            position.offset == 0
+                ? getInlineElementAtNode(
+                      getPreviousLeafSibling(this.rootNode, thisInline.getContainerNode())
+                  )
+                : new PartialInlineElement(thisInline, null, position);
+        let previousInline =
+            candidate && (!thisInline || thisInline.isAfter(candidate))
+                ? this.scoper.trimInlineElement(candidate)
+                : null;
 
         this.currentInline = previousInline || this.currentInline;
         return previousInline;
@@ -187,7 +186,6 @@ class ContentTraverser {
         );
         return getBlockElementAtNode(this.rootNode, leaf);
     }
-
 }
 
 export default ContentTraverser;

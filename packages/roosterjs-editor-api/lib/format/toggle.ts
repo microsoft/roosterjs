@@ -7,7 +7,7 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function toggle(editor: Editor, command: string) {
     editor.focus();
-    editor.formatWithUndo(() => {
+    editor.runWithUndo(() => {
         editor.getDocument().execCommand(command, false, null);
     });
 }

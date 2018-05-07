@@ -14,7 +14,7 @@ import { Indentation } from 'roosterjs-editor-types';
 export default function setIndentation(editor: Editor, indentation: Indentation) {
     editor.focus();
     let command = indentation == Indentation.Increase ? 'indent' : 'outdent';
-    editor.formatWithUndo(() => {
+    editor.runWithUndo(() => {
         let format = getFormatState(editor);
         editor.getDocument().execCommand(command, false, null);
         if (!format.isBullet && !format.isNumbering) {

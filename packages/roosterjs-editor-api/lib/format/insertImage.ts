@@ -10,7 +10,7 @@ export default function insertImage(editor: Editor, imageFile: File) {
     let reader = new FileReader();
     reader.onload = (event: ProgressEvent) => {
         if (!editor.isDisposed()) {
-            editor.formatWithUndo(() => {
+            editor.runWithUndo(() => {
                 let image = editor.getDocument().createElement('img');
                 image.src = (event.target as FileReader).result;
                 image.style.maxWidth = '100%';

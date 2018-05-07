@@ -36,7 +36,7 @@ export function workaroundForEdge(editor: Editor, callback: () => void) {
  */
 export default function toggleBullet(editor: Editor) {
     editor.focus();
-    editor.formatWithUndo(() => {
+    editor.runWithUndo(() => {
         workaroundForEdge(editor, () => {
             editor.getDocument().execCommand('insertUnorderedList', false, null);
         });

@@ -3,18 +3,22 @@ import EditorOptions from './EditorOptions';
 import Undo from '../undo/Undo';
 import attachDomEvent from '../coreAPI/attachDomEvent';
 import focus from '../coreAPI/focus';
-import formatWithUndo from '../coreAPI/formatWithUndo';
 import getCustomData from '../coreAPI/getCustomData';
 import getFocusPosition from '../coreAPI/getFocusPosition';
 import getLiveRange from '../coreAPI/getLiveRange';
 import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
+import keepSelection from '../coreAPI/keepSelection';
+import runWithUndo from '../coreAPI/runWithUndo';
 import select from '../coreAPI/select';
 import triggerEvent from '../coreAPI/triggerEvent';
 import { DefaultFormat } from 'roosterjs-editor-types';
 import { getComputedStyles } from 'roosterjs-editor-dom';
 
-export default function createEditorCore(contentDiv: HTMLDivElement, options: EditorOptions): EditorCore {
+export default function createEditorCore(
+    contentDiv: HTMLDivElement,
+    options: EditorOptions
+): EditorCore {
     return {
         contentDiv: contentDiv,
         document: contentDiv.ownerDocument,
@@ -49,12 +53,13 @@ function createCoreApiMap(map: Partial<CoreApiMap>): CoreApiMap {
     return {
         attachDomEvent: map.attachDomEvent || attachDomEvent,
         focus: map.focus || focus,
-        formatWithUndo: map.formatWithUndo || formatWithUndo,
+        runWithUndo: map.runWithUndo || runWithUndo,
         getCustomData: map.getCustomData || getCustomData,
         getFocusPosition: map.getFocusPosition || getFocusPosition,
         getLiveRange: map.getLiveRange || getLiveRange,
         hasFocus: map.hasFocus || hasFocus,
         insertNode: map.insertNode || insertNode,
+        keepSelection: map.keepSelection || keepSelection,
         select: map.select || select,
         triggerEvent: map.triggerEvent || triggerEvent,
     };

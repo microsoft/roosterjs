@@ -3,13 +3,7 @@ import hasFocus from './hasFocus';
 import { Position, SelectionRange, contains } from 'roosterjs-editor-dom';
 import { PositionType } from 'roosterjs-editor-types';
 
-const select: Select = (
-    core: EditorCore,
-    arg1: any,
-    arg2?: any,
-    arg3?: any,
-    arg4?: any
-) => {
+const select: Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => {
     let rawRange: Range;
 
     if (!arg1) {

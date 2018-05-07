@@ -97,9 +97,11 @@ class SelectionScoper implements TraversingScoper {
             end = this.range.end;
         }
 
-        return start.offset > 0 || !end.isAtEnd
-            ? new PartialInlineElement(inlineElement, start, end)
-            : inlineElement;
+        return start.isAfter(end) || start.equalTo(end)
+            ? null
+            : start.offset > 0 || !end.isAtEnd
+                ? new PartialInlineElement(inlineElement, start, end)
+                : inlineElement;
     }
 }
 

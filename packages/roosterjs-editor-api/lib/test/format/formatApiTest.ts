@@ -70,13 +70,13 @@ describe('FormatUtils', () => {
     });
 
     it('setTextColor() triggers the applyInlineStyle method in editor', () => {
-        spyOn(editor, 'formatWithUndo').and.callThrough();
+        spyOn(editor, 'runWithUndo').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
 
         let mockColor = 'red';
         setTextColor(editor, mockColor);
 
-        expect(editor.formatWithUndo).toHaveBeenCalled();
+        expect(editor.runWithUndo).toHaveBeenCalled();
         expect(applyInlineStyle.default).toHaveBeenCalled();
 
         let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];
@@ -86,13 +86,13 @@ describe('FormatUtils', () => {
     });
 
     it('setBackgroundColor() triggers the applyInlineStyle method in editor', () => {
-        spyOn(editor, 'formatWithUndo').and.callThrough();
+        spyOn(editor, 'runWithUndo').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
 
         let mockColor = 'red';
         setBackgroundColor(editor, mockColor);
 
-        expect(editor.formatWithUndo).toHaveBeenCalled();
+        expect(editor.runWithUndo).toHaveBeenCalled();
         expect(applyInlineStyle.default).toHaveBeenCalled();
 
         let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];
@@ -102,13 +102,13 @@ describe('FormatUtils', () => {
     });
 
     it('setFontName() triggers the applyInlineStyle method in editor', () => {
-        spyOn(editor, 'formatWithUndo').and.callThrough();
+        spyOn(editor, 'runWithUndo').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
 
         let mockFontName = 'Calibri, Arial, Helvetica, sans-serif';
         setFontName(editor, mockFontName);
 
-        expect(editor.formatWithUndo).toHaveBeenCalled();
+        expect(editor.runWithUndo).toHaveBeenCalled();
         expect(applyInlineStyle.default).toHaveBeenCalled();
 
         let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];
@@ -118,13 +118,13 @@ describe('FormatUtils', () => {
     });
 
     it('setFontSize() triggers the applyInlineStyle method in editor', () => {
-        spyOn(editor, 'formatWithUndo').and.callThrough();
+        spyOn(editor, 'runWithUndo').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
 
         let mockFontSize = '6pt';
         setFontSize(editor, mockFontSize);
 
-        expect(editor.formatWithUndo).toHaveBeenCalled();
+        expect(editor.runWithUndo).toHaveBeenCalled();
         expect(applyInlineStyle.default).toHaveBeenCalled();
 
         let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];

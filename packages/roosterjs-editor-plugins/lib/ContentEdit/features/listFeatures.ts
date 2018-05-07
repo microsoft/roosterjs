@@ -1,7 +1,15 @@
 import { ContentEditFeature } from '../ContentEditFeatures';
 import { Editor } from 'roosterjs-editor-core';
 import { Indentation, PluginDomEvent } from 'roosterjs-editor-types';
-import { Browser, Position, SelectionRange, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
+import {
+    Browser,
+    Position,
+    SelectionRange,
+    getTagOfNode,
+    isNodeEmpty,
+    splitParentNode,
+    unwrap,
+} from 'roosterjs-editor-dom';
 import {
     cacheGetCursorEventData,
     cacheGetNodeAtCursor,
@@ -20,7 +28,7 @@ const KEY_SPACE = 32;
 
 export const IndentOutdentWhenTab: ContentEditFeature = {
     key: KEY_TAB,
-    shouldHandleEvent: cacheGetListTag,
+    shouldHandleEvent: cacheGetListElement,
     handleEvent: (event, editor) => {
         let shift = (event.rawEvent as KeyboardEvent).shiftKey;
         setIndentation(editor, shift ? Indentation.Decrease : Indentation.Increase);
@@ -77,7 +85,7 @@ export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
 export const AutoBullet: ContentEditFeature = {
     key: KEY_SPACE,
     shouldHandleEvent: (event, editor) => {
-        if (!cacheGetListTag(event, editor)) {
+        if (!cacheGetListElement(event, editor)) {
             let cursorData = cacheGetCursorEventData(event, editor);
             let textBeforeCursor = cursorData.getSubStringBeforeCursor(3);
 
@@ -98,7 +106,7 @@ export const AutoBullet: ContentEditFeature = {
             let cursorData = cacheGetCursorEventData(event, editor);
             let textBeforeCursor = cursorData.getSubStringBeforeCursor(3);
 
-            editor.formatWithUndo(
+            editor.runWithUndo(
                 () => {
                     // Remove the user input '*', '-' or '1.'
                     let rangeToDelete = cursorData.getRangeWithForTextBeforeCursor(
@@ -122,7 +130,6 @@ export const AutoBullet: ContentEditFeature = {
                         listNode = getNodeAtCursor(editor, 'UL');
                     }
                 },
-                false /*preserveSelection*/,
                 ChangeSource.AutoBullet,
                 () => listNode
             );
@@ -132,18 +139,30 @@ export const AutoBullet: ContentEditFeature = {
 };
 
 function toggleListAndPreventDefault(event: PluginDomEvent, editor: Editor) {
-    let tag = cacheGetListTag(event, editor);
+    let listInfo = cacheGetListElement(event, editor);
+    if (listInfo) {
+        let [listElement, li] = listInfo;
+        while (editor.contains(li.parentNode) && li.parentNode != listElement) {
+            splitParentNode(li, false);
+            splitParentNode(li, true);
+            unwrap(li.parentNode);
+        }
 
-    if (tag == 'UL') {
-        toggleBullet(editor);
-    } else if (tag == 'OL') {
-        toggleNumbering(editor);
+        editor.select(li);
+
+        let tag = getTagOfNode(listElement);
+        if (tag == 'UL') {
+            toggleBullet(editor);
+        } else if (tag == 'OL') {
+            toggleNumbering(editor);
+        }
+        editor.focus();
+        event.rawEvent.preventDefault();
     }
-    event.rawEvent.preventDefault();
 }
 
-function cacheGetListTag(event: PluginDomEvent, editor: Editor) {
+function cacheGetListElement(event: PluginDomEvent, editor: Editor) {
     let li = cacheGetNodeAtCursor(editor, event, 'LI');
-    let tag = li && getTagOfNode(li.parentNode);
-    return tag == 'OL' || tag == 'UL' ? tag : null;
+    let listElement = li && getNodeAtCursor(editor, ['UL', 'OL'], li);
+    return listElement ? [listElement, li] : null;
 }

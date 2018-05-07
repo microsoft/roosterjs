@@ -22,7 +22,7 @@ export default class NodeBlockElement extends StartEndBlockElement {
      */
     public getFirstInlineElement(): InlineElement {
         if (!this.firstInline) {
-            let node = getFirstLeafNode(this.startNode)
+            let node = getFirstLeafNode(this.startNode);
             this.firstInline = getInlineElementAtNode(node);
         }
 

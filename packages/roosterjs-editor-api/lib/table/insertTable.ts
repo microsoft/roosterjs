@@ -34,7 +34,7 @@ export default function insertTable(
         }
     }
 
-    editor.formatWithUndo(() => {
+    editor.runWithUndo(() => {
         editor.insertNode(fragment);
         formatTable(
             editor,

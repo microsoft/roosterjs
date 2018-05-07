@@ -15,7 +15,7 @@ export default function setImageAltText(editor: Editor, altText: string) {
     let imageNodes = queryNodesWithSelection(editor, 'img');
 
     if (imageNodes.length > 0) {
-        editor.formatWithUndo(() => {
+        editor.runWithUndo(() => {
             for (let node of imageNodes) {
                 (node as HTMLElement).setAttribute('alt', altText);
             }

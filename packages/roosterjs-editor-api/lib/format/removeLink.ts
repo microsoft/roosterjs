@@ -12,10 +12,12 @@ export default function removeLink(editor: Editor) {
     editor.focus();
     let nodes = queryNodesWithSelection(editor, 'a[href]');
     if (nodes.length) {
-        editor.formatWithUndo(() => {
-            for (let node of nodes) {
-                unwrap(node);
-            }
-        }, true /*preserveSelection*/);
+        editor.runWithUndo(() => {
+            editor.keepSelection(() => {
+                for (let node of nodes) {
+                    unwrap(node);
+                }
+            });
+        });
     }
 }

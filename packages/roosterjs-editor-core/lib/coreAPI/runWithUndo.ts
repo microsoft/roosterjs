@@ -1,11 +1,9 @@
-import EditorCore, { FormatWithUndo } from '../editor/EditorCore';
-import { SelectionRange } from 'roosterjs-editor-dom/lib';
+import EditorCore, { RunWithUndo } from '../editor/EditorCore';
 import { ChangeSource, ContentChangedEvent, PluginEventType } from 'roosterjs-editor-types';
 
-const formatWithUndo: FormatWithUndo = (
+const runWithUndo: RunWithUndo = (
     core: EditorCore,
-    callback: () => void | Node,
-    preserveSelection: boolean,
+    callback: () => void,
     changeSource: ChangeSource | string,
     dataCallback: () => any,
     skipAddingUndoAfterFormat: boolean
@@ -19,17 +17,7 @@ const formatWithUndo: FormatWithUndo = (
 
     try {
         if (callback) {
-            if (preserveSelection) {
-                let range = core.api.getLiveRange(core) || core.cachedRange;
-                range = range && new SelectionRange(range).normalize().getRange();
-                let fallbackNode = callback();
-                if (!core.api.select(core, range) && fallbackNode) {
-                    core.api.select(core, fallbackNode);
-                }
-            } else {
-                callback();
-            }
-
+            callback();
             if (!isNested && !skipAddingUndoAfterFormat) {
                 core.undo.addUndoSnapshot();
             }
@@ -50,4 +38,4 @@ const formatWithUndo: FormatWithUndo = (
     }
 };
 
-export default formatWithUndo;
+export default runWithUndo;

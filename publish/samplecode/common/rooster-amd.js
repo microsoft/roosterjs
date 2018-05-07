@@ -339,7 +339,7 @@ var ZERO_WIDTH_SPACE = '\u200B';
 function applyInlineStyle(editor, styler) {
     editor.focus();
     var collapsed = editor.getSelectionRange().collapsed;
-    editor.formatWithUndo(function () {
+    editor.runWithUndo(function () {
         if (collapsed) {
             // Create a new span to hold the style.
             // Some content is needed to position selection into the span
@@ -375,7 +375,7 @@ function applyInlineStyle(editor, styler) {
                 editor.select(firstNode_1, "b" /* Before */, lastNode_1, "a" /* After */);
             }
         }
-    }, false /*preserveSelection*/, "Format" /* Format */, null /*dataCallback*/, collapsed /*skipAddingUndoAfterFormat*/);
+    }, "Format" /* Format */, null /*dataCallback*/, collapsed /*skipAddingUndoAfterFormat*/);
 }
 exports.default = applyInlineStyle;
 
@@ -406,7 +406,7 @@ var STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
  */
 function clearFormat(editor) {
     editor.focus();
-    editor.formatWithUndo(function () {
+    editor.runWithUndo(function () {
         editor.getDocument().execCommand('removeFormat', false, null);
         queryNodesWithSelection_1.default(editor, '[class]', false /*containsOnly*/, function (node) {
             return node.removeAttribute('class');
@@ -468,7 +468,7 @@ function createLink(editor, link, altText, displayText) {
         var normalizedUrl_1 = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
         var originalUrl_1 = linkData ? linkData.originalUrl : url;
         var anchor_1 = null;
-        editor.formatWithUndo(function () {
+        editor.runWithUndo(function () {
             if (editor.getSelectionRange().collapsed) {
                 anchor_1 = getAnchorNodeAtCursor(editor);
                 // If there is already a link, just change its href
@@ -494,7 +494,7 @@ function createLink(editor, link, altText, displayText) {
                 anchor_1.removeAttribute(TEMP_TITLE);
                 anchor_1.title = altText;
             }
-        }, false /*preserveSelection*/, "CreateLink" /* CreateLink */, function () { return anchor_1; });
+        }, "CreateLink" /* CreateLink */, function () { return anchor_1; });
     }
 }
 exports.default = createLink;
@@ -549,7 +549,7 @@ function insertImage(editor, imageFile) {
     var reader = new FileReader();
     reader.onload = function (event) {
         if (!editor.isDisposed()) {
-            editor.formatWithUndo(function () {
+            editor.runWithUndo(function () {
                 var image = editor.getDocument().createElement('img');
                 image.src = event.target.result;
                 image.style.maxWidth = '100%';
@@ -586,12 +586,14 @@ function removeLink(editor) {
     editor.focus();
     var nodes = queryNodesWithSelection_1.default(editor, 'a[href]');
     if (nodes.length) {
-        editor.formatWithUndo(function () {
-            for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
-                var node = nodes_1[_i];
-                roosterjs_editor_dom_1.unwrap(node);
-            }
-        }, true /*preserveSelection*/);
+        editor.runWithUndo(function () {
+            editor.keepSelection(function () {
+                for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
+                    var node = nodes_1[_i];
+                    roosterjs_editor_dom_1.unwrap(node);
+                }
+            });
+        });
     }
 }
 exports.default = removeLink;
@@ -617,7 +619,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 function setAlignment(editor, alignment) {
     editor.focus();
-    editor.formatWithUndo(function () {
+    editor.runWithUndo(function () {
         editor
             .getDocument()
             .execCommand(alignment == 1 /* Center */
@@ -691,7 +693,7 @@ function setDirection(editor, dir) {
         startBlock = contentTraverser.getNextBlockElement();
     }
     if (blockElements.length > 0) {
-        editor.formatWithUndo(function () {
+        editor.runWithUndo(function () {
             for (var _i = 0, blockElements_1 = blockElements; _i < blockElements_1.length; _i++) {
                 var block = blockElements_1[_i];
                 // Any DOM change in the loop might interfere with the traversing so we should try to
@@ -802,7 +804,7 @@ function setImageAltText(editor, altText) {
     editor.focus();
     var imageNodes = queryNodesWithSelection_1.default(editor, 'img');
     if (imageNodes.length > 0) {
-        editor.formatWithUndo(function () {
+        editor.runWithUndo(function () {
             for (var _i = 0, imageNodes_1 = imageNodes; _i < imageNodes_1.length; _i++) {
                 var node = imageNodes_1[_i];
                 node.setAttribute('alt', altText);
@@ -838,7 +840,7 @@ var queryNodesWithSelection_1 = __webpack_require__(/*! ../cursor/queryNodesWith
 function setIndentation(editor, indentation) {
     editor.focus();
     var command = indentation == 0 /* Increase */ ? 'indent' : 'outdent';
-    editor.formatWithUndo(function () {
+    editor.runWithUndo(function () {
         var format = getFormatState_1.default(editor);
         editor.getDocument().execCommand(command, false, null);
         if (!format.isBullet && !format.isNumbering) {
@@ -897,7 +899,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 function toggle(editor, command) {
     editor.focus();
-    editor.formatWithUndo(function () {
+    editor.runWithUndo(function () {
         editor.getDocument().execCommand(command, false, null);
     });
 }
@@ -935,22 +937,24 @@ var defaultStyler = function (element) {
  */
 function toggleBlockQuote(editor, styler) {
     editor.focus();
-    editor.formatWithUndo(function () {
-        // There are already blockquote nodes, unwrap them
-        if (queryNodesWithSelection_1.default(editor, 'blockquote', false /*containsOnly*/, roosterjs_editor_dom_1.unwrap).length ==
-            0) {
-            // Step 1: Find all block elements and their content nodes
-            var nodes = getContentNodes(editor);
-            // Step 2: Split existing list container if necessary
-            nodes = getSplittedListNodes(nodes);
-            // Step 3: Handle some special cases
-            nodes = getNodesWithSpecialCaseHandled(editor, nodes);
-            var quoteElement = roosterjs_editor_dom_1.wrap(nodes, '<blockquote></blockqupte>');
-            (styler || defaultStyler)(quoteElement);
-            // Return a fallback to select in case original selection is not valid any more
-            return nodes[0];
-        }
-    }, true /*preserveSelection*/);
+    editor.runWithUndo(function () {
+        editor.keepSelection(function () {
+            // There are already blockquote nodes, unwrap them
+            if (queryNodesWithSelection_1.default(editor, 'blockquote', false /*containsOnly*/, roosterjs_editor_dom_1.unwrap)
+                .length == 0) {
+                // Step 1: Find all block elements and their content nodes
+                var nodes = getContentNodes(editor);
+                // Step 2: Split existing list container if necessary
+                nodes = getSplittedListNodes(nodes);
+                // Step 3: Handle some special cases
+                nodes = getNodesWithSpecialCaseHandled(editor, nodes);
+                var quoteElement = roosterjs_editor_dom_1.wrap(nodes, '<blockquote></blockqupte>');
+                (styler || defaultStyler)(quoteElement);
+                // Return a fallback to select in case original selection is not valid any more
+                return nodes[0];
+            }
+        });
+    });
 }
 exports.default = toggleBlockQuote;
 function getContentNodes(editor) {
@@ -1105,7 +1109,7 @@ exports.workaroundForEdge = workaroundForEdge;
  */
 function toggleBullet(editor) {
     editor.focus();
-    editor.formatWithUndo(function () {
+    editor.runWithUndo(function () {
         workaroundForEdge(editor, function () {
             editor.getDocument().execCommand('insertUnorderedList', false, null);
         });
@@ -1137,7 +1141,7 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
  */
 function toggleHeader(editor, level) {
     level = Math.min(Math.max(Math.round(level), 0), 6);
-    editor.formatWithUndo(function () {
+    editor.runWithUndo(function () {
         editor.focus();
         if (level > 0) {
             var traverser = editor.getSelectionTraverser();
@@ -1218,7 +1222,7 @@ var toggleBullet_1 = __webpack_require__(/*! ./toggleBullet */ "./packages/roost
  */
 function toggleNumbering(editor) {
     editor.focus();
-    editor.formatWithUndo(function () {
+    editor.runWithUndo(function () {
         toggleBullet_1.workaroundForEdge(editor, function () {
             editor.getDocument().execCommand('insertOrderedList', false, null);
         });
@@ -1648,113 +1652,115 @@ var getNodeAtCursor_1 = __webpack_require__(/*! ../cursor/getNodeAtCursor */ "./
 function editTable(editor, operation) {
     var td = getNodeAtCursor_1.default(editor, ['TD', 'TH']);
     if (td) {
-        editor.formatWithUndo(function () {
-            var vtable = new VTable_1.default(td);
-            var currentRow = vtable.cells[vtable.row];
-            var currentCell = currentRow[vtable.col];
-            switch (operation) {
-                case 0 /* InsertAbove */:
-                case 1 /* InsertBelow */:
-                    var newRow = vtable.row + (operation == 0 /* InsertAbove */ ? 0 : 1);
-                    vtable.cells.splice(newRow, 0, currentRow.map(function (cell) { return VTable_1.default.cloneCell(cell); }));
-                    break;
-                case 2 /* InsertLeft */:
-                case 3 /* InsertRight */:
-                    var newCol_1 = vtable.col + (operation == 2 /* InsertLeft */ ? 0 : 1);
-                    vtable.forEachCellOfCurrentColumn(function (cell, row) {
-                        row.splice(newCol_1, 0, VTable_1.default.cloneCell(cell));
-                    });
-                    break;
-                case 6 /* DeleteRow */:
-                    vtable.forEachCellOfCurrentRow(function (cell, i) {
-                        var nextCell = vtable.getCell(vtable.row + 1, i);
-                        if (cell.td && cell.td.rowSpan > 1 && nextCell.spanAbove) {
-                            nextCell.td = cell.td;
-                        }
-                    });
-                    vtable.cells.splice(vtable.row, 1);
-                    break;
-                case 5 /* DeleteColumn */:
-                    vtable.forEachCellOfCurrentColumn(function (cell, row, i) {
-                        var nextCell = vtable.getCell(i, vtable.col + 1);
-                        if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
-                            nextCell.td = cell.td;
-                        }
-                        row.splice(vtable.col, 1);
-                    });
-                    break;
-                case 7 /* MergeAbove */:
-                case 8 /* MergeBelow */:
-                    var rowStep = operation == 7 /* MergeAbove */ ? -1 : 1;
-                    for (var rowIndex = vtable.row + rowStep; rowIndex >= 0 && rowIndex < vtable.cells.length; rowIndex += rowStep) {
-                        var cell = vtable.getCell(rowIndex, vtable.col);
-                        if (cell.td && !cell.spanAbove) {
-                            var aboveCell = rowIndex < vtable.row ? cell : currentCell;
-                            var belowCell = rowIndex < vtable.row ? currentCell : cell;
-                            if (aboveCell.td.colSpan == belowCell.td.colSpan) {
-                                VTable_1.default.moveChildren(belowCell.td, aboveCell.td);
-                                belowCell.td = null;
-                                belowCell.spanAbove = true;
-                            }
-                            break;
-                        }
-                    }
-                    break;
-                case 9 /* MergeLeft */:
-                case 10 /* MergeRight */:
-                    var colStep = operation == 9 /* MergeLeft */ ? -1 : 1;
-                    for (var colIndex = vtable.col + colStep; colIndex >= 0 && colIndex < vtable.cells[vtable.row].length; colIndex += colStep) {
-                        var cell = vtable.getCell(vtable.row, colIndex);
-                        if (cell.td && !cell.spanLeft) {
-                            var leftCell = colIndex < vtable.col ? cell : currentCell;
-                            var rightCell = colIndex < vtable.col ? currentCell : cell;
-                            if (leftCell.td.rowSpan == rightCell.td.rowSpan) {
-                                VTable_1.default.moveChildren(rightCell.td, leftCell.td);
-                                rightCell.td = null;
-                                rightCell.spanLeft = true;
-                            }
-                            break;
-                        }
-                    }
-                    break;
-                case 4 /* DeleteTable */:
-                    vtable.cells = null;
-                    break;
-                case 12 /* SplitVertically */:
-                    if (currentCell.td.rowSpan > 1) {
-                        vtable.getCell(vtable.row + 1, vtable.col).td = VTable_1.default.cloneNode(currentCell.td);
-                    }
-                    else {
-                        var splitRow = currentRow.map(function (cell) {
-                            return {
-                                td: cell == currentCell ? VTable_1.default.cloneNode(cell.td) : null,
-                                spanAbove: cell != currentCell,
-                                spanLeft: cell.spanLeft,
-                            };
-                        });
-                        vtable.cells.splice(vtable.row + 1, 0, splitRow);
-                    }
-                    break;
-                case 11 /* SplitHorizontally */:
-                    if (currentCell.td.colSpan > 1) {
-                        vtable.getCell(vtable.row, vtable.col + 1).td = VTable_1.default.cloneNode(currentCell.td);
-                    }
-                    else {
+        editor.runWithUndo(function () {
+            editor.keepSelection(function () {
+                var vtable = new VTable_1.default(td);
+                var currentRow = vtable.cells[vtable.row];
+                var currentCell = currentRow[vtable.col];
+                switch (operation) {
+                    case 0 /* InsertAbove */:
+                    case 1 /* InsertBelow */:
+                        var newRow = vtable.row + (operation == 0 /* InsertAbove */ ? 0 : 1);
+                        vtable.cells.splice(newRow, 0, currentRow.map(function (cell) { return VTable_1.default.cloneCell(cell); }));
+                        break;
+                    case 2 /* InsertLeft */:
+                    case 3 /* InsertRight */:
+                        var newCol_1 = vtable.col + (operation == 2 /* InsertLeft */ ? 0 : 1);
                         vtable.forEachCellOfCurrentColumn(function (cell, row) {
-                            row.splice(vtable.col + 1, 0, {
-                                td: row == currentRow ? VTable_1.default.cloneNode(cell.td) : null,
-                                spanAbove: cell.spanAbove,
-                                spanLeft: row != currentRow,
-                            });
+                            row.splice(newCol_1, 0, VTable_1.default.cloneCell(cell));
                         });
-                    }
-                    break;
-            }
-            vtable.writeBack();
-            td = editor.contains(td) ? td : vtable.getCurrentTd();
-            editor.focus();
-            return td;
-        }, true /*preserveSelection*/);
+                        break;
+                    case 6 /* DeleteRow */:
+                        vtable.forEachCellOfCurrentRow(function (cell, i) {
+                            var nextCell = vtable.getCell(vtable.row + 1, i);
+                            if (cell.td && cell.td.rowSpan > 1 && nextCell.spanAbove) {
+                                nextCell.td = cell.td;
+                            }
+                        });
+                        vtable.cells.splice(vtable.row, 1);
+                        break;
+                    case 5 /* DeleteColumn */:
+                        vtable.forEachCellOfCurrentColumn(function (cell, row, i) {
+                            var nextCell = vtable.getCell(i, vtable.col + 1);
+                            if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
+                                nextCell.td = cell.td;
+                            }
+                            row.splice(vtable.col, 1);
+                        });
+                        break;
+                    case 7 /* MergeAbove */:
+                    case 8 /* MergeBelow */:
+                        var rowStep = operation == 7 /* MergeAbove */ ? -1 : 1;
+                        for (var rowIndex = vtable.row + rowStep; rowIndex >= 0 && rowIndex < vtable.cells.length; rowIndex += rowStep) {
+                            var cell = vtable.getCell(rowIndex, vtable.col);
+                            if (cell.td && !cell.spanAbove) {
+                                var aboveCell = rowIndex < vtable.row ? cell : currentCell;
+                                var belowCell = rowIndex < vtable.row ? currentCell : cell;
+                                if (aboveCell.td.colSpan == belowCell.td.colSpan) {
+                                    VTable_1.default.moveChildren(belowCell.td, aboveCell.td);
+                                    belowCell.td = null;
+                                    belowCell.spanAbove = true;
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    case 9 /* MergeLeft */:
+                    case 10 /* MergeRight */:
+                        var colStep = operation == 9 /* MergeLeft */ ? -1 : 1;
+                        for (var colIndex = vtable.col + colStep; colIndex >= 0 && colIndex < vtable.cells[vtable.row].length; colIndex += colStep) {
+                            var cell = vtable.getCell(vtable.row, colIndex);
+                            if (cell.td && !cell.spanLeft) {
+                                var leftCell = colIndex < vtable.col ? cell : currentCell;
+                                var rightCell = colIndex < vtable.col ? currentCell : cell;
+                                if (leftCell.td.rowSpan == rightCell.td.rowSpan) {
+                                    VTable_1.default.moveChildren(rightCell.td, leftCell.td);
+                                    rightCell.td = null;
+                                    rightCell.spanLeft = true;
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    case 4 /* DeleteTable */:
+                        vtable.cells = null;
+                        break;
+                    case 12 /* SplitVertically */:
+                        if (currentCell.td.rowSpan > 1) {
+                            vtable.getCell(vtable.row + 1, vtable.col).td = VTable_1.default.cloneNode(currentCell.td);
+                        }
+                        else {
+                            var splitRow = currentRow.map(function (cell) {
+                                return {
+                                    td: cell == currentCell ? VTable_1.default.cloneNode(cell.td) : null,
+                                    spanAbove: cell != currentCell,
+                                    spanLeft: cell.spanLeft,
+                                };
+                            });
+                            vtable.cells.splice(vtable.row + 1, 0, splitRow);
+                        }
+                        break;
+                    case 11 /* SplitHorizontally */:
+                        if (currentCell.td.colSpan > 1) {
+                            vtable.getCell(vtable.row, vtable.col + 1).td = VTable_1.default.cloneNode(currentCell.td);
+                        }
+                        else {
+                            vtable.forEachCellOfCurrentColumn(function (cell, row) {
+                                row.splice(vtable.col + 1, 0, {
+                                    td: row == currentRow ? VTable_1.default.cloneNode(cell.td) : null,
+                                    spanAbove: cell.spanAbove,
+                                    spanLeft: row != currentRow,
+                                });
+                            });
+                        }
+                        break;
+                }
+                vtable.writeBack();
+                td = editor.contains(td) ? td : vtable.getCurrentTd();
+                editor.focus();
+                return td;
+            });
+        });
     }
 }
 exports.default = editTable;
@@ -1784,14 +1790,16 @@ function formatTable(editor, format, table) {
         ? table.rows[0].cells[0]
         : getNodeAtCursor_1.default(editor, ['TD', 'TH']);
     if (td) {
-        editor.formatWithUndo(function () {
-            var vtable = new VTable_1.default(td);
-            vtable.applyFormat(format);
-            vtable.writeBack();
-            td = editor.contains(td) ? td : vtable.getCurrentTd();
-            editor.focus();
-            return td;
-        }, true /*preserveSelection*/);
+        editor.runWithUndo(function () {
+            editor.keepSelection(function () {
+                var vtable = new VTable_1.default(td);
+                vtable.applyFormat(format);
+                vtable.writeBack();
+                td = editor.contains(td) ? td : vtable.getCurrentTd();
+                editor.focus();
+                return td;
+            });
+        });
     }
 }
 exports.default = formatTable;
@@ -1836,7 +1844,7 @@ function insertTable(editor, columns, rows, format) {
             td.style.width = getTableCellWidth(columns);
         }
     }
-    editor.formatWithUndo(function () {
+    editor.runWithUndo(function () {
         editor.insertNode(fragment);
         formatTable_1.default(editor, format || {
             bgColorEven: '#FFF',
@@ -1950,60 +1958,6 @@ function setSelectionToBegin(core) {
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-core/lib/coreAPI/formatWithUndo.ts":
-/*!**********************************************************************!*\
-  !*** ./packages/roosterjs-editor-core/lib/coreAPI/formatWithUndo.ts ***!
-  \**********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var lib_1 = __webpack_require__(/*! roosterjs-editor-dom/lib */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var formatWithUndo = function (core, callback, preserveSelection, changeSource, dataCallback, skipAddingUndoAfterFormat) {
-    var isNested = core.suspendAddingUndoSnapshot;
-    if (!isNested) {
-        core.undo.addUndoSnapshot();
-        core.suspendAddingUndoSnapshot = true;
-    }
-    try {
-        if (callback) {
-            if (preserveSelection) {
-                var range = core.api.getLiveRange(core) || core.cachedRange;
-                range = range && new lib_1.SelectionRange(range).normalize().getRange();
-                var fallbackNode = callback();
-                if (!core.api.select(core, range) && fallbackNode) {
-                    core.api.select(core, fallbackNode);
-                }
-            }
-            else {
-                callback();
-            }
-            if (!isNested && !skipAddingUndoAfterFormat) {
-                core.undo.addUndoSnapshot();
-            }
-            if (!isNested && changeSource) {
-                var event_1 = {
-                    eventType: 6 /* ContentChanged */,
-                    source: changeSource,
-                    data: dataCallback ? dataCallback() : null,
-                };
-                core.api.triggerEvent(core, event_1, true /*broadcast*/);
-            }
-        }
-    }
-    finally {
-        if (!isNested) {
-            core.suspendAddingUndoSnapshot = false;
-        }
-    }
-};
-exports.default = formatWithUndo;
-
-
-/***/ }),
-
 /***/ "./packages/roosterjs-editor-core/lib/coreAPI/getCustomData.ts":
 /*!*********************************************************************!*\
   !*** ./packages/roosterjs-editor-core/lib/coreAPI/getCustomData.ts ***!
@@ -2039,7 +1993,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var getFocusPosition = function (core) {
     var selection = core.document.defaultView.getSelection();
-    return selection && roosterjs_editor_dom_1.contains(core.contentDiv, selection.focusNode, true /*treatSameNodeAsContain*/)
+    return selection &&
+        roosterjs_editor_dom_1.contains(core.contentDiv, selection.focusNode, true /*treatSameNodeAsContain*/)
         ? new roosterjs_editor_dom_1.Position(selection.focusNode, selection.focusOffset)
         : null;
 };
@@ -2259,6 +2214,74 @@ function isSelectionAtBeginningOf(range, node) {
     }
     return false;
 }
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-core/lib/coreAPI/keepSelection.ts":
+/*!*********************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/coreAPI/keepSelection.ts ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var keepSelection = function (core, callback) {
+    var oldSelection = core.api.getLiveRange(core) || core.cachedRange;
+    oldSelection = oldSelection && new roosterjs_editor_dom_1.SelectionRange(oldSelection).normalize().getRange();
+    var newSelection = callback();
+    newSelection = newSelection instanceof Node ? new roosterjs_editor_dom_1.SelectionRange(newSelection) : newSelection;
+    if (!core.api.select(core, oldSelection) && newSelection) {
+        core.api.select(core, newSelection);
+    }
+};
+exports.default = keepSelection;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-core/lib/coreAPI/runWithUndo.ts":
+/*!*******************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/coreAPI/runWithUndo.ts ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var runWithUndo = function (core, callback, changeSource, dataCallback, skipAddingUndoAfterFormat) {
+    var isNested = core.suspendAddingUndoSnapshot;
+    if (!isNested) {
+        core.undo.addUndoSnapshot();
+        core.suspendAddingUndoSnapshot = true;
+    }
+    try {
+        if (callback) {
+            callback();
+            if (!isNested && !skipAddingUndoAfterFormat) {
+                core.undo.addUndoSnapshot();
+            }
+            if (!isNested && changeSource) {
+                var event_1 = {
+                    eventType: 6 /* ContentChanged */,
+                    source: changeSource,
+                    data: dataCallback ? dataCallback() : null,
+                };
+                core.api.triggerEvent(core, event_1, true /*broadcast*/);
+            }
+        }
+    }
+    finally {
+        if (!isNested) {
+            core.suspendAddingUndoSnapshot = false;
+        }
+    }
+};
+exports.default = runWithUndo;
 
 
 /***/ }),
@@ -2670,6 +2693,14 @@ var Editor = /** @class */ (function () {
     Editor.prototype.select = function (arg1, arg2, arg3, arg4) {
         return this.core.api.select(this.core, arg1, arg2, arg3, arg4);
     };
+    /**
+     * Run a callback with selection kept.
+     * @param callback The callback function to run and we will try to preserve selection after it finishes.
+     * The callback can return an optional selection, it will be used if original selection is no longer avaiable
+     */
+    Editor.prototype.keepSelection = function (callback) {
+        this.core.api.keepSelection(this.core, callback);
+    };
     //#endregion
     //#region EVENT API
     /**
@@ -2726,18 +2757,16 @@ var Editor = /** @class */ (function () {
      * addsnapshotAfterFormat is set to true, finally trigger ContentChangedEvent with given change source.
      * If this function is called nested, undo snapshot will only be added in the outside one
      * @param callback The callback function to perform formatting
-     * @param preserveSelection Set to true to try preserve the selection after format
      * @param addsnapshotAfterFormat Whether should add an undo snapshot after format callback is called
      * @param changeSource The change source to use when fire ContentChangedEvent. Default value is 'Format'
      * If pass null, the event will not be fired.
      * @param dataCallback A callback function to retrieve the data for ContentChangedEvent
      * @param skipAddingUndoAfterFormat Set to true to only add undo snapshot before format. Default value is false
      */
-    Editor.prototype.formatWithUndo = function (callback, preserveSelection, changeSource, dataCallback, skipAddingUndoAfterFormat) {
-        if (preserveSelection === void 0) { preserveSelection = false; }
+    Editor.prototype.runWithUndo = function (callback, changeSource, dataCallback, skipAddingUndoAfterFormat) {
         if (changeSource === void 0) { changeSource = "Format" /* Format */; }
         if (skipAddingUndoAfterFormat === void 0) { skipAddingUndoAfterFormat = false; }
-        this.core.api.formatWithUndo(this.core, callback, preserveSelection, changeSource, dataCallback, skipAddingUndoAfterFormat);
+        this.core.api.runWithUndo(this.core, callback, changeSource, dataCallback, skipAddingUndoAfterFormat);
     };
     /**
      * Whether there is an available undo snapshot
@@ -2873,7 +2902,7 @@ var Editor = /** @class */ (function () {
             // (i.e. select all and DEL, or backspace from very end to begin).
             // The fix is to add a DIV wrapping, apply default format and move cursor over
             formatElement = roosterjs_editor_dom_1.fromHtml('<div><br></div>', this.getDocument())[0];
-            this.core.contentDiv.appendChild(formatElement);
+            this.insertNode(formatElement);
             // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
             nodeToSelect = formatElement.firstChild;
         }
@@ -2931,12 +2960,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Undo_1 = __webpack_require__(/*! ../undo/Undo */ "./packages/roosterjs-editor-core/lib/undo/Undo.ts");
 var attachDomEvent_1 = __webpack_require__(/*! ../coreAPI/attachDomEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/attachDomEvent.ts");
 var focus_1 = __webpack_require__(/*! ../coreAPI/focus */ "./packages/roosterjs-editor-core/lib/coreAPI/focus.ts");
-var formatWithUndo_1 = __webpack_require__(/*! ../coreAPI/formatWithUndo */ "./packages/roosterjs-editor-core/lib/coreAPI/formatWithUndo.ts");
 var getCustomData_1 = __webpack_require__(/*! ../coreAPI/getCustomData */ "./packages/roosterjs-editor-core/lib/coreAPI/getCustomData.ts");
 var getFocusPosition_1 = __webpack_require__(/*! ../coreAPI/getFocusPosition */ "./packages/roosterjs-editor-core/lib/coreAPI/getFocusPosition.ts");
 var getLiveRange_1 = __webpack_require__(/*! ../coreAPI/getLiveRange */ "./packages/roosterjs-editor-core/lib/coreAPI/getLiveRange.ts");
 var hasFocus_1 = __webpack_require__(/*! ../coreAPI/hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
 var insertNode_1 = __webpack_require__(/*! ../coreAPI/insertNode */ "./packages/roosterjs-editor-core/lib/coreAPI/insertNode.ts");
+var keepSelection_1 = __webpack_require__(/*! ../coreAPI/keepSelection */ "./packages/roosterjs-editor-core/lib/coreAPI/keepSelection.ts");
+var runWithUndo_1 = __webpack_require__(/*! ../coreAPI/runWithUndo */ "./packages/roosterjs-editor-core/lib/coreAPI/runWithUndo.ts");
 var select_1 = __webpack_require__(/*! ../coreAPI/select */ "./packages/roosterjs-editor-core/lib/coreAPI/select.ts");
 var triggerEvent_1 = __webpack_require__(/*! ../coreAPI/triggerEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/triggerEvent.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
@@ -2974,12 +3004,13 @@ function createCoreApiMap(map) {
     return {
         attachDomEvent: map.attachDomEvent || attachDomEvent_1.default,
         focus: map.focus || focus_1.default,
-        formatWithUndo: map.formatWithUndo || formatWithUndo_1.default,
+        runWithUndo: map.runWithUndo || runWithUndo_1.default,
         getCustomData: map.getCustomData || getCustomData_1.default,
         getFocusPosition: map.getFocusPosition || getFocusPosition_1.default,
         getLiveRange: map.getLiveRange || getLiveRange_1.default,
         hasFocus: map.hasFocus || hasFocus_1.default,
         insertNode: map.insertNode || insertNode_1.default,
+        keepSelection: map.keepSelection || keepSelection_1.default,
         select: map.select || select_1.default,
         triggerEvent: map.triggerEvent || triggerEvent_1.default,
     };
@@ -3973,9 +4004,7 @@ var ContentTraverser = /** @class */ (function () {
         // 2) the block is before the current block
         // Then:
         // 1) Re-position current block to newly found block
-        if (previous &&
-            this.scoper.isBlockInScope(previous) &&
-            current.isAfter(previous)) {
+        if (previous && this.scoper.isBlockInScope(previous) && current.isAfter(previous)) {
             this.currentBlock = previous;
             return this.currentBlock;
         }
@@ -4137,9 +4166,11 @@ var SelectionScoper = /** @class */ (function () {
         if (end.isAfter(this.range.end)) {
             end = this.range.end;
         }
-        return start.offset > 0 || !end.isAtEnd
-            ? new PartialInlineElement_1.default(inlineElement, start, end)
-            : inlineElement;
+        return start.isAfter(end) || start.equalTo(end)
+            ? null
+            : start.offset > 0 || !end.isAtEnd
+                ? new PartialInlineElement_1.default(inlineElement, start, end)
+                : inlineElement;
     };
     return SelectionScoper;
 }());
@@ -5096,6 +5127,10 @@ var SelectionRange = /** @class */ (function () {
             this.start = new Position_1.default(startOrRawRange.startContainer, startOrRawRange.startOffset);
             this.end = new Position_1.default(startOrRawRange.endContainer, startOrRawRange.endOffset);
         }
+        else if (startOrRawRange instanceof Node) {
+            this.start = new Position_1.default(startOrRawRange, "b" /* Before */);
+            this.end = new Position_1.default(startOrRawRange, "a" /* After */);
+        }
         else {
             this.start = startOrRawRange;
             this.end = end || this.start;
@@ -5814,7 +5849,7 @@ function nativeAssign(source) {
     return Object.assign({}, source);
 }
 function customAssign(source) {
-    var result;
+    var result = {};
     for (var _i = 0, _a = Object.keys(source); _i < _a.length; _i++) {
         var key = _a[_i];
         result[key] = source[key];
@@ -6274,14 +6309,16 @@ function autoLink(event, editor) {
     anchor.textContent = linkData.originalUrl;
     anchor.href = linkData.normalizedUrl;
     editor.runAsync(function () {
-        editor.formatWithUndo(function () {
-            var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
-            var range = cursorData.getRangeWithForTextBeforeCursor(linkData.originalUrl, false /*exactMatch*/);
-            if (range && range.replaceWithNode(anchor)) {
-                // The content at cursor has changed. Should also clear the cursor data cache
-                roosterjs_editor_api_1.clearCursorEventDataCache(event);
-            }
-        }, true /*preserveSelection*/, "AutoLink" /* AutoLink */, function () { return anchor; });
+        editor.runWithUndo(function () {
+            editor.keepSelection(function () {
+                var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
+                var range = cursorData.getRangeWithForTextBeforeCursor(linkData.originalUrl, false /*exactMatch*/);
+                if (range && range.replaceWithNode(anchor)) {
+                    // The content at cursor has changed. Should also clear the cursor data cache
+                    roosterjs_editor_api_1.clearCursorEventDataCache(event);
+                }
+            });
+        }, "AutoLink" /* AutoLink */, function () { return anchor; });
     });
     return "AutoLink" /* AutoLink */;
 }
@@ -6307,7 +6344,7 @@ var KEY_ENTER = 13;
 var KEY_SPACE = 32;
 exports.IndentOutdentWhenTab = {
     key: KEY_TAB,
-    shouldHandleEvent: cacheGetListTag,
+    shouldHandleEvent: cacheGetListElement,
     handleEvent: function (event, editor) {
         var shift = event.rawEvent.shiftKey;
         roosterjs_editor_api_1.setIndentation(editor, shift ? 1 /* Decrease */ : 0 /* Increase */);
@@ -6359,7 +6396,7 @@ exports.OutdentWhenEnterOnEmptyLine = {
 exports.AutoBullet = {
     key: KEY_SPACE,
     shouldHandleEvent: function (event, editor) {
-        if (!cacheGetListTag(event, editor)) {
+        if (!cacheGetListElement(event, editor)) {
             var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
             var textBeforeCursor = cursorData.getSubStringBeforeCursor(3);
             // Auto list is triggered if:
@@ -6376,7 +6413,7 @@ exports.AutoBullet = {
             var listNode;
             var cursorData = roosterjs_editor_api_1.cacheGetCursorEventData(event, editor);
             var textBeforeCursor = cursorData.getSubStringBeforeCursor(3);
-            editor.formatWithUndo(function () {
+            editor.runWithUndo(function () {
                 // Remove the user input '*', '-' or '1.'
                 var rangeToDelete = cursorData.getRangeWithForTextBeforeCursor(textBeforeCursor, true /*exactMatch*/);
                 if (rangeToDelete) {
@@ -6394,25 +6431,36 @@ exports.AutoBullet = {
                     roosterjs_editor_api_1.toggleBullet(editor);
                     listNode = roosterjs_editor_api_1.getNodeAtCursor(editor, 'UL');
                 }
-            }, false /*preserveSelection*/, "AutoBullet" /* AutoBullet */, function () { return listNode; });
+            }, "AutoBullet" /* AutoBullet */, function () { return listNode; });
         });
         return "AutoBullet" /* AutoBullet */;
     },
 };
 function toggleListAndPreventDefault(event, editor) {
-    var tag = cacheGetListTag(event, editor);
-    if (tag == 'UL') {
-        roosterjs_editor_api_1.toggleBullet(editor);
+    var listInfo = cacheGetListElement(event, editor);
+    if (listInfo) {
+        var listElement = listInfo[0], li = listInfo[1];
+        while (editor.contains(li.parentNode) && li.parentNode != listElement) {
+            roosterjs_editor_dom_1.splitParentNode(li, false);
+            roosterjs_editor_dom_1.splitParentNode(li, true);
+            roosterjs_editor_dom_1.unwrap(li.parentNode);
+        }
+        editor.select(li);
+        var tag = roosterjs_editor_dom_1.getTagOfNode(listElement);
+        if (tag == 'UL') {
+            roosterjs_editor_api_1.toggleBullet(editor);
+        }
+        else if (tag == 'OL') {
+            roosterjs_editor_api_1.toggleNumbering(editor);
+        }
+        editor.focus();
+        event.rawEvent.preventDefault();
     }
-    else if (tag == 'OL') {
-        roosterjs_editor_api_1.toggleNumbering(editor);
-    }
-    event.rawEvent.preventDefault();
 }
-function cacheGetListTag(event, editor) {
+function cacheGetListElement(event, editor) {
     var li = roosterjs_editor_api_1.cacheGetNodeAtCursor(editor, event, 'LI');
-    var tag = li && roosterjs_editor_dom_1.getTagOfNode(li.parentNode);
-    return tag == 'OL' || tag == 'UL' ? tag : null;
+    var listElement = li && roosterjs_editor_api_1.getNodeAtCursor(editor, ['UL', 'OL'], li);
+    return listElement ? [listElement, li] : null;
 }
 
 
@@ -6459,7 +6507,7 @@ function cacheGetQuoteChild(event, editor) {
     });
 }
 function splitQuote(event, editor) {
-    editor.formatWithUndo(function () {
+    editor.runWithUndo(function () {
         var childOfQuote = cacheGetQuoteChild(event, editor);
         var blockQuoteElement = childOfQuote.parentNode;
         roosterjs_editor_dom_1.splitParentNode(childOfQuote, false /*splitBefore*/);
@@ -6921,7 +6969,7 @@ var Paste = /** @class */ (function () {
         else {
             roosterjs_editor_core_1.restoreSnapshot(this.editor, clipboardData.snapshotBeforePaste);
         }
-        this.editor.formatWithUndo(function () {
+        this.editor.runWithUndo(function () {
             switch (pasteOption) {
                 case 0 /* PasteHtml */:
                     _this.editor.insertNode(fragment);
@@ -6934,7 +6982,7 @@ var Paste = /** @class */ (function () {
                     roosterjs_editor_api_1.insertImage(_this.editor, clipboardData.image);
                     break;
             }
-        }, false /*preserveSelection*/, "Paste" /* Paste */, function () { return clipboardData; });
+        }, "Paste" /* Paste */, function () { return clipboardData; });
     };
     Paste.prototype.applyTextFormat = function (node, format) {
         var leaf = roosterjs_editor_dom_1.getFirstLeafNode(node);
@@ -7914,7 +7962,7 @@ var ImageResize = /** @class */ (function () {
                 _this.startPageY = e.pageY;
                 _this.startWidth = img.clientWidth;
                 _this.startHeight = img.clientHeight;
-                _this.editor.formatWithUndo(null, false /*preserveSelection*/, "ImageResize" /* ImageResize */);
+                _this.editor.runWithUndo(null, "ImageResize" /* ImageResize */);
                 var document_1 = _this.editor.getDocument();
                 document_1.addEventListener('mousemove', _this.doResize, true /*useCapture*/);
                 document_1.addEventListener('mouseup', _this.finishResize, true /*useCapture*/);
@@ -7963,7 +8011,7 @@ var ImageResize = /** @class */ (function () {
                 _this.resizeDiv.style.height = '';
             }
             _this.direction = null;
-            _this.editor.formatWithUndo(null, false, "ImageResize" /* ImageResize */);
+            _this.editor.runWithUndo(null, "ImageResize" /* ImageResize */);
             e.preventDefault();
         };
         this.removeResizeDivIfAny = function (img) {
@@ -8024,10 +8072,10 @@ var ImageResize = /** @class */ (function () {
         else if (e.eventType == 0 /* KeyDown */ && this.resizeDiv) {
             var event_2 = e.rawEvent;
             if (event_2.which == DELETE_KEYCODE || event_2.which == BACKSPACE_KEYCODE) {
-                this.editor.formatWithUndo(function () {
+                this.editor.runWithUndo(function () {
                     _this.removeResizeDiv(_this.resizeDiv);
                     _this.resizeDiv = null;
-                }, false /*preserveSelection*/, "ImageResize" /* ImageResize */);
+                }, "ImageResize" /* ImageResize */);
                 event_2.preventDefault();
             }
             else if (event_2.which != SHIFT_KEYCODE &&
@@ -8216,7 +8264,9 @@ var TableResize = /** @class */ (function () {
                 var newWidth_1 = _this.td.clientWidth -
                     cellPadding * 2 +
                     (e.pageX - _this.initialPageX) * (_this.isRtl(table) ? -1 : 1);
-                _this.editor.formatWithUndo(function () { return _this.setTableColumnWidth(newWidth_1 + 'px'); }, true /*preserveSelection*/);
+                _this.editor.runWithUndo(function () {
+                    return _this.editor.keepSelection(function () { return _this.setTableColumnWidth(newWidth_1 + 'px'); });
+                });
             }
             _this.pageX = -1;
             _this.calcAndShowHandle();

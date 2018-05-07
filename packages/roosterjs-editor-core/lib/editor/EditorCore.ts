@@ -7,7 +7,7 @@ import {
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import { Position } from 'roosterjs-editor-dom';
+import { Position, SelectionRange } from 'roosterjs-editor-dom';
 
 interface EditorCore {
     document: Document;
@@ -37,14 +37,6 @@ export type AttachDomEvent = (
     beforeDispatch?: (event: UIEvent) => void
 ) => () => void;
 export type Focus = (core: EditorCore) => void;
-export type FormatWithUndo = (
-    core: EditorCore,
-    callback: () => void | Node,
-    preserveSelection: boolean,
-    changeSource: ChangeSource | string,
-    dataCallback: () => any,
-    skipAddingUndoAfterFormat: boolean
-) => void;
 export type GetCustomData = <T>(
     core: EditorCore,
     key: string,
@@ -52,27 +44,33 @@ export type GetCustomData = <T>(
     disposer?: (value: T) => void
 ) => T;
 export type GetFocusPosition = (core: EditorCore) => Position;
-export type GetLiveRange =  (core: EditorCore) => Range;
+export type GetLiveRange = (core: EditorCore) => Range;
 export type HasFocus = (core: EditorCore) => boolean;
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
-export type Select = (
+export type KeepSelection = (
     core: EditorCore,
-    arg1: any,
-    arg2?: any,
-    arg3?: any,
-    arg4?: any
-) => boolean;
+    callback: () => SelectionRange | Node | void
+) => void;
+export type RunWithUndo = (
+    core: EditorCore,
+    callback: () => void,
+    changeSource: ChangeSource | string,
+    dataCallback: () => any,
+    skipAddingUndoAfterFormat: boolean
+) => void;
+export type Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => boolean;
 export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcast: boolean) => void;
 
 export interface CoreApiMap {
     attachDomEvent: AttachDomEvent;
     focus: Focus;
-    formatWithUndo: FormatWithUndo;
+    runWithUndo: RunWithUndo;
     getCustomData: GetCustomData;
     getFocusPosition: GetFocusPosition;
     getLiveRange: GetLiveRange;
     hasFocus: HasFocus;
     insertNode: InsertNode;
+    keepSelection: KeepSelection;
     select: Select;
     triggerEvent: TriggerEvent;
 }

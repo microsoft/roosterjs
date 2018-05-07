@@ -26,12 +26,12 @@ describe('setIndentation()', () => {
 
     function runningTest(indentation: Indentation, command: string) {
         let document = editor.getDocument();
-        spyOn(editor, 'formatWithUndo').and.callThrough();
+        spyOn(editor, 'runWithUndo').and.callThrough();
         spyOn(document, 'execCommand').and.callThrough();
 
         setIndentation(editor, indentation);
 
-        expect(editor.formatWithUndo).toHaveBeenCalled();
+        expect(editor.runWithUndo).toHaveBeenCalled();
         expect(document.execCommand).toHaveBeenCalledWith(command, false, null);
     }
 });

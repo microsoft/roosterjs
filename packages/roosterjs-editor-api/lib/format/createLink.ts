@@ -42,7 +42,7 @@ export default function createLink(
         let originalUrl = linkData ? linkData.originalUrl : url;
         let anchor: HTMLAnchorElement = null;
 
-        editor.formatWithUndo(
+        editor.runWithUndo(
             () => {
                 if (editor.getSelectionRange().collapsed) {
                     anchor = getAnchorNodeAtCursor(editor);
@@ -69,7 +69,6 @@ export default function createLink(
                     anchor.title = altText;
                 }
             },
-            false /*preserveSelection*/,
             ChangeSource.CreateLink,
             () => anchor
         );

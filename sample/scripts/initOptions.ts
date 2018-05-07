@@ -1,6 +1,6 @@
 import Idle from './plugins/Idle';
 import ShowCursorPosition from './plugins/ShowCursorPosition';
-import ShowFromState from './plugins/ShowFormatState';
+import ShowFormatState from './plugins/ShowFormatState';
 import { DefaultFormat } from 'roosterjs-editor-types';
 import { DefaultShortcut, HyperLink, Paste, ContentEdit } from 'roosterjs-editor-plugins';
 import { ImageResize } from 'roosterjs-plugin-image-resize';
@@ -69,7 +69,7 @@ export function initEditorForOptions() {
     }
 
     plugins.push(new ShowCursorPosition(document.getElementById('cursorPosition')));
-    plugins.push(new ShowFromState(document.getElementById('formatState')));
+    plugins.push(new ShowFormatState(document.getElementById('formatState')));
     plugins.push(new Idle(document.getElementById('idleEventTime')))
 
     let defaultFormat: DefaultFormat = {};

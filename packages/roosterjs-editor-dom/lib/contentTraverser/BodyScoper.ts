@@ -17,7 +17,7 @@ class BodyScoper implements TraversingScoper {
 
     // Get the first inline element in the editor
     public getStartInlineElement(): InlineElement {
-        let node = getFirstLeafNode(this.rootNode)
+        let node = getFirstLeafNode(this.rootNode);
         return getInlineElementAtNode(node);
     }
 

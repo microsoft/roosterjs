@@ -1,4 +1,5 @@
 import Position from './Position';
+import { PositionType } from 'roosterjs-editor-types';
 
 /**
  * Represent a selection range in DOM tree
@@ -28,17 +29,26 @@ export default class SelectionRange {
     constructor(rawRange: Range);
 
     /**
+     * Create a SelectionRange object to select a node
+     * @param node The node to select;
+     */
+    constructor(node: Node);
+
+    /**
      * Create a SelectionRange object using start and end position
      * @param start The start position
      * @param end The end position
      */
     constructor(start: Position, end?: Position);
 
-    constructor(startOrRawRange: Position | Range, end?: Position) {
+    constructor(startOrRawRange: Position | Range | Node, end?: Position) {
         if (startOrRawRange instanceof Range) {
             this.rawRange = startOrRawRange;
             this.start = new Position(startOrRawRange.startContainer, startOrRawRange.startOffset);
             this.end = new Position(startOrRawRange.endContainer, startOrRawRange.endOffset);
+        } else if (startOrRawRange instanceof Node) {
+            this.start = new Position(startOrRawRange, PositionType.Before);
+            this.end = new Position(startOrRawRange, PositionType.After);
         } else {
             this.start = startOrRawRange;
             this.end = end || this.start;

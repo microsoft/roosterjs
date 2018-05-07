@@ -37,7 +37,11 @@ function setSelectionToBegin(core: EditorCore) {
     } else if (nodeType == NodeType.Element) {
         // If first node is a html void element (void elements cannot have child nodes),
         // move selection before it, otherwise move selection inside it
-        core.api.select(core, firstNode, isVoidHtmlElement(firstNode as HTMLElement) ? PositionType.Before : 0);
+        core.api.select(
+            core,
+            firstNode,
+            isVoidHtmlElement(firstNode as HTMLElement) ? PositionType.Before : 0
+        );
     } else {
         // No first node, likely we have an empty content DIV, move selection inside it
         core.api.select(core, core.contentDiv, 0);

@@ -144,7 +144,10 @@ export default class ContentEdit implements EditorPlugin {
                 this.backspaceUndoEventSource
             )
         ) {
-            this.backspaceUndoEventSource = <ChangeSource>AutoLink1.handleEvent(event as PluginDomEvent, this.editor);
+            this.backspaceUndoEventSource = <ChangeSource>AutoLink1.handleEvent(
+                event as PluginDomEvent,
+                this.editor
+            );
         }
     }
 

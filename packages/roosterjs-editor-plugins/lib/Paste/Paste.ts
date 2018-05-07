@@ -158,7 +158,7 @@ export default class Paste implements EditorPlugin {
             restoreSnapshot(this.editor, clipboardData.snapshotBeforePaste);
         }
 
-        this.editor.formatWithUndo(
+        this.editor.runWithUndo(
             () => {
                 switch (pasteOption) {
                     case PasteOption.PasteHtml:
@@ -175,7 +175,6 @@ export default class Paste implements EditorPlugin {
                         break;
                 }
             },
-            false /*preserveSelection*/,
             ChangeSource.Paste,
             () => clipboardData
         );

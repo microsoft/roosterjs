@@ -21,28 +21,30 @@ let defaultStyler = (element: HTMLElement) => {
  */
 export default function toggleBlockQuote(editor: Editor, styler?: (element: HTMLElement) => void) {
     editor.focus();
-    editor.formatWithUndo(() => {
-        // There are already blockquote nodes, unwrap them
-        if (
-            queryNodesWithSelection(editor, 'blockquote', false /*containsOnly*/, unwrap).length ==
-            0
-        ) {
-            // Step 1: Find all block elements and their content nodes
-            let nodes = getContentNodes(editor);
+    editor.runWithUndo(() => {
+        editor.keepSelection(() => {
+            // There are already blockquote nodes, unwrap them
+            if (
+                queryNodesWithSelection(editor, 'blockquote', false /*containsOnly*/, unwrap)
+                    .length == 0
+            ) {
+                // Step 1: Find all block elements and their content nodes
+                let nodes = getContentNodes(editor);
 
-            // Step 2: Split existing list container if necessary
-            nodes = getSplittedListNodes(nodes);
+                // Step 2: Split existing list container if necessary
+                nodes = getSplittedListNodes(nodes);
 
-            // Step 3: Handle some special cases
-            nodes = getNodesWithSpecialCaseHandled(editor, nodes);
+                // Step 3: Handle some special cases
+                nodes = getNodesWithSpecialCaseHandled(editor, nodes);
 
-            let quoteElement = wrap(nodes, '<blockquote></blockqupte>') as HTMLElement;
-            (styler || defaultStyler)(quoteElement);
+                let quoteElement = wrap(nodes, '<blockquote></blockqupte>') as HTMLElement;
+                (styler || defaultStyler)(quoteElement);
 
-            // Return a fallback to select in case original selection is not valid any more
-            return nodes[0];
-        }
-    }, true /*preserveSelection*/);
+                // Return a fallback to select in case original selection is not valid any more
+                return nodes[0];
+            }
+        });
+    });
 }
 
 function getContentNodes(editor: Editor): Node[] {

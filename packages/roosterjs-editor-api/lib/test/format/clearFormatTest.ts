@@ -19,12 +19,12 @@ describe('clearFormat()', () => {
 
     it('triggers the removeformat command in document', () => {
         let document = editor.getDocument();
-        spyOn(editor, 'formatWithUndo').and.callThrough();
+        spyOn(editor, 'runWithUndo').and.callThrough();
         spyOn(document, 'execCommand').and.callThrough();
 
         clearFormat(editor);
 
-        expect(editor.formatWithUndo).toHaveBeenCalled();
+        expect(editor.runWithUndo).toHaveBeenCalled();
         expect(document.execCommand).toHaveBeenCalledWith('removeFormat', false, null);
     });
 

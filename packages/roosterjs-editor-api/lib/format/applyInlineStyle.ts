@@ -12,7 +12,7 @@ const ZERO_WIDTH_SPACE = '\u200B';
 export default function applyInlineStyle(editor: Editor, styler: (element: HTMLElement) => void) {
     editor.focus();
     let collapsed = editor.getSelectionRange().collapsed;
-    editor.formatWithUndo(
+    editor.runWithUndo(
         () => {
             if (collapsed) {
                 // Create a new span to hold the style.
@@ -55,7 +55,6 @@ export default function applyInlineStyle(editor: Editor, styler: (element: HTMLE
                 }
             }
         },
-        false /*preserveSelection*/,
         ChangeSource.Format,
         null /*dataCallback*/,
         collapsed /*skipAddingUndoAfterFormat*/
