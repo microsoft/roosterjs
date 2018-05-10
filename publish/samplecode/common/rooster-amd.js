@@ -6243,9 +6243,7 @@ function createLink(editor, link, altText, displayText) {
                 if (anchor_1) {
                     anchor_1.href = normalizedUrl_1;
                     // Only change the text content if it differs from the current.
-                    if (displayText && anchor_1.textContent != displayText) {
-                        anchor_1.textContent = displayText || originalUrl_1;
-                    }
+                    updateAnchorDisplayText(anchor_1, displayText || originalUrl_1);
                 }
                 else {
                     anchor_1 = editor.getDocument().createElement('A');
@@ -6258,6 +6256,7 @@ function createLink(editor, link, altText, displayText) {
                 /* the selection is not collapsed, use browser execCommand */
                 editor.getDocument().execCommand('createLink', false, normalizedUrl_1);
                 anchor_1 = getAnchorNodeAtCursor(editor);
+                updateAnchorDisplayText(anchor_1, displayText || originalUrl_1);
             }
             if (altText && anchor_1) {
                 // Hack: Ideally this should be done by HyperLink plugin.
@@ -6273,6 +6272,11 @@ function createLink(editor, link, altText, displayText) {
 exports.default = createLink;
 function getAnchorNodeAtCursor(editor) {
     return queryNodesWithSelection_1.default(editor, 'a[href]')[0];
+}
+function updateAnchorDisplayText(anchor, displayText) {
+    if (displayText && anchor.textContent != displayText) {
+        anchor.textContent = displayText;
+    }
 }
 
 

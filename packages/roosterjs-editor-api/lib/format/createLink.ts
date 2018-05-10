@@ -77,9 +77,7 @@ export default function createLink(
                 if (anchor) {
                     anchor.href = normalizedUrl;
                     // Only change the text content if it differs from the current.
-                    if (displayText && anchor.textContent != displayText) {
-                        anchor.textContent = displayText || originalUrl;
-                    }
+                    updateAnchorDisplayText(anchor, displayText || originalUrl);
                 } else {
                     anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
                     anchor.textContent = displayText || originalUrl;
@@ -90,9 +88,7 @@ export default function createLink(
                 /* the selection is not collapsed, use browser execCommand */
                 editor.getDocument().execCommand('createLink', false, normalizedUrl);
                 anchor = getAnchorNodeAtCursor(editor);
-                if (displayText && anchor.textContent != displayText) {
-                    anchor.textContent = displayText || originalUrl;
-                }
+                updateAnchorDisplayText(anchor, displayText || originalUrl);
             }
             if (altText && anchor) {
                 // Hack: Ideally this should be done by HyperLink plugin.
@@ -109,4 +105,10 @@ export default function createLink(
 
 function getAnchorNodeAtCursor(editor: Editor): HTMLAnchorElement {
     return queryNodesWithSelection(editor, 'a[href]')[0] as HTMLAnchorElement;
+}
+
+function updateAnchorDisplayText(anchor: HTMLAnchorElement, displayText: string) {
+    if (displayText && anchor.textContent != displayText) {
+        anchor.textContent = displayText;
+    }
 }
