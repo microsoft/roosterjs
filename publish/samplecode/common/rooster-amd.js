@@ -1,5 +1,5 @@
 /*
-    VERSION: 6.10.0
+    VERSION: 6.10.1
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -6242,6 +6242,10 @@ function createLink(editor, link, altText, displayText) {
                 // If there is already a link, just change its href
                 if (anchor_1) {
                     anchor_1.href = normalizedUrl_1;
+                    // Only change the text content if it differs from the current.
+                    if (displayText && anchor_1.textContent != displayText) {
+                        anchor_1.textContent = displayText || originalUrl_1;
+                    }
                 }
                 else {
                     anchor_1 = editor.getDocument().createElement('A');

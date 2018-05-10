@@ -76,6 +76,10 @@ export default function createLink(
                 // If there is already a link, just change its href
                 if (anchor) {
                     anchor.href = normalizedUrl;
+                    // Only change the text content if it differs from the current.
+                    if (displayText && anchor.textContent != displayText) {
+                        anchor.textContent = displayText || originalUrl;
+                    }
                 } else {
                     anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
                     anchor.textContent = displayText || originalUrl;
@@ -86,6 +90,9 @@ export default function createLink(
                 /* the selection is not collapsed, use browser execCommand */
                 editor.getDocument().execCommand('createLink', false, normalizedUrl);
                 anchor = getAnchorNodeAtCursor(editor);
+                if (displayText && anchor.textContent != displayText) {
+                    anchor.textContent = displayText || originalUrl;
+                }
             }
             if (altText && anchor) {
                 // Hack: Ideally this should be done by HyperLink plugin.
