@@ -25,7 +25,13 @@ import {
     editTable,
     formatTable,
 } from 'roosterjs-editor-api';
-import { Alignment, Direction, Indentation, TableOperation, TableFormat } from 'roosterjs-editor-types';
+import {
+    Alignment,
+    Direction,
+    Indentation,
+    TableOperation,
+    TableFormat,
+} from 'roosterjs-editor-types';
 import getCurrentEditor from './currentEditor';
 
 let TABLE_FORMAT = [
@@ -105,7 +111,10 @@ export default function initFormatBar() {
         let range = editor.getSelectionRange();
         let existingLink = queryNodesWithSelection(editor, 'a[href]')[0] as HTMLAnchorElement;
         let url = window.prompt('Url', existingLink ? existingLink.href : 'http://');
-        let text = range.collapsed && !existingLink ? window.prompt('Text of link', url) : null;
+        let text = window.prompt(
+            'Text of link',
+            existingLink ? existingLink.textContent : range.collapsed ? url : range.toString()
+        );
         createLink(editor, url, url, text);
     });
 
@@ -132,7 +141,7 @@ export default function initFormatBar() {
             formatTable(getCurrentEditor(), TABLE_FORMAT[intValue]);
             select.value = '-1';
         }
-    })
+    });
 
     // Header
     document.getElementById('header').addEventListener('change', function() {
@@ -192,7 +201,7 @@ export default function initFormatBar() {
 
     // LTR
     document.getElementById('ltr').addEventListener('click', function() {
-        setDirection(getCurrentEditor(), Direction.LeftToRight)
+        setDirection(getCurrentEditor(), Direction.LeftToRight);
     });
 
     // RTL
