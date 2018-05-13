@@ -1,5 +1,5 @@
 /*
-    VERSION: 6.10.2
+    VERSION: 6.10.3
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -6245,8 +6245,6 @@ function applyLinkPrefix(url) {
  * @param displayText Optional display text for the link.
  * If specified, the display text of link will be replaced with this text.
  * If not specified and there wasn't a link, the link url will be used as display text.
- * If not specified and there is a link, the display text will be replaced with the new link url if
- * original display text is the same with original url.
  */
 function createLink(editor, link, altText, displayText) {
     editor.focus();
@@ -6259,26 +6257,20 @@ function createLink(editor, link, altText, displayText) {
         // i.e. if the link starts with something like abc@xxx, we will add mailto: prefix
         // if the link starts with ftp.xxx, we will add ftp:// link. For more, see applyLinkPrefix
         var normalizedUrl_1 = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
-        var typedUrl_1 = linkData ? linkData.originalUrl : url;
+        var originalUrl_1 = linkData ? linkData.originalUrl : url;
         var anchor_1 = null;
         execFormatWithUndo_1.default(editor, function () {
             if (isSelectionCollapsed_1.default(editor)) {
                 anchor_1 = getAnchorNodeAtCursor(editor);
                 // If there is already a link, just change its href
                 if (anchor_1) {
-                    var originalLinkData = matchLink_1.default(anchor_1.innerText);
-                    if (!displayText && originalLinkData &&
-                        (originalLinkData.originalUrl == anchor_1.innerText ||
-                            originalLinkData.normalizedUrl == anchor_1.innerText)) {
-                        displayText = typedUrl_1;
-                    }
-                    // Only change the text content if it differs from the current.
-                    updateAnchorDisplayText(anchor_1, displayText);
                     anchor_1.href = normalizedUrl_1;
+                    // Change text content if it is specified
+                    updateAnchorDisplayText(anchor_1, displayText);
                 }
                 else {
                     anchor_1 = editor.getDocument().createElement('A');
-                    anchor_1.textContent = displayText || typedUrl_1;
+                    anchor_1.textContent = displayText || originalUrl_1;
                     anchor_1.href = normalizedUrl_1;
                     editor.insertNode(anchor_1);
                 }
