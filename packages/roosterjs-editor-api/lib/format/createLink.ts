@@ -75,7 +75,7 @@ export default function createLink(
 
                 // If there is already a link, just change its href
                 if (anchor) {
-                    // Only change the text content if it differs from the current.
+                    // Change text content if it is specified
                     updateAnchorDisplayText(anchor, displayText);
                     anchor.href = normalizedUrl;
                 } else {
