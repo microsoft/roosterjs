@@ -1287,8 +1287,10 @@ declare namespace roosterjs {
      * When protocol is not specified, a best matched protocol will be predicted.
      * @param altText Optional alt text of the link, will be shown when hover on the link
      * @param displayText Optional display text for the link.
-     * If there is a selection, this parameter will be ignored.
-     * If not specified, will use link instead
+     * If specified, the display text of link will be replaced with this text.
+     * If not specified and there wasn't a link, the link url will be used as display text.
+     * If not specified and there is a link, the display text will be replaced with the new link url if
+     * original display text is the same with original url.
      */
     function createLink(editor: Editor, link: string, altText?: string, displayText?: string): void;
 
