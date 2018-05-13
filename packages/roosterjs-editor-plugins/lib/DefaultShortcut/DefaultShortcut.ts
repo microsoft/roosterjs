@@ -207,6 +207,8 @@ function tryGetCommandFromEvent(event: PluginEvent): Command {
 export default class DefaultShortcut implements EditorPlugin {
     private editor: Editor;
 
+    public name: 'DefaultShortcut';
+
     public initialize(editor: Editor): void {
         this.editor = editor;
     }

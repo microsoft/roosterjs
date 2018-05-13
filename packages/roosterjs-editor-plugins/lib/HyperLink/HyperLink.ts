@@ -30,6 +30,7 @@ const KEY_ENTER = 13;
 export default class HyperLink implements EditorPlugin {
     private editor: Editor;
     private backspaceToUndo: boolean;
+    public name: 'HyperLink';
 
     /**
      * Create a new instance of HyperLink class
@@ -211,9 +212,6 @@ export default class HyperLink implements EditorPlugin {
     }
 
     private forEachHyperLink(callback: (a: HTMLAnchorElement) => void) {
-        let anchors = this.editor.queryContent('a[href]');
-        for (let i = 0; i < anchors.length; i++) {
-            callback(anchors[i] as HTMLAnchorElement);
-        }
+        this.editor.queryElements('a[href]', callback);
     }
 }

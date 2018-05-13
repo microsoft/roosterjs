@@ -29,6 +29,7 @@ import getInheritableStyles from './getInheritableStyles';
 export default class Paste implements EditorPlugin {
     private editor: Editor;
     private pasteDisposer: () => void;
+    public name: 'Paste';
 
     /**
      * Create an instance of Paste

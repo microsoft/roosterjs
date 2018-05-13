@@ -24,6 +24,7 @@ class Watermark implements EditorPlugin {
     private isWatermarkShowing: boolean;
     private focusDisposer: () => void;
     private blurDisposer: () => void;
+    public name: 'Watermark';
 
     /**
      * Create an instance of Watermark plugin
@@ -95,13 +96,9 @@ class Watermark implements EditorPlugin {
     }
 
     private hideWatermark() {
-        let nodes = this.editor.queryContent(`span[id="${WATERMARK_SPAN_ID}"]`);
-        for (let i = 0; i < nodes.length; i++) {
-            let node = nodes.item(i);
-            if (node.parentNode) {
-                node.parentNode.removeChild(node);
-            }
-        }
+        this.editor.queryElements(`span[id="${WATERMARK_SPAN_ID}"]`, span =>
+            this.editor.deleteNode(span)
+        );
         this.isWatermarkShowing = false;
     }
 

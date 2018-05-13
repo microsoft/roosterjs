@@ -31,6 +31,7 @@ export default class ImageResize implements EditorPlugin {
     private startHeight: number;
     private resizeDiv: HTMLElement;
     private direction: string;
+    public name: 'ImageResize';
 
     /**
      * Create a new instance of ImageResize
@@ -94,10 +95,7 @@ export default class ImageResize implements EditorPlugin {
             e.eventType == PluginEventType.ContentChanged &&
             (<ContentChangedEvent>e).source != ChangeSource.ImageResize
         ) {
-            let images = [].slice.call(this.editor.queryContent('img'));
-            for (let image of images) {
-                this.removeResizeDivIfAny(image);
-            }
+            this.editor.queryElements('img', this.removeResizeDivIfAny);
             this.resizeDiv = null;
         } else if (e.eventType == PluginEventType.ExtractContent) {
             let event = <ExtractContentEvent>e;
@@ -265,7 +263,7 @@ export default class ImageResize implements EditorPlugin {
         }
     }
 
-    private removeResizeDivIfAny(img: HTMLImageElement) {
+    private removeResizeDivIfAny = (img: HTMLImageElement) => {
         let div = img && (img.parentNode as HTMLElement);
         let previous = div && div.previousSibling;
         let next = div && div.nextSibling;
@@ -280,7 +278,7 @@ export default class ImageResize implements EditorPlugin {
             div.parentNode.insertBefore(img, div);
             this.removeResizeDiv(div);
         }
-    }
+    };
 
     private extractHtml(html: string): string {
         return html.replace(EXTRACT_HTML_REGEX, '$1');

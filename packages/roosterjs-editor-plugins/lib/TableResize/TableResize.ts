@@ -13,6 +13,7 @@ export default class TableResize implements EditorPlugin {
     private td: HTMLTableCellElement;
     private pageX = -1;
     private initialPageX: number;
+    public name: 'TableResize';
 
     constructor(isRtl?: boolean) {}
 

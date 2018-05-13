@@ -7,24 +7,22 @@ import { isDocumentPosition } from 'roosterjs-editor-dom';
  * @param editor The editor
  * @param selector The selector to query
  * @param nodeContainedByRangeOnly When set to true, only return the nodes contained by current selection. Default value is false
+ * @param forEachCallback An optional callback to be invoked on each node in query result
  * @returns The nodes intersected with current selection, returns an empty array if no result is found
  */
-export default function queryNodesWithSelection(
+export default function queryNodesWithSelection<T extends HTMLElement = HTMLElement>(
     editor: Editor,
     selector: string,
-    nodeContainedByRangeOnly?: boolean
-): Node[] {
-    let result: Node[] = [];
-    let nodes = editor.queryContent(selector);
+    nodeContainedByRangeOnly?: boolean,
+    forEachCallback?: (node: T) => void
+): T[] {
+    let nodes = editor.queryElements<T>(selector);
     let range = editor.getSelectionRange();
-    if (range) {
-        for (let i = 0; i < nodes.length; i++) {
-            if (isIntersectWithNodeRange(nodes[i], range, nodeContainedByRangeOnly)) {
-                result.push(nodes[i]);
-            }
-        }
+    nodes = nodes.filter(node => isIntersectWithNodeRange(node, range, nodeContainedByRangeOnly));
+    if (forEachCallback) {
+        nodes.forEach(forEachCallback);
     }
-    return result;
+    return nodes;
 }
 
 function isIntersectWithNodeRange(

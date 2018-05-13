@@ -40,6 +40,8 @@ export default class ContentEdit implements EditorPlugin {
     private editor: Editor;
     private backspaceToUndo: boolean;
 
+    public name: 'ContentEdit';
+
     /**
      * Create instance of ContentEdit plugin
      * @param features An optional feature set to determine which features the plugin should provide

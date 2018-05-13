@@ -1,5 +1,5 @@
 /*
-    VERSION: 6.10.1
+    VERSION: 6.10.2
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -283,20 +283,17 @@ var roosterjs_editor_dom_1 = __webpack_require__(0);
  * @param editor The editor
  * @param selector The selector to query
  * @param nodeContainedByRangeOnly When set to true, only return the nodes contained by current selection. Default value is false
+ * @param forEachCallback An optional callback to be invoked on each node in query result
  * @returns The nodes intersected with current selection, returns an empty array if no result is found
  */
-function queryNodesWithSelection(editor, selector, nodeContainedByRangeOnly) {
-    var result = [];
-    var nodes = editor.queryContent(selector);
+function queryNodesWithSelection(editor, selector, nodeContainedByRangeOnly, forEachCallback) {
+    var nodes = editor.queryElements(selector);
     var range = editor.getSelectionRange();
-    if (range) {
-        for (var i = 0; i < nodes.length; i++) {
-            if (isIntersectWithNodeRange(nodes[i], range, nodeContainedByRangeOnly)) {
-                result.push(nodes[i]);
-            }
-        }
+    nodes = nodes.filter(function (node) { return isIntersectWithNodeRange(node, range, nodeContainedByRangeOnly); });
+    if (forEachCallback) {
+        nodes.forEach(forEachCallback);
     }
-    return result;
+    return nodes;
 }
 exports.default = queryNodesWithSelection;
 function isIntersectWithNodeRange(node, range, nodeContainedByRangeOnly) {
@@ -2623,20 +2620,21 @@ function insertCursorMarkerToEditorPoint(editor, editorPoint, cursorMaker) {
 }
 // Remove an element from editor by Id
 function removeCursorMarkerById(editor, id) {
-    var nodes = getCursorMarkNodes(editor, id);
-    if (nodes) {
-        for (var i = 0; i < nodes.length; i++) {
-            nodes[i].parentNode.removeChild(nodes[i]);
+    getCursorMarkNodes(editor, id, function (span) {
+        var parent = span.parentNode;
+        span.parentNode.removeChild(span);
+        if (BrowserData_1.default.isSafari) {
+            parent.normalize();
         }
-    }
+    });
 }
 // Get an element by unique id. If there is more than one element by the id, it should return null
 function getCursorMarkerByUniqueId(editor, id) {
     var nodes = getCursorMarkNodes(editor, id);
     return nodes && nodes.length == 1 ? nodes[0] : null;
 }
-function getCursorMarkNodes(editor, id) {
-    return editor.queryContent("span[id=\"" + id + "\"]:empty");
+function getCursorMarkNodes(editor, id, callback) {
+    return editor.queryElements("span[id=\"" + id + "\"]:empty", callback);
 }
 // Create a cursor marker by id
 function createCursorMarker(editor, id) {
@@ -3479,36 +3477,54 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var execFormatWithUndo_1 = __webpack_require__(1);
 var getNodeAtCursor_1 = __webpack_require__(9);
 var roosterjs_editor_core_1 = __webpack_require__(2);
+var roosterjs_editor_dom_1 = __webpack_require__(0);
 var ZERO_WIDTH_SPACE = '&#8203;';
+var WORKAROUND_CLASS = 'ROOSTER_WORKAROUND';
+var WORKAROUND_HTML = "<img class=\"" + WORKAROUND_CLASS + "\">";
+var WORKAROUND_SELECTOR = 'img.' + WORKAROUND_CLASS;
 /**
- * Edge may incorrectly put cursor after toggle bullet, workaround it by adding a space.
- * The space will be removed by Edge after toggle bullet
+ * Toggle bullet/numbering at selection
  * @param editor The editor instance
- * @returns The workaround span
+ * @param isNumbering Whether this is to toggle numbering or bullet
  */
-function workaroundForEdge(editor) {
-    if (roosterjs_editor_core_1.browserData.isEdge) {
-        var node = getNodeAtCursor_1.default(editor);
-        if (node && node.nodeType == 1 /* Element */ && node.textContent == '') {
-            var span = editor.getDocument().createElement('span');
-            node.insertBefore(span, node.firstChild);
-            span.innerHTML = ZERO_WIDTH_SPACE;
-            return span;
+function toggleList(editor, isNumbering) {
+    editor.focus();
+    execFormatWithUndo_1.default(editor, function () {
+        var workaroundSpan;
+        // Edge may incorrectly put cursor after toggle bullet, workaround it by adding a space.
+        if (roosterjs_editor_core_1.browserData.isEdge) {
+            var node = getNodeAtCursor_1.default(editor);
+            if (node && node.nodeType == 1 /* Element */ && node.textContent == '') {
+                workaroundSpan = editor.getDocument().createElement('span');
+                node.insertBefore(workaroundSpan, node.firstChild);
+                workaroundSpan.innerHTML = ZERO_WIDTH_SPACE;
+            }
         }
-    }
-    return null;
+        else if (roosterjs_editor_core_1.browserData.isChrome) {
+            // Chrome may lose the inline styles after toggle bullet, workaround it by add an empty IMG before each line
+            var workaroundPrototype = roosterjs_editor_dom_1.fromHtml(WORKAROUND_HTML, editor.getDocument())[0];
+            var traverser = editor.getContentTraverser(1 /* Selection */);
+            var block = traverser.currentBlockElement;
+            while (block) {
+                var workaroundNode = workaroundPrototype.cloneNode(true);
+                var startNode = block.getStartNode();
+                if (startNode.nodeType == 1 /* Element */) {
+                    startNode.insertBefore(workaroundNode, startNode.firstChild);
+                }
+                else if (startNode.nodeType == 3 /* Text */) {
+                    startNode.parentNode.insertBefore(workaroundNode, startNode);
+                }
+                block = traverser.getNextBlockElement();
+            }
+        }
+        editor
+            .getDocument()
+            .execCommand(isNumbering ? 'insertOrderedList' : 'insertUnorderedList', false, null);
+        editor.deleteNode(workaroundSpan);
+        editor.queryElements(WORKAROUND_SELECTOR, function (img) { return editor.deleteNode(img); });
+    });
 }
-exports.workaroundForEdge = workaroundForEdge;
-/**
- * Remove the workaroundSpan after toggling bullet in Edge
- * @param workaroundSpan The workaround span that was added
- */
-function removeWorkaroundForEdge(workaroundSpan) {
-    if (workaroundSpan && workaroundSpan.parentNode) {
-        workaroundSpan.parentNode.removeChild(workaroundSpan);
-    }
-}
-exports.removeWorkaroundForEdge = removeWorkaroundForEdge;
+exports.toggleList = toggleList;
 /**
  * Toggle bullet at selection
  * If selection contains bullet in deep level, toggle bullet will decrease the bullet level by one
@@ -3518,12 +3534,7 @@ exports.removeWorkaroundForEdge = removeWorkaroundForEdge;
  * @param editor The editor instance
  */
 function toggleBullet(editor) {
-    editor.focus();
-    execFormatWithUndo_1.default(editor, function () {
-        var workaroundSpan = workaroundForEdge(editor);
-        editor.getDocument().execCommand('insertUnorderedList', false, null);
-        removeWorkaroundForEdge(workaroundSpan);
-    });
+    toggleList(editor, false /*isNumbering*/);
 }
 exports.default = toggleBullet;
 
@@ -4047,6 +4058,19 @@ var Editor = /** @class */ (function () {
     Editor.prototype.contains = function (node) {
         return roosterjs_editor_dom_1.contains(this.core.contentDiv, node);
     };
+    /**
+     * Query HTML elements in editor using querySelectorAll() method
+     * @param selector Selector string to query
+     * @param forEachCallback An optional callback to be invoked on each node in query result
+     * @returns HTML Element list of the query result
+     */
+    Editor.prototype.queryElements = function (selector, forEachCallback) {
+        var nodes = [].slice.call(this.core.contentDiv.querySelectorAll(selector));
+        if (forEachCallback) {
+            nodes.forEach(forEachCallback);
+        }
+        return nodes;
+    };
     //#endregion
     //#region Content API
     /**
@@ -4115,9 +4139,7 @@ var Editor = /** @class */ (function () {
         }
     };
     /**
-     * DOM query content in editor
-     * @param selector Selector string to query
-     * @returns Node list of the query result
+     * @deprecated Use queryElements instead
      */
     Editor.prototype.queryContent = function (selector) {
         return this.core.contentDiv.querySelectorAll(selector);
@@ -6526,10 +6548,16 @@ function editTable(editor, operation) {
                     break;
             }
             vtable.writeBack();
-            td = editor.contains(td) ? td : vtable.getCurrentTd();
-            editor.focus();
-            return td;
+            if (!editor.contains(td)) {
+                td = vtable.getCurrentTd();
+            }
         }, true /*preserveSelection*/);
+        var range = editor.getSelectionRange();
+        if (!roosterjs_editor_dom_1.contains(td, range.startContainer) && td != range.startContainer) {
+            range.setStart(td, 0);
+            editor.updateSelection(range);
+            editor.focus();
+        }
     }
 }
 exports.default = editTable;
@@ -6807,7 +6835,6 @@ exports.default = toggleItalic;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var execFormatWithUndo_1 = __webpack_require__(1);
 var toggleBullet_1 = __webpack_require__(46);
 /**
  * Toggle numbering at selection
@@ -6818,12 +6845,7 @@ var toggleBullet_1 = __webpack_require__(46);
  * @param editor The editor instance
  */
 function toggleNumbering(editor) {
-    editor.focus();
-    execFormatWithUndo_1.default(editor, function () {
-        var workaroundSpan = toggleBullet_1.workaroundForEdge(editor);
-        editor.getDocument().execCommand('insertOrderedList', false, null);
-        toggleBullet_1.removeWorkaroundForEdge(workaroundSpan);
-    });
+    toggleBullet_1.toggleList(editor, true /*isNumbering*/);
 }
 exports.default = toggleNumbering;
 
@@ -7304,10 +7326,7 @@ var HyperLink = /** @class */ (function () {
         return href;
     };
     HyperLink.prototype.forEachHyperLink = function (callback) {
-        var anchors = this.editor.queryContent('a[href]');
-        for (var i = 0; i < anchors.length; i++) {
-            callback(anchors[i]);
-        }
+        this.editor.queryElements('a[href]', callback);
     };
     return HyperLink;
 }());
@@ -8590,13 +8609,10 @@ var Watermark = /** @class */ (function () {
         this.isWatermarkShowing = true;
     };
     Watermark.prototype.hideWatermark = function () {
-        var nodes = this.editor.queryContent("span[id=\"" + WATERMARK_SPAN_ID + "\"]");
-        for (var i = 0; i < nodes.length; i++) {
-            var node = nodes.item(i);
-            if (node.parentNode) {
-                node.parentNode.removeChild(node);
-            }
-        }
+        var _this = this;
+        this.editor.queryElements("span[id=\"" + WATERMARK_SPAN_ID + "\"]", function (span) {
+            return _this.editor.deleteNode(span);
+        });
         this.isWatermarkShowing = false;
     };
     Watermark.prototype.removeWartermarkFromHtml = function (event) {
@@ -8886,6 +8902,20 @@ var ImageResize = /** @class */ (function () {
             _this.editor.triggerContentChangedEvent("ImageResize" /* ImageResize */);
             e.preventDefault();
         };
+        this.removeResizeDivIfAny = function (img) {
+            var div = img && img.parentNode;
+            var previous = div && div.previousSibling;
+            var next = div && div.nextSibling;
+            if (previous &&
+                previous.nodeType == 8 /* Comment */ &&
+                previous.nodeValue == BEGIN_TAG &&
+                next &&
+                next.nodeType == 8 /* Comment */ &&
+                next.nodeValue == END_TAG) {
+                div.parentNode.insertBefore(img, div);
+                _this.removeResizeDiv(div);
+            }
+        };
     }
     ImageResize.prototype.initialize = function (editor) {
         this.editor = editor;
@@ -8933,11 +8963,7 @@ var ImageResize = /** @class */ (function () {
         }
         else if (e.eventType == 6 /* ContentChanged */ &&
             e.source != "ImageResize" /* ImageResize */) {
-            var images = [].slice.call(this.editor.queryContent('img'));
-            for (var _i = 0, images_1 = images; _i < images_1.length; _i++) {
-                var image = images_1[_i];
-                this.removeResizeDivIfAny(image);
-            }
+            this.editor.queryElements('img', this.removeResizeDivIfAny);
             this.resizeDiv = null;
         }
         else if (e.eventType == 7 /* ExtractContent */) {
@@ -9027,20 +9053,6 @@ var ImageResize = /** @class */ (function () {
                 }
             });
             this.editor.deleteNode(resizeDiv);
-        }
-    };
-    ImageResize.prototype.removeResizeDivIfAny = function (img) {
-        var div = img && img.parentNode;
-        var previous = div && div.previousSibling;
-        var next = div && div.nextSibling;
-        if (previous &&
-            previous.nodeType == 8 /* Comment */ &&
-            previous.nodeValue == BEGIN_TAG &&
-            next &&
-            next.nodeType == 8 /* Comment */ &&
-            next.nodeValue == END_TAG) {
-            div.parentNode.insertBefore(img, div);
-            this.removeResizeDiv(div);
         }
     };
     ImageResize.prototype.extractHtml = function (html) {

@@ -212,6 +212,23 @@ export default class Editor {
         return contains(this.core.contentDiv, node);
     }
 
+    /**
+     * Query HTML elements in editor using querySelectorAll() method
+     * @param selector Selector string to query
+     * @param forEachCallback An optional callback to be invoked on each node in query result
+     * @returns HTML Element list of the query result
+     */
+    public queryElements<T extends HTMLElement = HTMLElement>(
+        selector: string,
+        forEachCallback?: (node: T) => void
+    ): T[] {
+        let nodes = [].slice.call(this.core.contentDiv.querySelectorAll(selector)) as T[];
+        if (forEachCallback) {
+            nodes.forEach(forEachCallback);
+        }
+        return nodes;
+    }
+
     //#endregion
 
     //#region Content API
@@ -288,9 +305,7 @@ export default class Editor {
     }
 
     /**
-     * DOM query content in editor
-     * @param selector Selector string to query
-     * @returns Node list of the query result
+     * @deprecated Use queryElements instead
      */
     public queryContent(selector: string): NodeListOf<Element> {
         return this.core.contentDiv.querySelectorAll(selector);
