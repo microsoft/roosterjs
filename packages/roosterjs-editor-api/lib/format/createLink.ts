@@ -47,8 +47,8 @@ function applyLinkPrefix(url: string): string {
  * When protocol is not specified, a best matched protocol will be predicted.
  * @param altText Optional alt text of the link, will be shown when hover on the link
  * @param displayText Optional display text for the link.
- * If there is a selection, this parameter will be ignored.
- * If not specified, will use link instead
+ * If specified, the display text of link will be replaced with this text.
+ * If not specified and there wasn't a link, the link url will be used as display text.
  */
 export default function createLink(
     editor: Editor,
@@ -76,8 +76,8 @@ export default function createLink(
                 // If there is already a link, just change its href
                 if (anchor) {
                     anchor.href = normalizedUrl;
-                    // Only change the text content if it differs from the current.
-                    updateAnchorDisplayText(anchor, displayText || originalUrl);
+                    // Change text content if it is specified
+                    updateAnchorDisplayText(anchor, displayText);
                 } else {
                     anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
                     anchor.textContent = displayText || originalUrl;
@@ -88,7 +88,7 @@ export default function createLink(
                 /* the selection is not collapsed, use browser execCommand */
                 editor.getDocument().execCommand('createLink', false, normalizedUrl);
                 anchor = getAnchorNodeAtCursor(editor);
-                updateAnchorDisplayText(anchor, displayText || originalUrl);
+                updateAnchorDisplayText(anchor, displayText);
             }
             if (altText && anchor) {
                 // Hack: Ideally this should be done by HyperLink plugin.
