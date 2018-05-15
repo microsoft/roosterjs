@@ -118,8 +118,12 @@ function assembleFormatString(defaultFormat: DefaultFormat): string {
     if (defaultFormat.underline) {
         defaultFormatString += '  underline: true,\n';
     }
-    defaultFormatString += `  textColor: \"${defaultFormat.textColor}\",\n`;
-    defaultFormatString += `  fontFamily: \"${defaultFormat.fontFamily}\",\n`;
+    if (defaultFormat.textColor) {
+        defaultFormatString += `  textColor: \"${defaultFormat.textColor}\",\n`;
+    }
+    if (defaultFormat.fontFamily) {
+        defaultFormatString += `  fontFamily: \"${defaultFormat.fontFamily}\",\n`;
+    }
     defaultFormatString += '};\n';
     return defaultFormatString;
 }
