@@ -1,3 +1,5 @@
+const devServerPort = 3000;
+
 module.exports = {
     entry: './sample/scripts/sample.ts',
     devtool: 'source-map',
@@ -23,6 +25,9 @@ module.exports = {
     stats: "minimal",
     devServer: {
         host: "0.0.0.0", // This makes the server public so that others can test by http://hostname ...
-        port: 3000
+        port: devServerPort,
+        open: true,
+        openPage: "sample/sample.htm",
+        public: "localhost:" + devServerPort
     }
-}
+};

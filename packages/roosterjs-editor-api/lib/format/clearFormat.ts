@@ -1,5 +1,8 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import setBackgroundColor from './setBackgroundColor';
+import toggleBold from './toggleBold';
+import toggleItalic from './toggleItalic';
+import toggleUnderline from './toggleUnderline';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';
 import setTextColor from './setTextColor';
@@ -23,20 +26,38 @@ export default function clearFormat(editor: Editor) {
             editor.getDocument().execCommand('removeFormat', false, null);
 
             let nodes = queryNodesWithSelection(editor, '[class]');
-            for (let node of nodes) {
+            for (const node of nodes) {
                 (<HTMLElement>node).removeAttribute('class');
             }
 
+            const defaultFormat = editor.getDefaultFormat();
+            const isDefaultFormatEmpty = Object.keys(defaultFormat).length === 0;
             nodes = queryNodesWithSelection(editor, '[style]', true /*nodeContainedByRangeOnly*/);
-            for (let node of nodes) {
+            for (const node of nodes) {
                 STYLES_TO_REMOVE.forEach(style => (<HTMLElement>node).style.removeProperty(style));
+
+                // when default format is empty, keep the HTML minimum by removing style attribute if there's no style
+                // (note: because default format is empty, we're not adding style back in)
+                if (isDefaultFormatEmpty && node.getAttribute('style') === '') {
+                    node.removeAttribute('style');
+                }
             }
 
-            let defaultFormat = editor.getDefaultFormat();
-            setFontName(editor, defaultFormat.fontFamily);
-            setFontSize(editor, defaultFormat.fontSize);
-            setTextColor(editor, defaultFormat.textColor);
-            setBackgroundColor(editor, defaultFormat.backgroundColor);
+            if (!isDefaultFormatEmpty) {
+                setFontName(editor, defaultFormat.fontFamily);
+                setFontSize(editor, defaultFormat.fontSize);
+                setTextColor(editor, defaultFormat.textColor);
+                setBackgroundColor(editor, defaultFormat.backgroundColor);
+                if (defaultFormat.bold) {
+                    toggleBold(editor);
+                }
+                if (defaultFormat.italic) {
+                    toggleItalic(editor);
+                }
+                if (defaultFormat.underline) {
+                    toggleUnderline(editor);
+                }
+            }
         });
     });
 }

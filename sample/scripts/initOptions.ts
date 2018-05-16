@@ -88,12 +88,14 @@ export function initEditorForOptions() {
     if ((document.getElementById('underlineCheckbox') as HTMLInputElement).checked) {
         defaultFormat.underline = true;
     }
-    defaultFormat.textColor = (document.getElementById(
-        'textColorDefaultFormat'
-    ) as HTMLInputElement).value;
-    defaultFormat.fontFamily = (document.getElementById(
-        'fontNameDefaultFormat'
-    ) as HTMLInputElement).value;
+    const textColor = (document.getElementById('textColorDefaultFormat') as HTMLInputElement).value;
+    if (textColor) {
+        defaultFormat.textColor = textColor;
+    }
+    const fontFamily = (document.getElementById('fontNameDefaultFormat') as HTMLInputElement).value;
+    if (fontFamily) {
+        defaultFormat.fontFamily = fontFamily;
+    }
     let editorOptions: EditorOptions = {
         plugins: plugins,
         defaultFormat: defaultFormat,
