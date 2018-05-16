@@ -230,8 +230,9 @@ export default class ContentEdit implements EditorPlugin {
                     }
 
                     // If not explicitly insert br, Chrome will operate on the previous line
+                    let tempBr = this.editor.getDocument().createElement('BR');
                     if (browserData.isChrome || browserData.isSafari) {
-                        this.editor.insertContent('<BR>');
+                        this.editor.insertNode(tempBr);
                     }
 
                     if (textBeforeCursor == '1.') {
@@ -241,6 +242,8 @@ export default class ContentEdit implements EditorPlugin {
                         toggleBullet(this.editor);
                         listNode = getNodeAtCursor(this.editor, 'UL');
                     }
+
+                    this.editor.deleteNode(tempBr);
                 });
 
                 this.editor.addUndoSnapshot();
