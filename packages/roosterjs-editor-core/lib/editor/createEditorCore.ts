@@ -33,7 +33,7 @@ export default function createEditorCore(
 }
 
 function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat {
-    if (baseFormat && Object.keys(baseFormat).length === 0 ) {
+    if (baseFormat && Object.keys(baseFormat).length === 0) {
         return {};
     }
 

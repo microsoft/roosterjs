@@ -1,5 +1,6 @@
+import execFormatWithUndo from './execFormatWithUndo';
 import { Editor } from 'roosterjs-editor-core';
-import { toggleList } from './toggleBullet';
+import { workaroundForList } from './toggleBullet';
 
 /**
  * Toggle numbering at selection
@@ -10,5 +11,10 @@ import { toggleList } from './toggleBullet';
  * @param editor The editor instance
  */
 export default function toggleNumbering(editor: Editor) {
-    toggleList(editor, true /*isNumbering*/);
+    editor.focus();
+    execFormatWithUndo(editor, () => {
+        workaroundForList(editor, () => {
+            editor.getDocument().execCommand('insertOrderedList', false, null);
+        });
+    });
 }

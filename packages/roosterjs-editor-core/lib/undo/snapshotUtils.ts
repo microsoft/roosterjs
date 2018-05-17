@@ -120,7 +120,7 @@ function insertCursorMarkerToEditorPoint(
 function removeCursorMarkerById(editor: Editor, id: string) {
     getCursorMarkNodes(editor, id, span => {
         let parent = span.parentNode;
-        span.parentNode.removeChild(span)
+        span.parentNode.removeChild(span);
         if (browserData.isSafari) {
             parent.normalize();
         }

@@ -23,6 +23,7 @@ export default class TableResize implements EditorPlugin {
     }
 
     dispose() {
+        this.detachMouseEvents();
         this.editor = null;
         this.onMouseOverDisposer();
     }
@@ -115,12 +116,13 @@ export default class TableResize implements EditorPlugin {
     }
 
     private onMouseDown = (e: MouseEvent) => {
+        if (!this.editor || this.editor.isDisposed()) {
+            return;
+        }
+
         this.pageX = e.pageX;
         this.initialPageX = e.pageX;
-        let document = this.editor.getDocument();
-
-        document.addEventListener('mousemove', this.onMouseMove, true);
-        document.addEventListener('mouseup', this.onMouseUp, true);
+        this.attachMouseEvents();
 
         let handle = this.getResizeHandle();
         handle.style.borderWidth = '0 1px';
@@ -134,9 +136,7 @@ export default class TableResize implements EditorPlugin {
     };
 
     private onMouseUp = (e: MouseEvent) => {
-        let document = this.editor.getDocument();
-        document.removeEventListener('mousemove', this.onMouseMove, true);
-        document.removeEventListener('mouseup', this.onMouseUp, true);
+        this.detachMouseEvents();
 
         let handle = this.getResizeHandle();
         handle.style.borderWidth = '0';
@@ -162,6 +162,22 @@ export default class TableResize implements EditorPlugin {
         this.editor.focus();
         this.cancelEvent(e);
     };
+
+    private attachMouseEvents() {
+        if (this.editor && !this.editor.isDisposed()) {
+            let document = this.editor.getDocument();
+            document.addEventListener('mousemove', this.onMouseMove, true);
+            document.addEventListener('mouseup', this.onMouseUp, true);
+        }
+    }
+
+    private detachMouseEvents() {
+        if (this.editor && !this.editor.isDisposed()) {
+            let document = this.editor.getDocument();
+            document.removeEventListener('mousemove', this.onMouseMove, true);
+            document.removeEventListener('mouseup', this.onMouseUp, true);
+        }
+    }
 
     private setTableColumnWidth(width: string) {
         let vtable = new VTable(this.td);

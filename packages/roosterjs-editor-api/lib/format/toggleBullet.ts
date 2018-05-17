@@ -1,57 +1,11 @@
 import execFormatWithUndo from './execFormatWithUndo';
+import getFormatState from './getFormatState';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import { Editor, browserData } from 'roosterjs-editor-core';
-import { NodeType, ContentScope } from 'roosterjs-editor-types';
-import { fromHtml } from 'roosterjs-editor-dom';
+import { DefaultFormat, NodeType } from 'roosterjs-editor-types';
+import { applyFormat } from 'roosterjs-editor-dom';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
-const WORKAROUND_CLASS = 'ROOSTER_WORKAROUND';
-const WORKAROUND_HTML = `<img class="${WORKAROUND_CLASS}">`;
-const WORKAROUND_SELECTOR = 'img.' + WORKAROUND_CLASS;
-
-/**
- * Toggle bullet/numbering at selection
- * @param editor The editor instance
- * @param isNumbering Whether this is to toggle numbering or bullet
- */
-export function toggleList(editor: Editor, isNumbering: boolean) {
-    editor.focus();
-    execFormatWithUndo(editor, () => {
-        let workaroundSpan: HTMLElement;
-
-        // Edge may incorrectly put cursor after toggle bullet, workaround it by adding a space.
-        if (browserData.isEdge) {
-            let node = getNodeAtCursor(editor) as Element;
-            if (node && node.nodeType == NodeType.Element && node.textContent == '') {
-                workaroundSpan = editor.getDocument().createElement('span');
-                node.insertBefore(workaroundSpan, node.firstChild);
-                workaroundSpan.innerHTML = ZERO_WIDTH_SPACE;
-            }
-        } else if (browserData.isChrome) {
-            // Chrome may lose the inline styles after toggle bullet, workaround it by add an empty IMG before each line
-            let workaroundPrototype = fromHtml(WORKAROUND_HTML, editor.getDocument())[0];
-            let traverser = editor.getContentTraverser(ContentScope.Selection);
-            let block = traverser.currentBlockElement;
-            while (block) {
-                let workaroundNode = workaroundPrototype.cloneNode(true);
-                let startNode = block.getStartNode();
-                if (startNode.nodeType == NodeType.Element) {
-                    startNode.insertBefore(workaroundNode, startNode.firstChild);
-                } else if (startNode.nodeType == NodeType.Text) {
-                    startNode.parentNode.insertBefore(workaroundNode, startNode);
-                }
-                block = traverser.getNextBlockElement();
-            }
-        }
-
-        editor
-            .getDocument()
-            .execCommand(isNumbering ? 'insertOrderedList' : 'insertUnorderedList', false, null);
-
-        editor.deleteNode(workaroundSpan);
-        editor.queryElements(WORKAROUND_SELECTOR, img => editor.deleteNode(img));
-    });
-}
 
 /**
  * Toggle bullet at selection
@@ -62,5 +16,83 @@ export function toggleList(editor: Editor, isNumbering: boolean) {
  * @param editor The editor instance
  */
 export default function toggleBullet(editor: Editor) {
-    toggleList(editor, false /*isNumbering*/);
+    editor.focus();
+    execFormatWithUndo(editor, () => {
+        workaroundForList(editor, () => {
+            editor.getDocument().execCommand('insertUnorderedList', false, null);
+        });
+    });
+}
+
+/**
+ * Browsers don't handle bullet/numbering list well, especially the formats when switching list statue
+ * So we workaround it by always adding format to list element
+ */
+export function workaroundForList(editor: Editor, callback: () => void) {
+    let workaroundSpan: HTMLElement;
+
+    // Edge may incorrectly put cursor after toggle bullet, workaround it by adding a space.
+    if (browserData.isEdge) {
+        let node = getNodeAtCursor(editor) as Element;
+        if (node && node.nodeType == NodeType.Element && node.textContent == '') {
+            workaroundSpan = editor.getDocument().createElement('span');
+            node.insertBefore(workaroundSpan, node.firstChild);
+            workaroundSpan.innerHTML = ZERO_WIDTH_SPACE;
+        }
+    }
+
+    let ancestorFormats = getAncestorListFormats(editor);
+    let currentFormat = getCurrentFormat(editor);
+
+    callback();
+
+    let listNode = getNodeAtCursor(editor, 'LI') as HTMLElement;
+    if (
+        listNode &&
+        !listNode.getAttribute('style') &&
+        !ancestorFormats.find(format => format.node == listNode)
+    ) {
+        applyFormat(listNode, currentFormat);
+    }
+
+    ancestorFormats.forEach(
+        nodeEntry =>
+            nodeEntry.format &&
+            editor.contains(nodeEntry.node) &&
+            nodeEntry.node.setAttribute('style', nodeEntry.format)
+    );
+    editor.deleteNode(workaroundSpan);
+}
+
+function getAncestorListFormats(editor: Editor) {
+    let result: {
+        node: HTMLElement;
+        format: string;
+    }[] = [];
+    let node = getNodeAtCursor(editor, 'LI') as HTMLElement;
+
+    while (node) {
+        result.push({
+            node: node,
+            format: node.getAttribute('style'),
+        });
+        node = getNodeAtCursor(editor, 'LI', node.parentNode) as HTMLElement;
+    }
+
+    return result;
+}
+
+function getCurrentFormat(editor: Editor): DefaultFormat {
+    let format = getFormatState(editor, null);
+    return format
+        ? {
+              fontFamily: format.fontName,
+              fontSize: format.fontSize,
+              textColor: format.textColor,
+              backgroundColor: format.backgroundColor,
+              bold: format.isBold,
+              italic: format.isItalic,
+              underline: format.isUnderline,
+          }
+        : {};
 }
