@@ -53,6 +53,16 @@ const enum PluginEventType {
      * Idle event, fired when user doesn't have any input for a time period (specified in EditorOptions)
      */
     Idle,
+
+    /**
+     * Let plugin know editor is ready now
+     */
+    EditorReady,
+
+    /**
+     * Let plugin know editor is about to dispose
+     */
+    BeforeDispose,
 }
 
 export default PluginEventType;

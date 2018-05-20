@@ -103,12 +103,21 @@ export default class Editor {
         if (options.idleEventTimeSpanInSecond > 0) {
             this.startIdleLoop(options.idleEventTimeSpanInSecond * 1000);
         }
+
+        // 10. Finally, let plugins know that we are ready
+        this.triggerEvent({
+            eventType: PluginEventType.EditorReady,
+        }, true /*broadcast*/);
     }
 
     /**
      * Dispose this editor, dispose all plugins and custom data
      */
     public dispose(): void {
+        this.triggerEvent({
+            eventType: PluginEventType.BeforeDispose,
+        }, true /*broadcast*/);
+
         if (this.core.idleLoopHandle > 0) {
             let win = this.core.contentDiv.ownerDocument.defaultView || window;
             win.clearInterval(this.core.idleLoopHandle);

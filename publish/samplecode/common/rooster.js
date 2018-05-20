@@ -1,5 +1,5 @@
 /*
-    VERSION: 6.10.5
+    VERSION: 6.10.6
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -2804,13 +2804,7 @@ function insertCursorMarkerToEditorPoint(editor, editorPoint, cursorMaker) {
 }
 // Remove an element from editor by Id
 function removeCursorMarkerById(editor, id) {
-    getCursorMarkNodes(editor, id, function (span) {
-        var parent = span.parentNode;
-        span.parentNode.removeChild(span);
-        if (BrowserData_1.default.isSafari) {
-            parent.normalize();
-        }
-    });
+    getCursorMarkNodes(editor, id, function (span) { return span.parentNode.removeChild(span); });
 }
 // Get an element by unique id. If there is more than one element by the id, it should return null
 function getCursorMarkerByUniqueId(editor, id) {
@@ -4072,11 +4066,18 @@ var Editor = /** @class */ (function () {
         if (options.idleEventTimeSpanInSecond > 0) {
             this.startIdleLoop(options.idleEventTimeSpanInSecond * 1000);
         }
+        // 10. Finally, let plugins know that we are ready
+        this.triggerEvent({
+            eventType: 10 /* EditorReady */,
+        }, true /*broadcast*/);
     }
     /**
      * Dispose this editor, dispose all plugins and custom data
      */
     Editor.prototype.dispose = function () {
+        this.triggerEvent({
+            eventType: 11 /* BeforeDispose */,
+        }, true /*broadcast*/);
         if (this.core.idleLoopHandle > 0) {
             var win = this.core.contentDiv.ownerDocument.defaultView || window;
             win.clearInterval(this.core.idleLoopHandle);

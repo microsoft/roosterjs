@@ -118,13 +118,7 @@ function insertCursorMarkerToEditorPoint(
 
 // Remove an element from editor by Id
 function removeCursorMarkerById(editor: Editor, id: string) {
-    getCursorMarkNodes(editor, id, span => {
-        let parent = span.parentNode;
-        span.parentNode.removeChild(span);
-        if (browserData.isSafari) {
-            parent.normalize();
-        }
-    });
+    getCursorMarkNodes(editor, id, span => span.parentNode.removeChild(span));
 }
 
 // Get an element by unique id. If there is more than one element by the id, it should return null
