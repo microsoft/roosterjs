@@ -1,6 +1,7 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import getFormatState from './getFormatState';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
+import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { Editor, browserData } from 'roosterjs-editor-core';
 import { DefaultFormat, NodeType } from 'roosterjs-editor-types';
 import { applyFormat } from 'roosterjs-editor-dom';
@@ -46,21 +47,26 @@ export function workaroundForList(editor: Editor, callback: () => void) {
 
     callback();
 
-    let listNode = getNodeAtCursor(editor, 'LI') as HTMLElement;
-    if (
-        listNode &&
-        !listNode.getAttribute('style') &&
-        !ancestorFormats.find(format => format.node == listNode)
-    ) {
-        applyFormat(listNode, currentFormat);
+    // Workaround for Chrome to avoid losing format when toggle bullet
+    if (browserData.isChrome) {
+        queryNodesWithSelection(editor, 'LI', false /*notContainedByRangeOnly*/, listNode => {
+            if (
+                listNode &&
+                !listNode.getAttribute('style') &&
+                !ancestorFormats.find(format => format.node == listNode)
+            ) {
+                applyFormat(listNode, currentFormat);
+            }
+        });
+
+        ancestorFormats.forEach(
+            nodeEntry =>
+                nodeEntry.format &&
+                editor.contains(nodeEntry.node) &&
+                nodeEntry.node.setAttribute('style', nodeEntry.format)
+        );
     }
 
-    ancestorFormats.forEach(
-        nodeEntry =>
-            nodeEntry.format &&
-            editor.contains(nodeEntry.node) &&
-            nodeEntry.node.setAttribute('style', nodeEntry.format)
-    );
     editor.deleteNode(workaroundSpan);
 }
 
@@ -89,7 +95,6 @@ function getCurrentFormat(editor: Editor): DefaultFormat {
               fontFamily: format.fontName,
               fontSize: format.fontSize,
               textColor: format.textColor,
-              backgroundColor: format.backgroundColor,
               bold: format.isBold,
               italic: format.isItalic,
               underline: format.isUnderline,

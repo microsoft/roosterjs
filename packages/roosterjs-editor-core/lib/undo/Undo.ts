@@ -21,7 +21,7 @@ export default class Undo implements UndoService {
     private lastKeyPress: number;
     private onDropDisposer: () => void;
     private onCutDisposer: () => void;
-    public name: 'Undo';
+    public name = 'Undo';
 
     protected undoSnapshots: UndoSnapshotsService;
 
