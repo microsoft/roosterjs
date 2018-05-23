@@ -1025,7 +1025,7 @@ export class Undo implements UndoService {
     private lastKeyPress;
     private onDropDisposer;
     private onCutDisposer;
-    name: 'Undo';
+    name: string;
     protected undoSnapshots: UndoSnapshotsService;
     /**
      * Create an instance of Undo

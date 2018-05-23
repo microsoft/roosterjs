@@ -1026,7 +1026,7 @@ declare namespace roosterjs {
         private lastKeyPress;
         private onDropDisposer;
         private onCutDisposer;
-        name: 'Undo';
+        name: string;
         protected undoSnapshots: UndoSnapshotsService;
         /**
          * Create an instance of Undo

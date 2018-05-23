@@ -2321,6 +2321,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var execFormatWithUndo_1 = __webpack_require__(1);
 var getFormatState_1 = __webpack_require__(24);
 var getNodeAtCursor_1 = __webpack_require__(9);
+var queryNodesWithSelection_1 = __webpack_require__(3);
 var roosterjs_editor_core_1 = __webpack_require__(2);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var ZERO_WIDTH_SPACE = '&#8203;';
@@ -2359,17 +2360,21 @@ function workaroundForList(editor, callback) {
     var ancestorFormats = getAncestorListFormats(editor);
     var currentFormat = getCurrentFormat(editor);
     callback();
-    var listNode = getNodeAtCursor_1.default(editor, 'LI');
-    if (listNode &&
-        !listNode.getAttribute('style') &&
-        !ancestorFormats.find(function (format) { return format.node == listNode; })) {
-        roosterjs_editor_dom_1.applyFormat(listNode, currentFormat);
+    // Workaround for Chrome to avoid losing format when toggle bullet
+    if (roosterjs_editor_core_1.browserData.isChrome) {
+        queryNodesWithSelection_1.default(editor, 'LI', false /*notContainedByRangeOnly*/, function (listNode) {
+            if (listNode &&
+                !listNode.getAttribute('style') &&
+                !ancestorFormats.find(function (format) { return format.node == listNode; })) {
+                roosterjs_editor_dom_1.applyFormat(listNode, currentFormat);
+            }
+        });
+        ancestorFormats.forEach(function (nodeEntry) {
+            return nodeEntry.format &&
+                editor.contains(nodeEntry.node) &&
+                nodeEntry.node.setAttribute('style', nodeEntry.format);
+        });
     }
-    ancestorFormats.forEach(function (nodeEntry) {
-        return nodeEntry.format &&
-            editor.contains(nodeEntry.node) &&
-            nodeEntry.node.setAttribute('style', nodeEntry.format);
-    });
     editor.deleteNode(workaroundSpan);
 }
 exports.workaroundForList = workaroundForList;
@@ -2392,7 +2397,6 @@ function getCurrentFormat(editor) {
             fontFamily: format.fontName,
             fontSize: format.fontSize,
             textColor: format.textColor,
-            backgroundColor: format.backgroundColor,
             bold: format.isBold,
             italic: format.isItalic,
             underline: format.isUnderline,
@@ -2454,6 +2458,7 @@ var Undo = /** @class */ (function () {
         var _this = this;
         this.preserveSnapshots = preserveSnapshots;
         this.maxBufferSize = maxBufferSize;
+        this.name = 'Undo';
         this.onNativeEvent = function () {
             _this.addUndoSnapshot();
             _this.hasNewContent = true;
