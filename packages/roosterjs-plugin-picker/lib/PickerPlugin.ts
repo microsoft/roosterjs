@@ -5,13 +5,13 @@ import { PartialInlineElement } from 'roosterjs-editor-dom';
 import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 // Character codes
-export const BACKSPACE_CHARCODE = 8;
-export const TAB_CHARCODE = 9;
-export const ENTER_CHARCODE = 13;
-export const UP_ARROW_CHARCODE = 38;
-export const DOWN_ARROW_CHARCODE = 40;
-export const DELETE_CHARCODE = 46;
-export const ESC_CHARCODE = 27;
+const BACKSPACE_CHARCODE = 8;
+const TAB_CHARCODE = 9;
+const ENTER_CHARCODE = 13;
+const UP_ARROW_CHARCODE = 38;
+const DOWN_ARROW_CHARCODE = 40;
+const DELETE_CHARCODE = 46;
+const ESC_CHARCODE = 27;
 
 export interface EditorPickerPluginInterface extends EditorPlugin {
     dataProvider: PickerDataProvider;
