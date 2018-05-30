@@ -1,0 +1,295 @@
+import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
+import { cacheGetCursorEventData, replaceTextBeforeCursorWithNode } from 'roosterjs-editor-api';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { PartialInlineElement } from 'roosterjs-editor-dom';
+import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+
+// Character codes
+const BACKSPACE_CHARCODE = 8;
+const TAB_CHARCODE = 9;
+const ENTER_CHARCODE = 13;
+const UP_ARROW_CHARCODE = 38;
+const DOWN_ARROW_CHARCODE = 40;
+const DELETE_CHARCODE = 46;
+const ESC_CHARCODE = 27;
+
+export interface EditorPickerPluginInterface extends EditorPlugin {
+    dataProvider: PickerDataProvider;
+}
+
+export default class EditorPickerPlugin implements EditorPickerPluginInterface {
+    private editor: Editor;
+    private eventHandledOnKeyDown: boolean;
+    private blockSuggestions: boolean;
+    private isSuggesting: boolean;
+
+    constructor(
+        public readonly dataProvider: PickerDataProvider,
+        private pickerOptions: PickerPluginOptions
+    ) {}
+
+    public initialize(editor: Editor) {
+        this.editor = editor;
+        this.dataProvider.onInitalize(
+            (htmlNode: Node) => {
+                let nodeInserted = false;
+                this.editor.focus();
+                this.editor.addUndoSnapshot();
+
+                let wordToReplace = this.getWord(null);
+                if (wordToReplace) {
+                    replaceTextBeforeCursorWithNode(this.editor, wordToReplace, htmlNode, true);
+                    nodeInserted = true;
+                    this.setIsSuggesting(false);
+                }
+
+                if (nodeInserted) {
+                    this.editor.triggerContentChangedEvent(this.pickerOptions.changeSource);
+                    this.editor.addUndoSnapshot();
+                }
+            },
+            (isSuggesting: boolean) => {
+                this.setIsSuggesting(isSuggesting);
+            }
+        );
+    }
+
+    public dispose() {
+        this.editor = null;
+        this.dataProvider.onDispose();
+    }
+
+    public willHandleEventExclusively(event: PluginEvent) {
+        return (
+            this.isSuggesting &&
+            (event.eventType == PluginEventType.KeyDown || event.eventType == PluginEventType.KeyUp)
+        );
+    }
+
+    public onPluginEvent(event: PluginEvent) {
+        let domEvent = event as PluginDomEvent;
+        if (event.eventType == PluginEventType.KeyDown) {
+            let keyboardEvent: KeyboardEvent = domEvent.rawEvent as KeyboardEvent;
+            this.eventHandledOnKeyDown = false;
+            this.onKeyDownEvent(domEvent, keyboardEvent);
+        }
+        if (event.eventType == PluginEventType.KeyUp && !this.eventHandledOnKeyDown) {
+            let keyboardEvent: KeyboardEvent = domEvent.rawEvent as KeyboardEvent;
+            this.onKeyUpDomEvent(domEvent, keyboardEvent);
+        } else if (event.eventType == PluginEventType.MouseUp) {
+            if (this.isSuggesting) {
+                this.setIsSuggesting(false);
+            }
+        }
+    }
+
+    private setIsSuggesting(isSuggesting: boolean) {
+        this.isSuggesting = isSuggesting;
+        this.dataProvider.onIsSuggestingChanged(isSuggesting);
+    }
+
+    private handleKeyDownEvent(event: PluginDomEvent) {
+        this.eventHandledOnKeyDown = true;
+        event.rawEvent.preventDefault();
+        event.rawEvent.stopImmediatePropagation();
+    }
+
+    private getIdValue(node: Node): string {
+        return node.attributes && node.attributes.getNamedItem('id')
+            ? (node.attributes.getNamedItem('id').value as string)
+            : null;
+    }
+
+    private getWordBeforeCursor(event: PluginDomEvent): string {
+        let cursorData = cacheGetCursorEventData(event, this.editor);
+        return cursorData ? cursorData.wordBeforeCursor : null;
+    }
+
+    private replaceNode(currentNode: Node, replacementNode: Node) {
+        if (currentNode) {
+            this.editor.deleteNode(currentNode);
+        }
+        if (replacementNode) {
+            this.editor.insertNode(replacementNode);
+        }
+    }
+
+    private getRangeUntilAt(event: PluginDomEvent): Range {
+        let cursorData = cacheGetCursorEventData(event, this.editor);
+        let range = this.editor.getDocument().createRange();
+        cursorData.getTextSectionBeforeCursorTill(textInline => {
+            let hasMatched = false;
+            let nodeContent = textInline.getTextContent();
+            let nodeIndex = nodeContent ? nodeContent.length : -1;
+            while (nodeIndex >= 0) {
+                if (nodeContent[nodeIndex] == this.pickerOptions.triggerCharacter) {
+                    range.setStart(
+                        textInline.getContainerNode(),
+                        textInline.getStartPoint().offset + nodeIndex
+                    );
+                    hasMatched = true;
+                    break;
+                }
+                nodeIndex--;
+            }
+
+            if (hasMatched) {
+                range.setEnd(textInline.getContainerNode(), textInline.getEndPoint().offset);
+            }
+
+            return hasMatched;
+        });
+        return range;
+    }
+
+    private onKeyUpDomEvent(event: PluginDomEvent, keyboardEvent: KeyboardEvent) {
+        if (this.isSuggesting) {
+            let wordBeforeCursor = this.getWord(event);
+            if (wordBeforeCursor && wordBeforeCursor.split(' ').length <= 4) {
+                let shortWord = wordBeforeCursor.substring(1).trim();
+                this.dataProvider.queryStringUpdated(shortWord);
+            } else {
+                this.setIsSuggesting(false);
+            }
+        } else {
+            let wordBeforeCursor = this.getWord(event);
+            if (!this.blockSuggestions) {
+                if (
+                    wordBeforeCursor != null &&
+                    wordBeforeCursor.split(' ').length <= 4 &&
+                    wordBeforeCursor[0] == this.pickerOptions.triggerCharacter
+                ) {
+                    this.setIsSuggesting(true);
+                    let shortWord = wordBeforeCursor.substring(1).trim();
+                    this.dataProvider.queryStringUpdated(shortWord);
+                    if (this.dataProvider.setCursorPoint) {
+                        // Determine the bounding rectangle for the @mention
+                        let cursorData = cacheGetCursorEventData(event, this.editor);
+                        let rangeNode = this.editor.getDocument().createRange();
+                        let nodeBeforeCursor = cursorData.inlineElementBeforeCursor.getContainerNode();
+                        let rangeStartSuccessfullySet = this.setRangeStart(
+                            rangeNode,
+                            nodeBeforeCursor,
+                            wordBeforeCursor
+                        );
+                        if (!rangeStartSuccessfullySet) {
+                            // VSO 24891: Out of range error is occurring because nodeBeforeCursor
+                            // is not including the trigger character. In this case, the node before
+                            // the node before cursor is the trigger character, and this is where the range should start.
+                            let nodeBeforeNodeBeforeCursor = nodeBeforeCursor.previousSibling;
+                            this.setRangeStart(
+                                rangeNode,
+                                nodeBeforeNodeBeforeCursor,
+                                this.pickerOptions.triggerCharacter
+                            );
+                        }
+                        let rect = rangeNode.getBoundingClientRect();
+
+                        // Safari's support for range.getBoundingClientRect is incomplete.
+                        // We perform this check to fall back to getClientRects in case it's at the page origin.
+                        if (rect.left == 0 && rect.bottom == 0 && rect.top == 0) {
+                            rect = rangeNode.getClientRects()[0];
+                        }
+
+                        if (!rect) {
+                            return;
+                        }
+                        rangeNode.detach();
+
+                        // Display the @mention popup in the correct place
+                        let targetPoint = { x: rect.left, y: (rect.bottom + rect.top) / 2 };
+                        let bufferZone = (rect.bottom - rect.top) / 2;
+                        this.dataProvider.setCursorPoint(targetPoint, bufferZone);
+                    }
+                }
+            } else {
+                if (
+                    wordBeforeCursor != null &&
+                    wordBeforeCursor[0] != this.pickerOptions.triggerCharacter
+                ) {
+                    this.blockSuggestions = false;
+                }
+            }
+        }
+    }
+
+    private onKeyDownEvent(event: PluginDomEvent, keyboardEvent: KeyboardEvent) {
+        if (this.isSuggesting) {
+            if (keyboardEvent.which == ESC_CHARCODE) {
+                this.setIsSuggesting(false);
+                this.blockSuggestions = true;
+                this.handleKeyDownEvent(event);
+            } else if (
+                this.dataProvider.shiftHighlight &&
+                (keyboardEvent.which == UP_ARROW_CHARCODE ||
+                    keyboardEvent.which == DOWN_ARROW_CHARCODE)
+            ) {
+                this.dataProvider.shiftHighlight(
+                    keyboardEvent.which == DOWN_ARROW_CHARCODE ? true : false
+                );
+                this.handleKeyDownEvent(event);
+            } else if (
+                this.dataProvider.selectOption &&
+                (keyboardEvent.which == ENTER_CHARCODE || keyboardEvent.which == TAB_CHARCODE)
+            ) {
+                this.dataProvider.selectOption();
+                this.handleKeyDownEvent(event);
+            } else {
+                // Currently no op.
+            }
+        } else {
+            if (keyboardEvent.which == BACKSPACE_CHARCODE) {
+                let cursorData = cacheGetCursorEventData(event, this.editor);
+                let nodeBeforeCursor = cursorData.inlineElementBeforeCursor
+                    ? cursorData.inlineElementBeforeCursor.getContainerNode()
+                    : null;
+                let nodeId = nodeBeforeCursor ? this.getIdValue(nodeBeforeCursor) : null;
+                if (
+                    nodeId &&
+                    nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0 &&
+                    (cursorData.inlineElementAfterCursor == null ||
+                        !(cursorData.inlineElementAfterCursor instanceof PartialInlineElement))
+                ) {
+                    let replacementNode = this.dataProvider.onRemove(nodeBeforeCursor, true);
+                    this.replaceNode(nodeBeforeCursor, replacementNode);
+                    this.handleKeyDownEvent(event);
+                }
+            } else if (keyboardEvent.which == DELETE_CHARCODE) {
+                let cursorData = cacheGetCursorEventData(event, this.editor);
+                let nodeAfterCursor = cursorData.inlineElementAfterCursor
+                    ? cursorData.inlineElementAfterCursor.getContainerNode()
+                    : null;
+                let nodeId = nodeAfterCursor ? this.getIdValue(nodeAfterCursor) : null;
+                if (nodeId && nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0) {
+                    let replacementNode = this.dataProvider.onRemove(nodeAfterCursor, false);
+                    this.replaceNode(nodeAfterCursor, replacementNode);
+                    this.handleKeyDownEvent(event);
+                }
+            }
+        }
+    }
+
+    private getWord(event: PluginDomEvent) {
+        let wordFromRange = this.getRangeUntilAt(event).toString();
+        let wordFromCache = this.getWordBeforeCursor(event);
+        // VSO 24891: In picker, trigger and mention are separated into two nodes.
+        // In this case, wordFromRange is the trigger character while wordFromCache is the whole string,
+        // so wordFromCache is what we want to return.
+        if (
+            wordFromRange == this.pickerOptions.triggerCharacter &&
+            wordFromRange != wordFromCache
+        ) {
+            return wordFromCache;
+        }
+        return wordFromRange;
+    }
+
+    private setRangeStart(rangeNode: Range, node: Node, target: string) {
+        let nodeOffset = node.textContent.indexOf(target);
+        if (nodeOffset > -1) {
+            rangeNode.setStart(node, nodeOffset);
+            return true;
+        }
+        return false;
+    }
+}
