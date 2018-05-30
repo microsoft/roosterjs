@@ -69,16 +69,14 @@ export default class Paste implements EditorPlugin {
                 clipboardData.html = textToHtml(clipboardData.text);
             }
             let currentStyles = getInheritableStyles(this.editor);
-            if (!clipboardData.isHtmlFromTempDiv) {
-                clipboardData.html = sanitizeHtml(
-                    clipboardData.html,
-                    null /*additionalStyleNodes*/,
-                    false /*convertInlineCssOnly*/,
-                    this.htmlPropertyCallbacks,
-                    true /*preserveFragmentOnly*/,
-                    currentStyles
-                );
-            }
+            clipboardData.html = sanitizeHtml(
+                clipboardData.html,
+                null /*additionalStyleNodes*/,
+                false /*convertInlineCssOnly*/,
+                this.htmlPropertyCallbacks,
+                true /*preserveFragmentOnly*/,
+                currentStyles
+            );
             this.pasteOriginal(clipboardData);
         });
     };

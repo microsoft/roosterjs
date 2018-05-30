@@ -1,17 +1,27 @@
 import ContentPosition from './ContentPosition';
 
-// Options for insertContent API
+/**
+ * Options for insertContent API
+ */
 interface InsertOption {
-    // Target position
+    /**
+     * Target position
+     */
     position: ContentPosition;
 
-    // Whether need to update cursor
+    /**
+     * Whether need to update cursor
+     */
     updateCursor: boolean;
 
-    // Whether need to replace current selection
+    /**
+     * Whether need to replace current selection
+     */
     replaceSelection: boolean;
 
-    // Whether need to insert the content into a new line
+    /**
+     * Whether need to insert the content into a new line
+     */
     insertOnNewLine: boolean;
 }
 

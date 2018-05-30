@@ -1,5 +1,5 @@
 /*
-    VERSION: 6.10.6
+    VERSION: 6.10.8
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -713,6 +713,12 @@ exports.cacheGetListElement = cacheGetListElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Get current browser information from user agent string
+ * @param userAgent The userAgent string of a browser
+ * @param appVersion The appVersion string of a browser
+ * @returns The BrowserInfo object calculated from the given userAgent and appVersion
+ */
 function getBrowserData(userAgent, appVersion) {
     // In case universal render somehow hits this code path
     if (typeof window == 'undefined') {
@@ -2459,9 +2465,12 @@ var Undo = /** @class */ (function () {
         this.preserveSnapshots = preserveSnapshots;
         this.maxBufferSize = maxBufferSize;
         this.name = 'Undo';
-        this.onNativeEvent = function () {
+        this.onNativeEvent = function (e) {
             _this.addUndoSnapshot();
             _this.hasNewContent = true;
+            _this.editor.runAsync(function () {
+                return _this.editor.triggerContentChangedEvent(e.type == 'cut' ? "Cut" /* Cut */ : "Drop" /* Drop */);
+            });
         };
     }
     /**
@@ -3039,8 +3048,49 @@ function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, property
 }
 exports.default = sanitizeHtml;
 var ALLOWED_HTML_TAGS = 'BODY,H1,H2,H3,H4,H5,H6,FORM,P,BR,NOBR,HR,ACRONYM,ABBR,ADDRESS,B,BDI,BDO,BIG,BLOCKQUOTE,CENTER,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,WBR,XMP,INPUT,TEXTAREA,BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,IMG,MAP,AREA,CANVAS,FIGCAPTION,FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,TABLE,CAPTION,TH,TR,TD,THEAD,TBODY,TFOOT,COL,COLGROUP,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'.split(',');
-var ALLOWED_HTML_ATTRIBUTES = 'accept,align,alt,checked,cite,cols,colspan,contextmenu,coords,datetime,default,dir,dirname,disabled,download,headers,height,hidden,high,href,hreflang,ismap,kind,label,lang,list,low,max,maxlength,media,min,multiple,open,optimum,pattern,placeholder,readonly,rel,required,reversed,rows,rowspan,scope,selected,shape,size,sizes,span,spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,type,usemap,value,width,wrap'.split(',');
+var ALLOWED_HTML_ATTRIBUTES = 'accept,align,alt,checked,cite,color,cols,colspan,contextmenu,coords,datetime,default,dir,dirname,disabled,download,face,headers,height,hidden,high,href,hreflang,ismap,kind,label,lang,list,low,max,maxlength,media,min,multiple,open,optimum,pattern,placeholder,readonly,rel,required,reversed,rows,rowspan,scope,selected,shape,size,sizes,span,spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,type,usemap,value,width,wrap'.split(',');
 var DROPPED_STYLE = ['white-space'];
+var DEFAULT_STYLE_VALUES = {
+    'background-color': 'transparent',
+    'border-bottom-color': 'rgb(0, 0, 0)',
+    'border-bottom-style': 'none',
+    'border-bottom-width': '0px',
+    'border-image-outset': '0',
+    'border-image-repeat': 'stretch',
+    'border-image-slice': '100%',
+    'border-image-source': 'none',
+    'border-image-width': '1',
+    'border-left-color': 'rgb(0, 0, 0)',
+    'border-left-style': 'none',
+    'border-left-width': '0px',
+    'border-right-color': 'rgb(0, 0, 0)',
+    'border-right-style': 'none',
+    'border-right-width': '0px',
+    'border-top-color': 'rgb(0, 0, 0)',
+    'border-top-style': 'none',
+    'border-top-width': '0px',
+    'outline-color': 'transparent',
+    'outline-style': 'none',
+    'outline-width': '0px',
+    overflow: 'visible',
+    'text-decoration': 'none',
+    '-webkit-text-stroke-width': '0px',
+    'word-wrap': 'break-word',
+    'margin-left': '0px',
+    'margin-right': '0px',
+    padding: '0px',
+    'padding-top': '0px',
+    'padding-left': '0px',
+    'padding-right': '0px',
+    'padding-bottom': '0px',
+    border: '0px',
+    'border-top': '0px',
+    'border-left': '0px',
+    'border-right': '0px',
+    'border-bottom': '0px',
+    'vertical-align': 'baseline',
+    float: 'none',
+};
 function convertInlineCss(doc, additionalStyleNodes) {
     var styleNodes = toArray(doc.querySelectorAll('style'));
     var styleSheets = (additionalStyleNodes || [])
@@ -3129,6 +3179,8 @@ function removeUnusedCss(element, thisStyle) {
             var value = pair[1].trim().toLowerCase();
             var isInheritable = thisStyle[name_1] != undefined;
             var keep = value != 'inherit' &&
+                name_1.substr(0, 1) != '-' &&
+                DEFAULT_STYLE_VALUES[name_1] != value &&
                 ((isInheritable && value != thisStyle[name_1]) ||
                     (!isInheritable && value != 'initial' && value != 'normal')) &&
                 !shouldRemove(tag, name_1, value);
@@ -3157,7 +3209,7 @@ function shouldRemove(tag, name, value) {
     if (value.indexOf('expression') >= 0) {
         return true;
     }
-    if (tag == 'LI' && name == 'width') {
+    if (['LI', 'DIV'].indexOf(tag) >= 0 && name == 'width') {
         return true;
     }
     return false;
@@ -5218,6 +5270,9 @@ exports.default = wrapAll;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
+ */
 var VTable = /** @class */ (function () {
     function VTable(node) {
         var _this = this;
@@ -5250,6 +5305,9 @@ var VTable = /** @class */ (function () {
             });
         }
     }
+    /**
+     * Write the virtual table back to DOM tree to represent the change of VTable
+     */
     VTable.prototype.writeBack = function () {
         var _this = this;
         if (this.cells) {
@@ -5270,6 +5328,10 @@ var VTable = /** @class */ (function () {
             this.table.parentNode.removeChild(this.table);
         }
     };
+    /**
+     * Apply the given table format to this virtual table
+     * @param format Table format to apply
+     */
     VTable.prototype.applyFormat = function (format) {
         this.trs[0].style.backgroundColor = format.bgColorOdd || 'transparent';
         if (this.trs[1]) {
@@ -5284,19 +5346,36 @@ var VTable = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Loop each cell of current column and invoke a callback function
+     * @param callback The callback function to invoke
+     */
     VTable.prototype.forEachCellOfCurrentColumn = function (callback) {
         for (var i = 0; i < this.cells.length; i++) {
             callback(this.getCell(i, this.col), this.cells[i], i);
         }
     };
+    /**
+     * Loop each cell of current row and invoke a callback function
+     * @param callback The callback function to invoke
+     */
     VTable.prototype.forEachCellOfCurrentRow = function (callback) {
         for (var i = 0; i < this.cells[this.row].length; i++) {
             callback(this.getCell(this.row, i), i);
         }
     };
+    /**
+     * Get a table cell using its row and column index. This function will always return an object
+     * even if the given indexes don't exist in table.
+     * @param row The row index
+     * @param col The column index
+     */
     VTable.prototype.getCell = function (row, col) {
-        return (this.cells[row] && this.cells[row][col]) || {};
+        return (this.cells && this.cells[row] && this.cells[row][col]) || {};
     };
+    /**
+     * Get current HTML table cell object. If the current table cell is a virtual expanded cell, return its root cell
+     */
     VTable.prototype.getCurrentTd = function () {
         if (this.cells) {
             var row = Math.min(this.cells.length - 1, this.row);
@@ -5319,6 +5398,11 @@ var VTable = /** @class */ (function () {
         }
         return null;
     };
+    /**
+     * Move all children from one node to another
+     * @param fromNode The source node to move children from
+     * @param toNode Target node. If not passed, children nodes of source node will be removed
+     */
     VTable.moveChildren = function (fromNode, toNode) {
         while (fromNode.firstChild) {
             if (toNode) {
@@ -5329,6 +5413,10 @@ var VTable = /** @class */ (function () {
             }
         }
     };
+    /**
+     * Clone a node without its children.
+     * @param node The node to clone
+     */
     VTable.cloneNode = function (node) {
         var newNode = node ? node.cloneNode(false /*deep*/) : null;
         if (newNode && newNode instanceof HTMLTableCellElement && !newNode.firstChild) {
@@ -5336,6 +5424,10 @@ var VTable = /** @class */ (function () {
         }
         return newNode;
     };
+    /**
+     * Clone a table cell
+     * @param cell The cell to clone
+     */
     VTable.cloneCell = function (cell) {
         return {
             td: VTable.cloneNode(cell.td),
@@ -7721,9 +7813,7 @@ var Paste = /** @class */ (function () {
                     clipboardData.html = textToHtml_1.default(clipboardData.text);
                 }
                 var currentStyles = getInheritableStyles_1.default(_this.editor);
-                if (!clipboardData.isHtmlFromTempDiv) {
-                    clipboardData.html = roosterjs_editor_dom_1.sanitizeHtml(clipboardData.html, null /*additionalStyleNodes*/, false /*convertInlineCssOnly*/, _this.htmlPropertyCallbacks, true /*preserveFragmentOnly*/, currentStyles);
-                }
+                clipboardData.html = roosterjs_editor_dom_1.sanitizeHtml(clipboardData.html, null /*additionalStyleNodes*/, false /*convertInlineCssOnly*/, _this.htmlPropertyCallbacks, true /*preserveFragmentOnly*/, currentStyles);
                 _this.pasteOriginal(clipboardData);
             });
         };
@@ -7857,11 +7947,10 @@ var CONTAINER_HTML = '<div contenteditable style="width: 1px; height: 1px; overf
  */
 function buildClipboardData(event, editor, callback) {
     var dataTransfer = event.clipboardData || editor.getDocument().defaultView.clipboardData;
-    var types = dataTransfer.types ? [].slice.call(dataTransfer.types) : [];
     var clipboardData = {
         snapshotBeforePaste: null,
         originalFormat: getCurrentFormat(editor),
-        types: types,
+        types: dataTransfer.types || [],
         image: getImage(dataTransfer),
         text: dataTransfer.getData('text'),
         html: null,
@@ -7875,7 +7964,6 @@ function buildClipboardData(event, editor, callback) {
     else {
         retrieveHtmlViaTempDiv(editor, function (html) {
             clipboardData.html = html;
-            clipboardData.isHtmlFromTempDiv = true;
             callback(clipboardData);
         });
     }
@@ -8573,13 +8661,14 @@ exports.default = textToHtml;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_api_1 = __webpack_require__(4);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 // Inheritable CSS properties
 // Ref: https://www.w3.org/TR/CSS21/propidx.html
 var INHERITABLE_PROPERTIES = 'border-collapse,border-spacing,caption-side,color,cursor,direction,empty-cells,font-family,font-size,font-style,font-variant,font-weight,font,letter-spacing,line-height,list-style-image,list-style-position,list-style-type,list-style,orphans,quotes,text-align,text-indent,text-transform,visibility,white-space,widows,word-spacing'.split(',');
 function getInheritableStyles(editor) {
-    var node = roosterjs_editor_api_1.getNodeAtCursor(editor);
+    var selection = editor.getDocument().defaultView.getSelection();
+    var node = selection.focusNode;
+    node = node && node.nodeType != 1 /* Element */ ? node.parentNode : node;
     var styles = node ? roosterjs_editor_dom_1.getComputedStyles(node, INHERITABLE_PROPERTIES) : [];
     var result = {};
     for (var i = 0; i < INHERITABLE_PROPERTIES.length; i++) {

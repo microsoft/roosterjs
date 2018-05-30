@@ -23,11 +23,10 @@ export default function buildClipboardData(
 ) {
     let dataTransfer =
         event.clipboardData || (<WindowForIE>editor.getDocument().defaultView).clipboardData;
-    let types: string[] = dataTransfer.types ? [].slice.call(dataTransfer.types) : [];
     let clipboardData: ClipboardData = {
         snapshotBeforePaste: null,
         originalFormat: getCurrentFormat(editor),
-        types: types,
+        types: dataTransfer.types || [],
         image: getImage(dataTransfer),
         text: dataTransfer.getData('text'),
         html: null,
@@ -41,7 +40,6 @@ export default function buildClipboardData(
     } else {
         retrieveHtmlViaTempDiv(editor, html => {
             clipboardData.html = html;
-            clipboardData.isHtmlFromTempDiv = true;
             callback(clipboardData);
         });
     }

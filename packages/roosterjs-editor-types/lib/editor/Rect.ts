@@ -1,15 +1,25 @@
-// This represents a rect inside editor
+/**
+ * This represents a rect inside editor
+ */
 interface Rect {
-    // Top
+    /**
+     * Top
+     */
     top: number;
 
-    // Bottom
+    /**
+     * Bottom
+     */
     bottom: number;
 
-    // Left
+    /**
+     * Left
+     */
     left: number;
 
-    // Right
+    /**
+     * Right
+     */
     right: number;
 }
 

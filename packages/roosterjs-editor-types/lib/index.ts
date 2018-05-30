@@ -1,6 +1,7 @@
 export { default as Alignment } from './format/Alignment';
 export { default as BlockElement } from './editor/BlockElement';
-export { default as ContentChangedEvent, ChangeSource } from './editor/ContentChangedEvent';
+export { default as ChangeSource } from './editor/ChangeSource';
+export { default as ContentChangedEvent } from './editor/ContentChangedEvent';
 export { default as ContentPosition } from './editor/ContentPosition';
 export { default as ContentScope } from './editor/ContentScope';
 export { default as DefaultFormat } from './editor/DefaultFormat';

@@ -1,9 +1,15 @@
-// enum for setting block direction
+/**
+ * enum for setting block direction, used by setDirection API
+ */
 const enum Direction {
-    // Left to right
+    /**
+     * Left to right
+     */
     LeftToRight,
 
-    // Right to left
+    /**
+     * Right to left
+     */
     RightToLeft,
 }
 

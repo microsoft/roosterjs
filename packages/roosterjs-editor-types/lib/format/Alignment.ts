@@ -1,12 +1,20 @@
-// enum for setting block alignment
+/**
+ * enum for setting block alignment, used by setAlignment API
+ */
 const enum Alignment {
-    // Align left
+    /**
+     * Align left
+     */
     Left,
 
-    // Align center
+    /**
+     * Align center
+     */
     Center,
 
-    // Align right
+    /**
+     * Align right
+     */
     Right,
 }
 

@@ -1,5 +1,5 @@
 import UndoSnapshots, { UndoSnapshotsService } from './UndoSnapshots';
-import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { ChangeSource, PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import Editor from '../editor/Editor';
 import UndoService from '../editor/UndoService';
 import { buildSnapshot, restoreSnapshot } from './snapshotUtils';
@@ -228,8 +228,13 @@ export default class Undo implements UndoService {
         this.hasNewContent = true;
     }
 
-    private onNativeEvent = () => {
+    private onNativeEvent = (e: UIEvent) => {
         this.addUndoSnapshot();
         this.hasNewContent = true;
+        this.editor.runAsync(() =>
+            this.editor.triggerContentChangedEvent(
+                e.type == 'cut' ? ChangeSource.Cut : ChangeSource.Drop
+            )
+        );
     };
 }

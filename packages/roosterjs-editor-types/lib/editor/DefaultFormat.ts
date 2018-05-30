@@ -1,24 +1,40 @@
-// Default format settings
+/**
+ * Default format settings
+ */
 interface DefaultFormat {
-    // Font family
+    /**
+     * Font family
+     */
     fontFamily?: string;
 
-    // Font size
+    /**
+     * Font size
+     */
     fontSize?: string;
 
-    // Text color
+    /**
+     * Text color
+     */
     textColor?: string;
 
-    // Background Color
+    /**
+     * Background Color
+     */
     backgroundColor?: string;
 
-    // Whether is bold
+    /**
+     * Whether is bold
+     */
     bold?: boolean;
 
-    // Whether is italic
+    /**
+     * Whether is italic
+     */
     italic?: boolean;
 
-    // Whether has underline
+    /**
+     * Whether has underline
+     */
     underline?: boolean;
 }
 

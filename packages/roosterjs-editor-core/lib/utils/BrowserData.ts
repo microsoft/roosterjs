@@ -1,15 +1,56 @@
 export interface BrowserData {
-    isMac: boolean;
-    isWin: boolean;
-    isWebKit: boolean;
-    isIE: boolean;
-    isIE11OrGreater: boolean;
-    isSafari: boolean;
-    isChrome: boolean;
-    isFirefox: boolean;
-    isEdge: boolean;
+    /**
+     * Wether current OS is Mac
+     */
+    isMac?: boolean;
+
+    /**
+     * Whether current OS is Windows
+     */
+    isWin?: boolean;
+
+    /**
+     * Whether current browser is using webkit kernal
+     */
+    isWebKit?: boolean;
+
+    /**
+     * Whether current browser is Internet Explorer
+     */
+    isIE?: boolean;
+
+    /**
+     * Whether current browser is IE10 or IE11
+     */
+    isIE11OrGreater?: boolean;
+
+    /**
+     * Whether current browser is Safari
+     */
+    isSafari?: boolean;
+
+    /**
+     * Whether current browser is Chrome
+     */
+    isChrome?: boolean;
+
+    /**
+     * Whether current browser is Firfox
+     */
+    isFirefox?: boolean;
+
+    /**
+     * Whether current browser is Edge
+     */
+    isEdge?: boolean;
 }
 
+/**
+ * Get current browser information from user agent string
+ * @param userAgent The userAgent string of a browser
+ * @param appVersion The appVersion string of a browser
+ * @returns The BrowserInfo object calculated from the given userAgent and appVersion
+ */
 export function getBrowserData(userAgent?: string, appVersion?: string): BrowserData {
     // In case universal render somehow hits this code path
     if (typeof window == 'undefined') {
