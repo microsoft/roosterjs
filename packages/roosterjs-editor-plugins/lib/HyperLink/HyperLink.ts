@@ -17,7 +17,7 @@ import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
 // we need to trim off the trailing puncatuation before turning it to link match
 const TRAILING_PUNCTUATION_REGEX = /[.()+={}\[\]\s:;"',>]+$/i;
-const TEMP_TITLE_REGEX = /<a\s+([^>]*\s+)?(title|istemptitle)="[^"]*"\s*([^>]*)\s+(title|istemptitle)="[^"]*"(\s+[^>]*)?>/gm;
+const TEMP_TITLE_REGEX = /<a\s+(([^>]*)\s+)?(title|istemptitle)="[^"]*"(\s*[^>]*)\s+(title|istemptitle)="[^"]*"(\s+[^>]*)?>/gm;
 const TEMP_TITLE = 'istemptitle';
 const MINIMUM_LENGTH = 5;
 const KEY_BACKSPACE = 8;
@@ -176,7 +176,7 @@ export default class HyperLink implements EditorPlugin {
     }
 
     private removeTempTooltip(content: string): string {
-        return content.replace(TEMP_TITLE_REGEX, '<a $1$3$5>');
+        return content.replace(TEMP_TITLE_REGEX, '<a $2$4$6>');
     }
 
     private onClickLink = (keyboardEvent: KeyboardEvent) => {
