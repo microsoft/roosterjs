@@ -44,6 +44,11 @@ interface InlineElement {
     isAfter(inlineElement: InlineElement): boolean;
 
     /**
+     * Checks if this inline element is a textual inline element
+     */
+    isTextualInlineElement(): boolean;
+
+    /**
      * Checks if the given editor position is contained in this inline element
      */
     contains(position: EditorPoint): boolean;
@@ -55,11 +60,7 @@ interface InlineElement {
      * when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
      * The actuall styling is done by consumer through the styler callback
      */
-    applyStyle(
-        styler: (node: Node) => void,
-        fromPoint?: EditorPoint,
-        toPoint?: EditorPoint
-    ): void;
+    applyStyle(styler: (node: Node) => void, fromPoint?: EditorPoint, toPoint?: EditorPoint): void;
 }
 
 export default InlineElement;

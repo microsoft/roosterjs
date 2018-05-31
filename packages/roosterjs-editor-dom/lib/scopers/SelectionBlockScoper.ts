@@ -1,5 +1,4 @@
 import EditorSelection from './EditorSelection';
-import InlineElementFactory from '../inlineElements/InlineElementFactory';
 import {
     BlockElement,
     ContentPosition,
@@ -15,13 +14,8 @@ class SelectionBlockScoper implements TraversingScoper {
     private readonly editorSelection: EditorSelection;
     private selectionBlock: BlockElement;
 
-    constructor(
-        rootNode: Node,
-        selectionRange: Range,
-        private startPosition: ContentPosition,
-        inlineElementFactory: InlineElementFactory
-    ) {
-        this.editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+    constructor(rootNode: Node, selectionRange: Range, private startPosition: ContentPosition) {
+        this.editorSelection = new EditorSelection(rootNode, selectionRange);
     }
 
     // Get the start block element

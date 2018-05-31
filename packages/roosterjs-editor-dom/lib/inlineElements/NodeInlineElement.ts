@@ -65,6 +65,13 @@ class NodeInlineElement implements InlineElement {
         };
     }
 
+    /**
+     * Checks if this inline element is a textual inline element
+     */
+    public isTextualInlineElement(): boolean {
+        return false;
+    }
+
     // Checks if an inline element is after the current inline element
     public isAfter(inlineElement: InlineElement): boolean {
         return isNodeAfter(this.containerNode, inlineElement.getContainerNode());

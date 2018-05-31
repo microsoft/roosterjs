@@ -21,15 +21,13 @@ export { getNextLeafSibling, getPreviousLeafSibling } from './domWalker/getLeafS
 export { getFirstLeafNode, getLastLeafNode } from './domWalker/getLeafNode';
 
 export { default as ImageInlineElement } from './inlineElements/ImageInlineElement';
-export { default as InlineElementFactory } from './inlineElements/InlineElementFactory';
-export { default as InlineElementResolver } from './inlineElements/InlineElementResolver';
 export { default as LinkInlineElement } from './inlineElements/LinkInlineElement';
 export { default as NodeInlineElement } from './inlineElements/NodeInlineElement';
 export { default as PartialInlineElement } from './inlineElements/PartialInlineElement';
 export { default as TextInlineElement } from './inlineElements/TextInlineElement';
+export { default as resolveInlineElement } from './inlineElements/resolveInlineElement';
 
 export { default as BodyScoper } from './scopers/BodyScoper';
-export { default as EditorSelection } from './scopers/EditorSelection';
 export { default as SelectionBlockScoper } from './scopers/SelectionBlockScoper';
 export { default as SelectionScoper } from './scopers/SelectionScoper';
 
@@ -49,7 +47,6 @@ export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isDocumentPosition } from './utils/isDocumentPosition';
 export { default as isEditorPointAfter } from './utils/isEditorPointAfter';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
-export { default as isTextualInlineElement } from './utils/isTextualInlineElement';
 export { default as matchLink } from './utils/matchLink';
 export { default as matchWhiteSpaces } from './utils/matchWhiteSpaces';
 export { default as normalizeEditorPoint } from './utils/normalizeEditorPoint';
@@ -59,4 +56,6 @@ export { default as wrap } from './utils/wrap';
 
 export { default as VTable, VCell } from './table/VTable';
 
+export { default as isTextualInlineElement } from './deprecated/isTextualInlineElement';
 export { default as wrapAll } from './deprecated/wrapAll';
+export { default as EditorSelection } from './scopers/EditorSelection';

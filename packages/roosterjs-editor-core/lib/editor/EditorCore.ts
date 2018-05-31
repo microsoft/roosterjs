@@ -8,13 +8,12 @@ import {
     PluginEventType,
     Rect,
 } from 'roosterjs-editor-types';
-import { ContentTraverser, InlineElementFactory } from 'roosterjs-editor-dom';
+import { ContentTraverser } from 'roosterjs-editor-dom';
 
 interface EditorCore {
     document: Document;
     contentDiv: HTMLDivElement;
     plugins: EditorPlugin[];
-    inlineElementFactory: InlineElementFactory;
     defaultFormat: DefaultFormat;
     customData: {
         [Key: string]: {

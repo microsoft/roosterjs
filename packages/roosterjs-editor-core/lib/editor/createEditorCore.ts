@@ -12,7 +12,7 @@ import insertNode from '../coreAPI/insertNode';
 import triggerEvent from '../coreAPI/triggerEvent';
 import updateSelection from '../coreAPI/updateSelection';
 import { DefaultFormat } from 'roosterjs-editor-types';
-import { InlineElementFactory, getComputedStyle } from 'roosterjs-editor-dom';
+import { getComputedStyle } from 'roosterjs-editor-dom';
 
 export default function createEditorCore(
     contentDiv: HTMLDivElement,
@@ -21,7 +21,6 @@ export default function createEditorCore(
     return {
         contentDiv: contentDiv,
         document: contentDiv.ownerDocument,
-        inlineElementFactory: new InlineElementFactory(),
         defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
         customData: {},
         cachedSelectionRange: null,

@@ -1,6 +1,5 @@
 import * as DomTestHelper from '../DomTestHelper';
 import { StartEndBlockElement, getNextInlineElement } from '../../blockElements/BlockElement';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
 import { InlineElement } from 'roosterjs-editor-types';
 
 let testID = 'StartEndBlockElement';
@@ -11,13 +10,7 @@ function createStartEndBlockElementWithContent(
     let testDiv = DomTestHelper.createElementFromContent(testID, content);
     let startNode = testDiv.firstChild;
     let endNode = testDiv.lastChild;
-    let inlineElementFactory = new InlineElementFactory(null);
-    let startEndBlockElement = new StartEndBlockElement(
-        testDiv,
-        startNode,
-        endNode,
-        inlineElementFactory
-    );
+    let startEndBlockElement = new StartEndBlockElement(testDiv, startNode, endNode);
     return [startEndBlockElement, testDiv];
 }
 
@@ -397,11 +390,9 @@ describe('StartEndBlockElement isInBlock()', () => {
         rootNode: HTMLElement,
         blockElement: StartEndBlockElement
     ): InlineElement {
-        let inlineElementFactory = new InlineElementFactory(null);
         let inlineElementAfterBlockElement = getNextInlineElement(
             rootNode,
-            blockElement.getLastInlineElement(),
-            inlineElementFactory
+            blockElement.getLastInlineElement()
         );
         return inlineElementAfterBlockElement;
     }

@@ -1,14 +1,13 @@
 import * as DomTestHelper from '../DomTestHelper';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
 import { NodeBlockElement } from '../../blockElements/BlockElement';
 import { InlineElement } from 'roosterjs-editor-types';
+import { NodeInlineElement } from '../..';
 
 let testID = 'NodeBlockElement';
 
 function createNodeBlockElementWithContent(content: string): [NodeBlockElement, HTMLElement] {
-    let inlineElementFactory = new InlineElementFactory(null);
     let testDiv = DomTestHelper.createElementFromContent(testID, content);
-    let nodeBlockElement = new NodeBlockElement(testDiv, inlineElementFactory);
+    let nodeBlockElement = new NodeBlockElement(testDiv);
     return [nodeBlockElement, testDiv];
 }
 
@@ -359,10 +358,9 @@ describe('NodeBlockElement isInBlock()', () => {
     });
 
     function createNodeInlineElement(inlineElementContent: string): InlineElement {
-        let inlineElementFactory = new InlineElementFactory(null);
         let testDiv = DomTestHelper.createElementFromContent(testID, inlineElementContent);
-        let parentBlock = new NodeBlockElement(testDiv, null);
-        let inlineElement = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
+        let parentBlock = new NodeBlockElement(testDiv);
+        let inlineElement = new NodeInlineElement(testDiv.firstChild, parentBlock);
         return inlineElement;
     }
 

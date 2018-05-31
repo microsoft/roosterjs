@@ -1,10 +1,10 @@
-import InlineElementFactory from '../inlineElements/InlineElementFactory';
 import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import contains from '../utils/contains';
 import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import isDocumentPosition from '../utils/isDocumentPosition';
 import isNodeAfter from '../utils/isNodeAfter';
+import resolveInlineElement from '../inlineElements/resolveInlineElement';
 import shouldSkipNode from '../domWalker/shouldSkipNode';
 import {
     BlockElement,
@@ -22,42 +22,31 @@ import {
 } from '../domWalker/getLeafSibling';
 
 // Get the inline element at a node
-function getInlineElementAtNode(
-    rootNode: Node,
-    node: Node,
-    inlineElementFactory: InlineElementFactory
-): InlineElement {
+function getInlineElementAtNode(rootNode: Node, node: Node): InlineElement {
     // An inline element has to be in a block element, get the block first and then resolve through the factory
-    let parentBlock = node ? getBlockElementAtNode(rootNode, node, inlineElementFactory) : null;
-    return parentBlock ? inlineElementFactory.resolve(node, rootNode, parentBlock) : null;
+    let parentBlock = node ? getBlockElementAtNode(rootNode, node) : null;
+    return parentBlock ? resolveInlineElement(node, rootNode, parentBlock) : null;
 }
 
 // Get first inline element
-function getFirstInlineElement(
-    rootNode: Node,
-    inlineElementFactory: InlineElementFactory
-): InlineElement {
+function getFirstInlineElement(rootNode: Node): InlineElement {
     // getFirstLeafNode can return null for empty container
     // do check null before passing on to get inline from the node
     let node = getFirstLeafNode(rootNode);
-    return node ? getInlineElementAtNode(rootNode, node, inlineElementFactory) : null;
+    return node ? getInlineElementAtNode(rootNode, node) : null;
 }
 
 // Get last inline element
-function getLastInlineElement(
-    rootNode: Node,
-    inlineElementFactory: InlineElementFactory
-): InlineElement {
+function getLastInlineElement(rootNode: Node): InlineElement {
     // getLastLeafNode can return null for empty container
     // do check null before passing on to get inline from the node
     let node = getLastLeafNode(rootNode);
-    return node ? getInlineElementAtNode(rootNode, node, inlineElementFactory) : null;
+    return node ? getInlineElementAtNode(rootNode, node) : null;
 }
 
 function getNextPreviousInlineElement(
     rootNode: Node,
     inlineElement: InlineElement,
-    inlineElementFactory: InlineElementFactory,
     isNext: boolean
 ): InlineElement {
     let result: InlineElement;
@@ -72,9 +61,7 @@ function getNextPreviousInlineElement(
             // Get a leaf node after startNode and use that base to find next inline
             let startNode = inlineElement.getContainerNode();
             startNode = getLeafSibling(rootNode, startNode, isNext);
-            result = startNode
-                ? getInlineElementAtNode(rootNode, startNode, inlineElementFactory)
-                : null;
+            result = startNode ? getInlineElementAtNode(rootNode, startNode) : null;
         }
     }
 
@@ -82,31 +69,13 @@ function getNextPreviousInlineElement(
 }
 
 // Get next inline element
-function getNextInlineElement(
-    rootNode: Node,
-    inlineElement: InlineElement,
-    inlineElementFactory: InlineElementFactory
-): InlineElement {
-    return getNextPreviousInlineElement(
-        rootNode,
-        inlineElement,
-        inlineElementFactory,
-        true /*isNext*/
-    );
+function getNextInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement {
+    return getNextPreviousInlineElement(rootNode, inlineElement, true /*isNext*/);
 }
 
 // Get previous inline element
-function getPreviousInlineElement(
-    rootNode: Node,
-    inlineElement: InlineElement,
-    inlineElementFactory: InlineElementFactory
-): InlineElement {
-    return getNextPreviousInlineElement(
-        rootNode,
-        inlineElement,
-        inlineElementFactory,
-        false /*isNext*/
-    );
+function getPreviousInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement {
+    return getNextPreviousInlineElement(rootNode, inlineElement, false /*isNext*/);
 }
 
 // Get inline element before an editor point
@@ -114,11 +83,7 @@ function getPreviousInlineElement(
 // There is a good possibility that the cursor is in middle of an inline element (i.e. mid of a text node)
 // in this case, we only want to return what is before cursor (a partial of an inline) to indicate
 // that we're in middle. The logic is largely to detect if the editor point runs across an inline element
-function getInlineElementBeforePoint(
-    rootNode: Node,
-    position: EditorPoint,
-    inlineElementFactory: InlineElementFactory
-) {
+function getInlineElementBeforePoint(rootNode: Node, position: EditorPoint) {
     let inlineElement: InlineElement;
     let containerNode = position.containerNode;
     let offset = position.offset;
@@ -139,9 +104,7 @@ function getInlineElementBeforePoint(
             containerNode = getPreviousLeafSibling(rootNode, containerNode);
         }
 
-        inlineElement = containerNode
-            ? getInlineElementAtNode(rootNode, containerNode, inlineElementFactory)
-            : null;
+        inlineElement = containerNode ? getInlineElementAtNode(rootNode, containerNode) : null;
 
         // if the inline element we get in the end wraps around the point (contains), this has to be a partial
         isPartial = isPartial || (inlineElement && inlineElement.contains(position));
@@ -154,11 +117,7 @@ function getInlineElementBeforePoint(
 }
 
 // Similar to getInlineElementBeforePoint, to get inline element after an editor point
-function getInlineElementAfterPoint(
-    rootNode: Node,
-    editorPoint: EditorPoint,
-    inlineElementFactory: InlineElementFactory
-) {
+function getInlineElementAfterPoint(rootNode: Node, editorPoint: EditorPoint) {
     let inlineElement: InlineElement;
     let containerNode = editorPoint.containerNode;
     let offset = editorPoint.offset;
@@ -183,9 +142,7 @@ function getInlineElementAfterPoint(
             containerNode = getNextLeafSibling(rootNode, containerNode);
         }
 
-        inlineElement = containerNode
-            ? getInlineElementAtNode(rootNode, containerNode, inlineElementFactory)
-            : null;
+        inlineElement = containerNode ? getInlineElementAtNode(rootNode, containerNode) : null;
 
         // if the inline element we get in the end wraps (contains) the editor point, this has to be a partial
         // the point runs across a test node in a link
@@ -335,42 +292,31 @@ function findTailLeafNodeInBlock(node: Node, containerBlockNode: Node): Node {
     return tailNode;
 }
 
-function getFirstLastBlockElement(
-    rootNode: Node,
-    inlineElementFactory: InlineElementFactory,
-    isFirst: boolean
-): BlockElement {
+function getFirstLastBlockElement(rootNode: Node, isFirst: boolean): BlockElement {
     let getChild = isFirst ? (node: Node) => node.firstChild : (node: Node) => node.lastChild;
     let node = getChild(rootNode);
     while (node && getChild(node)) {
         node = getChild(node);
     }
 
-    return node ? getBlockElementAtNode(rootNode, node, inlineElementFactory) : null;
+    return node ? getBlockElementAtNode(rootNode, node) : null;
 }
 
 // Get the first block element
 // NOTE: this can return null for empty container
-function getFirstBlockElement(
-    rootNode: Node,
-    inlineElementFactory: InlineElementFactory
-): BlockElement {
-    return getFirstLastBlockElement(rootNode, inlineElementFactory, true /*isFirst*/);
+function getFirstBlockElement(rootNode: Node): BlockElement {
+    return getFirstLastBlockElement(rootNode, true /*isFirst*/);
 }
 
 // Get the last block element
 // NOTE: this can return null for empty container
-function getLastBlockElement(
-    rootNode: Node,
-    inlineElementFactory: InlineElementFactory
-): BlockElement {
-    return getFirstLastBlockElement(rootNode, inlineElementFactory, false /*isFirst*/);
+function getLastBlockElement(rootNode: Node): BlockElement {
+    return getFirstLastBlockElement(rootNode, false /*isFirst*/);
 }
 
 function getNextPreviousBlockElement(
     rootNode: Node,
     blockElement: BlockElement,
-    inlineElementFactory: InlineElementFactory,
     isNext: boolean
 ): BlockElement {
     let getNode = isNext
@@ -382,38 +328,20 @@ function getNextPreviousBlockElement(
         // TODO: this code is used to identify block, maybe we shouldn't exclude those empty nodes
         // We can improve this later on
         let leaf = getLeafSibling(rootNode, getNode(blockElement), isNext);
-        result = leaf ? getBlockElementAtNode(rootNode, leaf, inlineElementFactory) : null;
+        result = leaf ? getBlockElementAtNode(rootNode, leaf) : null;
     }
 
     return result;
 }
 
 // Get next block
-function getNextBlockElement(
-    rootNode: Node,
-    blockElement: BlockElement,
-    inlineElementFactory: InlineElementFactory
-) {
-    return getNextPreviousBlockElement(
-        rootNode,
-        blockElement,
-        inlineElementFactory,
-        true /*isNext*/
-    );
+function getNextBlockElement(rootNode: Node, blockElement: BlockElement) {
+    return getNextPreviousBlockElement(rootNode, blockElement, true /*isNext*/);
 }
 
 // Get previous block
-function getPreviousBlockElement(
-    rootNode: Node,
-    blockElement: BlockElement,
-    inlineElementFactory: InlineElementFactory
-) {
-    return getNextPreviousBlockElement(
-        rootNode,
-        blockElement,
-        inlineElementFactory,
-        false /*isNext*/
-    );
+function getPreviousBlockElement(rootNode: Node, blockElement: BlockElement) {
+    return getNextPreviousBlockElement(rootNode, blockElement, false /*isNext*/);
 }
 
 // This presents a content block that can be reprented by a single html block type element.
@@ -422,7 +350,7 @@ class NodeBlockElement implements BlockElement {
     private firstInline: InlineElement;
     private lastInline: InlineElement;
 
-    constructor(private containerNode: Node, private inlineElementFactory: InlineElementFactory) {}
+    constructor(private containerNode: Node) {}
 
     // Get the text content in the block
     public getTextContent(): string {
@@ -449,7 +377,7 @@ class NodeBlockElement implements BlockElement {
     // Get the first inline element in the block
     public getFirstInlineElement(): InlineElement {
         if (!this.firstInline) {
-            this.firstInline = getFirstInlineElement(this.containerNode, this.inlineElementFactory);
+            this.firstInline = getFirstInlineElement(this.containerNode);
         }
 
         return this.firstInline;
@@ -458,7 +386,7 @@ class NodeBlockElement implements BlockElement {
     // Get the last inline element in the block
     public getLastInlineElement(): InlineElement {
         if (!this.lastInline) {
-            this.lastInline = getLastInlineElement(this.containerNode, this.inlineElementFactory);
+            this.lastInline = getLastInlineElement(this.containerNode);
         }
 
         return this.lastInline;
@@ -470,11 +398,7 @@ class NodeBlockElement implements BlockElement {
         let startInline = this.getFirstInlineElement();
         while (startInline) {
             allInlines.push(startInline);
-            startInline = getNextInlineElement(
-                this.containerNode,
-                startInline,
-                this.inlineElementFactory
-            );
+            startInline = getNextInlineElement(this.containerNode, startInline);
         }
 
         return allInlines;
@@ -518,12 +442,7 @@ class StartEndBlockElement implements BlockElement {
     private firstInline: InlineElement;
     private lastInline: InlineElement;
 
-    constructor(
-        private rootNode: Node,
-        private startNode: Node,
-        private endNode: Node,
-        private inlineElementFactory: InlineElementFactory
-    ) {}
+    constructor(private rootNode: Node, private startNode: Node, private endNode: Node) {}
 
     // Gets the text content
     public getTextContent(): string {
@@ -566,11 +485,7 @@ class StartEndBlockElement implements BlockElement {
     // Gets first inline
     public getFirstInlineElement(): InlineElement {
         if (!this.firstInline) {
-            this.firstInline = getInlineElementAtNode(
-                this.rootNode,
-                this.startNode,
-                this.inlineElementFactory
-            );
+            this.firstInline = getInlineElementAtNode(this.rootNode, this.startNode);
         }
 
         return this.firstInline;
@@ -579,11 +494,7 @@ class StartEndBlockElement implements BlockElement {
     // Gets last inline
     public getLastInlineElement(): InlineElement {
         if (!this.lastInline) {
-            this.lastInline = getInlineElementAtNode(
-                this.rootNode,
-                this.endNode,
-                this.inlineElementFactory
-            );
+            this.lastInline = getInlineElementAtNode(this.rootNode, this.endNode);
         }
 
         return this.lastInline;
@@ -595,11 +506,7 @@ class StartEndBlockElement implements BlockElement {
         let startInline = this.getFirstInlineElement();
         while (startInline) {
             allInlines.push(startInline);
-            startInline = getNextInlineElement(
-                this.rootNode,
-                startInline,
-                this.inlineElementFactory
-            );
+            startInline = getNextInlineElement(this.rootNode, startInline);
         }
 
         return allInlines;
@@ -663,17 +570,13 @@ class StartEndBlockElement implements BlockElement {
 // 1) to identify the head, it needs to crawl DOM tre left/up till a block node or BR is encountered
 // 2) same for identifying tail
 // 3) should also apply a block ceiling, meaning as it crawls up, it should stop at a block node
-function getBlockElementAtNode(
-    rootNode: Node,
-    node: Node,
-    inlineElementFactory: InlineElementFactory
-): BlockElement {
+function getBlockElementAtNode(rootNode: Node, node: Node): BlockElement {
     // TODO: assert node to be a leaf node
     let blockElement: BlockElement;
     if (node && contains(rootNode, node)) {
         // if the node is already a block, return right away
         if (isBlockElement(node)) {
-            return new NodeBlockElement(node, inlineElementFactory);
+            return new NodeBlockElement(node);
         }
 
         // Identify the containing block. This serves as ceiling for traversing down below
@@ -719,12 +622,7 @@ function getBlockElementAtNode(
 
         if (headNode.parentNode != tailNode.parentNode) {
             // Un-balanced start and end, create a start-end block
-            blockElement = new StartEndBlockElement(
-                rootNode,
-                headNode,
-                tailNode,
-                inlineElementFactory
-            );
+            blockElement = new StartEndBlockElement(rootNode, headNode, tailNode);
         } else {
             // Balanced start and end (point to same parent), need to see if further collapsing can be done
             parentNode = headNode.parentNode;
@@ -746,8 +644,8 @@ function getBlockElementAtNode(
             // If head and tail are same and it is a block element, create NodeBlock, otherwise start-end block
             blockElement =
                 headNode == tailNode && isBlockElement(headNode)
-                    ? new NodeBlockElement(headNode, inlineElementFactory)
-                    : new StartEndBlockElement(rootNode, headNode, tailNode, inlineElementFactory);
+                    ? new NodeBlockElement(headNode)
+                    : new StartEndBlockElement(rootNode, headNode, tailNode);
         }
     }
 

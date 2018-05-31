@@ -1,5 +1,5 @@
+import resolveInlineElement from '../inlineElements/resolveInlineElement';
 import { InlineElement, EditorPoint } from 'roosterjs-editor-types';
-import InlineElementFactory from '../inlineElements/InlineElementFactory';
 import { NodeBlockElement, StartEndBlockElement } from '../blockElements/BlockElement';
 
 // Create element with content and id and insert the element in the DOM
@@ -63,8 +63,7 @@ export function isEditorPointEqual(point1: EditorPoint, point2: EditorPoint): bo
 
 // Create NodeBlockElement from given HTMLElement
 export function createNodeBlockElementWithDiv(testDiv: HTMLElement): NodeBlockElement {
-    let inlineElementFactory = new InlineElementFactory(null);
-    let nodeBlockElement = new NodeBlockElement(testDiv, inlineElementFactory);
+    let nodeBlockElement = new NodeBlockElement(testDiv);
     return nodeBlockElement;
 }
 
@@ -74,21 +73,14 @@ export function createStartEndBlockElementWithStartEndNode(
     startNode: Node,
     endNode: Node
 ): StartEndBlockElement {
-    let inlineElementFactory = new InlineElementFactory(null);
-    let startEndBlockElement = new StartEndBlockElement(
-        rootNode,
-        startNode,
-        endNode,
-        inlineElementFactory
-    );
+    let startEndBlockElement = new StartEndBlockElement(rootNode, startNode, endNode);
     return startEndBlockElement;
 }
 
 // Create inlineElement from node
 export function createInlineElementFromNode(node: Node, rootNode: Node): InlineElement {
-    let inlineElementFactory = new InlineElementFactory(null);
-    let parentBlock = new NodeBlockElement(node, null);
-    let inlineElement = inlineElementFactory.resolve(node, rootNode, parentBlock);
+    let parentBlock = new NodeBlockElement(node);
+    let inlineElement = resolveInlineElement(node, rootNode, parentBlock);
     return inlineElement;
 }
 

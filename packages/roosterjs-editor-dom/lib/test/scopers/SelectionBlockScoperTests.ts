@@ -1,5 +1,4 @@
 import * as DomTestHelper from '../DomTestHelper';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
 import SelectionBlockScoper from '../../scopers/SelectionBlockScoper';
 import { BlockElement, NodeBoundary, ContentPosition } from 'roosterjs-editor-types';
 
@@ -10,8 +9,7 @@ function createSelectionBlockScoper(
     selectionRange: Range,
     startPosition: ContentPosition
 ) {
-    let inlineElementFactory = new InlineElementFactory(null);
-    return new SelectionBlockScoper(rootNode, selectionRange, startPosition, inlineElementFactory);
+    return new SelectionBlockScoper(rootNode, selectionRange, startPosition);
 }
 
 describe('SelectionBlockScoper getStartBlockElement()', () => {

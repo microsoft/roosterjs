@@ -1,14 +1,15 @@
 import EditorCore, { InsertNode } from '../editor/EditorCore';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import {
-    EditorSelection,
     changeElementTag,
     contains,
+    getBlockElementAtNode,
     getFirstBlockElement,
     getLastBlockElement,
     getTagOfNode,
     isBlockElement,
     isNodeEmpty,
+    normalizeEditorPoint,
     unwrap,
     wrap,
 } from 'roosterjs-editor-dom';
@@ -48,7 +49,7 @@ export default insertNode;
 
 // Insert a node at begin of the editor
 function insertNodeAtBegin(core: EditorCore, node: Node, option: InsertOption) {
-    let firstBlock = getFirstBlockElement(core.contentDiv, core.inlineElementFactory);
+    let firstBlock = getFirstBlockElement(core.contentDiv);
     let insertedNode: Node;
     if (firstBlock) {
         let refNode = firstBlock.getStartNode();
@@ -93,7 +94,7 @@ function insertNodeAtBegin(core: EditorCore, node: Node, option: InsertOption) {
 
 // Insert a node at end of the editor
 function insertNodeAtEnd(core: EditorCore, node: Node, option: InsertOption) {
-    let lastBlock = getLastBlockElement(core.contentDiv, core.inlineElementFactory);
+    let lastBlock = getLastBlockElement(core.contentDiv);
     let insertedNode: Node;
     if (lastBlock) {
         let refNode = lastBlock.getEndNode();
@@ -145,14 +146,9 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
         }
 
         // Create a clone (backup) for the selection first as we may need to restore to it later
-        let originalSelectionRange = selectionRange.cloneRange();
-
-        let editorSelection = new EditorSelection(
-            core.contentDiv,
-            selectionRange,
-            core.inlineElementFactory
-        );
-        let blockElement = editorSelection.startBlockElement;
+        let range = selectionRange.cloneRange();
+        let position = normalizeEditorPoint(range.startContainer, range.startOffset);
+        let blockElement = getBlockElementAtNode(core.contentDiv, position.containerNode);
 
         if (blockElement) {
             let endNode = blockElement.getEndNode();
@@ -175,7 +171,7 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
             selectionRange.collapse(false /*toStart*/);
             core.api.updateSelection(core, selectionRange);
         } else {
-            core.api.updateSelection(core, originalSelectionRange);
+            core.api.updateSelection(core, range);
         }
     }
 }

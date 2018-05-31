@@ -1,5 +1,5 @@
 import { ContentPosition, ContentScope, InlineElement } from 'roosterjs-editor-types';
-import { ContentTraverser, isTextualInlineElement, matchWhiteSpaces } from 'roosterjs-editor-dom';
+import { ContentTraverser, matchWhiteSpaces } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
 // The class that helps parse content around cursor
@@ -176,7 +176,7 @@ export default class CursorData {
 
         let previousInline = this.backwardTraverser.getPreviousInlineElement();
         while (!this.backwardTraversingComplete) {
-            if (previousInline && isTextualInlineElement(previousInline)) {
+            if (previousInline && previousInline.isTextualInlineElement()) {
                 let textContent = previousInline.getTextContent();
                 if (!this.inlineBeforeCursor) {
                     // Make sure the inline before cursor is a non-empty text inline

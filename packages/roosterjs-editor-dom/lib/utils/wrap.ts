@@ -46,8 +46,8 @@ export default function wrap(
     nodes: Node | Node[],
     wrapper?: string | HTMLElement,
     sanitize?: boolean
-    ): HTMLElement {
-        nodes = !nodes ? [] : nodes instanceof Node ? [nodes] : nodes;
+): HTMLElement {
+    nodes = !nodes ? [] : nodes instanceof Node ? [nodes] : nodes;
     if (nodes.length == 0 || !nodes[0]) {
         return null;
     }
@@ -55,11 +55,9 @@ export default function wrap(
     if (!(wrapper instanceof Element)) {
         let document = nodes[0].ownerDocument;
         wrapper = wrapper || 'div';
-        wrapper = /^\w+$/.test(wrapper) ? document.createElement(wrapper) : (fromHtml(
-                  wrapper,
-                  document,
-                  sanitize
-              )[0] as HTMLElement);
+        wrapper = /^\w+$/.test(wrapper)
+            ? document.createElement(wrapper)
+            : (fromHtml(wrapper, document, sanitize)[0] as HTMLElement);
     }
 
     let parentNode = nodes[0].parentNode;

@@ -20,11 +20,11 @@ import {
 } from 'roosterjs-editor-types';
 import {
     ContentTraverser,
-    EditorSelection,
     NodeBlockElement,
     applyFormat,
     contains,
     fromHtml,
+    getBlockElementAtNode,
     getFirstBlockElement,
     getInlineElementAtNode,
     getTagOfNode,
@@ -105,18 +105,24 @@ export default class Editor {
         }
 
         // 10. Finally, let plugins know that we are ready
-        this.triggerEvent({
-            eventType: PluginEventType.EditorReady,
-        }, true /*broadcast*/);
+        this.triggerEvent(
+            {
+                eventType: PluginEventType.EditorReady,
+            },
+            true /*broadcast*/
+        );
     }
 
     /**
      * Dispose this editor, dispose all plugins and custom data
      */
     public dispose(): void {
-        this.triggerEvent({
-            eventType: PluginEventType.BeforeDispose,
-        }, true /*broadcast*/);
+        this.triggerEvent(
+            {
+                eventType: PluginEventType.BeforeDispose,
+            },
+            true /*broadcast*/
+        );
 
         if (this.core.idleLoopHandle > 0) {
             let win = this.core.contentDiv.ownerDocument.defaultView || window;
@@ -209,7 +215,7 @@ export default class Editor {
      * @requires The InlineElement result
      */
     public getInlineElementAtNode(node: Node): InlineElement {
-        return getInlineElementAtNode(this.core.contentDiv, node, this.core.inlineElementFactory);
+        return getInlineElementAtNode(this.core.contentDiv, node);
     }
 
     /**
@@ -654,12 +660,12 @@ export default class Editor {
                 (focusNode.nodeType == NodeType.Text &&
                     focusNode.parentNode == this.core.contentDiv))
         ) {
-            let editorSelection = new EditorSelection(
-                this.core.contentDiv,
-                selectionRange,
-                this.core.inlineElementFactory
+            let position = normalizeEditorPoint(
+                selectionRange.startContainer,
+                selectionRange.startOffset
             );
-            let blockElement = editorSelection.startBlockElement;
+            let blockElement = getBlockElementAtNode(this.core.contentDiv, position.containerNode);
+
             if (!blockElement) {
                 // Only reason we don't get the selection block is that we have an empty content div
                 // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
@@ -709,7 +715,7 @@ export default class Editor {
     }
 
     private ensureInitialContent() {
-        let firstBlock = getFirstBlockElement(this.core.contentDiv, this.core.inlineElementFactory);
+        let firstBlock = getFirstBlockElement(this.core.contentDiv);
         let defaultFormatBlockElement: HTMLElement;
 
         if (!firstBlock) {

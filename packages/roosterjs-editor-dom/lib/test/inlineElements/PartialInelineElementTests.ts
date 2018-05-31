@@ -1,8 +1,8 @@
 import * as TestHelper from '../DomTestHelper';
+import PartialInlineElement from '../../inlineElements/PartialInlineElement';
+import resolveInlineElement from '../../inlineElements/resolveInlineElement';
 import { InlineElement } from 'roosterjs-editor-types';
 import { NodeBlockElement } from '../../blockElements/BlockElement';
-import PartialInlineElement from '../../inlineElements/PartialInlineElement';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
 
 let testID = 'PartialInlineElement';
 
@@ -25,9 +25,8 @@ function createPartialInlineElementWithDiv(
     startOffset: number,
     endOffset: number
 ): [PartialInlineElement, InlineElement, NodeBlockElement] {
-    let testParentBlock = new NodeBlockElement(testDiv, null /*InlineElementFactory*/);
-    let inlineElementFactory = new InlineElementFactory(null);
-    let inlineElement = inlineElementFactory.resolve(testDiv.firstChild, testDiv, testParentBlock);
+    let testParentBlock = new NodeBlockElement(testDiv);
+    let inlineElement = resolveInlineElement(testDiv.firstChild, testDiv, testParentBlock);
     let startPoint = startOffset
         ? { containerNode: testDiv.firstChild.firstChild, offset: startOffset }
         : null;

@@ -78,6 +78,13 @@ class PartialInlineElement implements InlineElement {
         );
     }
 
+    /**
+     * Checks if this inline element is a textual inline element
+     */
+    public isTextualInlineElement(): boolean {
+        return this.inlineElement && this.inlineElement.isTextualInlineElement();
+    }
+
     // Check if this inline element is after the other inline element
     public isAfter(inlineElement: InlineElement): boolean {
         // First node level check to see if this element's container node is after (following) the other element (inlineElement)

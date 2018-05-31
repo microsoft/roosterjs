@@ -1,4 +1,3 @@
-import InlineElementFactory from '../inlineElements/InlineElementFactory';
 import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import editorPointEquals from '../utils/editorPointEquals';
 import isEditorPointAfter from '../utils/isEditorPointAfter';
@@ -22,11 +21,7 @@ class EditorSelection {
     private startBlock: BlockElement;
     private endBlock: BlockElement;
 
-    constructor(
-        private rootNode: Node,
-        private selectionRange: Range,
-        private inlineElementFactory: InlineElementFactory
-    ) {
+    constructor(private rootNode: Node, private selectionRange: Range) {
         // compute the start and end point
         this.startPoint = normalizeEditorPoint(
             this.selectionRange.startContainer,
@@ -44,11 +39,7 @@ class EditorSelection {
 
     // Get the inline element before start of the selection
     public get inlineElementBeforeStart(): InlineElement {
-        return getInlineElementBeforePoint(
-            this.rootNode,
-            this.startPoint,
-            this.inlineElementFactory
-        );
+        return getInlineElementBeforePoint(this.rootNode, this.startPoint);
     }
 
     // Get the start inline element of the selection (the first inline after the selection)
@@ -66,11 +57,7 @@ class EditorSelection {
     // Get start block element
     public get startBlockElement(): BlockElement {
         if (!this.startBlock && this.startPoint) {
-            this.startBlock = getBlockElementAtNode(
-                this.rootNode,
-                this.startPoint.containerNode,
-                this.inlineElementFactory
-            );
+            this.startBlock = getBlockElementAtNode(this.rootNode, this.startPoint.containerNode);
         }
 
         return this.startBlock;
@@ -79,11 +66,7 @@ class EditorSelection {
     // Get end block element
     public get endBlockElement(): BlockElement {
         if (!this.endBlock && this.endPoint) {
-            this.endBlock = getBlockElementAtNode(
-                this.rootNode,
-                this.endPoint.containerNode,
-                this.inlineElementFactory
-            );
+            this.endBlock = getBlockElementAtNode(this.rootNode, this.endPoint.containerNode);
         }
 
         return this.endBlock;
@@ -225,22 +208,14 @@ class EditorSelection {
     // calculate start and end inline element
     private calculateStartEndInline(): void {
         // Compute the start point
-        this.startInline = getInlineElementAfterPoint(
-            this.rootNode,
-            this.startPoint,
-            this.inlineElementFactory
-        );
+        this.startInline = getInlineElementAfterPoint(this.rootNode, this.startPoint);
 
         if (this.collapsed) {
             // For collapsed range, set end to be same as start
             this.endInline = this.startInline;
         } else {
             // For non-collapsed range, get same for end point
-            this.endInline = getInlineElementBeforePoint(
-                this.rootNode,
-                this.endPoint,
-                this.inlineElementFactory
-            );
+            this.endInline = getInlineElementBeforePoint(this.rootNode, this.endPoint);
 
             // it is possible that start and end points to same inline element, which
             // is often the case where users select partial text of a text node
