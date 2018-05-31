@@ -1,12 +1,12 @@
 const devServerPort = 3000;
 
 module.exports = {
-    entry: './sample/scripts/sample.ts',
+    entry: './publish/samplesite/scripts/sample.ts',
     devtool: 'source-map',
     output: {
         filename: 'sample.js',
-        path: __dirname + '/sample/scripts',
-        publicPath: '/sample/scripts/',
+        path: __dirname + '/publish/samplesite/scripts',
+        publicPath: '/publish/samplesite/scripts/',
         sourceMapFilename: '[name].map'
     },
     resolve: {
@@ -27,7 +27,7 @@ module.exports = {
         host: "0.0.0.0", // This makes the server public so that others can test by http://hostname ...
         port: devServerPort,
         open: true,
-        openPage: "sample/sample.htm",
+        openPage: "publish/samplesite/sample.htm",
         public: "localhost:" + devServerPort
     }
 };
