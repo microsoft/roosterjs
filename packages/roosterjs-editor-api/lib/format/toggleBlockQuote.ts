@@ -1,7 +1,7 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
-import { getTagOfNode, splitParentNode, unwrap, wrapAll, wrap } from 'roosterjs-editor-dom';
+import { getTagOfNode, splitParentNode, unwrap, wrap } from 'roosterjs-editor-dom';
 import { ContentScope, EditorPoint, NodeBoundary } from 'roosterjs-editor-types';
 import { Editor, browserData } from 'roosterjs-editor-core';
 
@@ -40,7 +40,7 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
                 // Step 3: Handle some special cases
                 nodes = getNodesWithSpecialCaseHandled(editor, nodes, startPoint, endPoint);
 
-                let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLElement;
+                let quoteElement = wrap(nodes, 'blockquote');
                 (styler || defaultStyler)(quoteElement);
 
                 return quoteElement;
@@ -113,7 +113,7 @@ function getNodesWithSpecialCaseHandled(
     endPoint: EditorPoint
 ): Node[] {
     if (nodes.length == 1 && nodes[0].nodeName == 'BR') {
-        nodes[0] = wrap(nodes[0], '<div></div>') as HTMLDivElement;
+        nodes[0] = wrap(nodes[0]);
     } else if (nodes.length == 0) {
         let document = editor.getDocument();
         // Selection is collapsed and blockElment is null, we need to create an empty div.

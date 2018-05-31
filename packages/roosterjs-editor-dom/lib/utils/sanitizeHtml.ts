@@ -199,7 +199,11 @@ function removeUnusedCssAndDangerousContent(
         node.parentNode.removeChild(node);
     }
     if (isText && currentStyle['white-space'] == 'pre') {
-        node.nodeValue = node.nodeValue.replace(/\s\s/g, ' \u00A0');
+        let text = node.nodeValue;
+        let nbsp = '\u00A0';
+        text = text.replace(/^ /gm, nbsp);
+        text = text.replace(/ {2}/g, ' ' + nbsp);
+        node.nodeValue = text;
     } else if (nodeType == NodeType.Element) {
         let element = <HTMLElement>node;
         if (element.hasAttribute('style')) {

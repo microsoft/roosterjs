@@ -14,8 +14,6 @@ import {
 } from 'roosterjs-editor-dom';
 import { ContentPosition, InsertOption, NodeType } from 'roosterjs-editor-types';
 
-const HTML_EMPTY_DIV = '<div></div>';
-
 const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOption) => {
     option = option || {
         position: ContentPosition.SelectionStart,
@@ -89,7 +87,7 @@ function insertNodeAtBegin(core: EditorCore, node: Node, option: InsertOption) {
     // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
     // add a DIV wrapping
     if (insertedNode && option.insertOnNewLine && !isBlockElement(insertedNode)) {
-        wrap(insertedNode, HTML_EMPTY_DIV);
+        wrap(insertedNode);
     }
 }
 
@@ -133,7 +131,7 @@ function insertNodeAtEnd(core: EditorCore, node: Node, option: InsertOption) {
     // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
     // add a DIV wrapping
     if (insertedNode && option.insertOnNewLine && !isBlockElement(insertedNode)) {
-        wrap(insertedNode, HTML_EMPTY_DIV);
+        wrap(insertedNode);
     }
 }
 

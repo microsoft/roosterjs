@@ -30,7 +30,7 @@ import {
     getTagOfNode,
     isNodeEmpty,
     normalizeEditorPoint,
-    wrapAll,
+    wrap,
 } from 'roosterjs-editor-dom';
 
 const IS_IE_OR_EDGE = browserData.isIE || browserData.isEdge;
@@ -305,7 +305,7 @@ export default class Editor {
             // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
             // separately to show up on its own line
             if (option && option.insertOnNewLine && allNodes.length > 0) {
-                allNodes = [wrapAll(allNodes)];
+                allNodes = [wrap(allNodes)];
             }
             for (let i = 0; i < allNodes.length; i++) {
                 this.insertNode(allNodes[i], option);
@@ -676,7 +676,7 @@ export default class Editor {
                 // The focus node could be pointing to the content div, normalize it to have it point to a child first
                 let focusOffset = selectionRange.startOffset;
                 let editorPoint = normalizeEditorPoint(focusNode, focusOffset);
-                let element = wrapAll(blockElement.getContentNodes()) as HTMLElement;
+                let element = wrap(blockElement.getContentNodes());
                 if (getTagOfNode(blockElement.getStartNode()) == 'BR') {
                     // if the block is just BR, apply default format
                     // Otherwise, leave it as it is as we don't want to change the style for existing data

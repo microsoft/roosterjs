@@ -1001,7 +1001,14 @@ export type StyleMap = {
     [name: string]: string;
 };
 
-export function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[];
+/**
+ * Creates an HTML node array from html
+ * @param html the html string to create HTML elements from
+ * @param ownerDocument Owner document of the result HTML elements
+ * @param sanitize Whether do sanitization before create elements to avoid XSS. Default value is false
+ * @returns An HTML node array to represent the given html string
+ */
+export function fromHtml(html: string, ownerDocument: HTMLDocument, sanitize?: boolean): Node[];
 
 export function getComputedStyle(node: Node, styleName: string): string;
 
@@ -1014,6 +1021,11 @@ export function getComputedStyle(node: Node, styleName: string): string;
  */
 export function getComputedStyles(node: Node, styleNames?: string | string[]): string[];
 
+/**
+ * Get the html tag of a node, or empty if it is not an element
+ * @param node The node to get tag of
+ * @returns Tag name in upper case if the given node is an Element, or empty string otherwise
+ */
 export function getTagOfNode(node: Node): string;
 
 export function isBlockElement(node: Node): boolean;
@@ -1028,11 +1040,27 @@ export function isDocumentPosition(position: DocumentPosition, targets: Document
 export function isEditorPointAfter(point1: EditorPoint, point2: EditorPoint): boolean;
 
 /**
- * Check if a given node has visible content
+ * Check if a given node has no visible content
+ * @param node The node to check
+ * @param trimContent Whether trim the text content so that spaces will be treated as empty.
+ * Default value is false
+ * @returns True if there isn't any visible element inside node, otherwise false
  */
-export function isNodeEmpty(node: Node, trim?: boolean): boolean;
+export function isNodeEmpty(node: Node, trimContent?: boolean): boolean;
 
 export function isTextualInlineElement(inlineElement: InlineElement): boolean;
+
+/**
+ * Try to match a given string with link match rules, return matched link
+ * @param url Input url to match
+ * @param option Link match option, exact or partial. If it is exact match, we need
+ * to check the length of matched link and url
+ * @param rules Optional link match rules, if not passed, only the default link match
+ * rules will be applied
+ * @returns The matched link data, or null if no match found.
+ * The link data includes an original url and a normalized url
+ */
+export function matchLink(url: string): LinkData;
 
 export function matchWhiteSpaces(source: string): string[];
 
@@ -1049,11 +1077,41 @@ export function normalizeEditorPoint(container: Node, offset: number): EditorPoi
  */
 export function splitParentNode(node: Node, splitBefore: boolean): Node;
 
+/**
+ * Removes the node and keep all children in place, return the parentNode where the children are attached
+ * @param node the node to remove
+ */
 export function unwrap(node: Node): Node;
 
-export function wrap(node: Node, htmlFragment: string): Node;
+/**
+ * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
+ * @param nodes The node or node array to wrap
+ * @param wrapper The wrapper HTML tag name
+ * @param sanitize Whether do sanitization of wrapper string before create node to avoid XSS,
+ * default value is false
+ * @returns The wrapper element
+ */
+export function wrap<T extends keyof HTMLElementTagNameMap>(nodes: Node | Node[], wrapper?: T, sanitize?: boolean): HTMLElementTagNameMap[T];
 
-export function wrapAll(nodes: Node[], htmlFragment?: string): Node;
+/**
+ * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
+ * @param nodes The node or node array to wrap
+ * @param wrapper The wrapper HTML string, default value is DIV
+ * @param sanitize Whether do sanitization of wrapper string before create node to avoid XSS,
+ * default value is false
+ * @returns The wrapper element
+ */
+export function wrap(nodes: Node | Node[], wrapper?: string, sanitize?: boolean): HTMLElement;
+
+/**
+ * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
+ * @param nodes The node or node array to wrap
+ * @param wrapper The wrapper HTML element, default value is a new DIV element
+ * @param sanitize Whether do sanitization of wrapper string before create node to avoid XSS,
+ * default value is false
+ * @returns The wrapper element
+ */
+export function wrap(nodes: Node | Node[], wrapper?: HTMLElement, sanitize?: boolean): HTMLElement;
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -1152,6 +1210,11 @@ export interface VCell {
      */
     spanAbove?: boolean;
 }
+
+/**
+ * @deprecated Use wrap() instead
+ */
+export function wrapAll(nodes: Node[], htmlFragment?: string): Node;
 
 export class Editor {
     private undoService;
@@ -2112,18 +2175,6 @@ export function toggleUnderline(editor: Editor): void;
  * if passed in param is outside the range, will be rounded to nearest number in the range
  */
 export function toggleHeader(editor: Editor, level: number): void;
-
-/**
- * Try to match a given string with link match rules, return matched link
- * @param url Input url to match
- * @param option Link match option, exact or partial. If it is exact match, we need
- * to check the length of matched link and url
- * @param rules Optional link match rules, if not passed, only the default link match
- * rules will be applied
- * @returns The matched link data, or null if no match found.
- * The link data includes an original url and a normalized url
- */
-export function matchLink(url: string): LinkData;
 
 export class DefaultShortcut implements EditorPlugin {
     private editor;

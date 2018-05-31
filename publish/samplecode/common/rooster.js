@@ -91,7 +91,7 @@ var roosterjs =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 53);
+/******/ 	return __webpack_require__(__webpack_require__.s = 52);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -116,75 +116,77 @@ exports.getNextInlineElement = BlockElement_1.getNextInlineElement;
 exports.getPreviousInlineElement = BlockElement_1.getPreviousInlineElement;
 exports.getInlineElementBeforePoint = BlockElement_1.getInlineElementBeforePoint;
 exports.getInlineElementAfterPoint = BlockElement_1.getInlineElementAfterPoint;
-var ContentTraverser_1 = __webpack_require__(57);
+var ContentTraverser_1 = __webpack_require__(56);
 exports.ContentTraverser = ContentTraverser_1.default;
 var getLeafSibling_1 = __webpack_require__(16);
 exports.getNextLeafSibling = getLeafSibling_1.getNextLeafSibling;
 exports.getPreviousLeafSibling = getLeafSibling_1.getPreviousLeafSibling;
-var getLeafNode_1 = __webpack_require__(32);
+var getLeafNode_1 = __webpack_require__(33);
 exports.getFirstLeafNode = getLeafNode_1.getFirstLeafNode;
 exports.getLastLeafNode = getLeafNode_1.getLastLeafNode;
-var ImageInlineElement_1 = __webpack_require__(33);
+var ImageInlineElement_1 = __webpack_require__(34);
 exports.ImageInlineElement = ImageInlineElement_1.default;
-var InlineElementFactory_1 = __webpack_require__(58);
+var InlineElementFactory_1 = __webpack_require__(57);
 exports.InlineElementFactory = InlineElementFactory_1.default;
-var LinkInlineElement_1 = __webpack_require__(35);
+var LinkInlineElement_1 = __webpack_require__(36);
 exports.LinkInlineElement = LinkInlineElement_1.default;
 var NodeInlineElement_1 = __webpack_require__(8);
 exports.NodeInlineElement = NodeInlineElement_1.default;
 var PartialInlineElement_1 = __webpack_require__(12);
 exports.PartialInlineElement = PartialInlineElement_1.default;
-var TextInlineElement_1 = __webpack_require__(20);
+var TextInlineElement_1 = __webpack_require__(21);
 exports.TextInlineElement = TextInlineElement_1.default;
-var BodyScoper_1 = __webpack_require__(60);
+var BodyScoper_1 = __webpack_require__(59);
 exports.BodyScoper = BodyScoper_1.default;
-var EditorSelection_1 = __webpack_require__(21);
+var EditorSelection_1 = __webpack_require__(22);
 exports.EditorSelection = EditorSelection_1.default;
-var SelectionBlockScoper_1 = __webpack_require__(61);
+var SelectionBlockScoper_1 = __webpack_require__(60);
 exports.SelectionBlockScoper = SelectionBlockScoper_1.default;
-var SelectionScoper_1 = __webpack_require__(62);
+var SelectionScoper_1 = __webpack_require__(61);
 exports.SelectionScoper = SelectionScoper_1.default;
-var applyFormat_1 = __webpack_require__(63);
+var applyFormat_1 = __webpack_require__(62);
 exports.applyFormat = applyFormat_1.default;
-var changeElementTag_1 = __webpack_require__(64);
+var changeElementTag_1 = __webpack_require__(63);
 exports.changeElementTag = changeElementTag_1.default;
 var contains_1 = __webpack_require__(14);
 exports.contains = contains_1.default;
-var convertInlineCss_1 = __webpack_require__(65);
+var convertInlineCss_1 = __webpack_require__(64);
 exports.convertInlineCss = convertInlineCss_1.default;
-var sanitizeHtml_1 = __webpack_require__(36);
+var sanitizeHtml_1 = __webpack_require__(20);
 exports.sanitizeHtml = sanitizeHtml_1.default;
-var fromHtml_1 = __webpack_require__(19);
+var fromHtml_1 = __webpack_require__(35);
 exports.fromHtml = fromHtml_1.default;
 var getComputedStyle_1 = __webpack_require__(15);
 exports.getComputedStyle = getComputedStyle_1.default;
 exports.getComputedStyles = getComputedStyle_1.getComputedStyles;
 var getTagOfNode_1 = __webpack_require__(7);
 exports.getTagOfNode = getTagOfNode_1.default;
-var isBlockElement_1 = __webpack_require__(31);
+var isBlockElement_1 = __webpack_require__(32);
 exports.isBlockElement = isBlockElement_1.default;
 var isDocumentPosition_1 = __webpack_require__(6);
 exports.isDocumentPosition = isDocumentPosition_1.default;
 var isEditorPointAfter_1 = __webpack_require__(13);
 exports.isEditorPointAfter = isEditorPointAfter_1.default;
-var isNodeEmpty_1 = __webpack_require__(66);
+var isNodeEmpty_1 = __webpack_require__(65);
 exports.isNodeEmpty = isNodeEmpty_1.default;
-var isTextualInlineElement_1 = __webpack_require__(67);
+var isTextualInlineElement_1 = __webpack_require__(66);
 exports.isTextualInlineElement = isTextualInlineElement_1.default;
+var matchLink_1 = __webpack_require__(67);
+exports.matchLink = matchLink_1.default;
 var matchWhiteSpaces_1 = __webpack_require__(68);
 exports.matchWhiteSpaces = matchWhiteSpaces_1.default;
-var normalizeEditorPoint_1 = __webpack_require__(22);
+var normalizeEditorPoint_1 = __webpack_require__(23);
 exports.normalizeEditorPoint = normalizeEditorPoint_1.default;
 var splitParentNode_1 = __webpack_require__(69);
 exports.splitParentNode = splitParentNode_1.default;
 var unwrap_1 = __webpack_require__(70);
 exports.unwrap = unwrap_1.default;
-var wrap_1 = __webpack_require__(34);
+var wrap_1 = __webpack_require__(19);
 exports.wrap = wrap_1.default;
-var wrapAll_1 = __webpack_require__(71);
-exports.wrapAll = wrapAll_1.default;
-var VTable_1 = __webpack_require__(72);
+var VTable_1 = __webpack_require__(71);
 exports.VTable = VTable_1.default;
+var wrapAll_1 = __webpack_require__(72);
+exports.wrapAll = wrapAll_1.default;
 
 
 /***/ }),
@@ -254,18 +256,18 @@ function validateEditorPoint(editor, point) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Editor_1 = __webpack_require__(56);
+var Editor_1 = __webpack_require__(55);
 exports.Editor = Editor_1.default;
-var Undo_1 = __webpack_require__(27);
+var Undo_1 = __webpack_require__(28);
 exports.Undo = Undo_1.default;
-var UndoSnapshots_1 = __webpack_require__(28);
+var UndoSnapshots_1 = __webpack_require__(29);
 exports.UndoSnapshotsService = UndoSnapshots_1.default;
 var BrowserData_1 = __webpack_require__(10);
 exports.browserData = BrowserData_1.default;
 var eventDataCacheUtils_1 = __webpack_require__(85);
 exports.clearEventDataCache = eventDataCacheUtils_1.clearEventDataCache;
 exports.cacheGetEventData = eventDataCacheUtils_1.cacheGetEventData;
-var snapshotUtils_1 = __webpack_require__(29);
+var snapshotUtils_1 = __webpack_require__(30);
 exports.buildSnapshot = snapshotUtils_1.buildSnapshot;
 exports.restoreSnapshot = snapshotUtils_1.restoreSnapshot;
 
@@ -321,7 +323,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var cacheGetCursorEventData_1 = __webpack_require__(86);
 exports.cacheGetCursorEventData = cacheGetCursorEventData_1.default;
 exports.clearCursorEventDataCache = cacheGetCursorEventData_1.clearCursorEventDataCache;
-var CursorData_1 = __webpack_require__(23);
+var CursorData_1 = __webpack_require__(24);
 exports.CursorData = CursorData_1.default;
 var getNodeAtCursor_1 = __webpack_require__(9);
 exports.getNodeAtCursor = getNodeAtCursor_1.default;
@@ -342,7 +344,7 @@ var createLink_1 = __webpack_require__(89);
 exports.createLink = createLink_1.default;
 var execFormatWithUndo_1 = __webpack_require__(1);
 exports.execFormatWithUndo = execFormatWithUndo_1.default;
-var getFormatState_1 = __webpack_require__(24);
+var getFormatState_1 = __webpack_require__(25);
 exports.getFormatState = getFormatState_1.default;
 var insertImage_1 = __webpack_require__(91);
 exports.insertImage = insertImage_1.default;
@@ -350,7 +352,7 @@ var insertTable_1 = __webpack_require__(92);
 exports.insertTable = insertTable_1.default;
 var editTable_1 = __webpack_require__(93);
 exports.editTable = editTable_1.default;
-var formatTable_1 = __webpack_require__(49);
+var formatTable_1 = __webpack_require__(48);
 exports.formatTable = formatTable_1.default;
 var removeLink_1 = __webpack_require__(94);
 exports.removeLink = removeLink_1.default;
@@ -372,7 +374,7 @@ var setIndentation_1 = __webpack_require__(98);
 exports.setIndentation = setIndentation_1.default;
 var toggleBold_1 = __webpack_require__(42);
 exports.toggleBold = toggleBold_1.default;
-var toggleBullet_1 = __webpack_require__(25);
+var toggleBullet_1 = __webpack_require__(26);
 exports.toggleBullet = toggleBullet_1.default;
 var toggleItalic_1 = __webpack_require__(43);
 exports.toggleItalic = toggleItalic_1.default;
@@ -390,8 +392,6 @@ var toggleUnderline_1 = __webpack_require__(44);
 exports.toggleUnderline = toggleUnderline_1.default;
 var toggleHeader_1 = __webpack_require__(104);
 exports.toggleHeader = toggleHeader_1.default;
-var matchLink_1 = __webpack_require__(48);
-exports.matchLink = matchLink_1.default;
 
 
 /***/ }),
@@ -443,9 +443,12 @@ exports.default = isDocumentPosition;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-// Returns the html tag of a node, or empty if it is not an element
+/**
+ * Get the html tag of a node, or empty if it is not an element
+ * @param node The node to get tag of
+ * @returns Tag name in upper case if the given node is an Element, or empty string otherwise
+ */
 function getTagOfNode(node) {
-    // TODO: we need to standardize on use of lower or upper case
     return node && node.nodeType == 1 /* Element */ ? node.tagName.toUpperCase() : '';
 }
 exports.default = getTagOfNode;
@@ -463,7 +466,7 @@ var getTagOfNode_1 = __webpack_require__(7);
 var isDocumentPosition_1 = __webpack_require__(6);
 var isEditorPointAfter_1 = __webpack_require__(13);
 var isNodeAfter_1 = __webpack_require__(17);
-var wrap_1 = __webpack_require__(34);
+var wrap_1 = __webpack_require__(19);
 var getLeafSibling_1 = __webpack_require__(16);
 // This presents an inline element that can be reprented by a single html node.
 // This serves as base for most inline element as it contains most implentation
@@ -607,7 +610,7 @@ var NodeInlineElement = /** @class */ (function () {
                     }
                     else if (len == startNode.nodeValue.length) {
                         // It is whole text node
-                        styler(wrap_1.default(startNode, '<span></span>'));
+                        styler(wrap_1.default(startNode, 'span'));
                     }
                     else {
                         // It is partial of a text node
@@ -791,11 +794,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(12);
 var contains_1 = __webpack_require__(14);
 var getTagOfNode_1 = __webpack_require__(7);
-var isBlockElement_1 = __webpack_require__(31);
+var isBlockElement_1 = __webpack_require__(32);
 var isDocumentPosition_1 = __webpack_require__(6);
 var isNodeAfter_1 = __webpack_require__(17);
 var shouldSkipNode_1 = __webpack_require__(18);
-var getLeafNode_1 = __webpack_require__(32);
+var getLeafNode_1 = __webpack_require__(33);
 var getLeafSibling_1 = __webpack_require__(16);
 // Get the inline element at a node
 function getInlineElementAtNode(rootNode, node, inlineElementFactory) {
@@ -1376,7 +1379,7 @@ exports.getBlockElementAtNode = getBlockElementAtNode;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var editorPointEquals_1 = __webpack_require__(30);
+var editorPointEquals_1 = __webpack_require__(31);
 var isDocumentPosition_1 = __webpack_require__(6);
 var isEditorPointAfter_1 = __webpack_require__(13);
 // This is a special version of inline element that identifies a section of an inline element
@@ -1701,21 +1704,302 @@ exports.default = shouldSkipNode;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-// Creates a HTMLElement array from html
-function fromHtml(htmlFragment, ownerDocument) {
-    var element = ownerDocument.createElement('DIV');
-    element.innerHTML = htmlFragment;
-    var children = [];
-    for (var index = 0; index < element.childNodes.length; index++) {
-        children.push(element.childNodes.item(index));
+var fromHtml_1 = __webpack_require__(35);
+function wrap(nodes, wrapper, sanitize) {
+    nodes = !nodes ? [] : nodes instanceof Node ? [nodes] : nodes;
+    if (nodes.length == 0 || !nodes[0]) {
+        return null;
     }
-    return children;
+    if (!(wrapper instanceof Element)) {
+        var document_1 = nodes[0].ownerDocument;
+        wrapper = wrapper || 'div';
+        wrapper = /^\w+$/.test(wrapper) ? document_1.createElement(wrapper) : fromHtml_1.default(wrapper, document_1, sanitize)[0];
+    }
+    var parentNode = nodes[0].parentNode;
+    if (parentNode) {
+        parentNode.insertBefore(wrapper, nodes[0]);
+    }
+    for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
+        var node = nodes_1[_i];
+        wrapper.appendChild(node);
+    }
+    return wrapper;
 }
-exports.default = fromHtml;
+exports.default = wrap;
 
 
 /***/ }),
 /* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getTagOfNode_1 = __webpack_require__(7);
+var HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
+var START_FRAGMENT = '<!--StartFragment-->';
+var END_FRAGMENT = '<!--EndFragment-->';
+var LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
+var LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
+var LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
+var LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
+/**
+ * Sanitize HTML string
+ * This function will do the following work:
+ * 1. Convert global CSS into inline CSS
+ * 2. Remove dangerous HTML tags and attributes
+ * 3. Remove useless CSS properties
+ * @param html The input HTML
+ * @param additionalStyleNodes additional style nodes for inline css converting
+ * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
+ * @param propertyCallbacks A callback function map to handle HTML properties
+ * @param preserveFragmentOnly If set to true, only preserve the html content between <!--StartFragment--> and <!--Endfragment-->
+ */
+function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, propertyCallbacks, preserveFragmentOnly, currentStyle) {
+    var parser = new DOMParser();
+    var matches = HTML_REGEX.exec(html);
+    html = matches ? matches[0] : html;
+    var doc;
+    if (!html ||
+        !html.trim() ||
+        !(doc = parser.parseFromString(html, 'text/html')) ||
+        !doc.body ||
+        !doc.body.firstChild) {
+        return '';
+    }
+    // 1. Filter out html code outside of Fragment tags if need
+    if (preserveFragmentOnly) {
+        html = trimWithFragment(html);
+        doc.body.innerHTML = html;
+    }
+    // 2. Convert global CSS into inline CSS
+    convertInlineCss(doc, additionalStyleNodes);
+    // 3, 4: Remove dangerous HTML tags and attributes, remove useless CSS properties
+    if (!convertInlineCssOnly) {
+        var callbackPropertyNames = (propertyCallbacks ? Object.keys(propertyCallbacks) : []).map(function (name) { return name.toLowerCase(); });
+        removeUnusedCssAndDangerousContent(doc.body, callbackPropertyNames, propertyCallbacks, currentStyle || {});
+    }
+    return doc.body.innerHTML;
+}
+exports.default = sanitizeHtml;
+var ALLOWED_HTML_TAGS = 'BODY,H1,H2,H3,H4,H5,H6,FORM,P,BR,NOBR,HR,ACRONYM,ABBR,ADDRESS,B,BDI,BDO,BIG,BLOCKQUOTE,CENTER,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,WBR,XMP,INPUT,TEXTAREA,BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,IMG,MAP,AREA,CANVAS,FIGCAPTION,FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,TABLE,CAPTION,TH,TR,TD,THEAD,TBODY,TFOOT,COL,COLGROUP,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'.split(',');
+var ALLOWED_HTML_ATTRIBUTES = 'accept,align,alt,checked,cite,color,cols,colspan,contextmenu,coords,datetime,default,dir,dirname,disabled,download,face,headers,height,hidden,high,href,hreflang,ismap,kind,label,lang,list,low,max,maxlength,media,min,multiple,open,optimum,pattern,placeholder,readonly,rel,required,reversed,rows,rowspan,scope,selected,shape,size,sizes,span,spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,type,usemap,value,width,wrap'.split(',');
+var DROPPED_STYLE = ['white-space'];
+var DEFAULT_STYLE_VALUES = {
+    'background-color': 'transparent',
+    'border-bottom-color': 'rgb(0, 0, 0)',
+    'border-bottom-style': 'none',
+    'border-bottom-width': '0px',
+    'border-image-outset': '0',
+    'border-image-repeat': 'stretch',
+    'border-image-slice': '100%',
+    'border-image-source': 'none',
+    'border-image-width': '1',
+    'border-left-color': 'rgb(0, 0, 0)',
+    'border-left-style': 'none',
+    'border-left-width': '0px',
+    'border-right-color': 'rgb(0, 0, 0)',
+    'border-right-style': 'none',
+    'border-right-width': '0px',
+    'border-top-color': 'rgb(0, 0, 0)',
+    'border-top-style': 'none',
+    'border-top-width': '0px',
+    'outline-color': 'transparent',
+    'outline-style': 'none',
+    'outline-width': '0px',
+    overflow: 'visible',
+    'text-decoration': 'none',
+    '-webkit-text-stroke-width': '0px',
+    'word-wrap': 'break-word',
+    'margin-left': '0px',
+    'margin-right': '0px',
+    padding: '0px',
+    'padding-top': '0px',
+    'padding-left': '0px',
+    'padding-right': '0px',
+    'padding-bottom': '0px',
+    border: '0px',
+    'border-top': '0px',
+    'border-left': '0px',
+    'border-right': '0px',
+    'border-bottom': '0px',
+    'vertical-align': 'baseline',
+    float: 'none',
+};
+function convertInlineCss(doc, additionalStyleNodes) {
+    var styleNodes = toArray(doc.querySelectorAll('style'));
+    var styleSheets = (additionalStyleNodes || [])
+        .reverse()
+        .map(function (node) { return node.sheet; })
+        .concat(styleNodes.map(function (node) { return node.sheet; }).reverse());
+    for (var _i = 0, styleSheets_1 = styleSheets; _i < styleSheets_1.length; _i++) {
+        var styleSheet = styleSheets_1[_i];
+        var _loop_1 = function (j) {
+            // Skip any none-style rule, i.e. @page
+            var styleRule = styleSheet.cssRules[j];
+            var text = styleRule && styleRule.style ? styleRule.style.cssText : null;
+            if (styleRule.type != CSSRule.STYLE_RULE || !text || !styleRule.selectorText) {
+                return "continue";
+            }
+            // Make sure the selector is not empty
+            for (var _i = 0, _a = styleRule.selectorText.split(','); _i < _a.length; _i++) {
+                var selector = _a[_i];
+                if (!selector || !selector.trim() || selector.indexOf(':') >= 0) {
+                    continue;
+                }
+                var nodes = toArray(doc.querySelectorAll(selector));
+                // Always put existing styles after so that they have higher priority
+                // Which means if both global style and inline style apply to the same element,
+                // inline style will have higher priority
+                nodes.forEach(function (node) {
+                    return node.setAttribute('style', text + (node.getAttribute('style') || ''));
+                });
+            }
+        };
+        for (var j = styleSheet.cssRules.length - 1; j >= 0; j--) {
+            _loop_1(j);
+        }
+    }
+}
+function nativeAssign(source) {
+    return Object.assign({}, source);
+}
+function customAssign(source) {
+    var result = {};
+    for (var _i = 0, _a = Object.keys(source); _i < _a.length; _i++) {
+        var key = _a[_i];
+        result[key] = source[key];
+    }
+    return result;
+}
+var assign = Object.assign ? nativeAssign : customAssign;
+function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propertyCallbacks, currentStyle) {
+    var thisStyle = assign(currentStyle);
+    var nodeType = node.nodeType;
+    var tag = getTagOfNode_1.default(node) || '';
+    var isElement = nodeType == 1 /* Element */;
+    var isText = nodeType == 3 /* Text */;
+    if ((isElement && ALLOWED_HTML_TAGS.indexOf(tag) < 0 && tag.indexOf(':') < 0) ||
+        (isText && /^[\r\n]*$/g.test(node.nodeValue)) ||
+        (!isElement && !isText)) {
+        node.parentNode.removeChild(node);
+    }
+    if (isText && currentStyle['white-space'] == 'pre') {
+        var text = node.nodeValue;
+        var nbsp = '\u00A0';
+        text = text.replace(/^ /gm, nbsp);
+        text = text.replace(/ {2}/g, ' ' + nbsp);
+        node.nodeValue = text;
+    }
+    else if (nodeType == 1 /* Element */) {
+        var element = node;
+        if (element.hasAttribute('style')) {
+            removeUnusedCss(element, thisStyle);
+        }
+        removeDisallowedAttributes(element, callbackPropertyNames, propertyCallbacks);
+        var child = element.firstChild;
+        var next = void 0;
+        for (; child; child = next) {
+            next = child.nextSibling;
+            removeUnusedCssAndDangerousContent(child, callbackPropertyNames, propertyCallbacks, thisStyle);
+        }
+    }
+}
+function removeUnusedCss(element, thisStyle) {
+    var tag = getTagOfNode_1.default(element);
+    var source = element
+        .getAttribute('style')
+        .split(';')
+        .filter(function (style) { return style && style.trim() != ''; });
+    var result = source.filter(function (style) {
+        var pair = style.split(':');
+        if (pair.length == 2) {
+            var name_1 = pair[0].trim().toLowerCase();
+            var value = pair[1].trim().toLowerCase();
+            var isInheritable = thisStyle[name_1] != undefined;
+            var keep = value != 'inherit' &&
+                name_1.substr(0, 1) != '-' &&
+                DEFAULT_STYLE_VALUES[name_1] != value &&
+                ((isInheritable && value != thisStyle[name_1]) ||
+                    (!isInheritable && value != 'initial' && value != 'normal')) &&
+                !shouldRemove(tag, name_1, value);
+            if (keep && isInheritable) {
+                thisStyle[name_1] = value;
+            }
+            return keep && DROPPED_STYLE.indexOf(name_1) < 0;
+        }
+        else {
+            return false;
+        }
+    });
+    if (source.length != result.length) {
+        if (result.length > 0) {
+            element.setAttribute('style', result.join(';'));
+        }
+        else {
+            element.removeAttribute('style');
+        }
+    }
+}
+function shouldRemove(tag, name, value) {
+    if (name == 'position') {
+        return true;
+    }
+    if (value.indexOf('expression') >= 0) {
+        return true;
+    }
+    if (['LI', 'DIV'].indexOf(tag) >= 0 && name == 'width') {
+        return true;
+    }
+    return false;
+}
+function removeDisallowedAttributes(element, callbackPropertyNames, propertyCallbacks) {
+    for (var i = element.attributes.length - 1; i >= 0; i--) {
+        var attribute = element.attributes[i];
+        var name_2 = attribute.name.toLowerCase().trim();
+        var value = attribute.value.trim();
+        if (callbackPropertyNames.indexOf(name_2) >= 0) {
+            value = propertyCallbacks[name_2](value);
+            if (value != null) {
+                attribute.value = value;
+            }
+            else {
+                element.removeAttribute(name_2);
+            }
+        }
+        else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name_2) < 0 ||
+            value.toLowerCase().indexOf('script:') >= 0) {
+            element.removeAttribute(attribute.name);
+        }
+    }
+}
+function toArray(list) {
+    return [].slice.call(list);
+}
+function trimWithFragment(html) {
+    var startIndex = html.indexOf(START_FRAGMENT);
+    var endIndex = html.lastIndexOf(END_FRAGMENT);
+    if (startIndex >= 0 && endIndex >= 0 && endIndex >= startIndex + START_FRAGMENT.length) {
+        var before = html.substr(0, startIndex);
+        html = html.substring(startIndex + START_FRAGMENT.length, endIndex);
+        // Fix up table for Excel
+        if (html.match(LAST_TD_END_REGEX)) {
+            var trMatch = before.match(LAST_TR_REGEX);
+            var tr = trMatch ? trMatch[0] : '<TR>';
+            html = tr + html + '</TR>';
+        }
+        if (html.match(LAST_TR_END_REGEX)) {
+            var tableMatch = before.match(LAST_TABLE_REGEX);
+            var table = tableMatch ? tableMatch[0] : '<TABLE>';
+            html = table + html + '</TABLE>';
+        }
+    }
+    return html;
+}
+
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1744,16 +2028,16 @@ exports.default = TextInlineElement;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(12);
-var editorPointEquals_1 = __webpack_require__(30);
+var editorPointEquals_1 = __webpack_require__(31);
 var isEditorPointAfter_1 = __webpack_require__(13);
-var normalizeEditorPoint_1 = __webpack_require__(22);
+var normalizeEditorPoint_1 = __webpack_require__(23);
 var BlockElement_1 = __webpack_require__(11);
 // This is a utility like class that produces editor point/inline/block element around or within a selection range
 var EditorSelection = /** @class */ (function () {
@@ -1980,7 +2264,7 @@ exports.default = EditorSelection;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2021,7 +2305,7 @@ exports.default = normalizeEditorPoint;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2224,7 +2508,7 @@ exports.default = CursorData;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2318,14 +2602,14 @@ exports.default = getFormatState;
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var execFormatWithUndo_1 = __webpack_require__(1);
-var getFormatState_1 = __webpack_require__(24);
+var getFormatState_1 = __webpack_require__(25);
 var getNodeAtCursor_1 = __webpack_require__(9);
 var queryNodesWithSelection_1 = __webpack_require__(3);
 var roosterjs_editor_core_1 = __webpack_require__(2);
@@ -2412,13 +2696,13 @@ function getCurrentFormat(editor) {
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DefaultShortcut_1 = __webpack_require__(55);
+var DefaultShortcut_1 = __webpack_require__(54);
 exports.DefaultShortcut = DefaultShortcut_1.default;
 var HyperLink_1 = __webpack_require__(105);
 exports.HyperLink = HyperLink_1.default;
@@ -2426,7 +2710,7 @@ var ContentEdit_1 = __webpack_require__(106);
 exports.ContentEdit = ContentEdit_1.default;
 var Paste_1 = __webpack_require__(107);
 exports.Paste = Paste_1.default;
-var ContentEditFeatures_1 = __webpack_require__(50);
+var ContentEditFeatures_1 = __webpack_require__(49);
 exports.getDefaultContentEditFeatures = ContentEditFeatures_1.getDefaultContentEditFeatures;
 var Watermark_1 = __webpack_require__(115);
 exports.Watermark = Watermark_1.default;
@@ -2435,14 +2719,14 @@ exports.TableResize = TableResize_1.default;
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var UndoSnapshots_1 = __webpack_require__(28);
-var snapshotUtils_1 = __webpack_require__(29);
+var UndoSnapshots_1 = __webpack_require__(29);
+var snapshotUtils_1 = __webpack_require__(30);
 var KEY_BACKSPACE = 8;
 var KEY_DELETE = 46;
 var KEY_SPACE = 32;
@@ -2650,7 +2934,7 @@ exports.default = Undo;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2713,7 +2997,7 @@ exports.default = UndoSnapshots;
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2838,7 +3122,7 @@ function createCursorMarker(editor, id) {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2852,7 +3136,7 @@ exports.default = editorPointEquals;
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2873,7 +3157,7 @@ exports.default = isBlockElement;
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2909,7 +3193,7 @@ exports.getLastLeafNode = getLastLeafNode;
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2938,34 +3222,30 @@ exports.default = ImageInlineElement;
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var fromHtml_1 = __webpack_require__(19);
-// Wrap the node with html and return the wrapped node
-function wrap(node, htmlFragment) {
-    if (!node) {
-        return null;
-    }
-    var wrapper = node;
-    if (htmlFragment) {
-        wrapper = fromHtml_1.default(htmlFragment, node.ownerDocument)[0];
-        if (node.parentNode) {
-            node.parentNode.insertBefore(wrapper, node);
-            node.parentNode.removeChild(node);
-        }
-        wrapper.appendChild(node);
-    }
-    return wrapper;
+var sanitizeHtml_1 = __webpack_require__(20);
+/**
+ * Creates an HTML node array from html
+ * @param html the html string to create HTML elements from
+ * @param ownerDocument Owner document of the result HTML elements
+ * @param sanitize Whether do sanitization before create elements to avoid XSS. Default value is false
+ * @returns An HTML node array to represent the given html string
+ */
+function fromHtml(html, ownerDocument, sanitize) {
+    var element = ownerDocument.createElement('DIV');
+    element.innerHTML = sanitize ? sanitizeHtml_1.default(html) : html;
+    return [].slice.call(element.childNodes);
 }
-exports.default = wrap;
+exports.default = fromHtml;
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2991,272 +3271,6 @@ var LinkInlineElement = /** @class */ (function (_super) {
     return LinkInlineElement;
 }(NodeInlineElement_1.default));
 exports.default = LinkInlineElement;
-
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var getTagOfNode_1 = __webpack_require__(7);
-var HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
-var START_FRAGMENT = '<!--StartFragment-->';
-var END_FRAGMENT = '<!--EndFragment-->';
-var LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
-var LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
-var LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
-var LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
-/**
- * Sanitize HTML string
- * This function will do the following work:
- * 1. Convert global CSS into inline CSS
- * 2. Remove dangerous HTML tags and attributes
- * 3. Remove useless CSS properties
- * @param html The input HTML
- * @param additionalStyleNodes additional style nodes for inline css converting
- * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
- * @param propertyCallbacks A callback function map to handle HTML properties
- * @param preserveFragmentOnly If set to true, only preserve the html content between <!--StartFragment--> and <!--Endfragment-->
- */
-function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, propertyCallbacks, preserveFragmentOnly, currentStyle) {
-    var parser = new DOMParser();
-    var matches = HTML_REGEX.exec(html);
-    html = matches ? matches[0] : html;
-    var doc;
-    if (!html ||
-        !html.trim() ||
-        !(doc = parser.parseFromString(html, 'text/html')) ||
-        !doc.body ||
-        !doc.body.firstChild) {
-        return '';
-    }
-    // 1. Filter out html code outside of Fragment tags if need
-    if (preserveFragmentOnly) {
-        html = trimWithFragment(html);
-        doc.body.innerHTML = html;
-    }
-    // 2. Convert global CSS into inline CSS
-    convertInlineCss(doc, additionalStyleNodes);
-    // 3, 4: Remove dangerous HTML tags and attributes, remove useless CSS properties
-    if (!convertInlineCssOnly) {
-        var callbackPropertyNames = (propertyCallbacks ? Object.keys(propertyCallbacks) : []).map(function (name) { return name.toLowerCase(); });
-        removeUnusedCssAndDangerousContent(doc.body, callbackPropertyNames, propertyCallbacks, currentStyle || {});
-    }
-    return doc.body.innerHTML;
-}
-exports.default = sanitizeHtml;
-var ALLOWED_HTML_TAGS = 'BODY,H1,H2,H3,H4,H5,H6,FORM,P,BR,NOBR,HR,ACRONYM,ABBR,ADDRESS,B,BDI,BDO,BIG,BLOCKQUOTE,CENTER,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,WBR,XMP,INPUT,TEXTAREA,BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,IMG,MAP,AREA,CANVAS,FIGCAPTION,FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,TABLE,CAPTION,TH,TR,TD,THEAD,TBODY,TFOOT,COL,COLGROUP,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'.split(',');
-var ALLOWED_HTML_ATTRIBUTES = 'accept,align,alt,checked,cite,color,cols,colspan,contextmenu,coords,datetime,default,dir,dirname,disabled,download,face,headers,height,hidden,high,href,hreflang,ismap,kind,label,lang,list,low,max,maxlength,media,min,multiple,open,optimum,pattern,placeholder,readonly,rel,required,reversed,rows,rowspan,scope,selected,shape,size,sizes,span,spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,type,usemap,value,width,wrap'.split(',');
-var DROPPED_STYLE = ['white-space'];
-var DEFAULT_STYLE_VALUES = {
-    'background-color': 'transparent',
-    'border-bottom-color': 'rgb(0, 0, 0)',
-    'border-bottom-style': 'none',
-    'border-bottom-width': '0px',
-    'border-image-outset': '0',
-    'border-image-repeat': 'stretch',
-    'border-image-slice': '100%',
-    'border-image-source': 'none',
-    'border-image-width': '1',
-    'border-left-color': 'rgb(0, 0, 0)',
-    'border-left-style': 'none',
-    'border-left-width': '0px',
-    'border-right-color': 'rgb(0, 0, 0)',
-    'border-right-style': 'none',
-    'border-right-width': '0px',
-    'border-top-color': 'rgb(0, 0, 0)',
-    'border-top-style': 'none',
-    'border-top-width': '0px',
-    'outline-color': 'transparent',
-    'outline-style': 'none',
-    'outline-width': '0px',
-    overflow: 'visible',
-    'text-decoration': 'none',
-    '-webkit-text-stroke-width': '0px',
-    'word-wrap': 'break-word',
-    'margin-left': '0px',
-    'margin-right': '0px',
-    padding: '0px',
-    'padding-top': '0px',
-    'padding-left': '0px',
-    'padding-right': '0px',
-    'padding-bottom': '0px',
-    border: '0px',
-    'border-top': '0px',
-    'border-left': '0px',
-    'border-right': '0px',
-    'border-bottom': '0px',
-    'vertical-align': 'baseline',
-    float: 'none',
-};
-function convertInlineCss(doc, additionalStyleNodes) {
-    var styleNodes = toArray(doc.querySelectorAll('style'));
-    var styleSheets = (additionalStyleNodes || [])
-        .reverse()
-        .map(function (node) { return node.sheet; })
-        .concat(styleNodes.map(function (node) { return node.sheet; }).reverse());
-    for (var _i = 0, styleSheets_1 = styleSheets; _i < styleSheets_1.length; _i++) {
-        var styleSheet = styleSheets_1[_i];
-        var _loop_1 = function (j) {
-            // Skip any none-style rule, i.e. @page
-            var styleRule = styleSheet.cssRules[j];
-            var text = styleRule && styleRule.style ? styleRule.style.cssText : null;
-            if (styleRule.type != CSSRule.STYLE_RULE || !text || !styleRule.selectorText) {
-                return "continue";
-            }
-            // Make sure the selector is not empty
-            for (var _i = 0, _a = styleRule.selectorText.split(','); _i < _a.length; _i++) {
-                var selector = _a[_i];
-                if (!selector || !selector.trim() || selector.indexOf(':') >= 0) {
-                    continue;
-                }
-                var nodes = toArray(doc.querySelectorAll(selector));
-                // Always put existing styles after so that they have higher priority
-                // Which means if both global style and inline style apply to the same element,
-                // inline style will have higher priority
-                nodes.forEach(function (node) {
-                    return node.setAttribute('style', text + (node.getAttribute('style') || ''));
-                });
-            }
-        };
-        for (var j = styleSheet.cssRules.length - 1; j >= 0; j--) {
-            _loop_1(j);
-        }
-    }
-}
-function nativeAssign(source) {
-    return Object.assign({}, source);
-}
-function customAssign(source) {
-    var result = {};
-    for (var _i = 0, _a = Object.keys(source); _i < _a.length; _i++) {
-        var key = _a[_i];
-        result[key] = source[key];
-    }
-    return result;
-}
-var assign = Object.assign ? nativeAssign : customAssign;
-function removeUnusedCssAndDangerousContent(node, callbackPropertyNames, propertyCallbacks, currentStyle) {
-    var thisStyle = assign(currentStyle);
-    var nodeType = node.nodeType;
-    var tag = getTagOfNode_1.default(node) || '';
-    var isElement = nodeType == 1 /* Element */;
-    var isText = nodeType == 3 /* Text */;
-    if ((isElement && ALLOWED_HTML_TAGS.indexOf(tag) < 0 && tag.indexOf(':') < 0) ||
-        (isText && /^[\r\n]*$/g.test(node.nodeValue)) ||
-        (!isElement && !isText)) {
-        node.parentNode.removeChild(node);
-    }
-    if (isText && currentStyle['white-space'] == 'pre') {
-        node.nodeValue = node.nodeValue.replace(/\s\s/g, ' \u00A0');
-    }
-    else if (nodeType == 1 /* Element */) {
-        var element = node;
-        if (element.hasAttribute('style')) {
-            removeUnusedCss(element, thisStyle);
-        }
-        removeDisallowedAttributes(element, callbackPropertyNames, propertyCallbacks);
-        var child = element.firstChild;
-        var next = void 0;
-        for (; child; child = next) {
-            next = child.nextSibling;
-            removeUnusedCssAndDangerousContent(child, callbackPropertyNames, propertyCallbacks, thisStyle);
-        }
-    }
-}
-function removeUnusedCss(element, thisStyle) {
-    var tag = getTagOfNode_1.default(element);
-    var source = element
-        .getAttribute('style')
-        .split(';')
-        .filter(function (style) { return style && style.trim() != ''; });
-    var result = source.filter(function (style) {
-        var pair = style.split(':');
-        if (pair.length == 2) {
-            var name_1 = pair[0].trim().toLowerCase();
-            var value = pair[1].trim().toLowerCase();
-            var isInheritable = thisStyle[name_1] != undefined;
-            var keep = value != 'inherit' &&
-                name_1.substr(0, 1) != '-' &&
-                DEFAULT_STYLE_VALUES[name_1] != value &&
-                ((isInheritable && value != thisStyle[name_1]) ||
-                    (!isInheritable && value != 'initial' && value != 'normal')) &&
-                !shouldRemove(tag, name_1, value);
-            if (keep && isInheritable) {
-                thisStyle[name_1] = value;
-            }
-            return keep && DROPPED_STYLE.indexOf(name_1) < 0;
-        }
-        else {
-            return false;
-        }
-    });
-    if (source.length != result.length) {
-        if (result.length > 0) {
-            element.setAttribute('style', result.join(';'));
-        }
-        else {
-            element.removeAttribute('style');
-        }
-    }
-}
-function shouldRemove(tag, name, value) {
-    if (name == 'position') {
-        return true;
-    }
-    if (value.indexOf('expression') >= 0) {
-        return true;
-    }
-    if (['LI', 'DIV'].indexOf(tag) >= 0 && name == 'width') {
-        return true;
-    }
-    return false;
-}
-function removeDisallowedAttributes(element, callbackPropertyNames, propertyCallbacks) {
-    for (var i = element.attributes.length - 1; i >= 0; i--) {
-        var attribute = element.attributes[i];
-        var name_2 = attribute.name.toLowerCase().trim();
-        var value = attribute.value.trim();
-        if (callbackPropertyNames.indexOf(name_2) >= 0) {
-            value = propertyCallbacks[name_2](value);
-            if (value != null) {
-                attribute.value = value;
-            }
-            else {
-                element.removeAttribute(name_2);
-            }
-        }
-        else if (ALLOWED_HTML_ATTRIBUTES.indexOf(name_2) < 0 ||
-            value.toLowerCase().indexOf('script:') >= 0) {
-            element.removeAttribute(attribute.name);
-        }
-    }
-}
-function toArray(list) {
-    return [].slice.call(list);
-}
-function trimWithFragment(html) {
-    var startIndex = html.indexOf(START_FRAGMENT);
-    var endIndex = html.lastIndexOf(END_FRAGMENT);
-    if (startIndex >= 0 && endIndex >= 0 && endIndex >= startIndex + START_FRAGMENT.length) {
-        var before = html.substr(0, startIndex);
-        html = html.substring(startIndex + START_FRAGMENT.length, endIndex);
-        // Fix up table for Excel
-        if (html.match(LAST_TD_END_REGEX)) {
-            var trMatch = before.match(LAST_TR_REGEX);
-            var tr = trMatch ? trMatch[0] : '<TR>';
-            html = tr + html + '</TR>';
-        }
-        if (html.match(LAST_TR_END_REGEX)) {
-            var tableMatch = before.match(LAST_TABLE_REGEX);
-            var table = tableMatch ? tableMatch[0] : '<TABLE>';
-            html = table + html + '</TABLE>';
-        }
-    }
-    return html;
-}
 
 
 /***/ }),
@@ -3593,85 +3607,6 @@ exports.default = setTextColor;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-// http exclude matching regex
-// invalid URL example (in paricular on IE and Edge):
-// - http://www.bing.com%00, %00 before ? (question mark) is considered invalid. IE/Edge throws invalid argument exception
-// - http://www.bing.com%1, %1 is invalid
-// - http://www.bing.com%g, %g is invalid (IE and Edge expects a two hex value after a %)
-// - http://www.bing.com%, % as ending is invalid (IE and Edge expects a two hex value after a %)
-// All above % cases if they're after ? (question mark) is then considered valid again
-// Similar for @, it needs to be after / (forward slash), or ? (question mark). Otherwise IE/Edge will throw security exception
-// - http://www.bing.com@name, @name before ? (question mark) is considered invalid
-// - http://www.bing.com/@name, is valid sine it is after / (forward slash)
-// - http://www.bing.com?@name, is also valid sinve it is after ? (question mark)
-// The regex below is essentially a break down of:
-// ^[^?]+%[^0-9a-f]+ => to exclude URL like www.bing.com%%
-// ^[^?]+%[0-9a-f][^0-9a-f]+ => to exclude URL like www.bing.com%1
-// ^[^?]+%00 => to exclude URL like www.bing.com%00
-// ^[^?]+%$ => to exclude URL like www.bing.com%
-// ^https?:\/\/[^?\/]+@ => to exclude URL like http://www.bing.com@name
-// ^www\.[^?\/]+@ => to exclude URL like www.bing.com@name
-var httpExcludeRegEx = /^[^?]+%[^0-9a-f]+|^[^?]+%[0-9a-f][^0-9a-f]+|^[^?]+%00|^[^?]+%$|^https?:\/\/[^?\/]+@|^www\.[^?\/]+@/i;
-var linkMatchRules = {
-    http: {
-        match: /^(microsoft-edge:)?http:\/\/\S+|www\.\S+/i,
-        except: httpExcludeRegEx,
-        normalizeUrl: function (url) { return (/^(microsoft-edge:)?http:\/\//i.test(url) ? url : 'http://' + url); },
-    },
-    https: {
-        match: /^(microsoft-edge:)?https:\/\/\S+/i,
-        except: httpExcludeRegEx,
-    },
-    mailto: { match: /^mailto:\S+@\S+\.\S+/i },
-    notes: { match: /^notes:\/\/\S+/i },
-    file: { match: /^file:\/\/\/?\S+/i },
-    unc: { match: /^\\\\\S+/i },
-    ftp: {
-        match: /^ftp:\/\/\S+|ftp\.\S+/i,
-        normalizeUrl: function (url) { return (/^ftp:\/\//i.test(url) ? url : 'ftp://' + url); },
-    },
-    news: { match: /^news:(\/\/)?\S+/i },
-    telnet: { match: /^telnet:\S+/i },
-    gopher: { match: /^gopher:\/\/\S+/i },
-    wais: { match: /^wais:\S+/i },
-};
-/**
- * Try to match a given string with link match rules, return matched link
- * @param url Input url to match
- * @param option Link match option, exact or partial. If it is exact match, we need
- * to check the length of matched link and url
- * @param rules Optional link match rules, if not passed, only the default link match
- * rules will be applied
- * @returns The matched link data, or null if no match found.
- * The link data includes an original url and a normalized url
- */
-function matchLink(url) {
-    if (url) {
-        for (var _i = 0, _a = Object.keys(linkMatchRules); _i < _a.length; _i++) {
-            var schema = _a[_i];
-            var rule = linkMatchRules[schema];
-            var matches = url.match(rule.match);
-            if (matches && matches[0] == url && (!rule.except || !rule.except.test(url))) {
-                return {
-                    scheme: schema,
-                    originalUrl: url,
-                    normalizedUrl: rule.normalizeUrl ? rule.normalizeUrl(url) : url,
-                };
-            }
-        }
-    }
-    return null;
-}
-exports.default = matchLink;
-
-
-/***/ }),
-/* 49 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
 var execFormatWithUndo_1 = __webpack_require__(1);
 var getNodeAtCursor_1 = __webpack_require__(9);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
@@ -3699,7 +3634,7 @@ exports.default = formatTable;
 
 
 /***/ }),
-/* 50 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3725,7 +3660,7 @@ exports.getDefaultContentEditFeatures = getDefaultContentEditFeatures;
 
 
 /***/ }),
-/* 51 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3786,7 +3721,7 @@ function getAndSetNodeId(customData, element) {
 
 
 /***/ }),
-/* 52 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3804,7 +3739,7 @@ exports.createLevelLists = createLevelLists;
 
 
 /***/ }),
-/* 53 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3813,24 +3748,24 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-var createEditor_1 = __webpack_require__(54);
+var createEditor_1 = __webpack_require__(53);
 exports.createEditor = createEditor_1.default;
 __export(__webpack_require__(117));
 __export(__webpack_require__(0));
 __export(__webpack_require__(2));
 __export(__webpack_require__(4));
-__export(__webpack_require__(26));
+__export(__webpack_require__(27));
 __export(__webpack_require__(118));
 
 
 /***/ }),
-/* 54 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_plugins_1 = __webpack_require__(26);
+var roosterjs_editor_plugins_1 = __webpack_require__(27);
 var roosterjs_editor_core_1 = __webpack_require__(2);
 /**
  * Create an editor instance with most common options
@@ -3865,7 +3800,7 @@ exports.default = createEditor;
 
 
 /***/ }),
-/* 55 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3998,13 +3933,13 @@ exports.default = DefaultShortcut;
 
 
 /***/ }),
-/* 56 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Undo_1 = __webpack_require__(27);
+var Undo_1 = __webpack_require__(28);
 var BrowserData_1 = __webpack_require__(10);
 var createEditorCore_1 = __webpack_require__(73);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
@@ -4064,7 +3999,7 @@ var Editor = /** @class */ (function () {
                     // The focus node could be pointing to the content div, normalize it to have it point to a child first
                     var focusOffset = selectionRange.startOffset;
                     var editorPoint = roosterjs_editor_dom_1.normalizeEditorPoint(focusNode, focusOffset);
-                    var element = roosterjs_editor_dom_1.wrapAll(blockElement.getContentNodes());
+                    var element = roosterjs_editor_dom_1.wrap(blockElement.getContentNodes());
                     if (roosterjs_editor_dom_1.getTagOfNode(blockElement.getStartNode()) == 'BR') {
                         // if the block is just BR, apply default format
                         // Otherwise, leave it as it is as we don't want to change the style for existing data
@@ -4297,7 +4232,7 @@ var Editor = /** @class */ (function () {
             // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
             // separately to show up on its own line
             if (option && option.insertOnNewLine && allNodes.length > 0) {
-                allNodes = [roosterjs_editor_dom_1.wrapAll(allNodes)];
+                allNodes = [roosterjs_editor_dom_1.wrap(allNodes)];
             }
             for (var i = 0; i < allNodes.length; i++) {
                 this.insertNode(allNodes[i], option);
@@ -4597,7 +4532,7 @@ exports.default = Editor;
 
 
 /***/ }),
-/* 57 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4730,13 +4665,13 @@ exports.default = ContentTraverser;
 
 
 /***/ }),
-/* 58 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DefaultInlineElementResolver_1 = __webpack_require__(59);
+var DefaultInlineElementResolver_1 = __webpack_require__(58);
 var NodeInlineElement_1 = __webpack_require__(8);
 // This factory holds all resolvers and provide function to resolve DOM node to inline element
 var InlineElementFactory = /** @class */ (function () {
@@ -4799,15 +4734,15 @@ exports.default = InlineElementFactory;
 
 
 /***/ }),
-/* 59 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var ImageInlineElement_1 = __webpack_require__(33);
-var LinkInlineElement_1 = __webpack_require__(35);
-var TextInlineElement_1 = __webpack_require__(20);
+var ImageInlineElement_1 = __webpack_require__(34);
+var LinkInlineElement_1 = __webpack_require__(36);
+var TextInlineElement_1 = __webpack_require__(21);
 var getTagOfNode_1 = __webpack_require__(7);
 // This is default inline element resolver which produces very basic inline elements
 var DefaultInlineElementResolver = /** @class */ (function () {
@@ -4834,7 +4769,7 @@ exports.default = DefaultInlineElementResolver;
 
 
 /***/ }),
-/* 60 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4869,13 +4804,13 @@ exports.default = BodyScoper;
 
 
 /***/ }),
-/* 61 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorSelection_1 = __webpack_require__(21);
+var EditorSelection_1 = __webpack_require__(22);
 // This provides traversing content in a selection start block
 // This is commonly used for those cursor context sensitive plugin
 // i.e. Mentions, Hashtag etc. they want to know text being typed at cursor
@@ -4956,13 +4891,13 @@ exports.default = SelectionBlockScoper;
 
 
 /***/ }),
-/* 62 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var EditorSelection_1 = __webpack_require__(21);
+var EditorSelection_1 = __webpack_require__(22);
 // This is selection scoper that provide a start inline as the start of the selection
 // and checks if a block falls in the selection (isBlockInScope)
 // last trimInlineElement to trim any inline element to return a partial that falls in the selection
@@ -4993,7 +4928,7 @@ exports.default = SelectionScoper;
 
 
 /***/ }),
-/* 63 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5029,7 +4964,7 @@ exports.default = applyFormat;
 
 
 /***/ }),
-/* 64 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5037,7 +4972,7 @@ exports.default = applyFormat;
 Object.defineProperty(exports, "__esModule", { value: true });
 var getComputedStyle_1 = __webpack_require__(15);
 var getTagOfNode_1 = __webpack_require__(7);
-var normalizeEditorPoint_1 = __webpack_require__(22);
+var normalizeEditorPoint_1 = __webpack_require__(23);
 function changeElementTag(element, newTag, range) {
     var start;
     var end;
@@ -5073,13 +5008,13 @@ exports.default = changeElementTag;
 
 
 /***/ }),
-/* 65 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var sanitizeHtml_1 = __webpack_require__(36);
+var sanitizeHtml_1 = __webpack_require__(20);
 /**
  * @deprecated Use sanitizeHtml() instead
  */
@@ -5090,49 +5025,50 @@ exports.default = convertInlineCss;
 
 
 /***/ }),
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var VISIBLE_ELEMENT_SELECTOR = ['table', 'img', 'li'].join(',');
+var ZERO_WIDTH_SPACE = /\u200b/g;
+/**
+ * Check if a given node has no visible content
+ * @param node The node to check
+ * @param trimContent Whether trim the text content so that spaces will be treated as empty.
+ * Default value is false
+ * @returns True if there isn't any visible element inside node, otherwise false
+ */
+function isNodeEmpty(node, trimContent) {
+    if (node.nodeType == 3 /* Text */) {
+        return trim(node.nodeValue, trimContent) == '';
+    }
+    else if (node.nodeType == 1 /* Element */) {
+        var element = node;
+        var textContent = trim(element.textContent, trimContent);
+        if (textContent != '' || element.querySelectorAll(VISIBLE_ELEMENT_SELECTOR)[0]) {
+            return false;
+        }
+    }
+    return true;
+}
+exports.default = isNodeEmpty;
+function trim(s, trim) {
+    s = s.replace(ZERO_WIDTH_SPACE, '');
+    return trim ? s.trim() : s;
+}
+
+
+/***/ }),
 /* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var VISIBLE_ELEMENT_SELECTORS = ['table', 'img', 'li'];
-var ZERO_WIDTH_SPACE = '\u200b';
-/**
- * Check if a given node has visible content
- */
-function isNodeEmpty(node, trim) {
-    var trimmer = trim ? function (text) { return text.trim(); } : function (text) { return text; };
-    if (node.nodeType == 3 /* Text */) {
-        return trimmer(node.data) == '';
-    }
-    else if (node.nodeType == 1 /* Element */) {
-        var element = node;
-        var textContent = trimmer(element.textContent);
-        if (textContent != '' && textContent != ZERO_WIDTH_SPACE) {
-            return false;
-        }
-        for (var _i = 0, VISIBLE_ELEMENT_SELECTORS_1 = VISIBLE_ELEMENT_SELECTORS; _i < VISIBLE_ELEMENT_SELECTORS_1.length; _i++) {
-            var selector = VISIBLE_ELEMENT_SELECTORS_1[_i];
-            if (element.querySelectorAll(selector).length > 0) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-exports.default = isNodeEmpty;
-
-
-/***/ }),
-/* 67 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
 var PartialInlineElement_1 = __webpack_require__(12);
-var TextInlineElement_1 = __webpack_require__(20);
+var TextInlineElement_1 = __webpack_require__(21);
 // Check if the inline is a text type inline element
 // This essentially test if the inline is TextInlineElement
 // or a partial inline element that decorates a TextInlineElement
@@ -5148,6 +5084,85 @@ function isTextualInlineElement(inlineElement) {
     return isTextualInlineElement;
 }
 exports.default = isTextualInlineElement;
+
+
+/***/ }),
+/* 67 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+// http exclude matching regex
+// invalid URL example (in paricular on IE and Edge):
+// - http://www.bing.com%00, %00 before ? (question mark) is considered invalid. IE/Edge throws invalid argument exception
+// - http://www.bing.com%1, %1 is invalid
+// - http://www.bing.com%g, %g is invalid (IE and Edge expects a two hex value after a %)
+// - http://www.bing.com%, % as ending is invalid (IE and Edge expects a two hex value after a %)
+// All above % cases if they're after ? (question mark) is then considered valid again
+// Similar for @, it needs to be after / (forward slash), or ? (question mark). Otherwise IE/Edge will throw security exception
+// - http://www.bing.com@name, @name before ? (question mark) is considered invalid
+// - http://www.bing.com/@name, is valid sine it is after / (forward slash)
+// - http://www.bing.com?@name, is also valid sinve it is after ? (question mark)
+// The regex below is essentially a break down of:
+// ^[^?]+%[^0-9a-f]+ => to exclude URL like www.bing.com%%
+// ^[^?]+%[0-9a-f][^0-9a-f]+ => to exclude URL like www.bing.com%1
+// ^[^?]+%00 => to exclude URL like www.bing.com%00
+// ^[^?]+%$ => to exclude URL like www.bing.com%
+// ^https?:\/\/[^?\/]+@ => to exclude URL like http://www.bing.com@name
+// ^www\.[^?\/]+@ => to exclude URL like www.bing.com@name
+var httpExcludeRegEx = /^[^?]+%[^0-9a-f]+|^[^?]+%[0-9a-f][^0-9a-f]+|^[^?]+%00|^[^?]+%$|^https?:\/\/[^?\/]+@|^www\.[^?\/]+@/i;
+var linkMatchRules = {
+    http: {
+        match: /^(microsoft-edge:)?http:\/\/\S+|www\.\S+/i,
+        except: httpExcludeRegEx,
+        normalizeUrl: function (url) { return (/^(microsoft-edge:)?http:\/\//i.test(url) ? url : 'http://' + url); },
+    },
+    https: {
+        match: /^(microsoft-edge:)?https:\/\/\S+/i,
+        except: httpExcludeRegEx,
+    },
+    mailto: { match: /^mailto:\S+@\S+\.\S+/i },
+    notes: { match: /^notes:\/\/\S+/i },
+    file: { match: /^file:\/\/\/?\S+/i },
+    unc: { match: /^\\\\\S+/i },
+    ftp: {
+        match: /^ftp:\/\/\S+|ftp\.\S+/i,
+        normalizeUrl: function (url) { return (/^ftp:\/\//i.test(url) ? url : 'ftp://' + url); },
+    },
+    news: { match: /^news:(\/\/)?\S+/i },
+    telnet: { match: /^telnet:\S+/i },
+    gopher: { match: /^gopher:\/\/\S+/i },
+    wais: { match: /^wais:\S+/i },
+};
+/**
+ * Try to match a given string with link match rules, return matched link
+ * @param url Input url to match
+ * @param option Link match option, exact or partial. If it is exact match, we need
+ * to check the length of matched link and url
+ * @param rules Optional link match rules, if not passed, only the default link match
+ * rules will be applied
+ * @returns The matched link data, or null if no match found.
+ * The link data includes an original url and a normalized url
+ */
+function matchLink(url) {
+    if (url) {
+        for (var _i = 0, _a = Object.keys(linkMatchRules); _i < _a.length; _i++) {
+            var schema = _a[_i];
+            var rule = linkMatchRules[schema];
+            var matches = url.match(rule.match);
+            if (matches && matches[0] == url && (!rule.except || !rule.except.test(url))) {
+                return {
+                    scheme: schema,
+                    originalUrl: url,
+                    normalizedUrl: rule.normalizeUrl ? rule.normalizeUrl(url) : url,
+                };
+            }
+        }
+    }
+    return null;
+}
+exports.default = matchLink;
 
 
 /***/ }),
@@ -5216,7 +5231,10 @@ exports.default = splitParentNode;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-// Removes the node and keep all children in place, return the parentNode where the children are attached
+/**
+ * Removes the node and keep all children in place, return the parentNode where the children are attached
+ * @param node the node to remove
+ */
 function unwrap(node) {
     // Unwrap requires a parentNode
     var parentNode = node ? node.parentNode : null;
@@ -5234,37 +5252,6 @@ exports.default = unwrap;
 
 /***/ }),
 /* 71 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var fromHtml_1 = __webpack_require__(19);
-// Wrap all the node with html and return the wrapped node
-// All nodes should be under same parent
-function wrapAll(nodes, htmlFragment) {
-    if (htmlFragment === void 0) { htmlFragment = '<div></div>'; }
-    if (!nodes || nodes.length == 0) {
-        return null;
-    }
-    var parentNode = nodes[0].parentNode;
-    var wrapper = parentNode;
-    if (htmlFragment) {
-        wrapper = fromHtml_1.default(htmlFragment, nodes[0].ownerDocument)[0];
-        if (parentNode) {
-            parentNode.insertBefore(wrapper, nodes[0]);
-        }
-        for (var i = 0; i < nodes.length; i++) {
-            wrapper.appendChild(nodes[i]);
-        }
-    }
-    return wrapper;
-}
-exports.default = wrapAll;
-
-
-/***/ }),
-/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5467,6 +5454,24 @@ function getTableFromTd(td) {
 function getBorderStyle(style) {
     return 'solid 1px ' + (style || 'transparent');
 }
+
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var wrap_1 = __webpack_require__(19);
+/**
+ * @deprecated Use wrap() instead
+ */
+function wrapAll(nodes, htmlFragment) {
+    if (htmlFragment === void 0) { htmlFragment = '<div></div>'; }
+    return wrap_1.default(nodes, htmlFragment);
+}
+exports.default = wrapAll;
 
 
 /***/ }),
@@ -5897,7 +5902,6 @@ exports.default = hasFocus;
 Object.defineProperty(exports, "__esModule", { value: true });
 var isVoidHtmlElement_1 = __webpack_require__(37);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
-var HTML_EMPTY_DIV = '<div></div>';
 var insertNode = function (core, node, option) {
     option = option || {
         position: 2 /* SelectionStart */,
@@ -5967,7 +5971,7 @@ function insertNodeAtBegin(core, node, option) {
     // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
     // add a DIV wrapping
     if (insertedNode && option.insertOnNewLine && !roosterjs_editor_dom_1.isBlockElement(insertedNode)) {
-        roosterjs_editor_dom_1.wrap(insertedNode, HTML_EMPTY_DIV);
+        roosterjs_editor_dom_1.wrap(insertedNode);
     }
 }
 // Insert a node at end of the editor
@@ -6011,7 +6015,7 @@ function insertNodeAtEnd(core, node, option) {
     // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
     // add a DIV wrapping
     if (insertedNode && option.insertOnNewLine && !roosterjs_editor_dom_1.isBlockElement(insertedNode)) {
-        roosterjs_editor_dom_1.wrap(insertedNode, HTML_EMPTY_DIV);
+        roosterjs_editor_dom_1.wrap(insertedNode);
     }
 }
 // Insert node at selection
@@ -6213,7 +6217,7 @@ exports.cacheGetEventData = cacheGetEventData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CursorData_1 = __webpack_require__(23);
+var CursorData_1 = __webpack_require__(24);
 var roosterjs_editor_core_1 = __webpack_require__(2);
 var EVENTDATACACHE_CURSORDATA = 'CURSORDATA';
 /**
@@ -6247,7 +6251,7 @@ exports.clearCursorEventDataCache = clearCursorEventDataCache;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CursorData_1 = __webpack_require__(23);
+var CursorData_1 = __webpack_require__(24);
 var replaceRangeWithNode_1 = __webpack_require__(39);
 /**
  * Validate the text matches what's before the cursor, and return the range for it
@@ -6430,8 +6434,8 @@ exports.default = clearFormat;
 Object.defineProperty(exports, "__esModule", { value: true });
 var execFormatWithUndo_1 = __webpack_require__(1);
 var isSelectionCollapsed_1 = __webpack_require__(5);
-var matchLink_1 = __webpack_require__(48);
 var queryNodesWithSelection_1 = __webpack_require__(3);
+var roosterjs_editor_dom_1 = __webpack_require__(0);
 // Regex matching Uri scheme
 var URI_REGEX = /^[a-zA-Z]+:/i;
 // Regex matching begin of email address
@@ -6479,7 +6483,7 @@ function createLink(editor, link, altText, displayText) {
     editor.focus();
     var url = link ? link.trim() : '';
     if (url) {
-        var linkData = matchLink_1.default(url);
+        var linkData = roosterjs_editor_dom_1.matchLink(url);
         // matchLink can match most links, but not all, i.e. if you pass link a link as "abc", it won't match
         // we know in that case, users will want to insert a link like http://abc
         // so we have separate logic in applyLinkPrefix to add link prefix depending on the format of the link
@@ -6602,7 +6606,7 @@ exports.default = insertImage;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var execFormatWithUndo_1 = __webpack_require__(1);
-var formatTable_1 = __webpack_require__(49);
+var formatTable_1 = __webpack_require__(48);
 /**
  * Insert table into editor at current selection
  * @param editor The editor instance
@@ -6919,7 +6923,7 @@ function setDirection(editor, dir) {
                     // the start node "abc" is not in same level as the end node <br> (the <br> is in a span)
                     // Some html suffling is required to properly wrap the content before applying dir
                     var allNodes = block.getContentNodes();
-                    roosterjs_editor_dom_1.wrapAll(allNodes, "<div dir='" + dirValue + "', style='text-align:" + styleValue + ";'></div>");
+                    roosterjs_editor_dom_1.wrap(allNodes, "<div dir='" + dirValue + "', style='text-align:" + styleValue + ";'></div>");
                 }
             }
         });
@@ -6969,9 +6973,9 @@ exports.default = setImageAltText;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var execFormatWithUndo_1 = __webpack_require__(1);
-var getFormatState_1 = __webpack_require__(24);
+var getFormatState_1 = __webpack_require__(25);
 var queryNodesWithSelection_1 = __webpack_require__(3);
-var toggleBullet_1 = __webpack_require__(25);
+var toggleBullet_1 = __webpack_require__(26);
 /**
  * Set indentation at selection
  * If selection contains bullet/numbering list, increase/decrease indentation will
@@ -7008,7 +7012,7 @@ exports.default = setIndentation;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var execFormatWithUndo_1 = __webpack_require__(1);
-var toggleBullet_1 = __webpack_require__(25);
+var toggleBullet_1 = __webpack_require__(26);
 /**
  * Toggle numbering at selection
  * If selection contains numbering in deep level, toggle numbering will decrease the numbering level by one
@@ -7069,7 +7073,7 @@ function toggleBlockQuote(editor, styler) {
             nodes = getSplittedListNodes(nodes);
             // Step 3: Handle some special cases
             nodes = getNodesWithSpecialCaseHandled(editor, nodes, startPoint, endPoint);
-            var quoteElement = roosterjs_editor_dom_1.wrapAll(nodes, '<blockquote></blockqupte>');
+            var quoteElement = roosterjs_editor_dom_1.wrap(nodes, 'blockquote');
             (styler || defaultStyler)(quoteElement);
             return quoteElement;
         }
@@ -7133,7 +7137,7 @@ function getSplittedListNodes(nodes) {
 }
 function getNodesWithSpecialCaseHandled(editor, nodes, startPoint, endPoint) {
     if (nodes.length == 1 && nodes[0].nodeName == 'BR') {
-        nodes[0] = roosterjs_editor_dom_1.wrap(nodes[0], '<div></div>');
+        nodes[0] = roosterjs_editor_dom_1.wrap(nodes[0]);
     }
     else if (nodes.length == 0) {
         var document_1 = editor.getDocument();
@@ -7313,6 +7317,7 @@ exports.default = toggleHeader;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_api_1 = __webpack_require__(4);
+var roosterjs_editor_dom_1 = __webpack_require__(0);
 var roosterjs_editor_core_1 = __webpack_require__(2);
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
 // we need to trim off the trailing puncatuation before turning it to link match
@@ -7424,7 +7429,7 @@ var HyperLink = /** @class */ (function () {
                 ? wordBeforeCursor.length - trailingPunctuation.length
                 : wordBeforeCursor.length);
             // Match and replace in editor
-            var linkData_1 = roosterjs_editor_api_1.matchLink(linkCandidate);
+            var linkData_1 = roosterjs_editor_dom_1.matchLink(linkCandidate);
             if (linkData_1) {
                 var anchor_1 = this.editor.getDocument().createElement('A');
                 anchor_1.textContent = linkData_1.originalUrl;
@@ -7491,7 +7496,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_api_1 = __webpack_require__(4);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 var roosterjs_editor_core_1 = __webpack_require__(2);
-var ContentEditFeatures_1 = __webpack_require__(50);
+var ContentEditFeatures_1 = __webpack_require__(49);
 var KEY_TAB = 9;
 var KEY_BACKSPACE = 8;
 var KEY_ENTER = 13;
@@ -8081,7 +8086,7 @@ exports.default = convertPastedContentFromWord;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CustomData_1 = __webpack_require__(51);
+var CustomData_1 = __webpack_require__(50);
 ;
 /** create an empty WordConverter */
 function createWordConverter() {
@@ -8103,7 +8108,7 @@ exports.createWordConverter = createWordConverter;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var LevelLists_1 = __webpack_require__(52);
+var LevelLists_1 = __webpack_require__(51);
 ;
 /** create an empty WordConverterArguments */
 function createWordConverterArguments(nodes) {
@@ -8126,8 +8131,8 @@ exports.createWordConverterArguments = createWordConverterArguments;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var LevelLists_1 = __webpack_require__(52);
-var CustomData_1 = __webpack_require__(51);
+var LevelLists_1 = __webpack_require__(51);
+var CustomData_1 = __webpack_require__(50);
 var roosterjs_editor_dom_1 = __webpack_require__(0);
 /** Word list metadata style name */
 var LOOKUP_DEPTH = 5;

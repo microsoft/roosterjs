@@ -1,6 +1,6 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import { BlockElement, ContentScope, Direction } from 'roosterjs-editor-types';
-import { NodeBlockElement, StartEndBlockElement, wrapAll } from 'roosterjs-editor-dom';
+import { NodeBlockElement, StartEndBlockElement, wrap } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -49,7 +49,7 @@ export default function setDirection(editor: Editor, dir: Direction) {
                     // the start node "abc" is not in same level as the end node <br> (the <br> is in a span)
                     // Some html suffling is required to properly wrap the content before applying dir
                     let allNodes = block.getContentNodes();
-                    wrapAll(
+                    wrap(
                         allNodes,
                         `<div dir='${dirValue}', style='text-align:${styleValue};'></div>`
                     );

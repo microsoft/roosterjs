@@ -185,7 +185,7 @@ class NodeInlineElement implements InlineElement {
                         styler(parentNode);
                     } else if (len == startNode.nodeValue.length) {
                         // It is whole text node
-                        styler(wrap(startNode, '<span></span>'));
+                        styler(wrap(startNode, 'span'));
                     } else {
                         // It is partial of a text node
                         let newNode = ownerDoc.createElement('SPAN');

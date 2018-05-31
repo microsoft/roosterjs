@@ -1,5 +1,4 @@
 import {
-    matchLink,
     replaceTextBeforeCursorWithNode,
     cacheGetCursorEventData,
     clearCursorEventDataCache,
@@ -12,6 +11,7 @@ import {
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
+import { matchLink } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
 
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;

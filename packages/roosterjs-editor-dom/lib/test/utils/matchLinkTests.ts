@@ -1,5 +1,5 @@
+import matchLink from '../../utils/matchLink';
 import { LinkData } from 'roosterjs-editor-types';
-import matchLink from '../../linkMatch/matchLink';
 
 function runMatchTestWithValidLink(link: string, expected: LinkData): void {
     let resultData = matchLink(link);

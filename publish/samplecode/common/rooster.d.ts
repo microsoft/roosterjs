@@ -1002,7 +1002,14 @@ declare namespace roosterjs {
         [name: string]: string;
     };
 
-    function fromHtml(htmlFragment: string, ownerDocument: HTMLDocument): Node[];
+    /**
+     * Creates an HTML node array from html
+     * @param html the html string to create HTML elements from
+     * @param ownerDocument Owner document of the result HTML elements
+     * @param sanitize Whether do sanitization before create elements to avoid XSS. Default value is false
+     * @returns An HTML node array to represent the given html string
+     */
+    function fromHtml(html: string, ownerDocument: HTMLDocument, sanitize?: boolean): Node[];
 
     function getComputedStyle(node: Node, styleName: string): string;
 
@@ -1015,6 +1022,11 @@ declare namespace roosterjs {
      */
     function getComputedStyles(node: Node, styleNames?: string | string[]): string[];
 
+    /**
+     * Get the html tag of a node, or empty if it is not an element
+     * @param node The node to get tag of
+     * @returns Tag name in upper case if the given node is an Element, or empty string otherwise
+     */
     function getTagOfNode(node: Node): string;
 
     function isBlockElement(node: Node): boolean;
@@ -1029,11 +1041,27 @@ declare namespace roosterjs {
     function isEditorPointAfter(point1: EditorPoint, point2: EditorPoint): boolean;
 
     /**
-     * Check if a given node has visible content
+     * Check if a given node has no visible content
+     * @param node The node to check
+     * @param trimContent Whether trim the text content so that spaces will be treated as empty.
+     * Default value is false
+     * @returns True if there isn't any visible element inside node, otherwise false
      */
-    function isNodeEmpty(node: Node, trim?: boolean): boolean;
+    function isNodeEmpty(node: Node, trimContent?: boolean): boolean;
 
     function isTextualInlineElement(inlineElement: InlineElement): boolean;
+
+    /**
+     * Try to match a given string with link match rules, return matched link
+     * @param url Input url to match
+     * @param option Link match option, exact or partial. If it is exact match, we need
+     * to check the length of matched link and url
+     * @param rules Optional link match rules, if not passed, only the default link match
+     * rules will be applied
+     * @returns The matched link data, or null if no match found.
+     * The link data includes an original url and a normalized url
+     */
+    function matchLink(url: string): LinkData;
 
     function matchWhiteSpaces(source: string): string[];
 
@@ -1050,11 +1078,41 @@ declare namespace roosterjs {
      */
     function splitParentNode(node: Node, splitBefore: boolean): Node;
 
+    /**
+     * Removes the node and keep all children in place, return the parentNode where the children are attached
+     * @param node the node to remove
+     */
     function unwrap(node: Node): Node;
 
-    function wrap(node: Node, htmlFragment: string): Node;
+    /**
+     * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
+     * @param nodes The node or node array to wrap
+     * @param wrapper The wrapper HTML tag name
+     * @param sanitize Whether do sanitization of wrapper string before create node to avoid XSS,
+     * default value is false
+     * @returns The wrapper element
+     */
+    function wrap<T extends keyof HTMLElementTagNameMap>(nodes: Node | Node[], wrapper?: T, sanitize?: boolean): HTMLElementTagNameMap[T];
 
-    function wrapAll(nodes: Node[], htmlFragment?: string): Node;
+    /**
+     * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
+     * @param nodes The node or node array to wrap
+     * @param wrapper The wrapper HTML string, default value is DIV
+     * @param sanitize Whether do sanitization of wrapper string before create node to avoid XSS,
+     * default value is false
+     * @returns The wrapper element
+     */
+    function wrap(nodes: Node | Node[], wrapper?: string, sanitize?: boolean): HTMLElement;
+
+    /**
+     * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
+     * @param nodes The node or node array to wrap
+     * @param wrapper The wrapper HTML element, default value is a new DIV element
+     * @param sanitize Whether do sanitization of wrapper string before create node to avoid XSS,
+     * default value is false
+     * @returns The wrapper element
+     */
+    function wrap(nodes: Node | Node[], wrapper?: HTMLElement, sanitize?: boolean): HTMLElement;
 
     /**
      * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -1153,6 +1211,11 @@ declare namespace roosterjs {
          */
         spanAbove?: boolean;
     }
+
+    /**
+     * @deprecated Use wrap() instead
+     */
+    function wrapAll(nodes: Node[], htmlFragment?: string): Node;
 
     class Editor {
         private undoService;
@@ -2113,18 +2176,6 @@ declare namespace roosterjs {
      * if passed in param is outside the range, will be rounded to nearest number in the range
      */
     function toggleHeader(editor: Editor, level: number): void;
-
-    /**
-     * Try to match a given string with link match rules, return matched link
-     * @param url Input url to match
-     * @param option Link match option, exact or partial. If it is exact match, we need
-     * to check the length of matched link and url
-     * @param rules Optional link match rules, if not passed, only the default link match
-     * rules will be applied
-     * @returns The matched link data, or null if no match found.
-     * The link data includes an original url and a normalized url
-     */
-    function matchLink(url: string): LinkData;
 
     class DefaultShortcut implements EditorPlugin {
         private editor;
