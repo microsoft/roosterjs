@@ -1,5 +1,5 @@
 import * as DomTestHelper from '../DomTestHelper';
-import EditorSelection from '../../scopers/EditorSelection';
+import EditorSelection from '../../contentTraverser/EditorSelection';
 import { BlockElement, NodeBoundary } from 'roosterjs-editor-types';
 
 let testID = 'EditorSelection';

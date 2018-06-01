@@ -1,9 +1,10 @@
-import { BlockElement, InlineElement, TraversingScoper } from 'roosterjs-editor-types';
+import TraversingScoper from './TraversingScoper';
+import { BlockElement, InlineElement } from 'roosterjs-editor-types';
 import { getFirstBlockElement, getFirstInlineElement } from '../blockElements/BlockElement';
 
 // This provides scoper for traversing the entire editor body starting from the beginning
 class BodyScoper implements TraversingScoper {
-    constructor(private rootNode: Node) {}
+    constructor(public rootNode: Node) {}
 
     // Get the start block element
     public getStartBlockElement(): BlockElement {

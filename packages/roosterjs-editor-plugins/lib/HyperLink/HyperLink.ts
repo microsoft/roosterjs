@@ -18,7 +18,10 @@ import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
 // we need to trim off the trailing puncatuation before turning it to link match
 const TRAILING_PUNCTUATION_REGEX = /[.()+={}\[\]\s:;"',>]+$/i;
 const TEMP_TITLE = 'istemptitle';
-const TEMP_TITLE_REGEX = new RegExp(`<a\\s+([^>]*\\s+)?(title|${TEMP_TITLE})="[^"]*"\\s*([^>]*)\\s+(title|${TEMP_TITLE})="[^"]*"(\\s+[^>]*)?>`, 'gm');
+const TEMP_TITLE_REGEX = new RegExp(
+    `<a\\s+([^>]*\\s+)?(title|${TEMP_TITLE})="[^"]*"\\s*([^>]*)\\s+(title|${TEMP_TITLE})="[^"]*"(\\s+[^>]*)?>`,
+    'gm'
+);
 const MINIMUM_LENGTH = 5;
 const KEY_BACKSPACE = 8;
 const KEY_SPACE = 32;
@@ -177,9 +180,9 @@ export default class HyperLink implements EditorPlugin {
 
     private removeTempTooltip(content: string): string {
         return content.replace(TEMP_TITLE_REGEX, (...groups: string[]): string => {
-            const firstValue = groups[1] == null ? "" : groups[1].trim();
-            const secondValue = groups[3] == null ? "" : groups[3].trim();
-            const thirdValue = groups[5] == null ? "" : groups[5].trim();
+            const firstValue = groups[1] == null ? '' : groups[1].trim();
+            const secondValue = groups[3] == null ? '' : groups[3].trim();
+            const thirdValue = groups[5] == null ? '' : groups[5].trim();
 
             // possible values (* is space, x, y, z are the first, second, and third value respectively):
             // *** (no values) << empty case
@@ -191,7 +194,7 @@ export default class HyperLink implements EditorPlugin {
             // *y*z (second and third)
             // x*y*z (all)
             if (firstValue.length === 0 && secondValue.length === 0 && thirdValue.length === 0) {
-                return "<a>";
+                return '<a>';
             }
 
             let result;
@@ -213,7 +216,10 @@ export default class HyperLink implements EditorPlugin {
             (browserData.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey)
         ) {
             let target = this.target || '_blank';
-            this.editor.getDocument().defaultView.window.open(href, target);
+            let window = this.editor.getDocument().defaultView;
+            try {
+                window.open(href, target);
+            } catch {}
         }
     };
 

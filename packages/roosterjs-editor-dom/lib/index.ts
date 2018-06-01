@@ -27,10 +27,6 @@ export { default as PartialInlineElement } from './inlineElements/PartialInlineE
 export { default as TextInlineElement } from './inlineElements/TextInlineElement';
 export { default as resolveInlineElement } from './inlineElements/resolveInlineElement';
 
-export { default as BodyScoper } from './scopers/BodyScoper';
-export { default as SelectionBlockScoper } from './scopers/SelectionBlockScoper';
-export { default as SelectionScoper } from './scopers/SelectionScoper';
-
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
 export { default as contains } from './utils/contains';
@@ -58,4 +54,5 @@ export { default as VTable, VCell } from './table/VTable';
 
 export { default as isTextualInlineElement } from './deprecated/isTextualInlineElement';
 export { default as wrapAll } from './deprecated/wrapAll';
-export { default as EditorSelection } from './scopers/EditorSelection';
+export { default as EditorSelection } from './contentTraverser/EditorSelection';
+export { default as TraversingScoper } from './contentTraverser/TraversingScoper';

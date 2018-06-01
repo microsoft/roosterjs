@@ -22,7 +22,6 @@ export { default as PluginDomEvent } from './editor/PluginDomEvent';
 export { default as PluginEvent } from './editor/PluginEvent';
 export { default as PluginEventType } from './editor/PluginEventType';
 export { default as Rect } from './editor/Rect';
-export { default as TraversingScoper } from './editor/TraversingScoper';
 export { default as ClipboardData } from './clipboard/ClipboardData';
 export { default as BeforePasteEvent } from './clipboard/BeforePasteEvent';
 export { default as PasteOption } from './clipboard/PasteOption';

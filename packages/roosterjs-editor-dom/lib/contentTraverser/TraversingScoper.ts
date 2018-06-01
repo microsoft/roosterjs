@@ -1,5 +1,4 @@
-import BlockElement from './BlockElement';
-import InlineElement from './InlineElement';
+import { BlockElement, InlineElement } from 'roosterjs-editor-types';
 
 // A scoper provides two things to a content traverser:
 // 1) a start position -- a start inline or block element
@@ -15,6 +14,9 @@ import InlineElement from './InlineElement';
 // When users ask for a previous inline element and content traverser sees a null startInline element, it will fall back to
 // call this getInlineElementBeforeStart to get a previous inline element. Not all scoper needs this, so it is made as optional
 interface TraversingScoper {
+    // The root node of this scoper
+    rootNode: Node;
+
     // Get the start block element
     getStartBlockElement: () => BlockElement;
 
