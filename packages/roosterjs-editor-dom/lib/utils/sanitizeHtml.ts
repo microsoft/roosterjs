@@ -1,4 +1,5 @@
 import { NodeType } from 'roosterjs-editor-types';
+import { convertInlineCssInDom } from './convertInlineCss';
 import getTagOfNode from './getTagOfNode';
 
 const HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
@@ -64,7 +65,7 @@ export default function sanitizeHtml(
     }
 
     // 2. Convert global CSS into inline CSS
-    convertInlineCss(doc, additionalStyleNodes);
+    convertInlineCssInDom(doc, additionalStyleNodes);
 
     // 3, 4: Remove dangerous HTML tags and attributes, remove useless CSS properties
     if (!convertInlineCssOnly) {
@@ -131,37 +132,6 @@ const DEFAULT_STYLE_VALUES: { [name: string]: string } = {
     'vertical-align': 'baseline',
     float: 'none',
 };
-
-function convertInlineCss(doc: Document, additionalStyleNodes: HTMLStyleElement[]) {
-    let styleNodes = toArray(doc.querySelectorAll('style'));
-    let styleSheets = (additionalStyleNodes || [])
-        .reverse()
-        .map(node => node.sheet as CSSStyleSheet)
-        .concat(styleNodes.map(node => node.sheet as CSSStyleSheet).reverse());
-    for (let styleSheet of styleSheets) {
-        for (let j = styleSheet.cssRules.length - 1; j >= 0; j--) {
-            // Skip any none-style rule, i.e. @page
-            let styleRule = styleSheet.cssRules[j] as CSSStyleRule;
-            let text = styleRule && styleRule.style ? styleRule.style.cssText : null;
-            if (styleRule.type != CSSRule.STYLE_RULE || !text || !styleRule.selectorText) {
-                continue;
-            }
-            // Make sure the selector is not empty
-            for (let selector of styleRule.selectorText.split(',')) {
-                if (!selector || !selector.trim() || selector.indexOf(':') >= 0) {
-                    continue;
-                }
-                let nodes = toArray(doc.querySelectorAll(selector));
-                // Always put existing styles after so that they have higher priority
-                // Which means if both global style and inline style apply to the same element,
-                // inline style will have higher priority
-                nodes.forEach(node =>
-                    node.setAttribute('style', text + (node.getAttribute('style') || ''))
-                );
-            }
-        }
-    }
-}
 
 type ObjectForAssign<T> = { [key: string]: T };
 
@@ -301,10 +271,6 @@ function removeDisallowedAttributes(
             element.removeAttribute(attribute.name);
         }
     }
-}
-
-function toArray<T extends Node>(list: NodeListOf<T>): T[] {
-    return [].slice.call(list) as T[];
 }
 
 function trimWithFragment(html: string): string {

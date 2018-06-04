@@ -16,6 +16,20 @@ export default function toggleHeader(editor: Editor, level: number) {
     execFormatWithUndo(editor, () => {
         editor.focus();
 
+        let wrapped = false;
+        queryNodesWithSelection(editor, 'H1,H2,H3,H4,H5,H6', false, header => {
+            if (!wrapped) {
+                editor.getDocument().execCommand('formatBlock', false, '<DIV>');
+                wrapped = true;
+            }
+
+            let div = editor.getDocument().createElement('div');
+            while (header.firstChild) {
+                div.appendChild(header.firstChild);
+            }
+            editor.replaceNode(header, div);
+        });
+
         if (level > 0) {
             let traverser = editor.getContentTraverser(ContentScope.Selection);
             let inlineElement = traverser ? traverser.currentInlineElement : null;
@@ -30,18 +44,6 @@ export default function toggleHeader(editor: Editor, level: number) {
                 inlineElement = traverser.getNextInlineElement();
             }
             editor.getDocument().execCommand('formatBlock', false, `<H${level}>`);
-        } else {
-            editor.getDocument().execCommand('formatBlock', false, '<DIV>');
-            for (let i = 1; i <= 6; i++) {
-                let headers = queryNodesWithSelection(editor, 'H' + i);
-                headers.forEach(header => {
-                    let div = editor.getDocument().createElement('div');
-                    while (header.firstChild) {
-                        div.appendChild(header.firstChild);
-                    }
-                    editor.replaceNode(header, div);
-                });
-            }
         }
     });
 }
