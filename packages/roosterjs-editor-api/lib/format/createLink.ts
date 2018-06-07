@@ -1,5 +1,4 @@
 import execFormatWithUndo from './execFormatWithUndo';
-import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
@@ -70,7 +69,8 @@ export default function createLink(
         let anchor: HTMLAnchorElement = null;
 
         execFormatWithUndo(editor, () => {
-            if (isSelectionCollapsed(editor)) {
+            let range = editor.getSelectionRange();
+            if (range && range.collapsed) {
                 anchor = getAnchorNodeAtCursor(editor);
 
                 // If there is already a link, just change its href

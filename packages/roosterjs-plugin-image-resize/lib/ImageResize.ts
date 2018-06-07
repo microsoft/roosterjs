@@ -9,6 +9,7 @@ import {
     ExtractContentEvent,
 } from 'roosterjs-editor-types';
 import { contains, getTagOfNode } from 'roosterjs-editor-dom';
+import { execFormatWithUndo } from 'roosterjs-editor-api';
 
 const BEGIN_TAG = 'RoosterJsImageResizingBegin';
 const END_TAG = 'RoosterJsImageResizingEnd';
@@ -77,7 +78,10 @@ export default class ImageResize implements EditorPlugin {
         } else if (e.eventType == PluginEventType.KeyDown && this.resizeDiv) {
             let event = <KeyboardEvent>(<PluginDomEvent>e).rawEvent;
             if (event.which == DELETE_KEYCODE || event.which == BACKSPACE_KEYCODE) {
-                this.editor.runWithUndo(() => this.removeResizeDiv(this.resizeDiv));
+                execFormatWithUndo(this.editor, () => {
+                    this.removeResizeDiv(this.resizeDiv);
+                    this.resizeDiv = null;
+                });
                 event.preventDefault();
                 this.resizeDiv = null;
             } else if (
