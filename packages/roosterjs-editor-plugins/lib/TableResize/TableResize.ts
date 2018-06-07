@@ -1,11 +1,11 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { contains, fromHtml, getComputedStyle, VTable } from 'roosterjs-editor-dom';
 import { execFormatWithUndo, getNodeAtCursor } from 'roosterjs-editor-api';
-import { PluginEvent, PluginEventType, PluginDomEvent } from 'roosterjs-editor-types';
+import { ContentPosition, PluginEvent, PluginEventType, PluginDomEvent } from 'roosterjs-editor-types';
 
 const TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
 const HANDLE_WIDTH = 6;
-const CONTAINER_HTML = `<div style="position: absolute; cursor: col-resize; width: ${HANDLE_WIDTH}px; border: solid 0 #C6C6C6;"></div>`;
+const CONTAINER_HTML = `<div style="position: fixed; cursor: col-resize; width: ${HANDLE_WIDTH}px; border: solid 0 #C6C6C6;"></div>`;
 
 export default class TableResize implements EditorPlugin {
     private editor: Editor;
@@ -99,7 +99,12 @@ export default class TableResize implements EditorPlugin {
             () => {
                 let document = this.editor.getDocument();
                 let handle = fromHtml(CONTAINER_HTML, document)[0] as HTMLElement;
-                document.body.appendChild(handle);
+                this.editor.insertNode(handle, {
+                    position: ContentPosition.Outside,
+                    updateCursor: false,
+                    replaceSelection: false,
+                    insertOnNewLine: false,
+                });
                 handle.addEventListener('mousedown', this.onMouseDown);
                 return handle;
             },

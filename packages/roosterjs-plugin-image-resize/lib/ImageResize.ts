@@ -9,7 +9,6 @@ import {
     ExtractContentEvent,
 } from 'roosterjs-editor-types';
 import { contains, getTagOfNode } from 'roosterjs-editor-dom';
-import { execFormatWithUndo } from 'roosterjs-editor-api';
 
 const BEGIN_TAG = 'RoosterJsImageResizingBegin';
 const END_TAG = 'RoosterJsImageResizingEnd';
@@ -49,12 +48,11 @@ export default class ImageResize implements EditorPlugin {
 
     initialize(editor: Editor) {
         this.editor = editor;
-        this.editor.getDocument().execCommand('enableObjectResizing', false, false);
     }
 
     dispose() {
         if (this.resizeDiv) {
-            this.unselect(false /*selectImageAfterUnSelect*/);
+            this.hideResizeHandle();
         }
         this.editor = null;
     }
@@ -67,29 +65,27 @@ export default class ImageResize implements EditorPlugin {
                 target.contentEditable = 'false';
                 let currentImg = this.getSelectedImage();
                 if (currentImg && currentImg != target) {
-                    this.unselect(false /*selectImageAfterUnSelect*/);
+                    this.hideResizeHandle();
                 }
 
                 if (!this.resizeDiv) {
-                    this.select(target);
+                    this.showResizeHandle(<HTMLImageElement>target);
                 }
             } else if (this.resizeDiv && !contains(this.resizeDiv, target)) {
-                this.unselect(false /*selectImageAfterUnSelect*/);
+                this.hideResizeHandle();
             }
         } else if (e.eventType == PluginEventType.KeyDown && this.resizeDiv) {
             let event = <KeyboardEvent>(<PluginDomEvent>e).rawEvent;
             if (event.which == DELETE_KEYCODE || event.which == BACKSPACE_KEYCODE) {
-                execFormatWithUndo(this.editor, () => {
-                    this.removeResizeDiv(this.resizeDiv);
-                    this.resizeDiv = null;
-                });
+                this.editor.runWithUndo(() => this.removeResizeDiv(this.resizeDiv));
                 event.preventDefault();
+                this.resizeDiv = null;
             } else if (
                 event.which != SHIFT_KEYCODE &&
                 event.which != CTRL_KEYCODE &&
                 event.which != ALT_KEYCODE
             ) {
-                this.unselect(true /*selectImageAfterUnSelect*/);
+                this.hideResizeHandle(true /*selectImageAfterUnSelect*/);
             }
         } else if (
             e.eventType == PluginEventType.ContentChanged &&
@@ -103,16 +99,24 @@ export default class ImageResize implements EditorPlugin {
         }
     }
 
-    private select(target: HTMLElement) {
-        this.resizeDiv = this.createResizeDiv(target);
-        target.contentEditable = 'false';
+    /**
+     * Select a given IMG element, show the resize handle
+     * @param img The IMG element to select
+     */
+    showResizeHandle(img: HTMLImageElement) {
+        this.resizeDiv = this.createResizeDiv(img);
+        img.contentEditable = 'false';
         let range = document.createRange();
         range.setEndAfter(this.resizeDiv);
         range.collapse(false /*toStart*/);
         this.editor.updateSelection(range);
     }
 
-    private unselect(selectImageAfterUnSelect: boolean) {
+    /**
+     * Hide resize handle of current selected image
+     * @param selectImageAfterUnSelect Optional, when set to true, select the image element after hide the resize handle
+     */
+    hideResizeHandle(selectImageAfterUnSelect?: boolean) {
         let img = this.getSelectedImage();
         let parent = this.resizeDiv.parentNode;
         if (parent) {

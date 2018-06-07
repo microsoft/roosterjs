@@ -6,6 +6,7 @@ export { default as ContentPosition } from './editor/ContentPosition';
 export { default as ContentScope } from './editor/ContentScope';
 export { default as DefaultFormat } from './editor/DefaultFormat';
 export { default as Direction } from './format/Direction';
+export { default as DocumentCommand } from './browser/DocumentCommand';
 export { default as DocumentPosition } from './browser/DocumentPosition';
 export { default as EditorPoint, NodeBoundary } from './editor/EditorPoint';
 export { default as ExtractContentEvent } from './editor/ExtractContentEvent';
