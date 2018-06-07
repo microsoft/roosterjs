@@ -14,13 +14,12 @@ export interface PickerPluginOptions {
 }
 
 export interface PickerDataProvider {
-    // Function called when the plugin is intialized to register two callbacks with the data provider and pass in a reference to the editor
+    // Function called when the plugin is intialized to register two callbacks with the data provider
     // The first is called in order to "commit" a new element to the editor body that isn't handled automatically by the editor plugin.
     // The second sets the isSuggesting value for situations where the UX needs to manipulate the suggesting state that's otherwise plugin managed.
     onInitalize: (
         commitMentionCallback: (nodeToAvoiddd: HTMLElement) => void,
-        setIsSuggestingCallback: (isSuggesting: boolean) => void,
-        editor: Editor,
+        setIsSuggestingCallback: (isSuggesting: boolean) => void
     ) => void;
 
     // Function called when the plugin is disposed for the data provider to do any cleanup.
@@ -44,4 +43,7 @@ export interface PickerDataProvider {
 
     // Function that returns the current cursor position as an anchor point for where to show UX.
     setCursorPoint?: (targetPoint: { x: number; y: number }, buffer: number) => void;
+
+    // Function that provides the current Editor reference
+    setEditor?: (editor: Editor) => void;
 }

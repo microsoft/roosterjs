@@ -50,9 +50,12 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
             },
             (isSuggesting: boolean) => {
                 this.setIsSuggesting(isSuggesting);
-            },
-            this.editor
+            }
         );
+
+        if (this.dataProvider.setEditor) {
+            this.dataProvider.setEditor(editor);
+        }
     }
 
     public dispose() {
