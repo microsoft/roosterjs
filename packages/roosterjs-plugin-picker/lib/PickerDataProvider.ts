@@ -14,7 +14,7 @@ export interface PickerPluginOptions {
 }
 
 export interface PickerDataProvider {
-    // Function called when the plugin is intialized to register two callbacks with the data provider
+    // Function called when the plugin is intialized to register two callbacks with the data provider.
     // The first is called in order to "commit" a new element to the editor body that isn't handled automatically by the editor plugin.
     // The second sets the isSuggesting value for situations where the UX needs to manipulate the suggesting state that's otherwise plugin managed.
     onInitalize: (

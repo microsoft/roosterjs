@@ -122,7 +122,7 @@ export default class ImageResize implements EditorPlugin {
      */
     hideResizeHandle(selectImageAfterUnSelect?: boolean) {
         let img = this.getSelectedImage();
-        let parent = this.resizeDiv.parentNode;
+        let parent = this.resizeDiv && this.resizeDiv.parentNode;
         if (parent) {
             if (img) {
                 img.removeAttribute('contentEditable');
