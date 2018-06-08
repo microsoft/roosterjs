@@ -257,6 +257,7 @@ export default class ImageResize implements EditorPlugin {
         div.style.right = '0';
         div.style.bottom = '0';
         div.style.border = 'solid 1px ' + this.selectionBorderColor;
+        div.style.pointerEvents = 'none';
         return resizeDiv;
     }
 
