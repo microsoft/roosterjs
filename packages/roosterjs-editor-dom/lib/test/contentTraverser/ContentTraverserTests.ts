@@ -4,11 +4,7 @@ import BodyScoper from '../../contentTraverser/BodyScoper';
 import SelectionScoper from '../../contentTraverser/SelectionScoper';
 import SelectionBlockScoper from '../../contentTraverser/SelectionBlockScoper';
 import TraversingScoper from '../../contentTraverser/TraversingScoper';
-import {
-    ContentPosition,
-    NodeBoundary,
-    BlockElement,
-} from 'roosterjs-editor-types';
+import { ContentPosition, NodeBoundary, BlockElement } from 'roosterjs-editor-types';
 
 let testID = 'ContentTraverser';
 

@@ -1,7 +1,12 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { contains, fromHtml, getComputedStyle, VTable } from 'roosterjs-editor-dom';
 import { execFormatWithUndo, getNodeAtCursor } from 'roosterjs-editor-api';
-import { ContentPosition, PluginEvent, PluginEventType, PluginDomEvent } from 'roosterjs-editor-types';
+import {
+    ContentPosition,
+    PluginEvent,
+    PluginEventType,
+    PluginDomEvent,
+} from 'roosterjs-editor-types';
 
 const TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
 const HANDLE_WIDTH = 6;

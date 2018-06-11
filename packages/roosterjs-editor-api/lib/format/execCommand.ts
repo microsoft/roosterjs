@@ -25,9 +25,7 @@ export default function execCommand(
 ) {
     editor.focus();
     let formatter = () => editor.getDocument().execCommand(command, false, null);
-    let callback = doWorkaroundForList ?
-        () => workaroundForList(editor, formatter) :
-        formatter;
+    let callback = doWorkaroundForList ? () => workaroundForList(editor, formatter) : formatter;
 
     let range = editor.getSelectionRange();
     if (range && range.collapsed && !addUndoSnapshotWhenCollapsed) {
