@@ -22,19 +22,19 @@ export default function resolveInlineElement(
         parent = parent.parentNode
     ) {
         nodeChain.push(parent);
-        parent = parent.parentNode;
     }
 
     let inlineElement: InlineElement;
 
     for (let i = nodeChain.length - 1; i >= 0 && !inlineElement; i--) {
-        let tag = getTagOfNode(nodeChain[i]);
+        let currentNode = nodeChain[i];
+        let tag = getTagOfNode(currentNode);
         if (tag == 'A') {
-            inlineElement = new LinkInlineElement(node, parentBlock);
+            inlineElement = new LinkInlineElement(currentNode, parentBlock);
         } else if (tag == 'IMG') {
-            inlineElement = new ImageInlineElement(node, parentBlock);
-        } else if (node.nodeType == NodeType.Text) {
-            inlineElement = new TextInlineElement(node, parentBlock);
+            inlineElement = new ImageInlineElement(currentNode, parentBlock);
+        } else if (currentNode.nodeType == NodeType.Text) {
+            inlineElement = new TextInlineElement(currentNode, parentBlock);
         }
     }
 
