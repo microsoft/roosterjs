@@ -10,6 +10,9 @@
 // offset = NodeBoundary.Begin: begin of the node
 // offset = NodeBoudnary.End: end of node for non-textual node
 // offset = offset into text node for text node
+/**
+ * @deprecated
+ */
 export const enum NodeBoundary {
     Begin = 0,
     End = 1,

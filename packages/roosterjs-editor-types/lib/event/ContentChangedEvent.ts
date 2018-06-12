@@ -1,4 +1,4 @@
-import ChangeSource from './ChangeSource';
+import ChangeSource from '../enum/ChangeSource';
 import PluginEvent from './PluginEvent';
 
 /**

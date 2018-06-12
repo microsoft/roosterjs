@@ -1,4 +1,4 @@
-import ContentPosition from './ContentPosition';
+import ContentPosition from '../enum/ContentPosition';
 
 /**
  * Options for insertContent API

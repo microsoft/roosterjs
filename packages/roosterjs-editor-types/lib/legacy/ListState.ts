@@ -1,4 +1,7 @@
-// enum for html list state
+/**
+ * @deprecated
+ * enum for html list state
+ */
 const enum ListState {
     // Not in list state
     None,

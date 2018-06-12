@@ -1,4 +1,7 @@
-// Indicates the scope of a traversing
+/**
+ * @deprecated
+ * Indicates the scope of a traversing
+ */
 const enum ContentScope {
     // Scope to a block
     Block,

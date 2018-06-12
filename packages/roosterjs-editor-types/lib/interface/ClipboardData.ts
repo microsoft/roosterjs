@@ -1,4 +1,4 @@
-import DefaultFormat from '../editor/DefaultFormat';
+import DefaultFormat from './DefaultFormat';
 
 /**
  * An object contains all related data for pasting
