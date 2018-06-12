@@ -10,8 +10,15 @@ import {
     toggleNumbering,
     validateAndGetRangeForTextBeforeCursor,
 } from 'roosterjs-editor-api';
-import { VTable, contains, getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
-import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
+import {
+    Browser,
+    VTable,
+    contains,
+    getTagOfNode,
+    isNodeEmpty,
+    splitParentNode,
+} from 'roosterjs-editor-dom';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     ChangeSource,
     Indentation,
@@ -231,7 +238,7 @@ export default class ContentEdit implements EditorPlugin {
 
                     // If not explicitly insert br, Chrome will operate on the previous line
                     let tempBr = this.editor.getDocument().createElement('BR');
-                    if (browserData.isChrome || browserData.isSafari) {
+                    if (Browser.isChrome || Browser.isSafari) {
                         this.editor.insertNode(tempBr);
                     }
 

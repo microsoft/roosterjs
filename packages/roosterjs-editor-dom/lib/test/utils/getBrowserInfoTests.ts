@@ -1,7 +1,8 @@
-import { BrowserData, getBrowserData } from '../../utils/BrowserData';
+import { BrowserInfo } from 'roosterjs-editor-types';
+import { getBrowserInfo } from '../../utils/Browser';
 
-function runBrowserDataTest(userAgent: string, appVersion: string, expected: BrowserData): void {
-    let b = getBrowserData(userAgent, appVersion);
+function runBrowserDataTest(userAgent: string, appVersion: string, expected: BrowserInfo): void {
+    let b = getBrowserInfo(userAgent, appVersion);
     expect(b.isChrome).toBe(expected.isChrome);
     expect(b.isEdge).toBe(expected.isEdge);
     expect(b.isFirefox).toBe(expected.isFirefox);

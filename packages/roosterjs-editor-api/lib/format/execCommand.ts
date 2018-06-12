@@ -3,8 +3,8 @@ import getFormatState from './getFormatState';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { DefaultFormat, DocumentCommand, NodeType } from 'roosterjs-editor-types';
-import { Editor, browserData } from 'roosterjs-editor-core';
-import { applyFormat } from 'roosterjs-editor-dom';
+import { Editor } from 'roosterjs-editor-core';
+import { Browser, applyFormat } from 'roosterjs-editor-dom';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
 
@@ -43,7 +43,7 @@ export function workaroundForList(editor: Editor, callback: () => void) {
     let workaroundSpan: HTMLElement;
 
     // Edge may incorrectly put cursor after toggle bullet, workaround it by adding a space.
-    if (browserData.isEdge) {
+    if (Browser.isEdge) {
         let node = getNodeAtCursor(editor) as Element;
         if (node && node.nodeType == NodeType.Element && node.textContent == '') {
             workaroundSpan = editor.getDocument().createElement('span');
@@ -58,7 +58,7 @@ export function workaroundForList(editor: Editor, callback: () => void) {
     callback();
 
     // Workaround for Chrome to avoid losing format when toggle bullet
-    if (browserData.isChrome) {
+    if (Browser.isChrome) {
         queryNodesWithSelection(editor, 'LI', false /*notContainedByRangeOnly*/, listNode => {
             if (
                 listNode &&

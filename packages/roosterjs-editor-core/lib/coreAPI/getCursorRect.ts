@@ -1,7 +1,6 @@
 import EditorCore, { GetCursorRect } from '../editor/EditorCore';
 import { Rect, NodeType } from 'roosterjs-editor-types';
-import { normalizeEditorPoint, isEditorPointAfter } from 'roosterjs-editor-dom';
-import browserData from '../utils/BrowserData';
+import { Browser, normalizeEditorPoint, isEditorPointAfter } from 'roosterjs-editor-dom';
 
 /**
  * Returns a rect representing the location of the cursor.
@@ -35,7 +34,7 @@ const getCursorRect: GetCursorRect = (core: EditorCore) => {
 
     // 3) if current cursor is inside text node, use range.getClientRects() for safari or insert a SPAN and get the rect of SPAN for others
     if (!rect) {
-        if (browserData.isSafari) {
+        if (Browser.isSafari) {
             let rects = range.getClientRects();
             if (rects && rects.length == 1) {
                 rect = getRectFromClientRect(rects[0]);

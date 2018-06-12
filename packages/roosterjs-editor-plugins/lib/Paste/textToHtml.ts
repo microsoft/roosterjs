@@ -1,4 +1,4 @@
-import { browserData } from 'roosterjs-editor-core';
+import { Browser } from 'roosterjs-editor-dom';
 
 var ZERO_WIDTH_SPACE = '&#8203;';
 
@@ -21,7 +21,7 @@ export default function textToHtml(text: string): string {
         text = `<span>${lines[0]}<br></span><span>${lines[1]}</span>`;
     } else if (lines.length > 2) {
         text = '';
-        let lineEnd = browserData.isEdge || browserData.isIE ? ZERO_WIDTH_SPACE : '<br>';
+        let lineEnd = Browser.isIEOrEdge ? ZERO_WIDTH_SPACE : '<br>';
         lines.forEach((line, i) => {
             if (i == 0) {
                 text += `<span>${line}<br></span>`;

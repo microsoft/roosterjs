@@ -1,9 +1,9 @@
 import execFormatWithUndo from './execFormatWithUndo';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
-import { getTagOfNode, splitParentNode, unwrap, wrap } from 'roosterjs-editor-dom';
+import { Browser, getTagOfNode, splitParentNode, unwrap, wrap } from 'roosterjs-editor-dom';
 import { ContentScope, EditorPoint, NodeBoundary } from 'roosterjs-editor-types';
-import { Editor, browserData } from 'roosterjs-editor-core';
+import { Editor } from 'roosterjs-editor-core';
 
 var ZERO_WIDTH_SPACE = '&#8203;';
 
@@ -120,7 +120,7 @@ function getNodesWithSpecialCaseHandled(
         // In case of IE and Edge, we insert ZWS to put cursor in the div, otherwise insert BR node.
         let div = document.createElement('div');
         div.appendChild(
-            browserData.isEdge || browserData.isIE
+            Browser.isIEOrEdge
                 ? document.createTextNode(ZERO_WIDTH_SPACE)
                 : document.createElement('BR')
         );

@@ -1,4 +1,5 @@
-import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
+import { Browser } from 'roosterjs-editor-dom';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
     toggleBold,
@@ -184,7 +185,7 @@ let winCommands: ShortcutCommand[] = [
 // Try get command from the event
 function tryGetCommandFromEvent(event: PluginEvent): Command {
     if (event.eventType == PluginEventType.KeyDown) {
-        let commands = browserData.isMac ? macCommands : winCommands;
+        let commands = Browser.isMac ? macCommands : winCommands;
         let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
         for (let cmd of commands) {
             if (

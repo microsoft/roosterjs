@@ -11,8 +11,8 @@ import {
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import { matchLink } from 'roosterjs-editor-dom';
-import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
+import { Browser, matchLink } from 'roosterjs-editor-dom';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
 // we need to trim off the trailing puncatuation before turning it to link match
@@ -50,7 +50,7 @@ export default class HyperLink implements EditorPlugin {
     public initialize(editor: Editor): void {
         this.editor = editor;
 
-        if (browserData.isIE) {
+        if (Browser.isIE) {
             this.editor
                 .getDocument()
                 .execCommand(
@@ -211,9 +211,9 @@ export default class HyperLink implements EditorPlugin {
     private onClickLink = (keyboardEvent: KeyboardEvent) => {
         let href: string;
         if (
-            !browserData.isFirefox &&
+            !Browser.isFirefox &&
             (href = this.tryGetHref(keyboardEvent.srcElement)) &&
-            (browserData.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey)
+            (Browser.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey)
         ) {
             let target = this.target || '_blank';
             let window = this.editor.getDocument().defaultView;

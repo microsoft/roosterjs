@@ -2,7 +2,6 @@ import EditorCore from './EditorCore';
 import EditorOptions from './EditorOptions';
 import Undo from '../undo/Undo';
 import UndoService from './UndoService';
-import browserData from '../utils/BrowserData';
 import createEditorCore from './createEditorCore';
 import {
     ChangeSource,
@@ -19,6 +18,7 @@ import {
     Rect,
 } from 'roosterjs-editor-types';
 import {
+    Browser,
     ContentTraverser,
     NodeBlockElement,
     applyFormat,
@@ -32,8 +32,6 @@ import {
     normalizeEditorPoint,
     wrap,
 } from 'roosterjs-editor-dom';
-
-const IS_IE_OR_EDGE = browserData.isIE || browserData.isEdge;
 
 export default class Editor {
     private undoService: UndoService;
@@ -617,7 +615,7 @@ export default class Editor {
             }),
             this.core.api.attachDomEvent(
                 this.core,
-                IS_IE_OR_EDGE ? 'beforedeactivate' : 'blur',
+                Browser.isIEOrEdge ? 'beforedeactivate' : 'blur',
                 null,
                 () => {
                     this.saveSelectionRange();

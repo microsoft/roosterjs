@@ -1,4 +1,5 @@
 // Browser
+export { default as BrowserInfo } from './browser/BrowserInfo';
 export { default as DocumentCommand } from './browser/DocumentCommand';
 export { default as DocumentPosition } from './browser/DocumentPosition';
 export { default as NodeType } from './browser/NodeType';

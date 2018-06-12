@@ -27,6 +27,7 @@ export { default as PartialInlineElement } from './inlineElements/PartialInlineE
 export { default as TextInlineElement } from './inlineElements/TextInlineElement';
 export { default as resolveInlineElement } from './inlineElements/resolveInlineElement';
 
+export { default as Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
 export { default as contains } from './utils/contains';

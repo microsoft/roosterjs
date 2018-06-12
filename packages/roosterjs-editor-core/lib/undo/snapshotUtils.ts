@@ -1,7 +1,6 @@
 import Editor from '../editor/Editor';
-import browserData from '../utils/BrowserData';
 import { EditorPoint, NodeBoundary, NodeType } from 'roosterjs-editor-types';
-import { normalizeEditorPoint } from 'roosterjs-editor-dom';
+import { Browser, normalizeEditorPoint } from 'roosterjs-editor-dom';
 
 // Undo cursor marker
 const CURSOR_START = 'cursor-start';
@@ -22,7 +21,7 @@ export function buildSnapshot(editor: Editor): string {
     // The insertion of cursor marker for some reasons has caused the selection maintained in browser to be lost.
     // This restores the selection prior to removing the cursor marker.
     // The code may throw error for Firefox and IE, hence keep it only for Mac Safari
-    if (browserData.isSafari) {
+    if (Browser.isSafari) {
         updateSelectionToCursorMarkers(editor);
     }
 
