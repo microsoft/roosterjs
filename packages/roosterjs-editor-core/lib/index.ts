@@ -7,12 +7,11 @@ export {
     Focus,
     GetContentTraverser,
     GetCustomData,
-    GetCursorRect,
     GetSelectionRange,
     HasFocus,
     InsertNode,
+    Select,
     TriggerEvent,
-    UpdateSelection,
 } from './editor/EditorCore';
 export { default as EditorOptions } from './editor/EditorOptions';
 export { default as EditorPlugin } from './editor/EditorPlugin';

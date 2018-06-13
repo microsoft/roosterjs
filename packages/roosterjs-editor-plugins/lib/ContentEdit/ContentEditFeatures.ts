@@ -56,6 +56,12 @@ interface ContentEditFeatures {
      * @default true
      */
     tabInTable: boolean;
+
+    /**
+     * When press Up or Down in table cell, jump to the table cell above/below
+     * @default true
+     */
+    upDownInTable: boolean;
 }
 
 export default ContentEditFeatures;
@@ -74,5 +80,6 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         unquoteWhenEnterOnEmptyLine: true,
         autoBullet: true,
         tabInTable: true,
+        upDownInTable: true,
     };
 }

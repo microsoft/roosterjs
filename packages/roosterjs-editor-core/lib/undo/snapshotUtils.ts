@@ -1,5 +1,5 @@
 import Editor from '../editor/Editor';
-import { EditorPoint, NodeBoundary, NodeType } from 'roosterjs-editor-types';
+import { EditorPoint, NodeBoundary, NodeType, PositionType } from 'roosterjs-editor-types';
 import { Browser, normalizeEditorPoint } from 'roosterjs-editor-dom';
 
 // Undo cursor marker
@@ -72,10 +72,7 @@ function updateSelectionToCursorMarkers(editor: Editor) {
     let endMarker = getCursorMarkerByUniqueId(editor, CURSOR_END);
 
     if (startMarker && endMarker) {
-        let selectionRange = editor.getDocument().createRange();
-        selectionRange.setEndBefore(endMarker);
-        selectionRange.setStartAfter(startMarker);
-        editor.updateSelection(selectionRange);
+        editor.select(startMarker, PositionType.After, endMarker, PositionType.Before);
     }
 }
 

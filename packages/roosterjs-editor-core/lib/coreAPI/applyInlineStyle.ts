@@ -1,5 +1,5 @@
 import EditorCore, { ApplyInlineStyle } from '../editor/EditorCore';
-import { ContentScope } from 'roosterjs-editor-types';
+import { ContentScope, PositionType } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
 
@@ -26,10 +26,7 @@ function applyInlineStyleToCollapsedSelection(
     // This is needed so that the cursor still looks blinking inside editor
     // This also means an extra ZWS will be in editor
     // TODO: somewhere in returning content to consumer, we may need to do a cleanup for ZWS
-    let updatedRange = core.document.createRange();
-    updatedRange.selectNodeContents(element);
-    updatedRange.collapse(false /* toStart */);
-    core.api.updateSelection(core, updatedRange);
+    core.api.select(core, element, PositionType.End);
 }
 
 // Apply style to non collapsed selection
@@ -64,10 +61,7 @@ function applyInlineStyleToNonCollapsedSelection(
     // When selectionStartNode/EndNode is set, it means there is DOM change. Re-create the selection
     if (startNode && endNode) {
         // Set the selection
-        let updatedRange = core.document.createRange();
-        updatedRange.setStartBefore(startNode);
-        updatedRange.setEndAfter(endNode);
-        core.api.updateSelection(core, updatedRange);
+        core.api.select(core, startNode, PositionType.Before, endNode, PositionType.After);
     }
 }
 

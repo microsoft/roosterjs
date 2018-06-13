@@ -1,7 +1,7 @@
 import execFormatWithUndo from '../format/execFormatWithUndo';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import { Editor } from 'roosterjs-editor-core';
-import { TableOperation } from 'roosterjs-editor-types';
+import { TableOperation, PositionType } from 'roosterjs-editor-types';
 import { VTable, contains } from 'roosterjs-editor-dom';
 
 /**
@@ -147,8 +147,7 @@ export default function editTable(editor: Editor, operation: TableOperation) {
         );
         let range = editor.getSelectionRange();
         if (!contains(td, range.startContainer) && td != range.startContainer) {
-            range.setStart(td, 0);
-            editor.updateSelection(range);
+            editor.select(td, PositionType.Begin);
             editor.focus();
         }
     }

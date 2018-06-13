@@ -27,10 +27,7 @@ export default function removeLink(editor: Editor) {
                 editor.contains(startPoint.containerNode) &&
                 editor.contains(endPoint.containerNode)
             ) {
-                let newRange = editor.getDocument().createRange();
-                newRange.setStart(startPoint.containerNode, startPoint.offset);
-                newRange.setEnd(endPoint.containerNode, endPoint.offset);
-                editor.updateSelection(newRange);
+                editor.select(startPoint.containerNode, startPoint.offset, endPoint.containerNode, endPoint.offset);
             }
         });
     }

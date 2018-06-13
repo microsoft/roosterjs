@@ -13,7 +13,7 @@ import {
     unwrap,
     wrap,
 } from 'roosterjs-editor-dom';
-import { ContentPosition, InsertOption, NodeType } from 'roosterjs-editor-types';
+import { ContentPosition, InsertOption, NodeType, PositionType } from 'roosterjs-editor-types';
 
 const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOption) => {
     option = option || {
@@ -167,11 +167,9 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
         let nodeForCursor = node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
         selectionRange.insertNode(node);
         if (option.updateCursor && nodeForCursor) {
-            selectionRange.setEndAfter(nodeForCursor);
-            selectionRange.collapse(false /*toStart*/);
-            core.api.updateSelection(core, selectionRange);
+            core.api.select(core, nodeForCursor, PositionType.After);
         } else {
-            core.api.updateSelection(core, range);
+            core.api.select(core, range);
         }
     }
 }

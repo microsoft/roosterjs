@@ -5,12 +5,11 @@ import attachDomEvent from '../coreAPI/attachDomEvent';
 import focus from '../coreAPI/focus';
 import getContentTraverser from '../coreAPI/getContentTraverser';
 import getCustomData from '../coreAPI/getCustomData';
-import getCursorRect from '../coreAPI/getCursorRect';
 import getSelectionRange from '../coreAPI/getSelectionRange';
 import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
 import triggerEvent from '../coreAPI/triggerEvent';
-import updateSelection from '../coreAPI/updateSelection';
+import select from '../coreAPI/select';
 import { DefaultFormat } from 'roosterjs-editor-types';
 import { getComputedStyle } from 'roosterjs-editor-dom';
 
@@ -56,11 +55,10 @@ function createCoreApiMap(map: Partial<CoreApiMap>): CoreApiMap {
         focus: map.focus || focus,
         getContentTraverser: map.getContentTraverser || getContentTraverser,
         getCustomData: map.getCustomData || getCustomData,
-        getCursorRect: map.getCursorRect || getCursorRect,
         getSelectionRange: map.getSelectionRange || getSelectionRange,
         hasFocus: map.hasFocus || hasFocus,
         insertNode: map.insertNode || insertNode,
         triggerEvent: map.triggerEvent || triggerEvent,
-        updateSelection: map.updateSelection || updateSelection,
+        select: map.select || select,
     };
 }

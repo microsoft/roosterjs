@@ -27,6 +27,7 @@ import {
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
+    PositionType,
 } from 'roosterjs-editor-types';
 import ContentEditFeatures, { getDefaultContentEditFeatures } from './ContentEditFeatures';
 
@@ -34,6 +35,8 @@ const KEY_TAB = 9;
 const KEY_BACKSPACE = 8;
 const KEY_ENTER = 13;
 const KEY_SPACE = 32;
+const KEY_UP = 38;
+const KEY_DOWN = 40;
 const BLOCKQUOTE_TAG_NAME = 'BLOCKQUOTE';
 
 /**
@@ -114,20 +117,15 @@ export default class ContentEdit implements EditorPlugin {
                         this.toggleList(event);
                     } else {
                         let document = this.editor.getDocument();
-                        document.defaultView.requestAnimationFrame(() => {
-                            if (this.editor) {
-                                let br = document.createElement('br');
-                                this.editor.insertNode(br);
-                                let range = document.createRange();
-                                range.setStartAfter(br);
-                                this.editor.updateSelection(range);
-                            }
+                        this.editor.runAsync(() => {
+                            let br = document.createElement('br');
+                            this.editor.insertNode(br);
+                            this.editor.select(br, PositionType.After);
                         });
                     }
                 }
             }
         } else if (this.isTabInTable(event)) {
-            let range = this.editor.getDocument().createRange();
             for (
                 let td = this.cacheGetTd(event),
                     vtable = new VTable(td),
@@ -140,25 +138,43 @@ export default class ContentEdit implements EditorPlugin {
                 if (col < 0 || col >= vtable.cells[row].length) {
                     row += step;
                     if (row < 0 || row >= vtable.cells.length) {
-                        if (keyboardEvent.shiftKey) {
-                            range.setStartBefore(vtable.table);
-                        } else {
-                            range.setEndAfter(vtable.table);
-                            range.collapse(false /*toStart*/);
-                        }
-                        this.editor.updateSelection(range);
+                        this.editor.select(vtable.table, keyboardEvent.shiftKey ? PositionType.Before : PositionType.After);
                         break;
                     }
                     col = keyboardEvent.shiftKey ? vtable.cells[row].length - 1 : 0;
                 }
                 let cell = vtable.getCell(row, col);
                 if (cell.td) {
-                    range.setStart(cell.td, 0);
-                    this.editor.updateSelection(range);
+                    this.editor.select(cell.td, PositionType.Begin);
                     break;
                 }
             }
             keyboardEvent.preventDefault();
+        } else if (this.isUpDownInTable(event)) {
+            let td = this.cacheGetTd(event);
+            let vtable = new VTable(td);
+            let isUp = keyboardEvent.which == KEY_UP
+            let step = isUp ? -1 : 1;
+            let targetTd: HTMLTableCellElement = null;
+
+            for (let row = vtable.row; row >= 0 && row < vtable.cells.length; row += step) {
+                let cell = vtable.getCell(row, vtable.col);
+                if (cell.td && cell.td != td) {
+                    targetTd = cell.td;
+                    break;
+                }
+            }
+
+            this.editor.runAsync(() => {
+                let newContainer = getNodeAtCursor(this.editor);
+                if (!contains(td, newContainer, true /*treatSameNodeAsContain*/)) {
+                    if (targetTd) {
+                        this.editor.select(targetTd, PositionType.Begin);
+                    } else {
+                        this.editor.select(vtable.table, isUp ? PositionType.Before : PositionType.After);
+                    }
+                }
+            })
         } else if ((blockQuoteElement = this.getBlockQuoteElementFromEvent(event, keyboardEvent))) {
             let node = getNodeAtCursor(this.editor);
             if (node && node != blockQuoteElement) {
@@ -178,10 +194,7 @@ export default class ContentEdit implements EditorPlugin {
                             blockQuoteElement.parentNode.removeChild(blockQuoteElement);
                         }
 
-                        let range = this.editor.getSelectionRange();
-                        range.selectNode(node);
-                        range.collapse(true /*toStart*/);
-                        this.editor.updateSelection(range);
+                        this.editor.select(node, PositionType.Before);
                     });
                 }
             }
@@ -297,6 +310,16 @@ export default class ContentEdit implements EditorPlugin {
             this.features.tabInTable &&
             event.eventType == PluginEventType.KeyDown &&
             keyboardEvent.which == KEY_TAB &&
+            !!this.cacheGetTd(event)
+        );
+    }
+
+    private isUpDownInTable(event: PluginEvent): boolean {
+        let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+        return (
+            this.features.upDownInTable &&
+            event.eventType == PluginEventType.KeyDown &&
+            (keyboardEvent.which == KEY_UP || keyboardEvent.which == KEY_DOWN) &&
             !!this.cacheGetTd(event)
         );
     }

@@ -6,7 +6,6 @@ import {
     InsertOption,
     PluginEvent,
     PluginEventType,
-    Rect,
 } from 'roosterjs-editor-types';
 import { ContentTraverser } from 'roosterjs-editor-dom';
 
@@ -42,7 +41,6 @@ export type GetContentTraverser = (
     scope: ContentScope,
     position?: ContentPosition
 ) => ContentTraverser;
-export type GetCursorRect = (core: EditorCore) => Rect;
 export type GetCustomData = <T>(
     core: EditorCore,
     key: string,
@@ -52,8 +50,8 @@ export type GetCustomData = <T>(
 export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => Range;
 export type HasFocus = (core: EditorCore) => boolean;
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
+export type Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => boolean;
 export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcast: boolean) => void;
-export type UpdateSelection = (core: EditorCore, range: Range) => boolean;
 
 export interface CoreApiMap {
     applyInlineStyle: ApplyInlineStyle;
@@ -61,10 +59,9 @@ export interface CoreApiMap {
     focus: Focus;
     getContentTraverser: GetContentTraverser;
     getCustomData: GetCustomData;
-    getCursorRect: GetCursorRect;
     getSelectionRange: GetSelectionRange;
     hasFocus: HasFocus;
     insertNode: InsertNode;
+    select: Select;
     triggerEvent: TriggerEvent;
-    updateSelection: UpdateSelection;
 }

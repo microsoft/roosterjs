@@ -15,12 +15,15 @@ import {
     NodeType,
     PluginEvent,
     PluginEventType,
+    PositionType,
     Rect,
 } from 'roosterjs-editor-types';
 import {
     Browser,
     ContentTraverser,
     NodeBlockElement,
+    Position,
+    SelectionRange,
     applyFormat,
     contains,
     fromHtml,
@@ -361,12 +364,76 @@ export default class Editor {
     }
 
     /**
+     * Select content by range
+     * @param range The range to select
+     * @returns True if content is selected, otherwise false
+     */
+    public select(range: Range): boolean;
+
+    /**
+     * Select content by SelectionRange
+     * @param range The SelectionRange object which represents the content range to select
+     * @returns True if content is selected, otherwise false
+     */
+    public select(range: SelectionRange): boolean;
+
+    /**
+     * Select content by Position and collapse to this position
+     * @param position The position to select
+     * @returns True if content is selected, otherwise false
+     */
+    public select(position: Position): boolean;
+
+    /**
+     * Select content by a start and end position
+     * @param start The start position to select
+     * @param end The end position to select, if this is the same with start, the selection will be collapsed
+     * @returns True if content is selected, otherwise false
+     */
+    public select(start: Position, end: Position): boolean;
+
+    /**
+     * Select content by node
+     * @param node The node to select
+     * @returns True if content is selected, otherwise false
+     */
+    public select(node: Node): boolean;
+
+    /**
+     * Select content by node and offset, and collapse to this position
+     * @param node The node to select
+     * @param offset The offset of node to select, can be a number or value of PositionType
+     * @returns True if content is selected, otherwise false
+     */
+    public select(node: Node, offset: number | PositionType): boolean;
+
+    /**
+     * Select content by start and end nodes and offsets
+     * @param startNode The node to select start from
+     * @param startOffset The offset to select start from
+     * @param endNode The node to select end to
+     * @param endOffset The offset to select end to
+     * @returns True if content is selected, otherwise false
+     */
+    public select(
+        startNode: Node,
+        startOffset: number | PositionType,
+        endNode: Node,
+        endOffset: number | PositionType
+    ): boolean;
+
+    public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
+        return this.core.api.select(this.core, arg1, arg2, arg3, arg4);
+    }
+
+    /**
+     * @deprecated Use select() instead
      * Update selection in editor
      * @param selectionRange The selection range to update to
      * @returns true if selection range is updated. Otherwise false.
      */
     public updateSelection(selectionRange: Range): boolean {
-        return this.core.api.updateSelection(this.core, selectionRange);
+        return this.select(selectionRange);
     }
 
     /**
@@ -384,7 +451,14 @@ export default class Editor {
      * @returns a Rect object representing cursor location
      */
     public getCursorRect(): Rect {
-        return this.core.api.getCursorRect(this.core);
+        let selection = this.core.document.defaultView.getSelection();
+
+        if (!selection || !selection.focusNode) {
+            return null;
+        }
+
+        let position = new Position(selection.focusNode, selection.focusOffset);
+        return position.getRect();
     }
 
     /**
@@ -709,7 +783,7 @@ export default class Editor {
 
         range.collapse(true /* toStart */);
 
-        return this.core.api.updateSelection(this.core, range);
+        return this.core.api.select(this.core, range);
     }
 
     private ensureInitialContent() {

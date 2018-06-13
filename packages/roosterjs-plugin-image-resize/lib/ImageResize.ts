@@ -7,6 +7,7 @@ import {
     PluginEventType,
     PluginDomEvent,
     ExtractContentEvent,
+    PositionType,
 } from 'roosterjs-editor-types';
 import { contains, getTagOfNode } from 'roosterjs-editor-dom';
 import { execFormatWithUndo } from 'roosterjs-editor-api';
@@ -89,7 +90,7 @@ export default class ImageResize implements EditorPlugin {
                 event.which != CTRL_KEYCODE &&
                 event.which != ALT_KEYCODE
             ) {
-                this.hideResizeHandle(true /*selectImageAfterUnSelect*/);
+                this.hideResizeHandle();
             }
         } else if (
             e.eventType == PluginEventType.ContentChanged &&
@@ -110,10 +111,7 @@ export default class ImageResize implements EditorPlugin {
     showResizeHandle(img: HTMLImageElement) {
         this.resizeDiv = this.createResizeDiv(img);
         img.contentEditable = 'false';
-        let range = document.createRange();
-        range.setEndAfter(this.resizeDiv);
-        range.collapse(false /*toStart*/);
-        this.editor.updateSelection(range);
+        this.editor.select(this.resizeDiv, PositionType.After);
     }
 
     /**
@@ -134,9 +132,9 @@ export default class ImageResize implements EditorPlugin {
                 parent.insertBefore(img, referenceNode);
 
                 if (selectImageAfterUnSelect) {
-                    let range = this.editor.getDocument().createRange();
-                    range.selectNode(img);
-                    this.editor.updateSelection(range);
+                    this.editor.select(img);
+                } else {
+                    this.editor.select(img, PositionType.After);
                 }
             }
             this.removeResizeDiv(this.resizeDiv);

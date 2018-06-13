@@ -59,7 +59,7 @@ function updateSelection(
         return;
     }
 
-    editor.updateSelection(range);
+    editor.select(range);
 }
 
 function validateEditorPoint(editor: Editor, point: EditorPoint): boolean {

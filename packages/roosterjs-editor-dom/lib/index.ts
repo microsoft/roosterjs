@@ -57,3 +57,6 @@ export { default as isTextualInlineElement } from './deprecated/isTextualInlineE
 export { default as wrapAll } from './deprecated/wrapAll';
 export { default as EditorSelection } from './contentTraverser/EditorSelection';
 export { default as TraversingScoper } from './contentTraverser/TraversingScoper';
+
+export { default as Position } from './selection/Position';
+export { default as SelectionRange } from './selection/SelectionRange';
