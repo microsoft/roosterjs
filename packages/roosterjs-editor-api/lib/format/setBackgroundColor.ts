@@ -1,4 +1,3 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -13,7 +12,7 @@ export default function setBackgroundColor(editor: Editor, color: string) {
     // TODO: Verify color
     let validatedColor = color.trim();
     if (validatedColor) {
-        execFormatWithUndo(editor, () => {
+        editor.addUndoSnapshot(() => {
             editor.applyInlineStyle((element: HTMLElement) => {
                 element.style.backgroundColor = validatedColor;
             });

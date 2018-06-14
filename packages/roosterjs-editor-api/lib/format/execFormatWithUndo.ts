@@ -1,78 +1,36 @@
 import { Editor } from 'roosterjs-editor-core';
-import { ChangeSource, EditorPoint, NodeType } from 'roosterjs-editor-types';
+import { EditorPoint } from 'roosterjs-editor-types';
 
 /**
+ * @deprecated Use Editor.editWithUndo() instead
  * Formatter function type
  * @param startPoint Current selection start point
  * @param endPoint Current selection end point
  * @returns A fallback node for selection. When original selection range is not valid after format,
  * will try to select this element instead
  */
-export type Formatter = (startPoint: EditorPoint, endPoint: EditorPoint) => Node | void | any;
+export type Formatter = (startPoint?: EditorPoint, endPoint?: EditorPoint) => Node | void | any;
 
 /**
- * Execute format with undo
- * It tries to add undo snapshot at begin and end of the function. Duplicated snapshot will only be added once
- * @param editor The editor instance
- * @param formatter The callback format function we want to perform, it also creates a fallback node for selection.
- * A fallback node is a node to update selection to if start point or end point is not avaiable/valid
- * @param preserveSelection (Optional) Whether to preserve selection, if set to true,
- * we update the selection to original selection range.
+ * @deprecated Use Editor.editWithUndo() instead
  */
 export default function execFormatWithUndo(
     editor: Editor,
     formatter: Formatter,
     preserveSelection?: boolean
 ) {
-    editor.addUndoSnapshot();
-    let range = editor.getSelectionRange();
-    let startPoint = range
-        ? { containerNode: range.startContainer, offset: range.startOffset }
-        : null;
-    let endPoint = range ? { containerNode: range.endContainer, offset: range.endOffset } : null;
-
-    let fallbackNode = formatter(startPoint, endPoint);
-    editor.triggerContentChangedEvent(ChangeSource.Format);
-
-    if (preserveSelection && startPoint && endPoint) {
-        updateSelection(editor, startPoint, endPoint, <Node>fallbackNode);
-    }
-
-    editor.addUndoSnapshot();
-}
-
-function updateSelection(
-    editor: Editor,
-    startPoint: EditorPoint,
-    endPoint: EditorPoint,
-    fallbackNode: Node
-) {
-    editor.focus();
-    let range = editor.getDocument().createRange();
-
-    if (validateEditorPoint(editor, startPoint) && validateEditorPoint(editor, endPoint)) {
-        range.setStart(startPoint.containerNode, startPoint.offset);
-        range.setEnd(endPoint.containerNode, endPoint.offset);
-    } else if (fallbackNode instanceof Node) {
-        range.selectNode(fallbackNode);
-    } else {
-        return;
-    }
-
-    editor.select(range);
-}
-
-function validateEditorPoint(editor: Editor, point: EditorPoint): boolean {
-    if (point.containerNode && editor.contains(point.containerNode)) {
-        if (point.containerNode.nodeType == NodeType.Text) {
-            point.offset = Math.min(point.offset, (<Text>point.containerNode).data.length);
-        } else if (point.containerNode.nodeType == NodeType.Element) {
-            point.offset = Math.min(
-                point.offset,
-                (<HTMLElement>point.containerNode).childNodes.length
-            );
+    editor.addUndoSnapshot((start, end) => {
+        let startPoint = {
+            containerNode: start.node,
+            offset: start.offset,
+        };
+        let endPoint = {
+            containerNode: end.node,
+            offset: end.offset,
+        };
+        let node = formatter(startPoint, endPoint);
+        if (preserveSelection && !editor.select(startPoint.containerNode, startPoint.offset, endPoint.containerNode, endPoint.offset) && node instanceof Node) {
+            editor.select(node);
         }
-        return point.offset >= 0;
-    }
-    return false;
+    });
 }

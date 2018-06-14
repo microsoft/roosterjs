@@ -1,4 +1,3 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -12,7 +11,7 @@ export default function setFontName(editor: Editor, fontName: string) {
     // TODO: Verify font name
     let validatedFontName = fontName.trim();
     if (validatedFontName) {
-        execFormatWithUndo(editor, () => {
+        editor.addUndoSnapshot(() => {
             // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
             // (http://www.w3schools.com/tags/tag_font.asp). Use editor.applyInlineStyle which gives flexibility on applying inline style
             // for here, we use CSS font-family style

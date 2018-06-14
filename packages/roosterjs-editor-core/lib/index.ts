@@ -4,6 +4,7 @@ export {
     CoreApiMap,
     ApplyInlineStyle,
     AttachDomEvent,
+    EditWithUndo,
     Focus,
     GetContentTraverser,
     GetCustomData,

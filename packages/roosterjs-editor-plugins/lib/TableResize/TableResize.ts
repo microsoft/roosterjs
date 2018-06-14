@@ -1,6 +1,6 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { contains, fromHtml, getComputedStyle, VTable } from 'roosterjs-editor-dom';
-import { execFormatWithUndo, getNodeAtCursor } from 'roosterjs-editor-api';
+import { getNodeAtCursor } from 'roosterjs-editor-api';
 import {
     ContentPosition,
     PluginEvent,
@@ -160,11 +160,10 @@ export default class TableResize implements EditorPlugin {
                 this.td.clientWidth -
                 cellPadding * 2 +
                 (e.pageX - this.initialPageX) * (this.isRtl(table) ? -1 : 1);
-            execFormatWithUndo(
-                this.editor,
-                () => this.setTableColumnWidth(newWidth + 'px'),
-                true /*preserveSelection*/
-            );
+            this.editor.addUndoSnapshot((start, end) => {
+                this.setTableColumnWidth(newWidth + 'px');
+                this.editor.select(start, end);
+            });
         }
 
         this.pageX = -1;

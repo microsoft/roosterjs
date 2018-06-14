@@ -1,4 +1,3 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import getFormatState from './getFormatState';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
@@ -31,7 +30,7 @@ export default function execCommand(
     if (range && range.collapsed && !addUndoSnapshotWhenCollapsed) {
         callback();
     } else {
-        execFormatWithUndo(editor, callback);
+        editor.addUndoSnapshot(callback);
     }
 }
 
@@ -39,7 +38,7 @@ export default function execCommand(
  * Browsers don't handle bullet/numbering list well, especially the formats when switching list statue
  * So we workaround it by always adding format to list element
  */
-export function workaroundForList(editor: Editor, callback: () => void) {
+function workaroundForList(editor: Editor, callback: () => void) {
     let workaroundSpan: HTMLElement;
 
     // Edge may incorrectly put cursor after toggle bullet, workaround it by adding a space.

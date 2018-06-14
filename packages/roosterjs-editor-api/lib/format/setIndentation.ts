@@ -1,9 +1,7 @@
-import execFormatWithUndo from './execFormatWithUndo';
-import getFormatState from '../format/getFormatState';
+import execCommand from './execCommand';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { Editor } from 'roosterjs-editor-core';
-import { Indentation } from 'roosterjs-editor-types';
-import { workaroundForList } from './execCommand';
+import { DocumentCommand, Indentation } from 'roosterjs-editor-types';
 
 /**
  * Set indentation at selection
@@ -14,19 +12,16 @@ import { workaroundForList } from './execCommand';
  * Indentation.Increase to increase indentation or Indentation.Decrease to decrease indentation
  */
 export default function setIndentation(editor: Editor, indentation: Indentation) {
-    editor.focus();
-    let command = indentation == Indentation.Increase ? 'indent' : 'outdent';
-    execFormatWithUndo(editor, () => {
-        workaroundForList(editor, () => {
-            let format = getFormatState(editor);
-            editor.getDocument().execCommand(command, false, null);
-            if (!format.isBullet && !format.isNumbering) {
-                let nodes = queryNodesWithSelection(editor, 'blockquote');
-                nodes.forEach(node => {
-                    (<HTMLElement>node).style.marginTop = '0px';
-                    (<HTMLElement>node).style.marginBottom = '0px';
-                });
-            }
-        });
+    let command = indentation == Indentation.Increase ? DocumentCommand.Indent : DocumentCommand.Outdent;
+    editor.addUndoSnapshot(() => {
+        let isInlist = queryNodesWithSelection(editor, 'OL,UL').length > 0;
+        execCommand(editor, command, true /*addUndoSnapshotWhenCollapsed*/, true /*doWorkaroundForList*/);
+
+        if (!isInlist) {
+            queryNodesWithSelection(editor, 'BLOCKQUOTE', false /*nodeContainedByRangeOnly*/ , node => {
+                node.style.marginTop = '0px';
+                node.style.marginBottom = '0px';
+            });
+        }
     });
 }

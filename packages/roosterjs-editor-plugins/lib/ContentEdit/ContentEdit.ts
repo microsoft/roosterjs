@@ -3,7 +3,7 @@ import {
     setIndentation,
     cacheGetNodeAtCursor,
     cacheGetListState,
-    execFormatWithUndo,
+    clearCursorEventDataCache,
     getNodeAtCursor,
     queryNodesWithSelection,
     toggleBullet,
@@ -183,7 +183,7 @@ export default class ContentEdit implements EditorPlugin {
                 }
                 if (node.parentNode == blockQuoteElement && this.shouldToggleState(event, node)) {
                     keyboardEvent.preventDefault();
-                    execFormatWithUndo(this.editor, () => {
+                    this.editor.addUndoSnapshot(() => {
                         splitParentNode(node, false /*splitBefore*/);
 
                         blockQuoteElement.parentNode.insertBefore(
@@ -226,53 +226,47 @@ export default class ContentEdit implements EditorPlugin {
             !cursorData.getFirstNonTextInlineBeforeCursor()
         ) {
             this.editor.runAsync(() => {
-                let listNode: Node;
+                this.editor.addUndoSnapshot(
+                    () => {
+                        let cursorData = cacheGetCursorEventData(event, this.editor);
+                        let textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
+                        // Remove the user input '*', '-' or '1.'
+                        let rangeToDelete =
+                            validateAndGetRangeForTextBeforeCursor(
+                                this.editor,
+                                textBeforeCursor,
+                                true /*exactMatch*/,
+                                cursorData
+                            );
+                        if (rangeToDelete) {
+                            rangeToDelete.deleteContents();
+                        }
 
-                // editor.insertContent(NBSP);
-                this.editor.addUndoSnapshot();
-                this.editor.runWithoutAddingUndoSnapshot(() => {
-                    // Remove the user input '*', '-' or '1.'
-                    let rangeToDelete =
-                        validateAndGetRangeForTextBeforeCursor(
-                            this.editor,
-                            textBeforeCursor + '\u00A0', // Add the &nbsp; we just inputted
-                            true /*exactMatch*/,
-                            cursorData
-                        ) ||
-                        validateAndGetRangeForTextBeforeCursor(
-                            this.editor,
-                            textBeforeCursor + ' ', // Add the &nbsp; we just inputted
-                            true /*exactMatch*/,
-                            cursorData
-                        );
-                    if (rangeToDelete) {
-                        rangeToDelete.deleteContents();
-                    }
+                        // If not explicitly insert br, Chrome will operate on the previous line
+                        let tempBr = this.editor.getDocument().createElement('BR');
+                        if (Browser.isChrome || Browser.isSafari) {
+                            this.editor.insertNode(tempBr);
+                        }
 
-                    // If not explicitly insert br, Chrome will operate on the previous line
-                    let tempBr = this.editor.getDocument().createElement('BR');
-                    if (Browser.isChrome || Browser.isSafari) {
-                        this.editor.insertNode(tempBr);
-                    }
+                        let listNode: Node;
 
-                    if (textBeforeCursor == '1.') {
-                        toggleNumbering(this.editor);
-                        listNode = getNodeAtCursor(this.editor, 'OL');
-                    } else {
-                        toggleBullet(this.editor);
-                        listNode = getNodeAtCursor(this.editor, 'UL');
-                    }
+                        if (textBeforeCursor.indexOf('1.') == 0) {
+                            toggleNumbering(this.editor);
+                            listNode = getNodeAtCursor(this.editor, 'OL');
+                        } else {
+                            toggleBullet(this.editor);
+                            listNode = getNodeAtCursor(this.editor, 'UL');
+                        }
 
-                    this.editor.deleteNode(tempBr);
-                });
+                        this.editor.deleteNode(tempBr);
+                        return listNode;
+                    },
+                    ChangeSource.AutoBullet
+                );
 
-                this.editor.addUndoSnapshot();
-
-                if (listNode) {
-                    this.editor.triggerContentChangedEvent(ChangeSource.AutoBullet, listNode);
-                    this.backspaceToUndo = true;
-                }
+                this.backspaceToUndo = true;
             });
+            clearCursorEventDataCache(event);
         }
     }
 

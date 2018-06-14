@@ -1,6 +1,5 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
-import { ChangeSource } from 'roosterjs-editor-types';
+import { ChangeSource, DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { matchLink } from 'roosterjs-editor-dom';
 
@@ -66,40 +65,44 @@ export default function createLink(
         // if the link starts with ftp.xxx, we will add ftp:// link. For more, see applyLinkPrefix
         let normalizedUrl = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
         let originalUrl = linkData ? linkData.originalUrl : url;
-        let anchor: HTMLAnchorElement = null;
 
-        execFormatWithUndo(editor, () => {
-            let range = editor.getSelectionRange();
-            if (range && range.collapsed) {
-                anchor = getAnchorNodeAtCursor(editor);
+        editor.addUndoSnapshot(
+            () => {
+                let range = editor.getSelectionRange();
+                let anchor: HTMLAnchorElement = null;
+                if (range && range.collapsed) {
+                    anchor = getAnchorNodeAtCursor(editor);
 
-                // If there is already a link, just change its href
-                if (anchor) {
-                    anchor.href = normalizedUrl;
-                    // Change text content if it is specified
-                    updateAnchorDisplayText(anchor, displayText);
+                    // If there is already a link, just change its href
+                    if (anchor) {
+                        anchor.href = normalizedUrl;
+                        // Change text content if it is specified
+                        updateAnchorDisplayText(anchor, displayText);
+                    } else {
+                        anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
+                        anchor.textContent = displayText || originalUrl;
+                        anchor.href = normalizedUrl;
+                        editor.insertNode(anchor);
+                    }
                 } else {
-                    anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
-                    anchor.textContent = displayText || originalUrl;
-                    anchor.href = normalizedUrl;
-                    editor.insertNode(anchor);
+                    /* the selection is not collapsed, use browser execCommand */
+                    editor
+                        .getDocument()
+                        .execCommand(DocumentCommand.CreateLink, false, normalizedUrl);
+                    anchor = getAnchorNodeAtCursor(editor);
+                    updateAnchorDisplayText(anchor, displayText);
                 }
-            } else {
-                /* the selection is not collapsed, use browser execCommand */
-                editor.getDocument().execCommand('createLink', false, normalizedUrl);
-                anchor = getAnchorNodeAtCursor(editor);
-                updateAnchorDisplayText(anchor, displayText);
-            }
-            if (altText && anchor) {
-                // Hack: Ideally this should be done by HyperLink plugin.
-                // We make a hack here since we don't have an event to notify HyperLink plugin
-                // before we apply the link.
-                anchor.removeAttribute(TEMP_TITLE);
-                anchor.title = altText;
-            }
-        });
-
-        editor.triggerContentChangedEvent(ChangeSource.CreateLink, anchor);
+                if (altText && anchor) {
+                    // Hack: Ideally this should be done by HyperLink plugin.
+                    // We make a hack here since we don't have an event to notify HyperLink plugin
+                    // before we apply the link.
+                    anchor.removeAttribute(TEMP_TITLE);
+                    anchor.title = altText;
+                }
+                return anchor;
+            },
+            ChangeSource.CreateLink
+        );
     }
 }
 

@@ -1,7 +1,6 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { Editor } from 'roosterjs-editor-core';
-import { ContentScope, NodeType } from 'roosterjs-editor-types';
+import { ContentScope, DocumentCommand, NodeType } from 'roosterjs-editor-types';
 
 /**
  * Toggle header at selection
@@ -13,13 +12,13 @@ import { ContentScope, NodeType } from 'roosterjs-editor-types';
 export default function toggleHeader(editor: Editor, level: number) {
     level = Math.min(Math.max(Math.round(level), 0), 6);
 
-    execFormatWithUndo(editor, () => {
+    editor.addUndoSnapshot((start, end) => {
         editor.focus();
 
         let wrapped = false;
         queryNodesWithSelection(editor, 'H1,H2,H3,H4,H5,H6', false, header => {
             if (!wrapped) {
-                editor.getDocument().execCommand('formatBlock', false, '<DIV>');
+                editor.getDocument().execCommand(DocumentCommand.FormatBlock, false, '<DIV>');
                 wrapped = true;
             }
 
@@ -43,7 +42,7 @@ export default function toggleHeader(editor: Editor, level: number) {
                 }
                 inlineElement = traverser.getNextInlineElement();
             }
-            editor.getDocument().execCommand('formatBlock', false, `<H${level}>`);
+            editor.getDocument().execCommand(DocumentCommand.FormatBlock, false, `<H${level}>`);
         }
     });
 }
