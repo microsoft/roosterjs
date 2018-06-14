@@ -16,8 +16,9 @@ const editWithUndo: EditWithUndo = (
 
     try {
         if (callback) {
-            let range = new SelectionRange(core.api.getSelectionRange(core, true /*tryGetFromCache*/)).normalize();
-            let data = callback(range.start, range.end);
+            let range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
+            let selectionRange = range && new SelectionRange(range).normalize();
+            let data = selectionRange ? callback(selectionRange.start, selectionRange.end) : callback(null, null);
 
             if (!isNested) {
                 core.undo.addUndoSnapshot();
