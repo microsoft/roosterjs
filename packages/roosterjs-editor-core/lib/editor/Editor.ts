@@ -34,6 +34,9 @@ import {
     normalizeEditorPoint,
     wrap,
 } from 'roosterjs-editor-dom';
+import { buildSnapshot, restoreSnapshot } from '../undo/snapshotUtils';
+
+const KEY_BACKSPACE = 8;
 
 export default class Editor {
     private omitContentEditable: boolean;
@@ -508,6 +511,7 @@ export default class Editor {
         source: ChangeSource | string = ChangeSource.SetContent,
         data?: any
     ) {
+        this.onContentChange();
         this.triggerEvent({
             eventType: PluginEventType.ContentChanged,
             source: source,
@@ -560,7 +564,22 @@ export default class Editor {
         callback?: (start: Position, end: Position) => any,
         changeSource: ChangeSource | string = ChangeSource.Format
     ) {
-        this.core.api.editWithUndo(this.core, callback, changeSource);
+        this.core.api.editWithUndo(this.core, callback, changeSource, true /*addUndoSnapshotBeforeAction*/);
+    }
+
+    /**
+     * Perform an auto complete action in the callback, save a snapsnot of content before the action,
+     * and trigger ContentChangedEvent with the change source if specified
+     * @param callback The auto complete callback, return value will be used as data field of ContentChangedEvent
+     * @param changeSource Chagne source of ContentChangedEvent.
+     */
+    public performAutoComplete(
+        callback: (start: Position, end: Position) => any,
+        changeSource: ChangeSource
+    ) {
+        let snapshot = buildSnapshot(this);
+        this.core.api.editWithUndo(this.core, callback, changeSource, false /*addUndoSnapshotBeforeAction*/);
+        this.core.snapshotBeforeAutoComplete = snapshot;
     }
 
     /**
@@ -664,7 +683,7 @@ export default class Editor {
                 this.core,
                 'keydown',
                 PluginEventType.KeyDown,
-                this.stopPropagation
+                this.onKeyDown,
             ),
             this.core.api.attachDomEvent(
                 this.core,
@@ -672,7 +691,7 @@ export default class Editor {
                 PluginEventType.KeyUp,
                 this.stopPropagation
             ),
-            this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
+            this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown, this.onContentChange),
             this.core.api.attachDomEvent(this.core, 'mouseup', PluginEventType.MouseUp),
             this.core.api.attachDomEvent(
                 this.core,
@@ -720,6 +739,21 @@ export default class Editor {
             event.stopPropagation();
         }
     };
+
+    private onContentChange = (event?: KeyboardEvent) => {
+        if (this.core.snapshotBeforeAutoComplete !== null) {
+            if (event && event.which == KEY_BACKSPACE) {
+                event.preventDefault();
+                this.addUndoSnapshot(() => restoreSnapshot(this, this.core.snapshotBeforeAutoComplete), ChangeSource.UndoAutoComplete);
+            }
+            this.core.snapshotBeforeAutoComplete = null;
+        }
+    }
+
+    private onKeyDown = (event: KeyboardEvent) => {
+        this.stopPropagation(event);
+        this.onContentChange(event);
+    }
 
     // Check if user is typing right under the content div
     // When typing goes directly under content div, many things can go wrong

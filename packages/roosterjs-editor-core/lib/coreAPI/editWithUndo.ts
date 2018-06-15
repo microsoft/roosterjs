@@ -5,13 +5,14 @@ import { Position, SelectionRange } from 'roosterjs-editor-dom';
 const editWithUndo: EditWithUndo = (
     core: EditorCore,
     callback: (start: Position, end: Position) => any,
-    changeSource: ChangeSource | string
+    changeSource: ChangeSource | string,
+    addUndoSnapshotBeforeAction: boolean
 ) => {
     let isNested = core.suspendUndo;
+    core.suspendUndo = true;
 
-    if (!isNested) {
+    if (!isNested && addUndoSnapshotBeforeAction) {
         core.undo.addUndoSnapshot();
-        core.suspendUndo = true;
     }
 
     try {

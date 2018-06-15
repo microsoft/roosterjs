@@ -74,6 +74,11 @@ interface EditorCore {
      * Core API map of this editor
      */
     readonly api: CoreApiMap;
+
+    /**
+     * A cached undo snapshot before auto complete, it will be restored into editor when a BackSpace key is pressed before other event is fired
+     */
+    snapshotBeforeAutoComplete: string;
 }
 
 export default EditorCore;
@@ -88,7 +93,8 @@ export type AttachDomEvent = (
 export type EditWithUndo = (
     core: EditorCore,
     callback: (start: Position, end: Position) => any,
-    changeSource: ChangeSource | string
+    changeSource: ChangeSource | string,
+    addUndoSnapshotBeforeAction: boolean
 ) => void;
 export type Focus = (core: EditorCore) => void;
 export type GetContentTraverser = (

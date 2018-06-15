@@ -31,6 +31,7 @@ export default function createEditorCore(
         idleLoopHandle: 0,
         ignoreIdleEvent: false,
         api: createCoreApiMap(options.coreApiOverride),
+        snapshotBeforeAutoComplete: null,
     };
 }
 
