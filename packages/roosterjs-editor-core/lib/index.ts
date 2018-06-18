@@ -21,4 +21,4 @@ export { default as UndoSnapshotsService } from './undo/UndoSnapshots';
 export { default as UndoService } from './editor/UndoService';
 export { default as browserData, BrowserData } from './utils/BrowserData';
 export { clearEventDataCache, cacheGetEventData } from './utils/eventDataCacheUtils';
-export { buildSnapshot, restoreSnapshot } from './undo/snapshotUtils';
+export { buildSnapshot, restoreSnapshot, addCursorMarkersToSelection, removeCursorMarkers, updateSelectionToCursorMarkers } from './undo/snapshotUtils';

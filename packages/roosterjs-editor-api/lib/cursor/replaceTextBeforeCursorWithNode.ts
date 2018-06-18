@@ -1,7 +1,7 @@
 import CursorData from './CursorData';
 import replaceRangeWithNode from './replaceRangeWithNode';
 import { InlineElement } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { Editor, addCursorMarkersToSelection, removeCursorMarkers, updateSelectionToCursorMarkers } from 'roosterjs-editor-core';
 
 /**
  * Validate the text matches what's before the cursor, and return the range for it
@@ -117,9 +117,20 @@ export default function replaceTextBeforeCursorWithNode(
     }
 
     let replaced = false;
-    let range = validateAndGetRangeForTextBeforeCursor(editor, text, exactMatch, cursorData);
-    if (range) {
-        replaced = replaceRangeWithNode(editor, range, node, exactMatch);
+    let currentRange = editor.getSelectionRange();
+
+    try {
+        if (currentRange) {
+            addCursorMarkersToSelection(editor, currentRange);
+        }
+
+        let range = validateAndGetRangeForTextBeforeCursor(editor, text, exactMatch, cursorData);
+        if (range) {
+            replaced = replaceRangeWithNode(editor, range, node, exactMatch);
+        }
+    } finally {
+        updateSelectionToCursorMarkers(editor);
+        removeCursorMarkers(editor);
     }
 
     return replaced;

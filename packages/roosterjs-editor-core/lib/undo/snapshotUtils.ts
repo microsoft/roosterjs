@@ -40,14 +40,14 @@ export function restoreSnapshot(editor: Editor, snapshot: string): void {
 }
 
 // Remove the temporarily added cursor markers
-function removeCursorMarkers(editor: Editor): void {
+export function removeCursorMarkers(editor: Editor): void {
     removeCursorMarkerById(editor, CURSOR_START);
     removeCursorMarkerById(editor, CURSOR_END);
 }
 
 // Temporarily inject a SPAN marker to the selection which is used to remember where the selection is
 // The marker is used on restore selection on undo
-function addCursorMarkersToSelection(editor: Editor, selectionRange: Range): void {
+export function addCursorMarkersToSelection(editor: Editor, selectionRange: Range): void {
     // First to insert the start marker
     let startMarker = createCursorMarker(editor, CURSOR_START);
     let startPoint = normalizeEditorPoint(
@@ -68,7 +68,7 @@ function addCursorMarkersToSelection(editor: Editor, selectionRange: Range): voi
 
 // Update selection to where cursor marker is
 // This is used in post building snapshot to restore selection
-function updateSelectionToCursorMarkers(editor: Editor) {
+export function updateSelectionToCursorMarkers(editor: Editor) {
     let startMarker = getCursorMarkerByUniqueId(editor, CURSOR_START);
     let endMarker = getCursorMarkerByUniqueId(editor, CURSOR_END);
 
