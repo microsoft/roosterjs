@@ -1,7 +1,12 @@
 import CursorData from './CursorData';
 import replaceRangeWithNode from './replaceRangeWithNode';
 import { InlineElement } from 'roosterjs-editor-types';
-import { Editor, addCursorMarkersToSelection, removeCursorMarkers, updateSelectionToCursorMarkers } from 'roosterjs-editor-core';
+import {
+    Editor,
+    addCursorMarkersToSelection,
+    removeCursorMarkers,
+    updateSelectionToCursorMarkers,
+} from 'roosterjs-editor-core';
 
 /**
  * Validate the text matches what's before the cursor, and return the range for it
