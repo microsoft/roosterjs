@@ -20,16 +20,18 @@ function replaceRangeWithNode(
         return false;
     }
 
-    let backupRange = editor.getSelectionRange();
+    editor.runWithSelectionMarker(() => {
+        let backupRange = editor.getSelectionRange();
 
-    range.deleteContents();
-    range.insertNode(node);
+        range.deleteContents();
+        range.insertNode(node);
 
-    if (exactMatch) {
-        editor.select(node, PositionType.After);
-    } else if (backupRange && editor.contains(backupRange.startContainer)) {
-        editor.select(backupRange);
-    }
+        if (exactMatch) {
+            editor.select(node, PositionType.After);
+        } else if (backupRange && editor.contains(backupRange.startContainer)) {
+            editor.select(backupRange);
+        }
+    }, true /*useInlineMarker*/);
 
     return true;
 }

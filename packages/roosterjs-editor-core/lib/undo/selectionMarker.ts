@@ -21,18 +21,30 @@ const CURSOR_MARK_SELECTOR = `SPAN#${CURSOR_START},SPAN#${CURSOR_END},SPAN#${CUR
  */
 export function markSelection(
     container: HTMLElement,
-    rawRange: Range,
+    range: Range,
     useInlineMarker: boolean
 ): boolean {
-    if (!rawRange || queryElements(container, CURSOR_MARK_SELECTOR).length > 0) {
+    if (!range || queryElements(container, CURSOR_MARK_SELECTOR).length > 0) {
         return false;
     }
-    let range = new SelectionRange(rawRange).normalize();
-    if (range.collapsed || (!useInlineMarker && range.start.node == range.end.node)) {
-        insertMarker(CURSOR_SINGLE, useInlineMarker, range.start, range.end);
+    if (range.collapsed || (!useInlineMarker && range.startContainer == range.endContainer)) {
+        insertMarker(
+            CURSOR_SINGLE,
+            useInlineMarker,
+            new Position(range.startContainer, range.startOffset).normalize(),
+            new Position(range.endContainer, range.endOffset).normalize()
+        );
     } else {
-        insertMarker(CURSOR_START, useInlineMarker, range.start);
-        insertMarker(CURSOR_END, useInlineMarker, range.end);
+        insertMarker(
+            CURSOR_END,
+            useInlineMarker,
+            new Position(range.endContainer, range.endOffset).normalize()
+        );
+        insertMarker(
+            CURSOR_START,
+            useInlineMarker,
+            new Position(range.startContainer, range.startOffset).normalize()
+        );
     }
     return true;
 }

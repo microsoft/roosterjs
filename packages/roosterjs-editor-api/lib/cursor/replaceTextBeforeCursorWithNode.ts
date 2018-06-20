@@ -119,9 +119,7 @@ export default function replaceTextBeforeCursorWithNode(
     let replaced = false;
     let range = validateAndGetRangeForTextBeforeCursor(editor, text, exactMatch, cursorData);
     if (range) {
-        editor.runWithSelectionMarker(() => {
-            replaced = replaceRangeWithNode(editor, range, node, exactMatch);
-        }, true /*useInlineMarker*/);
+        replaced = replaceRangeWithNode(editor, range, node, exactMatch);
     }
 
     return replaced;
