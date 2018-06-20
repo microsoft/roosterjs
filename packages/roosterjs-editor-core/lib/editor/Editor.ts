@@ -494,7 +494,9 @@ export default class Editor {
             }
         } finally {
             if (selectionMarked) {
-                this.restoreSelectionFromMarker(true /*removeMarkerOnly*/);
+                // In safari the selection will be lost after inserting markers, so need to restore it
+                // For other browsers we just need to delete markers here
+                this.restoreSelectionFromMarker(!Browser.isSafari /*removeMarkerOnly*/);
             }
         }
     }
