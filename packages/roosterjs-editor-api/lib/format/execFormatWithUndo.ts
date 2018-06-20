@@ -29,7 +29,16 @@ export default function execFormatWithUndo(
             offset: end.offset,
         };
         let node = formatter(startPoint, endPoint);
-        if (preserveSelection && !editor.select(startPoint.containerNode, startPoint.offset, endPoint.containerNode, endPoint.offset) && node instanceof Node) {
+        if (
+            preserveSelection &&
+            !editor.select(
+                startPoint.containerNode,
+                startPoint.offset,
+                endPoint.containerNode,
+                endPoint.offset
+            ) &&
+            node instanceof Node
+        ) {
             editor.select(node);
         }
     });

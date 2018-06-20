@@ -1,7 +1,6 @@
 import EditorCore, { Focus } from '../editor/EditorCore';
-import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import { NodeType, PositionType } from 'roosterjs-editor-types';
-import { getFirstLeafNode } from 'roosterjs-editor-dom';
+import { getFirstLeafNode, isVoidHtmlElement } from 'roosterjs-editor-dom';
 
 const focus: Focus = (core: EditorCore) => {
     if (!core.api.hasFocus(core) || !core.api.getSelectionRange(core, false /*tryGetFromCache*/)) {

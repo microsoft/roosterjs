@@ -13,6 +13,8 @@ import { Editor } from 'roosterjs-editor-core';
 export default function setImageAltText(editor: Editor, altText: string) {
     editor.focus();
     editor.addUndoSnapshot(() => {
-        queryNodesWithSelection(editor, 'IMG', false /*nodeContainedByRangeOnly*/, node => node.setAttribute('alt', altText));
+        queryNodesWithSelection(editor, 'IMG', false /*nodeContainedByRangeOnly*/, node =>
+            node.setAttribute('alt', altText)
+        );
     });
 }

@@ -1,5 +1,4 @@
 import EditorCore, { InsertNode } from '../editor/EditorCore';
-import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import {
     changeElementTag,
     contains,
@@ -9,9 +8,11 @@ import {
     getTagOfNode,
     isBlockElement,
     isNodeEmpty,
+    isVoidHtmlElement,
     normalizeEditorPoint,
     unwrap,
     wrap,
+    SelectionRange,
 } from 'roosterjs-editor-dom';
 import { ContentPosition, InsertOption, NodeType, PositionType } from 'roosterjs-editor-types';
 
@@ -160,7 +161,7 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
                 selectionRange.setEndAfter(endNode);
                 selectionRange.collapse(false /*toStart*/);
             } else {
-                preprocessNode(core, selectionRange, node, endNode);
+                selectionRange = preprocessNode(core, selectionRange, node, endNode);
             }
         }
 
@@ -174,7 +175,12 @@ function insertNodeAtSelection(core: EditorCore, node: Node, option: InsertOptio
     }
 }
 
-function preprocessNode(core: EditorCore, range: Range, nodeToInsert: Node, currentNode: Node) {
+function preprocessNode(
+    core: EditorCore,
+    range: Range,
+    nodeToInsert: Node,
+    currentNode: Node
+): Range {
     let rootNodeToInsert = nodeToInsert;
 
     if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
@@ -222,12 +228,22 @@ function preprocessNode(core: EditorCore, range: Range, nodeToInsert: Node, curr
     if (getTagOfNode(currentNode) == 'P') {
         // Insert into a P tag may cause issues when the inserted content contains any block element.
         // Change P tag to DIV to make sure it works well
-        changeElementTag(<HTMLElement>currentNode, 'div', range);
+        let rangeCache = new SelectionRange(range).normalize();
+        let div = changeElementTag(<HTMLElement>currentNode, 'div');
+        if (
+            rangeCache.start.node != div &&
+            rangeCache.end.node != div &&
+            contains(core.contentDiv, rangeCache)
+        ) {
+            range = rangeCache.getRange();
+        }
     }
 
     if (isVoidHtmlElement(range.endContainer as HTMLElement)) {
         range.setEndBefore(range.endContainer);
     }
+
+    return range;
 }
 
 function isSelectionAtBeginningOf(range: Range, node: Node) {

@@ -105,10 +105,7 @@ function getSplittedListNodes(nodes: Node[]): Node[] {
     return nodes;
 }
 
-function getNodesWithSpecialCaseHandled(
-    editor: Editor,
-    nodes: Node[]
-): Node[] {
+function getNodesWithSpecialCaseHandled(editor: Editor, nodes: Node[]): Node[] {
     if (nodes.length == 1 && nodes[0].nodeName == 'BR') {
         nodes[0] = wrap(nodes[0]);
     } else if (nodes.length == 0) {

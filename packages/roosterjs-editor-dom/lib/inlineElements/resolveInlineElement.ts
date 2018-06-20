@@ -8,7 +8,8 @@ import { BlockElement, InlineElement, NodeType } from 'roosterjs-editor-types';
 /**
  * Resolve an inline element by a leaf node
  * @param node The node to resolve from
- * @
+ * @param rootNode Root node of current scope
+ * @param parentBlock The parent block element
  */
 export default function resolveInlineElement(
     node: Node,

@@ -16,7 +16,7 @@ import {
     getNextLeafSibling,
     sanitizeHtml,
 } from 'roosterjs-editor-dom';
-import { Editor, EditorPlugin, buildSnapshot, restoreSnapshot } from 'roosterjs-editor-core';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { insertImage } from 'roosterjs-editor-api';
 import buildClipboardData from './buildClipboardData';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
@@ -146,9 +146,12 @@ export default class Paste implements EditorPlugin {
         let { clipboardData, fragment, pasteOption } = event;
         this.editor.focus();
         if (clipboardData.snapshotBeforePaste == null) {
-            clipboardData.snapshotBeforePaste = buildSnapshot(this.editor);
+            clipboardData.snapshotBeforePaste = this.editor.getContent(
+                false /*triggerExtractContentEvent*/,
+                true /*markSelection*/
+            );
         } else {
-            restoreSnapshot(this.editor, clipboardData.snapshotBeforePaste);
+            this.editor.setContent(clipboardData.snapshotBeforePaste);
         }
 
         switch (pasteOption) {

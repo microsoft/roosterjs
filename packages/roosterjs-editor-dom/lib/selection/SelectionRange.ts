@@ -63,8 +63,10 @@ export default class SelectionRange {
         if (!this.rawRange) {
             let document = this.start.node.ownerDocument;
             this.rawRange = document.createRange();
-            this.rawRange.setStart(this.start.node, this.start.offset);
-            this.rawRange.setEnd(this.end.node, this.end.offset);
+            let start = this.start.toFocusablePosition();
+            let end = this.end.toFocusablePosition();
+            this.rawRange.setStart(start.node, start.offset);
+            this.rawRange.setEnd(end.node, end.offset);
         }
         return this.rawRange;
     }

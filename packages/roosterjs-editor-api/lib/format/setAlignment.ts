@@ -23,6 +23,11 @@ export default function setAlignment(editor: Editor, alignment: Alignment) {
 
     editor.addUndoSnapshot(() => {
         execCommand(editor, command, true /*addUndoSnapshotWhenCollapsed*/);
-        queryNodesWithSelection(editor, '[align]', false /*nodeContainedByRangeOnly*/, node => node.style.textAlign = align);
+        queryNodesWithSelection(
+            editor,
+            '[align]',
+            false /*nodeContainedByRangeOnly*/,
+            node => (node.style.textAlign = align)
+        );
     });
 }

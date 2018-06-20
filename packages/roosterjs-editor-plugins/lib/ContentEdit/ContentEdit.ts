@@ -120,7 +120,10 @@ export default class ContentEdit implements EditorPlugin {
                 if (col < 0 || col >= vtable.cells[row].length) {
                     row += step;
                     if (row < 0 || row >= vtable.cells.length) {
-                        this.editor.select(vtable.table, keyboardEvent.shiftKey ? PositionType.Before : PositionType.After);
+                        this.editor.select(
+                            vtable.table,
+                            keyboardEvent.shiftKey ? PositionType.Before : PositionType.After
+                        );
                         break;
                     }
                     col = keyboardEvent.shiftKey ? vtable.cells[row].length - 1 : 0;
@@ -135,7 +138,7 @@ export default class ContentEdit implements EditorPlugin {
         } else if (this.isUpDownInTable(event)) {
             let td = this.cacheGetTd(event);
             let vtable = new VTable(td);
-            let isUp = keyboardEvent.which == KEY_UP
+            let isUp = keyboardEvent.which == KEY_UP;
             let step = isUp ? -1 : 1;
             let targetTd: HTMLTableCellElement = null;
 
@@ -153,10 +156,13 @@ export default class ContentEdit implements EditorPlugin {
                     if (targetTd) {
                         this.editor.select(targetTd, PositionType.Begin);
                     } else {
-                        this.editor.select(vtable.table, isUp ? PositionType.Before : PositionType.After);
+                        this.editor.select(
+                            vtable.table,
+                            isUp ? PositionType.Before : PositionType.After
+                        );
                     }
                 }
-            })
+            });
         } else if ((blockQuoteElement = this.getBlockQuoteElementFromEvent(event, keyboardEvent))) {
             let node = getNodeAtCursor(this.editor);
             if (node && node != blockQuoteElement) {
@@ -209,16 +215,18 @@ export default class ContentEdit implements EditorPlugin {
         ) {
             this.editor.runAsync(() => {
                 this.editor.performAutoComplete(() => {
-                    let cursorData = cacheGetCursorEventData(null /*pass null for event, force get fresh CursorData*/, this.editor);
+                    let cursorData = cacheGetCursorEventData(
+                        null /*pass null for event, force get fresh CursorData*/,
+                        this.editor
+                    );
                     let textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
                     // Remove the user input '*', '-' or '1.'
-                    let rangeToDelete =
-                        validateAndGetRangeForTextBeforeCursor(
-                            this.editor,
-                            textBeforeCursor,
-                            true /*exactMatch*/,
-                            cursorData
-                        );
+                    let rangeToDelete = validateAndGetRangeForTextBeforeCursor(
+                        this.editor,
+                        textBeforeCursor,
+                        true /*exactMatch*/,
+                        cursorData
+                    );
                     if (rangeToDelete) {
                         rangeToDelete.deleteContents();
                     }

@@ -2,6 +2,7 @@ import { NodeType, PositionType, Rect } from 'roosterjs-editor-types';
 import Browser from '../utils/Browser';
 import getElementOrParentElement from '../utils/getElementOrParentElement';
 import isNodeAfter from '../utils/isNodeAfter';
+import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 
 /**
  * Represent a position in DOM tree by the node and its offset index
@@ -94,6 +95,16 @@ export default class Position {
             newOffset = this.isAtEnd ? PositionType.End : PositionType.Begin;
         }
         return new Position(node, newOffset);
+    }
+
+    /**
+     * Convert to focusable position
+     * If current node is a void element, we need to move up one level to put cursor outside void element
+     */
+    toFocusablePosition() {
+        return this.node.nodeType == NodeType.Element && isVoidHtmlElement(<HTMLElement>this.node)
+            ? new Position(this.node, this.isAtEnd ? PositionType.After : PositionType.Before)
+            : this;
     }
 
     /**

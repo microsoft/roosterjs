@@ -12,16 +12,27 @@ import { DocumentCommand, Indentation } from 'roosterjs-editor-types';
  * Indentation.Increase to increase indentation or Indentation.Decrease to decrease indentation
  */
 export default function setIndentation(editor: Editor, indentation: Indentation) {
-    let command = indentation == Indentation.Increase ? DocumentCommand.Indent : DocumentCommand.Outdent;
+    let command =
+        indentation == Indentation.Increase ? DocumentCommand.Indent : DocumentCommand.Outdent;
     editor.addUndoSnapshot(() => {
         let isInlist = queryNodesWithSelection(editor, 'OL,UL').length > 0;
-        execCommand(editor, command, true /*addUndoSnapshotWhenCollapsed*/, true /*doWorkaroundForList*/);
+        execCommand(
+            editor,
+            command,
+            true /*addUndoSnapshotWhenCollapsed*/,
+            true /*doWorkaroundForList*/
+        );
 
         if (!isInlist) {
-            queryNodesWithSelection(editor, 'BLOCKQUOTE', false /*nodeContainedByRangeOnly*/ , node => {
-                node.style.marginTop = '0px';
-                node.style.marginBottom = '0px';
-            });
+            queryNodesWithSelection(
+                editor,
+                'BLOCKQUOTE',
+                false /*nodeContainedByRangeOnly*/,
+                node => {
+                    node.style.marginTop = '0px';
+                    node.style.marginBottom = '0px';
+                }
+            );
         }
     });
 }

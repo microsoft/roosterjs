@@ -31,13 +31,17 @@ import {
     getInlineElementAtNode,
     getTagOfNode,
     isNodeEmpty,
+    queryElements,
     normalizeEditorPoint,
     wrap,
 } from 'roosterjs-editor-dom';
-import { buildSnapshot, restoreSnapshot } from '../undo/snapshotUtils';
+import { markSelection, retrieveRangeFromMarker } from '../undo/selectionMarker';
 
 const KEY_BACKSPACE = 8;
 
+/**
+ * RoosterJs core editor class
+ */
 export default class Editor {
     private omitContentEditable: boolean;
     private disableRestoreSelectionOnFocus: boolean;
@@ -227,25 +231,50 @@ export default class Editor {
      * @param node The node to check
      * @returns True if the given node is in editor content, otherwise false
      */
-    public contains(node: Node): boolean {
-        return contains(this.core.contentDiv, node);
+    public contains(node: Node): boolean;
+
+    /**
+     * Check if the range falls in the editor content
+     * @param range The range to check
+     * @returns True if the given range is in editor content, otherwise false
+     */
+    public contains(range: Range): boolean;
+
+    /**
+     * Check if the selection range falls in the editor content
+     * @param range The range to check
+     * @returns True if the given range is in editor content, otherwise false
+     */
+    public contains(range: SelectionRange): boolean;
+
+    public contains(arg: Node | Range | SelectionRange): boolean {
+        return contains(this.core.contentDiv, <Node>arg);
     }
 
     /**
-     * Query HTML elements in editor using querySelectorAll() method
+     * Query HTML elements in editor by tag name
+     * @param tag Tag name of the element to query
+     * @param forEachCallback An optional callback to be invoked on each element in query result
+     * @returns HTML Element list of the query result
+     */
+    public queryElements<T extends keyof HTMLElementTagNameMap>(
+        tag: T,
+        forEachCallback?: (node: T) => any
+    ): HTMLElementTagNameMap[T][];
+
+    /**
+     * Query HTML elements in editor by a selector string
      * @param selector Selector string to query
      * @param forEachCallback An optional callback to be invoked on each node in query result
-     * @returns HTML Element list of the query result
+     * @returns HTML Element array of the query result
      */
     public queryElements<T extends HTMLElement = HTMLElement>(
         selector: string,
-        forEachCallback?: (node: T) => void
-    ): T[] {
-        let nodes = [].slice.call(this.core.contentDiv.querySelectorAll(selector)) as T[];
-        if (forEachCallback) {
-            nodes.forEach(forEachCallback);
-        }
-        return nodes;
+        forEachCallback?: (node: T) => any
+    ): T[];
+
+    public queryElements(selector: string, forEachCallback?: (node: Node) => any) {
+        return queryElements(this.core.contentDiv, selector, forEachCallback);
     }
 
     //#endregion
@@ -265,10 +294,22 @@ export default class Editor {
      * Get current editor content as HTML string
      * @param triggerExtractContentEvent Whether trigger ExtractContent event to all plugins
      * before return. Use this parameter to remove any temporary content added by plugins.
+     * @param includeSelectionMarker Set to true if need include selection marker inside the content.
+     * When restore this content, editor will set the selection to the position marked by these markers
      * @returns HTML string representing current editor content
      */
-    public getContent(triggerExtractContentEvent: boolean = true): string {
-        let content = this.core.contentDiv.innerHTML;
+    public getContent(
+        triggerExtractContentEvent: boolean = true,
+        includeSelectionMarker: boolean = false
+    ): string {
+        let content = '';
+        if (includeSelectionMarker) {
+            this.runWithSelectionMarker(() => {
+                content = this.core.contentDiv.innerHTML;
+            }, false /*useInlineMarker*/);
+        } else {
+            content = this.core.contentDiv.innerHTML;
+        }
 
         if (triggerExtractContentEvent) {
             let extractContentEvent: ExtractContentEvent = {
@@ -294,9 +335,16 @@ export default class Editor {
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * @param content HTML content to set in
      */
-    public setContent(content: string) {
-        this.core.contentDiv.innerHTML = content || '';
-        this.triggerContentChangedEvent();
+    public setContent(content: string, triggerContentChangedEvent: boolean = true) {
+        if (this.core.contentDiv.innerHTML != content) {
+            this.core.contentDiv.innerHTML = content || '';
+
+            this.restoreSelectionFromMarker();
+
+            if (triggerContentChangedEvent) {
+                this.triggerContentChangedEvent();
+            }
+        }
     }
 
     /**
@@ -430,6 +478,28 @@ export default class Editor {
     }
 
     /**
+     * Insert selection marker element into content, so that after doing some modification,
+     * we can still restore the selection as long as the selection marker is still there
+     * @returns True if selection markers are added, otherwise false.
+     */
+    public runWithSelectionMarker(callback: () => any, useInlineMarker?: boolean) {
+        let selectionMarked = markSelection(
+            this.core.contentDiv,
+            this.getSelectionRange(),
+            useInlineMarker
+        );
+        try {
+            if (callback) {
+                callback();
+            }
+        } finally {
+            if (selectionMarked) {
+                this.restoreSelectionFromMarker();
+            }
+        }
+    }
+
+    /**
      * @deprecated Use select() instead
      * Update selection in editor
      * @param selectionRange The selection range to update to
@@ -440,6 +510,7 @@ export default class Editor {
     }
 
     /**
+     * @deprecated
      * Save the current selection in editor so that when focus again, the selection can be restored
      */
     public saveSelectionRange() {
@@ -564,7 +635,12 @@ export default class Editor {
         callback?: (start: Position, end: Position) => any,
         changeSource: ChangeSource | string = ChangeSource.Format
     ) {
-        this.core.api.editWithUndo(this.core, callback, changeSource, true /*addUndoSnapshotBeforeAction*/);
+        this.core.api.editWithUndo(
+            this.core,
+            callback,
+            changeSource,
+            true /*addUndoSnapshotBeforeAction*/
+        );
     }
 
     /**
@@ -577,8 +653,16 @@ export default class Editor {
         callback: (start: Position, end: Position) => any,
         changeSource: ChangeSource
     ) {
-        let snapshot = buildSnapshot(this);
-        this.core.api.editWithUndo(this.core, callback, changeSource, false /*addUndoSnapshotBeforeAction*/);
+        let snapshot = this.getContent(
+            false /*triggerContentChangedEvent*/,
+            true /*markSelection*/
+        );
+        this.core.api.editWithUndo(
+            this.core,
+            callback,
+            changeSource,
+            false /*addUndoSnapshotBeforeAction*/
+        );
         this.core.snapshotBeforeAutoComplete = snapshot;
     }
 
@@ -617,7 +701,10 @@ export default class Editor {
      * dispose editor.
      */
     public getCustomData<T>(key: string, getter: () => T, disposer?: (value: T) => void): T {
-        return this.core.api.getCustomData(this.core, key, getter);
+        return (this.core.customData[key] = this.core.customData[key] || {
+            value: getter(),
+            disposer: disposer,
+        }).value;
     }
 
     /**
@@ -683,7 +770,7 @@ export default class Editor {
                 this.core,
                 'keydown',
                 PluginEventType.KeyDown,
-                this.onKeyDown,
+                this.onKeyDown
             ),
             this.core.api.attachDomEvent(
                 this.core,
@@ -691,7 +778,12 @@ export default class Editor {
                 PluginEventType.KeyUp,
                 this.stopPropagation
             ),
-            this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown, this.onContentChange),
+            this.core.api.attachDomEvent(
+                this.core,
+                'mousedown',
+                PluginEventType.MouseDown,
+                this.onContentChange
+            ),
             this.core.api.attachDomEvent(this.core, 'mouseup', PluginEventType.MouseUp),
             this.core.api.attachDomEvent(
                 this.core,
@@ -744,16 +836,23 @@ export default class Editor {
         if (this.core.snapshotBeforeAutoComplete !== null) {
             if (event && event.which == KEY_BACKSPACE) {
                 event.preventDefault();
-                this.addUndoSnapshot(() => restoreSnapshot(this, this.core.snapshotBeforeAutoComplete), ChangeSource.UndoAutoComplete);
+                this.addUndoSnapshot(
+                    () =>
+                        this.setContent(
+                            this.core.snapshotBeforeAutoComplete,
+                            false /*triggerContentChangedEvent*/
+                        ),
+                    ChangeSource.UndoAutoComplete
+                );
             }
             this.core.snapshotBeforeAutoComplete = null;
         }
-    }
+    };
 
     private onKeyDown = (event: KeyboardEvent) => {
         this.stopPropagation(event);
         this.onContentChange(event);
-    }
+    };
 
     // Check if user is typing right under the content div
     // When typing goes directly under content div, many things can go wrong
@@ -864,6 +963,13 @@ export default class Editor {
                 );
             }
         }, interval);
+    }
+
+    private restoreSelectionFromMarker() {
+        let range = retrieveRangeFromMarker(this.core.contentDiv);
+        if (range) {
+            this.select(range);
+        }
     }
 
     //#endregion

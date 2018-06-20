@@ -102,12 +102,6 @@ export type GetContentTraverser = (
     scope: ContentScope,
     position?: ContentPosition
 ) => ContentTraverser;
-export type GetCustomData = <T>(
-    core: EditorCore,
-    key: string,
-    getter: () => T,
-    disposer?: (value: T) => void
-) => T;
 export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => Range;
 export type HasFocus = (core: EditorCore) => boolean;
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
@@ -149,16 +143,6 @@ export interface CoreApiMap {
      * @returns a ContentTraverser object
      */
     getContentTraverser: GetContentTraverser;
-
-    /**
-     * Get a custom data from this editor using specified key.
-     * @param core The EditorCore object
-     * @param key A unique key of this custom data
-     * @param getter Getter function of this custom data. If will be called when first time retrieve this data
-     * @param disposer Optional disposer function. It will be called when editor is disposing
-     * @returns The custom data specified by key
-     */
-    getCustomData: GetCustomData;
 
     /**
      * Get current or cached selection range

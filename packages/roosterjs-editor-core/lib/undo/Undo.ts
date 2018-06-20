@@ -2,7 +2,6 @@ import UndoSnapshots, { UndoSnapshotsService } from './UndoSnapshots';
 import { ChangeSource, PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import Editor from '../editor/Editor';
 import UndoService from '../editor/UndoService';
-import { buildSnapshot, restoreSnapshot } from './snapshotUtils';
 
 const KEY_BACKSPACE = 8;
 const KEY_DELETE = 46;
@@ -135,7 +134,10 @@ export default class Undo implements UndoService {
      * Add an undo snapshot
      */
     public addUndoSnapshot(): void {
-        let snapshot = buildSnapshot(this.editor);
+        let snapshot = this.editor.getContent(
+            false /*triggerExtractContentEvent*/,
+            true /*markSelection*/
+        );
         this.getSnapshotsManager().addSnapshot(snapshot);
         this.hasNewContent = false;
     }
@@ -153,7 +155,7 @@ export default class Undo implements UndoService {
         if (snapshot != null) {
             try {
                 this.isRestoring = true;
-                restoreSnapshot(this.editor, snapshot);
+                this.editor.setContent(snapshot);
             } finally {
                 this.isRestoring = false;
             }

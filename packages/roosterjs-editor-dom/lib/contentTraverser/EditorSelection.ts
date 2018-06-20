@@ -1,5 +1,4 @@
 import PartialInlineElement from '../inlineElements/PartialInlineElement';
-import editorPointEquals from '../utils/editorPointEquals';
 import isEditorPointAfter from '../utils/isEditorPointAfter';
 import normalizeEditorPoint from '../utils/normalizeEditorPoint';
 import { BlockElement, EditorPoint, InlineElement } from 'roosterjs-editor-types';
@@ -155,7 +154,8 @@ class EditorSelection {
                     trimmedInline =
                         trimmedStartPoint &&
                         trimmedEndPoint &&
-                        editorPointEquals(trimmedStartPoint, trimmedEndPoint)
+                        trimmedStartPoint.containerNode == trimmedEndPoint.containerNode &&
+                        trimmedStartPoint.offset == trimmedEndPoint.offset
                             ? null
                             : new PartialInlineElement(
                                   decoratedInline,

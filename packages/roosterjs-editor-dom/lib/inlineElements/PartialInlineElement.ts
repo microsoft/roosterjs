@@ -1,4 +1,3 @@
-import editorPointEquals from '../utils/editorPointEquals';
 import isDocumentPosition from '../utils/isDocumentPosition';
 import isEditorPointAfter from '../utils/isEditorPointAfter';
 import { BlockElement, DocumentPosition, EditorPoint, InlineElement } from 'roosterjs-editor-types';
@@ -112,7 +111,8 @@ class PartialInlineElement implements InlineElement {
             let thisStartPoint = this.getStartPoint();
             isAfter =
                 isEditorPointAfter(thisStartPoint, otherInlineEndPoint) ||
-                editorPointEquals(thisStartPoint, otherInlineEndPoint);
+                (thisStartPoint.containerNode == otherInlineEndPoint.containerNode &&
+                    thisStartPoint.offset == otherInlineEndPoint.offset);
         }
 
         return isAfter;

@@ -133,7 +133,7 @@ export default class HyperLink implements EditorPlugin {
 
                 this.editor.runAsync(() => {
                     this.editor.performAutoComplete(() => {
-                         replaceTextBeforeCursorWithNode(
+                        replaceTextBeforeCursorWithNode(
                             this.editor,
                             linkData.originalUrl,
                             anchor,

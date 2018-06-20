@@ -1,4 +1,4 @@
-import * as DomTestHelper from 'roosterjs-editor-dom/lib/test/DomTestHelper';
+import * as DomTestHelper from '../DomTestHelper';
 import isVoidHtmlElement from '../../utils/isVoidHtmlElement';
 
 describe('isVoidHtmlElement()', () => {

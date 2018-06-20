@@ -3,15 +3,14 @@ import EditorOptions from './EditorOptions';
 import Undo from '../undo/Undo';
 import applyInlineStyle from '../coreAPI/applyInlineStyle';
 import attachDomEvent from '../coreAPI/attachDomEvent';
+import editWithUndo from '../coreAPI/editWithUndo';
 import focus from '../coreAPI/focus';
 import getContentTraverser from '../coreAPI/getContentTraverser';
-import getCustomData from '../coreAPI/getCustomData';
 import getSelectionRange from '../coreAPI/getSelectionRange';
 import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
-import editWithUndo from '../coreAPI/editWithUndo';
-import triggerEvent from '../coreAPI/triggerEvent';
 import select from '../coreAPI/select';
+import triggerEvent from '../coreAPI/triggerEvent';
 import { DefaultFormat } from 'roosterjs-editor-types';
 import { getComputedStyle } from 'roosterjs-editor-dom';
 
@@ -57,14 +56,13 @@ function createCoreApiMap(map: Partial<CoreApiMap>): CoreApiMap {
     return {
         applyInlineStyle: map.applyInlineStyle || applyInlineStyle,
         attachDomEvent: map.attachDomEvent || attachDomEvent,
+        editWithUndo: map.editWithUndo || editWithUndo,
         focus: map.focus || focus,
         getContentTraverser: map.getContentTraverser || getContentTraverser,
-        getCustomData: map.getCustomData || getCustomData,
         getSelectionRange: map.getSelectionRange || getSelectionRange,
         hasFocus: map.hasFocus || hasFocus,
         insertNode: map.insertNode || insertNode,
-        editWithUndo: map.editWithUndo || editWithUndo,
-        triggerEvent: map.triggerEvent || triggerEvent,
         select: map.select || select,
+        triggerEvent: map.triggerEvent || triggerEvent,
     };
 }

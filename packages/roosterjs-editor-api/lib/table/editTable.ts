@@ -19,11 +19,7 @@ export default function editTable(editor: Editor, operation: TableOperation) {
                 case TableOperation.InsertAbove:
                 case TableOperation.InsertBelow:
                     let newRow = vtable.row + (operation == TableOperation.InsertAbove ? 0 : 1);
-                    vtable.cells.splice(
-                        newRow,
-                        0,
-                        currentRow.map(cell => VTable.cloneCell(cell))
-                    );
+                    vtable.cells.splice(newRow, 0, currentRow.map(cell => VTable.cloneCell(cell)));
                     break;
 
                 case TableOperation.InsertLeft:

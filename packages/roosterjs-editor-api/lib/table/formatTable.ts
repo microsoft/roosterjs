@@ -9,7 +9,7 @@ import { TableFormat } from 'roosterjs-editor-types';
  * @param formatName Name of the format to use
  */
 export default function formatTable(editor: Editor, format: TableFormat, table?: HTMLTableElement) {
-    table = table || getNodeAtCursor(editor, 'TABLE') as HTMLTableElement;
+    table = table || (getNodeAtCursor(editor, 'TABLE') as HTMLTableElement);
     if (table) {
         editor.addUndoSnapshot((start, end) => {
             let vtable = new VTable(table);
