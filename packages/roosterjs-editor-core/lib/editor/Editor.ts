@@ -494,7 +494,7 @@ export default class Editor {
             }
         } finally {
             if (selectionMarked) {
-                this.restoreSelectionFromMarker();
+                this.restoreSelectionFromMarker(true /*removeMarkerOnly*/);
             }
         }
     }
@@ -965,8 +965,8 @@ export default class Editor {
         }, interval);
     }
 
-    private restoreSelectionFromMarker() {
-        let range = retrieveRangeFromMarker(this.core.contentDiv);
+    private restoreSelectionFromMarker(removeMarkerOnly?: boolean) {
+        let range = retrieveRangeFromMarker(this.core.contentDiv, removeMarkerOnly);
         if (range) {
             this.select(range);
         }

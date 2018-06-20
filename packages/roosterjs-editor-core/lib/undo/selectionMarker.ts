@@ -41,27 +41,34 @@ export function markSelection(
  * If there is selection marker in content, convert into back to a selection range and remove the markers,
  * otherwise no op.
  * @param container Container HTML element to query selection markers from
+ * @param removeMarkerOnly Skip retrieving range, but only delete existing markers
  * @returns The selection range converted from makers, or null if no valid marker found.
  */
-export function retrieveRangeFromMarker(container: HTMLElement): Range {
+export function retrieveRangeFromMarker(container: HTMLElement, removeMarkerOnly?: boolean): Range {
     let start: Position;
     let end: Position;
     let range: Range;
 
-    let markers = queryElements(container, CURSOR_MARK_SELECTOR, marker => {
-        switch (marker.id) {
-            case CURSOR_START:
-                start = saveCreatePosition(marker, OFFSET_1_ATTRIBUTE);
-                break;
-            case CURSOR_END:
-                end = saveCreatePosition(marker, OFFSET_1_ATTRIBUTE);
-                break;
-            case CURSOR_SINGLE:
-                start = saveCreatePosition(marker, OFFSET_1_ATTRIBUTE);
-                end = saveCreatePosition(marker, OFFSET_2_ATTRIBUTE);
-                break;
-        }
-    });
+    let markers = queryElements(
+        container,
+        CURSOR_MARK_SELECTOR,
+        removeMarkerOnly
+            ? null
+            : marker => {
+                  switch (marker.id) {
+                      case CURSOR_START:
+                          start = saveCreatePosition(marker, OFFSET_1_ATTRIBUTE);
+                          break;
+                      case CURSOR_END:
+                          end = saveCreatePosition(marker, OFFSET_1_ATTRIBUTE);
+                          break;
+                      case CURSOR_SINGLE:
+                          start = saveCreatePosition(marker, OFFSET_1_ATTRIBUTE);
+                          end = saveCreatePosition(marker, OFFSET_2_ATTRIBUTE);
+                          break;
+                  }
+              }
+    );
 
     if (start && end && markers.length <= 2) {
         range = new SelectionRange(start, end).getRange();
