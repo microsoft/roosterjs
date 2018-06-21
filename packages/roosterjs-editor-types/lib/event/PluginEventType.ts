@@ -50,7 +50,7 @@ const enum PluginEventType {
     BeforePaste,
 
     /**
-     * Idle event, fired when user doesn't have any input for a time period (specified in EditorOptions)
+     * @deprecated
      */
     Idle,
 

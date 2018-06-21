@@ -10,8 +10,6 @@ import {
     ExtractContentEvent,
     InlineElement,
     InsertOption,
-    NodeBoundary,
-    NodeType,
     PluginEvent,
     PluginEventType,
     PositionType,
@@ -27,12 +25,12 @@ import {
     contains,
     fromHtml,
     getBlockElementAtNode,
+    getElementOrParentElement,
     getFirstBlockElement,
     getInlineElementAtNode,
     getTagOfNode,
     isNodeEmpty,
     queryElements,
-    normalizeEditorPoint,
     wrap,
 } from 'roosterjs-editor-dom';
 import { markSelection, retrieveRangeFromMarker } from '../undo/selectionMarker';
@@ -43,8 +41,6 @@ const KEY_BACKSPACE = 8;
  * RoosterJs core editor class
  */
 export default class Editor {
-    private omitContentEditable: boolean;
-    private disableRestoreSelectionOnFocus: boolean;
     private inIME: boolean;
     private core: EditorCore;
     private eventDisposers: (() => void)[];
@@ -64,24 +60,12 @@ export default class Editor {
 
         // 2. Store options values to local variables
         this.core = createEditorCore(contentDiv, options);
-        this.disableRestoreSelectionOnFocus = options.disableRestoreSelectionOnFocus;
-        this.omitContentEditable = options.omitContentEditableAttributeChanges;
 
         // 3. Initialize plugins
-        this.core.plugins.forEach(plugin => {
-            if (!plugin.name) {
-                plugin.name = (<Object>plugin).constructor.name;
-            }
-            plugin.initialize(this);
-        });
+        this.core.plugins.forEach(plugin => plugin.initialize(this));
 
         // 4. Ensure initial content and its format
-        if (options.initialContent) {
-            this.setContent(options.initialContent);
-        } else if (contentDiv.innerHTML != '') {
-            this.triggerContentChangedEvent();
-        }
-        this.ensureInitialContent();
+        this.ensureInitialContent(options.initialContent || contentDiv.innerHTML || '');
 
         // 5. Initialize undo service
         // This need to be after step 4 so that undo service can pickup initial content
@@ -91,8 +75,8 @@ export default class Editor {
         // 6. Create event handler to bind DOM events
         this.createEventHandlers();
 
-        // 7. Finally make the container editable and set its selection styles
-        if (!this.omitContentEditable) {
+        // 7. Make the container editable and set its selection styles
+        if (!this.core.omitContentEditable) {
             contentDiv.setAttribute('contenteditable', 'true');
             let styles = contentDiv.style;
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
@@ -105,12 +89,7 @@ export default class Editor {
             this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, false);
         } catch (e) {}
 
-        // 9. Start a timer loop if required
-        if (options.idleEventTimeSpanInSecond > 0) {
-            this.startIdleLoop(options.idleEventTimeSpanInSecond * 1000);
-        }
-
-        // 10. Finally, let plugins know that we are ready
+        // 9. Finally, let plugins know that we are ready
         this.triggerEvent(
             {
                 eventType: PluginEventType.EditorReady,
@@ -130,16 +109,7 @@ export default class Editor {
             true /*broadcast*/
         );
 
-        if (this.core.idleLoopHandle > 0) {
-            let win = this.core.contentDiv.ownerDocument.defaultView || window;
-            win.clearInterval(this.core.idleLoopHandle);
-            this.core.idleLoopHandle = 0;
-        }
-
-        this.core.plugins.forEach(plugin => {
-            plugin.dispose();
-        });
-
+        this.core.plugins.forEach(plugin => plugin.dispose());
         this.eventDisposers.forEach(disposer => disposer());
         this.eventDisposers = null;
 
@@ -151,7 +121,7 @@ export default class Editor {
             delete this.core.customData[key];
         }
 
-        if (!this.omitContentEditable) {
+        if (!this.core.omitContentEditable) {
             let styles = this.core.contentDiv.style;
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = '';
             this.core.contentDiv.removeAttribute('contenteditable');
@@ -392,6 +362,7 @@ export default class Editor {
     }
 
     /**
+     * @deprecated
      * Get current selection
      * @return current selection object
      */
@@ -538,11 +509,60 @@ export default class Editor {
     }
 
     /**
+     * @deprecated This function will be moved to roosterjs-editor-api in next major release
      * Apply inline style to current selection
-     * @param styler The callback function to apply style
+     * @param callback The callback function to apply style
      */
-    public applyInlineStyle(styler: (element: HTMLElement) => void): void {
-        this.core.api.applyInlineStyle(this.core, styler);
+    public applyInlineStyle(callback: (element: HTMLElement) => any) {
+        this.focus();
+        let range = this.getSelectionRange();
+        let collapsed = range && range.collapsed;
+
+        if (collapsed) {
+            this.addUndoSnapshot();
+
+            // Create a new span to hold the style.
+            // Some content is needed to position selection into the span
+            // for here, we inject ZWS - zero width space
+            let element = fromHtml(
+                '<SPAN>\u200B</SPAN>',
+                this.getDocument()
+            )[0] as HTMLElement;
+            callback(element);
+            this.insertNode(element);
+
+            // reset selection to be after the ZWS (rather than selecting it)
+            // This is needed so that the cursor still looks blinking inside editor
+            // This also means an extra ZWS will be in editor
+            this.select(element, PositionType.End);
+        } else {
+            this.addUndoSnapshot(() => {
+                    // This is start and end node that get the style. The start and end needs to be recorded so that selection
+                // can be re-applied post-applying style
+                let firstNode: Node;
+                let lastNode: Node;
+                let contentTraverser = this.getSelectionTraverser();
+
+                // Just loop through all inline elements in the selection and apply style for each
+                let inlineElement = contentTraverser.currentInlineElement;
+                while (inlineElement) {
+                    // Need to obtain next inline first. Applying styles changes DOM which may mess up with the navigation
+                    let nextInline = contentTraverser.getNextInlineElement();
+                    inlineElement.applyStyle(element => {
+                        callback(element as HTMLElement);
+                        firstNode = firstNode || element;
+                        lastNode = element;
+                    });
+
+                    inlineElement = nextInline;
+                }
+
+                // When selectionStartNode/EndNode is set, it means there is DOM change. Re-create the selection
+                if (firstNode && lastNode) {
+                    this.select(firstNode, PositionType.Before, lastNode, PositionType.After);
+                }
+            });
+        }
     }
 
     //#endregion
@@ -726,21 +746,48 @@ export default class Editor {
     }
 
     /**
-     * Get a content traverser that can be used to travse content within editor
-     * @param scope Content scope type. There are 3 kinds of scoper:
-     * 1) SelectionBlockScoper is a block based scoper that restrict traversing within the block where the selection is
-     *    it allows traversing from start, end or selection start position
-     *    this is commonly used to parse content from cursor as user type up to the begin or end of block
-     * 2) SelectionScoper restricts traversing within the selection. It is commonly used for applying style to selection
-     * 3) BodyScoper will traverse the entire editor body from the beginning (ignoring the passed in position parameter)
-     * @param position Start position of the traverser
-     * @returns A content traverser to help travse among InlineElemnt/BlockElement within scope
+     * Get a content traverser for the whole editor
+     */
+    public getBodyTraverser(): ContentTraverser {
+        return ContentTraverser.createBodyTraverser(this.core.contentDiv);
+    }
+
+    /**
+     * Get a content traverser for current selection
+     */
+    public getSelectionTraverser(): ContentTraverser {
+        let range = this.getSelectionRange();
+        return range && ContentTraverser.createSelectionTraverser(this.core.contentDiv, this.getSelectionRange());
+    }
+
+    /**
+     * Get a content traverser for current block element start from specified position
+     * @param startFrom Start position of the traverser. Default value is ContentPosition.SelectionStart
+     */
+    public getBlockTraverser(
+        startFrom: ContentPosition = ContentPosition.SelectionStart
+    ): ContentTraverser {
+        let range = this.getSelectionRange();
+        return range && ContentTraverser.createSelectionBlockTraverser(this.core.contentDiv, range, startFrom);
+    }
+
+    /**
+     * @deprecated Use getBodyTraverser, getSelectionTraverser, getBlockTraverser instead
      */
     public getContentTraverser(
         scope: ContentScope,
         position: ContentPosition = ContentPosition.SelectionStart
     ): ContentTraverser {
-        return this.core.api.getContentTraverser(this.core, scope, position);
+        switch (scope) {
+            case ContentScope.Block:
+                return this.getBlockTraverser();
+            case ContentScope.Selection:
+                return this.getSelectionTraverser();
+            case ContentScope.Body:
+                return this.getBodyTraverser();
+        }
+
+        return null;
     }
 
     /**
@@ -801,7 +848,7 @@ export default class Editor {
             ),
             this.core.api.attachDomEvent(this.core, 'focus', null, () => {
                 // Restore the last saved selection first
-                if (this.core.cachedSelectionRange && !this.disableRestoreSelectionOnFocus) {
+                if (this.core.cachedSelectionRange && !this.core.disableRestoreSelectionOnFocus) {
                     this.updateSelection(this.core.cachedSelectionRange);
                 }
                 this.core.cachedSelectionRange = null;
@@ -863,38 +910,29 @@ export default class Editor {
     // When selection is not collapsed, i.e. users press ctrl+A, and then type
     // We don't have a good way to fix that for the moment
     private onKeyPress = (event: KeyboardEvent) => {
-        let selectionRange = this.core.api.getSelectionRange(this.core, true /*tryGetFromCache*/);
-        let focusNode: Node;
+        let range = this.getSelectionRange();
         if (
-            selectionRange &&
-            selectionRange.collapsed &&
-            (focusNode = selectionRange.startContainer) &&
-            (focusNode == this.core.contentDiv ||
-                (focusNode.nodeType == NodeType.Text &&
-                    focusNode.parentNode == this.core.contentDiv))
+            range &&
+            range.collapsed &&
+            getElementOrParentElement(range.startContainer) == this.core.contentDiv
         ) {
-            let position = normalizeEditorPoint(
-                selectionRange.startContainer,
-                selectionRange.startOffset
-            );
-            let blockElement = getBlockElementAtNode(this.core.contentDiv, position.containerNode);
+            let position = new Position(range.startContainer, range.startOffset).normalize();
+            let blockElement = getBlockElementAtNode(this.core.contentDiv, position.node);
 
             if (!blockElement) {
                 // Only reason we don't get the selection block is that we have an empty content div
                 // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
                 // The fix is to add a DIV wrapping, apply default format and move cursor over
-                let nodes = fromHtml('<div><br></div>', this.core.document);
-                let element = this.core.contentDiv.appendChild(nodes[0]) as HTMLElement;
+                let node = fromHtml('<div><br></div>', this.core.document)[0];
+                let element = this.core.contentDiv.appendChild(node) as HTMLElement;
                 applyFormat(element, this.core.defaultFormat);
                 // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
-                this.selectEditorPoint(element.firstChild, NodeBoundary.Begin);
+                this.select(element.firstChild, PositionType.Begin);
             } else if (
                 blockElement.getStartNode().parentNode == blockElement.getEndNode().parentNode
             ) {
                 // Only fix the balanced start-end block where start and end node is under same parent
                 // The focus node could be pointing to the content div, normalize it to have it point to a child first
-                let focusOffset = selectionRange.startOffset;
-                let editorPoint = normalizeEditorPoint(focusNode, focusOffset);
                 let element = wrap(blockElement.getContentNodes());
                 if (getTagOfNode(blockElement.getStartNode()) == 'BR') {
                     // if the block is just BR, apply default format
@@ -902,32 +940,15 @@ export default class Editor {
                     applyFormat(element, this.core.defaultFormat);
                 }
                 // Last restore the selection using the normalized editor point
-                this.selectEditorPoint(editorPoint.containerNode, editorPoint.offset);
+                this.select(position);
             }
         }
         this.stopPropagation(event);
     };
 
-    private selectEditorPoint(container: Node, offset: number): boolean {
-        if (!this.contains(container)) {
-            return false;
-        }
+    private ensureInitialContent(initialContent: string) {
+        this.setContent(initialContent);
 
-        let range = this.core.document.createRange();
-        if (container.nodeType == NodeType.Text && offset <= container.nodeValue.length) {
-            range.setStart(container, offset);
-        } else if (offset == NodeBoundary.Begin) {
-            range.setStartBefore(container);
-        } else {
-            range.setStartAfter(container);
-        }
-
-        range.collapse(true /* toStart */);
-
-        return this.core.api.select(this.core, range);
-    }
-
-    private ensureInitialContent() {
         let firstBlock = getFirstBlockElement(this.core.contentDiv);
         let defaultFormatBlockElement: HTMLElement;
 
@@ -948,23 +969,6 @@ export default class Editor {
         if (defaultFormatBlockElement) {
             applyFormat(defaultFormatBlockElement, this.core.defaultFormat);
         }
-    }
-
-    private startIdleLoop(interval: number) {
-        let win = this.core.contentDiv.ownerDocument.defaultView || window;
-        this.core.idleLoopHandle = win.setInterval(() => {
-            if (this.core.ignoreIdleEvent) {
-                this.core.ignoreIdleEvent = false;
-            } else {
-                this.core.api.triggerEvent(
-                    this.core,
-                    {
-                        eventType: PluginEventType.Idle,
-                    },
-                    true /*broadcast*/
-                );
-            }
-        }, interval);
     }
 
     private restoreSelectionFromMarker(removeMarkerOnly?: boolean) {

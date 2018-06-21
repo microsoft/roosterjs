@@ -1,4 +1,4 @@
-import { BlockElement, ContentScope, Direction } from 'roosterjs-editor-types';
+import { BlockElement, Direction } from 'roosterjs-editor-types';
 import { NodeBlockElement, StartEndBlockElement, wrap } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
@@ -20,7 +20,7 @@ export default function setDirection(editor: Editor, dir: Direction) {
     // Otherwise (i.e. <ced><div>abc<span>12<br>34</span><div></ced>, abc<span>12<br> is a block) do nothing since there isn't
     // really a way to change direction for such blocks (some HTML shuffling is needed)
     let blockElements: BlockElement[] = [];
-    let contentTraverser = editor.getContentTraverser(ContentScope.Selection);
+    let contentTraverser = editor.getSelectionTraverser();
     let startBlock = contentTraverser.currentBlockElement;
     while (startBlock) {
         blockElements.push(startBlock);

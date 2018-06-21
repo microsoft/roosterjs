@@ -21,9 +21,6 @@ const attachDomEvent: AttachDomEvent = (
                 false /*broadcast*/
             );
         }
-
-        // Ignore idle event since there is DOM event happened
-        core.ignoreIdleEvent = true;
     };
     core.contentDiv.addEventListener(eventName, onEvent);
     return () => {

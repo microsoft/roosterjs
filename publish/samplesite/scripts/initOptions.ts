@@ -1,4 +1,3 @@
-import Idle from './plugins/Idle';
 import ShowCursorPosition from './plugins/ShowCursorPosition';
 import ShowFromState from './plugins/ShowFormatState';
 import { DefaultFormat } from 'roosterjs-editor-types';
@@ -75,7 +74,6 @@ export function initEditorForOptions() {
 
     plugins.push(new ShowCursorPosition(document.getElementById('cursorPosition')));
     plugins.push(new ShowFromState(document.getElementById('formatState')));
-    plugins.push(new Idle(document.getElementById('idleEventTime')))
 
     let defaultFormat: DefaultFormat = {};
 
@@ -98,8 +96,7 @@ export function initEditorForOptions() {
     }
     let editorOptions: EditorOptions = {
         plugins: plugins,
-        defaultFormat: defaultFormat,
-        idleEventTimeSpanInSecond: 3,
+        defaultFormat: defaultFormat
     };
 
     setCurrentEditor(

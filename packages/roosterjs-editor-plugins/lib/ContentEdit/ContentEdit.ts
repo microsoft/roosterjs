@@ -374,7 +374,7 @@ export default class ContentEdit implements EditorPlugin {
         let range = this.editor.getSelectionRange();
         if (range && range.startOffset == NodeBoundary.Begin) {
             let container = range.startContainer;
-            while (container != node && contains(node, container) && !container.previousSibling) {
+            while (contains(node, container) && !container.previousSibling) {
                 container = container.parentNode;
             }
             return container == node;

@@ -573,7 +573,7 @@ class StartEndBlockElement implements BlockElement {
 function getBlockElementAtNode(rootNode: Node, node: Node): BlockElement {
     // TODO: assert node to be a leaf node
     let blockElement: BlockElement;
-    if (node && contains(rootNode, node)) {
+    if (contains(rootNode, node)) {
         // if the node is already a block, return right away
         if (isBlockElement(node)) {
             return new NodeBlockElement(node);
@@ -657,6 +657,7 @@ export {
     StartEndBlockElement,
     getBlockElementAtNode,
     getFirstBlockElement,
+    getFirstLastBlockElement,
     getLastBlockElement,
     getNextBlockElement,
     getPreviousBlockElement,

@@ -8,14 +8,6 @@ import { Editor } from 'roosterjs-editor-core';
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
  */
 export default function setBackgroundColor(editor: Editor, color: string) {
-    editor.focus();
-    // TODO: Verify color
-    let validatedColor = color.trim();
-    if (validatedColor) {
-        editor.addUndoSnapshot(() => {
-            editor.applyInlineStyle((element: HTMLElement) => {
-                element.style.backgroundColor = validatedColor;
-            });
-        });
-    }
+    color = color.trim();
+    editor.applyInlineStyle(element => element.style.backgroundColor = color);
 }

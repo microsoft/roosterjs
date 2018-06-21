@@ -39,37 +39,6 @@ describe('Editor getSelectionRange()', () => {
     });
 });
 
-describe('Editor applyInlineStyle()', () => {
-    let originalContent = '<div id="text">text</div>';
-
-    beforeEach(() => {
-        editor = TestHelper.initEditor(testID);
-        editor.setContent(originalContent);
-    });
-
-    afterEach(() => {
-        editor.dispose();
-        TestHelper.removeElement(testID);
-    });
-
-    it('apply inline style to selected node', () => {
-        // Arrange
-        TestHelper.selectNode(document.getElementById('text'));
-
-        // Act
-        editor.applyInlineStyle((element: HTMLElement) => {
-            element.style.color = 'rgb(0,0,0)';
-            element.style.fontSize = '12pt';
-            element.style.fontFamily = 'Calibri';
-        });
-
-        // Assert
-        expect(editor.getContent()).toBe(
-            '<div id="text"><span style="color: rgb(0, 0, 0); font-size: 12pt; font-family: Calibri;">text</span></div>'
-        );
-    });
-});
-
 describe('Editor setContent()', () => {
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);

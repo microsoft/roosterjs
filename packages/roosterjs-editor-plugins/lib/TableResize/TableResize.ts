@@ -49,7 +49,7 @@ export default class TableResize implements EditorPlugin {
     private clickIntoCurrentTd(event: PluginDomEvent) {
         let mouseEvent = <MouseEvent>event.rawEvent;
         let target = mouseEvent.target;
-        return target instanceof Node && (this.td == target || contains(this.td, <Node>target));
+        return target instanceof Node && contains(this.td, <Node>target, true /*treatSameNodeAsContain*/);
     }
 
     private onMouseOver = (e: MouseEvent) => {

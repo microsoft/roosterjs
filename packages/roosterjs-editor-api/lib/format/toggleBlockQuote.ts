@@ -1,7 +1,7 @@
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import { Browser, getTagOfNode, splitParentNode, unwrap, wrap } from 'roosterjs-editor-dom';
-import { ContentScope, PositionType } from 'roosterjs-editor-types';
+import { PositionType } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 var ZERO_WIDTH_SPACE = '&#8203;';
@@ -51,7 +51,7 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
 
 function getContentNodes(editor: Editor): Node[] {
     let result: Node[] = [];
-    let contentTraverser = editor.getContentTraverser(ContentScope.Selection);
+    let contentTraverser = editor.getSelectionTraverser();
     let blockElement = contentTraverser ? contentTraverser.currentBlockElement : null;
     while (blockElement) {
         let nodes = blockElement.getContentNodes();

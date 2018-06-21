@@ -1,4 +1,4 @@
-import { ContentPosition, ContentScope, InlineElement } from 'roosterjs-editor-types';
+import { InlineElement } from 'roosterjs-editor-types';
 import { ContentTraverser, matchWhiteSpaces } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
@@ -74,10 +74,7 @@ export default class CursorData {
         if (!this.inlineAfterCursor && !this.forwardTraversingComplete) {
             // TODO: this may needs to be extended to support read more than just one inline element after cursor
             if (!this.forwardTraverser) {
-                this.forwardTraverser = this.editor.getContentTraverser(
-                    ContentScope.Block,
-                    ContentPosition.SelectionStart
-                );
+                this.forwardTraverser = this.editor.getBlockTraverser();
             }
 
             if (this.forwardTraverser) {
@@ -164,10 +161,7 @@ export default class CursorData {
     /// Continue traversing backward till stop condition is met or begin of block is reached
     private continueTraversingBackwardTill(stopFunc: (inlineElement: InlineElement) => boolean) {
         if (!this.backwardTraverser) {
-            this.backwardTraverser = this.editor.getContentTraverser(
-                ContentScope.Block,
-                ContentPosition.SelectionStart
-            );
+            this.backwardTraverser = this.editor.getBlockTraverser();
         }
 
         if (!this.backwardTraverser) {

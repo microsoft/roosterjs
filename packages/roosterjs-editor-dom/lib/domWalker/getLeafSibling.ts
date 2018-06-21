@@ -7,7 +7,7 @@ export function getLeafSibling(rootNode: Node, startNode: Node, isNext: boolean)
         ? (node: Node) => node.nextSibling
         : (node: Node) => node.previousSibling;
     let getChild = isNext ? (node: Node) => node.firstChild : (node: Node) => node.lastChild;
-    if (startNode && contains(rootNode, startNode)) {
+    if (contains(rootNode, startNode)) {
         let curNode = startNode;
         let shouldContinue = true;
 
