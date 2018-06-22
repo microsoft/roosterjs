@@ -46,6 +46,7 @@ export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isDocumentPosition } from './utils/isDocumentPosition';
 export { default as isEditorPointAfter } from './utils/isEditorPointAfter';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
+export { default as isPositionAtBeginningOf } from './utils/isPositionAtBeginningOf';
 export { default as isVoidHtmlElement } from './utils/isVoidHtmlElement';
 export { default as matchLink } from './utils/matchLink';
 export { default as matchWhiteSpaces } from './utils/matchWhiteSpaces';

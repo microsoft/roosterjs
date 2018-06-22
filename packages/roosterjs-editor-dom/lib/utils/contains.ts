@@ -41,6 +41,10 @@ export default function contains(
         return false;
     }
 
+    if (treatSameNodeAsContain && container == contained) {
+        return true;
+    }
+
     if (!(contained instanceof Node)) {
         let range = contained instanceof Range ? contained : contained.getRange();
         contained = range ? range.commonAncestorContainer : null;

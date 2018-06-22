@@ -8,6 +8,7 @@ import {
     getTagOfNode,
     isBlockElement,
     isNodeEmpty,
+    isPositionAtBeginningOf,
     isVoidHtmlElement,
     unwrap,
     wrap,
@@ -43,7 +44,10 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
                     // For insert on new line, or refNode is text or void html element (HR, BR etc.)
                     // which cannot have children, i.e. <div>hello<br>world</div>. 'hello', 'world' are the
                     // first and last node. Insert before 'hello' or after 'world', but still inside DIV
-                    insertedNode = refParentNode.insertBefore(node, isBegin ? refNode : refNode.nextSibling);
+                    insertedNode = refParentNode.insertBefore(
+                        node,
+                        isBegin ? refNode : refNode.nextSibling
+                    );
                 } else {
                     // if the refNode can have child, use appendChild (which is like to insert as first/last child)
                     // i.e. <div>hello</div>, the content will be inserted before/after hello
@@ -88,10 +92,14 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
                     }
                 }
 
-                let nodeForCursor = node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
+                let nodeForCursor =
+                    node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
                 range.insertNode(node);
                 if (updateCursor && nodeForCursor) {
-                    core.api.select(core, nodeForCursor, PositionType.After);
+                    core.api.select(
+                        core,
+                        new Position(nodeForCursor, PositionType.After).normalize()
+                    );
                 } else {
                     core.api.select(core, clonedRange);
                 }
@@ -146,7 +154,7 @@ function preprocessNode(
             }
 
             if (getTagOfNode(listNode.parentNode) == tag) {
-                if (isNodeEmpty(listNode) || isSelectionAtBeginningOf(range, listNode)) {
+                if (isNodeEmpty(listNode) || isPositionAtBeginningOf(range, listNode)) {
                     range.setEndBefore(listNode);
                 } else {
                     range.setEndAfter(listNode);
@@ -176,29 +184,4 @@ function preprocessNode(
     }
 
     return range;
-}
-
-function isSelectionAtBeginningOf(range: Range, node: Node) {
-    if (range) {
-        if (
-            range.startOffset > 0 &&
-            range.startContainer.nodeType == NodeType.Element &&
-            range.startContainer.childNodes[range.startOffset] == node
-        ) {
-            return true;
-        } else if (range.startOffset == 0) {
-            let container = range.startContainer;
-            while (
-                contains(node, container) &&
-                (!container.previousSibling || isNodeEmpty(container.previousSibling))
-            ) {
-                container = container.parentNode;
-            }
-
-            if (container == node) {
-                return true;
-            }
-        }
-    }
-    return false;
 }

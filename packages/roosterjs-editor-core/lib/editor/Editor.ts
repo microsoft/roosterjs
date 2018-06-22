@@ -524,10 +524,7 @@ export default class Editor {
             // Create a new span to hold the style.
             // Some content is needed to position selection into the span
             // for here, we inject ZWS - zero width space
-            let element = fromHtml(
-                '<SPAN>\u200B</SPAN>',
-                this.getDocument()
-            )[0] as HTMLElement;
+            let element = fromHtml('<SPAN>\u200B</SPAN>', this.getDocument())[0] as HTMLElement;
             callback(element);
             this.insertNode(element);
 
@@ -537,7 +534,7 @@ export default class Editor {
             this.select(element, PositionType.End);
         } else {
             this.addUndoSnapshot(() => {
-                    // This is start and end node that get the style. The start and end needs to be recorded so that selection
+                // This is start and end node that get the style. The start and end needs to be recorded so that selection
                 // can be re-applied post-applying style
                 let firstNode: Node;
                 let lastNode: Node;
@@ -669,11 +666,11 @@ export default class Editor {
      * Perform an auto complete action in the callback, save a snapsnot of content before the action,
      * and trigger ContentChangedEvent with the change source if specified
      * @param callback The auto complete callback, return value will be used as data field of ContentChangedEvent
-     * @param changeSource Chagne source of ContentChangedEvent.
+     * @param changeSource Chagne source of ContentChangedEvent. If not passed, no ContentChangedEvent will be  triggered
      */
     public performAutoComplete(
         callback: (start: Position, end: Position) => any,
-        changeSource: ChangeSource
+        changeSource?: ChangeSource
     ) {
         let snapshot = this.getContent(
             false /*triggerContentChangedEvent*/,
@@ -757,7 +754,13 @@ export default class Editor {
      */
     public getSelectionTraverser(): ContentTraverser {
         let range = this.getSelectionRange();
-        return range && ContentTraverser.createSelectionTraverser(this.core.contentDiv, this.getSelectionRange());
+        return (
+            range &&
+            ContentTraverser.createSelectionTraverser(
+                this.core.contentDiv,
+                this.getSelectionRange()
+            )
+        );
     }
 
     /**
@@ -768,7 +771,10 @@ export default class Editor {
         startFrom: ContentPosition = ContentPosition.SelectionStart
     ): ContentTraverser {
         let range = this.getSelectionRange();
-        return range && ContentTraverser.createSelectionBlockTraverser(this.core.contentDiv, range, startFrom);
+        return (
+            range &&
+            ContentTraverser.createSelectionBlockTraverser(this.core.contentDiv, range, startFrom)
+        );
     }
 
     /**
