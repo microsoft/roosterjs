@@ -170,25 +170,19 @@ actions in the page.
 
 ## Sample code
 
-In the `/sample/` folder is a sample editor that you can explore.
 To use the sample editor, follow these instructions:
 
-1. Get dependencies using npm.
+1. Get dependencies using [yarn](https://yarnpkg.com):
    ```cmd
-   npm install
+   yarn
    ```
 
-2. Build the source code.
+2. Build the source code, and start the sample editor:
    ```
-   npm run build
-   ```
-
-3. Start the sample editor.
-   ```
-   npm start
+   yarn start
    ```
 
-4. Navigate to the sample editor at http://localhost:3000/sample/sample.htm
+4. Navigate to the sample editor at http://localhost:3000/publish/samplesite/sample.htm
 
 ## More documentation
 
