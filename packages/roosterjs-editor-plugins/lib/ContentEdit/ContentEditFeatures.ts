@@ -71,6 +71,12 @@ interface ContentEditFeatures {
      * @default true
      */
     autoLink: boolean;
+
+    /**
+     * Respond to default common keyboard short, i.e. Ctrl+B, Ctrl+I, Ctrl+U, Ctrl+Z, Ctrl+Y
+     * @default true
+     */
+    defaultShortcut: boolean;
 }
 
 export default ContentEditFeatures;
@@ -91,6 +97,7 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         autoBullet: true,
         tabInTable: true,
         upDownInTable: true,
+        defaultShortcut: true,
     };
 }
 
@@ -98,4 +105,5 @@ export interface ContentEditFeature {
     keys: number[];
     shouldHandleEvent: (event: PluginDomEvent, editor: Editor) => any;
     handleEvent: (event: PluginDomEvent, editor: Editor) => ChangeSource | void;
+    allowFunctionKeys?: boolean;
 }

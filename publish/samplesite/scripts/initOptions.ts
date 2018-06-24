@@ -2,7 +2,6 @@ import ShowCursorPosition from './plugins/ShowCursorPosition';
 import ShowFromState from './plugins/ShowFormatState';
 import { DefaultFormat } from 'roosterjs-editor-types';
 import {
-    DefaultShortcut,
     HyperLink,
     Paste,
     ContentEdit,
@@ -26,7 +25,6 @@ function initOptions() {
     });
 
     [
-        'defaultShortcutCheckbox',
         'hyperlinkCheckbox',
         'pasteCheckbox',
         'contentEditCheckbox',
@@ -47,9 +45,6 @@ export function initEditorForOptions() {
     setCurrentEditor(null);
 
     let plugins: EditorPlugin[] = [];
-    if ((document.getElementById('defaultShortcutCheckbox') as HTMLInputElement).checked) {
-        plugins.push(new DefaultShortcut());
-    }
     if ((document.getElementById('hyperlinkCheckbox') as HTMLInputElement).checked) {
         plugins.push(new HyperLink());
     }

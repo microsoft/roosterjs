@@ -1,5 +1,4 @@
 import {
-    DefaultShortcut,
     HyperLink,
     Paste,
     ContentEdit,
@@ -12,7 +11,6 @@ import { DefaultFormat } from 'roosterjs-editor-types';
 
 const defaultPluginsString: string = [
     'var plugins = [',
-    '  new roosterPlugins.DefaultShortcut(),',
     '  new roosterPlugins.HyperLink(),',
     '  new roosterPlugins.Paste(),',
     '  new roosterPlugins.ContentEdit(),',
@@ -82,8 +80,6 @@ function assemblePluginsString(plugins: EditorPlugin[]): string {
                 pluginsString += "  new roosterjsPlugins.Watermark('Type content here...'),\n";
             } else if (plugin instanceof ImageResize) {
                 pluginsString += '  new roosterjsImageResizePlugin.ImageResize(),\n';
-            } else if (plugin instanceof DefaultShortcut) {
-                pluginsString += '  new roosterjsPlugins.DefaultShortcut(),\n';
             } else if (plugin instanceof HyperLink) {
                 pluginsString += '  new roosterjsPlugins.HyperLink(),\n';
             } else if (plugin instanceof Paste) {

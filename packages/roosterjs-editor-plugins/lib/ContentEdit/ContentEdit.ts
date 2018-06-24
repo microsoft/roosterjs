@@ -25,6 +25,7 @@ import {
     UnquoteWhenEnterOnEmptyLine,
 } from './features/quoteFeatures';
 import { TabInTable, UpDownInTable } from './features/tableFeatures';
+import { DefaultShortcut } from './features/shortcutFeatures';
 
 /**
  * An editor plugin to handle content edit event.
@@ -69,6 +70,7 @@ export default class ContentEdit implements EditorPlugin {
         this.addFeature(featureSet.upDownInTable, UpDownInTable);
         this.addFeature(featureSet.autoBullet, AutoBullet);
         this.addFeature(featureSet.autoLink, AutoLink);
+        this.addFeature(featureSet.defaultShortcut, DefaultShortcut);
         this.autoLinkEnabled = featureSet.autoLink;
     }
 
@@ -91,17 +93,13 @@ export default class ContentEdit implements EditorPlugin {
      * Check whether the event should be handled exclusively by this plugin
      */
     public willHandleEventExclusively(event: PluginEvent): boolean {
-        let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
-        if (
-            event.eventType == PluginEventType.KeyDown &&
-            this.keys.indexOf(keyboardEvent.which) >= 0 &&
-            !keyboardEvent.ctrlKey &&
-            !keyboardEvent.altKey &&
-            !keyboardEvent.metaKey
-        ) {
+        let e = (event as PluginDomEvent).rawEvent as KeyboardEvent;
+        if (event.eventType == PluginEventType.KeyDown && this.keys.indexOf(e.which) >= 0) {
+            let hasFunctionKey = e.ctrlKey || e.altKey || e.metaKey;
             for (let feature of this.features) {
                 if (
-                    feature.keys.indexOf(keyboardEvent.which) >= 0 &&
+                    (feature.allowFunctionKeys || !hasFunctionKey) &&
+                    feature.keys.indexOf(e.which) >= 0 &&
                     feature.shouldHandleEvent(<PluginDomEvent>event, this.editor)
                 ) {
                     this.currentFeature = feature;
