@@ -5,10 +5,12 @@ import {
     getLastInlineElement,
     getNextInlineElement,
     getPreviousInlineElement,
-    getInlineElementBeforePoint,
-    getInlineElementAfterPoint,
 } from '../../blockElements/BlockElement';
 import { NodeBoundary, InlineElement, EditorPoint } from 'roosterjs-editor-types';
+import {
+    getInlineElementBeforePoint,
+    getInlineElementAfterPoint,
+} from '../../deprecated/getInlineElementBeforeAfterPoint';
 
 let testID = 'getInlineElement';
 

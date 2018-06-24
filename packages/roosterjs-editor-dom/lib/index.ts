@@ -12,8 +12,6 @@ export {
     getInlineElementAtNode,
     getNextInlineElement,
     getPreviousInlineElement,
-    getInlineElementBeforePoint,
-    getInlineElementAfterPoint,
 } from './blockElements/BlockElement';
 
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
@@ -27,6 +25,10 @@ export { default as NodeInlineElement } from './inlineElements/NodeInlineElement
 export { default as PartialInlineElement } from './inlineElements/PartialInlineElement';
 export { default as TextInlineElement } from './inlineElements/TextInlineElement';
 export { default as resolveInlineElement } from './inlineElements/resolveInlineElement';
+export {
+    getInlineElementBefore,
+    getInlineElementAfter,
+} from './inlineElements/getInlineElementBeforeAfter';
 
 export { default as Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
@@ -50,7 +52,6 @@ export { default as isPositionAtBeginningOf } from './utils/isPositionAtBeginnin
 export { default as isVoidHtmlElement } from './utils/isVoidHtmlElement';
 export { default as matchLink } from './utils/matchLink';
 export { default as matchWhiteSpaces } from './utils/matchWhiteSpaces';
-export { default as normalizeEditorPoint } from './utils/normalizeEditorPoint';
 export { default as queryElements } from './utils/queryElements';
 export { default as splitParentNode } from './utils/splitParentNode';
 export { default as unwrap } from './utils/unwrap';
@@ -58,10 +59,16 @@ export { default as wrap } from './utils/wrap';
 
 export { default as VTable, VCell } from './table/VTable';
 
+export { default as Position } from './selection/Position';
+export { default as SelectionRange } from './selection/SelectionRange';
+
+// Deprecated
 export { default as isTextualInlineElement } from './deprecated/isTextualInlineElement';
 export { default as wrapAll } from './deprecated/wrapAll';
 export { default as EditorSelection } from './contentTraverser/EditorSelection';
 export { default as TraversingScoper } from './contentTraverser/TraversingScoper';
-
-export { default as Position } from './selection/Position';
-export { default as SelectionRange } from './selection/SelectionRange';
+export {
+    getInlineElementBeforePoint,
+    getInlineElementAfterPoint,
+} from './deprecated/getInlineElementBeforeAfterPoint';
+export { default as normalizeEditorPoint } from './deprecated/normalizeEditorPoint';

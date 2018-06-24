@@ -108,6 +108,16 @@ export default class Position {
     }
 
     /**
+     * @deprecated
+     */
+    toEditorPoint() {
+        return {
+            containerNode: this.node,
+            offset: this.offset == 0 && this.isAtEnd ? 1 : this.offset,
+        };
+    }
+
+    /**
      * Check if this position is equal to the given position
      * @param p The position to check
      */

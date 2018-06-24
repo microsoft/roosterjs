@@ -38,10 +38,18 @@ export default function clearFormat(editor: Editor) {
         });
 
         if (!isDefaultFormatEmpty) {
-            setFontName(editor, defaultFormat.fontFamily);
-            setFontSize(editor, defaultFormat.fontSize);
-            setTextColor(editor, defaultFormat.textColor);
-            setBackgroundColor(editor, defaultFormat.backgroundColor);
+            if (defaultFormat.fontFamily) {
+                setFontName(editor, defaultFormat.fontFamily);
+            }
+            if (defaultFormat.fontSize) {
+                setFontSize(editor, defaultFormat.fontSize);
+            }
+            if (defaultFormat.textColor) {
+                setTextColor(editor, defaultFormat.textColor);
+            }
+            if (defaultFormat.backgroundColor) {
+                setBackgroundColor(editor, defaultFormat.backgroundColor);
+            }
             if (defaultFormat.bold) {
                 toggleBold(editor);
             }

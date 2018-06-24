@@ -6,6 +6,7 @@ import { getTagOfNode } from 'roosterjs-editor-dom';
 const EVENTDATACACHE_LISTSTATE = 'LISTSTATE';
 
 /**
+ * @deprecated use getNodeAtCursor(editor, ['OL','UL']) instead
  * Get the list state at selection
  * The list state refers to the HTML elements <OL> or <UL>
  * @param editor The editor instance

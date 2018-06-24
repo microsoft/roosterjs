@@ -1,17 +1,16 @@
 import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import isEditorPointAfter from '../utils/isEditorPointAfter';
-import normalizeEditorPoint from '../utils/normalizeEditorPoint';
 import { BlockElement, EditorPoint, InlineElement } from 'roosterjs-editor-types';
+import { getBlockElementAtNode } from '../blockElements/BlockElement';
+import SelectionRange from '../selection/SelectionRange';
 import {
-    getBlockElementAtNode,
-    getInlineElementAfterPoint,
-    getInlineElementBeforePoint,
-} from '../blockElements/BlockElement';
+    getInlineElementAfter,
+    getInlineElementBefore,
+} from '../inlineElements/getInlineElementBeforeAfter';
 
 // This is a utility like class that produces editor point/inline/block element around or within a selection range
 class EditorSelection {
-    private readonly startPoint: EditorPoint;
-    private readonly endPoint: EditorPoint;
+    private selectionRange: SelectionRange;
 
     private startInline: InlineElement;
     private endInline: InlineElement;
@@ -20,15 +19,8 @@ class EditorSelection {
     private startBlock: BlockElement;
     private endBlock: BlockElement;
 
-    constructor(private rootNode: Node, private selectionRange: Range) {
-        // compute the start and end point
-        this.startPoint = normalizeEditorPoint(
-            this.selectionRange.startContainer,
-            this.selectionRange.startOffset
-        );
-        this.endPoint = this.selectionRange.collapsed
-            ? this.startPoint
-            : normalizeEditorPoint(this.selectionRange.endContainer, this.selectionRange.endOffset);
+    constructor(private rootNode: Node, range: Range) {
+        this.selectionRange = new SelectionRange(range).normalize();
     }
 
     // Get the collapsed state of the selection
@@ -38,7 +30,7 @@ class EditorSelection {
 
     // Get the inline element before start of the selection
     public get inlineElementBeforeStart(): InlineElement {
-        return getInlineElementBeforePoint(this.rootNode, this.startPoint);
+        return getInlineElementBefore(this.rootNode, this.selectionRange.start);
     }
 
     // Get the start inline element of the selection (the first inline after the selection)
@@ -55,8 +47,8 @@ class EditorSelection {
 
     // Get start block element
     public get startBlockElement(): BlockElement {
-        if (!this.startBlock && this.startPoint) {
-            this.startBlock = getBlockElementAtNode(this.rootNode, this.startPoint.containerNode);
+        if (!this.startBlock) {
+            this.startBlock = getBlockElementAtNode(this.rootNode, this.selectionRange.start.node);
         }
 
         return this.startBlock;
@@ -64,8 +56,8 @@ class EditorSelection {
 
     // Get end block element
     public get endBlockElement(): BlockElement {
-        if (!this.endBlock && this.endPoint) {
-            this.endBlock = getBlockElementAtNode(this.rootNode, this.endPoint.containerNode);
+        if (!this.endBlock) {
+            this.endBlock = getBlockElementAtNode(this.rootNode, this.selectionRange.end.node);
         }
 
         return this.endBlock;
@@ -208,14 +200,14 @@ class EditorSelection {
     // calculate start and end inline element
     private calculateStartEndInline(): void {
         // Compute the start point
-        this.startInline = getInlineElementAfterPoint(this.rootNode, this.startPoint);
+        this.startInline = getInlineElementAfter(this.rootNode, this.selectionRange.start);
 
         if (this.collapsed) {
             // For collapsed range, set end to be same as start
             this.endInline = this.startInline;
         } else {
             // For non-collapsed range, get same for end point
-            this.endInline = getInlineElementBeforePoint(this.rootNode, this.endPoint);
+            this.endInline = getInlineElementBefore(this.rootNode, this.selectionRange.end);
 
             // it is possible that start and end points to same inline element, which
             // is often the case where users select partial text of a text node

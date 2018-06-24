@@ -5,21 +5,9 @@ import isBlockElement from '../utils/isBlockElement';
 import isDocumentPosition from '../utils/isDocumentPosition';
 import isNodeAfter from '../utils/isNodeAfter';
 import resolveInlineElement from '../inlineElements/resolveInlineElement';
-import shouldSkipNode from '../domWalker/shouldSkipNode';
-import {
-    BlockElement,
-    DocumentPosition,
-    InlineElement,
-    EditorPoint,
-    NodeBoundary,
-    NodeType,
-} from 'roosterjs-editor-types';
+import { BlockElement, DocumentPosition, InlineElement } from 'roosterjs-editor-types';
 import { getFirstLeafNode, getLastLeafNode } from '../domWalker/getLeafNode';
-import {
-    getLeafSibling,
-    getPreviousLeafSibling,
-    getNextLeafSibling,
-} from '../domWalker/getLeafSibling';
+import { getLeafSibling } from '../domWalker/getLeafSibling';
 
 // Get the inline element at a node
 function getInlineElementAtNode(rootNode: Node, node: Node): InlineElement {
@@ -76,84 +64,6 @@ function getNextInlineElement(rootNode: Node, inlineElement: InlineElement): Inl
 // Get previous inline element
 function getPreviousInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement {
     return getNextPreviousInlineElement(rootNode, inlineElement, false /*isNext*/);
-}
-
-// Get inline element before an editor point
-// This is mostly used when users want to get the inline element before selection/cursor
-// There is a good possibility that the cursor is in middle of an inline element (i.e. mid of a text node)
-// in this case, we only want to return what is before cursor (a partial of an inline) to indicate
-// that we're in middle. The logic is largely to detect if the editor point runs across an inline element
-function getInlineElementBeforePoint(rootNode: Node, position: EditorPoint) {
-    let inlineElement: InlineElement;
-    let containerNode = position.containerNode;
-    let offset = position.offset;
-    if (containerNode) {
-        let isPartial = false;
-        if (offset == NodeBoundary.Begin) {
-            // The point is at the begin of container element
-            containerNode = getPreviousLeafSibling(rootNode, containerNode);
-        } else if (
-            containerNode.nodeType == NodeType.Text &&
-            offset < containerNode.nodeValue.length
-        ) {
-            // Run across a text node
-            isPartial = true;
-        }
-
-        if (containerNode && shouldSkipNode(containerNode)) {
-            containerNode = getPreviousLeafSibling(rootNode, containerNode);
-        }
-
-        inlineElement = containerNode ? getInlineElementAtNode(rootNode, containerNode) : null;
-
-        // if the inline element we get in the end wraps around the point (contains), this has to be a partial
-        isPartial = isPartial || (inlineElement && inlineElement.contains(position));
-        if (isPartial && inlineElement) {
-            inlineElement = new PartialInlineElement(inlineElement, null, position);
-        }
-    }
-
-    return inlineElement;
-}
-
-// Similar to getInlineElementBeforePoint, to get inline element after an editor point
-function getInlineElementAfterPoint(rootNode: Node, editorPoint: EditorPoint) {
-    let inlineElement: InlineElement;
-    let containerNode = editorPoint.containerNode;
-    let offset = editorPoint.offset;
-    if (containerNode) {
-        let isPartial = false;
-        if (
-            (containerNode.nodeType == NodeType.Text && offset == containerNode.nodeValue.length) ||
-            (containerNode.nodeType == NodeType.Element && offset == NodeBoundary.End)
-        ) {
-            // The point is at the end of container element
-            containerNode = getNextLeafSibling(rootNode, containerNode);
-        } else if (
-            containerNode.nodeType == NodeType.Text &&
-            offset > NodeBoundary.Begin &&
-            offset < containerNode.nodeValue.length
-        ) {
-            // Run across a text node, this inline has to be partial
-            isPartial = true;
-        }
-
-        if (containerNode && shouldSkipNode(containerNode)) {
-            containerNode = getNextLeafSibling(rootNode, containerNode);
-        }
-
-        inlineElement = containerNode ? getInlineElementAtNode(rootNode, containerNode) : null;
-
-        // if the inline element we get in the end wraps (contains) the editor point, this has to be a partial
-        // the point runs across a test node in a link
-        isPartial = isPartial || (inlineElement && inlineElement.contains(editorPoint));
-
-        if (isPartial && inlineElement) {
-            inlineElement = new PartialInlineElement(inlineElement, editorPoint, null);
-        }
-    }
-
-    return inlineElement;
 }
 
 // Checks if the node is a BR
@@ -666,6 +576,4 @@ export {
     getInlineElementAtNode,
     getNextInlineElement,
     getPreviousInlineElement,
-    getInlineElementBeforePoint,
-    getInlineElementAfterPoint,
 };

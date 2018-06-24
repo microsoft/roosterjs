@@ -1,5 +1,5 @@
 import * as DomTestHelper from '../DomTestHelper';
-import normalizeEditorPoint from '../../utils/normalizeEditorPoint';
+import normalizeEditorPoint from '../../deprecated/normalizeEditorPoint';
 import { NodeType } from 'roosterjs-editor-types';
 
 describe('normalizeEditorPoint()', () => {
