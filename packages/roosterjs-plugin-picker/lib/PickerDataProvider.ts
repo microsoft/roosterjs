@@ -9,12 +9,17 @@ export interface PickerPluginOptions {
     // Constant that defines the character(s) that will trigger the suggesting state in the plugin.
     // The @mentions case, for instance, uses a '@' symbol.
     triggerCharacter: string;
+
+    // Option for using the picker in the horizontal state:
+    // Vertical (the default, when this is false), will call shiftHighlight with up (false) and down (true).
+    // Horizontal (when this is true), will call shiftHighlight with left (false) and right (true).
+    isHorizontal?: boolean;
 }
 
 export interface PickerDataProvider {
     // Function called when the plugin is intialized to register two callbacks with the data provider.
     // The first is called in order to "commit" a new element to the editor body that isn't handled automatically by the editor plugin.
-    // The second sets the isSuggesting value for situations where the UX needs to manipulate the suggesting state that's otherwise plugin managed.
+    // The second sets the isSuggesting value for situations wherethe UX needs to manipulate the suggesting state that's otherwise plugin managed.
     onInitalize: (
         commitMentionCallback: (nodeToAvoiddd: HTMLElement) => void,
         setIsSuggestingCallback: (isSuggesting: boolean) => void
@@ -33,7 +38,7 @@ export interface PickerDataProvider {
     selectOption?: () => void;
 
     // Function called when a keypress is issued that would move the highlight on any picker UX.
-    shiftHighlight?: (isDown: boolean) => void;
+    shiftHighlight?: (isIncrement: boolean) => void;
 
     // Function that is called when a delete command is issued.
     // Returns the intended replacement node (if partial delete) or null (if full delete)

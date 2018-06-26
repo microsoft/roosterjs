@@ -1,17 +1,19 @@
-import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
+import { PickerDataProvider, PickerPluginOptions } from '../store/schema/PickerDataProvider';
 import { cacheGetCursorEventData, replaceTextBeforeCursorWithNode } from 'roosterjs-editor-api';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { PartialInlineElement } from 'roosterjs-editor-dom';
 import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 // Character codes
-const BACKSPACE_CHARCODE = 8;
-const TAB_CHARCODE = 9;
-const ENTER_CHARCODE = 13;
-const UP_ARROW_CHARCODE = 38;
-const DOWN_ARROW_CHARCODE = 40;
-const DELETE_CHARCODE = 46;
-const ESC_CHARCODE = 27;
+export const BACKSPACE_CHARCODE = 8;
+export const TAB_CHARCODE = 9;
+export const ENTER_CHARCODE = 13;
+export const ESC_CHARCODE = 27;
+export const LEFT_ARROW_CHARCODE = 37;
+export const UP_ARROW_CHARCODE = 38;
+export const RIGHT_ARROW_CHARCODE = 39;
+export const DOWN_ARROW_CHARCODE = 40;
+export const DELETE_CHARCODE = 46;
 
 export interface EditorPickerPluginInterface extends EditorPlugin {
     dataProvider: PickerDataProvider;
@@ -95,8 +97,9 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
     }
 
     private getIdValue(node: Node): string {
-        return node.attributes && node.attributes.getNamedItem('id')
-            ? (node.attributes.getNamedItem('id').value as string)
+        let element = node as Element;
+        return element.attributes && element.attributes.getNamedItem('id')
+            ? (element.attributes.getNamedItem('id').value as string)
             : null;
     }
 
@@ -221,11 +224,16 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
                 this.handleKeyDownEvent(event);
             } else if (
                 this.dataProvider.shiftHighlight &&
-                (keyboardEvent.which == UP_ARROW_CHARCODE ||
-                    keyboardEvent.which == DOWN_ARROW_CHARCODE)
+                (this.pickerOptions.isHorizontal
+                    ? keyboardEvent.which == LEFT_ARROW_CHARCODE ||
+                      keyboardEvent.which == RIGHT_ARROW_CHARCODE
+                    : keyboardEvent.which == UP_ARROW_CHARCODE ||
+                      keyboardEvent.which == DOWN_ARROW_CHARCODE)
             ) {
                 this.dataProvider.shiftHighlight(
-                    keyboardEvent.which == DOWN_ARROW_CHARCODE ? true : false
+                    this.pickerOptions.isHorizontal
+                        ? keyboardEvent.which == RIGHT_ARROW_CHARCODE ? true : false
+                        : keyboardEvent.which == DOWN_ARROW_CHARCODE ? true : false
                 );
                 this.handleKeyDownEvent(event);
             } else if (
@@ -285,7 +293,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
     }
 
     private setRangeStart(rangeNode: Range, node: Node, target: string) {
-        let nodeOffset = node.textContent.indexOf(target);
+        let nodeOffset = node.textContent.lastIndexOf(target);
         if (nodeOffset > -1) {
             rangeNode.setStart(node, nodeOffset);
             return true;
