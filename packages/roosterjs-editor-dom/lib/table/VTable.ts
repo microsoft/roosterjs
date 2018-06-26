@@ -1,17 +1,62 @@
 import { TableFormat } from 'roosterjs-editor-types';
 
+/**
+ * Represent a virtual cell of a virtual table
+ */
 export interface VCell {
+    /**
+     * The table cell object. The value will be null if this is an expanded virtual cell
+     */
     td?: HTMLTableCellElement;
+
+    /**
+     * Whether this cell is spanned from left
+     */
     spanLeft?: boolean;
+
+    /**
+     * Whether this cell is spanned from above
+     */
     spanAbove?: boolean;
 }
 
+/**
+ * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
+ */
 export default class VTable {
+    /**
+     * The HTML table object
+     */
     table: HTMLTableElement;
+
+    /**
+     * Virtual cells
+     */
     cells: VCell[][];
+
+    /**
+     * Current row index
+     */
     row: number;
+
+    /**
+     * Current column index
+     */
     col: number;
+
     private trs: HTMLTableRowElement[] = [];
+
+    /**
+     * Create a new instance of VTable object using HTML table node
+     * @param node The HTML Table node
+     */
+    constructor(table: HTMLTableElement);
+
+    /**
+     * Create a new instance of VTable object using one of its table cell
+     * @param td The HTML table cell node
+     */
+    constructor(td: HTMLTableCellElement);
 
     constructor(node: HTMLTableElement | HTMLTableCellElement) {
         this.table = node instanceof HTMLTableElement ? node : getTableFromTd(node);
@@ -45,6 +90,9 @@ export default class VTable {
         }
     }
 
+    /**
+     * Write the virtual table back to DOM tree to represent the change of VTable
+     */
     writeBack() {
         if (this.cells) {
             VTable.moveChildren(this.table);
@@ -64,6 +112,10 @@ export default class VTable {
         }
     }
 
+    /**
+     * Apply the given table format to this virtual table
+     * @param format Table format to apply
+     */
     applyFormat(format: TableFormat) {
         this.trs[0].style.backgroundColor = format.bgColorOdd || 'transparent';
         if (this.trs[1]) {
@@ -79,22 +131,39 @@ export default class VTable {
         );
     }
 
+    /**
+     * Loop each cell of current column and invoke a callback function
+     * @param callback The callback function to invoke
+     */
     forEachCellOfCurrentColumn(callback: (cell: VCell, row: VCell[], i: number) => void) {
         for (let i = 0; i < this.cells.length; i++) {
             callback(this.getCell(i, this.col), this.cells[i], i);
         }
     }
 
+    /**
+     * Loop each cell of current row and invoke a callback function
+     * @param callback The callback function to invoke
+     */
     forEachCellOfCurrentRow(callback: (cell: VCell, i: number) => void) {
         for (let i = 0; i < this.cells[this.row].length; i++) {
             callback(this.getCell(this.row, i), i);
         }
     }
 
+    /**
+     * Get a table cell using its row and column index. This function will always return an object
+     * even if the given indexes don't exist in table.
+     * @param row The row index
+     * @param col The column index
+     */
     getCell(row: number, col: number): VCell {
-        return (this.cells[row] && this.cells[row][col]) || {};
+        return (this.cells && this.cells[row] && this.cells[row][col]) || {};
     }
 
+    /**
+     * Get current HTML table cell object. If the current table cell is a virtual expanded cell, return its root cell
+     */
     getCurrentTd(): HTMLTableCellElement {
         if (this.cells) {
             let row = Math.min(this.cells.length - 1, this.row);
@@ -116,6 +185,11 @@ export default class VTable {
         return null;
     }
 
+    /**
+     * Move all children from one node to another
+     * @param fromNode The source node to move children from
+     * @param toNode Target node. If not passed, children nodes of source node will be removed
+     */
     static moveChildren(fromNode: Node, toNode?: Node) {
         while (fromNode.firstChild) {
             if (toNode) {
@@ -126,6 +200,10 @@ export default class VTable {
         }
     }
 
+    /**
+     * Clone a node without its children.
+     * @param node The node to clone
+     */
     static cloneNode<T extends Node>(node: T): T {
         let newNode = node ? <T>node.cloneNode(false /*deep*/) : null;
         if (newNode && newNode instanceof HTMLTableCellElement && !newNode.firstChild) {
@@ -134,6 +212,10 @@ export default class VTable {
         return newNode;
     }
 
+    /**
+     * Clone a table cell
+     * @param cell The cell to clone
+     */
     static cloneCell(cell: VCell): VCell {
         return {
             td: VTable.cloneNode(cell.td),

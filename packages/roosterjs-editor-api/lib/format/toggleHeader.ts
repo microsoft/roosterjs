@@ -1,7 +1,6 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { Editor } from 'roosterjs-editor-core';
-import { ContentScope, NodeType } from 'roosterjs-editor-types';
+import { DocumentCommand, NodeType } from 'roosterjs-editor-types';
 
 /**
  * Toggle header at selection
@@ -13,11 +12,25 @@ import { ContentScope, NodeType } from 'roosterjs-editor-types';
 export default function toggleHeader(editor: Editor, level: number) {
     level = Math.min(Math.max(Math.round(level), 0), 6);
 
-    execFormatWithUndo(editor, () => {
+    editor.addUndoSnapshot(() => {
         editor.focus();
 
+        let wrapped = false;
+        queryNodesWithSelection(editor, 'H1,H2,H3,H4,H5,H6', false, header => {
+            if (!wrapped) {
+                editor.getDocument().execCommand(DocumentCommand.FormatBlock, false, '<DIV>');
+                wrapped = true;
+            }
+
+            let div = editor.getDocument().createElement('div');
+            while (header.firstChild) {
+                div.appendChild(header.firstChild);
+            }
+            editor.replaceNode(header, div);
+        });
+
         if (level > 0) {
-            let traverser = editor.getContentTraverser(ContentScope.Selection);
+            let traverser = editor.getSelectionTraverser();
             let inlineElement = traverser ? traverser.currentInlineElement : null;
             while (inlineElement) {
                 let node = inlineElement.getContainerNode();
@@ -29,19 +42,7 @@ export default function toggleHeader(editor: Editor, level: number) {
                 }
                 inlineElement = traverser.getNextInlineElement();
             }
-            editor.getDocument().execCommand('formatBlock', false, `<H${level}>`);
-        } else {
-            editor.getDocument().execCommand('formatBlock', false, '<DIV>');
-            for (let i = 1; i <= 6; i++) {
-                let headers = queryNodesWithSelection(editor, 'H' + i);
-                headers.forEach(header => {
-                    let div = editor.getDocument().createElement('div');
-                    while (header.firstChild) {
-                        div.appendChild(header.firstChild);
-                    }
-                    editor.replaceNode(header, div);
-                });
-            }
+            editor.getDocument().execCommand(DocumentCommand.FormatBlock, false, `<H${level}>`);
         }
     });
 }

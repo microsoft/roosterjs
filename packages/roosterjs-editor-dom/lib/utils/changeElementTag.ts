@@ -1,21 +1,17 @@
-import getComputedStyle from './getComputedStyle';
 import getTagOfNode from './getTagOfNode';
-import normalizeEditorPoint from './normalizeEditorPoint';
-import { EditorPoint } from 'roosterjs-editor-types';
+import { getComputedStyles } from './getComputedStyle';
 
-export default function changeElementTag(
+/**
+ * Change tag of ab HTML Element to a new one, and replace it from DOM tree
+ * @param element The element to change tag
+ * @param newTag New tag to change to
+ * @returns The new element with new tag
+ */
+export default function changeElementTag<K extends keyof HTMLElementTagNameMap>(
     element: HTMLElement,
-    newTag: string,
-    range?: Range
-): HTMLElement {
-    let start: EditorPoint;
-    let end: EditorPoint;
-
-    if (range) {
-        start = normalizeEditorPoint(range.startContainer, range.startOffset);
-        end = normalizeEditorPoint(range.endContainer, range.endOffset);
-    }
-
+    newTag: K,
+    deprecated?: any
+): HTMLElementTagNameMap[K] {
     let newElement = element.ownerDocument.createElement(newTag);
 
     for (let i = 0; i < element.attributes.length; i++) {
@@ -28,19 +24,14 @@ export default function changeElementTag(
     }
 
     if (getTagOfNode(element) == 'P') {
-        newElement.style.marginTop = getComputedStyle(element, 'margin-top');
-        newElement.style.marginBottom = getComputedStyle(element, 'margin-bottom');
+        [newElement.style.marginTop, newElement.style.marginBottom] = getComputedStyles(element, [
+            'margin-top',
+            'margin-bottom',
+        ]);
     }
 
     if (element.parentNode) {
         element.parentNode.replaceChild(newElement, element);
-    }
-
-    if (range && start.containerNode != element && end.containerNode != element) {
-        try {
-            range.setStart(start.containerNode, start.offset);
-            range.setEnd(end.containerNode, end.offset);
-        } catch (e) {}
     }
 
     return newElement;

@@ -1,5 +1,8 @@
-import InlineElementFactory from '../inlineElements/InlineElementFactory';
-import { BlockElement, InlineElement, TraversingScoper } from 'roosterjs-editor-types';
+import BodyScoper from './BodyScoper';
+import SelectionBlockScoper from './SelectionBlockScoper';
+import SelectionScoper from './SelectionScoper';
+import TraversingScoper from './TraversingScoper';
+import { BlockElement, ContentPosition, InlineElement } from 'roosterjs-editor-types';
 import {
     getNextBlockElement,
     getPreviousBlockElement,
@@ -7,21 +10,56 @@ import {
     getPreviousInlineElement,
 } from '../blockElements/BlockElement';
 
-// The provides traversing of content inside editor.
-// There are two ways to traverse, block by block, or inline element by inline element
-// Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
-// the current inline element position
+/**
+ * The provides traversing of content inside editor.
+ * There are two ways to traverse, block by block, or inline element by inline element
+ * Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
+ * the current inline element position
+ */
 class ContentTraverser {
     private currentInline: InlineElement;
     private currentBlock: BlockElement;
 
-    constructor(
-        private rootNode: Node,
-        private scoper: TraversingScoper,
-        private inlineElementFactory: InlineElementFactory
-    ) {}
+    /**
+     * Create a content traverser for the whole body of given root node
+     * @param scoper Traversing scoper object to help scope the traversing
+     */
+    constructor(private scoper: TraversingScoper) {}
 
-    // Get current block
+    /**
+     * Create a content traverser for the whole body of given root node
+     * @param rootNode The root node to traverse in
+     */
+    public static createBodyTraverser(rootNode: Node): ContentTraverser {
+        return new ContentTraverser(new BodyScoper(rootNode));
+    }
+
+    /**
+     * Create a content traverser for the given selection
+     * @param rootNode The root node to traverse in
+     * @param range The selection range to scope the traversing
+     */
+    public static createSelectionTraverser(rootNode: Node, range: Range): ContentTraverser {
+        return new ContentTraverser(new SelectionScoper(rootNode, range));
+    }
+
+    /**
+     * Create a content traverser for a block element which contains the given position
+     * @param rootNode The root node to traverse in
+     * @param positionInBlock A position inside a block, traversing will be scoped within this block
+     * @param startFrom Start position of traversing. The value can be Begin, End, SelectionStart
+     */
+    public static createSelectionBlockTraverser(
+        rootNode: Node,
+        range: Range,
+        start: ContentPosition = ContentPosition.SelectionStart
+    ): ContentTraverser {
+        return new ContentTraverser(new SelectionBlockScoper(rootNode, range, start));
+    }
+
+    /**
+     * Get current block
+     */
     public get currentBlockElement(): BlockElement {
         // Prepare currentBlock from the scoper
         if (!this.currentBlock) {
@@ -31,12 +69,12 @@ class ContentTraverser {
         return this.currentBlock;
     }
 
-    // Get next block element
+    /**
+     * Get next block element
+     */
     public getNextBlockElement(): BlockElement {
         let thisBlock = this.currentBlockElement;
-        let nextBlock = thisBlock
-            ? getNextBlockElement(this.rootNode, thisBlock, this.inlineElementFactory)
-            : null;
+        let nextBlock = thisBlock ? getNextBlockElement(this.scoper.rootNode, thisBlock) : null;
 
         // Make sure this is right block:
         // 1) the block is in scope per scoper
@@ -51,11 +89,13 @@ class ContentTraverser {
         return null;
     }
 
-    // Get previous block element
+    /**
+     * Get previous block element
+     */
     public getPreviousBlockElement(): BlockElement {
         let thisBlock = this.currentBlockElement;
         let previousBlock = thisBlock
-            ? getPreviousBlockElement(this.rootNode, thisBlock, this.inlineElementFactory)
+            ? getPreviousBlockElement(this.scoper.rootNode, thisBlock)
             : null;
 
         // Make sure this is right block:
@@ -75,7 +115,9 @@ class ContentTraverser {
         return null;
     }
 
-    // Current inline element getter
+    /**
+     * Current inline element getter
+     */
     public get currentInlineElement(): InlineElement {
         // Retrieve a start inline from scoper
         if (!this.currentInline) {
@@ -85,12 +127,14 @@ class ContentTraverser {
         return this.currentInline;
     }
 
-    // Get next inline element
+    /**
+     * Get next inline element
+     */
     public getNextInlineElement(): InlineElement {
         let thisInline = this.currentInlineElement;
         let nextInline: InlineElement;
         if (thisInline) {
-            nextInline = getNextInlineElement(this.rootNode, thisInline, this.inlineElementFactory);
+            nextInline = getNextInlineElement(this.scoper.rootNode, thisInline);
         } else {
             nextInline = this.scoper.getInlineElementAfterStart
                 ? this.scoper.getInlineElementAfterStart()
@@ -114,16 +158,14 @@ class ContentTraverser {
         return null;
     }
 
-    // Get previous inline element
+    /**
+     * Get previous inline element
+     */
     public getPreviousInlineElement(): InlineElement {
         let thisInline = this.currentInlineElement;
         let previousInline: InlineElement;
         if (thisInline) {
-            previousInline = getPreviousInlineElement(
-                this.rootNode,
-                thisInline,
-                this.inlineElementFactory
-            );
+            previousInline = getPreviousInlineElement(this.scoper.rootNode, thisInline);
         } else {
             previousInline = this.scoper.getInlineElementBeforeStart
                 ? this.scoper.getInlineElementBeforeStart()

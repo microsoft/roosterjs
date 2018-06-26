@@ -41,7 +41,6 @@ export default function buildClipboardData(
     } else {
         retrieveHtmlViaTempDiv(editor, html => {
             clipboardData.html = html;
-            clipboardData.isHtmlFromTempDiv = true;
             callback(clipboardData);
         });
     }
@@ -101,14 +100,12 @@ function retrieveHtmlViaTempDiv(editor: Editor, callback: (html: string) => void
     let tempDiv = getTempDivForPaste(editor);
     tempDiv.focus();
 
-    window.requestAnimationFrame(() => {
-        if (editor) {
-            // restore original selection range in editor
-            editor.updateSelection(originalSelectionRange);
-            callback(tempDiv.innerHTML);
-            tempDiv.style.display = 'none';
-            tempDiv.innerHTML = '';
-        }
+    editor.runAsync(() => {
+        // restore original selection range in editor
+        editor.select(originalSelectionRange);
+        callback(tempDiv.innerHTML);
+        tempDiv.style.display = 'none';
+        tempDiv.innerHTML = '';
     });
 }
 

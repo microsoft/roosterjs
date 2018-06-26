@@ -1,35 +1,24 @@
 import {
-    matchLink,
-    replaceTextBeforeCursorWithNode,
-    cacheGetCursorEventData,
-    clearCursorEventDataCache,
-} from 'roosterjs-editor-api';
-import {
     ChangeSource,
     ContentChangedEvent,
     ExtractContentEvent,
-    PluginDomEvent,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import { Editor, EditorPlugin, browserData } from 'roosterjs-editor-core';
+import { Browser } from 'roosterjs-editor-dom';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 
-// When user type, they may end a link with a puncatuation, i.e. www.bing.com;
-// we need to trim off the trailing puncatuation before turning it to link match
-const TRAILING_PUNCTUATION_REGEX = /[.()+={}\[\]\s:;"',>]+$/i;
-const TEMP_TITLE_REGEX = /<a\s+([^>]*\s+)?(title|istemptitle)="[^"]*"\s*([^>]*)\s+(title|istemptitle)="[^"]*"(\s+[^>]*)?>/gm;
 const TEMP_TITLE = 'istemptitle';
-const MINIMUM_LENGTH = 5;
-const KEY_BACKSPACE = 8;
-const KEY_SPACE = 32;
-const KEY_ENTER = 13;
+const TEMP_TITLE_REGEX = new RegExp(
+    `<a\\s+([^>]*\\s+)?(title|${TEMP_TITLE})="[^"]*"\\s*([^>]*)\\s+(title|${TEMP_TITLE})="[^"]*"(\\s+[^>]*)?>`,
+    'gm'
+);
 
 /**
- * An editor plugin that auto linkify text as users type and show a tooltip for existing link
+ * An editor plugin that show a tooltip for existing link
  */
 export default class HyperLink implements EditorPlugin {
     private editor: Editor;
-    private backspaceToUndo: boolean;
     public name: 'HyperLink';
 
     /**
@@ -47,7 +36,7 @@ export default class HyperLink implements EditorPlugin {
     public initialize(editor: Editor): void {
         this.editor = editor;
 
-        if (browserData.isIE) {
+        if (Browser.isIE) {
             this.editor
                 .getDocument()
                 .execCommand(
@@ -59,47 +48,20 @@ export default class HyperLink implements EditorPlugin {
     }
 
     public dispose(): void {
-        this.forEachHyperLink(this.resetAnchor.bind(this));
+        this.editor.queryElements('a[href]', this.resetAnchor);
         this.editor = null;
     }
 
     // Handle the event
     public onPluginEvent(event: PluginEvent): void {
-        let keyboardEvent = (event as PluginDomEvent).rawEvent as KeyboardEvent;
-        if (
-            this.backspaceToUndo &&
-            (event.eventType == PluginEventType.KeyDown ||
-                event.eventType == PluginEventType.MouseDown ||
-                event.eventType == PluginEventType.ContentChanged)
-        ) {
-            this.backspaceToUndo = false;
-            if (
-                event.eventType == PluginEventType.KeyDown &&
-                keyboardEvent.which == KEY_BACKSPACE
-            ) {
-                keyboardEvent.preventDefault();
-                this.editor.undo();
-            }
-        }
-
         switch (event.eventType) {
-            case PluginEventType.KeyDown:
-                if (keyboardEvent.which == KEY_ENTER || keyboardEvent.which == KEY_SPACE) {
-                    this.autoLink(event);
-                }
-                break;
-
             case PluginEventType.ContentChanged:
                 let contentChangedEvent = event as ContentChangedEvent;
-                if (contentChangedEvent.source == ChangeSource.Paste) {
-                    this.autoLink(event);
-                } else if (contentChangedEvent.source == ChangeSource.CreateLink) {
+                if (contentChangedEvent.source == ChangeSource.CreateLink) {
                     this.resetAnchor(contentChangedEvent.data as HTMLAnchorElement);
                 }
 
-                if (contentChangedEvent.source != ChangeSource.AutoLink) {
-                    this.forEachHyperLink(this.processLink.bind(this));
-                }
+                this.editor.queryElements('a[href]', this.processLink);
                 break;
 
             case PluginEventType.ExtractContent:
@@ -109,7 +71,7 @@ export default class HyperLink implements EditorPlugin {
         }
     }
 
-    private resetAnchor(a: HTMLAnchorElement) {
+    private resetAnchor = (a: HTMLAnchorElement) => {
         try {
             if (a.getAttribute(TEMP_TITLE)) {
                 a.removeAttribute(TEMP_TITLE);
@@ -117,77 +79,58 @@ export default class HyperLink implements EditorPlugin {
             }
             a.removeEventListener('mouseup', this.onClickLink);
         } catch (e) {}
-    }
+    };
 
-    private autoLink(event: PluginEvent) {
-        let cursorData = cacheGetCursorEventData(event, this.editor);
-        let wordBeforeCursor = cursorData ? cursorData.wordBeforeCursor : null;
-        if (wordBeforeCursor && wordBeforeCursor.length > MINIMUM_LENGTH) {
-            // Check for trailing punctuation
-            let trailingPunctuations = wordBeforeCursor.match(TRAILING_PUNCTUATION_REGEX);
-            let trailingPunctuation =
-                trailingPunctuations && trailingPunctuations.length > 0
-                    ? trailingPunctuations[0]
-                    : null;
-
-            // Compute the link candidate
-            let linkCandidate = wordBeforeCursor.substring(
-                0,
-                trailingPunctuation
-                    ? wordBeforeCursor.length - trailingPunctuation.length
-                    : wordBeforeCursor.length
-            );
-
-            // Match and replace in editor
-            let linkData = matchLink(linkCandidate);
-            if (linkData) {
-                let anchor = this.editor.getDocument().createElement('A') as HTMLAnchorElement;
-                anchor.textContent = linkData.originalUrl;
-                anchor.href = linkData.normalizedUrl;
-
-                this.editor.runAsync(() => {
-                    this.editor.addUndoSnapshot();
-                    let replaced = replaceTextBeforeCursorWithNode(
-                        this.editor,
-                        linkData.originalUrl,
-                        anchor,
-                        false /* exactMatch */,
-                        cursorData
-                    );
-                    if (replaced) {
-                        // The content at cursor has changed. Should also clear the cursor data cache
-                        clearCursorEventDataCache(event);
-                        this.processLink(anchor);
-                        this.editor.addUndoSnapshot();
-                        this.editor.triggerContentChangedEvent(ChangeSource.AutoLink, anchor);
-                        this.backspaceToUndo = true;
-                    }
-                });
-            }
-        }
-    }
-
-    private processLink(a: HTMLAnchorElement) {
+    private processLink = (a: HTMLAnchorElement) => {
         if (!a.title && this.getTooltipCallback) {
             a.setAttribute(TEMP_TITLE, 'true');
             a.title = this.getTooltipCallback(this.tryGetHref(a));
         }
         a.addEventListener('mouseup', this.onClickLink);
-    }
+    };
 
     private removeTempTooltip(content: string): string {
-        return content.replace(TEMP_TITLE_REGEX, '<a $1$3$5>');
+        return content.replace(TEMP_TITLE_REGEX, (...groups: string[]): string => {
+            const firstValue = groups[1] == null ? '' : groups[1].trim();
+            const secondValue = groups[3] == null ? '' : groups[3].trim();
+            const thirdValue = groups[5] == null ? '' : groups[5].trim();
+
+            // possible values (* is space, x, y, z are the first, second, and third value respectively):
+            // *** (no values) << empty case
+            // x** (first value only)
+            // *x* (second value only)
+            // **x (third value only)
+            // x*y* (first and second)
+            // x**z (first and third) << double spaces
+            // *y*z (second and third)
+            // x*y*z (all)
+            if (firstValue.length === 0 && secondValue.length === 0 && thirdValue.length === 0) {
+                return '<a>';
+            }
+
+            let result;
+            if (secondValue.length === 0) {
+                result = `${firstValue} ${thirdValue}`;
+            } else {
+                result = `${firstValue} ${secondValue} ${thirdValue}`;
+            }
+
+            return `<a ${result.trim()}>`;
+        });
     }
 
     private onClickLink = (keyboardEvent: KeyboardEvent) => {
         let href: string;
         if (
-            !browserData.isFirefox &&
+            !Browser.isFirefox &&
             (href = this.tryGetHref(keyboardEvent.srcElement)) &&
-            (browserData.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey)
+            (Browser.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey)
         ) {
             let target = this.target || '_blank';
-            this.editor.getDocument().defaultView.window.open(href, target);
+            let window = this.editor.getDocument().defaultView;
+            try {
+                window.open(href, target);
+            } catch {}
         }
     };
 
@@ -209,9 +152,5 @@ export default class HyperLink implements EditorPlugin {
         }
 
         return href;
-    }
-
-    private forEachHyperLink(callback: (a: HTMLAnchorElement) => void) {
-        this.editor.queryElements('a[href]', callback);
     }
 }

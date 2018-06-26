@@ -116,6 +116,6 @@ describe('replaceTextBeforeCursorWithNode replaceTextBeforeCursorWithNode()', ()
         range.setStartBefore(selectedNode);
         range.setEndAfter(selectedNode);
         range.collapse(false);
-        editor.updateSelection(range);
+        editor.select(range);
     }
 });

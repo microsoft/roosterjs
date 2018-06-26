@@ -1,18 +1,16 @@
 import EditorCore, { CoreApiMap } from './EditorCore';
 import EditorOptions from './EditorOptions';
-import applyInlineStyle from '../coreAPI/applyInlineStyle';
+import Undo from '../undo/Undo';
 import attachDomEvent from '../coreAPI/attachDomEvent';
+import editWithUndo from '../coreAPI/editWithUndo';
 import focus from '../coreAPI/focus';
-import getContentTraverser from '../coreAPI/getContentTraverser';
-import getCustomData from '../coreAPI/getCustomData';
-import getCursorRect from '../coreAPI/getCursorRect';
 import getSelectionRange from '../coreAPI/getSelectionRange';
 import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
+import select from '../coreAPI/select';
 import triggerEvent from '../coreAPI/triggerEvent';
-import updateSelection from '../coreAPI/updateSelection';
 import { DefaultFormat } from 'roosterjs-editor-types';
-import { InlineElementFactory, getComputedStyle } from 'roosterjs-editor-dom';
+import { getComputedStyle } from 'roosterjs-editor-dom';
 
 export default function createEditorCore(
     contentDiv: HTMLDivElement,
@@ -21,14 +19,16 @@ export default function createEditorCore(
     return {
         contentDiv: contentDiv,
         document: contentDiv.ownerDocument,
-        inlineElementFactory: new InlineElementFactory(),
         defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
+        undo: options.undo || new Undo(),
+        suspendUndo: false,
         customData: {},
         cachedSelectionRange: null,
         plugins: (options.plugins || []).filter(plugin => !!plugin),
-        idleLoopHandle: 0,
-        ignoreIdleEvent: false,
         api: createCoreApiMap(options.coreApiOverride),
+        snapshotBeforeAutoComplete: null,
+        disableRestoreSelectionOnFocus: options.disableRestoreSelectionOnFocus,
+        omitContentEditable: options.omitContentEditableAttributeChanges,
     };
 }
 
@@ -52,16 +52,13 @@ function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat
 function createCoreApiMap(map: Partial<CoreApiMap>): CoreApiMap {
     map = map || {};
     return {
-        applyInlineStyle: map.applyInlineStyle || applyInlineStyle,
         attachDomEvent: map.attachDomEvent || attachDomEvent,
+        editWithUndo: map.editWithUndo || editWithUndo,
         focus: map.focus || focus,
-        getContentTraverser: map.getContentTraverser || getContentTraverser,
-        getCustomData: map.getCustomData || getCustomData,
-        getCursorRect: map.getCursorRect || getCursorRect,
         getSelectionRange: map.getSelectionRange || getSelectionRange,
         hasFocus: map.hasFocus || hasFocus,
         insertNode: map.insertNode || insertNode,
+        select: map.select || select,
         triggerEvent: map.triggerEvent || triggerEvent,
-        updateSelection: map.updateSelection || updateSelection,
     };
 }

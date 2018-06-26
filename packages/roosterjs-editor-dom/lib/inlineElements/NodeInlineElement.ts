@@ -65,6 +65,13 @@ class NodeInlineElement implements InlineElement {
         };
     }
 
+    /**
+     * Checks if this inline element is a textual inline element
+     */
+    public isTextualInlineElement(): boolean {
+        return false;
+    }
+
     // Checks if an inline element is after the current inline element
     public isAfter(inlineElement: InlineElement): boolean {
         return isNodeAfter(this.containerNode, inlineElement.getContainerNode());
@@ -149,7 +156,7 @@ class NodeInlineElement implements InlineElement {
             return;
         }
 
-        while (startNode == this.containerNode || contains(this.containerNode, startNode)) {
+        while (contains(this.containerNode, startNode, true /*treatSameNodeAsContain*/)) {
             // The code below modifies DOM. Need to get the next sibling first otherwise you won't be able to reliably get a good next sibling node
             let nextLeafNode = getNextLeafSibling(this.containerNode, startNode);
 
@@ -185,7 +192,7 @@ class NodeInlineElement implements InlineElement {
                         styler(parentNode);
                     } else if (len == startNode.nodeValue.length) {
                         // It is whole text node
-                        styler(wrap(startNode, '<span></span>'));
+                        styler(wrap(startNode, 'span'));
                     } else {
                         // It is partial of a text node
                         let newNode = ownerDoc.createElement('SPAN');

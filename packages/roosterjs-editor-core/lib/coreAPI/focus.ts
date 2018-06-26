@@ -1,7 +1,6 @@
 import EditorCore, { Focus } from '../editor/EditorCore';
-import isVoidHtmlElement from '../utils/isVoidHtmlElement';
-import { NodeType } from 'roosterjs-editor-types';
-import { getFirstLeafNode } from 'roosterjs-editor-dom';
+import { NodeType, PositionType } from 'roosterjs-editor-types';
+import { getFirstLeafNode, isVoidHtmlElement } from 'roosterjs-editor-dom';
 
 const focus: Focus = (core: EditorCore) => {
     if (!core.api.hasFocus(core) || !core.api.getSelectionRange(core, false /*tryGetFromCache*/)) {
@@ -12,10 +11,7 @@ const focus: Focus = (core: EditorCore) => {
         // So here we always do a live selection pull on DOM and make it point in Editor. The pitfall is, the cursor could be reset
         // to very begin to of editor since we don't really have last saved selection (created on blur which does not fire in this case).
         // It should be better than the case you cannot type
-        if (
-            !core.cachedSelectionRange ||
-            !core.api.updateSelection(core, core.cachedSelectionRange)
-        ) {
+        if (!core.cachedSelectionRange || !core.api.select(core, core.cachedSelectionRange)) {
             setSelectionToBegin(core);
         }
     }
@@ -30,32 +26,23 @@ const focus: Focus = (core: EditorCore) => {
 };
 
 function setSelectionToBegin(core: EditorCore) {
-    let range: Range;
     let firstNode = getFirstLeafNode(core.contentDiv);
-    if (firstNode) {
-        if (firstNode.nodeType == NodeType.Text) {
-            // First node is text, move range to the begin
-            range = core.document.createRange();
-            range.setStart(firstNode, 0);
-        } else if (firstNode.nodeType == NodeType.Element) {
-            if (isVoidHtmlElement(firstNode as HTMLElement)) {
-                // First node is a html void element (void elements cannot have child nodes), move range before it
-                range = core.document.createRange();
-                range.setStartBefore(firstNode);
-            } else {
-                // Other html element, move range inside it
-                range = core.document.createRange();
-                range.setStart(firstNode, 0);
-            }
-        }
-    } else {
-        // No first node, likely we have an empty content DIV, move range inside it
-        range = core.document.createRange();
-        range.setStart(core.contentDiv, 0);
-    }
+    let nodeType = firstNode ? firstNode.nodeType : null;
 
-    if (range) {
-        core.api.updateSelection(core, range);
+    if (nodeType == NodeType.Text) {
+        // First node is text, move selection to the begin
+        core.api.select(core, firstNode, PositionType.Begin);
+    } else if (nodeType == NodeType.Element) {
+        // If first node is a html void element (void elements cannot have child nodes),
+        // move selection before it, otherwise move selection inside it
+        core.api.select(
+            core,
+            firstNode,
+            isVoidHtmlElement(firstNode as HTMLElement) ? PositionType.Before : PositionType.Begin
+        );
+    } else {
+        // No first node, likely we have an empty content DIV, move selection inside it
+        core.api.select(core, core.contentDiv, PositionType.Begin);
     }
 }
 

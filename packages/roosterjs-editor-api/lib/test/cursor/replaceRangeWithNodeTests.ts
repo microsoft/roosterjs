@@ -111,7 +111,7 @@ describe('replaceRangeWithNode replaceRangeWithNode()', () => {
         range.setStartBefore(selectedNode);
         range.setEndAfter(selectedNode);
         range.collapse(false);
-        editor.updateSelection(range);
+        editor.select(range);
         let cursor = new CursorData(editor);
         let textElement = cursor.inlineElementBeforeCursor;
         range.setStart(textElement.getContainerNode(), startOffset);

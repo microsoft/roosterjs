@@ -1,15 +1,17 @@
 import * as DomTestHelper from '../DomTestHelper';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
+import PartialInlineElement from '../../inlineElements/PartialInlineElement';
+import TextInlineElement from '../../inlineElements/TextInlineElement';
+import resolveInlineElement from '../../inlineElements/resolveInlineElement';
 import { NodeBlockElement } from '../../blockElements/BlockElement';
 import { InlineElement, NodeBoundary } from 'roosterjs-editor-types';
+import { NodeInlineElement } from '../..';
 
 let testID = 'NodeInlineElement';
 
 function createNodeInlineElement(inlineElementContent: string): InlineElement {
-    let inlineElementFactory = new InlineElementFactory(null);
     let testDiv = DomTestHelper.createElementFromContent(testID, inlineElementContent);
-    let parentBlock = new NodeBlockElement(testDiv, null);
-    let inlineElement = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
+    let parentBlock = new NodeBlockElement(testDiv);
+    let inlineElement = resolveInlineElement(testDiv.firstChild, testDiv, parentBlock);
 
     return inlineElement;
 }
@@ -130,12 +132,6 @@ describe('NodeInlineElement getEndPoint()', () => {
 });
 
 describe('NodeInlineElement isAfter()', () => {
-    let inlineElementFactory: InlineElementFactory;
-
-    beforeEach(() => {
-        inlineElementFactory = new InlineElementFactory(null);
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
     });
@@ -146,9 +142,9 @@ describe('NodeInlineElement isAfter()', () => {
             testID,
             '<span>node1</span><span>text</span><span>node2</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv, null);
-        let element1 = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
-        let element2 = inlineElementFactory.resolve(testDiv.lastChild, testDiv, parentBlock);
+        let parentBlock = new NodeBlockElement(testDiv);
+        let element1 = resolveInlineElement(testDiv.firstChild, testDiv, parentBlock);
+        let element2 = resolveInlineElement(testDiv.lastChild, testDiv, parentBlock);
 
         // Act
         let isElement2AfterElement1 = element2.isAfter(element1);
@@ -169,10 +165,10 @@ describe('NodeInlineElement isAfter()', () => {
         let testDiv2 = DomTestHelper.createElementFromContent('testDiv2', '<span>node2</span>');
         div.appendChild(testDiv2);
         div.insertBefore(testDiv1, testDiv2);
-        let parentBlock1 = new NodeBlockElement(testDiv1, null);
-        let parentBlock2 = new NodeBlockElement(testDiv2, null);
-        let element1 = inlineElementFactory.resolve(testDiv1.firstChild, testDiv1, parentBlock1);
-        let element2 = inlineElementFactory.resolve(testDiv2.firstChild, testDiv2, parentBlock2);
+        let parentBlock1 = new NodeBlockElement(testDiv1);
+        let parentBlock2 = new NodeBlockElement(testDiv2);
+        let element1 = resolveInlineElement(testDiv1.firstChild, testDiv1, parentBlock1);
+        let element2 = resolveInlineElement(testDiv2.firstChild, testDiv2, parentBlock2);
 
         // Act
         let isElement2AfterElement1 = element2.isAfter(element1);
@@ -185,12 +181,6 @@ describe('NodeInlineElement isAfter()', () => {
 });
 
 describe('NodeInlineElement contains()', () => {
-    let inlineElementFactory: InlineElementFactory;
-
-    beforeEach(() => {
-        inlineElementFactory = new InlineElementFactory(null);
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
     });
@@ -201,8 +191,8 @@ describe('NodeInlineElement contains()', () => {
             testID,
             '<span><a><span>part1</span>text</a>text<span>part2</span>part3</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv, null);
-        let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
+        let parentBlock = new NodeBlockElement(testDiv);
+        let element = resolveInlineElement(testDiv.firstChild, testDiv, parentBlock);
         let editorPoint = {
             containerNode: testDiv.firstChild.lastChild,
             offset: NodeBoundary.End,
@@ -221,12 +211,8 @@ describe('NodeInlineElement contains()', () => {
             testID,
             '<span><a><span>part1</span>text</a>text<span>part2</span>part3</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv, null);
-        let element = inlineElementFactory.resolve(
-            testDiv.firstChild.firstChild,
-            testDiv,
-            parentBlock
-        );
+        let parentBlock = new NodeBlockElement(testDiv);
+        let element = resolveInlineElement(testDiv.firstChild.firstChild, testDiv, parentBlock);
         let editorPoint = {
             containerNode: testDiv.firstChild.lastChild,
             offset: NodeBoundary.End,
@@ -269,13 +255,12 @@ describe('NodeInlineElement applyStyle()', () => {
 
     it('fromPoint != null, toPoint != null', () => {
         // Arrange
-        let inlineElementFactory = new InlineElementFactory(null);
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
             '<span>www.example.com</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv, null);
-        let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
+        let parentBlock = new NodeBlockElement(testDiv);
+        let element = resolveInlineElement(testDiv.firstChild, testDiv, parentBlock);
         let fromPoint = { containerNode: testDiv.firstChild.firstChild, offset: 3 };
         let toPoint = { containerNode: testDiv.firstChild.lastChild, offset: 11 };
         let mockColor = 'red';
@@ -296,13 +281,12 @@ describe('NodeInlineElement applyStyle()', () => {
 
     it('fromPoint != null, toPoint = null', () => {
         // Arrange
-        let inlineElementFactory = new InlineElementFactory(null);
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
             '<span>www.example.com</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv, null);
-        let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
+        let parentBlock = new NodeBlockElement(testDiv);
+        let element = resolveInlineElement(testDiv.firstChild, testDiv, parentBlock);
         let fromPoint = { containerNode: testDiv.firstChild.firstChild, offset: 3 };
         let mockColor = 'red';
 
@@ -322,13 +306,12 @@ describe('NodeInlineElement applyStyle()', () => {
 
     it('fromPoint = null, toPoint != null', () => {
         // Arrange
-        let inlineElementFactory = new InlineElementFactory(null);
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
             '<span>www.example.com</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv, null);
-        let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
+        let parentBlock = new NodeBlockElement(testDiv);
+        let element = resolveInlineElement(testDiv.firstChild, testDiv, parentBlock);
         let toPoint = { containerNode: testDiv.firstChild.firstChild, offset: 11 };
         let mockColor = 'red';
 
@@ -348,13 +331,12 @@ describe('NodeInlineElement applyStyle()', () => {
 
     it('fromPoint != null, toPoint != null, fromPoint = toPoint', () => {
         // Arrange
-        let inlineElementFactory = new InlineElementFactory(null);
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
             '<span>www.example.com</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv, null);
-        let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
+        let parentBlock = new NodeBlockElement(testDiv);
+        let element = resolveInlineElement(testDiv.firstChild, testDiv, parentBlock);
         let fromPoint = { containerNode: testDiv.firstChild.firstChild, offset: 3 };
         let toPoint = { containerNode: testDiv.firstChild.firstChild, offset: 3 };
         let mockColor = 'red';
@@ -375,13 +357,12 @@ describe('NodeInlineElement applyStyle()', () => {
 
     it('fromPoint != null, toPoint != null, fromPoint is after toPoint', () => {
         // Arrange
-        let inlineElementFactory = new InlineElementFactory(null);
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
             '<span>www.example.com</span>'
         );
-        let parentBlock = new NodeBlockElement(testDiv, null);
-        let element = inlineElementFactory.resolve(testDiv.firstChild, testDiv, parentBlock);
+        let parentBlock = new NodeBlockElement(testDiv);
+        let element = resolveInlineElement(testDiv.firstChild, testDiv, parentBlock);
         let fromPoint = { containerNode: testDiv.firstChild.firstChild, offset: 4 };
         let toPoint = { containerNode: testDiv.firstChild.firstChild, offset: 3 };
         let mockColor = 'red';
@@ -399,4 +380,24 @@ describe('NodeInlineElement applyStyle()', () => {
         let innerHTML = getInnerHTML(element);
         expect(innerHTML).toBe('<span>www.example.com</span>');
     });
+});
+
+describe('isTextualInlineElement()', () => {
+    it('input = <TextInlineElement>', () => {
+        runTest(new TextInlineElement(null, null), true);
+    });
+
+    it('input = <PartialInlineElement>{}', () => {
+        runTest(new PartialInlineElement(new NodeInlineElement(null, null)), false);
+    });
+
+    it('input = PartialInlineElement with TextInlineElement as decoratedInline', () => {
+        let mockInlineElement = new PartialInlineElement(new TextInlineElement(null, null));
+        runTest(mockInlineElement, true);
+    });
+
+    function runTest(input: InlineElement, output: boolean) {
+        let result = input.isTextualInlineElement();
+        expect(result).toBe(output);
+    }
 });

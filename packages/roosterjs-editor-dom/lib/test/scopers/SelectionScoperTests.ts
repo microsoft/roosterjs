@@ -1,13 +1,11 @@
 import * as DomTestHelper from '../DomTestHelper';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
-import SelectionScoper from '../../scopers/SelectionScoper';
+import SelectionScoper from '../../contentTraverser/SelectionScoper';
 import { BlockElement, NodeBoundary } from 'roosterjs-editor-types';
 
 let testID = 'SelectionScoper';
 
 function createSelectionScoper(rootNode: Node, selectionRange: Range) {
-    let inlineElementFactory = new InlineElementFactory(null);
-    return new SelectionScoper(rootNode, selectionRange, inlineElementFactory);
+    return new SelectionScoper(rootNode, selectionRange);
 }
 
 describe('SelectionScoper getStartBlockElement()', () => {

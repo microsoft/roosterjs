@@ -1,5 +1,5 @@
-import execFormatWithUndo from './execFormatWithUndo';
-import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
+import execCommand from './execCommand';
+import { DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -13,11 +13,5 @@ import { Editor } from 'roosterjs-editor-core';
  * @param editor The editor instance
  */
 export default function toggleSuperscript(editor: Editor) {
-    editor.focus();
-    let formatter = () => editor.getDocument().execCommand('superscript', false, null);
-    if (isSelectionCollapsed(editor)) {
-        formatter();
-    } else {
-        execFormatWithUndo(editor, formatter);
-    }
+    execCommand(editor, DocumentCommand.Superscript);
 }

@@ -1,4 +1,4 @@
-import { PickerDataProvider, PickerPluginOptions } from '../store/schema/PickerDataProvider';
+import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { cacheGetCursorEventData, replaceTextBeforeCursorWithNode } from 'roosterjs-editor-api';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { PartialInlineElement } from 'roosterjs-editor-dom';
@@ -52,7 +52,8 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
             },
             (isSuggesting: boolean) => {
                 this.setIsSuggesting(isSuggesting);
-            }
+            },
+            editor
         );
     }
 
@@ -232,8 +233,12 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
             ) {
                 this.dataProvider.shiftHighlight(
                     this.pickerOptions.isHorizontal
-                        ? keyboardEvent.which == RIGHT_ARROW_CHARCODE ? true : false
-                        : keyboardEvent.which == DOWN_ARROW_CHARCODE ? true : false
+                        ? keyboardEvent.which == RIGHT_ARROW_CHARCODE
+                            ? true
+                            : false
+                        : keyboardEvent.which == DOWN_ARROW_CHARCODE
+                            ? true
+                            : false
                 );
                 this.handleKeyDownEvent(event);
             } else if (

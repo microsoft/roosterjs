@@ -1,4 +1,5 @@
 import { Editor } from 'roosterjs-editor-core';
+import { PositionType } from 'roosterjs-editor-types/lib';
 
 /**
  * Replace the specified range with a node
@@ -19,18 +20,18 @@ function replaceRangeWithNode(
         return false;
     }
 
-    let backupRange = editor.getSelectionRange();
+    editor.runWithSelectionMarker(() => {
+        let backupRange = editor.getSelectionRange();
 
-    range.deleteContents();
-    range.insertNode(node);
+        range.deleteContents();
+        range.insertNode(node);
 
-    if (exactMatch) {
-        range.setEndAfter(node);
-        range.collapse(false /*toStart*/);
-        editor.updateSelection(range);
-    } else if (backupRange && editor.contains(backupRange.startContainer)) {
-        editor.updateSelection(backupRange);
-    }
+        if (exactMatch) {
+            editor.select(node, PositionType.After);
+        } else if (backupRange && editor.contains(backupRange.startContainer)) {
+            editor.select(backupRange);
+        }
+    }, true /*useInlineMarker*/);
 
     return true;
 }

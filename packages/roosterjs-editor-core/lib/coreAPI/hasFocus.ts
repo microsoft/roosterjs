@@ -4,8 +4,7 @@ import { contains } from 'roosterjs-editor-dom';
 const hasFocus: HasFocus = (core: EditorCore) => {
     let activeElement = core.document.activeElement;
     return (
-        activeElement &&
-        (core.contentDiv == activeElement || contains(core.contentDiv, activeElement))
+        activeElement && contains(core.contentDiv, activeElement, true /*treatSameNodeAsContain*/)
     );
 };
 

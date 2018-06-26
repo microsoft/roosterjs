@@ -1,4 +1,4 @@
-import { DefaultShortcut, HyperLink, Paste, ContentEdit } from 'roosterjs-editor-plugins';
+import { HyperLink, Paste, ContentEdit } from 'roosterjs-editor-plugins';
 import { Editor, EditorOptions, EditorPlugin } from 'roosterjs-editor-core';
 
 /**
@@ -14,12 +14,7 @@ export default function createEditor(
     additionalPlugins?: EditorPlugin[],
     initialContent?: string
 ): Editor {
-    let plugins: EditorPlugin[] = [
-        new DefaultShortcut(),
-        new HyperLink(),
-        new Paste(),
-        new ContentEdit(),
-    ];
+    let plugins: EditorPlugin[] = [new HyperLink(), new Paste(), new ContentEdit()];
 
     if (additionalPlugins) {
         plugins = plugins.concat(additionalPlugins);

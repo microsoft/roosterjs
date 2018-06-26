@@ -1,9 +1,8 @@
-import execFormatWithUndo from './execFormatWithUndo';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
-import { getTagOfNode, splitParentNode, unwrap, wrapAll, wrap } from 'roosterjs-editor-dom';
-import { ContentScope, EditorPoint, NodeBoundary } from 'roosterjs-editor-types';
-import { Editor, browserData } from 'roosterjs-editor-core';
+import { Browser, getTagOfNode, splitParentNode, unwrap, wrap } from 'roosterjs-editor-dom';
+import { PositionType } from 'roosterjs-editor-types';
+import { Editor } from 'roosterjs-editor-core';
 
 var ZERO_WIDTH_SPACE = '&#8203;';
 
@@ -24,35 +23,35 @@ let defaultStyler = (element: HTMLElement) => {
 export default function toggleBlockQuote(editor: Editor, styler?: (element: HTMLElement) => void) {
     editor.focus();
     let blockquoteNodes = queryNodesWithSelection(editor, 'blockquote');
-    execFormatWithUndo(
-        editor,
-        (startPoint, endPoint) => {
-            if (blockquoteNodes.length) {
-                // There are already blockquote nodes, unwrap them
-                blockquoteNodes.forEach(node => unwrap(node));
-            } else {
-                // Step 1: Find all block elements and their content nodes
-                let nodes = getContentNodes(editor);
+    editor.addUndoSnapshot((start, end) => {
+        let quoteElement: HTMLElement;
 
-                // Step 2: Split existing list container if necessary
-                nodes = getSplittedListNodes(nodes);
+        if (blockquoteNodes.length) {
+            // There are already blockquote nodes, unwrap them
+            blockquoteNodes.forEach(node => unwrap(node));
+        } else {
+            // Step 1: Find all block elements and their content nodes
+            let nodes = getContentNodes(editor);
 
-                // Step 3: Handle some special cases
-                nodes = getNodesWithSpecialCaseHandled(editor, nodes, startPoint, endPoint);
+            // Step 2: Split existing list container if necessary
+            nodes = getSplittedListNodes(nodes);
 
-                let quoteElement = wrapAll(nodes, '<blockquote></blockqupte>') as HTMLElement;
-                (styler || defaultStyler)(quoteElement);
+            // Step 3: Handle some special cases
+            nodes = getNodesWithSpecialCaseHandled(editor, nodes);
 
-                return quoteElement;
-            }
-        },
-        true /*preserveSelection*/
-    );
+            quoteElement = wrap(nodes, 'blockquote');
+            (styler || defaultStyler)(quoteElement);
+        }
+
+        if (!editor.select(start, end) && quoteElement) {
+            editor.select(quoteElement);
+        }
+    });
 }
 
 function getContentNodes(editor: Editor): Node[] {
     let result: Node[] = [];
-    let contentTraverser = editor.getContentTraverser(ContentScope.Selection);
+    let contentTraverser = editor.getSelectionTraverser();
     let blockElement = contentTraverser ? contentTraverser.currentBlockElement : null;
     while (blockElement) {
         let nodes = blockElement.getContentNodes();
@@ -106,32 +105,23 @@ function getSplittedListNodes(nodes: Node[]): Node[] {
     return nodes;
 }
 
-function getNodesWithSpecialCaseHandled(
-    editor: Editor,
-    nodes: Node[],
-    startPoint: EditorPoint,
-    endPoint: EditorPoint
-): Node[] {
+function getNodesWithSpecialCaseHandled(editor: Editor, nodes: Node[]): Node[] {
     if (nodes.length == 1 && nodes[0].nodeName == 'BR') {
-        nodes[0] = wrap(nodes[0], '<div></div>') as HTMLDivElement;
+        nodes[0] = wrap(nodes[0]);
     } else if (nodes.length == 0) {
         let document = editor.getDocument();
         // Selection is collapsed and blockElment is null, we need to create an empty div.
         // In case of IE and Edge, we insert ZWS to put cursor in the div, otherwise insert BR node.
         let div = document.createElement('div');
         div.appendChild(
-            browserData.isEdge || browserData.isIE
+            Browser.isIEOrEdge
                 ? document.createTextNode(ZERO_WIDTH_SPACE)
                 : document.createElement('BR')
         );
 
         editor.insertNode(div);
         nodes.push(div);
-
-        if (startPoint && endPoint) {
-            startPoint.containerNode = endPoint.containerNode = div;
-            startPoint.offset = endPoint.offset = NodeBoundary.Begin;
-        }
+        editor.select(div, PositionType.Begin);
     }
     return nodes;
 }

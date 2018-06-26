@@ -1,4 +1,5 @@
 import { NodeType } from 'roosterjs-editor-types';
+import { convertInlineCssInDom } from './convertInlineCss';
 import getTagOfNode from './getTagOfNode';
 
 const HTML_REGEX = /<html[^>]*>[\s\S]*<\/html>/i;
@@ -64,7 +65,7 @@ export default function sanitizeHtml(
     }
 
     // 2. Convert global CSS into inline CSS
-    convertInlineCss(doc, additionalStyleNodes);
+    convertInlineCssInDom(doc, additionalStyleNodes);
 
     // 3, 4: Remove dangerous HTML tags and attributes, remove useless CSS properties
     if (!convertInlineCssOnly) {
@@ -85,41 +86,52 @@ export default function sanitizeHtml(
 const ALLOWED_HTML_TAGS = 'BODY,H1,H2,H3,H4,H5,H6,FORM,P,BR,NOBR,HR,ACRONYM,ABBR,ADDRESS,B,BDI,BDO,BIG,BLOCKQUOTE,CENTER,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,WBR,XMP,INPUT,TEXTAREA,BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,IMG,MAP,AREA,CANVAS,FIGCAPTION,FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,TABLE,CAPTION,TH,TR,TD,THEAD,TBODY,TFOOT,COL,COLGROUP,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'.split(
     ','
 );
-const ALLOWED_HTML_ATTRIBUTES = 'accept,align,alt,checked,cite,cols,colspan,contextmenu,coords,datetime,default,dir,dirname,disabled,download,headers,height,hidden,high,href,hreflang,ismap,kind,label,lang,list,low,max,maxlength,media,min,multiple,open,optimum,pattern,placeholder,readonly,rel,required,reversed,rows,rowspan,scope,selected,shape,size,sizes,span,spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,type,usemap,value,width,wrap'.split(
+const ALLOWED_HTML_ATTRIBUTES = 'accept,align,alt,checked,cite,color,cols,colspan,contextmenu,coords,datetime,default,dir,dirname,disabled,download,face,headers,height,hidden,high,href,hreflang,ismap,kind,label,lang,list,low,max,maxlength,media,min,multiple,open,optimum,pattern,placeholder,readonly,rel,required,reversed,rows,rowspan,scope,selected,shape,size,sizes,span,spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,type,usemap,value,width,wrap'.split(
     ','
 );
 const DROPPED_STYLE = ['white-space'];
 
-function convertInlineCss(doc: Document, additionalStyleNodes: HTMLStyleElement[]) {
-    let styleNodes = toArray(doc.querySelectorAll('style'));
-    let styleSheets = (additionalStyleNodes || [])
-        .reverse()
-        .map(node => node.sheet as CSSStyleSheet)
-        .concat(styleNodes.map(node => node.sheet as CSSStyleSheet).reverse());
-    for (let styleSheet of styleSheets) {
-        for (let j = styleSheet.cssRules.length - 1; j >= 0; j--) {
-            // Skip any none-style rule, i.e. @page
-            let styleRule = styleSheet.cssRules[j] as CSSStyleRule;
-            let text = styleRule && styleRule.style ? styleRule.style.cssText : null;
-            if (styleRule.type != CSSRule.STYLE_RULE || !text || !styleRule.selectorText) {
-                continue;
-            }
-            // Make sure the selector is not empty
-            for (let selector of styleRule.selectorText.split(',')) {
-                if (!selector || !selector.trim() || selector.indexOf(':') >= 0) {
-                    continue;
-                }
-                let nodes = toArray(doc.querySelectorAll(selector));
-                // Always put existing styles after so that they have higher priority
-                // Which means if both global style and inline style apply to the same element,
-                // inline style will have higher priority
-                nodes.forEach(node =>
-                    node.setAttribute('style', text + (node.getAttribute('style') || ''))
-                );
-            }
-        }
-    }
-}
+const DEFAULT_STYLE_VALUES: { [name: string]: string } = {
+    'background-color': 'transparent',
+    'border-bottom-color': 'rgb(0, 0, 0)',
+    'border-bottom-style': 'none',
+    'border-bottom-width': '0px',
+    'border-image-outset': '0',
+    'border-image-repeat': 'stretch',
+    'border-image-slice': '100%',
+    'border-image-source': 'none',
+    'border-image-width': '1',
+    'border-left-color': 'rgb(0, 0, 0)',
+    'border-left-style': 'none',
+    'border-left-width': '0px',
+    'border-right-color': 'rgb(0, 0, 0)',
+    'border-right-style': 'none',
+    'border-right-width': '0px',
+    'border-top-color': 'rgb(0, 0, 0)',
+    'border-top-style': 'none',
+    'border-top-width': '0px',
+    'outline-color': 'transparent',
+    'outline-style': 'none',
+    'outline-width': '0px',
+    overflow: 'visible',
+    'text-decoration': 'none',
+    '-webkit-text-stroke-width': '0px',
+    'word-wrap': 'break-word',
+    'margin-left': '0px',
+    'margin-right': '0px',
+    padding: '0px',
+    'padding-top': '0px',
+    'padding-left': '0px',
+    'padding-right': '0px',
+    'padding-bottom': '0px',
+    border: '0px',
+    'border-top': '0px',
+    'border-left': '0px',
+    'border-right': '0px',
+    'border-bottom': '0px',
+    'vertical-align': 'baseline',
+    float: 'none',
+};
 
 type ObjectForAssign<T> = { [key: string]: T };
 
@@ -157,7 +169,11 @@ function removeUnusedCssAndDangerousContent(
         node.parentNode.removeChild(node);
     }
     if (isText && currentStyle['white-space'] == 'pre') {
-        node.nodeValue = node.nodeValue.replace(/\s\s/g, ' \u00A0');
+        let text = node.nodeValue;
+        let nbsp = '\u00A0';
+        text = text.replace(/^ /gm, nbsp);
+        text = text.replace(/ {2}/g, ' ' + nbsp);
+        node.nodeValue = text;
     } else if (nodeType == NodeType.Element) {
         let element = <HTMLElement>node;
         if (element.hasAttribute('style')) {
@@ -194,6 +210,8 @@ function removeUnusedCss(element: HTMLElement, thisStyle: StyleMap) {
             let isInheritable = thisStyle[name] != undefined;
             let keep =
                 value != 'inherit' &&
+                name.substr(0, 1) != '-' &&
+                DEFAULT_STYLE_VALUES[name] != value &&
                 ((isInheritable && value != thisStyle[name]) ||
                     (!isInheritable && value != 'initial' && value != 'normal')) &&
                 !shouldRemove(tag, name, value);
@@ -223,7 +241,7 @@ function shouldRemove(tag: string, name: string, value: string) {
         return true;
     }
 
-    if (tag == 'LI' && name == 'width') {
+    if (['LI', 'DIV'].indexOf(tag) >= 0 && name == 'width') {
         return true;
     }
 
@@ -253,10 +271,6 @@ function removeDisallowedAttributes(
             element.removeAttribute(attribute.name);
         }
     }
-}
-
-function toArray<T extends Node>(list: NodeListOf<T>): T[] {
-    return [].slice.call(list) as T[];
 }
 
 function trimWithFragment(html: string): string {

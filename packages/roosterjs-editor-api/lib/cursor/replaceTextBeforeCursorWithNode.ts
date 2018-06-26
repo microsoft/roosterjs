@@ -102,7 +102,7 @@ export function validateAndGetRangeForTextBeforeCursor(
  * at the moment, what is before cursor could be "<URL>,", however, only "<URL>" makes the link. by setting exactMatch = false, it does not match
  * from right before cursor, but can scan through till first same char is seen. On the other hand if set exactMatch = true, it starts the match right
  * before cursor.
- * @param cursorData
+ * @param cursorData The Cursor data of current selection
  */
 export default function replaceTextBeforeCursorWithNode(
     editor: Editor,

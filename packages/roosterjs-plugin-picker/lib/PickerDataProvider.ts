@@ -1,3 +1,4 @@
+import { Editor } from 'roosterjs-editor-core';
 export interface PickerPluginOptions {
     // Constant that defines the element ID prefix to look for.
     // If it matches, this element should be handled by the plugin
@@ -17,12 +18,13 @@ export interface PickerPluginOptions {
 }
 
 export interface PickerDataProvider {
-    // Function called when the plugin is intialized to register two callbacks with the data provider.
+    // Function called when the plugin is intialized to register two callbacks with the data provider and a reference to the Editor.
     // The first is called in order to "commit" a new element to the editor body that isn't handled automatically by the editor plugin.
-    // The second sets the isSuggesting value for situations wherethe UX needs to manipulate the suggesting state that's otherwise plugin managed.
+    // The second sets the isSuggesting value for situations where the UX needs to manipulate the suggesting state that's otherwise plugin managed.
     onInitalize: (
         commitMentionCallback: (nodeToAvoiddd: HTMLElement) => void,
-        setIsSuggestingCallback: (isSuggesting: boolean) => void
+        setIsSuggestingCallback: (isSuggesting: boolean) => void,
+        editor?: Editor
     ) => void;
 
     // Function called when the plugin is disposed for the data provider to do any cleanup.

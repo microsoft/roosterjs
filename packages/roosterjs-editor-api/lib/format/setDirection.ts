@@ -1,6 +1,5 @@
-import execFormatWithUndo from './execFormatWithUndo';
-import { BlockElement, ContentScope, Direction } from 'roosterjs-editor-types';
-import { NodeBlockElement, StartEndBlockElement, wrapAll } from 'roosterjs-editor-dom';
+import { BlockElement, Direction } from 'roosterjs-editor-types';
+import { NodeBlockElement, StartEndBlockElement, wrap } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -21,7 +20,7 @@ export default function setDirection(editor: Editor, dir: Direction) {
     // Otherwise (i.e. <ced><div>abc<span>12<br>34</span><div></ced>, abc<span>12<br> is a block) do nothing since there isn't
     // really a way to change direction for such blocks (some HTML shuffling is needed)
     let blockElements: BlockElement[] = [];
-    let contentTraverser = editor.getContentTraverser(ContentScope.Selection);
+    let contentTraverser = editor.getSelectionTraverser();
     let startBlock = contentTraverser.currentBlockElement;
     while (startBlock) {
         blockElements.push(startBlock);
@@ -29,7 +28,7 @@ export default function setDirection(editor: Editor, dir: Direction) {
     }
 
     if (blockElements.length > 0) {
-        execFormatWithUndo(editor, () => {
+        editor.addUndoSnapshot(() => {
             for (let block of blockElements) {
                 // Any DOM change in the loop might interfere with the traversing so we should try to
                 // get the next block first before running any logic that may change DOM
@@ -49,7 +48,7 @@ export default function setDirection(editor: Editor, dir: Direction) {
                     // the start node "abc" is not in same level as the end node <br> (the <br> is in a span)
                     // Some html suffling is required to properly wrap the content before applying dir
                     let allNodes = block.getContentNodes();
-                    wrapAll(
+                    wrap(
                         allNodes,
                         `<div dir='${dirValue}', style='text-align:${styleValue};'></div>`
                     );

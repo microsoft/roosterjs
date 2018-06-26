@@ -1,3 +1,6 @@
+import { ChangeSource, PluginDomEvent } from 'roosterjs-editor-types';
+import { Editor } from 'roosterjs-editor-core';
+
 /**
  * Feature set for ContentEdit plugin.
  * Call getDefaultContentEditFeatures() to get default feature set.
@@ -56,6 +59,24 @@ interface ContentEditFeatures {
      * @default true
      */
     tabInTable: boolean;
+
+    /**
+     * When press Up or Down in table cell, jump to the table cell above/below
+     * @default true
+     */
+    upDownInTable: boolean;
+
+    /**
+     * When press Space or Enter after a hyperlink-like string, convert the string to a hyperlink
+     * @default true
+     */
+    autoLink: boolean;
+
+    /**
+     * Respond to default common keyboard short, i.e. Ctrl+B, Ctrl+I, Ctrl+U, Ctrl+Z, Ctrl+Y
+     * @default true
+     */
+    defaultShortcut: boolean;
 }
 
 export default ContentEditFeatures;
@@ -65,6 +86,7 @@ export default ContentEditFeatures;
  */
 export function getDefaultContentEditFeatures(): ContentEditFeatures {
     return {
+        autoLink: true,
         indentWhenTab: true,
         outdentWhenShiftTab: true,
         outdentWhenBackspaceOnEmptyFirstLine: true,
@@ -74,5 +96,14 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         unquoteWhenEnterOnEmptyLine: true,
         autoBullet: true,
         tabInTable: true,
+        upDownInTable: true,
+        defaultShortcut: true,
     };
+}
+
+export interface ContentEditFeature {
+    keys: number[];
+    shouldHandleEvent: (event: PluginDomEvent, editor: Editor) => any;
+    handleEvent: (event: PluginDomEvent, editor: Editor) => ChangeSource | void;
+    allowFunctionKeys?: boolean;
 }

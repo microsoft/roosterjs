@@ -14,10 +14,8 @@ export {
     default as replaceTextBeforeCursorWithNode,
     validateAndGetRangeForTextBeforeCursor,
 } from './cursor/replaceTextBeforeCursorWithNode';
-export { default as cacheGetListState } from './format/cacheGetListState';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
-export { default as execFormatWithUndo, Formatter } from './format/execFormatWithUndo';
 export { default as getFormatState } from './format/getFormatState';
 export { default as insertImage } from './format/insertImage';
 export { default as insertTable } from './table/insertTable';
@@ -42,4 +40,6 @@ export { default as toggleSubscript } from './format/toggleSubscript';
 export { default as toggleSuperscript } from './format/toggleSuperscript';
 export { default as toggleUnderline } from './format/toggleUnderline';
 export { default as toggleHeader } from './format/toggleHeader';
-export { default as matchLink } from './linkMatch/matchLink';
+
+export { default as cacheGetListState } from './deprecated/cacheGetListState';
+export { default as execFormatWithUndo, Formatter } from './deprecated/execFormatWithUndo';

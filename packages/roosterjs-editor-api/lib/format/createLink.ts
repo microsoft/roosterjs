@@ -1,9 +1,7 @@
-import execFormatWithUndo from './execFormatWithUndo';
-import isSelectionCollapsed from '../cursor/isSelectionCollapsed';
-import matchLink from '../linkMatch/matchLink';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
-import { ChangeSource } from 'roosterjs-editor-types';
+import { ChangeSource, DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
+import { matchLink } from 'roosterjs-editor-dom';
 
 // Regex matching Uri scheme
 const URI_REGEX = /^[a-zA-Z]+:/i;
@@ -67,10 +65,11 @@ export default function createLink(
         // if the link starts with ftp.xxx, we will add ftp:// link. For more, see applyLinkPrefix
         let normalizedUrl = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
         let originalUrl = linkData ? linkData.originalUrl : url;
-        let anchor: HTMLAnchorElement = null;
 
-        execFormatWithUndo(editor, () => {
-            if (isSelectionCollapsed(editor)) {
+        editor.addUndoSnapshot(() => {
+            let range = editor.getSelectionRange();
+            let anchor: HTMLAnchorElement = null;
+            if (range && range.collapsed) {
                 anchor = getAnchorNodeAtCursor(editor);
 
                 // If there is already a link, just change its href
@@ -86,7 +85,7 @@ export default function createLink(
                 }
             } else {
                 /* the selection is not collapsed, use browser execCommand */
-                editor.getDocument().execCommand('createLink', false, normalizedUrl);
+                editor.getDocument().execCommand(DocumentCommand.CreateLink, false, normalizedUrl);
                 anchor = getAnchorNodeAtCursor(editor);
                 updateAnchorDisplayText(anchor, displayText);
             }
@@ -97,9 +96,8 @@ export default function createLink(
                 anchor.removeAttribute(TEMP_TITLE);
                 anchor.title = altText;
             }
-        });
-
-        editor.triggerContentChangedEvent(ChangeSource.CreateLink, anchor);
+            return anchor;
+        }, ChangeSource.CreateLink);
     }
 }
 

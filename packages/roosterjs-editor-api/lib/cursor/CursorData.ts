@@ -1,5 +1,5 @@
-import { ContentPosition, ContentScope, InlineElement } from 'roosterjs-editor-types';
-import { ContentTraverser, isTextualInlineElement, matchWhiteSpaces } from 'roosterjs-editor-dom';
+import { InlineElement } from 'roosterjs-editor-types';
+import { ContentTraverser, matchWhiteSpaces } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
 // The class that helps parse content around cursor
@@ -74,10 +74,7 @@ export default class CursorData {
         if (!this.inlineAfterCursor && !this.forwardTraversingComplete) {
             // TODO: this may needs to be extended to support read more than just one inline element after cursor
             if (!this.forwardTraverser) {
-                this.forwardTraverser = this.editor.getContentTraverser(
-                    ContentScope.Block,
-                    ContentPosition.SelectionStart
-                );
+                this.forwardTraverser = this.editor.getBlockTraverser();
             }
 
             if (this.forwardTraverser) {
@@ -164,10 +161,7 @@ export default class CursorData {
     /// Continue traversing backward till stop condition is met or begin of block is reached
     private continueTraversingBackwardTill(stopFunc: (inlineElement: InlineElement) => boolean) {
         if (!this.backwardTraverser) {
-            this.backwardTraverser = this.editor.getContentTraverser(
-                ContentScope.Block,
-                ContentPosition.SelectionStart
-            );
+            this.backwardTraverser = this.editor.getBlockTraverser();
         }
 
         if (!this.backwardTraverser) {
@@ -176,7 +170,7 @@ export default class CursorData {
 
         let previousInline = this.backwardTraverser.getPreviousInlineElement();
         while (!this.backwardTraversingComplete) {
-            if (previousInline && isTextualInlineElement(previousInline)) {
+            if (previousInline && previousInline.isTextualInlineElement()) {
                 let textContent = previousInline.getTextContent();
                 if (!this.inlineBeforeCursor) {
                     // Make sure the inline before cursor is a non-empty text inline

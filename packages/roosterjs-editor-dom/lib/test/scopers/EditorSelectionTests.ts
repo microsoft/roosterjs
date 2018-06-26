@@ -1,22 +1,12 @@
 import * as DomTestHelper from '../DomTestHelper';
-import EditorSelection from '../../scopers/EditorSelection';
-import InlineElementFactory from '../../inlineElements/InlineElementFactory';
+import EditorSelection from '../../contentTraverser/EditorSelection';
 import { BlockElement, NodeBoundary } from 'roosterjs-editor-types';
 
 let testID = 'EditorSelection';
-let inlineElementFactory: InlineElementFactory;
 
 describe('EditorSelection collapsed()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     it('input = <span>www.example.com</span>, editorSelection is collapsed', () => {
@@ -29,7 +19,7 @@ describe('EditorSelection collapsed()', () => {
 
         // collapse to end
         selectionRange.collapse(false);
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
 
         // Act
         let isCollapsed = editorSelection.collapsed;
@@ -48,7 +38,7 @@ describe('EditorSelection collapsed()', () => {
 
         // collapse to start
         selectionRange.collapse(true);
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
 
         // Act
         let isCollapsed = editorSelection.collapsed;
@@ -64,7 +54,7 @@ describe('EditorSelection collapsed()', () => {
             '<span>www.example.com</span>'
         );
         let selectionRange = DomTestHelper.createRangeFromChildNodes(rootNode);
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
 
         // Act
         let isCollapsed = editorSelection.collapsed;
@@ -75,16 +65,8 @@ describe('EditorSelection collapsed()', () => {
 });
 
 describe('EditorSelection inlineElementBeforeStart()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     function runTest(
@@ -97,7 +79,7 @@ describe('EditorSelection inlineElementBeforeStart()', () => {
         // Arrange
         let startPoint = { containerNode: node, offset: startOffset };
         let endPoint = { containerNode: node, offset: endOffset };
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
 
         // Act
         let inlineElementBeforeStart = editorSelection.inlineElementBeforeStart;
@@ -134,7 +116,7 @@ describe('EditorSelection inlineElementBeforeStart()', () => {
         let startPoint = { containerNode: rootNode.firstChild, offset: NodeBoundary.Begin };
         let endPoint = { containerNode: rootNode.firstChild, offset: NodeBoundary.End };
         let selectionRange = DomTestHelper.createRangeWithStartEndNode(startPoint, endPoint);
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
 
         // Act
         let inlineElementBeforeStart = editorSelection.inlineElementBeforeStart;
@@ -159,16 +141,8 @@ describe('EditorSelection inlineElementBeforeStart()', () => {
 });
 
 describe('EditorSelection startInlineElement()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     function runTest(
@@ -181,7 +155,7 @@ describe('EditorSelection startInlineElement()', () => {
         // Arrange
         let startPoint = { containerNode: node, offset: startOffset };
         let endPoint = { containerNode: node, offset: endOffset };
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
 
         // Act
         let startInline = editorSelection.startInlineElement;
@@ -234,16 +208,8 @@ describe('EditorSelection startInlineElement()', () => {
 });
 
 describe('EditorSelection endInlineElement()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     function runTest(
@@ -256,7 +222,7 @@ describe('EditorSelection endInlineElement()', () => {
         // Arrange
         let startPoint = { containerNode: node, offset: startOffset };
         let endPoint = { containerNode: node, offset: endOffset };
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
 
         // Act
         let endInline = editorSelection.endInlineElement;
@@ -305,21 +271,13 @@ describe('EditorSelection endInlineElement()', () => {
 });
 
 describe('EditorSelection startBlockElement()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
     });
 
-    afterAll(() => {
-        inlineElementFactory = null;
-    });
-
     function runTest(rootNode: Node, selectionRange: Range, testBlockElement: BlockElement) {
         // Arrange
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
 
         // Act
         let startBlockElement = editorSelection.startBlockElement;
@@ -374,21 +332,13 @@ describe('EditorSelection startBlockElement()', () => {
 });
 
 describe('EditorSelection endBlockElement()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
     });
 
-    afterAll(() => {
-        inlineElementFactory = null;
-    });
-
     function runTest(rootNode: Node, selectionRange: Range, testBlockElement: BlockElement) {
         // Arrange
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
 
         // Act
         let endBlockElement = editorSelection.endBlockElement;
@@ -443,16 +393,8 @@ describe('EditorSelection endBlockElement()', () => {
 });
 
 describe('EditorSelection trimInlineElement()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     it('input = <div>abc</div>, collapsed selection', () => {
@@ -460,7 +402,7 @@ describe('EditorSelection trimInlineElement()', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let selectionRange = DomTestHelper.createRangeFromChildNodes(rootNode);
         selectionRange.collapse(false);
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
         let inlineElement = DomTestHelper.createInlineElementFromNode(
             rootNode.firstChild.firstChild,
             rootNode
@@ -481,7 +423,7 @@ describe('EditorSelection trimInlineElement()', () => {
 
         // range is '<p>part1</p>'
         let selectionRange = DomTestHelper.createRangeWithStartEndNode(startPoint, endPoint);
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
 
         // inlineElement is 'part1'
         let inlineElement = DomTestHelper.createInlineElementFromNode(
@@ -504,7 +446,7 @@ describe('EditorSelection trimInlineElement()', () => {
 
         // range is '<p>part1</p>'
         let selectionRange = DomTestHelper.createRangeWithStartEndNode(startPoint, endPoint);
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
 
         // inlineElement is 'part2'
         let inlineElement = DomTestHelper.createInlineElementFromNode(
@@ -530,7 +472,7 @@ describe('EditorSelection trimInlineElement()', () => {
 
         // range is 'part1'
         let selectionRange = DomTestHelper.createRangeWithStartEndNode(startPoint, endPoint);
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
 
         // inlineElement is 'part1,part2'
         let inlineElement = DomTestHelper.createInlineElementFromNode(
@@ -551,16 +493,8 @@ describe('EditorSelection trimInlineElement()', () => {
 });
 
 describe('EditorSelection isBlockInScope()', () => {
-    beforeAll(() => {
-        inlineElementFactory = new InlineElementFactory(null);
-    });
-
     afterEach(() => {
         DomTestHelper.removeElement(testID);
-    });
-
-    afterAll(() => {
-        inlineElementFactory = null;
     });
 
     function runTest(
@@ -570,7 +504,7 @@ describe('EditorSelection isBlockInScope()', () => {
         output: boolean
     ) {
         // Arrange
-        let editorSelection = new EditorSelection(rootNode, selectionRange, inlineElementFactory);
+        let editorSelection = new EditorSelection(rootNode, selectionRange);
 
         // Act
         let isTestBlockInScope = editorSelection.isBlockInScope(testBlockElement);
