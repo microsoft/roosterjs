@@ -1,5 +1,4 @@
 import { Editor } from 'roosterjs-editor-core';
-
 export interface PickerPluginOptions {
     // Constant that defines the element ID prefix to look for.
     // If it matches, this element should be handled by the plugin
@@ -11,6 +10,11 @@ export interface PickerPluginOptions {
     // Constant that defines the character(s) that will trigger the suggesting state in the plugin.
     // The @mentions case, for instance, uses a '@' symbol.
     triggerCharacter: string;
+
+    // Option for using the picker in the horizontal state:
+    // Vertical (the default, when this is false), will call shiftHighlight with up (false) and down (true).
+    // Horizontal (when this is true), will call shiftHighlight with left (false) and right (true).
+    isHorizontal?: boolean;
 }
 
 export interface PickerDataProvider {
@@ -36,7 +40,7 @@ export interface PickerDataProvider {
     selectOption?: () => void;
 
     // Function called when a keypress is issued that would move the highlight on any picker UX.
-    shiftHighlight?: (isDown: boolean) => void;
+    shiftHighlight?: (isIncrement: boolean) => void;
 
     // Function that is called when a delete command is issued.
     // Returns the intended replacement node (if partial delete) or null (if full delete)
