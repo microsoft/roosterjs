@@ -1,4 +1,4 @@
-import { PickerDataProvider, PickerPluginOptions } from '../store/schema/PickerDataProvider';
+import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { cacheGetCursorEventData, replaceTextBeforeCursorWithNode } from 'roosterjs-editor-api';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { PartialInlineElement } from 'roosterjs-editor-dom';
