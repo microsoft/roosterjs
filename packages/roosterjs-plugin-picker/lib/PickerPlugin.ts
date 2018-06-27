@@ -233,8 +233,8 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
             ) {
                 this.dataProvider.shiftHighlight(
                     this.pickerOptions.isHorizontal
-                        ? keyboardEvent.which == RIGHT_ARROW_CHARCODE ? true : false
-                        : keyboardEvent.which == DOWN_ARROW_CHARCODE ? true : false
+                        ? keyboardEvent.which == RIGHT_ARROW_CHARCODE
+                        : keyboardEvent.which == DOWN_ARROW_CHARCODE
                 );
                 this.handleKeyDownEvent(event);
             } else if (
