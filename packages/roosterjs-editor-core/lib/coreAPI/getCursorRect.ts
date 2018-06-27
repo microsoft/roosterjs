@@ -71,8 +71,8 @@ function getRectFromClientRect(clientRect: ClientRect): Rect {
     return clientRect &&
         (clientRect.left != 0 ||
             clientRect.right != 0 ||
-            clientRect.left != 0 ||
-            clientRect.right != 0)
+            clientRect.top != 0 ||
+            clientRect.bottom != 0)
         ? {
               left: Math.round(clientRect.left),
               right: Math.round(clientRect.right),
