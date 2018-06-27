@@ -65,7 +65,7 @@ function autoLink(event: PluginDomEvent, editor: Editor) {
 
             // Explicitly trigger ContentChanged event here and do not trigger it from performAutoComplete,
             // because we want the anchor can be handled by other plugins (e.g. HyperLink) before undo snapshot is added
-            editor.triggerContentChangedEvent(ChangeSource.AutoBullet, anchor);
+            editor.triggerContentChangedEvent(ChangeSource.AutoLink, anchor);
         });
     });
 }

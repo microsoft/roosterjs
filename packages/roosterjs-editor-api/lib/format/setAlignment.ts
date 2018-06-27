@@ -22,7 +22,7 @@ export default function setAlignment(editor: Editor, alignment: Alignment) {
     }
 
     editor.addUndoSnapshot(() => {
-        execCommand(editor, command, true /*addUndoSnapshotWhenCollapsed*/);
+        execCommand(editor, command);
         queryNodesWithSelection(
             editor,
             '[align]',

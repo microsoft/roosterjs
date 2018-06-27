@@ -1,14 +1,13 @@
 import BodyScoper from './BodyScoper';
+import EmptyInlineElement from '../inlineElements/EmptyInlineElement';
+import Position from '../selection/Position';
 import SelectionBlockScoper from './SelectionBlockScoper';
 import SelectionScoper from './SelectionScoper';
 import TraversingScoper from './TraversingScoper';
 import { BlockElement, ContentPosition, InlineElement } from 'roosterjs-editor-types';
-import {
-    getNextBlockElement,
-    getPreviousBlockElement,
-    getNextInlineElement,
-    getPreviousInlineElement,
-} from '../blockElements/BlockElement';
+import { getInlineElementBeforeAfter } from '../inlineElements/getInlineElementBeforeAfter';
+import { getLeafSibling } from '../domWalker/getLeafSibling';
+import { getNextPreviousInlineElement, getBlockElementAtNode } from '../blockElements/BlockElement';
 
 /**
  * The provides traversing of content inside editor.
@@ -16,7 +15,7 @@ import {
  * Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
  * the current inline element position
  */
-class ContentTraverser {
+export default class ContentTraverser {
     private currentInline: InlineElement;
     private currentBlock: BlockElement;
 
@@ -46,15 +45,16 @@ class ContentTraverser {
     /**
      * Create a content traverser for a block element which contains the given position
      * @param rootNode The root node to traverse in
-     * @param positionInBlock A position inside a block, traversing will be scoped within this block
+     * @param position A position inside a block, traversing will be scoped within this block.
+     * If passing a range, the start position of this range will be used
      * @param startFrom Start position of traversing. The value can be Begin, End, SelectionStart
      */
     public static createSelectionBlockTraverser(
         rootNode: Node,
-        range: Range,
+        position: Position | Range,
         start: ContentPosition = ContentPosition.SelectionStart
     ): ContentTraverser {
-        return new ContentTraverser(new SelectionBlockScoper(rootNode, range, start));
+        return new ContentTraverser(new SelectionBlockScoper(rootNode, position, start));
     }
 
     /**
@@ -73,42 +73,36 @@ class ContentTraverser {
      * Get next block element
      */
     public getNextBlockElement(): BlockElement {
-        let thisBlock = this.currentBlockElement;
-        let nextBlock = thisBlock ? getNextBlockElement(this.scoper.rootNode, thisBlock) : null;
-
-        // Make sure this is right block:
-        // 1) the block is in scope per scoper
-        // 2) the block is after the current block
-        // Then:
-        // 1) Re-position current block to newly found block
-        if (nextBlock && this.scoper.isBlockInScope(nextBlock) && nextBlock.isAfter(thisBlock)) {
-            this.currentBlock = nextBlock;
-            return this.currentBlock;
-        }
-
-        return null;
+        return this.getPreviousNextBlockElement(true /*isNext*/);
     }
 
     /**
      * Get previous block element
      */
     public getPreviousBlockElement(): BlockElement {
-        let thisBlock = this.currentBlockElement;
-        let previousBlock = thisBlock
-            ? getPreviousBlockElement(this.scoper.rootNode, thisBlock)
-            : null;
+        return this.getPreviousNextBlockElement(false /*isNext*/);
+    }
+
+    private getPreviousNextBlockElement(isNext: boolean): BlockElement {
+        let current = this.currentBlockElement;
+        let leaf = getLeafSibling(
+            this.scoper.rootNode,
+            isNext ? current.getEndNode() : current.getStartNode(),
+            isNext
+        );
+        let newBlock = leaf ? getBlockElementAtNode(this.scoper.rootNode, leaf) : null;
 
         // Make sure this is right block:
         // 1) the block is in scope per scoper
-        // 2) the block is before the current block
+        // 2) the block is after (for next) or before (for previous) the current block
         // Then:
         // 1) Re-position current block to newly found block
         if (
-            previousBlock &&
-            this.scoper.isBlockInScope(previousBlock) &&
-            thisBlock.isAfter(previousBlock)
+            newBlock &&
+            this.scoper.isBlockInScope(newBlock) &&
+            ((isNext && newBlock.isAfter(current)) || (!isNext && current.isAfter(newBlock)))
         ) {
-            this.currentBlock = previousBlock;
+            this.currentBlock = newBlock;
             return this.currentBlock;
         }
 
@@ -124,70 +118,53 @@ class ContentTraverser {
             this.currentInline = this.scoper.getStartInlineElement();
         }
 
-        return this.currentInline;
+        return this.currentInline instanceof EmptyInlineElement ? null : this.currentInline;
     }
 
     /**
      * Get next inline element
      */
     public getNextInlineElement(): InlineElement {
-        let thisInline = this.currentInlineElement;
-        let nextInline: InlineElement;
-        if (thisInline) {
-            nextInline = getNextInlineElement(this.scoper.rootNode, thisInline);
-        } else {
-            nextInline = this.scoper.getInlineElementAfterStart
-                ? this.scoper.getInlineElementAfterStart()
-                : null;
-        }
-
-        // For inline, we need to make sure:
-        // 1) it is really next to current, unless current is null
-        // 2) pass on the new inline to this.scoper to do the triming and we still get back an inline
-        // Then
-        // 1) re-position current inline
-        if (
-            nextInline &&
-            (!thisInline || nextInline.isAfter(thisInline)) &&
-            (nextInline = this.scoper.trimInlineElement(nextInline))
-        ) {
-            this.currentInline = nextInline;
-            return this.currentInline;
-        }
-
-        return null;
+        return this.getPreviousNextInlineElement(true /*isNext*/);
     }
 
     /**
      * Get previous inline element
      */
     public getPreviousInlineElement(): InlineElement {
-        let thisInline = this.currentInlineElement;
-        let previousInline: InlineElement;
-        if (thisInline) {
-            previousInline = getPreviousInlineElement(this.scoper.rootNode, thisInline);
+        return this.getPreviousNextInlineElement(false /*isNext*/);
+    }
+
+    private getPreviousNextInlineElement(isNext: boolean): InlineElement {
+        let current = this.currentInlineElement || this.currentInline;
+        let newInline: InlineElement;
+
+        if (current instanceof EmptyInlineElement) {
+            newInline = getInlineElementBeforeAfter(
+                this.scoper.rootNode,
+                current.getPosition(),
+                isNext
+            );
+            newInline = current.getParentBlock().isInBlock(newInline) ? newInline : null;
         } else {
-            previousInline = this.scoper.getInlineElementBeforeStart
-                ? this.scoper.getInlineElementBeforeStart()
-                : null;
+            newInline = getNextPreviousInlineElement(this.scoper.rootNode, current, isNext);
+            newInline =
+                (newInline && (isNext && newInline.isAfter(current))) ||
+                (!isNext && current.isAfter(newInline))
+                    ? newInline
+                    : null;
         }
 
         // For inline, we need to make sure:
-        // 1) it is really previous to current
-        // 2) pass on the new inline to this.scoper to do the trimming and we still get back an inline
+        // 1) it is really next/previous to current
+        // 2) pass on the new inline to this.scoper to do the triming and we still get back an inline
         // Then
         // 1) re-position current inline
-        if (
-            previousInline &&
-            (!thisInline || thisInline.isAfter(previousInline)) &&
-            (previousInline = this.scoper.trimInlineElement(previousInline))
-        ) {
-            this.currentInline = previousInline;
+        if (newInline && (newInline = this.scoper.trimInlineElement(newInline))) {
+            this.currentInline = newInline;
             return this.currentInline;
         }
 
         return null;
     }
 }
-
-export default ContentTraverser;

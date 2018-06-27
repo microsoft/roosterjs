@@ -53,10 +53,10 @@ export function markSelection(
  * If there is selection marker in content, convert into back to a selection range and remove the markers,
  * otherwise no op.
  * @param container Container HTML element to query selection markers from
- * @param removeMarkerOnly Skip retrieving range, but only delete existing markers
+ * @param retrieveSelectionRange Whether retrieve selection range from the markers if any
  * @returns The selection range converted from makers, or null if no valid marker found.
  */
-export function retrieveRangeFromMarker(container: HTMLElement, removeMarkerOnly?: boolean): Range {
+export function removeMarker(container: HTMLElement, retrieveSelectionRange: boolean): Range {
     let start: Position;
     let end: Position;
     let range: Range;
@@ -64,22 +64,22 @@ export function retrieveRangeFromMarker(container: HTMLElement, removeMarkerOnly
     let markers = queryElements(
         container,
         CURSOR_MARK_SELECTOR,
-        removeMarkerOnly
-            ? null
-            : marker => {
+        retrieveSelectionRange
+            ? marker => {
                   switch (marker.id) {
                       case CURSOR_START:
-                          start = saveCreatePosition(marker, OFFSET_1_ATTRIBUTE);
+                          start = safeCreatePosition(marker, OFFSET_1_ATTRIBUTE);
                           break;
                       case CURSOR_END:
-                          end = saveCreatePosition(marker, OFFSET_1_ATTRIBUTE);
+                          end = safeCreatePosition(marker, OFFSET_1_ATTRIBUTE);
                           break;
                       case CURSOR_SINGLE:
-                          start = saveCreatePosition(marker, OFFSET_1_ATTRIBUTE);
-                          end = saveCreatePosition(marker, OFFSET_2_ATTRIBUTE);
+                          start = safeCreatePosition(marker, OFFSET_1_ATTRIBUTE);
+                          end = safeCreatePosition(marker, OFFSET_2_ATTRIBUTE);
                           break;
                   }
               }
+            : null
     );
 
     if (start && end && markers.length <= 2) {
@@ -91,7 +91,7 @@ export function retrieveRangeFromMarker(container: HTMLElement, removeMarkerOnly
     return range;
 }
 
-function saveCreatePosition(marker: HTMLElement, attrName: string) {
+function safeCreatePosition(marker: HTMLElement, attrName: string) {
     let node = marker.nextSibling;
     let offset = parseInt(marker.getAttribute(attrName)) || 0;
 

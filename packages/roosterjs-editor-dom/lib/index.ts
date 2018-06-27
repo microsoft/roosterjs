@@ -5,13 +5,9 @@ export {
     getFirstBlockElement,
     getFirstLastBlockElement,
     getLastBlockElement,
-    getNextBlockElement,
-    getPreviousBlockElement,
     getFirstInlineElement,
     getLastInlineElement,
     getInlineElementAtNode,
-    getNextInlineElement,
-    getPreviousInlineElement,
 } from './blockElements/BlockElement';
 
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
@@ -65,7 +61,6 @@ export { default as SelectionRange } from './selection/SelectionRange';
 // Deprecated
 export { default as isTextualInlineElement } from './deprecated/isTextualInlineElement';
 export { default as wrapAll } from './deprecated/wrapAll';
-export { default as EditorSelection } from './contentTraverser/EditorSelection';
 export { default as TraversingScoper } from './contentTraverser/TraversingScoper';
 export {
     getInlineElementBeforePoint,

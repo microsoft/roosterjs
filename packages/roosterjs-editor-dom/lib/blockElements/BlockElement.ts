@@ -34,36 +34,20 @@ function getLastInlineElement(rootNode: Node): InlineElement {
 
 function getNextPreviousInlineElement(
     rootNode: Node,
-    inlineElement: InlineElement,
+    current: InlineElement,
     isNext: boolean
 ): InlineElement {
-    let result: InlineElement;
-    if (inlineElement) {
-        if (
-            inlineElement instanceof PartialInlineElement &&
-            (inlineElement as PartialInlineElement).nextInlineElement
-        ) {
-            // if current is partial, get the the other half of the inline unless it is no more
-            result = (inlineElement as PartialInlineElement).nextInlineElement;
-        } else {
-            // Get a leaf node after startNode and use that base to find next inline
-            let startNode = inlineElement.getContainerNode();
-            startNode = getLeafSibling(rootNode, startNode, isNext);
-            result = startNode ? getInlineElementAtNode(rootNode, startNode) : null;
-        }
+    if (current instanceof PartialInlineElement && current.nextInlineElement) {
+        // if current is partial, get the the other half of the inline unless it is no more
+        return current.nextInlineElement;
+    } else if (current) {
+        // Get a leaf node after startNode and use that base to find next inline
+        let startNode = current.getContainerNode();
+        startNode = getLeafSibling(rootNode, startNode, isNext);
+        return getInlineElementAtNode(rootNode, startNode);
+    } else {
+        return null;
     }
-
-    return result;
-}
-
-// Get next inline element
-function getNextInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement {
-    return getNextPreviousInlineElement(rootNode, inlineElement, true /*isNext*/);
-}
-
-// Get previous inline element
-function getPreviousInlineElement(rootNode: Node, inlineElement: InlineElement): InlineElement {
-    return getNextPreviousInlineElement(rootNode, inlineElement, false /*isNext*/);
 }
 
 // Checks if the node is a BR
@@ -224,36 +208,6 @@ function getLastBlockElement(rootNode: Node): BlockElement {
     return getFirstLastBlockElement(rootNode, false /*isFirst*/);
 }
 
-function getNextPreviousBlockElement(
-    rootNode: Node,
-    blockElement: BlockElement,
-    isNext: boolean
-): BlockElement {
-    let getNode = isNext
-        ? (element: BlockElement) => element.getEndNode()
-        : (element: BlockElement) => element.getStartNode();
-    let result: BlockElement;
-    if (blockElement) {
-        // Get a leaf node after block's end element and use that base to find next block
-        // TODO: this code is used to identify block, maybe we shouldn't exclude those empty nodes
-        // We can improve this later on
-        let leaf = getLeafSibling(rootNode, getNode(blockElement), isNext);
-        result = leaf ? getBlockElementAtNode(rootNode, leaf) : null;
-    }
-
-    return result;
-}
-
-// Get next block
-function getNextBlockElement(rootNode: Node, blockElement: BlockElement) {
-    return getNextPreviousBlockElement(rootNode, blockElement, true /*isNext*/);
-}
-
-// Get previous block
-function getPreviousBlockElement(rootNode: Node, blockElement: BlockElement) {
-    return getNextPreviousBlockElement(rootNode, blockElement, false /*isNext*/);
-}
-
 // This presents a content block that can be reprented by a single html block type element.
 // In most cases, it corresponds to an HTML block level element, i.e. P, DIV, LI, TD etc.
 class NodeBlockElement implements BlockElement {
@@ -308,7 +262,11 @@ class NodeBlockElement implements BlockElement {
         let startInline = this.getFirstInlineElement();
         while (startInline) {
             allInlines.push(startInline);
-            startInline = getNextInlineElement(this.containerNode, startInline);
+            startInline = getNextPreviousInlineElement(
+                this.containerNode,
+                startInline,
+                true /*isNext*/
+            );
         }
 
         return allInlines;
@@ -416,7 +374,7 @@ class StartEndBlockElement implements BlockElement {
         let startInline = this.getFirstInlineElement();
         while (startInline) {
             allInlines.push(startInline);
-            startInline = getNextInlineElement(this.rootNode, startInline);
+            startInline = getNextPreviousInlineElement(this.rootNode, startInline, true /*isNext*/);
         }
 
         return allInlines;
@@ -569,11 +527,8 @@ export {
     getFirstBlockElement,
     getFirstLastBlockElement,
     getLastBlockElement,
-    getNextBlockElement,
-    getPreviousBlockElement,
     getFirstInlineElement,
     getLastInlineElement,
     getInlineElementAtNode,
-    getNextInlineElement,
-    getPreviousInlineElement,
+    getNextPreviousInlineElement,
 };

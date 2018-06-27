@@ -33,8 +33,8 @@ import {
     queryElements,
     wrap,
 } from 'roosterjs-editor-dom';
-import { markSelection, retrieveRangeFromMarker } from '../undo/selectionMarker';
 
+import { markSelection, removeMarker } from '../undo/selectionMarker';
 const KEY_BACKSPACE = 8;
 
 /**
@@ -309,7 +309,7 @@ export default class Editor {
         if (this.core.contentDiv.innerHTML != content) {
             this.core.contentDiv.innerHTML = content || '';
 
-            this.restoreSelectionFromMarker();
+            this.removeSelectionMarker(true /*applySelection*/);
 
             if (triggerContentChangedEvent) {
                 this.triggerContentChangedEvent();
@@ -467,7 +467,7 @@ export default class Editor {
             if (selectionMarked) {
                 // In safari the selection will be lost after inserting markers, so need to restore it
                 // For other browsers we just need to delete markers here
-                this.restoreSelectionFromMarker(!Browser.isSafari /*removeMarkerOnly*/);
+                this.removeSelectionMarker(Browser.isSafari /*applySelection*/);
             }
         }
     }
@@ -891,13 +891,9 @@ export default class Editor {
         if (this.core.snapshotBeforeAutoComplete !== null) {
             if (event && event.which == KEY_BACKSPACE) {
                 event.preventDefault();
-                this.addUndoSnapshot(
-                    () =>
-                        this.setContent(
-                            this.core.snapshotBeforeAutoComplete,
-                            false /*triggerContentChangedEvent*/
-                        ),
-                    ChangeSource.UndoAutoComplete
+                this.setContent(
+                    this.core.snapshotBeforeAutoComplete,
+                    false /*triggerContentChangedEvent*/
                 );
             }
             this.core.snapshotBeforeAutoComplete = null;
@@ -977,8 +973,8 @@ export default class Editor {
         }
     }
 
-    private restoreSelectionFromMarker(removeMarkerOnly?: boolean) {
-        let range = retrieveRangeFromMarker(this.core.contentDiv, removeMarkerOnly);
+    private removeSelectionMarker(applySelection: boolean) {
+        let range = removeMarker(this.core.contentDiv, applySelection);
         if (range) {
             this.select(range);
         }

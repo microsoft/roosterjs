@@ -16,12 +16,7 @@ export default function setIndentation(editor: Editor, indentation: Indentation)
         indentation == Indentation.Increase ? DocumentCommand.Indent : DocumentCommand.Outdent;
     editor.addUndoSnapshot(() => {
         let isInlist = queryNodesWithSelection(editor, 'OL,UL').length > 0;
-        execCommand(
-            editor,
-            command,
-            true /*addUndoSnapshotWhenCollapsed*/,
-            true /*doWorkaroundForList*/
-        );
+        execCommand(editor, command, true /*doWorkaroundForList*/);
 
         if (!isInlist) {
             queryNodesWithSelection(

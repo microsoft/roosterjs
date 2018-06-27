@@ -1,5 +1,8 @@
 import * as DomTestHelper from '../DomTestHelper';
-import { StartEndBlockElement, getNextInlineElement } from '../../blockElements/BlockElement';
+import {
+    StartEndBlockElement,
+    getNextPreviousInlineElement,
+} from '../../blockElements/BlockElement';
 import { InlineElement } from 'roosterjs-editor-types';
 
 let testID = 'StartEndBlockElement';
@@ -390,9 +393,10 @@ describe('StartEndBlockElement isInBlock()', () => {
         rootNode: HTMLElement,
         blockElement: StartEndBlockElement
     ): InlineElement {
-        let inlineElementAfterBlockElement = getNextInlineElement(
+        let inlineElementAfterBlockElement = getNextPreviousInlineElement(
             rootNode,
-            blockElement.getLastInlineElement()
+            blockElement.getLastInlineElement(),
+            true
         );
         return inlineElementAfterBlockElement;
     }

@@ -14,14 +14,18 @@ import {
 } from 'roosterjs-editor-types';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../domWalker/getLeafSibling';
 
-// This presents an inline element that can be reprented by a single html node.
-// This serves as base for most inline element as it contains most implentation
-// of all operations that can happen on an inline element. Other sub inline elements mostly
-// just identify themself for a certain type
+/**
+ * This presents an inline element that can be reprented by a single html node.
+ * This serves as base for most inline element as it contains most implentation
+ * of all operations that can happen on an inline element. Other sub inline elements mostly
+ * just identify themself for a certain type
+ */
 class NodeInlineElement implements InlineElement {
     constructor(private containerNode: Node, private parentBlock: BlockElement) {}
 
-    // The text content for this inline element
+    /**
+     * The text content for this inline element
+     */
     public getTextContent(): string {
         // nodeValue is better way to retrieve content for a text. Others, just use textContent
         return this.containerNode.nodeType == NodeType.Text
@@ -29,7 +33,9 @@ class NodeInlineElement implements InlineElement {
             : this.containerNode.textContent;
     }
 
-    // Get the container node
+    /**
+     * Get the container node
+     */
     public getContainerNode(): Node {
         return this.containerNode;
     }
@@ -39,7 +45,9 @@ class NodeInlineElement implements InlineElement {
         return this.parentBlock;
     }
 
-    // Get the start point of the inline element
+    /**
+     * Get the start point of the inline element
+     */
     public getStartPoint(): EditorPoint {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest first child node from the container
@@ -50,7 +58,9 @@ class NodeInlineElement implements InlineElement {
         return { containerNode: firstChild, offset: NodeBoundary.Begin };
     }
 
-    // Get the end point of the inline element
+    /**
+     * Get the end point of the inline element
+     */
     public getEndPoint(): EditorPoint {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest last child node from the container
@@ -72,12 +82,18 @@ class NodeInlineElement implements InlineElement {
         return false;
     }
 
-    // Checks if an inline element is after the current inline element
+    /**
+     * Checks if an inline element is after the current inline element
+     */
     public isAfter(inlineElement: InlineElement): boolean {
-        return isNodeAfter(this.containerNode, inlineElement.getContainerNode());
+        return inlineElement
+            ? isNodeAfter(this.containerNode, inlineElement.getContainerNode())
+            : false;
     }
 
-    // Checks if an editor point is contained in the inline element
+    /**
+     * Checks if an editor point is contained in the inline element
+     */
     public contains(editorPoint: EditorPoint): boolean {
         let startPoint = this.getStartPoint();
         let endPoint = this.getEndPoint();
@@ -86,11 +102,9 @@ class NodeInlineElement implements InlineElement {
         );
     }
 
-    // Apply inline style to a region of an inline element. The region is identified thorugh the from and to point
-    // The fromPoint and toPoint are optional and when bing missed, it indicates the boundary of the element
-    // The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
-    // when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
-    // The actuall styling is done by consumer through the styler callback
+    /**
+     * Apply inline style to an inline element
+     */
     public applyStyle(
         styler: (node: Node) => void,
         fromPoint?: EditorPoint,

@@ -11,10 +11,5 @@ import { Editor } from 'roosterjs-editor-core';
  * @param editor The editor instance
  */
 export default function toggleBullet(editor: Editor) {
-    execCommand(
-        editor,
-        DocumentCommand.InsertUnorderedList,
-        true /*addUndoSnapshotWhenCollapsed*/,
-        true /*doWorkaroundForList*/
-    );
+    execCommand(editor, DocumentCommand.InsertUnorderedList, true /*doWorkaroundForList*/);
 }

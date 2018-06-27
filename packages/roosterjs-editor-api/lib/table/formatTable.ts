@@ -5,8 +5,9 @@ import { TableFormat } from 'roosterjs-editor-types';
 
 /**
  * Format table
- * @param table The table to format
- * @param formatName Name of the format to use
+ * @param editor The editor which contains the table to format
+ * @param format A TableFormat object contains format information we want to apply to the table
+ * @param table The table to format. This is optional. When not passed, the current table (if any) will be formatted
  */
 export default function formatTable(editor: Editor, format: TableFormat, table?: HTMLTableElement) {
     table = table || (getNodeAtCursor(editor, 'TABLE') as HTMLTableElement);

@@ -60,7 +60,10 @@ export const UpDownInTable: ContentEditFeature = {
 
         editor.runAsync(() => {
             let newContainer = getNodeAtCursor(editor);
-            if (!contains(td, newContainer, true /*treatSameNodeAsContain*/)) {
+            if (
+                contains(vtable.table, newContainer) &&
+                !contains(td, newContainer, true /*treatSameNodeAsContain*/)
+            ) {
                 if (targetTd) {
                     editor.select(targetTd, PositionType.Begin);
                 } else {

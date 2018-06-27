@@ -16,11 +16,14 @@ export default function queryNodesWithSelection<T extends HTMLElement = HTMLElem
     nodeContainedByRangeOnly?: boolean,
     forEachCallback?: (node: T) => void
 ): T[] {
-    let nodes = editor.queryElements<T>(selector);
     let range = editor.getSelectionRange();
-    nodes = nodes.filter(node => isIntersectWithNodeRange(node, range, nodeContainedByRangeOnly));
-    if (forEachCallback) {
-        nodes.forEach(forEachCallback);
+    let nodes: T[] = [];
+    if (range) {
+        nodes = editor.queryElements<T>(selector);
+        nodes = nodes.filter(node => isIntersectWithNodeRange(node, range, nodeContainedByRangeOnly));
+        if (forEachCallback) {
+            nodes.forEach(forEachCallback);
+        }
     }
     return nodes;
 }

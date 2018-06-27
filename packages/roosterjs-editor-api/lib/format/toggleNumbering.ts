@@ -11,10 +11,5 @@ import { Editor } from 'roosterjs-editor-core';
  * @param editor The editor instance
  */
 export default function toggleNumbering(editor: Editor) {
-    execCommand(
-        editor,
-        DocumentCommand.InsertOrderedList,
-        true /*addUndoSnapshotWhenCollapsed*/,
-        true /*doWorkaroundForList*/
-    );
+    execCommand(editor, DocumentCommand.InsertOrderedList, true /*doWorkaroundForList*/);
 }

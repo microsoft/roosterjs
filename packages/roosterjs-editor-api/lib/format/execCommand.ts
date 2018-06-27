@@ -19,7 +19,6 @@ const ZERO_WIDTH_SPACE = '&#8203;';
 export default function execCommand(
     editor: Editor,
     command: DocumentCommand,
-    addUndoSnapshotWhenCollapsed?: boolean,
     doWorkaroundForList?: boolean
 ) {
     editor.focus();
@@ -27,7 +26,8 @@ export default function execCommand(
     let callback = doWorkaroundForList ? () => workaroundForList(editor, formatter) : formatter;
 
     let range = editor.getSelectionRange();
-    if (range && range.collapsed && !addUndoSnapshotWhenCollapsed) {
+    if (range && range.collapsed) {
+        editor.addUndoSnapshot();
         callback();
     } else {
         editor.addUndoSnapshot(callback);

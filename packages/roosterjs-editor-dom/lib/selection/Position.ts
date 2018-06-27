@@ -63,9 +63,7 @@ export default class Position {
             default:
                 let endOffset = getEndOffset(this.node);
                 this.offset = Math.max(0, Math.min(<number>offsetOrPosType, endOffset));
-                this.isAtEnd =
-                    offsetOrPosType == PositionType.End ||
-                    (this.offset > 0 && this.offset == endOffset);
+                this.isAtEnd = offsetOrPosType > 0 && offsetOrPosType >= endOffset;
                 break;
         }
 

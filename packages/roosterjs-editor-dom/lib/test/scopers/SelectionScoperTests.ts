@@ -276,7 +276,7 @@ describe('SelectionScoper trimInlineElement()', () => {
         let trimmedElement = scoper.trimInlineElement(inlineElement);
 
         // Assert
-        expect(trimmedElement).toBeUndefined();
+        expect(trimmedElement).toBeFalsy();
     });
 
     it('input = <span>part1,part2</span>, part of inlineElement is out of scope', () => {

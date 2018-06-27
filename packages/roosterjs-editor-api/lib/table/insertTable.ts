@@ -1,5 +1,5 @@
 import { Editor } from 'roosterjs-editor-core';
-import { TableFormat } from 'roosterjs-editor-types';
+import { TableFormat, PositionType } from 'roosterjs-editor-types';
 import formatTable from './formatTable';
 
 /**
@@ -34,6 +34,7 @@ export default function insertTable(
         }
     }
 
+    editor.focus();
     editor.addUndoSnapshot(() => {
         editor.insertNode(fragment);
         formatTable(
@@ -47,6 +48,7 @@ export default function insertTable(
             },
             table
         );
+        editor.runAsync(() => editor.select(table, PositionType.After));
     });
 }
 
