@@ -1,7 +1,7 @@
 import getFormatState from './getFormatState';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
-import { DefaultFormat, DocumentCommand, NodeType } from 'roosterjs-editor-types';
+import { DefaultFormat, DocumentCommand, NodeType, ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { Browser, applyFormat } from 'roosterjs-editor-dom';
 
@@ -30,7 +30,7 @@ export default function execCommand(
         editor.addUndoSnapshot();
         callback();
     } else {
-        editor.addUndoSnapshot(callback);
+        editor.addUndoSnapshot(callback, ChangeSource.Format);
     }
 }
 

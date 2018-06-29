@@ -1,7 +1,7 @@
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import { Browser, getTagOfNode, splitParentNode, unwrap, wrap } from 'roosterjs-editor-dom';
-import { PositionType } from 'roosterjs-editor-types';
+import { PositionType, ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 var ZERO_WIDTH_SPACE = '&#8203;';
@@ -46,7 +46,7 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
         if (!editor.select(start, end) && quoteElement) {
             editor.select(quoteElement);
         }
-    });
+    }, ChangeSource.Format);
 }
 
 function getContentNodes(editor: Editor): Node[] {

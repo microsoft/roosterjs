@@ -7,7 +7,7 @@ import toggleUnderline from './toggleUnderline';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';
 import setTextColor from './setTextColor';
-import { DocumentCommand } from 'roosterjs-editor-types';
+import { DocumentCommand, ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
@@ -60,5 +60,5 @@ export default function clearFormat(editor: Editor) {
                 toggleUnderline(editor);
             }
         }
-    });
+    }, ChangeSource.Format);
 }

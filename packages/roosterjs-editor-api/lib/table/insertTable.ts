@@ -1,5 +1,5 @@
 import { Editor } from 'roosterjs-editor-core';
-import { TableFormat, PositionType } from 'roosterjs-editor-types';
+import { TableFormat, PositionType, ChangeSource } from 'roosterjs-editor-types';
 import formatTable from './formatTable';
 
 /**
@@ -49,7 +49,7 @@ export default function insertTable(
             table
         );
         editor.runAsync(() => editor.select(table, PositionType.After));
-    });
+    }, ChangeSource.Format);
 }
 
 function getTableCellWidth(columns: number): string {

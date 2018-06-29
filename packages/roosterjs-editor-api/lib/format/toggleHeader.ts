@@ -1,6 +1,6 @@
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { Editor } from 'roosterjs-editor-core';
-import { DocumentCommand, NodeType } from 'roosterjs-editor-types';
+import { DocumentCommand, NodeType, ChangeSource } from 'roosterjs-editor-types';
 
 /**
  * Toggle header at selection
@@ -44,5 +44,5 @@ export default function toggleHeader(editor: Editor, level: number) {
             }
             editor.getDocument().execCommand(DocumentCommand.FormatBlock, false, `<H${level}>`);
         }
-    });
+    }, ChangeSource.Format);
 }

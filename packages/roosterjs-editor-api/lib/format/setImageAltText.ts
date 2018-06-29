@@ -1,5 +1,6 @@
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { Editor } from 'roosterjs-editor-core';
+import { ChangeSource } from 'roosterjs-editor-types';
 
 /**
  * Set image alt text for all selected images at selection. If no images is contained
@@ -16,5 +17,5 @@ export default function setImageAltText(editor: Editor, altText: string) {
         queryNodesWithSelection(editor, 'IMG', false /*nodeContainedByRangeOnly*/, node =>
             node.setAttribute('alt', altText)
         );
-    });
+    }, ChangeSource.Format);
 }

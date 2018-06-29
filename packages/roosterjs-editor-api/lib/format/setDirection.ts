@@ -1,4 +1,4 @@
-import { BlockElement, Direction } from 'roosterjs-editor-types';
+import { BlockElement, Direction, ChangeSource } from 'roosterjs-editor-types';
 import { NodeBlockElement, StartEndBlockElement, wrap } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 
@@ -54,6 +54,6 @@ export default function setDirection(editor: Editor, dir: Direction) {
                     );
                 }
             }
-        });
+        }, ChangeSource.Format);
     }
 }

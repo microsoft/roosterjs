@@ -1,7 +1,7 @@
 import execCommand from './execCommand';
 import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { Editor } from 'roosterjs-editor-core';
-import { DocumentCommand, Indentation } from 'roosterjs-editor-types';
+import { DocumentCommand, Indentation, ChangeSource } from 'roosterjs-editor-types';
 
 /**
  * Set indentation at selection
@@ -29,5 +29,5 @@ export default function setIndentation(editor: Editor, indentation: Indentation)
                 }
             );
         }
-    });
+    }, ChangeSource.Format);
 }

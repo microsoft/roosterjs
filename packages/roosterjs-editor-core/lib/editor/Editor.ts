@@ -467,7 +467,7 @@ export default class Editor {
             if (selectionMarked) {
                 // In safari the selection will be lost after inserting markers, so need to restore it
                 // For other browsers we just need to delete markers here
-                this.removeSelectionMarker(Browser.isSafari /*applySelection*/);
+                this.removeSelectionMarker(Browser.isSafari || Browser.isChrome /*applySelection*/);
             }
         }
     }
@@ -558,7 +558,7 @@ export default class Editor {
                 if (firstNode && lastNode) {
                     this.select(firstNode, PositionType.Before, lastNode, PositionType.After);
                 }
-            });
+            }, ChangeSource.Format);
         }
     }
 
@@ -647,12 +647,12 @@ export default class Editor {
      * If this function is called nested, undo snapshot will only be added in the outside one
      * @param callback The callback function to perform formatting, returns a data object which will be used as
      * the data field in ContentChangedEvent if changeSource is not null.
-     * @param changeSource The change source to use when fire ContentChangedEvent. Default value is 'Format'
-     * If pass null, the event will not be fired.
+     * @param changeSource The change source to use when fire ContentChangedEvent. When the value is not null,
+     * a ContentChangedEvent will be fired with change source equal to this value
      */
     public addUndoSnapshot(
         callback?: (start: Position, end: Position) => any,
-        changeSource: ChangeSource | string = ChangeSource.Format
+        changeSource?: ChangeSource | string
     ) {
         this.core.api.editWithUndo(
             this.core,

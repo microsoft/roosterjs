@@ -1,7 +1,7 @@
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import { Editor } from 'roosterjs-editor-core';
 import { VTable } from 'roosterjs-editor-dom';
-import { TableFormat } from 'roosterjs-editor-types';
+import { TableFormat, ChangeSource } from 'roosterjs-editor-types';
 
 /**
  * Format table
@@ -18,6 +18,6 @@ export default function formatTable(editor: Editor, format: TableFormat, table?:
             vtable.writeBack();
             editor.focus();
             editor.select(start, end);
-        });
+        }, ChangeSource.Format);
     }
 }
