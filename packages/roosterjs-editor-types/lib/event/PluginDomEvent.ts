@@ -1,13 +1,9 @@
-import PluginEvent from './PluginEvent';
+import GenericPluginDomEvent from './GenericPluginDomEvent';
+import KeyboardDomEvent from './KeyboardDomEvent';
 
 /**
- * This represents a PluginEvent for a DOM event
+ * This represents a PluginEvent wrapping native browser event
  */
-interface PluginDomEvent extends PluginEvent {
-    /**
-     * original DOM event
-     */
-    rawEvent: Event;
-}
+type PluginDomEvent = KeyboardDomEvent | GenericPluginDomEvent;
 
 export default PluginDomEvent;

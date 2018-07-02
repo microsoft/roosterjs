@@ -123,9 +123,9 @@ export default class ContentEdit implements EditorPlugin {
             event.eventType == PluginEventType.ContentChanged &&
             (<ContentChangedEvent>event).source == ChangeSource.Paste &&
             this.autoLinkEnabled &&
-            AutoLink.shouldHandleEvent(<PluginDomEvent>event, this.editor)
+            AutoLink.shouldHandleEvent(event, this.editor)
         ) {
-            AutoLink.handleEvent(<PluginDomEvent>event, this.editor);
+            AutoLink.handleEvent(event, this.editor);
         }
     }
 

@@ -1,4 +1,4 @@
-import { ChangeSource, PluginDomEvent } from 'roosterjs-editor-types';
+import { ChangeSource, PluginEvent, PluginDomEvent } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -101,9 +101,11 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
     };
 }
 
-export interface ContentEditFeature {
+export interface GenericContentEditFeature<TEvent extends PluginEvent> {
     keys: number[];
-    shouldHandleEvent: (event: PluginDomEvent, editor: Editor) => any;
-    handleEvent: (event: PluginDomEvent, editor: Editor) => ChangeSource | void;
+    shouldHandleEvent: (event: TEvent, editor: Editor) => any;
+    handleEvent: (event: TEvent, editor: Editor) => ChangeSource | void;
     allowFunctionKeys?: boolean;
 }
+
+export type ContentEditFeature = GenericContentEditFeature<PluginDomEvent>;

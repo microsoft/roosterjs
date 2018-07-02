@@ -1,9 +1,12 @@
-import PluginEvent from './PluginEvent';
+import BasePluginEvent from './BasePluginEvent';
+import PluginEventType from './PluginEventType';
 
 /**
- * Represents a custom PluginEvent for extracting content
+ * Represents a custom BasePluginEvent for extracting content
  */
-interface ExtractContentEvent extends PluginEvent {
+interface ExtractContentEvent extends BasePluginEvent {
+    eventType: PluginEventType.ExtractContent,
+
     /**
      * Current content string
      * Plugin can change this string to clean up the markups it added before
