@@ -49,7 +49,7 @@ export default class ContentTraverser {
      * If passing a range, the start position of this range will be used
      * @param startFrom Start position of traversing. The value can be Begin, End, SelectionStart
      */
-    public static createSelectionBlockTraverser(
+    public static createBlockTraverser(
         rootNode: Node,
         position: Position | Range,
         start: ContentPosition = ContentPosition.SelectionStart

@@ -1,4 +1,3 @@
-import SelectionRange from '../selection/SelectionRange';
 import { NodeType } from 'roosterjs-editor-types';
 
 /**
@@ -24,17 +23,9 @@ export default function contains(
  */
 export default function contains(container: Node, contained: Range): boolean;
 
-/**
- * Test if a node contains a given range
- * @param container The container node
- * @param contained The selection range to check if it is inside container
- * @returns True if contained is insied container, otherwise false
- */
-export default function contains(container: Node, contained: SelectionRange): boolean;
-
 export default function contains(
     container: Node,
-    contained: Node | Range | SelectionRange,
+    contained: Node | Range,
     treatSameNodeAsContain?: boolean
 ): boolean {
     if (!container || !contained) {
@@ -46,8 +37,7 @@ export default function contains(
     }
 
     if (!(contained instanceof Node)) {
-        let range = contained instanceof Range ? contained : contained.getRange();
-        contained = range ? range.commonAncestorContainer : null;
+        contained = contained && contained.commonAncestorContainer;
         treatSameNodeAsContain = true;
     }
 

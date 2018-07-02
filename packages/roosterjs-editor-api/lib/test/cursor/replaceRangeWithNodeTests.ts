@@ -1,6 +1,5 @@
 import * as TestHelper from '../TestHelper';
-import CursorData from '../../cursor/CursorData';
-import replaceRangeWithNode from '../../cursor/replaceRangeWithNode';
+import replaceRangeWithNode from '../../format/replaceWithNode';
 import { Editor } from 'roosterjs-editor-core';
 
 describe('replaceRangeWithNode replaceRangeWithNode()', () => {
@@ -112,8 +111,7 @@ describe('replaceRangeWithNode replaceRangeWithNode()', () => {
         range.setEndAfter(selectedNode);
         range.collapse(false);
         editor.select(range);
-        let cursor = new CursorData(editor);
-        let textElement = cursor.inlineElementBeforeCursor;
+        let textElement = editor.getContentSearcherOfCursor().getInlineElementBefore();
         range.setStart(textElement.getContainerNode(), startOffset);
         range.setEnd(textElement.getContainerNode(), endOffset);
         return range;

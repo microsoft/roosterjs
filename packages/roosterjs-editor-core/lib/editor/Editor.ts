@@ -17,10 +17,10 @@ import {
 } from 'roosterjs-editor-types';
 import {
     Browser,
+    PositionContentSearcher,
     ContentTraverser,
     NodeBlockElement,
     Position,
-    SelectionRange,
     applyFormat,
     contains,
     fromHtml,
@@ -210,14 +210,7 @@ export default class Editor {
      */
     public contains(range: Range): boolean;
 
-    /**
-     * Check if the selection range falls in the editor content
-     * @param range The range to check
-     * @returns True if the given range is in editor content, otherwise false
-     */
-    public contains(range: SelectionRange): boolean;
-
-    public contains(arg: Node | Range | SelectionRange): boolean {
+    public contains(arg: Node | Range): boolean {
         return contains(this.core.contentDiv, <Node>arg);
     }
 
@@ -391,13 +384,6 @@ export default class Editor {
      * @returns True if content is selected, otherwise false
      */
     public select(range: Range): boolean;
-
-    /**
-     * Select content by SelectionRange
-     * @param range The SelectionRange object which represents the content range to select
-     * @returns True if content is selected, otherwise false
-     */
-    public select(range: SelectionRange): boolean;
 
     /**
      * Select content by Position and collapse to this position
@@ -772,9 +758,16 @@ export default class Editor {
     ): ContentTraverser {
         let range = this.getSelectionRange();
         return (
-            range &&
-            ContentTraverser.createSelectionBlockTraverser(this.core.contentDiv, range, startFrom)
+            range && ContentTraverser.createBlockTraverser(this.core.contentDiv, range, startFrom)
         );
+    }
+
+    /**
+     * Get a text traverser of current selection
+     */
+    public getContentSearcherOfCursor(): PositionContentSearcher {
+        let range = this.getSelectionRange();
+        return range && new PositionContentSearcher(this.core.contentDiv, Position.getStart(range));
     }
 
     /**
@@ -855,7 +848,7 @@ export default class Editor {
             this.core.api.attachDomEvent(this.core, 'focus', null, () => {
                 // Restore the last saved selection first
                 if (this.core.cachedSelectionRange && !this.core.disableRestoreSelectionOnFocus) {
-                    this.updateSelection(this.core.cachedSelectionRange);
+                    this.select(this.core.cachedSelectionRange);
                 }
                 this.core.cachedSelectionRange = null;
             }),
@@ -918,7 +911,7 @@ export default class Editor {
             range.collapsed &&
             getElementOrParentElement(range.startContainer) == this.core.contentDiv
         ) {
-            let position = new Position(range.startContainer, range.startOffset).normalize();
+            let position = Position.getStart(range).normalize();
             let blockElement = getBlockElementAtNode(this.core.contentDiv, position.node);
 
             if (!blockElement) {

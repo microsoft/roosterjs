@@ -1,5 +1,4 @@
 import Position from '../selection/Position';
-import SelectionRange from '../selection/SelectionRange';
 import TraversingScoper from './TraversingScoper';
 import { BlockElement, InlineElement } from 'roosterjs-editor-types';
 import { getBlockElementAtNode } from '../blockElements/BlockElement';
@@ -12,7 +11,8 @@ import PartialInlineElement from '../inlineElements/PartialInlineElement';
  * last trimInlineElement to trim any inline element to return a partial that falls in the selection
  */
 class SelectionScoper implements TraversingScoper {
-    private selectionRange: SelectionRange;
+    private start: Position;
+    private end: Position;
     private startBlock: BlockElement;
     private startInline: InlineElement;
 
@@ -22,7 +22,8 @@ class SelectionScoper implements TraversingScoper {
      * @param range The selection range to scope to
      */
     constructor(public rootNode: Node, range: Range) {
-        this.selectionRange = new SelectionRange(range).normalize();
+        this.start = Position.getStart(range).normalize();
+        this.end = Position.getEnd(range).normalize();
     }
 
     /**
@@ -30,7 +31,7 @@ class SelectionScoper implements TraversingScoper {
      */
     public getStartBlockElement(): BlockElement {
         if (!this.startBlock) {
-            this.startBlock = getBlockElementAtNode(this.rootNode, this.selectionRange.start.node);
+            this.startBlock = getBlockElementAtNode(this.rootNode, this.start.node);
         }
 
         return this.startBlock;
@@ -42,7 +43,7 @@ class SelectionScoper implements TraversingScoper {
     public getStartInlineElement(): InlineElement {
         if (!this.startInline) {
             this.startInline = this.trimInlineElement(
-                getInlineElementAfter(this.rootNode, this.selectionRange.start)
+                getInlineElementAfter(this.rootNode, this.start)
             );
         }
 
@@ -59,10 +60,10 @@ class SelectionScoper implements TraversingScoper {
         }
         let inScope = false;
         let selStartBlock = this.getStartBlockElement();
-        if (this.selectionRange.collapsed) {
+        if (this.start.equalTo(this.end)) {
             inScope = selStartBlock && selStartBlock.equals(block);
         } else {
-            let selEndBlock = getBlockElementAtNode(this.rootNode, this.selectionRange.end.node);
+            let selEndBlock = getBlockElementAtNode(this.rootNode, this.end.node);
 
             // There are three cases that are considered as "block in scope"
             // 1) The start of selection falls on the block
@@ -85,25 +86,24 @@ class SelectionScoper implements TraversingScoper {
      * @param inline The InlineElement to check
      */
     public trimInlineElement(inline: InlineElement): InlineElement {
-        if (!inline || this.selectionRange.collapsed) {
+        if (!inline || this.start.equalTo(this.end)) {
             return null;
         }
 
-        let startPoint = inline.getStartPoint();
-        let endPoint = inline.getEndPoint();
-        let start = new Position(startPoint.containerNode, startPoint.offset);
-        let end = new Position(endPoint.containerNode, endPoint.offset);
+        // Temp code. Will be changed to using InlineElement.getStart/EndPosition() soon
+        let start = Position.FromEditorPoint(inline.getStartPoint());
+        let end = Position.FromEditorPoint(inline.getEndPoint());
 
-        if (start.isAfter(this.selectionRange.end) || this.selectionRange.start.isAfter(end)) {
+        if (start.isAfter(this.end) || this.start.isAfter(end)) {
             return null;
         }
 
-        if (this.selectionRange.start.isAfter(start)) {
-            start = this.selectionRange.start;
+        if (this.start.isAfter(start)) {
+            start = this.start;
         }
 
-        if (end.isAfter(this.selectionRange.end)) {
-            end = this.selectionRange.end;
+        if (end.isAfter(this.end)) {
+            end = this.end;
         }
 
         return start.isAfter(end) || start.equalTo(end)

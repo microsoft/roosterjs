@@ -1,7 +1,9 @@
-import { NodeType, PositionType, Rect } from 'roosterjs-editor-types';
+import { NodeType, PositionType, Rect, EditorPoint } from 'roosterjs-editor-types';
 import Browser from '../utils/Browser';
+import contains from '../utils/contains';
 import getElementOrParentElement from '../utils/getElementOrParentElement';
 import isNodeAfter from '../utils/isNodeAfter';
+import isNodeEmpty from '../utils/isNodeEmpty';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 
 /**
@@ -106,16 +108,6 @@ export default class Position {
     }
 
     /**
-     * @deprecated
-     */
-    toEditorPoint() {
-        return {
-            containerNode: this.node,
-            offset: this.offset == 0 && this.isAtEnd ? 1 : this.offset,
-        };
-    }
-
-    /**
      * Check if this position is equal to the given position
      * @param p The position to check
      */
@@ -172,7 +164,7 @@ export default class Position {
                 }
             }
 
-            // 4) fallback to element.getBoundingClientRect()
+            // 3) fallback to element.getBoundingClientRect()
             if (!rect && element) {
                 rect = normalizeRect(element.getBoundingClientRect());
             }
@@ -182,12 +174,76 @@ export default class Position {
     }
 
     /**
+     * Check if this position is at beginning of the given node
+     * @param targetNode The node to check
+     * @returns True if position is at beginning of the node, otherwise false
+     */
+    isAtBeginningOf(targetNode: Node) {
+        let node = this.node;
+        if (this.offset == 0) {
+            while (contains(targetNode, this.node) && areAllPrevousNodesEmpty(node)) {
+                node = node.parentNode;
+            }
+
+            if (node == targetNode) {
+                return true;
+            }
+        } else {
+            // This is to handle the case when position is before the target node
+            return node.nodeType == NodeType.Element && node.childNodes[this.offset] == targetNode;
+        }
+    }
+
+    /**
      * Move this position with offset, returns a new position with a valid offset in the same node
      * @param offset Offset to move with
      */
     move(offset: number) {
         return new Position(this.node, this.offset + offset);
     }
+
+    /**
+     * Get start position of the given Range
+     * @param range The range to get position from
+     */
+    static getStart(range: Range) {
+        return new Position(range.startContainer, range.startOffset);
+    }
+
+    /**
+     * Get end position of the given Range
+     * @param range The range to get position from
+     */
+    static getEnd(range: Range) {
+        return new Position(range.endContainer, range.endOffset);
+    }
+
+    /**
+     * @deprecated Do not use
+     */
+    static FromEditorPoint(point: EditorPoint) {
+        return new Position(point.containerNode, point.offset);
+    }
+
+    /**
+     * @deprecated Do not use
+     */
+    toEditorPoint() {
+        return {
+            containerNode: this.node,
+            offset: this.offset == 0 && this.isAtEnd ? 1 : this.offset,
+        };
+    }
+}
+
+function areAllPrevousNodesEmpty(node: Node): boolean {
+    while (node.previousSibling) {
+        node = node.previousSibling;
+        if (!isNodeEmpty(node)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 function getIndexOfNode(node: Node): number {

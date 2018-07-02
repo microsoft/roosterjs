@@ -1,6 +1,6 @@
 import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
-import { cacheGetCursorEventData, replaceTextBeforeCursorWithNode } from 'roosterjs-editor-api';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { replaceWithNode } from 'roosterjs-editor-api';
+import { Editor, EditorPlugin, cacheGetContentSearcher } from 'roosterjs-editor-core';
 import { PartialInlineElement } from 'roosterjs-editor-dom';
 import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
@@ -40,7 +40,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
 
                 let wordToReplace = this.getWord(null);
                 if (wordToReplace) {
-                    replaceTextBeforeCursorWithNode(this.editor, wordToReplace, htmlNode, true);
+                    replaceWithNode(this.editor, wordToReplace, htmlNode, true);
                     nodeInserted = true;
                     this.setIsSuggesting(false);
                 }
@@ -105,8 +105,8 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
     }
 
     private getWordBeforeCursor(event: PluginDomEvent): string {
-        let cursorData = cacheGetCursorEventData(event, this.editor);
-        return cursorData ? cursorData.wordBeforeCursor : null;
+        let searcher = cacheGetContentSearcher(event, this.editor);
+        return searcher ? searcher.getWordBefore() : null;
     }
 
     private replaceNode(currentNode: Node, replacementNode: Node) {
@@ -119,9 +119,9 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
     }
 
     private getRangeUntilAt(event: PluginDomEvent): Range {
-        let cursorData = cacheGetCursorEventData(event, this.editor);
+        let PositionContentSearcher = cacheGetContentSearcher(event, this.editor);
         let range = this.editor.getDocument().createRange();
-        cursorData.getTextSectionBeforeCursorTill(textInline => {
+        PositionContentSearcher.forEachTextInlineElement(textInline => {
             let hasMatched = false;
             let nodeContent = textInline.getTextContent();
             let nodeIndex = nodeContent ? nodeContent.length : -1;
@@ -168,9 +168,11 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
                     this.dataProvider.queryStringUpdated(shortWord);
                     if (this.dataProvider.setCursorPoint) {
                         // Determine the bounding rectangle for the @mention
-                        let cursorData = cacheGetCursorEventData(event, this.editor);
+                        let searcher = cacheGetContentSearcher(event, this.editor);
                         let rangeNode = this.editor.getDocument().createRange();
-                        let nodeBeforeCursor = cursorData.inlineElementBeforeCursor.getContainerNode();
+                        let nodeBeforeCursor = searcher
+                            .getInlineElementBefore()
+                            .getContainerNode();
                         let rangeStartSuccessfullySet = this.setRangeStart(
                             rangeNode,
                             nodeBeforeCursor,
@@ -248,25 +250,25 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
             }
         } else {
             if (keyboardEvent.which == BACKSPACE_CHARCODE) {
-                let cursorData = cacheGetCursorEventData(event, this.editor);
-                let nodeBeforeCursor = cursorData.inlineElementBeforeCursor
-                    ? cursorData.inlineElementBeforeCursor.getContainerNode()
+                let searcher = cacheGetContentSearcher(event, this.editor);
+                let nodeBeforeCursor = searcher.getInlineElementBefore()
+                    ? searcher.getInlineElementBefore().getContainerNode()
                     : null;
                 let nodeId = nodeBeforeCursor ? this.getIdValue(nodeBeforeCursor) : null;
                 if (
                     nodeId &&
                     nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0 &&
-                    (cursorData.inlineElementAfterCursor == null ||
-                        !(cursorData.inlineElementAfterCursor instanceof PartialInlineElement))
+                    (searcher.getInlineElementAfter() == null ||
+                        !(searcher.getInlineElementAfter() instanceof PartialInlineElement))
                 ) {
                     let replacementNode = this.dataProvider.onRemove(nodeBeforeCursor, true);
                     this.replaceNode(nodeBeforeCursor, replacementNode);
                     this.handleKeyDownEvent(event);
                 }
             } else if (keyboardEvent.which == DELETE_CHARCODE) {
-                let cursorData = cacheGetCursorEventData(event, this.editor);
-                let nodeAfterCursor = cursorData.inlineElementAfterCursor
-                    ? cursorData.inlineElementAfterCursor.getContainerNode()
+                let searcher = cacheGetContentSearcher(event, this.editor);
+                let nodeAfterCursor = searcher.getInlineElementAfter()
+                    ? searcher.getInlineElementAfter().getContainerNode()
                     : null;
                 let nodeId = nodeAfterCursor ? this.getIdValue(nodeAfterCursor) : null;
                 if (nodeId && nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0) {

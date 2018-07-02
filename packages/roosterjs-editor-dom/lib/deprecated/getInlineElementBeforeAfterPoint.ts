@@ -8,12 +8,12 @@ import {
  * @deprecated Use getInlineElementBefore instead
  */
 export function getInlineElementBeforePoint(rootNode: Node, point: EditorPoint): InlineElement {
-    return getInlineElementBefore(rootNode, new Position(point.containerNode, point.offset));
+    return getInlineElementBefore(rootNode, Position.FromEditorPoint(point));
 }
 
 /**
  * @deprecated Use getInlineElementAfter instead
  */
 export function getInlineElementAfterPoint(rootNode: Node, point: EditorPoint): InlineElement {
-    return getInlineElementAfter(rootNode, new Position(point.containerNode, point.offset));
+    return getInlineElementAfter(rootNode, Position.FromEditorPoint(point));
 }

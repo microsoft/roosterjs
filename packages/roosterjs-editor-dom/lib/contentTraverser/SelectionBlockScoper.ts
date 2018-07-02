@@ -26,10 +26,7 @@ class SelectionBlockScoper implements TraversingScoper {
         position: Position | Range,
         private startFrom: ContentPosition
     ) {
-        position =
-            position instanceof Range
-                ? new Position(position.startContainer, position.startOffset)
-                : position;
+        position = position instanceof Range ? Position.getStart(position) : position;
         this.position = position.normalize();
         this.block = getBlockElementAtNode(this.rootNode, this.position.node);
     }

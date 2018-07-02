@@ -19,4 +19,9 @@ export { default as UndoService } from './editor/UndoService';
 export { default as browserData, BrowserData } from './deprecated/BrowserData';
 export { default as cacheGetEventData } from './eventApi/cacheGetEventData';
 export { default as clearEventDataCache } from './eventApi/clearEventDataCache';
+export {
+    cacheGetContentSearcher,
+    clearContentSearcherCache,
+} from './eventApi/cacheGetContentSearcher';
+
 export { buildSnapshot, restoreSnapshot } from './deprecated/snapshotUtils';

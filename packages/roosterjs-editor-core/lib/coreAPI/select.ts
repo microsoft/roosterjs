@@ -1,24 +1,18 @@
 import EditorCore, { Select } from '../editor/EditorCore';
 import hasFocus from './hasFocus';
-import { Position, SelectionRange, contains } from 'roosterjs-editor-dom';
+import { Position, contains, createRange } from 'roosterjs-editor-dom';
 import { PositionType } from 'roosterjs-editor-types';
 
 const select: Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => {
-    let rawRange: Range;
+    let range: Range;
 
     if (!arg1) {
         return false;
     } else if (arg1 instanceof Range) {
-        rawRange = arg1;
+        range = arg1;
     } else {
-        let range: SelectionRange;
-        if (arg1.start && arg1.end) {
-            range = <SelectionRange>arg1;
-        } else if (arg1.node) {
-            range = new SelectionRange(
-                new Position(arg1),
-                arg2 && arg2.node ? new Position(arg2) : null
-            );
+        if (arg1.node) {
+            range = createRange(new Position(arg1), arg2 && arg2.node ? new Position(arg2) : null);
         } else if (arg1 instanceof Node) {
             let start: Position;
             let end: Position;
@@ -32,12 +26,11 @@ const select: Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg
                         ? new Position(<Node>arg3, <number | PositionType>arg4)
                         : null;
             }
-            range = new SelectionRange(start, end);
+            range = createRange(start, end);
         }
-        rawRange = range.getRange();
     }
 
-    if (contains(core.contentDiv, rawRange)) {
+    if (contains(core.contentDiv, range)) {
         let selection = core.document.defaultView.getSelection();
         if (selection) {
             if (selection.rangeCount > 0) {
@@ -47,10 +40,10 @@ const select: Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg
                 } catch (e) {}
             }
 
-            selection.addRange(rawRange);
+            selection.addRange(range);
 
             if (!hasFocus(core)) {
-                core.cachedSelectionRange = rawRange;
+                core.cachedSelectionRange = range;
             }
 
             return true;

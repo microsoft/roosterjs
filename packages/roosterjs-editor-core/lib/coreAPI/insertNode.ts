@@ -3,16 +3,15 @@ import {
     Position,
     changeElementTag,
     contains,
+    createRange,
     getBlockElementAtNode,
     getFirstLastBlockElement,
     getTagOfNode,
     isBlockElement,
     isNodeEmpty,
-    isPositionAtBeginningOf,
     isVoidHtmlElement,
     unwrap,
     wrap,
-    SelectionRange,
 } from 'roosterjs-editor-dom';
 import { ContentPosition, InsertOption, NodeType, PositionType } from 'roosterjs-editor-types';
 
@@ -75,7 +74,7 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
 
                 // Create a clone (backup) for the selection first as we may need to restore to it later
                 let clonedRange = range.cloneRange();
-                let position = new Position(range.startContainer, range.startOffset).normalize();
+                let position = Position.getStart(range).normalize();
                 let blockElement = getBlockElementAtNode(contentDiv, position.node);
 
                 if (blockElement) {
@@ -154,7 +153,7 @@ function preprocessNode(
             }
 
             if (getTagOfNode(listNode.parentNode) == tag) {
-                if (isNodeEmpty(listNode) || isPositionAtBeginningOf(range, listNode)) {
+                if (isNodeEmpty(listNode) || Position.getStart(range).isAtBeginningOf(listNode)) {
                     range.setEndBefore(listNode);
                 } else {
                     range.setEndAfter(listNode);
@@ -168,14 +167,12 @@ function preprocessNode(
     if (getTagOfNode(currentNode) == 'P') {
         // Insert into a P tag may cause issues when the inserted content contains any block element.
         // Change P tag to DIV to make sure it works well
-        let rangeCache = new SelectionRange(range).normalize();
+        let start = Position.getStart(range).normalize();
+        let end = Position.getEnd(range).normalize();
         let div = changeElementTag(<HTMLElement>currentNode, 'div');
-        if (
-            rangeCache.start.node != div &&
-            rangeCache.end.node != div &&
-            contains(core.contentDiv, rangeCache)
-        ) {
-            range = rangeCache.getRange();
+        let newRange = createRange(start, end);
+        if (start.node != div && end.node != div && contains(core.contentDiv, newRange)) {
+            range = newRange;
         }
     }
 

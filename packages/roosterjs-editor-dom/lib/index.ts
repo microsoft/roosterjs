@@ -11,6 +11,7 @@ export {
 } from './blockElements/BlockElement';
 
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
+export { default as PositionContentSearcher } from './contentTraverser/PositionContentSearcher';
 
 export { getNextLeafSibling, getPreviousLeafSibling } from './domWalker/getLeafSibling';
 export { getFirstLeafNode, getLastLeafNode } from './domWalker/getLeafNode';
@@ -44,7 +45,6 @@ export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isDocumentPosition } from './utils/isDocumentPosition';
 export { default as isEditorPointAfter } from './utils/isEditorPointAfter';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
-export { default as isPositionAtBeginningOf } from './utils/isPositionAtBeginningOf';
 export { default as isVoidHtmlElement } from './utils/isVoidHtmlElement';
 export { default as matchLink } from './utils/matchLink';
 export { default as matchWhiteSpaces } from './utils/matchWhiteSpaces';
@@ -56,7 +56,7 @@ export { default as wrap } from './utils/wrap';
 export { default as VTable, VCell } from './table/VTable';
 
 export { default as Position } from './selection/Position';
-export { default as SelectionRange } from './selection/SelectionRange';
+export { default as createRange } from './selection/createRange';
 
 // Deprecated
 export { default as isTextualInlineElement } from './deprecated/isTextualInlineElement';

@@ -20,7 +20,9 @@ export default function queryNodesWithSelection<T extends HTMLElement = HTMLElem
     let nodes: T[] = [];
     if (range) {
         nodes = editor.queryElements<T>(selector);
-        nodes = nodes.filter(node => isIntersectWithNodeRange(node, range, nodeContainedByRangeOnly));
+        nodes = nodes.filter(node =>
+            isIntersectWithNodeRange(node, range, nodeContainedByRangeOnly)
+        );
         if (forEachCallback) {
             nodes.forEach(forEachCallback);
         }

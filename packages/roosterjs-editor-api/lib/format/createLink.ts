@@ -84,7 +84,7 @@ export default function createLink(
                     editor.insertNode(anchor);
                 }
             } else {
-                /* the selection is not collapsed, use browser execCommand */
+                // the selection is not collapsed, use browser execCommand
                 editor.getDocument().execCommand(DocumentCommand.CreateLink, false, normalizedUrl);
                 anchor = getAnchorNodeAtCursor(editor);
                 updateAnchorDisplayText(anchor, displayText);

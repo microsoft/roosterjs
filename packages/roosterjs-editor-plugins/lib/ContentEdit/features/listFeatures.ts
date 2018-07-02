@@ -1,15 +1,13 @@
 import { ContentEditFeature } from '../ContentEditFeatures';
-import { Editor } from 'roosterjs-editor-core';
+import { Editor, cacheGetContentSearcher } from 'roosterjs-editor-core';
 import { Indentation, PluginDomEvent } from 'roosterjs-editor-types';
-import { Browser, getTagOfNode, isNodeEmpty, isPositionAtBeginningOf } from 'roosterjs-editor-dom';
+import { Browser, Position, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
 import {
-    cacheGetCursorEventData,
     cacheGetNodeAtCursor,
     getNodeAtCursor,
     setIndentation,
     toggleBullet,
     toggleNumbering,
-    validateAndGetRangeForTextBeforeCursor,
 } from 'roosterjs-editor-api';
 import { ChangeSource, PositionType } from 'roosterjs-editor-types';
 
@@ -42,7 +40,8 @@ export const MergeInNewLine: ContentEditFeature = {
     keys: [KEY_BACKSPACE],
     shouldHandleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');
-        return li && isPositionAtBeginningOf(editor.getSelectionRange(), li);
+        let range = editor.getSelectionRange();
+        return li && range && Position.getStart(range).isAtBeginningOf(li);
     },
     handleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');
@@ -82,15 +81,15 @@ export const AutoBullet: ContentEditFeature = {
     keys: [KEY_SPACE],
     shouldHandleEvent: (event, editor) => {
         if (!cacheGetListElement(event, editor)) {
-            let cursorData = cacheGetCursorEventData(event, editor);
-            let textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
+            let searcher = cacheGetContentSearcher(event, editor);
+            let textBeforeCursor = searcher.getSubStringBefore(3);
 
             // Auto list is triggered if:
             // 1. Text before cursor exactly mathces '*', '-' or '1.'
             // 2. There's no non-text inline entities before cursor
             return (
                 ['*', '-', '1.'].indexOf(textBeforeCursor) >= 0 &&
-                !cursorData.getFirstNonTextInlineBeforeCursor()
+                !searcher.getNearestNonTextInlineElement()
             );
         }
         return false;
@@ -98,16 +97,11 @@ export const AutoBullet: ContentEditFeature = {
     handleEvent: (event, editor) => {
         editor.runAsync(() => {
             editor.performAutoComplete(() => {
-                let cursorData = cacheGetCursorEventData(
-                    null /*pass null for event, force get fresh CursorData*/,
-                    editor
-                );
-                let textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
-                let rangeToDelete = validateAndGetRangeForTextBeforeCursor(
-                    editor,
+                let searcher = editor.getContentSearcherOfCursor();
+                let textBeforeCursor = searcher.getSubStringBefore(3);
+                let rangeToDelete = searcher.getRangeFromText(
                     textBeforeCursor,
-                    true /*exactMatch*/,
-                    cursorData
+                    true /*exactMatch*/
                 );
 
                 if (rangeToDelete) {

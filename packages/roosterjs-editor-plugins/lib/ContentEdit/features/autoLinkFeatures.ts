@@ -1,12 +1,13 @@
 import { ChangeSource, LinkData, PluginDomEvent } from 'roosterjs-editor-types';
 import { ContentEditFeature } from '../ContentEditFeatures';
-import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
 import {
-    cacheGetCursorEventData,
-    clearCursorEventDataCache,
-    replaceTextBeforeCursorWithNode,
-} from 'roosterjs-editor-api';
+    Editor,
+    cacheGetEventData,
+    cacheGetContentSearcher,
+    clearContentSearcherCache,
+} from 'roosterjs-editor-core';
 import { matchLink } from 'roosterjs-editor-dom';
+import { replaceWithNode } from 'roosterjs-editor-api';
 
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
 // we need to trim off the trailing puncatuation before turning it to link match
@@ -23,8 +24,8 @@ export const AutoLink: ContentEditFeature = {
 
 function cacheGetLinkData(event: PluginDomEvent, editor: Editor): LinkData {
     return cacheGetEventData(event, 'LINK_DATA', () => {
-        let cursorData = cacheGetCursorEventData(event, editor);
-        let word = cursorData && cursorData.wordBeforeCursor;
+        let searcher = cacheGetContentSearcher(event, editor);
+        let word = searcher && searcher.getWordBefore();
         if (word && word.length > MINIMUM_LENGTH) {
             // Check for trailing punctuation
             let trailingPunctuations = word.match(TRAILING_PUNCTUATION_REGEX);
@@ -44,7 +45,7 @@ function cacheGetLinkData(event: PluginDomEvent, editor: Editor): LinkData {
 }
 
 function autoLink(event: PluginDomEvent, editor: Editor) {
-    let cursorData = cacheGetCursorEventData(event, editor);
+    let searcher = cacheGetContentSearcher(event, editor);
     let anchor = editor.getDocument().createElement('a');
     let linkData = cacheGetLinkData(event, editor);
     anchor.textContent = linkData.originalUrl;
@@ -52,16 +53,16 @@ function autoLink(event: PluginDomEvent, editor: Editor) {
 
     editor.runAsync(() => {
         editor.performAutoComplete(() => {
-            replaceTextBeforeCursorWithNode(
+            replaceWithNode(
                 editor,
                 linkData.originalUrl,
                 anchor,
                 false /* exactMatch */,
-                cursorData
+                searcher
             );
 
             // The content at cursor has changed. Should also clear the cursor data cache
-            clearCursorEventDataCache(event);
+            clearContentSearcherCache(event);
 
             // Explicitly trigger ContentChanged event here and do not trigger it from performAutoComplete,
             // because we want the anchor can be handled by other plugins (e.g. HyperLink) before undo snapshot is added
