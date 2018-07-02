@@ -1,4 +1,7 @@
+import { AutoLink } from './features/autoLinkFeatures';
+import { DefaultShortcut } from './features/shortcutFeatures';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { TabInTable, UpDownInTable } from './features/tableFeatures';
 import {
     ChangeSource,
     PluginDomEvent,
@@ -19,13 +22,10 @@ import {
     OutdentWhenBackOn1stEmptyLine,
     OutdentWhenEnterOnEmptyLine,
 } from './features/listFeatures';
-import { AutoLink } from './features/autoLinkFeatures';
 import {
     UnquoteWhenBackOnEmpty1stLine,
     UnquoteWhenEnterOnEmptyLine,
 } from './features/quoteFeatures';
-import { TabInTable, UpDownInTable } from './features/tableFeatures';
-import { DefaultShortcut } from './features/shortcutFeatures';
 
 /**
  * An editor plugin to handle content edit event.

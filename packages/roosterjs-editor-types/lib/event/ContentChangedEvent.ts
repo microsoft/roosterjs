@@ -1,5 +1,5 @@
-import ChangeSource from '../enum/ChangeSource';
 import BasePluginEvent from './BasePluginEvent';
+import ChangeSource from '../enum/ChangeSource';
 import PluginEventType from './PluginEventType';
 
 /**

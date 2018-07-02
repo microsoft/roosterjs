@@ -1,4 +1,4 @@
-import { ChangeSource, PluginEvent, PluginDomEvent } from 'roosterjs-editor-types';
+import { ChangeSource, PluginDomEvent, PluginEvent } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**

@@ -1,6 +1,5 @@
 import { ChangeSource, LinkData, PluginEvent } from 'roosterjs-editor-types';
 import { GenericContentEditFeature } from '../ContentEditFeatures';
-import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
 import {
     Editor,
     cacheGetEventData,

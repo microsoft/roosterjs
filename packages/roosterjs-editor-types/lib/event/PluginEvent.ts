@@ -1,11 +1,11 @@
-import BasePluginEvent from "./BasePluginEvent";
-import BeforePasteEvent from "./BeforePasteEvent";
-import ContentChangedEvent from "./ContentChangedEvent";
-import ExtractContentEvent from "./ExtractContentEvent";
-import PluginDomEvent from "./PluginDomEvent";
-import EditorReadyEvent from "./EditorReadyEvent";
-import BeforeDisposeEvent from "./BeforeDisposeEvent";
-import KeyboardDomEvent from "./KeyboardDomEvent";
+import BasePluginEvent from './BasePluginEvent';
+import BeforeDisposeEvent from './BeforeDisposeEvent';
+import BeforePasteEvent from './BeforePasteEvent';
+import ContentChangedEvent from './ContentChangedEvent';
+import EditorReadyEvent from './EditorReadyEvent';
+import ExtractContentEvent from './ExtractContentEvent';
+import KeyboardDomEvent from './KeyboardDomEvent';
+import PluginDomEvent from './PluginDomEvent';
 
 /**
  * Editor plugin event interface

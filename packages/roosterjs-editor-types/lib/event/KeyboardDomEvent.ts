@@ -1,6 +1,6 @@
+import BasePluginEvent from './BasePluginEvent';
 import PluginDomEvent from './PluginDomEvent';
 import PluginEventType from './PluginEventType';
-import BasePluginEvent from './BasePluginEvent';
 
 /**
  * This represents a PluginEvent wrapping native browser event
