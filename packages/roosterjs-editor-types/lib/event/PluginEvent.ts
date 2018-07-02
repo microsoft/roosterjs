@@ -4,7 +4,6 @@ import BeforePasteEvent from './BeforePasteEvent';
 import ContentChangedEvent from './ContentChangedEvent';
 import EditorReadyEvent from './EditorReadyEvent';
 import ExtractContentEvent from './ExtractContentEvent';
-import KeyboardDomEvent from './KeyboardDomEvent';
 import PluginDomEvent from './PluginDomEvent';
 
 /**
@@ -17,7 +16,6 @@ type PluginEvent =
   | ExtractContentEvent
   | PluginDomEvent
   | EditorReadyEvent
-  | BeforeDisposeEvent
-  | KeyboardDomEvent;
+  | BeforeDisposeEvent;
 
 export default PluginEvent;

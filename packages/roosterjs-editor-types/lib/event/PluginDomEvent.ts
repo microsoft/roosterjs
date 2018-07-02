@@ -1,9 +1,23 @@
-import GenericPluginDomEvent from './GenericPluginDomEvent';
-import KeyboardDomEvent from './KeyboardDomEvent';
+import BasePluginEvent from './BasePluginEvent';
+import PluginEventType from './PluginEventType';
 
 /**
  * This represents a PluginEvent wrapping native browser event
  */
-type PluginDomEvent = KeyboardDomEvent | GenericPluginDomEvent;
+interface PluginDomEvent extends BasePluginEvent {
+    eventType:
+        PluginEventType.CompositionEnd |
+        PluginEventType.MouseDown |
+        PluginEventType.MouseUp |
+        PluginEventType.KeyDown |
+        PluginEventType.KeyPress |
+        PluginEventType.KeyUp |
+        PluginEventType.Idle,
+
+    /**
+     * original DOM event
+     */
+    rawEvent: Event;
+}
 
 export default PluginDomEvent;
