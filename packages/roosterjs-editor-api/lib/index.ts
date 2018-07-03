@@ -2,7 +2,7 @@ export {
     default as getNodeAtCursor,
     cacheGetListElement,
     cacheGetNodeAtCursor,
-} from './cursor/getNodeAtCursor';
+} from './format/getNodeAtCursor';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
 export { default as getFormatState } from './format/getFormatState';

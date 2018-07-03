@@ -1,7 +1,7 @@
 import execCommand from './execCommand';
 import { Editor } from 'roosterjs-editor-core';
 import { DocumentCommand, Indentation, ChangeSource, QueryScope } from 'roosterjs-editor-types';
-import getNodeAtCursor from '../cursor/getNodeAtCursor';
+import getNodeAtCursor from './getNodeAtCursor';
 
 /**
  * Set indentation at selection

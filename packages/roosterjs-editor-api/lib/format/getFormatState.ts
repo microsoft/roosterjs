@@ -1,4 +1,4 @@
-import getNodeAtCursor, { cacheGetNodeAtCursor } from '../cursor/getNodeAtCursor';
+import getNodeAtCursor, { cacheGetNodeAtCursor } from './getNodeAtCursor';
 import { Editor } from 'roosterjs-editor-core';
 import { FormatState, PluginEvent, QueryScope } from 'roosterjs-editor-types';
 import { getComputedStyles, getTagOfNode } from 'roosterjs-editor-dom';

@@ -1,4 +1,4 @@
-import getNodeAtCursor from '../cursor/getNodeAtCursor';
+import getNodeAtCursor from './getNodeAtCursor';
 import { Browser, getTagOfNode, splitParentNode, unwrap, wrap } from 'roosterjs-editor-dom';
 import { PositionType, ChangeSource, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';

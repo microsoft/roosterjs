@@ -1,4 +1,4 @@
-import getNodeAtCursor from '../cursor/getNodeAtCursor';
+import getNodeAtCursor from '../format/getNodeAtCursor';
 import { Editor } from 'roosterjs-editor-core';
 import { VTable } from 'roosterjs-editor-dom';
 import { TableFormat, ChangeSource } from 'roosterjs-editor-types';
