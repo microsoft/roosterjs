@@ -53,13 +53,7 @@ function autoLink(event: PluginDomEvent, editor: Editor) {
 
     editor.runAsync(() => {
         editor.performAutoComplete(() => {
-            replaceWithNode(
-                editor,
-                linkData.originalUrl,
-                anchor,
-                false /* exactMatch */,
-                searcher
-            );
+            replaceWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */, searcher);
 
             // The content at cursor has changed. Should also clear the cursor data cache
             clearContentSearcherCache(event);

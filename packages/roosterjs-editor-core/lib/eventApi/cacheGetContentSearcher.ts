@@ -13,7 +13,10 @@ const CONTENTSEARCHER_KEY = 'CONTENTSEARCHER';
  * @param editor The editor instance
  * @returns The PositionContentSearcher object
  */
-export function cacheGetContentSearcher(event: PluginEvent, editor: Editor): PositionContentSearcher {
+export function cacheGetContentSearcher(
+    event: PluginEvent,
+    editor: Editor
+): PositionContentSearcher {
     return cacheGetEventData(event, CONTENTSEARCHER_KEY, () => editor.getContentSearcherOfCursor());
 }
 

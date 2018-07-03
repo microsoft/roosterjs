@@ -13,6 +13,7 @@ import {
     PluginEvent,
     PluginEventType,
     PositionType,
+    QueryScope,
     Rect,
 } from 'roosterjs-editor-types';
 import {
@@ -30,11 +31,12 @@ import {
     getInlineElementAtNode,
     getTagOfNode,
     isNodeEmpty,
+    markSelection,
     queryElements,
+    removeMarker,
     wrap,
 } from 'roosterjs-editor-dom';
 
-import { markSelection, removeMarker } from '../undo/selectionMarker';
 const KEY_BACKSPACE = 8;
 
 /**
@@ -218,11 +220,11 @@ export default class Editor {
      * Query HTML elements in editor by tag name
      * @param tag Tag name of the element to query
      * @param forEachCallback An optional callback to be invoked on each element in query result
-     * @returns HTML Element list of the query result
+     * @returns HTML Element array of the query result
      */
     public queryElements<T extends keyof HTMLElementTagNameMap>(
         tag: T,
-        forEachCallback?: (node: T) => any
+        forEachCallback?: (node: HTMLElementTagNameMap[T]) => any
     ): HTMLElementTagNameMap[T][];
 
     /**
@@ -236,8 +238,42 @@ export default class Editor {
         forEachCallback?: (node: T) => any
     ): T[];
 
-    public queryElements(selector: string, forEachCallback?: (node: Node) => any) {
-        return queryElements(this.core.contentDiv, selector, forEachCallback);
+    /**
+     * Query HTML elements with the given scope by tag name
+     * @param tag Tag name of the element to query
+     * @param scope The scope of the query, default value is QueryScope.Body
+     * @param forEachCallback An optional callback to be invoked on each element in query result
+     * @returns HTML Element list of the query result
+     */
+    public queryElements<T extends keyof HTMLElementTagNameMap>(
+        tag: T,
+        scope: QueryScope,
+        forEachCallback?: (node: HTMLElementTagNameMap[T]) => any
+    ): HTMLElementTagNameMap[T][];
+
+    /**
+     * Query HTML elements with the given scope by a selector string
+     * @param selector Selector string to query
+     * @param scope The scope of the query, default value is QueryScope.Body
+     * @param forEachCallback An optional callback to be invoked on each element in query result
+     * @returns HTML Element array of the query result
+     */
+    public queryElements<T extends HTMLElement = HTMLElement>(
+        selector: string,
+        scope: QueryScope,
+        forEachCallback?: (node: T) => any
+    ): T[];
+
+    public queryElements(
+        selector: string,
+        scopeOrCallback: QueryScope | ((node: Node) => any) = QueryScope.Body,
+        callback?: (node: Node) => any
+    ) {
+        let scope = scopeOrCallback instanceof Function ? QueryScope.Body : scopeOrCallback;
+        callback = scopeOrCallback instanceof Function ? scopeOrCallback : callback;
+
+        let range = scope == QueryScope.Body ? null : this.getSelectionRange();
+        return queryElements(this.core.contentDiv, selector, callback, scope, range);
     }
 
     //#endregion

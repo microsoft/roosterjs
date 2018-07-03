@@ -1,6 +1,5 @@
-import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { Editor } from 'roosterjs-editor-core';
-import { DocumentCommand, NodeType, ChangeSource } from 'roosterjs-editor-types';
+import { DocumentCommand, NodeType, ChangeSource, QueryScope } from 'roosterjs-editor-types';
 
 /**
  * Toggle header at selection
@@ -16,7 +15,7 @@ export default function toggleHeader(editor: Editor, level: number) {
         editor.focus();
 
         let wrapped = false;
-        queryNodesWithSelection(editor, 'H1,H2,H3,H4,H5,H6', false, header => {
+        editor.queryElements('H1,H2,H3,H4,H5,H6', QueryScope.OnSelection, header => {
             if (!wrapped) {
                 editor.getDocument().execCommand(DocumentCommand.FormatBlock, false, '<DIV>');
                 wrapped = true;

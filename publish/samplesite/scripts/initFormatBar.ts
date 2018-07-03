@@ -3,7 +3,6 @@ import {
     createLink,
     insertImage,
     insertTable,
-    queryNodesWithSelection,
     toggleBold,
     toggleItalic,
     toggleUnderline,
@@ -29,6 +28,7 @@ import {
     Alignment,
     Direction,
     Indentation,
+    QueryScope,
     TableOperation,
     TableFormat,
 } from 'roosterjs-editor-types';
@@ -109,7 +109,7 @@ export default function initFormatBar() {
     document.getElementById('insertLink').addEventListener('click', function() {
         let editor = getCurrentEditor();
         let range = editor.getSelectionRange();
-        let existingLink = queryNodesWithSelection(editor, 'a[href]')[0] as HTMLAnchorElement;
+        let existingLink = editor.queryElements('a[href]', QueryScope.OnSelection)[0] as HTMLAnchorElement;
         let url = window.prompt('Url', existingLink ? existingLink.href : 'http://');
         let text = window.prompt(
             'Text of link',

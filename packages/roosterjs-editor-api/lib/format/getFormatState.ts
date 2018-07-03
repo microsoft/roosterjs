@@ -1,7 +1,6 @@
 import getNodeAtCursor, { cacheGetNodeAtCursor } from '../cursor/getNodeAtCursor';
-import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { Editor } from 'roosterjs-editor-core';
-import { FormatState, PluginEvent } from 'roosterjs-editor-types';
+import { FormatState, PluginEvent, QueryScope } from 'roosterjs-editor-types';
 import { getComputedStyles, getTagOfNode } from 'roosterjs-editor-dom';
 
 // Query command state, used for query Bold, Italic, Underline state
@@ -43,9 +42,9 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
         isNumbering: listTag == 'OL',
         headerLevel: (headerTag && parseInt(headerTag[1])) || 0,
 
-        canUnlink: !!queryNodesWithSelection(editor, 'a[href]')[0],
-        canAddImageAltText: !!queryNodesWithSelection(editor, 'img')[0],
-        isBlockQuote: queryNodesWithSelection(editor, 'blockquote').length > 0,
+        canUnlink: !!editor.queryElements('a[href]', QueryScope.OnSelection)[0],
+        canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],
+        isBlockQuote: !!editor.queryElements('blockquote', QueryScope.OnSelection)[0],
 
         canUndo: editor.canUndo(),
         canRedo: editor.canRedo(),

@@ -1,7 +1,12 @@
 import getFormatState from './getFormatState';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
-import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
-import { DefaultFormat, DocumentCommand, NodeType, ChangeSource } from 'roosterjs-editor-types';
+import {
+    DefaultFormat,
+    DocumentCommand,
+    NodeType,
+    ChangeSource,
+    QueryScope,
+} from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { Browser, applyFormat } from 'roosterjs-editor-dom';
 
@@ -58,7 +63,7 @@ function workaroundForList(editor: Editor, callback: () => void) {
 
     // Workaround for Chrome to avoid losing format when toggle bullet
     if (Browser.isChrome) {
-        queryNodesWithSelection(editor, 'LI', false /*notContainedByRangeOnly*/, listNode => {
+        editor.queryElements('LI', QueryScope.OnSelection, listNode => {
             if (
                 listNode &&
                 !listNode.getAttribute('style') &&

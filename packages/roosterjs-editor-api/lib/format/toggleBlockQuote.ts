@@ -1,7 +1,6 @@
-import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import getNodeAtCursor from '../cursor/getNodeAtCursor';
 import { Browser, getTagOfNode, splitParentNode, unwrap, wrap } from 'roosterjs-editor-dom';
-import { PositionType, ChangeSource } from 'roosterjs-editor-types';
+import { PositionType, ChangeSource, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 var ZERO_WIDTH_SPACE = '&#8203;';
@@ -22,7 +21,7 @@ let defaultStyler = (element: HTMLElement) => {
  */
 export default function toggleBlockQuote(editor: Editor, styler?: (element: HTMLElement) => void) {
     editor.focus();
-    let blockquoteNodes = queryNodesWithSelection(editor, 'blockquote');
+    let blockquoteNodes = editor.queryElements('blockquote', QueryScope.OnSelection);
     editor.addUndoSnapshot((start, end) => {
         let quoteElement: HTMLElement;
 

@@ -57,6 +57,7 @@ export { default as VTable, VCell } from './table/VTable';
 
 export { default as Position } from './selection/Position';
 export { default as createRange } from './selection/createRange';
+export { markSelection, removeMarker } from './selection/selectionMarker';
 
 // Deprecated
 export { default as isTextualInlineElement } from './deprecated/isTextualInlineElement';

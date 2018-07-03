@@ -3,7 +3,6 @@ export {
     cacheGetListElement,
     cacheGetNodeAtCursor,
 } from './cursor/getNodeAtCursor';
-export { default as queryNodesWithSelection } from './cursor/queryNodesWithSelection';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
 export { default as getFormatState } from './format/getFormatState';
@@ -40,6 +39,7 @@ export {
     cacheGetCursorEventData,
     clearCursorEventDataCache,
 } from './deprecated/CursorData';
+export { default as queryNodesWithSelection } from './deprecated/queryNodesWithSelection';
 export {
     default as replaceTextBeforeCursorWithNode,
     validateAndGetRangeForTextBeforeCursor,

@@ -98,21 +98,26 @@ class SelectionScoper implements TraversingScoper {
             return null;
         }
 
+        let startPartial = false;
+        let endPartial = false;
+
         if (this.start.isAfter(start)) {
             start = this.start;
+            startPartial = true;
         }
 
         if (end.isAfter(this.end)) {
             end = this.end;
+            endPartial = true;
         }
 
         return start.isAfter(end) || start.equalTo(end)
             ? null
-            : start.offset > 0 || !end.isAtEnd
+            : startPartial || endPartial
                 ? new PartialInlineElement(
                       inline,
-                      start.offset > 0 ? start.toEditorPoint() : null,
-                      end.isAtEnd ? null : end.toEditorPoint()
+                      startPartial && start.toEditorPoint(),
+                      endPartial && end.toEditorPoint()
                   )
                 : inline;
     }

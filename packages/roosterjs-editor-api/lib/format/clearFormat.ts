@@ -1,5 +1,4 @@
 import execCommand from './execCommand';
-import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import setBackgroundColor from './setBackgroundColor';
 import toggleBold from './toggleBold';
 import toggleItalic from './toggleItalic';
@@ -7,7 +6,7 @@ import toggleUnderline from './toggleUnderline';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';
 import setTextColor from './setTextColor';
-import { DocumentCommand, ChangeSource } from 'roosterjs-editor-types';
+import { DocumentCommand, ChangeSource, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
@@ -23,11 +22,13 @@ export default function clearFormat(editor: Editor) {
     editor.addUndoSnapshot(() => {
         execCommand(editor, DocumentCommand.RemoveFormat);
 
-        queryNodesWithSelection(editor, '[class]', false, node => node.removeAttribute('class'));
+        editor.queryElements('[class]', QueryScope.OnSelection, node =>
+            node.removeAttribute('class')
+        );
 
         const defaultFormat = editor.getDefaultFormat();
         const isDefaultFormatEmpty = Object.keys(defaultFormat).length === 0;
-        queryNodesWithSelection(editor, '[style]', true /*nodeContainedByRangeOnly*/, node => {
+        editor.queryElements('[style]', QueryScope.InSelection, node => {
             STYLES_TO_REMOVE.forEach(style => node.style.removeProperty(style));
 
             // when default format is empty, keep the HTML minimum by removing style attribute if there's no style

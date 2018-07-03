@@ -1,6 +1,5 @@
 import execCommand from './execCommand';
-import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
-import { Alignment, DocumentCommand, ChangeSource } from 'roosterjs-editor-types';
+import { Alignment, DocumentCommand, ChangeSource, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -23,10 +22,9 @@ export default function setAlignment(editor: Editor, alignment: Alignment) {
 
     editor.addUndoSnapshot(() => {
         execCommand(editor, command);
-        queryNodesWithSelection(
-            editor,
+        editor.queryElements(
             '[align]',
-            false /*nodeContainedByRangeOnly*/,
+            QueryScope.OnSelection,
             node => (node.style.textAlign = align)
         );
     }, ChangeSource.Format);

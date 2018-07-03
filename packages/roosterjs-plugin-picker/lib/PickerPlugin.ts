@@ -170,9 +170,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
                         // Determine the bounding rectangle for the @mention
                         let searcher = cacheGetContentSearcher(event, this.editor);
                         let rangeNode = this.editor.getDocument().createRange();
-                        let nodeBeforeCursor = searcher
-                            .getInlineElementBefore()
-                            .getContainerNode();
+                        let nodeBeforeCursor = searcher.getInlineElementBefore().getContainerNode();
                         let rangeStartSuccessfullySet = this.setRangeStart(
                             rangeNode,
                             nodeBeforeCursor,

@@ -12,6 +12,7 @@ export { default as Direction } from './enum/Direction';
 export { default as Indentation } from './enum/Indentation';
 export { default as PasteOption } from './enum/PasteOption';
 export { default as PositionType } from './enum/PositionType';
+export { default as QueryScope } from './enum/QueryScope';
 export { default as TableOperation } from './enum/TableOperation';
 
 // Event

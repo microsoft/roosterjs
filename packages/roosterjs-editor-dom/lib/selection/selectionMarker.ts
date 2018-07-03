@@ -1,4 +1,6 @@
-import { Position, createRange, queryElements } from 'roosterjs-editor-dom';
+import Position from './Position';
+import createRange from './createRange';
+import queryElements from '../utils/queryElements';
 import { PositionType } from 'roosterjs-editor-types';
 
 const OFFSET_1_ATTRIBUTE = 'data-offset1';

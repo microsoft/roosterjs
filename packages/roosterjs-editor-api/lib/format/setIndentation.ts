@@ -1,7 +1,7 @@
 import execCommand from './execCommand';
-import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { Editor } from 'roosterjs-editor-core';
-import { DocumentCommand, Indentation, ChangeSource } from 'roosterjs-editor-types';
+import { DocumentCommand, Indentation, ChangeSource, QueryScope } from 'roosterjs-editor-types';
+import getNodeAtCursor from '../cursor/getNodeAtCursor';
 
 /**
  * Set indentation at selection
@@ -15,19 +15,14 @@ export default function setIndentation(editor: Editor, indentation: Indentation)
     let command =
         indentation == Indentation.Increase ? DocumentCommand.Indent : DocumentCommand.Outdent;
     editor.addUndoSnapshot(() => {
-        let isInlist = queryNodesWithSelection(editor, 'OL,UL').length > 0;
+        let listNode = getNodeAtCursor(editor, ['OL', 'UL']);
         execCommand(editor, command, true /*doWorkaroundForList*/);
 
-        if (!isInlist) {
-            queryNodesWithSelection(
-                editor,
-                'BLOCKQUOTE',
-                false /*nodeContainedByRangeOnly*/,
-                node => {
-                    node.style.marginTop = '0px';
-                    node.style.marginBottom = '0px';
-                }
-            );
+        if (!listNode) {
+            editor.queryElements('BLOCKQUOTE', QueryScope.OnSelection, node => {
+                node.style.marginTop = '0px';
+                node.style.marginBottom = '0px';
+            });
         }
     }, ChangeSource.Format);
 }
