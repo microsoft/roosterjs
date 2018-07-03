@@ -1,10 +1,13 @@
+import BasePluginEvent from './BasePluginEvent';
 import ChangeSource from '../enum/ChangeSource';
-import PluginEvent from './PluginEvent';
+import PluginEventType from './PluginEventType';
 
 /**
- * Represents a custom PluginEvent for content change
+ * Represents a change to the editor made by another plugin
  */
-interface ContentChangedEvent extends PluginEvent {
+interface ContentChangedEvent extends BasePluginEvent {
+    eventType: PluginEventType.ContentChanged,
+
     /**
      * Source of the change
      */

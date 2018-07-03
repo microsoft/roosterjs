@@ -1,5 +1,5 @@
-import { ChangeSource, LinkData, PluginDomEvent } from 'roosterjs-editor-types';
-import { ContentEditFeature } from '../ContentEditFeatures';
+import { ChangeSource, LinkData, PluginEvent } from 'roosterjs-editor-types';
+import { GenericContentEditFeature } from '../ContentEditFeatures';
 import {
     Editor,
     cacheGetEventData,
@@ -16,13 +16,13 @@ const MINIMUM_LENGTH = 5;
 const KEY_ENTER = 13;
 const KEY_SPACE = 32;
 
-export const AutoLink: ContentEditFeature = {
+export const AutoLink: GenericContentEditFeature<PluginEvent> = {
     keys: [KEY_ENTER, KEY_SPACE],
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
 };
 
-function cacheGetLinkData(event: PluginDomEvent, editor: Editor): LinkData {
+function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
     return cacheGetEventData(event, 'LINK_DATA', () => {
         let searcher = cacheGetContentSearcher(event, editor);
         let word = searcher && searcher.getWordBefore();
@@ -44,7 +44,7 @@ function cacheGetLinkData(event: PluginDomEvent, editor: Editor): LinkData {
     });
 }
 
-function autoLink(event: PluginDomEvent, editor: Editor) {
+function autoLink(event: PluginEvent, editor: Editor) {
     let searcher = cacheGetContentSearcher(event, editor);
     let anchor = editor.getDocument().createElement('a');
     let linkData = cacheGetLinkData(event, editor);

@@ -1,20 +1,21 @@
-import PluginEventType from './PluginEventType';
+import BasePluginEvent from './BasePluginEvent';
+import BeforeDisposeEvent from './BeforeDisposeEvent';
+import BeforePasteEvent from './BeforePasteEvent';
+import ContentChangedEvent from './ContentChangedEvent';
+import EditorReadyEvent from './EditorReadyEvent';
+import ExtractContentEvent from './ExtractContentEvent';
+import PluginDomEvent from './PluginDomEvent';
 
 /**
  * Editor plugin event interface
  */
-interface PluginEvent {
-    /**
-     * Type of this event
-     */
-    eventType: PluginEventType;
 
-    /**
-     * An optional event cache.
-     * This will be consumed by event cache API to store some expensive calculation result.
-     * So that for the same event across plugins, the result doesn't need to be calculated again
-     */
-    eventDataCache?: { [key: string]: any };
-}
+type PluginEvent =
+  | BeforePasteEvent
+  | ContentChangedEvent
+  | ExtractContentEvent
+  | PluginDomEvent
+  | EditorReadyEvent
+  | BeforeDisposeEvent;
 
 export default PluginEvent;
