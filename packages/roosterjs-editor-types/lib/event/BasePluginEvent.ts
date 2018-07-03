@@ -1,5 +1,3 @@
-import PluginEventType from './PluginEventType';
-
 /**
  * Editor plugin event interface
  */

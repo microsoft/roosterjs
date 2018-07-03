@@ -16,6 +16,7 @@ export { default as QueryScope } from './enum/QueryScope';
 export { default as TableOperation } from './enum/TableOperation';
 
 // Event
+export { default as BasePluginEvent } from './event/BasePluginEvent';
 export { default as BeforeDisposeEvent } from './event/BeforeDisposeEvent';
 export { default as BeforePasteEvent } from './event/BeforePasteEvent';
 export { default as ContentChangedEvent } from './event/ContentChangedEvent';

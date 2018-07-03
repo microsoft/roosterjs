@@ -1,4 +1,3 @@
-import BasePluginEvent from './BasePluginEvent';
 import BeforeDisposeEvent from './BeforeDisposeEvent';
 import BeforePasteEvent from './BeforePasteEvent';
 import ContentChangedEvent from './ContentChangedEvent';
