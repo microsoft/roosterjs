@@ -1,7 +1,7 @@
-import getNodeAtCursor, { cacheGetNodeAtCursor } from './getNodeAtCursor';
+import { cacheGetNodeAtCursor } from './getNodeAtCursor';
 import { Editor } from 'roosterjs-editor-core';
 import { FormatState, PluginEvent, QueryScope } from 'roosterjs-editor-types';
-import { getComputedStyles, getTagOfNode } from 'roosterjs-editor-dom';
+import { Position, getComputedStyles, getTagOfNode, getElementOrParentElement } from 'roosterjs-editor-dom';
 
 // Query command state, used for query Bold, Italic, Underline state
 function queryCommandState(editor: Editor, command: string): boolean {
@@ -19,15 +19,23 @@ function queryCommandState(editor: Editor, command: string): boolean {
  * @returns The format state at cursor
  */
 export default function getFormatState(editor: Editor, event?: PluginEvent): FormatState {
-    let node = getNodeAtCursor(editor);
-    let styles = getComputedStyles(node);
+    let range = editor.getSelectionRange();
+    if (!range) {
+        return {};
+    }
+
+    let node = Position.getStart(range).normalize().node;
+    let element = getElementOrParentElement(node);
+    let styles = getComputedStyles(element);
     let listTag = getTagOfNode(cacheGetNodeAtCursor(editor, event, ['OL', 'UL']));
     let headerTag = getTagOfNode(
         cacheGetNodeAtCursor(editor, event, ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'])
     );
+    let fontSizePx = styles[1];
+    let fontSizePt = (Math.round(parseFloat(fontSizePx) * 75) / 100) + 'pt';
     return {
         fontName: styles[0],
-        fontSize: styles[1],
+        fontSize: fontSizePt,
         textColor: styles[2],
         backgroundColor: styles[3],
 

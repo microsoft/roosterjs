@@ -247,7 +247,7 @@ export default function initFormatBar() {
         let select = document.getElementById('fontSizeButton') as HTMLSelectElement;
         let text = select.value;
         if (text) {
-            setFontSize(editor, text + 'px');
+            setFontSize(editor, text + 'pt');
         }
         select.value = '';
     });
