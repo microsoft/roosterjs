@@ -333,6 +333,7 @@ export default class Editor {
     /**
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * @param content HTML content to set in
+     * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     public setContent(content: string, triggerContentChangedEvent: boolean = true) {
         if (this.core.contentDiv.innerHTML != content) {
@@ -815,7 +816,7 @@ export default class Editor {
     ): ContentTraverser {
         switch (scope) {
             case ContentScope.Block:
-                return this.getBlockTraverser();
+                return this.getBlockTraverser(position);
             case ContentScope.Selection:
                 return this.getSelectionTraverser();
             case ContentScope.Body:

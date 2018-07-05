@@ -6,7 +6,7 @@ import {
     cacheGetContentSearcher,
     clearContentSearcherCache,
 } from 'roosterjs-editor-core';
-import { matchLink } from 'roosterjs-editor-dom';
+import { Browser, matchLink } from 'roosterjs-editor-dom';
 import { replaceWithNode } from 'roosterjs-editor-api';
 
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
@@ -18,6 +18,7 @@ const KEY_SPACE = 32;
 
 export const AutoLink: GenericContentEditFeature<PluginEvent> = {
     keys: [KEY_ENTER, KEY_SPACE],
+    initialize: editor => Browser.isIE && editor.getDocument().execCommand('AutoUrlDetect', false, false),
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
 };

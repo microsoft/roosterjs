@@ -33,26 +33,26 @@ export default class HyperLink implements EditorPlugin {
         private target?: string
     ) {}
 
+    /**
+     * Initialize this plugin
+     * @param editor The editor instance
+     */
     public initialize(editor: Editor): void {
         this.editor = editor;
-
-        if (Browser.isIE) {
-            this.editor
-                .getDocument()
-                .execCommand(
-                    'AutoUrlDetect',
-                    false /* shouldDisplayUserInterface */,
-                    false /* value */
-                );
-        }
     }
 
+    /**
+     * Dispose this plugin
+     */
     public dispose(): void {
         this.editor.queryElements('a[href]', this.resetAnchor);
         this.editor = null;
     }
 
-    // Handle the event
+    /**
+     * Handle plugin events
+     * @param event The event object
+     */
     public onPluginEvent(event: PluginEvent): void {
         switch (event.eventType) {
             case PluginEventType.ContentChanged:
@@ -134,9 +134,11 @@ export default class HyperLink implements EditorPlugin {
         }
     };
 
-    // Try get href from an anchor element
-    // The reason this is put in a try-catch is that
-    // it has been seen that accessing href may throw an exception, in particular on IE/Edge
+    /**
+     * Try get href from an anchor element
+     * The reason this is put in a try-catch is that
+     * it has been seen that accessing href may throw an exception, in particular on IE/Edge
+     */
     private tryGetHref(element: Element): string {
         let href: string = null;
         try {

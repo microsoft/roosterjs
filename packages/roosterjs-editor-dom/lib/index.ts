@@ -38,7 +38,7 @@ export {
     StyleMap,
 } from './utils/sanitizeHtml';
 export { default as fromHtml } from './utils/fromHtml';
-export { default as getComputedStyle, getComputedStyles } from './utils/getComputedStyle';
+export { default as getComputedStyles, getComputedStyle } from './utils/getComputedStyles';
 export { default as getElementOrParentElement } from './utils/getElementOrParentElement';
 export { default as getTagOfNode } from './utils/getTagOfNode';
 export { default as isBlockElement } from './utils/isBlockElement';

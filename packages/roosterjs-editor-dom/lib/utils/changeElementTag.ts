@@ -1,5 +1,5 @@
+import getComputedStyles from './getComputedStyles';
 import getTagOfNode from './getTagOfNode';
-import { getComputedStyles } from './getComputedStyle';
 
 /**
  * Change tag of ab HTML Element to a new one, and replace it from DOM tree

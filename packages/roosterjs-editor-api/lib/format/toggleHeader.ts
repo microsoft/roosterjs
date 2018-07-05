@@ -1,5 +1,6 @@
 import { Editor } from 'roosterjs-editor-core';
-import { DocumentCommand, NodeType, ChangeSource, QueryScope } from 'roosterjs-editor-types';
+import { DocumentCommand, ChangeSource, QueryScope } from 'roosterjs-editor-types';
+import { getElementOrParentElement } from 'roosterjs-editor-dom/lib';
 
 /**
  * Toggle header at selection
@@ -32,12 +33,9 @@ export default function toggleHeader(editor: Editor, level: number) {
             let traverser = editor.getSelectionTraverser();
             let inlineElement = traverser ? traverser.currentInlineElement : null;
             while (inlineElement) {
-                let node = inlineElement.getContainerNode();
-                if (node.nodeType == NodeType.Text) {
-                    node = node.parentNode;
-                }
-                if (node.nodeType == NodeType.Element) {
-                    (<HTMLElement>node).style.fontSize = '';
+                let element = getElementOrParentElement(inlineElement.getContainerNode());
+                if (element) {
+                    element.style.fontSize = '';
                 }
                 inlineElement = traverser.getNextInlineElement();
             }

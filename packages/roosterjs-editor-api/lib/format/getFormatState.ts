@@ -1,12 +1,7 @@
 import { cacheGetNodeAtCursor } from './getNodeAtCursor';
 import { Editor } from 'roosterjs-editor-core';
-import { FormatState, PluginEvent, QueryScope } from 'roosterjs-editor-types';
-import { Position, getComputedStyles, getTagOfNode, getElementOrParentElement } from 'roosterjs-editor-dom';
-
-// Query command state, used for query Bold, Italic, Underline state
-function queryCommandState(editor: Editor, command: string): boolean {
-    return editor.getDocument().queryCommandState(command);
-}
+import { DocumentCommand, FormatState, PluginEvent, QueryScope } from 'roosterjs-editor-types';
+import { getComputedStyles, getTagOfNode } from 'roosterjs-editor-dom';
 
 /**
  * Get format state at cursor
@@ -19,32 +14,24 @@ function queryCommandState(editor: Editor, command: string): boolean {
  * @returns The format state at cursor
  */
 export default function getFormatState(editor: Editor, event?: PluginEvent): FormatState {
-    let range = editor.getSelectionRange();
-    if (!range) {
-        return {};
-    }
-
-    let node = Position.getStart(range).normalize().node;
-    let element = getElementOrParentElement(node);
-    let styles = getComputedStyles(element);
+    let styles = getComputedStyles(editor.getSelectionRange());
     let listTag = getTagOfNode(cacheGetNodeAtCursor(editor, event, ['OL', 'UL']));
     let headerTag = getTagOfNode(
         cacheGetNodeAtCursor(editor, event, ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'])
     );
-    let fontSizePx = styles[1];
-    let fontSizePt = (Math.round(parseFloat(fontSizePx) * 75) / 100) + 'pt';
+    let document = editor.getDocument();
     return {
         fontName: styles[0],
-        fontSize: fontSizePt,
+        fontSize: styles[1],
         textColor: styles[2],
         backgroundColor: styles[3],
 
-        isBold: queryCommandState(editor, 'bold'),
-        isItalic: queryCommandState(editor, 'italic'),
-        isUnderline: queryCommandState(editor, 'underline'),
-        isStrikeThrough: queryCommandState(editor, 'strikeThrough'),
-        isSubscript: queryCommandState(editor, 'subscript'),
-        isSuperscript: queryCommandState(editor, 'superscript'),
+        isBold: document.queryCommandState(DocumentCommand.Bold),
+        isItalic: document.queryCommandState(DocumentCommand.Italic),
+        isUnderline: document.queryCommandState(DocumentCommand.Underline),
+        isStrikeThrough: document.queryCommandState(DocumentCommand.StrikeThrough),
+        isSubscript: document.queryCommandState(DocumentCommand.Subscript),
+        isSuperscript: document.queryCommandState(DocumentCommand.Superscript),
 
         isBullet: listTag == 'UL',
         isNumbering: listTag == 'OL',

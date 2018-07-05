@@ -51,8 +51,15 @@ export default class ContentEdit implements EditorPlugin {
      * Create instance of ContentEdit plugin
      * @param features An optional feature set to determine which features the plugin should provide
      */
-    constructor(featureSet?: ContentEditFeatures) {
-        featureSet = featureSet || getDefaultContentEditFeatures();
+    constructor(private featureSet?: ContentEditFeatures) {}
+
+    /**
+     * Initialize this plugin
+     * @param editor The editor instance
+     */
+    public initialize(editor: Editor): void {
+        this.editor = editor;
+        let featureSet = this.featureSet || getDefaultContentEditFeatures();
         this.addFeature(featureSet.indentWhenTab, IndentWhenTab);
         this.addFeature(featureSet.outdentWhenShiftTab, OutdentWhenShiftTab);
         this.addFeature(
@@ -72,14 +79,6 @@ export default class ContentEdit implements EditorPlugin {
         this.addFeature(featureSet.autoLink, AutoLink);
         this.addFeature(featureSet.defaultShortcut, DefaultShortcut);
         this.autoLinkEnabled = featureSet.autoLink;
-    }
-
-    /**
-     * Initialize this plugin
-     * @param editor The editor instance
-     */
-    public initialize(editor: Editor): void {
-        this.editor = editor;
     }
 
     /**
@@ -132,6 +131,9 @@ export default class ContentEdit implements EditorPlugin {
     private addFeature(add: boolean, feature: ContentEditFeature) {
         if (add) {
             this.features.push(feature);
+            if (feature.initialize) {
+                feature.initialize(this.editor);
+            }
             for (let key of feature.keys) {
                 if (this.keys.indexOf(key) < 0) {
                     this.keys.push(key);

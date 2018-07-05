@@ -1,5 +1,5 @@
-import getComputedStyle from '../utils/getComputedStyle';
 import { NodeType } from 'roosterjs-editor-types';
+import { getComputedStyle } from '../utils/getComputedStyles';
 
 // Check if it is an empty text node
 function isEmptyTextNode(node: Node): boolean {

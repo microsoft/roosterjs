@@ -1,3 +1,4 @@
+import Position from '../selection/Position';
 import contains from '../utils/contains';
 import getTagOfNode from '../utils/getTagOfNode';
 import isDocumentPosition from '../utils/isDocumentPosition';
@@ -11,6 +12,7 @@ import {
     InlineElement,
     NodeBoundary,
     NodeType,
+    PositionType,
 } from 'roosterjs-editor-types';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../domWalker/getLeafSibling';
 
@@ -55,7 +57,8 @@ class NodeInlineElement implements InlineElement {
         while (firstChild.firstChild) {
             firstChild = firstChild.firstChild;
         }
-        return { containerNode: firstChild, offset: NodeBoundary.Begin };
+
+        return new Position(firstChild, 0).toEditorPoint();
     }
 
     /**
@@ -68,11 +71,7 @@ class NodeInlineElement implements InlineElement {
         while (lastChild.lastChild) {
             lastChild = lastChild.lastChild;
         }
-        return {
-            containerNode: lastChild,
-            offset:
-                lastChild.nodeType == NodeType.Text ? lastChild.nodeValue.length : NodeBoundary.End,
-        };
+        return new Position(lastChild, PositionType.End).toEditorPoint();
     }
 
     /**

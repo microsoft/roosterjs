@@ -10,7 +10,7 @@ import insertNode from '../coreAPI/insertNode';
 import select from '../coreAPI/select';
 import triggerEvent from '../coreAPI/triggerEvent';
 import { DefaultFormat } from 'roosterjs-editor-types';
-import { getComputedStyle } from 'roosterjs-editor-dom';
+import { getComputedStyles } from 'roosterjs-editor-dom';
 
 export default function createEditorCore(
     contentDiv: HTMLDivElement,
@@ -38,10 +38,11 @@ function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat
     }
 
     baseFormat = baseFormat || <DefaultFormat>{};
+    let styles = getComputedStyles(node);
     return {
-        fontFamily: baseFormat.fontFamily || getComputedStyle(node, 'font-family'),
-        fontSize: baseFormat.fontSize || getComputedStyle(node, 'font-size'),
-        textColor: baseFormat.textColor || getComputedStyle(node, 'color'),
+        fontFamily: baseFormat.fontFamily || styles[0],
+        fontSize: baseFormat.fontSize || styles[1],
+        textColor: baseFormat.textColor || styles[2],
         backgroundColor: baseFormat.backgroundColor || '',
         bold: baseFormat.bold,
         italic: baseFormat.italic,

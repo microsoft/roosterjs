@@ -1,5 +1,5 @@
 import * as DomTestHelper from '../DomTestHelper';
-import getComputedStyle from '../../utils/getComputedStyle';
+import { getComputedStyle } from '../../utils/getComputedStyles';
 
 describe('getComputedStyle()', () => {
     let testID = 'getComputedStyle';
