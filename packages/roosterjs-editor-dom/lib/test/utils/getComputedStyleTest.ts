@@ -9,11 +9,11 @@ describe('getComputedStyle()', () => {
     });
 
     it('input = ["test", "font-size"]', () => {
-        runTest(['test', 'font-size'], '');
+        runTest(['test', 'font-size'], '12pt');
     });
 
-    it('input = [<div style="font-size:12px">Test</div>, "font-size"]', () => {
-        runTest(['<div style="font-size:12px">Test</div>', 'font-size'], '12px');
+    it('input = [<div style="font-size:16px">Test</div>, "font-size"]', () => {
+        runTest(['<div style="font-size:16px">Test</div>', 'font-size'], '12pt');
     });
 
     function runTest(input: [string, string], output: string) {

@@ -38,7 +38,7 @@ describe('clearFormat()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div id="text" style=""><span style="font-family: &quot;times new roman&quot;; font-size: 16px; color: black;">text</span></div>'
+            '<div id="text" style=""><span style="font-family: &quot;times new roman&quot;; font-size: 12pt; color: black;">text</span></div>'
         );
     });
 });

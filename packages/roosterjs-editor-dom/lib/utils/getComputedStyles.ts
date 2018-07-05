@@ -39,10 +39,12 @@ export default function getComputedStyles(
         let win = element.ownerDocument.defaultView || window;
         let styles = win.getComputedStyle(element);
 
-        for (let style of styleNames) {
-            let value = ((styles && styles.getPropertyValue(style)) || '').toLowerCase();
-            value = style == 'font-size' ? px2Pt(value) : value;
-            result.push(value);
+        if (styles) {
+            for (let style of styleNames) {
+                let value = (styles.getPropertyValue(style) || '').toLowerCase();
+                value = style == 'font-size' ? px2Pt(value) : value;
+                result.push(value);
+            }
         }
     }
 
