@@ -287,7 +287,9 @@ export default class ImageResize implements EditorPlugin {
     };
 
     private extractHtml(html: string): string {
-        return html.replace(EXTRACT_HTML_REGEX, '$1');
+        return html.replace(EXTRACT_HTML_REGEX, (...groups: string[]) => {
+            return groups[1].replace(/(\s*contenteditable="false"(\/?>)|contenteditable="false"\s*)/im, "$2");
+        });
     }
 
     private getSelectedImage(): HTMLElement {
