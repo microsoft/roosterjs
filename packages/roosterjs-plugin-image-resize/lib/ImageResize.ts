@@ -39,12 +39,14 @@ export default class ImageResize implements EditorPlugin {
      * @param minHeight Minimum height of image when resize in pixel, default value is 10
      * @param selectionBorderColor Color of resize border and handles, default value is #DB626C
      * @param forcePreserveRatio Whether always preserve width/height ratio when resize, default value is false
+     * @param bypassClassName Class name of IMG tag which to bypass resize logic (e.g. for a placeholder image)
      */
     constructor(
         private minWidth: number = 10,
         private minHeight: number = 10,
         private selectionBorderColor: string = '#DB626C',
-        private forcePreserveRatio: boolean = false
+        private forcePreserveRatio: boolean = false,
+        private bypassClassName: string = undefined
     ) {}
 
     initialize(editor: Editor) {
@@ -63,6 +65,10 @@ export default class ImageResize implements EditorPlugin {
             let event = (<PluginDomEvent>e).rawEvent;
             let target = <HTMLElement>(event.srcElement || event.target);
             if (getTagOfNode(target) == 'IMG') {
+                if (target.classList.contains(this.bypassClassName)) {
+                    return;
+                }
+
                 target.contentEditable = 'false';
                 let currentImg = this.getSelectedImage();
                 if (currentImg && currentImg != target) {
@@ -223,7 +229,7 @@ export default class ImageResize implements EditorPlugin {
         parent.insertBefore(document.createComment(END_TAG), resizeDiv.nextSibling);
 
         resizeDiv.style.position = 'relative';
-        resizeDiv.style.display = 'inline-table';
+        resizeDiv.style.display = 'inline-flex';
         resizeDiv.contentEditable = 'false';
         resizeDiv.appendChild(target);
         ['nw', 'ne', 'sw', 'se'].forEach(pos => {
