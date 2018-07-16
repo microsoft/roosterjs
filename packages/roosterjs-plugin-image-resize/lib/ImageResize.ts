@@ -39,12 +39,15 @@ export default class ImageResize implements EditorPlugin {
      * @param minHeight Minimum height of image when resize in pixel, default value is 10
      * @param selectionBorderColor Color of resize border and handles, default value is #DB626C
      * @param forcePreserveRatio Whether always preserve width/height ratio when resize, default value is false
+     * @param resizableImageSelector Selector for picking which image is resizable (e.g. for all images not placeholders), note
+     * that the tag must be IMG regardless what the selector is
      */
     constructor(
         private minWidth: number = 10,
         private minHeight: number = 10,
         private selectionBorderColor: string = '#DB626C',
-        private forcePreserveRatio: boolean = false
+        private forcePreserveRatio: boolean = false,
+        private resizableImageSelector: string = 'img'
     ) {}
 
     initialize(editor: Editor) {
@@ -60,11 +63,18 @@ export default class ImageResize implements EditorPlugin {
 
     onPluginEvent(e: PluginEvent) {
         if (e.eventType == PluginEventType.MouseDown) {
-            let event = (<PluginDomEvent>e).rawEvent;
-            let target = <HTMLElement>(event.srcElement || event.target);
+            const event = (<PluginDomEvent>e).rawEvent;
+            const target = <HTMLElement>(event.srcElement || event.target);
+
             if (getTagOfNode(target) == 'IMG') {
+                const parent = target.parentNode as HTMLElement;
+                const elements = parent ? [].slice.call(parent.querySelectorAll(this.resizableImageSelector)) as HTMLElement[] : [];
+                if (elements.indexOf(target) < 0) {
+                    return;
+                }
+
                 target.contentEditable = 'false';
-                let currentImg = this.getSelectedImage();
+                const currentImg = this.getSelectedImage();
                 if (currentImg && currentImg != target) {
                     this.hideResizeHandle();
                 }
@@ -76,7 +86,7 @@ export default class ImageResize implements EditorPlugin {
                 this.hideResizeHandle();
             }
         } else if (e.eventType == PluginEventType.KeyDown && this.resizeDiv) {
-            let event = <KeyboardEvent>(<PluginDomEvent>e).rawEvent;
+            const event = <KeyboardEvent>(<PluginDomEvent>e).rawEvent;
             if (event.which == DELETE_KEYCODE || event.which == BACKSPACE_KEYCODE) {
                 this.editor.addUndoSnapshot(() => {
                     this.removeResizeDiv(this.resizeDiv);
@@ -98,7 +108,7 @@ export default class ImageResize implements EditorPlugin {
             this.editor.queryElements('img', this.removeResizeDivIfAny);
             this.resizeDiv = null;
         } else if (e.eventType == PluginEventType.ExtractContent) {
-            let event = <ExtractContentEvent>e;
+            const event = <ExtractContentEvent>e;
             event.content = this.extractHtml(event.content);
         }
     }
@@ -223,7 +233,7 @@ export default class ImageResize implements EditorPlugin {
         parent.insertBefore(document.createComment(END_TAG), resizeDiv.nextSibling);
 
         resizeDiv.style.position = 'relative';
-        resizeDiv.style.display = 'inline-table';
+        resizeDiv.style.display = 'inline-flex';
         resizeDiv.contentEditable = 'false';
         resizeDiv.appendChild(target);
         ['nw', 'ne', 'sw', 'se'].forEach(pos => {
