@@ -7,7 +7,7 @@ import PluginEventType from './PluginEventType';
  * Provides a chance for plugin to change the content before it is pasted into editor.
  */
 interface BeforePasteEvent extends BasePluginEvent {
-    eventType: PluginEventType.BeforePaste,
+    eventType: PluginEventType.BeforePaste;
     /**
      * An object contains all related data for pasting
      */

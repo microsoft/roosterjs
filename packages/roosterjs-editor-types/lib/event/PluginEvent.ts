@@ -10,11 +10,11 @@ import PluginDomEvent from './PluginDomEvent';
  */
 
 type PluginEvent =
-  | BeforePasteEvent
-  | ContentChangedEvent
-  | ExtractContentEvent
-  | PluginDomEvent
-  | EditorReadyEvent
-  | BeforeDisposeEvent;
+    | BeforePasteEvent
+    | ContentChangedEvent
+    | ExtractContentEvent
+    | PluginDomEvent
+    | EditorReadyEvent
+    | BeforeDisposeEvent;
 
 export default PluginEvent;

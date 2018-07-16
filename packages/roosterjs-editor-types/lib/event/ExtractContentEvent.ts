@@ -5,7 +5,7 @@ import PluginEventType from './PluginEventType';
  * Represents a custom BasePluginEvent for extracting content
  */
 interface ExtractContentEvent extends BasePluginEvent {
-    eventType: PluginEventType.ExtractContent,
+    eventType: PluginEventType.ExtractContent;
 
     /**
      * Current content string

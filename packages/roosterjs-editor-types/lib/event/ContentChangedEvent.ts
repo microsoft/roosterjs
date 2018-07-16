@@ -6,7 +6,7 @@ import PluginEventType from './PluginEventType';
  * Represents a change to the editor made by another plugin
  */
 interface ContentChangedEvent extends BasePluginEvent {
-    eventType: PluginEventType.ContentChanged,
+    eventType: PluginEventType.ContentChanged;
 
     /**
      * Source of the change

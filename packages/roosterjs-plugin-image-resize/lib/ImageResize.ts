@@ -68,7 +68,11 @@ export default class ImageResize implements EditorPlugin {
 
             if (getTagOfNode(target) == 'IMG') {
                 const parent = target.parentNode as HTMLElement;
-                const elements = parent ? [].slice.call(parent.querySelectorAll(this.resizableImageSelector)) as HTMLElement[] : [];
+                const elements = parent
+                    ? ([].slice.call(
+                          parent.querySelectorAll(this.resizableImageSelector)
+                      ) as HTMLElement[])
+                    : [];
                 if (elements.indexOf(target) < 0) {
                     return;
                 }
@@ -298,7 +302,10 @@ export default class ImageResize implements EditorPlugin {
 
     private extractHtml(html: string): string {
         return html.replace(EXTRACT_HTML_REGEX, (...groups: string[]) => {
-            return groups[1].replace(/(\s*contenteditable="false"(\/?>)|contenteditable="false"\s*)/im, "$2");
+            return groups[1].replace(
+                /(\s*contenteditable="false"(\/?>)|contenteditable="false"\s*)/im,
+                '$2'
+            );
         });
     }
 

@@ -8,10 +8,7 @@ import getElementOrParentElement from './getElementOrParentElement';
  * Default value is font-family, font-size, color, background-color
  * @returns An array of the computed styles
  */
-export default function getComputedStyles(
-    node: Node,
-    styleNames?: string | string[]
-): string[];
+export default function getComputedStyles(node: Node, styleNames?: string | string[]): string[];
 
 /**
  * Get computed styles of start node of a range
@@ -20,18 +17,13 @@ export default function getComputedStyles(
  * Default value is font-family, font-size, color, background-color
  * @returns An array of the computed styles
  */
-export default function getComputedStyles(
-    range: Range,
-    styleNames?: string | string[]
-): string[];
+export default function getComputedStyles(range: Range, styleNames?: string | string[]): string[];
 
 export default function getComputedStyles(
     from: Node | Range,
     styleNames: string | string[] = ['font-family', 'font-size', 'color', 'background-color']
 ): string[] {
-    let node = from instanceof Range ?
-        Position.getStart(from).normalize().node :
-        from;
+    let node = from instanceof Range ? Position.getStart(from).normalize().node : from;
     let element = getElementOrParentElement(node);
     let result: string[] = [];
     styleNames = styleNames instanceof Array ? styleNames : [styleNames];
@@ -57,7 +49,7 @@ export function getComputedStyle(node: Node, styleName: string): string {
 
 function px2Pt(px: string) {
     if (px && px.indexOf('px') == px.length - 2) {
-        return (Math.round(parseFloat(px) * 75) / 100) + 'pt';
+        return Math.round(parseFloat(px) * 75) / 100 + 'pt';
     }
     return px;
 }

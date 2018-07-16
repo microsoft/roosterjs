@@ -18,7 +18,8 @@ const KEY_SPACE = 32;
 
 export const AutoLink: GenericContentEditFeature<PluginEvent> = {
     keys: [KEY_ENTER, KEY_SPACE],
-    initialize: editor => Browser.isIE && editor.getDocument().execCommand('AutoUrlDetect', false, false),
+    initialize: editor =>
+        Browser.isIE && editor.getDocument().execCommand('AutoUrlDetect', false, false),
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
 };
