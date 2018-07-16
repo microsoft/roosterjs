@@ -67,7 +67,7 @@ export default class ImageResize implements EditorPlugin {
             const target = <HTMLElement>(event.srcElement || event.target);
 
             if (getTagOfNode(target) == 'IMG') {
-                const parent = target.parentElement;
+                const parent = target.parentNode;
                 const elements = parent ? [].slice.call(parent.querySelectorAll(this.resizableImageSelector)) as HTMLElement[] : [];
                 if (elements.indexOf(target) < 0) {
                     return;
