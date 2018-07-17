@@ -33,14 +33,30 @@ const select: Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg
     if (contains(core.contentDiv, range)) {
         let selection = core.document.defaultView.getSelection();
         if (selection) {
+            let needAddRange = true;
+
             if (selection.rangeCount > 0) {
                 // Workaround IE exception 800a025e
                 try {
-                    selection.removeAllRanges();
+                    // Do not remove/add range if current selection is the same with target range
+                    // Without this check, execCommand() may fail in Edge since we changed the selection
+                    let currentRange = selection.rangeCount == 1 ? selection.getRangeAt(0) : null;
+                    if (
+                        currentRange.startContainer != range.startContainer ||
+                        currentRange.startOffset != range.startOffset ||
+                        currentRange.endContainer != range.endContainer ||
+                        currentRange.endOffset != range.endOffset
+                    ) {
+                        selection.removeAllRanges();
+                    } else {
+                        needAddRange = false;
+                    }
                 } catch (e) {}
             }
 
-            selection.addRange(range);
+            if (needAddRange) {
+                selection.addRange(range);
+            }
 
             if (!hasFocus(core)) {
                 core.cachedSelectionRange = range;
