@@ -1,7 +1,6 @@
 import UndoSnapshots, { UndoSnapshotsService } from './UndoSnapshots';
 import {
     ChangeSource,
-    PluginKeyboardEvent,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
