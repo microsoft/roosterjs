@@ -1,15 +1,13 @@
-import { ContentEditFeature } from '../ContentEditFeatures';
+import { ContentEditFeature, Keys } from '../ContentEditFeatures';
 import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
-import { PluginDomEvent, PositionType } from 'roosterjs-editor-types';
+import { PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
 import { getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
 import { getNodeAtCursor } from 'roosterjs-editor-api';
 
-const KEY_BACKSPACE = 8;
-const KEY_ENTER = 13;
 const QUOTE_TAG = 'BLOCKQUOTE';
 
 export const UnquoteWhenBackOnEmpty1stLine: ContentEditFeature = {
-    keys: [KEY_BACKSPACE],
+    keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
         let childOfQuote = cacheGetQuoteChild(event, editor);
         return childOfQuote && isNodeEmpty(childOfQuote) && !childOfQuote.previousSibling;
@@ -18,15 +16,16 @@ export const UnquoteWhenBackOnEmpty1stLine: ContentEditFeature = {
 };
 
 export const UnquoteWhenEnterOnEmptyLine: ContentEditFeature = {
-    keys: [KEY_ENTER],
+    keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {
         let childOfQuote = cacheGetQuoteChild(event, editor);
-        return childOfQuote && isNodeEmpty(childOfQuote);
+        let shift = event.rawEvent.shiftKey;
+        return !shift && childOfQuote && isNodeEmpty(childOfQuote);
     },
     handleEvent: (event, editor) => editor.performAutoComplete(() => splitQuote(event, editor)),
 };
 
-function cacheGetQuoteChild(event: PluginDomEvent, editor: Editor): Node {
+function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: Editor): Node {
     return cacheGetEventData(event, 'QUOTE_CHILD', () => {
         let node = getNodeAtCursor(editor);
         if (getTagOfNode(node) == QUOTE_TAG) {
@@ -39,7 +38,7 @@ function cacheGetQuoteChild(event: PluginDomEvent, editor: Editor): Node {
     });
 }
 
-function splitQuote(event: PluginDomEvent, editor: Editor) {
+function splitQuote(event: PluginKeyboardEvent, editor: Editor) {
     editor.addUndoSnapshot(() => {
         let childOfQuote = cacheGetQuoteChild(event, editor);
         let blockQuoteElement = childOfQuote.parentNode;

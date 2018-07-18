@@ -2,7 +2,7 @@ import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import { Editor, EditorPlugin, cacheGetContentSearcher } from 'roosterjs-editor-core';
 import { PartialInlineElement } from 'roosterjs-editor-dom';
-import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { PluginKeyboardEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 // Character codes
 export const BACKSPACE_CHARCODE = 8;
@@ -70,15 +70,12 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
     }
 
     public onPluginEvent(event: PluginEvent) {
-        let domEvent = event as PluginDomEvent;
         if (event.eventType == PluginEventType.KeyDown) {
-            let keyboardEvent: KeyboardEvent = domEvent.rawEvent as KeyboardEvent;
             this.eventHandledOnKeyDown = false;
-            this.onKeyDownEvent(domEvent, keyboardEvent);
+            this.onKeyDownEvent(event);
         }
         if (event.eventType == PluginEventType.KeyUp && !this.eventHandledOnKeyDown) {
-            let keyboardEvent: KeyboardEvent = domEvent.rawEvent as KeyboardEvent;
-            this.onKeyUpDomEvent(domEvent, keyboardEvent);
+            this.onKeyUpDomEvent(event);
         } else if (event.eventType == PluginEventType.MouseUp) {
             if (this.isSuggesting) {
                 this.setIsSuggesting(false);
@@ -91,7 +88,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         this.dataProvider.onIsSuggestingChanged(isSuggesting);
     }
 
-    private handleKeyDownEvent(event: PluginDomEvent) {
+    private handleKeyDownEvent(event: PluginKeyboardEvent) {
         this.eventHandledOnKeyDown = true;
         event.rawEvent.preventDefault();
         event.rawEvent.stopImmediatePropagation();
@@ -104,7 +101,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
             : null;
     }
 
-    private getWordBeforeCursor(event: PluginDomEvent): string {
+    private getWordBeforeCursor(event: PluginKeyboardEvent): string {
         let searcher = cacheGetContentSearcher(event, this.editor);
         return searcher ? searcher.getWordBefore() : null;
     }
@@ -118,7 +115,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         }
     }
 
-    private getRangeUntilAt(event: PluginDomEvent): Range {
+    private getRangeUntilAt(event: PluginKeyboardEvent): Range {
         let PositionContentSearcher = cacheGetContentSearcher(event, this.editor);
         let range = this.editor.getDocument().createRange();
         PositionContentSearcher.forEachTextInlineElement(textInline => {
@@ -146,7 +143,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         return range;
     }
 
-    private onKeyUpDomEvent(event: PluginDomEvent, keyboardEvent: KeyboardEvent) {
+    private onKeyUpDomEvent(event: PluginKeyboardEvent) {
         if (this.isSuggesting) {
             let wordBeforeCursor = this.getWord(event);
             if (wordBeforeCursor && wordBeforeCursor.split(' ').length <= 4) {
@@ -217,7 +214,8 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         }
     }
 
-    private onKeyDownEvent(event: PluginDomEvent, keyboardEvent: KeyboardEvent) {
+    private onKeyDownEvent(event: PluginKeyboardEvent) {
+        let keyboardEvent = event.rawEvent;
         if (this.isSuggesting) {
             if (keyboardEvent.which == ESC_CHARCODE) {
                 this.setIsSuggesting(false);
@@ -278,7 +276,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         }
     }
 
-    private getWord(event: PluginDomEvent) {
+    private getWord(event: PluginKeyboardEvent) {
         let wordFromRange = this.getRangeUntilAt(event).toString();
         let wordFromCache = this.getWordBeforeCursor(event);
         // VSO 24891: In picker, trigger and mention are separated into two nodes.

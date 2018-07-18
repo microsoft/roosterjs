@@ -5,7 +5,6 @@ import {
     NodeType,
     PluginEvent,
     PluginEventType,
-    PluginDomEvent,
     ExtractContentEvent,
     PositionType,
 } from 'roosterjs-editor-types';
@@ -63,7 +62,7 @@ export default class ImageResize implements EditorPlugin {
 
     onPluginEvent(e: PluginEvent) {
         if (e.eventType == PluginEventType.MouseDown) {
-            const event = (<PluginDomEvent>e).rawEvent;
+            const event = e.rawEvent;
             const target = <HTMLElement>(event.srcElement || event.target);
 
             if (getTagOfNode(target) == 'IMG') {
@@ -90,7 +89,7 @@ export default class ImageResize implements EditorPlugin {
                 this.hideResizeHandle();
             }
         } else if (e.eventType == PluginEventType.KeyDown && this.resizeDiv) {
-            const event = <KeyboardEvent>(<PluginDomEvent>e).rawEvent;
+            const event = e.rawEvent;
             if (event.which == DELETE_KEYCODE || event.which == BACKSPACE_KEYCODE) {
                 this.editor.addUndoSnapshot(() => {
                     this.removeResizeDiv(this.resizeDiv);

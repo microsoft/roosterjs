@@ -7,6 +7,7 @@ import {
     ContentEdit,
     Watermark,
     TableResize,
+    getDefaultContentEditFeatures,
 } from 'roosterjs-editor-plugins';
 import { ImageResize } from 'roosterjs-plugin-image-resize';
 import { Editor, EditorPlugin, EditorOptions } from 'roosterjs-editor-core';
@@ -36,6 +37,19 @@ function initOptions() {
         'underlineCheckbox',
         'textColorDefaultFormat',
         'fontNameDefaultFormat',
+        'autoLinkCheckbox',
+        'indentWhenTabCheckbox',
+        'outdentWhenShiftTabCheckbox',
+        'outdentWhenBackspaceOnEmptyFirstLineCheckbox',
+        'outdentWhenEnterOnEmptyLineCheckbox',
+        'mergeInNewLineWhenBackspaceOnFirstCharCheckbox',
+        'unquoteWhenBackspaceOnEmptyFirstLineCheckbox',
+        'unquoteWhenEnterOnEmptyLineCheckbox',
+        'autoBulletCheckbox',
+        'tabInTableCheckbox',
+        'upDownInTableCheckbox',
+        'defaultShortcutCheckbox',
+        'smartOrderedListCheckbox',
     ].forEach(id => {
         document.getElementById(id).addEventListener('change', initEditorForOptions);
     });
@@ -51,8 +65,34 @@ export function initEditorForOptions() {
     if ((document.getElementById('pasteCheckbox') as HTMLInputElement).checked) {
         plugins.push(new Paste(true));
     }
+
+    let features = getDefaultContentEditFeatures();
+    let featuresChanged = false;
+
     if ((document.getElementById('contentEditCheckbox') as HTMLInputElement).checked) {
-        plugins.push(new ContentEdit());
+        features.autoLink = (document.getElementById('autoLinkCheckbox') as HTMLInputElement).checked;
+        features.indentWhenTab = (document.getElementById('indentWhenTabCheckbox') as HTMLInputElement).checked;
+        features.outdentWhenShiftTab = (document.getElementById('outdentWhenShiftTabCheckbox') as HTMLInputElement).checked;
+        features.outdentWhenBackspaceOnEmptyFirstLine = (document.getElementById('outdentWhenBackspaceOnEmptyFirstLineCheckbox') as HTMLInputElement).checked;
+        features.outdentWhenEnterOnEmptyLine = (document.getElementById('outdentWhenEnterOnEmptyLineCheckbox') as HTMLInputElement).checked;
+        features.mergeInNewLineWhenBackspaceOnFirstChar = (document.getElementById('mergeInNewLineWhenBackspaceOnFirstCharCheckbox') as HTMLInputElement).checked;
+        features.unquoteWhenBackspaceOnEmptyFirstLine = (document.getElementById('unquoteWhenBackspaceOnEmptyFirstLineCheckbox') as HTMLInputElement).checked;
+        features.unquoteWhenEnterOnEmptyLine = (document.getElementById('unquoteWhenEnterOnEmptyLineCheckbox') as HTMLInputElement).checked;
+        features.autoBullet = (document.getElementById('autoBulletCheckbox') as HTMLInputElement).checked;
+        features.tabInTable = (document.getElementById('tabInTableCheckbox') as HTMLInputElement).checked;
+        features.upDownInTable = (document.getElementById('upDownInTableCheckbox') as HTMLInputElement).checked;
+        features.defaultShortcut = (document.getElementById('defaultShortcutCheckbox') as HTMLInputElement).checked;
+        features.smartOrderedList = (document.getElementById('smartOrderedListCheckbox') as HTMLInputElement).checked;
+        plugins.push(new ContentEdit(features));
+
+        let defaultFeatures = getDefaultContentEditFeatures();
+        let keys = Object.keys(defaultFeatures);
+        for (let key of keys) {
+            if (features[key] != defaultFeatures[key]) {
+                featuresChanged = true;
+                break;
+            }
+        }
     }
 
     if ((document.getElementById('watermarkCheckbox') as HTMLInputElement).checked) {
@@ -98,7 +138,7 @@ export function initEditorForOptions() {
         new Editor(document.getElementById('editor') as HTMLDivElement, editorOptions)
     );
 
-    updateSampleCode(plugins, defaultFormat);
+    updateSampleCode(plugins, defaultFormat, featuresChanged && features);
 }
 
 export default initOptions;

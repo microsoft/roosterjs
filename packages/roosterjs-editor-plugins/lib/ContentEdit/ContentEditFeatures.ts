@@ -1,4 +1,4 @@
-import { ChangeSource, PluginDomEvent, PluginEvent } from 'roosterjs-editor-types';
+import { ChangeSource, PluginKeyboardEvent, PluginEvent } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -77,6 +77,18 @@ interface ContentEditFeatures {
      * @default true
      */
     defaultShortcut: boolean;
+
+    /**
+     * When generate ordered list, the list bullet will variare according its nesting level, in a loop of '1', 'a', 'i'
+     * @default false
+     */
+    smartOrderedList: boolean;
+
+    /**
+     * A style list for smart ordered list. This value is only effective when smartOrderedList is true
+     * @default ['lower-alpha', 'lower-roman', 'decimal']
+     */
+    smartOrderedListStyles: string[];
 }
 
 export default ContentEditFeatures;
@@ -98,6 +110,8 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         tabInTable: true,
         upDownInTable: true,
         defaultShortcut: true,
+        smartOrderedList: false,
+        smartOrderedListStyles: ['lower-alpha', 'lower-roman', 'decimal'],
     };
 }
 
@@ -109,4 +123,25 @@ export interface GenericContentEditFeature<TEvent extends PluginEvent> {
     allowFunctionKeys?: boolean;
 }
 
-export type ContentEditFeature = GenericContentEditFeature<PluginDomEvent>;
+export type ContentEditFeature = GenericContentEditFeature<PluginKeyboardEvent>;
+
+export const enum Keys {
+    NULL = 0,
+    BACKSPACE = 8,
+    TAB = 9,
+    ENTER = 13,
+    SPACE = 32,
+    UP = 38,
+    DOWN = 40,
+    B = 66,
+    I = 73,
+    U = 85,
+    Y = 89,
+    Z = 90,
+    PERIOD = 190,
+    FORWARDSLASH = 191,
+    Ctrl = 0x100,
+    Meta = 0x200,
+    Shift = 0x400,
+    CONTENTCHANGED = 0x800,
+}

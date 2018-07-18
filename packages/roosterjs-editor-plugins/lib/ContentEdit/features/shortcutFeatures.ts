@@ -1,7 +1,7 @@
 import { Browser } from 'roosterjs-editor-dom';
-import { ContentEditFeature } from '../ContentEditFeatures';
+import { ContentEditFeature, Keys } from '../ContentEditFeatures';
 import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
-import { PluginDomEvent, PluginEventType } from 'roosterjs-editor-types';
+import { PluginKeyboardEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
     toggleBold,
     toggleItalic,
@@ -9,19 +9,6 @@ import {
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-
-const enum Keys {
-    B = 66,
-    I = 73,
-    U = 85,
-    Y = 89,
-    Z = 90,
-    PERIOD = 190,
-    FORWARDSLASH = 191,
-    Ctrl = 0x100,
-    Meta = 0x200,
-    Shift = 0x400,
-}
 
 interface ShortcutCommand {
     winKey: number;
@@ -61,9 +48,9 @@ export const DefaultShortcut: ContentEditFeature = {
     },
 };
 
-function cacheGetCommand(event: PluginDomEvent) {
+function cacheGetCommand(event: PluginKeyboardEvent) {
     return cacheGetEventData(event, 'DEFAULT_SHORT_COMMAND', () => {
-        let e = event.rawEvent as KeyboardEvent;
+        let e = event.rawEvent;
         let key =
             event.eventType == PluginEventType.KeyDown
                 ? e.which |

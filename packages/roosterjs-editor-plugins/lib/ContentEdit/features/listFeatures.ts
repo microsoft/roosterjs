@@ -1,6 +1,6 @@
-import { ContentEditFeature } from '../ContentEditFeatures';
+import { ContentEditFeature, GenericContentEditFeature, Keys } from '../ContentEditFeatures';
 import { Editor, cacheGetContentSearcher } from 'roosterjs-editor-core';
-import { Indentation, PluginDomEvent } from 'roosterjs-editor-types';
+import { Indentation, PluginKeyboardEvent, ContentChangedEvent } from 'roosterjs-editor-types';
 import { Browser, Position, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
 import {
     cacheGetNodeAtCursor,
@@ -9,17 +9,12 @@ import {
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-import { ChangeSource, PositionType } from 'roosterjs-editor-types';
-
-const KEY_BACKSPACE = 8;
-const KEY_TAB = 9;
-const KEY_ENTER = 13;
-const KEY_SPACE = 32;
+import { PositionType } from 'roosterjs-editor-types';
 
 export const IndentWhenTab: ContentEditFeature = {
-    keys: [KEY_TAB],
+    keys: [Keys.TAB],
     shouldHandleEvent: (event, editor) =>
-        !(event.rawEvent as KeyboardEvent).shiftKey && cacheGetListElement(event, editor),
+        !event.rawEvent.shiftKey && cacheGetListElement(event, editor),
     handleEvent: (event, editor) => {
         setIndentation(editor, Indentation.Increase);
         event.rawEvent.preventDefault();
@@ -27,9 +22,9 @@ export const IndentWhenTab: ContentEditFeature = {
 };
 
 export const OutdentWhenShiftTab: ContentEditFeature = {
-    keys: [KEY_TAB],
+    keys: [Keys.TAB],
     shouldHandleEvent: (event, editor) =>
-        (event.rawEvent as KeyboardEvent).shiftKey && cacheGetListElement(event, editor),
+        event.rawEvent.shiftKey && cacheGetListElement(event, editor),
     handleEvent: (event, editor) => {
         setIndentation(editor, Indentation.Decrease);
         event.rawEvent.preventDefault();
@@ -37,7 +32,7 @@ export const OutdentWhenShiftTab: ContentEditFeature = {
 };
 
 export const MergeInNewLine: ContentEditFeature = {
-    keys: [KEY_BACKSPACE],
+    keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');
         let range = editor.getSelectionRange();
@@ -58,7 +53,7 @@ export const MergeInNewLine: ContentEditFeature = {
 };
 
 export const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
-    keys: [KEY_BACKSPACE],
+    keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');
         return li && isNodeEmpty(li) && !li.previousSibling;
@@ -67,7 +62,7 @@ export const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
 };
 
 export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
-    keys: [KEY_ENTER],
+    keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');
         return li && isNodeEmpty(li);
@@ -78,7 +73,7 @@ export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
 };
 
 export const AutoBullet: ContentEditFeature = {
-    keys: [KEY_SPACE],
+    keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
         if (!cacheGetListElement(event, editor)) {
             let searcher = cacheGetContentSearcher(event, editor);
@@ -114,24 +109,38 @@ export const AutoBullet: ContentEditFeature = {
                     editor.insertNode(tempBr);
                 }
 
-                let listNode: Node;
-
                 if (textBeforeCursor.indexOf('1.') == 0) {
                     toggleNumbering(editor);
-                    listNode = getNodeAtCursor(editor, 'OL');
                 } else {
                     toggleBullet(editor);
-                    listNode = getNodeAtCursor(editor, 'UL');
                 }
 
                 editor.deleteNode(tempBr);
-                return listNode;
-            }, ChangeSource.AutoBullet);
+            });
         });
     },
 };
 
-function toggleListAndPreventDefault(event: PluginDomEvent, editor: Editor) {
+export function getSmartOrderedList(
+    styleList: string[]
+): GenericContentEditFeature<ContentChangedEvent> {
+    return {
+        keys: [Keys.CONTENTCHANGED], // Triggered by ContentChangedEvent
+        shouldHandleEvent: (event, editor) => event.data instanceof HTMLOListElement,
+        handleEvent: (event, editor) => {
+            let ol = event.data as HTMLOListElement;
+            let parentOl = getNodeAtCursor(editor, 'OL', ol.parentNode) as HTMLOListElement;
+            if (parentOl) {
+                // The style list must has at least one value. If no value is passed in, fallback to decimal
+                let styles = styleList && styleList.length > 0 ? styleList : ['decimal'];
+                ol.style.listStyle =
+                    styles[(styles.indexOf(parentOl.style.listStyle) + 1) % styles.length];
+            }
+        },
+    };
+}
+
+function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: Editor) {
     let listInfo = cacheGetListElement(event, editor);
     if (listInfo) {
         let listElement = listInfo[0];
@@ -146,7 +155,7 @@ function toggleListAndPreventDefault(event: PluginDomEvent, editor: Editor) {
     }
 }
 
-function cacheGetListElement(event: PluginDomEvent, editor: Editor) {
+function cacheGetListElement(event: PluginKeyboardEvent, editor: Editor) {
     let li = cacheGetNodeAtCursor(editor, event, ['LI', 'TABLE']);
     let listElement = li && getTagOfNode(li) == 'LI' && getNodeAtCursor(editor, ['UL', 'OL'], li);
     return listElement ? [listElement, li] : null;

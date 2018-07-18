@@ -4,7 +4,7 @@
  */
 const enum ChangeSource {
     /**
-     * Content changed by auto bullet
+     * @deprecated
      */
     AutoBullet = 'AutoBullet',
 

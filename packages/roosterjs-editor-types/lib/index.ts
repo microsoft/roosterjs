@@ -22,7 +22,12 @@ export { default as BeforePasteEvent } from './event/BeforePasteEvent';
 export { default as ContentChangedEvent } from './event/ContentChangedEvent';
 export { default as EditorReadyEvent } from './event/EditorReadyEvent';
 export { default as ExtractContentEvent } from './event/ExtractContentEvent';
-export { default as PluginDomEvent } from './event/PluginDomEvent';
+export {
+    default as PluginDomEvent,
+    PluginCompositionEvent,
+    PluginKeyboardEvent,
+    PluginMouseEvent,
+} from './event/PluginDomEvent';
 export { default as PluginEvent } from './event/PluginEvent';
 export { default as PluginEventType } from './event/PluginEventType';
 

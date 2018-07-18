@@ -1,5 +1,10 @@
 import UndoSnapshots, { UndoSnapshotsService } from './UndoSnapshots';
-import { ChangeSource, PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    PluginKeyboardEvent,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 import Editor from '../editor/Editor';
 import UndoService from '../editor/UndoService';
 
@@ -74,10 +79,10 @@ export default class Undo implements UndoService {
 
         switch (event.eventType) {
             case PluginEventType.KeyDown:
-                this.onKeyDown(event as PluginDomEvent);
+                this.onKeyDown(event.rawEvent);
                 break;
             case PluginEventType.KeyPress:
-                this.onKeyPress(event as PluginDomEvent);
+                this.onKeyPress(event.rawEvent);
                 break;
             case PluginEventType.CompositionEnd:
                 this.clearRedoForInput();
@@ -162,10 +167,9 @@ export default class Undo implements UndoService {
         }
     }
 
-    private onKeyDown(pluginEvent: PluginDomEvent): void {
+    private onKeyDown(evt: KeyboardEvent): void {
         // Handle backspace/delete when there is a selection to take a snapshot
         // since we want the state prior to deletion restorable
-        let evt = pluginEvent.rawEvent as KeyboardEvent;
         if (evt.which == KEY_BACKSPACE || evt.which == KEY_DELETE) {
             let selectionRange = this.editor.getSelectionRange();
 
@@ -195,8 +199,7 @@ export default class Undo implements UndoService {
         }
     }
 
-    private onKeyPress(pluginEvent: PluginDomEvent): void {
-        let evt = pluginEvent.rawEvent as KeyboardEvent;
+    private onKeyPress(evt: KeyboardEvent): void {
         if (evt.metaKey) {
             // if metaKey is pressed, simply return since no actual effect will be taken on the editor.
             // this is to prevent changing hasNewContent to true when meta + v to paste on Safari.

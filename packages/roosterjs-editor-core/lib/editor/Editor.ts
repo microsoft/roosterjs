@@ -301,14 +301,10 @@ export default class Editor {
         triggerExtractContentEvent: boolean = true,
         includeSelectionMarker: boolean = false
     ): string {
-        let content = '';
-        if (includeSelectionMarker) {
-            this.runWithSelectionMarker(() => {
-                content = this.core.contentDiv.innerHTML;
-            }, false /*useInlineMarker*/);
-        } else {
-            content = this.core.contentDiv.innerHTML;
-        }
+        let contentDiv = this.core.contentDiv;
+        let content = includeSelectionMarker
+            ? this.runWithSelectionMarker(() => contentDiv.innerHTML, false /*useInlineMarker*/)
+            : contentDiv.innerHTML;
 
         if (triggerExtractContentEvent) {
             let extractContentEvent: ExtractContentEvent = {
@@ -474,18 +470,16 @@ export default class Editor {
     /**
      * Insert selection marker element into content, so that after doing some modification,
      * we can still restore the selection as long as the selection marker is still there
-     * @returns True if selection markers are added, otherwise false.
+     * @returns The return value of callback
      */
-    public runWithSelectionMarker(callback: () => any, useInlineMarker?: boolean) {
+    public runWithSelectionMarker<T>(callback: () => T, useInlineMarker?: boolean): T {
         let selectionMarked = markSelection(
             this.core.contentDiv,
             this.getSelectionRange(),
             useInlineMarker
         );
         try {
-            if (callback) {
-                callback();
-            }
+            return callback && callback();
         } finally {
             if (selectionMarked) {
                 // In safari the selection will be lost after inserting markers, so need to restore it
@@ -509,12 +503,12 @@ export default class Editor {
      * @deprecated
      * Save the current selection in editor so that when focus again, the selection can be restored
      */
-    public saveSelectionRange() {
+    public saveSelectionRange = () => {
         this.core.cachedSelectionRange = this.core.api.getSelectionRange(
             this.core,
             false /*tryGetFromCache*/
         );
-    }
+    };
 
     /**
      * Get a rect representing the location of the cursor.
@@ -893,9 +887,7 @@ export default class Editor {
                 this.core,
                 Browser.isIEOrEdge ? 'beforedeactivate' : 'blur',
                 null,
-                () => {
-                    this.saveSelectionRange();
-                }
+                this.saveSelectionRange
             ),
         ];
     }
