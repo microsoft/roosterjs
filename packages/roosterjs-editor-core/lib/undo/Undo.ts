@@ -217,6 +217,11 @@ export default class Undo implements UndoService {
 
         if (shouldTakeUndo) {
             this.addUndoSnapshot();
+            if (evt.which == KEY_ENTER) {
+                // Treat ENTER as new content so if there is no input after ENTER and undo,
+                // we restore the snapshot before ENTER
+                this.hasNewContent = true;
+            }
         } else {
             this.clearRedoForInput();
         }

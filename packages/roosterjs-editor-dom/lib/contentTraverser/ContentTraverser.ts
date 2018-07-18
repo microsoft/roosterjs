@@ -149,8 +149,8 @@ export default class ContentTraverser {
         } else {
             newInline = getNextPreviousInlineElement(this.scoper.rootNode, current, isNext);
             newInline =
-                (newInline && (isNext && newInline.isAfter(current))) ||
-                (!isNext && current.isAfter(newInline))
+                (newInline && isNext && newInline.isAfter(current)) ||
+                (current && !isNext && current.isAfter(newInline))
                     ? newInline
                     : null;
         }
