@@ -1,8 +1,9 @@
 import { Browser } from 'roosterjs-editor-dom';
 import { ContentEditFeature, Keys } from '../ContentEditFeatures';
 import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
-import { PluginKeyboardEvent, PluginEventType } from 'roosterjs-editor-types';
+import { FontSizeChange, PluginKeyboardEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
+    changeFontSize,
     toggleBold,
     toggleItalic,
     toggleUnderline,
@@ -32,11 +33,21 @@ const commands: ShortcutCommand[] = [
     createCommand(Keys.Ctrl | Keys.Y, Keys.Meta | Keys.Shift | Keys.Z, editor => editor.redo()),
     createCommand(Keys.Ctrl | Keys.PERIOD, Keys.Meta | Keys.PERIOD, toggleBullet),
     createCommand(Keys.Ctrl | Keys.FORWARDSLASH, Keys.Meta | Keys.FORWARDSLASH, toggleNumbering),
+    createCommand(
+        Keys.Ctrl | Keys.Shift | Keys.PERIOD,
+        Keys.Meta | Keys.Shift | Keys.PERIOD,
+        editor => changeFontSize(editor, FontSizeChange.Increase)
+    ),
+    createCommand(
+        Keys.Ctrl | Keys.Shift | Keys.COMMA,
+        Keys.Meta | Keys.Shift | Keys.COMMA,
+        editor => changeFontSize(editor, FontSizeChange.Decrease)
+    ),
 ];
 
 export const DefaultShortcut: ContentEditFeature = {
     allowFunctionKeys: true,
-    keys: [Keys.B, Keys.I, Keys.U, Keys.Y, Keys.Z, Keys.PERIOD, Keys.FORWARDSLASH],
+    keys: [Keys.B, Keys.I, Keys.U, Keys.Y, Keys.Z, Keys.COMMA, Keys.PERIOD, Keys.FORWARDSLASH],
     shouldHandleEvent: cacheGetCommand,
     handleEvent: (event, editor) => {
         let command = cacheGetCommand(event);
@@ -46,6 +57,7 @@ export const DefaultShortcut: ContentEditFeature = {
             event.rawEvent.stopPropagation();
         }
     },
+    isAvailable: featureSet => featureSet.defaultShortcut,
 };
 
 function cacheGetCommand(event: PluginKeyboardEvent) {

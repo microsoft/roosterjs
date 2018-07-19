@@ -34,6 +34,7 @@ export const TabInTable: ContentEditFeature = {
         }
         event.rawEvent.preventDefault();
     },
+    isAvailable: featureSet => featureSet.tabInTable,
 };
 
 export const UpDownInTable: ContentEditFeature = {
@@ -68,6 +69,7 @@ export const UpDownInTable: ContentEditFeature = {
             }
         });
     },
+    isAvailable: featureSet => featureSet.upDownInTable,
 };
 
 function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellElement {

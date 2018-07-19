@@ -20,6 +20,7 @@ export const AutoLink: GenericContentEditFeature<PluginEvent> = {
         Browser.isIE && editor.getDocument().execCommand('AutoUrlDetect', false, false),
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
+    isAvailable: featureSet => featureSet.autoLink,
 };
 
 function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {

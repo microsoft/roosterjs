@@ -1,9 +1,5 @@
 import UndoSnapshots, { UndoSnapshotsService } from './UndoSnapshots';
-import {
-    ChangeSource,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import { ChangeSource, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import Editor from '../editor/Editor';
 import UndoService from '../editor/UndoService';
 

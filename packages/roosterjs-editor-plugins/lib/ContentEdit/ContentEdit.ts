@@ -37,9 +37,7 @@ import {
  */
 export default class ContentEdit implements EditorPlugin {
     private editor: Editor;
-    private features: GenericContentEditFeature<PluginEvent>[] = [];
-    private contentChangedFeatures: GenericContentEditFeature<PluginEvent>[] = [];
-    private keys: number[] = [];
+    private featureMap: { [key: number]: GenericContentEditFeature<PluginEvent>[] } = {};
     private currentFeature: GenericContentEditFeature<PluginEvent>;
     public name: 'ContentEdit';
 
@@ -56,28 +54,32 @@ export default class ContentEdit implements EditorPlugin {
     public initialize(editor: Editor): void {
         this.editor = editor;
         let featureSet = this.featureSet || getDefaultContentEditFeatures();
-        this.addFeature(featureSet.indentWhenTab, IndentWhenTab);
-        this.addFeature(featureSet.outdentWhenShiftTab, OutdentWhenShiftTab);
-        this.addFeature(
-            featureSet.outdentWhenBackspaceOnEmptyFirstLine,
-            OutdentWhenBackOn1stEmptyLine
-        );
-        this.addFeature(featureSet.outdentWhenEnterOnEmptyLine, OutdentWhenEnterOnEmptyLine);
-        this.addFeature(featureSet.mergeInNewLineWhenBackspaceOnFirstChar, MergeInNewLine);
-        this.addFeature(
-            featureSet.unquoteWhenBackspaceOnEmptyFirstLine,
-            UnquoteWhenBackOnEmpty1stLine
-        );
-        this.addFeature(featureSet.unquoteWhenEnterOnEmptyLine, UnquoteWhenEnterOnEmptyLine);
-        this.addFeature(featureSet.tabInTable, TabInTable);
-        this.addFeature(featureSet.upDownInTable, UpDownInTable);
-        this.addFeature(featureSet.autoBullet, AutoBullet);
-        this.addFeature(featureSet.autoLink, AutoLink);
-        this.addFeature(featureSet.defaultShortcut, DefaultShortcut);
-        this.addFeature(
-            featureSet.smartOrderedList,
-            getSmartOrderedList(featureSet.smartOrderedListStyles)
-        );
+        [
+            IndentWhenTab,
+            OutdentWhenShiftTab,
+            OutdentWhenBackOn1stEmptyLine,
+            OutdentWhenEnterOnEmptyLine,
+            MergeInNewLine,
+            UnquoteWhenBackOnEmpty1stLine,
+            UnquoteWhenEnterOnEmptyLine,
+            TabInTable,
+            UpDownInTable,
+            AutoBullet,
+            AutoLink,
+            DefaultShortcut,
+            getSmartOrderedList(featureSet.smartOrderedListStyles),
+        ]
+            .filter(feature => feature.isAvailable(featureSet))
+            .forEach(feature => {
+                if (feature.initialize) {
+                    feature.initialize(this.editor);
+                }
+                feature.keys.forEach(key => {
+                    let array = this.featureMap[key] || [];
+                    array.push(feature);
+                    this.featureMap[key] = array;
+                });
+            });
     }
 
     /**
@@ -90,31 +92,19 @@ export default class ContentEdit implements EditorPlugin {
     /**
      * Check whether the event should be handled exclusively by this plugin
      */
-    public willHandleEventExclusively(e: PluginEvent): boolean {
-        if (e.eventType == PluginEventType.KeyDown && this.keys.indexOf(e.rawEvent.which) >= 0) {
-            let event = e.rawEvent;
-            let hasFunctionKey = event.ctrlKey || event.altKey || event.metaKey;
-            this.currentFeature = this.findFeature(this.features, hasFunctionKey, e);
-            return !!this.currentFeature;
-        }
-
-        return false;
+    public willHandleEventExclusively(event: PluginEvent): boolean {
+        this.findFeature(event);
+        return !!this.currentFeature;
     }
 
     /**
      * Handle the event
      */
     public onPluginEvent(event: PluginEvent) {
-        if (
-            event.eventType == PluginEventType.ContentChanged &&
-            !this.currentFeature &&
-            this.contentChangedFeatures.length >= 0
-        ) {
-            this.currentFeature = this.findFeature(
-                this.contentChangedFeatures,
-                false /*hasFunctionKey*/,
-                event
-            );
+        // ContentChangedEvent will be broadcast so we won't see it in willHandleEventExclusively(),
+        // we need to check it again here
+        if (!this.currentFeature && event.eventType == PluginEventType.ContentChanged) {
+            this.findFeature(event);
         }
 
         if (this.currentFeature) {
@@ -124,46 +114,23 @@ export default class ContentEdit implements EditorPlugin {
         }
     }
 
-    private findFeature(
-        featureArray: GenericContentEditFeature<PluginEvent>[],
-        hasFunctionKey: boolean,
-        event: PluginEvent
-    ): GenericContentEditFeature<PluginEvent> {
-        let key =
-            event.eventType == PluginEventType.KeyDown
-                ? event.rawEvent.which
-                : event.eventType == PluginEventType.ContentChanged
-                    ? Keys.CONTENTCHANGED
-                    : Keys.NULL;
-        for (let feature of featureArray) {
-            if (
-                (feature.allowFunctionKeys || !hasFunctionKey) &&
-                feature.keys.indexOf(key) >= 0 &&
-                feature.shouldHandleEvent(event, this.editor)
-            ) {
-                return feature;
-            }
-        }
-        return null;
-    }
+    private findFeature(event: PluginEvent) {
+        let hasFunctionKey = false;
+        let features: GenericContentEditFeature<PluginEvent>[];
 
-    private addFeature(add: boolean, feature: GenericContentEditFeature<PluginEvent>) {
-        if (add) {
-            this.features.push(feature);
-            if (feature.initialize) {
-                feature.initialize(this.editor);
-            }
-
-            let pushedIntoContentChangedFeatures = false;
-            for (let key of feature.keys) {
-                if (this.keys.indexOf(key) < 0) {
-                    this.keys.push(key);
-                }
-                if (!pushedIntoContentChangedFeatures && key == Keys.CONTENTCHANGED) {
-                    this.contentChangedFeatures.push(feature);
-                    pushedIntoContentChangedFeatures = true;
-                }
-            }
+        if (event.eventType == PluginEventType.KeyDown) {
+            let rawEvent = event.rawEvent;
+            hasFunctionKey = rawEvent.ctrlKey || rawEvent.altKey || rawEvent.metaKey;
+            features = this.featureMap[rawEvent.which];
+        } else if (event.eventType == PluginEventType.ContentChanged) {
+            features = this.featureMap[Keys.CONTENTCHANGED];
         }
+        this.currentFeature =
+            features &&
+            features.find(
+                feature =>
+                    (feature.allowFunctionKeys || !hasFunctionKey) &&
+                    feature.shouldHandleEvent(event, this.editor)
+            );
     }
 }

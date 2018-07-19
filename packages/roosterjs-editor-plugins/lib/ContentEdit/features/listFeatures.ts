@@ -19,6 +19,7 @@ export const IndentWhenTab: ContentEditFeature = {
         setIndentation(editor, Indentation.Increase);
         event.rawEvent.preventDefault();
     },
+    isAvailable: featureSet => featureSet.indentWhenTab,
 };
 
 export const OutdentWhenShiftTab: ContentEditFeature = {
@@ -29,6 +30,7 @@ export const OutdentWhenShiftTab: ContentEditFeature = {
         setIndentation(editor, Indentation.Decrease);
         event.rawEvent.preventDefault();
     },
+    isAvailable: featureSet => featureSet.outdentWhenShiftTab,
 };
 
 export const MergeInNewLine: ContentEditFeature = {
@@ -50,6 +52,7 @@ export const MergeInNewLine: ContentEditFeature = {
             toggleListAndPreventDefault(event, editor);
         }
     },
+    isAvailable: featureSet => featureSet.mergeInNewLineWhenBackspaceOnFirstChar,
 };
 
 export const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
@@ -59,6 +62,7 @@ export const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
         return li && isNodeEmpty(li) && !li.previousSibling;
     },
     handleEvent: toggleListAndPreventDefault,
+    isAvailable: featureSet => featureSet.outdentWhenBackspaceOnEmptyFirstLine,
 };
 
 export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
@@ -70,6 +74,7 @@ export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
     handleEvent: (event, editor) => {
         editor.performAutoComplete(() => toggleListAndPreventDefault(event, editor));
     },
+    isAvailable: featureSet => featureSet.outdentWhenEnterOnEmptyLine,
 };
 
 export const AutoBullet: ContentEditFeature = {
@@ -119,6 +124,7 @@ export const AutoBullet: ContentEditFeature = {
             });
         });
     },
+    isAvailable: featureSet => featureSet.autoBullet,
 };
 
 export function getSmartOrderedList(
@@ -137,6 +143,7 @@ export function getSmartOrderedList(
                     styles[(styles.indexOf(parentOl.style.listStyle) + 1) % styles.length];
             }
         },
+        isAvailable: featureSet => featureSet.smartOrderedList,
     };
 }
 

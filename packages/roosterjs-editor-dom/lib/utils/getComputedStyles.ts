@@ -43,6 +43,12 @@ export default function getComputedStyles(
     return result;
 }
 
+/**
+ * A shortcut for getComputedStyles() when only one style is to be retrieved
+ * @param node The node to get style from
+ * @param styleName The style name
+ * @returns The style value
+ */
 export function getComputedStyle(node: Node, styleName: string): string {
     return getComputedStyles(node, styleName)[0] || '';
 }

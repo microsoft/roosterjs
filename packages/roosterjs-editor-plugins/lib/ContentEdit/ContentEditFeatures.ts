@@ -118,6 +118,7 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
 export interface GenericContentEditFeature<TEvent extends PluginEvent> {
     keys: number[];
     initialize?: (editor: Editor) => any;
+    isAvailable: (featureSet: ContentEditFeatures) => void;
     shouldHandleEvent: (event: TEvent, editor: Editor) => any;
     handleEvent: (event: TEvent, editor: Editor) => ChangeSource | void;
     allowFunctionKeys?: boolean;
@@ -138,6 +139,7 @@ export const enum Keys {
     U = 85,
     Y = 89,
     Z = 90,
+    COMMA = 188,
     PERIOD = 190,
     FORWARDSLASH = 191,
     Ctrl = 0x100,

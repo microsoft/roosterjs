@@ -9,6 +9,7 @@ export { default as Alignment } from './enum/Alignment';
 export { default as ChangeSource } from './enum/ChangeSource';
 export { default as ContentPosition } from './enum/ContentPosition';
 export { default as Direction } from './enum/Direction';
+export { default as FontSizeChange } from './enum/FontSizeChange';
 export { default as Indentation } from './enum/Indentation';
 export { default as PasteOption } from './enum/PasteOption';
 export { default as PositionType } from './enum/PositionType';
