@@ -1,3 +1,4 @@
+export { default as CorePlugin } from './editor/CorePlugin';
 export { default as Editor } from './editor/Editor';
 export {
     default as EditorCore,

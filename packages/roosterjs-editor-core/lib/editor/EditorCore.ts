@@ -1,5 +1,6 @@
-import EditorPlugin from '../editor/EditorPlugin';
-import UndoService from '../editor/UndoService';
+import CorePlugin from './CorePlugin';
+import EditorPlugin from './EditorPlugin';
+import UndoService from './UndoService';
 import {
     ChangeSource,
     DefaultFormat,
@@ -34,6 +35,11 @@ interface EditorCore {
     readonly defaultFormat: DefaultFormat;
 
     /**
+     * Core plugin of this editor
+     */
+    readonly corePlugin: CorePlugin;
+
+    /**
      * Undo service of this editor
      */
     readonly undo: UndoService;
@@ -54,16 +60,9 @@ interface EditorCore {
     readonly api: CoreApiMap;
 
     /**
-     * Whether auto restore previous selection when focus to editor
-     * Default value is false
+     * Core API map of this editor with default values (not overridable)
      */
-    readonly disableRestoreSelectionOnFocus?: boolean;
-
-    /**
-     * Whether skip setting contenteditable attribute to content DIV
-     * Default value is false
-     */
-    readonly omitContentEditable?: boolean;
+    readonly defaultApi: CoreApiMap;
 
     /**
      * Whether adding undo snapshot is suspended
@@ -74,11 +73,6 @@ interface EditorCore {
      * Cached selection range of this editor
      */
     cachedSelectionRange: Range;
-
-    /**
-     * A cached undo snapshot before auto complete, it will be restored into editor when a BackSpace key is pressed before other event is fired
-     */
-    snapshotBeforeAutoComplete: string;
 }
 
 export default EditorCore;
@@ -117,7 +111,8 @@ export interface CoreApiMap {
      * Undo snapshot will not be added if this call is nested inside another editWithUndo() call.
      * @param core The EditorCore object
      * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
-     * @param changeSource The ChangeSource string of ContentChangedEvent. @default is ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
+     * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
+     * @param addUndoSnapshotBeforeAction Whether add an undo snapshot before invoke the callback function. @default true
      */
     editWithUndo: EditWithUndo;
 

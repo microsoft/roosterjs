@@ -1,3 +1,4 @@
+import CorePlugin from './CorePlugin';
 import EditorCore, { CoreApiMap } from './EditorCore';
 import EditorOptions from './EditorOptions';
 import Undo from '../undo/Undo';
@@ -16,19 +17,20 @@ export default function createEditorCore(
     contentDiv: HTMLDivElement,
     options: EditorOptions
 ): EditorCore {
+    let undo = options.undo || new Undo();
+    let corePlugin = new CorePlugin(contentDiv, options.disableRestoreSelectionOnFocus);
     return {
         contentDiv: contentDiv,
         document: contentDiv.ownerDocument,
         defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
-        undo: options.undo || new Undo(),
+        corePlugin: corePlugin,
+        undo: undo,
         suspendUndo: false,
         customData: {},
         cachedSelectionRange: null,
-        plugins: (options.plugins || []).filter(plugin => !!plugin),
+        plugins: [corePlugin, ...(options.plugins || []), undo].filter(plugin => !!plugin),
         api: createCoreApiMap(options.coreApiOverride),
-        snapshotBeforeAutoComplete: null,
-        disableRestoreSelectionOnFocus: options.disableRestoreSelectionOnFocus,
-        omitContentEditable: options.omitContentEditableAttributeChanges,
+        defaultApi: createCoreApiMap(),
     };
 }
 
@@ -50,7 +52,7 @@ function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat
     };
 }
 
-function createCoreApiMap(map: Partial<CoreApiMap>): CoreApiMap {
+function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
     map = map || {};
     return {
         attachDomEvent: map.attachDomEvent || attachDomEvent,

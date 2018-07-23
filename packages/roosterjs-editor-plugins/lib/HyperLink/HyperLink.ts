@@ -55,6 +55,10 @@ export default class HyperLink implements EditorPlugin {
      */
     public onPluginEvent(event: PluginEvent): void {
         switch (event.eventType) {
+            case PluginEventType.EditorReady:
+                this.editor.queryElements('a[href]', this.processLink);
+                break;
+
             case PluginEventType.ContentChanged:
                 let contentChangedEvent = event as ContentChangedEvent;
                 if (contentChangedEvent.source == ChangeSource.CreateLink) {

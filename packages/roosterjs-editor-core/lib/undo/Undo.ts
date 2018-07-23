@@ -40,11 +40,6 @@ export default class Undo implements UndoService {
         this.editor = editor;
         this.onDropDisposer = this.editor.addDomEventHandler('drop', this.onNativeEvent);
         this.onCutDisposer = this.editor.addDomEventHandler('cut', this.onNativeEvent);
-
-        // Add an initial snapshot if snapshotsManager isn't created yet
-        if (!this.undoSnapshots) {
-            this.addUndoSnapshot();
-        }
     }
 
     /**
@@ -73,6 +68,9 @@ export default class Undo implements UndoService {
         }
 
         switch (event.eventType) {
+            case PluginEventType.EditorReady:
+                this.addUndoSnapshot();
+                break;
             case PluginEventType.KeyDown:
                 this.onKeyDown(event.rawEvent);
                 break;
