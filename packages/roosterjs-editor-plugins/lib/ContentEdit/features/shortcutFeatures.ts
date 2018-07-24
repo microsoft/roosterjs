@@ -70,6 +70,6 @@ function cacheGetCommand(event: PluginKeyboardEvent) {
                   (e.shiftKey && Keys.Shift) |
                   (e.ctrlKey && Keys.Ctrl)
                 : 0;
-        return key && commands.find(cmd => (Browser.isMac ? cmd.macKey : cmd.winKey) == key);
+        return key && commands.filter(cmd => (Browser.isMac ? cmd.macKey : cmd.winKey) == key)[0];
     });
 }

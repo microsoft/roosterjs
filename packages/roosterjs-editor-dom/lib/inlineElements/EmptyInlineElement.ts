@@ -77,7 +77,7 @@ export default class EmptyInlineElement implements InlineElement {
      * Apply inline style to a region of an inline element.
      */
     applyStyle(
-        styler: (node: Node) => void,
+        styler: (element: HTMLElement) => any,
         fromPoint?: EditorPoint,
         toPoint?: EditorPoint
     ): void {}

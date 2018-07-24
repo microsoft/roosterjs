@@ -188,10 +188,11 @@ export default class Editor {
     /**
      * Get InlineElement at given node
      * @param node The node to create InlineElement
+     * @param forceAtNode Force to get a NodeInlineElement at the given node
      * @requires The InlineElement result
      */
-    public getInlineElementAtNode(node: Node): InlineElement {
-        return getInlineElementAtNode(this.core.contentDiv, node);
+    public getInlineElementAtNode(node: Node, forceAtNode?: boolean): InlineElement {
+        return getInlineElementAtNode(this.core.contentDiv, node, forceAtNode);
     }
 
     /**
@@ -736,8 +737,7 @@ export default class Editor {
         return this.core.document.defaultView.getSelection();
     }
 
-
-        /**
+    /**
      * @deprecated Use select() instead
      * Update selection in editor
      * @param selectionRange The selection range to update to
@@ -786,45 +786,33 @@ export default class Editor {
     public applyInlineStyle(callback: (element: HTMLElement) => any) {
         this.focus();
         let range = this.getSelectionRange();
-        let collapsed = range && range.collapsed;
 
-        if (collapsed) {
-            this.addUndoSnapshot();
-
-            // Create a new span to hold the style.
+        if (range && range.collapsed) {
+            // Create a new text node to hold the selection.
             // Some content is needed to position selection into the span
             // for here, we inject ZWS - zero width space
-            let element = fromHtml('<SPAN>\u200B</SPAN>', this.getDocument())[0] as HTMLElement;
-            callback(element);
-            this.insertNode(element);
-
-            // reset selection to be after the ZWS (rather than selecting it)
-            // This is needed so that the cursor still looks blinking inside editor
-            // This also means an extra ZWS will be in editor
-            this.select(element, PositionType.End);
+            let tempNode = this.getDocument().createTextNode('\u200B');
+            this.addUndoSnapshot();
+            range.insertNode(tempNode);
+            this.getInlineElementAtNode(tempNode, true /*forceAtNode*/).applyStyle(callback);
+            this.select(tempNode, PositionType.End);
         } else {
+            // This is start and end node that get the style. The start and end needs to be recorded so that selection
+            // can be re-applied post-applying style
             this.addUndoSnapshot(() => {
-                // This is start and end node that get the style. The start and end needs to be recorded so that selection
-                // can be re-applied post-applying style
                 let firstNode: Node;
                 let lastNode: Node;
                 let contentTraverser = this.getSelectionTraverser();
-
-                // Just loop through all inline elements in the selection and apply style for each
                 let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
                 while (inlineElement) {
-                    // Need to obtain next inline first. Applying styles changes DOM which may mess up with the navigation
-                    let nextInline = contentTraverser.getNextInlineElement();
+                    let nextInlineElement = contentTraverser.getNextInlineElement();
                     inlineElement.applyStyle(element => {
-                        callback(element as HTMLElement);
+                        callback(element);
                         firstNode = firstNode || element;
                         lastNode = element;
                     });
-
-                    inlineElement = nextInline;
+                    inlineElement = nextInlineElement;
                 }
-
-                // When selectionStartNode/EndNode is set, it means there is DOM change. Re-create the selection
                 if (firstNode && lastNode) {
                     this.select(firstNode, PositionType.Before, lastNode, PositionType.After);
                 }

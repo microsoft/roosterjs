@@ -127,10 +127,10 @@ export default class ContentEdit implements EditorPlugin {
         }
         this.currentFeature =
             features &&
-            features.find(
+            features.filter(
                 feature =>
                     (feature.allowFunctionKeys || !hasFunctionKey) &&
                     feature.shouldHandleEvent(event, this.editor)
-            );
+            )[0];
     }
 }

@@ -559,16 +559,9 @@ describe('PartialInlineElement applyStyle()', () => {
         TestHelper.removeElement(testID);
     });
 
-    function getInnerHTML(element: InlineElement): string {
-        let htmlElement = element.getContainerNode() as HTMLElement;
-        let wrapper = document.createElement('div');
-        wrapper.appendChild(htmlElement);
-        return wrapper.innerHTML;
-    }
-
     function runTest(input: [string, number, number], output: string) {
         // Arrange
-        let [partialInlineElement] = createPartialInlineElementWithContent(
+        let [partialInlineElement, , , testDiv] = createPartialInlineElementWithContent(
             input[0],
             input[1],
             input[2]
@@ -580,28 +573,27 @@ describe('PartialInlineElement applyStyle()', () => {
         });
 
         // Assert
-        let innerHTML = getInnerHTML(partialInlineElement);
-        expect(innerHTML).toBe(output);
+        expect(testDiv.innerHTML).toBe(output);
     }
 
     it('Partial on start point', () => {
         runTest(
             ['<span>www.example.com</span>', 4, null /*endOffset*/],
-            '<span>www.<span style="color: red;">example.com</span></span>'
+            '<span>www.</span><span style="color: red;">example.com</span>'
         );
     });
 
     it('Partial on end point', () => {
         runTest(
             ['<span>www.example.com</span>', null /*startOffset*/, 11],
-            '<span><span style="color: red;">www.example</span>.com</span>'
+            '<span style="color: red;">www.example</span><span>.com</span>'
         );
     });
 
     it('Partial on start point and end point, startOffset < endOffset', () => {
         runTest(
             ['<span>www.example.com</span>', 4, 11],
-            '<span>www.<span style="color: red;">example</span>.com</span>'
+            '<span>www.</span><span style="color: red;">example</span><span>.com</span>'
         );
     });
 

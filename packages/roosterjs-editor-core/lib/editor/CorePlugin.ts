@@ -178,19 +178,17 @@ export default class CorePlugin implements EditorPlugin {
     }
 
     private onKeyDown(event: KeyboardEvent) {
-        if (this.snapshotBeforeAutoComplete !== null) {
-            if (
-                event.which == KEY_BACKSPACE &&
-                this.snapshotAfterAutoComplete == this.getSnapshot()
-            ) {
-                event.preventDefault();
-                this.editor.setContent(
-                    this.snapshotBeforeAutoComplete,
-                    false /*triggerContentChangedEvent*/
-                );
-            }
-            this.snapshotBeforeAutoComplete = null;
-            this.snapshotAfterAutoComplete = null;
+        if (
+            this.snapshotBeforeAutoComplete !== null &&
+            event.which == KEY_BACKSPACE &&
+            this.snapshotAfterAutoComplete == this.getSnapshot()
+        ) {
+            event.preventDefault();
+            this.editor.setContent(
+                this.snapshotBeforeAutoComplete,
+                false /*triggerContentChangedEvent*/
+            );
+            this.clearAutoCompleteSnapshots();
         }
     }
 
@@ -200,6 +198,8 @@ export default class CorePlugin implements EditorPlugin {
      * We fix it by wrapping it with a div and reposition cursor within the div
      */
     private onKeyPress(event: KeyboardEvent) {
+        this.clearAutoCompleteSnapshots();
+
         let range = this.editor.getSelectionRange();
 
         if (
@@ -214,5 +214,10 @@ export default class CorePlugin implements EditorPlugin {
 
     private getSnapshot() {
         return this.editor.getContent(false /*triggerContentChangedEvent*/, true /*markSelection*/);
+    }
+
+    private clearAutoCompleteSnapshots() {
+        this.snapshotBeforeAutoComplete = null;
+        this.snapshotAfterAutoComplete = null;
     }
 }

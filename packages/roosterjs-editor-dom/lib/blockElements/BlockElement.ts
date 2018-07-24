@@ -1,3 +1,4 @@
+import NodeInlineElement from '../inlineElements/NodeInlineElement';
 import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import contains from '../utils/contains';
 import getTagOfNode from '../utils/getTagOfNode';
@@ -9,11 +10,21 @@ import { BlockElement, DocumentPosition, InlineElement } from 'roosterjs-editor-
 import { getFirstLeafNode, getLastLeafNode } from '../domWalker/getLeafNode';
 import { getLeafSibling } from '../domWalker/getLeafSibling';
 
-// Get the inline element at a node
-function getInlineElementAtNode(rootNode: Node, node: Node): InlineElement {
+/**
+ * Get the inline element at a node
+ * @param rootNode The root node of current scope
+ * @param node The node to get InlineElement from
+ * @param forceAtNode Force to get a NodeInlineElement at the given node
+ */
+function getInlineElementAtNode(rootNode: Node, node: Node, forceAtNode?: boolean): InlineElement {
     // An inline element has to be in a block element, get the block first and then resolve through the factory
     let parentBlock = node ? getBlockElementAtNode(rootNode, node) : null;
-    return parentBlock ? resolveInlineElement(node, rootNode, parentBlock) : null;
+    return (
+        parentBlock &&
+        (forceAtNode
+            ? new NodeInlineElement(node, parentBlock)
+            : resolveInlineElement(node, rootNode, parentBlock))
+    );
 }
 
 // Get first inline element

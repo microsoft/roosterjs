@@ -231,16 +231,14 @@ describe('NodeInlineElement applyStyle()', () => {
         DomTestHelper.removeElement(testID);
     });
 
-    function getInnerHTML(element: InlineElement): string {
-        let htmlElement = element.getContainerNode() as HTMLElement;
-        let wrapper = document.createElement('div');
-        wrapper.appendChild(htmlElement);
-        return wrapper.innerHTML;
-    }
-
     it('fromPoint = null, toPoint = null', () => {
         // Arrange
-        let element = createNodeInlineElement('<span>www.example.com</span>');
+        let testDiv = DomTestHelper.createElementFromContent(
+            testID,
+            '<span>www.example.com</span>'
+        );
+        let parentBlock = new NodeBlockElement(testDiv);
+        let element = resolveInlineElement(testDiv.firstChild, testDiv, parentBlock);
         let mockColor = 'red';
 
         // Act
@@ -249,8 +247,7 @@ describe('NodeInlineElement applyStyle()', () => {
         });
 
         // Assert
-        let innerHTML = getInnerHTML(element);
-        expect(innerHTML).toBe('<span style="color: red;">www.example.com</span>');
+        expect(testDiv.innerHTML).toBe('<span style="color: red;">www.example.com</span>');
     });
 
     it('fromPoint != null, toPoint != null', () => {
@@ -275,8 +272,9 @@ describe('NodeInlineElement applyStyle()', () => {
         );
 
         // Assert
-        let innerHTML = getInnerHTML(element);
-        expect(innerHTML).toBe('<span>www<span style="color: red;">.example</span>.com</span>');
+        expect(testDiv.innerHTML).toBe(
+            '<span>www</span><span style="color: red;">.example</span><span>.com</span>'
+        );
     });
 
     it('fromPoint != null, toPoint = null', () => {
@@ -300,8 +298,9 @@ describe('NodeInlineElement applyStyle()', () => {
         );
 
         // Assert
-        let innerHTML = getInnerHTML(element);
-        expect(innerHTML).toBe('<span>www<span style="color: red;">.example.com</span></span>');
+        expect(testDiv.innerHTML).toBe(
+            '<span>www</span><span style="color: red;">.example.com</span>'
+        );
     });
 
     it('fromPoint = null, toPoint != null', () => {
@@ -325,8 +324,9 @@ describe('NodeInlineElement applyStyle()', () => {
         );
 
         // Assert
-        let innerHTML = getInnerHTML(element);
-        expect(innerHTML).toBe('<span><span style="color: red;">www.example</span>.com</span>');
+        expect(testDiv.innerHTML).toBe(
+            '<span style="color: red;">www.example</span><span>.com</span>'
+        );
     });
 
     it('fromPoint != null, toPoint != null, fromPoint = toPoint', () => {
@@ -351,8 +351,7 @@ describe('NodeInlineElement applyStyle()', () => {
         );
 
         // Assert
-        let innerHTML = getInnerHTML(element);
-        expect(innerHTML).toBe('<span>www.example.com</span>');
+        expect(testDiv.innerHTML).toBe('<span>www.example.com</span>');
     });
 
     it('fromPoint != null, toPoint != null, fromPoint is after toPoint', () => {
@@ -377,8 +376,7 @@ describe('NodeInlineElement applyStyle()', () => {
         );
 
         // Assert
-        let innerHTML = getInnerHTML(element);
-        expect(innerHTML).toBe('<span>www.example.com</span>');
+        expect(testDiv.innerHTML).toBe('<span>www.example.com</span>');
     });
 });
 

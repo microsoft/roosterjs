@@ -55,7 +55,9 @@ export function getComputedStyle(node: Node, styleName: string): string {
 
 function px2Pt(px: string) {
     if (px && px.indexOf('px') == px.length - 2) {
-        return Math.round(parseFloat(px) * 75) / 100 + 'pt';
+        // Edge may not handle the floating computing well which causes the calculated value is a little less than actual value
+        // So add 0.05 to fix it
+        return Math.round(parseFloat(px) * 75 + 0.05) / 100 + 'pt';
     }
     return px;
 }

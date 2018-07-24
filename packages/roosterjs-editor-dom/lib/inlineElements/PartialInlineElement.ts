@@ -120,7 +120,7 @@ class PartialInlineElement implements InlineElement {
 
     // apply style
     public applyStyle(
-        styler: (node: Node) => void,
+        styler: (element: HTMLElement) => any,
         fromPoint?: EditorPoint,
         toPoint?: EditorPoint
     ): void {
