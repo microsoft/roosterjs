@@ -146,7 +146,6 @@ class NodeInlineElement implements InlineElement {
             from = nextNode && new Position(nextNode, PositionType.Begin);
         }
 
-
         if (formatNodes.length > 0) {
             if (formatNodes.every(node => node.parentNode == formatNodes[0].parentNode)) {
                 let newNode = formatNodes.shift();
@@ -154,7 +153,7 @@ class NodeInlineElement implements InlineElement {
                     newNode.nodeValue += node.nodeValue;
                     node.parentNode.removeChild(node);
                 });
-                formatNodes = [newNode]
+                formatNodes = [newNode];
             }
 
             formatNodes.forEach(node => {

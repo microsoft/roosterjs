@@ -292,7 +292,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
     }
 
     private setRangeStart(rangeNode: Range, node: Node, target: string) {
-        let nodeOffset = node.textContent.lastIndexOf(target);
+        let nodeOffset = node ? node.textContent.lastIndexOf(target) : -1;
         if (nodeOffset > -1) {
             rangeNode.setStart(node, nodeOffset);
             return true;

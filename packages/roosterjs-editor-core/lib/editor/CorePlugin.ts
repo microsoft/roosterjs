@@ -31,7 +31,6 @@ export default class CorePlugin implements EditorPlugin {
     public name = 'CorePlugin';
     private editor: Editor;
     private snapshotBeforeAutoComplete: string;
-    private snapshotAfterAutoComplete: string;
     private inIME: boolean;
     private disposers: (() => void)[] = null;
 
@@ -96,12 +95,14 @@ export default class CorePlugin implements EditorPlugin {
      * @param changeSource Chagne source of ContentChangedEvent. If not passed, no ContentChangedEvent will be  triggered
      */
     public performAutoComplete(callback: () => any, changeSource?: ChangeSource) {
-        let snapshot = this.getSnapshot();
+        let snapshot = this.editor.getContent(
+            false /*triggerContentChangedEvent*/,
+            true /*markSelection*/
+        );
         let data = callback();
         this.editor.addUndoSnapshot();
         this.editor.triggerContentChangedEvent(changeSource, data);
         this.snapshotBeforeAutoComplete = snapshot;
-        this.snapshotAfterAutoComplete = this.getSnapshot();
     }
 
     /**
@@ -152,8 +153,12 @@ export default class CorePlugin implements EditorPlugin {
      */
     public onPluginEvent(event: PluginEvent) {
         switch (event.eventType) {
+            case PluginEventType.ContentChanged:
+            case PluginEventType.MouseDown:
+                this.onContentChanged();
+                break;
             case PluginEventType.KeyDown:
-                this.onKeyDown(event.rawEvent);
+                this.onContentChanged(event.rawEvent);
                 break;
             case PluginEventType.KeyPress:
                 this.onKeyPress(event.rawEvent);
@@ -177,18 +182,16 @@ export default class CorePlugin implements EditorPlugin {
         );
     }
 
-    private onKeyDown(event: KeyboardEvent) {
-        if (
-            this.snapshotBeforeAutoComplete !== null &&
-            event.which == KEY_BACKSPACE &&
-            this.snapshotAfterAutoComplete == this.getSnapshot()
-        ) {
-            event.preventDefault();
-            this.editor.setContent(
-                this.snapshotBeforeAutoComplete,
-                false /*triggerContentChangedEvent*/
-            );
-            this.clearAutoCompleteSnapshots();
+    private onContentChanged(event?: KeyboardEvent) {
+        if (this.snapshotBeforeAutoComplete !== null) {
+            if (event && event.which == KEY_BACKSPACE) {
+                event.preventDefault();
+                this.editor.setContent(
+                    this.snapshotBeforeAutoComplete,
+                    false /*triggerContentChangedEvent*/
+                );
+            }
+            this.snapshotBeforeAutoComplete = null;
         }
     }
 
@@ -198,8 +201,6 @@ export default class CorePlugin implements EditorPlugin {
      * We fix it by wrapping it with a div and reposition cursor within the div
      */
     private onKeyPress(event: KeyboardEvent) {
-        this.clearAutoCompleteSnapshots();
-
         let range = this.editor.getSelectionRange();
 
         if (
@@ -210,14 +211,5 @@ export default class CorePlugin implements EditorPlugin {
             let position = this.ensureTypeInElement(Position.getStart(range));
             this.editor.select(position);
         }
-    }
-
-    private getSnapshot() {
-        return this.editor.getContent(false /*triggerContentChangedEvent*/, true /*markSelection*/);
-    }
-
-    private clearAutoCompleteSnapshots() {
-        this.snapshotBeforeAutoComplete = null;
-        this.snapshotAfterAutoComplete = null;
     }
 }
