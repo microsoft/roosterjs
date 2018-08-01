@@ -49,11 +49,12 @@ export default function replaceWithNode(
     }
 
     let range: Range;
-    if (textOrRange instanceof Range) {
-        range = textOrRange;
-    } else {
+
+    if (typeof textOrRange == 'string') {
         searcher = searcher || editor.getContentSearcherOfCursor();
         range = searcher && searcher.getRangeFromText(textOrRange, exactMatch);
+    } else {
+        range = textOrRange;
     }
 
     if (range) {

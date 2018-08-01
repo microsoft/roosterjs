@@ -202,28 +202,6 @@ function findTailLeafNodeInBlock(node: Node, containerBlockNode: Node): Node {
     return tailNode;
 }
 
-function getFirstLastBlockElement(rootNode: Node, isFirst: boolean): BlockElement {
-    let getChild = isFirst ? (node: Node) => node.firstChild : (node: Node) => node.lastChild;
-    let node = getChild(rootNode);
-    while (node && getChild(node)) {
-        node = getChild(node);
-    }
-
-    return node ? getBlockElementAtNode(rootNode, node) : null;
-}
-
-// Get the first block element
-// NOTE: this can return null for empty container
-function getFirstBlockElement(rootNode: Node): BlockElement {
-    return getFirstLastBlockElement(rootNode, true /*isFirst*/);
-}
-
-// Get the last block element
-// NOTE: this can return null for empty container
-function getLastBlockElement(rootNode: Node): BlockElement {
-    return getFirstLastBlockElement(rootNode, false /*isFirst*/);
-}
-
 // This presents a content block that can be reprented by a single html block type element.
 // In most cases, it corresponds to an HTML block level element, i.e. P, DIV, LI, TD etc.
 class NodeBlockElement implements BlockElement {
@@ -540,9 +518,6 @@ export {
     NodeBlockElement,
     StartEndBlockElement,
     getBlockElementAtNode,
-    getFirstBlockElement,
-    getFirstLastBlockElement,
-    getLastBlockElement,
     getFirstInlineElement,
     getLastInlineElement,
     getInlineElementAtNode,

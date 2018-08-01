@@ -1,7 +1,7 @@
 import { cacheGetNodeAtCursor } from './getNodeAtCursor';
 import { Editor } from 'roosterjs-editor-core';
 import { DocumentCommand, FormatState, PluginEvent, QueryScope } from 'roosterjs-editor-types';
-import { getComputedStyles, getTagOfNode } from 'roosterjs-editor-dom';
+import { Position, getComputedStyles, getTagOfNode } from 'roosterjs-editor-dom';
 
 /**
  * Get format state at cursor
@@ -14,7 +14,9 @@ import { getComputedStyles, getTagOfNode } from 'roosterjs-editor-dom';
  * @returns The format state at cursor
  */
 export default function getFormatState(editor: Editor, event?: PluginEvent): FormatState {
-    let styles = getComputedStyles(editor.getSelectionRange());
+    let range = editor.getSelectionRange();
+    let node = range && Position.getStart(range).normalize().node;
+    let styles = node ? getComputedStyles(node) : [];
     let listTag = getTagOfNode(cacheGetNodeAtCursor(editor, event, ['OL', 'UL']));
     let headerTag = getTagOfNode(
         cacheGetNodeAtCursor(editor, event, ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'])

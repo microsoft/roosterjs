@@ -2,13 +2,15 @@ export {
     NodeBlockElement,
     StartEndBlockElement,
     getBlockElementAtNode,
-    getFirstBlockElement,
-    getFirstLastBlockElement,
-    getLastBlockElement,
     getFirstInlineElement,
     getLastInlineElement,
     getInlineElementAtNode,
 } from './blockElements/BlockElement';
+export {
+    getFirstBlockElement,
+    getFirstLastBlockElement,
+    getLastBlockElement,
+} from './blockElements/getFirstLastBlockElement';
 
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
 export { default as PositionContentSearcher } from './contentTraverser/PositionContentSearcher';

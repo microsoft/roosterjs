@@ -1,5 +1,7 @@
 import * as TestHelper from '../DomTestHelper';
+import NodeInlineElement from '../../inlineElements/NodeInlineElement';
 import PartialInlineElement from '../../inlineElements/PartialInlineElement';
+import Position from '../../selection/Position';
 import resolveInlineElement from '../../inlineElements/resolveInlineElement';
 import { InlineElement } from 'roosterjs-editor-types';
 import { NodeBlockElement } from '../../blockElements/BlockElement';
@@ -18,6 +20,23 @@ function createPartialInlineElementWithContent(
         endOffset
     );
     return [partialInlineElement, inlineElement, testParentBlock, testDiv];
+}
+
+function createPartialInlineElementWithSpan(
+    span: HTMLElement,
+    startOffset: number,
+    endOffset: number
+): [PartialInlineElement, InlineElement, NodeBlockElement] {
+    let testParentBlock = new NodeBlockElement(span.parentNode);
+    let inlineElement = new NodeInlineElement(span, testParentBlock);
+    let startPosition = startOffset ? new Position(span.firstChild, startOffset) : null;
+    let endPosition = endOffset ? new Position(span.firstChild, endOffset) : null;
+    let partialInlineElement = new PartialInlineElement(
+        inlineElement,
+        startPosition ? startPosition.toEditorPoint() : null,
+        endPosition ? endPosition.toEditorPoint() : null
+    );
+    return [partialInlineElement, inlineElement, testParentBlock];
 }
 
 function createPartialInlineElementWithDiv(
@@ -286,88 +305,6 @@ describe('PartialInlineElement getEndPoint()', () => {
     });
 });
 
-describe('PartialInlineElement isStartPartial()', () => {
-    afterEach(() => {
-        TestHelper.removeElement(testID);
-    });
-
-    function runTest(input: [string, number, number], output: boolean) {
-        // Arrange
-        let [partialInlineElement] = createPartialInlineElementWithContent(
-            input[0],
-            input[1],
-            input[2]
-        );
-
-        // Act
-        let isStartPartial = partialInlineElement.isStartPartial();
-
-        // Assert
-        expect(isStartPartial).toBe(output);
-    }
-
-    it('Partial on start point', () => {
-        runTest(['<span>www.example.com</span>', 4, null /*endOffset*/], true);
-    });
-
-    it('Partial on end point', () => {
-        runTest(['<span>www.example.com</span>', null /*startOffset*/, 11], false);
-    });
-
-    it('Partial on start point and end point, startOffset < endOffset', () => {
-        runTest(['<span>www.example.com</span>', 4, 11], true);
-    });
-
-    it('Partial on start point and end point, startOffset = endOffset', () => {
-        runTest(['<span>www.example.com</span>', 4, 4], true);
-    });
-
-    it('Partial on start point and end point, startOffset > endOffset', () => {
-        runTest(['<span>www.example.com</span>', 4, 3], true);
-    });
-});
-
-describe('PartialInlineElement isEndPartial()', () => {
-    afterEach(() => {
-        TestHelper.removeElement(testID);
-    });
-
-    function runTest(input: [string, number, number], output: boolean) {
-        // Arrange
-        let [partialInlineElement] = createPartialInlineElementWithContent(
-            input[0],
-            input[1],
-            input[2]
-        );
-
-        // Act
-        let isEndPartial = partialInlineElement.isEndPartial();
-
-        // Assert
-        expect(isEndPartial).toBe(output);
-    }
-
-    it('Partial on start point', () => {
-        runTest(['<span>www.example.com</span>', 4, null /*endOffset*/], false);
-    });
-
-    it('Partial on end point', () => {
-        runTest(['<span>www.example.com</span>', null /*startOffset*/, 11], true);
-    });
-
-    it('Partial on start point and end point, startOffset < endOffset', () => {
-        runTest(['<span>www.example.com</span>', 4, 11], true);
-    });
-
-    it('Partial on start point and end point, startOffset = endOffset', () => {
-        runTest(['<span>www.example.com</span>', 4, 4], true);
-    });
-
-    it('Partial on start point and end point, startOffset > endOffset', () => {
-        runTest(['<span>www.example.com</span>', 4, 3], true);
-    });
-});
-
 describe('PartialInlineElement nextInlineElement', () => {
     afterEach(() => {
         TestHelper.removeElement(testID);
@@ -525,12 +462,34 @@ describe('PartialInlineElement isAfter()', () => {
         expect(isElement1AfterElement2).toBe(output[1]);
     }
 
+    function runTest2(
+        span1: HTMLElement,
+        span2: HTMLElement,
+        startOffset1: number,
+        endOffset1: number,
+        startOffset2: number,
+        endOffset2: number,
+        output: [boolean, boolean]
+    ) {
+        // Arrange
+        let [element1] = createPartialInlineElementWithSpan(span1, startOffset1, endOffset1);
+        let [element2] = createPartialInlineElementWithSpan(span2, startOffset2, endOffset2);
+
+        // Act
+        let isElement2AfterElement1 = element2.isAfter(element1);
+        let isElement1AfterElement2 = element1.isAfter(element2);
+
+        // Assert
+        expect(isElement2AfterElement1).toBe(output[0]);
+        expect(isElement1AfterElement2).toBe(output[1]);
+    }
+
     it('container node of element2 is after container node of element1', () => {
         let testDiv = TestHelper.createElementFromContent(
             testID,
             '<span>node1</span><span>text</span><span>node2</span>'
         );
-        runTest(testDiv.firstChild as HTMLElement, testDiv.lastChild as HTMLElement, 0, 2, 0, 1, [
+        runTest2(testDiv.firstChild as HTMLElement, testDiv.lastChild as HTMLElement, 0, 2, 0, 1, [
             true,
             false,
         ]);

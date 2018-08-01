@@ -1,4 +1,3 @@
-import Position from '../selection/Position';
 import getElementOrParentElement from './getElementOrParentElement';
 
 /**
@@ -8,22 +7,10 @@ import getElementOrParentElement from './getElementOrParentElement';
  * Default value is font-family, font-size, color, background-color
  * @returns An array of the computed styles
  */
-export default function getComputedStyles(node: Node, styleNames?: string | string[]): string[];
-
-/**
- * Get computed styles of start node of a range
- * @param range The range to get computed styles from
- * @param styleNames Names of style to get, can be a single name or an array.
- * Default value is font-family, font-size, color, background-color
- * @returns An array of the computed styles
- */
-export default function getComputedStyles(range: Range, styleNames?: string | string[]): string[];
-
 export default function getComputedStyles(
-    from: Node | Range,
+    node: Node,
     styleNames: string | string[] = ['font-family', 'font-size', 'color', 'background-color']
 ): string[] {
-    let node = from instanceof Range ? Position.getStart(from).normalize().node : from;
     let element = getElementOrParentElement(node);
     let result: string[] = [];
     styleNames = styleNames instanceof Array ? styleNames : [styleNames];

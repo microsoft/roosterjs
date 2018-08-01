@@ -382,15 +382,20 @@ describe('NodeInlineElement applyStyle()', () => {
 
 describe('isTextualInlineElement()', () => {
     it('input = <TextInlineElement>', () => {
-        runTest(new TextInlineElement(null, null), true);
+        runTest(new TextInlineElement(document.createTextNode('test'), null), true);
     });
 
     it('input = <PartialInlineElement>{}', () => {
-        runTest(new PartialInlineElement(new NodeInlineElement(null, null)), false);
+        runTest(
+            new PartialInlineElement(new NodeInlineElement(document.createElement('span'), null)),
+            false
+        );
     });
 
     it('input = PartialInlineElement with TextInlineElement as decoratedInline', () => {
-        let mockInlineElement = new PartialInlineElement(new TextInlineElement(null, null));
+        let mockInlineElement = new PartialInlineElement(
+            new TextInlineElement(document.createTextNode('test'), null)
+        );
         runTest(mockInlineElement, true);
     });
 
