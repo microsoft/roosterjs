@@ -2,6 +2,7 @@ import EditorCore from './EditorCore';
 import EditorOptions from './EditorOptions';
 import createEditorCore from './createEditorCore';
 import {
+    BlockElement,
     ChangeSource,
     ContentPosition,
     ContentScope,
@@ -23,12 +24,14 @@ import {
     Position,
     contains,
     fromHtml,
+    getBlockElementAtNode,
     getInlineElementAtNode,
     getTagOfNode,
     isNodeEmpty,
     markSelection,
     queryElements,
     removeMarker,
+    collapseNodes,
     wrap,
 } from 'roosterjs-editor-dom';
 
@@ -189,10 +192,19 @@ export default class Editor {
      * Get InlineElement at given node
      * @param node The node to create InlineElement
      * @param forceAtNode Force to get a NodeInlineElement at the given node
-     * @requires The InlineElement result
+     * @returns The InlineElement result
      */
     public getInlineElementAtNode(node: Node, forceAtNode?: boolean): InlineElement {
         return getInlineElementAtNode(this.core.contentDiv, node, forceAtNode);
+    }
+
+    /**
+     * Get BlockElement at given node
+     * @param node The node to create InlineElement
+     * @returns The BlockElement result
+     */
+    public getBlockElementAtNode(node: Node): BlockElement {
+        return getBlockElementAtNode(this.core.contentDiv, node);
     }
 
     /**
@@ -271,6 +283,21 @@ export default class Editor {
 
         let range = scope == QueryScope.Body ? null : this.getSelectionRange();
         return queryElements(this.core.contentDiv, selector, callback, scope, range);
+    }
+
+    /**
+     * Collapse nodes within the given start and end nodes to their common ascenstor node,
+     * split parent nodes if necessary
+     * @param start The start node
+     * @param end The end node
+     * @param canSplitParent True to allow split parent node there are nodes before start or after end under the same parent
+     * and the returned nodes will be all nodes from start trhough end after splitting
+     * False to disallow split parent
+     * @returns When cansplitParent is true, returns all node from start through end after splitting,
+     * otherwise just return start and end
+     */
+    public collapseNodes(start: Node, end: Node, canSplitParent: boolean): Node[] {
+        return collapseNodes(this.core.contentDiv, start, end, canSplitParent);
     }
 
     //#endregion

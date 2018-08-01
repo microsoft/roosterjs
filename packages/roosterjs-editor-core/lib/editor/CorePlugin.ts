@@ -13,10 +13,9 @@ import {
     getElementOrParentElement,
     applyFormat,
     fromHtml,
-    wrap,
     isNodeEmpty,
     getBlockElementAtNode,
-    NodeBlockElement,
+    StartEndBlockElement,
 } from 'roosterjs-editor-dom';
 
 const KEY_BACKSPACE = 8;
@@ -113,7 +112,7 @@ export default class CorePlugin implements EditorPlugin {
     public ensureTypeInElement(position: Position): Position {
         position = position.normalize();
         let block = getBlockElementAtNode(this.contentDiv, position.node);
-        let formatNode: Node;
+        let formatNode: HTMLElement;
 
         if (!block) {
             // Only reason we don't get the selection block is that we have an empty content div
@@ -126,14 +125,8 @@ export default class CorePlugin implements EditorPlugin {
             // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
             position = new Position(formatNode.firstChild, PositionType.Begin);
         } else {
-            if (block instanceof NodeBlockElement) {
-                // Already in a NodeBlockElement, just format this element if it is empty
-                formatNode = block.getStartNode();
-            } else if (block.getStartNode().parentNode == block.getEndNode().parentNode) {
-                // Only fix the balanced start-end block where start and end node is under same parent
-                // The focus node could be pointing to the content div, normalize it to have it point to a child first
-                formatNode = wrap(block.getContentNodes());
-            }
+            block = block instanceof StartEndBlockElement ? block.toNodeBlockElement() : block;
+            formatNode = block.getStartNode() as HTMLElement;
 
             // if the block is empty, apply default format
             // Otherwise, leave it as it is as we don't want to change the style for existing data
@@ -141,7 +134,7 @@ export default class CorePlugin implements EditorPlugin {
         }
 
         if (formatNode) {
-            applyFormat(<HTMLElement>formatNode, this.editor.getDefaultFormat());
+            applyFormat(formatNode, this.editor.getDefaultFormat());
         }
 
         return position;
@@ -183,16 +176,18 @@ export default class CorePlugin implements EditorPlugin {
     }
 
     private onContentChanged(event?: KeyboardEvent) {
-        if (this.snapshotBeforeAutoComplete !== null) {
-            if (event && event.which == KEY_BACKSPACE) {
+        if (event && event.which == KEY_BACKSPACE) {
+            if (this.snapshotBeforeAutoComplete !== null) {
                 event.preventDefault();
                 this.editor.setContent(
                     this.snapshotBeforeAutoComplete,
                     false /*triggerContentChangedEvent*/
                 );
+            } else if (this.editor.isEmpty()) {
+                event.preventDefault();
             }
-            this.snapshotBeforeAutoComplete = null;
         }
+        this.snapshotBeforeAutoComplete = null;
     }
 
     /**

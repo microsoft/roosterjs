@@ -40,3 +40,21 @@ export default function splitParentNode(
 
     return newParent;
 }
+
+/**
+ * Split parent node by a balanced node range
+ * @param start Start node
+ * @param end End node
+ * @returns The parent node of the given node range if the given nodes are balanced, otherwise null
+ */
+export function splitBalancedNodeRange(nodes: Node | Node[]): HTMLElement {
+    let start = nodes instanceof Array ? nodes[0] : nodes;
+    let end = nodes instanceof Array ? nodes[nodes.length - 1] : nodes;
+    let parentNode = start && end && start.parentNode == end.parentNode ? start.parentNode : null;
+    if (parentNode) {
+        splitParentNode(start, true /*splitBefore*/, true /*removeEmptyNewNode*/);
+        splitParentNode(end, false /*splitBefore*/, true /*removeEmptyNewNode*/);
+    }
+
+    return parentNode as HTMLElement;
+}

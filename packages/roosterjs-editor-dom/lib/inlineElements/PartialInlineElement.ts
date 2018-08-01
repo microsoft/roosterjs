@@ -67,9 +67,7 @@ class PartialInlineElement implements InlineElement {
      * Get next partial inline element if it is not at the end boundary yet
      */
     public get nextInlineElement(): PartialInlineElement {
-        return this.endPoint
-            ? new PartialInlineElement(this.inlineElement, this.endPoint, null)
-            : null;
+        return this.endPoint && new PartialInlineElement(this.inlineElement, this.endPoint, null);
     }
 
     /**

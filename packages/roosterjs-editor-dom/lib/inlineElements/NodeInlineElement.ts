@@ -11,7 +11,7 @@ import {
     PositionType,
 } from 'roosterjs-editor-types';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../domWalker/getLeafSibling';
-import splitParentNode from '../utils/splitParentNode';
+import { splitBalancedNodeRange } from '../utils/splitParentNode';
 
 /**
  * This presents an inline element that can be reprented by a single html node.
@@ -50,12 +50,7 @@ class NodeInlineElement implements InlineElement {
     public getStartPoint(): EditorPoint {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest first child node from the container
-        let firstChild = this.containerNode;
-        while (firstChild.firstChild) {
-            firstChild = firstChild.firstChild;
-        }
-
-        return new Position(firstChild, 0).toEditorPoint();
+        return new Position(this.containerNode, 0).normalize().toEditorPoint();
     }
 
     /**
@@ -64,11 +59,7 @@ class NodeInlineElement implements InlineElement {
     public getEndPoint(): EditorPoint {
         // For an editor point, we always want it to point to a leaf node
         // We should try to go get the lowest last child node from the container
-        let lastChild = this.containerNode;
-        while (lastChild.lastChild) {
-            lastChild = lastChild.lastChild;
-        }
-        return new Position(lastChild, PositionType.End).toEditorPoint();
+        return new Position(this.containerNode, PositionType.End).normalize().toEditorPoint();
     }
 
     /**
@@ -82,9 +73,7 @@ class NodeInlineElement implements InlineElement {
      * Checks if an inline element is after the current inline element
      */
     public isAfter(inlineElement: InlineElement): boolean {
-        return inlineElement
-            ? isNodeAfter(this.containerNode, inlineElement.getContainerNode())
-            : false;
+        return inlineElement && isNodeAfter(this.containerNode, inlineElement.getContainerNode());
     }
 
     /**
@@ -156,15 +145,13 @@ class NodeInlineElement implements InlineElement {
                 formatNodes = [newNode];
             }
 
-            formatNodes.forEach(node => {
-                if (getTagOfNode(node.parentNode) == 'SPAN') {
-                    splitParentNode(node, true /*splitBefore*/, true /*removeEmptyNewNode*/);
-                    splitParentNode(node, false /*splitAfter*/, true /*removeEmptyNewNode*/);
-                    styler(node.parentNode as HTMLElement);
-                } else {
-                    styler(wrap(node, 'span'));
-                }
-            });
+            formatNodes.forEach(node =>
+                styler(
+                    getTagOfNode(node.parentNode) == 'SPAN'
+                        ? splitBalancedNodeRange(node)
+                        : wrap(node, 'span')
+                )
+            );
         }
     }
 }

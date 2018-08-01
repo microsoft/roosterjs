@@ -32,6 +32,7 @@ export {
 export { default as Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
+export { default as collapseNodes } from './utils/collapseNodes';
 export { default as contains } from './utils/contains';
 export { default as convertInlineCss } from './utils/convertInlineCss';
 export {
@@ -51,7 +52,7 @@ export { default as isVoidHtmlElement } from './utils/isVoidHtmlElement';
 export { default as matchLink } from './utils/matchLink';
 export { default as matchWhiteSpaces } from './utils/matchWhiteSpaces';
 export { default as queryElements } from './utils/queryElements';
-export { default as splitParentNode } from './utils/splitParentNode';
+export { default as splitParentNode, splitBalancedNodeRange } from './utils/splitParentNode';
 export { default as unwrap } from './utils/unwrap';
 export { default as wrap } from './utils/wrap';
 

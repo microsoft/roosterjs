@@ -1,7 +1,7 @@
 import { ContentEditFeature, Keys } from '../ContentEditFeatures';
 import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
 import { PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
-import { getTagOfNode, isNodeEmpty, splitParentNode } from 'roosterjs-editor-dom';
+import { getTagOfNode, isNodeEmpty, splitBalancedNodeRange, unwrap } from 'roosterjs-editor-dom';
 import { getNodeAtCursor } from 'roosterjs-editor-api';
 
 const QUOTE_TAG = 'BLOCKQUOTE';
@@ -43,14 +43,8 @@ function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: Editor): Node {
 function splitQuote(event: PluginKeyboardEvent, editor: Editor) {
     editor.addUndoSnapshot(() => {
         let childOfQuote = cacheGetQuoteChild(event, editor);
-        let blockQuoteElement = childOfQuote.parentNode;
-        splitParentNode(childOfQuote, false /*splitBefore*/);
-
-        blockQuoteElement.parentNode.insertBefore(childOfQuote, blockQuoteElement.nextSibling);
-        if (!blockQuoteElement.firstChild) {
-            blockQuoteElement.parentNode.removeChild(blockQuoteElement);
-        }
-
+        let parent = splitBalancedNodeRange(childOfQuote);
+        unwrap(parent);
         editor.select(childOfQuote, PositionType.Begin);
     });
     event.rawEvent.preventDefault();
