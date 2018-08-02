@@ -6,7 +6,7 @@ const getCustomData: GetCustomData = <T>(
     getter: () => T,
     disposer?: (value: T) => void
 ): T => {
-    return (this.core.customData[key] = this.core.customData[key] || {
+    return (core.customData[key] = core.customData[key] || {
         value: getter(),
         disposer: disposer,
     }).value as T;
