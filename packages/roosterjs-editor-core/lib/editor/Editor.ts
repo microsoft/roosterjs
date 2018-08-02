@@ -667,10 +667,7 @@ export default class Editor {
      * dispose editor.
      */
     public getCustomData<T>(key: string, getter: () => T, disposer?: (value: T) => void): T {
-        return (this.core.customData[key] = this.core.customData[key] || {
-            value: getter(),
-            disposer: disposer,
-        }).value;
+        return this.core.api.getCustomData(this.core, key, getter, disposer);
     }
 
     /**

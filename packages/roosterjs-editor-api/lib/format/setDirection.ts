@@ -20,7 +20,7 @@ export default function setDirection(editor: Editor, direction: Direction) {
     }
 
     if (blockElements.length > 0) {
-        editor.addUndoSnapshot(() => {
+        editor.addUndoSnapshot((start, end) => {
             for (let block of blockElements) {
                 let nodeBlock =
                     block instanceof StartEndBlockElement
@@ -30,6 +30,7 @@ export default function setDirection(editor: Editor, direction: Direction) {
                 node.setAttribute('dir', direction == Direction.LeftToRight ? 'ltr' : 'rtl');
                 node.style.textAlign = direction == Direction.LeftToRight ? 'left' : 'right';
             }
+            editor.select(start, end);
         }, ChangeSource.Format);
     }
 }

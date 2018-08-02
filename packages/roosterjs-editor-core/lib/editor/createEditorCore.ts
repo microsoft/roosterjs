@@ -5,6 +5,7 @@ import Undo from '../undo/Undo';
 import attachDomEvent from '../coreAPI/attachDomEvent';
 import editWithUndo from '../coreAPI/editWithUndo';
 import focus from '../coreAPI/focus';
+import getCustomData from '../coreAPI/getCustomData';
 import getSelectionRange from '../coreAPI/getSelectionRange';
 import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
@@ -58,6 +59,7 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
         attachDomEvent: map.attachDomEvent || attachDomEvent,
         editWithUndo: map.editWithUndo || editWithUndo,
         focus: map.focus || focus,
+        getCustomData: map.getCustomData || getCustomData,
         getSelectionRange: map.getSelectionRange || getSelectionRange,
         hasFocus: map.hasFocus || hasFocus,
         insertNode: map.insertNode || insertNode,

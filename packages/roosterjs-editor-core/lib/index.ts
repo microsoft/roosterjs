@@ -6,6 +6,7 @@ export {
     AttachDomEvent,
     EditWithUndo,
     Focus,
+    GetCustomData,
     GetSelectionRange,
     HasFocus,
     InsertNode,

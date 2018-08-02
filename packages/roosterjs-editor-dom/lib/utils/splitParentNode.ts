@@ -52,8 +52,8 @@ export function splitBalancedNodeRange(nodes: Node | Node[]): HTMLElement {
     let end = nodes instanceof Array ? nodes[nodes.length - 1] : nodes;
     let parentNode = start && end && start.parentNode == end.parentNode ? start.parentNode : null;
     if (parentNode) {
-        splitParentNode(start, true /*splitBefore*/, true /*removeEmptyNewNode*/);
-        splitParentNode(end, false /*splitBefore*/, true /*removeEmptyNewNode*/);
+        splitParentNode(start, true /*splitBefore*/);
+        splitParentNode(end, false /*splitBefore*/);
     }
 
     return parentNode as HTMLElement;

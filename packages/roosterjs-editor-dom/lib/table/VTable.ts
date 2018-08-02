@@ -47,17 +47,9 @@ export default class VTable {
     private trs: HTMLTableRowElement[] = [];
 
     /**
-     * Create a new instance of VTable object using HTML table node
-     * @param node The HTML Table node
+     * Create a new instance of VTable object using HTML TABLE or TD node
+     * @param node The HTML Table or TD node
      */
-    constructor(table: HTMLTableElement);
-
-    /**
-     * Create a new instance of VTable object using one of its table cell
-     * @param td The HTML table cell node
-     */
-    constructor(td: HTMLTableCellElement);
-
     constructor(node: HTMLTableElement | HTMLTableCellElement) {
         this.table = node instanceof HTMLTableElement ? node : getTableFromTd(node);
         if (this.table) {

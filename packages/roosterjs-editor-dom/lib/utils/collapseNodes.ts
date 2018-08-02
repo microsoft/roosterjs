@@ -52,7 +52,7 @@ function collapse(
             if (!canSplitParent) {
                 break;
             }
-            splitParentNode(node, isStart, true /*removeEmptyNewNode*/);
+            splitParentNode(node, isStart);
         }
         node = node.parentNode;
     }

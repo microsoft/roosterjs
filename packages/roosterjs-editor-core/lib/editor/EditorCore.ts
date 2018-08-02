@@ -90,6 +90,12 @@ export type EditWithUndo = (
     addUndoSnapshotBeforeAction: boolean
 ) => void;
 export type Focus = (core: EditorCore) => void;
+export type GetCustomData = <T>(
+    core: EditorCore,
+    key: string,
+    getter: () => T,
+    disposer?: (value: T) => void
+) => T;
 export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => Range;
 export type HasFocus = (core: EditorCore) => boolean;
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
@@ -121,6 +127,17 @@ export interface CoreApiMap {
      * @param core The EditorCore object
      */
     focus: Focus;
+
+    /**
+     * Get custom data related with this editor
+     * @param core The EditorCore object
+     * @param key Key of the custom data
+     * @param getter Getter function. If custom data for the given key doesn't exist,
+     * call this function to get one and store it.
+     * @param disposer An optional disposer function to dispose this custom data when
+     * dispose editor.
+     */
+    getCustomData: GetCustomData;
 
     /**
      * Get current or cached selection range

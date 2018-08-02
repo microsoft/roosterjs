@@ -310,7 +310,7 @@ class StartEndBlockElement implements BlockElement {
         return (
             contains(this.startNode, node, true /*treatSameNodeAsContain*/) ||
             contains(this.endNode, node, true /*treatSameNodeAsContain*/) ||
-            (isNodeAfter(node, this.startNode) || isNodeAfter(this.endNode, node))
+            (isNodeAfter(node, this.startNode) && isNodeAfter(this.endNode, node))
         );
     }
 }
