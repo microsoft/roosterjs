@@ -1,5 +1,6 @@
 import {
     Browser,
+    Position,
     unwrap,
     wrap,
     fromHtml,
@@ -35,8 +36,10 @@ export default function toggleBlockQuote(editor: Editor, styler?: (element: HTML
             range &&
             editor.queryElements('blockquote', QueryScope.OnSelection, unwrap).length == 0
         ) {
-            let startBlock = editor.getBlockElementAtNode(range.startContainer);
-            let endBlock = editor.getBlockElementAtNode(range.endContainer);
+            let startNode = Position.getStart(range).normalize().node;
+            let startBlock = editor.getBlockElementAtNode(startNode);
+            let endNode = Position.getEnd(range).normalize().node;
+            let endBlock = editor.getBlockElementAtNode(endNode);
             let nodes =
                 startBlock && endBlock
                     ? editor.collapseNodes(
