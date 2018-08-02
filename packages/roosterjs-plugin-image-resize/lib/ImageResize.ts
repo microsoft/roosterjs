@@ -30,6 +30,7 @@ export default class ImageResize implements EditorPlugin {
     private startHeight: number;
     private resizeDiv: HTMLElement;
     private direction: string;
+    private dragStartDisposer: () => void;
     public name: 'ImageResize';
 
     /**
@@ -51,11 +52,17 @@ export default class ImageResize implements EditorPlugin {
 
     initialize(editor: Editor) {
         this.editor = editor;
+        this.dragStartDisposer = editor.addDomEventHandler('dragstart', this.onDragStart);
+
     }
 
     dispose() {
         if (this.resizeDiv) {
             this.hideResizeHandle();
+        }
+        if (this.dragStartDisposer) {
+            this.dragStartDisposer();
+            this.dragStartDisposer = null;
         }
         this.editor = null;
     }
@@ -318,6 +325,12 @@ export default class ImageResize implements EditorPlugin {
 
     private isWest(direction: string): boolean {
         return direction && direction.substr(1, 1) == 'w';
+    }
+
+    private onDragStart = (e: DragEvent) => {
+        if ((e.srcElement || e.target) == this.getSelectedImage()) {
+            this.hideResizeHandle(true);
+        }
     }
 }
 

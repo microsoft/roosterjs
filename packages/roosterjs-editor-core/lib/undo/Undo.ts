@@ -232,12 +232,11 @@ export default class Undo implements UndoService {
     }
 
     private onNativeEvent = (e: UIEvent) => {
-        this.addUndoSnapshot();
-        this.hasNewContent = true;
-        this.editor.runAsync(() =>
+        this.editor.runAsync(() => {
+            this.addUndoSnapshot();
             this.editor.triggerContentChangedEvent(
                 e.type == 'cut' ? ChangeSource.Cut : ChangeSource.Drop
             )
-        );
+        });
     };
 }
