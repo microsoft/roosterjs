@@ -19,14 +19,14 @@ const DEFAULT_STYLER = (_: HTMLElement) => {};
  * the elements will be untagge and other elements will take no affect
  * @param editor The editor instance
  * @param tag The tag name
- * @param wrapFunction The wrap function
- * @param unwrapFunction The unwrap function
- * @param styler The styler for setting the style for the blockquote element
+ * @param styler (Optional) The styler for setting the style for the blockquote element
+ * @param wrapFunction (Optional) The wrap function
+ * @param unwrapFunction (Optional) The unwrap function
  */
 export default function toggleTagCore<T extends keyof HTMLElementTagNameMap>(
     editor: Editor,
     tag: T,
-    styler: (element: HTMLElement) => void,
+    styler?: (element: HTMLElement) => void,
     wrapFunction: (nodes: Node[]) => HTMLElement = (nodes) => wrap(nodes, tag),
     unwrapFunction: (node: Node) => Node = unwrap
 ): void {

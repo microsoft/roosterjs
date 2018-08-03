@@ -1,5 +1,4 @@
 import { Editor } from 'roosterjs-editor-core';
-import { unwrap, wrap } from 'roosterjs-editor-dom';
 import toggleTagCore from './toggleTagCore';
 
 const BLOCKQUOTE_TAG = 'blockquote';
