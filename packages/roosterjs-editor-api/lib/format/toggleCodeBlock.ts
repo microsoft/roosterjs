@@ -5,7 +5,6 @@ import toggleTagCore from './toggleTagCore';
 const PRE_TAG = 'pre';
 const CODE_TAG = 'code';
 const CODE_NODE_TAG = 'CODE';
-const defaultStyler = (_: HTMLElement) => {};
 
 /**
  * Toggle code block at selection, if selection already contains any code blocked elements,
@@ -14,7 +13,7 @@ const defaultStyler = (_: HTMLElement) => {};
  * @param styler (Optional) The custom styler for setting the style for the code block element
  */
 export default function toggleCodeBlock(editor: Editor, styler?: (element: HTMLElement) => void): void {
-    toggleTagCore(editor, PRE_TAG, wrapFunction, unwrapFunction, styler || defaultStyler);
+    toggleTagCore(editor, PRE_TAG, styler, wrapFunction, unwrapFunction);
 }
 
 function wrapFunction(nodes: Node[]): HTMLElement {

@@ -2,6 +2,7 @@ import {
     Browser,
     Position,
     wrap,
+    unwrap,
     fromHtml,
     getTagOfNode,
     splitBalancedNodeRange,
@@ -11,6 +12,7 @@ import { Editor } from 'roosterjs-editor-core';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
 const UNWRAPPABLE_NODES = 'LI,THEAD,TBODY,TR,TD,TH'.split(',');
+const DEFAULT_STYLER = (_: HTMLElement) => {};
 
 /**
  * Toggle a tag at selection, if selection already contains elements of such tag,
@@ -23,10 +25,10 @@ const UNWRAPPABLE_NODES = 'LI,THEAD,TBODY,TR,TD,TH'.split(',');
  */
 export default function toggleTagCore<T extends keyof HTMLElementTagNameMap>(
     editor: Editor,
-    wrapper: T,
-    wrapFunction: (nodes: Node[]) => HTMLElement,
-    unwrapFunction: (node: Node) => Node,
-    styler: (element: HTMLElement) => void
+    tag: T,
+    styler: (element: HTMLElement) => void,
+    wrapFunction: (nodes: Node[]) => HTMLElement = (nodes) => wrap(nodes, tag),
+    unwrapFunction: (node: Node) => Node = unwrap
 ): void {
     editor.focus();
     editor.addUndoSnapshot((start, end) => {
@@ -34,7 +36,7 @@ export default function toggleTagCore<T extends keyof HTMLElementTagNameMap>(
         let range = editor.getSelectionRange();
         if (
             range &&
-            editor.queryElements(wrapper, QueryScope.OnSelection, unwrapFunction).length == 0
+            editor.queryElements(tag, QueryScope.OnSelection, unwrapFunction).length == 0
         ) {
             let startNode = Position.getStart(range).normalize().node;
             let startBlock = editor.getBlockElementAtNode(startNode);
@@ -76,7 +78,7 @@ export default function toggleTagCore<T extends keyof HTMLElementTagNameMap>(
             }
 
             result = wrapFunction(nodes);
-            styler(result);
+            (styler || DEFAULT_STYLER)(result);
         }
 
         if (!editor.select(start, end) && result) {
