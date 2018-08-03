@@ -19,6 +19,7 @@ import {
     setTextColor,
     setBackgroundColor,
     toggleBlockQuote,
+    toggleCodeBlock,
     removeLink,
     toggleHeader,
     editTable,
@@ -88,6 +89,11 @@ export default function initFormatBar() {
     // Blockquote
     document.getElementById('blockquoteButton').addEventListener('click', function() {
         toggleBlockQuote(getCurrentEditor());
+    });
+
+    // Code
+    document.getElementById('codeButton').addEventListener('click', function() {
+        toggleCodeBlock(getCurrentEditor());
     });
 
     // StrikeThrough
