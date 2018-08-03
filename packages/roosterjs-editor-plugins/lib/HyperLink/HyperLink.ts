@@ -94,33 +94,40 @@ export default class HyperLink implements EditorPlugin {
     };
 
     private removeTempTooltip(content: string): string {
-        return content.replace(TEMP_TITLE_REGEX, (...groups: string[]): string => {
-            const firstValue = groups[1] == null ? '' : groups[1].trim();
-            const secondValue = groups[3] == null ? '' : groups[3].trim();
-            const thirdValue = groups[5] == null ? '' : groups[5].trim();
+        return content.replace(
+            TEMP_TITLE_REGEX,
+            (...groups: string[]): string => {
+                const firstValue = groups[1] == null ? '' : groups[1].trim();
+                const secondValue = groups[3] == null ? '' : groups[3].trim();
+                const thirdValue = groups[5] == null ? '' : groups[5].trim();
 
-            // possible values (* is space, x, y, z are the first, second, and third value respectively):
-            // *** (no values) << empty case
-            // x** (first value only)
-            // *x* (second value only)
-            // **x (third value only)
-            // x*y* (first and second)
-            // x**z (first and third) << double spaces
-            // *y*z (second and third)
-            // x*y*z (all)
-            if (firstValue.length === 0 && secondValue.length === 0 && thirdValue.length === 0) {
-                return '<a>';
+                // possible values (* is space, x, y, z are the first, second, and third value respectively):
+                // *** (no values) << empty case
+                // x** (first value only)
+                // *x* (second value only)
+                // **x (third value only)
+                // x*y* (first and second)
+                // x**z (first and third) << double spaces
+                // *y*z (second and third)
+                // x*y*z (all)
+                if (
+                    firstValue.length === 0 &&
+                    secondValue.length === 0 &&
+                    thirdValue.length === 0
+                ) {
+                    return '<a>';
+                }
+
+                let result;
+                if (secondValue.length === 0) {
+                    result = `${firstValue} ${thirdValue}`;
+                } else {
+                    result = `${firstValue} ${secondValue} ${thirdValue}`;
+                }
+
+                return `<a ${result.trim()}>`;
             }
-
-            let result;
-            if (secondValue.length === 0) {
-                result = `${firstValue} ${thirdValue}`;
-            } else {
-                result = `${firstValue} ${secondValue} ${thirdValue}`;
-            }
-
-            return `<a ${result.trim()}>`;
-        });
+        );
     }
 
     private onClickLink = (keyboardEvent: KeyboardEvent) => {

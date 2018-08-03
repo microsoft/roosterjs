@@ -13,7 +13,7 @@ export default function insertImage(editor: Editor, imageFile: File) {
         if (!editor.isDisposed()) {
             editor.addUndoSnapshot(() => {
                 let image = editor.getDocument().createElement('img');
-                image.src = (event.target as FileReader).result;
+                image.src = (event.target as FileReader).result as string;
                 image.style.maxWidth = '100%';
                 editor.insertNode(image);
             }, ChangeSource.Format);

@@ -85,9 +85,11 @@ export default class CursorData {
  * @returns The cursor data
  */
 export function cacheGetCursorEventData(event: PluginEvent, editor: Editor): CursorData {
-    return cacheGetEventData<CursorData>(event, EVENTDATACACHE_CURSORDATA, (): CursorData => {
-        return new CursorData(editor);
-    });
+    return cacheGetEventData<CursorData>(
+        event,
+        EVENTDATACACHE_CURSORDATA,
+        () => new CursorData(editor)
+    );
 }
 
 /**

@@ -77,13 +77,14 @@ function createElementFromContent(id: string, content: string): HTMLElement {
 function assemblePluginsString(plugins: EditorPlugin[], features: ContentEditFeatures): string {
     if (plugins) {
         let contentEditOptions = '';
+        let pluginsString = '';
 
         if (features) {
-            contentEditOptions += '  var options = roosterjsPlugins.getDefaultContentEditFeatures();\n';
+            pluginsString += 'var options = roosterjsPlugins.getDefaultContentEditFeatures();\n';
             let defaultFeatures = getDefaultContentEditFeatures();
             for (let key of Object.keys(defaultFeatures)) {
-                if (features[key] != defaultFeatures[key]) {
-                    contentEditOptions += '  options.' + key + ' = ' + (features[key] ? 'true' : 'false') + ';\n';
+                if (key != 'smartOrderedListStyles' && features[key] != defaultFeatures[key]) {
+                    pluginsString += 'options.' + key + ' = ' + (features[key] ? 'true' : 'false') + ';\n';
                 }
             }
             contentEditOptions += '  new roosterjsPlugins.ContentEdit(options),\n';
@@ -91,7 +92,7 @@ function assemblePluginsString(plugins: EditorPlugin[], features: ContentEditFea
             contentEditOptions = '  new roosterjsPlugins.ContentEdit(),\n';
         }
 
-        let pluginsString = 'var plugins = [\n';
+        pluginsString += 'var plugins = [\n';
         plugins.forEach(plugin => {
             if (plugin instanceof Watermark) {
                 pluginsString += "  new roosterjsPlugins.Watermark('Type content here...'),\n";

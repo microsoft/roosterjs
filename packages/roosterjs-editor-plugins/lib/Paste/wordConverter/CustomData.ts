@@ -10,7 +10,7 @@ export default interface CustomData {
 
     /** Next node Id to use */
     nextNodeId: number;
-};
+}
 
 /** create an empty CustomData */
 export function createCustomData(): CustomData {

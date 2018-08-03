@@ -236,7 +236,7 @@ export default class Undo implements UndoService {
             this.addUndoSnapshot();
             this.editor.triggerContentChangedEvent(
                 e.type == 'cut' ? ChangeSource.Cut : ChangeSource.Drop
-            )
+            );
         });
     };
 }

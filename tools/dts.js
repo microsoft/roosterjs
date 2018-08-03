@@ -44,6 +44,9 @@ function parseExports(exports) {
         var exportArray = exports.split(',');
         var result = {};
         for (var i = 0; i < exportArray.length; i++) {
+            if (exportArray[i].trim() == '') {
+                continue;
+            }
             var itemPair = exportArray[i].split(' as ');
             var name = itemPair[0].trim();
             var as = itemPair[1] ? itemPair[1].trim() : name;

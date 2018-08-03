@@ -53,7 +53,6 @@ export default class ImageResize implements EditorPlugin {
     initialize(editor: Editor) {
         this.editor = editor;
         this.dragStartDisposer = editor.addDomEventHandler('dragstart', this.onDragStart);
-
     }
 
     dispose() {
@@ -196,7 +195,7 @@ export default class ImageResize implements EditorPlugin {
             if (this.forcePreserveRatio || e.shiftKey) {
                 let ratio =
                     this.startWidth > 0 && this.startHeight > 0
-                        ? this.startWidth * 1.0 / this.startHeight
+                        ? (this.startWidth * 1.0) / this.startHeight
                         : 0;
                 if (ratio > 0) {
                     if (newWidth < newHeight * ratio) {
@@ -331,7 +330,7 @@ export default class ImageResize implements EditorPlugin {
         if ((e.srcElement || e.target) == this.getSelectedImage()) {
             this.hideResizeHandle(true);
         }
-    }
+    };
 }
 
 /**

@@ -18,4 +18,4 @@ export default interface ListMetadata {
 
     /** Counts the number of items we have found for this list */
     numberOfItems: number;
-};
+}

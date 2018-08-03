@@ -63,7 +63,7 @@ export function initEditorForOptions() {
         plugins.push(new HyperLink());
     }
     if ((document.getElementById('pasteCheckbox') as HTMLInputElement).checked) {
-        plugins.push(new Paste(true));
+        plugins.push(new Paste());
     }
 
     let features = getDefaultContentEditFeatures();
@@ -88,7 +88,7 @@ export function initEditorForOptions() {
         let defaultFeatures = getDefaultContentEditFeatures();
         let keys = Object.keys(defaultFeatures);
         for (let key of keys) {
-            if (features[key] != defaultFeatures[key]) {
+            if (key != 'smartOrderedListStyles' && features[key] != defaultFeatures[key]) {
                 featuresChanged = true;
                 break;
             }

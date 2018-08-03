@@ -50,18 +50,10 @@ var webpackConfig = {
         }]
     },
     stats: 'minimal',
-    plugins: isProduction ? [
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                dead_code: true,
-                warnings: true,
-                screw_ie8: true,
-                drop_debugger: true,
-                drop_console: true,
-                unsafe: false,
-            },
-        })
-    ] : []
+    mode: isProduction ? 'production' : 'development',
+    optimization: {
+        minimize: isProduction
+    }
 };
 
 var version = JSON.stringify(require(path.join(__dirname, '..', 'package.json')).version).replace(/"/g, '');

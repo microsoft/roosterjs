@@ -10,6 +10,6 @@ const getCustomData: GetCustomData = <T>(
         value: getter(),
         disposer: disposer,
     }).value as T;
-}
+};
 
 export default getCustomData;

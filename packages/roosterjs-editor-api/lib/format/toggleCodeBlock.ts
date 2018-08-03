@@ -12,7 +12,10 @@ const CODE_NODE_TAG = 'CODE';
  * @param editor The editor instance
  * @param styler (Optional) The custom styler for setting the style for the code block element
  */
-export default function toggleCodeBlock(editor: Editor, styler?: (element: HTMLElement) => void): void {
+export default function toggleCodeBlock(
+    editor: Editor,
+    styler?: (element: HTMLElement) => void
+): void {
     toggleTagCore(editor, PRE_TAG, styler, wrapFunction, unwrapFunction);
 }
 

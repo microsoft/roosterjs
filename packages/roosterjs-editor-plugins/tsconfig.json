@@ -8,6 +8,7 @@
     "removeComments": false,
     "noImplicitAny": true,
     "preserveConstEnums": true,
+    "noUnusedLocals": true,
     "baseUrl": "../../",
     "paths": {
       "*": [

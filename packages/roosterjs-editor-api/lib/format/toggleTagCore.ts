@@ -27,7 +27,7 @@ export default function toggleTagCore<T extends keyof HTMLElementTagNameMap>(
     editor: Editor,
     tag: T,
     styler?: (element: HTMLElement) => void,
-    wrapFunction: (nodes: Node[]) => HTMLElement = (nodes) => wrap(nodes, tag),
+    wrapFunction: (nodes: Node[]) => HTMLElement = nodes => wrap(nodes, tag),
     unwrapFunction: (node: Node) => Node = unwrap
 ): void {
     editor.focus();

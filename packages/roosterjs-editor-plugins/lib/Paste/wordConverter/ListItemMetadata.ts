@@ -19,4 +19,4 @@ export default interface ListItemMetadata {
 
     /** Word list item node */
     originalNode: HTMLElement;
-};
+}

@@ -1,7 +1,7 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 
 /**
- * @derpecated Use ContentEdit plugin with fature DefaultShortcut instead
+ * @deprecated Use ContentEdit plugin with fature DefaultShortcut instead
  */
 export default class DefaultShortcut implements EditorPlugin {
     public name: 'DefaultShortcut';
