@@ -93,8 +93,14 @@ function insertMarker(type: string, useInlineMarker: boolean, pos1: Position, po
     let node = pos1.node;
     let marker = node.ownerDocument.createElement('SPAN');
     marker.id = type;
-    marker.setAttribute(OFFSET_1_ATTRIBUTE, useInlineMarker ? '0' : '' + pos1.offset);
-    marker.setAttribute(OFFSET_2_ATTRIBUTE, useInlineMarker || !pos2 ? '0' : '' + pos2.offset);
+    marker.setAttribute(
+        OFFSET_1_ATTRIBUTE,
+        useInlineMarker ? '0' : '' + pos1.getRestorableOffset()
+    );
+    marker.setAttribute(
+        OFFSET_2_ATTRIBUTE,
+        useInlineMarker || !pos2 ? '0' : '' + pos2.getRestorableOffset()
+    );
 
     if (!useInlineMarker || pos1.offset == 0) {
         node.parentNode.insertBefore(marker, node);

@@ -195,6 +195,14 @@ export default class Position {
     }
 
     /**
+     * Get a restorable offset value. This combines offset and isAtEnd together, and only used for restoring a positing
+     * When current node doesn't have any child node and the position is after the node, return value will be 1 rather than 0
+     */
+    getRestorableOffset() {
+        return this.offset == 0 && this.isAtEnd ? 1 : this.offset;
+    }
+
+    /**
      * Move this position with offset, returns a new position with a valid offset in the same node
      * @param offset Offset to move with
      */
@@ -231,7 +239,7 @@ export default class Position {
     toEditorPoint() {
         return {
             containerNode: this.node,
-            offset: this.offset == 0 && this.isAtEnd ? 1 : this.offset,
+            offset: this.getRestorableOffset(),
         };
     }
 }
