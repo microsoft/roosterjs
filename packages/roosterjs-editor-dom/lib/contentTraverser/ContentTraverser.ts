@@ -145,7 +145,9 @@ export default class ContentTraverser {
                 current.getPosition(),
                 isNext
             );
-            newInline = current.getParentBlock().isInBlock(newInline) ? newInline : null;
+            if (newInline && !current.getParentBlock().isInBlock(newInline)) {
+                newInline = null;
+            }
         } else {
             newInline = getNextPreviousInlineElement(this.scoper.rootNode, current, isNext);
             newInline =

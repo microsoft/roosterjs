@@ -27,7 +27,12 @@ export {
     default as PluginDomEvent,
     PluginCompositionEvent,
     PluginKeyboardEvent,
+    PluginKeyDownEvent,
+    PluginKeyPressEvent,
+    PluginKeyUpEvent,
     PluginMouseEvent,
+    PluginMouseDownEvent,
+    PluginMouseUpEvent,
 } from './event/PluginDomEvent';
 export { default as PluginEvent } from './event/PluginEvent';
 export { default as PluginEventType } from './event/PluginEventType';

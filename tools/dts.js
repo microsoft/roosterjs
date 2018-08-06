@@ -249,14 +249,19 @@ function output(filename, library, queue) {
         if (exports) {
             for (var name in exports){
                 var alias = exports[name];
-                var texts;
+                var texts = null;
                 if (elements[name]) {
                     texts = elements[name];
-                } else if (elements[name + '<T>']) {
-                    texts = elements[name + '<T>'];
-                    alias = alias;
                 } else {
-                    throw new Error('Name not found: ' + name);
+                    for (var n in elements) {
+                        if (n.indexOf(alias + '<') == 0) {
+                            texts = elements[n];
+                            break;
+                        }
+                    }
+                    if (!texts) {
+                        throw new Error('Name not found: ' + name + '; alias: ' + alias);
+                    }
                 }
 
                 for (var text of texts) {

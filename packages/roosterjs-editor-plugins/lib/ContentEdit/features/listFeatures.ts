@@ -69,7 +69,7 @@ export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
     keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');
-        return li && isNodeEmpty(li);
+        return !event.rawEvent.shiftKey && li && isNodeEmpty(li);
     },
     handleEvent: (event, editor) => {
         editor.performAutoComplete(() => toggleListAndPreventDefault(event, editor));
