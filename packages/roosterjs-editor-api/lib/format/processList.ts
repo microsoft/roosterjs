@@ -33,9 +33,10 @@ function workaroundForChrome(editor: Editor) {
             // Add a temp <IMG> tag before all other nodes in the block to avoid Chrome remove existing format when toggle list
             let tempNode = fromHtml(TEMP_NODE_HTML, editor.getDocument())[0];
             if (isVoidHtmlElement(container as HTMLElement) || !isBlockElement(container)) {
-                container = container.parentNode;
+                container.parentNode.insertBefore(tempNode, container);
+            } else {
+                container.insertBefore(tempNode, container.firstChild);
             }
-            container.insertBefore(tempNode, container.firstChild);
         }
 
         block = traverser.getNextBlockElement();
