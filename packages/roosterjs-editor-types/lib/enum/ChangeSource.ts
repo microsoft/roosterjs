@@ -4,7 +4,7 @@
  */
 const enum ChangeSource {
     /**
-     * Content changed by auto bullet
+     * @deprecated
      */
     AutoBullet = 'AutoBullet',
 
@@ -52,11 +52,6 @@ const enum ChangeSource {
      * Content changed by drag & drop operation
      */
     Drop = 'Drop',
-
-    /**
-     * Press BackSpace key to undo an auto completed action
-     */
-    UndoAutoComplete = 'UndoAutoComplete',
 }
 
 export default ChangeSource;

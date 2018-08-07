@@ -1,6 +1,6 @@
 import EditorCore, { EditWithUndo } from '../editor/EditorCore';
 import { ChangeSource, ContentChangedEvent, PluginEventType } from 'roosterjs-editor-types';
-import { Position, SelectionRange } from 'roosterjs-editor-dom';
+import { Position } from 'roosterjs-editor-dom';
 
 const editWithUndo: EditWithUndo = (
     core: EditorCore,
@@ -18,10 +18,10 @@ const editWithUndo: EditWithUndo = (
     try {
         if (callback) {
             let range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-            let selectionRange = range && new SelectionRange(range).normalize();
-            let data = selectionRange
-                ? callback(selectionRange.start, selectionRange.end)
-                : callback(null, null);
+            let data = callback(
+                range && Position.getStart(range).normalize(),
+                range && Position.getEnd(range).normalize()
+            );
 
             if (!isNested) {
                 core.undo.addUndoSnapshot();

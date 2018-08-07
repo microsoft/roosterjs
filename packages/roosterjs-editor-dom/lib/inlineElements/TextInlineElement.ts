@@ -6,11 +6,4 @@ export default class TextInlineElement extends NodeInlineElement {
     constructor(containerNode: Node, parentBlock: BlockElement) {
         super(containerNode, parentBlock);
     }
-
-    /**
-     * Checks if this inline element is a textual inline element
-     */
-    public isTextualInlineElement(): boolean {
-        return true;
-    }
 }

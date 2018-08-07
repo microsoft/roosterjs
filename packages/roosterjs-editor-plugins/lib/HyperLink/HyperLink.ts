@@ -33,28 +33,32 @@ export default class HyperLink implements EditorPlugin {
         private target?: string
     ) {}
 
+    /**
+     * Initialize this plugin
+     * @param editor The editor instance
+     */
     public initialize(editor: Editor): void {
         this.editor = editor;
-
-        if (Browser.isIE) {
-            this.editor
-                .getDocument()
-                .execCommand(
-                    'AutoUrlDetect',
-                    false /* shouldDisplayUserInterface */,
-                    false /* value */
-                );
-        }
     }
 
+    /**
+     * Dispose this plugin
+     */
     public dispose(): void {
         this.editor.queryElements('a[href]', this.resetAnchor);
         this.editor = null;
     }
 
-    // Handle the event
+    /**
+     * Handle plugin events
+     * @param event The event object
+     */
     public onPluginEvent(event: PluginEvent): void {
         switch (event.eventType) {
+            case PluginEventType.EditorReady:
+                this.editor.queryElements('a[href]', this.processLink);
+                break;
+
             case PluginEventType.ContentChanged:
                 let contentChangedEvent = event as ContentChangedEvent;
                 if (contentChangedEvent.source == ChangeSource.CreateLink) {
@@ -90,33 +94,40 @@ export default class HyperLink implements EditorPlugin {
     };
 
     private removeTempTooltip(content: string): string {
-        return content.replace(TEMP_TITLE_REGEX, (...groups: string[]): string => {
-            const firstValue = groups[1] == null ? '' : groups[1].trim();
-            const secondValue = groups[3] == null ? '' : groups[3].trim();
-            const thirdValue = groups[5] == null ? '' : groups[5].trim();
+        return content.replace(
+            TEMP_TITLE_REGEX,
+            (...groups: string[]): string => {
+                const firstValue = groups[1] == null ? '' : groups[1].trim();
+                const secondValue = groups[3] == null ? '' : groups[3].trim();
+                const thirdValue = groups[5] == null ? '' : groups[5].trim();
 
-            // possible values (* is space, x, y, z are the first, second, and third value respectively):
-            // *** (no values) << empty case
-            // x** (first value only)
-            // *x* (second value only)
-            // **x (third value only)
-            // x*y* (first and second)
-            // x**z (first and third) << double spaces
-            // *y*z (second and third)
-            // x*y*z (all)
-            if (firstValue.length === 0 && secondValue.length === 0 && thirdValue.length === 0) {
-                return '<a>';
+                // possible values (* is space, x, y, z are the first, second, and third value respectively):
+                // *** (no values) << empty case
+                // x** (first value only)
+                // *x* (second value only)
+                // **x (third value only)
+                // x*y* (first and second)
+                // x**z (first and third) << double spaces
+                // *y*z (second and third)
+                // x*y*z (all)
+                if (
+                    firstValue.length === 0 &&
+                    secondValue.length === 0 &&
+                    thirdValue.length === 0
+                ) {
+                    return '<a>';
+                }
+
+                let result;
+                if (secondValue.length === 0) {
+                    result = `${firstValue} ${thirdValue}`;
+                } else {
+                    result = `${firstValue} ${secondValue} ${thirdValue}`;
+                }
+
+                return `<a ${result.trim()}>`;
             }
-
-            let result;
-            if (secondValue.length === 0) {
-                result = `${firstValue} ${thirdValue}`;
-            } else {
-                result = `${firstValue} ${secondValue} ${thirdValue}`;
-            }
-
-            return `<a ${result.trim()}>`;
-        });
+        );
     }
 
     private onClickLink = (keyboardEvent: KeyboardEvent) => {
@@ -134,9 +145,11 @@ export default class HyperLink implements EditorPlugin {
         }
     };
 
-    // Try get href from an anchor element
-    // The reason this is put in a try-catch is that
-    // it has been seen that accessing href may throw an exception, in particular on IE/Edge
+    /**
+     * Try get href from an anchor element
+     * The reason this is put in a try-catch is that
+     * it has been seen that accessing href may throw an exception, in particular on IE/Edge
+     */
     private tryGetHref(element: Element): string {
         let href: string = null;
         try {

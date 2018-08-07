@@ -1,4 +1,4 @@
-import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
+import queryNodesWithSelection from '../deprecated/queryNodesWithSelection';
 import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
 import { ListState, PluginEvent } from 'roosterjs-editor-types';
 import { getTagOfNode } from 'roosterjs-editor-dom';

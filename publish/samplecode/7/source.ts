@@ -1,5 +1,5 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType, PluginDomEvent } from 'roosterjs-editor-types';
+import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { createEditor } from 'roosterjs';
 
 const NUMBERS = [
@@ -31,8 +31,7 @@ class MyPlugin implements EditorPlugin {
 
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.KeyPress) {
-            let domEvent = <PluginDomEvent>event;
-            let keyboardEvent = <KeyboardEvent>domEvent.rawEvent;
+            let keyboardEvent = event.rawEvent;
             if (keyboardEvent.which >= KEY_0 && keyboardEvent.which <= KEY_9) {
                 let text = NUMBERS[keyboardEvent.which - KEY_0] + ' ';
                 this.editor.insertContent(text);

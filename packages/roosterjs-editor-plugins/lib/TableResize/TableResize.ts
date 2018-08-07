@@ -5,7 +5,8 @@ import {
     ContentPosition,
     PluginEvent,
     PluginEventType,
-    PluginDomEvent,
+    PluginMouseEvent,
+    ChangeSource,
 } from 'roosterjs-editor-types';
 
 const TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
@@ -38,16 +39,15 @@ export default class TableResize implements EditorPlugin {
             this.td &&
             (event.eventType == PluginEventType.KeyDown ||
                 event.eventType == PluginEventType.ContentChanged ||
-                (event.eventType == PluginEventType.MouseDown &&
-                    !this.clickIntoCurrentTd(<PluginDomEvent>event)))
+                (event.eventType == PluginEventType.MouseDown && !this.clickIntoCurrentTd(event)))
         ) {
             this.td = null;
             this.calcAndShowHandle();
         }
     }
 
-    private clickIntoCurrentTd(event: PluginDomEvent) {
-        let mouseEvent = <MouseEvent>event.rawEvent;
+    private clickIntoCurrentTd(event: PluginMouseEvent) {
+        let mouseEvent = event.rawEvent;
         let target = mouseEvent.target;
         return (
             target instanceof Node &&
@@ -166,7 +166,7 @@ export default class TableResize implements EditorPlugin {
             this.editor.addUndoSnapshot((start, end) => {
                 this.setTableColumnWidth(newWidth + 'px');
                 this.editor.select(start, end);
-            });
+            }, ChangeSource.Format);
         }
 
         this.pageX = -1;

@@ -1,5 +1,4 @@
-import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
-import { ChangeSource, DocumentCommand } from 'roosterjs-editor-types';
+import { ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { matchLink } from 'roosterjs-editor-dom';
 
@@ -84,7 +83,7 @@ export default function createLink(
                     editor.insertNode(anchor);
                 }
             } else {
-                /* the selection is not collapsed, use browser execCommand */
+                // the selection is not collapsed, use browser execCommand
                 editor.getDocument().execCommand(DocumentCommand.CreateLink, false, normalizedUrl);
                 anchor = getAnchorNodeAtCursor(editor);
                 updateAnchorDisplayText(anchor, displayText);
@@ -102,7 +101,7 @@ export default function createLink(
 }
 
 function getAnchorNodeAtCursor(editor: Editor): HTMLAnchorElement {
-    return queryNodesWithSelection(editor, 'a[href]')[0] as HTMLAnchorElement;
+    return editor.queryElements('a[href]', QueryScope.OnSelection)[0] as HTMLAnchorElement;
 }
 
 function updateAnchorDisplayText(anchor: HTMLAnchorElement, displayText: string) {

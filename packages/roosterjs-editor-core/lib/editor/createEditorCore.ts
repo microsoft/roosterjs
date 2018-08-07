@@ -1,34 +1,37 @@
+import CorePlugin from './CorePlugin';
 import EditorCore, { CoreApiMap } from './EditorCore';
 import EditorOptions from './EditorOptions';
 import Undo from '../undo/Undo';
 import attachDomEvent from '../coreAPI/attachDomEvent';
 import editWithUndo from '../coreAPI/editWithUndo';
 import focus from '../coreAPI/focus';
+import getCustomData from '../coreAPI/getCustomData';
 import getSelectionRange from '../coreAPI/getSelectionRange';
 import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
 import select from '../coreAPI/select';
 import triggerEvent from '../coreAPI/triggerEvent';
 import { DefaultFormat } from 'roosterjs-editor-types';
-import { getComputedStyle } from 'roosterjs-editor-dom';
+import { getComputedStyles } from 'roosterjs-editor-dom';
 
 export default function createEditorCore(
     contentDiv: HTMLDivElement,
     options: EditorOptions
 ): EditorCore {
+    let undo = options.undo || new Undo();
+    let corePlugin = new CorePlugin(contentDiv, options.disableRestoreSelectionOnFocus);
     return {
         contentDiv: contentDiv,
         document: contentDiv.ownerDocument,
         defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
-        undo: options.undo || new Undo(),
+        corePlugin: corePlugin,
+        undo: undo,
         suspendUndo: false,
         customData: {},
         cachedSelectionRange: null,
-        plugins: (options.plugins || []).filter(plugin => !!plugin),
+        plugins: [corePlugin, ...(options.plugins || []), undo].filter(plugin => !!plugin),
         api: createCoreApiMap(options.coreApiOverride),
-        snapshotBeforeAutoComplete: null,
-        disableRestoreSelectionOnFocus: options.disableRestoreSelectionOnFocus,
-        omitContentEditable: options.omitContentEditableAttributeChanges,
+        defaultApi: createCoreApiMap(),
     };
 }
 
@@ -38,10 +41,11 @@ function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat
     }
 
     baseFormat = baseFormat || <DefaultFormat>{};
+    let styles = getComputedStyles(node);
     return {
-        fontFamily: baseFormat.fontFamily || getComputedStyle(node, 'font-family'),
-        fontSize: baseFormat.fontSize || getComputedStyle(node, 'font-size'),
-        textColor: baseFormat.textColor || getComputedStyle(node, 'color'),
+        fontFamily: baseFormat.fontFamily || styles[0],
+        fontSize: baseFormat.fontSize || styles[1],
+        textColor: baseFormat.textColor || styles[2],
         backgroundColor: baseFormat.backgroundColor || '',
         bold: baseFormat.bold,
         italic: baseFormat.italic,
@@ -49,12 +53,13 @@ function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat
     };
 }
 
-function createCoreApiMap(map: Partial<CoreApiMap>): CoreApiMap {
+function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
     map = map || {};
     return {
         attachDomEvent: map.attachDomEvent || attachDomEvent,
         editWithUndo: map.editWithUndo || editWithUndo,
         focus: map.focus || focus,
+        getCustomData: map.getCustomData || getCustomData,
         getSelectionRange: map.getSelectionRange || getSelectionRange,
         hasFocus: map.hasFocus || hasFocus,
         insertNode: map.insertNode || insertNode,

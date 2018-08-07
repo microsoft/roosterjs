@@ -44,6 +44,9 @@ function parseExports(exports) {
         var exportArray = exports.split(',');
         var result = {};
         for (var i = 0; i < exportArray.length; i++) {
+            if (exportArray[i].trim() == '') {
+                continue;
+            }
             var itemPair = exportArray[i].split(' as ');
             var name = itemPair[0].trim();
             var as = itemPair[1] ? itemPair[1].trim() : name;
@@ -246,14 +249,19 @@ function output(filename, library, queue) {
         if (exports) {
             for (var name in exports){
                 var alias = exports[name];
-                var texts;
+                var texts = null;
                 if (elements[name]) {
                     texts = elements[name];
-                } else if (elements[name + '<T>']) {
-                    texts = elements[name + '<T>'];
-                    alias = alias;
                 } else {
-                    throw new Error('Name not found: ' + name);
+                    for (var n in elements) {
+                        if (n.indexOf(alias + '<') == 0) {
+                            texts = elements[n];
+                            break;
+                        }
+                    }
+                    if (!texts) {
+                        throw new Error('Name not found: ' + name + '; alias: ' + alias);
+                    }
                 }
 
                 for (var text of texts) {

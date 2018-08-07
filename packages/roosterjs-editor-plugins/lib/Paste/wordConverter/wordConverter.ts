@@ -17,7 +17,7 @@ export default interface WordConverter {
 
     /** Custom data storage for list items */
     customData: CustomData;
-};
+}
 
 /** create an empty WordConverter */
 export function createWordConverter(): WordConverter {

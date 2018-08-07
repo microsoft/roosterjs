@@ -33,7 +33,7 @@ export default interface WordConverterArguments {
 
     /** Remembers the item that was last processed  */
     lastProcessedItem: HTMLElement;
-};
+}
 
 /** create an empty WordConverterArguments */
 export function createWordConverterArguments(

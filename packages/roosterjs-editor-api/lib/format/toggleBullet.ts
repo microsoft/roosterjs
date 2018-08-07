@@ -1,5 +1,5 @@
-import execCommand from './execCommand';
-import { DocumentCommand } from 'roosterjs-editor-types';
+import processList from './processList';
+import { ChangeSource, DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -11,10 +11,9 @@ import { Editor } from 'roosterjs-editor-core';
  * @param editor The editor instance
  */
 export default function toggleBullet(editor: Editor) {
-    execCommand(
-        editor,
-        DocumentCommand.InsertUnorderedList,
-        true /*addUndoSnapshotWhenCollapsed*/,
-        true /*doWorkaroundForList*/
+    editor.focus();
+    editor.addUndoSnapshot(
+        () => processList(editor, DocumentCommand.InsertUnorderedList),
+        ChangeSource.Format
     );
 }

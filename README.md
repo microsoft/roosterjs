@@ -1,7 +1,7 @@
 # Rooster
 
-Rooster is a framework-independent JavaScript rich-text editor neatly nested 
-inside one HTML `<div>` element. Editing operations performed by end users are 
+Rooster is a framework-independent JavaScript rich-text editor neatly nested
+inside one HTML `<div>` element. Editing operations performed by end users are
 handled in simple ways to generate the final HTML.
 
 ## Features
@@ -11,16 +11,16 @@ handled in simple ways to generate the final HTML.
 Rooster contains 6 packages.
 
 1. `roosterjs`:
-   A facade of all Rooster code for those who want a quick start. Use the 
-   `createEditor()` function in roosterjs to create an editor with default 
+   A facade of all Rooster code for those who want a quick start. Use the
+   `createEditor()` function in roosterjs to create an editor with default
    configurations.
 
 2. `roosterjs-editor-core`:
-   Defines the core editor and plugin infrastructure. Use `roosterjs-editor-core` 
+   Defines the core editor and plugin infrastructure. Use `roosterjs-editor-core`
    instead of `roosterjs` to build and customize your own editor.
 
 3. `roosterjs-editor-api`:
-   Defines APIs for editor operations. Use these APIs to modify content and 
+   Defines APIs for editor operations. Use these APIs to modify content and
    formatting in the editor you built using `roosterjs-editor-core`.
 
 4. `roosterjs-editor-dom`:
@@ -28,10 +28,10 @@ Rooster contains 6 packages.
    you want to access DOM API directly.
 
 5. `roosterjs-editor-plugins`:
-   Defines basic plugins for common features. Examples: making hyperlinks, 
+   Defines basic plugins for common features. Examples: making hyperlinks,
    pasting HTML content, inserting inline images.
 
-6. `roosterjs-editor-types`: 
+6. `roosterjs-editor-types`:
    Defines public interfaces and enumerations.
 
 ### APIs
@@ -41,10 +41,10 @@ Rooster provides DOM level APIs (in `roosterjs-editor-dom`) and formatting APIs
 
 `roosterjs-editor-dom` provides several levels of DOM operations:
 - Perform basic DOM operations such as `fromHtml()`, `wrap()`, `unwrap()`, ...
-- Wrap a given DOM node with `InlineElemen`t or `BlockElement` and perform 
+- Wrap a given DOM node with `InlineElemen`t or `BlockElement` and perform
   operations with DOM Walker API.
 - Perform DOM operations on a given scope using scopers.
-- Travel among `InlineElements` and `BlockElements` with scope using 
+- Travel among `InlineElements` and `BlockElements` with scope using
   ContentTraverser API.
 
 `roosterjs-editor-api` provides APIs for scenario-based operations triggered by
@@ -52,25 +52,25 @@ user interaction.
 
 ## Plugins
 
-Rooster supports plugins. You can use built-in plugins or build your own. 
-Plugins call APIs to communicate with the editor. When an operation is 
-performed by the user or when content is changed by code, the editor will 
+Rooster supports plugins. You can use built-in plugins or build your own.
+Plugins call APIs to communicate with the editor. When an operation is
+performed by the user or when content is changed by code, the editor will
 trigger events for the plugins to handle.
 
-Here's a sample plugin which will show a dialog containing "Hello Rooster" when 
+Here's a sample plugin which will show a dialog containing "Hello Rooster" when
 an "a" is typed in the editor:
 
 ```typescript
 class HelloRooster implements EditorPlugin {
-    initialize(editor: Editor) {        
+    initialize(editor: Editor) {
     }
 
-    dispose() {        
+    dispose() {
     }
 
     onPluginEvent(e: PluginEvent) {
-        if ( e.eventType == PluginEventType.KeyPress && 
-            (e as PluginDomEvent).which == 65 ) {
+        if ( e.eventType == PluginEventType.KeyPress &&
+            e.rawEvent.which == 65 ) {
             alert('Hello Rooster');
         }
     }
@@ -97,13 +97,13 @@ In order to run the code below, you may also need to install [webpack](https://w
 
 ### A quick start
 
-1. Create `editor.htm` contains a DIV with some styles, and a reference to a 
+1. Create `editor.htm` contains a DIV with some styles, and a reference to a
 .js file:
 
 ```html
 <html>
     <body>
-        <div id='editorDiv' style='width: 500px; height: 300px; overflow: auto; 
+        <div id='editorDiv' style='width: 500px; height: 300px; overflow: auto;
         border: solid 1px black'></div>
         <script src='editor.js'></script>
     </body>
@@ -132,7 +132,7 @@ editor.setContent('Welcome to <b>RoosterJs</b>!');
 ```html
 <html>
     <body>
-        <div id='editorDiv' style='width: 500px; height: 300px; overflow: auto; 
+        <div id='editorDiv' style='width: 500px; height: 300px; overflow: auto;
         border: solid 1px black'></div>
         <button id='buttonB'>B</button>
         <button id='buttonI'>I</button>
@@ -170,25 +170,19 @@ actions in the page.
 
 ## Sample code
 
-In the `/sample/` folder is a sample editor that you can explore.
 To use the sample editor, follow these instructions:
 
-1. Get dependencies using npm.
+1. Get dependencies using [yarn](https://yarnpkg.com):
    ```cmd
-   npm install
+   yarn
    ```
 
-2. Build the source code.
+2. Build the source code, and start the sample editor:
    ```
-   npm run build
-   ```
-
-3. Start the sample editor.
-   ```
-   npm start
+   yarn start
    ```
 
-4. Navigate to the sample editor at http://localhost:3000/sample/sample.htm
+4. Navigate to the sample editor at http://localhost:3000/publish/samplesite/sample.htm
 
 ## More documentation
 

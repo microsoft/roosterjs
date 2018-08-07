@@ -3,8 +3,7 @@ import {
     getInlineElementAtNode,
     getFirstInlineElement,
     getLastInlineElement,
-    getNextInlineElement,
-    getPreviousInlineElement,
+    getNextPreviousInlineElement,
 } from '../../blockElements/BlockElement';
 import { NodeBoundary, InlineElement, EditorPoint } from 'roosterjs-editor-types';
 import {
@@ -205,7 +204,7 @@ describe('getInlineElement getNextInlineElement()', () => {
         let endPoint = { containerNode: testNode, offset: endOffset };
 
         // Act
-        let inlineElement = getNextInlineElement(rootNode, currentInline);
+        let inlineElement = getNextPreviousInlineElement(rootNode, currentInline, true);
 
         // Assert
         expect(
@@ -227,7 +226,7 @@ describe('getInlineElement getNextInlineElement()', () => {
         );
 
         // Act
-        let nextInline = getNextInlineElement(rootNode, currentInline);
+        let nextInline = getNextPreviousInlineElement(rootNode, currentInline, true);
 
         // Assert
         expect(nextInline).toBe(null);
@@ -242,7 +241,7 @@ describe('getInlineElement getNextInlineElement()', () => {
         );
 
         // Act
-        let nextInline = getNextInlineElement(rootNode, currentInline);
+        let nextInline = getNextPreviousInlineElement(rootNode, currentInline, true);
 
         // Assert
         expect(nextInline).toBe(null);
@@ -299,7 +298,7 @@ describe('getInlineElement getPreviousInlineElement()', () => {
         let endPoint = { containerNode: testNode, offset: endOffset };
 
         // Act
-        let inlineElement = getPreviousInlineElement(rootNode, currentInline);
+        let inlineElement = getNextPreviousInlineElement(rootNode, currentInline, false);
 
         // Assert
         expect(
@@ -321,7 +320,7 @@ describe('getInlineElement getPreviousInlineElement()', () => {
         );
 
         // Act
-        let previousInline = getPreviousInlineElement(rootNode, currentInline);
+        let previousInline = getNextPreviousInlineElement(rootNode, currentInline, false);
 
         // Assert
         expect(previousInline).toBe(null);
@@ -336,7 +335,7 @@ describe('getInlineElement getPreviousInlineElement()', () => {
         );
 
         // Act
-        let previousInline = getPreviousInlineElement(rootNode, currentInline);
+        let previousInline = getNextPreviousInlineElement(rootNode, currentInline, false);
 
         // Assert
         expect(previousInline).toBe(null);

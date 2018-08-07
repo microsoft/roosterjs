@@ -1,48 +1,44 @@
-import { ContentEditFeature } from '../ContentEditFeatures';
-import { Editor } from 'roosterjs-editor-core';
-import { Indentation, PluginDomEvent } from 'roosterjs-editor-types';
-import { Browser, getTagOfNode, isNodeEmpty, isPositionAtBeginningOf } from 'roosterjs-editor-dom';
+import { ContentEditFeature, GenericContentEditFeature, Keys } from '../ContentEditFeatures';
+import { Editor, cacheGetContentSearcher } from 'roosterjs-editor-core';
+import { Indentation, PluginKeyboardEvent, ContentChangedEvent } from 'roosterjs-editor-types';
+import { Browser, Position, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
 import {
-    cacheGetCursorEventData,
     cacheGetNodeAtCursor,
     getNodeAtCursor,
     setIndentation,
     toggleBullet,
     toggleNumbering,
-    validateAndGetRangeForTextBeforeCursor,
 } from 'roosterjs-editor-api';
-import { ChangeSource, PositionType } from 'roosterjs-editor-types';
-
-const KEY_BACKSPACE = 8;
-const KEY_TAB = 9;
-const KEY_ENTER = 13;
-const KEY_SPACE = 32;
+import { PositionType } from 'roosterjs-editor-types';
 
 export const IndentWhenTab: ContentEditFeature = {
-    keys: [KEY_TAB],
+    keys: [Keys.TAB],
     shouldHandleEvent: (event, editor) =>
-        !(event.rawEvent as KeyboardEvent).shiftKey && cacheGetListElement(event, editor),
+        !event.rawEvent.shiftKey && cacheGetListElement(event, editor),
     handleEvent: (event, editor) => {
         setIndentation(editor, Indentation.Increase);
         event.rawEvent.preventDefault();
     },
+    isAvailable: featureSet => featureSet.indentWhenTab,
 };
 
 export const OutdentWhenShiftTab: ContentEditFeature = {
-    keys: [KEY_TAB],
+    keys: [Keys.TAB],
     shouldHandleEvent: (event, editor) =>
-        (event.rawEvent as KeyboardEvent).shiftKey && cacheGetListElement(event, editor),
+        event.rawEvent.shiftKey && cacheGetListElement(event, editor),
     handleEvent: (event, editor) => {
         setIndentation(editor, Indentation.Decrease);
         event.rawEvent.preventDefault();
     },
+    isAvailable: featureSet => featureSet.outdentWhenShiftTab,
 };
 
 export const MergeInNewLine: ContentEditFeature = {
-    keys: [KEY_BACKSPACE],
+    keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');
-        return li && isPositionAtBeginningOf(editor.getSelectionRange(), li);
+        let range = editor.getSelectionRange();
+        return li && range && Position.getStart(range).isAtBeginningOf(li);
     },
     handleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');
@@ -56,41 +52,44 @@ export const MergeInNewLine: ContentEditFeature = {
             toggleListAndPreventDefault(event, editor);
         }
     },
+    isAvailable: featureSet => featureSet.mergeInNewLineWhenBackspaceOnFirstChar,
 };
 
 export const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
-    keys: [KEY_BACKSPACE],
+    keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');
         return li && isNodeEmpty(li) && !li.previousSibling;
     },
     handleEvent: toggleListAndPreventDefault,
+    isAvailable: featureSet => featureSet.outdentWhenBackspaceOnEmptyFirstLine,
 };
 
 export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
-    keys: [KEY_ENTER],
+    keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');
-        return li && isNodeEmpty(li);
+        return !event.rawEvent.shiftKey && li && isNodeEmpty(li);
     },
     handleEvent: (event, editor) => {
         editor.performAutoComplete(() => toggleListAndPreventDefault(event, editor));
     },
+    isAvailable: featureSet => featureSet.outdentWhenEnterOnEmptyLine,
 };
 
 export const AutoBullet: ContentEditFeature = {
-    keys: [KEY_SPACE],
+    keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
         if (!cacheGetListElement(event, editor)) {
-            let cursorData = cacheGetCursorEventData(event, editor);
-            let textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
+            let searcher = cacheGetContentSearcher(event, editor);
+            let textBeforeCursor = searcher.getSubStringBefore(3);
 
             // Auto list is triggered if:
             // 1. Text before cursor exactly mathces '*', '-' or '1.'
             // 2. There's no non-text inline entities before cursor
             return (
                 ['*', '-', '1.'].indexOf(textBeforeCursor) >= 0 &&
-                !cursorData.getFirstNonTextInlineBeforeCursor()
+                !searcher.getNearestNonTextInlineElement()
             );
         }
         return false;
@@ -98,16 +97,11 @@ export const AutoBullet: ContentEditFeature = {
     handleEvent: (event, editor) => {
         editor.runAsync(() => {
             editor.performAutoComplete(() => {
-                let cursorData = cacheGetCursorEventData(
-                    null /*pass null for event, force get fresh CursorData*/,
-                    editor
-                );
-                let textBeforeCursor = cursorData.getXCharsBeforeCursor(3);
-                let rangeToDelete = validateAndGetRangeForTextBeforeCursor(
-                    editor,
+                let searcher = editor.getContentSearcherOfCursor();
+                let textBeforeCursor = searcher.getSubStringBefore(3);
+                let rangeToDelete = searcher.getRangeFromText(
                     textBeforeCursor,
-                    true /*exactMatch*/,
-                    cursorData
+                    true /*exactMatch*/
                 );
 
                 if (rangeToDelete) {
@@ -120,24 +114,40 @@ export const AutoBullet: ContentEditFeature = {
                     editor.insertNode(tempBr);
                 }
 
-                let listNode: Node;
-
                 if (textBeforeCursor.indexOf('1.') == 0) {
                     toggleNumbering(editor);
-                    listNode = getNodeAtCursor(editor, 'OL');
                 } else {
                     toggleBullet(editor);
-                    listNode = getNodeAtCursor(editor, 'UL');
                 }
 
                 editor.deleteNode(tempBr);
-                return listNode;
-            }, ChangeSource.AutoBullet);
+            });
         });
     },
+    isAvailable: featureSet => featureSet.autoBullet,
 };
 
-function toggleListAndPreventDefault(event: PluginDomEvent, editor: Editor) {
+export function getSmartOrderedList(
+    styleList: string[]
+): GenericContentEditFeature<ContentChangedEvent> {
+    return {
+        keys: [Keys.CONTENTCHANGED], // Triggered by ContentChangedEvent
+        shouldHandleEvent: (event, editor) => event.data instanceof HTMLOListElement,
+        handleEvent: (event, editor) => {
+            let ol = event.data as HTMLOListElement;
+            let parentOl = getNodeAtCursor(editor, 'OL', ol.parentNode) as HTMLOListElement;
+            if (parentOl) {
+                // The style list must has at least one value. If no value is passed in, fallback to decimal
+                let styles = styleList && styleList.length > 0 ? styleList : ['decimal'];
+                ol.style.listStyle =
+                    styles[(styles.indexOf(parentOl.style.listStyle) + 1) % styles.length];
+            }
+        },
+        isAvailable: featureSet => featureSet.smartOrderedList,
+    };
+}
+
+function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: Editor) {
     let listInfo = cacheGetListElement(event, editor);
     if (listInfo) {
         let listElement = listInfo[0];
@@ -152,7 +162,7 @@ function toggleListAndPreventDefault(event: PluginDomEvent, editor: Editor) {
     }
 }
 
-function cacheGetListElement(event: PluginDomEvent, editor: Editor) {
+function cacheGetListElement(event: PluginKeyboardEvent, editor: Editor) {
     let li = cacheGetNodeAtCursor(editor, event, ['LI', 'TABLE']);
     let listElement = li && getTagOfNode(li) == 'LI' && getNodeAtCursor(editor, ['UL', 'OL'], li);
     return listElement ? [listElement, li] : null;

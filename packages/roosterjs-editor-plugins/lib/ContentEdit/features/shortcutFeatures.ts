@@ -1,27 +1,15 @@
 import { Browser } from 'roosterjs-editor-dom';
-import { ContentEditFeature } from '../ContentEditFeatures';
+import { ContentEditFeature, Keys } from '../ContentEditFeatures';
 import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
-import { PluginDomEvent, PluginEventType } from 'roosterjs-editor-types';
+import { FontSizeChange, PluginKeyboardEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
+    changeFontSize,
     toggleBold,
     toggleItalic,
     toggleUnderline,
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-
-const enum Keys {
-    B = 66,
-    I = 73,
-    U = 85,
-    Y = 89,
-    Z = 90,
-    PERIOD = 190,
-    FORWARDSLASH = 191,
-    Ctrl = 0x100,
-    Meta = 0x200,
-    Shift = 0x400,
-}
 
 interface ShortcutCommand {
     winKey: number;
@@ -45,11 +33,21 @@ const commands: ShortcutCommand[] = [
     createCommand(Keys.Ctrl | Keys.Y, Keys.Meta | Keys.Shift | Keys.Z, editor => editor.redo()),
     createCommand(Keys.Ctrl | Keys.PERIOD, Keys.Meta | Keys.PERIOD, toggleBullet),
     createCommand(Keys.Ctrl | Keys.FORWARDSLASH, Keys.Meta | Keys.FORWARDSLASH, toggleNumbering),
+    createCommand(
+        Keys.Ctrl | Keys.Shift | Keys.PERIOD,
+        Keys.Meta | Keys.Shift | Keys.PERIOD,
+        editor => changeFontSize(editor, FontSizeChange.Increase)
+    ),
+    createCommand(
+        Keys.Ctrl | Keys.Shift | Keys.COMMA,
+        Keys.Meta | Keys.Shift | Keys.COMMA,
+        editor => changeFontSize(editor, FontSizeChange.Decrease)
+    ),
 ];
 
 export const DefaultShortcut: ContentEditFeature = {
     allowFunctionKeys: true,
-    keys: [Keys.B, Keys.I, Keys.U, Keys.Y, Keys.Z, Keys.PERIOD, Keys.FORWARDSLASH],
+    keys: [Keys.B, Keys.I, Keys.U, Keys.Y, Keys.Z, Keys.COMMA, Keys.PERIOD, Keys.FORWARDSLASH],
     shouldHandleEvent: cacheGetCommand,
     handleEvent: (event, editor) => {
         let command = cacheGetCommand(event);
@@ -59,11 +57,12 @@ export const DefaultShortcut: ContentEditFeature = {
             event.rawEvent.stopPropagation();
         }
     },
+    isAvailable: featureSet => featureSet.defaultShortcut,
 };
 
-function cacheGetCommand(event: PluginDomEvent) {
+function cacheGetCommand(event: PluginKeyboardEvent) {
     return cacheGetEventData(event, 'DEFAULT_SHORT_COMMAND', () => {
-        let e = event.rawEvent as KeyboardEvent;
+        let e = event.rawEvent;
         let key =
             event.eventType == PluginEventType.KeyDown
                 ? e.which |
@@ -71,6 +70,6 @@ function cacheGetCommand(event: PluginDomEvent) {
                   (e.shiftKey && Keys.Shift) |
                   (e.ctrlKey && Keys.Ctrl)
                 : 0;
-        return key && commands.find(cmd => (Browser.isMac ? cmd.macKey : cmd.winKey) == key);
+        return key && commands.filter(cmd => (Browser.isMac ? cmd.macKey : cmd.winKey) == key)[0];
     });
 }

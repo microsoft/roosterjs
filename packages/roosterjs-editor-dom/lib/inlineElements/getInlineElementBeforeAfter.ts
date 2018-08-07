@@ -15,7 +15,7 @@ import { NodeType, InlineElement } from 'roosterjs-editor-types';
  * @param position The position to get InlineElement before
  */
 export function getInlineElementBefore(root: Node, position: Position): InlineElement {
-    return getInlineElementBeforeAfterPosition(root, position, false /*isAfter*/);
+    return getInlineElementBeforeAfter(root, position, false /*isAfter*/);
 }
 
 /**
@@ -28,10 +28,10 @@ export function getInlineElementBefore(root: Node, position: Position): InlineEl
  * @param position The position to get InlineElement after
  */
 export function getInlineElementAfter(root: Node, position: Position): InlineElement {
-    return getInlineElementBeforeAfterPosition(root, position, true /*isAfter*/);
+    return getInlineElementBeforeAfter(root, position, true /*isAfter*/);
 }
 
-function getInlineElementBeforeAfterPosition(root: Node, position: Position, isAfter: boolean) {
+export function getInlineElementBeforeAfter(root: Node, position: Position, isAfter: boolean) {
     if (!root || !position || !position.node) {
         return null;
     }

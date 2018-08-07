@@ -1,14 +1,12 @@
+import { AutoLink } from './features/autoLinkFeatures';
+import { DefaultShortcut } from './features/shortcutFeatures';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import {
-    ChangeSource,
-    PluginDomEvent,
-    PluginEvent,
-    PluginEventType,
-    ContentChangedEvent,
-} from 'roosterjs-editor-types';
+import { TabInTable, UpDownInTable } from './features/tableFeatures';
+import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import ContentEditFeatures, {
     getDefaultContentEditFeatures,
-    ContentEditFeature,
+    GenericContentEditFeature,
+    Keys,
 } from './ContentEditFeatures';
 
 import {
@@ -18,14 +16,12 @@ import {
     MergeInNewLine,
     OutdentWhenBackOn1stEmptyLine,
     OutdentWhenEnterOnEmptyLine,
+    getSmartOrderedList,
 } from './features/listFeatures';
-import { AutoLink } from './features/autoLinkFeatures';
 import {
     UnquoteWhenBackOnEmpty1stLine,
     UnquoteWhenEnterOnEmptyLine,
 } from './features/quoteFeatures';
-import { TabInTable, UpDownInTable } from './features/tableFeatures';
-import { DefaultShortcut } from './features/shortcutFeatures';
 
 /**
  * An editor plugin to handle content edit event.
@@ -41,38 +37,15 @@ import { DefaultShortcut } from './features/shortcutFeatures';
  */
 export default class ContentEdit implements EditorPlugin {
     private editor: Editor;
-    private features: ContentEditFeature[] = [];
-    private keys: number[] = [];
-    private currentFeature: ContentEditFeature;
-    private autoLinkEnabled: boolean;
+    private featureMap: { [key: number]: GenericContentEditFeature<PluginEvent>[] } = {};
+    private currentFeature: GenericContentEditFeature<PluginEvent>;
     public name: 'ContentEdit';
 
     /**
      * Create instance of ContentEdit plugin
      * @param features An optional feature set to determine which features the plugin should provide
      */
-    constructor(featureSet?: ContentEditFeatures) {
-        featureSet = featureSet || getDefaultContentEditFeatures();
-        this.addFeature(featureSet.indentWhenTab, IndentWhenTab);
-        this.addFeature(featureSet.outdentWhenShiftTab, OutdentWhenShiftTab);
-        this.addFeature(
-            featureSet.outdentWhenBackspaceOnEmptyFirstLine,
-            OutdentWhenBackOn1stEmptyLine
-        );
-        this.addFeature(featureSet.outdentWhenEnterOnEmptyLine, OutdentWhenEnterOnEmptyLine);
-        this.addFeature(featureSet.mergeInNewLineWhenBackspaceOnFirstChar, MergeInNewLine);
-        this.addFeature(
-            featureSet.unquoteWhenBackspaceOnEmptyFirstLine,
-            UnquoteWhenBackOnEmpty1stLine
-        );
-        this.addFeature(featureSet.unquoteWhenEnterOnEmptyLine, UnquoteWhenEnterOnEmptyLine);
-        this.addFeature(featureSet.tabInTable, TabInTable);
-        this.addFeature(featureSet.upDownInTable, UpDownInTable);
-        this.addFeature(featureSet.autoBullet, AutoBullet);
-        this.addFeature(featureSet.autoLink, AutoLink);
-        this.addFeature(featureSet.defaultShortcut, DefaultShortcut);
-        this.autoLinkEnabled = featureSet.autoLink;
-    }
+    constructor(private featureSet?: ContentEditFeatures) {}
 
     /**
      * Initialize this plugin
@@ -80,6 +53,33 @@ export default class ContentEdit implements EditorPlugin {
      */
     public initialize(editor: Editor): void {
         this.editor = editor;
+        let featureSet = this.featureSet || getDefaultContentEditFeatures();
+        [
+            IndentWhenTab,
+            OutdentWhenShiftTab,
+            OutdentWhenBackOn1stEmptyLine,
+            OutdentWhenEnterOnEmptyLine,
+            MergeInNewLine,
+            UnquoteWhenBackOnEmpty1stLine,
+            UnquoteWhenEnterOnEmptyLine,
+            TabInTable,
+            UpDownInTable,
+            AutoBullet,
+            AutoLink,
+            DefaultShortcut,
+            getSmartOrderedList(featureSet.smartOrderedListStyles),
+        ]
+            .filter(feature => feature.isAvailable(featureSet))
+            .forEach(feature => {
+                if (feature.initialize) {
+                    feature.initialize(this.editor);
+                }
+                feature.keys.forEach(key => {
+                    let array = this.featureMap[key] || [];
+                    array.push(feature);
+                    this.featureMap[key] = array;
+                });
+            });
     }
 
     /**
@@ -93,50 +93,44 @@ export default class ContentEdit implements EditorPlugin {
      * Check whether the event should be handled exclusively by this plugin
      */
     public willHandleEventExclusively(event: PluginEvent): boolean {
-        let e = (event as PluginDomEvent).rawEvent as KeyboardEvent;
-        if (event.eventType == PluginEventType.KeyDown && this.keys.indexOf(e.which) >= 0) {
-            let hasFunctionKey = e.ctrlKey || e.altKey || e.metaKey;
-            for (let feature of this.features) {
-                if (
-                    (feature.allowFunctionKeys || !hasFunctionKey) &&
-                    feature.keys.indexOf(e.which) >= 0 &&
-                    feature.shouldHandleEvent(<PluginDomEvent>event, this.editor)
-                ) {
-                    this.currentFeature = feature;
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        this.findFeature(event);
+        return !!this.currentFeature;
     }
 
     /**
      * Handle the event
      */
     public onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.KeyDown && this.currentFeature) {
+        // ContentChangedEvent will be broadcast so we won't see it in willHandleEventExclusively(),
+        // we need to check it again here
+        if (!this.currentFeature && event.eventType == PluginEventType.ContentChanged) {
+            this.findFeature(event);
+        }
+
+        if (this.currentFeature) {
             let feature = this.currentFeature;
             this.currentFeature = null;
-            feature.handleEvent(<PluginDomEvent>event, this.editor);
-        } else if (
-            event.eventType == PluginEventType.ContentChanged &&
-            (<ContentChangedEvent>event).source == ChangeSource.Paste &&
-            this.autoLinkEnabled &&
-            AutoLink.shouldHandleEvent(<PluginDomEvent>event, this.editor)
-        ) {
-            AutoLink.handleEvent(<PluginDomEvent>event, this.editor);
+            feature.handleEvent(event, this.editor);
         }
     }
 
-    private addFeature(add: boolean, feature: ContentEditFeature) {
-        if (add) {
-            this.features.push(feature);
-            for (let key of feature.keys) {
-                if (this.keys.indexOf(key) < 0) {
-                    this.keys.push(key);
-                }
-            }
+    private findFeature(event: PluginEvent) {
+        let hasFunctionKey = false;
+        let features: GenericContentEditFeature<PluginEvent>[];
+
+        if (event.eventType == PluginEventType.KeyDown) {
+            let rawEvent = event.rawEvent;
+            hasFunctionKey = rawEvent.ctrlKey || rawEvent.altKey || rawEvent.metaKey;
+            features = this.featureMap[rawEvent.which];
+        } else if (event.eventType == PluginEventType.ContentChanged) {
+            features = this.featureMap[Keys.CONTENTCHANGED];
         }
+        this.currentFeature =
+            features &&
+            features.filter(
+                feature =>
+                    (feature.allowFunctionKeys || !hasFunctionKey) &&
+                    feature.shouldHandleEvent(event, this.editor)
+            )[0];
     }
 }

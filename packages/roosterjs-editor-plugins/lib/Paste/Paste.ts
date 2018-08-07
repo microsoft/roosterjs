@@ -63,7 +63,6 @@ export default class Paste implements EditorPlugin {
     }
 
     private onPaste = (event: Event) => {
-        this.editor.addUndoSnapshot();
         buildClipboardData(<ClipboardEvent>event, this.editor, clipboardData => {
             if (!clipboardData.html && clipboardData.text) {
                 clipboardData.html = textToHtml(clipboardData.text);
@@ -145,32 +144,33 @@ export default class Paste implements EditorPlugin {
     private internalPaste(event: BeforePasteEvent) {
         let { clipboardData, fragment, pasteOption } = event;
         this.editor.focus();
-        if (clipboardData.snapshotBeforePaste == null) {
-            clipboardData.snapshotBeforePaste = this.editor.getContent(
-                false /*triggerExtractContentEvent*/,
-                true /*markSelection*/
-            );
-        } else {
-            this.editor.setContent(clipboardData.snapshotBeforePaste);
-        }
+        this.editor.addUndoSnapshot(() => {
+            if (clipboardData.snapshotBeforePaste == null) {
+                clipboardData.snapshotBeforePaste = this.editor.getContent(
+                    false /*triggerExtractContentEvent*/,
+                    true /*markSelection*/
+                );
+            } else {
+                this.editor.setContent(clipboardData.snapshotBeforePaste);
+            }
 
-        switch (pasteOption) {
-            case PasteOption.PasteHtml:
-                this.editor.insertNode(fragment);
-                break;
+            switch (pasteOption) {
+                case PasteOption.PasteHtml:
+                    this.editor.insertNode(fragment);
+                    break;
 
-            case PasteOption.PasteText:
-                let html = textToHtml(clipboardData.text);
-                this.editor.insertContent(html);
-                break;
+                case PasteOption.PasteText:
+                    let html = textToHtml(clipboardData.text);
+                    this.editor.insertContent(html);
+                    break;
 
-            case PasteOption.PasteImage:
-                insertImage(this.editor, clipboardData.image);
-                break;
-        }
+                case PasteOption.PasteImage:
+                    insertImage(this.editor, clipboardData.image);
+                    break;
+            }
 
-        this.editor.addUndoSnapshot();
-        this.editor.triggerContentChangedEvent(ChangeSource.Paste, clipboardData);
+            return clipboardData;
+        }, ChangeSource.Paste);
     }
 
     private applyTextFormat(node: Node, format: DefaultFormat) {

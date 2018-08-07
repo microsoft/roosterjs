@@ -1,27 +1,43 @@
 import TraversingScoper from './TraversingScoper';
 import { BlockElement, InlineElement } from 'roosterjs-editor-types';
-import { getFirstBlockElement, getFirstInlineElement } from '../blockElements/BlockElement';
+import { getFirstInlineElement } from '../blockElements/BlockElement';
+import { getFirstBlockElement } from '../blockElements/getFirstLastBlockElement';
+import contains from '../utils/contains';
 
-// This provides scoper for traversing the entire editor body starting from the beginning
+/**
+ * provides scoper for traversing the entire editor body starting from the beginning
+ */
 class BodyScoper implements TraversingScoper {
+    /**
+     * Construct a new instance of BodyScoper class
+     * @param rootNode Root node of the body
+     */
     constructor(public rootNode: Node) {}
 
-    // Get the start block element
+    /**
+     * Get the start block element
+     */
     public getStartBlockElement(): BlockElement {
         return getFirstBlockElement(this.rootNode);
     }
 
-    // Get the first inline element in the editor
+    /**
+     * Get the start inline element
+     */
     public getStartInlineElement(): InlineElement {
         return getFirstInlineElement(this.rootNode);
     }
 
-    // Since the scope is global, all blocks under the root node are in scope
+    /**
+     * Since the scope is global, all blocks under the root node are in scope
+     */
     public isBlockInScope(blockElement: BlockElement): boolean {
-        return this.rootNode.contains(blockElement.getStartNode());
+        return contains(this.rootNode, blockElement.getStartNode());
     }
 
-    // Since we're at body scope, inline elements never need to be trimmed
+    /**
+     * Since we're at body scope, inline elements never need to be trimmed
+     */
     public trimInlineElement(inlineElement: InlineElement): InlineElement {
         return inlineElement;
     }

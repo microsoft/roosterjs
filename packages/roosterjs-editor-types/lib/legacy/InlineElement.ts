@@ -60,7 +60,11 @@ interface InlineElement {
      * when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
      * The actuall styling is done by consumer through the styler callback
      */
-    applyStyle(styler: (node: Node) => void, fromPoint?: EditorPoint, toPoint?: EditorPoint): void;
+    applyStyle(
+        styler: (element: HTMLElement) => any,
+        fromPoint?: EditorPoint,
+        toPoint?: EditorPoint
+    ): void;
 }
 
 export default InlineElement;

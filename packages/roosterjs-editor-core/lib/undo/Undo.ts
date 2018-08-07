@@ -1,5 +1,5 @@
 import UndoSnapshots, { UndoSnapshotsService } from './UndoSnapshots';
-import { ChangeSource, PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { ChangeSource, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import Editor from '../editor/Editor';
 import UndoService from '../editor/UndoService';
 
@@ -40,11 +40,6 @@ export default class Undo implements UndoService {
         this.editor = editor;
         this.onDropDisposer = this.editor.addDomEventHandler('drop', this.onNativeEvent);
         this.onCutDisposer = this.editor.addDomEventHandler('cut', this.onNativeEvent);
-
-        // Add an initial snapshot if snapshotsManager isn't created yet
-        if (!this.undoSnapshots) {
-            this.addUndoSnapshot();
-        }
     }
 
     /**
@@ -73,11 +68,14 @@ export default class Undo implements UndoService {
         }
 
         switch (event.eventType) {
+            case PluginEventType.EditorReady:
+                this.addUndoSnapshot();
+                break;
             case PluginEventType.KeyDown:
-                this.onKeyDown(event as PluginDomEvent);
+                this.onKeyDown(event.rawEvent);
                 break;
             case PluginEventType.KeyPress:
-                this.onKeyPress(event as PluginDomEvent);
+                this.onKeyPress(event.rawEvent);
                 break;
             case PluginEventType.CompositionEnd:
                 this.clearRedoForInput();
@@ -162,10 +160,9 @@ export default class Undo implements UndoService {
         }
     }
 
-    private onKeyDown(pluginEvent: PluginDomEvent): void {
+    private onKeyDown(evt: KeyboardEvent): void {
         // Handle backspace/delete when there is a selection to take a snapshot
         // since we want the state prior to deletion restorable
-        let evt = pluginEvent.rawEvent as KeyboardEvent;
         if (evt.which == KEY_BACKSPACE || evt.which == KEY_DELETE) {
             let selectionRange = this.editor.getSelectionRange();
 
@@ -195,8 +192,7 @@ export default class Undo implements UndoService {
         }
     }
 
-    private onKeyPress(pluginEvent: PluginDomEvent): void {
-        let evt = pluginEvent.rawEvent as KeyboardEvent;
+    private onKeyPress(evt: KeyboardEvent): void {
         if (evt.metaKey) {
             // if metaKey is pressed, simply return since no actual effect will be taken on the editor.
             // this is to prevent changing hasNewContent to true when meta + v to paste on Safari.
@@ -217,6 +213,11 @@ export default class Undo implements UndoService {
 
         if (shouldTakeUndo) {
             this.addUndoSnapshot();
+            if (evt.which == KEY_ENTER) {
+                // Treat ENTER as new content so if there is no input after ENTER and undo,
+                // we restore the snapshot before ENTER
+                this.hasNewContent = true;
+            }
         } else {
             this.clearRedoForInput();
         }
@@ -231,12 +232,11 @@ export default class Undo implements UndoService {
     }
 
     private onNativeEvent = (e: UIEvent) => {
-        this.addUndoSnapshot();
-        this.hasNewContent = true;
-        this.editor.runAsync(() =>
+        this.editor.runAsync(() => {
+            this.addUndoSnapshot();
             this.editor.triggerContentChangedEvent(
                 e.type == 'cut' ? ChangeSource.Cut : ChangeSource.Drop
-            )
-        );
+            );
+        });
     };
 }

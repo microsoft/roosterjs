@@ -10,7 +10,7 @@ export default interface LevelLists {
 
     /** Unique id of the list currently at this level */
     currentUniqueListId: number;
-};
+}
 
 /** create an empty LevelLists */
 export function createLevelLists(): LevelLists {

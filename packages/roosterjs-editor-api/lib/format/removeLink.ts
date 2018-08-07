@@ -1,4 +1,4 @@
-import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
+import { ChangeSource, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { unwrap } from 'roosterjs-editor-dom';
 
@@ -11,7 +11,7 @@ import { unwrap } from 'roosterjs-editor-dom';
 export default function removeLink(editor: Editor) {
     editor.focus();
     editor.addUndoSnapshot((start, end) => {
-        queryNodesWithSelection(editor, 'a[href]', false, unwrap);
+        editor.queryElements('a[href]', QueryScope.OnSelection, unwrap);
         editor.select(start, end);
-    });
+    }, ChangeSource.Format);
 }

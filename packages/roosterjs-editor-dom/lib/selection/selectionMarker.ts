@@ -1,4 +1,6 @@
-import { Position, SelectionRange, queryElements } from 'roosterjs-editor-dom';
+import Position from './Position';
+import createRange from './createRange';
+import queryElements from '../utils/queryElements';
 import { PositionType } from 'roosterjs-editor-types';
 
 const OFFSET_1_ATTRIBUTE = 'data-offset1';
@@ -27,24 +29,13 @@ export function markSelection(
     if (!range || queryElements(container, CURSOR_MARK_SELECTOR).length > 0) {
         return false;
     }
-    if (range.collapsed || (!useInlineMarker && range.startContainer == range.endContainer)) {
-        insertMarker(
-            CURSOR_SINGLE,
-            useInlineMarker,
-            new Position(range.startContainer, range.startOffset).normalize(),
-            new Position(range.endContainer, range.endOffset).normalize()
-        );
+    let start = Position.getStart(range).normalize();
+    let end = Position.getEnd(range).normalize();
+    if (start.equalTo(end) || (!useInlineMarker && start.node == end.node)) {
+        insertMarker(CURSOR_SINGLE, useInlineMarker, start, end);
     } else {
-        insertMarker(
-            CURSOR_END,
-            useInlineMarker,
-            new Position(range.endContainer, range.endOffset).normalize()
-        );
-        insertMarker(
-            CURSOR_START,
-            useInlineMarker,
-            new Position(range.startContainer, range.startOffset).normalize()
-        );
+        insertMarker(CURSOR_END, useInlineMarker, end);
+        insertMarker(CURSOR_START, useInlineMarker, start);
     }
     return true;
 }
@@ -53,10 +44,10 @@ export function markSelection(
  * If there is selection marker in content, convert into back to a selection range and remove the markers,
  * otherwise no op.
  * @param container Container HTML element to query selection markers from
- * @param removeMarkerOnly Skip retrieving range, but only delete existing markers
+ * @param retrieveSelectionRange Whether retrieve selection range from the markers if any
  * @returns The selection range converted from makers, or null if no valid marker found.
  */
-export function retrieveRangeFromMarker(container: HTMLElement, removeMarkerOnly?: boolean): Range {
+export function removeMarker(container: HTMLElement, retrieveSelectionRange: boolean): Range {
     let start: Position;
     let end: Position;
     let range: Range;
@@ -64,26 +55,26 @@ export function retrieveRangeFromMarker(container: HTMLElement, removeMarkerOnly
     let markers = queryElements(
         container,
         CURSOR_MARK_SELECTOR,
-        removeMarkerOnly
-            ? null
-            : marker => {
+        retrieveSelectionRange
+            ? marker => {
                   switch (marker.id) {
                       case CURSOR_START:
-                          start = saveCreatePosition(marker, OFFSET_1_ATTRIBUTE);
+                          start = safeCreatePosition(marker, OFFSET_1_ATTRIBUTE);
                           break;
                       case CURSOR_END:
-                          end = saveCreatePosition(marker, OFFSET_1_ATTRIBUTE);
+                          end = safeCreatePosition(marker, OFFSET_1_ATTRIBUTE);
                           break;
                       case CURSOR_SINGLE:
-                          start = saveCreatePosition(marker, OFFSET_1_ATTRIBUTE);
-                          end = saveCreatePosition(marker, OFFSET_2_ATTRIBUTE);
+                          start = safeCreatePosition(marker, OFFSET_1_ATTRIBUTE);
+                          end = safeCreatePosition(marker, OFFSET_2_ATTRIBUTE);
                           break;
                   }
               }
+            : null
     );
 
     if (start && end && markers.length <= 2) {
-        range = new SelectionRange(start, end).getRange();
+        range = createRange(start, end);
     }
 
     markers.forEach(marker => marker.parentNode && marker.parentNode.removeChild(marker));
@@ -91,7 +82,7 @@ export function retrieveRangeFromMarker(container: HTMLElement, removeMarkerOnly
     return range;
 }
 
-function saveCreatePosition(marker: HTMLElement, attrName: string) {
+function safeCreatePosition(marker: HTMLElement, attrName: string) {
     let node = marker.nextSibling;
     let offset = parseInt(marker.getAttribute(attrName)) || 0;
 
@@ -102,8 +93,14 @@ function insertMarker(type: string, useInlineMarker: boolean, pos1: Position, po
     let node = pos1.node;
     let marker = node.ownerDocument.createElement('SPAN');
     marker.id = type;
-    marker.setAttribute(OFFSET_1_ATTRIBUTE, useInlineMarker ? '0' : '' + pos1.offset);
-    marker.setAttribute(OFFSET_2_ATTRIBUTE, useInlineMarker || !pos2 ? '0' : '' + pos2.offset);
+    marker.setAttribute(
+        OFFSET_1_ATTRIBUTE,
+        useInlineMarker ? '0' : '' + pos1.getRestorableOffset()
+    );
+    marker.setAttribute(
+        OFFSET_2_ATTRIBUTE,
+        useInlineMarker || !pos2 ? '0' : '' + pos2.getRestorableOffset()
+    );
 
     if (!useInlineMarker || pos1.offset == 0) {
         node.parentNode.insertBefore(marker, node);

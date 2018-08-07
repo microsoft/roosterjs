@@ -1,8 +1,8 @@
 import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
-import { cacheGetCursorEventData, replaceTextBeforeCursorWithNode } from 'roosterjs-editor-api';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { replaceWithNode } from 'roosterjs-editor-api';
+import { Editor, EditorPlugin, cacheGetContentSearcher } from 'roosterjs-editor-core';
 import { PartialInlineElement } from 'roosterjs-editor-dom';
-import { PluginDomEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { PluginKeyboardEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 // Character codes
 export const BACKSPACE_CHARCODE = 8;
@@ -40,7 +40,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
 
                 let wordToReplace = this.getWord(null);
                 if (wordToReplace) {
-                    replaceTextBeforeCursorWithNode(this.editor, wordToReplace, htmlNode, true);
+                    replaceWithNode(this.editor, wordToReplace, htmlNode, true);
                     nodeInserted = true;
                     this.setIsSuggesting(false);
                 }
@@ -70,15 +70,12 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
     }
 
     public onPluginEvent(event: PluginEvent) {
-        let domEvent = event as PluginDomEvent;
         if (event.eventType == PluginEventType.KeyDown) {
-            let keyboardEvent: KeyboardEvent = domEvent.rawEvent as KeyboardEvent;
             this.eventHandledOnKeyDown = false;
-            this.onKeyDownEvent(domEvent, keyboardEvent);
+            this.onKeyDownEvent(event);
         }
         if (event.eventType == PluginEventType.KeyUp && !this.eventHandledOnKeyDown) {
-            let keyboardEvent: KeyboardEvent = domEvent.rawEvent as KeyboardEvent;
-            this.onKeyUpDomEvent(domEvent, keyboardEvent);
+            this.onKeyUpDomEvent(event);
         } else if (event.eventType == PluginEventType.MouseUp) {
             if (this.isSuggesting) {
                 this.setIsSuggesting(false);
@@ -91,7 +88,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         this.dataProvider.onIsSuggestingChanged(isSuggesting);
     }
 
-    private handleKeyDownEvent(event: PluginDomEvent) {
+    private handleKeyDownEvent(event: PluginKeyboardEvent) {
         this.eventHandledOnKeyDown = true;
         event.rawEvent.preventDefault();
         event.rawEvent.stopImmediatePropagation();
@@ -104,9 +101,9 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
             : null;
     }
 
-    private getWordBeforeCursor(event: PluginDomEvent): string {
-        let cursorData = cacheGetCursorEventData(event, this.editor);
-        return cursorData ? cursorData.wordBeforeCursor : null;
+    private getWordBeforeCursor(event: PluginKeyboardEvent): string {
+        let searcher = cacheGetContentSearcher(event, this.editor);
+        return searcher ? searcher.getWordBefore() : null;
     }
 
     private replaceNode(currentNode: Node, replacementNode: Node) {
@@ -118,10 +115,10 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         }
     }
 
-    private getRangeUntilAt(event: PluginDomEvent): Range {
-        let cursorData = cacheGetCursorEventData(event, this.editor);
+    private getRangeUntilAt(event: PluginKeyboardEvent): Range {
+        let PositionContentSearcher = cacheGetContentSearcher(event, this.editor);
         let range = this.editor.getDocument().createRange();
-        cursorData.getTextSectionBeforeCursorTill(textInline => {
+        PositionContentSearcher.forEachTextInlineElement(textInline => {
             let hasMatched = false;
             let nodeContent = textInline.getTextContent();
             let nodeIndex = nodeContent ? nodeContent.length : -1;
@@ -146,7 +143,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         return range;
     }
 
-    private onKeyUpDomEvent(event: PluginDomEvent, keyboardEvent: KeyboardEvent) {
+    private onKeyUpDomEvent(event: PluginKeyboardEvent) {
         if (this.isSuggesting) {
             let wordBeforeCursor = this.getWord(event);
             if (wordBeforeCursor && wordBeforeCursor.split(' ').length <= 4) {
@@ -168,9 +165,9 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
                     this.dataProvider.queryStringUpdated(shortWord);
                     if (this.dataProvider.setCursorPoint) {
                         // Determine the bounding rectangle for the @mention
-                        let cursorData = cacheGetCursorEventData(event, this.editor);
+                        let searcher = cacheGetContentSearcher(event, this.editor);
                         let rangeNode = this.editor.getDocument().createRange();
-                        let nodeBeforeCursor = cursorData.inlineElementBeforeCursor.getContainerNode();
+                        let nodeBeforeCursor = searcher.getInlineElementBefore().getContainerNode();
                         let rangeStartSuccessfullySet = this.setRangeStart(
                             rangeNode,
                             nodeBeforeCursor,
@@ -217,7 +214,8 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         }
     }
 
-    private onKeyDownEvent(event: PluginDomEvent, keyboardEvent: KeyboardEvent) {
+    private onKeyDownEvent(event: PluginKeyboardEvent) {
+        let keyboardEvent = event.rawEvent;
         if (this.isSuggesting) {
             if (keyboardEvent.which == ESC_CHARCODE) {
                 this.setIsSuggesting(false);
@@ -234,11 +232,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
                 this.dataProvider.shiftHighlight(
                     this.pickerOptions.isHorizontal
                         ? keyboardEvent.which == RIGHT_ARROW_CHARCODE
-                            ? true
-                            : false
                         : keyboardEvent.which == DOWN_ARROW_CHARCODE
-                            ? true
-                            : false
                 );
                 this.handleKeyDownEvent(event);
             } else if (
@@ -252,25 +246,25 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
             }
         } else {
             if (keyboardEvent.which == BACKSPACE_CHARCODE) {
-                let cursorData = cacheGetCursorEventData(event, this.editor);
-                let nodeBeforeCursor = cursorData.inlineElementBeforeCursor
-                    ? cursorData.inlineElementBeforeCursor.getContainerNode()
+                let searcher = cacheGetContentSearcher(event, this.editor);
+                let nodeBeforeCursor = searcher.getInlineElementBefore()
+                    ? searcher.getInlineElementBefore().getContainerNode()
                     : null;
                 let nodeId = nodeBeforeCursor ? this.getIdValue(nodeBeforeCursor) : null;
                 if (
                     nodeId &&
                     nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0 &&
-                    (cursorData.inlineElementAfterCursor == null ||
-                        !(cursorData.inlineElementAfterCursor instanceof PartialInlineElement))
+                    (searcher.getInlineElementAfter() == null ||
+                        !(searcher.getInlineElementAfter() instanceof PartialInlineElement))
                 ) {
                     let replacementNode = this.dataProvider.onRemove(nodeBeforeCursor, true);
                     this.replaceNode(nodeBeforeCursor, replacementNode);
                     this.handleKeyDownEvent(event);
                 }
             } else if (keyboardEvent.which == DELETE_CHARCODE) {
-                let cursorData = cacheGetCursorEventData(event, this.editor);
-                let nodeAfterCursor = cursorData.inlineElementAfterCursor
-                    ? cursorData.inlineElementAfterCursor.getContainerNode()
+                let searcher = cacheGetContentSearcher(event, this.editor);
+                let nodeAfterCursor = searcher.getInlineElementAfter()
+                    ? searcher.getInlineElementAfter().getContainerNode()
                     : null;
                 let nodeId = nodeAfterCursor ? this.getIdValue(nodeAfterCursor) : null;
                 if (nodeId && nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0) {
@@ -282,7 +276,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         }
     }
 
-    private getWord(event: PluginDomEvent) {
+    private getWord(event: PluginKeyboardEvent) {
         let wordFromRange = this.getRangeUntilAt(event).toString();
         let wordFromCache = this.getWordBeforeCursor(event);
         // VSO 24891: In picker, trigger and mention are separated into two nodes.
@@ -298,7 +292,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
     }
 
     private setRangeStart(rangeNode: Range, node: Node, target: string) {
-        let nodeOffset = node.textContent.lastIndexOf(target);
+        let nodeOffset = node ? node.textContent.lastIndexOf(target) : -1;
         if (nodeOffset > -1) {
             rangeNode.setStart(node, nodeOffset);
             return true;

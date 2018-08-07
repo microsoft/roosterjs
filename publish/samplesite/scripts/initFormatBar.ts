@@ -3,7 +3,6 @@ import {
     createLink,
     insertImage,
     insertTable,
-    queryNodesWithSelection,
     toggleBold,
     toggleItalic,
     toggleUnderline,
@@ -20,6 +19,7 @@ import {
     setTextColor,
     setBackgroundColor,
     toggleBlockQuote,
+    toggleCodeBlock,
     removeLink,
     toggleHeader,
     editTable,
@@ -29,6 +29,7 @@ import {
     Alignment,
     Direction,
     Indentation,
+    QueryScope,
     TableOperation,
     TableFormat,
 } from 'roosterjs-editor-types';
@@ -90,6 +91,11 @@ export default function initFormatBar() {
         toggleBlockQuote(getCurrentEditor());
     });
 
+    // Code
+    document.getElementById('codeButton').addEventListener('click', function() {
+        toggleCodeBlock(getCurrentEditor());
+    });
+
     // StrikeThrough
     document.getElementById('strikeThroughButton').addEventListener('click', function() {
         toggleStrikethrough(getCurrentEditor());
@@ -109,7 +115,7 @@ export default function initFormatBar() {
     document.getElementById('insertLink').addEventListener('click', function() {
         let editor = getCurrentEditor();
         let range = editor.getSelectionRange();
-        let existingLink = queryNodesWithSelection(editor, 'a[href]')[0] as HTMLAnchorElement;
+        let existingLink = editor.queryElements('a[href]', QueryScope.OnSelection)[0] as HTMLAnchorElement;
         let url = window.prompt('Url', existingLink ? existingLink.href : 'http://');
         let text = window.prompt(
             'Text of link',
@@ -247,7 +253,7 @@ export default function initFormatBar() {
         let select = document.getElementById('fontSizeButton') as HTMLSelectElement;
         let text = select.value;
         if (text) {
-            setFontSize(editor, text + 'px');
+            setFontSize(editor, text + 'pt');
         }
         select.value = '';
     });

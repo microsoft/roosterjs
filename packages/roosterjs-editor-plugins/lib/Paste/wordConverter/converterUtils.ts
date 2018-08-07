@@ -308,9 +308,9 @@ function recurringGetOrCreateListAtNode(
  * conversion is happening, we want to get rid of these elements
  */
 function cleanupListIgnore(node: Node, levels: number) {
-    for (let i = 0; i < node.childNodes.length; i++) {
-        let child = node.childNodes[i];
+    let nodesToRemove: Node[] = [];
 
+    for (let child = node.firstChild; child; child = child.nextSibling) {
         // Clean up the item internally first if we need to based on the number of levels
         if (child.nodeType == NodeType.Element && levels > 1) {
             cleanupListIgnore(child, levels - 1);
@@ -321,10 +321,11 @@ function cleanupListIgnore(node: Node, levels: number) {
 
         // Check if we can remove this item out
         if (isEmptySpan(child) || isIgnoreNode(child)) {
-            node.removeChild(child);
-            i--;
+            nodesToRemove.push(child);
         }
     }
+
+    nodesToRemove.forEach(child => node.removeChild(child));
 }
 
 /**

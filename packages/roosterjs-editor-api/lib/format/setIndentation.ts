@@ -1,7 +1,7 @@
-import execCommand from './execCommand';
-import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
 import { Editor } from 'roosterjs-editor-core';
-import { DocumentCommand, Indentation } from 'roosterjs-editor-types';
+import { DocumentCommand, Indentation, ChangeSource, QueryScope } from 'roosterjs-editor-types';
+import getNodeAtCursor from './getNodeAtCursor';
+import processList from './processList';
 
 /**
  * Set indentation at selection
@@ -15,24 +15,25 @@ export default function setIndentation(editor: Editor, indentation: Indentation)
     let command =
         indentation == Indentation.Increase ? DocumentCommand.Indent : DocumentCommand.Outdent;
     editor.addUndoSnapshot(() => {
-        let isInlist = queryNodesWithSelection(editor, 'OL,UL').length > 0;
-        execCommand(
-            editor,
-            command,
-            true /*addUndoSnapshotWhenCollapsed*/,
-            true /*doWorkaroundForList*/
-        );
+        editor.focus();
+        let listNode = getNodeAtCursor(editor, ['OL', 'UL']);
+        let newNode: Node;
 
-        if (!isInlist) {
-            queryNodesWithSelection(
-                editor,
-                'BLOCKQUOTE',
-                false /*nodeContainedByRangeOnly*/,
-                node => {
-                    node.style.marginTop = '0px';
-                    node.style.marginBottom = '0px';
-                }
-            );
+        if (listNode) {
+            // There is already list node, setIndentation() will increase/decrease the list level,
+            // so we need to process the list when change indentation
+            newNode = processList(editor, command);
+        } else {
+            // No existing list node, browser will create <Blockquote> node for indentation.
+            // We need to set top and bottom margin to 0 to avoid unnecessary spaces
+            editor.getDocument().execCommand(command, false, null);
+            editor.queryElements('BLOCKQUOTE', QueryScope.OnSelection, node => {
+                newNode = newNode || node;
+                node.style.marginTop = '0px';
+                node.style.marginBottom = '0px';
+            });
         }
-    });
+
+        return newNode;
+    }, ChangeSource.Format);
 }

@@ -1,13 +1,7 @@
-import getNodeAtCursor, { cacheGetNodeAtCursor } from '../cursor/getNodeAtCursor';
-import queryNodesWithSelection from '../cursor/queryNodesWithSelection';
+import { cacheGetNodeAtCursor } from './getNodeAtCursor';
 import { Editor } from 'roosterjs-editor-core';
-import { FormatState, PluginEvent } from 'roosterjs-editor-types';
-import { getComputedStyles, getTagOfNode } from 'roosterjs-editor-dom';
-
-// Query command state, used for query Bold, Italic, Underline state
-function queryCommandState(editor: Editor, command: string): boolean {
-    return editor.getDocument().queryCommandState(command);
-}
+import { DocumentCommand, FormatState, PluginEvent, QueryScope } from 'roosterjs-editor-types';
+import { Position, getComputedStyles, getTagOfNode } from 'roosterjs-editor-dom';
 
 /**
  * Get format state at cursor
@@ -20,32 +14,34 @@ function queryCommandState(editor: Editor, command: string): boolean {
  * @returns The format state at cursor
  */
 export default function getFormatState(editor: Editor, event?: PluginEvent): FormatState {
-    let node = getNodeAtCursor(editor);
-    let styles = getComputedStyles(node);
+    let range = editor.getSelectionRange();
+    let node = range && Position.getStart(range).normalize().node;
+    let styles = node ? getComputedStyles(node) : [];
     let listTag = getTagOfNode(cacheGetNodeAtCursor(editor, event, ['OL', 'UL']));
     let headerTag = getTagOfNode(
         cacheGetNodeAtCursor(editor, event, ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'])
     );
+    let document = editor.getDocument();
     return {
         fontName: styles[0],
         fontSize: styles[1],
         textColor: styles[2],
         backgroundColor: styles[3],
 
-        isBold: queryCommandState(editor, 'bold'),
-        isItalic: queryCommandState(editor, 'italic'),
-        isUnderline: queryCommandState(editor, 'underline'),
-        isStrikeThrough: queryCommandState(editor, 'strikeThrough'),
-        isSubscript: queryCommandState(editor, 'subscript'),
-        isSuperscript: queryCommandState(editor, 'superscript'),
+        isBold: document.queryCommandState(DocumentCommand.Bold),
+        isItalic: document.queryCommandState(DocumentCommand.Italic),
+        isUnderline: document.queryCommandState(DocumentCommand.Underline),
+        isStrikeThrough: document.queryCommandState(DocumentCommand.StrikeThrough),
+        isSubscript: document.queryCommandState(DocumentCommand.Subscript),
+        isSuperscript: document.queryCommandState(DocumentCommand.Superscript),
 
         isBullet: listTag == 'UL',
         isNumbering: listTag == 'OL',
         headerLevel: (headerTag && parseInt(headerTag[1])) || 0,
 
-        canUnlink: !!queryNodesWithSelection(editor, 'a[href]')[0],
-        canAddImageAltText: !!queryNodesWithSelection(editor, 'img')[0],
-        isBlockQuote: queryNodesWithSelection(editor, 'blockquote').length > 0,
+        canUnlink: !!editor.queryElements('a[href]', QueryScope.OnSelection)[0],
+        canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],
+        isBlockQuote: !!editor.queryElements('blockquote', QueryScope.OnSelection)[0],
 
         canUndo: editor.canUndo(),
         canRedo: editor.canRedo(),

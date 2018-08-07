@@ -1,18 +1,14 @@
-import { ContentEditFeature } from '../ContentEditFeatures';
+import { ContentEditFeature, Keys } from '../ContentEditFeatures';
 import { Editor } from 'roosterjs-editor-core';
 import { PluginEvent, PositionType } from 'roosterjs-editor-types';
 import { VTable, contains, getTagOfNode } from 'roosterjs-editor-dom';
 import { cacheGetNodeAtCursor, getNodeAtCursor } from 'roosterjs-editor-api';
 
-const KEY_TAB = 9;
-const KEY_UP = 38;
-const KEY_DOWN = 40;
-
 export const TabInTable: ContentEditFeature = {
-    keys: [KEY_TAB],
+    keys: [Keys.TAB],
     shouldHandleEvent: cacheGetTableCell,
     handleEvent: (event, editor) => {
-        let shift = (event.rawEvent as KeyboardEvent).shiftKey;
+        let shift = event.rawEvent.shiftKey;
         let td = cacheGetTableCell(event, editor);
         for (
             let vtable = new VTable(td),
@@ -38,15 +34,16 @@ export const TabInTable: ContentEditFeature = {
         }
         event.rawEvent.preventDefault();
     },
+    isAvailable: featureSet => featureSet.tabInTable,
 };
 
 export const UpDownInTable: ContentEditFeature = {
-    keys: [KEY_UP, KEY_DOWN],
+    keys: [Keys.UP, Keys.DOWN],
     shouldHandleEvent: cacheGetTableCell,
     handleEvent: (event, editor) => {
         let td = cacheGetTableCell(event, editor);
         let vtable = new VTable(td);
-        let isUp = (event.rawEvent as KeyboardEvent).which == KEY_UP;
+        let isUp = event.rawEvent.which == Keys.UP;
         let step = isUp ? -1 : 1;
         let targetTd: HTMLTableCellElement = null;
 
@@ -60,7 +57,10 @@ export const UpDownInTable: ContentEditFeature = {
 
         editor.runAsync(() => {
             let newContainer = getNodeAtCursor(editor);
-            if (!contains(td, newContainer, true /*treatSameNodeAsContain*/)) {
+            if (
+                contains(vtable.table, newContainer) &&
+                !contains(td, newContainer, true /*treatSameNodeAsContain*/)
+            ) {
                 if (targetTd) {
                     editor.select(targetTd, PositionType.Begin);
                 } else {
@@ -69,6 +69,7 @@ export const UpDownInTable: ContentEditFeature = {
             }
         });
     },
+    isAvailable: featureSet => featureSet.upDownInTable,
 };
 
 function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellElement {

@@ -1,6 +1,6 @@
-import getNodeAtCursor from '../cursor/getNodeAtCursor';
+import getNodeAtCursor from '../format/getNodeAtCursor';
 import { Editor } from 'roosterjs-editor-core';
-import { TableOperation } from 'roosterjs-editor-types';
+import { TableOperation, ChangeSource } from 'roosterjs-editor-types';
 import { VTable } from 'roosterjs-editor-dom';
 
 /**
@@ -138,6 +138,6 @@ export default function editTable(editor: Editor, operation: TableOperation) {
             if (!editor.select(start, end)) {
                 editor.select(editor.contains(td) ? td : vtable.getCurrentTd());
             }
-        });
+        }, ChangeSource.Format);
     }
 }

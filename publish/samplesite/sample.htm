@@ -120,7 +120,9 @@
             }
 
             .optionList {
-                width: 300px;
+                min-width: 300px;
+                max-height: 200px;
+                overflow-y: auto;
             }
 
             .formatBar {
@@ -157,6 +159,22 @@
                         <div><input type="checkbox" id="watermarkCheckbox"><label for="watermarkCheckbox">Watermark plugin</label></div>
                         <div><input type="checkbox" id="imageResizeCheckbox" checked><label for="imageResizeCheckbox">Image Resize plugin</label></div>
                         <div><input type="checkbox" id="tableResizeCheckbox" checked><label for="tableResizeCheckbox">Table Resize plugin</label></div>
+                    </div>
+                    <div class="optionList">
+                        <div>Content Edit features:</div>
+                        <div><input type="checkbox" id="autoLinkCheckbox" checked><label for="autoLinkCheckbox">AutoLink</label></div>
+                        <div><input type="checkbox" id="indentWhenTabCheckbox" checked><label for="indentWhenTabCheckbox">Indent When Tab</label></div>
+                        <div><input type="checkbox" id="outdentWhenShiftTabCheckbox" checked><label for="outdentWhenShiftTabCheckbox">Outdent When Shift+Tab</label></div>
+                        <div><input type="checkbox" id="outdentWhenBackspaceOnEmptyFirstLineCheckbox" checked><label for="outdentWhenBackspaceOnEmptyFirstLineCheckbox">Outdent When Backspace On Empty FirstLine</label></div>
+                        <div><input type="checkbox" id="outdentWhenEnterOnEmptyLineCheckbox" checked><label for="outdentWhenEnterOnEmptyLineCheckbox">Outdent When Enter On Empty Line</label></div>
+                        <div><input type="checkbox" id="mergeInNewLineWhenBackspaceOnFirstCharCheckbox"><label for="mergeInNewLineWhenBackspaceOnFirstCharCheckbox">Merge In New Line When Backspace On FirstChar In List</label></div>
+                        <div><input type="checkbox" id="unquoteWhenBackspaceOnEmptyFirstLineCheckbox" checked><label for="unquoteWhenBackspaceOnEmptyFirstLineCheckbox">Unquote When Backspace On Empty First Line</label></div>
+                        <div><input type="checkbox" id="unquoteWhenEnterOnEmptyLineCheckbox" checked><label for="unquoteWhenEnterOnEmptyLineCheckbox">Unquote When Enter On Empty Line</label></div>
+                        <div><input type="checkbox" id="autoBulletCheckbox" checked><label for="autoBulletCheckbox">Auto Bullet / Numbering</label></div>
+                        <div><input type="checkbox" id="tabInTableCheckbox" checked><label for="tabInTableCheckbox">Tab To Jump Cell In Table</label></div>
+                        <div><input type="checkbox" id="upDownInTableCheckbox" checked><label for="upDownInTableCheckbox">Up / Down To Jump Cell In Table</label></div>
+                        <div><input type="checkbox" id="defaultShortcutCheckbox" checked><label for="defaultShortcutCheckbox">Default Shortcuts</label></div>
+                        <div><input type="checkbox" id="smartOrderedListCheckbox"><label for="smartOrderedListCheckbox">Smart Ordered List Style</label></div>
                     </div>
                     <div class="optionList">
                         <div>Default Format:</div>
@@ -299,6 +317,7 @@
                 <button id="bulletButton">Bullet</button>
                 <button id="numberingButton">Numbering</button>
                 <button id="blockquoteButton">BlockQuote</button>
+                <button id="codeButton">Code</button>
                 &nbsp;
                 <button id="indentButton">Indent</button>
                 <button id="outdentButton">Outdent</button>

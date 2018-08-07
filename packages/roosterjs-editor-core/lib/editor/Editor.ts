@@ -2,6 +2,7 @@ import EditorCore from './EditorCore';
 import EditorOptions from './EditorOptions';
 import createEditorCore from './createEditorCore';
 import {
+    BlockElement,
     ChangeSource,
     ContentPosition,
     ContentScope,
@@ -13,37 +14,34 @@ import {
     PluginEvent,
     PluginEventType,
     PositionType,
+    QueryScope,
     Rect,
 } from 'roosterjs-editor-types';
 import {
     Browser,
+    PositionContentSearcher,
     ContentTraverser,
-    NodeBlockElement,
     Position,
-    SelectionRange,
-    applyFormat,
     contains,
     fromHtml,
     getBlockElementAtNode,
-    getElementOrParentElement,
-    getFirstBlockElement,
     getInlineElementAtNode,
     getTagOfNode,
     isNodeEmpty,
+    markSelection,
     queryElements,
+    removeMarker,
+    collapseNodes,
     wrap,
 } from 'roosterjs-editor-dom';
-import { markSelection, retrieveRangeFromMarker } from '../undo/selectionMarker';
-
-const KEY_BACKSPACE = 8;
 
 /**
  * RoosterJs core editor class
  */
 export default class Editor {
-    private inIME: boolean;
     private core: EditorCore;
     private eventDisposers: (() => void)[];
+    private contenteditableChanged: boolean;
 
     //#region Lifecycle
 
@@ -65,31 +63,34 @@ export default class Editor {
         this.core.plugins.forEach(plugin => plugin.initialize(this));
 
         // 4. Ensure initial content and its format
-        this.ensureInitialContent(options.initialContent || contentDiv.innerHTML || '');
+        this.setContent(options.initialContent || contentDiv.innerHTML || '');
+        this.core.corePlugin.ensureTypeInElement(new Position(contentDiv, PositionType.Begin));
 
-        // 5. Initialize undo service
-        // This need to be after step 4 so that undo service can pickup initial content
-        this.core.undo.initialize(this);
-        this.core.plugins.push(this.core.undo);
+        // 5. Create event handler to bind DOM events
+        this.eventDisposers = [
+            this.core.api.attachDomEvent(this.core, 'keypress', PluginEventType.KeyPress),
+            this.core.api.attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown),
+            this.core.api.attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp),
+            this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
+            this.core.api.attachDomEvent(this.core, 'mouseup', PluginEventType.MouseUp),
+        ];
 
-        // 6. Create event handler to bind DOM events
-        this.createEventHandlers();
-
-        // 7. Make the container editable and set its selection styles
-        if (!this.core.omitContentEditable) {
+        // 6. Make the container editable and set its selection styles
+        if (!options.omitContentEditableAttributeChanges && !contentDiv.isContentEditable) {
             contentDiv.setAttribute('contenteditable', 'true');
             let styles = contentDiv.style;
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
+            this.contenteditableChanged = true;
         }
 
-        // 8. Disable these operations for firefox since its behavior is usually wrong
+        // 7. Disable these operations for firefox since its behavior is usually wrong
         // Catch any possible exception since this should not block the initialization of editor
         try {
             this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, false);
             this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, false);
         } catch (e) {}
 
-        // 9. Finally, let plugins know that we are ready
+        // 8. Finally, let plugins know that we are ready
         this.triggerEvent(
             {
                 eventType: PluginEventType.EditorReady,
@@ -121,7 +122,7 @@ export default class Editor {
             delete this.core.customData[key];
         }
 
-        if (!this.core.omitContentEditable) {
+        if (this.contenteditableChanged) {
             let styles = this.core.contentDiv.style;
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = '';
             this.core.contentDiv.removeAttribute('contenteditable');
@@ -190,10 +191,20 @@ export default class Editor {
     /**
      * Get InlineElement at given node
      * @param node The node to create InlineElement
-     * @requires The InlineElement result
+     * @param forceAtNode Force to get a NodeInlineElement at the given node
+     * @returns The InlineElement result
      */
-    public getInlineElementAtNode(node: Node): InlineElement {
-        return getInlineElementAtNode(this.core.contentDiv, node);
+    public getInlineElementAtNode(node: Node, forceAtNode?: boolean): InlineElement {
+        return getInlineElementAtNode(this.core.contentDiv, node, forceAtNode);
+    }
+
+    /**
+     * Get BlockElement at given node
+     * @param node The node to create InlineElement
+     * @returns The BlockElement result
+     */
+    public getBlockElementAtNode(node: Node): BlockElement {
+        return getBlockElementAtNode(this.core.contentDiv, node);
     }
 
     /**
@@ -210,14 +221,7 @@ export default class Editor {
      */
     public contains(range: Range): boolean;
 
-    /**
-     * Check if the selection range falls in the editor content
-     * @param range The range to check
-     * @returns True if the given range is in editor content, otherwise false
-     */
-    public contains(range: SelectionRange): boolean;
-
-    public contains(arg: Node | Range | SelectionRange): boolean {
+    public contains(arg: Node | Range): boolean {
         return contains(this.core.contentDiv, <Node>arg);
     }
 
@@ -225,11 +229,11 @@ export default class Editor {
      * Query HTML elements in editor by tag name
      * @param tag Tag name of the element to query
      * @param forEachCallback An optional callback to be invoked on each element in query result
-     * @returns HTML Element list of the query result
+     * @returns HTML Element array of the query result
      */
     public queryElements<T extends keyof HTMLElementTagNameMap>(
         tag: T,
-        forEachCallback?: (node: T) => any
+        forEachCallback?: (node: HTMLElementTagNameMap[T]) => any
     ): HTMLElementTagNameMap[T][];
 
     /**
@@ -243,8 +247,57 @@ export default class Editor {
         forEachCallback?: (node: T) => any
     ): T[];
 
-    public queryElements(selector: string, forEachCallback?: (node: Node) => any) {
-        return queryElements(this.core.contentDiv, selector, forEachCallback);
+    /**
+     * Query HTML elements with the given scope by tag name
+     * @param tag Tag name of the element to query
+     * @param scope The scope of the query, default value is QueryScope.Body
+     * @param forEachCallback An optional callback to be invoked on each element in query result
+     * @returns HTML Element list of the query result
+     */
+    public queryElements<T extends keyof HTMLElementTagNameMap>(
+        tag: T,
+        scope: QueryScope,
+        forEachCallback?: (node: HTMLElementTagNameMap[T]) => any
+    ): HTMLElementTagNameMap[T][];
+
+    /**
+     * Query HTML elements with the given scope by a selector string
+     * @param selector Selector string to query
+     * @param scope The scope of the query, default value is QueryScope.Body
+     * @param forEachCallback An optional callback to be invoked on each element in query result
+     * @returns HTML Element array of the query result
+     */
+    public queryElements<T extends HTMLElement = HTMLElement>(
+        selector: string,
+        scope: QueryScope,
+        forEachCallback?: (node: T) => any
+    ): T[];
+
+    public queryElements(
+        selector: string,
+        scopeOrCallback: QueryScope | ((node: Node) => any) = QueryScope.Body,
+        callback?: (node: Node) => any
+    ) {
+        let scope = scopeOrCallback instanceof Function ? QueryScope.Body : scopeOrCallback;
+        callback = scopeOrCallback instanceof Function ? scopeOrCallback : callback;
+
+        let range = scope == QueryScope.Body ? null : this.getSelectionRange();
+        return queryElements(this.core.contentDiv, selector, callback, scope, range);
+    }
+
+    /**
+     * Collapse nodes within the given start and end nodes to their common ascenstor node,
+     * split parent nodes if necessary
+     * @param start The start node
+     * @param end The end node
+     * @param canSplitParent True to allow split parent node there are nodes before start or after end under the same parent
+     * and the returned nodes will be all nodes from start trhough end after splitting
+     * False to disallow split parent
+     * @returns When cansplitParent is true, returns all node from start through end after splitting,
+     * otherwise just return start and end
+     */
+    public collapseNodes(start: Node, end: Node, canSplitParent: boolean): Node[] {
+        return collapseNodes(this.core.contentDiv, start, end, canSplitParent);
     }
 
     //#endregion
@@ -272,14 +325,10 @@ export default class Editor {
         triggerExtractContentEvent: boolean = true,
         includeSelectionMarker: boolean = false
     ): string {
-        let content = '';
-        if (includeSelectionMarker) {
-            this.runWithSelectionMarker(() => {
-                content = this.core.contentDiv.innerHTML;
-            }, false /*useInlineMarker*/);
-        } else {
-            content = this.core.contentDiv.innerHTML;
-        }
+        let contentDiv = this.core.contentDiv;
+        let content = includeSelectionMarker
+            ? this.runWithSelectionMarker(() => contentDiv.innerHTML, false /*useInlineMarker*/)
+            : contentDiv.innerHTML;
 
         if (triggerExtractContentEvent) {
             let extractContentEvent: ExtractContentEvent = {
@@ -304,12 +353,13 @@ export default class Editor {
     /**
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * @param content HTML content to set in
+     * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     public setContent(content: string, triggerContentChangedEvent: boolean = true) {
         if (this.core.contentDiv.innerHTML != content) {
             this.core.contentDiv.innerHTML = content || '';
 
-            this.restoreSelectionFromMarker();
+            this.select(removeMarker(this.core.contentDiv, true /*retrieveSelectionRange*/));
 
             if (triggerContentChangedEvent) {
                 this.triggerContentChangedEvent();
@@ -341,13 +391,6 @@ export default class Editor {
         }
     }
 
-    /**
-     * @deprecated Use queryElements instead
-     */
-    public queryContent(selector: string): NodeListOf<Element> {
-        return this.core.contentDiv.querySelectorAll(selector);
-    }
-
     //#endregion
 
     //#region Focus and Selection
@@ -359,15 +402,6 @@ export default class Editor {
      */
     public getSelectionRange(): Range {
         return this.core.api.getSelectionRange(this.core, true /*tryGetFromCache*/);
-    }
-
-    /**
-     * @deprecated
-     * Get current selection
-     * @return current selection object
-     */
-    public getSelection(): Selection {
-        return this.core.document.defaultView.getSelection();
     }
 
     /**
@@ -391,13 +425,6 @@ export default class Editor {
      * @returns True if content is selected, otherwise false
      */
     public select(range: Range): boolean;
-
-    /**
-     * Select content by SelectionRange
-     * @param range The SelectionRange object which represents the content range to select
-     * @returns True if content is selected, otherwise false
-     */
-    public select(range: SelectionRange): boolean;
 
     /**
      * Select content by Position and collapse to this position
@@ -451,39 +478,31 @@ export default class Editor {
     /**
      * Insert selection marker element into content, so that after doing some modification,
      * we can still restore the selection as long as the selection marker is still there
-     * @returns True if selection markers are added, otherwise false.
+     * @returns The return value of callback
      */
-    public runWithSelectionMarker(callback: () => any, useInlineMarker?: boolean) {
+    public runWithSelectionMarker<T>(callback: () => T, useInlineMarker?: boolean): T {
         let selectionMarked = markSelection(
             this.core.contentDiv,
             this.getSelectionRange(),
             useInlineMarker
         );
         try {
-            if (callback) {
-                callback();
-            }
+            return callback && callback();
         } finally {
             if (selectionMarked) {
                 // In safari the selection will be lost after inserting markers, so need to restore it
                 // For other browsers we just need to delete markers here
-                this.restoreSelectionFromMarker(!Browser.isSafari /*removeMarkerOnly*/);
+                this.select(
+                    removeMarker(
+                        this.core.contentDiv,
+                        Browser.isSafari || Browser.isChrome /*applySelection*/
+                    )
+                );
             }
         }
     }
 
     /**
-     * @deprecated Use select() instead
-     * Update selection in editor
-     * @param selectionRange The selection range to update to
-     * @returns true if selection range is updated. Otherwise false.
-     */
-    public updateSelection(selectionRange: Range): boolean {
-        return this.select(selectionRange);
-    }
-
-    /**
-     * @deprecated
      * Save the current selection in editor so that when focus again, the selection can be restored
      */
     public saveSelectionRange() {
@@ -491,6 +510,14 @@ export default class Editor {
             this.core,
             false /*tryGetFromCache*/
         );
+    }
+
+    /**
+     * Restore the saved selection range and clear it
+     */
+    public restoreSavedRange() {
+        this.select(this.core.cachedSelectionRange);
+        this.core.cachedSelectionRange = null;
     }
 
     /**
@@ -506,60 +533,6 @@ export default class Editor {
 
         let position = new Position(selection.focusNode, selection.focusOffset);
         return position.getRect();
-    }
-
-    /**
-     * @deprecated This function will be moved to roosterjs-editor-api in next major release
-     * Apply inline style to current selection
-     * @param callback The callback function to apply style
-     */
-    public applyInlineStyle(callback: (element: HTMLElement) => any) {
-        this.focus();
-        let range = this.getSelectionRange();
-        let collapsed = range && range.collapsed;
-
-        if (collapsed) {
-            this.addUndoSnapshot();
-
-            // Create a new span to hold the style.
-            // Some content is needed to position selection into the span
-            // for here, we inject ZWS - zero width space
-            let element = fromHtml('<SPAN>\u200B</SPAN>', this.getDocument())[0] as HTMLElement;
-            callback(element);
-            this.insertNode(element);
-
-            // reset selection to be after the ZWS (rather than selecting it)
-            // This is needed so that the cursor still looks blinking inside editor
-            // This also means an extra ZWS will be in editor
-            this.select(element, PositionType.End);
-        } else {
-            this.addUndoSnapshot(() => {
-                // This is start and end node that get the style. The start and end needs to be recorded so that selection
-                // can be re-applied post-applying style
-                let firstNode: Node;
-                let lastNode: Node;
-                let contentTraverser = this.getSelectionTraverser();
-
-                // Just loop through all inline elements in the selection and apply style for each
-                let inlineElement = contentTraverser.currentInlineElement;
-                while (inlineElement) {
-                    // Need to obtain next inline first. Applying styles changes DOM which may mess up with the navigation
-                    let nextInline = contentTraverser.getNextInlineElement();
-                    inlineElement.applyStyle(element => {
-                        callback(element as HTMLElement);
-                        firstNode = firstNode || element;
-                        lastNode = element;
-                    });
-
-                    inlineElement = nextInline;
-                }
-
-                // When selectionStartNode/EndNode is set, it means there is DOM change. Re-create the selection
-                if (firstNode && lastNode) {
-                    this.select(firstNode, PositionType.Before, lastNode, PositionType.After);
-                }
-            });
-        }
     }
 
     //#endregion
@@ -601,7 +574,6 @@ export default class Editor {
         source: ChangeSource | string = ChangeSource.SetContent,
         data?: any
     ) {
-        this.onContentChange();
         this.triggerEvent({
             eventType: PluginEventType.ContentChanged,
             source: source,
@@ -630,29 +602,17 @@ export default class Editor {
     }
 
     /**
-     * @deprecated Use editWithUndo() instead
-     */
-    public runWithoutAddingUndoSnapshot(callback: () => void) {
-        try {
-            this.core.suspendUndo = true;
-            callback();
-        } finally {
-            this.core.suspendUndo = false;
-        }
-    }
-
-    /**
      * Add undo snapshot, and execute a format callback function, then add another undo snapshot, then trigger
      * ContentChangedEvent with given change source.
      * If this function is called nested, undo snapshot will only be added in the outside one
      * @param callback The callback function to perform formatting, returns a data object which will be used as
      * the data field in ContentChangedEvent if changeSource is not null.
-     * @param changeSource The change source to use when fire ContentChangedEvent. Default value is 'Format'
-     * If pass null, the event will not be fired.
+     * @param changeSource The change source to use when fire ContentChangedEvent. When the value is not null,
+     * a ContentChangedEvent will be fired with change source equal to this value
      */
     public addUndoSnapshot(
         callback?: (start: Position, end: Position) => any,
-        changeSource: ChangeSource | string = ChangeSource.Format
+        changeSource?: ChangeSource | string
     ) {
         this.core.api.editWithUndo(
             this.core,
@@ -668,21 +628,8 @@ export default class Editor {
      * @param callback The auto complete callback, return value will be used as data field of ContentChangedEvent
      * @param changeSource Chagne source of ContentChangedEvent. If not passed, no ContentChangedEvent will be  triggered
      */
-    public performAutoComplete(
-        callback: (start: Position, end: Position) => any,
-        changeSource?: ChangeSource
-    ) {
-        let snapshot = this.getContent(
-            false /*triggerContentChangedEvent*/,
-            true /*markSelection*/
-        );
-        this.core.api.editWithUndo(
-            this.core,
-            callback,
-            changeSource,
-            false /*addUndoSnapshotBeforeAction*/
-        );
-        this.core.snapshotBeforeAutoComplete = snapshot;
+    public performAutoComplete(callback: () => any, changeSource?: ChangeSource) {
+        this.core.corePlugin.performAutoComplete(callback, changeSource);
     }
 
     /**
@@ -720,10 +667,7 @@ export default class Editor {
      * dispose editor.
      */
     public getCustomData<T>(key: string, getter: () => T, disposer?: (value: T) => void): T {
-        return (this.core.customData[key] = this.core.customData[key] || {
-            value: getter(),
-            disposer: disposer,
-        }).value;
+        return this.core.api.getCustomData(this.core, key, getter, disposer);
     }
 
     /**
@@ -731,7 +675,7 @@ export default class Editor {
      * @returns True if editor is in IME input sequence, otherwise false
      */
     public isInIME(): boolean {
-        return this.inIME;
+        return this.core.corePlugin.isInIME();
     }
 
     /**
@@ -772,28 +716,16 @@ export default class Editor {
     ): ContentTraverser {
         let range = this.getSelectionRange();
         return (
-            range &&
-            ContentTraverser.createSelectionBlockTraverser(this.core.contentDiv, range, startFrom)
+            range && ContentTraverser.createBlockTraverser(this.core.contentDiv, range, startFrom)
         );
     }
 
     /**
-     * @deprecated Use getBodyTraverser, getSelectionTraverser, getBlockTraverser instead
+     * Get a text traverser of current selection
      */
-    public getContentTraverser(
-        scope: ContentScope,
-        position: ContentPosition = ContentPosition.SelectionStart
-    ): ContentTraverser {
-        switch (scope) {
-            case ContentScope.Block:
-                return this.getBlockTraverser();
-            case ContentScope.Selection:
-                return this.getSelectionTraverser();
-            case ContentScope.Body:
-                return this.getBodyTraverser();
-        }
-
-        return null;
+    public getContentSearcherOfCursor(): PositionContentSearcher {
+        let range = this.getSelectionRange();
+        return range && new PositionContentSearcher(this.core.contentDiv, Position.getStart(range));
     }
 
     /**
@@ -811,176 +743,104 @@ export default class Editor {
 
     //#endregion
 
-    //#region Private functions
-    private createEventHandlers() {
-        this.eventDisposers = [
-            this.core.api.attachDomEvent(this.core, 'input', null, this.stopPropagation),
-            this.core.api.attachDomEvent(
-                this.core,
-                'keypress',
-                PluginEventType.KeyPress,
-                this.onKeyPress
-            ),
-            this.core.api.attachDomEvent(
-                this.core,
-                'keydown',
-                PluginEventType.KeyDown,
-                this.onKeyDown
-            ),
-            this.core.api.attachDomEvent(
-                this.core,
-                'keyup',
-                PluginEventType.KeyUp,
-                this.stopPropagation
-            ),
-            this.core.api.attachDomEvent(
-                this.core,
-                'mousedown',
-                PluginEventType.MouseDown,
-                this.onContentChange
-            ),
-            this.core.api.attachDomEvent(this.core, 'mouseup', PluginEventType.MouseUp),
-            this.core.api.attachDomEvent(
-                this.core,
-                'compositionstart',
-                null,
-                () => (this.inIME = true)
-            ),
-            this.core.api.attachDomEvent(
-                this.core,
-                'compositionend',
-                PluginEventType.CompositionEnd,
-                () => (this.inIME = false)
-            ),
-            this.core.api.attachDomEvent(this.core, 'focus', null, () => {
-                // Restore the last saved selection first
-                if (this.core.cachedSelectionRange && !this.core.disableRestoreSelectionOnFocus) {
-                    this.updateSelection(this.core.cachedSelectionRange);
-                }
-                this.core.cachedSelectionRange = null;
-            }),
-            this.core.api.attachDomEvent(
-                this.core,
-                Browser.isIEOrEdge ? 'beforedeactivate' : 'blur',
-                null,
-                () => {
-                    this.saveSelectionRange();
-                }
-            ),
-        ];
+    //#region Deprecated methods
+
+    /**
+     * @deprecated Use queryElements instead
+     */
+    public queryContent(selector: string): NodeListOf<Element> {
+        return this.core.contentDiv.querySelectorAll(selector);
     }
 
-    private stopPropagation = (event: KeyboardEvent) => {
-        if (
-            !event.ctrlKey &&
-            !event.altKey &&
-            !event.metaKey &&
-            (event.which == 32 || // Space
-            (event.which >= 65 && event.which <= 90) || // A-Z
-            (event.which >= 48 && event.which <= 57) || // 0-9
-            (event.which >= 96 && event.which <= 105) || // 0-9 on num pad
-            (event.which >= 186 && event.which <= 192) || // ';', '=', ',', '-', '.', '/', '`'
-                (event.which >= 219 && event.which <= 222))
-        ) {
-            // '[', '\', ']', '''
-            event.stopPropagation();
+    /**
+     * @deprecated
+     * Get current selection
+     * @return current selection object
+     */
+    public getSelection(): Selection {
+        return this.core.document.defaultView.getSelection();
+    }
+
+    /**
+     * @deprecated Use select() instead
+     * Update selection in editor
+     * @param selectionRange The selection range to update to
+     * @returns true if selection range is updated. Otherwise false.
+     */
+    public updateSelection(selectionRange: Range): boolean {
+        return this.select(selectionRange);
+    }
+
+    /**
+     * @deprecated Use editWithUndo() instead
+     */
+    public runWithoutAddingUndoSnapshot(callback: () => void) {
+        try {
+            this.core.suspendUndo = true;
+            callback();
+        } finally {
+            this.core.suspendUndo = false;
         }
-    };
+    }
 
-    private onContentChange = (event?: KeyboardEvent) => {
-        if (this.core.snapshotBeforeAutoComplete !== null) {
-            if (event && event.which == KEY_BACKSPACE) {
-                event.preventDefault();
-                this.addUndoSnapshot(
-                    () =>
-                        this.setContent(
-                            this.core.snapshotBeforeAutoComplete,
-                            false /*triggerContentChangedEvent*/
-                        ),
-                    ChangeSource.UndoAutoComplete
-                );
-            }
-            this.core.snapshotBeforeAutoComplete = null;
+    /**
+     * @deprecated Use getBodyTraverser, getSelectionTraverser, getBlockTraverser instead
+     */
+    public getContentTraverser(
+        scope: ContentScope,
+        position: ContentPosition = ContentPosition.SelectionStart
+    ): ContentTraverser {
+        switch (scope) {
+            case ContentScope.Block:
+                return this.getBlockTraverser(position);
+            case ContentScope.Selection:
+                return this.getSelectionTraverser();
+            case ContentScope.Body:
+                return this.getBodyTraverser();
         }
-    };
 
-    private onKeyDown = (event: KeyboardEvent) => {
-        this.stopPropagation(event);
-        this.onContentChange(event);
-    };
+        return null;
+    }
 
-    // Check if user is typing right under the content div
-    // When typing goes directly under content div, many things can go wrong
-    // We fix it by wrapping it with a div and reposition cursor within the div
-    // TODO: we only fix the case when selection is collapsed
-    // When selection is not collapsed, i.e. users press ctrl+A, and then type
-    // We don't have a good way to fix that for the moment
-    private onKeyPress = (event: KeyboardEvent) => {
+    /**
+     * @deprecated This function will be moved to roosterjs-editor-api in next major release
+     * Apply inline style to current selection
+     * @param callback The callback function to apply style
+     */
+    public applyInlineStyle(callback: (element: HTMLElement) => any) {
+        this.focus();
         let range = this.getSelectionRange();
-        if (
-            range &&
-            range.collapsed &&
-            getElementOrParentElement(range.startContainer) == this.core.contentDiv
-        ) {
-            let position = new Position(range.startContainer, range.startOffset).normalize();
-            let blockElement = getBlockElementAtNode(this.core.contentDiv, position.node);
 
-            if (!blockElement) {
-                // Only reason we don't get the selection block is that we have an empty content div
-                // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
-                // The fix is to add a DIV wrapping, apply default format and move cursor over
-                let node = fromHtml('<div><br></div>', this.core.document)[0];
-                let element = this.core.contentDiv.appendChild(node) as HTMLElement;
-                applyFormat(element, this.core.defaultFormat);
-                // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
-                this.select(element.firstChild, PositionType.Begin);
-            } else if (
-                blockElement.getStartNode().parentNode == blockElement.getEndNode().parentNode
-            ) {
-                // Only fix the balanced start-end block where start and end node is under same parent
-                // The focus node could be pointing to the content div, normalize it to have it point to a child first
-                let element = wrap(blockElement.getContentNodes());
-                if (getTagOfNode(blockElement.getStartNode()) == 'BR') {
-                    // if the block is just BR, apply default format
-                    // Otherwise, leave it as it is as we don't want to change the style for existing data
-                    applyFormat(element, this.core.defaultFormat);
+        if (range && range.collapsed) {
+            // Create a new text node to hold the selection.
+            // Some content is needed to position selection into the span
+            // for here, we inject ZWS - zero width space
+            let tempNode = this.getDocument().createTextNode('\u200B');
+            this.addUndoSnapshot();
+            range.insertNode(tempNode);
+            this.getInlineElementAtNode(tempNode, true /*forceAtNode*/).applyStyle(callback);
+            this.select(tempNode, PositionType.End);
+        } else {
+            // This is start and end node that get the style. The start and end needs to be recorded so that selection
+            // can be re-applied post-applying style
+            this.addUndoSnapshot(() => {
+                let firstNode: Node;
+                let lastNode: Node;
+                let contentTraverser = this.getSelectionTraverser();
+                let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
+                while (inlineElement) {
+                    let nextInlineElement = contentTraverser.getNextInlineElement();
+                    inlineElement.applyStyle(element => {
+                        callback(element);
+                        firstNode = firstNode || element;
+                        lastNode = element;
+                    });
+                    inlineElement = nextInlineElement;
                 }
-                // Last restore the selection using the normalized editor point
-                this.select(position);
-            }
-        }
-        this.stopPropagation(event);
-    };
-
-    private ensureInitialContent(initialContent: string) {
-        this.setContent(initialContent);
-
-        let firstBlock = getFirstBlockElement(this.core.contentDiv);
-        let defaultFormatBlockElement: HTMLElement;
-
-        if (!firstBlock) {
-            // No first block, let's create one
-            let nodes = fromHtml('<div><br></div>', this.core.document);
-            defaultFormatBlockElement = this.core.contentDiv.appendChild(nodes[0]) as HTMLElement;
-        } else if (firstBlock instanceof NodeBlockElement) {
-            // There is a first block and it is a Node (P, DIV etc.) block
-            // Check if it is empty block and apply default format if so
-            // TODO: what about first block contains just an image? testing getTextContent won't tell that
-            // Probably it is no harm since apply default format on an image block won't change anything for the image
-            if (firstBlock.getTextContent() == '') {
-                defaultFormatBlockElement = firstBlock.getStartNode() as HTMLElement;
-            }
-        }
-
-        if (defaultFormatBlockElement) {
-            applyFormat(defaultFormatBlockElement, this.core.defaultFormat);
-        }
-    }
-
-    private restoreSelectionFromMarker(removeMarkerOnly?: boolean) {
-        let range = retrieveRangeFromMarker(this.core.contentDiv, removeMarkerOnly);
-        if (range) {
-            this.select(range);
+                if (firstNode && lastNode) {
+                    this.select(firstNode, PositionType.Before, lastNode, PositionType.After);
+                }
+            }, ChangeSource.Format);
         }
     }
 

@@ -9,16 +9,31 @@ export { default as Alignment } from './enum/Alignment';
 export { default as ChangeSource } from './enum/ChangeSource';
 export { default as ContentPosition } from './enum/ContentPosition';
 export { default as Direction } from './enum/Direction';
+export { default as FontSizeChange } from './enum/FontSizeChange';
 export { default as Indentation } from './enum/Indentation';
 export { default as PasteOption } from './enum/PasteOption';
 export { default as PositionType } from './enum/PositionType';
+export { default as QueryScope } from './enum/QueryScope';
 export { default as TableOperation } from './enum/TableOperation';
 
 // Event
+export { default as BasePluginEvent } from './event/BasePluginEvent';
+export { default as BeforeDisposeEvent } from './event/BeforeDisposeEvent';
 export { default as BeforePasteEvent } from './event/BeforePasteEvent';
 export { default as ContentChangedEvent } from './event/ContentChangedEvent';
+export { default as EditorReadyEvent } from './event/EditorReadyEvent';
 export { default as ExtractContentEvent } from './event/ExtractContentEvent';
-export { default as PluginDomEvent } from './event/PluginDomEvent';
+export {
+    default as PluginDomEvent,
+    PluginCompositionEvent,
+    PluginKeyboardEvent,
+    PluginKeyDownEvent,
+    PluginKeyPressEvent,
+    PluginKeyUpEvent,
+    PluginMouseEvent,
+    PluginMouseDownEvent,
+    PluginMouseUpEvent,
+} from './event/PluginDomEvent';
 export { default as PluginEvent } from './event/PluginEvent';
 export { default as PluginEventType } from './event/PluginEventType';
 

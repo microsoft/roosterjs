@@ -1,5 +1,5 @@
 import * as TestHelper from '../TestHelper';
-import replaceTextBeforeCursorWithNode from '../../cursor/replaceTextBeforeCursorWithNode';
+import replaceTextBeforeCursorWithNode from '../../deprecated/replaceTextBeforeCursorWithNode';
 import { Editor } from 'roosterjs-editor-core';
 
 describe('replaceTextBeforeCursorWithNode replaceTextBeforeCursorWithNode()', () => {

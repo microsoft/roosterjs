@@ -1,6 +1,6 @@
 import EditorCore, { Focus } from '../editor/EditorCore';
-import { NodeType, PositionType } from 'roosterjs-editor-types';
-import { getFirstLeafNode, isVoidHtmlElement } from 'roosterjs-editor-dom';
+import { PositionType } from 'roosterjs-editor-types';
+import { Position, getFirstLeafNode } from 'roosterjs-editor-dom';
 
 const focus: Focus = (core: EditorCore) => {
     if (!core.api.hasFocus(core) || !core.api.getSelectionRange(core, false /*tryGetFromCache*/)) {
@@ -12,7 +12,9 @@ const focus: Focus = (core: EditorCore) => {
         // to very begin to of editor since we don't really have last saved selection (created on blur which does not fire in this case).
         // It should be better than the case you cannot type
         if (!core.cachedSelectionRange || !core.api.select(core, core.cachedSelectionRange)) {
-            setSelectionToBegin(core);
+            let node = getFirstLeafNode(core.contentDiv) || core.contentDiv;
+            let position = new Position(node, PositionType.Begin).toFocusablePosition();
+            core.api.select(core, position);
         }
     }
 
@@ -24,26 +26,5 @@ const focus: Focus = (core: EditorCore) => {
         core.contentDiv.focus();
     }
 };
-
-function setSelectionToBegin(core: EditorCore) {
-    let firstNode = getFirstLeafNode(core.contentDiv);
-    let nodeType = firstNode ? firstNode.nodeType : null;
-
-    if (nodeType == NodeType.Text) {
-        // First node is text, move selection to the begin
-        core.api.select(core, firstNode, PositionType.Begin);
-    } else if (nodeType == NodeType.Element) {
-        // If first node is a html void element (void elements cannot have child nodes),
-        // move selection before it, otherwise move selection inside it
-        core.api.select(
-            core,
-            firstNode,
-            isVoidHtmlElement(firstNode as HTMLElement) ? PositionType.Before : PositionType.Begin
-        );
-    } else {
-        // No first node, likely we have an empty content DIV, move selection inside it
-        core.api.select(core, core.contentDiv, PositionType.Begin);
-    }
-}
 
 export default focus;

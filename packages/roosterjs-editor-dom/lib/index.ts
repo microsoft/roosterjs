@@ -2,19 +2,18 @@ export {
     NodeBlockElement,
     StartEndBlockElement,
     getBlockElementAtNode,
-    getFirstBlockElement,
-    getFirstLastBlockElement,
-    getLastBlockElement,
-    getNextBlockElement,
-    getPreviousBlockElement,
     getFirstInlineElement,
     getLastInlineElement,
     getInlineElementAtNode,
-    getNextInlineElement,
-    getPreviousInlineElement,
 } from './blockElements/BlockElement';
+export {
+    getFirstBlockElement,
+    getFirstLastBlockElement,
+    getLastBlockElement,
+} from './blockElements/getFirstLastBlockElement';
 
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
+export { default as PositionContentSearcher } from './contentTraverser/PositionContentSearcher';
 
 export { getNextLeafSibling, getPreviousLeafSibling } from './domWalker/getLeafSibling';
 export { getFirstLeafNode, getLastLeafNode } from './domWalker/getLeafNode';
@@ -33,6 +32,7 @@ export {
 export { default as Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
+export { default as collapseNodes } from './utils/collapseNodes';
 export { default as contains } from './utils/contains';
 export { default as convertInlineCss } from './utils/convertInlineCss';
 export {
@@ -41,31 +41,30 @@ export {
     StyleMap,
 } from './utils/sanitizeHtml';
 export { default as fromHtml } from './utils/fromHtml';
-export { default as getComputedStyle, getComputedStyles } from './utils/getComputedStyle';
+export { default as getComputedStyles, getComputedStyle } from './utils/getComputedStyles';
 export { default as getElementOrParentElement } from './utils/getElementOrParentElement';
 export { default as getTagOfNode } from './utils/getTagOfNode';
 export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isDocumentPosition } from './utils/isDocumentPosition';
 export { default as isEditorPointAfter } from './utils/isEditorPointAfter';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
-export { default as isPositionAtBeginningOf } from './utils/isPositionAtBeginningOf';
 export { default as isVoidHtmlElement } from './utils/isVoidHtmlElement';
 export { default as matchLink } from './utils/matchLink';
 export { default as matchWhiteSpaces } from './utils/matchWhiteSpaces';
 export { default as queryElements } from './utils/queryElements';
-export { default as splitParentNode } from './utils/splitParentNode';
+export { default as splitParentNode, splitBalancedNodeRange } from './utils/splitParentNode';
 export { default as unwrap } from './utils/unwrap';
 export { default as wrap } from './utils/wrap';
 
 export { default as VTable, VCell } from './table/VTable';
 
 export { default as Position } from './selection/Position';
-export { default as SelectionRange } from './selection/SelectionRange';
+export { default as createRange } from './selection/createRange';
+export { markSelection, removeMarker } from './selection/selectionMarker';
 
 // Deprecated
 export { default as isTextualInlineElement } from './deprecated/isTextualInlineElement';
 export { default as wrapAll } from './deprecated/wrapAll';
-export { default as EditorSelection } from './contentTraverser/EditorSelection';
 export { default as TraversingScoper } from './contentTraverser/TraversingScoper';
 export {
     getInlineElementBeforePoint,

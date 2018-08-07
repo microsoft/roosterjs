@@ -1,9 +1,11 @@
 import {
+    ContentEditFeatures,
     HyperLink,
     Paste,
     ContentEdit,
     Watermark,
     TableResize,
+    getDefaultContentEditFeatures,
 } from 'roosterjs-editor-plugins';
 import { ImageResize } from 'roosterjs-plugin-image-resize';
 import { EditorPlugin } from 'roosterjs-editor-core';
@@ -17,9 +19,9 @@ const defaultPluginsString: string = [
     '];\n',
 ].join('\n');
 
-export default function updateSampleCode(plugins?: EditorPlugin[], defaultFormat?: DefaultFormat) {
+export default function updateSampleCode(plugins?: EditorPlugin[], defaultFormat?: DefaultFormat, features?: ContentEditFeatures) {
     updateHtmlSampleCode();
-    updateJsSampleCode(plugins, defaultFormat);
+    updateJsSampleCode(plugins, defaultFormat, features);
 }
 
 function updateHtmlSampleCode() {
@@ -42,14 +44,14 @@ function updateHtmlSampleCode() {
     htmlSampleCode.appendChild(createElementFromContent('htmlSampleCode', codeString));
 }
 
-function updateJsSampleCode(plugins: EditorPlugin[], defaultFormat: DefaultFormat) {
+function updateJsSampleCode(plugins: EditorPlugin[], defaultFormat: DefaultFormat, features: ContentEditFeatures) {
     let jsSampleCode = document.getElementById('jsSample');
     jsSampleCode.innerHTML = '';
     let node = document.createElement('h2');
     node.innerHTML = 'JS Sample Code';
     jsSampleCode.appendChild(node);
     let startString = assembleRequireString(plugins, defaultFormat);
-    let pluginsString = assemblePluginsString(plugins);
+    let pluginsString = assemblePluginsString(plugins, features);
     let formatString = assembleFormatString(defaultFormat);
     let optionsString = assembleOptionsString(pluginsString, formatString);
     let endString = assembleEndString(optionsString);
@@ -72,9 +74,25 @@ function createElementFromContent(id: string, content: string): HTMLElement {
     return node;
 }
 
-function assemblePluginsString(plugins: EditorPlugin[]): string {
+function assemblePluginsString(plugins: EditorPlugin[], features: ContentEditFeatures): string {
     if (plugins) {
-        let pluginsString = 'var plugins = [\n';
+        let contentEditOptions = '';
+        let pluginsString = '';
+
+        if (features) {
+            pluginsString += 'var options = roosterjsPlugins.getDefaultContentEditFeatures();\n';
+            let defaultFeatures = getDefaultContentEditFeatures();
+            for (let key of Object.keys(defaultFeatures)) {
+                if (key != 'smartOrderedListStyles' && features[key] != defaultFeatures[key]) {
+                    pluginsString += 'options.' + key + ' = ' + (features[key] ? 'true' : 'false') + ';\n';
+                }
+            }
+            contentEditOptions += '  new roosterjsPlugins.ContentEdit(options),\n';
+        } else {
+            contentEditOptions = '  new roosterjsPlugins.ContentEdit(),\n';
+        }
+
+        pluginsString += 'var plugins = [\n';
         plugins.forEach(plugin => {
             if (plugin instanceof Watermark) {
                 pluginsString += "  new roosterjsPlugins.Watermark('Type content here...'),\n";
@@ -85,7 +103,7 @@ function assemblePluginsString(plugins: EditorPlugin[]): string {
             } else if (plugin instanceof Paste) {
                 pluginsString += '  new roosterjsPlugins.Paste(),\n';
             } else if (plugin instanceof ContentEdit) {
-                pluginsString += '  new roosterjsPlugins.ContentEdit(),\n';
+                pluginsString += contentEditOptions;
             } else if (plugin instanceof TableResize) {
                 pluginsString += '  new roosterjsPlugins.TableResize(),\n';
             }

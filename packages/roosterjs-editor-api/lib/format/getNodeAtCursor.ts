@@ -1,6 +1,6 @@
 import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
-import { NodeType, PluginEvent } from 'roosterjs-editor-types';
-import { getTagOfNode } from 'roosterjs-editor-dom';
+import { PluginEvent } from 'roosterjs-editor-types';
+import { getTagOfNode, getElementOrParentElement } from 'roosterjs-editor-dom';
 
 /**
  * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
@@ -30,7 +30,7 @@ export default function getNodeAtCursor(
         }
     }
 
-    node = node && node.nodeType == NodeType.Text ? node.parentNode : node;
+    node = getElementOrParentElement(node);
     if (expectedTags) {
         if (expectedTags instanceof Array) {
             expectedTags = expectedTags.map(tag => (tag ? tag.toUpperCase() : ''));
