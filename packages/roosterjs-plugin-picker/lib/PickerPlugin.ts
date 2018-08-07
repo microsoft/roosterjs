@@ -153,7 +153,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
                 this.setIsSuggesting(false);
             }
         } else {
-            let wordBeforeCursor = this.getWord(event);
+            let wordBeforeCursor = this.getWordBeforeCursor(event);
             if (!this.blockSuggestions) {
                 if (
                     wordBeforeCursor != null &&

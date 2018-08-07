@@ -1,5 +1,4 @@
 import { Editor } from 'roosterjs-editor-core';
-
 export interface PickerPluginOptions {
     // Constant that defines the element ID prefix to look for.
     // If it matches, this element should be handled by the plugin
