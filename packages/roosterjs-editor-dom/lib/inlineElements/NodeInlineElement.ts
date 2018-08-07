@@ -116,22 +116,21 @@ class NodeInlineElement implements InlineElement {
             let formatNode = from.node;
             let parentTag = getTagOfNode(formatNode.parentNode);
 
-            if (formatNode.nodeType != NodeType.Text || ['TR', 'TABLE'].indexOf(parentTag) >= 0) {
-                continue;
-            }
-
             // The code below modifies DOM. Need to get the next sibling first otherwise you won't be able to reliably get a good next sibling node
             let nextNode = getNextLeafSibling(this.containerNode, formatNode);
 
-            if (formatNode == to.node && !to.isAtEnd) {
-                formatNode = splitTextNode(formatNode, to.offset, true /*returnFirstPart*/);
+            if (formatNode.nodeType == NodeType.Text && ['TR', 'TABLE'].indexOf(parentTag) < 0) {
+                if (formatNode == to.node && !to.isAtEnd) {
+                    formatNode = splitTextNode(formatNode, to.offset, true /*returnFirstPart*/);
+                }
+
+                if (from.offset > 0) {
+                    formatNode = splitTextNode(formatNode, from.offset, false /*returnFirstPart*/);
+                }
+
+                formatNodes.push(formatNode);
             }
 
-            if (from.offset > 0) {
-                formatNode = splitTextNode(formatNode, from.offset, false /*returnFirstPart*/);
-            }
-
-            formatNodes.push(formatNode);
             from = nextNode && new Position(nextNode, PositionType.Begin);
         }
 
