@@ -2,7 +2,12 @@ import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import { Editor, EditorPlugin, cacheGetContentSearcher } from 'roosterjs-editor-core';
 import { PartialInlineElement } from 'roosterjs-editor-dom';
-import { PluginKeyboardEvent, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    PluginKeyboardEvent,
+    PluginEvent,
+    PluginEventType,
+    PositionType,
+} from 'roosterjs-editor-types';
 
 // Character codes
 export const BACKSPACE_CHARCODE = 8;
@@ -259,6 +264,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
                 ) {
                     let replacementNode = this.dataProvider.onRemove(nodeBeforeCursor, true);
                     this.replaceNode(nodeBeforeCursor, replacementNode);
+                    this.editor.select(replacementNode, PositionType.After);
                     this.handleKeyDownEvent(event);
                 }
             } else if (keyboardEvent.which == DELETE_CHARCODE) {
