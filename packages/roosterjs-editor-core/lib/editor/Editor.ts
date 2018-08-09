@@ -16,6 +16,7 @@ import {
     PositionType,
     QueryScope,
     Rect,
+    NodeType,
 } from 'roosterjs-editor-types';
 import {
     Browser,
@@ -812,12 +813,23 @@ export default class Editor {
         let range = this.getSelectionRange();
 
         if (range && range.collapsed) {
-            // Create a new text node to hold the selection.
-            // Some content is needed to position selection into the span
-            // for here, we inject ZWS - zero width space
-            let tempNode = this.getDocument().createTextNode('\u200B');
-            this.addUndoSnapshot();
-            range.insertNode(tempNode);
+            let tempNode = range.startContainer;
+            let ZWS = '\u200B';
+            let isZWSNode =
+                tempNode &&
+                tempNode.nodeType == NodeType.Text &&
+                tempNode.nodeValue == ZWS &&
+                getTagOfNode(tempNode.parentNode) == 'SPAN';
+
+            if (!isZWSNode) {
+                this.addUndoSnapshot();
+                // Create a new text node to hold the selection.
+                // Some content is needed to position selection into the span
+                // for here, we inject ZWS - zero width space
+                tempNode = this.getDocument().createTextNode(ZWS);
+                range.insertNode(tempNode);
+            }
+
             this.getInlineElementAtNode(tempNode, true /*forceAtNode*/).applyStyle(callback);
             this.select(tempNode, PositionType.End);
         } else {
