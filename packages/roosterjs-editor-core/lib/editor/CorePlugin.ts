@@ -154,7 +154,7 @@ export default class CorePlugin implements EditorPlugin {
                 this.onContentChanged(event.rawEvent);
                 break;
             case PluginEventType.KeyPress:
-                this.onKeyPress(event.rawEvent);
+                this.onKeyPress();
                 break;
         }
     }
@@ -176,16 +176,12 @@ export default class CorePlugin implements EditorPlugin {
     }
 
     private onContentChanged(event?: KeyboardEvent) {
-        if (event && event.which == KEY_BACKSPACE) {
-            if (this.snapshotBeforeAutoComplete !== null) {
-                event.preventDefault();
-                this.editor.setContent(
-                    this.snapshotBeforeAutoComplete,
-                    false /*triggerContentChangedEvent*/
-                );
-            } else if (this.editor.isEmpty()) {
-                event.preventDefault();
-            }
+        if (event && event.which == KEY_BACKSPACE && this.snapshotBeforeAutoComplete !== null) {
+            event.preventDefault();
+            this.editor.setContent(
+                this.snapshotBeforeAutoComplete,
+                false /*triggerContentChangedEvent*/
+            );
         }
         this.snapshotBeforeAutoComplete = null;
     }
@@ -195,7 +191,7 @@ export default class CorePlugin implements EditorPlugin {
      * When typing goes directly under content div, many things can go wrong
      * We fix it by wrapping it with a div and reposition cursor within the div
      */
-    private onKeyPress(event: KeyboardEvent) {
+    private onKeyPress() {
         let range = this.editor.getSelectionRange();
 
         if (
