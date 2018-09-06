@@ -15,7 +15,7 @@ var regFunction = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare
 // 3. [export ][default |declare ]const enum <NAME> {...}
 var regEnum = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?(const\s+)?enum\s+([a-zA-Z0-9_<>]+)\s*{/g;
 // 4. [export ][default |declare ]type <NAME> = ...;
-var regType = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?type\s+([0-9a-zA-Z_<>]+)\s*=\s*/g;
+var regType = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?type\s+([0-9a-zA-Z_]+(\s*<[^>]+>)?)\s*=\s*/g;
 // 5. [export ][default |declare ]const <NAME>: ...;
 var regConst = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?const\s+([0-9a-zA-Z_<>]+)\s*:\s*/g;
 // 6. export[ default] <NAME>|{NAMES};
@@ -149,7 +149,7 @@ function parseType(content, elements) {
     var matches;
     while (matches = regType.exec(content)) {
         var result = parsePair(content, matches.index + matches[0].length, '{', '}', 0, ';');
-        var typeText = (matches[1] || '') + 'type ' + namePlaceholder + ' = ' + result[0];
+        var typeText = (matches[1] || '') + 'type ' + namePlaceholder + (matches[6] || '') + ' = ' + result[0];
         var name = getName(matches, 5);
         appendText(elements, name, typeText);
         content = result[1];

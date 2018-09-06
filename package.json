@@ -18,9 +18,9 @@
     "b": "npm run clean && npm run normalize && npm run tslint && node tools/build-all.js",
     "build": "npm run b && npm run pack && npm run pack:prod && npm run dts && npm run copysample",
     "start": "webpack-dev-server",
-    "test": "npm run b && karma start",
-    "test:debug": "npm run b && karma start --no-single-run",
-    "prettier": "node node_modules/prettier/bin-prettier --tab-width 4 --print-width 100 --write --trailing-comma es5 --jsx-bracket-same-line --single-quote \"packages/**/*.ts\"",
+    "test": "karma start",
+    "test:debug": "karma start --no-single-run",
+    "prettier": "node tools/prettier.js",
     "publish": "node tools/publish-all.js"
   },
   "devDependencies": {

@@ -7,6 +7,8 @@ var mainPackageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../pac
 
 var packages = collectPackages(packagePath).map(p => p.replace('packages/', ''));
 
+var knownCustomizedPackages = {};
+
 packages.forEach((package) => {
     console.log(`normalizing ${package}...`);
     normalizePackageJson(package, packages);
@@ -20,20 +22,27 @@ function readPackageJson(package) {
 }
 
 function normalizePackageJson(package, packages) {
-    var packageJsonFilePath = path.join(packagePath, package, 'package.json');
     var packageJson = readPackageJson(package);
 
     Object.keys(packageJson.dependencies).forEach((dep) => {
-        if (packages.indexOf(dep) > -1) {
+        if (knownCustomizedPackages[dep]) {
+            packageJson.dependencies[dep] = knownCustomizedPackages[dep];
+        } else if (packages.indexOf(dep) > -1) {
             packageJson.dependencies[dep] = mainPackageJson.version;
-        } else if (mainPackageJson.dependencies[dep]) {
+        } else if (
+            mainPackageJson.dependencies && mainPackageJson.dependencies[dep]) {
             packageJson.dependencies[dep] = mainPackageJson.dependencies[dep];
-        } else {
+        } else if (!packageJson.dependencies[dep]) {
             console.error("there is a missing dependency in the main package.json: ", dep);
         }
     });
 
-    packageJson.version = mainPackageJson.version;
+    if (packageJson.version) {
+        knownCustomizedPackages[packageJson.name] = packageJson.version;
+    } else {
+        packageJson.version = mainPackageJson.version;
+    }
+
     packageJson.typings = "./lib/index.d.ts";
     packageJson.main = "./lib/index.js";
     packageJson.license = "MIT";

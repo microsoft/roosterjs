@@ -32,8 +32,20 @@ module.exports = function(config) {
         webpack: {
             devtool: 'inline-source-map',
             mode: 'development',
+            module: {
+                rules: [{
+                    test: /\.ts$/,
+                    loader: 'ts-loader',
+                    options: {
+                        compilerOptions: {
+                            rootDir: __dirname
+                        },
+                    }
+                }]
+            },
             resolve: {
-                modules: ['./dist']
+                extensions: ['.ts', '.js'],
+                modules: ['./packages']
             }
         },
 
