@@ -1,7 +1,7 @@
 import getNodeAtCursor from './getNodeAtCursor';
 import { DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { fromHtml, isVoidHtmlElement, isBlockElement, Browser } from 'roosterjs-editor-dom';
+import { fromHtml, isVoidHtmlElement, isBlockElement, Browser, isNodeEmpty } from 'roosterjs-editor-dom';
 
 const TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
 const TEMP_NODE_HTML = `<img class="${TEMP_NODE_CLASS}">`;
@@ -29,7 +29,7 @@ function workaroundForChrome(editor: Editor) {
     while (block) {
         let container = block.getStartNode();
 
-        if (container) {
+        if (container && !isNodeEmpty(container)) {
             // Add a temp <IMG> tag before all other nodes in the block to avoid Chrome remove existing format when toggle list
             let tempNode = fromHtml(TEMP_NODE_HTML, editor.getDocument())[0];
             if (isVoidHtmlElement(container as HTMLElement) || !isBlockElement(container)) {

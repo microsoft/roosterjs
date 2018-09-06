@@ -26,7 +26,7 @@ export default function createEditorCore(
         defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
         corePlugin: corePlugin,
         undo: undo,
-        suspendUndo: false,
+        currentUndoSnapshot: null,
         customData: {},
         cachedSelectionRange: null,
         plugins: [corePlugin, ...(options.plugins || []), undo].filter(plugin => !!plugin),

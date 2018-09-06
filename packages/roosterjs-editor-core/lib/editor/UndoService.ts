@@ -19,7 +19,7 @@ interface UndoService extends EditorPlugin {
      * This method will not trigger ExtractContent event, so any temporary content will be
      * added into undo snapshot
      */
-    addUndoSnapshot: () => void;
+    addUndoSnapshot: () => string;
 
     /**
      * Whether there is snapshot for undo

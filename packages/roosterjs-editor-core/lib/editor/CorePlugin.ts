@@ -5,6 +5,7 @@ import {
     PluginCompositionEvent,
     PluginEvent,
     PluginEventType,
+    PluginMouseUpEvent,
     PositionType,
 } from 'roosterjs-editor-types';
 import {
@@ -32,6 +33,7 @@ export default class CorePlugin implements EditorPlugin {
     private snapshotBeforeAutoComplete: string;
     private inIME: boolean;
     private disposers: (() => void)[] = null;
+    private mouseUpEventListerAdded: boolean;
 
     /**
      * Creates an instance of Core plugin
@@ -61,6 +63,7 @@ export default class CorePlugin implements EditorPlugin {
             this.editor.addDomEventHandler(Browser.isIEOrEdge ? 'beforedeactivate' : 'blur', () =>
                 this.editor.saveSelectionRange()
             ),
+            this.editor.addDomEventHandler('mousedown', this.onMouseDown),
             this.disableRestoreSelectionOnFocus
                 ? null
                 : this.editor.addDomEventHandler('focus', () => this.editor.restoreSavedRange()),
@@ -71,6 +74,8 @@ export default class CorePlugin implements EditorPlugin {
      * Dispose this plugin
      */
     public dispose() {
+        this.removeMouseUpEventListener();
+
         if (this.disposers) {
             this.disposers.forEach(disposer => disposer && disposer());
             this.disposers = null;
@@ -94,14 +99,11 @@ export default class CorePlugin implements EditorPlugin {
      * @param changeSource Chagne source of ContentChangedEvent. If not passed, no ContentChangedEvent will be  triggered
      */
     public performAutoComplete(callback: () => any, changeSource?: ChangeSource) {
-        let snapshot = this.editor.getContent(
-            false /*triggerContentChangedEvent*/,
-            true /*markSelection*/
-        );
-        let data = callback();
-        this.editor.addUndoSnapshot();
-        this.editor.triggerContentChangedEvent(changeSource, data);
-        this.snapshotBeforeAutoComplete = snapshot;
+        this.editor.addUndoSnapshot((start, end, snapshot) => {
+            let data = callback();
+            this.snapshotBeforeAutoComplete = snapshot;
+            return data;
+        }, changeSource);
     }
 
     /**
@@ -201,6 +203,30 @@ export default class CorePlugin implements EditorPlugin {
         ) {
             let position = this.ensureTypeInElement(Position.getStart(range));
             this.editor.select(position);
+        }
+    }
+
+    private onMouseDown = () => {
+        if (this.editor && !this.mouseUpEventListerAdded) {
+            this.editor.getDocument().addEventListener('mouseup', this.onMouseUp, true);
+            this.mouseUpEventListerAdded = true;
+        }
+    };
+
+    private onMouseUp = (event: MouseEvent) => {
+        if (this.editor) {
+            this.removeMouseUpEventListener();
+            this.editor.triggerEvent(<PluginMouseUpEvent>{
+                eventType: PluginEventType.MouseUp,
+                rawEvent: event,
+            });
+        }
+    };
+
+    private removeMouseUpEventListener() {
+        if (this.mouseUpEventListerAdded) {
+            this.mouseUpEventListerAdded = false;
+            this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
         }
     }
 }

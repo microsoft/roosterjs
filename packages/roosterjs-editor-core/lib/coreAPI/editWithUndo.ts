@@ -4,15 +4,13 @@ import { Position } from 'roosterjs-editor-dom';
 
 const editWithUndo: EditWithUndo = (
     core: EditorCore,
-    callback: (start: Position, end: Position) => any,
-    changeSource: ChangeSource | string,
-    addUndoSnapshotBeforeAction: boolean
+    callback: (start: Position, end: Position, snapshotBeforeCallback: string) => any,
+    changeSource: ChangeSource | string
 ) => {
-    let isNested = core.suspendUndo;
-    core.suspendUndo = true;
+    let isNested = core.currentUndoSnapshot !== null;
 
-    if (!isNested && addUndoSnapshotBeforeAction) {
-        core.undo.addUndoSnapshot();
+    if (!isNested) {
+        core.currentUndoSnapshot = core.undo.addUndoSnapshot();
     }
 
     try {
@@ -20,7 +18,8 @@ const editWithUndo: EditWithUndo = (
             let range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
             let data = callback(
                 range && Position.getStart(range).normalize(),
-                range && Position.getEnd(range).normalize()
+                range && Position.getEnd(range).normalize(),
+                core.currentUndoSnapshot
             );
 
             if (!isNested) {
@@ -38,7 +37,7 @@ const editWithUndo: EditWithUndo = (
         }
     } finally {
         if (!isNested) {
-            core.suspendUndo = false;
+            core.currentUndoSnapshot = null;
         }
     }
 };

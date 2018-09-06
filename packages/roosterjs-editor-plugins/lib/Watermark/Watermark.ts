@@ -70,6 +70,7 @@ class Watermark implements EditorPlugin {
     private showHideWatermark(ignoreCachedState: boolean) {
         if (this.editor.hasFocus() && (ignoreCachedState || this.isWatermarkShowing)) {
             this.hideWatermark();
+            this.editor.focus();
         } else if (
             !this.editor.hasFocus() &&
             (ignoreCachedState || !this.isWatermarkShowing) &&

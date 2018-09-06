@@ -131,13 +131,14 @@ export default class Undo implements UndoService {
     /**
      * Add an undo snapshot
      */
-    public addUndoSnapshot(): void {
+    public addUndoSnapshot(): string {
         let snapshot = this.editor.getContent(
             false /*triggerExtractContentEvent*/,
             true /*markSelection*/
         );
         this.getSnapshotsManager().addSnapshot(snapshot);
         this.hasNewContent = false;
+        return snapshot;
     }
 
     protected getSnapshotsManager(): UndoSnapshotsService {

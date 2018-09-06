@@ -65,9 +65,9 @@ interface EditorCore {
     readonly defaultApi: CoreApiMap;
 
     /**
-     * Whether adding undo snapshot is suspended
+     * The undo snapshot taken by addUndoSnapshot() before callback function is invoked.
      */
-    suspendUndo: boolean;
+    currentUndoSnapshot: string;
 
     /**
      * Cached selection range of this editor
@@ -85,9 +85,8 @@ export type AttachDomEvent = (
 ) => () => void;
 export type EditWithUndo = (
     core: EditorCore,
-    callback: (start: Position, end: Position) => any,
-    changeSource: ChangeSource | string,
-    addUndoSnapshotBeforeAction: boolean
+    callback: (start: Position, end: Position, snapshotBeforeCallback: string) => any,
+    changeSource: ChangeSource | string
 ) => void;
 export type Focus = (core: EditorCore) => void;
 export type GetCustomData = <T>(
@@ -118,7 +117,6 @@ export interface CoreApiMap {
      * @param core The EditorCore object
      * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
      * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
-     * @param addUndoSnapshotBeforeAction Whether add an undo snapshot before invoke the callback function. @default true
      */
     editWithUndo: EditWithUndo;
 
