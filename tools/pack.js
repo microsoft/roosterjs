@@ -3,7 +3,6 @@
 // -p, -prod: Pack into production mode (compressed)
 // -amd:      Use amd mode rather than commonjs
 // -e, -enum: Preserve const enum objects, don't convert into inlined number
-var exec = require('child_process').execSync;
 var path = require('path');
 var rootPath = path.resolve(__dirname, '..');
 var sourcePath = path.resolve(rootPath, 'packages');
@@ -44,7 +43,7 @@ var webpackConfig = {
             options: {
                 compilerOptions: {
                     declaration: false,
-                    preserveConstEnums: false
+                    preserveConstEnums: preserveEnum
                 },
             }
         }]
