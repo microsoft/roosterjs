@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Microsoft/roosterjs.svg?branch=master)](https://travis-ci.org/Microsoft/roosterjs)
+
 # Rooster
 
 Rooster is a framework-independent JavaScript rich-text editor neatly nested
@@ -40,6 +42,7 @@ Rooster provides DOM level APIs (in `roosterjs-editor-dom`) and formatting APIs
 (in `roosterjs-editor-api`) to perform editing operations.
 
 `roosterjs-editor-dom` provides several levels of DOM operations:
+
 - Perform basic DOM operations such as `fromHtml()`, `wrap()`, `unwrap()`, ...
 - Wrap a given DOM node with `InlineElemen`t or `BlockElement` and perform
   operations with DOM Walker API.
@@ -62,18 +65,15 @@ an "a" is typed in the editor:
 
 ```typescript
 class HelloRooster implements EditorPlugin {
-    initialize(editor: Editor) {
-    }
+  initialize(editor: Editor) {}
 
-    dispose() {
-    }
+  dispose() {}
 
-    onPluginEvent(e: PluginEvent) {
-        if ( e.eventType == PluginEventType.KeyPress &&
-            e.rawEvent.which == 65 ) {
-            alert('Hello Rooster');
-        }
+  onPluginEvent(e: PluginEvent) {
+    if (e.eventType == PluginEventType.KeyPress && e.rawEvent.which == 65) {
+      alert('Hello Rooster');
     }
+  }
 }
 ```
 
@@ -98,7 +98,7 @@ In order to run the code below, you may also need to install [webpack](https://w
 ### A quick start
 
 1. Create `editor.htm` contains a DIV with some styles, and a reference to a
-.js file:
+   .js file:
 
 ```html
 <html>
@@ -151,13 +151,13 @@ var editor = roosterjs.createEditor(editorDiv);
 editor.setContent('Welcome to <b>RoosterJs</b>!');
 
 document.getElementById('buttonB').addEventListener('click', function() {
-    roosterjs.toggleBold(editor);
+  roosterjs.toggleBold(editor);
 });
 document.getElementById('buttonI').addEventListener('click', function() {
-    roosterjs.toggleItalic(editor);
+  roosterjs.toggleItalic(editor);
 });
 document.getElementById('buttonU').addEventListener('click', function() {
-    roosterjs.toggleUnderline(editor);
+  roosterjs.toggleUnderline(editor);
 });
 ```
 
@@ -166,23 +166,25 @@ document.getElementById('buttonU').addEventListener('click', function() {
 `webpack source.js editor.js`
 
 4. Navigate to editor.htm, you will see buttons with bold, italic, underline
-actions in the page.
+   actions in the page.
 
 ## Sample code
 
 To use the sample editor, follow these instructions:
 
 1. Get dependencies using [yarn](https://yarnpkg.com):
+
    ```cmd
    yarn
    ```
 
 2. Build the source code, and start the sample editor:
+
    ```
    yarn start
    ```
 
-4. Navigate to the sample editor at http://localhost:3000/publish/samplesite/sample.htm
+3. Navigate to the sample editor at http://localhost:3000/publish/samplesite/sample.htm
 
 ## More documentation
 
