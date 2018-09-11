@@ -1,5 +1,7 @@
 language: node_js
-sudo: false
+sudo: required
+addons:
+  chrome: stable
 node_js:
   - 9
 before_install:
@@ -7,6 +9,7 @@ before_install:
 install:
   - npm run build
 script:
+  - xvfb-run make test
   - npm run test
 cache:
   yarn: true
