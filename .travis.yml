@@ -9,7 +9,6 @@ before_install:
 install:
   - npm run build
 script:
-  - xvfb-run make test
-  - npm run test
+  - xvfb-run npm run test
 cache:
   yarn: true
