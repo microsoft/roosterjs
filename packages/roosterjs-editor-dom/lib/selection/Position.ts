@@ -140,7 +140,9 @@ export default class Position {
         range.setStart(this.node, this.offset);
 
         // 1) try to get rect using range.getBoundingClientRect()
-        let rect = range.getBoundingClientRect ? normalizeRect(range.getBoundingClientRect()) : null;
+        let rect = range.getBoundingClientRect
+            ? normalizeRect(range.getBoundingClientRect())
+            : null;
         if (rect) {
             return rect;
         }

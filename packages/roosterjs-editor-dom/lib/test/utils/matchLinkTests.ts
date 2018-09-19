@@ -82,26 +82,6 @@ describe('defaultLinkMatchRules regular https links with extact match', () => {
 });
 
 describe('defaultLinkMatchRules special http links that has % and @, but is valid', () => {
-    it('www.test%20it.com/', () => {
-        // URL: www.test%20it.com/ => %20 is a valid percent encoding
-        let link = 'www.test%20it.com/';
-        runMatchTestWithValidLink(link, {
-            scheme: 'http',
-            originalUrl: link,
-            normalizedUrl: 'http://' + link,
-        });
-    });
-
-    it('www.test%20it%20.com/', () => {
-        // URL: www.test%20it%20.com/ => test two %20 in a row
-        let link = 'www.test%20it%20.com/';
-        runMatchTestWithValidLink(link, {
-            scheme: 'http',
-            originalUrl: link,
-            normalizedUrl: 'http://' + link,
-        });
-    });
-
     it('www.test.com/?test=test%00it', () => {
         // URL: www.test.com/?test=test%00it %00 => %00 is invalid percent encoding but URL is valid since it is after ?
         let link = 'www.test.com/?test=test%00it';
@@ -181,6 +161,16 @@ describe('defaultLinkMatchRules exact match with extra space and text', () => {
     it('www.bing.com more', () => {
         // exact match should not match since there is some space and extra text after the url
         runMatchTestWithBadLink('www.bing.com more');
+    });
+});
+
+describe('defaultLinkmatchRules does not match invalid urls', () => {
+    it('www.bing,com', () => {
+        runMatchTestWithBadLink('www.bing,com');
+    });
+
+    it('www.b,,au', () => {
+        runMatchTestWithBadLink('www.b,,au');
     });
 });
 

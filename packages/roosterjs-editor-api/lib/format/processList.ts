@@ -1,7 +1,13 @@
 import getNodeAtCursor from './getNodeAtCursor';
 import { DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { fromHtml, isVoidHtmlElement, isBlockElement, Browser, isNodeEmpty } from 'roosterjs-editor-dom';
+import {
+    fromHtml,
+    isVoidHtmlElement,
+    isBlockElement,
+    Browser,
+    isNodeEmpty,
+} from 'roosterjs-editor-dom';
 
 const TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
 const TEMP_NODE_HTML = `<img class="${TEMP_NODE_CLASS}">`;
