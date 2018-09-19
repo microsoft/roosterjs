@@ -64,8 +64,6 @@ const linkMatchRules: { [schema: string]: LinkMatchRule } = {
     wais: { match: new RegExp(`^wais:(\\/\\/)?${domainPortWithUrlRegEx}`, 'i') },
 };
 
-console.log(`^wais:${domainPortWithUrlRegEx}`);
-
 /**
  * Try to match a given string with link match rules, return matched link
  * @param url Input url to match
