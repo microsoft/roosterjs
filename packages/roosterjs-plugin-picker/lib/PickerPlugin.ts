@@ -1,7 +1,7 @@
 import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import { Editor, EditorPlugin, cacheGetContentSearcher } from 'roosterjs-editor-core';
-import { PartialInlineElement } from 'roosterjs-editor-dom';
+import { Browser, PartialInlineElement } from 'roosterjs-editor-dom';
 import {
     PluginKeyboardEvent,
     PluginEvent,
@@ -9,16 +9,18 @@ import {
     PositionType,
 } from 'roosterjs-editor-types';
 
-// Character codes
+// Character codes.
+// IE11 uses different character codes. which are noted below.
+// If adding a new key, test in IE to figure out what the code is.
 export const BACKSPACE_CHARCODE = "Backspace";
 export const TAB_CHARCODE = "Tab";
 export const ENTER_CHARCODE = "Enter";
-export const ESC_CHARCODE = "Escape";
-export const LEFT_ARROW_CHARCODE = "ArrowLeft";
-export const UP_ARROW_CHARCODE = "ArrowUp";
-export const RIGHT_ARROW_CHARCODE = "ArrowRight";
-export const DOWN_ARROW_CHARCODE = "ArrowDown";
-export const DELETE_CHARCODE = "Delete";
+export const ESC_CHARCODE = !Browser.isIE ? "Escape" : "Esc";
+export const LEFT_ARROW_CHARCODE = !Browser.isIE ? "ArrowLeft" : "Left";
+export const UP_ARROW_CHARCODE = !Browser.isIE ? "ArrowUp" : "Up";
+export const RIGHT_ARROW_CHARCODE = !Browser.isIE ? "ArrowRight" : "Right";
+export const DOWN_ARROW_CHARCODE = !Browser.isIE ? "ArrowDown" : "Down";
+export const DELETE_CHARCODE = !Browser.isIE ? "Delete" : "Del";
 
 export interface EditorPickerPluginInterface extends EditorPlugin {
     dataProvider: PickerDataProvider;
