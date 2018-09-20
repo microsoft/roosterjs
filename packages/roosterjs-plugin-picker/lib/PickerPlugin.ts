@@ -150,10 +150,17 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
 
     private onKeyUpDomEvent(event: PluginKeyboardEvent) {
         if (this.isSuggesting) {
-            let wordBeforeCursor = this.getWord(event);
-            if (wordBeforeCursor && wordBeforeCursor.split(' ').length <= 4) {
-                let shortWord = wordBeforeCursor.substring(1).trim();
-                this.dataProvider.queryStringUpdated(shortWord);
+            // Word before cursor represents the text prior to the cursor, up to and including the trigger symbol.
+            const wordBeforeCursor = this.getWord(event);
+            const trimmedWordBeforeCursor = wordBeforeCursor.substring(1).trim();
+
+            // Update the query string when:
+            // 1. There's an actual value
+            // 2. That actual value isn't just pure whitespace
+            // 3. That actual value isn't more than 4 words long (at which point we assume the person kept typing)
+            // Otherwise, we want to dismiss the picker plugin's UX.
+            if (trimmedWordBeforeCursor && trimmedWordBeforeCursor.length > 0 && trimmedWordBeforeCursor.split(' ').length <= 4) {
+                this.dataProvider.queryStringUpdated(trimmedWordBeforeCursor);
             } else {
                 this.setIsSuggesting(false);
             }
