@@ -24,30 +24,44 @@ interface LinkMatchRule {
 // ^[^?]+%$ => to exclude URL like www.bing.com%
 // ^https?:\/\/[^?\/]+@ => to exclude URL like http://www.bing.com@name
 // ^www\.[^?\/]+@ => to exclude URL like www.bing.com@name
+// , => to exclude url like www.bing,,com
 const httpExcludeRegEx = /^[^?]+%[^0-9a-f]+|^[^?]+%[0-9a-f][^0-9a-f]+|^[^?]+%00|^[^?]+%$|^https?:\/\/[^?\/]+@|^www\.[^?\/]+@/i;
+
+// via https://tools.ietf.org/html/rfc1035 Page 7
+const labelRegEx = '[a-z](?:[a-z0-9-]*[a-z0-9])?'; // We're using case insensitive regexes below so don't bother including A-Z
+const domainNameRegEx = `(?:${labelRegEx}\\.)*${labelRegEx}`;
+const domainPortRegEx = `${domainNameRegEx}(?:\\:[0-9]+)?`;
+const domainPortWithUrlRegEx = `${domainPortRegEx}(?:[\\/\\?]\\S*)?`;
 
 const linkMatchRules: { [schema: string]: LinkMatchRule } = {
     http: {
-        match: /^(microsoft-edge:)?http:\/\/\S+|www\.\S+/i,
+        match: new RegExp(
+            `^(?:microsoft-edge:)?http:\\/\\/${domainPortWithUrlRegEx}|www\\.${domainPortWithUrlRegEx}`,
+            'i'
+        ),
         except: httpExcludeRegEx,
-        normalizeUrl: url => (/^(microsoft-edge:)?http:\/\//i.test(url) ? url : 'http://' + url),
+        normalizeUrl: url =>
+            new RegExp('^(?:microsoft-edge:)?http:\\/\\/', 'i').test(url) ? url : 'http://' + url,
     },
     https: {
-        match: /^(microsoft-edge:)?https:\/\/\S+/i,
+        match: new RegExp(`^(?:microsoft-edge:)?https:\\/\\/${domainPortWithUrlRegEx}`, 'i'),
         except: httpExcludeRegEx,
     },
-    mailto: { match: /^mailto:\S+@\S+\.\S+/i },
-    notes: { match: /^notes:\/\/\S+/i },
-    file: { match: /^file:\/\/\/?\S+/i },
-    unc: { match: /^\\\\\S+/i },
+    mailto: { match: new RegExp('^mailto:\\S+@\\S+\\.\\S+', 'i') },
+    notes: { match: new RegExp('^notes:\\/\\/\\S+', 'i') },
+    file: { match: new RegExp('^file:\\/\\/\\/?\\S+', 'i') },
+    unc: { match: new RegExp('^\\\\\\\\\\S+', 'i') },
     ftp: {
-        match: /^ftp:\/\/\S+|ftp\.\S+/i,
-        normalizeUrl: url => (/^ftp:\/\//i.test(url) ? url : 'ftp://' + url),
+        match: new RegExp(
+            `^ftp:\\/\\/${domainPortWithUrlRegEx}|ftp\\.${domainPortWithUrlRegEx}`,
+            'i'
+        ),
+        normalizeUrl: url => (new RegExp('^ftp:\\/\\/', 'i').test(url) ? url : 'ftp://' + url),
     },
-    news: { match: /^news:(\/\/)?\S+/i },
-    telnet: { match: /^telnet:\S+/i },
-    gopher: { match: /^gopher:\/\/\S+/i },
-    wais: { match: /^wais:\S+/i },
+    news: { match: new RegExp(`^news:(\\/\\/)?${domainPortWithUrlRegEx}`, 'i') },
+    telnet: { match: new RegExp(`^telnet:(\\/\\/)?${domainPortWithUrlRegEx}`, 'i') },
+    gopher: { match: new RegExp(`^gopher:\\/\\/${domainPortWithUrlRegEx}`, 'i') },
+    wais: { match: new RegExp(`^wais:(\\/\\/)?${domainPortWithUrlRegEx}`, 'i') },
 };
 
 /**
