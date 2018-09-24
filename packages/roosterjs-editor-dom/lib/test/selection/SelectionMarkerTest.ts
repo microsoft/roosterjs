@@ -5,7 +5,7 @@ function dom(domString: string): HTMLElement {
     return parsedResult as HTMLElement;
 }
 
-fdescribe('markSelection()', () => {
+describe('markSelection()', () => {
 
     describe('When deserializing a selection that was previously serialized, it should be consistent', () => {
 
