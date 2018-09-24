@@ -171,6 +171,12 @@ export interface CoreApiMap {
     select: Select;
 
     /**
+     * Select content
+     * @param core The EditorCore object
+     */
+    selectAsync: Select;
+
+    /**
      * Trigger a plugin event
      * @param core The EditorCore object
      * @param pluginEvent The event object to trigger

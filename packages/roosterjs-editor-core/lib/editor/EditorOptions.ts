@@ -51,6 +51,11 @@ interface EditorOptions {
      * Default value is null
      */
     coreApiOverride?: Partial<CoreApiMap>;
+
+    /**
+     * Whether to use the experimental async select or not
+     */
+    useExperimentalAsyncSelect?: boolean;
 }
 
 export default EditorOptions;
