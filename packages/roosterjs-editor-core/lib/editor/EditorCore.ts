@@ -73,6 +73,11 @@ interface EditorCore {
      * Cached selection range of this editor
      */
     cachedSelectionRange: Range;
+
+    /**
+     * If the cachedSelectionRange should be written to the DOM on the next frame.
+     */
+    hasPendingSelectionUpdateForAnimationFrame: boolean;
 }
 
 export default EditorCore;

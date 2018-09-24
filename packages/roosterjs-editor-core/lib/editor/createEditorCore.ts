@@ -29,6 +29,7 @@ export default function createEditorCore(
         currentUndoSnapshot: null,
         customData: {},
         cachedSelectionRange: null,
+        hasPendingSelectionUpdateForAnimationFrame: false,
         plugins: [corePlugin, ...(options.plugins || []), undo].filter(plugin => !!plugin),
         api: createCoreApiMap(options.coreApiOverride),
         defaultApi: createCoreApiMap(),
