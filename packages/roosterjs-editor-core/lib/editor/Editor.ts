@@ -29,9 +29,11 @@ import {
     getInlineElementAtNode,
     getTagOfNode,
     isNodeEmpty,
-    markSelection,
+    markSelectionWithSpan,
+    markSelectionWithAttributes,
     queryElements,
-    removeMarker,
+    removeSpanMarker,
+    removeAttributeMarker,
     collapseNodes,
     wrap,
 } from 'roosterjs-editor-dom';
@@ -43,6 +45,9 @@ export default class Editor {
     private core: EditorCore;
     private eventDisposers: (() => void)[];
     private contenteditableChanged: boolean;
+    isUsingAttributeBasedSelectionMarker: boolean;
+    markSelection: typeof markSelectionWithSpan & typeof markSelectionWithAttributes;
+    removeMarker: typeof removeSpanMarker & typeof removeAttributeMarker;
 
     //#region Lifecycle
 
@@ -59,6 +64,13 @@ export default class Editor {
 
         // 2. Store options values to local variables
         this.core = createEditorCore(contentDiv, options);
+        this.markSelection = options.useExperimentalAttributeBasedSelectionMarker
+             ? markSelectionWithAttributes
+             : markSelectionWithSpan;
+        this.removeMarker = options.useExperimentalAttributeBasedSelectionMarker
+             ? removeAttributeMarker
+             : removeSpanMarker;
+        this.isUsingAttributeBasedSelectionMarker = options.useExperimentalAttributeBasedSelectionMarker;
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
@@ -359,7 +371,7 @@ export default class Editor {
         if (this.core.contentDiv.innerHTML != content) {
             this.core.contentDiv.innerHTML = content || '';
 
-            this.select(removeMarker(this.core.contentDiv, true /*retrieveSelectionRange*/));
+            this.select(this.removeMarker(this.core.contentDiv, true /*retrieveSelectionRange*/));
 
             if (triggerContentChangedEvent) {
                 this.triggerContentChangedEvent();
@@ -481,7 +493,7 @@ export default class Editor {
      * @returns The return value of callback
      */
     public runWithSelectionMarker<T>(callback: () => T, useInlineMarker?: boolean): T {
-        let selectionMarked = markSelection(
+        let selectionMarked = this.markSelection(
             this.core.contentDiv,
             this.getSelectionRange(),
             useInlineMarker
@@ -489,11 +501,14 @@ export default class Editor {
         try {
             return callback && callback();
         } finally {
-            if (selectionMarked) {
+            // The attribute-based selection marker does not destroy the active range.
+            // only manually restore the range if we are using the old (span-based) marker.
+            // because selecting here forces a reflow on every undo snapshot (ever space).
+            if (selectionMarked && !this.isUsingAttributeBasedSelectionMarker) {
                 // In safari the selection will be lost after inserting markers, so need to restore it
                 // For other browsers we just need to delete markers here
                 this.select(
-                    removeMarker(
+                    this.removeMarker(
                         this.core.contentDiv,
                         Browser.isSafari || Browser.isChrome /*applySelection*/
                     )

@@ -51,6 +51,10 @@ interface EditorOptions {
      * Default value is null
      */
     coreApiOverride?: Partial<CoreApiMap>;
+    /**
+     * Whether or not to use the new experimental non-reflowing selection marker
+     */
+    useExperimentalAttributeBasedSelectionMarker?: boolean,
 }
 
 export default EditorOptions;
