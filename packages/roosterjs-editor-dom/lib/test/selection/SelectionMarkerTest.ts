@@ -1,4 +1,4 @@
-import {markSelection, removeMarker} from '../../selection/selectionMarker';
+import {markSelection, removeMarker} from '../../selection/experimentalAttributeBasedSelectionMarker';
 
 function dom(domString: string): HTMLElement {
     const parsedResult = new DOMParser().parseFromString(domString, "text/html").body.childNodes[0];
@@ -9,7 +9,7 @@ fdescribe('markSelection()', () => {
 
     describe('When deserializing a selection that was previously serialized, it should be consistent', () => {
 
-        function test(element: HTMLElement, initialRange: Range) {
+        function testSelectionIsNondestructive(element: HTMLElement, initialRange: Range) {
             const parentElement = element.parentElement;
             markSelection(parentElement, initialRange, true);
             const resultingRange = removeMarker(parentElement, true);
@@ -26,7 +26,7 @@ fdescribe('markSelection()', () => {
             initialRange.setStart(div.childNodes[0], 0);
             initialRange.setEnd(div.childNodes[0], 5);
 
-            test(div, initialRange);
+            testSelectionIsNondestructive(div, initialRange);
         });
 
         it('should be consistent when  the serialized selection is in a text node that is the only child of its parent', () => {
@@ -35,7 +35,7 @@ fdescribe('markSelection()', () => {
             initialRange.setStart(div.childNodes[0], 1);
             initialRange.setEnd(div.childNodes[0], 3);
 
-            test(div, initialRange);
+            testSelectionIsNondestructive(div, initialRange);
         });
 
         it('should be consistent when the serialized selection is in text node that spans across elements', () => {
@@ -44,7 +44,7 @@ fdescribe('markSelection()', () => {
             initialRange.setStart(div.childNodes[0], 1);
             initialRange.setEnd(div.childNodes[1].childNodes[0], 3);
 
-            test(div, initialRange);
+            testSelectionIsNondestructive(div, initialRange);
         });
 
         it('should be consistent when the serialized selection is an element\'s full text', () => {
@@ -53,7 +53,7 @@ fdescribe('markSelection()', () => {
             initialRange.setStart(div.childNodes[0].childNodes[0], 0);
             initialRange.setEnd(div.childNodes[0].childNodes[0], 3);
 
-            test(div, initialRange);
+            testSelectionIsNondestructive(div, initialRange);
         });
 
         it('should be consistent when the serialized selection spans across multiple elements', () => {
@@ -61,7 +61,7 @@ fdescribe('markSelection()', () => {
             const initialRange = new Range()
             initialRange.setStart(div.childNodes[0].childNodes[0], 2);
             initialRange.setEnd(div.childNodes[2].childNodes[0], 2);
-            test(div, initialRange);
+            testSelectionIsNondestructive(div, initialRange);
         })
     })
 });
