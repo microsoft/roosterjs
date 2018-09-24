@@ -54,7 +54,7 @@ interface EditorOptions {
     /**
      * Whether or not to use the new experimental non-reflowing selection marker
      */
-    useExperimentalAttributeBasedSelectionMarker?: boolean,
+    useExperimentalAttributeBasedSelectionMarker?: boolean;
 }
 
 export default EditorOptions;

@@ -65,12 +65,13 @@ export default class Editor {
         // 2. Store options values to local variables
         this.core = createEditorCore(contentDiv, options);
         this.markSelection = options.useExperimentalAttributeBasedSelectionMarker
-             ? markSelectionWithAttributes
-             : markSelectionWithSpan;
+            ? markSelectionWithAttributes
+            : markSelectionWithSpan;
         this.removeMarker = options.useExperimentalAttributeBasedSelectionMarker
-             ? removeAttributeMarker
-             : removeSpanMarker;
-        this.isUsingAttributeBasedSelectionMarker = options.useExperimentalAttributeBasedSelectionMarker;
+            ? removeAttributeMarker
+            : removeSpanMarker;
+        this.isUsingAttributeBasedSelectionMarker =
+            options.useExperimentalAttributeBasedSelectionMarker;
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));

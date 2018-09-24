@@ -61,8 +61,14 @@ export { default as VTable, VCell } from './table/VTable';
 export { default as Position } from './selection/Position';
 export { default as createRange } from './selection/createRange';
 
-export { markSelection as markSelectionWithSpan, removeMarker as removeSpanMarker } from './selection/selectionMarker';
-export { markSelection as markSelectionWithAttributes, removeMarker as removeAttributeMarker } from './selection/experimentalAttributeBasedSelectionMarker';
+export {
+    markSelection as markSelectionWithSpan,
+    removeMarker as removeSpanMarker,
+} from './selection/selectionMarker';
+export {
+    markSelection as markSelectionWithAttributes,
+    removeMarker as removeAttributeMarker,
+} from './selection/experimentalAttributeBasedSelectionMarker';
 
 // Deprecated
 export { default as isTextualInlineElement } from './deprecated/isTextualInlineElement';
