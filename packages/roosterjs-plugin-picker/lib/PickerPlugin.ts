@@ -1,7 +1,7 @@
 import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import { Editor, EditorPlugin, cacheGetContentSearcher } from 'roosterjs-editor-core';
-import { PartialInlineElement } from 'roosterjs-editor-dom';
+import { Browser, PartialInlineElement } from 'roosterjs-editor-dom';
 import {
     PluginKeyboardEvent,
     PluginEvent,
@@ -9,16 +9,18 @@ import {
     PositionType,
 } from 'roosterjs-editor-types';
 
-// Character codes
-export const BACKSPACE_CHARCODE = 8;
-export const TAB_CHARCODE = 9;
-export const ENTER_CHARCODE = 13;
-export const ESC_CHARCODE = 27;
-export const LEFT_ARROW_CHARCODE = 37;
-export const UP_ARROW_CHARCODE = 38;
-export const RIGHT_ARROW_CHARCODE = 39;
-export const DOWN_ARROW_CHARCODE = 40;
-export const DELETE_CHARCODE = 46;
+// Character codes.
+// IE11 uses different character codes. which are noted below.
+// If adding a new key, test in IE to figure out what the code is.
+export const BACKSPACE_CHARCODE = "Backspace";
+export const TAB_CHARCODE = "Tab";
+export const ENTER_CHARCODE = "Enter";
+export const ESC_CHARCODE = !Browser.isIE ? "Escape" : "Esc";
+export const LEFT_ARROW_CHARCODE = !Browser.isIE ? "ArrowLeft" : "Left";
+export const UP_ARROW_CHARCODE = !Browser.isIE ? "ArrowUp" : "Up";
+export const RIGHT_ARROW_CHARCODE = !Browser.isIE ? "ArrowRight" : "Right";
+export const DOWN_ARROW_CHARCODE = !Browser.isIE ? "ArrowDown" : "Down";
+export const DELETE_CHARCODE = !Browser.isIE ? "Delete" : "Del";
 
 export interface EditorPickerPluginInterface extends EditorPlugin {
     dataProvider: PickerDataProvider;
@@ -229,27 +231,27 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
     private onKeyDownEvent(event: PluginKeyboardEvent) {
         let keyboardEvent = event.rawEvent;
         if (this.isSuggesting) {
-            if (keyboardEvent.which == ESC_CHARCODE) {
+            if (keyboardEvent.key == ESC_CHARCODE) {
                 this.setIsSuggesting(false);
                 this.blockSuggestions = true;
                 this.handleKeyDownEvent(event);
             } else if (
                 this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
-                    ? keyboardEvent.which == LEFT_ARROW_CHARCODE ||
-                      keyboardEvent.which == RIGHT_ARROW_CHARCODE
-                    : keyboardEvent.which == UP_ARROW_CHARCODE ||
-                      keyboardEvent.which == DOWN_ARROW_CHARCODE)
+                    ? keyboardEvent.key == LEFT_ARROW_CHARCODE ||
+                      keyboardEvent.key == RIGHT_ARROW_CHARCODE
+                    : keyboardEvent.key == UP_ARROW_CHARCODE ||
+                      keyboardEvent.key == DOWN_ARROW_CHARCODE)
             ) {
                 this.dataProvider.shiftHighlight(
                     this.pickerOptions.isHorizontal
-                        ? keyboardEvent.which == RIGHT_ARROW_CHARCODE
-                        : keyboardEvent.which == DOWN_ARROW_CHARCODE
+                        ? keyboardEvent.key == RIGHT_ARROW_CHARCODE
+                        : keyboardEvent.key == DOWN_ARROW_CHARCODE
                 );
                 this.handleKeyDownEvent(event);
             } else if (
                 this.dataProvider.selectOption &&
-                (keyboardEvent.which == ENTER_CHARCODE || keyboardEvent.which == TAB_CHARCODE)
+                (keyboardEvent.key == ENTER_CHARCODE || keyboardEvent.key == TAB_CHARCODE)
             ) {
                 this.dataProvider.selectOption();
                 this.handleKeyDownEvent(event);
@@ -257,7 +259,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
                 // Currently no op.
             }
         } else {
-            if (keyboardEvent.which == BACKSPACE_CHARCODE) {
+            if (keyboardEvent.key == BACKSPACE_CHARCODE) {
                 let searcher = cacheGetContentSearcher(event, this.editor);
                 let nodeBeforeCursor = searcher.getInlineElementBefore()
                     ? searcher.getInlineElementBefore().getContainerNode()
@@ -274,7 +276,7 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
                     this.editor.select(replacementNode, PositionType.After);
                     this.handleKeyDownEvent(event);
                 }
-            } else if (keyboardEvent.which == DELETE_CHARCODE) {
+            } else if (keyboardEvent.key == DELETE_CHARCODE) {
                 let searcher = cacheGetContentSearcher(event, this.editor);
                 let nodeAfterCursor = searcher.getInlineElementAfter()
                     ? searcher.getInlineElementAfter().getContainerNode()
