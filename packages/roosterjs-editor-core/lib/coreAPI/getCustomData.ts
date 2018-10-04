@@ -8,7 +8,7 @@ const getCustomData: GetCustomData = <T>(
 ): T => {
     return (core.customData[key] = core.customData[key] || {
         value: getter(),
-        disposer: disposer,
+        disposer,
     }).value as T;
 };
 

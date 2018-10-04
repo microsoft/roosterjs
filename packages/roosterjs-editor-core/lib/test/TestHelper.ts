@@ -11,8 +11,8 @@ export function initEditor(id: string, plugins?: EditorPlugin[], undo?: UndoServ
     document.body.insertBefore(node, document.body.childNodes[0]);
 
     let options: EditorOptions = {
-        plugins: plugins,
-        undo: undo,
+        plugins,
+        undo,
         defaultFormat: {
             fontFamily: 'Calibri,Arial,Helvetica,sans-serif',
             fontSize: '11pt',

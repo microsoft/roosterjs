@@ -21,11 +21,11 @@ export default function createEditorCore(
     let undo = options.undo || new Undo();
     let corePlugin = new CorePlugin(contentDiv, options.disableRestoreSelectionOnFocus);
     return {
-        contentDiv: contentDiv,
+        contentDiv,
         document: contentDiv.ownerDocument,
         defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
-        corePlugin: corePlugin,
-        undo: undo,
+        corePlugin,
+        undo,
         currentUndoSnapshot: null,
         customData: {},
         cachedSelectionRange: null,
