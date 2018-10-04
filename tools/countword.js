@@ -15,7 +15,7 @@ while (match = reg.exec(file)) {
 }
 var array = Object.keys(map).map(function(key) {
     return {
-        key: key,
+        key,
         len: key.length * map[key],
     }
 });

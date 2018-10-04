@@ -28,8 +28,8 @@ function enqueue(queue, filename, exports) {
         return;
     }
     queue.push({
-        filename: filename,
-        exports: exports,
+        filename,
+        exports,
         elements: {}
     });
 }
@@ -341,8 +341,8 @@ if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir);
 }
 main({
-    projDir: projDir,
-    baseDir: baseDir,
+    projDir,
+    baseDir,
     library: 'roosterjs',
     output: path.resolve(targetDir, 'rooster'),
     include: [
