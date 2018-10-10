@@ -10,6 +10,7 @@ import getSelectionRange from '../coreAPI/getSelectionRange';
 import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
 import select from '../coreAPI/select';
+import experimentalSelectAsync from '../coreAPI/experimentalSelectAsync';
 import triggerEvent from '../coreAPI/triggerEvent';
 import { DefaultFormat } from 'roosterjs-editor-types';
 import { getComputedStyles } from 'roosterjs-editor-dom';
@@ -29,6 +30,7 @@ export default function createEditorCore(
         currentUndoSnapshot: null,
         customData: {},
         cachedSelectionRange: null,
+        hasPendingSelectionUpdateForAnimationFrame: false,
         plugins: [corePlugin, ...(options.plugins || []), undo].filter(plugin => !!plugin),
         api: createCoreApiMap(options.coreApiOverride),
         defaultApi: createCoreApiMap(),
@@ -64,6 +66,7 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
         hasFocus: map.hasFocus || hasFocus,
         insertNode: map.insertNode || insertNode,
         select: map.select || select,
+        selectAsync: map.selectAsync || experimentalSelectAsync,
         triggerEvent: map.triggerEvent || triggerEvent,
     };
 }

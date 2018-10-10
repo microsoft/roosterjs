@@ -73,6 +73,11 @@ interface EditorCore {
      * Cached selection range of this editor
      */
     cachedSelectionRange: Range;
+
+    /**
+     * If the cachedSelectionRange should be written to the DOM on the next frame.
+     */
+    hasPendingSelectionUpdateForAnimationFrame: boolean;
 }
 
 export default EditorCore;
@@ -164,6 +169,12 @@ export interface CoreApiMap {
      * @param core The EditorCore object
      */
     select: Select;
+
+    /**
+     * Select content
+     * @param core The EditorCore object
+     */
+    selectAsync: Select;
 
     /**
      * Trigger a plugin event
