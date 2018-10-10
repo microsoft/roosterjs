@@ -156,12 +156,14 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
             const wordBeforeCursor = this.getWord(event);
             const trimmedWordBeforeCursor = wordBeforeCursor.substring(1).trim();
 
-            // Update the query string when:
+            // If we hit a case where wordBeforeCursor is just the trigger character,
+            // that means we've gotten a onKeyUp event right after it's been typed.
+            // Otherwise, update the query string when:
             // 1. There's an actual value
             // 2. That actual value isn't just pure whitespace
             // 3. That actual value isn't more than 4 words long (at which point we assume the person kept typing)
             // Otherwise, we want to dismiss the picker plugin's UX.
-            if (trimmedWordBeforeCursor && trimmedWordBeforeCursor.length > 0 && trimmedWordBeforeCursor.split(' ').length <= 4) {
+            if (wordBeforeCursor == this.pickerOptions.triggerCharacter || (trimmedWordBeforeCursor && trimmedWordBeforeCursor.length > 0 && trimmedWordBeforeCursor.split(' ').length <= 4)) {
                 this.dataProvider.queryStringUpdated(trimmedWordBeforeCursor);
             } else {
                 this.setIsSuggesting(false);
