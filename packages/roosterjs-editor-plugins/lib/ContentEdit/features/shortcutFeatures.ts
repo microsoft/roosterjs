@@ -19,9 +19,9 @@ interface ShortcutCommand {
 
 function createCommand(winKey: number, macKey: number, action: (editor: Editor) => any) {
     return {
-        winKey: winKey,
-        macKey: macKey,
-        action: action,
+        winKey,
+        macKey,
+        action,
     };
 }
 

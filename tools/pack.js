@@ -19,7 +19,7 @@ if (isProduction) {
 }
 filename += '.js';
 var output = {
-    filename: filename,
+    filename,
     path: distPath
 };
 if (isAmd) {
@@ -31,7 +31,7 @@ if (isAmd) {
 var webpackConfig = {
     entry: path.resolve(sourcePath, 'roosterjs/lib/index.ts'),
     devtool: 'source-map',
-    output: output,
+    output,
     resolve: {
         extensions: ['.ts'],
         modules: [ sourcePath ],

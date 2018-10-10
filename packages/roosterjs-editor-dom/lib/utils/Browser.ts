@@ -42,15 +42,15 @@ export function getBrowserInfo(userAgent: string, appVersion: string): BrowserIn
     let isWin = appVersion.indexOf('Win') != -1 || appVersion.indexOf('NT') != -1;
 
     return {
-        isMac: isMac,
-        isWin: isWin,
-        isWebKit: isWebKit,
-        isIE: isIE,
-        isIE11OrGreater: isIE11OrGreater,
-        isSafari: isSafari,
-        isChrome: isChrome,
-        isFirefox: isFirefox,
-        isEdge: isEdge,
+        isMac,
+        isWin,
+        isWebKit,
+        isIE,
+        isIE11OrGreater,
+        isSafari,
+        isChrome,
+        isFirefox,
+        isEdge,
         isIEOrEdge: isIE || isEdge,
     };
 }
