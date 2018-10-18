@@ -64,7 +64,9 @@ function cacheGetCommand(event: PluginKeyboardEvent) {
     return cacheGetEventData(event, 'DEFAULT_SHORT_COMMAND', () => {
         let e = event.rawEvent;
         let key =
-            event.eventType == PluginEventType.KeyDown
+            // Need to check ALT key to be false since in some language (e.g. Polski) uses AltGr to input some special charactors
+            // In that case, ctrlKey and altKey are both true in Edge, but we should not trigger any shortcut function here
+            event.eventType == PluginEventType.KeyDown && !e.altKey
                 ? e.which |
                   (e.metaKey && Keys.Meta) |
                   (e.shiftKey && Keys.Shift) |
