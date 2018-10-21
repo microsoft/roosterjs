@@ -61,10 +61,7 @@ function autoLink(event: PluginEvent, editor: Editor) {
 
             // The content at cursor has changed. Should also clear the cursor data cache
             clearContentSearcherCache(event);
-
-            // Explicitly trigger ContentChanged event here and do not trigger it from performAutoComplete,
-            // because we want the anchor can be handled by other plugins (e.g. HyperLink) before undo snapshot is added
-            editor.triggerContentChangedEvent(ChangeSource.AutoLink, anchor);
-        });
+            return anchor;
+        }, ChangeSource.AutoLink);
     });
 }

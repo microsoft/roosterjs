@@ -12,15 +12,15 @@ import {
 // Character codes.
 // IE11 uses different character codes. which are noted below.
 // If adding a new key, test in IE to figure out what the code is.
-export const BACKSPACE_CHARCODE = "Backspace";
-export const TAB_CHARCODE = "Tab";
-export const ENTER_CHARCODE = "Enter";
-export const ESC_CHARCODE = !Browser.isIE ? "Escape" : "Esc";
-export const LEFT_ARROW_CHARCODE = !Browser.isIE ? "ArrowLeft" : "Left";
-export const UP_ARROW_CHARCODE = !Browser.isIE ? "ArrowUp" : "Up";
-export const RIGHT_ARROW_CHARCODE = !Browser.isIE ? "ArrowRight" : "Right";
-export const DOWN_ARROW_CHARCODE = !Browser.isIE ? "ArrowDown" : "Down";
-export const DELETE_CHARCODE = !Browser.isIE ? "Delete" : "Del";
+export const BACKSPACE_CHARCODE = 'Backspace';
+export const TAB_CHARCODE = 'Tab';
+export const ENTER_CHARCODE = 'Enter';
+export const ESC_CHARCODE = !Browser.isIE ? 'Escape' : 'Esc';
+export const LEFT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowLeft' : 'Left';
+export const UP_ARROW_CHARCODE = !Browser.isIE ? 'ArrowUp' : 'Up';
+export const RIGHT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowRight' : 'Right';
+export const DOWN_ARROW_CHARCODE = !Browser.isIE ? 'ArrowDown' : 'Down';
+export const DELETE_CHARCODE = !Browser.isIE ? 'Delete' : 'Del';
 
 export interface EditorPickerPluginInterface extends EditorPlugin {
     dataProvider: PickerDataProvider;
@@ -163,7 +163,12 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
             // 2. That actual value isn't just pure whitespace
             // 3. That actual value isn't more than 4 words long (at which point we assume the person kept typing)
             // Otherwise, we want to dismiss the picker plugin's UX.
-            if (wordBeforeCursor == this.pickerOptions.triggerCharacter || (trimmedWordBeforeCursor && trimmedWordBeforeCursor.length > 0 && trimmedWordBeforeCursor.split(' ').length <= 4)) {
+            if (
+                wordBeforeCursor == this.pickerOptions.triggerCharacter ||
+                (trimmedWordBeforeCursor &&
+                    trimmedWordBeforeCursor.length > 0 &&
+                    trimmedWordBeforeCursor.split(' ').length <= 4)
+            ) {
                 this.dataProvider.queryStringUpdated(trimmedWordBeforeCursor);
             } else {
                 this.setIsSuggesting(false);

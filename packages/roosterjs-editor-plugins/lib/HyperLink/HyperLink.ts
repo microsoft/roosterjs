@@ -1,10 +1,4 @@
-import {
-    ChangeSource,
-    ContentChangedEvent,
-    ExtractContentEvent,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import { ChangeSource, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { Browser } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 
@@ -60,17 +54,15 @@ export default class HyperLink implements EditorPlugin {
                 break;
 
             case PluginEventType.ContentChanged:
-                let contentChangedEvent = event as ContentChangedEvent;
-                if (contentChangedEvent.source == ChangeSource.CreateLink) {
-                    this.resetAnchor(contentChangedEvent.data as HTMLAnchorElement);
+                if (event.source == ChangeSource.CreateLink) {
+                    this.resetAnchor(event.data as HTMLAnchorElement);
                 }
 
                 this.editor.queryElements('a[href]', this.processLink);
                 break;
 
             case PluginEventType.ExtractContent:
-                let extractContentEvent = event as ExtractContentEvent;
-                extractContentEvent.content = this.removeTempTooltip(extractContentEvent.content);
+                event.content = this.removeTempTooltip(event.content);
                 break;
         }
     }
