@@ -310,7 +310,7 @@ function recurringGetOrCreateListAtNode(
 function cleanupListIgnore(node: Node, levels: number) {
     let nodesToRemove: Node[] = [];
 
-    for (let child = node.firstChild; child; child = child.nextSibling) {
+    for (let child: Node = node.firstChild; child; child = child.nextSibling) {
         // Clean up the item internally first if we need to based on the number of levels
         if (child.nodeType == NodeType.Element && levels > 1) {
             cleanupListIgnore(child, levels - 1);
@@ -385,7 +385,7 @@ function getFakeBulletText(node: Node, levels: number): string {
     // Basically, we need to locate the mso-list:Ignore SPAN, which holds either one text or image node. That
     // text or image node will be the fake bullet we are looking for
     let result: string = null;
-    let child = node.firstChild;
+    let child: Node = node.firstChild;
     while (!result && child) {
         // First, check if we need to convert the Word list comments into real elements
         child = fixWordListComments(child, true /*removeComments*/);

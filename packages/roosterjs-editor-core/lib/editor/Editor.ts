@@ -86,8 +86,8 @@ export default class Editor {
         // 7. Disable these operations for firefox since its behavior is usually wrong
         // Catch any possible exception since this should not block the initialization of editor
         try {
-            this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, false);
-            this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, false);
+            this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, <string><any>false);
+            this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <string><any>false);
         } catch (e) {}
 
         // 8. Finally, let plugins know that we are ready

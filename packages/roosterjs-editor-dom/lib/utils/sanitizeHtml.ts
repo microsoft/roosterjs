@@ -182,7 +182,7 @@ function removeUnusedCssAndDangerousContent(
 
         removeDisallowedAttributes(element, callbackPropertyNames, propertyCallbacks);
 
-        let child = element.firstChild;
+        let child: Node = element.firstChild;
         let next: Node;
         for (; child; child = next) {
             next = child.nextSibling;

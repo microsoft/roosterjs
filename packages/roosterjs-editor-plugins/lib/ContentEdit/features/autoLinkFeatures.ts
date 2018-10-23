@@ -17,7 +17,7 @@ const MINIMUM_LENGTH = 5;
 export const AutoLink: GenericContentEditFeature<PluginEvent> = {
     keys: [Keys.ENTER, Keys.SPACE, Keys.CONTENTCHANGED],
     initialize: editor =>
-        Browser.isIE && editor.getDocument().execCommand('AutoUrlDetect', false, false),
+        Browser.isIE && editor.getDocument().execCommand('AutoUrlDetect', false, <string><any>false),
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
     isAvailable: featureSet => featureSet.autoLink,

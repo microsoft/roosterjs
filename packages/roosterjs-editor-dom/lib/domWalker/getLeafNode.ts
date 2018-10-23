@@ -3,7 +3,7 @@ import { getLeafSibling } from './getLeafSibling';
 
 function getLeafNode(rootNode: Node, isFirst: boolean): Node {
     let getChild = isFirst ? (node: Node) => node.firstChild : (node: Node) => node.lastChild;
-    let result = getChild(rootNode);
+    let result: Node = getChild(rootNode);
     while (result && getChild(result)) {
         result = getChild(result);
     }
