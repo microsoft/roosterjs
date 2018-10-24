@@ -1,10 +1,11 @@
 import EditorCore, { EditWithUndo } from '../editor/EditorCore';
 import { ChangeSource, ContentChangedEvent, PluginEventType } from 'roosterjs-editor-types';
 import { Position } from 'roosterjs-editor-dom';
+import { UndoSnapshot } from '../undo/UndoSnapshotTranslator';
 
 const editWithUndo: EditWithUndo = (
     core: EditorCore,
-    callback: (start: Position, end: Position, snapshotBeforeCallback: string) => any,
+    callback: (start: Position, end: Position, snapshotBeforeCallback: UndoSnapshot) => any,
     changeSource: ChangeSource | string
 ) => {
     let isNested = core.currentUndoSnapshot !== null;

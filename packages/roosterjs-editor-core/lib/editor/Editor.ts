@@ -35,6 +35,11 @@ import {
     collapseNodes,
     wrap,
 } from 'roosterjs-editor-dom';
+import {
+    UndoSnapshot,
+    UndoSnapshotTranslator
+} from '../undo/UndoSnapshotTranslator';
+import UndoSnapshotTranslatorService from './UndoSnapshotTranslatorService';
 
 /**
  * RoosterJs core editor class
@@ -43,6 +48,10 @@ export default class Editor {
     private core: EditorCore;
     private eventDisposers: (() => void)[];
     private contenteditableChanged: boolean;
+
+    public get undoSnapshotTranslator(): UndoSnapshotTranslatorService {
+        return this.core.undoSnapshotTranslator;
+    }
 
     //#region Lifecycle
 
@@ -62,6 +71,7 @@ export default class Editor {
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
+        this.undoSnapshotTranslator.initialize(this);
 
         // 4. Ensure initial content and its format
         this.setContent(options.initialContent || contentDiv.innerHTML || '');
@@ -611,7 +621,7 @@ export default class Editor {
      * a ContentChangedEvent will be fired with change source equal to this value
      */
     public addUndoSnapshot(
-        callback?: (start: Position, end: Position, snapshotBeforeCallback: string) => any,
+        callback?: (start: Position, end: Position, snapshotBeforeCallback: UndoSnapshot) => any,
         changeSource?: ChangeSource | string
     ) {
         this.core.api.editWithUndo(this.core, callback, changeSource);
@@ -770,7 +780,7 @@ export default class Editor {
      */
     public runWithoutAddingUndoSnapshot(callback: () => void) {
         try {
-            this.core.currentUndoSnapshot = this.getContent(false, true);
+            this.core.currentUndoSnapshot = this.core.undoSnapshotTranslator.getUndoSnapshot();
             callback();
         } finally {
             this.core.currentUndoSnapshot = null;

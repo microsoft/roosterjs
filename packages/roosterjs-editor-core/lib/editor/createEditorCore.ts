@@ -13,6 +13,7 @@ import select from '../coreAPI/select';
 import triggerEvent from '../coreAPI/triggerEvent';
 import { DefaultFormat } from 'roosterjs-editor-types';
 import { getComputedStyles } from 'roosterjs-editor-dom';
+import { UndoSnapshotTranslator } from '../undo/UndoSnapshotTranslator';
 
 export default function createEditorCore(
     contentDiv: HTMLDivElement,
@@ -26,6 +27,7 @@ export default function createEditorCore(
         defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
         corePlugin,
         undo,
+        undoSnapshotTranslator: new UndoSnapshotTranslator(contentDiv),
         currentUndoSnapshot: null,
         customData: {},
         cachedSelectionRange: null,

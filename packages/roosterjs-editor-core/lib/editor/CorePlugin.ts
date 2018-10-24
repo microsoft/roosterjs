@@ -18,6 +18,7 @@ import {
     getBlockElementAtNode,
     StartEndBlockElement,
 } from 'roosterjs-editor-dom';
+import { UndoSnapshot } from '../undo/UndoSnapshotTranslator';
 
 const KEY_BACKSPACE = 8;
 
@@ -35,6 +36,7 @@ interface AutoCompleteInfo {
 export default class CorePlugin implements EditorPlugin {
     public name = 'CorePlugin';
     private editor: Editor;
+    private snapshotBeforeAutoComplete: UndoSnapshot;
     private autoCompleteInfo: AutoCompleteInfo;
     private inIME: boolean;
     private disposers: (() => void)[] = null;
@@ -196,10 +198,7 @@ export default class CorePlugin implements EditorPlugin {
         if (this.autoCompleteInfo) {
             if (event && event.which == KEY_BACKSPACE) {
                 event.preventDefault();
-                this.editor.setContent(
-                    this.autoCompleteInfo.snapshot,
-                    false /*triggerContentChangedEvent*/
-                );
+                this.editor.undoSnapshotTranslator.restoreUndoSnapshot(this.snapshotBeforeAutoComplete);
             }
             this.autoCompleteInfo = null;
         }

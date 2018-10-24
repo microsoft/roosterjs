@@ -1,7 +1,6 @@
-import UndoSnapshots, { UndoSnapshotsService } from './UndoSnapshots';
 import { ChangeSource, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import Editor from '../editor/Editor';
-import UndoService from '../editor/UndoService';
+import { Editor, UndoService, UndoSnapshotsService } from 'roosterjs-editor-core';
+import { UndoSnapshot } from './UndoSnapshotTranslator';
 
 const KEY_BACKSPACE = 8;
 const KEY_DELETE = 46;
@@ -13,7 +12,7 @@ const KEY_DOWN = 40;
 /**
  * Provides snapshot based undo service for Editor
  */
-export default class Undo implements UndoService {
+export class Undo implements UndoService {
     private editor: Editor;
     private isRestoring: boolean;
     private hasNewContent: boolean;
@@ -128,22 +127,16 @@ export default class Undo implements UndoService {
         return this.getSnapshotsManager().canMove(1 /*nextSnapshot*/);
     }
 
-    /**
-     * Add an undo snapshot
-     */
-    public addUndoSnapshot(): string {
-        let snapshot = this.editor.getContent(
-            false /*triggerExtractContentEvent*/,
-            true /*markSelection*/
-        );
-        this.getSnapshotsManager().addSnapshot(snapshot);
+    public addUndoSnapshot(): UndoSnapshot {
+        const snapshot = this.editor.undoSnapshotTranslator.getUndoSnapshot();
+        this.getSnapshotsManager().addSnapshot(JSON.stringify(snapshot));
         this.hasNewContent = false;
         return snapshot;
     }
 
     protected getSnapshotsManager(): UndoSnapshotsService {
         if (!this.undoSnapshots) {
-            this.undoSnapshots = new UndoSnapshots(this.maxBufferSize);
+            this.undoSnapshots = new UndoSnapshotsService(this.maxBufferSize);
         }
         return this.undoSnapshots;
     }
@@ -152,9 +145,10 @@ export default class Undo implements UndoService {
         let snapshot = this.getSnapshotsManager().move(delta);
 
         if (snapshot != null) {
+            const snapshotJSON = JSON.parse(snapshot);
             try {
                 this.isRestoring = true;
-                this.editor.setContent(snapshot);
+                this.editor.undoSnapshotTranslator.restoreUndoSnapshot(snapshotJSON);
             } finally {
                 this.isRestoring = false;
             }
@@ -241,3 +235,5 @@ export default class Undo implements UndoService {
         });
     };
 }
+
+export default Undo;

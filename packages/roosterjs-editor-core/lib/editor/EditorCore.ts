@@ -1,6 +1,7 @@
 import CorePlugin from './CorePlugin';
 import EditorPlugin from './EditorPlugin';
 import UndoService from './UndoService';
+import UndoSnapshotTranslatorService from './UndoSnapshotTranslatorService';
 import {
     ChangeSource,
     DefaultFormat,
@@ -9,6 +10,7 @@ import {
     PluginEventType,
 } from 'roosterjs-editor-types';
 import { Position } from 'roosterjs-editor-dom';
+import { UndoSnapshot } from '../undo/UndoSnapshotTranslator';
 
 /**
  * Represents the core data structure of an editor
@@ -45,6 +47,11 @@ interface EditorCore {
     readonly undo: UndoService;
 
     /**
+     * Undo snapshot translation service of this editor.
+     */
+    readonly undoSnapshotTranslator: UndoSnapshotTranslatorService;
+
+    /**
      * Custom data of this editor
      */
     readonly customData: {
@@ -67,7 +74,7 @@ interface EditorCore {
     /**
      * The undo snapshot taken by addUndoSnapshot() before callback function is invoked.
      */
-    currentUndoSnapshot: string;
+    currentUndoSnapshot: UndoSnapshot;
 
     /**
      * Cached selection range of this editor
@@ -85,7 +92,7 @@ export type AttachDomEvent = (
 ) => () => void;
 export type EditWithUndo = (
     core: EditorCore,
-    callback: (start: Position, end: Position, snapshotBeforeCallback: string) => any,
+    callback: (start: Position, end: Position, snapshotBeforeCallback: UndoSnapshot) => any,
     changeSource: ChangeSource | string
 ) => void;
 export type Focus = (core: EditorCore) => void;
