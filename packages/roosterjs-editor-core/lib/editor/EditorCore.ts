@@ -8,9 +8,9 @@ import {
     InsertOption,
     PluginEvent,
     PluginEventType,
+    UndoSnapshot,
 } from 'roosterjs-editor-types';
 import { Position } from 'roosterjs-editor-dom';
-import { UndoSnapshot } from '../undo/UndoSnapshotTranslator';
 
 /**
  * Represents the core data structure of an editor

@@ -1,5 +1,5 @@
 import Editor from './Editor';
-import { UndoSnapshot } from '../undo/UndoSnapshotTranslator';
+import { UndoSnapshot } from 'roosterjs-editor-types';
 
 export default interface UndoSnapshotTranslatorService {
     initialize(editor: Editor): void;

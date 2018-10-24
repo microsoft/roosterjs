@@ -17,6 +17,7 @@ import {
     QueryScope,
     Rect,
     NodeType,
+    UndoSnapshot,
 } from 'roosterjs-editor-types';
 import {
     Browser,
@@ -36,7 +37,6 @@ import {
     wrap,
 } from 'roosterjs-editor-dom';
 import {
-    UndoSnapshot,
     UndoSnapshotTranslator
 } from '../undo/UndoSnapshotTranslator';
 import UndoSnapshotTranslatorService from './UndoSnapshotTranslatorService';

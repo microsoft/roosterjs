@@ -27,7 +27,7 @@ export default function createEditorCore(
         defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
         corePlugin,
         undo,
-        undoSnapshotTranslator: new UndoSnapshotTranslator(contentDiv),
+        undoSnapshotTranslator: new UndoSnapshotTranslator(),
         currentUndoSnapshot: null,
         customData: {},
         cachedSelectionRange: null,

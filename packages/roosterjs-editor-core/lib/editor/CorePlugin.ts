@@ -7,6 +7,7 @@ import {
     PluginEventType,
     PluginMouseUpEvent,
     PositionType,
+    UndoSnapshot,
 } from 'roosterjs-editor-types';
 import {
     Browser,
@@ -18,7 +19,6 @@ import {
     getBlockElementAtNode,
     StartEndBlockElement,
 } from 'roosterjs-editor-dom';
-import { UndoSnapshot } from '../undo/UndoSnapshotTranslator';
 
 const KEY_BACKSPACE = 8;
 

@@ -1,6 +1,5 @@
-import { ChangeSource, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { ChangeSource, PluginEvent, PluginEventType, UndoSnapshot } from 'roosterjs-editor-types';
 import { Editor, UndoService, UndoSnapshotsService } from 'roosterjs-editor-core';
-import { UndoSnapshot } from './UndoSnapshotTranslator';
 
 const KEY_BACKSPACE = 8;
 const KEY_DELETE = 46;

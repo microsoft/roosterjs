@@ -1,5 +1,5 @@
 import EditorPlugin from './EditorPlugin';
-import { UndoSnapshot } from '../undo/UndoSnapshotTranslator';
+import { UndoSnapshot } from 'roosterjs-editor-types';
 
 /**
  * Defines replaceable undo service for editor
