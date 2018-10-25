@@ -34,12 +34,6 @@ export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
 export { default as collapseNodes } from './utils/collapseNodes';
 export { default as contains } from './utils/contains';
-export { default as convertInlineCss } from './utils/convertInlineCss';
-export {
-    default as sanitizeHtml,
-    SanitizeHtmlPropertyCallback,
-    StyleMap,
-} from './utils/sanitizeHtml';
 export { default as fromHtml } from './utils/fromHtml';
 export { default as getComputedStyles, getComputedStyle } from './utils/getComputedStyles';
 export { default as getElementOrParentElement } from './utils/getElementOrParentElement';
@@ -71,3 +65,9 @@ export {
     getInlineElementAfterPoint,
 } from './deprecated/getInlineElementBeforeAfterPoint';
 export { default as normalizeEditorPoint } from './deprecated/normalizeEditorPoint';
+export { default as convertInlineCss } from './utils/convertInlineCss';
+export {
+    default as sanitizeHtml,
+    SanitizeHtmlPropertyCallback,
+    StyleMap,
+} from './utils/sanitizeHtml';

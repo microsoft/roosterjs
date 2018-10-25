@@ -1,6 +1,6 @@
-import convertInlineCss from '../../utils/convertInlineCss';
+import HtmlSanitizer from '../sanitizer/HtmlSanitizer';
 
-describe('convertInlineCss', () => {
+describe('globalCssToInline', () => {
     it('input = "" ', () => {
         runTest('', '');
     });
@@ -41,7 +41,7 @@ describe('convertInlineCss', () => {
 
     function runTest(input: string, output: string) {
         // Act
-        let result = convertInlineCss(input);
+        let result = HtmlSanitizer.convertInlineCss(input);
 
         // Assert
         expect(result).toBe(output);

@@ -157,10 +157,7 @@ export default class CorePlugin implements EditorPlugin {
     public onPluginEvent(event: PluginEvent) {
         switch (event.eventType) {
             case PluginEventType.ContentChanged:
-                if (
-                    this.autoCompleteInfo &&
-                    this.autoCompleteInfo.changeSource != event.source
-                ) {
+                if (this.autoCompleteInfo && this.autoCompleteInfo.changeSource != event.source) {
                     this.onContentChanged();
                 }
                 break;

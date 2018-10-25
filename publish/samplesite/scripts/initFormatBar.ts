@@ -34,6 +34,7 @@ import {
     TableFormat,
 } from 'roosterjs-editor-types';
 import getCurrentEditor from './currentEditor';
+import { HtmlSanitizer } from 'roosterjs-html-sanitizer';
 
 let TABLE_FORMAT = [
     createTableFormat('#FFF', '#FFF', '#ABABAB', '#ABABAB', '#ABABAB'),
@@ -278,5 +279,13 @@ export default function initFormatBar() {
             setBackgroundColor(editor, text);
         }
         select.value = '';
+    });
+
+    // Sanitize HTML
+    document.getElementById('sanitizeHtmlButton').addEventListener('click', function() {
+        let editor = getCurrentEditor();
+        let html = editor.getContent();
+        html = HtmlSanitizer.sanitizeHtml(html);
+        editor.setContent(html);
     });
 }
