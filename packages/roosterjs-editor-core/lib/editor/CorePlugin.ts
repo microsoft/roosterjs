@@ -23,7 +23,7 @@ import {
 const KEY_BACKSPACE = 8;
 
 interface AutoCompleteInfo {
-    snapshot: string;
+    snapshot: UndoSnapshot;
     changeSource: string;
 }
 
@@ -36,7 +36,6 @@ interface AutoCompleteInfo {
 export default class CorePlugin implements EditorPlugin {
     public name = 'CorePlugin';
     private editor: Editor;
-    private snapshotBeforeAutoComplete: UndoSnapshot;
     private autoCompleteInfo: AutoCompleteInfo;
     private inIME: boolean;
     private disposers: (() => void)[] = null;
@@ -106,7 +105,7 @@ export default class CorePlugin implements EditorPlugin {
      * @param changeSource Chagne source of ContentChangedEvent. If not passed, no ContentChangedEvent will be  triggered
      */
     public performAutoComplete(callback: () => any, changeSource?: ChangeSource) {
-        this.editor.addUndoSnapshot((start, end, snapshot) => {
+        this.editor.addUndoSnapshot((start, end, snapshot: UndoSnapshot) => {
             let data = callback();
             this.autoCompleteInfo = {
                 snapshot,
@@ -198,7 +197,7 @@ export default class CorePlugin implements EditorPlugin {
         if (this.autoCompleteInfo) {
             if (event && event.which == KEY_BACKSPACE) {
                 event.preventDefault();
-                this.editor.undoSnapshotTranslator.restoreUndoSnapshot(this.snapshotBeforeAutoComplete);
+                this.editor.undoSnapshotTranslator.restoreUndoSnapshot(this.autoCompleteInfo.snapshot);
             }
             this.autoCompleteInfo = null;
         }

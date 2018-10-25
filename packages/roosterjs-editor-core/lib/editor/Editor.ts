@@ -36,9 +36,6 @@ import {
     collapseNodes,
     wrap,
 } from 'roosterjs-editor-dom';
-import {
-    UndoSnapshotTranslator
-} from '../undo/UndoSnapshotTranslator';
 import UndoSnapshotTranslatorService from './UndoSnapshotTranslatorService';
 
 /**
