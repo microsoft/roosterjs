@@ -112,8 +112,9 @@ export default class Position {
      */
     equalTo(p: Position): boolean {
         return (
-            this == p ||
-            (this.node == p.node && this.offset == p.offset && this.isAtEnd == p.isAtEnd)
+            p &&
+            (this == p ||
+                (this.node == p.node && this.offset == p.offset && this.isAtEnd == p.isAtEnd))
         );
     }
 
@@ -213,7 +214,7 @@ export default class Position {
      * @param offset Offset to move with
      */
     move(offset: number) {
-        return new Position(this.node, this.offset + offset);
+        return new Position(this.node, Math.max(this.offset + offset, 0));
     }
 
     /**

@@ -30,6 +30,10 @@ export default function changeElementTag(
     newTag: string,
     deprecated?: any
 ): HTMLElement {
+    if (!element || !newTag) {
+        return null;
+    }
+
     let newElement = element.ownerDocument.createElement(newTag);
 
     for (let i = 0; i < element.attributes.length; i++) {
@@ -41,7 +45,7 @@ export default function changeElementTag(
         newElement.appendChild(element.firstChild);
     }
 
-    if (getTagOfNode(element) == 'P') {
+    if (getTagOfNode(element) == 'P' || getTagOfNode(newElement) == 'P') {
         [newElement.style.marginTop, newElement.style.marginBottom] = getComputedStyles(element, [
             'margin-top',
             'margin-bottom',
