@@ -191,3 +191,8 @@ To use the sample editor, follow these instructions:
 We are still working on more documentation in [roosterjs wiki](https://github.com/Microsoft/roosterjs/wiki).
 
 ## License - MIT
+
+License
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+Licensed under the [MIT](https://github.com/Microsoft/roosterjs/blob/master/LICENSE) License.
