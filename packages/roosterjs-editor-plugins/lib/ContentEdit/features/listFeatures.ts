@@ -1,7 +1,14 @@
+import { cacheGetContentSearcher, Editor } from 'roosterjs-editor-core';
+import { ContentChangedEvent, Indentation, PluginKeyboardEvent } from 'roosterjs-editor-types';
 import { ContentEditFeature, GenericContentEditFeature, Keys } from '../ContentEditFeatures';
-import { Editor, cacheGetContentSearcher } from 'roosterjs-editor-core';
-import { Indentation, PluginKeyboardEvent, ContentChangedEvent } from 'roosterjs-editor-types';
-import { Browser, Position, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
+import { PositionType } from 'roosterjs-editor-types';
+import {
+    Browser,
+    Position,
+    getTagOfNode,
+    isNodeEmpty,
+    isPositionAtBeginningOf,
+} from 'roosterjs-editor-dom';
 import {
     cacheGetNodeAtCursor,
     getNodeAtCursor,
@@ -9,7 +16,6 @@ import {
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-import { PositionType } from 'roosterjs-editor-types';
 
 export const IndentWhenTab: ContentEditFeature = {
     keys: [Keys.TAB],
@@ -38,7 +44,7 @@ export const MergeInNewLine: ContentEditFeature = {
     shouldHandleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');
         let range = editor.getSelectionRange();
-        return li && range && Position.getStart(range).isAtBeginningOf(li);
+        return li && range && isPositionAtBeginningOf(Position.getStart(range), li);
     },
     handleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');

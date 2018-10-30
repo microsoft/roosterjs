@@ -1,5 +1,5 @@
 import * as DomTestHelper from '../DomTestHelper';
-import shouldSkipNode from '../../domWalker/shouldSkipNode';
+import shouldSkipNode from '../../utils/shouldSkipNode';
 
 let testID = 'shouldSkipNode';
 

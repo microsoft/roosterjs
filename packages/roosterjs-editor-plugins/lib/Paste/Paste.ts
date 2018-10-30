@@ -1,3 +1,14 @@
+import buildClipboardData from './buildClipboardData';
+import fragmentHandler from './fragmentHandler';
+import textToHtml from './textToHtml';
+import {
+    AttributeCallbackMap,
+    getInheritableStyles,
+    HtmlSanitizer,
+    htmlToDom,
+} from 'roosterjs-html-sanitizer';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { insertImage } from 'roosterjs-editor-api';
 import {
     BeforePasteEvent,
     ChangeSource,
@@ -5,23 +16,15 @@ import {
     DefaultFormat,
     NodeType,
     PasteOption,
-    PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
 import {
-    SanitizeHtmlPropertyCallback,
     applyFormat,
     fromHtml,
     getFirstLeafNode,
     getNextLeafSibling,
-    sanitizeHtml,
+    Position,
 } from 'roosterjs-editor-dom';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { insertImage } from 'roosterjs-editor-api';
-import buildClipboardData from './buildClipboardData';
-import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
-import textToHtml from './textToHtml';
-import getInheritableStyles from './getInheritableStyles';
 
 /**
  * Paste plugin, handles onPaste event and paste content into editor
@@ -29,17 +32,19 @@ import getInheritableStyles from './getInheritableStyles';
 export default class Paste implements EditorPlugin {
     private editor: Editor;
     private pasteDisposer: () => void;
+    private sanitizer: HtmlSanitizer;
     public name: 'Paste';
 
     /**
      * Create an instance of Paste
      * @param deprecated Deprecated parameter only used for compatibility with old code
-     * @param htmlPropertyCallbacks A callback to help handle html sanitization
+     * @param attributeCallbacks A set of callbacks to help handle html attribute during sanitization
      */
-    constructor(
-        deprecated?: boolean,
-        private htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback
-    ) {}
+    constructor(deprecated?: boolean, attributeCallbacks?: AttributeCallbackMap) {
+        this.sanitizer = new HtmlSanitizer({
+            attributeCallbacks,
+        });
+    }
 
     public initialize(editor: Editor) {
         this.editor = editor;
@@ -52,30 +57,19 @@ export default class Paste implements EditorPlugin {
         this.editor = null;
     }
 
-    public onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.BeforePaste) {
-            let beforePasteEvent = <BeforePasteEvent>event;
-
-            if (beforePasteEvent.pasteOption == PasteOption.PasteHtml) {
-                convertPastedContentFromWord(beforePasteEvent.fragment);
-            }
-        }
-    }
-
     private onPaste = (event: Event) => {
         buildClipboardData(<ClipboardEvent>event, this.editor, clipboardData => {
-            if (!clipboardData.html && clipboardData.text) {
-                clipboardData.html = textToHtml(clipboardData.text);
+            let doc = htmlToDom(clipboardData.html, true /*preserveFragmentOnly*/, fragmentHandler);
+            if (doc && doc.body) {
+                this.sanitizer.convertGlobalCssToInlineCss(doc);
+
+                let range = this.editor.getSelectionRange();
+                let element = range && Position.getStart(range).normalize().element;
+                let currentStyles = getInheritableStyles(element);
+                this.sanitizer.sanitize(doc.body, currentStyles);
+                clipboardData.html = doc.body.innerHTML;
             }
-            let currentStyles = getInheritableStyles(this.editor);
-            clipboardData.html = sanitizeHtml(
-                clipboardData.html,
-                null /*additionalStyleNodes*/,
-                false /*convertInlineCssOnly*/,
-                this.htmlPropertyCallbacks,
-                true /*preserveFragmentOnly*/,
-                currentStyles
-            );
+
             this.pasteOriginal(clipboardData);
         });
     };

@@ -92,24 +92,26 @@ function safeCreatePosition(marker: HTMLElement, attrName: string) {
 function insertMarker(type: string, useInlineMarker: boolean, pos1: Position, pos2?: Position) {
     let node = pos1.node;
     let marker = node.ownerDocument.createElement('SPAN');
+    let offset = getRestorableOffset(pos1);
     marker.id = type;
-    marker.setAttribute(
-        OFFSET_1_ATTRIBUTE,
-        useInlineMarker ? '0' : '' + pos1.getRestorableOffset()
-    );
+    marker.setAttribute(OFFSET_1_ATTRIBUTE, useInlineMarker ? '0' : '' + offset);
     marker.setAttribute(
         OFFSET_2_ATTRIBUTE,
-        useInlineMarker || !pos2 ? '0' : '' + pos2.getRestorableOffset()
+        useInlineMarker || !pos2 ? '0' : '' + getRestorableOffset(pos2)
     );
 
-    if (!useInlineMarker || pos1.offset == 0) {
+    if (!useInlineMarker || offset == 0) {
         node.parentNode.insertBefore(marker, node);
     } else if (pos1.isAtEnd) {
         node.parentNode.insertBefore(marker, node.nextSibling);
     } else {
         let range = node.ownerDocument.createRange();
-        range.setStart(node, pos1.offset);
+        range.setStart(node, offset);
         range.collapse(true /* toStart */);
         range.insertNode(marker);
     }
+}
+
+function getRestorableOffset(position: Position): number {
+    return position.offset == 0 && position.isAtEnd ? 1 : position.offset;
 }

@@ -150,7 +150,7 @@ export default class HtmlSanitizer {
         let tag = isElement ? element.tagName.toUpperCase() : '';
 
         if (
-            (isElement && !this.allowElement(element, tag, context) && tag.indexOf(':') < 0) ||
+            (isElement && !this.allowElement(element, tag, context)) ||
             (isText && /^[\r\n]*$/g.test(node.nodeValue)) ||
             (!isElement && !isText)
         ) {
@@ -243,7 +243,9 @@ export default class HtmlSanitizer {
 
     private allowElement(element: HTMLElement, tag: string, context: Object): boolean {
         let callback = this.elementCallbacks[tag];
-        return callback ? callback(element, context) : this.allowedTags.indexOf(tag) >= 0;
+        return callback
+            ? callback(element, context)
+            : this.allowedTags.indexOf(tag) >= 0 || tag.indexOf(':') > 0;
     }
 }
 

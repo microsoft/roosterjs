@@ -9,8 +9,8 @@ import isNodeAfter from '../utils/isNodeAfter';
 import resolveInlineElement from '../inlineElements/resolveInlineElement';
 import wrap from '../utils/wrap';
 import { BlockElement, InlineElement } from 'roosterjs-editor-types';
-import { getFirstLeafNode, getLastLeafNode } from '../domWalker/getLeafNode';
-import { getLeafSibling } from '../domWalker/getLeafSibling';
+import { getFirstLeafNode, getLastLeafNode } from '../utils/getLeafNode';
+import { getLeafSibling } from '../utils/getLeafSibling';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
 
 /**

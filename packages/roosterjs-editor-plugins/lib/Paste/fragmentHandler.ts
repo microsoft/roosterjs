@@ -1,0 +1,38 @@
+import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
+import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
+import { getTagOfNode } from 'roosterjs-editor-dom';
+import { splitWithFragment } from 'roosterjs-html-sanitizer';
+
+const WORD_ATTRIBUTE_NAME = 'xmlns:w';
+const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';
+const EXCEL_ATTRIBUTE_NAME = 'xmlns:x';
+const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
+
+const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
+const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
+const LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
+const LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
+
+export default function fragmentHandler(doc: HTMLDocument, source: string) {
+    let [html, before] = splitWithFragment(source);
+    let firstNode = doc && doc.body && (doc.querySelector('html') as HTMLElement);
+    if (getTagOfNode(firstNode) == 'HTML') {
+        if (firstNode.getAttribute(WORD_ATTRIBUTE_NAME) == WORD_ATTRIBUTE_VALUE) {
+            doc.body.innerHTML = html;
+            convertPastedContentFromWord(doc);
+        } else if (firstNode.getAttribute(EXCEL_ATTRIBUTE_NAME) == EXCEL_ATTRIBUTE_VALUE) {
+            if (html.match(LAST_TD_END_REGEX)) {
+                let trMatch = before.match(LAST_TR_REGEX);
+                let tr = trMatch ? trMatch[0] : '<TR>';
+                html = tr + html + '</TR>';
+            }
+            if (html.match(LAST_TR_END_REGEX)) {
+                let tableMatch = before.match(LAST_TABLE_REGEX);
+                let table = tableMatch ? tableMatch[0] : '<TABLE>';
+                html = table + html + '</TABLE>';
+            }
+            doc.body.innerHTML = html;
+            convertPastedContentFromExcel(doc);
+        }
+    }
+}

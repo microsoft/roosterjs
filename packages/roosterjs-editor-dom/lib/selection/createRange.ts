@@ -1,5 +1,6 @@
 import Position from './Position';
-import { PositionType } from 'roosterjs-editor-types';
+import isVoidHtmlElement from '../utils/isVoidHtmlElement';
+import { NodeType, PositionType } from 'roosterjs-editor-types';
 
 /**
  * Create a Range object with the given Node(s)
@@ -26,10 +27,20 @@ export default function createRange(start: Position | Node, end?: Position | Nod
     }
 
     let range = start.node.ownerDocument.createRange();
-    start = start.toFocusablePosition();
-    end = end.toFocusablePosition();
+    start = getFocusablePosition(start);
+    end = getFocusablePosition(end);
     range.setStart(start.node, start.offset);
     range.setEnd(end.node, end.offset);
 
     return range;
+}
+
+/**
+ * Convert to focusable position
+ * If current node is a void element, we need to move up one level to put cursor outside void element
+ */
+function getFocusablePosition(position: Position) {
+    return position.node.nodeType == NodeType.Element && isVoidHtmlElement(position.node)
+        ? new Position(position.node, position.isAtEnd ? PositionType.After : PositionType.Before)
+        : position;
 }

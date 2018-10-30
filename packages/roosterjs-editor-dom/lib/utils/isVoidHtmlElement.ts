@@ -11,8 +11,9 @@ const HTML_VOID_ELEMENTS = 'AREA,BASE,BR,COL,COMMAND,EMBED,HR,IMG,INPUT,KEYGEN,L
 );
 
 /**
- * check if it is html void element. void element cannot have childen
+ * Check if the given node is html void element. Void element cannot have childen
+ * @param node The node to check
  */
-export default function isVoidHtmlElement(element: HTMLElement): boolean {
-    return !!element && HTML_VOID_ELEMENTS.indexOf(getTagOfNode(element)) >= 0;
+export default function isVoidHtmlElement(node: Node): boolean {
+    return !!node && HTML_VOID_ELEMENTS.indexOf(getTagOfNode(node)) >= 0;
 }

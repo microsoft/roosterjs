@@ -1,5 +1,5 @@
 import { NodeType } from 'roosterjs-editor-types';
-import { getComputedStyle } from '../utils/getComputedStyles';
+import { getComputedStyle } from './getComputedStyles';
 
 const CRLF = /^[\r\n]+$/gm;
 

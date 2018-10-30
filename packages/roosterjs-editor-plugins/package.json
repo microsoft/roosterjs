@@ -5,7 +5,8 @@
     "roosterjs-editor-types": "",
     "roosterjs-editor-dom": "",
     "roosterjs-editor-core": "",
-    "roosterjs-editor-api": ""
+    "roosterjs-editor-api": "",
+    "roosterjs-html-sanitizer": ""
   },
   "main": "./lib/index.ts"
 }

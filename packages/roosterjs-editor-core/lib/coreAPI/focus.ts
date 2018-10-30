@@ -1,6 +1,6 @@
 import EditorCore, { Focus } from '../editor/EditorCore';
 import { PositionType } from 'roosterjs-editor-types';
-import { Position, getFirstLeafNode } from 'roosterjs-editor-dom';
+import { getFirstLeafNode } from 'roosterjs-editor-dom';
 
 const focus: Focus = (core: EditorCore) => {
     if (!core.api.hasFocus(core) || !core.api.getSelectionRange(core, false /*tryGetFromCache*/)) {
@@ -13,8 +13,7 @@ const focus: Focus = (core: EditorCore) => {
         // It should be better than the case you cannot type
         if (!core.cachedSelectionRange || !core.api.select(core, core.cachedSelectionRange)) {
             let node = getFirstLeafNode(core.contentDiv) || core.contentDiv;
-            let position = new Position(node, PositionType.Begin).toFocusablePosition();
-            core.api.select(core, position);
+            core.api.select(core, node, PositionType.Begin);
         }
     }
 

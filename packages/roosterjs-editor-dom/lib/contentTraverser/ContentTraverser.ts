@@ -6,7 +6,7 @@ import SelectionScoper from './SelectionScoper';
 import TraversingScoper from './TraversingScoper';
 import { BlockElement, ContentPosition, InlineElement } from 'roosterjs-editor-types';
 import { getInlineElementBeforeAfter } from '../inlineElements/getInlineElementBeforeAfter';
-import { getLeafSibling } from '../domWalker/getLeafSibling';
+import { getLeafSibling } from '../utils/getLeafSibling';
 import { getNextPreviousInlineElement, getBlockElementAtNode } from '../blockElements/BlockElement';
 
 /**

@@ -1,6 +1,12 @@
-import contains from '../utils/contains';
+import contains from './contains';
 import shouldSkipNode from './shouldSkipNode';
 
+/**
+ * This walks forwards/backwards DOM tree to get next meaningful node
+ * @param rootNode Root node to scope the leaf sibling node
+ * @param startNode current node to get sibling node from
+ * @param isNext True to get next leaf sibling node, false to get previous leaf sibling node
+ */
 export function getLeafSibling(rootNode: Node, startNode: Node, isNext: boolean): Node {
     let result = null;
     let getSibling = isNext
@@ -39,14 +45,20 @@ export function getLeafSibling(rootNode: Node, startNode: Node, isNext: boolean)
     return result;
 }
 
-// This walks forwards (from left to right) DOM tree to get next meaningful node
-// A null is returned when it reaches the very end - beyond the scope as defined by rootNode
+/**
+ * This walks forwards DOM tree to get next meaningful node
+ * @param rootNode Root node to scope the leaf sibling node
+ * @param startNode current node to get sibling node from
+ */
 export function getNextLeafSibling(rootNode: Node, startNode: Node): Node {
     return getLeafSibling(rootNode, startNode, true /*isNext*/);
 }
 
-// This walks backwards (from right to left) DOM tree to get previous meaningful node
-// A null is returned when it reaches the very first - beyond the scope as defined by rootNode
+/**
+ * This walks backwards DOM tree to get next meaningful node
+ * @param rootNode Root node to scope the leaf sibling node
+ * @param startNode current node to get sibling node from
+ */
 export function getPreviousLeafSibling(rootNode: Node, startNode: Node): Node {
     return getLeafSibling(rootNode, startNode, false /*isNext*/);
 }

@@ -3,7 +3,7 @@ import {
     getNextLeafSibling,
     getPreviousLeafSibling,
     getLeafSibling,
-} from '../../domWalker/getLeafSibling';
+} from '../../utils/getLeafSibling';
 
 let testID = 'getLeafSibling';
 

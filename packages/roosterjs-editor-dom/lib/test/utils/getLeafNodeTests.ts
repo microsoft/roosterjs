@@ -1,5 +1,5 @@
 import * as DomTestHelper from '../DomTestHelper';
-import { getFirstLeafNode, getLastLeafNode } from '../../domWalker/getLeafNode';
+import { getFirstLeafNode, getLastLeafNode } from '../../utils/getLeafNode';
 
 let testID = 'getLeafNode';
 

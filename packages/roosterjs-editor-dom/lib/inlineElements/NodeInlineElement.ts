@@ -10,7 +10,7 @@ import {
     NodeType,
     PositionType,
 } from 'roosterjs-editor-types';
-import { getNextLeafSibling, getPreviousLeafSibling } from '../domWalker/getLeafSibling';
+import { getNextLeafSibling, getPreviousLeafSibling } from '../utils/getLeafSibling';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
 
 /**

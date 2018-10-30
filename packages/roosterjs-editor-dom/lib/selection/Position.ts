@@ -1,9 +1,6 @@
-import { NodeType, PositionType, Rect, EditorPoint } from 'roosterjs-editor-types';
-import contains from '../utils/contains';
+import { NodeType, PositionType, EditorPoint } from 'roosterjs-editor-types';
 import getElementOrParentElement from '../utils/getElementOrParentElement';
 import isNodeAfter from '../utils/isNodeAfter';
-import isNodeEmpty from '../utils/isNodeEmpty';
-import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 
 /**
  * Represent a position in DOM tree by the node and its offset index
@@ -97,16 +94,6 @@ export default class Position {
     }
 
     /**
-     * Convert to focusable position
-     * If current node is a void element, we need to move up one level to put cursor outside void element
-     */
-    toFocusablePosition() {
-        return this.node.nodeType == NodeType.Element && isVoidHtmlElement(<HTMLElement>this.node)
-            ? new Position(this.node, this.isAtEnd ? PositionType.After : PositionType.Before)
-            : this;
-    }
-
-    /**
      * Check if this position is equal to the given position
      * @param p The position to check
      */
@@ -128,80 +115,7 @@ export default class Position {
     }
 
     /**
-     * Get bounding rect of this position
-     */
-    getRect(): Rect {
-        const document = this.node && this.node.ownerDocument;
-
-        if (!document) {
-            return null;
-        }
-
-        const range = document.createRange();
-        range.setStart(this.node, this.offset);
-
-        // 1) try to get rect using range.getBoundingClientRect()
-        let rect = range.getBoundingClientRect
-            ? normalizeRect(range.getBoundingClientRect())
-            : null;
-        if (rect) {
-            return rect;
-        }
-
-        // 2) try to get rect using range.getClientRects
-        const { node, element, offset } = this.normalize();
-        const rects = range.getClientRects ? range.getClientRects() : null;
-        rect = rects && rects.length == 1 ? normalizeRect(rects[0]) : null;
-        if (rect) {
-            return rect;
-        }
-
-        // 3) if node is text node, try inserting a SPAN and get the rect of SPAN for others
-        if (node.nodeType == NodeType.Text) {
-            let span = document.createElement('SPAN');
-            range.setStart(node, offset);
-            range.collapse(true /*toStart*/);
-            range.insertNode(span);
-            rect = span.getBoundingClientRect ? normalizeRect(span.getBoundingClientRect()) : null;
-            span.parentNode.removeChild(span);
-            if (rect) {
-                return rect;
-            }
-        }
-
-        // 4) try getBoundingClientRect on element
-        if (element && element.getBoundingClientRect) {
-            rect = normalizeRect(element.getBoundingClientRect());
-            if (rect) {
-                return rect;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Check if this position is at beginning of the given node
-     * @param targetNode The node to check
-     * @returns True if position is at beginning of the node, otherwise false
-     */
-    isAtBeginningOf(targetNode: Node) {
-        let node = this.node;
-        if (this.offset == 0) {
-            while (contains(targetNode, this.node) && areAllPrevousNodesEmpty(node)) {
-                node = node.parentNode;
-            }
-
-            if (node == targetNode) {
-                return true;
-            }
-        } else {
-            // This is to handle the case when position is before the target node
-            return node.nodeType == NodeType.Element && node.childNodes[this.offset] == targetNode;
-        }
-    }
-
-    /**
+     * @deprecated
      * Get a restorable offset value. This combines offset and isAtEnd together, and only used for restoring a positing
      * When current node doesn't have any child node and the position is after the node, return value will be 1 rather than 0
      */
@@ -251,16 +165,6 @@ export default class Position {
     }
 }
 
-function areAllPrevousNodesEmpty(node: Node): boolean {
-    while (node.previousSibling) {
-        node = node.previousSibling;
-        if (!isNodeEmpty(node)) {
-            return false;
-        }
-    }
-    return true;
-}
-
 function getIndexOfNode(node: Node): number {
     let i = 0;
     while ((node = node.previousSibling)) {
@@ -277,18 +181,4 @@ function getEndOffset(node: Node): number {
     } else {
         return 1;
     }
-}
-
-function normalizeRect(clientRect: ClientRect): Rect {
-    // A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p
-    // We validate that and only return a rect when the passed in ClientRect is valid
-    let { left, right, top, bottom } = clientRect || <ClientRect>{};
-    return left + right + top + bottom > 0
-        ? {
-              left: Math.round(left),
-              right: Math.round(right),
-              top: Math.round(top),
-              bottom: Math.round(bottom),
-          }
-        : null;
 }
