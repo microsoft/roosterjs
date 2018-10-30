@@ -27,7 +27,7 @@ function createPartialInlineElementWithSpan(
     startOffset: number,
     endOffset: number
 ): [PartialInlineElement, InlineElement, NodeBlockElement] {
-    let testParentBlock = new NodeBlockElement(span.parentNode);
+    let testParentBlock = new NodeBlockElement(span.parentNode as HTMLElement);
     let inlineElement = new NodeInlineElement(span, testParentBlock);
     let startPosition = startOffset ? new Position(span.firstChild, startOffset) : null;
     let endPosition = endOffset ? new Position(span.firstChild, endOffset) : null;

@@ -8,6 +8,12 @@ import InlineElement from './InlineElement';
  */
 export interface BlockElement {
     /**
+     * Collapse this block element to a single DOM element.
+     */
+    collapseToSingleElement(): HTMLElement;
+
+    /**
+     * @deprecated
      * Get text content of this block element
      */
     getTextContent(): string;
@@ -23,21 +29,25 @@ export interface BlockElement {
     getEndNode(): Node;
 
     /**
+     * @deprecated
      * Get content nodes of this block element as node array
      */
     getContentNodes(): Node[];
 
     /**
+     * @deprecated
      * Get the first inline element of this block element
      */
     getFirstInlineElement(): InlineElement;
 
     /**
+     * @deprecated
      * Get the last inline element of this block element
      */
     getLastInlineElement(): InlineElement;
 
     /**
+     * @deprecated
      * Get all inline elements inside this block element as array
      */
     getInlineElements(): InlineElement[];
@@ -53,6 +63,7 @@ export interface BlockElement {
     isAfter(blockElement: BlockElement): boolean;
 
     /**
+     * @deprecated
      * Check if the given inline element falls within this block element
      */
     isInBlock(inlineElement: InlineElement): boolean;

@@ -79,7 +79,7 @@ export function createStartEndBlockElementWithStartEndNode(
 
 // Create inlineElement from node
 export function createInlineElementFromNode(node: Node, rootNode: Node): InlineElement {
-    let parentBlock = new NodeBlockElement(node);
+    let parentBlock = new NodeBlockElement(node as HTMLElement);
     let inlineElement = resolveInlineElement(node, rootNode, parentBlock);
     return inlineElement;
 }
