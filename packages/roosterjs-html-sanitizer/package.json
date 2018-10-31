@@ -3,5 +3,5 @@
   "description": "HTML sanitization utility for roosterjs",
   "dependencies": {},
   "main": "./lib/index.ts",
-  "version": "1.1.0"
+  "version": "1.1.1"
 }
