@@ -195,4 +195,4 @@ We are still working on more documentation in [roosterjs wiki](https://github.co
 License
 Copyright (c) Microsoft Corporation. All rights reserved.
 
-Licensed under the [MIT](LICENSE.txt) License.
+Licensed under the [MIT](LICENSE) License.
