@@ -9,7 +9,7 @@ var isProduction = checkParam('-p', '-prod');
 var typescriptPath = `node ../../node_modules/typescript/lib/tsc.js`;
 function buildPackages(module, folderName) {
     packages.forEach((package) => {
-        console.log(`building ${package} (${module})...`);
+        console.log(`building ${package}...`);
 
         var options = {
             stdio: 'inherit',
@@ -27,10 +27,13 @@ function buildPackages(module, folderName) {
 }
 
 if (isProduction) {
+    console.log('AMD:');
     buildPackages('amd', 'lib-amd');
+    console.log('');
 }
 
-// important: build lib + commonjs, so build that last since the default folder is lib
+// important: build lib + commonjs last since the default folder is lib
+console.log('CommonJS:');
 buildPackages('commonjs', 'lib');
 
 function checkParam() {
