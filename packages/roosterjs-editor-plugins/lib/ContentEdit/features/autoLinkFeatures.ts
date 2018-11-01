@@ -1,4 +1,10 @@
-import { ChangeSource, LinkData, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    LinkData,
+    PluginEvent,
+    PluginEventType,
+    PluginKeyboardEvent,
+} from 'roosterjs-editor-types';
 import { Keys, GenericContentEditFeature } from '../ContentEditFeatures';
 import {
     Editor,
@@ -6,8 +12,8 @@ import {
     cacheGetContentSearcher,
     clearContentSearcherCache,
 } from 'roosterjs-editor-core';
-import { Browser, matchLink } from 'roosterjs-editor-dom';
-import { replaceWithNode } from 'roosterjs-editor-api';
+import { Browser, matchLink, LinkInlineElement } from 'roosterjs-editor-dom';
+import { replaceWithNode, removeLink } from 'roosterjs-editor-api';
 
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
 // we need to trim off the trailing puncatuation before turning it to link match
@@ -22,6 +28,16 @@ export const AutoLink: GenericContentEditFeature<PluginEvent> = {
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
     isAvailable: featureSet => featureSet.autoLink,
+};
+
+export const UnlinkWhenBackspaceAfterLink: GenericContentEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.BACKSPACE],
+    shouldHandleEvent: hasLinkBeforeCursor,
+    handleEvent: (event, editor) => {
+        event.rawEvent.preventDefault();
+        removeLink(editor);
+    },
+    isAvailable: featureSet => featureSet.unlinkWhenBackspaceAfterLink,
 };
 
 function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
@@ -47,6 +63,12 @@ function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
               return null;
           })
         : null;
+}
+
+function hasLinkBeforeCursor(event: PluginKeyboardEvent, editor: Editor): boolean {
+    let contentSearcher = cacheGetContentSearcher(event, editor);
+    let inline = contentSearcher.getInlineElementBefore();
+    return inline instanceof LinkInlineElement;
 }
 
 function autoLink(event: PluginEvent, editor: Editor) {

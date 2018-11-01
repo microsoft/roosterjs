@@ -1,4 +1,4 @@
-import { AutoLink } from './features/autoLinkFeatures';
+import { AutoLink, UnlinkWhenBackspaceAfterLink } from './features/autoLinkFeatures';
 import { DefaultShortcut } from './features/shortcutFeatures';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { TabInTable, UpDownInTable } from './features/tableFeatures';
@@ -66,6 +66,7 @@ export default class ContentEdit implements EditorPlugin {
             UpDownInTable,
             AutoBullet,
             AutoLink,
+            UnlinkWhenBackspaceAfterLink,
             DefaultShortcut,
             getSmartOrderedList(featureSet.smartOrderedListStyles),
         ]

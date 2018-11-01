@@ -153,11 +153,7 @@ class NodeBlockElement implements BlockElement {
         let startInline = this.getFirstInlineElement();
         while (startInline) {
             allInlines.push(startInline);
-            startInline = getNextPreviousInlineElement(
-                this.element,
-                startInline,
-                true /*isNext*/
-            );
+            startInline = getNextPreviousInlineElement(this.element, startInline, true /*isNext*/);
         }
 
         return allInlines;

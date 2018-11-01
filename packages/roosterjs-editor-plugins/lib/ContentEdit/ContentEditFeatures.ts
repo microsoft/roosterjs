@@ -79,6 +79,12 @@ interface ContentEditFeatures {
     defaultShortcut: boolean;
 
     /**
+     * Unlink when backspace right after a hyperlink
+     * @default false
+     */
+    unlinkWhenBackspaceAfterLink: boolean;
+
+    /**
      * When generate ordered list, the list bullet will variare according its nesting level, in a loop of '1', 'a', 'i'
      * @default false
      */
@@ -110,6 +116,7 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         tabInTable: true,
         upDownInTable: true,
         defaultShortcut: true,
+        unlinkWhenBackspaceAfterLink: false,
         smartOrderedList: false,
         smartOrderedListStyles: ['lower-alpha', 'lower-roman', 'decimal'],
     };
