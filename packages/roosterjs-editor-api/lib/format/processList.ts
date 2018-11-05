@@ -10,6 +10,7 @@ import {
     getTagOfNode,
     getComputedStyles,
     applyFormat,
+    getFirstLeafNode,
 } from 'roosterjs-editor-dom';
 
 const TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
@@ -47,7 +48,7 @@ export default function processList(editor: Editor, command: DocumentCommand): N
         } else {
             // Otherwise, apply the format of first child non-empty element (if any) to LI node
             for (let li of LIs) {
-                let formatNode = getFirstNotEmptyChild(li);
+                let formatNode = getFirstLeafNode(li);
                 if (formatNode) {
                     applyListFormat(li, getComputedStyles(formatNode));
                 }
@@ -65,16 +66,6 @@ function applyListFormat(node: Node, formats: string[]) {
         textColor: formats[2],
         backgroundColor: formats[3],
     });
-}
-
-function getFirstNotEmptyChild(node: Node) {
-    for (let child: Node = node.firstChild; child; child = child.nextSibling) {
-        if (!isNodeEmpty(child)) {
-            return child;
-        }
-    }
-
-    return null;
 }
 
 function workaroundForChrome(editor: Editor) {

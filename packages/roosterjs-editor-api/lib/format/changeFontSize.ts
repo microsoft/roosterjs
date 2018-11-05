@@ -1,3 +1,4 @@
+import applyInlineStyle from './applyInlineStyle';
 import { Editor } from 'roosterjs-editor-core';
 import { FontSizeChange } from 'roosterjs-editor-types';
 import { getComputedStyle } from 'roosterjs-editor-dom';
@@ -22,9 +23,13 @@ export default function changeFontSize(
     fontSizes: number[] = FONT_SIZES
 ) {
     let changeBase: 1 | -1 = change == FontSizeChange.Increase ? 1 : -1;
-    editor.applyInlineStyle(element => {
+    applyInlineStyle(editor, element => {
         let pt = parseFloat(getComputedStyle(element, 'font-size'));
         element.style.fontSize = getNewFontSize(pt, changeBase, fontSizes) + 'pt';
+        let lineHeight = getComputedStyle(element, 'line-height');
+        if (lineHeight != 'normal') {
+            element.style.lineHeight = 'normal';
+        }
     });
 }
 
