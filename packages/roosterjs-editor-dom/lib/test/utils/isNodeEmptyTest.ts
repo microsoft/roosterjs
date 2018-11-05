@@ -7,7 +7,7 @@ describe('isNodeEmpty() trim = false', () => {
         div.innerHTML = input;
         let node = getNode();
         let result = isNodeEmpty(node);
-        expect(result).toEqual(expectResult);
+        expect(result).toEqual(expectResult, input);
         document.body.removeChild(div);
     }
 
@@ -42,10 +42,17 @@ describe('isNodeEmpty() trim = false', () => {
     it('DIV node', () => {
         runTest('<div id=id1>test</div>', () => $('id1'), false);
     });
-    it('IMG/TABLE/LI node', () => {
+    it('IMG node', () => {
         runTest('<img id=id1>', () => $('id1'), false);
-        runTest('<table id=id1></table>', () => $('id1'), false);
-        runTest('<ol><li id=id1></li></ol>', () => $('id1'), false);
+    });
+    it('TABLE node', () => {
+        runTest('<table id=id1></table>', () => $('id1'), true);
+    });
+    it('LI node', () => {
+        runTest('<ol><li id=id1></li></ol>', () => $('id1'), true);
+    });
+    it('Contains LI node', () => {
+        runTest('<ol id=id1><li></li></ol>', () => $('id1'), false);
     });
     it('DIV contains IMG/TABLE/LI node', () => {
         runTest('<div id=id2><img id=id1></div>', () => $('id2'), false);
@@ -68,7 +75,7 @@ describe('isNodeEmpty() trim = true', () => {
         div.innerHTML = input;
         let node = getNode();
         let result = isNodeEmpty(node, true);
-        expect(result).toEqual(expectResult);
+        expect(result).toEqual(expectResult, input);
         document.body.removeChild(div);
     }
 
@@ -103,10 +110,17 @@ describe('isNodeEmpty() trim = true', () => {
     it('DIV node', () => {
         runTest('<div id=id1>test</div>', () => $('id1'), false);
     });
-    it('IMG/TABLE/LI node', () => {
+    it('IMG node', () => {
         runTest('<img id=id1>', () => $('id1'), false);
-        runTest('<table id=id1></table>', () => $('id1'), false);
-        runTest('<ol><li id=id1></li></ol>', () => $('id1'), false);
+    });
+    it('TABLE node', () => {
+        runTest('<table id=id1></table>', () => $('id1'), true);
+    });
+    it('LI node', () => {
+        runTest('<ol><li id=id1></li></ol>', () => $('id1'), true);
+    });
+    it('Contains LI node', () => {
+        runTest('<ol id=id1><li></li></ol>', () => $('id1'), false);
     });
     it('DIV contains IMG/TABLE/LI node', () => {
         runTest('<div id=id2><img id=id1></div>', () => $('id2'), false);

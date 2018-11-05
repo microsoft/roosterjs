@@ -128,7 +128,10 @@ export default class CorePlugin implements EditorPlugin {
             // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
             // The fix is to add a DIV wrapping, apply default format and move cursor over
             let document = this.editor.getDocument();
-            formatNode = fromHtml('<div><br></div>', document)[0] as HTMLElement;
+            formatNode = fromHtml(
+                Browser.isEdge ? '<div><span><br></span></div>' : '<div><br></div>',
+                document
+            )[0] as HTMLElement;
             this.contentDiv.appendChild(formatNode);
 
             // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>

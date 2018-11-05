@@ -17,7 +17,7 @@ import { replaceWithNode, removeLink } from 'roosterjs-editor-api';
 
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
 // we need to trim off the trailing puncatuation before turning it to link match
-const TRAILING_PUNCTUATION_REGEX = /[.+={}\[\]\s:;"',>]+$/i;
+const TRAILING_PUNCTUATION_REGEX = /[.+=\s:;"',>]+$/i;
 const MINIMUM_LENGTH = 5;
 
 export const AutoLink: GenericContentEditFeature<PluginEvent> = {
@@ -52,10 +52,15 @@ function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
                   let trailingPunctuation = (trailingPunctuations || [])[0] || '';
                   let candidate = word.substring(0, word.length - trailingPunctuation.length);
 
-                  // Do special handling for ')'
-                  if (candidate[candidate.length - 1] == ')' && candidate.indexOf('(') < 0) {
-                      candidate = candidate.substr(0, candidate.length - 1);
-                  }
+                  // Do special handling for ')', '}', ']'
+                  ['()', '{}', '[]'].forEach(str => {
+                      if (
+                          candidate[candidate.length - 1] == str[1] &&
+                          candidate.indexOf(str[0]) < 0
+                      ) {
+                          candidate = candidate.substr(0, candidate.length - 1);
+                      }
+                  });
 
                   // Match and replace in editor
                   return matchLink(candidate);

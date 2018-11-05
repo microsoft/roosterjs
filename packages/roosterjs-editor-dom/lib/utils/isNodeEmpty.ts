@@ -1,8 +1,8 @@
 import { NodeType } from 'roosterjs-editor-types';
 import getTagOfNode from './getTagOfNode';
 
-const VISIBLE_ELEMENT_TAGS = ['TABLE', 'IMG', 'LI'];
-const VISIBLE_ELEMENT_SELECTOR = VISIBLE_ELEMENT_TAGS.join(',');
+const VISIBLE_ELEMENT_TAGS = ['IMG'];
+const VISIBLE_CHILD_ELEMENT_SELECTOR = ['TABLE', 'IMG', 'LI'].join(',');
 const ZERO_WIDTH_SPACE = /\u200b/g;
 
 /**
@@ -23,7 +23,7 @@ export default function isNodeEmpty(node: Node, trimContent?: boolean) {
         if (
             textContent != '' ||
             VISIBLE_ELEMENT_TAGS.indexOf(getTagOfNode(element)) >= 0 ||
-            element.querySelectorAll(VISIBLE_ELEMENT_SELECTOR)[0]
+            element.querySelectorAll(VISIBLE_CHILD_ELEMENT_SELECTOR)[0]
         ) {
             return false;
         }

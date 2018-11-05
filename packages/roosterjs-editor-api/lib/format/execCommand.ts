@@ -16,7 +16,6 @@ export default function execCommand(editor: Editor, command: DocumentCommand) {
 
     let range = editor.getSelectionRange();
     if (range && range.collapsed) {
-        editor.addUndoSnapshot();
         formatter();
     } else {
         editor.addUndoSnapshot(formatter, ChangeSource.Format);

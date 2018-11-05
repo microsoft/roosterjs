@@ -114,9 +114,9 @@ export const AutoBullet: ContentEditFeature = {
                     rangeToDelete.deleteContents();
                 }
 
-                // If not explicitly insert br, Chrome will operate on the previous line
+                // If not explicitly insert br, Chrome/Safari/IE will operate on the previous line
                 let tempBr = editor.getDocument().createElement('BR');
-                if (Browser.isChrome || Browser.isSafari) {
+                if (Browser.isChrome || Browser.isSafari || Browser.isIE11OrGreater) {
                     editor.insertNode(tempBr);
                 }
 

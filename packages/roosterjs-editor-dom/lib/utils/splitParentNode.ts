@@ -1,5 +1,4 @@
 import isNodeAfter from './isNodeAfter';
-import isNodeEmpty from './isNodeEmpty';
 
 /**
  * Split parent node of the given node before/after the given node.
@@ -12,11 +11,7 @@ import isNodeEmpty from './isNodeEmpty';
  * we remove it. @default false
  * @returns The new parent node
  */
-export default function splitParentNode(
-    node: Node,
-    splitBefore: boolean,
-    removeEmptyNewNode?: boolean
-): Node {
+export default function splitParentNode(node: Node, splitBefore: boolean): Node {
     if (!node || !node.parentNode) {
         return null;
     }
@@ -35,7 +30,7 @@ export default function splitParentNode(
     }
 
     // When the only child of new parent is ZERO_WIDTH_SPACE, we can still prevent keeping it by set removeEmptyNewNode to true
-    if (newParent.firstChild && !(removeEmptyNewNode && isNodeEmpty(newParent))) {
+    if (newParent.firstChild && newParent.innerHTML != '') {
         parentNode.parentNode.insertBefore(
             newParent,
             splitBefore ? parentNode : parentNode.nextSibling

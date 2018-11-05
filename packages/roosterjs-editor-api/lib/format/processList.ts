@@ -7,6 +7,9 @@ import {
     isBlockElement,
     Browser,
     isNodeEmpty,
+    getTagOfNode,
+    getComputedStyles,
+    applyFormat,
 } from 'roosterjs-editor-dom';
 
 const TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
@@ -21,12 +24,57 @@ export default function processList(editor: Editor, command: DocumentCommand): N
         workaroundForChrome(editor);
     }
 
+    let currentNode = getNodeAtCursor(editor);
+    let currentFormat = getComputedStyles(currentNode);
     let existingList = getNodeAtCursor(editor, ['OL', 'UL']);
     editor.getDocument().execCommand(command, false, null);
     editor.queryElements('.' + TEMP_NODE_CLASS, node => editor.deleteNode(node));
     let newList = getNodeAtCursor(editor, ['OL', 'UL']);
+    if (newList == existingList) {
+        newList = null;
+    }
 
-    return newList && newList != existingList ? newList : null;
+    // If this is in a new number list, need to adjust the format of numbers according to its content
+    if (newList && getTagOfNode(newList) == 'OL') {
+        let LIs = ([].slice.call(newList.childNodes) as Node[]).filter(
+            node => getTagOfNode(node) == 'LI'
+        );
+
+        if (LIs.length == 1 && isNodeEmpty(LIs[0], true /*trim*/)) {
+            // When there's only one LI child element which has empty content, it means this LI is just created.
+            // We just format it with current format
+            applyListFormat(LIs[0], currentFormat);
+        } else {
+            // Otherwise, apply the format of first child non-empty element (if any) to LI node
+            for (let li of LIs) {
+                let formatNode = getFirstNotEmptyChild(li);
+                if (formatNode) {
+                    applyListFormat(li, getComputedStyles(formatNode));
+                }
+            }
+        }
+    }
+
+    return newList;
+}
+
+function applyListFormat(node: Node, formats: string[]) {
+    applyFormat(node as HTMLElement, {
+        fontFamily: formats[0],
+        fontSize: formats[1],
+        textColor: formats[2],
+        backgroundColor: formats[3],
+    });
+}
+
+function getFirstNotEmptyChild(node: Node) {
+    for (let child: Node = node.firstChild; child; child = child.nextSibling) {
+        if (!isNodeEmpty(child)) {
+            return child;
+        }
+    }
+
+    return null;
 }
 
 function workaroundForChrome(editor: Editor) {

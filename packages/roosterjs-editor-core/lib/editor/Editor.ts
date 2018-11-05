@@ -813,23 +813,34 @@ export default class Editor {
         if (range && range.collapsed) {
             let tempNode = range.startContainer;
             let ZWS = '\u200B';
-            let isZWSNode =
-                tempNode &&
-                tempNode.nodeType == NodeType.Text &&
-                tempNode.nodeValue == ZWS &&
-                getTagOfNode(tempNode.parentNode) == 'SPAN';
 
-            if (!isZWSNode) {
+            let isEmptySpan =
+                getTagOfNode(tempNode) == 'SPAN' &&
+                (!tempNode.firstChild ||
+                    (getTagOfNode(tempNode.firstChild) == 'BR' &&
+                        !tempNode.firstChild.nextSibling));
+            if (isEmptySpan) {
                 this.addUndoSnapshot();
-                // Create a new text node to hold the selection.
-                // Some content is needed to position selection into the span
-                // for here, we inject ZWS - zero width space
-                tempNode = this.getDocument().createTextNode(ZWS);
-                range.insertNode(tempNode);
-            }
+                callback(tempNode as HTMLElement);
+            } else {
+                let isZWSNode =
+                    tempNode &&
+                    tempNode.nodeType == NodeType.Text &&
+                    tempNode.nodeValue == ZWS &&
+                    getTagOfNode(tempNode.parentNode) == 'SPAN';
 
-            this.getInlineElementAtNode(tempNode, true /*forceAtNode*/).applyStyle(callback);
-            this.select(tempNode, PositionType.End);
+                if (!isZWSNode) {
+                    this.addUndoSnapshot();
+                    // Create a new text node to hold the selection.
+                    // Some content is needed to position selection into the span
+                    // for here, we inject ZWS - zero width space
+                    tempNode = this.getDocument().createTextNode(ZWS);
+                    range.insertNode(tempNode);
+                }
+
+                this.getInlineElementAtNode(tempNode, true /*forceAtNode*/).applyStyle(callback);
+                this.select(tempNode, PositionType.End);
+            }
         } else {
             // This is start and end node that get the style. The start and end needs to be recorded so that selection
             // can be re-applied post-applying style
