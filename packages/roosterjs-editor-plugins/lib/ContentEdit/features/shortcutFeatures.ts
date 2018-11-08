@@ -57,7 +57,7 @@ export const DefaultShortcut: ContentEditFeature = {
             event.rawEvent.stopPropagation();
         }
     },
-    isAvailable: featureSet => featureSet.defaultShortcut,
+    featureFlag: 'defaultShortcut',
 };
 
 function cacheGetCommand(event: PluginKeyboardEvent) {

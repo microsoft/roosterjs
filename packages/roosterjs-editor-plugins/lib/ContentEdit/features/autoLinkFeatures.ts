@@ -27,7 +27,7 @@ export const AutoLink: GenericContentEditFeature<PluginEvent> = {
         editor.getDocument().execCommand('AutoUrlDetect', false, <string>(<any>false)),
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
-    isAvailable: featureSet => featureSet.autoLink,
+    featureFlag: 'autoLink',
 };
 
 export const UnlinkWhenBackspaceAfterLink: GenericContentEditFeature<PluginKeyboardEvent> = {
@@ -37,7 +37,7 @@ export const UnlinkWhenBackspaceAfterLink: GenericContentEditFeature<PluginKeybo
         event.rawEvent.preventDefault();
         removeLink(editor);
     },
-    isAvailable: featureSet => featureSet.unlinkWhenBackspaceAfterLink,
+    featureFlag: 'unlinkWhenBackspaceAfterLink',
 };
 
 function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {

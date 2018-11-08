@@ -125,7 +125,7 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
 export interface GenericContentEditFeature<TEvent extends PluginEvent> {
     keys: number[];
     initialize?: (editor: Editor) => any;
-    isAvailable: (featureSet: ContentEditFeatures) => void;
+    featureFlag: keyof ContentEditFeatures;
     shouldHandleEvent: (event: TEvent, editor: Editor) => any;
     handleEvent: (event: TEvent, editor: Editor) => ChangeSource | void;
     allowFunctionKeys?: boolean;

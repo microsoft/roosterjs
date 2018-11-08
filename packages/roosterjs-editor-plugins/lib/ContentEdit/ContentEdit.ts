@@ -70,7 +70,7 @@ export default class ContentEdit implements EditorPlugin {
             DefaultShortcut,
             getSmartOrderedList(featureSet.smartOrderedListStyles),
         ]
-            .filter(feature => feature.isAvailable(featureSet))
+            .filter(feature => featureSet[feature.featureFlag])
             .forEach(feature => {
                 if (feature.initialize) {
                     feature.initialize(this.editor);
