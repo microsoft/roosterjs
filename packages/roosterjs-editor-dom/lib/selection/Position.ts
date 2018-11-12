@@ -1,11 +1,11 @@
-import { NodeType, PositionType, EditorPoint } from 'roosterjs-editor-types';
 import getElementOrParentElement from '../utils/getElementOrParentElement';
 import isNodeAfter from '../utils/isNodeAfter';
+import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
 
 /**
  * Represent a position in DOM tree by the node and its offset index
  */
-export default class Position {
+export default class Position implements NodePosition {
     readonly node: Node;
     readonly element: HTMLElement;
     readonly offset: number;
@@ -16,7 +16,7 @@ export default class Position {
      * If the given position has invalid offset, this function will return a corrected value.
      * @param position The original position to clone from
      */
-    constructor(position: Position);
+    constructor(position: NodePosition);
 
     /**
      * Create a Position from node and an offset number
@@ -30,12 +30,12 @@ export default class Position {
      * @param node The node of this position
      * @param positionType Type of the postion, can be Begin, End, Before, After
      */
-    constructor(node: Node, positionType: PositionType);
+    constructor(node: Node, positionType: NodePosition);
 
-    constructor(nodeOrPosition: Node | Position, offsetOrPosType?: number | PositionType) {
-        if ((<Position>nodeOrPosition).node) {
-            this.node = (<Position>nodeOrPosition).node;
-            offsetOrPosType = (<Position>nodeOrPosition).offset;
+    constructor(nodeOrPosition: Node | NodePosition, offsetOrPosType?: number | NodePosition) {
+        if ((<NodePosition>nodeOrPosition).node) {
+            this.node = (<NodePosition>nodeOrPosition).node;
+            offsetOrPosType = (<NodePosition>nodeOrPosition).offset;
         } else {
             this.node = <Node>nodeOrPosition;
         }
@@ -72,7 +72,7 @@ export default class Position {
      * Normalize this position to the leaf node, return the normalize result.
      * If current position is already using leaf node, return this position object itself
      */
-    normalize(): Position {
+    normalize(): NodePosition {
         if (this.node.nodeType == NodeType.Text || !this.node.firstChild) {
             return this;
         }
@@ -95,32 +95,25 @@ export default class Position {
 
     /**
      * Check if this position is equal to the given position
-     * @param p The position to check
+     * @param position The position to check
      */
-    equalTo(p: Position): boolean {
+    equalTo(position: NodePosition): boolean {
         return (
-            p &&
-            (this == p ||
-                (this.node == p.node && this.offset == p.offset && this.isAtEnd == p.isAtEnd))
+            position &&
+            (this == position ||
+                (this.node == position.node &&
+                    this.offset == position.offset &&
+                    this.isAtEnd == position.isAtEnd))
         );
     }
 
     /**
-     * Checks if position 1 is after position 2
+     * Checks if this position is after the given position
      */
-    isAfter(p: Position): boolean {
-        return this.node == p.node
-            ? (this.isAtEnd && !p.isAtEnd) || this.offset > p.offset
-            : isNodeAfter(this.node, p.node);
-    }
-
-    /**
-     * @deprecated
-     * Get a restorable offset value. This combines offset and isAtEnd together, and only used for restoring a positing
-     * When current node doesn't have any child node and the position is after the node, return value will be 1 rather than 0
-     */
-    getRestorableOffset() {
-        return this.offset == 0 && this.isAtEnd ? 1 : this.offset;
+    isAfter(position: NodePosition): boolean {
+        return this.node == position.node
+            ? (this.isAtEnd && !position.isAtEnd) || this.offset > position.offset
+            : isNodeAfter(this.node, position.node);
     }
 
     /**
@@ -145,23 +138,6 @@ export default class Position {
      */
     static getEnd(range: Range) {
         return new Position(range.endContainer, range.endOffset);
-    }
-
-    /**
-     * @deprecated Do not use
-     */
-    static FromEditorPoint(point: EditorPoint) {
-        return new Position(point.containerNode, point.offset);
-    }
-
-    /**
-     * @deprecated Do not use
-     */
-    toEditorPoint() {
-        return {
-            containerNode: this.node,
-            offset: this.getRestorableOffset(),
-        };
     }
 }
 

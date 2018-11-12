@@ -1,13 +1,12 @@
-import Position from './Position';
 import createRange from './createRange';
 import getElementOrParentElement from '../utils/getElementOrParentElement';
-import { NodeType, Rect } from 'roosterjs-editor-types';
+import { NodePosition, NodeType, Rect } from 'roosterjs-editor-types';
 
 /**
  * Get bounding rect of this position
  * @param position The positioin to get rect from
  */
-export default function getPositionRect(position: Position): Rect {
+export default function getPositionRect(position: NodePosition): Rect {
     if (!position) {
         return null;
     }

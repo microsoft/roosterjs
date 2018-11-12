@@ -1,11 +1,11 @@
 import { cacheGetContentSearcher, Editor } from 'roosterjs-editor-core';
+import { ContentEditFeature, GenericContentEditFeature, Keys } from '../ContentEditFeatures';
 import {
     ContentChangedEvent,
     Indentation,
     PluginKeyboardEvent,
-    PositionType
-    } from 'roosterjs-editor-types';
-import { ContentEditFeature, GenericContentEditFeature, Keys } from '../ContentEditFeatures';
+    PositionType,
+} from 'roosterjs-editor-types';
 import {
     Browser,
     Position,

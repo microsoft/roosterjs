@@ -5,10 +5,10 @@ import {
     ChangeSource,
     DefaultFormat,
     InsertOption,
+    NodePosition,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import { Position } from 'roosterjs-editor-dom';
 
 /**
  * Represents the core data structure of an editor
@@ -85,7 +85,7 @@ export type AttachDomEvent = (
 ) => () => void;
 export type EditWithUndo = (
     core: EditorCore,
-    callback: (start: Position, end: Position, snapshotBeforeCallback: string) => any,
+    callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
     changeSource: ChangeSource | string
 ) => void;
 export type Focus = (core: EditorCore) => void;

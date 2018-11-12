@@ -1,9 +1,8 @@
 import PartialInlineElement from './PartialInlineElement';
-import Position from '../selection/Position';
 import shouldSkipNode from '../utils/shouldSkipNode';
 import { getInlineElementAtNode } from '../blockElements/BlockElement';
 import { getLeafSibling } from '../utils/getLeafSibling';
-import { NodeType, InlineElement } from 'roosterjs-editor-types';
+import { InlineElement, NodePosition, NodeType } from 'roosterjs-editor-types';
 
 /**
  * Get inline element before a position
@@ -14,7 +13,7 @@ import { NodeType, InlineElement } from 'roosterjs-editor-types';
  * @param root Root node of current scope, use for create InlineElement
  * @param position The position to get InlineElement before
  */
-export function getInlineElementBefore(root: Node, position: Position): InlineElement {
+export function getInlineElementBefore(root: Node, position: NodePosition): InlineElement {
     return getInlineElementBeforeAfter(root, position, false /*isAfter*/);
 }
 
@@ -27,11 +26,11 @@ export function getInlineElementBefore(root: Node, position: Position): InlineEl
  * @param root Root node of current scope, use for create InlineElement
  * @param position The position to get InlineElement after
  */
-export function getInlineElementAfter(root: Node, position: Position): InlineElement {
+export function getInlineElementAfter(root: Node, position: NodePosition): InlineElement {
     return getInlineElementBeforeAfter(root, position, true /*isAfter*/);
 }
 
-export function getInlineElementBeforeAfter(root: Node, position: Position, isAfter: boolean) {
+export function getInlineElementBeforeAfter(root: Node, position: NodePosition, isAfter: boolean) {
     if (!root || !position || !position.node) {
         return null;
     }
@@ -54,12 +53,11 @@ export function getInlineElementBeforeAfter(root: Node, position: Position, isAf
     }
 
     let inlineElement = getInlineElementAtNode(root, node);
-    let editorPoint = position.toEditorPoint();
 
-    if (inlineElement && (isPartial || inlineElement.contains(editorPoint))) {
+    if (inlineElement && (isPartial || inlineElement.contains(position))) {
         inlineElement = isAfter
-            ? new PartialInlineElement(inlineElement, editorPoint, null)
-            : new PartialInlineElement(inlineElement, null, editorPoint);
+            ? new PartialInlineElement(inlineElement, position, null)
+            : new PartialInlineElement(inlineElement, null, position);
     }
 
     return inlineElement;

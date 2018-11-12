@@ -1,9 +1,10 @@
 import * as DomTestHelper from '../DomTestHelper';
+import Position from '../../selection/Position';
+import { InlineElement } from 'roosterjs-editor-types';
 import {
     StartEndBlockElement,
     getNextPreviousInlineElement,
 } from '../../blockElements/BlockElement';
-import { InlineElement } from 'roosterjs-editor-types';
 
 let testID = 'StartEndBlockElement';
 
@@ -135,8 +136,8 @@ describe('StartEndBlockElement getFirstInlineElement()', () => {
     function runTest(input: string, startOffset: number, endOffset: number, node: Node) {
         // Arrange
         let [blockElement] = createStartEndBlockElementWithContent(input);
-        let startPoint = { containerNode: node, offset: startOffset };
-        let endPoint = { containerNode: node, offset: endOffset };
+        let startPoint = new Position(node, startOffset);
+        let endPoint = new Position(node, endOffset);
 
         // Act
         let inlineElement = blockElement.getFirstInlineElement();
@@ -176,8 +177,8 @@ describe('StartEndBlockElement getLastInlineElement()', () => {
     function runTest(input: string, startOffset: number, endOffset: number, node: Node) {
         // Arrange
         let [blockElement] = createStartEndBlockElementWithContent(input);
-        let startPoint = { containerNode: node, offset: startOffset };
-        let endPoint = { containerNode: node, offset: endOffset };
+        let startPoint = new Position(node, startOffset);
+        let endPoint = new Position(node, endOffset);
 
         // Act
         let inlineElement = blockElement.getLastInlineElement();
@@ -224,8 +225,8 @@ describe('StartEndBlockElement getInlineElements()', () => {
         endOffset: number,
         node: Node
     ) {
-        let startPoint = { containerNode: node, offset: startOffset };
-        let endPoint = { containerNode: node, offset: endOffset };
+        let startPoint = new Position(node, startOffset);
+        let endPoint = new Position(node, endOffset);
         expect(
             DomTestHelper.isInlineElementEqual(
                 inlineElement,
@@ -457,7 +458,7 @@ describe('StartEndBlockElement contains()', () => {
         expect(blockElementContainsNode).toBe(true);
     });
 
-    it('nodeBlockElement.containerNode equals node', () => {
+    it('nodeBlockElement.node equals node', () => {
         // Arrange
         let [blockElement, testDiv] = createStartEndBlockElementWithContent('www.example.com');
         let node = testDiv.firstChild;

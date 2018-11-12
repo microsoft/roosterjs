@@ -1,5 +1,5 @@
 import resolveInlineElement from '../inlineElements/resolveInlineElement';
-import { InlineElement, EditorPoint } from 'roosterjs-editor-types';
+import { InlineElement, NodePosition } from 'roosterjs-editor-types';
 import { NodeBlockElement, StartEndBlockElement } from '../blockElements/BlockElement';
 
 // Create element with content and id and insert the element in the DOM
@@ -42,23 +42,23 @@ export function runTestMethod2(
     expect(result).toBe(output);
 }
 
-// Check inlineElement equality based on startPoint, endPoint and textContent
+// Check inlineElement equality based on start, end and textContent
 export function isInlineElementEqual(
     element: InlineElement,
-    startPoint: EditorPoint,
-    endPoint: EditorPoint,
+    start: NodePosition,
+    end: NodePosition,
     textContent: string
 ): boolean {
     return (
-        isEditorPointEqual(element.getStartPoint(), startPoint) &&
-        isEditorPointEqual(element.getEndPoint(), endPoint) &&
+        arePositionsEqual(element.getStartPosition(), start) &&
+        arePositionsEqual(element.getEndPosition(), end) &&
         element.getTextContent() == textContent
     );
 }
 
-// Check if two editor points are equal
-export function isEditorPointEqual(point1: EditorPoint, point2: EditorPoint): boolean {
-    return point1.containerNode.isEqualNode(point2.containerNode) && point1.offset == point2.offset;
+// Check if two positions are equal
+function arePositionsEqual(point1: NodePosition, point2: NodePosition): boolean {
+    return point1.node.isEqualNode(point2.node) && point1.offset == point2.offset;
 }
 
 // Create NodeBlockElement from given HTMLElement
@@ -89,14 +89,6 @@ export function createRangeFromChildNodes(node: Node): Range {
     let selectionRange = new Range();
     selectionRange.setStartBefore(node.firstChild);
     selectionRange.setEndAfter(node.lastChild);
-    return selectionRange;
-}
-
-// Create range from start and end point
-export function createRangeWithStartEndNode(startPoint: EditorPoint, endPoint: EditorPoint): Range {
-    let selectionRange = new Range();
-    selectionRange.setStart(startPoint.containerNode, startPoint.offset);
-    selectionRange.setEnd(endPoint.containerNode, endPoint.offset);
     return selectionRange;
 }
 

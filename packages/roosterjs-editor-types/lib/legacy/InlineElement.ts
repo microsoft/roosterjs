@@ -1,5 +1,6 @@
 import BlockElement from './BlockElement';
 import EditorPoint from './EditorPoint';
+import NodePosition from '../interface/NodePosition';
 
 /**
  * This refers to an inline element (as opposed to block) in editor
@@ -31,12 +32,12 @@ interface InlineElement {
     /**
      * Get the start position of this inline element
      */
-    getStartPoint(): EditorPoint;
+    getStartPosition(): NodePosition;
 
     /**
      * Get the end position of this inline element
      */
-    getEndPoint(): EditorPoint;
+    getEndPosition(): NodePosition;
 
     /**
      * Checks if the given inline element is after this inline element
@@ -51,20 +52,24 @@ interface InlineElement {
     /**
      * Checks if the given editor position is contained in this inline element
      */
-    contains(position: EditorPoint): boolean;
+    contains(position: NodePosition | EditorPoint): boolean;
 
     /**
-     * Apply inline style to a region of an inline element. The region is identified thorugh the from and to point
-     * The fromPoint and toPoint are optional and when bing missed, it indicates the boundary of the element
-     * The function finds the minimal DOM on top of which styles can be applied, or create DOM when needed, i.e.
-     * when the style has to be applied to partial of a text node, in that case, it wraps that in a SPAN and returns the SPAN
-     * The actuall styling is done by consumer through the styler callback
+     * Apply inline style to a region of an inline element
      */
-    applyStyle(
-        styler: (element: HTMLElement) => any,
-        fromPoint?: EditorPoint,
-        toPoint?: EditorPoint
-    ): void;
+    applyStyle(styler: (element: HTMLElement) => any): void;
+
+    /**
+     * @deprecated
+     * Get the start position of this inline element
+     */
+    getStartPoint(): EditorPoint;
+
+    /**
+     * @deprecated
+     * Get the end position of this inline element
+     */
+    getEndPoint(): EditorPoint;
 }
 
 export default InlineElement;

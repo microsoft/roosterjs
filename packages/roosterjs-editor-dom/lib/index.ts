@@ -29,6 +29,7 @@ export {
     getInlineElementAfter,
 } from './inlineElements/getInlineElementBeforeAfter';
 
+export { default as applyTextStyle } from './utils/applyTextStyle';
 export { default as Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
@@ -40,7 +41,6 @@ export { default as getElementOrParentElement } from './utils/getElementOrParent
 export { default as getTagOfNode } from './utils/getTagOfNode';
 export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isDocumentPosition } from './utils/isDocumentPosition';
-export { default as isEditorPointAfter } from './utils/isEditorPointAfter';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
 export { default as isVoidHtmlElement } from './utils/isVoidHtmlElement';
 export { default as matchLink } from './utils/matchLink';
@@ -62,11 +62,6 @@ export { markSelection, removeMarker } from './selection/selectionMarker';
 export { default as isTextualInlineElement } from './deprecated/isTextualInlineElement';
 export { default as wrapAll } from './deprecated/wrapAll';
 export { default as TraversingScoper } from './contentTraverser/TraversingScoper';
-export {
-    getInlineElementBeforePoint,
-    getInlineElementAfterPoint,
-} from './deprecated/getInlineElementBeforeAfterPoint';
-export { default as normalizeEditorPoint } from './deprecated/normalizeEditorPoint';
 export { default as convertInlineCss } from './utils/convertInlineCss';
 export {
     default as sanitizeHtml,

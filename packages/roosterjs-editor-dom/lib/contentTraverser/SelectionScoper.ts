@@ -1,9 +1,9 @@
+import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import Position from '../selection/Position';
 import TraversingScoper from './TraversingScoper';
-import { BlockElement, InlineElement } from 'roosterjs-editor-types';
+import { BlockElement, InlineElement, NodePosition } from 'roosterjs-editor-types';
 import { getBlockElementAtNode } from '../blockElements/BlockElement';
 import { getInlineElementAfter } from '../inlineElements/getInlineElementBeforeAfter';
-import PartialInlineElement from '../inlineElements/PartialInlineElement';
 
 /**
  * This is selection scoper that provide a start inline as the start of the selection
@@ -11,8 +11,8 @@ import PartialInlineElement from '../inlineElements/PartialInlineElement';
  * last trimInlineElement to trim any inline element to return a partial that falls in the selection
  */
 class SelectionScoper implements TraversingScoper {
-    private start: Position;
-    private end: Position;
+    private start: NodePosition;
+    private end: NodePosition;
     private startBlock: BlockElement;
     private startInline: InlineElement;
 
@@ -91,8 +91,8 @@ class SelectionScoper implements TraversingScoper {
         }
 
         // Temp code. Will be changed to using InlineElement.getStart/EndPosition() soon
-        let start = Position.FromEditorPoint(inline.getStartPoint());
-        let end = Position.FromEditorPoint(inline.getEndPoint());
+        let start = inline.getStartPosition();
+        let end = inline.getEndPosition();
 
         if (start.isAfter(this.end) || this.start.isAfter(end)) {
             return null;
@@ -114,11 +114,7 @@ class SelectionScoper implements TraversingScoper {
         return start.isAfter(end) || start.equalTo(end)
             ? null
             : startPartial || endPartial
-                ? new PartialInlineElement(
-                      inline,
-                      startPartial && start.toEditorPoint(),
-                      endPartial && end.toEditorPoint()
-                  )
+                ? new PartialInlineElement(inline, startPartial && start, endPartial && end)
                 : inline;
     }
 }
