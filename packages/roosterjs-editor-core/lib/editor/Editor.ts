@@ -196,11 +196,10 @@ export default class Editor {
     /**
      * Get InlineElement at given node
      * @param node The node to create InlineElement
-     * @param forceAtNode Force to get a NodeInlineElement at the given node
      * @returns The InlineElement result
      */
-    public getInlineElementAtNode(node: Node, forceAtNode?: boolean): InlineElement {
-        return getInlineElementAtNode(this.core.contentDiv, node, forceAtNode);
+    public getInlineElementAtNode(node: Node): InlineElement {
+        return getInlineElementAtNode(this.core.contentDiv, node);
     }
 
     /**

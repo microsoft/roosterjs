@@ -1,6 +1,6 @@
 import { ChangeSource, NodeType, PositionType } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { getTagOfNode } from 'roosterjs-editor-dom';
+import { applyTextStyle, getTagOfNode } from 'roosterjs-editor-dom';
 
 /**
  * Apply inline style to current selection
@@ -38,7 +38,7 @@ export default function applyInlineStyle(editor: Editor, callback: (element: HTM
                 range.insertNode(tempNode);
             }
 
-            editor.getInlineElementAtNode(tempNode, true /*forceAtNode*/).applyStyle(callback);
+            applyTextStyle(tempNode, callback);
             editor.select(tempNode, PositionType.End);
         }
     } else {

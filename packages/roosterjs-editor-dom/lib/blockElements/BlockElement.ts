@@ -1,4 +1,3 @@
-import NodeInlineElement from '../inlineElements/NodeInlineElement';
 import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import collapseNodes from '../utils/collapseNodes';
 import contains from '../utils/contains';
@@ -17,16 +16,13 @@ import { splitBalancedNodeRange } from '../utils/splitParentNode';
  * Get the inline element at a node
  * @param rootNode The root node of current scope
  * @param node The node to get InlineElement from
- * @param forceAtNode Force to get a NodeInlineElement at the given node
  */
-function getInlineElementAtNode(rootNode: Node, node: Node, forceAtNode?: boolean): InlineElement {
+function getInlineElementAtNode(rootNode: Node, node: Node): InlineElement {
     // An inline element has to be in a block element, get the block first and then resolve through the factory
     let parentBlock = node ? getBlockElementAtNode(rootNode, node) : null;
     return (
         parentBlock &&
-        (forceAtNode
-            ? new NodeInlineElement(node, parentBlock)
-            : resolveInlineElement(node, rootNode, parentBlock))
+        resolveInlineElement(node, rootNode, parentBlock)
     );
 }
 
