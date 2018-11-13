@@ -47,7 +47,7 @@ class NodeInlineElement implements InlineElement {
      * Get the start position of the inline element
      */
     public getStartPosition(): NodePosition {
-        // For an position, we always want it to point to a leaf node
+        // For a position, we always want it to point to a leaf node
         // We should try to go get the lowest first child node from the container
         return new Position(this.containerNode, 0).normalize();
     }
@@ -56,7 +56,7 @@ class NodeInlineElement implements InlineElement {
      * Get the end position of the inline element
      */
     public getEndPosition(): NodePosition {
-        // For an position, we always want it to point to a leaf node
+        // For a position, we always want it to point to a leaf node
         // We should try to go get the lowest last child node from the container
         return new Position(this.containerNode, PositionType.End).normalize();
     }

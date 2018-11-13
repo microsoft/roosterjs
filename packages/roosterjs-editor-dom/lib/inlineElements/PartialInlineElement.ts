@@ -70,7 +70,7 @@ class PartialInlineElement implements InlineElement {
     }
 
     /**
-     * Get start position of this inline element.
+     * Get end position of this inline element.
      */
     public getEndPosition(): NodePosition {
         return this.end || this.inlineElement.getEndPosition();
@@ -91,7 +91,7 @@ class PartialInlineElement implements InlineElement {
     }
 
     /**
-     * Checks if it contains an position
+     * Checks if it contains a position
      */
     public contains(p: NodePosition | EditorPoint): boolean {
         const pos = safeGetPosition(p);

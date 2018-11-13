@@ -30,9 +30,9 @@ export default class Position implements NodePosition {
      * @param node The node of this position
      * @param positionType Type of the postion, can be Begin, End, Before, After
      */
-    constructor(node: Node, positionType: NodePosition);
+    constructor(node: Node, positionType: PositionType);
 
-    constructor(nodeOrPosition: Node | NodePosition, offsetOrPosType?: number | NodePosition) {
+    constructor(nodeOrPosition: Node | NodePosition, offsetOrPosType?: number) {
         if ((<NodePosition>nodeOrPosition).node) {
             this.node = (<NodePosition>nodeOrPosition).node;
             offsetOrPosType = (<NodePosition>nodeOrPosition).offset;

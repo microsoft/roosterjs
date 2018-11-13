@@ -62,11 +62,11 @@ describe('SelectionScoper getStartBlockElement()', () => {
 
     it('input = <p>example</p>, scoper is part of NodeBlockElement', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>example</p>');
-        let startPoint = new Position(rootNode.firstChild.firstChild, PositionType.Begin);
-        let endPoint = new Position(rootNode.firstChild.firstChild, PositionType.End);
+        let start = new Position(rootNode.firstChild.firstChild, PositionType.Begin);
+        let end = new Position(rootNode.firstChild.firstChild, PositionType.End);
 
         // range is 'e'
-        let range = createRange(startPoint, endPoint);
+        let range = createRange(start, end);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.firstChild as HTMLElement
         );
@@ -75,10 +75,10 @@ describe('SelectionScoper getStartBlockElement()', () => {
 
     it('input = <p>part1</p><p>part2</p>, scoper has multiple blockElements', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
-        let startPoint = new Position(rootNode.firstChild, PositionType.Begin);
-        let endPoint = new Position(rootNode.lastChild, PositionType.End);
+        let start = new Position(rootNode.firstChild, PositionType.Begin);
+        let end = new Position(rootNode.lastChild, PositionType.End);
 
-        let range = createRange(startPoint, endPoint);
+        let range = createRange(start, end);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.firstChild as HTMLElement
         );
@@ -100,8 +100,8 @@ describe('SelectionScoper getStartInlineElement()', () => {
     ) {
         // Arrange
         let scoper = createSelectionScoper(rootNode, range);
-        let startPoint = new Position(node, startOffset);
-        let endPoint = new Position(node, endOffset);
+        let start = new Position(node, startOffset);
+        let end = new Position(node, endOffset);
 
         // Act
         let inlineElement = scoper.getStartInlineElement();
@@ -110,8 +110,8 @@ describe('SelectionScoper getStartInlineElement()', () => {
         expect(
             DomTestHelper.isInlineElementEqual(
                 inlineElement,
-                startPoint,
-                endPoint,
+                start,
+                end,
                 node.textContent.substr(startOffset, endOffset)
             )
         ).toBe(true);
@@ -143,11 +143,11 @@ describe('SelectionScoper getStartInlineElement()', () => {
 
     it('input = www.example.com, startInlineElment is PartialInlineElement', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, 'www.example.com');
-        let startPoint = new Position(rootNode.firstChild, PositionType.Begin);
-        let endPoint = new Position(rootNode.firstChild, 3);
+        let start = new Position(rootNode.firstChild, PositionType.Begin);
+        let end = new Position(rootNode.firstChild, 3);
 
         // range is 'www'
-        let range = createRange(startPoint, endPoint);
+        let range = createRange(start, end);
         let node = document.createTextNode('www.example.com');
         runTest(rootNode, range, PositionType.Begin, 3, node);
     });
@@ -176,9 +176,9 @@ describe('SelectionScoper isBlockInScope()', () => {
 
     it('input = <p>part1</p><p>part2</p>, testBlockElement is in scope', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
-        let startPoint = new Position(rootNode.firstChild, PositionType.Begin);
-        let endPoint = new Position(rootNode.lastChild, PositionType.End);
-        let range = createRange(startPoint, endPoint);
+        let start = new Position(rootNode.firstChild, PositionType.Begin);
+        let end = new Position(rootNode.lastChild, PositionType.End);
+        let range = createRange(start, end);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.lastChild as HTMLElement
         );
@@ -187,9 +187,9 @@ describe('SelectionScoper isBlockInScope()', () => {
 
     it('input = <p>part1</p><p>part2</p>, testBlockElement is out of scope', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
-        let startPoint = new Position(rootNode.firstChild, PositionType.Begin);
-        let endPoint = new Position(rootNode.firstChild, PositionType.End);
-        let range = createRange(startPoint, endPoint);
+        let start = new Position(rootNode.firstChild, PositionType.Begin);
+        let end = new Position(rootNode.firstChild, PositionType.End);
+        let range = createRange(start, end);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.lastChild as HTMLElement
         );
@@ -198,11 +198,11 @@ describe('SelectionScoper isBlockInScope()', () => {
 
     it('input = <p>part1</p><p>part2</p>, part of testBlockElement is in scope', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
-        let startPoint = new Position(rootNode.firstChild.firstChild, 2);
-        let endPoint = new Position(rootNode.lastChild.firstChild, 3);
+        let start = new Position(rootNode.firstChild.firstChild, 2);
+        let end = new Position(rootNode.lastChild.firstChild, 3);
 
         // range = 'rt1</p><p>par'
-        let range = createRange(startPoint, endPoint);
+        let range = createRange(start, end);
 
         // First block element
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
@@ -213,11 +213,11 @@ describe('SelectionScoper isBlockInScope()', () => {
 
     it('input = <p>part1</p><p>part2</p>, part of blockElement is out of scope', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
-        let startPoint = new Position(rootNode.firstChild.firstChild, 2);
-        let endPoint = new Position(rootNode.lastChild.firstChild, 3);
+        let start = new Position(rootNode.firstChild.firstChild, 2);
+        let end = new Position(rootNode.lastChild.firstChild, 3);
 
         // range = 'rt1</p><p>par'
-        let range = createRange(startPoint, endPoint);
+        let range = createRange(start, end);
 
         // Second block element
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
@@ -235,11 +235,11 @@ describe('SelectionScoper trimInlineElement()', () => {
     it('input = <p>part1</p><p>part2</p>, inlineElement inside scope', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
-        let startPoint = new Position(rootNode.firstChild, PositionType.Begin);
-        let endPoint = new Position(rootNode.firstChild, PositionType.End);
+        let start = new Position(rootNode.firstChild, PositionType.Begin);
+        let end = new Position(rootNode.firstChild, PositionType.End);
 
         // range is '<p>part1</p>'
-        let range = createRange(startPoint, endPoint);
+        let range = createRange(start, end);
         let scoper = createSelectionScoper(rootNode, range);
 
         // inlineElement is 'part1'
@@ -258,11 +258,11 @@ describe('SelectionScoper trimInlineElement()', () => {
     it('input = <p>part1</p><p>part2</p>, inlineElement complete out of scope', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
-        let startPoint = new Position(rootNode.firstChild, PositionType.Begin);
-        let endPoint = new Position(rootNode.firstChild, PositionType.End);
+        let start = new Position(rootNode.firstChild, PositionType.Begin);
+        let end = new Position(rootNode.firstChild, PositionType.End);
 
         // range is '<p>part1</p>'
-        let range = createRange(startPoint, endPoint);
+        let range = createRange(start, end);
         let scoper = createSelectionScoper(rootNode, range);
 
         // inlineElement is 'part2'
@@ -281,11 +281,11 @@ describe('SelectionScoper trimInlineElement()', () => {
     it('input = <span>part1,part2</span>, part of inlineElement is out of scope', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<span>part1,part2</span>');
-        let startPoint = new Position(rootNode.firstChild.firstChild, PositionType.Begin);
-        let endPoint = new Position(rootNode.firstChild.firstChild, 5);
+        let start = new Position(rootNode.firstChild.firstChild, PositionType.Begin);
+        let end = new Position(rootNode.firstChild.firstChild, 5);
 
         // range is 'part1'
-        let range = createRange(startPoint, endPoint);
+        let range = createRange(start, end);
         let scoper = createSelectionScoper(rootNode, range);
 
         // inlineElement is 'part1,part2'
@@ -298,10 +298,10 @@ describe('SelectionScoper trimInlineElement()', () => {
         let trimmedElement = scoper.trimInlineElement(inlineElement);
 
         // Assert
-        startPoint = new Position(rootNode.firstChild.firstChild, PositionType.Begin);
-        endPoint = new Position(rootNode.firstChild.firstChild, 5);
+        start = new Position(rootNode.firstChild.firstChild, PositionType.Begin);
+        end = new Position(rootNode.firstChild.firstChild, 5);
         expect(
-            DomTestHelper.isInlineElementEqual(trimmedElement, startPoint, endPoint, 'part1')
+            DomTestHelper.isInlineElementEqual(trimmedElement, start, end, 'part1')
         ).toBe(true);
     });
 });

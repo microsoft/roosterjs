@@ -102,8 +102,8 @@ describe('SelectionBlockScoper getStartInlineElement()', () => {
     ) {
         // Arrange
         let scoper = createSelectionBlockScoper(rootNode, range, startPosition);
-        let startPoint = new Position(node, startOffset);
-        let endPoint = new Position(node, endOffset);
+        let start = new Position(node, startOffset);
+        let end = new Position(node, endOffset);
 
         // Act
         let inlineElement = scoper.getStartInlineElement();
@@ -112,8 +112,8 @@ describe('SelectionBlockScoper getStartInlineElement()', () => {
         expect(
             DomTestHelper.isInlineElementEqual(
                 inlineElement,
-                startPoint,
-                endPoint,
+                start,
+                end,
                 node.textContent.substr(startOffset, endOffset)
             )
         ).toBe(true);
@@ -154,11 +154,11 @@ describe('SelectionBlockScoper getStartInlineElement()', () => {
             testID,
             '<span>part1</span><span>part2</span>'
         );
-        let startPoint = new Position(rootNode.firstChild.firstChild, 3);
-        let endPoint = new Position(rootNode.lastChild.firstChild, PositionType.End);
+        let start = new Position(rootNode.firstChild.firstChild, 3);
+        let end = new Position(rootNode.lastChild.firstChild, PositionType.End);
 
         // range = 't1</span><span>part2</span>'
-        let range = createRange(startPoint, endPoint);
+        let range = createRange(start, end);
         let node = document.createTextNode('part1');
         runTest(rootNode, range, ContentPosition.SelectionStart, 3, 5, node);
     });

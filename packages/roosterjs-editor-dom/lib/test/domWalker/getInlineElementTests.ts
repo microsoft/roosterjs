@@ -23,8 +23,8 @@ describe('getInlineElement getInlineElementAtNode()', () => {
         endOffset: number
     ) {
         // Arrange
-        let startPoint = new Position(testNode, startOffset);
-        let endPoint = new Position(testNode, endOffset);
+        let start = new Position(testNode, startOffset);
+        let end = new Position(testNode, endOffset);
 
         // Act
         let inlineElement = getInlineElementAtNode(rootNode, node);
@@ -33,8 +33,8 @@ describe('getInlineElement getInlineElementAtNode()', () => {
         expect(
             DomTestHelper.isInlineElementEqual(
                 inlineElement,
-                startPoint,
-                endPoint,
+                start,
+                end,
                 testNode.textContent.substr(startOffset, endOffset)
             )
         ).toBe(true);
@@ -95,8 +95,8 @@ describe('getInlineElement getFirstInlineElement()', () => {
 
     function runTest(rootNode: Node, testNode: Node, startOffset: number, endOffset: number) {
         // Arrange
-        let startPoint = new Position(testNode, startOffset);
-        let endPoint = new Position(testNode, endOffset);
+        let start = new Position(testNode, startOffset);
+        let end = new Position(testNode, endOffset);
 
         // Act
         let inlineElement = getFirstInlineElement(rootNode);
@@ -105,8 +105,8 @@ describe('getInlineElement getFirstInlineElement()', () => {
         expect(
             DomTestHelper.isInlineElementEqual(
                 inlineElement,
-                startPoint,
-                endPoint,
+                start,
+                end,
                 testNode.textContent.substr(startOffset, endOffset)
             )
         ).toBe(true);
@@ -143,8 +143,8 @@ describe('getInlineElement getLastInlineElement()', () => {
 
     function runTest(rootNode: Node, testNode: Node, startOffset: number, endOffset: number) {
         // Arrange
-        let startPoint = new Position(testNode, startOffset);
-        let endPoint = new Position(testNode, endOffset);
+        let start = new Position(testNode, startOffset);
+        let end = new Position(testNode, endOffset);
 
         // Act
         let inlineElement = getLastInlineElement(rootNode);
@@ -153,8 +153,8 @@ describe('getInlineElement getLastInlineElement()', () => {
         expect(
             DomTestHelper.isInlineElementEqual(
                 inlineElement,
-                startPoint,
-                endPoint,
+                start,
+                end,
                 testNode.textContent.substr(startOffset, endOffset)
             )
         ).toBe(true);
@@ -197,8 +197,8 @@ describe('getInlineElement getNextInlineElement()', () => {
         endOffset: number
     ) {
         // Arrange
-        let startPoint = new Position(testNode, startOffset);
-        let endPoint = new Position(testNode, endOffset);
+        let start = new Position(testNode, startOffset);
+        let end = new Position(testNode, endOffset);
 
         // Act
         let inlineElement = getNextPreviousInlineElement(rootNode, currentInline, true);
@@ -207,8 +207,8 @@ describe('getInlineElement getNextInlineElement()', () => {
         expect(
             DomTestHelper.isInlineElementEqual(
                 inlineElement,
-                startPoint,
-                endPoint,
+                start,
+                end,
                 testNode.textContent.substr(startOffset, endOffset)
             )
         ).toBe(true);
@@ -291,8 +291,8 @@ describe('getInlineElement getPreviousInlineElement()', () => {
         endOffset: number
     ) {
         // Arrange
-        let startPoint = new Position(testNode, startOffset);
-        let endPoint = new Position(testNode, endOffset);
+        let start = new Position(testNode, startOffset);
+        let end = new Position(testNode, endOffset);
 
         // Act
         let inlineElement = getNextPreviousInlineElement(rootNode, currentInline, false);
@@ -301,8 +301,8 @@ describe('getInlineElement getPreviousInlineElement()', () => {
         expect(
             DomTestHelper.isInlineElementEqual(
                 inlineElement,
-                startPoint,
-                endPoint,
+                start,
+                end,
                 testNode.textContent.substr(startOffset, endOffset)
             )
         ).toBe(true);
