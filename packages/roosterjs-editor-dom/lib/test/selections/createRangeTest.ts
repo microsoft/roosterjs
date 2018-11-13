@@ -1,5 +1,5 @@
-import Position from '../../selection/Position';
 import createRange from '../../selection/createRange';
+import Position from '../../selection/Position';
 
 describe('createRange() with nodes', () => {
     function runTest(

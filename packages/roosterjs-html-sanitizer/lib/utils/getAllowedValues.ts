@@ -1,5 +1,5 @@
-import { StringMap, StyleCallbackMap } from '../types/maps';
 import cloneObject from './cloneObject';
+import { StringMap, StyleCallbackMap } from '../types/maps';
 
 const ALLOWED_HTML_TAGS = (
     'BODY,H1,H2,H3,H4,H5,H6,FORM,P,BR,NOBR,HR,ACRONYM,ABBR,ADDRESS,B,' +

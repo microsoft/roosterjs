@@ -1,7 +1,7 @@
-import { HtmlSanitizer } from 'roosterjs-html-sanitizer';
 import { createWordConverter } from './wordConverter';
 import { createWordConverterArguments } from './WordConverterArguments';
-import { processNodesDiscovery, processNodeConvert } from './converterUtils';
+import { HtmlSanitizer } from 'roosterjs-html-sanitizer';
+import { processNodeConvert, processNodesDiscovery } from './converterUtils';
 
 /** Converts all the Word generated list items in the specified node into standard HTML UL and OL tags */
 export default function convertPastedContentFromWord(doc: HTMLDocument) {

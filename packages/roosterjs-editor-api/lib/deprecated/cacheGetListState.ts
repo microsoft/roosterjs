@@ -1,7 +1,7 @@
 import queryNodesWithSelection from '../deprecated/queryNodesWithSelection';
-import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
-import { ListState, PluginEvent } from 'roosterjs-editor-types';
+import { cacheGetEventData, Editor } from 'roosterjs-editor-core';
 import { getTagOfNode } from 'roosterjs-editor-dom';
+import { ListState, PluginEvent } from 'roosterjs-editor-types';
 
 const EVENTDATACACHE_LISTSTATE = 'LISTSTATE';
 

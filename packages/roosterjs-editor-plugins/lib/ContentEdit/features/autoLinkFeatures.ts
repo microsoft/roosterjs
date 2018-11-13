@@ -1,3 +1,6 @@
+import { Browser, LinkInlineElement, matchLink } from 'roosterjs-editor-dom';
+import { GenericContentEditFeature, Keys } from '../ContentEditFeatures';
+import { removeLink, replaceWithNode } from 'roosterjs-editor-api';
 import {
     ChangeSource,
     LinkData,
@@ -5,15 +8,12 @@ import {
     PluginEventType,
     PluginKeyboardEvent,
 } from 'roosterjs-editor-types';
-import { Keys, GenericContentEditFeature } from '../ContentEditFeatures';
 import {
     Editor,
     cacheGetEventData,
     cacheGetContentSearcher,
     clearContentSearcherCache,
 } from 'roosterjs-editor-core';
-import { Browser, matchLink, LinkInlineElement } from 'roosterjs-editor-dom';
-import { replaceWithNode, removeLink } from 'roosterjs-editor-api';
 
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
 // we need to trim off the trailing puncatuation before turning it to link match

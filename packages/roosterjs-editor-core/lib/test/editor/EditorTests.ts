@@ -1,7 +1,7 @@
-import Editor from '../../editor/Editor';
-import * as TestHelper from '../TestHelper';
-import { ContentPosition } from 'roosterjs-editor-types';
 import * as getSelectionRange from '../../coreAPI/getSelectionRange';
+import * as TestHelper from '../TestHelper';
+import Editor from '../../editor/Editor';
+import { ContentPosition } from 'roosterjs-editor-types';
 
 let editor: Editor;
 let testID = 'EditorTest';

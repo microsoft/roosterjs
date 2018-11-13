@@ -1,14 +1,14 @@
 import buildClipboardData from './buildClipboardData';
 import fragmentHandler from './fragmentHandler';
 import textToHtml from './textToHtml';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { insertImage } from 'roosterjs-editor-api';
 import {
     AttributeCallbackMap,
     getInheritableStyles,
     HtmlSanitizer,
     htmlToDom,
 } from 'roosterjs-html-sanitizer';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { insertImage } from 'roosterjs-editor-api';
 import {
     BeforePasteEvent,
     ChangeSource,

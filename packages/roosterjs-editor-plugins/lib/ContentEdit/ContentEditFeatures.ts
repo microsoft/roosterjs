@@ -1,4 +1,4 @@
-import { ChangeSource, PluginKeyboardEvent, PluginEvent } from 'roosterjs-editor-types';
+import { ChangeSource, PluginEvent, PluginKeyboardEvent } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**

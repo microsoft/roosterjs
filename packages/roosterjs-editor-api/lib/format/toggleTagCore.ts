@@ -1,3 +1,5 @@
+import { ChangeSource, PositionType, QueryScope } from 'roosterjs-editor-types';
+import { Editor } from 'roosterjs-editor-core';
 import {
     Browser,
     Position,
@@ -7,8 +9,6 @@ import {
     getTagOfNode,
     splitBalancedNodeRange,
 } from 'roosterjs-editor-dom';
-import { ChangeSource, PositionType, QueryScope } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
 const UNWRAPPABLE_NODES = 'LI,THEAD,TBODY,TR,TD,TH'.split(',');

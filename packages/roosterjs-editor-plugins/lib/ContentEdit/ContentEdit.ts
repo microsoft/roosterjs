@@ -1,8 +1,8 @@
 import { AutoLink, UnlinkWhenBackspaceAfterLink } from './features/autoLinkFeatures';
 import { DefaultShortcut } from './features/shortcutFeatures';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { TabInTable, UpDownInTable } from './features/tableFeatures';
 import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { TabInTable, UpDownInTable } from './features/tableFeatures';
 import ContentEditFeatures, {
     getDefaultContentEditFeatures,
     GenericContentEditFeature,

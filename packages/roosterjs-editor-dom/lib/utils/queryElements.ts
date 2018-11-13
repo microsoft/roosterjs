@@ -1,4 +1,3 @@
-import isDocumentPosition from './isDocumentPosition';
 import { DocumentPosition } from 'roosterjs-editor-types';
 import { QueryScope } from 'roosterjs-editor-types';
 
@@ -50,10 +49,19 @@ function isIntersectWithNodeRange(
     }
 
     return (
-        isDocumentPosition(startPosition, targetPositions) || // intersectStart
-        isDocumentPosition(endPosition, targetPositions) || // intersectEnd
-        (isDocumentPosition(startPosition, DocumentPosition.Preceding) && // Contains
-            isDocumentPosition(endPosition, DocumentPosition.Following) &&
-            !isDocumentPosition(endPosition, DocumentPosition.ContainedBy))
+        checkPosition(startPosition, targetPositions) || // intersectStart
+        checkPosition(endPosition, targetPositions) || // intersectEnd
+        (checkPosition(startPosition, [DocumentPosition.Preceding]) && // Contains
+            checkPosition(endPosition, [DocumentPosition.Following]) &&
+            !checkPosition(endPosition, [DocumentPosition.ContainedBy]))
+    );
+}
+
+function checkPosition(position: DocumentPosition, targets: DocumentPosition[]): boolean {
+    return targets.some(
+        target =>
+            target == DocumentPosition.Same
+                ? position == DocumentPosition.Same
+                : (position & target) == target
     );
 }

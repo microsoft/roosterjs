@@ -1,5 +1,5 @@
+import { ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { DocumentCommand, ChangeSource, QueryScope } from 'roosterjs-editor-types';
 import { getElementOrParentElement } from 'roosterjs-editor-dom';
 
 /**

@@ -1,6 +1,8 @@
-import HtmlSanitizerOptions from '../types/HtmlSanitizerOptions';
 import cloneObject from '../utils/cloneObject';
+import getInheritableStyles from '../utils/getInheritableStyles';
+import HtmlSanitizerOptions from '../types/HtmlSanitizerOptions';
 import htmlToDom from '../utils/htmlToDom';
+import SanitizeHtmlOptions from '../types/SanitizeHtmlOptions';
 import {
     StringMap,
     StyleCallbackMap,
@@ -13,8 +15,6 @@ import {
     getDefaultStyleValues,
     getStyleCallbacks,
 } from '../utils/getAllowedValues';
-import getInheritableStyles from '../utils/getInheritableStyles';
-import SanitizeHtmlOptions from '../types/SanitizeHtmlOptions';
 
 export default class HtmlSanitizer {
     /**

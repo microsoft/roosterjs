@@ -1,5 +1,5 @@
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { contains, fromHtml, getComputedStyle, VTable } from 'roosterjs-editor-dom';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { getNodeAtCursor } from 'roosterjs-editor-api';
 import {
     ContentPosition,

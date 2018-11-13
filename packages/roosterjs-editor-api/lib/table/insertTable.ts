@@ -1,6 +1,6 @@
-import { Editor } from 'roosterjs-editor-core';
-import { TableFormat, PositionType, ChangeSource } from 'roosterjs-editor-types';
 import formatTable from './formatTable';
+import { ChangeSource, PositionType, TableFormat } from 'roosterjs-editor-types';
+import { Editor } from 'roosterjs-editor-core';
 
 /**
  * Insert table into editor at current selection

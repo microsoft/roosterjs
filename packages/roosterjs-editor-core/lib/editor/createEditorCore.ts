@@ -1,8 +1,7 @@
+import attachDomEvent from '../coreAPI/attachDomEvent';
 import CorePlugin from './CorePlugin';
 import EditorCore, { CoreApiMap } from './EditorCore';
 import EditorOptions from './EditorOptions';
-import Undo from '../undo/Undo';
-import attachDomEvent from '../coreAPI/attachDomEvent';
 import editWithUndo from '../coreAPI/editWithUndo';
 import focus from '../coreAPI/focus';
 import getCustomData from '../coreAPI/getCustomData';
@@ -11,6 +10,7 @@ import hasFocus from '../coreAPI/hasFocus';
 import insertNode from '../coreAPI/insertNode';
 import select from '../coreAPI/select';
 import triggerEvent from '../coreAPI/triggerEvent';
+import Undo from '../undo/Undo';
 import { DefaultFormat } from 'roosterjs-editor-types';
 import { getComputedStyles } from 'roosterjs-editor-dom';
 

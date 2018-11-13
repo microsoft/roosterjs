@@ -1,5 +1,5 @@
-import { Editor } from 'roosterjs-editor-core';
 import toggleTagCore from './toggleTagCore';
+import { Editor } from 'roosterjs-editor-core';
 
 const BLOCKQUOTE_TAG = 'blockquote';
 const DEFAULT_STYLER = (element: HTMLElement): void => {

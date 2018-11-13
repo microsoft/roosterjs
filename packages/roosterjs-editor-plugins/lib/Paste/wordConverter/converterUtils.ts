@@ -2,10 +2,10 @@ import ListItemMetadata from './ListItemMetadata';
 import ListMetadata from './ListMetadata';
 import WordConverter from './wordConverter';
 import WordConverterArguments from './WordConverterArguments';
-import { NodeType } from 'roosterjs-editor-types';
 import { createLevelLists } from './LevelLists';
 import { getObject, setObject } from './CustomData';
 import { getTagOfNode } from 'roosterjs-editor-dom';
+import { NodeType } from 'roosterjs-editor-types';
 
 /** Word list metadata style name */
 const LOOKUP_DEPTH = 5;

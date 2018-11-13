@@ -40,7 +40,6 @@ export { default as getComputedStyles, getComputedStyle } from './utils/getCompu
 export { default as getElementOrParentElement } from './utils/getElementOrParentElement';
 export { default as getTagOfNode } from './utils/getTagOfNode';
 export { default as isBlockElement } from './utils/isBlockElement';
-export { default as isDocumentPosition } from './utils/isDocumentPosition';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
 export { default as isVoidHtmlElement } from './utils/isVoidHtmlElement';
 export { default as matchLink } from './utils/matchLink';

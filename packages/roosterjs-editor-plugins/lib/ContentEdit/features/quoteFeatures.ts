@@ -1,8 +1,8 @@
+import { cacheGetEventData, Editor } from 'roosterjs-editor-core';
 import { ContentEditFeature, Keys } from '../ContentEditFeatures';
-import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
-import { PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
-import { getTagOfNode, isNodeEmpty, splitBalancedNodeRange, unwrap } from 'roosterjs-editor-dom';
 import { getNodeAtCursor } from 'roosterjs-editor-api';
+import { getTagOfNode, isNodeEmpty, splitBalancedNodeRange, unwrap } from 'roosterjs-editor-dom';
+import { PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
 
 const QUOTE_TAG = 'BLOCKQUOTE';
 

@@ -1,10 +1,10 @@
-import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import collapseNodes from '../utils/collapseNodes';
 import contains from '../utils/contains';
 import createRange from '../selection/createRange';
 import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import isNodeAfter from '../utils/isNodeAfter';
+import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import resolveInlineElement from '../inlineElements/resolveInlineElement';
 import wrap from '../utils/wrap';
 import { BlockElement, InlineElement } from 'roosterjs-editor-types';

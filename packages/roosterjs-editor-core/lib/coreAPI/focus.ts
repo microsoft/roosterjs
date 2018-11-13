@@ -1,6 +1,6 @@
 import EditorCore, { Focus } from '../editor/EditorCore';
-import { PositionType } from 'roosterjs-editor-types';
 import { getFirstLeafNode } from 'roosterjs-editor-dom';
+import { PositionType } from 'roosterjs-editor-types';
 
 const focus: Focus = (core: EditorCore) => {
     if (!core.api.hasFocus(core) || !core.api.getSelectionRange(core, false /*tryGetFromCache*/)) {

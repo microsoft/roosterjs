@@ -1,5 +1,5 @@
-import { Editor } from 'roosterjs-editor-core';
 import replaceWithNode from '../format/replaceWithNode';
+import { Editor } from 'roosterjs-editor-core';
 
 /**
  * @deprecated Use replaceWithNode instead

@@ -1,5 +1,5 @@
-import Position from '../../selection/Position';
 import createRange from '../../selection/createRange';
+import Position from '../../selection/Position';
 import queryElements from '../../utils/queryElements';
 import { QueryScope } from 'roosterjs-editor-types';
 

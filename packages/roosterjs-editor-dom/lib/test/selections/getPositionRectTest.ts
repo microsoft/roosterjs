@@ -1,5 +1,5 @@
-import Position from '../../selection/Position';
 import getPositionRect from '../../selection/getPositionRect';
+import Position from '../../selection/Position';
 
 describe('getPositionRect()', () => {
     function runTest(

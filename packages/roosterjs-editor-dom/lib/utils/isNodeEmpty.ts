@@ -1,5 +1,5 @@
-import { NodeType } from 'roosterjs-editor-types';
 import getTagOfNode from './getTagOfNode';
+import { NodeType } from 'roosterjs-editor-types';
 
 const VISIBLE_ELEMENT_TAGS = ['IMG'];
 const VISIBLE_CHILD_ELEMENT_SELECTOR = ['TABLE', 'IMG', 'LI'].join(',');

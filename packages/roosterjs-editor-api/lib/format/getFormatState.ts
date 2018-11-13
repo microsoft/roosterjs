@@ -1,7 +1,7 @@
 import { cacheGetNodeAtCursor } from './getNodeAtCursor';
-import { Editor } from 'roosterjs-editor-core';
 import { DocumentCommand, FormatState, PluginEvent, QueryScope } from 'roosterjs-editor-types';
-import { Position, getComputedStyles, getTagOfNode } from 'roosterjs-editor-dom';
+import { Editor } from 'roosterjs-editor-core';
+import { getComputedStyles, getTagOfNode, Position } from 'roosterjs-editor-dom';
 
 /**
  * Get format state at cursor

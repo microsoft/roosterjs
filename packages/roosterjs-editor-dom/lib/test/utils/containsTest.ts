@@ -1,6 +1,6 @@
-import Position from '../../selection/Position';
 import contains from '../../utils/contains';
 import createRange from '../../selection/createRange';
+import Position from '../../selection/Position';
 
 describe('contains()', () => {
     it('node in node, treatSameNodeAsContain = false', () => {

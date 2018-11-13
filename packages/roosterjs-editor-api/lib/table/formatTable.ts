@@ -1,7 +1,7 @@
 import getNodeAtCursor from '../format/getNodeAtCursor';
+import { ChangeSource, TableFormat } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { VTable } from 'roosterjs-editor-dom';
-import { TableFormat, ChangeSource } from 'roosterjs-editor-types';
 
 /**
  * Format table

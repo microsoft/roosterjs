@@ -13,12 +13,6 @@ export interface BlockElement {
     collapseToSingleElement(): HTMLElement;
 
     /**
-     * @deprecated
-     * Get text content of this block element
-     */
-    getTextContent(): string;
-
-    /**
      * Get start node of this block element
      */
     getStartNode(): Node;
@@ -27,6 +21,27 @@ export interface BlockElement {
      * Get end node of this block element
      */
     getEndNode(): Node;
+
+    /**
+     * Check whether this block element equals to the given block element
+     */
+    equals(blockElement: BlockElement): boolean;
+
+    /**
+     * Checks if this block element is after another block element
+     */
+    isAfter(blockElement: BlockElement): boolean;
+
+    /**
+     * Check if the given node is within this block element
+     */
+    contains(node: Node): boolean;
+
+    /**
+     * @deprecated
+     * Get text content of this block element
+     */
+    getTextContent(): string;
 
     /**
      * @deprecated
@@ -53,25 +68,10 @@ export interface BlockElement {
     getInlineElements(): InlineElement[];
 
     /**
-     * Check whether this block element equals to the given block element
-     */
-    equals(blockElement: BlockElement): boolean;
-
-    /**
-     * Checks if this block element is after another block element
-     */
-    isAfter(blockElement: BlockElement): boolean;
-
-    /**
      * @deprecated
      * Check if the given inline element falls within this block element
      */
     isInBlock(inlineElement: InlineElement): boolean;
-
-    /**
-     * Check if the given node is within this block element
-     */
-    contains(node: Node): boolean;
 }
 
 export default BlockElement;

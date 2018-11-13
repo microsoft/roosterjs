@@ -1,6 +1,6 @@
 import BlockElement from './BlockElement';
-import EditorPoint from './EditorPoint';
-import NodePosition from '../interface/NodePosition';
+import EditorPoint from '../legacy/EditorPoint';
+import NodePosition from './NodePosition';
 
 /**
  * This refers to an inline element (as opposed to block) in editor

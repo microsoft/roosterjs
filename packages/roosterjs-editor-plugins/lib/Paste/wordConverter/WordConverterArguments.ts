@@ -1,6 +1,6 @@
-import ListMetadata from './ListMetadata';
-import ListItemMetadata from './ListItemMetadata';
 import LevelLists, { createLevelLists } from './LevelLists';
+import ListItemMetadata from './ListItemMetadata';
+import ListMetadata from './ListMetadata';
 
 /** Contains the state of the WordConverter when called back after yielding */
 export default interface WordConverterArguments {

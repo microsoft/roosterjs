@@ -1,4 +1,4 @@
-import { DocumentCommand, ChangeSource } from 'roosterjs-editor-types';
+import { ChangeSource, DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**

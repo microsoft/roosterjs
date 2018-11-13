@@ -1,6 +1,6 @@
+import { applyTextStyle, getTagOfNode } from 'roosterjs-editor-dom';
 import { ChangeSource, NodeType, PositionType } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { applyTextStyle, getTagOfNode } from 'roosterjs-editor-dom';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 

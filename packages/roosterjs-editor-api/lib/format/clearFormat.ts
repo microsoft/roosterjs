@@ -1,12 +1,12 @@
 import execCommand from './execCommand';
 import setBackgroundColor from './setBackgroundColor';
-import toggleBold from './toggleBold';
-import toggleItalic from './toggleItalic';
-import toggleUnderline from './toggleUnderline';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';
 import setTextColor from './setTextColor';
-import { DocumentCommand, ChangeSource, QueryScope } from 'roosterjs-editor-types';
+import toggleBold from './toggleBold';
+import toggleItalic from './toggleItalic';
+import toggleUnderline from './toggleUnderline';
+import { ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];

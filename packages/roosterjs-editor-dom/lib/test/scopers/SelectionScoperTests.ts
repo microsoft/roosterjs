@@ -300,8 +300,6 @@ describe('SelectionScoper trimInlineElement()', () => {
         // Assert
         start = new Position(rootNode.firstChild.firstChild, PositionType.Begin);
         end = new Position(rootNode.firstChild.firstChild, 5);
-        expect(
-            DomTestHelper.isInlineElementEqual(trimmedElement, start, end, 'part1')
-        ).toBe(true);
+        expect(DomTestHelper.isInlineElementEqual(trimmedElement, start, end, 'part1')).toBe(true);
     });
 });

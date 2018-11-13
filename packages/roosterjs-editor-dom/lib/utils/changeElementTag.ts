@@ -9,8 +9,7 @@ import getTagOfNode from './getTagOfNode';
  */
 export default function changeElementTag<K extends keyof HTMLElementTagNameMap>(
     element: HTMLElement,
-    newTag: K,
-    deprecated?: any
+    newTag: K
 ): HTMLElementTagNameMap[K];
 
 /**
@@ -19,17 +18,9 @@ export default function changeElementTag<K extends keyof HTMLElementTagNameMap>(
  * @param newTag New tag to change to
  * @returns The new element with new tag
  */
-export default function changeElementTag(
-    element: HTMLElement,
-    newTag: string,
-    deprecated?: any
-): HTMLElement;
+export default function changeElementTag(element: HTMLElement, newTag: string): HTMLElement;
 
-export default function changeElementTag(
-    element: HTMLElement,
-    newTag: string,
-    deprecated?: any
-): HTMLElement {
+export default function changeElementTag(element: HTMLElement, newTag: string): HTMLElement {
     if (!element || !newTag) {
         return null;
     }
