@@ -80,19 +80,14 @@ class PartialInlineElement implements InlineElement {
      * Get next partial inline element if it is not at the end boundary yet
      */
     public get nextInlineElement(): PartialInlineElement {
-        return (
-            this.end && new PartialInlineElement(this.inlineElement, this.end, null)
-        );
+        return this.end && new PartialInlineElement(this.inlineElement, this.end, null);
     }
 
     /**
      * Get previous partial inline element if it is not at the begin boundary yet
      */
     public get previousInlineElement(): PartialInlineElement {
-        return (
-            this.start &&
-            new PartialInlineElement(this.inlineElement, null, this.start)
-        );
+        return this.start && new PartialInlineElement(this.inlineElement, null, this.start);
     }
 
     /**
@@ -136,7 +131,7 @@ class PartialInlineElement implements InlineElement {
             to = previousNode ? new Position(previousNode, PositionType.End) : null;
         }
 
-        applyTextStyle(container, styler, this.getStartPosition(), this.getEndPosition());
+        applyTextStyle(container, styler, from, to);
     }
 
     /**

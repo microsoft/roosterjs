@@ -20,10 +20,7 @@ import { splitBalancedNodeRange } from '../utils/splitParentNode';
 function getInlineElementAtNode(rootNode: Node, node: Node): InlineElement {
     // An inline element has to be in a block element, get the block first and then resolve through the factory
     let parentBlock = node ? getBlockElementAtNode(rootNode, node) : null;
-    return (
-        parentBlock &&
-        resolveInlineElement(node, rootNode, parentBlock)
-    );
+    return parentBlock && resolveInlineElement(node, rootNode, parentBlock);
 }
 
 // Get first inline element
