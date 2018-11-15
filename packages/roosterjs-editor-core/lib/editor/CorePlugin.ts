@@ -7,11 +7,8 @@ import {
     PluginEventType,
     PluginMouseUpEvent,
     PositionType,
-<<<<<<< HEAD
     UndoSnapshot,
-=======
     NodePosition,
->>>>>>> master
 } from 'roosterjs-editor-types';
 import {
     Browser,

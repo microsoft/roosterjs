@@ -1,5 +1,6 @@
 import EditorPlugin from './EditorPlugin';
 import UndoService from './UndoService';
+import UndoSnapshotTranslatorService from './UndoSnapshotTranslatorService';
 import { CoreApiMap } from './EditorCore';
 import { DefaultFormat } from 'roosterjs-editor-types';
 
@@ -27,6 +28,11 @@ interface EditorOptions {
      * Default value is a new instance of Undo object
      */
     undo?: UndoService;
+
+    /**
+     * A service for translating undo snapshots to/from an opaque type.
+     */
+    undoSnapshotTranslator?: UndoSnapshotTranslatorService,
 
     /**
      * Initial HTML content

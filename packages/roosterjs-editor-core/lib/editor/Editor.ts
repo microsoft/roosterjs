@@ -17,7 +17,6 @@ import {
     PositionType,
     QueryScope,
     Rect,
-    NodeType,
     UndoSnapshot,
 } from 'roosterjs-editor-types';
 import {

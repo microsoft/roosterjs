@@ -49,6 +49,7 @@ export { default as NodePosition } from './interface/NodePosition';
 export { default as Rect } from './interface/Rect';
 export { default as TableFormat } from './interface/TableFormat';
 export { default as UndoSnapshot } from './interface/UndoSnapshot';
+export { default as SavedSelection } from './interface/SavedSelection';
 
 // Legacy
 export { default as ContentScope } from './legacy/ContentScope';

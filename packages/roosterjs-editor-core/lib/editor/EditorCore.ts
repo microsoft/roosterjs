@@ -92,7 +92,7 @@ export type AttachDomEvent = (
 ) => () => void;
 export type EditWithUndo = (
     core: EditorCore,
-    callback: (start: Position, end: Position, snapshotBeforeCallback: UndoSnapshot) => any,
+    callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: UndoSnapshot) => any,
     changeSource: ChangeSource | string
 ) => void;
 export type Focus = (core: EditorCore) => void;
