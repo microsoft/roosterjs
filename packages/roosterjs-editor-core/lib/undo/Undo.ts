@@ -1,5 +1,7 @@
 import { ChangeSource, PluginEvent, PluginEventType, UndoSnapshot } from 'roosterjs-editor-types';
-import { Editor, UndoService, UndoSnapshotsService } from 'roosterjs-editor-core';
+import Editor from '../editor/Editor';
+import UndoService from '../editor/UndoService';
+import UndoSnapshots, { UndoSnapshotsService } from './UndoSnapshots';
 
 const KEY_BACKSPACE = 8;
 const KEY_DELETE = 46;
@@ -135,7 +137,7 @@ export class Undo implements UndoService {
 
     protected getSnapshotsManager(): UndoSnapshotsService {
         if (!this.undoSnapshots) {
-            this.undoSnapshots = new UndoSnapshotsService(this.maxBufferSize);
+            this.undoSnapshots = new UndoSnapshots(this.maxBufferSize);
         }
         return this.undoSnapshots;
     }

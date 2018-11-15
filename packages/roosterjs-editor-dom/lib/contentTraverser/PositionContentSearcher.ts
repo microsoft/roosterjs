@@ -1,8 +1,7 @@
 import ContentTraverser from './ContentTraverser';
-import Position from '../selection/Position';
 import createRange from '../selection/createRange';
 import matchWhiteSpaces from '../utils/matchWhiteSpaces';
-import { InlineElement } from 'roosterjs-editor-types';
+import { InlineElement, NodePosition } from 'roosterjs-editor-types';
 
 /**
  * The class that helps search content around a position
@@ -37,7 +36,7 @@ export default class PositionContentSearcher {
      * @param rootNode Root node of the whole scope
      * @param position Start position
      */
-    constructor(private rootNode: Node, private position: Position) {}
+    constructor(private rootNode: Node, private position: NodePosition) {}
 
     /**
      * Get the word before position. The word is determined by scanning backwards till the first white space, the portion
@@ -106,8 +105,8 @@ export default class PositionContentSearcher {
             return null;
         }
 
-        let startPosition: Position;
-        let endPosition: Position;
+        let startPosition: NodePosition;
+        let endPosition: NodePosition;
         let textIndex = text.length - 1;
 
         this.forEachTextInlineElement(textInline => {
@@ -119,9 +118,7 @@ export default class PositionContentSearcher {
 
                     // on first time when end is matched, set the end of range
                     if (!endPosition) {
-                        endPosition = Position.FromEditorPoint(textInline.getStartPoint()).move(
-                            nodeIndex + 1
-                        );
+                        endPosition = textInline.getStartPosition().move(nodeIndex + 1);
                     }
                 } else if (exactMatch || endPosition) {
                     // Mismatch found when exact match or end already match, so return since matching failed
@@ -131,9 +128,7 @@ export default class PositionContentSearcher {
 
             // when textIndex == -1, we have a successful complete match
             if (textIndex == -1) {
-                startPosition = Position.FromEditorPoint(textInline.getStartPoint()).move(
-                    nodeIndex + 1
-                );
+                startPosition = textInline.getStartPosition().move(nodeIndex + 1);
                 return true;
             }
 

@@ -1,3 +1,4 @@
+import { applyFormat, wrap } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     ChangeSource,
@@ -8,7 +9,6 @@ import {
     ExtractContentEvent,
     DefaultFormat,
 } from 'roosterjs-editor-types';
-import { applyFormat, wrap } from 'roosterjs-editor-dom';
 
 const WATERMARK_SPAN_ID = '_rooster_watermarkSpan';
 const WATERMARK_REGEX = new RegExp(

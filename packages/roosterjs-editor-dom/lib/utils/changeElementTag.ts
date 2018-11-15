@@ -9,8 +9,7 @@ import getTagOfNode from './getTagOfNode';
  */
 export default function changeElementTag<K extends keyof HTMLElementTagNameMap>(
     element: HTMLElement,
-    newTag: K,
-    deprecated?: any
+    newTag: K
 ): HTMLElementTagNameMap[K];
 
 /**
@@ -19,17 +18,13 @@ export default function changeElementTag<K extends keyof HTMLElementTagNameMap>(
  * @param newTag New tag to change to
  * @returns The new element with new tag
  */
-export default function changeElementTag(
-    element: HTMLElement,
-    newTag: string,
-    deprecated?: any
-): HTMLElement;
+export default function changeElementTag(element: HTMLElement, newTag: string): HTMLElement;
 
-export default function changeElementTag(
-    element: HTMLElement,
-    newTag: string,
-    deprecated?: any
-): HTMLElement {
+export default function changeElementTag(element: HTMLElement, newTag: string): HTMLElement {
+    if (!element || !newTag) {
+        return null;
+    }
+
     let newElement = element.ownerDocument.createElement(newTag);
 
     for (let i = 0; i < element.attributes.length; i++) {
@@ -41,7 +36,7 @@ export default function changeElementTag(
         newElement.appendChild(element.firstChild);
     }
 
-    if (getTagOfNode(element) == 'P') {
+    if (getTagOfNode(element) == 'P' || getTagOfNode(newElement) == 'P') {
         [newElement.style.marginTop, newElement.style.marginBottom] = getComputedStyles(element, [
             'margin-top',
             'margin-bottom',

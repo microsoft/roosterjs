@@ -1,5 +1,5 @@
-import { QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
+import { QueryScope } from 'roosterjs-editor-types';
 
 /**
  * @deprecated Use Editor.queryElements() instead

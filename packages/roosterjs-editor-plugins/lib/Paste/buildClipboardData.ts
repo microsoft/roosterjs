@@ -1,3 +1,4 @@
+import textToHtml from './textToHtml';
 import { ClipboardData, ContentPosition, DefaultFormat } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { fromHtml } from 'roosterjs-editor-dom';
@@ -24,25 +25,22 @@ export default function buildClipboardData(
     let dataTransfer =
         event.clipboardData || (<WindowForIE>editor.getDocument().defaultView).clipboardData;
     let types: string[] = dataTransfer.types ? [].slice.call(dataTransfer.types) : [];
-    let clipboardData: ClipboardData = {
-        snapshotBeforePaste: null,
-        originalFormat: getCurrentFormat(editor),
-        types: types,
-        image: getImage(dataTransfer),
-        text: dataTransfer.getData('text'),
-        html: null,
+    let text = dataTransfer.getData('text');
+    let retrieveHtmlCallback = (html: string) => {
+        callback({
+            snapshotBeforePaste: null,
+            originalFormat: getCurrentFormat(editor),
+            types,
+            image: getImage(dataTransfer),
+            text,
+            html: html || textToHtml(text || ''),
+        });
     };
 
     if (event.clipboardData && event.clipboardData.items) {
-        directRetrieveHtml(event, html => {
-            clipboardData.html = html;
-            callback(clipboardData);
-        });
+        directRetrieveHtml(event, retrieveHtmlCallback);
     } else {
-        retrieveHtmlViaTempDiv(editor, html => {
-            clipboardData.html = html;
-            callback(clipboardData);
-        });
+        retrieveHtmlViaTempDiv(editor, retrieveHtmlCallback);
     }
 }
 

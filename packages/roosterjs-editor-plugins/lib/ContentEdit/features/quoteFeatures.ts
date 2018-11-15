@@ -1,8 +1,8 @@
+import { cacheGetEventData, Editor } from 'roosterjs-editor-core';
 import { ContentEditFeature, Keys } from '../ContentEditFeatures';
-import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
-import { PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
-import { getTagOfNode, isNodeEmpty, splitBalancedNodeRange, unwrap } from 'roosterjs-editor-dom';
 import { getNodeAtCursor } from 'roosterjs-editor-api';
+import { getTagOfNode, isNodeEmpty, splitBalancedNodeRange, unwrap } from 'roosterjs-editor-dom';
+import { PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
 
 const QUOTE_TAG = 'BLOCKQUOTE';
 
@@ -13,7 +13,7 @@ export const UnquoteWhenBackOnEmpty1stLine: ContentEditFeature = {
         return childOfQuote && isNodeEmpty(childOfQuote) && !childOfQuote.previousSibling;
     },
     handleEvent: splitQuote,
-    isAvailable: featureSet => featureSet.unquoteWhenBackspaceOnEmptyFirstLine,
+    featureFlag: 'unquoteWhenBackspaceOnEmptyFirstLine',
 };
 
 export const UnquoteWhenEnterOnEmptyLine: ContentEditFeature = {
@@ -24,7 +24,7 @@ export const UnquoteWhenEnterOnEmptyLine: ContentEditFeature = {
         return !shift && childOfQuote && isNodeEmpty(childOfQuote);
     },
     handleEvent: (event, editor) => editor.performAutoComplete(() => splitQuote(event, editor)),
-    isAvailable: featureSet => featureSet.unquoteWhenEnterOnEmptyLine,
+    featureFlag: 'unquoteWhenEnterOnEmptyLine',
 };
 
 function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: Editor): Node {

@@ -1,5 +1,5 @@
-import { ChangeSource, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { Browser } from 'roosterjs-editor-dom';
+import { ChangeSource, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 
 const TEMP_TITLE = 'istemptitle';

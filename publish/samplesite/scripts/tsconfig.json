@@ -55,6 +55,12 @@
             ],
             "roosterjs-plugin-picker/lib/*": [
                 "packages/roosterjs-plugin-picker/lib/*"
+            ],
+            "roosterjs-html-sanitizer": [
+                "packages/roosterjs-html-sanitizer/lib/index"
+            ],
+            "roosterjs-html-sanitizer/lib/*": [
+                "packages/roosterjs-html-sanitizer/lib/*"
             ]
         }
     }

@@ -48,6 +48,7 @@ function initOptions() {
         'autoBulletCheckbox',
         'tabInTableCheckbox',
         'upDownInTableCheckbox',
+        'unlinkWhenBackspaceAfterLinkCheckbox',
         'defaultShortcutCheckbox',
         'smartOrderedListCheckbox',
     ].forEach(id => {
@@ -81,6 +82,7 @@ export function initEditorForOptions() {
         features.autoBullet = (document.getElementById('autoBulletCheckbox') as HTMLInputElement).checked;
         features.tabInTable = (document.getElementById('tabInTableCheckbox') as HTMLInputElement).checked;
         features.upDownInTable = (document.getElementById('upDownInTableCheckbox') as HTMLInputElement).checked;
+        features.unlinkWhenBackspaceAfterLink = (document.getElementById('unlinkWhenBackspaceAfterLinkCheckbox') as HTMLInputElement).checked;
         features.defaultShortcut = (document.getElementById('defaultShortcutCheckbox') as HTMLInputElement).checked;
         features.smartOrderedList = (document.getElementById('smartOrderedListCheckbox') as HTMLInputElement).checked;
         plugins.push(new ContentEdit(features));

@@ -1,3 +1,4 @@
+import { contains, getTagOfNode } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     ContentChangedEvent,
@@ -8,7 +9,6 @@ import {
     ExtractContentEvent,
     PositionType,
 } from 'roosterjs-editor-types';
-import { contains, getTagOfNode } from 'roosterjs-editor-dom';
 
 const BEGIN_TAG = 'RoosterJsImageResizingBegin';
 const END_TAG = 'RoosterJsImageResizingEnd';

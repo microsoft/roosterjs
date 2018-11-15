@@ -1,4 +1,4 @@
-import { HyperLink, Paste, ContentEdit } from 'roosterjs-editor-plugins';
+import { ContentEdit, HyperLink, Paste } from 'roosterjs-editor-plugins';
 import { Editor, EditorOptions, EditorPlugin } from 'roosterjs-editor-core';
 
 /**

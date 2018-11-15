@@ -1,4 +1,4 @@
-import { ChangeSource, PluginKeyboardEvent, PluginEvent } from 'roosterjs-editor-types';
+import { ChangeSource, PluginEvent, PluginKeyboardEvent } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -79,6 +79,12 @@ interface ContentEditFeatures {
     defaultShortcut: boolean;
 
     /**
+     * Unlink when backspace right after a hyperlink
+     * @default false
+     */
+    unlinkWhenBackspaceAfterLink: boolean;
+
+    /**
      * When generate ordered list, the list bullet will variare according its nesting level, in a loop of '1', 'a', 'i'
      * @default false
      */
@@ -110,6 +116,7 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         tabInTable: true,
         upDownInTable: true,
         defaultShortcut: true,
+        unlinkWhenBackspaceAfterLink: false,
         smartOrderedList: false,
         smartOrderedListStyles: ['lower-alpha', 'lower-roman', 'decimal'],
     };
@@ -118,7 +125,7 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
 export interface GenericContentEditFeature<TEvent extends PluginEvent> {
     keys: number[];
     initialize?: (editor: Editor) => any;
-    isAvailable: (featureSet: ContentEditFeatures) => void;
+    featureFlag: keyof ContentEditFeatures;
     shouldHandleEvent: (event: TEvent, editor: Editor) => any;
     handleEvent: (event: TEvent, editor: Editor) => ChangeSource | void;
     allowFunctionKeys?: boolean;

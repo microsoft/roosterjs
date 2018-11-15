@@ -79,17 +79,31 @@ class HelloRooster implements EditorPlugin {
 
 ## Installation
 
-Install via NPM:
+Install via NPM or Yarn:
+
+`yarn add roosterjs`
+
+or
 
 `npm install roosterjs --save`
 
 You can also install sub packages separately:
+
+`yarn add roosterjs-editor-core`
+`yarn add roosterjs-editor-api`
+`...`
+
+or
 
 `npm install roosterjs-editor-core --save`
 `npm install roosterjs-editor-api --save`
 `...`
 
 In order to run the code below, you may also need to install [webpack](https://webpack.js.org/):
+
+`yarn add webpack -g`
+
+or
 
 `npm install webpack -g`
 
@@ -172,16 +186,28 @@ document.getElementById('buttonU').addEventListener('click', function() {
 
 To use the sample editor, follow these instructions:
 
-1. Get dependencies using [yarn](https://yarnpkg.com):
+1. Get dependencies using [yarn](https://yarnpkg.com) or [npm](https://www.npmjs.com/):
 
    ```cmd
    yarn
+   ```
+   
+   or
+   
+    ```cmd
+   npm install
    ```
 
 2. Build the source code, and start the sample editor:
 
    ```
    yarn start
+   ```
+   
+   or
+   
+   ```
+   npm start
    ```
 
 3. Navigate to the sample editor at http://localhost:3000/publish/samplesite/sample.htm
@@ -191,3 +217,8 @@ To use the sample editor, follow these instructions:
 We are still working on more documentation in [roosterjs wiki](https://github.com/Microsoft/roosterjs/wiki).
 
 ## License - MIT
+
+License
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+Licensed under the [MIT](LICENSE) License.

@@ -1,5 +1,5 @@
 import execCommand from './execCommand';
-import { Alignment, DocumentCommand, ChangeSource, QueryScope } from 'roosterjs-editor-types';
+import { Alignment, ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**

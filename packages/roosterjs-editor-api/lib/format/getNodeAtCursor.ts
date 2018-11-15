@@ -1,6 +1,6 @@
-import { Editor, cacheGetEventData } from 'roosterjs-editor-core';
+import { cacheGetEventData, Editor } from 'roosterjs-editor-core';
+import { getElementOrParentElement, getTagOfNode } from 'roosterjs-editor-dom';
 import { PluginEvent } from 'roosterjs-editor-types';
-import { getTagOfNode, getElementOrParentElement } from 'roosterjs-editor-dom';
 
 /**
  * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node

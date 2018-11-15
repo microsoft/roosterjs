@@ -1,5 +1,5 @@
-import { Editor } from 'roosterjs-editor-core';
 import { ChangeSource, QueryScope } from 'roosterjs-editor-types';
+import { Editor } from 'roosterjs-editor-core';
 
 /**
  * Set image alt text for all selected images at selection. If no images is contained

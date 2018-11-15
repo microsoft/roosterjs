@@ -1,6 +1,5 @@
-import Position from '../selection/Position';
-import isEditorPointAfter from '../utils/isEditorPointAfter';
-import { BlockElement, EditorPoint, InlineElement } from 'roosterjs-editor-types';
+import { BlockElement, EditorPoint, InlineElement, NodePosition } from 'roosterjs-editor-types';
+import { toEditorPoint } from '../deprecated/positionUtils';
 
 /**
  * Represents an empty InlineElement.
@@ -8,7 +7,7 @@ import { BlockElement, EditorPoint, InlineElement } from 'roosterjs-editor-types
  * An empty InlineElement means current position is at the end of a tag so nothing is included inside this element
  */
 export default class EmptyInlineElement implements InlineElement {
-    constructor(private position: Position, private parentBlock: BlockElement) {}
+    constructor(private position: NodePosition, private parentBlock: BlockElement) {}
 
     /**
      * Get the text content of this inline element
@@ -34,21 +33,14 @@ export default class EmptyInlineElement implements InlineElement {
     /**
      * Get the start position of this inline element
      */
-    getStartPoint(): EditorPoint {
-        return this.position.toEditorPoint();
+    getStartPosition(): NodePosition {
+        return this.position;
     }
 
     /**
      * Get the end position of this inline element
      */
-    getEndPoint(): EditorPoint {
-        return this.position.toEditorPoint();
-    }
-
-    /**
-     * Get the position of this inline element
-     */
-    getPosition(): Position {
+    getEndPosition(): NodePosition {
         return this.position;
     }
 
@@ -56,7 +48,7 @@ export default class EmptyInlineElement implements InlineElement {
      * Checks if the given inline element is after this inline element
      */
     isAfter(inlineElement: InlineElement): boolean {
-        return isEditorPointAfter(this.position.toEditorPoint(), inlineElement.getEndPoint());
+        return inlineElement && this.position.isAfter(inlineElement.getEndPosition());
     }
 
     /**
@@ -76,9 +68,21 @@ export default class EmptyInlineElement implements InlineElement {
     /**
      * Apply inline style to a region of an inline element.
      */
-    applyStyle(
-        styler: (element: HTMLElement) => any,
-        fromPoint?: EditorPoint,
-        toPoint?: EditorPoint
-    ): void {}
+    applyStyle(styler: (element: HTMLElement) => any): void {}
+
+    /**
+     * @deprecated
+     * Get the start position of this inline element
+     */
+    getStartPoint(): EditorPoint {
+        return toEditorPoint(this.position);
+    }
+
+    /**
+     * @deprecated
+     * Get the end position of this inline element
+     */
+    getEndPoint(): EditorPoint {
+        return toEditorPoint(this.position);
+    }
 }

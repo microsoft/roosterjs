@@ -1,6 +1,6 @@
 import * as DomTestHelper from '../DomTestHelper';
-import { getBlockElementAtNode } from '../../blockElements/BlockElement';
 import { BlockElement } from 'roosterjs-editor-types';
+import { getBlockElementAtNode } from '../../blockElements/BlockElement';
 
 let testID = 'getBlockElement';
 

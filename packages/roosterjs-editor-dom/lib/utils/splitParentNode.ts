@@ -1,4 +1,4 @@
-import isNodeEmpty from './isNodeEmpty';
+import isNodeAfter from './isNodeAfter';
 
 /**
  * Split parent node of the given node before/after the given node.
@@ -11,13 +11,14 @@ import isNodeEmpty from './isNodeEmpty';
  * we remove it. @default false
  * @returns The new parent node
  */
-export default function splitParentNode(
-    node: Node,
-    splitBefore: boolean,
-    removeEmptyNewNode?: boolean
-): Node {
+export default function splitParentNode(node: Node, splitBefore: boolean): Node {
+    if (!node || !node.parentNode) {
+        return null;
+    }
+
     let parentNode = node.parentNode;
-    let newParent = parentNode.cloneNode(false /*deep*/);
+    let newParent = parentNode.cloneNode(false /*deep*/) as HTMLElement;
+    newParent.removeAttribute('id');
     if (splitBefore) {
         while (parentNode.firstChild && parentNode.firstChild != node) {
             newParent.appendChild(parentNode.firstChild);
@@ -29,7 +30,7 @@ export default function splitParentNode(
     }
 
     // When the only child of new parent is ZERO_WIDTH_SPACE, we can still prevent keeping it by set removeEmptyNewNode to true
-    if (newParent.firstChild && !(removeEmptyNewNode && isNodeEmpty(newParent))) {
+    if (newParent.firstChild && newParent.innerHTML != '') {
         parentNode.parentNode.insertBefore(
             newParent,
             splitBefore ? parentNode : parentNode.nextSibling
@@ -43,8 +44,8 @@ export default function splitParentNode(
 
 /**
  * Split parent node by a balanced node range
- * @param start Start node
- * @param end End node
+ * @param nodes The nodes to split from. If only one node is passed, split it from all its siblings.
+ * If two or nodes are passed, will split before the first one and after the last one, all other nodes will be ignored
  * @returns The parent node of the given node range if the given nodes are balanced, otherwise null
  */
 export function splitBalancedNodeRange(nodes: Node | Node[]): HTMLElement {
@@ -52,6 +53,11 @@ export function splitBalancedNodeRange(nodes: Node | Node[]): HTMLElement {
     let end = nodes instanceof Array ? nodes[nodes.length - 1] : nodes;
     let parentNode = start && end && start.parentNode == end.parentNode ? start.parentNode : null;
     if (parentNode) {
+        if (isNodeAfter(start, end)) {
+            let temp = end;
+            end = start;
+            start = temp;
+        }
         splitParentNode(start, true /*splitBefore*/);
         splitParentNode(end, false /*splitBefore*/);
     }

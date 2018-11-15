@@ -1,4 +1,4 @@
-import { getNewFontSize, FONT_SIZES } from '../../format/changeFontSize';
+import { FONT_SIZES, getNewFontSize } from '../../format/changeFontSize';
 
 describe('changeFontSize()', () => {
     function runTest(currentSize: number, isIncrease: boolean, expectedSize: number) {

@@ -38,18 +38,19 @@ export { default as PluginEvent } from './event/PluginEvent';
 export { default as PluginEventType } from './event/PluginEventType';
 
 // Interface
+export { default as BlockElement } from './interface/BlockElement';
 export { default as ClipboardData } from './interface/ClipboardData';
 export { default as DefaultFormat } from './interface/DefaultFormat';
 export { default as FormatState } from './interface/FormatState';
+export { default as InlineElement } from './interface/InlineElement';
 export { default as InsertOption } from './interface/InsertOption';
 export { default as LinkData } from './interface/LinkData';
+export { default as NodePosition } from './interface/NodePosition';
 export { default as Rect } from './interface/Rect';
 export { default as TableFormat } from './interface/TableFormat';
 export { default as UndoSnapshot } from './interface/UndoSnapshot';
 
 // Legacy
-export { default as BlockElement } from './legacy/BlockElement';
 export { default as ContentScope } from './legacy/ContentScope';
 export { default as EditorPoint, NodeBoundary } from './legacy/EditorPoint';
-export { default as InlineElement } from './legacy/InlineElement';
 export { default as ListState } from './legacy/ListState';

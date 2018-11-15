@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "../../dist/roosterjs-html-sanitizer",
+    "sourceMap": true,
+    "declaration": true,
+    "removeComments": false,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "preserveConstEnums": true,
+    "baseUrl": "../../",
+    "paths": {
+      "*": [
+        "*",
+        "dist/*"
+      ]
+    },
+    "rootDir": ".",
+    "lib": [
+      "es6",
+      "dom"
+    ]
+  },
+  "include": [
+    "lib/**/*.ts"
+  ]
+}

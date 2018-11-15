@@ -1,7 +1,18 @@
+import { cacheGetContentSearcher, Editor } from 'roosterjs-editor-core';
 import { ContentEditFeature, GenericContentEditFeature, Keys } from '../ContentEditFeatures';
-import { Editor, cacheGetContentSearcher } from 'roosterjs-editor-core';
-import { Indentation, PluginKeyboardEvent, ContentChangedEvent } from 'roosterjs-editor-types';
-import { Browser, Position, getTagOfNode, isNodeEmpty } from 'roosterjs-editor-dom';
+import {
+    ContentChangedEvent,
+    Indentation,
+    PluginKeyboardEvent,
+    PositionType,
+} from 'roosterjs-editor-types';
+import {
+    Browser,
+    Position,
+    getTagOfNode,
+    isNodeEmpty,
+    isPositionAtBeginningOf,
+} from 'roosterjs-editor-dom';
 import {
     cacheGetNodeAtCursor,
     getNodeAtCursor,
@@ -9,7 +20,6 @@ import {
     toggleBullet,
     toggleNumbering,
 } from 'roosterjs-editor-api';
-import { PositionType } from 'roosterjs-editor-types';
 
 export const IndentWhenTab: ContentEditFeature = {
     keys: [Keys.TAB],
@@ -19,7 +29,7 @@ export const IndentWhenTab: ContentEditFeature = {
         setIndentation(editor, Indentation.Increase);
         event.rawEvent.preventDefault();
     },
-    isAvailable: featureSet => featureSet.indentWhenTab,
+    featureFlag: 'indentWhenTab',
 };
 
 export const OutdentWhenShiftTab: ContentEditFeature = {
@@ -30,7 +40,7 @@ export const OutdentWhenShiftTab: ContentEditFeature = {
         setIndentation(editor, Indentation.Decrease);
         event.rawEvent.preventDefault();
     },
-    isAvailable: featureSet => featureSet.outdentWhenShiftTab,
+    featureFlag: 'outdentWhenShiftTab',
 };
 
 export const MergeInNewLine: ContentEditFeature = {
@@ -38,7 +48,7 @@ export const MergeInNewLine: ContentEditFeature = {
     shouldHandleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');
         let range = editor.getSelectionRange();
-        return li && range && Position.getStart(range).isAtBeginningOf(li);
+        return li && range && isPositionAtBeginningOf(Position.getStart(range), li);
     },
     handleEvent: (event, editor) => {
         let li = cacheGetNodeAtCursor(editor, event, 'LI');
@@ -52,7 +62,7 @@ export const MergeInNewLine: ContentEditFeature = {
             toggleListAndPreventDefault(event, editor);
         }
     },
-    isAvailable: featureSet => featureSet.mergeInNewLineWhenBackspaceOnFirstChar,
+    featureFlag: 'mergeInNewLineWhenBackspaceOnFirstChar',
 };
 
 export const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
@@ -62,7 +72,7 @@ export const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
         return li && isNodeEmpty(li) && !li.previousSibling;
     },
     handleEvent: toggleListAndPreventDefault,
-    isAvailable: featureSet => featureSet.outdentWhenBackspaceOnEmptyFirstLine,
+    featureFlag: 'outdentWhenBackspaceOnEmptyFirstLine',
 };
 
 export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
@@ -74,7 +84,7 @@ export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
     handleEvent: (event, editor) => {
         editor.performAutoComplete(() => toggleListAndPreventDefault(event, editor));
     },
-    isAvailable: featureSet => featureSet.outdentWhenEnterOnEmptyLine,
+    featureFlag: 'outdentWhenEnterOnEmptyLine',
 };
 
 export const AutoBullet: ContentEditFeature = {
@@ -108,9 +118,9 @@ export const AutoBullet: ContentEditFeature = {
                     rangeToDelete.deleteContents();
                 }
 
-                // If not explicitly insert br, Chrome will operate on the previous line
+                // If not explicitly insert br, Chrome/Safari/IE will operate on the previous line
                 let tempBr = editor.getDocument().createElement('BR');
-                if (Browser.isChrome || Browser.isSafari) {
+                if (Browser.isChrome || Browser.isSafari || Browser.isIE11OrGreater) {
                     editor.insertNode(tempBr);
                 }
 
@@ -124,7 +134,7 @@ export const AutoBullet: ContentEditFeature = {
             });
         });
     },
-    isAvailable: featureSet => featureSet.autoBullet,
+    featureFlag: 'autoBullet',
 };
 
 export function getSmartOrderedList(
@@ -143,7 +153,7 @@ export function getSmartOrderedList(
                     styles[(styles.indexOf(parentOl.style.listStyle) + 1) % styles.length];
             }
         },
-        isAvailable: featureSet => featureSet.smartOrderedList,
+        featureFlag: 'smartOrderedList',
     };
 }
 

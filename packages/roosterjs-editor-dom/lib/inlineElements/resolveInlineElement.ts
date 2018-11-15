@@ -1,8 +1,8 @@
+import getTagOfNode from '../utils/getTagOfNode';
 import ImageInlineElement from './ImageInlineElement';
 import LinkInlineElement from './LinkInlineElement';
 import NodeInlineElement from './NodeInlineElement';
 import TextInlineElement from './TextInlineElement';
-import getTagOfNode from '../utils/getTagOfNode';
 import { BlockElement, InlineElement, NodeType } from 'roosterjs-editor-types';
 
 /**

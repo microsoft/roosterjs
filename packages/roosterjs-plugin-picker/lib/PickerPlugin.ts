@@ -1,8 +1,9 @@
+import { Browser, createRange, PartialInlineElement } from 'roosterjs-editor-dom';
+import { cacheGetContentSearcher, Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
-import { Editor, EditorPlugin, cacheGetContentSearcher } from 'roosterjs-editor-core';
-import { Browser, PartialInlineElement } from 'roosterjs-editor-dom';
 import {
+    NodePosition,
     PluginKeyboardEvent,
     PluginEvent,
     PluginEventType,
@@ -124,17 +125,15 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
 
     private getRangeUntilAt(event: PluginKeyboardEvent): Range {
         let PositionContentSearcher = cacheGetContentSearcher(event, this.editor);
-        let range = this.editor.getDocument().createRange();
+        let startPos: NodePosition;
+        let endPos: NodePosition;
         PositionContentSearcher.forEachTextInlineElement(textInline => {
             let hasMatched = false;
             let nodeContent = textInline.getTextContent();
             let nodeIndex = nodeContent ? nodeContent.length : -1;
             while (nodeIndex >= 0) {
                 if (nodeContent[nodeIndex] == this.pickerOptions.triggerCharacter) {
-                    range.setStart(
-                        textInline.getContainerNode(),
-                        textInline.getStartPoint().offset + nodeIndex
-                    );
+                    startPos = textInline.getStartPosition().move(nodeIndex);
                     hasMatched = true;
                     break;
                 }
@@ -142,12 +141,12 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
             }
 
             if (hasMatched) {
-                range.setEnd(textInline.getContainerNode(), textInline.getEndPoint().offset);
+                endPos = textInline.getEndPosition();
             }
 
             return hasMatched;
         });
-        return range;
+        return createRange(startPos, endPos) || this.editor.getDocument().createRange();
     }
 
     private onKeyUpDomEvent(event: PluginKeyboardEvent) {

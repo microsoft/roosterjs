@@ -17,7 +17,7 @@ describe('setImageAltText()', () => {
         TestHelper.removeElement(testID);
     });
 
-    xit('adds altText in the image', () => {
+    it('adds altText in the image', () => {
         // Arrange
         editor.setContent(originalContent);
         setSelectionForImageNode(document.getElementsByTagName('img')[0]);

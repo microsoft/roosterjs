@@ -1,4 +1,4 @@
-import { Editor, cacheGetEventData, clearEventDataCache } from 'roosterjs-editor-core';
+import { cacheGetEventData, clearEventDataCache, Editor } from 'roosterjs-editor-core';
 import { InlineElement, PluginEvent } from 'roosterjs-editor-types';
 import { PositionContentSearcher } from 'roosterjs-editor-dom';
 

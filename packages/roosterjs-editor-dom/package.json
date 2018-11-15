@@ -2,7 +2,8 @@
   "name": "roosterjs-editor-dom",
   "description": "Object Model for roosterjs",
   "dependencies": {
-    "roosterjs-editor-types": ""
+    "roosterjs-editor-types": "",
+    "roosterjs-html-sanitizer": ""
   },
   "main": "./lib/index.ts"
 }

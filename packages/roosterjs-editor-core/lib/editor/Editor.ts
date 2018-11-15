@@ -1,6 +1,6 @@
+import createEditorCore from './createEditorCore';
 import EditorCore from './EditorCore';
 import EditorOptions from './EditorOptions';
-import createEditorCore from './createEditorCore';
 import {
     BlockElement,
     ChangeSource,
@@ -11,6 +11,7 @@ import {
     ExtractContentEvent,
     InlineElement,
     InsertOption,
+    NodePosition,
     PluginEvent,
     PluginEventType,
     PositionType,
@@ -27,6 +28,7 @@ import {
     contains,
     fromHtml,
     getBlockElementAtNode,
+    getPositionRect,
     getInlineElementAtNode,
     getTagOfNode,
     isNodeEmpty,
@@ -93,8 +95,12 @@ export default class Editor {
         // 7. Disable these operations for firefox since its behavior is usually wrong
         // Catch any possible exception since this should not block the initialization of editor
         try {
-            this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, <string><any>false);
-            this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <string><any>false);
+            this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, <string>(
+                (<any>false)
+            ));
+            this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <
+                string
+            >(<any>false));
         } catch (e) {}
 
         // 8. Finally, let plugins know that we are ready
@@ -198,11 +204,10 @@ export default class Editor {
     /**
      * Get InlineElement at given node
      * @param node The node to create InlineElement
-     * @param forceAtNode Force to get a NodeInlineElement at the given node
      * @returns The InlineElement result
      */
-    public getInlineElementAtNode(node: Node, forceAtNode?: boolean): InlineElement {
-        return getInlineElementAtNode(this.core.contentDiv, node, forceAtNode);
+    public getInlineElementAtNode(node: Node): InlineElement {
+        return getInlineElementAtNode(this.core.contentDiv, node);
     }
 
     /**
@@ -438,7 +443,7 @@ export default class Editor {
      * @param position The position to select
      * @returns True if content is selected, otherwise false
      */
-    public select(position: Position): boolean;
+    public select(position: NodePosition): boolean;
 
     /**
      * Select content by a start and end position
@@ -446,7 +451,7 @@ export default class Editor {
      * @param end The end position to select, if this is the same with start, the selection will be collapsed
      * @returns True if content is selected, otherwise false
      */
-    public select(start: Position, end: Position): boolean;
+    public select(start: NodePosition, end: NodePosition): boolean;
 
     /**
      * Select content by node
@@ -539,7 +544,7 @@ export default class Editor {
         }
 
         let position = new Position(selection.focusNode, selection.focusOffset);
-        return position.getRect();
+        return getPositionRect(position);
     }
 
     //#endregion
@@ -618,7 +623,7 @@ export default class Editor {
      * a ContentChangedEvent will be fired with change source equal to this value
      */
     public addUndoSnapshot(
-        callback?: (start: Position, end: Position, snapshotBeforeCallback: UndoSnapshot) => any,
+        callback?: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: UndoSnapshot) => any,
         changeSource?: ChangeSource | string
     ) {
         this.core.api.editWithUndo(this.core, callback, changeSource);
@@ -801,59 +806,6 @@ export default class Editor {
         }
 
         return null;
-    }
-
-    /**
-     * @deprecated This function will be moved to roosterjs-editor-api in next major release
-     * Apply inline style to current selection
-     * @param callback The callback function to apply style
-     */
-    public applyInlineStyle(callback: (element: HTMLElement) => any) {
-        this.focus();
-        let range = this.getSelectionRange();
-
-        if (range && range.collapsed) {
-            let tempNode = range.startContainer;
-            let ZWS = '\u200B';
-            let isZWSNode =
-                tempNode &&
-                tempNode.nodeType == NodeType.Text &&
-                tempNode.nodeValue == ZWS &&
-                getTagOfNode(tempNode.parentNode) == 'SPAN';
-
-            if (!isZWSNode) {
-                this.addUndoSnapshot();
-                // Create a new text node to hold the selection.
-                // Some content is needed to position selection into the span
-                // for here, we inject ZWS - zero width space
-                tempNode = this.getDocument().createTextNode(ZWS);
-                range.insertNode(tempNode);
-            }
-
-            this.getInlineElementAtNode(tempNode, true /*forceAtNode*/).applyStyle(callback);
-            this.select(tempNode, PositionType.End);
-        } else {
-            // This is start and end node that get the style. The start and end needs to be recorded so that selection
-            // can be re-applied post-applying style
-            this.addUndoSnapshot(() => {
-                let firstNode: Node;
-                let lastNode: Node;
-                let contentTraverser = this.getSelectionTraverser();
-                let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
-                while (inlineElement) {
-                    let nextInlineElement = contentTraverser.getNextInlineElement();
-                    inlineElement.applyStyle(element => {
-                        callback(element);
-                        firstNode = firstNode || element;
-                        lastNode = element;
-                    });
-                    inlineElement = nextInlineElement;
-                }
-                if (firstNode && lastNode) {
-                    this.select(firstNode, PositionType.Before, lastNode, PositionType.After);
-                }
-            }, ChangeSource.Format);
-        }
     }
 
     //#endregion

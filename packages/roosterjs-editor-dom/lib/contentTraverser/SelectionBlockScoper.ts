@@ -1,9 +1,9 @@
+import EmptyInlineElement from '../inlineElements/EmptyInlineElement';
 import Position from '../selection/Position';
 import TraversingScoper from './TraversingScoper';
-import { BlockElement, ContentPosition, InlineElement } from 'roosterjs-editor-types';
+import { BlockElement, ContentPosition, InlineElement, NodePosition } from 'roosterjs-editor-types';
 import { getBlockElementAtNode } from '../blockElements/BlockElement';
 import { getInlineElementAfter } from '../inlineElements/getInlineElementBeforeAfter';
-import EmptyInlineElement from '../inlineElements/EmptyInlineElement';
 
 /**
  * This provides traversing content in a selection start block
@@ -13,7 +13,7 @@ import EmptyInlineElement from '../inlineElements/EmptyInlineElement';
  */
 class SelectionBlockScoper implements TraversingScoper {
     private block: BlockElement;
-    private position: Position;
+    private position: NodePosition;
 
     /**
      * Create a new instance of SelectionBlockScoper class
@@ -23,7 +23,7 @@ class SelectionBlockScoper implements TraversingScoper {
      */
     constructor(
         public rootNode: Node,
-        position: Position | Range,
+        position: NodePosition | Range,
         private startFrom: ContentPosition
     ) {
         position = position instanceof Range ? Position.getStart(position) : position;

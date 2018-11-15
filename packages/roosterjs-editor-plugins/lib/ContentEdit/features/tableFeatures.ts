@@ -1,8 +1,8 @@
+import { cacheGetNodeAtCursor, getNodeAtCursor } from 'roosterjs-editor-api';
+import { contains, getTagOfNode, VTable } from 'roosterjs-editor-dom';
 import { ContentEditFeature, Keys } from '../ContentEditFeatures';
 import { Editor } from 'roosterjs-editor-core';
 import { PluginEvent, PositionType } from 'roosterjs-editor-types';
-import { VTable, contains, getTagOfNode } from 'roosterjs-editor-dom';
-import { cacheGetNodeAtCursor, getNodeAtCursor } from 'roosterjs-editor-api';
 
 export const TabInTable: ContentEditFeature = {
     keys: [Keys.TAB],
@@ -34,7 +34,7 @@ export const TabInTable: ContentEditFeature = {
         }
         event.rawEvent.preventDefault();
     },
-    isAvailable: featureSet => featureSet.tabInTable,
+    featureFlag: 'tabInTable',
 };
 
 export const UpDownInTable: ContentEditFeature = {
@@ -69,7 +69,7 @@ export const UpDownInTable: ContentEditFeature = {
             }
         });
     },
-    isAvailable: featureSet => featureSet.upDownInTable,
+    featureFlag: 'upDownInTable',
 };
 
 function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellElement {

@@ -6,11 +6,11 @@ import {
     ChangeSource,
     DefaultFormat,
     InsertOption,
+    NodePosition,
     PluginEvent,
     PluginEventType,
     UndoSnapshot,
 } from 'roosterjs-editor-types';
-import { Position } from 'roosterjs-editor-dom';
 
 /**
  * Represents the core data structure of an editor

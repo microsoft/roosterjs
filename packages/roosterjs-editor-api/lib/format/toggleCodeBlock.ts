@@ -1,6 +1,6 @@
+import toggleTagCore from './toggleTagCore';
 import { Editor } from 'roosterjs-editor-core';
 import { getTagOfNode, unwrap, wrap } from 'roosterjs-editor-dom';
-import toggleTagCore from './toggleTagCore';
 
 const PRE_TAG = 'pre';
 const CODE_TAG = 'code';

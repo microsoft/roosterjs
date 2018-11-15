@@ -1,7 +1,7 @@
 import EditorCore, { Select } from '../editor/EditorCore';
 import hasFocus from './hasFocus';
-import { Browser, Position, contains, createRange } from 'roosterjs-editor-dom';
-import { PositionType } from 'roosterjs-editor-types';
+import { Browser, contains, createRange, Position } from 'roosterjs-editor-dom';
+import { NodePosition, PositionType } from 'roosterjs-editor-types';
 
 const select: Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => {
     let range: Range;
@@ -14,8 +14,8 @@ const select: Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg
         if (arg1.node) {
             range = createRange(new Position(arg1), arg2 && arg2.node ? new Position(arg2) : null);
         } else if (arg1 instanceof Node) {
-            let start: Position;
-            let end: Position;
+            let start: NodePosition;
+            let end: NodePosition;
             if (arg2 == undefined) {
                 start = new Position(<Node>arg1, PositionType.Before);
                 end = new Position(<Node>arg1, PositionType.After);

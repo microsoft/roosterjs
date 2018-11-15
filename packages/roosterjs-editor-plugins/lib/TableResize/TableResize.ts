@@ -1,5 +1,5 @@
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { contains, fromHtml, getComputedStyle, VTable } from 'roosterjs-editor-dom';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { getNodeAtCursor } from 'roosterjs-editor-api';
 import {
     ContentPosition,
@@ -194,6 +194,7 @@ export default class TableResize implements EditorPlugin {
     private setTableColumnWidth(width: string) {
         let vtable = new VTable(this.td);
         vtable.table.style.width = '';
+        vtable.table.width = '';
         vtable.forEachCellOfCurrentColumn(cell => {
             if (cell.td) {
                 cell.td.style.width = cell.td == this.td ? width : '';

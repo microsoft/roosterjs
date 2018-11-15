@@ -1,33 +1,26 @@
-import NodeInlineElement from '../inlineElements/NodeInlineElement';
-import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import collapseNodes from '../utils/collapseNodes';
 import contains from '../utils/contains';
 import createRange from '../selection/createRange';
 import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import isNodeAfter from '../utils/isNodeAfter';
+import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import resolveInlineElement from '../inlineElements/resolveInlineElement';
 import wrap from '../utils/wrap';
 import { BlockElement, InlineElement } from 'roosterjs-editor-types';
-import { getFirstLeafNode, getLastLeafNode } from '../domWalker/getLeafNode';
-import { getLeafSibling } from '../domWalker/getLeafSibling';
+import { getFirstLeafNode, getLastLeafNode } from '../utils/getLeafNode';
+import { getLeafSibling } from '../utils/getLeafSibling';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
 
 /**
  * Get the inline element at a node
  * @param rootNode The root node of current scope
  * @param node The node to get InlineElement from
- * @param forceAtNode Force to get a NodeInlineElement at the given node
  */
-function getInlineElementAtNode(rootNode: Node, node: Node, forceAtNode?: boolean): InlineElement {
+function getInlineElementAtNode(rootNode: Node, node: Node): InlineElement {
     // An inline element has to be in a block element, get the block first and then resolve through the factory
     let parentBlock = node ? getBlockElementAtNode(rootNode, node) : null;
-    return (
-        parentBlock &&
-        (forceAtNode
-            ? new NodeInlineElement(node, parentBlock)
-            : resolveInlineElement(node, rootNode, parentBlock))
-    );
+    return parentBlock && resolveInlineElement(node, rootNode, parentBlock);
 }
 
 // Get first inline element
@@ -77,13 +70,23 @@ class NodeBlockElement implements BlockElement {
     private firstInline: InlineElement;
     private lastInline: InlineElement;
 
-    constructor(private containerNode: Node) {}
+    constructor(private element: HTMLElement) {}
 
     /**
+     * Collapse this element to a single DOM element.
+     * If the content nodes are separated in different root nodes, wrap them to a single node
+     * If the content nodes are included in root node with other nodes, split root node
+     */
+    public collapseToSingleElement(): HTMLElement {
+        return this.element;
+    }
+
+    /**
+     * @deprecated
      * Get the text content in the block
      */
     public getTextContent(): string {
-        return this.containerNode.textContent;
+        return this.element.textContent;
     }
 
     /**
@@ -91,7 +94,7 @@ class NodeBlockElement implements BlockElement {
      * For NodeBlockElement, start and end essentially refers to same node
      */
     public getStartNode(): Node {
-        return this.containerNode;
+        return this.element;
     }
 
     /**
@@ -99,39 +102,43 @@ class NodeBlockElement implements BlockElement {
      * For NodeBlockElement, start and end essentially refers to same node
      */
     public getEndNode(): Node {
-        return this.containerNode;
+        return this.element;
     }
 
     /**
+     * @deprecated
      * Get all nodes represented in a Node array
      */
     public getContentNodes(): Node[] {
-        return [this.containerNode];
+        return [this.element];
     }
 
     /**
+     * @deprecated
      * Get the first inline element in the block
      */
     public getFirstInlineElement(): InlineElement {
         if (!this.firstInline) {
-            this.firstInline = getFirstInlineElement(this.containerNode);
+            this.firstInline = getFirstInlineElement(this.element);
         }
 
         return this.firstInline;
     }
 
     /**
+     * @deprecated
      * Get the last inline element in the block
      */
     public getLastInlineElement(): InlineElement {
         if (!this.lastInline) {
-            this.lastInline = getLastInlineElement(this.containerNode);
+            this.lastInline = getLastInlineElement(this.element);
         }
 
         return this.lastInline;
     }
 
     /**
+     * @deprecated
      * Gets all inline in the block
      */
     public getInlineElements(): InlineElement[] {
@@ -139,11 +146,7 @@ class NodeBlockElement implements BlockElement {
         let startInline = this.getFirstInlineElement();
         while (startInline) {
             allInlines.push(startInline);
-            startInline = getNextPreviousInlineElement(
-                this.containerNode,
-                startInline,
-                true /*isNext*/
-            );
+            startInline = getNextPreviousInlineElement(this.element, startInline, true /*isNext*/);
         }
 
         return allInlines;
@@ -154,7 +157,7 @@ class NodeBlockElement implements BlockElement {
      */
     public equals(blockElement: BlockElement): boolean {
         // Ideally there is only one unique way to generate a block so we only need to compare the startNode
-        return this.containerNode == blockElement.getStartNode();
+        return this.element == blockElement.getStartNode();
     }
 
     /**
@@ -162,10 +165,11 @@ class NodeBlockElement implements BlockElement {
      */
     public isAfter(blockElement: BlockElement): boolean {
         // if the block's startNode is after current node endEnd, we say it is after
-        return isNodeAfter(this.containerNode, blockElement.getEndNode());
+        return isNodeAfter(this.element, blockElement.getEndNode());
     }
 
     /**
+     * @deprecated
      * Checks if an inline element falls within the block
      */
     public isInBlock(inlineElement: InlineElement): boolean {
@@ -176,7 +180,7 @@ class NodeBlockElement implements BlockElement {
      * Checks if a certain html node is within the block
      */
     public contains(node: Node): boolean {
-        return contains(this.containerNode, node, true /*treatSameNodeAsContain*/);
+        return contains(this.element, node, true /*treatSameNodeAsContain*/);
     }
 }
 
@@ -194,7 +198,36 @@ class StartEndBlockElement implements BlockElement {
 
     constructor(private rootNode: Node, private startNode: Node, private endNode: Node) {}
 
+    static getBlockContext(node: Node): HTMLElement {
+        while (node && !isBlockElement(node)) {
+            node = node.parentNode;
+        }
+        return node as HTMLElement;
+    }
+
     /**
+     * Collapse this element to a single DOM element.
+     * If the content nodes are separated in different root nodes, wrap them to a single node
+     * If the content nodes are included in root node with other nodes, split root node
+     */
+    public collapseToSingleElement(): HTMLElement {
+        let nodes = collapseNodes(
+            StartEndBlockElement.getBlockContext(this.startNode),
+            this.startNode,
+            this.endNode,
+            true /*canSplitParent*/
+        );
+        let blockContext = StartEndBlockElement.getBlockContext(this.startNode);
+        while (nodes[0] && nodes[0] != blockContext && nodes[0].parentNode != this.rootNode) {
+            nodes = [splitBalancedNodeRange(nodes)];
+        }
+        return nodes.length == 1 && isBlockElement(nodes[0])
+            ? (nodes[0] as HTMLElement)
+            : wrap(nodes);
+    }
+
+    /**
+     * @deprecated
      * Gets the text content
      */
     public getTextContent(): string {
@@ -203,29 +236,16 @@ class StartEndBlockElement implements BlockElement {
     }
 
     /**
+     * @deprecated
      * Get all nodes represented in a Node array
      * This only works for balanced node -- start and end is at same level
      */
     public getContentNodes(): Node[] {
         return collapseNodes(
-            getBlockContext(this.startNode),
+            StartEndBlockElement.getBlockContext(this.startNode),
             this.startNode,
             this.endNode,
             true /*canSplitParent*/
-        );
-    }
-
-    /**
-     * Convert this block element to NodeBlockElement by splitting parent nodes
-     */
-    public toNodeBlockElement(): NodeBlockElement {
-        let nodes = this.getContentNodes();
-        let blockContext = getBlockContext(this.startNode);
-        while (nodes[0] && nodes[0] != blockContext && nodes[0].parentNode != this.rootNode) {
-            nodes = [splitBalancedNodeRange(nodes)];
-        }
-        return new NodeBlockElement(
-            nodes.length == 1 && isBlockElement(nodes[0]) ? nodes[0] : wrap(nodes)
         );
     }
 
@@ -244,6 +264,7 @@ class StartEndBlockElement implements BlockElement {
     }
 
     /**
+     * @deprecated
      * Gets first inline
      */
     public getFirstInlineElement(): InlineElement {
@@ -255,6 +276,7 @@ class StartEndBlockElement implements BlockElement {
     }
 
     /**
+     * @deprecated
      * Gets last inline
      */
     public getLastInlineElement(): InlineElement {
@@ -266,6 +288,7 @@ class StartEndBlockElement implements BlockElement {
     }
 
     /**
+     * @deprecated
      * Gets all inline in the block
      */
     public getInlineElements(): InlineElement[] {
@@ -297,6 +320,7 @@ class StartEndBlockElement implements BlockElement {
     }
 
     /**
+     * @deprecated
      * Checks if an inline falls inside me
      */
     public isInBlock(inlineElement: InlineElement): boolean {
@@ -315,27 +339,29 @@ class StartEndBlockElement implements BlockElement {
     }
 }
 
-// This produces a block element from a a node
-// It needs to account for various HTML structure. Examples:
-// 1) <ced><div>abc</div></ced>
-//   This is most common the case, user passes in a node pointing to abc, and get back a block representing <div>abc</div>
-// 2) <ced><p><br></p></ced>
-//   Common content for empty block for email client like OWA, user passes node pointing to <br>, and get back a block representing <p><br></p>
-// 3) <ced>abc</ced>
-//   Not common, but does happen. It is still a block in user's view. User passes in abc, and get back a start-end block representing abc
-//   NOTE: abc could be just one node. However, since it is not a html block, it is more appropriate to use start-end block although they point to same node
-// 4) <ced><div>abc<br>123</div></ced>
-//   A bit tricky, but can happen when user use Ctrl+Enter which simply inserts a <BR> to create a link break. There're two blocks:
-//   block1: 1) abc<br> block2: 123
-// 5) <ced><div>abc<div>123</div></div></ced>
-//   Nesting div and there is text node in same level as a DIV. Two blocks: 1) abc 2) <div>123</div>
-// 6) <ced<div>abc<span>123<br>456</span></div></ced>
-//   This is really tricky. Essentially there is a <BR> in middle of a span breaking the span into two blocks;
-//   block1: abc<span>123<br> block2: 456
-// In summary, given any arbitary node (leaf), to identify the head and tail of the block, following rules need to be followed:
-// 1) to identify the head, it needs to crawl DOM tre left/up till a block node or BR is encountered
-// 2) same for identifying tail
-// 3) should also apply a block ceiling, meaning as it crawls up, it should stop at a block node
+/**
+ * This produces a block element from a a node
+ * It needs to account for various HTML structure. Examples:
+ * 1) <ced><div>abc</div></ced>
+ *   This is most common the case, user passes in a node pointing to abc, and get back a block representing <div>abc</div>
+ * 2) <ced><p><br></p></ced>
+ *   Common content for empty block for email client like OWA, user passes node pointing to <br>, and get back a block representing <p><br></p>
+ * 3) <ced>abc</ced>
+ *   Not common, but does happen. It is still a block in user's view. User passes in abc, and get back a start-end block representing abc
+ *   NOTE: abc could be just one node. However, since it is not a html block, it is more appropriate to use start-end block although they point to same node
+ * 4) <ced><div>abc<br>123</div></ced>
+ *   A bit tricky, but can happen when user use Ctrl+Enter which simply inserts a <BR> to create a link break. There're two blocks:
+ *   block1: 1) abc<br> block2: 123
+ * 5) <ced><div>abc<div>123</div></div></ced>
+ *   Nesting div and there is text node in same level as a DIV. Two blocks: 1) abc 2) <div>123</div>
+ * 6) <ced<div>abc<span>123<br>456</span></div></ced>
+ *   This is really tricky. Essentially there is a <BR> in middle of a span breaking the span into two blocks;
+ *   block1: abc<span>123<br> block2: 456
+ * In summary, given any arbitary node (leaf), to identify the head and tail of the block, following rules need to be followed:
+ * 1) to identify the head, it needs to crawl DOM tre left/up till a block node or BR is encountered
+ * 2) same for identifying tail
+ * 3) should also apply a block ceiling, meaning as it crawls up, it should stop at a block node
+ */
 function getBlockElementAtNode(rootNode: Node, node: Node): BlockElement {
     if (!contains(rootNode, node)) {
         return null;
@@ -344,9 +370,9 @@ function getBlockElementAtNode(rootNode: Node, node: Node): BlockElement {
     // Identify the containing block. This serves as ceiling for traversing down below
     // NOTE: this container block could be just the rootNode,
     // which cannot be used to create block element. We will special case handle it later on
-    let containerBlockNode = getBlockContext(node);
+    let containerBlockNode = StartEndBlockElement.getBlockContext(node);
     if (containerBlockNode == node) {
-        return new NodeBlockElement(node);
+        return new NodeBlockElement(containerBlockNode);
     }
 
     // Find the head and leaf node in the block
@@ -384,7 +410,7 @@ function getBlockElementAtNode(rootNode: Node, node: Node): BlockElement {
 
         // If head and tail are same and it is a block element, create NodeBlock, otherwise start-end block
         return headNode == tailNode && isBlockElement(headNode)
-            ? new NodeBlockElement(headNode)
+            ? new NodeBlockElement(headNode as HTMLElement)
             : new StartEndBlockElement(rootNode, headNode, tailNode);
     }
 }
@@ -422,13 +448,6 @@ function findHeadTailLeafNode(node: Node, containerBlockNode: Node, isTail: bool
         result = node;
     }
     return result;
-}
-
-function getBlockContext(node: Node): Node {
-    while (node && !isBlockElement(node)) {
-        node = node.parentNode;
-    }
-    return node;
 }
 
 export {

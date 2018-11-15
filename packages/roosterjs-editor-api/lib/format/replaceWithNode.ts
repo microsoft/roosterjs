@@ -1,6 +1,6 @@
 import { Editor } from 'roosterjs-editor-core';
-import { PositionType } from 'roosterjs-editor-types';
 import { PositionContentSearcher } from 'roosterjs-editor-dom';
+import { PositionType } from 'roosterjs-editor-types';
 
 /**
  * Replace text before current selection with a node, current selection will be kept if possible

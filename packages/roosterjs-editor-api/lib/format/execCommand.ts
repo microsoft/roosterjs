@@ -1,4 +1,4 @@
-import { DocumentCommand, ChangeSource } from 'roosterjs-editor-types';
+import { ChangeSource, DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -16,7 +16,6 @@ export default function execCommand(editor: Editor, command: DocumentCommand) {
 
     let range = editor.getSelectionRange();
     if (range && range.collapsed) {
-        editor.addUndoSnapshot();
         formatter();
     } else {
         editor.addUndoSnapshot(formatter, ChangeSource.Format);
