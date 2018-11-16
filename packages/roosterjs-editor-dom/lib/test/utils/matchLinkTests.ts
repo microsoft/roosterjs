@@ -25,6 +25,16 @@ describe('defaultLinkMatchRules regular http links with extact match', () => {
         runMatchTestWithValidLink(link, { scheme: 'http', originalUrl: link, normalizedUrl: link });
     });
 
+    it('http://1drv.com/test', () => {
+        let link = 'http://1drv.com/test';
+        runMatchTestWithValidLink(link, { scheme: 'http', originalUrl: link, normalizedUrl: link });
+    });
+
+    it('www.1234.com/test', () => {
+        let link = 'www.1234.com/test';
+        runMatchTestWithValidLink(link, { scheme: 'http', originalUrl: link, normalizedUrl: 'http://' + link });
+    });
+
     it('http://www.lifewire.com/how-torrent-downloading-works-2483513', () => {
         let link = 'http://www.lifewire.com/how-torrent-downloading-works-2483513';
         runMatchTestWithValidLink(link, { scheme: 'http', originalUrl: link, normalizedUrl: link });
