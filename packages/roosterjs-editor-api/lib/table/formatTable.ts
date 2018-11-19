@@ -1,4 +1,3 @@
-import getNodeAtCursor from '../format/getNodeAtCursor';
 import { ChangeSource, TableFormat } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { VTable } from 'roosterjs-editor-dom';
@@ -14,7 +13,7 @@ export default function formatTable(
     format: Partial<TableFormat>,
     table?: HTMLTableElement
 ) {
-    table = table || (getNodeAtCursor(editor, 'TABLE') as HTMLTableElement);
+    table = table || (editor.getElementAtCursor('TABLE') as HTMLTableElement);
     if (table) {
         editor.addUndoSnapshot((start, end) => {
             let vtable = new VTable(table);

@@ -1,4 +1,4 @@
-import getElementOrParentElement from '../utils/getElementOrParentElement';
+import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import isNodeAfter from '../utils/isNodeAfter';
 import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
 
@@ -65,7 +65,7 @@ export default class Position implements NodePosition {
                 break;
         }
 
-        this.element = getElementOrParentElement(this.node);
+        this.element = findClosestElementAncestor(this.node);
     }
 
     /**

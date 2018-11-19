@@ -12,7 +12,7 @@ import {
 import {
     Browser,
     Position,
-    getElementOrParentElement,
+    findClosestElementAncestor,
     applyFormat,
     fromHtml,
     isNodeEmpty,
@@ -215,7 +215,7 @@ export default class CorePlugin implements EditorPlugin {
         if (
             range &&
             range.collapsed &&
-            getElementOrParentElement(range.startContainer) == this.contentDiv
+            findClosestElementAncestor(range.startContainer) == this.contentDiv
         ) {
             let position = this.ensureTypeInElement(Position.getStart(range));
             this.editor.select(position);

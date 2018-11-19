@@ -1,4 +1,4 @@
-import execCommand from './execCommand';
+import execCommand from '../utils/execCommand';
 import { DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 

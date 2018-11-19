@@ -25,5 +25,6 @@ export {
     cacheGetContentSearcher,
     clearContentSearcherCache,
 } from './eventApi/cacheGetContentSearcher';
+export { default as cacheGetElementAtCursor } from './eventApi/cacheGetElementAtCursor';
 
 export { buildSnapshot, restoreSnapshot } from './deprecated/snapshotUtils';

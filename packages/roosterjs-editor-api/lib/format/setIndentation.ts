@@ -1,5 +1,4 @@
-import getNodeAtCursor from './getNodeAtCursor';
-import processList from './processList';
+import processList from '../utils/processList';
 import { ChangeSource, DocumentCommand, Indentation, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
@@ -16,7 +15,7 @@ export default function setIndentation(editor: Editor, indentation: Indentation)
         indentation == Indentation.Increase ? DocumentCommand.Indent : DocumentCommand.Outdent;
     editor.addUndoSnapshot(() => {
         editor.focus();
-        let listNode = getNodeAtCursor(editor, ['OL', 'UL']);
+        let listNode = editor.getElementAtCursor('OL,UL');
         let newNode: Node;
 
         if (listNode) {

@@ -32,7 +32,11 @@ describe('defaultLinkMatchRules regular http links with extact match', () => {
 
     it('www.1234.com/test', () => {
         let link = 'www.1234.com/test';
-        runMatchTestWithValidLink(link, { scheme: 'http', originalUrl: link, normalizedUrl: 'http://' + link });
+        runMatchTestWithValidLink(link, {
+            scheme: 'http',
+            originalUrl: link,
+            normalizedUrl: 'http://' + link,
+        });
     });
 
     it('http://www.lifewire.com/how-torrent-downloading-works-2483513', () => {

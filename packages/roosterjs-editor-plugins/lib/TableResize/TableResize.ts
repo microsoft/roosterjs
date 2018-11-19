@@ -1,6 +1,5 @@
 import { contains, fromHtml, getComputedStyle, VTable } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { getNodeAtCursor } from 'roosterjs-editor-api';
 import {
     ContentPosition,
     PluginEvent,
@@ -70,8 +69,8 @@ export default class TableResize implements EditorPlugin {
 
     private calcAndShowHandle() {
         if (this.td) {
-            let tr = <HTMLTableRowElement>getNodeAtCursor(this.editor, 'TR', this.td);
-            let table = <HTMLTableElement>getNodeAtCursor(this.editor, 'TABLE', tr);
+            let tr = <HTMLTableRowElement>this.editor.getElementAtCursor('TR', this.td);
+            let table = <HTMLTableElement>this.editor.getElementAtCursor('TABLE', tr);
             if (tr && table) {
                 let [left, top] = this.getPosition(table);
                 let handle = this.getResizeHandle();
@@ -154,7 +153,7 @@ export default class TableResize implements EditorPlugin {
         let handle = this.getResizeHandle();
         handle.style.borderWidth = '0';
 
-        let table = getNodeAtCursor(this.editor, 'TABLE', this.td) as HTMLTableElement;
+        let table = this.editor.getElementAtCursor('TABLE', this.td) as HTMLTableElement;
         let cellPadding = parseInt(table.cellPadding);
         cellPadding = isNaN(cellPadding) ? 0 : cellPadding;
 

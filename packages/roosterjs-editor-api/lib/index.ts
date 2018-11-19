@@ -1,8 +1,3 @@
-export {
-    default as getNodeAtCursor,
-    cacheGetListElement,
-    cacheGetNodeAtCursor,
-} from './format/getNodeAtCursor';
 export { default as changeFontSize, FONT_SIZES } from './format/changeFontSize';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
@@ -47,3 +42,8 @@ export {
     validateAndGetRangeForTextBeforeCursor,
 } from './deprecated/replaceTextBeforeCursorWithNode';
 export { default as replaceRangeWithNode } from './deprecated/replaceRangeWithNode';
+export {
+    default as getNodeAtCursor,
+    cacheGetListElement,
+    cacheGetNodeAtCursor,
+} from './deprecated/getNodeAtCursor';

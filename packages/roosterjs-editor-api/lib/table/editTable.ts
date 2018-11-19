@@ -1,4 +1,3 @@
-import getNodeAtCursor from '../format/getNodeAtCursor';
 import { ChangeSource, TableOperation } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { VTable } from 'roosterjs-editor-dom';
@@ -9,7 +8,7 @@ import { VTable } from 'roosterjs-editor-dom';
  * @param operation Table operation
  */
 export default function editTable(editor: Editor, operation: TableOperation) {
-    let td = getNodeAtCursor(editor, ['TD', 'TH']) as HTMLTableCellElement;
+    let td = editor.getElementAtCursor('TD,TH') as HTMLTableCellElement;
     if (td) {
         editor.addUndoSnapshot((start, end) => {
             let vtable = new VTable(td);

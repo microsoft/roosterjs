@@ -1,4 +1,4 @@
-import * as applyInlineStyle from '../../format/applyInlineStyle';
+import * as applyInlineStyle from '../../utils/applyInlineStyle';
 import * as TestHelper from '../TestHelper';
 import setBackgroundColor from '../../format/setBackgroundColor';
 import setFontName from '../../format/setFontName';
