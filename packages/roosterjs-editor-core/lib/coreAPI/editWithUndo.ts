@@ -6,14 +6,15 @@ import {
     NodePosition,
     PluginEventType,
 } from 'roosterjs-editor-types';
+import { IndexBasedSnapshot } from 'roosterjs-editor-types';
 
 const editWithUndo: EditWithUndo = (
     core: EditorCore,
-    callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
+    callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: IndexBasedSnapshot) => any,
     changeSource: ChangeSource | string
 ) => {
     let isNested = core.currentUndoSnapshot !== null;
-    let data: any;
+    let data: IndexBasedSnapshot;
 
     if (!isNested) {
         core.currentUndoSnapshot = core.undo.addUndoSnapshot();

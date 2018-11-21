@@ -1,6 +1,7 @@
 import createEditorCore from './createEditorCore';
 import EditorCore from './EditorCore';
 import EditorOptions from './EditorOptions';
+import { IndexBasedSnapshot } from 'roosterjs-editor-types';
 import {
     BlockElement,
     ChangeSource,
@@ -26,6 +27,7 @@ import {
     contains,
     fromHtml,
     getBlockElementAtNode,
+    getPositionIndexes,
     findClosestElementAncestor,
     getPositionRect,
     getInlineElementAtNode,
@@ -36,6 +38,7 @@ import {
     removeMarker,
     collapseNodes,
     wrap,
+    createRange,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -321,7 +324,7 @@ export default class Editor {
      * Get current editor content as HTML string
      * @param triggerExtractContentEvent Whether trigger ExtractContent event to all plugins
      * before return. Use this parameter to remove any temporary content added by plugins.
-     * @param includeSelectionMarker Set to true if need include selection marker inside the content.
+     * @param includeSelectionMarker @deprecated Set to true if need include selection marker inside the content.
      * When restore this content, editor will set the selection to the position marked by these markers
      * @returns HTML string representing current editor content
      */
@@ -364,6 +367,27 @@ export default class Editor {
             this.core.contentDiv.innerHTML = content || '';
 
             this.select(removeMarker(this.core.contentDiv, true /*retrieveSelectionRange*/));
+
+            if (triggerContentChangedEvent) {
+                this.triggerContentChangedEvent();
+            }
+        }
+    }
+
+    public takeSnapshot(): IndexBasedSnapshot {
+        let range = this.getSelectionRange();
+        return {
+            content: this.getContent(false /*triggerExtractContentEvent*/, false /*includeSelectionMarker*/),
+            startIndexes: range ? getPositionIndexes(this.core.contentDiv, Position.getStart(range)) : [],
+            endIndexes: range ? getPositionIndexes(this.core.contentDiv, Position.getEnd(range)) : [],
+        };
+    }
+
+    public restoreSnapshot(snapshot: IndexBasedSnapshot, triggerContentChangedEvent: boolean = true) {
+        if (snapshot) {
+            this.setContent(snapshot.content, false /*triggerContentChangedEvent*/);
+            let range = createRange(snapshot.startIndexes, snapshot.endIndexes, this.core.contentDiv);
+            this.select(range);
 
             if (triggerContentChangedEvent) {
                 this.triggerContentChangedEvent();
@@ -644,7 +668,7 @@ export default class Editor {
      * a ContentChangedEvent will be fired with change source equal to this value
      */
     public addUndoSnapshot(
-        callback?: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
+        callback?: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: IndexBasedSnapshot) => any,
         changeSource?: ChangeSource | string
     ) {
         this.core.api.editWithUndo(this.core, callback, changeSource);
@@ -803,7 +827,7 @@ export default class Editor {
      */
     public runWithoutAddingUndoSnapshot(callback: () => void) {
         try {
-            this.core.currentUndoSnapshot = this.getContent(false, true);
+            this.core.currentUndoSnapshot = this.takeSnapshot();
             callback();
         } finally {
             this.core.currentUndoSnapshot = null;

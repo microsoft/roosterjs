@@ -72,7 +72,7 @@ export default class ShowFormatState implements EditorPlugin {
                 result += ` <b>Header${formatState.headerLevel}</b>`;
             }
 
-            this.resultContainer.innerHTML = result;
+            // this.resultContainer.innerHTML = result;
         }
     }
 }

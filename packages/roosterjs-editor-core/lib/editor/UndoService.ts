@@ -1,4 +1,5 @@
 import EditorPlugin from './EditorPlugin';
+import { IndexBasedSnapshot } from 'roosterjs-editor-types';
 
 /**
  * Defines replaceable undo service for editor
@@ -19,7 +20,7 @@ interface UndoService extends EditorPlugin {
      * This method will not trigger ExtractContent event, so any temporary content will be
      * added into undo snapshot
      */
-    addUndoSnapshot: () => string;
+    addUndoSnapshot: () => IndexBasedSnapshot;
 
     /**
      * Whether there is snapshot for undo

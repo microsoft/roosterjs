@@ -1,7 +1,8 @@
 import Editor from '../editor/Editor';
 import UndoService from '../editor/UndoService';
-import UndoSnapshots, { UndoSnapshotsService } from './UndoSnapshots';
+import UndoSnapshots, { UndoSnapshotsService, SnapshotUtils } from './UndoSnapshots';
 import { ChangeSource, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { IndexBasedSnapshot } from 'roosterjs-editor-types';
 
 const KEY_BACKSPACE = 8;
 const KEY_DELETE = 46;
@@ -9,6 +10,34 @@ const KEY_SPACE = 32;
 const KEY_ENTER = 13;
 const KEY_PAGEUP = 33;
 const KEY_DOWN = 40;
+
+function areArraysEqual(a1: number[], a2: number[]) {
+    if (!a1 || !a2 || a1.length != a2.length) {
+        return false;
+    } else if (a1 == a2) {
+        return true;
+    } else {
+        for (let i = 0; i < a1.length; i++) {
+            if (a1[i] != a2[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+function areSnapshotsEqual(s1: IndexBasedSnapshot, s2: IndexBasedSnapshot): boolean {
+    return s1 && s2 && (s1 == s2 || (s1.content == s2.content && areArraysEqual(s1.startIndexes, s2.startIndexes) && areArraysEqual(s1.endIndexes, s2.endIndexes)));
+}
+
+function getSnapshotSize(snapshot: IndexBasedSnapshot): number {
+    return snapshot ? snapshot.content.length : 0;
+}
+
+const utils: SnapshotUtils<IndexBasedSnapshot> = {
+    areSnapshotsEqual,
+    getSnapshotSize,
+}
 
 /**
  * Provides snapshot based undo service for Editor
@@ -22,7 +51,7 @@ export default class Undo implements UndoService {
     private onCutDisposer: () => void;
     public name = 'Undo';
 
-    protected undoSnapshots: UndoSnapshotsService;
+    protected undoSnapshots: UndoSnapshotsService<IndexBasedSnapshot>;
 
     /**
      * Create an instance of Undo
@@ -131,19 +160,16 @@ export default class Undo implements UndoService {
     /**
      * Add an undo snapshot
      */
-    public addUndoSnapshot(): string {
-        let snapshot = this.editor.getContent(
-            false /*triggerExtractContentEvent*/,
-            true /*markSelection*/
-        );
+    public addUndoSnapshot(): IndexBasedSnapshot {
+        let snapshot = this.editor.takeSnapshot();
         this.getSnapshotsManager().addSnapshot(snapshot);
         this.hasNewContent = false;
         return snapshot;
     }
 
-    protected getSnapshotsManager(): UndoSnapshotsService {
+    protected getSnapshotsManager(): UndoSnapshotsService<IndexBasedSnapshot> {
         if (!this.undoSnapshots) {
-            this.undoSnapshots = new UndoSnapshots(this.maxBufferSize);
+            this.undoSnapshots = new UndoSnapshots<IndexBasedSnapshot>(utils, this.maxBufferSize);
         }
         return this.undoSnapshots;
     }
@@ -154,7 +180,7 @@ export default class Undo implements UndoService {
         if (snapshot != null) {
             try {
                 this.isRestoring = true;
-                this.editor.setContent(snapshot);
+                this.editor.restoreSnapshot(snapshot);
             } finally {
                 this.isRestoring = false;
             }

@@ -27,7 +27,7 @@ export default class ShowCursorPosition implements EditorPlugin {
                 rect.left +
                 '; right=' +
                 rect.right;
-            this.resultContainer.innerText = result;
+            // this.resultContainer.innerText = result;
         }
     }
 }

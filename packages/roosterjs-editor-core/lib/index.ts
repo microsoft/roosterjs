@@ -16,7 +16,7 @@ export {
 export { default as EditorOptions } from './editor/EditorOptions';
 export { default as EditorPlugin } from './editor/EditorPlugin';
 export { default as Undo } from './undo/Undo';
-export { default as UndoSnapshotsService } from './undo/UndoSnapshots';
+export { default as UndoSnapshotsService, SnapshotUtils } from './undo/UndoSnapshots';
 export { default as UndoService } from './editor/UndoService';
 export { default as browserData, BrowserData } from './deprecated/BrowserData';
 export { default as cacheGetEventData } from './eventApi/cacheGetEventData';
