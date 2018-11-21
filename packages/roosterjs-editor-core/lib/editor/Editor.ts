@@ -66,7 +66,6 @@ export default class Editor {
 
         // 4. Ensure initial content and its format
         this.setContent(options.initialContent || contentDiv.innerHTML || '');
-        this.core.corePlugin.ensureTypeInElement(new Position(contentDiv, PositionType.Begin));
 
         // 5. Create event handler to bind DOM events
         this.eventDisposers = [

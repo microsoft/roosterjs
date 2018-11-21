@@ -119,7 +119,7 @@ export default class CorePlugin implements EditorPlugin {
      * @param node Current node
      * @returns A new position to select
      */
-    public ensureTypeInElement(position: NodePosition): NodePosition {
+    private ensureTypeInElement(position: NodePosition): NodePosition {
         position = position.normalize();
         let block = getBlockElementAtNode(this.contentDiv, position.node);
         let formatNode: HTMLElement;
