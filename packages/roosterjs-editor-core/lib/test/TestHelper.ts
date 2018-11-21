@@ -1,6 +1,6 @@
 import Editor from '../editor/Editor';
-import EditorPlugin from '../editor/EditorPlugin';
 import EditorOptions from '../editor/EditorOptions';
+import EditorPlugin from '../editor/EditorPlugin';
 import UndoService from '../editor/UndoService';
 
 export * from 'roosterjs-editor-dom/lib/test/DomTestHelper';

@@ -1,4 +1,4 @@
-import processList from './processList';
+import processList from '../utils/processList';
 import { ChangeSource, DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 

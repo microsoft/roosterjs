@@ -1,4 +1,4 @@
-import toggleTagCore from './toggleTagCore';
+import toggleTagCore from '../utils/toggleTagCore';
 import { Editor } from 'roosterjs-editor-core';
 import { getTagOfNode, unwrap, wrap } from 'roosterjs-editor-dom';
 

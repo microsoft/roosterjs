@@ -1,5 +1,6 @@
-import { cacheGetContentSearcher, Editor } from 'roosterjs-editor-core';
+import { cacheGetContentSearcher, cacheGetElementAtCursor, Editor } from 'roosterjs-editor-core';
 import { ContentEditFeature, GenericContentEditFeature, Keys } from '../ContentEditFeatures';
+import { setIndentation, toggleBullet, toggleNumbering } from 'roosterjs-editor-api';
 import {
     ContentChangedEvent,
     Indentation,
@@ -13,13 +14,6 @@ import {
     isNodeEmpty,
     isPositionAtBeginningOf,
 } from 'roosterjs-editor-dom';
-import {
-    cacheGetNodeAtCursor,
-    getNodeAtCursor,
-    setIndentation,
-    toggleBullet,
-    toggleNumbering,
-} from 'roosterjs-editor-api';
 
 export const IndentWhenTab: ContentEditFeature = {
     keys: [Keys.TAB],
@@ -46,12 +40,12 @@ export const OutdentWhenShiftTab: ContentEditFeature = {
 export const MergeInNewLine: ContentEditFeature = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
-        let li = cacheGetNodeAtCursor(editor, event, 'LI');
+        let li = cacheGetElementAtCursor(editor, event, 'LI');
         let range = editor.getSelectionRange();
         return li && range && isPositionAtBeginningOf(Position.getStart(range), li);
     },
     handleEvent: (event, editor) => {
-        let li = cacheGetNodeAtCursor(editor, event, 'LI');
+        let li = cacheGetElementAtCursor(editor, event, 'LI');
         if (li.previousSibling) {
             editor.runAsync(() => {
                 let br = editor.getDocument().createElement('BR');
@@ -68,7 +62,7 @@ export const MergeInNewLine: ContentEditFeature = {
 export const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
-        let li = cacheGetNodeAtCursor(editor, event, 'LI');
+        let li = cacheGetElementAtCursor(editor, event, 'LI');
         return li && isNodeEmpty(li) && !li.previousSibling;
     },
     handleEvent: toggleListAndPreventDefault,
@@ -78,7 +72,7 @@ export const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
 export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
     keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {
-        let li = cacheGetNodeAtCursor(editor, event, 'LI');
+        let li = cacheGetElementAtCursor(editor, event, 'LI');
         return !event.rawEvent.shiftKey && li && isNodeEmpty(li);
     },
     handleEvent: (event, editor) => {
@@ -145,7 +139,7 @@ export function getSmartOrderedList(
         shouldHandleEvent: (event, editor) => event.data instanceof HTMLOListElement,
         handleEvent: (event, editor) => {
             let ol = event.data as HTMLOListElement;
-            let parentOl = getNodeAtCursor(editor, 'OL', ol.parentNode) as HTMLOListElement;
+            let parentOl = editor.getElementAtCursor('OL', ol.parentNode) as HTMLOListElement;
             if (parentOl) {
                 // The style list must has at least one value. If no value is passed in, fallback to decimal
                 let styles = styleList && styleList.length > 0 ? styleList : ['decimal'];
@@ -173,7 +167,7 @@ function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: Editor)
 }
 
 function cacheGetListElement(event: PluginKeyboardEvent, editor: Editor) {
-    let li = cacheGetNodeAtCursor(editor, event, ['LI', 'TABLE']);
-    let listElement = li && getTagOfNode(li) == 'LI' && getNodeAtCursor(editor, ['UL', 'OL'], li);
+    let li = cacheGetElementAtCursor(editor, event, 'LI,TABLE');
+    let listElement = li && getTagOfNode(li) == 'LI' && editor.getElementAtCursor('UL,OL', li);
     return listElement ? [listElement, li] : null;
 }

@@ -1,7 +1,6 @@
-import { cacheGetNodeAtCursor, getNodeAtCursor } from 'roosterjs-editor-api';
+import { cacheGetElementAtCursor, Editor } from 'roosterjs-editor-core';
 import { contains, getTagOfNode, VTable } from 'roosterjs-editor-dom';
 import { ContentEditFeature, Keys } from '../ContentEditFeatures';
-import { Editor } from 'roosterjs-editor-core';
 import { PluginEvent, PositionType } from 'roosterjs-editor-types';
 
 export const TabInTable: ContentEditFeature = {
@@ -56,7 +55,7 @@ export const UpDownInTable: ContentEditFeature = {
         }
 
         editor.runAsync(() => {
-            let newContainer = getNodeAtCursor(editor);
+            let newContainer = editor.getElementAtCursor();
             if (
                 contains(vtable.table, newContainer) &&
                 !contains(td, newContainer, true /*treatSameNodeAsContain*/)
@@ -73,6 +72,6 @@ export const UpDownInTable: ContentEditFeature = {
 };
 
 function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellElement {
-    let firstTd = cacheGetNodeAtCursor(editor, event, ['TD', 'TH', 'LI']);
+    let firstTd = cacheGetElementAtCursor(editor, event, 'TD,TH,LI');
     return getTagOfNode(firstTd) == 'LI' ? null : (firstTd as HTMLTableCellElement);
 }

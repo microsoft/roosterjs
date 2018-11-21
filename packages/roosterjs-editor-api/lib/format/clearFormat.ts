@@ -1,4 +1,4 @@
-import execCommand from './execCommand';
+import execCommand from '../utils/execCommand';
 import setBackgroundColor from './setBackgroundColor';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';

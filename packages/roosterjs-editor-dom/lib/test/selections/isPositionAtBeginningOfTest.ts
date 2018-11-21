@@ -1,5 +1,5 @@
-import Position from '../../selection/Position';
 import isPositionAtBeginningOf from '../../selection/isPositionAtBeginningOf';
+import Position from '../../selection/Position';
 
 describe('isPositionAtBeginningOf()', () => {
     function runTest(

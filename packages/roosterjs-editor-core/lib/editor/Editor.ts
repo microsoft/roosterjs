@@ -26,6 +26,7 @@ import {
     contains,
     fromHtml,
     getBlockElementAtNode,
+    findClosestElementAncestor,
     getPositionRect,
     getInlineElementAtNode,
     getTagOfNode,
@@ -524,18 +525,47 @@ export default class Editor {
     }
 
     /**
+     * Get current focused position. Return null if editor doesn't have focus at this time.
+     */
+    public getFocusedPosition(): NodePosition {
+        let sel = this.getSelection();
+        if (this.contains(sel && sel.focusNode)) {
+            return new Position(sel.focusNode, sel.focusOffset);
+        }
+
+        let range = this.getSelectionRange();
+        if (range) {
+            return Position.getStart(range);
+        }
+
+        return null;
+    }
+
+    /**
      * Get a rect representing the location of the cursor.
      * @returns a Rect object representing cursor location
      */
     public getCursorRect(): Rect {
-        let selection = this.getSelection();
+        let position = this.getFocusedPosition();
+        return position && getPositionRect(position);
+    }
 
-        if (!selection || !selection.focusNode) {
-            return null;
+    /**
+     * Get an HTML element from current cursor position.
+     * When expectedTags is not specified, return value is the current node (if it is HTML element)
+     * or its parent node (if current node is a Text node).
+     * When expectedTags is specified, return value is the first anscestor of current node which has
+     * one of the expected tags.
+     * If no element found within editor by the given tag, return null.
+     * @param selector Optional, an HTML selector to find HTML element with.
+     * @param startFrom Start search from this node. If not specified, start from current focused position
+     */
+    public getElementAtCursor(selector?: string, startFrom?: Node): HTMLElement {
+        if (!startFrom) {
+            let position = this.getFocusedPosition();
+            startFrom = position && position.node;
         }
-
-        let position = new Position(selection.focusNode, selection.focusOffset);
-        return getPositionRect(position);
+        return startFrom && findClosestElementAncestor(startFrom, this.core.contentDiv, selector);
     }
 
     //#endregion

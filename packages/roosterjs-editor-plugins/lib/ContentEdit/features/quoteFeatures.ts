@@ -1,6 +1,5 @@
 import { cacheGetEventData, Editor } from 'roosterjs-editor-core';
 import { ContentEditFeature, Keys } from '../ContentEditFeatures';
-import { getNodeAtCursor } from 'roosterjs-editor-api';
 import { getTagOfNode, isNodeEmpty, splitBalancedNodeRange, unwrap } from 'roosterjs-editor-dom';
 import { PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
 
@@ -29,12 +28,12 @@ export const UnquoteWhenEnterOnEmptyLine: ContentEditFeature = {
 
 function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: Editor): Node {
     return cacheGetEventData(event, 'QUOTE_CHILD', () => {
-        let node = getNodeAtCursor(editor);
+        let node = editor.getElementAtCursor();
         if (getTagOfNode(node) == QUOTE_TAG) {
             return node.firstChild;
         }
         while (editor.contains(node) && getTagOfNode(node.parentNode) != QUOTE_TAG) {
-            node = node.parentNode;
+            node = node.parentNode as HTMLElement;
         }
         return node && getTagOfNode(node.parentNode) == QUOTE_TAG ? node : null;
     });

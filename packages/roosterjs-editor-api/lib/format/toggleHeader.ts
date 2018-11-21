@@ -1,6 +1,6 @@
 import { ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { getElementOrParentElement } from 'roosterjs-editor-dom';
+import { findClosestElementAncestor } from 'roosterjs-editor-dom';
 
 /**
  * Toggle header at selection
@@ -33,7 +33,7 @@ export default function toggleHeader(editor: Editor, level: number) {
             let traverser = editor.getSelectionTraverser();
             let inlineElement = traverser ? traverser.currentInlineElement : null;
             while (inlineElement) {
-                let element = getElementOrParentElement(inlineElement.getContainerNode());
+                let element = findClosestElementAncestor(inlineElement.getContainerNode());
                 if (element) {
                     element.style.fontSize = '';
                 }

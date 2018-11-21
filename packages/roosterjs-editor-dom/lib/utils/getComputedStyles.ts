@@ -1,4 +1,4 @@
-import getElementOrParentElement from './getElementOrParentElement';
+import findClosestElementAncestor from './findClosestElementAncestor';
 
 /**
  * Get computed styles of a node
@@ -11,7 +11,7 @@ export default function getComputedStyles(
     node: Node,
     styleNames: string | string[] = ['font-family', 'font-size', 'color', 'background-color']
 ): string[] {
-    let element = getElementOrParentElement(node);
+    let element = findClosestElementAncestor(node);
     let result: string[] = [];
     styleNames = styleNames instanceof Array ? styleNames : [styleNames];
     if (element) {

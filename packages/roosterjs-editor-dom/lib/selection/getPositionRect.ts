@@ -1,5 +1,4 @@
 import createRange from './createRange';
-import getElementOrParentElement from '../utils/getElementOrParentElement';
 import { NodePosition, NodeType, Rect } from 'roosterjs-editor-types';
 
 /**
@@ -42,7 +41,7 @@ export default function getPositionRect(position: NodePosition): Rect {
     }
 
     // 4) try getBoundingClientRect on element
-    let element = getElementOrParentElement(position.node);
+    let element = position.element;
     if (element && element.getBoundingClientRect) {
         rect = normalizeRect(element.getBoundingClientRect());
         if (rect) {

@@ -1,4 +1,3 @@
-import getNodeAtCursor from './getNodeAtCursor';
 import { DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import {
@@ -25,12 +24,12 @@ export default function processList(editor: Editor, command: DocumentCommand): N
         workaroundForChrome(editor);
     }
 
-    let currentNode = getNodeAtCursor(editor);
+    let currentNode = editor.getElementAtCursor();
     let currentFormat = getComputedStyles(currentNode);
-    let existingList = getNodeAtCursor(editor, ['OL', 'UL']);
+    let existingList = editor.getElementAtCursor('OL,UL');
     editor.getDocument().execCommand(command, false, null);
     editor.queryElements('.' + TEMP_NODE_CLASS, node => editor.deleteNode(node));
-    let newList = getNodeAtCursor(editor, ['OL', 'UL']);
+    let newList = editor.getElementAtCursor('OL,UL');
     if (newList == existingList) {
         newList = null;
     }

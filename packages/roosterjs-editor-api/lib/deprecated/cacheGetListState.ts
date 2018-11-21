@@ -1,12 +1,9 @@
-import queryNodesWithSelection from '../deprecated/queryNodesWithSelection';
-import { cacheGetEventData, Editor } from 'roosterjs-editor-core';
+import { cacheGetElementAtCursor, Editor } from 'roosterjs-editor-core';
 import { getTagOfNode } from 'roosterjs-editor-dom';
 import { ListState, PluginEvent } from 'roosterjs-editor-types';
 
-const EVENTDATACACHE_LISTSTATE = 'LISTSTATE';
-
 /**
- * @deprecated use getNodeAtCursor(editor, ['OL','UL']) instead
+ * @deprecated use cacheGetElementAtCursor('OL,UL') instead
  * Get the list state at selection
  * The list state refers to the HTML elements <OL> or <UL>
  * @param editor The editor instance
@@ -16,16 +13,7 @@ const EVENTDATACACHE_LISTSTATE = 'LISTSTATE';
  * ListState.None indicates no <OL> or <UL> elements found at current selection
  */
 export default function cacheGetListState(editor: Editor, event?: PluginEvent): ListState {
-    return cacheGetEventData<ListState>(event, EVENTDATACACHE_LISTSTATE, () => {
-        let itemNodes = queryNodesWithSelection(editor, 'li');
-        if (itemNodes.length > 0) {
-            let tagName = getTagOfNode(itemNodes[0].parentNode);
-            if (tagName == 'OL') {
-                return ListState.Numbering;
-            } else if (tagName == 'UL') {
-                return ListState.Bullets;
-            }
-        }
-        return ListState.None;
-    });
+    let element = cacheGetElementAtCursor(editor, event, 'OL, UL');
+    let tag = getTagOfNode(element);
+    return tag == 'OL' ? ListState.Numbering : tag == 'UL' ? ListState.Bullets : ListState.None;
 }
