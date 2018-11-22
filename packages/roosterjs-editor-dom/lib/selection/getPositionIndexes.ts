@@ -35,20 +35,25 @@ export default function getPositionIndexes(rootNode: Element, position: NodePosi
             // indexed past the end of the text.
             return getPositionIndexes(
                 rootNode,
-                new Position(node.previousSibling, safeTextNodeLength(node.previousSibling as Text) + offset)
+                new Position(
+                    node.previousSibling,
+                    safeTextNodeLength(node.previousSibling as Text) + offset
+                )
             );
         } else {
-            return getPositionIndexes(rootNode, new Position(node.parentNode, getIndexInParent(node))).concat([
-                offset,
-            ]);
+            return getPositionIndexes(
+                rootNode,
+                new Position(node.parentNode, getIndexInParent(node))
+            ).concat([offset]);
         }
     }
     // For non-text nodes, recurse upward towards the root
     const child = node.childNodes[offset];
     const childNormalizedIndex = getNormalizedIndexInParent(child);
-    return getPositionIndexes(rootNode, new Position(node.parentNode, getIndexInParent(node))).concat([
-        childNormalizedIndex,
-    ]);
+    return getPositionIndexes(
+        rootNode,
+        new Position(node.parentNode, getIndexInParent(node))
+    ).concat([childNormalizedIndex]);
 }
 
 /**
@@ -89,4 +94,3 @@ function getIndexInParent(node: Node): number {
 function safeTextNodeLength(node: Text) {
     return node.textContent ? node.textContent.length : 0;
 }
-

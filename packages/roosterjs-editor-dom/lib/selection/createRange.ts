@@ -24,7 +24,11 @@ export default function createRange(start: NodePosition, end?: NodePosition): Ra
  */
 export default function createRange(start: number[], end: number[], rootNode: HTMLElement): Range;
 
-export default function createRange(start: NodePosition | Node | number[], end?: NodePosition | Node | number[], rootNode?: HTMLElement): Range {
+export default function createRange(
+    start: NodePosition | Node | number[],
+    end?: NodePosition | Node | number[],
+    rootNode?: HTMLElement
+): Range {
     if (!start) {
         return null;
     } else if (start instanceof Array) {

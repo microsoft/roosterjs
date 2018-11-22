@@ -1,7 +1,6 @@
 import createEditorCore from './createEditorCore';
 import EditorCore from './EditorCore';
 import EditorOptions from './EditorOptions';
-import { IndexBasedSnapshot } from 'roosterjs-editor-types';
 import {
     BlockElement,
     ChangeSource,
@@ -13,6 +12,7 @@ import {
     InlineElement,
     InsertOption,
     NodePosition,
+    NodeType,
     PluginEvent,
     PluginEventType,
     PositionType,
@@ -25,6 +25,7 @@ import {
     ContentTraverser,
     Position,
     contains,
+    createRange,
     fromHtml,
     getBlockElementAtNode,
     getPositionIndexes,
@@ -38,7 +39,6 @@ import {
     removeMarker,
     collapseNodes,
     wrap,
-    createRange,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -324,7 +324,7 @@ export default class Editor {
      * Get current editor content as HTML string
      * @param triggerExtractContentEvent Whether trigger ExtractContent event to all plugins
      * before return. Use this parameter to remove any temporary content added by plugins.
-     * @param includeSelectionMarker @deprecated Set to true if need include selection marker inside the content.
+     * @param includeSelectionMarker Set to true if need include selection marker inside the content.
      * When restore this content, editor will set the selection to the position marked by these markers
      * @returns HTML string representing current editor content
      */
@@ -333,9 +333,18 @@ export default class Editor {
         includeSelectionMarker: boolean = false
     ): string {
         let contentDiv = this.core.contentDiv;
-        let content = includeSelectionMarker
-            ? this.runWithSelectionMarker(() => contentDiv.innerHTML, false /*useInlineMarker*/)
-            : contentDiv.innerHTML;
+        let content = contentDiv.innerHTML;
+
+        if (includeSelectionMarker) {
+            let range = this.getSelectionRange();
+            let startIndexes = range
+                ? getPositionIndexes(this.core.contentDiv, Position.getStart(range))
+                : [];
+            let endIndexes = range
+                ? getPositionIndexes(this.core.contentDiv, Position.getEnd(range))
+                : [];
+            content += `<!--${JSON.stringify([startIndexes, endIndexes])}-->`;
+        }
 
         if (triggerExtractContentEvent) {
             let extractContentEvent: ExtractContentEvent = {
@@ -363,31 +372,27 @@ export default class Editor {
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     public setContent(content: string, triggerContentChangedEvent: boolean = true) {
-        if (this.core.contentDiv.innerHTML != content) {
-            this.core.contentDiv.innerHTML = content || '';
+        let contentDiv = this.core.contentDiv;
+        if (contentDiv.innerHTML != content) {
+            contentDiv.innerHTML = content || '';
 
-            this.select(removeMarker(this.core.contentDiv, true /*retrieveSelectionRange*/));
+            let indexesComment = contentDiv.lastChild;
 
-            if (triggerContentChangedEvent) {
-                this.triggerContentChangedEvent();
+            if (indexesComment && indexesComment.nodeType == NodeType.Comment) {
+                try {
+                    let indexes = JSON.parse(indexesComment.nodeValue) as number[][];
+                    if (
+                        indexes &&
+                        indexes.length == 2 &&
+                        indexes[0] instanceof Array &&
+                        indexes[1] instanceof Array
+                    ) {
+                        let range = createRange(indexes[0], indexes[1], contentDiv);
+                        this.select(range);
+                        this.deleteNode(indexesComment);
+                    }
+                } catch {}
             }
-        }
-    }
-
-    public takeSnapshot(): IndexBasedSnapshot {
-        let range = this.getSelectionRange();
-        return {
-            content: this.getContent(false /*triggerExtractContentEvent*/, false /*includeSelectionMarker*/),
-            startIndexes: range ? getPositionIndexes(this.core.contentDiv, Position.getStart(range)) : [],
-            endIndexes: range ? getPositionIndexes(this.core.contentDiv, Position.getEnd(range)) : [],
-        };
-    }
-
-    public restoreSnapshot(snapshot: IndexBasedSnapshot, triggerContentChangedEvent: boolean = true) {
-        if (snapshot) {
-            this.setContent(snapshot.content, false /*triggerContentChangedEvent*/);
-            let range = createRange(snapshot.startIndexes, snapshot.endIndexes, this.core.contentDiv);
-            this.select(range);
 
             if (triggerContentChangedEvent) {
                 this.triggerContentChangedEvent();
@@ -668,7 +673,7 @@ export default class Editor {
      * a ContentChangedEvent will be fired with change source equal to this value
      */
     public addUndoSnapshot(
-        callback?: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: IndexBasedSnapshot) => any,
+        callback?: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
         changeSource?: ChangeSource | string
     ) {
         this.core.api.editWithUndo(this.core, callback, changeSource);
@@ -827,7 +832,7 @@ export default class Editor {
      */
     public runWithoutAddingUndoSnapshot(callback: () => void) {
         try {
-            this.core.currentUndoSnapshot = this.takeSnapshot();
+            this.core.currentUndoSnapshot = this.getContent(false, true);
             callback();
         } finally {
             this.core.currentUndoSnapshot = null;

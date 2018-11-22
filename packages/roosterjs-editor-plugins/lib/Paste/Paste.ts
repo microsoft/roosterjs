@@ -140,9 +140,12 @@ export default class Paste implements EditorPlugin {
         this.editor.focus();
         this.editor.addUndoSnapshot(() => {
             if (clipboardData.snapshotBeforePaste == null) {
-                clipboardData.snapshotBeforePaste = this.editor.takeSnapshot();
+                clipboardData.snapshotBeforePaste = this.editor.getContent(
+                    false /*triggerExtractContentEvent*/,
+                    true /*markSelection*/
+                );
             } else {
-                this.editor.restoreSnapshot(clipboardData.snapshotBeforePaste);
+                this.editor.setContent(clipboardData.snapshotBeforePaste);
             }
 
             switch (pasteOption) {

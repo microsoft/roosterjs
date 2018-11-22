@@ -9,7 +9,6 @@ import {
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import { IndexBasedSnapshot } from 'roosterjs-editor-types';
 
 /**
  * Represents the core data structure of an editor
@@ -68,7 +67,7 @@ interface EditorCore {
     /**
      * The undo snapshot taken by addUndoSnapshot() before callback function is invoked.
      */
-    currentUndoSnapshot: IndexBasedSnapshot;
+    currentUndoSnapshot: string;
 
     /**
      * Cached selection range of this editor
@@ -86,7 +85,7 @@ export type AttachDomEvent = (
 ) => () => void;
 export type EditWithUndo = (
     core: EditorCore,
-    callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: IndexBasedSnapshot) => any,
+    callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
     changeSource: ChangeSource | string
 ) => void;
 export type Focus = (core: EditorCore) => void;

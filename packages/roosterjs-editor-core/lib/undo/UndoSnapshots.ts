@@ -2,24 +2,19 @@
 // to keep size under limit. This is kept at 10MB
 const MAXSIZELIMIT = 10000000;
 
-export interface UndoSnapshotsService<T> {
+export interface UndoSnapshotsService {
     canMove: (delta: number) => boolean;
-    move: (delta: number) => T;
-    addSnapshot: (snapshot: T) => void;
+    move: (delta: number) => string;
+    addSnapshot: (snapshot: string) => void;
     clearRedo: () => void;
 }
 
-export interface SnapshotUtils<T> {
-    areSnapshotsEqual(snapshot1: T, snapshot2: T): boolean;
-    getSnapshotSize(snapshot: T): number;
-}
-
-export default class UndoSnapshots<T> implements UndoSnapshotsService<T> {
-    private snapshots: T[];
+export default class UndoSnapshots implements UndoSnapshotsService {
+    private snapshots: string[];
     private totalSize: number;
     private currentIndex: number;
 
-    constructor(private utils: SnapshotUtils<T>, private maxSize: number = MAXSIZELIMIT) {
+    constructor(private maxSize: number = MAXSIZELIMIT) {
         this.snapshots = [];
         this.totalSize = 0;
         this.currentIndex = -1;
@@ -30,7 +25,7 @@ export default class UndoSnapshots<T> implements UndoSnapshotsService<T> {
         return newIndex >= 0 && newIndex < this.snapshots.length;
     }
 
-    public move(delta: number): T {
+    public move(delta: number): string {
         if (this.canMove(delta)) {
             this.currentIndex += delta;
             return this.snapshots[this.currentIndex];
@@ -39,16 +34,16 @@ export default class UndoSnapshots<T> implements UndoSnapshotsService<T> {
         }
     }
 
-    public addSnapshot(snapshot: T) {
-        if (this.currentIndex < 0 || !this.utils.areSnapshotsEqual(snapshot, this.snapshots[this.currentIndex])) {
+    public addSnapshot(snapshot: string) {
+        if (this.currentIndex < 0 || snapshot != this.snapshots[this.currentIndex]) {
             this.clearRedo();
             this.snapshots.push(snapshot);
             this.currentIndex++;
-            this.totalSize += this.utils.getSnapshotSize(snapshot);
+            this.totalSize += snapshot.length;
 
             let removeCount = 0;
             while (removeCount < this.snapshots.length && this.totalSize > this.maxSize) {
-                this.totalSize -= this.utils.getSnapshotSize(this.snapshots[removeCount]);
+                this.totalSize -= this.snapshots[removeCount].length;
                 removeCount++;
             }
 
@@ -63,7 +58,7 @@ export default class UndoSnapshots<T> implements UndoSnapshotsService<T> {
         if (this.canMove(1)) {
             let removedSize = 0;
             for (let i = this.currentIndex + 1; i < this.snapshots.length; i++) {
-                removedSize += this.utils.getSnapshotSize(this.snapshots[i]);
+                removedSize += this.snapshots[i].length;
             }
             this.snapshots.splice(this.currentIndex + 1);
             this.totalSize -= removedSize;

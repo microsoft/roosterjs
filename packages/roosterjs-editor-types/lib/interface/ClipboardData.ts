@@ -1,5 +1,4 @@
 import DefaultFormat from './DefaultFormat';
-import IndexBasedSnapshot from './IndexBasedSnapshot';
 
 /**
  * An object contains all related data for pasting
@@ -8,7 +7,7 @@ interface ClipboardData {
     /**
      * An editor content snapshot before pasting happens. This is used for changing paste format
      */
-    snapshotBeforePaste: IndexBasedSnapshot;
+    snapshotBeforePaste: string;
 
     /**
      * The format state at cursor before pasting. This is used for changing paste format

@@ -18,12 +18,11 @@ import {
     isNodeEmpty,
     getBlockElementAtNode,
 } from 'roosterjs-editor-dom';
-import { IndexBasedSnapshot } from 'roosterjs-editor-types';
 
 const KEY_BACKSPACE = 8;
 
 interface AutoCompleteInfo {
-    snapshot: IndexBasedSnapshot;
+    snapshot: string;
     changeSource: string;
 }
 
@@ -196,7 +195,7 @@ export default class CorePlugin implements EditorPlugin {
         if (this.autoCompleteInfo) {
             if (event && event.which == KEY_BACKSPACE) {
                 event.preventDefault();
-                this.editor.restoreSnapshot(
+                this.editor.setContent(
                     this.autoCompleteInfo.snapshot,
                     false /*triggerContentChangedEvent*/
                 );
