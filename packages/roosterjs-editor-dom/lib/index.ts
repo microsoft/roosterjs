@@ -1,16 +1,11 @@
-export {
-    NodeBlockElement,
-    StartEndBlockElement,
-    getBlockElementAtNode,
-    getFirstInlineElement,
-    getLastInlineElement,
-    getInlineElementAtNode,
-} from './blockElements/BlockElement';
+export { default as NodeBlockElement } from './blockElements/NodeBlockElement';
+export { default as getBlockElementAtNode } from './blockElements/getBlockElementAtNode';
 export {
     getFirstBlockElement,
     getFirstLastBlockElement,
     getLastBlockElement,
 } from './blockElements/getFirstLastBlockElement';
+export { default as StartEndBlockElement } from './blockElements/StartEndBlockElement';
 
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
 export { default as PositionContentSearcher } from './contentTraverser/PositionContentSearcher';
@@ -18,12 +13,12 @@ export { default as PositionContentSearcher } from './contentTraverser/PositionC
 export { getNextLeafSibling, getPreviousLeafSibling } from './utils/getLeafSibling';
 export { getFirstLeafNode, getLastLeafNode } from './utils/getLeafNode';
 
+export { default as getInlineElementAtNode } from './inlineElements/getInlineElementAtNode';
 export { default as ImageInlineElement } from './inlineElements/ImageInlineElement';
 export { default as LinkInlineElement } from './inlineElements/LinkInlineElement';
 export { default as NodeInlineElement } from './inlineElements/NodeInlineElement';
 export { default as PartialInlineElement } from './inlineElements/PartialInlineElement';
 export { default as TextInlineElement } from './inlineElements/TextInlineElement';
-export { default as resolveInlineElement } from './inlineElements/resolveInlineElement';
 export {
     getInlineElementBefore,
     getInlineElementAfter,

@@ -1,18 +1,17 @@
 import * as DomTestHelper from '../DomTestHelper';
-import NodeInlineElement from '../../inlineElements/NodeInlineElement';
+import getInlineElementAtNode from '../../inlineElements/getInlineElementAtNode';
+import NodeBlockElement from '../../blockElements/NodeBlockElement';
 import PartialInlineElement from '../../inlineElements/PartialInlineElement';
 import Position from '../../selection/Position';
-import resolveInlineElement from '../../inlineElements/resolveInlineElement';
-import TextInlineElement from '../../inlineElements/TextInlineElement';
 import { InlineElement, PositionType } from 'roosterjs-editor-types';
-import { NodeBlockElement } from '../../blockElements/BlockElement';
+import { NodeInlineElement } from '../..';
 
 let testID = 'NodeInlineElement';
 
 function createNodeInlineElement(inlineElementContent: string): InlineElement {
     let testDiv = DomTestHelper.createElementFromContent(testID, inlineElementContent);
     let parentBlock = new NodeBlockElement(testDiv);
-    let inlineElement = resolveInlineElement(testDiv.firstChild, testDiv, parentBlock);
+    let inlineElement = getInlineElementAtNode(parentBlock, testDiv.firstChild);
 
     return inlineElement;
 }
@@ -145,8 +144,8 @@ describe('NodeInlineElement isAfter()', () => {
             '<span>node1</span><span>text</span><span>node2</span>'
         );
         let parentBlock = new NodeBlockElement(testDiv);
-        let element1 = resolveInlineElement(testDiv.firstChild, testDiv, parentBlock);
-        let element2 = resolveInlineElement(testDiv.lastChild, testDiv, parentBlock);
+        let element1 = getInlineElementAtNode(parentBlock, testDiv.firstChild);
+        let element2 = getInlineElementAtNode(parentBlock, testDiv.lastChild);
 
         // Act
         let isElement2AfterElement1 = element2.isAfter(element1);
@@ -169,8 +168,8 @@ describe('NodeInlineElement isAfter()', () => {
         div.insertBefore(testDiv1, testDiv2);
         let parentBlock1 = new NodeBlockElement(testDiv1);
         let parentBlock2 = new NodeBlockElement(testDiv2);
-        let element1 = resolveInlineElement(testDiv1.firstChild, testDiv1, parentBlock1);
-        let element2 = resolveInlineElement(testDiv2.firstChild, testDiv2, parentBlock2);
+        let element1 = getInlineElementAtNode(parentBlock1, testDiv1.firstChild);
+        let element2 = getInlineElementAtNode(parentBlock2, testDiv2.firstChild);
 
         // Act
         let isElement2AfterElement1 = element2.isAfter(element1);
@@ -194,7 +193,7 @@ describe('NodeInlineElement contains()', () => {
             '<span><a><span>part1</span>text</a>text<span>part2</span>part3</span>'
         );
         let parentBlock = new NodeBlockElement(testDiv);
-        let element = resolveInlineElement(testDiv.firstChild, testDiv, parentBlock);
+        let element = getInlineElementAtNode(parentBlock, testDiv.firstChild);
         let position = new Position(testDiv.firstChild.lastChild, 3);
 
         // Act
@@ -211,7 +210,7 @@ describe('NodeInlineElement contains()', () => {
             '<span><a><span>part1</span>text</a>text<span>part2</span>part3</span>'
         );
         let parentBlock = new NodeBlockElement(testDiv);
-        let element = resolveInlineElement(testDiv.firstChild.firstChild, testDiv, parentBlock);
+        let element = getInlineElementAtNode(parentBlock, testDiv.firstChild.firstChild);
         let position = new Position(testDiv.firstChild.lastChild, PositionType.End);
 
         // Act
@@ -227,14 +226,14 @@ describe('NodeInlineElement applyStyle()', () => {
         DomTestHelper.removeElement(testID);
     });
 
-    it('fromPoint = null, toPoint = null', () => {
+    it('from = null, to = null', () => {
         // Arrange
         let testDiv = DomTestHelper.createElementFromContent(
             testID,
             '<span>www.example.com</span>'
         );
         let parentBlock = new NodeBlockElement(testDiv);
-        let element = resolveInlineElement(testDiv.firstChild, testDiv, parentBlock);
+        let element = getInlineElementAtNode(parentBlock, testDiv.firstChild);
         let mockColor = 'red';
 
         // Act
@@ -248,8 +247,8 @@ describe('NodeInlineElement applyStyle()', () => {
 });
 
 describe('isTextualInlineElement()', () => {
-    it('input = <TextInlineElement>', () => {
-        runTest(new TextInlineElement(document.createTextNode('test'), null), true);
+    it('input = <Text NodeInlineElement>', () => {
+        runTest(new NodeInlineElement(document.createTextNode('test'), null), true);
     });
 
     it('input = <PartialInlineElement>{}', () => {
@@ -259,9 +258,9 @@ describe('isTextualInlineElement()', () => {
         );
     });
 
-    it('input = PartialInlineElement with TextInlineElement as decoratedInline', () => {
+    it('input = PartialInlineElement with Text NodeInlineElement as decoratedInline', () => {
         let mockInlineElement = new PartialInlineElement(
-            new TextInlineElement(document.createTextNode('test'), null)
+            new NodeInlineElement(document.createTextNode('test'), null)
         );
         runTest(mockInlineElement, true);
     });

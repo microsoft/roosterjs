@@ -1,10 +1,11 @@
 import BodyScoper from './BodyScoper';
 import EmptyInlineElement from '../inlineElements/EmptyInlineElement';
+import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
+import getNextPreviousInlineElement from '../inlineElements/getNextPreviousInlineElement';
 import SelectionBlockScoper from './SelectionBlockScoper';
 import SelectionScoper from './SelectionScoper';
 import TraversingScoper from './TraversingScoper';
 import { BlockElement, ContentPosition, InlineElement, NodePosition } from 'roosterjs-editor-types';
-import { getBlockElementAtNode, getNextPreviousInlineElement } from '../blockElements/BlockElement';
 import { getInlineElementBeforeAfter } from '../inlineElements/getInlineElementBeforeAfter';
 import { getLeafSibling } from '../utils/getLeafSibling';
 

@@ -1,8 +1,8 @@
 import * as DomTestHelper from '../DomTestHelper';
+import NodeBlockElement from '../../blockElements/NodeBlockElement';
 import NodeInlineElement from '../../inlineElements/NodeInlineElement';
 import Position from '../../selection/Position';
 import { InlineElement } from 'roosterjs-editor-types';
-import { NodeBlockElement } from '../../blockElements/BlockElement';
 
 let testID = 'NodeBlockElement';
 

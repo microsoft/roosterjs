@@ -71,7 +71,7 @@ describe('getBrowserData', () => {
     it('Edge on Windows 10', () => {
         runBrowserDataTest(
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393',
-            '5.0 (Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; .NET CLR 2.0.50727; .NET CLR 3.0.30729; .NET CLR 3.5.30729; rv:11.0) like Gecko',
+            '5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko',
             {
                 isChrome: false,
                 isEdge: true,
@@ -89,7 +89,7 @@ describe('getBrowserData', () => {
     it('IE 11 on Windows 10', () => {
         runBrowserDataTest(
             'Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; .NET4.0E; .NET4.0C; rv:11.0) like Gecko',
-            '5.0 (compatible; MSIE 9.0; Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; .NET CLR 2.0.50727; .NET CLR 3.0.30729; .NET CLR 3.5.30729; OWASMIME/4.0500)',
+            '5.0 (compatible; MSIE 9.0; Windows NT 10.0; WOW64; Trident/7.0)',
             {
                 isChrome: false,
                 isEdge: false,
@@ -106,8 +106,8 @@ describe('getBrowserData', () => {
 
     it('IE 9 on Windows 10', () => {
         runBrowserDataTest(
-            'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; .NET CLR 2.0.50727; .NET CLR 3.0.30729; .NET CLR 3.5.30729; OWASMIME/4.0500)',
-            '5.0 (compatible; MSIE 9.0; Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; .NET CLR 2.0.50727; .NET CLR 3.0.30729; .NET CLR 3.5.30729; OWASMIME/4.0500)',
+            'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 10.0; WOW64; Trident/7.0)',
+            '5.0 (compatible; MSIE 9.0; Windows NT 10.0; WOW64; Trident/7.0)',
             {
                 isChrome: false,
                 isEdge: false,
