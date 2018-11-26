@@ -28,7 +28,7 @@ interface LinkMatchRule {
 const httpExcludeRegEx = /^[^?]+%[^0-9a-f]+|^[^?]+%[0-9a-f][^0-9a-f]+|^[^?]+%00|^[^?]+%$|^https?:\/\/[^?\/]+@|^www\.[^?\/]+@/i;
 
 // via https://tools.ietf.org/html/rfc1035 Page 7
-const labelRegEx = '[a-z](?:[a-z0-9-]*[a-z0-9])?'; // We're using case insensitive regexes below so don't bother including A-Z
+const labelRegEx = '[a-z0-9](?:[a-z0-9-]*[a-z0-9])?'; // We're using case insensitive regexes below so don't bother including A-Z
 const domainNameRegEx = `(?:${labelRegEx}\\.)*${labelRegEx}`;
 const domainPortRegEx = `${domainNameRegEx}(?:\\:[0-9]+)?`;
 const domainPortWithUrlRegEx = `${domainPortRegEx}(?:[\\/\\?]\\S*)?`;
