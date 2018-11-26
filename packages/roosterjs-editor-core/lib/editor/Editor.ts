@@ -28,7 +28,7 @@ import {
     createRange,
     fromHtml,
     getBlockElementAtNode,
-    getPositionIndexes,
+    getPositionPath,
     findClosestElementAncestor,
     getPositionRect,
     getInlineElementAtNode,
@@ -334,16 +334,12 @@ export default class Editor {
     ): string {
         let contentDiv = this.core.contentDiv;
         let content = contentDiv.innerHTML;
+        let range: Range;
 
-        if (includeSelectionMarker) {
-            let range = this.getSelectionRange();
-            let startIndexes = range
-                ? getPositionIndexes(this.core.contentDiv, Position.getStart(range))
-                : [];
-            let endIndexes = range
-                ? getPositionIndexes(this.core.contentDiv, Position.getEnd(range))
-                : [];
-            content += `<!--${JSON.stringify([startIndexes, endIndexes])}-->`;
+        if (includeSelectionMarker && (range = this.getSelectionRange())) {
+            let start = getPositionPath(Position.getStart(range), this.core.contentDiv);
+            let end = getPositionPath(Position.getEnd(range), this.core.contentDiv);
+            content += `<!--${JSON.stringify({ start, end })}-->`;
         }
 
         if (triggerExtractContentEvent) {
@@ -376,22 +372,17 @@ export default class Editor {
         if (contentDiv.innerHTML != content) {
             contentDiv.innerHTML = content || '';
 
-            let indexesComment = contentDiv.lastChild;
+            let pathComment = contentDiv.lastChild;
+            let path: any;
 
-            if (indexesComment && indexesComment.nodeType == NodeType.Comment) {
-                try {
-                    let indexes = JSON.parse(indexesComment.nodeValue) as number[][];
-                    if (
-                        indexes &&
-                        indexes.length == 2 &&
-                        indexes[0] instanceof Array &&
-                        indexes[1] instanceof Array
-                    ) {
-                        let range = createRange(indexes[0], indexes[1], contentDiv);
-                        this.select(range);
-                        this.deleteNode(indexesComment);
-                    }
-                } catch {}
+            if (
+                pathComment &&
+                pathComment.nodeType == NodeType.Comment &&
+                (path = tryParsePathJson(pathComment.nodeValue))
+            ) {
+                let range = createRange(path.start, path.end, contentDiv);
+                this.select(range);
+                this.deleteNode(pathComment);
             }
 
             if (triggerContentChangedEvent) {
@@ -859,4 +850,13 @@ export default class Editor {
     }
 
     //#endregion
+}
+
+function tryParsePathJson(json: string) {
+    try {
+        let obj = JSON.parse(json);
+        return obj && obj.start instanceof Array && obj.end instanceof Array ? obj : null;
+    } catch {
+        return null;
+    }
 }
