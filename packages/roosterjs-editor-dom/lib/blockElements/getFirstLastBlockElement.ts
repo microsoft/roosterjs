@@ -1,5 +1,5 @@
 import { BlockElement } from 'roosterjs-editor-types';
-import { getBlockElementAtNode } from './BlockElement';
+import getBlockElementAtNode from './getBlockElementAtNode';
 
 /**
  * Get the first/last BlockElement of under the root node.

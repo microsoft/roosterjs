@@ -1,10 +1,10 @@
 import * as TestHelper from '../DomTestHelper';
+import getInlineElementAtNode from '../../inlineElements/getInlineElementAtNode';
+import NodeBlockElement from '../../blockElements/NodeBlockElement';
 import NodeInlineElement from '../../inlineElements/NodeInlineElement';
 import PartialInlineElement from '../../inlineElements/PartialInlineElement';
 import Position from '../../selection/Position';
-import resolveInlineElement from '../../inlineElements/resolveInlineElement';
 import { InlineElement } from 'roosterjs-editor-types';
-import { NodeBlockElement } from '../../blockElements/BlockElement';
 
 let testID = 'PartialInlineElement';
 
@@ -41,12 +41,10 @@ function createPartialInlineElementWithDiv(
     endOffset: number
 ): [PartialInlineElement, InlineElement, NodeBlockElement] {
     let testParentBlock = new NodeBlockElement(testDiv);
-    let inlineElement = resolveInlineElement(testDiv.firstChild, testDiv, testParentBlock);
-    let startPosition = startOffset
-        ? new Position(testDiv.firstChild.firstChild, startOffset)
-        : null;
-    let endPosition = endOffset ? new Position(testDiv.firstChild.lastChild, endOffset) : null;
-    let partialInlineElement = new PartialInlineElement(inlineElement, startPosition, endPosition);
+    let inlineElement = getInlineElementAtNode(testParentBlock, testDiv.firstChild);
+    let start = startOffset ? new Position(testDiv.firstChild.firstChild, startOffset) : null;
+    let end = endOffset ? new Position(testDiv.firstChild.lastChild, endOffset) : null;
+    let partialInlineElement = new PartialInlineElement(inlineElement, start, end);
     return [partialInlineElement, inlineElement, testParentBlock];
 }
 
@@ -70,23 +68,23 @@ describe('PartialInlineElement getDecoratedInline()', () => {
         expect(decoratedInline).toBe(inlineElement);
     }
 
-    it('Partial on start point', () => {
+    it('Partial on start position', () => {
         runTest(['<span>www.example.com</span>', 4, null /*endOffset*/]);
     });
 
-    it('Partial on end point', () => {
+    it('Partial on end position', () => {
         runTest(['<span>www.example.com</span>', null /*startOffset*/, 11]);
     });
 
-    it('Partial on start point and end point, startOffset < endOffset', () => {
+    it('Partial on start position and end position, startOffset < endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 11]);
     });
 
-    it('Partial on start point and end point, startOffset = endOffset', () => {
+    it('Partial on start position and end position, startOffset = endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 4]);
     });
 
-    it('Partial on start point and end point, startOffset > endOffset', () => {
+    it('Partial on start position and end position, startOffset > endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 3]);
     });
 });
@@ -111,23 +109,23 @@ describe('PartialInlineElement getContainerNode()', () => {
         expect(containerNode).toBe(testDiv.firstChild);
     }
 
-    it('Partial on start point', () => {
+    it('Partial on start position', () => {
         runTest(['<span>www.example.com</span>', 4, null /*endOffset*/]);
     });
 
-    it('Partial on end point', () => {
+    it('Partial on end position', () => {
         runTest(['<span>www.example.com</span>', null /*startOffset*/, 11]);
     });
 
-    it('Partial on start point and end point, startOffset < endOffset', () => {
+    it('Partial on start position and end position, startOffset < endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 11]);
     });
 
-    it('Partial on start point and end point, startOffset = endOffset', () => {
+    it('Partial on start position and end position, startOffset = endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 4]);
     });
 
-    it('Partial on start point and end point, startOffset > endOffset', () => {
+    it('Partial on start position and end position, startOffset > endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 3]);
     });
 });
@@ -152,23 +150,23 @@ describe('PartialInlineElement getParentBlock()', () => {
         expect(parentBlock).toBe(testParentBlock);
     }
 
-    it('Partial on start point', () => {
+    it('Partial on start position', () => {
         runTest(['<span>www.example.com</span>', 4, null /*endOffset*/]);
     });
 
-    it('Partial on end point', () => {
+    it('Partial on end position', () => {
         runTest(['<span>www.example.com</span>', null /*startOffset*/, 11]);
     });
 
-    it('Partial on start point and end point, startOffset < endOffset', () => {
+    it('Partial on start position and end position, startOffset < endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 11]);
     });
 
-    it('Partial on start point and end point, startOffset = endOffset', () => {
+    it('Partial on start position and end position, startOffset = endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 4]);
     });
 
-    it('Partial on start point and end point, startOffset > endOffset', () => {
+    it('Partial on start position and end position, startOffset > endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 3]);
     });
 });
@@ -193,23 +191,23 @@ describe('PartialInlineElement getTextContent()', () => {
         expect(textContent).toBe(output);
     }
 
-    it('Partial on start point', () => {
+    it('Partial on start position', () => {
         runTest(['<span>www.example.com</span>', 4, null /*endOffset*/], 'example.com');
     });
 
-    it('Partial on end point', () => {
+    it('Partial on end position', () => {
         runTest(['<span>www.example.com</span>', null /*startOffset*/, 11], 'www.example');
     });
 
-    it('Partial on start point and end point, startOffset < endOffset', () => {
+    it('Partial on start position and end position, startOffset < endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 11], 'example');
     });
 
-    it('Partial on start point and end point, startOffset = endOffset', () => {
+    it('Partial on start position and end position, startOffset = endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 4], '');
     });
 
-    it('Partial on start point and end point, startOffset > endOffset', () => {
+    it('Partial on start position and end position, startOffset > endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 3], '');
     });
 });
@@ -235,23 +233,23 @@ describe('PartialInlineElement getStartPosition()', () => {
         expect(startPosition.offset).toEqual(input[1] || 0);
     }
 
-    it('Partial on start point', () => {
+    it('Partial on start position', () => {
         runTest(['<span>www.example.com</span>', 4, null /*endOffset*/]);
     });
 
-    it('Partial on end point', () => {
+    it('Partial on end position', () => {
         runTest(['<span>www.example.com</span>', null /*startOffset*/, 11]);
     });
 
-    it('Partial on start point and end point, startOffset < endOffset', () => {
+    it('Partial on start position and end position, startOffset < endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 11]);
     });
 
-    it('Partial on start point and end point, startOffset = endOffset', () => {
+    it('Partial on start position and end position, startOffset = endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 4]);
     });
 
-    it('Partial on start point and end point, startOffset > endOffset', () => {
+    it('Partial on start position and end position, startOffset > endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 3]);
     });
 });
@@ -277,23 +275,23 @@ describe('PartialInlineElement getEndPosition()', () => {
         expect(endPosition.offset).toEqual(output);
     }
 
-    it('Partial on start point', () => {
+    it('Partial on start position', () => {
         runTest(['<span>www.example.com</span>', 4, null /*endOffset*/], 15);
     });
 
-    it('Partial on end point', () => {
+    it('Partial on end position', () => {
         runTest(['<span>www.example.com</span>', null /*startOffset*/, 11], 11);
     });
 
-    it('Partial on start point and end point, startOffset < endOffset', () => {
+    it('Partial on start position and end position, startOffset < endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 11], 11);
     });
 
-    it('Partial on start point and end point, startOffset = endOffset', () => {
+    it('Partial on start position and end position, startOffset = endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 4], 4);
     });
 
-    it('Partial on start point and end point, startOffset > endOffset', () => {
+    it('Partial on start position and end position, startOffset > endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 3], 3);
     });
 });
@@ -323,23 +321,23 @@ describe('PartialInlineElement nextInlineElement', () => {
         );
     }
 
-    it('Partial on start point', () => {
+    it('Partial on start position', () => {
         runTest(['<span>www.example.com</span>', 4, null /*endOffset*/]);
     });
 
-    it('Partial on end point', () => {
+    it('Partial on end position', () => {
         runTest(['<span>www.example.com</span>', null /*startOffset*/, 11]);
     });
 
-    it('Partial on start point and end point, startOffset < endOffset', () => {
+    it('Partial on start position and end position, startOffset < endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 11]);
     });
 
-    it('Partial on start point and end point, startOffset = endOffset', () => {
+    it('Partial on start position and end position, startOffset = endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 4]);
     });
 
-    it('Partial on start point and end point, startOffset > endOffset', () => {
+    it('Partial on start position and end position, startOffset > endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 3]);
     });
 });
@@ -369,23 +367,23 @@ describe('PartialInlineElement previousInlineElement', () => {
         );
     }
 
-    it('Partial on start point', () => {
+    it('Partial on start position', () => {
         runTest(['<span>www.example.com</span>', 4, null /*endOffset*/]);
     });
 
-    it('Partial on end point', () => {
+    it('Partial on end position', () => {
         runTest(['<span>www.example.com</span>', null /*startOffset*/, 11]);
     });
 
-    it('Partial on start point and end point, startOffset < endOffset', () => {
+    it('Partial on start position and end position, startOffset < endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 11]);
     });
 
-    it('Partial on start point and end point, startOffset = endOffset', () => {
+    it('Partial on start position and end position, startOffset = endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 4]);
     });
 
-    it('Partial on start point and end point, startOffset > endOffset', () => {
+    it('Partial on start position and end position, startOffset > endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 3]);
     });
 });
@@ -532,32 +530,32 @@ describe('PartialInlineElement applyStyle()', () => {
         expect(testDiv.innerHTML).toBe(output);
     }
 
-    it('Partial on start point', () => {
+    it('Partial on start position', () => {
         runTest(
             ['<span>www.example.com</span>', 4, null /*endOffset*/],
             '<span>www.</span><span style="color: red;">example.com</span>'
         );
     });
 
-    it('Partial on end point', () => {
+    it('Partial on end position', () => {
         runTest(
             ['<span>www.example.com</span>', null /*startOffset*/, 11],
             '<span style="color: red;">www.example</span><span>.com</span>'
         );
     });
 
-    it('Partial on start point and end point, startOffset < endOffset', () => {
+    it('Partial on start position and end position, startOffset < endOffset', () => {
         runTest(
             ['<span>www.example.com</span>', 4, 11],
             '<span>www.</span><span style="color: red;">example</span><span>.com</span>'
         );
     });
 
-    it('Partial on start point and end point, startOffset = endOffset', () => {
+    it('Partial on start position and end position, startOffset = endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 4], '<span>www.example.com</span>');
     });
 
-    it('Partial on start point and end point, startOffset > endOffset', () => {
+    it('Partial on start position and end position, startOffset > endOffset', () => {
         runTest(['<span>www.example.com</span>', 4, 2], '<span>www.example.com</span>');
     });
 });

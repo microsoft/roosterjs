@@ -1,6 +1,7 @@
-import resolveInlineElement from '../inlineElements/resolveInlineElement';
+import getInlineElementAtNode from '../inlineElements/getInlineElementAtNode';
+import NodeBlockElement from '../blockElements/NodeBlockElement';
+import StartEndBlockElement from '../blockElements/StartEndBlockElement';
 import { InlineElement, NodePosition } from 'roosterjs-editor-types';
-import { NodeBlockElement, StartEndBlockElement } from '../blockElements/BlockElement';
 
 // Create element with content and id and insert the element in the DOM
 export function createElementFromContent(id: string, content: string): HTMLElement {
@@ -80,7 +81,7 @@ export function createStartEndBlockElementWithStartEndNode(
 // Create inlineElement from node
 export function createInlineElementFromNode(node: Node, rootNode: Node): InlineElement {
     let parentBlock = new NodeBlockElement(node as HTMLElement);
-    let inlineElement = resolveInlineElement(node, rootNode, parentBlock);
+    let inlineElement = getInlineElementAtNode(parentBlock, node);
     return inlineElement;
 }
 

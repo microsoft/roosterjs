@@ -1,8 +1,8 @@
+import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
 import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import Position from '../selection/Position';
 import TraversingScoper from './TraversingScoper';
 import { BlockElement, InlineElement, NodePosition } from 'roosterjs-editor-types';
-import { getBlockElementAtNode } from '../blockElements/BlockElement';
 import { getInlineElementAfter } from '../inlineElements/getInlineElementBeforeAfter';
 
 /**

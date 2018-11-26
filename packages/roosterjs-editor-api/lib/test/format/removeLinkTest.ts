@@ -5,7 +5,7 @@ import { Editor } from 'roosterjs-editor-core';
 describe('removeLink()', () => {
     let testID = 'removeLink';
     let originalContent =
-        '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><a href="www.outlook.com">link</a></div>';
+        '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><a href="#">link</a></div>';
     let editor: Editor;
 
     beforeEach(() => {
