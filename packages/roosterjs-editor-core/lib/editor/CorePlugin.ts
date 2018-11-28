@@ -118,7 +118,7 @@ export default class CorePlugin implements EditorPlugin {
      * @param node Current node
      * @returns A new position to select
      */
-    private ensureTypeInElement(position: Position): Position {
+    public ensureTypeInElement(position: Position): Position {
         position = position.normalize();
         let block = getBlockElementAtNode(this.contentDiv, position.node);
         let formatNode: HTMLElement;
