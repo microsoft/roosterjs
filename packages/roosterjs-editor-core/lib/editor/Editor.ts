@@ -95,13 +95,16 @@ export default class Editor {
             >(<any>false));
         } catch (e) {}
 
-        // 8. Finally, let plugins know that we are ready
+        // 8. Let plugins know that we are ready
         this.triggerEvent(
             {
                 eventType: PluginEventType.EditorReady,
             },
             true /*broadcast*/
         );
+
+        // 9. Before give editor to user, make sure there is at least one DIV element to accept typing
+        this.core.corePlugin.ensureTypeInElement(new Position(contentDiv, PositionType.Begin));
     }
 
     /**
