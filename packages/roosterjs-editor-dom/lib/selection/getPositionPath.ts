@@ -22,7 +22,7 @@ export default function getPositionPath(position: NodePosition, rootNode: HTMLEl
     let result: number[] = [];
     let parent: Node;
 
-    if ((node == rootNode && !node.firstChild) || !contains(rootNode, node, true)) {
+    if (!contains(rootNode, node, true)) {
         return [];
     }
 
