@@ -40,11 +40,7 @@ describe('getPositionPath', () => {
     describe('When deserializing a selection onto a new DOM that was previously serialized from an old DOM', () => {
         function testSelectionSeralizationIsSame(element: HTMLElement, initialRange: Range) {
             const paths = getPaths(initialRange, element);
-            const resultingRange = createRange(
-                paths.startPath,
-                paths.endPath,
-                element
-            );
+            const resultingRange = createRange(paths.startPath, paths.endPath, element);
             expect(resultingRange.startContainer).toEqual(initialRange.startContainer);
             expect(resultingRange.startOffset).toEqual(initialRange.startOffset);
             expect(resultingRange.endContainer).toEqual(initialRange.endContainer);
@@ -122,11 +118,7 @@ describe('getPositionPath', () => {
             // Act
             const paths = getPaths(initialRange, div);
             const divCopy = dom(div.outerHTML);
-            const resultingRange = createRange(
-                paths.startPath,
-                paths.endPath,
-                divCopy
-            );
+            const resultingRange = createRange(paths.startPath, paths.endPath, divCopy);
 
             expect(resultingRange.startContainer.textContent).toEqual(
                 'blahblahblah!This is where the selection will be'
@@ -156,11 +148,7 @@ describe('getPositionPath', () => {
             const paths = getPaths(initialRange, div);
             const divCopy = dom(div.outerHTML);
             expect(divCopy.childNodes.length).toBe(3);
-            const resultingRange = createRange(
-                paths.startPath,
-                paths.endPath,
-                divCopy
-            );
+            const resultingRange = createRange(paths.startPath, paths.endPath, divCopy);
 
             // Assert
             expect(resultingRange.startContainer.textContent).toEqual(
