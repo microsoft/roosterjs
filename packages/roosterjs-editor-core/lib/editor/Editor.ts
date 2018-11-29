@@ -376,7 +376,10 @@ export default class Editor {
             contentDiv.innerHTML = content || '';
 
             let pathComment = contentDiv.lastChild;
-            let path: any;
+            let path: {
+                start: number[];
+                end: number[];
+            };
 
             if (
                 pathComment &&
@@ -503,6 +506,7 @@ export default class Editor {
     }
 
     /**
+     * @deprecated
      * Insert selection marker element into content, so that after doing some modification,
      * we can still restore the selection as long as the selection marker is still there
      * @returns The return value of callback
