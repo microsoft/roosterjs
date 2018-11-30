@@ -50,7 +50,7 @@ export { default as Position } from './selection/Position';
 export { default as createRange } from './selection/createRange';
 export { default as getPositionRect } from './selection/getPositionRect';
 export { default as isPositionAtBeginningOf } from './selection/isPositionAtBeginningOf';
-export { markSelection, removeMarker } from './selection/selectionMarker';
+export { default as getSelectionPath, getRangeFromSelectionPath } from './selection/getSelectionPath';
 
 // Deprecated
 export { default as isTextualInlineElement } from './deprecated/isTextualInlineElement';
@@ -62,3 +62,4 @@ export {
     SanitizeHtmlPropertyCallback,
     StyleMap,
 } from './utils/sanitizeHtml';
+export { markSelection, removeMarker } from './deprecated/selectionMarker';

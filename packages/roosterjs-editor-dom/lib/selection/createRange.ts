@@ -23,7 +23,7 @@ export default function createRange(start: NodePosition | Node, end?: NodePositi
         end = new Position(<Node>end || start, PositionType.After);
         start = new Position(start, PositionType.Before);
     } else {
-        end = <Position>end || start;
+        end = <NodePosition>end || start;
     }
 
     let range = start.node.ownerDocument.createRange();

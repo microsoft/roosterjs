@@ -58,18 +58,16 @@ export default function replaceWithNode(
     }
 
     if (range) {
-        editor.runWithSelectionMarker(() => {
-            let backupRange = editor.getSelectionRange();
+        let backupRange = editor.getSelectionRange();
 
-            range.deleteContents();
-            range.insertNode(node);
+        range.deleteContents();
+        range.insertNode(node);
 
-            if (exactMatch) {
-                editor.select(node, PositionType.After);
-            } else {
-                editor.select(backupRange);
-            }
-        }, true /*useInlineMarker*/);
+        if (exactMatch) {
+            editor.select(node, PositionType.After);
+        } else {
+            editor.select(backupRange);
+        }
 
         return true;
     }
