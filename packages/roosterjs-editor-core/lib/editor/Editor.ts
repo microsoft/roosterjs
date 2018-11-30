@@ -1,6 +1,7 @@
 import createEditorCore from './createEditorCore';
 import EditorCore from './EditorCore';
 import EditorOptions from './EditorOptions';
+import { getRangeFromSelectionPath, getSelectionPath } from 'roosterjs-editor-dom';
 import {
     BlockElement,
     ChangeSource,
@@ -17,6 +18,7 @@ import {
     PluginEventType,
     PositionType,
     QueryScope,
+    SelectionPath,
     Rect,
 } from 'roosterjs-editor-types';
 import {
@@ -25,10 +27,8 @@ import {
     ContentTraverser,
     Position,
     contains,
-    createRange,
     fromHtml,
     getBlockElementAtNode,
-    getPositionPath,
     findClosestElementAncestor,
     getPositionRect,
     getInlineElementAtNode,
@@ -337,12 +337,13 @@ export default class Editor {
     ): string {
         let contentDiv = this.core.contentDiv;
         let content = contentDiv.innerHTML;
-        let range: Range;
+        let selectionPath: SelectionPath;
 
-        if (includeSelectionMarker && (range = this.getSelectionRange())) {
-            let start = getPositionPath(Position.getStart(range), this.core.contentDiv);
-            let end = getPositionPath(Position.getEnd(range), this.core.contentDiv);
-            content += `<!--${JSON.stringify({ start, end })}-->`;
+        if (
+            includeSelectionMarker &&
+            (selectionPath = getSelectionPath(contentDiv, this.getSelectionRange()))
+        ) {
+            content += `<!--${JSON.stringify(selectionPath)}-->`;
         }
 
         if (triggerExtractContentEvent) {
@@ -376,19 +377,14 @@ export default class Editor {
             contentDiv.innerHTML = content || '';
 
             let pathComment = contentDiv.lastChild;
-            let path: {
-                start: number[];
-                end: number[];
-            };
 
-            if (
-                pathComment &&
-                pathComment.nodeType == NodeType.Comment &&
-                (path = tryParsePathJson(pathComment.nodeValue))
-            ) {
-                let range = createRange(path.start, path.end, contentDiv);
-                this.select(range);
-                this.deleteNode(pathComment);
+            if (pathComment && pathComment.nodeType == NodeType.Comment) {
+                try {
+                    let path = JSON.parse(pathComment.nodeValue) as SelectionPath;
+                    this.deleteNode(pathComment);
+                    let range = getRangeFromSelectionPath(contentDiv, path);
+                    this.select(range);
+                } catch {}
             }
 
             if (triggerContentChangedEvent) {
@@ -857,13 +853,4 @@ export default class Editor {
     }
 
     //#endregion
-}
-
-function tryParsePathJson(json: string) {
-    try {
-        let obj = JSON.parse(json);
-        return obj && obj.start instanceof Array && obj.end instanceof Array ? obj : null;
-    } catch {
-        return null;
-    }
 }

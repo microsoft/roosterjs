@@ -16,29 +16,14 @@ export default function createRange(node: Node, endNode?: Node): Range;
  */
 export default function createRange(start: NodePosition, end?: NodePosition): Range;
 
-/**
- * Create a Range object using start and end node indexes and rootNode
- * @param start The start position path
- * @param end The end position path
- * @param rootNode The root node of the path
- */
-export default function createRange(start: number[], end: number[], rootNode: HTMLElement): Range;
-
-export default function createRange(
-    start: NodePosition | Node | number[],
-    end?: NodePosition | Node | number[],
-    rootNode?: HTMLElement
-): Range {
+export default function createRange(start: NodePosition | Node, end?: NodePosition | Node): Range {
     if (!start) {
         return null;
-    } else if (start instanceof Array) {
-        start = getPositionFromPath(rootNode, start);
-        end = getPositionFromPath(rootNode, end as number[]);
     } else if (start instanceof Node) {
         end = new Position(<Node>end || start, PositionType.After);
         start = new Position(start, PositionType.Before);
     } else {
-        end = <Position>end || start;
+        end = <NodePosition>end || start;
     }
 
     let range = start.node.ownerDocument.createRange();
@@ -48,28 +33,6 @@ export default function createRange(
     range.setEnd(end.node, end.offset);
 
     return range;
-}
-
-function getPositionFromPath(node: Node, path: number[]): NodePosition {
-    // Iterate with a for loop to avoid mutating the passed in element path stack
-    // or needing to copy it.
-    let offset: number;
-
-    for (let i = 0; i < path.length; i++) {
-        offset = path[i];
-        if (
-            i < path.length - 1 &&
-            node &&
-            node.nodeType == NodeType.Element &&
-            node.childNodes.length > offset
-        ) {
-            node = node.childNodes[offset];
-        } else {
-            break;
-        }
-    }
-
-    return new Position(node, offset);
 }
 
 /**

@@ -1,7 +1,7 @@
 import createRange from '../../selection/createRange';
 import getPositionRect from '../../selection/getPositionRect';
 import Position from '../../selection/Position';
-import { markSelection, removeMarker } from '../../selection/selectionMarker';
+import { markSelection, removeMarker } from '../../deprecated/selectionMarker';
 
 function runTestGlobal(
     input: string,

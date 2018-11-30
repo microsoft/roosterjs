@@ -1,6 +1,4 @@
-import getPositionPath from '../../selection/getPositionPath';
-import createRange from '../../selection/createRange';
-import Position from '../../selection/Position';
+import getSelectionPath, { getRangeFromSelectionPath } from '../../selection/getSelectionPath';
 
 // Slim polyfill of Range since it is not defined by jsdom
 // see open issue https://github.com/jsdom/jsdom/issues/317
@@ -29,18 +27,11 @@ function dom(domString: string): HTMLElement {
     return parsedResult as HTMLElement;
 }
 
-function getPaths(range: Range, root: HTMLElement) {
-    return {
-        startPath: getPositionPath(Position.getStart(range), root),
-        endPath: getPositionPath(Position.getEnd(range), root),
-    };
-}
-
 describe('getPositionPath', () => {
     describe('When deserializing a selection onto a new DOM that was previously serialized from an old DOM', () => {
         function testSelectionSeralizationIsSame(element: HTMLElement, initialRange: Range) {
-            const paths = getPaths(initialRange, element);
-            const resultingRange = createRange(paths.startPath, paths.endPath, element);
+            const paths = getSelectionPath(element, initialRange);
+            const resultingRange = getRangeFromSelectionPath(element, paths);
             expect(resultingRange.startContainer).toEqual(initialRange.startContainer);
             expect(resultingRange.startOffset).toEqual(initialRange.startOffset);
             expect(resultingRange.endContainer).toEqual(initialRange.endContainer);
@@ -53,9 +44,9 @@ describe('getPositionPath', () => {
             initialRange.setStart(div.childNodes[0], 0);
             initialRange.setEnd(div.childNodes[0], 5);
 
-            expect(getPaths(initialRange, div)).toEqual({
-                startPath: [0, 0],
-                endPath: [0, 5],
+            expect(getSelectionPath(div, initialRange)).toEqual({
+                start: [0, 0],
+                end: [0, 5],
             });
             testSelectionSeralizationIsSame(div, initialRange);
         });
@@ -116,9 +107,9 @@ describe('getPositionPath', () => {
             initialRange.setEnd(div.childNodes[2], 4);
 
             // Act
-            const paths = getPaths(initialRange, div);
+            const paths = getSelectionPath(div, initialRange);
             const divCopy = dom(div.outerHTML);
-            const resultingRange = createRange(paths.startPath, paths.endPath, divCopy);
+            const resultingRange = getRangeFromSelectionPath(divCopy, paths);
 
             expect(resultingRange.startContainer.textContent).toEqual(
                 'blahblahblah!This is where the selection will be'
@@ -145,10 +136,10 @@ describe('getPositionPath', () => {
             initialRange.setEnd(div, 3);
 
             // Act
-            const paths = getPaths(initialRange, div);
+            const paths = getSelectionPath(div, initialRange);
             const divCopy = dom(div.outerHTML);
             expect(divCopy.childNodes.length).toBe(3);
-            const resultingRange = createRange(paths.startPath, paths.endPath, divCopy);
+            const resultingRange = getRangeFromSelectionPath(divCopy, paths);
 
             // Assert
             expect(resultingRange.startContainer.textContent).toEqual(
@@ -170,12 +161,12 @@ describe('getPositionPath', () => {
             initialRange.setEnd(div, 0);
 
             // Act
-            const paths = getPaths(initialRange, div);
+            const paths = getSelectionPath(div, initialRange);
 
             // Assert
             expect(paths).toEqual({
-                startPath: [0],
-                endPath: [0],
+                start: [0],
+                end: [0],
             });
         });
 
@@ -192,12 +183,12 @@ describe('getPositionPath', () => {
             initialRange.setEnd(div.childNodes[2], 5);
 
             // Act
-            const paths = getPaths(initialRange, div);
+            const paths = getSelectionPath(div, initialRange);
 
             // Assert
             expect(paths).toEqual({
-                startPath: [0, 10],
-                endPath: [0, 10],
+                start: [0, 10],
+                end: [0, 10],
             });
         });
 
@@ -212,12 +203,12 @@ describe('getPositionPath', () => {
             initialRange.setEnd(div, 3);
 
             // Act
-            const paths = getPaths(initialRange, div);
+            const paths = getSelectionPath(div, initialRange);
 
             // Assert
             expect(paths).toEqual({
-                startPath: [1],
-                endPath: [1],
+                start: [1],
+                end: [1],
             });
         });
 
@@ -233,12 +224,12 @@ describe('getPositionPath', () => {
             initialRange.setEnd(div, 2);
 
             // Act
-            const paths = getPaths(initialRange, div);
+            const paths = getSelectionPath(div, initialRange);
 
             // Assert
             expect(paths).toEqual({
-                startPath: [1],
-                endPath: [1],
+                start: [1],
+                end: [1],
             });
         });
 
@@ -257,12 +248,12 @@ describe('getPositionPath', () => {
             initialRange.setEnd(div, 7);
 
             // Act
-            const paths = getPaths(initialRange, div);
+            const paths = getSelectionPath(div, initialRange);
 
             // Assert
             expect(paths).toEqual({
-                startPath: [1],
-                endPath: [1],
+                start: [1],
+                end: [1],
             });
         });
 
@@ -279,12 +270,12 @@ describe('getPositionPath', () => {
             initialRange.setEnd(a.parentNode, 3);
 
             // Act
-            const paths = getPaths(initialRange, div);
+            const paths = getSelectionPath(div, initialRange);
 
             // Assert
             expect(paths).toEqual({
-                startPath: [0, 1],
-                endPath: [0, 1],
+                start: [0, 1],
+                end: [0, 1],
             });
         });
 
@@ -294,12 +285,12 @@ describe('getPositionPath', () => {
             initialRange.setStart(div, 1);
             initialRange.setEnd(div, 1);
 
-            const paths = getPaths(initialRange, div);
+            const paths = getSelectionPath(div, initialRange);
 
             // Assert
             expect(paths).toEqual({
-                startPath: [1],
-                endPath: [1],
+                start: [1],
+                end: [1],
             });
         });
 
@@ -309,12 +300,12 @@ describe('getPositionPath', () => {
             initialRange.setStart(div, 2);
             initialRange.setEnd(div, 2);
 
-            const paths = getPaths(initialRange, div);
+            const paths = getSelectionPath(div, initialRange);
 
             // Assert
             expect(paths).toEqual({
-                startPath: [2],
-                endPath: [2],
+                start: [2],
+                end: [2],
             });
         });
     });
