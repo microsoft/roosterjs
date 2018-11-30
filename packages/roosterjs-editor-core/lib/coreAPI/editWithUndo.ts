@@ -14,6 +14,7 @@ const editWithUndo: EditWithUndo = (
 ) => {
     let isNested = core.currentUndoSnapshot !== null;
     let data: any;
+    let currentSnapshot: string;
 
     if (!isNested) {
         core.currentUndoSnapshot = core.undo.addUndoSnapshot();
@@ -29,7 +30,7 @@ const editWithUndo: EditWithUndo = (
             );
 
             if (!isNested) {
-                core.undo.addUndoSnapshot();
+                currentSnapshot = core.undo.addUndoSnapshot();
             }
         }
     } finally {
@@ -42,6 +43,7 @@ const editWithUndo: EditWithUndo = (
         let event: ContentChangedEvent = {
             eventType: PluginEventType.ContentChanged,
             source: changeSource,
+            lastSnapshot: currentSnapshot,
             data: data,
         };
         core.api.triggerEvent(core, event, true /*broadcast*/);

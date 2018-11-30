@@ -1,11 +1,22 @@
 import textToHtml from './textToHtml';
 import { ClipboardData, ContentPosition, DefaultFormat } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { fromHtml } from 'roosterjs-editor-dom';
+import { fromHtml, Browser } from 'roosterjs-editor-dom';
 import { getFormatState } from 'roosterjs-editor-api';
 
 const CONTAINER_HTML =
     '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
+
+// HTML header to indicate where is the HTML content started from.
+// Sample header:
+// Version:0.9
+// StartHTML:71
+// EndHTML:170
+// StartFragment:140
+// EndFragment:160
+// StartSelection:140
+// EndSelection:160
+const CLIPBOARD_HTML_HEADER_REGEX = /^Version:[0-9\.]+\s+StartHTML:\s*([0-9]+)\s+EndHTML:\s*([0-9]+)\s+/i;
 
 interface WindowForIE extends Window {
     clipboardData: DataTransfer;
@@ -27,6 +38,9 @@ export default function buildClipboardData(
     let types: string[] = dataTransfer.types ? [].slice.call(dataTransfer.types) : [];
     let text = dataTransfer.getData('text');
     let retrieveHtmlCallback = (html: string) => {
+        if (Browser.isEdge) {
+            html = workaroundForEdge(html);
+        }
         callback({
             snapshotBeforePaste: null,
             originalFormat: getCurrentFormat(editor),
@@ -126,4 +140,23 @@ function getTempDivForPaste(editor: Editor): HTMLElement {
     );
     tempDiv.style.display = '';
     return tempDiv;
+}
+
+/**
+ * Edge sometimes doesn't remove the headers, which cause we paste more things then expected.
+ * So we need to remove it in our code
+ * @param html The HTML string got from clipboard
+ */
+function workaroundForEdge(html: string) {
+    let headerValues = CLIPBOARD_HTML_HEADER_REGEX.exec(html);
+
+    if (headerValues && headerValues.length == 3) {
+        let start = parseInt(headerValues[1]);
+        let end = parseInt(headerValues[2]);
+        if (start > 0 && end > start) {
+            html = html.substring(start, end);
+        }
+    }
+
+    return html;
 }

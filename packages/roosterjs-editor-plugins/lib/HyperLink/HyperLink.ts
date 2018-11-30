@@ -58,13 +58,37 @@ export default class HyperLink implements EditorPlugin {
                     this.resetAnchor(event.data as HTMLAnchorElement);
                 }
 
-                this.editor.queryElements('a[href]', this.processLink);
+                let anchors = this.editor.queryElements('a[href]');
+                if (anchors.length > 0) {
+                    // 1. Cache existing snapshot
+                    let snapshotBeforeProcessLink = this.getSnapshot();
+
+                    // 2. Process links
+                    anchors.forEach(this.processLink);
+
+                    // 3. See if cached snapshot is the same with lastSnapshot
+                    // Same snapshot means content isn't changed by other plugins,
+                    // Then we can overwrite the sanpshot here to avoid Undo plugin
+                    // adding undo snapshot for the link title attribute change
+                    if (snapshotBeforeProcessLink == event.lastSnapshot) {
+                        // Overwrite last snapshot to suppress undo for the temp properties
+                        event.lastSnapshot = this.editor.getContent(false, true);
+                    }
+                }
+
                 break;
 
             case PluginEventType.ExtractContent:
                 event.content = this.removeTempTooltip(event.content);
                 break;
         }
+    }
+
+    private getSnapshot() {
+        return this.editor.getContent(
+            false /*triggerContentChangedEvent*/,
+            true /*addSelectionMarker*/
+        );
     }
 
     private resetAnchor = (a: HTMLAnchorElement) => {
