@@ -10,7 +10,7 @@ import { ChangeSource, BlockElement, NodeType,
     // DocumentCommand, QueryScope
 } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { getTagOfNode, unwrap, isBlockElement, wrap } from 'roosterjs-editor-dom';
+import { getTagOfNode, unwrap, isBlockElement, wrap, splitBalancedNodeRange } from 'roosterjs-editor-dom';
 
 // const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
 
@@ -33,7 +33,17 @@ export default function clearFormat(editor: Editor, clearBlockFormat?: boolean) 
             }
             blocks.forEach(block => {
                 let element = block.collapseToSingleElement();
-                clearStyle(element);
+
+                let elementToCollapse = element;
+                while (editor.contains(elementToCollapse.parentNode) && ['TD', 'TH', 'TR', 'TABLE', 'TBODY'].indexOf(getTagOfNode(elementToCollapse.parentNode)) < 0) {
+                    let newParent = splitBalancedNodeRange(elementToCollapse);
+                    if (elementToCollapse.firstChild == elementToCollapse.lastChild) {
+                        unwrap(elementToCollapse);
+                    }
+                    elementToCollapse = newParent;
+                }
+
+                clearStyle(elementToCollapse);
             });
             editor.select(start, end);
         // }
@@ -83,7 +93,7 @@ export default function clearFormat(editor: Editor, clearBlockFormat?: boolean) 
     }, ChangeSource.Format);
 }
 
-const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,A,H1,H2,H3,H4,H5,H6'.split(',');
+const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,A,H1,H2,H3,H4,H5,H6,UL,OL,LI'.split(',');
 
 function clearStyle(element: HTMLElement) {
     let nodesToUnwrap: HTMLElement[] = [];
