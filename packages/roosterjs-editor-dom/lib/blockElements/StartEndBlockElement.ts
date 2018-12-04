@@ -8,6 +8,7 @@ import isNodeAfter from '../utils/isNodeAfter';
 import wrap from '../utils/wrap';
 import { BlockElement, InlineElement } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
+import getTagOfNode from '../utils/getTagOfNode';
 
 /**
  * This reprents a block that is identified by a start and end node
@@ -44,7 +45,15 @@ export default class StartEndBlockElement implements BlockElement {
         );
         let blockContext = StartEndBlockElement.getBlockContext(this.startNode);
         while (nodes[0] && nodes[0] != blockContext && nodes[0].parentNode != this.rootNode) {
-            nodes = [splitBalancedNodeRange(nodes)];
+            let parentTag = getTagOfNode(nodes[0].parentNode);
+
+            // Avoid splitting table cell
+            if (parentTag == 'TD' || parentTag == 'TH') {
+                nodes = [wrap(nodes)];
+                break;
+            } else {
+                nodes = [splitBalancedNodeRange(nodes)];
+            }
         }
         return nodes.length == 1 && isBlockElement(nodes[0])
             ? (nodes[0] as HTMLElement)

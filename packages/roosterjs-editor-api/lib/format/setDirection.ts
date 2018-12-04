@@ -1,4 +1,5 @@
-import { BlockElement, ChangeSource, Direction } from 'roosterjs-editor-types';
+import collapseSelectedBlocks from '../utils/collapseSelectedBlocks';
+import { ChangeSource, Direction } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -9,23 +10,11 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function setDirection(editor: Editor, direction: Direction) {
     editor.focus();
-
-    let blockElements: BlockElement[] = [];
-    let contentTraverser = editor.getSelectionTraverser();
-    let startBlock = contentTraverser && contentTraverser.currentBlockElement;
-    while (startBlock) {
-        blockElements.push(startBlock);
-        startBlock = contentTraverser.getNextBlockElement();
-    }
-
-    if (blockElements.length > 0) {
-        editor.addUndoSnapshot((start, end) => {
-            for (let block of blockElements) {
-                let node = block.collapseToSingleElement();
-                node.setAttribute('dir', direction == Direction.LeftToRight ? 'ltr' : 'rtl');
-                node.style.textAlign = direction == Direction.LeftToRight ? 'left' : 'right';
-            }
-            editor.select(start, end);
-        }, ChangeSource.Format);
-    }
+    editor.addUndoSnapshot((start, end) => {
+        collapseSelectedBlocks(editor, element => {
+            element.setAttribute('dir', direction == Direction.LeftToRight ? 'ltr' : 'rtl');
+            element.style.textAlign = direction == Direction.LeftToRight ? 'left' : 'right';
+        });
+        editor.select(start, end);
+    }, ChangeSource.Format);
 }
