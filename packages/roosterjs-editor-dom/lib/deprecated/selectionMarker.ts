@@ -1,5 +1,5 @@
-import createRange from './createRange';
-import Position from './Position';
+import createRange from '../selection/createRange';
+import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
 import { NodePosition, PositionType } from 'roosterjs-editor-types';
 
@@ -11,6 +11,7 @@ const CURSOR_SINGLE = 'cursor-single';
 const CURSOR_MARK_SELECTOR = `SPAN#${CURSOR_START},SPAN#${CURSOR_END},SPAN#${CURSOR_SINGLE}`;
 
 /**
+ * @deprecated
  * Insert selection marker element into content, so that after doing some modification,
  * we can still restore the selection as long as the selection marker is still there
  * @param container Container HTML element to query selection markers from
@@ -41,6 +42,7 @@ export function markSelection(
 }
 
 /**
+ * @deprecated
  * If there is selection marker in content, convert into back to a selection range and remove the markers,
  * otherwise no op.
  * @param container Container HTML element to query selection markers from

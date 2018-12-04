@@ -1,7 +1,12 @@
 import Editor from '../editor/Editor';
 import UndoService from '../editor/UndoService';
 import UndoSnapshots, { UndoSnapshotsService } from './UndoSnapshots';
-import { ChangeSource, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    PluginEvent,
+    PluginEventType,
+    ContentChangedEvent,
+} from 'roosterjs-editor-types';
 
 const KEY_BACKSPACE = 8;
 const KEY_DELETE = 46;
@@ -81,9 +86,7 @@ export default class Undo implements UndoService {
                 this.clearRedoForInput();
                 break;
             case PluginEventType.ContentChanged:
-                if (!this.isRestoring) {
-                    this.clearRedoForInput();
-                }
+                this.onContentChanged(event);
                 break;
         }
     }
@@ -132,10 +135,7 @@ export default class Undo implements UndoService {
      * Add an undo snapshot
      */
     public addUndoSnapshot(): string {
-        let snapshot = this.editor.getContent(
-            false /*triggerExtractContentEvent*/,
-            true /*markSelection*/
-        );
+        let snapshot = this.getSnapshot();
         this.getSnapshotsManager().addSnapshot(snapshot);
         this.hasNewContent = false;
         return snapshot;
@@ -224,6 +224,20 @@ export default class Undo implements UndoService {
         }
 
         this.lastKeyPress = evt.which;
+    }
+
+    private onContentChanged(evt: ContentChangedEvent) {
+        if (!this.isRestoring) {
+            let currentSnapshot = this.getSnapshot();
+
+            if (evt.lastSnapshot != currentSnapshot) {
+                this.clearRedoForInput();
+            }
+        }
+    }
+
+    private getSnapshot() {
+        return this.editor.getContent(false /*triggerExtractContentEvent*/, true /*markSelection*/);
     }
 
     private clearRedoForInput() {

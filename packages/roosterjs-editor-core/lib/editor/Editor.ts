@@ -1,6 +1,7 @@
 import createEditorCore from './createEditorCore';
 import EditorCore from './EditorCore';
 import EditorOptions from './EditorOptions';
+import { getRangeFromSelectionPath, getSelectionPath } from 'roosterjs-editor-dom';
 import {
     BlockElement,
     ChangeSource,
@@ -12,10 +13,12 @@ import {
     InlineElement,
     InsertOption,
     NodePosition,
+    NodeType,
     PluginEvent,
     PluginEventType,
     PositionType,
     QueryScope,
+    SelectionPath,
     Rect,
 } from 'roosterjs-editor-types';
 import {
@@ -333,9 +336,15 @@ export default class Editor {
         includeSelectionMarker: boolean = false
     ): string {
         let contentDiv = this.core.contentDiv;
-        let content = includeSelectionMarker
-            ? this.runWithSelectionMarker(() => contentDiv.innerHTML, false /*useInlineMarker*/)
-            : contentDiv.innerHTML;
+        let content = contentDiv.innerHTML;
+        let selectionPath: SelectionPath;
+
+        if (
+            includeSelectionMarker &&
+            (selectionPath = getSelectionPath(contentDiv, this.getSelectionRange()))
+        ) {
+            content += `<!--${JSON.stringify(selectionPath)}-->`;
+        }
 
         if (triggerExtractContentEvent) {
             let extractContentEvent: ExtractContentEvent = {
@@ -363,10 +372,20 @@ export default class Editor {
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     public setContent(content: string, triggerContentChangedEvent: boolean = true) {
-        if (this.core.contentDiv.innerHTML != content) {
-            this.core.contentDiv.innerHTML = content || '';
+        let contentDiv = this.core.contentDiv;
+        if (contentDiv.innerHTML != content) {
+            contentDiv.innerHTML = content || '';
 
-            this.select(removeMarker(this.core.contentDiv, true /*retrieveSelectionRange*/));
+            let pathComment = contentDiv.lastChild;
+
+            if (pathComment && pathComment.nodeType == NodeType.Comment) {
+                try {
+                    let path = JSON.parse(pathComment.nodeValue) as SelectionPath;
+                    this.deleteNode(pathComment);
+                    let range = getRangeFromSelectionPath(contentDiv, path);
+                    this.select(range);
+                } catch {}
+            }
 
             if (triggerContentChangedEvent) {
                 this.triggerContentChangedEvent();
@@ -483,6 +502,7 @@ export default class Editor {
     }
 
     /**
+     * @deprecated
      * Insert selection marker element into content, so that after doing some modification,
      * we can still restore the selection as long as the selection marker is still there
      * @returns The return value of callback
