@@ -29,6 +29,9 @@ function switchTab(name: string) {
     document.getElementById('advanceTab').className = name == 'advance' ? 'selected' : '';
     document.getElementById('options').className = name == 'options' ? 'tab selected' : 'tab';
     document.getElementById('advance').className = name == 'advance' ? 'tab selected' : 'tab';
+
+    document.getElementById('sampleCodeContainer').style.display = name == 'advance' ? 'none' : '';
+    document.getElementById('snapshotContainer').style.display = name != 'advance' ? 'none' : '';
 }
 
 function initEditor() {
