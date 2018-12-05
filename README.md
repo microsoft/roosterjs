@@ -6,6 +6,10 @@ Rooster is a framework-independent JavaScript rich-text editor neatly nested
 inside one HTML `<div>` element. Editing operations performed by end users are
 handled in simple ways to generate the final HTML.
 
+To view the sample site, please click the link below:
+
+[RoosterJs Sample Site](https://microsoft.github.io/roosterjs/index.html).
+
 ## Features
 
 ### Packages
@@ -184,16 +188,18 @@ document.getElementById('buttonU').addEventListener('click', function() {
 
 ## Sample code
 
-To use the sample editor, follow these instructions:
+To view the sample site, please click [here](https://microsoft.github.io/roosterjs/index.html).
+
+To build the sample site code yourself, follow these instructions:
 
 1. Get dependencies using [yarn](https://yarnpkg.com) or [npm](https://www.npmjs.com/):
 
    ```cmd
    yarn
    ```
-   
+
    or
-   
+
     ```cmd
    npm install
    ```
@@ -203,9 +209,9 @@ To use the sample editor, follow these instructions:
    ```
    yarn start
    ```
-   
+
    or
-   
+
    ```
    npm start
    ```
