@@ -8,6 +8,8 @@ const TEMP_TITLE_REGEX = new RegExp(
     'gm'
 );
 
+export type OpenLinkEvent = (win: WindowProxy, href: string, target: string, keyboardEvent: KeyboardEvent) => void;
+
 /**
  * An editor plugin that show a tooltip for existing link
  */
@@ -20,11 +22,14 @@ export default class HyperLink implements EditorPlugin {
      * @param getTooltipCallback A callback function to get tooltip text for an existing hyperlink.
      * Default value is to return the href itself. If null, there will be no tooltip text.
      * @param target (Optional) Target window name for hyperlink. If null, will use "_blank"
-     * @param linkMatchRules (Optional) Rules for matching hyperlink. If null, will use defaultLinkMatchRules
+     * @param onLinkOpen (Optional) Open link callback
      */
     constructor(
         private getTooltipCallback: (href: string) => string = href => href,
-        private target?: string
+        private target?: string,
+        private onLinkOpen: OpenLinkEvent = (win, href, target): void => {
+            win.open(href, target);
+        }
     ) {}
 
     /**
@@ -156,7 +161,7 @@ export default class HyperLink implements EditorPlugin {
             let target = this.target || '_blank';
             let window = this.editor.getDocument().defaultView;
             try {
-                window.open(href, target);
+                this.onLinkOpen(window, href, target, keyboardEvent);
             } catch {}
         }
     };
