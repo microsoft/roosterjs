@@ -2,7 +2,7 @@ import { cacheGetElementAtCursor, cacheGetEventData, Editor } from 'roosterjs-ed
 import { PluginEvent } from 'roosterjs-editor-types';
 
 /**
- * @deprecated Use editor.findElementByTag()
+ * @deprecated Use editor.getElementAtCursor()
  * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
  * which matches the tag name, or null if no match found in editor.
  * @param editor The editor instance
