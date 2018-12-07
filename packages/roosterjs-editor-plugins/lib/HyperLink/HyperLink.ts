@@ -8,8 +8,6 @@ const TEMP_TITLE_REGEX = new RegExp(
     'gm'
 );
 
-export type OpenLinkEvent = (win: WindowProxy, href: string, target: string, keyboardEvent: KeyboardEvent) => void;
-
 /**
  * An editor plugin that show a tooltip for existing link
  */
@@ -27,9 +25,7 @@ export default class HyperLink implements EditorPlugin {
     constructor(
         private getTooltipCallback: (href: string) => string = href => href,
         private target?: string,
-        private onLinkOpen: OpenLinkEvent = (win, href, target): void => {
-            win.open(href, target);
-        }
+        private onLinkOpen?: (anchor: HTMLAnchorElement) => void
     ) {}
 
     /**
@@ -152,16 +148,21 @@ export default class HyperLink implements EditorPlugin {
     }
 
     private onClickLink = (keyboardEvent: KeyboardEvent) => {
+        const anchor = this.tryGetAnchor(keyboardEvent.srcElement);
         let href: string;
         if (
             !Browser.isFirefox &&
-            (href = this.tryGetHref(keyboardEvent.srcElement)) &&
+            (href = this.tryGetHref(anchor)) &&
             (Browser.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey)
         ) {
-            let target = this.target || '_blank';
-            let window = this.editor.getDocument().defaultView;
             try {
-                this.onLinkOpen(window, href, target, keyboardEvent);
+                if (this.onLinkOpen) {
+                    this.onLinkOpen(anchor);
+                } else {
+                    const target = this.target || '_blank';
+                    const window = this.editor.getDocument().defaultView;
+                    window.open(href, target);
+                }
             } catch {}
         }
     };
@@ -171,20 +172,20 @@ export default class HyperLink implements EditorPlugin {
      * The reason this is put in a try-catch is that
      * it has been seen that accessing href may throw an exception, in particular on IE/Edge
      */
-    private tryGetHref(element: Element): string {
-        let href: string = null;
+    private tryGetHref(anchor: HTMLAnchorElement): string {
         try {
-            do {
-                if (element.tagName == 'A') {
-                    href = (<HTMLAnchorElement>element).href;
-                    break;
-                }
-                element = element.parentElement;
-            } while (this.editor.contains(element));
-        } catch (error) {
-            // Not do anything for the moment
-        }
+            return anchor ? anchor.href : null;
+        } catch {}
+    }
 
-        return href;
+    private tryGetAnchor(element: Element): HTMLAnchorElement {
+        do {
+            if (element.tagName == 'A') {
+                return <HTMLAnchorElement>element;
+            }
+            element = element.parentElement;
+        } while (this.editor.contains(element));
+
+        return null;
     }
 }
