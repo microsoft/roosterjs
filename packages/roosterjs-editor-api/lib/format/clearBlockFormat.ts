@@ -5,7 +5,6 @@ import {
     isBlockElement,
     unwrap,
     wrap,
-    shouldSkipNode,
     splitBalancedNodeRange,
 } from 'roosterjs-editor-dom';
 import { ChangeSource, NodeType } from 'roosterjs-editor-types';
@@ -19,35 +18,30 @@ const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
  * Clear all formats of selected blocks.
  * When selection is collapsed, only clear format of current block.
  * @param editor The editor instance
- * @param tagsToUnWrap Optional. A string array contains HTML tags in upper case which we will unwrap when clear format
+ * @param tagsToUnwrap Optional. A string array contains HTML tags in upper case which we will unwrap when clear format
  * @param tagsToStopUnwrap Optional. A string array contains HTML tags in upper case which we will stop unwrap if these tags are hit
  */
 export default function clearBlockFormat(
     editor: Editor,
-    tagsToUnWrap?: string[],
-    tagsToStopUnwrap?: string[]
+    tagsToUnwrap: string[] = TAGS_TO_UNWRAP,
+    tagsToStopUnwrap: string[] = TAGS_TO_STOP_UNWRAP
 ) {
-    tagsToUnWrap = tagsToUnWrap || TAGS_TO_UNWRAP;
-    tagsToStopUnwrap = tagsToStopUnwrap || TAGS_TO_STOP_UNWRAP;
-
     editor.focus();
-
     editor.addUndoSnapshot((start, end) => {
         let groups: {
             first?: HTMLElement;
             last?: HTMLElement;
-            td?: HTMLElement;
         }[] = [{}];
-        let group = groups[0];
+        let currentTd: HTMLElement = null;
+        let stopUnwrapSelector = tagsToStopUnwrap.join(',');
 
         // 1. Collapse the selected blocks and get first and last element
         collapseSelectedBlocks(editor, element => {
-            let td = editor.getElementAtCursor(tagsToStopUnwrap.join(','), element);
-            if (td != group.td && group.first) {
-                group = { td };
-                groups.push(group);
-            } else {
-                group.td = td;
+            let group = groups[groups.length - 1];
+            let td = editor.getElementAtCursor(stopUnwrapSelector, element);
+            if (td != currentTd && group.first) {
+                currentTd = td;
+                groups.push(group = {});
             }
 
             group.first = group.first || element;
@@ -55,23 +49,20 @@ export default function clearBlockFormat(
         });
 
         groups.forEach(group => {
-            let { first, last } = group;
-
             // 2. Collapse with first and last element to make them under same parent
-            let elements = editor.collapseNodes(first, last, true /*canSplitParent*/);
+            let nodes = editor.collapseNodes(group.first, group.last, true /*canSplitParent*/);
 
             // 3. Continue collapse until we can't collapse any more (hit root node, or a table)
-            while (
-                editor.contains(elements[0].parentNode) &&
-                tagsToStopUnwrap.indexOf(getTagOfNode(elements[0].parentNode)) < 0
-            ) {
-                elements = [splitBalancedNodeRange(elements)];
+            if (canCollapse(tagsToStopUnwrap, nodes[0])) {
+                while (
+                    editor.contains(nodes[0].parentNode) && canCollapse(tagsToStopUnwrap, nodes[0].parentNode as HTMLElement)
+                ) {
+                    nodes = [splitBalancedNodeRange(nodes)];
+                }
             }
 
             // 4. Clear formats of the nodes
-            elements
-                .filter(element => element.nodeType == NodeType.Element)
-                .forEach(element => clearTagFormat(element as HTMLElement, tagsToUnWrap, tagsToStopUnwrap));
+            nodes.forEach(node => clearTagFormat(node as HTMLElement, tagsToUnwrap, tagsToStopUnwrap));
 
         });
 
@@ -79,39 +70,38 @@ export default function clearBlockFormat(
     }, ChangeSource.Format);
 }
 
-function clearTagFormat(element: HTMLElement, tagsToUnWrap: string[], tagsToStopUnwrap: string[]) {
+function clearTagFormat(node: Node, tagsToUnwrap: string[], tagsToStopUnwrap: string[]): boolean {
+    if (node.nodeType != NodeType.Element) {
+        return false;
+    }
+
     // 1. Recursively clear format of all its child nodes
-    for (let child of [].slice.call(element.childNodes) as Node[]) {
-        if (child.nodeType == NodeType.Element) {
-            clearTagFormat(child as HTMLElement, tagsToUnWrap, tagsToStopUnwrap);
+    let allChildrenAreBlock = ([].slice.call(node.childNodes) as Node[])
+        .map(n => clearTagFormat(n, tagsToUnwrap, tagsToStopUnwrap))
+        .reduce((previousValue, value) => previousValue && value, true);
+
+    if (canCollapse(tagsToStopUnwrap, node)) {
+        let returnBlockElement = isBlockElement(node);
+
+        // 2. If we should unwrap this tag, put it into an array and unwrap it later
+        if (tagsToUnwrap.indexOf(getTagOfNode(node)) >= 0 || allChildrenAreBlock) {
+            if (returnBlockElement && !allChildrenAreBlock) {
+                wrap(node);
+            }
+            unwrap(node);
+        } else {
+            // 3. Otherwise, remove all attributes
+            for (let attr of [].slice.call((node as HTMLElement).attributes) as Attr[]) {
+                (node as HTMLElement).removeAttributeNode(attr);
+            }
         }
+
+        return returnBlockElement;
+    } else {
+        return false;
     }
+}
 
-    let canProcessElement = tagsToStopUnwrap.indexOf(getTagOfNode(element)) < 0;
-
-    // 2. If we should unwrap this tag, put it into an array and unwrap it later
-    if (tagsToUnWrap.indexOf(getTagOfNode(element)) >= 0) {
-        let temp = element;
-        if (isBlockElement(element)) {
-            temp = wrap(element);
-        }
-        unwrap(element);
-        element = temp;
-    } else if (canProcessElement) {
-        // 3. Otherwise, remove all attributes
-        for (let attr of [].slice.call(element.attributes) as Attr[]) {
-            element.removeAttributeNode(attr);
-        }
-    }
-
-    if (canProcessElement) {
-        let hasInlineElement = false;
-        for (let child: Node = element.firstChild; child && !hasInlineElement; child = child.nextSibling) {
-            hasInlineElement = !isBlockElement(child) && !shouldSkipNode(child);
-        }
-
-        if (!hasInlineElement) {
-            unwrap(element);
-        }
-    }
+function canCollapse(tagsToStopUnwrap: string[], node: Node) {
+    return tagsToStopUnwrap.indexOf(getTagOfNode(node)) < 0;
 }
