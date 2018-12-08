@@ -62,7 +62,7 @@ export default function clearBlockFormat(
             }
 
             // 4. Clear formats of the nodes
-            nodes.forEach(node => clearTagFormat(node as HTMLElement, tagsToUnwrap, tagsToStopUnwrap));
+            nodes.forEach(node => clearNodeFormat(node as HTMLElement, tagsToUnwrap, tagsToStopUnwrap));
 
         });
 
@@ -70,14 +70,14 @@ export default function clearBlockFormat(
     }, ChangeSource.Format);
 }
 
-function clearTagFormat(node: Node, tagsToUnwrap: string[], tagsToStopUnwrap: string[]): boolean {
+function clearNodeFormat(node: Node, tagsToUnwrap: string[], tagsToStopUnwrap: string[]): boolean {
     if (node.nodeType != NodeType.Element) {
         return false;
     }
 
     // 1. Recursively clear format of all its child nodes
     let allChildrenAreBlock = ([].slice.call(node.childNodes) as Node[])
-        .map(n => clearTagFormat(n, tagsToUnwrap, tagsToStopUnwrap))
+        .map(n => clearNodeFormat(n, tagsToUnwrap, tagsToStopUnwrap))
         .reduce((previousValue, value) => previousValue && value, true);
 
     if (canCollapse(tagsToStopUnwrap, node)) {
