@@ -25,6 +25,18 @@ function initOptions() {
         window.alert(text);
     });
 
+    document.getElementById('takeSnapshot').addEventListener('click', () => {
+        let snapshot = getCurrentEditor().getContent(false, true);
+        (document.getElementById('snapshotTextarea') as HTMLTextAreaElement).value = snapshot;
+    });
+
+    document.getElementById('resumeSnapshot').addEventListener('click', () => {
+        let snapshot = (document.getElementById('snapshotTextarea') as HTMLTextAreaElement).value;
+        let editor = getCurrentEditor();
+        editor.focus();
+        editor.setContent(snapshot, false);
+    });
+
     [
         'hyperlinkCheckbox',
         'pasteCheckbox',
