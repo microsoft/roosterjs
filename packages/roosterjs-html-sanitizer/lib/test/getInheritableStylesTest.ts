@@ -4,7 +4,6 @@ describe('getInheritableStyles', () => {
     it('NULL', () => {
         let styles = getInheritableStyles(null);
         expect(styles).toEqual({
-            ['border-collapse']: '',
             ['border-spacing']: '',
             ['caption-side']: '',
             color: '',
@@ -42,7 +41,6 @@ describe('getInheritableStyles', () => {
         let styles = getInheritableStyles(node);
         document.body.removeChild(node);
         expect(styles).toEqual({
-            ['border-collapse']: 'separate',
             ['border-spacing']: '0px 0px',
             ['caption-side']: 'top',
             color: 'rgb(0, 0, 0)',
