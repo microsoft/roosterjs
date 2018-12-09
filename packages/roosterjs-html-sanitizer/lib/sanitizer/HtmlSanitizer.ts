@@ -151,7 +151,7 @@ export default class HtmlSanitizer {
 
         if (
             (isElement && !this.allowElement(element, tag, context)) ||
-            (isText && /^[\r\n]*$/g.test(node.nodeValue)) ||
+            ((isText && /^[\r\n]*$/g.test(node.nodeValue)) && !currentStyle.insidePRE) ||
             (!isElement && !isText)
         ) {
             node.parentNode.removeChild(node);
@@ -165,6 +165,11 @@ export default class HtmlSanitizer {
             let thisStyle = cloneObject(currentStyle);
             this.processAttributes(element, context);
             this.processCss(element, tag, thisStyle, context);
+
+            // Special handling for PRE tag, need to preserve \r\n inside PRE
+            if (tag == 'PRE') {
+                currentStyle.insidePRE = 'true';
+            }
 
             let child: Node = element.firstChild;
             let next: Node;

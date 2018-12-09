@@ -320,4 +320,12 @@ describe('sanitizeHtml with allowPreserveWhiteSpace', () => {
             '<div>&nbsp; &nbsp;test &nbsp; </div>'
         );
     });
+
+    it('new line in PRE tag', () => {
+        runTest(
+            true,
+            '<pre><span>line1</span>\n<span>line2</span></pre>',
+            '<pre><span>line1</span>\n<span>line2</span></pre>'
+        );
+    });
 });
