@@ -168,7 +168,7 @@ export default class HtmlSanitizer {
 
             // Special handling for PRE tag, need to preserve \r\n inside PRE
             if (tag == 'PRE') {
-                currentStyle.insidePRE = 'true';
+                thisStyle.insidePRE = 'true';
             }
 
             let child: Node = element.firstChild;
