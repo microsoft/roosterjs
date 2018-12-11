@@ -9,10 +9,11 @@ import {
 } from 'roosterjs-editor-dom';
 import { ChangeSource, NodeType } from 'roosterjs-editor-types';
 
-const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,A,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
+const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
     ','
 );
 const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
+const ATTRIBUTES_TO_PRESERVE = ['href'];
 
 /**
  * Clear all formats of selected blocks.
@@ -24,26 +25,27 @@ const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
 export default function clearBlockFormat(
     editor: Editor,
     tagsToUnwrap: string[] = TAGS_TO_UNWRAP,
-    tagsToStopUnwrap: string[] = TAGS_TO_STOP_UNWRAP
+    tagsToStopUnwrap: string[] = TAGS_TO_STOP_UNWRAP,
+    attributesToPreserve: string[] = ATTRIBUTES_TO_PRESERVE
 ) {
     editor.focus();
     editor.addUndoSnapshot((start, end) => {
         let groups: {
             first?: HTMLElement;
             last?: HTMLElement;
+            td?: HTMLElement;
         }[] = [{}];
-        let currentTd: HTMLElement = null;
         let stopUnwrapSelector = tagsToStopUnwrap.join(',');
 
         // 1. Collapse the selected blocks and get first and last element
         collapseSelectedBlocks(editor, element => {
             let group = groups[groups.length - 1];
             let td = editor.getElementAtCursor(stopUnwrapSelector, element);
-            if (td != currentTd && group.first) {
-                currentTd = td;
-                groups.push(group = {});
+            if (td != group.td && group.first) {
+                groups.push((group = {}));
             }
 
+            group.td = td;
             group.first = group.first || element;
             group.last = element;
         });
@@ -55,50 +57,87 @@ export default function clearBlockFormat(
             // 3. Continue collapse until we can't collapse any more (hit root node, or a table)
             if (canCollapse(tagsToStopUnwrap, nodes[0])) {
                 while (
-                    editor.contains(nodes[0].parentNode) && canCollapse(tagsToStopUnwrap, nodes[0].parentNode as HTMLElement)
+                    editor.contains(nodes[0].parentNode) &&
+                    canCollapse(tagsToStopUnwrap, nodes[0].parentNode as HTMLElement)
                 ) {
                     nodes = [splitBalancedNodeRange(nodes)];
                 }
             }
 
             // 4. Clear formats of the nodes
-            nodes.forEach(node => clearNodeFormat(node as HTMLElement, tagsToUnwrap, tagsToStopUnwrap));
+            nodes.forEach(node =>
+                clearNodeFormat(
+                    node as HTMLElement,
+                    tagsToUnwrap,
+                    tagsToStopUnwrap,
+                    attributesToPreserve
+                )
+            );
 
+            // 5. Clear CSS of container TD if exist
+            if (group.td) {
+                let styles = group.td.getAttribute('style') || '';
+                let styleArray = styles.split(';');
+                styleArray = styleArray.filter(
+                    style =>
+                        style
+                            .trim()
+                            .toLowerCase()
+                            .indexOf('border') == 0
+                );
+                styles = styleArray.join(';');
+                if (styles) {
+                    group.td.setAttribute('style', styles);
+                } else {
+                    group.td.removeAttribute('style');
+                }
+            }
         });
 
         editor.select(start, end);
     }, ChangeSource.Format);
 }
 
-function clearNodeFormat(node: Node, tagsToUnwrap: string[], tagsToStopUnwrap: string[]): boolean {
+function clearNodeFormat(
+    node: Node,
+    tagsToUnwrap: string[],
+    tagsToStopUnwrap: string[],
+    attributesToPreserve: string[]
+): boolean {
     if (node.nodeType != NodeType.Element) {
         return false;
     }
 
     // 1. Recursively clear format of all its child nodes
     let allChildrenAreBlock = ([].slice.call(node.childNodes) as Node[])
-        .map(n => clearNodeFormat(n, tagsToUnwrap, tagsToStopUnwrap))
+        .map(n => clearNodeFormat(n, tagsToUnwrap, tagsToStopUnwrap, attributesToPreserve))
         .reduce((previousValue, value) => previousValue && value, true);
 
-    if (canCollapse(tagsToStopUnwrap, node)) {
-        let returnBlockElement = isBlockElement(node);
-
-        // 2. If we should unwrap this tag, put it into an array and unwrap it later
-        if (tagsToUnwrap.indexOf(getTagOfNode(node)) >= 0 || allChildrenAreBlock) {
-            if (returnBlockElement && !allChildrenAreBlock) {
-                wrap(node);
-            }
-            unwrap(node);
-        } else {
-            // 3. Otherwise, remove all attributes
-            for (let attr of [].slice.call((node as HTMLElement).attributes) as Attr[]) {
-                (node as HTMLElement).removeAttributeNode(attr);
-            }
-        }
-
-        return returnBlockElement;
-    } else {
+    if (!canCollapse(tagsToStopUnwrap, node)) {
         return false;
+    }
+
+    let returnBlockElement = isBlockElement(node);
+
+    // 2. If we should unwrap this tag, put it into an array and unwrap it later
+    if (tagsToUnwrap.indexOf(getTagOfNode(node)) >= 0 || allChildrenAreBlock) {
+        if (returnBlockElement && !allChildrenAreBlock) {
+            wrap(node);
+        }
+        unwrap(node);
+    } else {
+        // 3. Otherwise, remove all attributes
+        clearAttribute(node as HTMLElement, attributesToPreserve);
+    }
+
+    return returnBlockElement;
+}
+
+function clearAttribute(element: HTMLElement, attributesToPreserve: string[]) {
+    for (let attr of [].slice.call(element.attributes) as Attr[]) {
+        if (attributesToPreserve.indexOf(attr.name.toLowerCase()) < 0) {
+            element.removeAttribute(attr.name);
+        }
     }
 }
 

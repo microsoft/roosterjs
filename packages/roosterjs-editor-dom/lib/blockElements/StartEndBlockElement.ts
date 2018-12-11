@@ -44,7 +44,12 @@ export default class StartEndBlockElement implements BlockElement {
             true /*canSplitParent*/
         );
         let blockContext = StartEndBlockElement.getBlockContext(this.startNode);
-        while (nodes[0] && nodes[0] != blockContext && nodes[0].parentNode != this.rootNode && ['TD', 'TH'].indexOf(getTagOfNode(nodes[0].parentNode)) < 0) {
+        while (
+            nodes[0] &&
+            nodes[0] != blockContext &&
+            nodes[0].parentNode != this.rootNode &&
+            ['TD', 'TH'].indexOf(getTagOfNode(nodes[0].parentNode)) < 0
+        ) {
             nodes = [splitBalancedNodeRange(nodes)];
         }
         return nodes.length == 1 && isBlockElement(nodes[0])
