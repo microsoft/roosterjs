@@ -282,7 +282,7 @@ export default class ImageResize implements EditorPlugin {
     private stopEvent = (e: UIEvent) => {
         e.stopPropagation();
         e.preventDefault();
-    }
+    };
 
     private removeResizeDiv(resizeDiv: HTMLElement) {
         if (this.editor && this.editor.contains(resizeDiv)) {
