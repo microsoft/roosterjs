@@ -50,7 +50,10 @@ export { default as Position } from './selection/Position';
 export { default as createRange } from './selection/createRange';
 export { default as getPositionRect } from './selection/getPositionRect';
 export { default as isPositionAtBeginningOf } from './selection/isPositionAtBeginningOf';
-export { default as getSelectionPath, getRangeFromSelectionPath } from './selection/getSelectionPath';
+export {
+    default as getSelectionPath,
+    getRangeFromSelectionPath,
+} from './selection/getSelectionPath';
 
 // Deprecated
 export { default as isTextualInlineElement } from './deprecated/isTextualInlineElement';

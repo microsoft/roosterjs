@@ -3,6 +3,7 @@ import contains from '../utils/contains';
 import createRange from '../selection/createRange';
 import getInlineElementAtNode from '../inlineElements/getInlineElementAtNode';
 import getNextPreviousInlineElement from '../inlineElements/getNextPreviousInlineElement';
+import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import isNodeAfter from '../utils/isNodeAfter';
 import wrap from '../utils/wrap';
@@ -43,7 +44,12 @@ export default class StartEndBlockElement implements BlockElement {
             true /*canSplitParent*/
         );
         let blockContext = StartEndBlockElement.getBlockContext(this.startNode);
-        while (nodes[0] && nodes[0] != blockContext && nodes[0].parentNode != this.rootNode) {
+        while (
+            nodes[0] &&
+            nodes[0] != blockContext &&
+            nodes[0].parentNode != this.rootNode &&
+            ['TD', 'TH'].indexOf(getTagOfNode(nodes[0].parentNode)) < 0
+        ) {
             nodes = [splitBalancedNodeRange(nodes)];
         }
         return nodes.length == 1 && isBlockElement(nodes[0])

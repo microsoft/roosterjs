@@ -151,7 +151,7 @@ export default class HtmlSanitizer {
 
         if (
             (isElement && !this.allowElement(element, tag, context)) ||
-            ((isText && /^[\r\n]*$/g.test(node.nodeValue)) && !currentStyle.insidePRE) ||
+            (isText && /^[\r\n]*$/g.test(node.nodeValue) && !currentStyle.insidePRE) ||
             (!isElement && !isText)
         ) {
             node.parentNode.removeChild(node);
