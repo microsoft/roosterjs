@@ -40,7 +40,7 @@ export default class HyperLink implements EditorPlugin {
         let href = this.tryGetHref(e.srcElement);
         if (href) {
             this.editor.setEditorDomAttribute(
-                'titile',
+                'title',
                 e.type == 'mouseover' ? this.getTooltipCallback(href) : null
             );
         }
