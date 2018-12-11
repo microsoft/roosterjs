@@ -30,7 +30,7 @@ export default class ImageResize implements EditorPlugin {
     private startHeight: number;
     private resizeDiv: HTMLElement;
     private direction: string;
-    private dragStartDisposer: () => void;
+    private disposers: (() => void)[];
     public name: 'ImageResize';
 
     /**
@@ -52,17 +52,18 @@ export default class ImageResize implements EditorPlugin {
 
     initialize(editor: Editor) {
         this.editor = editor;
-        this.dragStartDisposer = editor.addDomEventHandler('dragstart', this.onDragStart);
+        this.disposers = [
+            editor.addDomEventHandler('dragstart', this.onDragStart),
+            editor.addDomEventHandler('blur', this.onBlur),
+        ];
     }
 
     dispose() {
         if (this.resizeDiv) {
             this.hideResizeHandle();
         }
-        if (this.dragStartDisposer) {
-            this.dragStartDisposer();
-            this.dragStartDisposer = null;
-        }
+        this.disposers.forEach(disposer => disposer());
+        this.disposers = null;
         this.editor = null;
     }
 
@@ -175,7 +176,7 @@ export default class ImageResize implements EditorPlugin {
             this.direction = (<HTMLElement>(e.srcElement || e.target)).style.cursor;
         }
 
-        e.preventDefault();
+        this.stopEvent(e);
     };
 
     private doResize = (e: MouseEvent) => {
@@ -209,7 +210,7 @@ export default class ImageResize implements EditorPlugin {
             img.style.width = newWidth + 'px';
             img.style.height = newHeight + 'px';
         }
-        e.preventDefault();
+        this.stopEvent(e);
     };
 
     private finishResize = (e: MouseEvent) => {
@@ -230,7 +231,7 @@ export default class ImageResize implements EditorPlugin {
         this.direction = null;
         this.editor.addUndoSnapshot();
         this.editor.triggerContentChangedEvent(ChangeSource.ImageResize);
-        e.preventDefault();
+        this.stopEvent(e);
     };
 
     private createResizeDiv(target: HTMLElement) {
@@ -244,6 +245,7 @@ export default class ImageResize implements EditorPlugin {
         resizeDiv.style.position = 'relative';
         resizeDiv.style.display = 'inline-flex';
         resizeDiv.contentEditable = 'false';
+        resizeDiv.addEventListener('click', this.stopEvent);
         resizeDiv.appendChild(target);
         ['nw', 'ne', 'sw', 'se'].forEach(pos => {
             let div = document.createElement('DIV');
@@ -277,6 +279,11 @@ export default class ImageResize implements EditorPlugin {
         return resizeDiv;
     }
 
+    private stopEvent = (e: UIEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
     private removeResizeDiv(resizeDiv: HTMLElement) {
         if (this.editor && this.editor.contains(resizeDiv)) {
             [resizeDiv.previousSibling, resizeDiv.nextSibling].forEach(comment => {
@@ -303,6 +310,10 @@ export default class ImageResize implements EditorPlugin {
             div.parentNode.insertBefore(img, div);
             this.removeResizeDiv(div);
         }
+    };
+
+    private onBlur = (e: FocusEvent) => {
+        this.hideResizeHandle();
     };
 
     private extractHtml(html: string): string {
