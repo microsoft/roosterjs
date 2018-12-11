@@ -792,6 +792,19 @@ export default class Editor {
         });
     }
 
+    /**
+     * Set DOM attribute of editor content DIV
+     * @param name Name of the attribute
+     * @param value Value of the attribute
+     */
+    public setEditorDomAttribute(name: string, value: string) {
+        if (value === null) {
+            this.core.contentDiv.removeAttribute(name);
+        } else {
+            this.core.contentDiv.setAttribute(name, value);
+        }
+    }
+
     //#endregion
 
     //#region Deprecated methods
