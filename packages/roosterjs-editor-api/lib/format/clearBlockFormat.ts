@@ -50,7 +50,7 @@ export default function clearBlockFormat(
             group.last = element;
         });
 
-        groups.forEach(group => {
+        groups.filter(group => group.first).forEach(group => {
             // 2. Collapse with first and last element to make them under same parent
             let nodes = editor.collapseNodes(group.first, group.last, true /*canSplitParent*/);
 
