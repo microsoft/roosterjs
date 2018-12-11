@@ -3,6 +3,7 @@ import contains from '../utils/contains';
 import createRange from '../selection/createRange';
 import getInlineElementAtNode from '../inlineElements/getInlineElementAtNode';
 import getNextPreviousInlineElement from '../inlineElements/getNextPreviousInlineElement';
+import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import isNodeAfter from '../utils/isNodeAfter';
 import wrap from '../utils/wrap';
