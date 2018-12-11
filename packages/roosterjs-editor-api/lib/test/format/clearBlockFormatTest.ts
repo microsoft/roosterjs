@@ -27,6 +27,7 @@ describe('clearFormat()', () => {
     });
 
     it('BIU', () => {
+        // The selection path like {"start":[0,1,1,0,0],"end":[0,2,0,5]} is generated from the "Take snapshot" functionality of sample site
         runTest(
             '<div><b>This <i>is</i></b><i> <u>a</u></i><u> test</u></div><!--{"start":[0,1,1,0,0],"end":[0,2,0,5]}-->',
             '<div>This is a test</div>'

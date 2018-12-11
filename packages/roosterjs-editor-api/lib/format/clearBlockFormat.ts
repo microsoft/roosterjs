@@ -9,11 +9,11 @@ import {
 } from 'roosterjs-editor-dom';
 import { ChangeSource, NodeType } from 'roosterjs-editor-types';
 
-const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
+export const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
     ','
 );
-const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
-const ATTRIBUTES_TO_PRESERVE = ['href'];
+export const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
+export const ATTRIBUTES_TO_PRESERVE = ['href'];
 
 /**
  * Clear all formats of selected blocks.
