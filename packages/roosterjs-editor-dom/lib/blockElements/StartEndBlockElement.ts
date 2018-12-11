@@ -9,7 +9,6 @@ import isNodeAfter from '../utils/isNodeAfter';
 import wrap from '../utils/wrap';
 import { BlockElement, InlineElement } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
-import getTagOfNode from '../utils/getTagOfNode';
 
 /**
  * This reprents a block that is identified by a start and end node
