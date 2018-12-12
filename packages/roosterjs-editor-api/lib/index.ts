@@ -1,4 +1,10 @@
 export { default as changeFontSize, FONT_SIZES } from './format/changeFontSize';
+export {
+    default as clearBlockFormat,
+    TAGS_TO_UNWRAP,
+    TAGS_TO_STOP_UNWRAP,
+    ATTRIBUTES_TO_PRESERVE,
+} from './format/clearBlockFormat';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
 export { default as getFormatState } from './format/getFormatState';

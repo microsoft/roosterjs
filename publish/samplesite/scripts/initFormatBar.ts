@@ -1,4 +1,5 @@
 import {
+    clearBlockFormat,
     clearFormat,
     createLink,
     insertImage,
@@ -128,6 +129,11 @@ export default function initFormatBar() {
     // ClearFormat
     document.getElementById('clearFormatButton').addEventListener('click', function() {
         clearFormat(getCurrentEditor());
+    });
+
+    // ClearBlockFormat
+    document.getElementById('clearBlockFormatButton').addEventListener('click', function() {
+        clearBlockFormat(getCurrentEditor());
     });
 
     // Edit table
