@@ -2,7 +2,7 @@ import * as TestHelper from '../TestHelper';
 import clearBlockFormat from '../../format/clearBlockFormat';
 import { Editor } from 'roosterjs-editor-core';
 
-describe('clearFormat()', () => {
+describe('clearBlockFormat()', () => {
     let testID = 'clearFormat';
     let editor: Editor;
 
@@ -24,6 +24,10 @@ describe('clearFormat()', () => {
 
     it('Empty', () => {
         runTest('', '');
+    });
+
+    it('Empty line', () => {
+        runTest('<div><br></div><!--{"start":[0],"end":[0]}-->', '<div><br></div>');
     });
 
     it('BIU', () => {
@@ -58,7 +62,7 @@ describe('clearFormat()', () => {
     it('Multi lines', () => {
         runTest(
             '<div>This</div><div>is<br>a</div><div>test</div><!--{"start":[0,0,0],"end":[2,0,4]}-->',
-            '<div>This</div><div>is</div><div>a</div><div>test</div>'
+            '<div>This</div><div>is<br></div><div>a</div><div>test</div>'
         );
     });
 
@@ -86,7 +90,7 @@ describe('clearFormat()', () => {
     it('List in table - select cross cell', () => {
         runTest(
             '<div><table><tbody><tr><td>This</td><td>is<br><ul><li>a</li><ul><li>test</li></ul></ul></td></tr></tbody></table><br></div><!--{"start":[0,0,0,0,0,0,2],"end":[0,0,0,0,1,2,0,0,1]}-->',
-            '<div><table><tbody><tr><td>This</td><td><div>is</div><div>a</div><ul><ul><li>test</li></ul></ul></td></tr></tbody></table><br></div>'
+            '<div><table><tbody><tr><td>This</td><td><div>is<br></div><div>a</div><ul><ul><li>test</li></ul></ul></td></tr></tbody></table><br></div>'
         );
     });
 
