@@ -20,12 +20,12 @@ export default class HyperLink implements EditorPlugin {
      * @param getTooltipCallback A callback function to get tooltip text for an existing hyperlink.
      * Default value is to return the href itself. If null, there will be no tooltip text.
      * @param target (Optional) Target window name for hyperlink. If null, will use "_blank"
-     * @param onLinkOpen (Optional) Open link callback
+     * @param onLinkClick (Optional) Open link callback
      */
     constructor(
         private getTooltipCallback: (href: string) => string = href => href,
         private target?: string,
-        private onLinkOpen?: (anchor: HTMLAnchorElement) => void
+        private onLinkClick?: (anchor: HTMLAnchorElement, keyboardEvent: KeyboardEvent) => void
     ) {}
 
     /**
@@ -98,7 +98,7 @@ export default class HyperLink implements EditorPlugin {
                 a.removeAttribute(TEMP_TITLE);
                 a.removeAttribute('title');
             }
-            a.removeEventListener('mouseup', this.onClickLink);
+            a.removeEventListener('mouseup', this.onLinkMouseUp);
         } catch (e) {}
     };
 
@@ -107,7 +107,7 @@ export default class HyperLink implements EditorPlugin {
             a.setAttribute(TEMP_TITLE, 'true');
             a.title = this.getTooltipCallback(this.tryGetHref(a));
         }
-        a.addEventListener('mouseup', this.onClickLink);
+        a.addEventListener('mouseup', this.onLinkMouseUp);
     };
 
     private removeTempTooltip(content: string): string {
@@ -147,8 +147,13 @@ export default class HyperLink implements EditorPlugin {
         );
     }
 
-    private onClickLink = (keyboardEvent: KeyboardEvent) => {
-        const anchor = this.tryGetAnchor(keyboardEvent.srcElement);
+    private onLinkMouseUp = (keyboardEvent: KeyboardEvent) => {
+        const anchor = this.editor.getElementAtCursor('A', keyboardEvent.srcElement) as HTMLAnchorElement;
+        if (this.onLinkClick) {
+            this.onLinkClick(anchor, keyboardEvent);
+            return;
+        }
+
         let href: string;
         if (
             !Browser.isFirefox &&
@@ -156,13 +161,9 @@ export default class HyperLink implements EditorPlugin {
             (Browser.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey)
         ) {
             try {
-                if (this.onLinkOpen) {
-                    this.onLinkOpen(anchor);
-                } else {
-                    const target = this.target || '_blank';
-                    const window = this.editor.getDocument().defaultView;
-                    window.open(href, target);
-                }
+                const target = this.target || '_blank';
+                const window = this.editor.getDocument().defaultView;
+                window.open(href, target);
             } catch {}
         }
     };
@@ -176,16 +177,5 @@ export default class HyperLink implements EditorPlugin {
         try {
             return anchor ? anchor.href : null;
         } catch {}
-    }
-
-    private tryGetAnchor(element: Element): HTMLAnchorElement {
-        do {
-            if (element.tagName == 'A') {
-                return <HTMLAnchorElement>element;
-            }
-            element = element.parentElement;
-        } while (this.editor.contains(element));
-
-        return null;
     }
 }
