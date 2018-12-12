@@ -37,7 +37,7 @@ export default class HyperLink implements EditorPlugin {
             : [];
     }
 
-    private onMouse = (e: MouseEvent) => {
+    protected onMouse = (e: MouseEvent) => {
         const a = this.editor.getElementAtCursor('a[href]', e.srcElement) as HTMLAnchorElement;
         const href = this.tryGetHref(a);
 
