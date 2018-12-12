@@ -104,7 +104,7 @@ function clearNodeFormat(
     tagsToStopUnwrap: string[],
     attributesToPreserve: string[]
 ): boolean {
-    if (node.nodeType != NodeType.Element) {
+    if (node.nodeType != NodeType.Element || getTagOfNode(node) == 'BR') {
         return false;
     }
 
