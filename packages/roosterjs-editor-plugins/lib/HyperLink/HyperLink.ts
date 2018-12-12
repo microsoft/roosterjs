@@ -20,11 +20,12 @@ export default class HyperLink implements EditorPlugin {
      * @param getTooltipCallback A callback function to get tooltip text for an existing hyperlink.
      * Default value is to return the href itself. If null, there will be no tooltip text.
      * @param target (Optional) Target window name for hyperlink. If null, will use "_blank"
-     * @param linkMatchRules (Optional) Rules for matching hyperlink. If null, will use defaultLinkMatchRules
+     * @param onLinkClick (Optional) Open link callback
      */
     constructor(
         private getTooltipCallback: (href: string) => string = href => href,
-        private target?: string
+        private target?: string,
+        private onLinkClick?: (anchor: HTMLAnchorElement, keyboardEvent: KeyboardEvent) => void
     ) {}
 
     /**
@@ -97,7 +98,7 @@ export default class HyperLink implements EditorPlugin {
                 a.removeAttribute(TEMP_TITLE);
                 a.removeAttribute('title');
             }
-            a.removeEventListener('mouseup', this.onClickLink);
+            a.removeEventListener('mouseup', this.onLinkMouseUp);
         } catch (e) {}
     };
 
@@ -106,7 +107,7 @@ export default class HyperLink implements EditorPlugin {
             a.setAttribute(TEMP_TITLE, 'true');
             a.title = this.getTooltipCallback(this.tryGetHref(a));
         }
-        a.addEventListener('mouseup', this.onClickLink);
+        a.addEventListener('mouseup', this.onLinkMouseUp);
     };
 
     private removeTempTooltip(content: string): string {
@@ -146,16 +147,22 @@ export default class HyperLink implements EditorPlugin {
         );
     }
 
-    private onClickLink = (keyboardEvent: KeyboardEvent) => {
+    private onLinkMouseUp = (keyboardEvent: KeyboardEvent) => {
+        const anchor = this.editor.getElementAtCursor('A', keyboardEvent.srcElement) as HTMLAnchorElement;
+        if (this.onLinkClick) {
+            this.onLinkClick(anchor, keyboardEvent);
+            return;
+        }
+
         let href: string;
         if (
             !Browser.isFirefox &&
-            (href = this.tryGetHref(keyboardEvent.srcElement)) &&
+            (href = this.tryGetHref(anchor)) &&
             (Browser.isMac ? keyboardEvent.metaKey : keyboardEvent.ctrlKey)
         ) {
-            let target = this.target || '_blank';
-            let window = this.editor.getDocument().defaultView;
             try {
+                const target = this.target || '_blank';
+                const window = this.editor.getDocument().defaultView;
                 window.open(href, target);
             } catch {}
         }
@@ -166,20 +173,9 @@ export default class HyperLink implements EditorPlugin {
      * The reason this is put in a try-catch is that
      * it has been seen that accessing href may throw an exception, in particular on IE/Edge
      */
-    private tryGetHref(element: Element): string {
-        let href: string = null;
+    private tryGetHref(anchor: HTMLAnchorElement): string {
         try {
-            do {
-                if (element.tagName == 'A') {
-                    href = (<HTMLAnchorElement>element).href;
-                    break;
-                }
-                element = element.parentElement;
-            } while (this.editor.contains(element));
-        } catch (error) {
-            // Not do anything for the moment
-        }
-
-        return href;
+            return anchor ? anchor.href : null;
+        } catch {}
     }
 }
