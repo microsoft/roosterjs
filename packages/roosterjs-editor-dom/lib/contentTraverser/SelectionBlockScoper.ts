@@ -1,5 +1,6 @@
 import EmptyInlineElement from '../inlineElements/EmptyInlineElement';
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
+import getFirstLastInlineElementFromBlockElement from '../inlineElements/getFirstLastInlineElementFromBlockElement';
 import Position from '../selection/Position';
 import TraversingScoper from './TraversingScoper';
 import { BlockElement, ContentPosition, InlineElement, NodePosition } from 'roosterjs-editor-types';
@@ -48,13 +49,15 @@ class SelectionBlockScoper implements TraversingScoper {
         if (this.block) {
             switch (this.startFrom) {
                 case ContentPosition.Begin:
-                    return this.block.getFirstInlineElement();
                 case ContentPosition.End:
-                    return this.block.getLastInlineElement();
+                    return getFirstLastInlineElementFromBlockElement(
+                        this.block,
+                        this.startFrom == ContentPosition.Begin
+                    );
                 case ContentPosition.SelectionStart:
                     // Get the inline before selection start point, and ensure it falls in the selection block
                     let startInline = getInlineElementAfter(this.rootNode, this.position);
-                    return startInline && this.block.isInBlock(startInline)
+                    return startInline && this.block.contains(startInline.getContainerNode())
                         ? startInline
                         : new EmptyInlineElement(this.position, this.block);
             }
@@ -78,7 +81,7 @@ class SelectionBlockScoper implements TraversingScoper {
      * A block scoper does not cut an inline in half
      */
     public trimInlineElement(inlineElement: InlineElement): InlineElement {
-        return this.block && inlineElement && this.block.isInBlock(inlineElement)
+        return this.block && inlineElement && this.block.contains(inlineElement.getContainerNode())
             ? inlineElement
             : null;
     }

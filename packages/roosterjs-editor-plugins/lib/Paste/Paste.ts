@@ -37,10 +37,10 @@ export default class Paste implements EditorPlugin {
 
     /**
      * Create an instance of Paste
-     * @param deprecated Deprecated parameter only used for compatibility with old code
+     * @param preserved Not used. Preserved parameter only used for compatibility with old code
      * @param attributeCallbacks A set of callbacks to help handle html attribute during sanitization
      */
-    constructor(deprecated?: boolean, attributeCallbacks?: AttributeCallbackMap) {
+    constructor(preserved?: any, attributeCallbacks?: AttributeCallbackMap) {
         this.sanitizer = new HtmlSanitizer({
             attributeCallbacks,
         });
@@ -59,15 +59,23 @@ export default class Paste implements EditorPlugin {
 
     private onPaste = (event: Event) => {
         buildClipboardData(<ClipboardEvent>event, this.editor, clipboardData => {
-            let doc = htmlToDom(clipboardData.html, true /*preserveFragmentOnly*/, fragmentHandler);
-            if (doc && doc.body) {
-                this.sanitizer.convertGlobalCssToInlineCss(doc);
+            if (clipboardData.html) {
+                let doc = htmlToDom(
+                    clipboardData.html,
+                    true /*preserveFragmentOnly*/,
+                    fragmentHandler
+                );
+                if (doc && doc.body) {
+                    this.sanitizer.convertGlobalCssToInlineCss(doc);
 
-                let range = this.editor.getSelectionRange();
-                let element = range && Position.getStart(range).normalize().element;
-                let currentStyles = getInheritableStyles(element);
-                this.sanitizer.sanitize(doc.body, currentStyles);
-                clipboardData.html = doc.body.innerHTML;
+                    let range = this.editor.getSelectionRange();
+                    let element = range && Position.getStart(range).normalize().element;
+                    let currentStyles = getInheritableStyles(element);
+                    this.sanitizer.sanitize(doc.body, currentStyles);
+                    clipboardData.html = doc.body.innerHTML;
+                }
+            } else {
+                clipboardData.html = textToHtml(clipboardData.text);
             }
 
             this.pasteOriginal(clipboardData);

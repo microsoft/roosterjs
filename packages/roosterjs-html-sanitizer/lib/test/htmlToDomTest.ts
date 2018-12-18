@@ -33,17 +33,4 @@ describe('htmlToDom', () => {
             '<b>This is a test</b>'
         );
     });
-
-    xit('HTML with fragment from EXCEL', () => {
-        runTest(
-            '<html><body><table><tr><!--StartFragment--><td>a</td><td></td><!--EndFragment--></tr></table></body></html>',
-            true,
-            '<table><tbody><tr><td>a</td><td></td></tr></tbody></table>'
-        );
-        runTest(
-            '<html><body><table><!--StartFragment--><tr><td>a</td><td></td></tr><!--EndFragment--></table></body></html>',
-            true,
-            '<table><tbody><tr><td>a</td><td></td></tr></tbody></table>'
-        );
-    });
 });

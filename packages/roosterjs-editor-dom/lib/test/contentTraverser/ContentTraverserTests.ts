@@ -1,11 +1,7 @@
 import * as DomTestHelper from '../DomTestHelper';
-import BodyScoper from '../../contentTraverser/BodyScoper';
 import ContentTraverser from '../../contentTraverser/ContentTraverser';
 import createRange from '../../selection/createRange';
 import Position from '../../selection/Position';
-import SelectionBlockScoper from '../../contentTraverser/SelectionBlockScoper';
-import SelectionScoper from '../../contentTraverser/SelectionScoper';
-import TraversingScoper from '../../contentTraverser/TraversingScoper';
 import { BlockElement, ContentPosition, PositionType } from 'roosterjs-editor-types';
 
 let testID = 'ContentTraverser';
@@ -15,10 +11,7 @@ describe('ContentTraverser currentBlockElement()', () => {
         DomTestHelper.removeElement(testID);
     });
 
-    function runTest(rootNode: Node, scoper: TraversingScoper, testBlockElement: BlockElement) {
-        // Arrange
-        let contentTraverser = new ContentTraverser(scoper);
-
+    function runTest(contentTraverser: ContentTraverser, testBlockElement: BlockElement) {
         // Act
         let currentBlockElement = contentTraverser.currentBlockElement;
 
@@ -28,31 +21,31 @@ describe('ContentTraverser currentBlockElement()', () => {
 
     it('input = <p>part1</p><p>part2</p>, scoper = BodyScoper', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
-        let scoper = new BodyScoper(rootNode);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.firstChild as HTMLElement
         );
-        runTest(rootNode, scoper, testBlockElement);
+        runTest(ContentTraverser.createBodyTraverser(rootNode), testBlockElement);
     });
 
     it('input = <p>part1</p><p>part2</p>, scoper = SelectionScoper', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let range = DomTestHelper.createRangeWithDiv(rootNode.lastChild as HTMLElement);
-        let scoper = new SelectionScoper(rootNode, range);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.lastChild as HTMLElement
         );
-        runTest(rootNode, scoper, testBlockElement);
+        runTest(ContentTraverser.createSelectionTraverser(rootNode, range), testBlockElement);
     });
 
     it('input = <p>part1</p><p>part2</p>, scoper = SelectionBlockScoper', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
-        let scoper = new SelectionBlockScoper(rootNode, range, ContentPosition.End);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.firstChild as HTMLElement
         );
-        runTest(rootNode, scoper, testBlockElement);
+        runTest(
+            ContentTraverser.createBlockTraverser(rootNode, range, ContentPosition.End),
+            testBlockElement
+        );
     });
 });
 
@@ -65,8 +58,7 @@ describe('ContentTraverser getNextBlockElement()', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p>');
         let range = DomTestHelper.createRangeWithDiv(rootNode.firstChild as HTMLElement);
-        let scoper = new SelectionScoper(rootNode, range);
-        let contentTraverser = new ContentTraverser(scoper);
+        let contentTraverser = ContentTraverser.createSelectionTraverser(rootNode, range);
 
         // Act
         let nextBlockElement = contentTraverser.getNextBlockElement();
@@ -79,8 +71,7 @@ describe('ContentTraverser getNextBlockElement()', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
-        let scoper = new SelectionScoper(rootNode, range);
-        let contentTraverser = new ContentTraverser(scoper);
+        let contentTraverser = ContentTraverser.createSelectionTraverser(rootNode, range);
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.lastChild as HTMLElement
         );
@@ -99,8 +90,7 @@ describe('ContentTraverser getNextBlockElement()', () => {
         let start = new Position(rootNode.firstChild, PositionType.Begin);
         let end = new Position(rootNode.firstChild, PositionType.End);
         let range = createRange(start, end);
-        let scoper = new SelectionScoper(rootNode, range);
-        let contentTraverser = new ContentTraverser(scoper);
+        let contentTraverser = ContentTraverser.createSelectionTraverser(rootNode, range);
 
         // Act
         let nextBlockElement = contentTraverser.getNextBlockElement();
@@ -113,8 +103,11 @@ describe('ContentTraverser getNextBlockElement()', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let range = DomTestHelper.createRangeWithDiv(rootNode);
-        let scoper = new SelectionBlockScoper(rootNode, range, ContentPosition.Begin);
-        let contentTraverser = new ContentTraverser(scoper);
+        let contentTraverser = ContentTraverser.createBlockTraverser(
+            rootNode,
+            range,
+            ContentPosition.Begin
+        );
 
         // Act
         let nextBlockElement = contentTraverser.getNextBlockElement();
@@ -133,8 +126,7 @@ describe('ContentTraverser getPreviousBlockElement()', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p>');
         let range = DomTestHelper.createRangeWithDiv(rootNode.firstChild as HTMLElement);
-        let scoper = new SelectionScoper(rootNode, range);
-        let contentTraverser = new ContentTraverser(scoper);
+        let contentTraverser = ContentTraverser.createSelectionTraverser(rootNode, range);
 
         // Act
         let previousBlockElement = contentTraverser.getPreviousBlockElement();
@@ -147,8 +139,7 @@ describe('ContentTraverser getPreviousBlockElement()', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
-        let scoper = new SelectionScoper(rootNode, range);
-        let contentTraverser = new ContentTraverser(scoper);
+        let contentTraverser = ContentTraverser.createSelectionTraverser(rootNode, range);
         contentTraverser.getNextBlockElement();
         let testBlockElement = DomTestHelper.createNodeBlockElementWithDiv(
             rootNode.firstChild as HTMLElement
@@ -170,8 +161,7 @@ describe('ContentTraverser getPreviousBlockElement()', () => {
 
         // range = '<p>part2</p>'
         let range = createRange(start, end);
-        let scoper = new SelectionScoper(rootNode, range);
-        let contentTraverser = new ContentTraverser(scoper);
+        let contentTraverser = ContentTraverser.createSelectionTraverser(rootNode, range);
 
         // Act
         let previousBlockElement = contentTraverser.getPreviousBlockElement();
@@ -187,8 +177,7 @@ describe('ContentTraverser currentInlineElement()', () => {
     });
 
     function runTest(
-        rootNode: Node,
-        scoper: TraversingScoper,
+        contentTraverser: ContentTraverser,
         startOffset: number,
         endOffset: number,
         node: Node
@@ -196,7 +185,6 @@ describe('ContentTraverser currentInlineElement()', () => {
         // Arrange
         let start = new Position(node, startOffset);
         let end = new Position(node, endOffset);
-        let contentTraverser = new ContentTraverser(scoper);
 
         // Act
         let inlineElement = contentTraverser.currentInlineElement;
@@ -218,9 +206,13 @@ describe('ContentTraverser currentInlineElement()', () => {
             '<span>part1</span><span>part2</span>'
         );
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
-        let scoper = new SelectionBlockScoper(rootNode, range, ContentPosition.Begin);
         let node = document.createTextNode('part1');
-        runTest(rootNode, scoper, PositionType.Begin, 5, node);
+        runTest(
+            ContentTraverser.createBlockTraverser(rootNode, range, ContentPosition.Begin),
+            PositionType.Begin,
+            5,
+            node
+        );
     });
 
     it('input = <span>part1</span><span>part2</span>, scoper = SelectionBlockScoper, start = ContentPosition.End', () => {
@@ -229,9 +221,13 @@ describe('ContentTraverser currentInlineElement()', () => {
             '<span>part1</span><span>part2</span>'
         );
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
-        let scoper = new SelectionBlockScoper(rootNode, range, ContentPosition.End);
         let node = document.createTextNode('part2');
-        runTest(rootNode, scoper, PositionType.Begin, 5, node);
+        runTest(
+            ContentTraverser.createBlockTraverser(rootNode, range, ContentPosition.End),
+            PositionType.Begin,
+            5,
+            node
+        );
     });
 
     it('input = <span>part1</span><span>part2</span>, scoper = SelectionBlockScoper, start = ContentPosition.SelectionStart', () => {
@@ -242,9 +238,13 @@ describe('ContentTraverser currentInlineElement()', () => {
 
         // range = '<span>part2</span>'
         let range = DomTestHelper.createRangeWithDiv(rootNode.lastChild as HTMLElement);
-        let scoper = new SelectionBlockScoper(rootNode, range, ContentPosition.SelectionStart);
         let node = document.createTextNode('part2');
-        runTest(rootNode, scoper, PositionType.Begin, 5, node);
+        runTest(
+            ContentTraverser.createBlockTraverser(rootNode, range, ContentPosition.SelectionStart),
+            PositionType.Begin,
+            5,
+            node
+        );
     });
 
     it('input = <span>part1</span><span>part2</span>, scoper = SelectionScoper, startInlineElment is part1', () => {
@@ -253,9 +253,13 @@ describe('ContentTraverser currentInlineElement()', () => {
             '<span>part1</span><span>part2</span>'
         );
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
-        let scoper = new SelectionScoper(rootNode, range);
         let node = document.createTextNode('part1');
-        runTest(rootNode, scoper, PositionType.Begin, 5, node);
+        runTest(
+            ContentTraverser.createSelectionTraverser(rootNode, range),
+            PositionType.Begin,
+            5,
+            node
+        );
     });
 
     it('input = <span>part1</span><span>part2</span>, scoper = BodyScoper, startInlineElment is part1', () => {
@@ -263,9 +267,8 @@ describe('ContentTraverser currentInlineElement()', () => {
             testID,
             '<span>part1</span><span>part2</span>'
         );
-        let scoper = new BodyScoper(rootNode);
         let node = document.createTextNode('part1');
-        runTest(rootNode, scoper, PositionType.Begin, 5, node);
+        runTest(ContentTraverser.createBodyTraverser(rootNode), PositionType.Begin, 5, node);
     });
 });
 
@@ -275,8 +278,7 @@ describe('ContentTraverser getNextInlineElement()', () => {
     });
 
     function runTest(
-        rootNode: Node,
-        scoper: TraversingScoper,
+        contentTraverser: ContentTraverser,
         startOffset: number,
         endOffset: number,
         node: Node
@@ -284,7 +286,6 @@ describe('ContentTraverser getNextInlineElement()', () => {
         // Arrange
         let start = new Position(node, startOffset);
         let end = new Position(node, endOffset);
-        let contentTraverser = new ContentTraverser(scoper);
 
         // Act
         let nextInlineElement = contentTraverser.getNextInlineElement();
@@ -305,8 +306,7 @@ describe('ContentTraverser getNextInlineElement()', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p>');
         let range = DomTestHelper.createRangeWithDiv(rootNode.firstChild as HTMLElement);
-        let scoper = new SelectionScoper(rootNode, range);
-        let contentTraverser = new ContentTraverser(scoper);
+        let contentTraverser = ContentTraverser.createSelectionTraverser(rootNode, range);
 
         // Act
         let nextInlineElement = contentTraverser.getNextInlineElement();
@@ -323,8 +323,7 @@ describe('ContentTraverser getNextInlineElement()', () => {
 
         // range = '<p>part1</p>'
         let range = createRange(start, end);
-        let scoper = new SelectionScoper(rootNode, range);
-        let contentTraverser = new ContentTraverser(scoper);
+        let contentTraverser = ContentTraverser.createSelectionTraverser(rootNode, range);
 
         // Act
         let nextInlineElement = contentTraverser.getNextInlineElement();
@@ -336,9 +335,13 @@ describe('ContentTraverser getNextInlineElement()', () => {
     it('input = <p>part1</p><p>part2</p>, nextInlineElement in scope, scoper = selectionScoper', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
-        let scoper = new SelectionScoper(rootNode, range);
         let node = document.createTextNode('part2');
-        runTest(rootNode, scoper, PositionType.Begin, 5, node);
+        runTest(
+            ContentTraverser.createSelectionTraverser(rootNode, range),
+            PositionType.Begin,
+            5,
+            node
+        );
     });
 
     it('input = <span>part1</span><span>part2</span>, part nextInlineElement in scope, scoper = selectionScoper', () => {
@@ -351,9 +354,13 @@ describe('ContentTraverser getNextInlineElement()', () => {
 
         // range = '<span>part1</span><span>pa'
         let range = createRange(start, end);
-        let scoper = new SelectionScoper(rootNode, range);
         let node = document.createTextNode('part2');
-        runTest(rootNode, scoper, PositionType.Begin, 2, node);
+        runTest(
+            ContentTraverser.createSelectionTraverser(rootNode, range),
+            PositionType.Begin,
+            2,
+            node
+        );
     });
 
     it('input = <span>part1</span><span>part2</span>, nextInlineElement in startblock, scoper = selectionBlockScoper', () => {
@@ -362,17 +369,24 @@ describe('ContentTraverser getNextInlineElement()', () => {
             '<span>part1</span><span>part2</span>'
         );
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
-        let scoper = new SelectionScoper(rootNode, range);
         let node = document.createTextNode('part2');
-        runTest(rootNode, scoper, PositionType.Begin, 5, node);
+        runTest(
+            ContentTraverser.createSelectionTraverser(rootNode, range),
+            PositionType.Begin,
+            5,
+            node
+        );
     });
 
     it('input = <p>part1</p><p>part2</p>, nextInlineElement not in startblock, scoper = selectionBlockScoper', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
-        let scoper = new SelectionBlockScoper(rootNode, range, ContentPosition.Begin);
-        let contentTraverser = new ContentTraverser(scoper);
+        let contentTraverser = ContentTraverser.createBlockTraverser(
+            rootNode,
+            range,
+            ContentPosition.Begin
+        );
 
         // Act
         let nextInlineElement = contentTraverser.getNextInlineElement();
@@ -388,8 +402,7 @@ describe('ContentTraverser getPreviousInlineElement()', () => {
     });
 
     function runTest(
-        rootNode: Node,
-        scoper: TraversingScoper,
+        contentTraverser: ContentTraverser,
         startOffset: number,
         endOffset: number,
         node: Node
@@ -397,7 +410,6 @@ describe('ContentTraverser getPreviousInlineElement()', () => {
         // Arrange
         let start = new Position(node, startOffset);
         let end = new Position(node, endOffset);
-        let contentTraverser = new ContentTraverser(scoper);
         contentTraverser.getNextInlineElement();
 
         // Act
@@ -419,8 +431,7 @@ describe('ContentTraverser getPreviousInlineElement()', () => {
         // Arrange
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p>');
         let range = DomTestHelper.createRangeWithDiv(rootNode.firstChild as HTMLElement);
-        let scoper = new SelectionScoper(rootNode, range);
-        let contentTraverser = new ContentTraverser(scoper);
+        let contentTraverser = ContentTraverser.createSelectionTraverser(rootNode, range);
 
         // Act
         let previousInlineElement = contentTraverser.getPreviousInlineElement();
@@ -437,8 +448,7 @@ describe('ContentTraverser getPreviousInlineElement()', () => {
 
         // range = '<p>part2</p>'
         let range = createRange(start, end);
-        let scoper = new SelectionScoper(rootNode, range);
-        let contentTraverser = new ContentTraverser(scoper);
+        let contentTraverser = ContentTraverser.createSelectionTraverser(rootNode, range);
 
         // Act
         let previousInlineElement = contentTraverser.getPreviousInlineElement();
@@ -450,9 +460,13 @@ describe('ContentTraverser getPreviousInlineElement()', () => {
     it('input = <p>part1</p><p>part2</p>, previousInlineElement in scope, scoper = selectionScoper', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, '<p>part1</p><p>part2</p>');
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
-        let scoper = new SelectionScoper(rootNode, range);
         let node = document.createTextNode('part1');
-        runTest(rootNode, scoper, PositionType.Begin, 5, node);
+        runTest(
+            ContentTraverser.createSelectionTraverser(rootNode, range),
+            PositionType.Begin,
+            5,
+            node
+        );
     });
 
     it('input = <span>part1</span><span>part2</span>, part previousInlineElement in scope, scoper = selectionScoper', () => {
@@ -465,8 +479,7 @@ describe('ContentTraverser getPreviousInlineElement()', () => {
 
         // range = 't1</span><span>part2</span>'
         let range = createRange(start, end);
-        let scoper = new SelectionScoper(rootNode, range);
         let node = document.createTextNode('part1');
-        runTest(rootNode, scoper, 3, 5, node);
+        runTest(ContentTraverser.createSelectionTraverser(rootNode, range), 3, 5, node);
     });
 });

@@ -1,4 +1,3 @@
-import textToHtml from './textToHtml';
 import { ClipboardData, ContentPosition, DefaultFormat } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { fromHtml, Browser } from 'roosterjs-editor-dom';
@@ -47,7 +46,8 @@ export default function buildClipboardData(
             types,
             image: getImage(dataTransfer),
             text,
-            html: html || textToHtml(text || ''),
+            html,
+            rawHtml: html,
         });
     };
 

@@ -61,7 +61,7 @@ export default class EmptyInlineElement implements InlineElement {
     /**
      * Checks if the given editor position is contained in this inline element
      */
-    contains(position: EditorPoint): boolean {
+    contains(position: NodePosition | EditorPoint): boolean {
         return false;
     }
 

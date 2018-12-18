@@ -18,9 +18,11 @@ export default function fragmentHandler(doc: HTMLDocument, source: string) {
     let firstNode = doc && doc.body && (doc.querySelector('html') as HTMLElement);
     if (getTagOfNode(firstNode) == 'HTML') {
         if (firstNode.getAttribute(WORD_ATTRIBUTE_NAME) == WORD_ATTRIBUTE_VALUE) {
+            // Handle HTML copied from MS Word
             doc.body.innerHTML = html;
             convertPastedContentFromWord(doc);
         } else if (firstNode.getAttribute(EXCEL_ATTRIBUTE_NAME) == EXCEL_ATTRIBUTE_VALUE) {
+            // Handle HTML copied from MS Excel
             if (html.match(LAST_TD_END_REGEX)) {
                 let trMatch = before.match(LAST_TR_REGEX);
                 let tr = trMatch ? trMatch[0] : '<TR>';
@@ -33,6 +35,9 @@ export default function fragmentHandler(doc: HTMLDocument, source: string) {
             }
             doc.body.innerHTML = html;
             convertPastedContentFromExcel(doc);
+        } else {
+            // Handle HTML copied from other places
+            doc.body.innerHTML = html;
         }
     }
 }

@@ -30,9 +30,14 @@ interface ClipboardData {
     text: string;
 
     /**
-     * If the copied data contains HTML format, this will be the html string. Otherwise it is null.
+     * If the copied data contains HTML format, this will be the sanitized html string. Otherwise it is null.
      */
     html: string;
+
+    /**
+     * If the copied data contains HTML format, this will be the original html string without any processing. Otherwise it is null.
+     */
+    rawHtml: string;
 }
 
 export default ClipboardData;
