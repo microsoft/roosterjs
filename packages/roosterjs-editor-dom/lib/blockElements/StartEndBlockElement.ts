@@ -10,6 +10,8 @@ import wrap from '../utils/wrap';
 import { BlockElement, InlineElement } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
 
+const STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
+
 /**
  * This reprents a block that is identified by a start and end node
  * This is for cases like <root>Hello<BR>World</root>
@@ -48,7 +50,7 @@ export default class StartEndBlockElement implements BlockElement {
             nodes[0] &&
             nodes[0] != blockContext &&
             nodes[0].parentNode != this.rootNode &&
-            ['TD', 'TH'].indexOf(getTagOfNode(nodes[0].parentNode)) < 0
+            !isStructureNode(nodes[0].parentNode)
         ) {
             nodes = [splitBalancedNodeRange(nodes)];
         }
@@ -168,4 +170,8 @@ export default class StartEndBlockElement implements BlockElement {
     public isInBlock(inlineElement: InlineElement): boolean {
         return this.contains(inlineElement.getContainerNode());
     }
+}
+
+function isStructureNode(node: Node) {
+    return STRUCTURE_NODE_TAGS.indexOf(getTagOfNode(node)) >= 0;
 }

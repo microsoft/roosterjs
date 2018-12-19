@@ -94,6 +94,11 @@ export default function getBlockElementAtNode(rootNode: Node, node: Node): Block
  */
 function findHeadTailLeafNode(node: Node, containerBlockNode: Node, isTail: boolean): Node {
     let result = node;
+
+    if (getTagOfNode(result) == 'BR' && isTail) {
+        return result;
+    }
+
     while (result) {
         let sibling = node;
         while (!(sibling = isTail ? node.nextSibling : node.previousSibling)) {

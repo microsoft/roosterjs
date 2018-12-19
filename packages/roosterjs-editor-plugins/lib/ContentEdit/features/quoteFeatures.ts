@@ -1,9 +1,16 @@
 import { cacheGetEventData, Editor } from 'roosterjs-editor-core';
 import { ContentEditFeature, Keys } from '../ContentEditFeatures';
-import { getTagOfNode, isNodeEmpty, splitBalancedNodeRange, unwrap } from 'roosterjs-editor-dom';
+import {
+    getTagOfNode,
+    isNodeEmpty,
+    splitBalancedNodeRange,
+    unwrap,
+    wrap,
+} from 'roosterjs-editor-dom';
 import { PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
 
 const QUOTE_TAG = 'BLOCKQUOTE';
+const STRUCTURED_TAGS = [QUOTE_TAG, 'LI', 'TD', 'TH'].join(',');
 
 export const UnquoteWhenBackOnEmpty1stLine: ContentEditFeature = {
     keys: [Keys.BACKSPACE],
@@ -28,21 +35,31 @@ export const UnquoteWhenEnterOnEmptyLine: ContentEditFeature = {
 
 function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: Editor): Node {
     return cacheGetEventData(event, 'QUOTE_CHILD', () => {
-        let node = editor.getElementAtCursor();
-        if (getTagOfNode(node) == QUOTE_TAG) {
-            return node.firstChild;
+        let quote = editor.getElementAtCursor(STRUCTURED_TAGS);
+        if (quote && getTagOfNode(quote) == QUOTE_TAG) {
+            let pos = editor.getFocusedPosition();
+            let block = pos && editor.getBlockElementAtNode(pos.normalize().node);
+            if (block) {
+                let node =
+                    block.getStartNode() == quote
+                        ? block.getStartNode()
+                        : block.collapseToSingleElement();
+                return isNodeEmpty(node) ? node : null;
+            }
         }
-        while (editor.contains(node) && getTagOfNode(node.parentNode) != QUOTE_TAG) {
-            node = node.parentNode as HTMLElement;
-        }
-        return node && getTagOfNode(node.parentNode) == QUOTE_TAG ? node : null;
+
+        return null;
     });
 }
 
 function splitQuote(event: PluginKeyboardEvent, editor: Editor) {
     editor.addUndoSnapshot(() => {
         let childOfQuote = cacheGetQuoteChild(event, editor);
-        let parent = splitBalancedNodeRange(childOfQuote);
+        let parent: Node;
+        if (getTagOfNode(childOfQuote) == QUOTE_TAG) {
+            childOfQuote = wrap([].slice.call(childOfQuote.childNodes));
+        }
+        parent = splitBalancedNodeRange(childOfQuote);
         unwrap(parent);
         editor.select(childOfQuote, PositionType.Begin);
     });

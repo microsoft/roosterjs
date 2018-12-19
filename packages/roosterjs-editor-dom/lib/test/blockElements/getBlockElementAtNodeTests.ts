@@ -60,4 +60,15 @@ describe('getBlockElement getBlockElementAtNode', () => {
         );
         runTest(rootNode, rootNode.firstChild.firstChild, testBlockElement as BlockElement);
     });
+
+    it('input = <div><br></div> blockElementAtNode = <BR>', () => {
+        // Arrange
+        let rootNode = DomTestHelper.createElementFromContent(testID, '<div><br><br></div>');
+        let testBlockElement = DomTestHelper.createStartEndBlockElementWithStartEndNode(
+            rootNode.firstChild as HTMLElement,
+            rootNode.firstChild.firstChild,
+            rootNode.firstChild.firstChild
+        );
+        runTest(rootNode, rootNode.firstChild.firstChild, testBlockElement as BlockElement);
+    });
 });
