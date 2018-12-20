@@ -1,35 +1,54 @@
 const devServerPort = 3000;
 
 module.exports = {
-    entry: './publish/samplesite/scripts/sample.ts',
+    entry: './publish/samplesite/scripts/index.ts',
     devtool: 'source-map',
     output: {
-        filename: 'sample.js',
-        path: __dirname + '/publish/samplesite/scripts',
-        publicPath: '/publish/samplesite/scripts/',
-        sourceMapFilename: '[name].map'
+        filename: 'demo.js',
+        path: __dirname + '/scripts',
+        publicPath: '/scripts/',
+        sourceMapFilename: '[name].map',
     },
     resolve: {
-        extensions: ['.ts', '.js'],
-        modules: [
-            './packages',
-            './node_modules'
-        ]
+        extensions: ['.ts', '.tsx', '.js', '.svg', '.scss', '.'],
+        modules: ['./publish/samplesite/scripts', 'packages', './node_modules'],
     },
     mode: 'development',
     module: {
-        rules: [{
-            test: /\.ts$/,
-            loader: 'ts-loader'
-        }]
+        rules: [
+            {
+                test: /\.tsx?$/,
+                loader: 'ts-loader',
+            },
+            {
+                test: /\.svg$/,
+                loader: 'url-loader',
+                options: {
+                    mimetype: 'image/svg+xml',
+                },
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    '@microsoft/loader-load-themed-styles',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: true,
+                        },
+                    },
+                    'sass-loader',
+                ],
+            },
+        ],
     },
     watch: true,
-    stats: "minimal",
+    stats: 'minimal',
     devServer: {
-        host: "0.0.0.0", // This makes the server public so that others can test by http://hostname ...
+        host: '0.0.0.0', // This makes the server public so that others can test by http://hostname ...
         port: devServerPort,
         open: true,
-        openPage: "publish/samplesite/sample.htm",
-        public: "localhost:" + devServerPort
-    }
+        openPage: '',
+        public: 'localhost:' + devServerPort,
+    },
 };

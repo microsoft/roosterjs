@@ -1,6 +1,7 @@
 {
-  "include": [
-    "../packages/**/*.ts",
-    "../sample/**/*.ts"
-  ]
+    "include": [
+        "../packages/**/*.ts",
+        "../publish/samplesite/scripts/**/*.ts",
+        "../publish/samplesite/scripts/**/*.tsx"
+    ]
 }

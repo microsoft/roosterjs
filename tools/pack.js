@@ -20,13 +20,13 @@ if (isProduction) {
 filename += '.js';
 var output = {
     filename,
-    path: distPath
+    path: distPath,
 };
 if (isAmd) {
     output.libraryTarget = 'amd';
 } else {
     output.library = 'roosterjs';
-};
+}
 
 var webpackConfig = {
     entry: path.resolve(sourcePath, 'roosterjs/lib/index.ts'),
@@ -34,29 +34,34 @@ var webpackConfig = {
     output,
     resolve: {
         extensions: ['.ts'],
-        modules: [ sourcePath ],
+        modules: [sourcePath],
     },
     module: {
-        rules: [{
-            test: /\.ts$/,
-            loader: 'ts-loader',
-            options: {
-                compilerOptions: {
-                    declaration: false,
-                    preserveConstEnums: preserveEnum
+        rules: [
+            {
+                test: /\.ts$/,
+                loader: 'ts-loader',
+                options: {
+                    compilerOptions: {
+                        declaration: false,
+                        preserveConstEnums: preserveEnum,
+                    },
                 },
-            }
-        }]
+            },
+        ],
     },
     stats: 'minimal',
     mode: isProduction ? 'production' : 'development',
     optimization: {
-        minimize: isProduction
-    }
+        minimize: isProduction,
+    },
 };
 
-var version = JSON.stringify(require(path.join(__dirname, '..', 'package.json')).version).replace(/"/g, '');
-var license = fs.readFileSync(path.join(__dirname, '..', 'LICENSE')).toString();
+var version = JSON.stringify(require(path.join(rootPath, 'package.json')).version).replace(
+    /"/g,
+    '',
+);
+var license = fs.readFileSync(path.join(rootPath, 'LICENSE')).toString();
 var targetFile = path.resolve(distPath, filename);
 
 console.log('Packing file: ' + targetFile);
@@ -65,7 +70,10 @@ webpack(webpackConfig).run((err, stat) => {
         console.error(err);
     } else {
         var fileContent = fs.readFileSync(targetFile).toString();
-        fs.writeFileSync(targetFile, `/*\r\n    VERSION: ${version}\r\n\r\n${license}\r\n*/\r\n${fileContent}`);
+        fs.writeFileSync(
+            targetFile,
+            `/*\r\n    VERSION: ${version}\r\n\r\n${license}\r\n*/\r\n${fileContent}`,
+        );
     }
 });
 

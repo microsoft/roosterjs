@@ -12,5 +12,7 @@
         ".vscode/**": true,
         "dist/**": true,
         "stats.json": true,
-    }
+    },
+    "html.format.wrapLineLength": 100,
+    "prettier.tabWidth": 4
 }

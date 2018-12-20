@@ -1,0 +1,39 @@
+.mainPane {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.noGrow {
+    flex: 0 0 auto;
+}
+
+.body {
+    flex: 1 1 auto;
+    position: relative;
+    display: flex;
+}
+
+.editor {
+    min-width: 200px;
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.resizer {
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 6px;
+    cursor: col-resize;
+    &:hover {
+        background-color: #ccc;
+    }
+}
+
+.sidePane {
+    min-width: 340px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 300px;
+}

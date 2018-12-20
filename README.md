@@ -47,12 +47,12 @@ Rooster provides DOM level APIs (in `roosterjs-editor-dom`) and formatting APIs
 
 `roosterjs-editor-dom` provides several levels of DOM operations:
 
-- Perform basic DOM operations such as `fromHtml()`, `wrap()`, `unwrap()`, ...
-- Wrap a given DOM node with `InlineElemen`t or `BlockElement` and perform
-  operations with DOM Walker API.
-- Perform DOM operations on a given scope using scopers.
-- Travel among `InlineElements` and `BlockElements` with scope using
-  ContentTraverser API.
+-   Perform basic DOM operations such as `fromHtml()`, `wrap()`, `unwrap()`, ...
+-   Wrap a given DOM node with `InlineElemen`t or `BlockElement` and perform
+    operations with DOM Walker API.
+-   Perform DOM operations on a given scope using scopers.
+-   Travel among `InlineElements` and `BlockElements` with scope using
+    ContentTraverser API.
 
 `roosterjs-editor-api` provides APIs for scenario-based operations triggered by
 user interaction.
@@ -69,15 +69,15 @@ an "a" is typed in the editor:
 
 ```typescript
 class HelloRooster implements EditorPlugin {
-  initialize(editor: Editor) {}
+    initialize(editor: Editor) {}
 
-  dispose() {}
+    dispose() {}
 
-  onPluginEvent(e: PluginEvent) {
-    if (e.eventType == PluginEventType.KeyPress && e.rawEvent.which == 65) {
-      alert('Hello Rooster');
+    onPluginEvent(e: PluginEvent) {
+        if (e.eventType == PluginEventType.KeyPress && e.rawEvent.which == 65) {
+            alert('Hello Rooster');
+        }
     }
-  }
 }
 ```
 
@@ -169,13 +169,13 @@ var editor = roosterjs.createEditor(editorDiv);
 editor.setContent('Welcome to <b>RoosterJs</b>!');
 
 document.getElementById('buttonB').addEventListener('click', function() {
-  roosterjs.toggleBold(editor);
+    roosterjs.toggleBold(editor);
 });
 document.getElementById('buttonI').addEventListener('click', function() {
-  roosterjs.toggleItalic(editor);
+    roosterjs.toggleItalic(editor);
 });
 document.getElementById('buttonU').addEventListener('click', function() {
-  roosterjs.toggleUnderline(editor);
+    roosterjs.toggleUnderline(editor);
 });
 ```
 
@@ -194,29 +194,29 @@ To build the sample site code yourself, follow these instructions:
 
 1. Get dependencies using [yarn](https://yarnpkg.com) or [npm](https://www.npmjs.com/):
 
-   ```cmd
-   yarn
-   ```
+    ```cmd
+    yarn
+    ```
 
-   or
+    or
 
     ```cmd
-   npm install
-   ```
+    npm install
+    ```
 
 2. Build the source code, and start the sample editor:
 
-   ```
-   yarn start
-   ```
+    ```
+    yarn start
+    ```
 
-   or
+    or
 
-   ```
-   npm start
-   ```
+    ```
+    npm start
+    ```
 
-3. Navigate to the sample editor at http://localhost:3000/publish/samplesite/sample.htm
+3. Navigate to the sample editor at http://localhost:3000/
 
 ## More documentation
 

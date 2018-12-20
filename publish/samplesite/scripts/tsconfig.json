@@ -2,66 +2,29 @@
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
-        "baseUrl": "../../",
-        "lib": [
-            "es6",
-            "dom"
-        ],
+        "baseUrl": "../../../",
+        "lib": ["es6", "dom"],
+        "jsx": "react",
         "paths": {
-            "roosterjs": [
-                "packages/roosterjs/lib/index"
-            ],
-            "roosterjs/lib/*": [
-                "packages/roosterjs/lib/*"
-            ],
-            "roosterjs-editor-dom": [
-                "packages/roosterjs-editor-dom/lib/index"
-            ],
-            "roosterjs-editor-dom/lib/*": [
-                "packages/roosterjs-editor-dom/lib/*"
-            ],
-            "roosterjs-editor-core": [
-                "packages/roosterjs-editor-core/lib/index"
-            ],
-            "roosterjs-editor-core/lib/*": [
-                "packages/roosterjs-editor-core/lib/*"
-            ],
-            "roosterjs-editor-api": [
-                "packages/roosterjs-editor-api/lib/index"
-            ],
-            "roosterjs-editor-api/lib/*": [
-                "packages/roosterjs-editor-api/lib/*"
-            ],
-            "roosterjs-editor-plugins": [
-                "packages/roosterjs-editor-plugins/lib/index"
-            ],
-            "roosterjs-editor-plugins/lib/*": [
-                "packages/roosterjs-editor-plugins/lib/*"
-            ],
-            "roosterjs-editor-types": [
-                "packages/roosterjs-editor-types/lib/index"
-            ],
-            "roosterjs-editor-types/lib/*": [
-                "packages/roosterjs-editor-types/lib/*"
-            ],
-            "roosterjs-plugin-image-resize": [
-                "packages/roosterjs-plugin-image-resize/lib/index"
-            ],
-            "roosterjs-plugin-image-resize/lib/*": [
-                "packages/roosterjs-plugin-image-resize/lib/*"
-            ],
-            "roosterjs-plugin-picker": [
-                "packages/roosterjs-plugin-picker/lib/index"
-            ],
-            "roosterjs-plugin-picker/lib/*": [
-                "packages/roosterjs-plugin-picker/lib/*"
-            ],
-            "roosterjs-html-sanitizer": [
-                "packages/roosterjs-html-sanitizer/lib/index"
-            ],
-            "roosterjs-html-sanitizer/lib/*": [
-                "packages/roosterjs-html-sanitizer/lib/*"
-            ]
+            "roosterjs": ["packages/roosterjs/lib/index"],
+            "roosterjs/lib/*": ["packages/roosterjs/lib/*"],
+            "roosterjs-editor-dom": ["packages/roosterjs-editor-dom/lib/index"],
+            "roosterjs-editor-dom/lib/*": ["packages/roosterjs-editor-dom/lib/*"],
+            "roosterjs-editor-core": ["packages/roosterjs-editor-core/lib/index"],
+            "roosterjs-editor-core/lib/*": ["packages/roosterjs-editor-core/lib/*"],
+            "roosterjs-editor-api": ["packages/roosterjs-editor-api/lib/index"],
+            "roosterjs-editor-api/lib/*": ["packages/roosterjs-editor-api/lib/*"],
+            "roosterjs-editor-plugins": ["packages/roosterjs-editor-plugins/lib/index"],
+            "roosterjs-editor-plugins/lib/*": ["packages/roosterjs-editor-plugins/lib/*"],
+            "roosterjs-editor-types": ["packages/roosterjs-editor-types/lib/index"],
+            "roosterjs-editor-types/lib/*": ["packages/roosterjs-editor-types/lib/*"],
+            "roosterjs-plugin-image-resize": ["packages/roosterjs-plugin-image-resize/lib/index"],
+            "roosterjs-plugin-image-resize/lib/*": ["packages/roosterjs-plugin-image-resize/lib/*"],
+            "roosterjs-plugin-picker": ["packages/roosterjs-plugin-picker/lib/index"],
+            "roosterjs-plugin-picker/lib/*": ["packages/roosterjs-plugin-picker/lib/*"],
+            "roosterjs-html-sanitizer": ["packages/roosterjs-html-sanitizer/lib/index"],
+            "roosterjs-html-sanitizer/lib/*": ["packages/roosterjs-html-sanitizer/lib/*"]
         }
-    }
+    },
+    "include": ["./**/*.ts", "./**/*.tsx"]
 }

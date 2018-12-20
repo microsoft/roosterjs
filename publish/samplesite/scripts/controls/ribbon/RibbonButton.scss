@@ -1,0 +1,42 @@
+@import "../theme/theme.scss";
+
+.button {
+    border-width: 0;
+    border-radius: 4px;
+    margin: 2px;
+    padding: 0;
+    background-color: $prmaryBackgroundColor;
+    cursor: pointer;
+    &:hover {
+        background-color: $primaryLighter2;
+    }
+}
+
+.dropDownButton {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    overflow: visible;
+}
+
+.dropDown {
+    z-index: 1;
+    border: solid 1px $primaryBorder;
+    display: inline-block;
+    background-color: $prmaryBackgroundColor;
+    padding: 4px;
+    box-shadow: 2px 2px 4px $primaryBorder;
+    position: absolute;
+    top: 14px;
+    left: 0;
+}
+
+.dropDownItem {
+    cursor: pointer;
+    padding: 2px;
+    white-space: nowrap;
+    min-width: 60px;
+    &:hover {
+        background-color: $primaryLighter2;
+    }
+}

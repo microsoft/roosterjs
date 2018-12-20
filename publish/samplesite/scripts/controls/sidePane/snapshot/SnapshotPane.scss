@@ -1,0 +1,19 @@
+@import '../../theme/theme.scss';
+
+.snapshotPane {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.buttons {
+    margin-bottom: 10px;
+    flex: 0 0 auto;
+}
+
+.textarea {
+    flex: 1 1 auto;
+    resize: none;
+    min-height: 100px;
+    border-color: $primaryBorder;
+}
