@@ -21,9 +21,8 @@ describe('collapseNodes()', () => {
             document.getElementById(endId),
             allowSplictParent
         );
-        let results = nodes.map(
-            node =>
-                node.nodeType == NodeType.Element ? (<HTMLElement>node).outerHTML : node.nodeValue
+        let results = nodes.map(node =>
+            node.nodeType == NodeType.Element ? (<HTMLElement>node).outerHTML : node.nodeValue
         );
         expect(results).toEqual(resultHtmls, index);
         expect(div.innerHTML).toBe(resultFullHtml, index);

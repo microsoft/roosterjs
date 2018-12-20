@@ -86,8 +86,8 @@ export default class Position implements NodePosition {
                 newOffset == PositionType.Begin
                     ? node.firstChild
                     : newOffset == PositionType.End
-                        ? node.lastChild
-                        : node.childNodes[<number>newOffset];
+                    ? node.lastChild
+                    : node.childNodes[<number>newOffset];
             newOffset = this.isAtEnd ? PositionType.End : PositionType.Begin;
         }
         return new Position(node, newOffset);

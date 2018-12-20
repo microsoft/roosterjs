@@ -117,12 +117,14 @@ export default class VTable {
             this.trs[1].style.backgroundColor = format.bgColorEven || 'transparent';
         }
         this.cells.forEach(row =>
-            row.filter(cell => cell.td).forEach(cell => {
-                cell.td.style.borderTop = getBorderStyle(format.topBorderColor);
-                cell.td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
-                cell.td.style.borderLeft = getBorderStyle(format.verticalBorderColor);
-                cell.td.style.borderRight = getBorderStyle(format.verticalBorderColor);
-            })
+            row
+                .filter(cell => cell.td)
+                .forEach(cell => {
+                    cell.td.style.borderTop = getBorderStyle(format.topBorderColor);
+                    cell.td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
+                    cell.td.style.borderLeft = getBorderStyle(format.verticalBorderColor);
+                    cell.td.style.borderRight = getBorderStyle(format.verticalBorderColor);
+                })
         );
     }
 

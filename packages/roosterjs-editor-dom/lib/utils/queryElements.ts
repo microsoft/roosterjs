@@ -58,10 +58,9 @@ function isIntersectWithNodeRange(
 }
 
 function checkPosition(position: DocumentPosition, targets: DocumentPosition[]): boolean {
-    return targets.some(
-        target =>
-            target == DocumentPosition.Same
-                ? position == DocumentPosition.Same
-                : (position & target) == target
+    return targets.some(target =>
+        target == DocumentPosition.Same
+            ? position == DocumentPosition.Same
+            : (position & target) == target
     );
 }

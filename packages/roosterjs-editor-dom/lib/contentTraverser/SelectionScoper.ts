@@ -114,8 +114,8 @@ class SelectionScoper implements TraversingScoper {
         return start.isAfter(end) || start.equalTo(end)
             ? null
             : startPartial || endPartial
-                ? new PartialInlineElement(inline, startPartial && start, endPartial && end)
-                : inline;
+            ? new PartialInlineElement(inline, startPartial && start, endPartial && end)
+            : inline;
     }
 }
 

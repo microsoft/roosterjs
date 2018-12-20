@@ -50,49 +50,51 @@ export default function clearBlockFormat(
             group.last = element;
         });
 
-        groups.filter(group => group.first).forEach(group => {
-            // 2. Collapse with first and last element to make them under same parent
-            let nodes = editor.collapseNodes(group.first, group.last, true /*canSplitParent*/);
+        groups
+            .filter(group => group.first)
+            .forEach(group => {
+                // 2. Collapse with first and last element to make them under same parent
+                let nodes = editor.collapseNodes(group.first, group.last, true /*canSplitParent*/);
 
-            // 3. Continue collapse until we can't collapse any more (hit root node, or a table)
-            if (canCollapse(tagsToStopUnwrap, nodes[0])) {
-                while (
-                    editor.contains(nodes[0].parentNode) &&
-                    canCollapse(tagsToStopUnwrap, nodes[0].parentNode as HTMLElement)
-                ) {
-                    nodes = [splitBalancedNodeRange(nodes)];
+                // 3. Continue collapse until we can't collapse any more (hit root node, or a table)
+                if (canCollapse(tagsToStopUnwrap, nodes[0])) {
+                    while (
+                        editor.contains(nodes[0].parentNode) &&
+                        canCollapse(tagsToStopUnwrap, nodes[0].parentNode as HTMLElement)
+                    ) {
+                        nodes = [splitBalancedNodeRange(nodes)];
+                    }
                 }
-            }
 
-            // 4. Clear formats of the nodes
-            nodes.forEach(node =>
-                clearNodeFormat(
-                    node as HTMLElement,
-                    tagsToUnwrap,
-                    tagsToStopUnwrap,
-                    attributesToPreserve
-                )
-            );
-
-            // 5. Clear CSS of container TD if exist
-            if (group.td) {
-                let styles = group.td.getAttribute('style') || '';
-                let styleArray = styles.split(';');
-                styleArray = styleArray.filter(
-                    style =>
-                        style
-                            .trim()
-                            .toLowerCase()
-                            .indexOf('border') == 0
+                // 4. Clear formats of the nodes
+                nodes.forEach(node =>
+                    clearNodeFormat(
+                        node as HTMLElement,
+                        tagsToUnwrap,
+                        tagsToStopUnwrap,
+                        attributesToPreserve
+                    )
                 );
-                styles = styleArray.join(';');
-                if (styles) {
-                    group.td.setAttribute('style', styles);
-                } else {
-                    group.td.removeAttribute('style');
+
+                // 5. Clear CSS of container TD if exist
+                if (group.td) {
+                    let styles = group.td.getAttribute('style') || '';
+                    let styleArray = styles.split(';');
+                    styleArray = styleArray.filter(
+                        style =>
+                            style
+                                .trim()
+                                .toLowerCase()
+                                .indexOf('border') == 0
+                    );
+                    styles = styleArray.join(';');
+                    if (styles) {
+                        group.td.setAttribute('style', styles);
+                    } else {
+                        group.td.removeAttribute('style');
+                    }
                 }
-            }
-        });
+            });
 
         editor.select(start, end);
     }, ChangeSource.Format);
