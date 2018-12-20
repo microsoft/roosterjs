@@ -6,7 +6,6 @@ import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
  * An editor plugin that show a tooltip for existing link
  */
 export default class HyperLink implements EditorPlugin {
-    public name: 'HyperLink';
     private editor: Editor;
     private disposers: (() => void)[];
 
@@ -22,6 +21,13 @@ export default class HyperLink implements EditorPlugin {
         private target?: string,
         private onLinkClick?: (anchor: HTMLAnchorElement, mouseEvent: MouseEvent) => void
     ) {}
+
+    /**
+     * Get a friendly name of  this plugin
+     */
+    getName() {
+        return 'hyperlink';
+    }
 
     /**
      * Initialize this plugin
@@ -59,8 +65,8 @@ export default class HyperLink implements EditorPlugin {
     }
 
     /**
-     * Handle plugin events
-     * @param event The event object
+     * Handle events triggered from editor
+     * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent): void {
         if (event.eventType == PluginEventType.MouseUp) {

@@ -40,10 +40,6 @@ class MainPane extends MainPaneBase {
         );
     }
 
-    setActiveSidePane(plugin: SidePanePlugin) {
-        this.sidePane.setActiveSidePane(plugin);
-    }
-
     resetEditorPlugin(pluginState: BuildInPluginState) {
         this.editor.current.resetEditorPlugin(pluginState);
     }

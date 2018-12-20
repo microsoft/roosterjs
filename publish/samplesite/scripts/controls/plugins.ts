@@ -7,6 +7,7 @@ import SidePanePlugin from './SidePanePlugin';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TableOptionsPlugin from './sidePane/tableOptions/TableOptionsPlugin';
 import { EditorPlugin } from 'roosterjs-editor-core';
+import SanitizerPlugin from './sidePane/sanitizer/SanitizerPlugin';
 
 export default interface Plugins {
     ribbon: RibbonPlugin;
@@ -16,6 +17,7 @@ export default interface Plugins {
     tableOptions: TableOptionsPlugin;
     pasteResult: PasteResultPlugin;
     eventView: EventViewPlugin;
+    sanitizer: SanitizerPlugin;
 }
 
 let plugins: Plugins = null;
@@ -30,6 +32,7 @@ export function getPlugins(): Plugins {
             tableOptions: new TableOptionsPlugin(),
             pasteResult: new PasteResultPlugin(),
             eventView: new EventViewPlugin(),
+            sanitizer: new SanitizerPlugin(),
         };
     }
     return plugins;
@@ -45,6 +48,7 @@ export function getAllPluginArray(): EditorPlugin[] {
         allPlugins.tableOptions,
         allPlugins.pasteResult,
         allPlugins.eventView,
+        allPlugins.sanitizer,
     ];
 }
 
@@ -57,5 +61,6 @@ export function getSidePanePluginArray(): SidePanePlugin[] {
         allPlugins.tableOptions,
         allPlugins.pasteResult,
         allPlugins.eventView,
+        allPlugins.sanitizer,
     ];
 }

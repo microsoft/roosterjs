@@ -33,7 +33,6 @@ interface AutoCompleteInfo {
  * 3. IME state
  */
 export default class CorePlugin implements EditorPlugin {
-    public name = 'CorePlugin';
     private editor: Editor;
     private autoCompleteInfo: AutoCompleteInfo;
     private inIME: boolean;
@@ -49,6 +48,13 @@ export default class CorePlugin implements EditorPlugin {
         private contentDiv: HTMLDivElement,
         private disableRestoreSelectionOnFocus: boolean
     ) {}
+
+    /**
+     * Get a friendly name of  this plugin
+     */
+    getName() {
+        return 'core';
+    }
 
     /**
      * Initialize this plugin. This should only be called from Editor

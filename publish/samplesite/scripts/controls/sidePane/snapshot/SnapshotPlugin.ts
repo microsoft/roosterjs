@@ -1,14 +1,9 @@
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import SnapshotPane, { SnapshotPaneProps } from './SnapshotPane';
 
-export default class SnapshotPlugin extends SidePanePluginImpl<
-    SnapshotPane,
-    SnapshotPaneProps
-> {
-    name: 'Snapshot';
-
+export default class SnapshotPlugin extends SidePanePluginImpl<SnapshotPane, SnapshotPaneProps> {
     constructor() {
-        super(SnapshotPane, 'Snapshot');
+        super(SnapshotPane, 'snapshot', 'Snapshot');
     }
 
     getComponentProps() {

@@ -3,10 +3,8 @@ import SidePanePluginImpl from '../SidePanePluginImpl';
 import { PluginEvent } from 'roosterjs-editor-types';
 
 export default class EventViewPlugin extends SidePanePluginImpl<EventViewPane, {}> {
-    name: 'EventViewer';
-
     constructor() {
-        super(EventViewPane, 'Event Viewer');
+        super(EventViewPane, 'event', 'Event Viewer');
     }
 
     onPluginEvent(e: PluginEvent) {

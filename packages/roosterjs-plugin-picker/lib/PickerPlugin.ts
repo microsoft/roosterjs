@@ -38,6 +38,10 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         private pickerOptions: PickerPluginOptions
     ) {}
 
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     public initialize(editor: Editor) {
         this.editor = editor;
         this.dataProvider.onInitalize(
@@ -65,11 +69,22 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         );
     }
 
+    /**
+     * Dispose this plugin
+     */
     public dispose() {
         this.editor = null;
         this.dataProvider.onDispose();
     }
 
+    /**
+     * Check if the plugin should handle the given event exclusively.
+     * Handle an event exclusively means other plugin will not receive this event in
+     * onPluginEvent method.
+     * If two plugins will return true in willHandleEventExclusively() for the same event,
+     * the final result depends on the order of the plugins are added into editor
+     * @param event The event to check
+     */
     public willHandleEventExclusively(event: PluginEvent) {
         return (
             this.isSuggesting &&
@@ -77,6 +92,10 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         );
     }
 
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
     public onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.KeyDown) {
             this.eventHandledOnKeyDown = false;

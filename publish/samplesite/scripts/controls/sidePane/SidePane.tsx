@@ -18,22 +18,22 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
     constructor(props: SidePaneProps) {
         super(props);
         this.state = {
-            currentPane: props.plugins[0],
+            currentPane: this.getCurrentPluginFromHash() || this.props.plugins[0],
         };
+
+        window.addEventListener('hashchange', this.setCurrentPlugin);
     }
+
     render() {
+        window.location.hash = this.state.currentPane.getName
+            ? this.state.currentPane.getName()
+            : '';
         let className = (this.props.className || '') + ' ' + styles.sidePane;
         return (
             <div className={className} ref={this.div}>
                 {this.props.plugins.map(this.renderSidePane)}
             </div>
         );
-    }
-
-    setActiveSidePane(plugin: SidePanePlugin) {
-        this.setState({
-            currentPane: plugin,
-        });
     }
 
     changeWidth(widthDelta: number) {
@@ -60,4 +60,30 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
             </div>
         );
     };
+
+    private setCurrentPlugin = () => {
+        let plugin = this.getCurrentPluginFromHash();
+
+        if (plugin && this.state.currentPane != plugin) {
+            this.setState({
+                currentPane: plugin,
+            });
+        }
+    };
+
+    private getCurrentPluginFromHash() {
+        let hash = window.location.hash;
+        hash = hash ? hash.substr(1) : null;
+
+        if (hash) {
+            for (let plugin of this.props.plugins) {
+                let name = plugin.getName && plugin.getName();
+                if (name == hash) {
+                    return plugin;
+                }
+            }
+        }
+
+        return null;
+    }
 }

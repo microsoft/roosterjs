@@ -8,10 +8,8 @@ export default class FormatStatePlugin extends SidePanePluginImpl<
     FormatStatePane,
     FormatStatePaneState
 > {
-    name: 'FormatState';
-
     constructor() {
-        super(FormatStatePane, 'Format State');
+        super(FormatStatePane, 'format', 'Format State');
     }
 
     initialize(editor: Editor) {

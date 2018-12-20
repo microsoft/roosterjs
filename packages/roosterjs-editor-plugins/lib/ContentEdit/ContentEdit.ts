@@ -39,13 +39,19 @@ export default class ContentEdit implements EditorPlugin {
     private editor: Editor;
     private featureMap: { [key: number]: GenericContentEditFeature<PluginEvent>[] } = {};
     private currentFeature: GenericContentEditFeature<PluginEvent>;
-    public name: 'ContentEdit';
 
     /**
      * Create instance of ContentEdit plugin
      * @param features An optional feature set to determine which features the plugin should provide
      */
     constructor(private featureSet?: ContentEditFeatures) {}
+
+    /**
+     * Get a friendly name of  this plugin
+     */
+    getName() {
+        return 'contentedit';
+    }
 
     /**
      * Initialize this plugin
@@ -91,7 +97,12 @@ export default class ContentEdit implements EditorPlugin {
     }
 
     /**
-     * Check whether the event should be handled exclusively by this plugin
+     * Check if the plugin should handle the given event exclusively.
+     * Handle an event exclusively means other plugin will not receive this event in
+     * onPluginEvent method.
+     * If two plugins will return true in willHandleEventExclusively() for the same event,
+     * the final result depends on the order of the plugins are added into editor
+     * @param event The event to check
      */
     public willHandleEventExclusively(event: PluginEvent): boolean {
         this.findFeature(event);
@@ -99,7 +110,8 @@ export default class ContentEdit implements EditorPlugin {
     }
 
     /**
-     * Handle the event
+     * Handle events triggered from editor
+     * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
         // ContentChangedEvent will be broadcast so we won't see it in willHandleEventExclusively(),

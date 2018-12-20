@@ -1,4 +1,4 @@
-@import "../theme/theme.scss";
+@import '../theme/theme.scss';
 
 .titleBar {
     display: flex;
@@ -16,6 +16,7 @@
     font-weight: bold;
     font-style: italic;
     color: white;
+    text-shadow: 2px 2px 2px black;
 }
 
 .version {

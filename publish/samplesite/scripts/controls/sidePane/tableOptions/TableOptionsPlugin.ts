@@ -4,10 +4,8 @@ import { editTable, formatTable, insertTable } from 'roosterjs-editor-api';
 import { TableFormat, TableOperation } from 'roosterjs-editor-types';
 
 export default class TableOptionsPlugin extends SidePanePluginImpl<TablePane, TablePaneProps> {
-    name: 'TableOptions';
-
     constructor() {
-        super(TablePane, 'Table Options');
+        super(TablePane, 'table', 'Table Options');
     }
 
     getComponentProps() {

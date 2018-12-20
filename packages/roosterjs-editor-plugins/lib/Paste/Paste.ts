@@ -33,7 +33,6 @@ export default class Paste implements EditorPlugin {
     private editor: Editor;
     private pasteDisposer: () => void;
     private sanitizer: HtmlSanitizer;
-    public name: 'Paste';
 
     /**
      * Create an instance of Paste
@@ -46,11 +45,25 @@ export default class Paste implements EditorPlugin {
         });
     }
 
+    /**
+     * Get a friendly name of  this plugin
+     */
+    getName() {
+        return 'paste';
+    }
+
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     public initialize(editor: Editor) {
         this.editor = editor;
         this.pasteDisposer = editor.addDomEventHandler('paste', this.onPaste);
     }
 
+    /**
+     * Dispose this plugin
+     */
     public dispose() {
         this.pasteDisposer();
         this.pasteDisposer = null;

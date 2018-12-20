@@ -3,10 +3,8 @@ import SidePanePluginImpl from '../SidePanePluginImpl';
 import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 export default class PasteResultPlugin extends SidePanePluginImpl<PastePane, {}> {
-    name: 'PasteResult';
-
     constructor() {
-        super(PastePane, 'Paste Event Viewer');
+        super(PastePane, 'paste', 'Paste Event Viewer');
     }
 
     onPluginEvent(e: PluginEvent) {

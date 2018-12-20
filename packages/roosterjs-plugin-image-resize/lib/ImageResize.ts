@@ -31,7 +31,6 @@ export default class ImageResize implements EditorPlugin {
     private resizeDiv: HTMLElement;
     private direction: string;
     private disposers: (() => void)[];
-    public name: 'ImageResize';
 
     /**
      * Create a new instance of ImageResize
@@ -50,6 +49,17 @@ export default class ImageResize implements EditorPlugin {
         private resizableImageSelector: string = 'img'
     ) {}
 
+    /**
+     * Get a friendly name of  this plugin
+     */
+    getName() {
+        return 'imageresize';
+    }
+
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     initialize(editor: Editor) {
         this.editor = editor;
         this.disposers = [
@@ -58,6 +68,9 @@ export default class ImageResize implements EditorPlugin {
         ];
     }
 
+    /**
+     * Dispose this plugin
+     */
     dispose() {
         if (this.resizeDiv) {
             this.hideResizeHandle();
@@ -67,6 +80,10 @@ export default class ImageResize implements EditorPlugin {
         this.editor = null;
     }
 
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
     onPluginEvent(e: PluginEvent) {
         if (e.eventType == PluginEventType.MouseDown) {
             const event = e.rawEvent;

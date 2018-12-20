@@ -22,10 +22,12 @@ export default class EditorOptionsPlugin extends SidePanePluginImpl<
     OptionsPane,
     BuildInPluginState
 > {
-    name: 'EditorOptions';
-
     constructor() {
-        super(OptionsPane, 'Editor Options');
+        super(OptionsPane, 'options', 'Editor Options');
+    }
+
+    getName() {
+        return 'editoroptions';
     }
 
     getBuildInPluginState(): BuildInPluginState {

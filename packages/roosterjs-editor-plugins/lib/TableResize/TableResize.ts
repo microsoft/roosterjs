@@ -18,21 +18,42 @@ export default class TableResize implements EditorPlugin {
     private td: HTMLTableCellElement;
     private pageX = -1;
     private initialPageX: number;
-    public name: 'TableResize';
 
-    constructor(isRtl?: boolean) {}
+    /**
+     * Constructor TableResize plugin
+     * @param preserved A deprecated parameter used for compatibility with old code
+     */
+    constructor(preserved?: any) {}
 
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     initialize(editor: Editor) {
         this.editor = editor;
         this.onMouseOverDisposer = this.editor.addDomEventHandler('mouseover', this.onMouseOver);
     }
 
+    /**
+     * Get a friendly name of  this plugin
+     */
+    getName() {
+        return 'tableresize';
+    }
+
+    /**
+     * Dispose this plugin
+     */
     dispose() {
         this.detachMouseEvents();
         this.editor = null;
         this.onMouseOverDisposer();
     }
 
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
     onPluginEvent(event: PluginEvent) {
         if (
             this.td &&

@@ -4,7 +4,12 @@ import { Editor, EditorPlugin } from 'roosterjs-editor-core';
  * @deprecated Use ContentEdit plugin with fature DefaultShortcut instead
  */
 export default class DefaultShortcut implements EditorPlugin {
-    public name: 'DefaultShortcut';
+    /**
+     * Get a friendly name of  this plugin
+     */
+    getName() {
+        return 'defaultshortcut';
+    }
 
     /**
      * Initialize this plugin

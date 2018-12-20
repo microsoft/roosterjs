@@ -9,8 +9,13 @@ export default abstract class SidePanePluginImpl<T extends React.Component<P, an
 
     constructor(
         private readonly componentCtor: { new (props: P): T },
-        private readonly title: string,
+        private readonly pluginName: string,
+        private readonly title: string
     ) {}
+
+    getName() {
+        return this.pluginName;
+    }
 
     initialize(editor: Editor) {
         this.editor = editor;

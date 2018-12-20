@@ -17,8 +17,6 @@ export default abstract class MainPaneBase extends React.Component<{}, {}> {
         MainPaneBase.instance = this;
     }
 
-    abstract setActiveSidePane(plugin: SidePanePlugin);
-
     abstract resetEditorPlugin(pluginState: BuildInPluginState);
 
     abstract updateForamtState();
