@@ -663,6 +663,25 @@ exports.locals = {
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPane.scss":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??ref--6-1!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPane.scss ***!
+  \****************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, "._1FZTMFUuEHaT9xkM-ST8ch {\n  outline: none;\n  resize: none;\n  min-height: 100px;\n  height: 300px; }\n\n._2iwSa3pXuv3_WATDr-f3Td {\n  margin: 10px;\n  height: 35px;\n  width: 80px;\n  flex: 0 0 auto; }\n", ""]);
+
+// Exports
+exports.locals = {
+	"textarea": "_1FZTMFUuEHaT9xkM-ST8ch",
+	"button": "_2iwSa3pXuv3_WATDr-f3Td"
+};
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPane.scss":
 /*!**************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??ref--6-1!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPane.scss ***!
@@ -712,7 +731,7 @@ exports.locals = {
 
 exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "._12oSJMPyoFTLlgzjwJ32KK {\n  display: flex;\n  background-color: #0099aa;\n  padding: 5px 10px;\n  margin-bottom: 10px;\n  border-radius: 10px;\n  align-items: center; }\n\n._3iI4hhxTqBPHuVr17sPT34 {\n  flex: 0 0 auto;\n  font-size: 24pt;\n  font-family: Arial;\n  font-weight: bold;\n  font-style: italic;\n  color: white; }\n\n.lHeyWXUeLTngykSTZw29T {\n  flex: 1 1 auto;\n  color: white;\n  font-family: Calibri;\n  font-size: 14pt;\n  margin: 10px 0 0 10px; }\n\n.JHK9BQOYWOuiqwsOz79gJ {\n  flex: 0 0 auto;\n  text-align: right;\n  font-size: 14pt;\n  font-family: Calibri; }\n\n._2lYMb75xwE6eUFB4ZU0ngf {\n  color: white;\n  text-decoration: none; }\n  ._2lYMb75xwE6eUFB4ZU0ngf:hover {\n    text-decoration: underline; }\n\n._20gkrvWGPQsb8jEquy-pNW {\n  flex: 0 0 auto;\n  text-align: right;\n  font-size: 42pt;\n  font-family: Calibri;\n  height: 36px;\n  overflow: visible; }\n\n._1JefmV3TALf7QiPgdE8rb4 {\n  background-color: #aaf7ff;\n  margin-left: 10px;\n  border-radius: 400px;\n  box-shadow: 2px 2px 4px #00b0c4;\n  overflow: hidden;\n  color: red;\n  width: 76px;\n  text-align: center;\n  position: relative;\n  z-index: 1; }\n", ""]);
+exports.push([module.i, "._12oSJMPyoFTLlgzjwJ32KK {\n  display: flex;\n  background-color: #0099aa;\n  padding: 5px 10px;\n  margin-bottom: 10px;\n  border-radius: 10px;\n  align-items: center; }\n\n._3iI4hhxTqBPHuVr17sPT34 {\n  flex: 0 0 auto;\n  font-size: 24pt;\n  font-family: Arial;\n  font-weight: bold;\n  font-style: italic;\n  color: white;\n  text-shadow: 2px 2px 2px black; }\n\n.lHeyWXUeLTngykSTZw29T {\n  flex: 1 1 auto;\n  color: white;\n  font-family: Calibri;\n  font-size: 14pt;\n  margin: 10px 0 0 10px; }\n\n.JHK9BQOYWOuiqwsOz79gJ {\n  flex: 0 0 auto;\n  text-align: right;\n  font-size: 14pt;\n  font-family: Calibri; }\n\n._2lYMb75xwE6eUFB4ZU0ngf {\n  color: white;\n  text-decoration: none; }\n  ._2lYMb75xwE6eUFB4ZU0ngf:hover {\n    text-decoration: underline; }\n\n._20gkrvWGPQsb8jEquy-pNW {\n  flex: 0 0 auto;\n  text-align: right;\n  font-size: 42pt;\n  font-family: Calibri;\n  height: 36px;\n  overflow: visible; }\n\n._1JefmV3TALf7QiPgdE8rb4 {\n  background-color: #aaf7ff;\n  margin-left: 10px;\n  border-radius: 400px;\n  box-shadow: 2px 2px 4px #00b0c4;\n  overflow: hidden;\n  color: red;\n  width: 76px;\n  text-align: center;\n  position: relative;\n  z-index: 1; }\n", ""]);
 
 // Exports
 exports.locals = {
@@ -26900,7 +26919,6 @@ var CorePlugin = /** @class */ (function () {
         var _this = this;
         this.contentDiv = contentDiv;
         this.disableRestoreSelectionOnFocus = disableRestoreSelectionOnFocus;
-        this.name = 'CorePlugin';
         this.disposers = null;
         this.onMouseDown = function () {
             if (_this.editor && !_this.mouseUpEventListerAdded) {
@@ -26918,6 +26936,12 @@ var CorePlugin = /** @class */ (function () {
             }
         };
     }
+    /**
+     * Get a friendly name of  this plugin
+     */
+    CorePlugin.prototype.getName = function () {
+        return 'core';
+    };
     /**
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
@@ -32265,6 +32289,12 @@ var ContentEdit = /** @class */ (function () {
         this.featureMap = {};
     }
     /**
+     * Get a friendly name of  this plugin
+     */
+    ContentEdit.prototype.getName = function () {
+        return 'contentedit';
+    };
+    /**
      * Initialize this plugin
      * @param editor The editor instance
      */
@@ -32307,14 +32337,20 @@ var ContentEdit = /** @class */ (function () {
         this.editor = null;
     };
     /**
-     * Check whether the event should be handled exclusively by this plugin
+     * Check if the plugin should handle the given event exclusively.
+     * Handle an event exclusively means other plugin will not receive this event in
+     * onPluginEvent method.
+     * If two plugins will return true in willHandleEventExclusively() for the same event,
+     * the final result depends on the order of the plugins are added into editor
+     * @param event The event to check
      */
     ContentEdit.prototype.willHandleEventExclusively = function (event) {
         this.findFeature(event);
         return !!this.currentFeature;
     };
     /**
-     * Handle the event
+     * Handle events triggered from editor
+     * @param event PluginEvent object
      */
     ContentEdit.prototype.onPluginEvent = function (event) {
         // ContentChangedEvent will be broadcast so we won't see it in willHandleEventExclusively(),
@@ -32858,6 +32894,12 @@ var DefaultShortcut = /** @class */ (function () {
     function DefaultShortcut() {
     }
     /**
+     * Get a friendly name of  this plugin
+     */
+    DefaultShortcut.prototype.getName = function () {
+        return 'defaultshortcut';
+    };
+    /**
      * Initialize this plugin
      * @param editor The editor instance
      */
@@ -32910,6 +32952,12 @@ var HyperLink = /** @class */ (function () {
         };
     }
     /**
+     * Get a friendly name of  this plugin
+     */
+    HyperLink.prototype.getName = function () {
+        return 'hyperlink';
+    };
+    /**
      * Initialize this plugin
      * @param editor The editor instance
      */
@@ -32931,8 +32979,8 @@ var HyperLink = /** @class */ (function () {
         this.editor = null;
     };
     /**
-     * Handle plugin events
-     * @param event The event object
+     * Handle events triggered from editor
+     * @param event PluginEvent object
      */
     HyperLink.prototype.onPluginEvent = function (event) {
         if (event.eventType == 5 /* MouseUp */) {
@@ -33024,10 +33072,23 @@ var Paste = /** @class */ (function () {
             attributeCallbacks: attributeCallbacks,
         });
     }
+    /**
+     * Get a friendly name of  this plugin
+     */
+    Paste.prototype.getName = function () {
+        return 'paste';
+    };
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     Paste.prototype.initialize = function (editor) {
         this.editor = editor;
         this.pasteDisposer = editor.addDomEventHandler('paste', this.onPaste);
     };
+    /**
+     * Dispose this plugin
+     */
     Paste.prototype.dispose = function () {
         this.pasteDisposer();
         this.pasteDisposer = null;
@@ -34107,7 +34168,11 @@ var TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
 var HANDLE_WIDTH = 6;
 var CONTAINER_HTML = "<div style=\"position: fixed; cursor: col-resize; width: " + HANDLE_WIDTH + "px; border: solid 0 #C6C6C6;\"></div>";
 var TableResize = /** @class */ (function () {
-    function TableResize(isRtl) {
+    /**
+     * Constructor TableResize plugin
+     * @param preserved A deprecated parameter used for compatibility with old code
+     */
+    function TableResize(preserved) {
         var _this = this;
         this.pageX = -1;
         this.onMouseOver = function (e) {
@@ -34157,15 +34222,32 @@ var TableResize = /** @class */ (function () {
             _this.cancelEvent(e);
         };
     }
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     TableResize.prototype.initialize = function (editor) {
         this.editor = editor;
         this.onMouseOverDisposer = this.editor.addDomEventHandler('mouseover', this.onMouseOver);
     };
+    /**
+     * Get a friendly name of  this plugin
+     */
+    TableResize.prototype.getName = function () {
+        return 'tableresize';
+    };
+    /**
+     * Dispose this plugin
+     */
     TableResize.prototype.dispose = function () {
         this.detachMouseEvents();
         this.editor = null;
         this.onMouseOverDisposer();
     };
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
     TableResize.prototype.onPluginEvent = function (event) {
         if (this.td &&
             (event.eventType == 0 /* KeyDown */ ||
@@ -34303,12 +34385,25 @@ var Watermark = /** @class */ (function () {
             textColor: '#aaa',
         };
     }
+    /**
+     * Get a friendly name of  this plugin
+     */
+    Watermark.prototype.getName = function () {
+        return 'watermark';
+    };
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     Watermark.prototype.initialize = function (editor) {
         this.editor = editor;
         this.showHideWatermark(false /*ignoreCachedState*/);
         this.focusDisposer = this.editor.addDomEventHandler('focus', this.handleWatermark);
         this.blurDisposer = this.editor.addDomEventHandler('blur', this.handleWatermark);
     };
+    /**
+     * Dispose this plugin
+     */
     Watermark.prototype.dispose = function () {
         this.focusDisposer();
         this.blurDisposer();
@@ -34317,6 +34412,10 @@ var Watermark = /** @class */ (function () {
         this.hideWatermark();
         this.editor = null;
     };
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
     Watermark.prototype.onPluginEvent = function (event) {
         if (event.eventType == 6 /* ContentChanged */) {
             // When content is changed from setContent() API, current cached state
@@ -35018,6 +35117,16 @@ var ImageResize = /** @class */ (function () {
             }
         };
     }
+    /**
+     * Get a friendly name of  this plugin
+     */
+    ImageResize.prototype.getName = function () {
+        return 'imageresize';
+    };
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     ImageResize.prototype.initialize = function (editor) {
         this.editor = editor;
         this.disposers = [
@@ -35025,6 +35134,9 @@ var ImageResize = /** @class */ (function () {
             editor.addDomEventHandler('blur', this.onBlur),
         ];
     };
+    /**
+     * Dispose this plugin
+     */
     ImageResize.prototype.dispose = function () {
         if (this.resizeDiv) {
             this.hideResizeHandle();
@@ -35033,6 +35145,10 @@ var ImageResize = /** @class */ (function () {
         this.disposers = null;
         this.editor = null;
     };
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
     ImageResize.prototype.onPluginEvent = function (e) {
         var _this = this;
         if (e.eventType == 4 /* MouseDown */) {
@@ -35338,9 +35454,6 @@ var MainPane = /** @class */ (function (_super) {
                 React.createElement("div", { className: styles.resizer, onMouseDown: this.onMouseDown }),
                 React.createElement(SidePane_1.default, { ref: function (ref) { return (_this.sidePane = ref); }, plugins: plugins_1.getSidePanePluginArray(), className: styles.sidePane }))));
     };
-    MainPane.prototype.setActiveSidePane = function (plugin) {
-        this.sidePane.setActiveSidePane(plugin);
-    };
     MainPane.prototype.resetEditorPlugin = function (pluginState) {
         this.editor.current.resetEditorPlugin(pluginState);
     };
@@ -35553,6 +35666,7 @@ var PasteResultPlugin_1 = __webpack_require__(/*! ./sidePane/pasteResult/PasteRe
 var RibbonPlugin_1 = __webpack_require__(/*! ./ribbon/RibbonPlugin */ "./publish/samplesite/scripts/controls/ribbon/RibbonPlugin.ts");
 var SnapshotPlugin_1 = __webpack_require__(/*! ./sidePane/snapshot/SnapshotPlugin */ "./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPlugin.ts");
 var TableOptionsPlugin_1 = __webpack_require__(/*! ./sidePane/tableOptions/TableOptionsPlugin */ "./publish/samplesite/scripts/controls/sidePane/tableOptions/TableOptionsPlugin.ts");
+var SanitizerPlugin_1 = __webpack_require__(/*! ./sidePane/sanitizer/SanitizerPlugin */ "./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPlugin.ts");
 var plugins = null;
 function getPlugins() {
     if (!plugins) {
@@ -35564,6 +35678,7 @@ function getPlugins() {
             tableOptions: new TableOptionsPlugin_1.default(),
             pasteResult: new PasteResultPlugin_1.default(),
             eventView: new EventViewPlugin_1.default(),
+            sanitizer: new SanitizerPlugin_1.default(),
         };
     }
     return plugins;
@@ -35579,6 +35694,7 @@ function getAllPluginArray() {
         allPlugins.tableOptions,
         allPlugins.pasteResult,
         allPlugins.eventView,
+        allPlugins.sanitizer,
     ];
 }
 exports.getAllPluginArray = getAllPluginArray;
@@ -35591,6 +35707,7 @@ function getSidePanePluginArray() {
         allPlugins.tableOptions,
         allPlugins.pasteResult,
         allPlugins.eventView,
+        allPlugins.sanitizer,
     ];
 }
 exports.getSidePanePluginArray = getSidePanePluginArray;
@@ -35901,148 +36018,147 @@ exports.default = renderInsertLinkDialog;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var MainPaneBase_1 = __webpack_require__(/*! ../MainPaneBase */ "./publish/samplesite/scripts/controls/MainPaneBase.tsx");
 var renderInsertLinkDialog_1 = __webpack_require__(/*! ./renderInsertLinkDialog */ "./publish/samplesite/scripts/controls/ribbon/renderInsertLinkDialog.tsx");
 var plugins_1 = __webpack_require__(/*! ../plugins */ "./publish/samplesite/scripts/controls/plugins.ts");
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var buttons = {
     bold: {
-        title: "Bold",
+        title: 'Bold',
         image: __webpack_require__(/*! ./svg/bold.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/bold.svg"),
-        onClick: roosterjs_editor_api_1.toggleBold
+        onClick: roosterjs_editor_api_1.toggleBold,
     },
     italic: {
-        title: "Italic",
+        title: 'Italic',
         image: __webpack_require__(/*! ./svg/italic.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/italic.svg"),
-        onClick: roosterjs_editor_api_1.toggleItalic
+        onClick: roosterjs_editor_api_1.toggleItalic,
     },
     underline: {
-        title: "Underline",
+        title: 'Underline',
         image: __webpack_require__(/*! ./svg/underline.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/underline.svg"),
-        onClick: roosterjs_editor_api_1.toggleUnderline
+        onClick: roosterjs_editor_api_1.toggleUnderline,
     },
     fontName: {
-        title: "Font",
+        title: 'Font',
         image: __webpack_require__(/*! ./svg/fontname.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/fontname.svg"),
         onClick: roosterjs_editor_api_1.setFontName,
         dropDownItems: {
-            Arial: "Arial",
-            Calibri: "Calibri",
-            "Courier New": "Courier New",
-            Tahoma: "Tahoma",
-            "Times New Roman": "Times New Roman"
-        }
+            Arial: 'Arial',
+            Calibri: 'Calibri',
+            'Courier New': 'Courier New',
+            Tahoma: 'Tahoma',
+            'Times New Roman': 'Times New Roman',
+        },
     },
     fontSize: {
-        title: "Font size",
+        title: 'Font size',
         image: __webpack_require__(/*! ./svg/fontsize.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/fontsize.svg"),
         onClick: roosterjs_editor_api_1.setFontSize,
         dropDownItems: {
-            "8pt": "8",
-            "10pt": "10",
-            "12pt": "12",
-            "16pt": "16",
-            "20pt": "20",
-            "36pt": "36",
-            "72pt": "72"
-        }
+            '8pt': '8',
+            '10pt': '10',
+            '12pt': '12',
+            '16pt': '16',
+            '20pt': '20',
+            '36pt': '36',
+            '72pt': '72',
+        },
     },
     textColor: {
-        title: "Text color",
+        title: 'Text color',
         image: __webpack_require__(/*! ./svg/textcolor.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/textcolor.svg"),
         onClick: roosterjs_editor_api_1.setTextColor,
         dropDownItems: {
-            "#757b80": "Gray",
-            "#bd1398": "Violet",
-            "#7232ad": "Purple",
-            "#006fc9": "Blue",
-            "#4ba524": "Green",
-            "#e2c501": "Yellow",
-            "#d05c12": "Orange",
-            "#ff0000": "Red",
-            "#ffffff": "White",
-            "#000000": "Black"
-        }
+            '#757b80': 'Gray',
+            '#bd1398': 'Violet',
+            '#7232ad': 'Purple',
+            '#006fc9': 'Blue',
+            '#4ba524': 'Green',
+            '#e2c501': 'Yellow',
+            '#d05c12': 'Orange',
+            '#ff0000': 'Red',
+            '#ffffff': 'White',
+            '#000000': 'Black',
+        },
     },
     backColor: {
-        title: "Highlight",
+        title: 'Highlight',
         image: __webpack_require__(/*! ./svg/backcolor.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/backcolor.svg"),
         onClick: roosterjs_editor_api_1.setBackgroundColor,
         dropDownItems: {
-            "#ffff00": "Yellow",
-            "#00ff00": "Green",
-            "#00ffff": "Cyan",
-            "#ff00ff": "Purple",
-            "#0000ff": "Blue",
-            "#ff0000": "Red",
-            "#bebebe": "Gray",
-            "#666666": "Dark Gray",
-            "#ffffff": "White",
-            "#000000": "Black"
-        }
+            '#ffff00': 'Yellow',
+            '#00ff00': 'Green',
+            '#00ffff': 'Cyan',
+            '#ff00ff': 'Purple',
+            '#0000ff': 'Blue',
+            '#ff0000': 'Red',
+            '#bebebe': 'Gray',
+            '#666666': 'Dark Gray',
+            '#ffffff': 'White',
+            '#000000': 'Black',
+        },
     },
     bullet: {
-        title: "Bullet",
+        title: 'Bullet',
         image: __webpack_require__(/*! ./svg/bullets.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/bullets.svg"),
-        onClick: roosterjs_editor_api_1.toggleBullet
+        onClick: roosterjs_editor_api_1.toggleBullet,
     },
     numbering: {
-        title: "Numbering",
+        title: 'Numbering',
         image: __webpack_require__(/*! ./svg/numbering.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/numbering.svg"),
-        onClick: roosterjs_editor_api_1.toggleNumbering
+        onClick: roosterjs_editor_api_1.toggleNumbering,
     },
     outdent: {
-        title: "Decrease indent",
+        title: 'Decrease indent',
         image: __webpack_require__(/*! ./svg/outdent.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/outdent.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setIndentation(editor, 1 /* Decrease */); }
+        onClick: function (editor) { return roosterjs_editor_api_1.setIndentation(editor, 1 /* Decrease */); },
     },
     indent: {
-        title: "Increase indent",
+        title: 'Increase indent',
         image: __webpack_require__(/*! ./svg/indent.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/indent.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setIndentation(editor, 0 /* Increase */); }
+        onClick: function (editor) { return roosterjs_editor_api_1.setIndentation(editor, 0 /* Increase */); },
     },
     blockQuote: {
-        title: "Quote",
+        title: 'Quote',
         image: __webpack_require__(/*! ./svg/blockquote.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/blockquote.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.toggleBlockQuote(editor); }
+        onClick: function (editor) { return roosterjs_editor_api_1.toggleBlockQuote(editor); },
     },
     alignLeft: {
-        title: "Align left",
+        title: 'Align left',
         image: __webpack_require__(/*! ./svg/alignleft.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/alignleft.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setAlignment(editor, 0 /* Left */); }
+        onClick: function (editor) { return roosterjs_editor_api_1.setAlignment(editor, 0 /* Left */); },
     },
     alignCenter: {
-        title: "Align center",
+        title: 'Align center',
         image: __webpack_require__(/*! ./svg/aligncenter.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/aligncenter.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setAlignment(editor, 1 /* Center */); }
+        onClick: function (editor) { return roosterjs_editor_api_1.setAlignment(editor, 1 /* Center */); },
     },
     alignRight: {
-        title: "Align right",
+        title: 'Align right',
         image: __webpack_require__(/*! ./svg/alignright.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/alignright.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setAlignment(editor, 2 /* Right */); }
+        onClick: function (editor) { return roosterjs_editor_api_1.setAlignment(editor, 2 /* Right */); },
     },
     insertLink: {
-        title: "Insert hyperlink",
+        title: 'Insert hyperlink',
         image: __webpack_require__(/*! ./svg/createlink.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/createlink.svg"),
         onClick: null,
-        dropDownItems: { "0": "dummy" },
+        dropDownItems: { '0': 'dummy' },
         dropDownRenderer: renderInsertLinkDialog_1.default,
-        preserveOnClickAway: true
+        preserveOnClickAway: true,
     },
     unlink: {
-        title: "Remove hyperlink",
+        title: 'Remove hyperlink',
         image: __webpack_require__(/*! ./svg/unlink.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/unlink.svg"),
-        onClick: roosterjs_editor_api_1.removeLink
+        onClick: roosterjs_editor_api_1.removeLink,
     },
     insertImage: {
-        title: "Insert inline image",
+        title: 'Insert inline image',
         image: __webpack_require__(/*! ./svg/inlineimage.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/inlineimage.svg"),
         onClick: function (editor) {
-            var fileInput = document.createElement("input");
-            fileInput.type = "file";
-            fileInput.accept = "image/*";
-            fileInput.style.display = "none";
-            fileInput.addEventListener("change", function () {
+            var fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.style.display = 'none';
+            fileInput.addEventListener('change', function () {
                 var file = fileInput.files[0];
                 if (file) {
                     roosterjs_editor_api_1.insertImage(editor, file);
@@ -36051,83 +36167,81 @@ var buttons = {
             document.body.appendChild(fileInput);
             fileInput.click();
             document.body.removeChild(fileInput);
-        }
+        },
     },
     superscript: {
-        title: "Superscript",
+        title: 'Superscript',
         image: __webpack_require__(/*! ./svg/superscript.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/superscript.svg"),
-        onClick: roosterjs_editor_api_1.toggleSuperscript
+        onClick: roosterjs_editor_api_1.toggleSuperscript,
     },
     subscript: {
-        title: "Subscript",
+        title: 'Subscript',
         image: __webpack_require__(/*! ./svg/subscript.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/subscript.svg"),
-        onClick: roosterjs_editor_api_1.toggleSubscript
+        onClick: roosterjs_editor_api_1.toggleSubscript,
     },
     strikethrough: {
-        title: "Strikethrough",
+        title: 'Strikethrough',
         image: __webpack_require__(/*! ./svg/strikethrough.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/strikethrough.svg"),
-        onClick: roosterjs_editor_api_1.toggleStrikethrough
+        onClick: roosterjs_editor_api_1.toggleStrikethrough,
     },
     header: {
-        title: "Header",
+        title: 'Header',
         image: __webpack_require__(/*! ./svg/header.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/header.svg"),
         onClick: function (editor, value) { return roosterjs_editor_api_1.toggleHeader(editor, parseInt(value)); },
         dropDownItems: {
-            "0": "No header",
-            "1": "Header 1",
-            "2": "Header 2",
-            "3": "Header 3",
-            "4": "Header 4",
-            "5": "Header 5",
-            "6": "Header 6"
-        }
+            '0': 'No header',
+            '1': 'Header 1',
+            '2': 'Header 2',
+            '3': 'Header 3',
+            '4': 'Header 4',
+            '5': 'Header 5',
+            '6': 'Header 6',
+        },
     },
     code: {
-        title: "Code block",
+        title: 'Code block',
         image: __webpack_require__(/*! ./svg/code.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/code.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.toggleCodeBlock(editor); }
+        onClick: function (editor) { return roosterjs_editor_api_1.toggleCodeBlock(editor); },
     },
     ltr: {
-        title: "Left-to-right",
+        title: 'Left-to-right',
         image: __webpack_require__(/*! ./svg/ltr.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/ltr.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setDirection(editor, 0 /* LeftToRight */); }
+        onClick: function (editor) { return roosterjs_editor_api_1.setDirection(editor, 0 /* LeftToRight */); },
     },
     rtl: {
-        title: "Right-to-left",
+        title: 'Right-to-left',
         image: __webpack_require__(/*! ./svg/rtl.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/rtl.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setDirection(editor, 1 /* RightToLeft */); }
+        onClick: function (editor) { return roosterjs_editor_api_1.setDirection(editor, 1 /* RightToLeft */); },
     },
     undo: {
-        title: "Undo",
+        title: 'Undo',
         image: __webpack_require__(/*! ./svg/undo.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/undo.svg"),
-        onClick: function (editor) { return editor.undo(); }
+        onClick: function (editor) { return editor.undo(); },
     },
     redo: {
-        title: "Redo",
+        title: 'Redo',
         image: __webpack_require__(/*! ./svg/redo.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/redo.svg"),
-        onClick: function (editor) { return editor.redo(); }
+        onClick: function (editor) { return editor.redo(); },
     },
     clearFormat: {
-        title: "Remove formatting",
+        title: 'Remove formatting',
         image: __webpack_require__(/*! ./svg/removeformat.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/removeformat.svg"),
-        onClick: function (editor, key) {
-            return key == "block" ? roosterjs_editor_api_1.clearBlockFormat(editor) : roosterjs_editor_api_1.clearFormat(editor);
-        },
+        onClick: function (editor, key) { return (key == 'block' ? roosterjs_editor_api_1.clearBlockFormat(editor) : roosterjs_editor_api_1.clearFormat(editor)); },
         dropDownItems: {
-            selection: "Remove formatting of selected text",
-            block: "Remove formatting of selected paragraphs"
-        }
+            selection: 'Remove formatting of selected text',
+            block: 'Remove formatting of selected paragraphs',
+        },
     },
     table: {
-        title: "Show table options",
+        title: 'Show table options',
         image: __webpack_require__(/*! ./svg/table.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/table.svg"),
-        onClick: function () { return showTableOptions(); }
-    }
+        onClick: function () { return showTableOptions(); },
+    },
 };
 exports.default = buttons;
 function showTableOptions() {
     var plugins = plugins_1.getPlugins();
-    MainPaneBase_1.default.getInstance().setActiveSidePane(plugins.tableOptions);
+    window.location.hash = plugins.tableOptions.getName();
 }
 
 
@@ -36509,25 +36623,46 @@ var SidePane = /** @class */ (function (_super) {
                 React.createElement("div", { className: styles.bodyContainer },
                     React.createElement("div", { className: styles.body }, plugin.renderSidePane()))));
         };
-        _this.state = {
-            currentPane: props.plugins[0],
+        _this.setCurrentPlugin = function () {
+            var plugin = _this.getCurrentPluginFromHash();
+            if (plugin && _this.state.currentPane != plugin) {
+                _this.setState({
+                    currentPane: plugin,
+                });
+            }
         };
+        _this.state = {
+            currentPane: _this.getCurrentPluginFromHash() || _this.props.plugins[0],
+        };
+        window.addEventListener('hashchange', _this.setCurrentPlugin);
         return _this;
     }
     SidePane.prototype.render = function () {
+        window.location.hash = this.state.currentPane.getName
+            ? this.state.currentPane.getName()
+            : '';
         var className = (this.props.className || '') + ' ' + styles.sidePane;
         return (React.createElement("div", { className: className, ref: this.div }, this.props.plugins.map(this.renderSidePane)));
-    };
-    SidePane.prototype.setActiveSidePane = function (plugin) {
-        this.setState({
-            currentPane: plugin,
-        });
     };
     SidePane.prototype.changeWidth = function (widthDelta) {
         var div = this.div.current;
         if (div) {
             div.style.width = div.clientWidth + widthDelta + 'px';
         }
+    };
+    SidePane.prototype.getCurrentPluginFromHash = function () {
+        var hash = window.location.hash;
+        hash = hash ? hash.substr(1) : null;
+        if (hash) {
+            for (var _i = 0, _a = this.props.plugins; _i < _a.length; _i++) {
+                var plugin = _a[_i];
+                var name_1 = plugin.getName && plugin.getName();
+                if (name_1 == hash) {
+                    return plugin;
+                }
+            }
+        }
+        return null;
     };
     return SidePane;
 }(React.Component));
@@ -36559,11 +36694,15 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var SidePanePluginImpl = /** @class */ (function () {
-    function SidePanePluginImpl(componentCtor, title) {
+    function SidePanePluginImpl(componentCtor, pluginName, title) {
         this.componentCtor = componentCtor;
+        this.pluginName = pluginName;
         this.title = title;
         this.component = React.createRef();
     }
+    SidePanePluginImpl.prototype.getName = function () {
+        return this.pluginName;
+    };
     SidePanePluginImpl.prototype.initialize = function (editor) {
         this.editor = editor;
     };
@@ -36801,8 +36940,11 @@ var initialState = {
 var EditorOptionsPlugin = /** @class */ (function (_super) {
     __extends(EditorOptionsPlugin, _super);
     function EditorOptionsPlugin() {
-        return _super.call(this, OptionsPane_1.default, 'Editor Options') || this;
+        return _super.call(this, OptionsPane_1.default, 'options', 'Editor Options') || this;
     }
+    EditorOptionsPlugin.prototype.getName = function () {
+        return 'editoroptions';
+    };
     EditorOptionsPlugin.prototype.getBuildInPluginState = function () {
         var result;
         this.getComponent(function (component) { return (result = component.getState()); });
@@ -37721,7 +37863,7 @@ var SidePanePluginImpl_1 = __webpack_require__(/*! ../SidePanePluginImpl */ "./p
 var EventViewPlugin = /** @class */ (function (_super) {
     __extends(EventViewPlugin, _super);
     function EventViewPlugin() {
-        return _super.call(this, EventViewPane_1.default, 'Event Viewer') || this;
+        return _super.call(this, EventViewPane_1.default, 'event', 'Event Viewer') || this;
     }
     EventViewPlugin.prototype.onPluginEvent = function (e) {
         this.getComponent(function (component) { return component.addEvent(e); });
@@ -37875,7 +38017,7 @@ var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./
 var FormatStatePlugin = /** @class */ (function (_super) {
     __extends(FormatStatePlugin, _super);
     function FormatStatePlugin() {
-        return _super.call(this, FormatStatePane_1.default, 'Format State') || this;
+        return _super.call(this, FormatStatePane_1.default, 'format', 'Format State') || this;
     }
     FormatStatePlugin.prototype.initialize = function (editor) {
         var _this = this;
@@ -38037,7 +38179,7 @@ var SidePanePluginImpl_1 = __webpack_require__(/*! ../SidePanePluginImpl */ "./p
 var PasteResultPlugin = /** @class */ (function (_super) {
     __extends(PasteResultPlugin, _super);
     function PasteResultPlugin() {
-        return _super.call(this, PastePane_1.default, 'Paste Event Viewer') || this;
+        return _super.call(this, PastePane_1.default, 'paste', 'Paste Event Viewer') || this;
     }
     PasteResultPlugin.prototype.onPluginEvent = function (e) {
         if (e.eventType == 8 /* BeforePaste */) {
@@ -38050,6 +38192,117 @@ var PasteResultPlugin = /** @class */ (function (_super) {
     return PasteResultPlugin;
 }(SidePanePluginImpl_1.default));
 exports.default = PasteResultPlugin;
+
+
+/***/ }),
+
+/***/ "./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPane.scss":
+/*!***********************************************************************************!*\
+  !*** ./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPane.scss ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var content = __webpack_require__(/*! !../../../../../../node_modules/css-loader/dist/cjs.js??ref--6-1!../../../../../../node_modules/sass-loader/lib/loader.js!./SanitizerPane.scss */ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPane.scss");
+var loader = __webpack_require__(/*! ./node_modules/@microsoft/load-themed-styles/lib/index.js */ "./node_modules/@microsoft/load-themed-styles/lib/index.js");
+
+if(typeof content === "string") content = [[module.i, content]];
+
+// add the styles to the DOM
+for (var i = 0; i < content.length; i++) loader.loadStyles(content[i][1], false);
+
+if(content.locals) module.exports = content.locals;
+
+/***/ }),
+
+/***/ "./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPane.tsx":
+/*!**********************************************************************************!*\
+  !*** ./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPane.tsx ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var roosterjs_html_sanitizer_1 = __webpack_require__(/*! roosterjs-html-sanitizer */ "./packages/roosterjs-html-sanitizer/lib/index.ts");
+var styles = __webpack_require__(/*! ./SanitizerPane.scss */ "./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPane.scss");
+var SanitizerPane = /** @class */ (function (_super) {
+    __extends(SanitizerPane, _super);
+    function SanitizerPane() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.source = React.createRef();
+        _this.result = React.createRef();
+        _this.sanitize = function () {
+            _this.result.current.value = roosterjs_html_sanitizer_1.HtmlSanitizer.sanitizeHtml(_this.source.current.value);
+        };
+        return _this;
+    }
+    SanitizerPane.prototype.render = function () {
+        return (React.createElement(React.Fragment, null,
+            React.createElement("h3", null, "Input"),
+            React.createElement("textarea", { className: styles.textarea, ref: this.source }),
+            React.createElement("button", { className: styles.button, onClick: this.sanitize }, "Sanitize"),
+            React.createElement("h3", null, "Result"),
+            React.createElement("textarea", { className: styles.textarea, ref: this.result })));
+    };
+    return SanitizerPane;
+}(React.Component));
+exports.default = SanitizerPane;
+
+
+/***/ }),
+
+/***/ "./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPlugin.ts":
+/*!***********************************************************************************!*\
+  !*** ./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPlugin.ts ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var SanitizerPane_1 = __webpack_require__(/*! ./SanitizerPane */ "./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPane.tsx");
+var SidePanePluginImpl_1 = __webpack_require__(/*! ../SidePanePluginImpl */ "./publish/samplesite/scripts/controls/sidePane/SidePanePluginImpl.tsx");
+var SanitizerPlugin = /** @class */ (function (_super) {
+    __extends(SanitizerPlugin, _super);
+    function SanitizerPlugin() {
+        return _super.call(this, SanitizerPane_1.default, 'sanitizer', 'HTML Sanitizer') || this;
+    }
+    SanitizerPlugin.prototype.getComponentProps = function () {
+        return {};
+    };
+    return SanitizerPlugin;
+}(SidePanePluginImpl_1.default));
+exports.default = SanitizerPlugin;
 
 
 /***/ }),
@@ -38156,7 +38409,7 @@ var SnapshotPane_1 = __webpack_require__(/*! ./SnapshotPane */ "./publish/sample
 var SnapshotPlugin = /** @class */ (function (_super) {
     __extends(SnapshotPlugin, _super);
     function SnapshotPlugin() {
-        var _this = _super.call(this, SnapshotPane_1.default, 'Snapshot') || this;
+        var _this = _super.call(this, SnapshotPane_1.default, 'snapshot', 'Snapshot') || this;
         _this.onTakeSnapshot = function () {
             return _this.editor.getContent(false, true);
         };
@@ -38208,7 +38461,7 @@ var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./
 var TableOptionsPlugin = /** @class */ (function (_super) {
     __extends(TableOptionsPlugin, _super);
     function TableOptionsPlugin() {
-        var _this = _super.call(this, TablePane_1.default, 'Table Options') || this;
+        var _this = _super.call(this, TablePane_1.default, 'table', 'Table Options') || this;
         _this.onEditTable = function (operation) {
             roosterjs_editor_api_1.editTable(_this.editor, operation);
         };
@@ -38456,16 +38709,19 @@ var TitleBar = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     TitleBar.prototype.render = function () {
-        var className = styles.titleBar + " " + (this.props.className || "");
+        var className = styles.titleBar + ' ' + (this.props.className || '');
         return (React.createElement("div", { className: className },
-            React.createElement("div", { className: styles.title }, "RoosterJs Demo Site"),
-            React.createElement("div", { className: styles.version }, window.roosterJsVer || ""),
+            React.createElement("div", { className: styles.title },
+                React.createElement("span", { className: styles.titleText }, "RoosterJs Demo Site")),
+            React.createElement("div", { className: styles.version }, window.roosterJsVer || ''),
             React.createElement("div", { className: styles.links },
-                React.createElement("a", { href: "https://github.com/microsoft/roosterjs", target: "_blank", className: styles.link }, "RoosterJs on Github"),
+                React.createElement("a", { href: 'https://github.com/microsoft/roosterjs', target: '_blank', className: styles.link }, "RoosterJs on Github"),
                 "\u00A0",
-                React.createElement("a", { href: "https://www.npmjs.com/package/roosterjs", target: "_blank", className: styles.link }, "RoosterJs on NPM"),
+                React.createElement("a", { href: 'https://www.npmjs.com/package/roosterjs', target: '_blank', className: styles.link }, "RoosterJs on NPM"),
                 "\u00A0",
-                React.createElement("a", { href: "https://github.com/Microsoft/roosterjs/wiki", target: "_blank", className: styles.link }, "Documentations"))));
+                React.createElement("a", { href: 'https://github.com/Microsoft/roosterjs/wiki', target: '_blank', className: styles.link }, "Documentations")),
+            React.createElement("div", { className: styles.logo },
+                React.createElement("div", { className: styles.rooster }, "\uD83D\uDC14"))));
     };
     return TitleBar;
 }(React.Component));
