@@ -1,3 +1,4 @@
+import { getFormatState } from 'roosterjs-editor-api';
 import buildClipboardData from './buildClipboardData';
 import fragmentHandler from './fragmentHandler';
 import textToHtml from './textToHtml';
@@ -71,27 +72,16 @@ export default class Paste implements EditorPlugin {
     }
 
     private onPaste = (event: Event) => {
-        buildClipboardData(<ClipboardEvent>event, this.editor, clipboardData => {
-            if (clipboardData.html) {
-                let doc = htmlToDom(
-                    clipboardData.html,
-                    true /*preserveFragmentOnly*/,
-                    fragmentHandler
-                );
-                if (doc && doc.body) {
-                    this.sanitizer.convertGlobalCssToInlineCss(doc);
-
-                    let range = this.editor.getSelectionRange();
-                    let element = range && Position.getStart(range).normalize().element;
-                    let currentStyles = getInheritableStyles(element);
-                    this.sanitizer.sanitize(doc.body, currentStyles);
-                    clipboardData.html = doc.body.innerHTML;
-                }
-            } else {
-                clipboardData.html = textToHtml(clipboardData.text);
-            }
-
-            this.pasteOriginal(clipboardData);
+        buildClipboardData(<ClipboardEvent>event, this.editor, items => {
+            this.pasteOriginal({
+                snapshotBeforePaste: null,
+                originalFormat: this.getCurrentFormat(),
+                types: items.types,
+                image: items.image,
+                text: items.text,
+                rawHtml: items.html,
+                html: items.html ? this.sanitizeHtml(items.html) : textToHtml(items.text),
+            });
         });
     };
 
@@ -204,5 +194,34 @@ export default class Paste implements EditorPlugin {
         for (let parent of parents) {
             applyFormat(parent, format);
         }
+    }
+
+    private getCurrentFormat(): DefaultFormat {
+        let format = getFormatState(this.editor);
+        return format
+            ? {
+                  fontFamily: format.fontName,
+                  fontSize: format.fontSize,
+                  textColor: format.textColor,
+                  backgroundColor: format.backgroundColor,
+                  bold: format.isBold,
+                  italic: format.isItalic,
+                  underline: format.isUnderline,
+              }
+            : {};
+    }
+
+    private sanitizeHtml(html: string): string {
+        let doc = htmlToDom(html, true /*preserveFragmentOnly*/, fragmentHandler);
+        if (doc && doc.body) {
+            this.sanitizer.convertGlobalCssToInlineCss(doc);
+
+            let range = this.editor.getSelectionRange();
+            let element = range && Position.getStart(range).normalize().element;
+            let currentStyles = getInheritableStyles(element);
+            this.sanitizer.sanitize(doc.body, currentStyles);
+            return doc.body.innerHTML;
+        }
+        return '';
     }
 }

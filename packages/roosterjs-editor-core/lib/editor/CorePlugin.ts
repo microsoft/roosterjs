@@ -53,7 +53,7 @@ export default class CorePlugin implements EditorPlugin {
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'core';
+        return 'EditorCore';
     }
 
     /**

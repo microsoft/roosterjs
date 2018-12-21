@@ -319,7 +319,7 @@ describe('Editor getInlineElementAtNode()', () => {
     });
 });
 
-describe('Editor updateSelection()', () => {
+describe('Editor select()', () => {
     let node = TestHelper.createElementFromContent('testNode', '<p>abc</p><p>123</p>');
 
     beforeEach(() => {
@@ -342,14 +342,14 @@ describe('Editor updateSelection()', () => {
         let selectionRange = TestHelper.createRangeWithDiv(node.firstChild as HTMLElement);
 
         // Act
-        editor.updateSelection(selectionRange);
+        editor.select(selectionRange);
 
         // Assert
         expect(editor.getSelectionRange()).toBe(selectionRange);
     });
 });
 
-describe('Editor queryContent()', () => {
+describe('Editor queryElements()', () => {
     let node = TestHelper.createElementFromContent(
         'testNode',
         '<p class="myClass">abc</p><p class="myClass">123</p><p class="otherClass">456</p>'
@@ -372,7 +372,7 @@ describe('Editor queryContent()', () => {
 
     it('select myClass', () => {
         // Act
-        let nodeList = editor.queryContent('.myClass');
+        let nodeList = editor.queryElements('.myClass');
 
         // Assert
         expect(nodeList.length).toBe(2);
@@ -382,7 +382,7 @@ describe('Editor queryContent()', () => {
 
     it('select otherClass', () => {
         // Act
-        let nodeList = editor.queryContent('.otherClass');
+        let nodeList = editor.queryElements('.otherClass');
 
         // Assert
         expect(nodeList.length).toBe(1);

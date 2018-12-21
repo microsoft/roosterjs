@@ -30,6 +30,7 @@ export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
 export { default as collapseNodes } from './utils/collapseNodes';
 export { default as contains } from './utils/contains';
+export { default as extractClipboardEvent } from './utils/extractClipboardEvent';
 export { default as findClosestElementAncestor } from './utils/findClosestElementAncestor';
 export { default as fromHtml } from './utils/fromHtml';
 export { default as getComputedStyles, getComputedStyle } from './utils/getComputedStyles';

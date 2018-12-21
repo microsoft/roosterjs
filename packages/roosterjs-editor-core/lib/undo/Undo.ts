@@ -38,6 +38,13 @@ export default class Undo implements UndoService {
     constructor(private preserveSnapshots?: boolean, private maxBufferSize: number = 1e7) {}
 
     /**
+     * Get a friendly name of  this plugin
+     */
+    getName() {
+        return 'Undo';
+    }
+
+    /**
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */

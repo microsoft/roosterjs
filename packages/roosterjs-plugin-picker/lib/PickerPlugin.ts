@@ -27,7 +27,7 @@ export interface EditorPickerPluginInterface extends EditorPlugin {
     dataProvider: PickerDataProvider;
 }
 
-export default class EditorPickerPlugin implements EditorPickerPluginInterface {
+export default class PickerPlugin implements EditorPickerPluginInterface {
     private editor: Editor;
     private eventHandledOnKeyDown: boolean;
     private blockSuggestions: boolean;
@@ -37,6 +37,13 @@ export default class EditorPickerPlugin implements EditorPickerPluginInterface {
         public readonly dataProvider: PickerDataProvider,
         private pickerOptions: PickerPluginOptions
     ) {}
+
+    /**
+     * Get a friendly name
+     */
+    getName() {
+        return 'Picker';
+    }
 
     /**
      * Initialize this plugin. This should only be called from Editor

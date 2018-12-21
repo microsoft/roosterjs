@@ -502,31 +502,11 @@ export default class Editor {
     }
 
     /**
-     * @deprecated
-     * Insert selection marker element into content, so that after doing some modification,
-     * we can still restore the selection as long as the selection marker is still there
-     * @returns The return value of callback
+     * Get current selection
+     * @return current selection object
      */
-    public runWithSelectionMarker<T>(callback: () => T, useInlineMarker?: boolean): T {
-        let selectionMarked = markSelection(
-            this.core.contentDiv,
-            this.getSelectionRange(),
-            useInlineMarker
-        );
-        try {
-            return callback && callback();
-        } finally {
-            if (selectionMarked) {
-                // In safari the selection will be lost after inserting markers, so need to restore it
-                // For other browsers we just need to delete markers here
-                this.select(
-                    removeMarker(
-                        this.core.contentDiv,
-                        Browser.isSafari || Browser.isChrome /*applySelection*/
-                    )
-                );
-            }
-        }
+    public getSelection(): Selection {
+        return this.core.document.defaultView.getSelection();
     }
 
     /**
@@ -810,18 +790,38 @@ export default class Editor {
     //#region Deprecated methods
 
     /**
+     * @deprecated
+     * Insert selection marker element into content, so that after doing some modification,
+     * we can still restore the selection as long as the selection marker is still there
+     * @returns The return value of callback
+     */
+    public runWithSelectionMarker<T>(callback: () => T, useInlineMarker?: boolean): T {
+        let selectionMarked = markSelection(
+            this.core.contentDiv,
+            this.getSelectionRange(),
+            useInlineMarker
+        );
+        try {
+            return callback && callback();
+        } finally {
+            if (selectionMarked) {
+                // In safari the selection will be lost after inserting markers, so need to restore it
+                // For other browsers we just need to delete markers here
+                this.select(
+                    removeMarker(
+                        this.core.contentDiv,
+                        Browser.isSafari || Browser.isChrome /*applySelection*/
+                    )
+                );
+            }
+        }
+    }
+
+    /**
      * @deprecated Use queryElements instead
      */
     public queryContent(selector: string): NodeListOf<Element> {
         return this.core.contentDiv.querySelectorAll(selector);
-    }
-
-    /**
-     * Get current selection
-     * @return current selection object
-     */
-    public getSelection(): Selection {
-        return this.core.document.defaultView.getSelection();
     }
 
     /**
