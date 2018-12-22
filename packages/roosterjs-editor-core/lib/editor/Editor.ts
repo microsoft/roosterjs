@@ -659,7 +659,7 @@ export default class Editor {
      * @param callback The auto complete callback, return value will be used as data field of ContentChangedEvent
      * @param changeSource Chagne source of ContentChangedEvent. If not passed, no ContentChangedEvent will be  triggered
      */
-    public performAutoComplete(callback: () => any, changeSource?: ChangeSource) {
+    public performAutoComplete(callback: () => any, changeSource?: ChangeSource | string) {
         this.core.corePlugin.performAutoComplete(callback, changeSource);
     }
 

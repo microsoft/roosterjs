@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FormatState } from 'roosterjs-editor-types';
+import { Browser } from 'roosterjs-editor-dom';
 
 const styles = require('./FormatStatePane.scss');
 
@@ -81,6 +82,26 @@ export default class FormatStatePane extends React.Component<
                         <td>
                             {this.renderSpan(format.canUndo, 'Can Undo')}
                             {this.renderSpan(format.canRedo, 'Can Redo')}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className={styles.title}>{'Browser'}</td>
+                        <td>
+                            {this.renderSpan(Browser.isChrome, 'Chrome')}
+                            {this.renderSpan(Browser.isEdge, 'Edge')}
+                            {this.renderSpan(Browser.isFirefox, 'Firefox')}
+                            {this.renderSpan(Browser.isIE11OrGreater, 'IE10/11')}
+                            {this.renderSpan(Browser.isIE, 'IE')}
+                            {this.renderSpan(Browser.isIEOrEdge, 'IE/Edge')}
+                            {this.renderSpan(Browser.isSafari, 'Safari')}
+                            {this.renderSpan(Browser.isWebKit, 'Webkit')}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className={styles.title}>{'OS'}</td>
+                        <td>
+                            {this.renderSpan(Browser.isMac, 'MacOS')}
+                            {this.renderSpan(Browser.isWin, 'Windows')}
                         </td>
                     </tr>
                 </tbody>
