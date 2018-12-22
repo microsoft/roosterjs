@@ -26940,7 +26940,7 @@ var CorePlugin = /** @class */ (function () {
      * Get a friendly name of  this plugin
      */
     CorePlugin.prototype.getName = function () {
-        return 'core';
+        return 'EditorCore';
     };
     /**
      * Initialize this plugin. This should only be called from Editor
@@ -27401,23 +27401,11 @@ var Editor = /** @class */ (function () {
         return this.core.api.select(this.core, arg1, arg2, arg3, arg4);
     };
     /**
-     * @deprecated
-     * Insert selection marker element into content, so that after doing some modification,
-     * we can still restore the selection as long as the selection marker is still there
-     * @returns The return value of callback
+     * Get current selection
+     * @return current selection object
      */
-    Editor.prototype.runWithSelectionMarker = function (callback, useInlineMarker) {
-        var selectionMarked = roosterjs_editor_dom_2.markSelection(this.core.contentDiv, this.getSelectionRange(), useInlineMarker);
-        try {
-            return callback && callback();
-        }
-        finally {
-            if (selectionMarked) {
-                // In safari the selection will be lost after inserting markers, so need to restore it
-                // For other browsers we just need to delete markers here
-                this.select(roosterjs_editor_dom_2.removeMarker(this.core.contentDiv, roosterjs_editor_dom_2.Browser.isSafari || roosterjs_editor_dom_2.Browser.isChrome /*applySelection*/));
-            }
-        }
+    Editor.prototype.getSelection = function () {
+        return this.core.document.defaultView.getSelection();
     };
     /**
      * Save the current selection in editor so that when focus again, the selection can be restored
@@ -27648,17 +27636,29 @@ var Editor = /** @class */ (function () {
     //#endregion
     //#region Deprecated methods
     /**
+     * @deprecated
+     * Insert selection marker element into content, so that after doing some modification,
+     * we can still restore the selection as long as the selection marker is still there
+     * @returns The return value of callback
+     */
+    Editor.prototype.runWithSelectionMarker = function (callback, useInlineMarker) {
+        var selectionMarked = roosterjs_editor_dom_2.markSelection(this.core.contentDiv, this.getSelectionRange(), useInlineMarker);
+        try {
+            return callback && callback();
+        }
+        finally {
+            if (selectionMarked) {
+                // In safari the selection will be lost after inserting markers, so need to restore it
+                // For other browsers we just need to delete markers here
+                this.select(roosterjs_editor_dom_2.removeMarker(this.core.contentDiv, roosterjs_editor_dom_2.Browser.isSafari || roosterjs_editor_dom_2.Browser.isChrome /*applySelection*/));
+            }
+        }
+    };
+    /**
      * @deprecated Use queryElements instead
      */
     Editor.prototype.queryContent = function (selector) {
         return this.core.contentDiv.querySelectorAll(selector);
-    };
-    /**
-     * Get current selection
-     * @return current selection object
-     */
-    Editor.prototype.getSelection = function () {
-        return this.core.document.defaultView.getSelection();
     };
     /**
      * @deprecated Use select() instead
@@ -27978,6 +27978,12 @@ var Undo = /** @class */ (function () {
             });
         };
     }
+    /**
+     * Get a friendly name of  this plugin
+     */
+    Undo.prototype.getName = function () {
+        return 'Undo';
+    };
     /**
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
@@ -29561,6 +29567,8 @@ var collapseNodes_1 = __webpack_require__(/*! ./utils/collapseNodes */ "./packag
 exports.collapseNodes = collapseNodes_1.default;
 var contains_1 = __webpack_require__(/*! ./utils/contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
 exports.contains = contains_1.default;
+var extractClipboardEvent_1 = __webpack_require__(/*! ./utils/extractClipboardEvent */ "./packages/roosterjs-editor-dom/lib/utils/extractClipboardEvent.ts");
+exports.extractClipboardEvent = extractClipboardEvent_1.default;
 var findClosestElementAncestor_1 = __webpack_require__(/*! ./utils/findClosestElementAncestor */ "./packages/roosterjs-editor-dom/lib/utils/findClosestElementAncestor.ts");
 exports.findClosestElementAncestor = findClosestElementAncestor_1.default;
 var fromHtml_1 = __webpack_require__(/*! ./utils/fromHtml */ "./packages/roosterjs-editor-dom/lib/utils/fromHtml.ts");
@@ -31452,6 +31460,108 @@ exports.default = convertInlineCss;
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-dom/lib/utils/extractClipboardEvent.ts":
+/*!**************************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/utils/extractClipboardEvent.ts ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Browser_1 = __webpack_require__(/*! ./Browser */ "./packages/roosterjs-editor-dom/lib/utils/Browser.ts");
+// HTML header to indicate where is the HTML content started from.
+// Sample header:
+// Version:0.9
+// StartHTML:71
+// EndHTML:170
+// StartFragment:140
+// EndFragment:160
+// StartSelection:140
+// EndSelection:160
+var CLIPBOARD_HTML_HEADER_REGEX = /^Version:[0-9\.]+\s+StartHTML:\s*([0-9]+)\s+EndHTML:\s*([0-9]+)\s+/i;
+/**
+ * Extract a Clipboard event
+ * @param event The paste event
+ * @param callback Callback function when data is ready
+ * @param fallbackHtmlRetriever If direct HTML retriving is not support (e.g. Internet Explorer), as a fallback,
+ * using this helper function to retrieve HTML content
+ * @returns An object with the following properties:
+ *  types: Available types from the clipboard event
+ *  text: Plain text from the clipboard event
+ *  image: Image file from the clipboard event
+ *  html: Html string from the clipboard event. When set to null, it means there's no HTML found from the event.
+ *   When set to undefined, it means can't retrieve HTML string, there may be HTML string but direct retrieving is
+ *   not supported by browser.
+ */
+function extractClipboardEvent(event, callback) {
+    var dataTransfer = event.clipboardData ||
+        event.srcElement.ownerDocument.defaultView.clipboardData;
+    var result = {
+        types: dataTransfer.types ? [].slice.call(dataTransfer.types) : [],
+        text: dataTransfer.getData('text'),
+        image: getImage(dataTransfer),
+        html: undefined,
+    };
+    if (event.clipboardData && event.clipboardData.items) {
+        event.preventDefault();
+        var items = event.clipboardData.items;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (item.type && item.type.indexOf('text/html') == 0) {
+                item.getAsString(function (html) {
+                    result.html = Browser_1.default.isEdge ? workaroundForEdge(html) : html;
+                    callback(result);
+                });
+                return;
+            }
+        }
+        // No HTML content found, set html to null
+        result.html = null;
+    }
+    callback(result);
+}
+exports.default = extractClipboardEvent;
+function getImage(dataTransfer) {
+    // Chrome, Firefox, Edge support dataTransfer.items
+    var fileCount = dataTransfer.items ? dataTransfer.items.length : 0;
+    for (var i = 0; i < fileCount; i++) {
+        var item = dataTransfer.items[i];
+        if (item.type && item.type.indexOf('image/') == 0) {
+            return item.getAsFile();
+        }
+    }
+    // IE, Safari support dataTransfer.files
+    fileCount = dataTransfer.files ? dataTransfer.files.length : 0;
+    for (var i = 0; i < fileCount; i++) {
+        var file = dataTransfer.files.item(i);
+        if (file.type && file.type.indexOf('image/') == 0) {
+            return file;
+        }
+    }
+    return null;
+}
+/**
+ * Edge sometimes doesn't remove the headers, which cause we paste more things then expected.
+ * So we need to remove it in our code
+ * @param html The HTML string got from clipboard
+ */
+function workaroundForEdge(html) {
+    var headerValues = CLIPBOARD_HTML_HEADER_REGEX.exec(html);
+    if (headerValues && headerValues.length == 3) {
+        var start = parseInt(headerValues[1]);
+        var end = parseInt(headerValues[2]);
+        if (start > 0 && end > start) {
+            html = html.substring(start, end);
+        }
+    }
+    return html;
+}
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-dom/lib/utils/findClosestElementAncestor.ts":
 /*!*******************************************************************************!*\
   !*** ./packages/roosterjs-editor-dom/lib/utils/findClosestElementAncestor.ts ***!
@@ -33032,10 +33142,11 @@ exports.default = HyperLink;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var buildClipboardData_1 = __webpack_require__(/*! ./buildClipboardData */ "./packages/roosterjs-editor-plugins/lib/Paste/buildClipboardData.ts");
 var fragmentHandler_1 = __webpack_require__(/*! ./fragmentHandler */ "./packages/roosterjs-editor-plugins/lib/Paste/fragmentHandler.ts");
 var textToHtml_1 = __webpack_require__(/*! ./textToHtml */ "./packages/roosterjs-editor-plugins/lib/Paste/textToHtml.ts");
-var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
+var roosterjs_editor_api_2 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var roosterjs_html_sanitizer_1 = __webpack_require__(/*! roosterjs-html-sanitizer */ "./packages/roosterjs-html-sanitizer/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 /**
@@ -33050,22 +33161,16 @@ var Paste = /** @class */ (function () {
     function Paste(preserved, attributeCallbacks) {
         var _this = this;
         this.onPaste = function (event) {
-            buildClipboardData_1.default(event, _this.editor, function (clipboardData) {
-                if (clipboardData.html) {
-                    var doc = roosterjs_html_sanitizer_1.htmlToDom(clipboardData.html, true /*preserveFragmentOnly*/, fragmentHandler_1.default);
-                    if (doc && doc.body) {
-                        _this.sanitizer.convertGlobalCssToInlineCss(doc);
-                        var range = _this.editor.getSelectionRange();
-                        var element = range && roosterjs_editor_dom_1.Position.getStart(range).normalize().element;
-                        var currentStyles = roosterjs_html_sanitizer_1.getInheritableStyles(element);
-                        _this.sanitizer.sanitize(doc.body, currentStyles);
-                        clipboardData.html = doc.body.innerHTML;
-                    }
-                }
-                else {
-                    clipboardData.html = textToHtml_1.default(clipboardData.text);
-                }
-                _this.pasteOriginal(clipboardData);
+            buildClipboardData_1.default(event, _this.editor, function (items) {
+                _this.pasteOriginal({
+                    snapshotBeforePaste: null,
+                    originalFormat: _this.getCurrentFormat(),
+                    types: items.types,
+                    image: items.image,
+                    text: items.text,
+                    rawHtml: items.html,
+                    html: items.html ? _this.sanitizeHtml(items.html) : textToHtml_1.default(items.text),
+                });
             });
         };
         this.sanitizer = new roosterjs_html_sanitizer_1.HtmlSanitizer({
@@ -33163,7 +33268,7 @@ var Paste = /** @class */ (function () {
                     _this.editor.insertContent(html);
                     break;
                 case 2 /* PasteImage */:
-                    roosterjs_editor_api_1.insertImage(_this.editor, clipboardData.image);
+                    roosterjs_editor_api_2.insertImage(_this.editor, clipboardData.image);
                     break;
             }
             return clipboardData;
@@ -33185,6 +33290,32 @@ var Paste = /** @class */ (function () {
             roosterjs_editor_dom_1.applyFormat(parent_1, format);
         }
     };
+    Paste.prototype.getCurrentFormat = function () {
+        var format = roosterjs_editor_api_1.getFormatState(this.editor);
+        return format
+            ? {
+                fontFamily: format.fontName,
+                fontSize: format.fontSize,
+                textColor: format.textColor,
+                backgroundColor: format.backgroundColor,
+                bold: format.isBold,
+                italic: format.isItalic,
+                underline: format.isUnderline,
+            }
+            : {};
+    };
+    Paste.prototype.sanitizeHtml = function (html) {
+        var doc = roosterjs_html_sanitizer_1.htmlToDom(html, true /*preserveFragmentOnly*/, fragmentHandler_1.default);
+        if (doc && doc.body) {
+            this.sanitizer.convertGlobalCssToInlineCss(doc);
+            var range = this.editor.getSelectionRange();
+            var element = range && roosterjs_editor_dom_1.Position.getStart(range).normalize().element;
+            var currentStyles = roosterjs_html_sanitizer_1.getInheritableStyles(element);
+            this.sanitizer.sanitize(doc.body, currentStyles);
+            return doc.body.innerHTML;
+        }
+        return '';
+    };
     return Paste;
 }());
 exports.default = Paste;
@@ -33203,18 +33334,7 @@ exports.default = Paste;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var CONTAINER_HTML = '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
-// HTML header to indicate where is the HTML content started from.
-// Sample header:
-// Version:0.9
-// StartHTML:71
-// EndHTML:170
-// StartFragment:140
-// EndFragment:160
-// StartSelection:140
-// EndSelection:160
-var CLIPBOARD_HTML_HEADER_REGEX = /^Version:[0-9\.]+\s+StartHTML:\s*([0-9]+)\s+EndHTML:\s*([0-9]+)\s+/i;
 /**
  * Build ClipboardData from a paste event
  * @param event The paste event
@@ -33222,76 +33342,19 @@ var CLIPBOARD_HTML_HEADER_REGEX = /^Version:[0-9\.]+\s+StartHTML:\s*([0-9]+)\s+E
  * @param callback Callback function when data is ready
  */
 function buildClipboardData(event, editor, callback) {
-    var dataTransfer = event.clipboardData || editor.getDocument().defaultView.clipboardData;
-    var types = dataTransfer.types ? [].slice.call(dataTransfer.types) : [];
-    var text = dataTransfer.getData('text');
-    var retrieveHtmlCallback = function (html) {
-        if (roosterjs_editor_dom_1.Browser.isEdge) {
-            html = workaroundForEdge(html);
+    roosterjs_editor_dom_1.extractClipboardEvent(event, function (items) {
+        if (items.html === undefined) {
+            retrieveHtmlViaTempDiv(editor, function (html) {
+                items.html = html;
+                callback(items);
+            });
         }
-        callback({
-            snapshotBeforePaste: null,
-            originalFormat: getCurrentFormat(editor),
-            types: types,
-            image: getImage(dataTransfer),
-            text: text,
-            html: html,
-            rawHtml: html,
-        });
-    };
-    if (event.clipboardData && event.clipboardData.items) {
-        directRetrieveHtml(event, retrieveHtmlCallback);
-    }
-    else {
-        retrieveHtmlViaTempDiv(editor, retrieveHtmlCallback);
-    }
+        else {
+            callback(items);
+        }
+    });
 }
 exports.default = buildClipboardData;
-function getCurrentFormat(editor) {
-    var format = roosterjs_editor_api_1.getFormatState(editor);
-    return format
-        ? {
-            fontFamily: format.fontName,
-            fontSize: format.fontSize,
-            textColor: format.textColor,
-            backgroundColor: format.backgroundColor,
-            bold: format.isBold,
-            italic: format.isItalic,
-            underline: format.isUnderline,
-        }
-        : {};
-}
-function getImage(dataTransfer) {
-    // Chrome, Firefox, Edge support dataTransfer.items
-    var fileCount = dataTransfer.items ? dataTransfer.items.length : 0;
-    for (var i = 0; i < fileCount; i++) {
-        var item = dataTransfer.items[i];
-        if (item.type && item.type.indexOf('image/') == 0) {
-            return item.getAsFile();
-        }
-    }
-    // IE, Safari support dataTransfer.files
-    fileCount = dataTransfer.files ? dataTransfer.files.length : 0;
-    for (var i = 0; i < fileCount; i++) {
-        var file = dataTransfer.files.item(i);
-        if (file.type && file.type.indexOf('image/') == 0) {
-            return file;
-        }
-    }
-    return null;
-}
-function directRetrieveHtml(event, callback) {
-    event.preventDefault();
-    var items = event.clipboardData.items;
-    for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        if (item.type && item.type.indexOf('text/html') == 0) {
-            item.getAsString(callback);
-            return;
-        }
-    }
-    callback(null);
-}
 function retrieveHtmlViaTempDiv(editor, callback) {
     // cache original selection range in editor
     var originalSelectionRange = editor.getSelectionRange();
@@ -33320,22 +33383,6 @@ function getTempDivForPaste(editor) {
     });
     tempDiv.style.display = '';
     return tempDiv;
-}
-/**
- * Edge sometimes doesn't remove the headers, which cause we paste more things then expected.
- * So we need to remove it in our code
- * @param html The HTML string got from clipboard
- */
-function workaroundForEdge(html) {
-    var headerValues = CLIPBOARD_HTML_HEADER_REGEX.exec(html);
-    if (headerValues && headerValues.length == 3) {
-        var start = parseInt(headerValues[1]);
-        var end = parseInt(headerValues[2]);
-        if (start > 0 && end > start) {
-            html = html.substring(start, end);
-        }
-    }
-    return html;
 }
 
 
@@ -37921,6 +37968,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var styles = __webpack_require__(/*! ./FormatStatePane.scss */ "./publish/samplesite/scripts/controls/sidePane/formatState/FormatStatePane.scss");
 var FormatStatePane = /** @class */ (function (_super) {
     __extends(FormatStatePane, _super);
@@ -37976,7 +38024,23 @@ var FormatStatePane = /** @class */ (function (_super) {
                     React.createElement("td", { className: styles.title }, 'Undo'),
                     React.createElement("td", null,
                         this.renderSpan(format.canUndo, 'Can Undo'),
-                        this.renderSpan(format.canRedo, 'Can Redo')))))) : (React.createElement("div", null, 'Please focus into editor'));
+                        this.renderSpan(format.canRedo, 'Can Redo'))),
+                React.createElement("tr", null,
+                    React.createElement("td", { className: styles.title }, 'Browser'),
+                    React.createElement("td", null,
+                        this.renderSpan(roosterjs_editor_dom_1.Browser.isChrome, 'Chrome'),
+                        this.renderSpan(roosterjs_editor_dom_1.Browser.isEdge, 'Edge'),
+                        this.renderSpan(roosterjs_editor_dom_1.Browser.isFirefox, 'Firefox'),
+                        this.renderSpan(roosterjs_editor_dom_1.Browser.isIE11OrGreater, 'IE10/11'),
+                        this.renderSpan(roosterjs_editor_dom_1.Browser.isIE, 'IE'),
+                        this.renderSpan(roosterjs_editor_dom_1.Browser.isIEOrEdge, 'IE/Edge'),
+                        this.renderSpan(roosterjs_editor_dom_1.Browser.isSafari, 'Safari'),
+                        this.renderSpan(roosterjs_editor_dom_1.Browser.isWebKit, 'Webkit'))),
+                React.createElement("tr", null,
+                    React.createElement("td", { className: styles.title }, 'OS'),
+                    React.createElement("td", null,
+                        this.renderSpan(roosterjs_editor_dom_1.Browser.isMac, 'MacOS'),
+                        this.renderSpan(roosterjs_editor_dom_1.Browser.isWin, 'Windows')))))) : (React.createElement("div", null, 'Please focus into editor'));
     };
     FormatStatePane.prototype.renderSpan = function (formatState, text) {
         return React.createElement("span", { className: formatState ? '' : styles.inactive }, text + ' ');
