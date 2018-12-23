@@ -12,3 +12,11 @@ script:
   - xvfb-run npm run test
 cache:
   yarn: true
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  on:
+    branch: master
+  local-dir: ./dist/roosterjs/samplesite
