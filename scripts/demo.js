@@ -606,6 +606,24 @@ exports.locals = {
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPane.scss":
+/*!************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??ref--6-1!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPane.scss ***!
+  \************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, "._1_ro8PWblsgy0VHepvfDli {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  cursor: pointer;\n  margin: 3px 0;\n  white-space: nowrap; }\n  ._1_ro8PWblsgy0VHepvfDli:hover {\n    background-color: #eee; }\n", ""]);
+
+// Exports
+exports.locals = {
+	"block": "_1_ro8PWblsgy0VHepvfDli"
+};
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/editorOptions/OptionsPane.scss":
 /*!******************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??ref--6-1!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/editorOptions/OptionsPane.scss ***!
@@ -691,13 +709,15 @@ exports.locals = {
 
 exports = module.exports = __webpack_require__(/*! ../../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "._3r15MIGSvUzMb19r39TuWZ {\n  flex: 1 1 auto;\n  display: flex;\n  flex-direction: column; }\n\n._2MSbf-H-LoHd_nUJ01Tea {\n  margin-bottom: 10px;\n  flex: 0 0 auto; }\n\n._3DnkU-RyyemQdLpO2glzdA {\n  flex: 1 1 auto;\n  resize: none;\n  min-height: 100px;\n  border-color: #00bbcc; }\n", ""]);
+exports.push([module.i, "._3r15MIGSvUzMb19r39TuWZ {\n  flex: 1 1 auto;\n  display: flex;\n  flex-direction: column; }\n\n._2MSbf-H-LoHd_nUJ01Tea {\n  margin-bottom: 10px;\n  flex: 0 0 auto; }\n\n._3DnkU-RyyemQdLpO2glzdA {\n  flex: 1 1 auto;\n  resize: none;\n  min-height: 100px;\n  border-color: #00bbcc; }\n\n.OROYDhfmI21sW7qfpZOXj {\n  min-height: 100px;\n  max-height: 200px;\n  overflow: hidden auto;\n  border: solid 1px #00bbcc; }\n  .OROYDhfmI21sW7qfpZOXj pre {\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    cursor: pointer;\n    margin: 0; }\n    .OROYDhfmI21sW7qfpZOXj pre:hover {\n      background-color: #eee; }\n    .OROYDhfmI21sW7qfpZOXj pre._3fegUsWEdIFGweLBb_KWoS {\n      font-weight: bold; }\n", ""]);
 
 // Exports
 exports.locals = {
 	"snapshotPane": "_3r15MIGSvUzMb19r39TuWZ",
 	"buttons": "_2MSbf-H-LoHd_nUJ01Tea",
-	"textarea": "_3DnkU-RyyemQdLpO2glzdA"
+	"textarea": "_3DnkU-RyyemQdLpO2glzdA",
+	"snapshotList": "OROYDhfmI21sW7qfpZOXj",
+	"current": "_3fegUsWEdIFGweLBb_KWoS"
 };
 
 /***/ }),
@@ -35497,7 +35517,7 @@ var MainPane = /** @class */ (function (_super) {
             React.createElement(TitleBar_1.default, { className: styles.noGrow }),
             React.createElement(Ribbon_1.default, { plugin: plugins.ribbon, className: styles.noGrow }),
             React.createElement("div", { className: styles.body },
-                React.createElement(Editor_1.default, { plugins: plugins_1.getAllPluginArray(), className: styles.editor, ref: this.editor, initState: plugins.editorOptions.getBuildInPluginState() }),
+                React.createElement(Editor_1.default, { plugins: plugins_1.getAllPluginArray(), className: styles.editor, ref: this.editor, initState: plugins.editorOptions.getBuildInPluginState(), undo: plugins.snapshot }),
                 React.createElement("div", { className: styles.resizer, onMouseDown: this.onMouseDown }),
                 React.createElement(SidePane_1.default, { ref: function (ref) { return (_this.sidePane = ref); }, plugins: plugins_1.getSidePanePluginArray(), className: styles.sidePane }))));
     };
@@ -35613,8 +35633,8 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var BuildInPluginState_1 = __webpack_require__(/*! ../BuildInPluginState */ "./publish/samplesite/scripts/controls/BuildInPluginState.ts");
-var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_plugin_image_resize_1 = __webpack_require__(/*! roosterjs-plugin-image-resize */ "./packages/roosterjs-plugin-image-resize/lib/index.ts");
+var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_plugins_1 = __webpack_require__(/*! roosterjs-editor-plugins */ "./packages/roosterjs-editor-plugins/lib/index.ts");
 var styles = __webpack_require__(/*! ./Editor.scss */ "./publish/samplesite/scripts/controls/editor/Editor.scss");
 var assign = __webpack_require__(/*! object-assign */ "./node_modules/object-assign/index.js");
@@ -35659,6 +35679,7 @@ var Editor = /** @class */ (function (_super) {
         var options = {
             plugins: plugins,
             defaultFormat: defaultFormat,
+            undo: this.props.undo,
         };
         this.editor = new roosterjs_editor_core_1.Editor(this.contentDiv, options);
     };
@@ -35706,14 +35727,15 @@ exports.default = Editor;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var BlockElementsPlugin_1 = __webpack_require__(/*! ./sidePane/blockElements/BlockElementsPlugin */ "./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPlugin.ts");
 var EditorOptionsPlugin_1 = __webpack_require__(/*! ./sidePane/editorOptions/EditorOptionsPlugin */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/EditorOptionsPlugin.ts");
 var EventViewPlugin_1 = __webpack_require__(/*! ./sidePane/eventViewer/EventViewPlugin */ "./publish/samplesite/scripts/controls/sidePane/eventViewer/EventViewPlugin.ts");
 var FormatStatePlugin_1 = __webpack_require__(/*! ./sidePane/formatState/FormatStatePlugin */ "./publish/samplesite/scripts/controls/sidePane/formatState/FormatStatePlugin.ts");
 var PasteResultPlugin_1 = __webpack_require__(/*! ./sidePane/pasteResult/PasteResultPlugin */ "./publish/samplesite/scripts/controls/sidePane/pasteResult/PasteResultPlugin.ts");
 var RibbonPlugin_1 = __webpack_require__(/*! ./ribbon/RibbonPlugin */ "./publish/samplesite/scripts/controls/ribbon/RibbonPlugin.ts");
-var SnapshotPlugin_1 = __webpack_require__(/*! ./sidePane/snapshot/SnapshotPlugin */ "./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPlugin.ts");
-var TableOptionsPlugin_1 = __webpack_require__(/*! ./sidePane/tableOptions/TableOptionsPlugin */ "./publish/samplesite/scripts/controls/sidePane/tableOptions/TableOptionsPlugin.ts");
 var SanitizerPlugin_1 = __webpack_require__(/*! ./sidePane/sanitizer/SanitizerPlugin */ "./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPlugin.ts");
+var SnapshotPlugin_1 = __webpack_require__(/*! ./sidePane/snapshot/SnapshotPlugin */ "./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPlugin.tsx");
+var TableOptionsPlugin_1 = __webpack_require__(/*! ./sidePane/tableOptions/TableOptionsPlugin */ "./publish/samplesite/scripts/controls/sidePane/tableOptions/TableOptionsPlugin.ts");
 var plugins = null;
 function getPlugins() {
     if (!plugins) {
@@ -35725,6 +35747,7 @@ function getPlugins() {
             tableOptions: new TableOptionsPlugin_1.default(),
             pasteResult: new PasteResultPlugin_1.default(),
             eventView: new EventViewPlugin_1.default(),
+            blocks: new BlockElementsPlugin_1.default(),
             sanitizer: new SanitizerPlugin_1.default(),
         };
     }
@@ -35737,10 +35760,10 @@ function getAllPluginArray() {
         allPlugins.ribbon,
         allPlugins.formatState,
         allPlugins.editorOptions,
-        allPlugins.snapshot,
         allPlugins.tableOptions,
         allPlugins.pasteResult,
         allPlugins.eventView,
+        allPlugins.blocks,
         allPlugins.sanitizer,
     ];
 }
@@ -35754,6 +35777,7 @@ function getSidePanePluginArray() {
         allPlugins.tableOptions,
         allPlugins.pasteResult,
         allPlugins.eventView,
+        allPlugins.blocks,
         allPlugins.sanitizer,
     ];
 }
@@ -36774,6 +36798,134 @@ exports.default = SidePanePluginImpl;
 
 /***/ }),
 
+/***/ "./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPane.scss":
+/*!*******************************************************************************************!*\
+  !*** ./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPane.scss ***!
+  \*******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var content = __webpack_require__(/*! !../../../../../../node_modules/css-loader/dist/cjs.js??ref--6-1!../../../../../../node_modules/sass-loader/lib/loader.js!./BlockElementsPane.scss */ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPane.scss");
+var loader = __webpack_require__(/*! ./node_modules/@microsoft/load-themed-styles/lib/index.js */ "./node_modules/@microsoft/load-themed-styles/lib/index.js");
+
+if(typeof content === "string") content = [[module.i, content]];
+
+// add the styles to the DOM
+for (var i = 0; i < content.length; i++) loader.loadStyles(content[i][1], false);
+
+if(content.locals) module.exports = content.locals;
+
+/***/ }),
+
+/***/ "./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPane.tsx":
+/*!******************************************************************************************!*\
+  !*** ./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPane.tsx ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var styles = __webpack_require__(/*! ./BlockElementsPane.scss */ "./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPane.scss");
+var BlockElementsPane = /** @class */ (function (_super) {
+    __extends(BlockElementsPane, _super);
+    function BlockElementsPane(props) {
+        var _this = _super.call(this, props) || this;
+        _this.state = {
+            blocks: [],
+        };
+        return _this;
+    }
+    BlockElementsPane.prototype.render = function () {
+        var _this = this;
+        return (React.createElement("div", null,
+            React.createElement("button", { onClick: this.props.onGetBlocks }, "Get blocks"),
+            this.state.blocks.map(function (block, index) { return (React.createElement("pre", { key: index, className: styles.block, onMouseOver: function () { return _this.props.onMouseOver(block); } }, block.getTextContent() || '<NO CONTENT>')); })));
+    };
+    BlockElementsPane.prototype.setBlocks = function (blocks) {
+        this.setState({
+            blocks: blocks,
+        });
+    };
+    return BlockElementsPane;
+}(React.Component));
+exports.default = BlockElementsPane;
+
+
+/***/ }),
+
+/***/ "./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPlugin.ts":
+/*!*******************************************************************************************!*\
+  !*** ./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPlugin.ts ***!
+  \*******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var BlockElementsPane_1 = __webpack_require__(/*! ./BlockElementsPane */ "./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPane.tsx");
+var SidePanePluginImpl_1 = __webpack_require__(/*! ../SidePanePluginImpl */ "./publish/samplesite/scripts/controls/sidePane/SidePanePluginImpl.tsx");
+var BlockElementsPlugin = /** @class */ (function (_super) {
+    __extends(BlockElementsPlugin, _super);
+    function BlockElementsPlugin() {
+        var _this = _super.call(this, BlockElementsPane_1.default, 'block', 'Block Elements') || this;
+        _this.onGetBlocks = function () {
+            var traverser = _this.editor.getBodyTraverser();
+            var block = traverser && traverser.currentBlockElement;
+            var blocks = [];
+            while (block) {
+                blocks.push(block);
+                block = traverser.getNextBlockElement();
+            }
+            _this.getComponent(function (c) { return c.setBlocks(blocks); });
+        };
+        _this.onMouseOver = function (block) {
+            _this.editor.select(block.getStartNode(), 0, block.getEndNode(), -1 /* End */);
+        };
+        return _this;
+    }
+    BlockElementsPlugin.prototype.getComponentProps = function () {
+        return {
+            onGetBlocks: this.onGetBlocks,
+            onMouseOver: this.onMouseOver,
+        };
+    };
+    return BlockElementsPlugin;
+}(SidePanePluginImpl_1.default));
+exports.default = BlockElementsPlugin;
+
+
+/***/ }),
+
 /***/ "./publish/samplesite/scripts/controls/sidePane/editorOptions/Code.tsx":
 /*!*****************************************************************************!*\
   !*** ./publish/samplesite/scripts/controls/sidePane/editorOptions/Code.tsx ***!
@@ -36989,9 +37141,6 @@ var EditorOptionsPlugin = /** @class */ (function (_super) {
     function EditorOptionsPlugin() {
         return _super.call(this, OptionsPane_1.default, 'options', 'Editor Options') || this;
     }
-    EditorOptionsPlugin.prototype.getName = function () {
-        return 'editoroptions';
-    };
     EditorOptionsPlugin.prototype.getBuildInPluginState = function () {
         var result;
         this.getComponent(function (component) { return (result = component.getState()); });
@@ -38040,7 +38189,13 @@ var FormatStatePane = /** @class */ (function (_super) {
                     React.createElement("td", { className: styles.title }, 'OS'),
                     React.createElement("td", null,
                         this.renderSpan(roosterjs_editor_dom_1.Browser.isMac, 'MacOS'),
-                        this.renderSpan(roosterjs_editor_dom_1.Browser.isWin, 'Windows')))))) : (React.createElement("div", null, 'Please focus into editor'));
+                        this.renderSpan(roosterjs_editor_dom_1.Browser.isWin, 'Windows'))),
+                React.createElement("tr", null,
+                    React.createElement("td", { className: styles.title }, 'User Agent'),
+                    React.createElement("td", null, window.navigator.userAgent)),
+                React.createElement("tr", null,
+                    React.createElement("td", { className: styles.title }, 'App Version'),
+                    React.createElement("td", null, window.navigator.appVersion))))) : (React.createElement("div", null, 'Please focus into editor'));
     };
     FormatStatePane.prototype.renderSpan = function (formatState, text) {
         return React.createElement("span", { className: formatState ? '' : styles.inactive }, text + ' ');
@@ -38417,26 +38572,40 @@ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var styles = __webpack_require__(/*! ./SnapshotPane.scss */ "./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPane.scss");
 var SnapshotPane = /** @class */ (function (_super) {
     __extends(SnapshotPane, _super);
-    function SnapshotPane() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
+    function SnapshotPane(props) {
+        var _this = _super.call(this, props) || this;
         _this.takeSnapshot = function () {
-            var snapshot = _this.props.onTakeSnapshot();
+            _this.setSnapshot(_this.props.onTakeSnapshot());
+        };
+        _this.setSnapshot = function (snapshot) {
             _this.textarea.value = snapshot;
         };
-        _this.restoreSnapshot = function () {
-            var snapshot = _this.textarea.value;
-            _this.props.onRestoreSnapshot(snapshot);
+        _this.renderItem = function (snapshot, index) {
+            return (React.createElement("pre", { className: index == _this.state.currentIndex ? styles.current : '', key: index, onClick: function () { return _this.setSnapshot(snapshot); }, onDoubleClick: function () { return _this.props.onMove(index - _this.state.currentIndex); } }, snapshot || '<EMPTY SNAPSHOT>'));
+        };
+        _this.state = {
+            snapshots: [],
+            currentIndex: -1,
         };
         return _this;
     }
     SnapshotPane.prototype.render = function () {
         var _this = this;
         return (React.createElement("div", { className: styles.snapshotPane },
+            React.createElement("h3", null, "Undo Snapshots"),
+            React.createElement("div", { className: styles.snapshotList }, this.state.snapshots.map(this.renderItem)),
+            React.createElement("h3", null, "Selected Snapshot"),
             React.createElement("div", { className: styles.buttons },
                 React.createElement("button", { onClick: this.takeSnapshot }, 'Take snapshot'),
                 ' ',
-                React.createElement("button", { onClick: this.restoreSnapshot }, 'Restore snapshot')),
+                React.createElement("button", { onClick: function () { return _this.props.onRestoreSnapshot(_this.textarea.value); } }, 'Restore snapshot')),
             React.createElement("textarea", { ref: function (ref) { return (_this.textarea = ref); }, className: styles.textarea, spellCheck: false })));
+    };
+    SnapshotPane.prototype.updateSnapshots = function (snapshots, currentIndex) {
+        this.setState({
+            snapshots: snapshots,
+            currentIndex: currentIndex,
+        });
     };
     return SnapshotPane;
 }(React.Component));
@@ -38445,10 +38614,10 @@ exports.default = SnapshotPane;
 
 /***/ }),
 
-/***/ "./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPlugin.ts":
-/*!*********************************************************************************!*\
-  !*** ./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPlugin.ts ***!
-  \*********************************************************************************/
+/***/ "./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPlugin.tsx":
+/*!**********************************************************************************!*\
+  !*** ./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPlugin.tsx ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -38467,30 +38636,115 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var SidePanePluginImpl_1 = __webpack_require__(/*! ../SidePanePluginImpl */ "./publish/samplesite/scripts/controls/sidePane/SidePanePluginImpl.tsx");
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var SnapshotPane_1 = __webpack_require__(/*! ./SnapshotPane */ "./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPane.tsx");
+var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var SnapshotPlugin = /** @class */ (function (_super) {
     __extends(SnapshotPlugin, _super);
     function SnapshotPlugin() {
-        var _this = _super.call(this, SnapshotPane_1.default, 'snapshot', 'Snapshot') || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.refCallback = function (ref) {
+            _this.component = ref;
+            if (ref) {
+                _this.updateSnapshots();
+            }
+        };
         _this.onTakeSnapshot = function () {
-            return _this.editor.getContent(false, true);
+            return _this.editorInstance.getContent(false, true);
+        };
+        _this.onMove = function (step) {
+            var sanpshot = _this.getSnapshotsManager().move(step);
+            _this.onRestoreSnapshot(sanpshot);
+            _this.updateSnapshots();
         };
         _this.onRestoreSnapshot = function (snapshot) {
-            _this.editor.focus();
-            _this.editor.setContent(snapshot);
+            _this.editorInstance.focus();
+            _this.editorInstance.setContent(snapshot, false /*triggerContentChangedEvent*/);
         };
         return _this;
     }
+    SnapshotPlugin.prototype.initialize = function (editor) {
+        _super.prototype.initialize.call(this, editor);
+        this.editorInstance = editor;
+    };
+    SnapshotPlugin.prototype.dispose = function () {
+        this.editorInstance = null;
+        _super.prototype.dispose.call(this);
+    };
+    SnapshotPlugin.prototype.onPluginEvent = function (e) {
+        if (e.eventType == 10 /* EditorReady */) {
+            this.updateSnapshots();
+        }
+        _super.prototype.onPluginEvent.call(this, e);
+    };
+    SnapshotPlugin.prototype.getTitle = function () {
+        return 'Undo Snapshots';
+    };
+    SnapshotPlugin.prototype.renderSidePane = function () {
+        return React.createElement(SnapshotPane_1.default, __assign({}, this.getComponentProps(), { ref: this.refCallback }));
+    };
+    SnapshotPlugin.prototype.addUndoSnapshot = function () {
+        var snapshot = _super.prototype.addUndoSnapshot.call(this);
+        this.updateSnapshots();
+        return snapshot;
+    };
+    SnapshotPlugin.prototype.undo = function () {
+        _super.prototype.undo.call(this);
+        this.updateSnapshots();
+    };
+    SnapshotPlugin.prototype.redo = function () {
+        _super.prototype.redo.call(this);
+        this.updateSnapshots();
+    };
+    SnapshotPlugin.prototype.clear = function () {
+        _super.prototype.clear.call(this);
+        this.updateSnapshots();
+    };
     SnapshotPlugin.prototype.getComponentProps = function () {
         return {
             onRestoreSnapshot: this.onRestoreSnapshot,
             onTakeSnapshot: this.onTakeSnapshot,
+            onMove: this.onMove,
         };
     };
+    SnapshotPlugin.prototype.updateSnapshots = function () {
+        if (!this.component) {
+            return;
+        }
+        var manager = this.getSnapshotsManager();
+        var snapshots = [];
+        var currentIndex = -1;
+        var step = 0;
+        while (manager.canMove(step)) {
+            currentIndex++;
+            var snapshot = manager.move(step);
+            manager.move(-step);
+            step--;
+            snapshots.unshift(snapshot);
+        }
+        step = 1;
+        while (manager.canMove(step)) {
+            var snapshot = manager.move(step);
+            manager.move(-step);
+            step++;
+            snapshots.push(snapshot);
+        }
+        this.component.updateSnapshots(snapshots, currentIndex);
+    };
     return SnapshotPlugin;
-}(SidePanePluginImpl_1.default));
+}(roosterjs_editor_core_1.Undo));
 exports.default = SnapshotPlugin;
 
 
