@@ -1,7 +1,12 @@
 import * as React from 'react';
 import BuildInPluginState, { UrlPlaceholder } from '../BuildInPluginState';
-import { Editor as RoosterJsEditor, EditorOptions, EditorPlugin } from 'roosterjs-editor-core';
 import { ImageResize } from 'roosterjs-plugin-image-resize';
+import {
+    Editor as RoosterJsEditor,
+    EditorOptions,
+    EditorPlugin,
+    UndoService,
+} from 'roosterjs-editor-core';
 
 import {
     HyperLink,
@@ -20,6 +25,7 @@ export interface EditorProps {
     plugins: EditorPlugin[];
     initState: BuildInPluginState;
     className?: string;
+    undo?: UndoService;
 }
 
 export default class Editor extends React.Component<EditorProps, BuildInPluginState> {
@@ -71,6 +77,7 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
         let options: EditorOptions = {
             plugins: plugins,
             defaultFormat: defaultFormat,
+            undo: this.props.undo,
         };
         this.editor = new RoosterJsEditor(this.contentDiv, options);
     }

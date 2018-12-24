@@ -1,13 +1,14 @@
+import BlockElementsPlugin from './sidePane/blockElements/BlockElementsPlugin';
 import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
 import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
 import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
 import PasteResultPlugin from './sidePane/pasteResult/PasteResultPlugin';
 import RibbonPlugin from './ribbon/RibbonPlugin';
+import SanitizerPlugin from './sidePane/sanitizer/SanitizerPlugin';
 import SidePanePlugin from './SidePanePlugin';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TableOptionsPlugin from './sidePane/tableOptions/TableOptionsPlugin';
 import { EditorPlugin } from 'roosterjs-editor-core';
-import SanitizerPlugin from './sidePane/sanitizer/SanitizerPlugin';
 
 export default interface Plugins {
     ribbon: RibbonPlugin;
@@ -17,6 +18,7 @@ export default interface Plugins {
     tableOptions: TableOptionsPlugin;
     pasteResult: PasteResultPlugin;
     eventView: EventViewPlugin;
+    blocks: BlockElementsPlugin;
     sanitizer: SanitizerPlugin;
 }
 
@@ -32,6 +34,7 @@ export function getPlugins(): Plugins {
             tableOptions: new TableOptionsPlugin(),
             pasteResult: new PasteResultPlugin(),
             eventView: new EventViewPlugin(),
+            blocks: new BlockElementsPlugin(),
             sanitizer: new SanitizerPlugin(),
         };
     }
@@ -44,10 +47,10 @@ export function getAllPluginArray(): EditorPlugin[] {
         allPlugins.ribbon,
         allPlugins.formatState,
         allPlugins.editorOptions,
-        allPlugins.snapshot,
         allPlugins.tableOptions,
         allPlugins.pasteResult,
         allPlugins.eventView,
+        allPlugins.blocks,
         allPlugins.sanitizer,
     ];
 }
@@ -61,6 +64,7 @@ export function getSidePanePluginArray(): SidePanePlugin[] {
         allPlugins.tableOptions,
         allPlugins.pasteResult,
         allPlugins.eventView,
+        allPlugins.blocks,
         allPlugins.sanitizer,
     ];
 }

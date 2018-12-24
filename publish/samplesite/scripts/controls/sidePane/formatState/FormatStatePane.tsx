@@ -104,6 +104,14 @@ export default class FormatStatePane extends React.Component<
                             {this.renderSpan(Browser.isWin, 'Windows')}
                         </td>
                     </tr>
+                    <tr>
+                        <td className={styles.title}>{'User Agent'}</td>
+                        <td>{window.navigator.userAgent}</td>
+                    </tr>
+                    <tr>
+                        <td className={styles.title}>{'App Version'}</td>
+                        <td>{window.navigator.appVersion}</td>
+                    </tr>
                 </tbody>
             </table>
         ) : (

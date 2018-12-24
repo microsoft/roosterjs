@@ -18,5 +18,6 @@
     "prettier.jsxSingleQuote": true,
     "prettier.tabWidth": 4,
     "prettier.trailingComma": "es5",
-    "prettier.printWidth": 100
+    "prettier.printWidth": 100,
+    "typescript.extension.sortImports.sortOnSave": true
 }

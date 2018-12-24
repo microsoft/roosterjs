@@ -26,10 +26,6 @@ export default class EditorOptionsPlugin extends SidePanePluginImpl<
         super(OptionsPane, 'options', 'Editor Options');
     }
 
-    getName() {
-        return 'editoroptions';
-    }
-
     getBuildInPluginState(): BuildInPluginState {
         let result: BuildInPluginState;
         this.getComponent(component => (result = component.getState()));
