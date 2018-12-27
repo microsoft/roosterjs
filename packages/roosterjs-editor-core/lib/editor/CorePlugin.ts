@@ -2,12 +2,13 @@ import Editor from './Editor';
 import EditorPlugin from './EditorPlugin';
 import {
     ChangeSource,
+    NodePosition,
     PluginCompositionEvent,
     PluginEvent,
     PluginEventType,
+    PluginKeyboardEvent,
     PluginMouseUpEvent,
     PositionType,
-    NodePosition,
 } from 'roosterjs-editor-types';
 import {
     Browser,
@@ -47,7 +48,7 @@ export default class CorePlugin implements EditorPlugin {
     constructor(
         private contentDiv: HTMLDivElement,
         private disableRestoreSelectionOnFocus: boolean
-    ) {}
+    ) { }
 
     /**
      * Get a friendly name of  this plugin
@@ -125,7 +126,7 @@ export default class CorePlugin implements EditorPlugin {
      * @param node Current node
      * @returns A new position to select
      */
-    public ensureTypeInElement(position: NodePosition): NodePosition {
+    public ensureTypeInElement(position: NodePosition, event?: PluginKeyboardEvent): NodePosition {
         position = position.normalize();
         let block = getBlockElementAtNode(this.contentDiv, position.node);
         let formatNode: HTMLElement;
@@ -148,7 +149,9 @@ export default class CorePlugin implements EditorPlugin {
 
             // if the block is empty, apply default format
             // Otherwise, leave it as it is as we don't want to change the style for existing data
-            formatNode = formatNode && isNodeEmpty(formatNode) ? formatNode : null;
+            // unless the block was just created by the keyboard event (e.g. ctrl+a & start typing)
+            const shouldSetNodeStyles = isNodeEmpty(formatNode) || (event && this.wasNodeJustCreatedByKeyboardEvent(event, formatNode));
+            formatNode = formatNode && shouldSetNodeStyles ? formatNode : null;
         }
 
         if (formatNode) {
@@ -156,6 +159,10 @@ export default class CorePlugin implements EditorPlugin {
         }
 
         return position;
+    }
+
+    private wasNodeJustCreatedByKeyboardEvent(event: PluginKeyboardEvent, formatNode: HTMLElement): boolean {
+        return event.rawEvent.target instanceof Node && event.rawEvent.target.contains(formatNode) && event.rawEvent.key === formatNode.innerText;
     }
 
     /**
@@ -176,7 +183,7 @@ export default class CorePlugin implements EditorPlugin {
                 this.onContentChanged(event.rawEvent);
                 break;
             case PluginEventType.KeyPress:
-                this.onKeyPress();
+                this.onKeyPress(event);
                 break;
         }
     }
@@ -210,12 +217,25 @@ export default class CorePlugin implements EditorPlugin {
         }
     }
 
+    private onKeyPress(event: PluginKeyboardEvent) {
+        // If normalization was not possible before the keypress,
+        // check again after the keyboard event has been processed by browser native behaviour.
+        //
+        // This handles the case where the keyboard event that first inserts content happens when
+        // there is already content under the selection (e.g. Ctrl+a -> type new content).
+        if (!this.tryNormalizeTyping(event)) {
+            requestAnimationFrame(() => {
+                this.tryNormalizeTyping(event);
+            });
+        }
+    }
+
     /**
      * Check if user is typing right under the content div
      * When typing goes directly under content div, many things can go wrong
      * We fix it by wrapping it with a div and reposition cursor within the div
      */
-    private onKeyPress() {
+    private tryNormalizeTyping(event: PluginKeyboardEvent): boolean {
         let range = this.editor.getSelectionRange();
 
         if (
@@ -223,9 +243,12 @@ export default class CorePlugin implements EditorPlugin {
             range.collapsed &&
             findClosestElementAncestor(range.startContainer) == this.contentDiv
         ) {
-            let position = this.ensureTypeInElement(Position.getStart(range));
+            let position = this.ensureTypeInElement(Position.getStart(range), event);
             this.editor.select(position);
+            return true;
         }
+
+        return false;
     }
 
     private onMouseDown = () => {
