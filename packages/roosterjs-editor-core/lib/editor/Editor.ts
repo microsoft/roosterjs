@@ -6,7 +6,6 @@ import {
     BlockElement,
     ChangeSource,
     ContentPosition,
-    ContentScope,
     DefaultFormat,
     DocumentCommand,
     ExtractContentEvent,
@@ -22,7 +21,6 @@ import {
     Rect,
 } from 'roosterjs-editor-types';
 import {
-    Browser,
     PositionContentSearcher,
     ContentTraverser,
     Position,
@@ -34,9 +32,7 @@ import {
     getInlineElementAtNode,
     getTagOfNode,
     isNodeEmpty,
-    markSelection,
     queryElements,
-    removeMarker,
     collapseNodes,
     wrap,
 } from 'roosterjs-editor-dom';
@@ -783,86 +779,6 @@ export default class Editor {
         } else {
             this.core.contentDiv.setAttribute(name, value);
         }
-    }
-
-    //#endregion
-
-    //#region Deprecated methods
-
-    /**
-     * @deprecated
-     * Insert selection marker element into content, so that after doing some modification,
-     * we can still restore the selection as long as the selection marker is still there
-     * @returns The return value of callback
-     */
-    public runWithSelectionMarker<T>(callback: () => T, useInlineMarker?: boolean): T {
-        let selectionMarked = markSelection(
-            this.core.contentDiv,
-            this.getSelectionRange(),
-            useInlineMarker
-        );
-        try {
-            return callback && callback();
-        } finally {
-            if (selectionMarked) {
-                // In safari the selection will be lost after inserting markers, so need to restore it
-                // For other browsers we just need to delete markers here
-                this.select(
-                    removeMarker(
-                        this.core.contentDiv,
-                        Browser.isSafari || Browser.isChrome /*applySelection*/
-                    )
-                );
-            }
-        }
-    }
-
-    /**
-     * @deprecated Use queryElements instead
-     */
-    public queryContent(selector: string): NodeListOf<Element> {
-        return this.core.contentDiv.querySelectorAll(selector);
-    }
-
-    /**
-     * @deprecated Use select() instead
-     * Update selection in editor
-     * @param selectionRange The selection range to update to
-     * @returns true if selection range is updated. Otherwise false.
-     */
-    public updateSelection(selectionRange: Range): boolean {
-        return this.select(selectionRange);
-    }
-
-    /**
-     * @deprecated Use editWithUndo() instead
-     */
-    public runWithoutAddingUndoSnapshot(callback: () => void) {
-        try {
-            this.core.currentUndoSnapshot = this.getContent(false, true);
-            callback();
-        } finally {
-            this.core.currentUndoSnapshot = null;
-        }
-    }
-
-    /**
-     * @deprecated Use getBodyTraverser, getSelectionTraverser, getBlockTraverser instead
-     */
-    public getContentTraverser(
-        scope: ContentScope,
-        position: ContentPosition = ContentPosition.SelectionStart
-    ): ContentTraverser {
-        switch (scope) {
-            case ContentScope.Block:
-                return this.getBlockTraverser(position);
-            case ContentScope.Selection:
-                return this.getSelectionTraverser();
-            case ContentScope.Body:
-                return this.getBodyTraverser();
-        }
-
-        return null;
     }
 
     //#endregion

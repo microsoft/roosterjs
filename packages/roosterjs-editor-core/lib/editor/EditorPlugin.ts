@@ -6,6 +6,11 @@ import { PluginEvent } from 'roosterjs-editor-types';
  */
 interface EditorPlugin {
     /**
+     * Get a friendly name of this plugin
+     */
+    getName: () => string;
+
+    /**
      * The first method that editor will call to a plugin when editor is initializing.
      * It will pass in the editor instance, plugin should take this chance to save the
      * editor reference so that it can call to any editor method or format API later.
@@ -37,17 +42,6 @@ interface EditorPlugin {
      * @param event The event to handle:
      */
     onPluginEvent?: (event: PluginEvent) => void;
-
-    /**
-     * Get a friendly name of this plugin
-     */
-    getName?: () => string;
-
-    /**
-     * @deprecated
-     * Name of a plugin. If null, editor will set its value with its class name
-     */
-    name?: string;
 }
 
 export default EditorPlugin;

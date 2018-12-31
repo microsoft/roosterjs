@@ -55,15 +55,3 @@ export {
     default as getSelectionPath,
     getRangeFromSelectionPath,
 } from './selection/getSelectionPath';
-
-// Deprecated
-export { default as isTextualInlineElement } from './deprecated/isTextualInlineElement';
-export { default as wrapAll } from './deprecated/wrapAll';
-export { default as TraversingScoper } from './contentTraverser/TraversingScoper';
-export { default as convertInlineCss } from './utils/convertInlineCss';
-export {
-    default as sanitizeHtml,
-    SanitizeHtmlPropertyCallback,
-    StyleMap,
-} from './utils/sanitizeHtml';
-export { markSelection, removeMarker } from './deprecated/selectionMarker';

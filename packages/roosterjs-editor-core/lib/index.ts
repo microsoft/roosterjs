@@ -18,7 +18,6 @@ export { default as EditorPlugin } from './editor/EditorPlugin';
 export { default as Undo } from './undo/Undo';
 export { default as UndoSnapshotsService } from './undo/UndoSnapshots';
 export { default as UndoService } from './editor/UndoService';
-export { default as browserData, BrowserData } from './deprecated/BrowserData';
 export { default as cacheGetEventData } from './eventApi/cacheGetEventData';
 export { default as clearEventDataCache } from './eventApi/clearEventDataCache';
 export {
@@ -26,5 +25,3 @@ export {
     clearContentSearcherCache,
 } from './eventApi/cacheGetContentSearcher';
 export { default as cacheGetElementAtCursor } from './eventApi/cacheGetElementAtCursor';
-
-export { buildSnapshot, restoreSnapshot } from './deprecated/snapshotUtils';

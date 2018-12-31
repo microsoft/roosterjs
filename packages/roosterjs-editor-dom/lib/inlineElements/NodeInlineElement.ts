@@ -1,11 +1,8 @@
 import applyTextStyle from '../utils/applyTextStyle';
 import isNodeAfter from '../utils/isNodeAfter';
 import Position from '../selection/Position';
-import { safeGetPosition } from '../deprecated/positionUtils';
-import { toEditorPoint } from '../deprecated/positionUtils';
 import {
     BlockElement,
-    EditorPoint,
     InlineElement,
     NodePosition,
     NodeType,
@@ -78,10 +75,9 @@ class NodeInlineElement implements InlineElement {
     /**
      * Checks if the given position is contained in the inline element
      */
-    public contains(p: NodePosition | EditorPoint): boolean {
+    public contains(pos: NodePosition): boolean {
         let start = this.getStartPosition();
         let end = this.getEndPosition();
-        let pos = safeGetPosition(p);
         return pos && pos.isAfter(start) && end.isAfter(pos);
     }
 
@@ -90,22 +86,6 @@ class NodeInlineElement implements InlineElement {
      */
     public applyStyle(styler: (element: HTMLElement) => any): void {
         applyTextStyle(this.containerNode, styler);
-    }
-
-    /**
-     * @deprecated
-     * Get the start point of the inline element
-     */
-    public getStartPoint(): EditorPoint {
-        return toEditorPoint(this.getStartPosition());
-    }
-
-    /**
-     * @deprecated
-     * Get the end point of the inline element
-     */
-    public getEndPoint(): EditorPoint {
-        return toEditorPoint(this.getEndPosition());
     }
 }
 

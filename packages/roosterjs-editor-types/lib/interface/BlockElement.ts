@@ -1,5 +1,3 @@
-import InlineElement from './InlineElement';
-
 /**
  * This refers to a "content block" in editor that serves as a content parsing boundary
  * It is most those html block like tags, i.e. <p>, <div>, <li>, <td> etc.
@@ -36,42 +34,6 @@ export interface BlockElement {
      * Check if the given node is within this block element
      */
     contains(node: Node): boolean;
-
-    /**
-     * @deprecated
-     * Get text content of this block element
-     */
-    getTextContent(): string;
-
-    /**
-     * @deprecated
-     * Get content nodes of this block element as node array
-     */
-    getContentNodes(): Node[];
-
-    /**
-     * @deprecated
-     * Get the first inline element of this block element
-     */
-    getFirstInlineElement(): InlineElement;
-
-    /**
-     * @deprecated
-     * Get the last inline element of this block element
-     */
-    getLastInlineElement(): InlineElement;
-
-    /**
-     * @deprecated
-     * Get all inline elements inside this block element as array
-     */
-    getInlineElements(): InlineElement[];
-
-    /**
-     * @deprecated
-     * Check if the given inline element falls within this block element
-     */
-    isInBlock(inlineElement: InlineElement): boolean;
 }
 
 export default BlockElement;

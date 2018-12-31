@@ -50,8 +50,3 @@ export { default as NodePosition } from './interface/NodePosition';
 export { default as Rect } from './interface/Rect';
 export { default as SelectionPath } from './interface/SelectionPath';
 export { default as TableFormat } from './interface/TableFormat';
-
-// Legacy
-export { default as ContentScope } from './legacy/ContentScope';
-export { default as EditorPoint, NodeBoundary } from './legacy/EditorPoint';
-export { default as ListState } from './legacy/ListState';

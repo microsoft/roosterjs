@@ -1,4 +1,9 @@
-import { contains, fromHtml, getComputedStyle, VTable } from 'roosterjs-editor-dom';
+import {
+    contains,
+    fromHtml,
+    getComputedStyle,
+    VTable
+    } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     ContentPosition,
@@ -18,12 +23,6 @@ export default class TableResize implements EditorPlugin {
     private td: HTMLTableCellElement;
     private pageX = -1;
     private initialPageX: number;
-
-    /**
-     * Constructor TableResize plugin
-     * @param preserved A deprecated parameter used for compatibility with old code
-     */
-    constructor(preserved?: any) {}
 
     /**
      * Initialize this plugin. This should only be called from Editor
