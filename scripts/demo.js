@@ -27025,9 +27025,10 @@ var CorePlugin = /** @class */ (function () {
     /**
      * Ensure we are typing in an HTML Element inside editor, and apply default format if current block is empty
      * @param node Current node
+     * @param event (optional) The keyboard event that we are ensuring is typing in an element.
      * @returns A new position to select
      */
-    CorePlugin.prototype.ensureTypeInElement = function (position) {
+    CorePlugin.prototype.ensureTypeInElement = function (position, event) {
         position = position.normalize();
         var block = roosterjs_editor_dom_1.getBlockElementAtNode(this.contentDiv, position.node);
         var formatNode;
@@ -27045,12 +27046,17 @@ var CorePlugin = /** @class */ (function () {
             formatNode = block.collapseToSingleElement();
             // if the block is empty, apply default format
             // Otherwise, leave it as it is as we don't want to change the style for existing data
-            formatNode = formatNode && roosterjs_editor_dom_1.isNodeEmpty(formatNode) ? formatNode : null;
+            // unless the block was just created by the keyboard event (e.g. ctrl+a & start typing)
+            var shouldSetNodeStyles = roosterjs_editor_dom_1.isNodeEmpty(formatNode) || (event && this.wasNodeJustCreatedByKeyboardEvent(event, formatNode));
+            formatNode = formatNode && shouldSetNodeStyles ? formatNode : null;
         }
         if (formatNode) {
             roosterjs_editor_dom_1.applyFormat(formatNode, this.editor.getDefaultFormat());
         }
         return position;
+    };
+    CorePlugin.prototype.wasNodeJustCreatedByKeyboardEvent = function (event, formatNode) {
+        return event.rawEvent.target instanceof Node && event.rawEvent.target.contains(formatNode) && event.rawEvent.key === formatNode.innerText;
     };
     /**
      * Handle events triggered from editor
@@ -27070,7 +27076,7 @@ var CorePlugin = /** @class */ (function () {
                 this.onContentChanged(event.rawEvent);
                 break;
             case 1 /* KeyPress */:
-                this.onKeyPress();
+                this.onKeyPress(event);
                 break;
         }
     };
@@ -27096,19 +27102,37 @@ var CorePlugin = /** @class */ (function () {
             this.autoCompleteInfo = null;
         }
     };
+    CorePlugin.prototype.onKeyPress = function (event) {
+        var _this = this;
+        // If normalization was not possible before the keypress,
+        // check again after the keyboard event has been processed by browser native behaviour.
+        //
+        // This handles the case where the keyboard event that first inserts content happens when
+        // there is already content under the selection (e.g. Ctrl+a -> type new content).
+        //
+        // Only scheudle when the range is not collapsed to catch this edge case.
+        var range = this.editor.getSelectionRange();
+        if (!this.tryNormalizeTyping(event) && !range.collapsed) {
+            requestAnimationFrame(function () {
+                _this.tryNormalizeTyping(event);
+            });
+        }
+    };
     /**
      * Check if user is typing right under the content div
      * When typing goes directly under content div, many things can go wrong
      * We fix it by wrapping it with a div and reposition cursor within the div
      */
-    CorePlugin.prototype.onKeyPress = function () {
+    CorePlugin.prototype.tryNormalizeTyping = function (event) {
         var range = this.editor.getSelectionRange();
         if (range &&
             range.collapsed &&
             roosterjs_editor_dom_1.findClosestElementAncestor(range.startContainer) == this.contentDiv) {
-            var position = this.ensureTypeInElement(roosterjs_editor_dom_1.Position.getStart(range));
+            var position = this.ensureTypeInElement(roosterjs_editor_dom_1.Position.getStart(range), event);
             this.editor.select(position);
+            return true;
         }
+        return false;
     };
     CorePlugin.prototype.removeMouseUpEventListener = function () {
         if (this.mouseUpEventListerAdded) {
