@@ -36,7 +36,7 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
     constructor(
         public readonly dataProvider: PickerDataProvider,
         private pickerOptions: PickerPluginOptions
-    ) {}
+    ) { }
 
     /**
      * Get a friendly name
@@ -53,20 +53,21 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
         this.editor = editor;
         this.dataProvider.onInitalize(
             (htmlNode: Node) => {
-                let nodeInserted = false;
                 this.editor.focus();
                 this.editor.addUndoSnapshot();
 
                 let wordToReplace = this.getWord(null);
                 if (wordToReplace) {
-                    replaceWithNode(this.editor, wordToReplace, htmlNode, true);
-                    nodeInserted = true;
-                    this.setIsSuggesting(false);
-                }
+                    let insertNode = () => {
+                        replaceWithNode(this.editor, wordToReplace, htmlNode, true /* exactMatch */);
+                        this.setIsSuggesting(false);
+                    }
 
-                if (nodeInserted) {
-                    this.editor.triggerContentChangedEvent(this.pickerOptions.changeSource);
-                    this.editor.addUndoSnapshot();
+                    if (this.pickerOptions.handleAutoComplete) {
+                        this.editor.performAutoComplete(insertNode, this.pickerOptions.changeSource);
+                    } else {
+                        this.editor.addUndoSnapshot(insertNode, this.pickerOptions.changeSource)
+                    }
                 }
             },
             (isSuggesting: boolean) => {
@@ -271,9 +272,9 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                 this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
                     ? keyboardEvent.key == LEFT_ARROW_CHARCODE ||
-                      keyboardEvent.key == RIGHT_ARROW_CHARCODE
+                    keyboardEvent.key == RIGHT_ARROW_CHARCODE
                     : keyboardEvent.key == UP_ARROW_CHARCODE ||
-                      keyboardEvent.key == DOWN_ARROW_CHARCODE)
+                    keyboardEvent.key == DOWN_ARROW_CHARCODE)
             ) {
                 this.dataProvider.shiftHighlight(
                     this.pickerOptions.isHorizontal
