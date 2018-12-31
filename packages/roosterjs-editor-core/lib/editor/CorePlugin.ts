@@ -124,6 +124,7 @@ export default class CorePlugin implements EditorPlugin {
     /**
      * Ensure we are typing in an HTML Element inside editor, and apply default format if current block is empty
      * @param node Current node
+     * @param event (optional) The keyboard event that we are ensuring is typing in an element.
      * @returns A new position to select
      */
     public ensureTypeInElement(position: NodePosition, event?: PluginKeyboardEvent): NodePosition {
@@ -223,7 +224,10 @@ export default class CorePlugin implements EditorPlugin {
         //
         // This handles the case where the keyboard event that first inserts content happens when
         // there is already content under the selection (e.g. Ctrl+a -> type new content).
-        if (!this.tryNormalizeTyping(event)) {
+        //
+        // Only scheudle when the range is not collapsed to catch this edge case.
+        let range = this.editor.getSelectionRange();
+        if (!this.tryNormalizeTyping(event) && !range.collapsed) {
             requestAnimationFrame(() => {
                 this.tryNormalizeTyping(event);
             });
