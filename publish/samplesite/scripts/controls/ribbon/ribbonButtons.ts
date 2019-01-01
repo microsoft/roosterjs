@@ -1,5 +1,6 @@
 import MainPaneBase from '../MainPaneBase';
 import renderInsertLinkDialog from './renderInsertLinkDialog';
+import renderTableOptions from './renderTableOptions';
 import RibbonButtonType from './RibbonButtonType';
 import { Alignment, Direction, Indentation } from 'roosterjs-editor-types';
 import { getPlugins } from '../plugins';
@@ -33,16 +34,19 @@ const buttons: { [key: string]: RibbonButtonType } = {
         title: 'Bold',
         image: require('./svg/bold.svg'),
         onClick: toggleBold,
+        checked: format => format.isBold,
     },
     italic: {
         title: 'Italic',
         image: require('./svg/italic.svg'),
         onClick: toggleItalic,
+        checked: format => format.isItalic,
     },
     underline: {
         title: 'Underline',
         image: require('./svg/underline.svg'),
         onClick: toggleUnderline,
+        checked: format => format.isUnderline,
     },
     fontName: {
         title: 'Font',
@@ -108,11 +112,13 @@ const buttons: { [key: string]: RibbonButtonType } = {
         title: 'Bullet',
         image: require('./svg/bullets.svg'),
         onClick: toggleBullet,
+        checked: format => format.isBullet,
     },
     numbering: {
         title: 'Numbering',
         image: require('./svg/numbering.svg'),
         onClick: toggleNumbering,
+        checked: format => format.isNumbering,
     },
     outdent: {
         title: 'Decrease indent',
@@ -128,6 +134,7 @@ const buttons: { [key: string]: RibbonButtonType } = {
         title: 'Quote',
         image: require('./svg/blockquote.svg'),
         onClick: editor => toggleBlockQuote(editor),
+        checked: format => format.isBlockQuote,
     },
     alignLeft: {
         title: 'Align left',
@@ -157,6 +164,14 @@ const buttons: { [key: string]: RibbonButtonType } = {
         image: require('./svg/unlink.svg'),
         onClick: removeLink,
     },
+    table: {
+        title: 'Show table options',
+        image: require('./svg/table.svg'),
+        onClick: null,
+        dropDownItems: { 0: 'dummy' },
+        dropDownRenderer: renderTableOptions,
+        preserveOnClickAway: true,
+    },
     insertImage: {
         title: 'Insert inline image',
         image: require('./svg/inlineimage.svg'),
@@ -180,16 +195,19 @@ const buttons: { [key: string]: RibbonButtonType } = {
         title: 'Superscript',
         image: require('./svg/superscript.svg'),
         onClick: toggleSuperscript,
+        checked: format => format.isSuperscript,
     },
     subscript: {
         title: 'Subscript',
         image: require('./svg/subscript.svg'),
         onClick: toggleSubscript,
+        checked: format => format.isSubscript,
     },
     strikethrough: {
         title: 'Strikethrough',
         image: require('./svg/strikethrough.svg'),
         onClick: toggleStrikethrough,
+        checked: format => format.isStrikeThrough,
     },
     header: {
         title: 'Header',
@@ -239,16 +257,6 @@ const buttons: { [key: string]: RibbonButtonType } = {
             block: 'Remove formatting of selected paragraphs',
         },
     },
-    table: {
-        title: 'Show table options',
-        image: require('./svg/table.svg'),
-        onClick: () => showTableOptions(),
-    },
 };
 
 export default buttons;
-
-function showTableOptions() {
-    let plugins = getPlugins();
-    window.location.hash = plugins.tableOptions.getName();
-}

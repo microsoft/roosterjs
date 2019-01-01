@@ -44,6 +44,7 @@ export default class FormatStatePlugin extends SidePanePluginImpl<
         let rect = this.editor && this.editor.getCursorRect();
         return {
             format,
+            inIME: this.editor && this.editor.isInIME(),
             x: rect ? rect.left : 0,
             y: rect ? rect.top : 0,
         };

@@ -21,7 +21,11 @@ class MainPane extends MainPaneBase {
         return (
             <div className={styles.mainPane}>
                 <TitleBar className={styles.noGrow} />
-                <Ribbon plugin={plugins.ribbon} className={styles.noGrow} />
+                <Ribbon
+                    plugin={plugins.ribbon}
+                    className={styles.noGrow}
+                    ref={plugins.ribbon.refCallback}
+                />
                 <div className={styles.body}>
                     <Editor
                         plugins={getAllPluginArray()}

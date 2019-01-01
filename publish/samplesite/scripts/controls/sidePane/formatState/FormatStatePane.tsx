@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { FormatState } from 'roosterjs-editor-types';
 import { Browser } from 'roosterjs-editor-dom';
+import { FormatState } from 'roosterjs-editor-types';
 
 const styles = require('./FormatStatePane.scss');
 
 export interface FormatStatePaneState {
     format: FormatState;
+    inIME: boolean;
     x: number;
     y: number;
 }
@@ -18,6 +19,7 @@ export default class FormatStatePane extends React.Component<
         super(props);
         this.state = {
             format: props.format,
+            inIME: props.inIME,
             x: props.x,
             y: props.y,
         };
@@ -33,17 +35,17 @@ export default class FormatStatePane extends React.Component<
             <table>
                 <tbody>
                     <tr>
-                        <td className={styles.title}>{'Position'}</td>
+                        <td className={styles.title}>Position</td>
                         <td>{`${x},${y}`}</td>
                     </tr>
                     <tr>
-                        <td className={styles.title}>{'Font'}</td>
+                        <td className={styles.title}>Font</td>
                         <td>
                             <span>{`${format.fontName}, ${format.fontSize}`}</span>
                         </td>
                     </tr>
                     <tr>
-                        <td className={styles.title}>{'Colors'}</td>
+                        <td className={styles.title}>Colors</td>
                         <td>
                             <span
                                 style={{
@@ -54,7 +56,11 @@ export default class FormatStatePane extends React.Component<
                         </td>
                     </tr>
                     <tr>
-                        <td className={styles.title}>{'Formats'}</td>
+                        <td className={styles.title}>IME</td>
+                        <td>{this.renderSpan(this.state.inIME, 'InIME')}</td>
+                    </tr>
+                    <tr>
+                        <td className={styles.title}>Formats</td>
                         <td>
                             {this.renderSpan(format.isBold, 'Bold')}
                             {this.renderSpan(format.isItalic, 'Italic')}
@@ -65,7 +71,7 @@ export default class FormatStatePane extends React.Component<
                         </td>
                     </tr>
                     <tr>
-                        <td className={styles.title}>{'Structure'}</td>
+                        <td className={styles.title}>Structure</td>
                         <td>
                             {this.renderSpan(format.isBullet, 'Bullet')}
                             {this.renderSpan(format.isNumbering, 'Numbering')}
@@ -78,14 +84,14 @@ export default class FormatStatePane extends React.Component<
                         </td>
                     </tr>
                     <tr>
-                        <td className={styles.title}>{'Undo'}</td>
+                        <td className={styles.title}>Undo</td>
                         <td>
                             {this.renderSpan(format.canUndo, 'Can Undo')}
                             {this.renderSpan(format.canRedo, 'Can Redo')}
                         </td>
                     </tr>
                     <tr>
-                        <td className={styles.title}>{'Browser'}</td>
+                        <td className={styles.title}>Browser</td>
                         <td>
                             {this.renderSpan(Browser.isChrome, 'Chrome')}
                             {this.renderSpan(Browser.isEdge, 'Edge')}
@@ -98,24 +104,24 @@ export default class FormatStatePane extends React.Component<
                         </td>
                     </tr>
                     <tr>
-                        <td className={styles.title}>{'OS'}</td>
+                        <td className={styles.title}>OS</td>
                         <td>
                             {this.renderSpan(Browser.isMac, 'MacOS')}
                             {this.renderSpan(Browser.isWin, 'Windows')}
                         </td>
                     </tr>
                     <tr>
-                        <td className={styles.title}>{'User Agent'}</td>
+                        <td className={styles.title}>User Agent</td>
                         <td>{window.navigator.userAgent}</td>
                     </tr>
                     <tr>
-                        <td className={styles.title}>{'App Version'}</td>
+                        <td className={styles.title}>App Version</td>
                         <td>{window.navigator.appVersion}</td>
                     </tr>
                 </tbody>
             </table>
         ) : (
-            <div>{'Please focus into editor'}</div>
+            <div>Please focus into editor</div>
         );
     }
 
