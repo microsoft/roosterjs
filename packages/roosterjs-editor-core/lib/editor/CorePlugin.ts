@@ -48,7 +48,7 @@ export default class CorePlugin implements EditorPlugin {
     constructor(
         private contentDiv: HTMLDivElement,
         private disableRestoreSelectionOnFocus: boolean
-    ) { }
+    ) {}
 
     /**
      * Get a friendly name of  this plugin
@@ -75,7 +75,6 @@ export default class CorePlugin implements EditorPlugin {
             this.editor.addDomEventHandler(Browser.isIEOrEdge ? 'beforedeactivate' : 'blur', () =>
                 this.editor.saveSelectionRange()
             ),
-            this.editor.addDomEventHandler('mousedown', this.onMouseDown),
             this.disableRestoreSelectionOnFocus
                 ? null
                 : this.editor.addDomEventHandler('focus', () => this.editor.restoreSavedRange()),
@@ -151,7 +150,9 @@ export default class CorePlugin implements EditorPlugin {
             // if the block is empty, apply default format
             // Otherwise, leave it as it is as we don't want to change the style for existing data
             // unless the block was just created by the keyboard event (e.g. ctrl+a & start typing)
-            const shouldSetNodeStyles = isNodeEmpty(formatNode) || (event && this.wasNodeJustCreatedByKeyboardEvent(event, formatNode));
+            const shouldSetNodeStyles =
+                isNodeEmpty(formatNode) ||
+                (event && this.wasNodeJustCreatedByKeyboardEvent(event, formatNode));
             formatNode = formatNode && shouldSetNodeStyles ? formatNode : null;
         }
 
@@ -162,8 +163,15 @@ export default class CorePlugin implements EditorPlugin {
         return position;
     }
 
-    private wasNodeJustCreatedByKeyboardEvent(event: PluginKeyboardEvent, formatNode: HTMLElement): boolean {
-        return event.rawEvent.target instanceof Node && event.rawEvent.target.contains(formatNode) && event.rawEvent.key === formatNode.innerText;
+    private wasNodeJustCreatedByKeyboardEvent(
+        event: PluginKeyboardEvent,
+        formatNode: HTMLElement
+    ): boolean {
+        return (
+            event.rawEvent.target instanceof Node &&
+            event.rawEvent.target.contains(formatNode) &&
+            event.rawEvent.key === formatNode.innerText
+        );
     }
 
     /**
@@ -178,6 +186,11 @@ export default class CorePlugin implements EditorPlugin {
                 }
                 break;
             case PluginEventType.MouseDown:
+                if (!this.mouseUpEventListerAdded) {
+                    this.editor.getDocument().addEventListener('mouseup', this.onMouseUp, true);
+                    this.mouseUpEventListerAdded = true;
+                }
+
                 this.onContentChanged();
                 break;
             case PluginEventType.KeyDown:
@@ -254,13 +267,6 @@ export default class CorePlugin implements EditorPlugin {
 
         return false;
     }
-
-    private onMouseDown = () => {
-        if (this.editor && !this.mouseUpEventListerAdded) {
-            this.editor.getDocument().addEventListener('mouseup', this.onMouseUp, true);
-            this.mouseUpEventListerAdded = true;
-        }
-    };
 
     private onMouseUp = (event: MouseEvent) => {
         if (this.editor) {
