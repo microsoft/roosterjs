@@ -1,3 +1,4 @@
+import createRange from '../selection/createRange';
 import getInlineElementAtNode from '../inlineElements/getInlineElementAtNode';
 import NodeBlockElement from '../blockElements/NodeBlockElement';
 import StartEndBlockElement from '../blockElements/StartEndBlockElement';
@@ -87,16 +88,10 @@ export function createInlineElementFromNode(node: Node, rootNode: Node): InlineE
 
 // Create range from child nodes of given node
 export function createRangeFromChildNodes(node: Node): Range {
-    let selectionRange = new Range();
-    selectionRange.setStartBefore(node.firstChild);
-    selectionRange.setEndAfter(node.lastChild);
-    return selectionRange;
+    return createRange(node.firstChild, node.lastChild);
 }
 
 // Create range from given HTMLElement
 export function createRangeWithDiv(testDiv: HTMLElement): Range {
-    let selectionRange = new Range();
-    selectionRange.setStartBefore(testDiv);
-    selectionRange.setEndAfter(testDiv);
-    return selectionRange;
+    return createRange(testDiv);
 }

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { BlockElement } from 'roosterjs-editor-types';
+import { createRange } from 'roosterjs-editor-dom';
 
 const styles = require('./BlockElementsPane.scss');
 
@@ -33,7 +34,7 @@ export default class BlockElementsPane extends React.Component<
                         className={styles.block}
                         onMouseOver={() => this.props.onMouseOver(block)}
                     >
-                        {block.getTextContent() || '<NO CONTENT>'}
+                        {getTextContent(block) || '<NO CONTENT>'}
                     </pre>
                 ))}
             </div>
@@ -45,4 +46,10 @@ export default class BlockElementsPane extends React.Component<
             blocks: blocks,
         });
     }
+}
+
+function getTextContent(block: BlockElement): string {
+    return block.getStartNode() == block.getEndNode()
+        ? block.getStartNode().textContent
+        : createRange(block.getStartNode(), block.getEndNode()).toString();
 }

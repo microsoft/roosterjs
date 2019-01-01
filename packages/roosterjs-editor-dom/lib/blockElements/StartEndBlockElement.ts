@@ -44,7 +44,7 @@ export default class StartEndBlockElement implements BlockElement {
             nodes[0] &&
             nodes[0] != blockContext &&
             nodes[0].parentNode != this.rootNode &&
-            !isStructureNode(nodes[0].parentNode)
+            STRUCTURE_NODE_TAGS.indexOf(getTagOfNode(nodes[0].parentNode)) < 0
         ) {
             nodes = [splitBalancedNodeRange(nodes)];
         }
@@ -94,8 +94,4 @@ export default class StartEndBlockElement implements BlockElement {
             (isNodeAfter(node, this.startNode) && isNodeAfter(this.endNode, node))
         );
     }
-}
-
-function isStructureNode(node: Node) {
-    return STRUCTURE_NODE_TAGS.indexOf(getTagOfNode(node)) >= 0;
 }
