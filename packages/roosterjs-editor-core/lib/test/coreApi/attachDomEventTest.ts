@@ -7,6 +7,9 @@ import { PluginEvent, PluginEventType, PluginKeyboardEvent } from 'roosterjs-edi
 
 class MockPlugin implements EditorPlugin {
     lastEvent: PluginEvent = null;
+    getName() {
+        return 'Mock';
+    }
     initialize(editor: Editor) {}
     dispose() {}
     onPluginEvent(e: PluginEvent) {
