@@ -1,5 +1,5 @@
 /*
-    VERSION: 6.19.1
+    VERSION: 6.19.2
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -28463,7 +28463,7 @@ var StartEndBlockElement = /** @class */ (function () {
         while (nodes[0] &&
             nodes[0] != blockContext &&
             nodes[0].parentNode != this.rootNode &&
-            !isStructureNode(nodes[0].parentNode)) {
+            STRUCTURE_NODE_TAGS.indexOf(getTagOfNode_1.default(nodes[0].parentNode)) < 0) {
             nodes = [splitParentNode_1.splitBalancedNodeRange(nodes)];
         }
         return nodes.length == 1 && isBlockElement_1.default(nodes[0])
@@ -28562,9 +28562,6 @@ var StartEndBlockElement = /** @class */ (function () {
     return StartEndBlockElement;
 }());
 exports.default = StartEndBlockElement;
-function isStructureNode(node) {
-    return STRUCTURE_NODE_TAGS.indexOf(getTagOfNode_1.default(node)) >= 0;
-}
 
 
 /***/ }),
@@ -36865,6 +36862,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var styles = __webpack_require__(/*! ./BlockElementsPane.scss */ "./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPane.scss");
 var BlockElementsPane = /** @class */ (function (_super) {
     __extends(BlockElementsPane, _super);
@@ -36879,7 +36877,7 @@ var BlockElementsPane = /** @class */ (function (_super) {
         var _this = this;
         return (React.createElement("div", null,
             React.createElement("button", { onClick: this.props.onGetBlocks }, "Get blocks"),
-            this.state.blocks.map(function (block, index) { return (React.createElement("pre", { key: index, className: styles.block, onMouseOver: function () { return _this.props.onMouseOver(block); } }, block.getTextContent() || '<NO CONTENT>')); })));
+            this.state.blocks.map(function (block, index) { return (React.createElement("pre", { key: index, className: styles.block, onMouseOver: function () { return _this.props.onMouseOver(block); } }, getTextContent(block) || '<NO CONTENT>')); })));
     };
     BlockElementsPane.prototype.setBlocks = function (blocks) {
         this.setState({
@@ -36889,6 +36887,11 @@ var BlockElementsPane = /** @class */ (function (_super) {
     return BlockElementsPane;
 }(React.Component));
 exports.default = BlockElementsPane;
+function getTextContent(block) {
+    return block.getStartNode() == block.getEndNode()
+        ? block.getStartNode().textContent
+        : roosterjs_editor_dom_1.createRange(block.getStartNode(), block.getEndNode()).toString();
+}
 
 
 /***/ }),

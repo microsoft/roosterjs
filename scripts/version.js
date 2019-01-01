@@ -1,1 +1,1 @@
-window.roosterJsVer = "v6.19.1";
+window.roosterJsVer = "v6.19.2";
