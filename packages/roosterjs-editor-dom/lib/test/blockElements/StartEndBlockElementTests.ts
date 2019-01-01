@@ -1,8 +1,5 @@
 import * as DomTestHelper from '../DomTestHelper';
-import getNextPreviousInlineElement from '../../inlineElements/getNextPreviousInlineElement';
-import Position from '../../selection/Position';
 import StartEndBlockElement from '../../blockElements/StartEndBlockElement';
-import { InlineElement } from 'roosterjs-editor-types';
 
 let testID = 'StartEndBlockElement';
 
@@ -15,37 +12,6 @@ function createStartEndBlockElementWithContent(
     let startEndBlockElement = new StartEndBlockElement(testDiv, startNode, endNode);
     return [startEndBlockElement, testDiv];
 }
-
-function createLinkElementWithContent(content: string): Node {
-    let node = document.createElement('a');
-    node.innerHTML = content;
-    return node;
-}
-
-describe('StartEndBlockElement getTextContent()', () => {
-    afterEach(() => {
-        DomTestHelper.removeElement(testID);
-    });
-
-    function runTest(input: string, output: string) {
-        // Arrange
-        let [blockElement] = createStartEndBlockElementWithContent(input);
-
-        // Act
-        let textContent = blockElement.getTextContent();
-
-        // Assert
-        expect(textContent).toBe(output);
-    }
-
-    it('input = www.example.com', () => {
-        runTest('www.example.com', 'www.example.com');
-    });
-
-    it('input = hello<a>www.example.com</a><br>', () => {
-        runTest('hello<a>www.example.com</a><br>', 'hellowww.example.com');
-    });
-});
 
 describe('StartEndBlockElement getStartNode()', () => {
     afterEach(() => {
@@ -95,73 +61,6 @@ describe('StartEndBlockElement getEndNode()', () => {
 
     it('input = hello<a>www.example.com</a><br>', () => {
         runTest('hello<a>www.example.com</a><br>', document.createElement('br'));
-    });
-});
-
-describe('StartEndBlockElement getContentNodes()', () => {
-    afterEach(() => {
-        DomTestHelper.removeElement(testID);
-    });
-
-    it('input = www.example.com', () => {
-        // Arrange
-        let [blockElement] = createStartEndBlockElementWithContent('www.example.com');
-
-        // Act
-        let contents = blockElement.getContentNodes();
-
-        // Assert
-        expect(contents[0]).toEqual(document.createTextNode('www.example.com'));
-    });
-
-    it('input = hello<a>www.example.com</a><br>', () => {
-        // Arrange
-        let [blockElement] = createStartEndBlockElementWithContent(
-            'hello<a>www.example.com</a><br>'
-        );
-
-        // Act
-        let contents = blockElement.getContentNodes();
-
-        // Assert
-        expect(contents[0]).toEqual(document.createTextNode('hello'));
-        expect(contents[1]).toEqual(createLinkElementWithContent('www.example.com'));
-        expect(contents[2]).toEqual(document.createElement('br'));
-    });
-});
-
-describe('StartEndBlockElement getInlineElements()', () => {
-    afterEach(() => {
-        DomTestHelper.removeElement(testID);
-    });
-
-    function runTest(
-        inlineElement: InlineElement,
-        startOffset: number,
-        endOffset: number,
-        node: Node
-    ) {
-        let start = new Position(node, startOffset);
-        let end = new Position(node, endOffset);
-        expect(
-            DomTestHelper.isInlineElementEqual(inlineElement, start, end, node.textContent)
-        ).toBe(true);
-    }
-
-    it('input = <img>hello<a>www.example.com</a><br>', () => {
-        // Arrange
-        let [blockElement] = createStartEndBlockElementWithContent(
-            '<img>hello<a>www.example.com</a><br>'
-        );
-
-        // Act
-        let inlineElements = blockElement.getInlineElements();
-
-        // Assert
-        runTest(inlineElements[0], 0, 1, document.createElement('img'));
-        runTest(inlineElements[1], 0, 5, document.createTextNode('hello'));
-        runTest(inlineElements[2], 0, 15, document.createTextNode('www.example.com'));
-        runTest(inlineElements[3], 0, 1, document.createElement('br'));
     });
 });
 
@@ -297,56 +196,6 @@ describe('StartEndBlockElement isAfter()', () => {
             testDiv.lastChild,
             [false, false]
         );
-    });
-});
-
-describe('StartEndBlockElement isInBlock()', () => {
-    function getInlineElementAfterBlockElement(
-        rootNode: HTMLElement,
-        blockElement: StartEndBlockElement
-    ): InlineElement {
-        let inlineElementAfterBlockElement = getNextPreviousInlineElement(
-            rootNode,
-            blockElement.getLastInlineElement(),
-            true
-        );
-        return inlineElementAfterBlockElement;
-    }
-
-    afterEach(() => {
-        DomTestHelper.removeElement(testID);
-    });
-
-    it('input = <img><span>part1</span><a>part2</a>', () => {
-        // Arrange
-        let testDiv = DomTestHelper.createElementFromContent(
-            testID,
-            '<img>hello<a>www.example.com</a><br>world'
-        );
-        let blockElement = DomTestHelper.createStartEndBlockElementWithStartEndNode(
-            testDiv,
-            testDiv.firstChild,
-            testDiv.lastChild.previousSibling
-        );
-        let inlineElements = blockElement.getInlineElements();
-        let inlineElementAfterBlockElement = getInlineElementAfterBlockElement(
-            testDiv,
-            blockElement
-        );
-
-        // Act
-        let isElement1InBlock = blockElement.isInBlock(inlineElements[0]);
-        let isElement2InBlock = blockElement.isInBlock(inlineElements[1]);
-        let isElement3InBlock = blockElement.isInBlock(inlineElements[2]);
-        let isElement4InBlock = blockElement.isInBlock(inlineElements[3]);
-        let isElement5InBlock = blockElement.isInBlock(inlineElementAfterBlockElement);
-
-        // Assert
-        expect(isElement1InBlock).toEqual(true);
-        expect(isElement2InBlock).toEqual(true);
-        expect(isElement3InBlock).toEqual(true);
-        expect(isElement4InBlock).toEqual(true);
-        expect(isElement5InBlock).toEqual(false);
     });
 });
 
