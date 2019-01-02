@@ -571,14 +571,36 @@ exports.locals = {
 
 exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "._1wpwdj00FWmAyUFP8-5Ord {\n  border-width: 0;\n  border-radius: 4px;\n  margin: 2px;\n  padding: 0;\n  background-color: white;\n  cursor: pointer; }\n  ._1wpwdj00FWmAyUFP8-5Ord:hover {\n    background-color: #aaf7ff; }\n\n._36duXNYYlkhudOWXPUtSVy {\n  position: relative;\n  width: 32px;\n  height: 32px;\n  overflow: visible; }\n\n._18OeXypTTJ8EG0UWU0bi8O {\n  z-index: 1;\n  border: solid 1px #00bbcc;\n  display: inline-block;\n  background-color: white;\n  padding: 4px;\n  box-shadow: 2px 2px 4px #00bbcc;\n  position: absolute;\n  top: 14px;\n  left: 0; }\n\n._2lFFFSFesbY6zajU9kAbCs {\n  cursor: pointer;\n  padding: 2px;\n  white-space: nowrap;\n  min-width: 60px; }\n  ._2lFFFSFesbY6zajU9kAbCs:hover {\n    background-color: #aaf7ff; }\n", ""]);
+exports.push([module.i, "._1wpwdj00FWmAyUFP8-5Ord {\n  border-width: 0;\n  border-radius: 4px;\n  margin: 2px;\n  padding: 0;\n  background-color: white;\n  cursor: pointer; }\n  ._1wpwdj00FWmAyUFP8-5Ord:hover {\n    background-color: #aaf7ff; }\n  ._1wpwdj00FWmAyUFP8-5Ord.zA0LCo67RO9J8p2Stis9S {\n    background-color: #00b0c4; }\n\n._36duXNYYlkhudOWXPUtSVy {\n  position: relative;\n  width: 32px;\n  height: 32px;\n  overflow: visible; }\n\n._18OeXypTTJ8EG0UWU0bi8O {\n  z-index: 1;\n  border: solid 1px #00bbcc;\n  display: inline-block;\n  background-color: white;\n  padding: 4px;\n  box-shadow: 2px 2px 4px #00bbcc;\n  position: absolute;\n  top: 14px;\n  left: 0; }\n\n._2lFFFSFesbY6zajU9kAbCs {\n  cursor: pointer;\n  padding: 2px;\n  white-space: nowrap;\n  min-width: 60px; }\n  ._2lFFFSFesbY6zajU9kAbCs:hover {\n    background-color: #aaf7ff; }\n", ""]);
 
 // Exports
 exports.locals = {
 	"button": "_1wpwdj00FWmAyUFP8-5Ord",
+	"checked": "zA0LCo67RO9J8p2Stis9S",
 	"dropDownButton": "_36duXNYYlkhudOWXPUtSVy",
 	"dropDown": "_18OeXypTTJ8EG0UWU0bi8O",
 	"dropDownItem": "_2lFFFSFesbY6zajU9kAbCs"
+};
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/ribbon/TableOptions.scss":
+/*!***************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??ref--6-1!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/ribbon/TableOptions.scss ***!
+  \***************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, "._15Gv4hNCsdrY9DdZlsBfwR {\n  float: right; }\n\n.TiLPD8jhtkGuVzU-YAtrr {\n  margin: 2px 4px;\n  min-width: 80px; }\n\n._2xYKybTJCqtoV5zxzsh5j5 {\n  text-align: center; }\n\n._1dXffUsc5SpYqyEwi7IJJd {\n  white-space: nowrap; }\n", ""]);
+
+// Exports
+exports.locals = {
+	"close": "_15Gv4hNCsdrY9DdZlsBfwR",
+	"button": "TiLPD8jhtkGuVzU-YAtrr",
+	"buttonRow": "_2xYKybTJCqtoV5zxzsh5j5",
+	"label": "_1dXffUsc5SpYqyEwi7IJJd"
 };
 
 /***/ }),
@@ -643,6 +665,26 @@ exports.locals = {
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/eventViewer/EventViewPane.scss":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??ref--6-1!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/eventViewer/EventViewPane.scss ***!
+  \******************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, "._1-mTOSizNeAep3RyeT-LGY {\n  max-width: 100%;\n  max-height: 300px; }\n\n._1FseLDqMX7u6g50t576wmd {\n  font-family: 'Courier New';\n  font-size: 10.5pt;\n  margin: 10px; }\n\n.ZZWD-y1CW5Q9u89yjXX9q {\n  margin-left: 20px; }\n", ""]);
+
+// Exports
+exports.locals = {
+	"img": "_1-mTOSizNeAep3RyeT-LGY",
+	"pasteContent": "_1FseLDqMX7u6g50t576wmd",
+	"eventContent": "ZZWD-y1CW5Q9u89yjXX9q"
+};
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/formatState/FormatStatePane.scss":
 /*!********************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??ref--6-1!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/formatState/FormatStatePane.scss ***!
@@ -658,25 +700,6 @@ exports.push([module.i, "._2UpUQ0x04x64bUrOKyutf5 {\n  color: #eee; }\n\n._3n32c
 exports.locals = {
 	"inactive": "_2UpUQ0x04x64bUrOKyutf5",
 	"title": "_3n32c4c6adzNn9BO7AcK79"
-};
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/pasteResult/PastePane.scss":
-/*!**************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??ref--6-1!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/pasteResult/PastePane.scss ***!
-  \**************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ../../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
-// Module
-exports.push([module.i, "._2_JBoHXC8SOQxlKKce9ksF {\n  max-width: 100%;\n  max-height: 300px; }\n\n._1CMY09t2xfGNGhGjvczfV3 {\n  font-family: 'Courier New';\n  font-size: 10.5pt;\n  margin: 10px; }\n", ""]);
-
-// Exports
-exports.locals = {
-	"img": "_2_JBoHXC8SOQxlKKce9ksF",
-	"pasteContent": "_1CMY09t2xfGNGhGjvczfV3"
 };
 
 /***/ }),
@@ -718,26 +741,6 @@ exports.locals = {
 	"textarea": "_3DnkU-RyyemQdLpO2glzdA",
 	"snapshotList": "OROYDhfmI21sW7qfpZOXj",
 	"current": "_3fegUsWEdIFGweLBb_KWoS"
-};
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/tableOptions/TablePane.scss":
-/*!***************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??ref--6-1!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/tableOptions/TablePane.scss ***!
-  \***************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ../../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
-// Module
-exports.push([module.i, "._2WPdoNh-rZyG0y_al-K-G_ {\n  margin: 2px 4px;\n  min-width: 80px; }\n\n.fQR2TLJrw6yeonGmb4A2D {\n  text-align: center; }\n\n._320M79wEI3uwSDNxZaq48t {\n  white-space: nowrap; }\n", ""]);
-
-// Exports
-exports.locals = {
-	"button": "_2WPdoNh-rZyG0y_al-K-G_",
-	"buttonRow": "fQR2TLJrw6yeonGmb4A2D",
-	"label": "_320M79wEI3uwSDNxZaq48t"
 };
 
 /***/ }),
@@ -35536,7 +35539,7 @@ var MainPane = /** @class */ (function (_super) {
         var plugins = plugins_1.getPlugins();
         return (React.createElement("div", { className: styles.mainPane },
             React.createElement(TitleBar_1.default, { className: styles.noGrow }),
-            React.createElement(Ribbon_1.default, { plugin: plugins.ribbon, className: styles.noGrow }),
+            React.createElement(Ribbon_1.default, { plugin: plugins.ribbon, className: styles.noGrow, ref: plugins.ribbon.refCallback }),
             React.createElement("div", { className: styles.body },
                 React.createElement(Editor_1.default, { plugins: plugins_1.getAllPluginArray(), className: styles.editor, ref: this.editor, initState: plugins.editorOptions.getBuildInPluginState(), undo: plugins.snapshot }),
                 React.createElement("div", { className: styles.resizer, onMouseDown: this.onMouseDown }),
@@ -35752,11 +35755,9 @@ var BlockElementsPlugin_1 = __webpack_require__(/*! ./sidePane/blockElements/Blo
 var EditorOptionsPlugin_1 = __webpack_require__(/*! ./sidePane/editorOptions/EditorOptionsPlugin */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/EditorOptionsPlugin.ts");
 var EventViewPlugin_1 = __webpack_require__(/*! ./sidePane/eventViewer/EventViewPlugin */ "./publish/samplesite/scripts/controls/sidePane/eventViewer/EventViewPlugin.ts");
 var FormatStatePlugin_1 = __webpack_require__(/*! ./sidePane/formatState/FormatStatePlugin */ "./publish/samplesite/scripts/controls/sidePane/formatState/FormatStatePlugin.ts");
-var PasteResultPlugin_1 = __webpack_require__(/*! ./sidePane/pasteResult/PasteResultPlugin */ "./publish/samplesite/scripts/controls/sidePane/pasteResult/PasteResultPlugin.ts");
 var RibbonPlugin_1 = __webpack_require__(/*! ./ribbon/RibbonPlugin */ "./publish/samplesite/scripts/controls/ribbon/RibbonPlugin.ts");
 var SanitizerPlugin_1 = __webpack_require__(/*! ./sidePane/sanitizer/SanitizerPlugin */ "./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPlugin.ts");
 var SnapshotPlugin_1 = __webpack_require__(/*! ./sidePane/snapshot/SnapshotPlugin */ "./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPlugin.tsx");
-var TableOptionsPlugin_1 = __webpack_require__(/*! ./sidePane/tableOptions/TableOptionsPlugin */ "./publish/samplesite/scripts/controls/sidePane/tableOptions/TableOptionsPlugin.ts");
 var plugins = null;
 function getPlugins() {
     if (!plugins) {
@@ -35765,8 +35766,6 @@ function getPlugins() {
             formatState: new FormatStatePlugin_1.default(),
             snapshot: new SnapshotPlugin_1.default(),
             editorOptions: new EditorOptionsPlugin_1.default(),
-            tableOptions: new TableOptionsPlugin_1.default(),
-            pasteResult: new PasteResultPlugin_1.default(),
             eventView: new EventViewPlugin_1.default(),
             blocks: new BlockElementsPlugin_1.default(),
             sanitizer: new SanitizerPlugin_1.default(),
@@ -35781,8 +35780,6 @@ function getAllPluginArray() {
         allPlugins.ribbon,
         allPlugins.formatState,
         allPlugins.editorOptions,
-        allPlugins.tableOptions,
-        allPlugins.pasteResult,
         allPlugins.eventView,
         allPlugins.blocks,
         allPlugins.sanitizer,
@@ -35795,8 +35792,6 @@ function getSidePanePluginArray() {
         allPlugins.formatState,
         allPlugins.editorOptions,
         allPlugins.snapshot,
-        allPlugins.tableOptions,
-        allPlugins.pasteResult,
         allPlugins.eventView,
         allPlugins.blocks,
         allPlugins.sanitizer,
@@ -35871,6 +35866,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var RibbonButton_1 = __webpack_require__(/*! ./RibbonButton */ "./publish/samplesite/scripts/controls/ribbon/RibbonButton.tsx");
 var ribbonButtons_1 = __webpack_require__(/*! ./ribbonButtons */ "./publish/samplesite/scripts/controls/ribbon/ribbonButtons.ts");
+var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var styles = __webpack_require__(/*! ./Ribbon.scss */ "./publish/samplesite/scripts/controls/ribbon/Ribbon.scss");
 var Ribbon = /** @class */ (function (_super) {
     __extends(Ribbon, _super);
@@ -35884,15 +35880,21 @@ var Ribbon = /** @class */ (function (_super) {
         _this.onClear = function () {
             var editor = _this.props.plugin.getEditor();
             editor.addUndoSnapshot(function () {
-                editor.setContent("");
+                editor.setContent('');
             });
+        };
+        _this.onButtonClicked = function () {
+            _this.forceUpdate();
         };
         return _this;
     }
     Ribbon.prototype.render = function () {
+        var _this = this;
         var plugin = this.props.plugin;
-        return (React.createElement("div", { className: styles.ribbon + " " + (this.props.className || "") },
-            Object.keys(ribbonButtons_1.default).map(function (key) { return (React.createElement(RibbonButton_1.default, { key: key, plugin: plugin, button: ribbonButtons_1.default[key] })); }),
+        var editor = plugin.getEditor();
+        var format = editor && roosterjs_editor_api_1.getFormatState(editor);
+        return (React.createElement("div", { className: styles.ribbon + ' ' + (this.props.className || '') },
+            Object.keys(ribbonButtons_1.default).map(function (key) { return (React.createElement(RibbonButton_1.default, { key: key, plugin: plugin, format: format, button: ribbonButtons_1.default[key], onClicked: _this.onButtonClicked })); }),
             React.createElement("button", { onClick: this.onSave, className: styles.textButton }, "Export"),
             React.createElement("button", { onClick: this.onClear, className: styles.textButton }, "Clear")));
     };
@@ -35960,6 +35962,7 @@ var RibbonButton = /** @class */ (function (_super) {
                 button.onClick(editor, value);
                 MainPaneBase_1.default.getInstance().updateForamtState();
             }
+            _this.props.onClicked();
         };
         _this.onShowDropDown = function () {
             if (!_this.props.button.preserveOnClickAway) {
@@ -35983,8 +35986,16 @@ var RibbonButton = /** @class */ (function (_super) {
     RibbonButton.prototype.render = function () {
         var _this = this;
         var button = this.props.button;
+        var editor = this.props.plugin.getEditor();
+        var className = styles.button;
+        if (editor &&
+            this.props.format &&
+            button.checked &&
+            button.checked(this.props.format, editor)) {
+            className += ' ' + styles.checked;
+        }
         return (React.createElement("span", { className: styles.dropDownButton },
-            React.createElement("button", { onClick: function () { return (button.dropDownItems ? _this.onShowDropDown() : _this.onClick()); }, className: styles.button },
+            React.createElement("button", { onClick: function () { return (button.dropDownItems ? _this.onShowDropDown() : _this.onClick()); }, className: className },
                 React.createElement("img", { src: button.image, width: 32, height: 32, title: button.title })),
             button.dropDownItems &&
                 this.state.isDropDownShown &&
@@ -36015,7 +36026,14 @@ exports.default = RibbonButton;
 Object.defineProperty(exports, "__esModule", { value: true });
 var RibbonPlugin = /** @class */ (function () {
     function RibbonPlugin() {
+        var _this = this;
+        this.refCallback = function (ref) {
+            _this.ribbon = ref;
+        };
     }
+    RibbonPlugin.prototype.getName = function () {
+        return 'Ribbon';
+    };
     RibbonPlugin.prototype.initialize = function (editor) {
         this.editor = editor;
     };
@@ -36025,10 +36043,37 @@ var RibbonPlugin = /** @class */ (function () {
     RibbonPlugin.prototype.getEditor = function () {
         return this.editor;
     };
+    RibbonPlugin.prototype.onPluginEvent = function (event) {
+        if (this.ribbon &&
+            (event.eventType == 2 /* KeyUp */ ||
+                event.eventType == 5 /* MouseUp */ ||
+                event.eventType == 6 /* ContentChanged */)) {
+            this.ribbon.forceUpdate();
+        }
+    };
     return RibbonPlugin;
 }());
 exports.default = RibbonPlugin;
 
+
+/***/ }),
+
+/***/ "./publish/samplesite/scripts/controls/ribbon/TableOptions.scss":
+/*!**********************************************************************!*\
+  !*** ./publish/samplesite/scripts/controls/ribbon/TableOptions.scss ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader/dist/cjs.js??ref--6-1!../../../../../node_modules/sass-loader/lib/loader.js!./TableOptions.scss */ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/ribbon/TableOptions.scss");
+var loader = __webpack_require__(/*! ./node_modules/@microsoft/load-themed-styles/lib/index.js */ "./node_modules/@microsoft/load-themed-styles/lib/index.js");
+
+if(typeof content === "string") content = [[module.i, content]];
+
+// add the styles to the DOM
+for (var i = 0; i < content.length; i++) loader.loadStyles(content[i][1], false);
+
+if(content.locals) module.exports = content.locals;
 
 /***/ }),
 
@@ -36100,6 +36145,173 @@ exports.default = renderInsertLinkDialog;
 
 /***/ }),
 
+/***/ "./publish/samplesite/scripts/controls/ribbon/renderTableOptions.tsx":
+/*!***************************************************************************!*\
+  !*** ./publish/samplesite/scripts/controls/ribbon/renderTableOptions.tsx ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
+var styles = __webpack_require__(/*! ./TableOptions.scss */ "./publish/samplesite/scripts/controls/ribbon/TableOptions.scss");
+var TABLE_FORMAT = {
+    default: createTableFormat('#FFF', '#FFF', '#ABABAB', '#ABABAB', '#ABABAB'),
+    lightLines: createTableFormat('#FFF', '#FFF', null, '#92C0E0'),
+    towTones: createTableFormat('#C0E4FF', '#FFF'),
+    lightBands: createTableFormat('#D8D8D8', '#FFF'),
+    grid: createTableFormat('#D8D8D8', '#FFF', '#ABABAB', '#ABABAB', '#ABABAB'),
+    clear: createTableFormat('#FFF', '#FFF'),
+};
+var TableOptions = /** @class */ (function (_super) {
+    __extends(TableOptions, _super);
+    function TableOptions() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.cols = React.createRef();
+        _this.rows = React.createRef();
+        _this.evenBgColor = React.createRef();
+        _this.oddBgColor = React.createRef();
+        _this.topBorderColor = React.createRef();
+        _this.bottomBorderColor = React.createRef();
+        _this.verticalBorderColor = React.createRef();
+        _this.onInsertTable = function () {
+            var cols = parseInt(_this.cols.current.value);
+            var rows = parseInt(_this.rows.current.value);
+            if (cols > 0 && cols <= 10 && rows > 0 && rows <= 10) {
+                roosterjs_editor_api_1.insertTable(_this.props.editor, cols, rows);
+            }
+            _this.props.onDismiss();
+        };
+        _this.onCustomizeFormat = function () {
+            var format = createTableFormat(_this.evenBgColor.current.value || undefined, _this.oddBgColor.current.value || undefined, _this.topBorderColor.current.value || undefined, _this.bottomBorderColor.current.value || undefined, _this.verticalBorderColor.current.value || undefined);
+            roosterjs_editor_api_1.formatTable(_this.props.editor, format);
+            _this.props.onDismiss();
+        };
+        return _this;
+    }
+    TableOptions.prototype.render = function () {
+        return (React.createElement("div", null,
+            React.createElement("div", { className: styles.close },
+                React.createElement("button", { onClick: this.props.onDismiss }, "X")),
+            React.createElement("table", null,
+                React.createElement("tbody", null,
+                    React.createElement("tr", null,
+                        React.createElement("th", { colSpan: 2 }, "Insert Table")),
+                    React.createElement("tr", null,
+                        React.createElement("td", null, "Columns:"),
+                        React.createElement("td", null,
+                            React.createElement("input", { type: 'text', ref: this.cols }))),
+                    React.createElement("tr", null,
+                        React.createElement("td", null, "Rows:"),
+                        React.createElement("td", null,
+                            React.createElement("input", { type: 'text', ref: this.rows }))),
+                    React.createElement("tr", null,
+                        React.createElement("td", { colSpan: 2, className: styles.buttonRow },
+                            React.createElement("button", { onClick: this.onInsertTable, className: styles.button }, "Insert"))),
+                    React.createElement("tr", null,
+                        React.createElement("th", { colSpan: 2 }, "Edit Table")),
+                    React.createElement("tr", null,
+                        React.createElement("td", null, "Insert"),
+                        React.createElement("td", null,
+                            this.renderEditTableButton('Above', 0 /* InsertAbove */),
+                            this.renderEditTableButton('Below', 1 /* InsertBelow */),
+                            this.renderEditTableButton('Left', 2 /* InsertLeft */),
+                            this.renderEditTableButton('Right', 3 /* InsertRight */))),
+                    React.createElement("tr", null,
+                        React.createElement("td", null, "Delete"),
+                        React.createElement("td", null,
+                            this.renderEditTableButton('Table', 4 /* DeleteTable */),
+                            this.renderEditTableButton('Column', 5 /* DeleteColumn */),
+                            this.renderEditTableButton('Row', 6 /* DeleteRow */))),
+                    React.createElement("tr", null,
+                        React.createElement("td", null, "Merge"),
+                        React.createElement("td", null,
+                            this.renderEditTableButton('Above', 7 /* MergeAbove */),
+                            this.renderEditTableButton('Below', 8 /* MergeBelow */),
+                            this.renderEditTableButton('Left', 9 /* MergeLeft */),
+                            this.renderEditTableButton('Right', 10 /* MergeRight */))),
+                    React.createElement("tr", null,
+                        React.createElement("td", null, "Split"),
+                        React.createElement("td", null,
+                            this.renderEditTableButton('Horizontally', 11 /* SplitHorizontally */),
+                            this.renderEditTableButton('Vertically', 12 /* SplitVertically */))),
+                    React.createElement("tr", null,
+                        React.createElement("th", { colSpan: 2 }, "Format Table")),
+                    React.createElement("tr", null,
+                        React.createElement("td", null, "Predefined:"),
+                        React.createElement("td", null,
+                            this.renderFormatTableButton('Default', TABLE_FORMAT.default),
+                            this.renderFormatTableButton('Grid', TABLE_FORMAT.grid),
+                            this.renderFormatTableButton('Light lines', TABLE_FORMAT.lightLines),
+                            this.renderFormatTableButton('Two tones', TABLE_FORMAT.towTones),
+                            this.renderFormatTableButton('Light bands', TABLE_FORMAT.lightBands),
+                            this.renderFormatTableButton('Clear', TABLE_FORMAT.clear))),
+                    React.createElement("tr", null,
+                        React.createElement("th", { colSpan: 2, className: styles.buttonRow }, "Customized Colors:")),
+                    this.renderCustomizeFormatRow('Even row', this.evenBgColor),
+                    this.renderCustomizeFormatRow('Odd row', this.oddBgColor),
+                    this.renderCustomizeFormatRow('Top border', this.topBorderColor),
+                    this.renderCustomizeFormatRow('Bottom border', this.bottomBorderColor),
+                    this.renderCustomizeFormatRow('Vertical border', this.verticalBorderColor),
+                    React.createElement("tr", null,
+                        React.createElement("td", { colSpan: 2, className: styles.buttonRow, onClick: this.onCustomizeFormat },
+                            React.createElement("button", { className: styles.button }, "Apply Format")))))));
+    };
+    TableOptions.prototype.renderEditTableButton = function (text, operation) {
+        var _this = this;
+        return (React.createElement("button", { className: styles.button, onClick: function () {
+                roosterjs_editor_api_1.editTable(_this.props.editor, operation);
+                _this.props.onDismiss();
+            } }, text));
+    };
+    TableOptions.prototype.renderFormatTableButton = function (text, format) {
+        var _this = this;
+        return (React.createElement("button", { className: styles.button, onClick: function () {
+                roosterjs_editor_api_1.formatTable(_this.props.editor, format);
+                _this.props.onDismiss();
+            } }, text));
+    };
+    TableOptions.prototype.renderCustomizeFormatRow = function (text, ref) {
+        return (React.createElement("tr", null,
+            React.createElement("td", { className: styles.label }, text),
+            React.createElement("td", null,
+                React.createElement("input", { type: 'text', ref: ref }))));
+    };
+    return TableOptions;
+}(React.Component));
+function createTableFormat(bgColorEven, bgColorOdd, topBorder, bottomBorder, verticalBorder) {
+    return {
+        bgColorEven: bgColorEven,
+        bgColorOdd: bgColorOdd,
+        topBorderColor: topBorder,
+        bottomBorderColor: bottomBorder,
+        verticalBorderColor: verticalBorder,
+    };
+}
+function renderTableOptions(editor, onDismiss) {
+    return React.createElement(TableOptions, { editor: editor, onDismiss: onDismiss });
+}
+exports.default = renderTableOptions;
+
+
+/***/ }),
+
 /***/ "./publish/samplesite/scripts/controls/ribbon/ribbonButtons.ts":
 /*!*********************************************************************!*\
   !*** ./publish/samplesite/scripts/controls/ribbon/ribbonButtons.ts ***!
@@ -36111,23 +36323,26 @@ exports.default = renderInsertLinkDialog;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var renderInsertLinkDialog_1 = __webpack_require__(/*! ./renderInsertLinkDialog */ "./publish/samplesite/scripts/controls/ribbon/renderInsertLinkDialog.tsx");
-var plugins_1 = __webpack_require__(/*! ../plugins */ "./publish/samplesite/scripts/controls/plugins.ts");
+var renderTableOptions_1 = __webpack_require__(/*! ./renderTableOptions */ "./publish/samplesite/scripts/controls/ribbon/renderTableOptions.tsx");
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var buttons = {
     bold: {
         title: 'Bold',
         image: __webpack_require__(/*! ./svg/bold.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/bold.svg"),
         onClick: roosterjs_editor_api_1.toggleBold,
+        checked: function (format) { return format.isBold; },
     },
     italic: {
         title: 'Italic',
         image: __webpack_require__(/*! ./svg/italic.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/italic.svg"),
         onClick: roosterjs_editor_api_1.toggleItalic,
+        checked: function (format) { return format.isItalic; },
     },
     underline: {
         title: 'Underline',
         image: __webpack_require__(/*! ./svg/underline.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/underline.svg"),
         onClick: roosterjs_editor_api_1.toggleUnderline,
+        checked: function (format) { return format.isUnderline; },
     },
     fontName: {
         title: 'Font',
@@ -36193,11 +36408,13 @@ var buttons = {
         title: 'Bullet',
         image: __webpack_require__(/*! ./svg/bullets.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/bullets.svg"),
         onClick: roosterjs_editor_api_1.toggleBullet,
+        checked: function (format) { return format.isBullet; },
     },
     numbering: {
         title: 'Numbering',
         image: __webpack_require__(/*! ./svg/numbering.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/numbering.svg"),
         onClick: roosterjs_editor_api_1.toggleNumbering,
+        checked: function (format) { return format.isNumbering; },
     },
     outdent: {
         title: 'Decrease indent',
@@ -36213,6 +36430,7 @@ var buttons = {
         title: 'Quote',
         image: __webpack_require__(/*! ./svg/blockquote.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/blockquote.svg"),
         onClick: function (editor) { return roosterjs_editor_api_1.toggleBlockQuote(editor); },
+        checked: function (format) { return format.isBlockQuote; },
     },
     alignLeft: {
         title: 'Align left',
@@ -36242,6 +36460,14 @@ var buttons = {
         image: __webpack_require__(/*! ./svg/unlink.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/unlink.svg"),
         onClick: roosterjs_editor_api_1.removeLink,
     },
+    table: {
+        title: 'Show table options',
+        image: __webpack_require__(/*! ./svg/table.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/table.svg"),
+        onClick: null,
+        dropDownItems: { 0: 'dummy' },
+        dropDownRenderer: renderTableOptions_1.default,
+        preserveOnClickAway: true,
+    },
     insertImage: {
         title: 'Insert inline image',
         image: __webpack_require__(/*! ./svg/inlineimage.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/inlineimage.svg"),
@@ -36265,16 +36491,19 @@ var buttons = {
         title: 'Superscript',
         image: __webpack_require__(/*! ./svg/superscript.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/superscript.svg"),
         onClick: roosterjs_editor_api_1.toggleSuperscript,
+        checked: function (format) { return format.isSuperscript; },
     },
     subscript: {
         title: 'Subscript',
         image: __webpack_require__(/*! ./svg/subscript.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/subscript.svg"),
         onClick: roosterjs_editor_api_1.toggleSubscript,
+        checked: function (format) { return format.isSubscript; },
     },
     strikethrough: {
         title: 'Strikethrough',
         image: __webpack_require__(/*! ./svg/strikethrough.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/strikethrough.svg"),
         onClick: roosterjs_editor_api_1.toggleStrikethrough,
+        checked: function (format) { return format.isStrikeThrough; },
     },
     header: {
         title: 'Header',
@@ -36324,17 +36553,8 @@ var buttons = {
             block: 'Remove formatting of selected paragraphs',
         },
     },
-    table: {
-        title: 'Show table options',
-        image: __webpack_require__(/*! ./svg/table.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/table.svg"),
-        onClick: function () { return showTableOptions(); },
-    },
 };
 exports.default = buttons;
-function showTableOptions() {
-    var plugins = plugins_1.getPlugins();
-    window.location.hash = plugins.tableOptions.getName();
-}
 
 
 /***/ }),
@@ -37921,6 +38141,25 @@ exports.default = WatermarkCode;
 
 /***/ }),
 
+/***/ "./publish/samplesite/scripts/controls/sidePane/eventViewer/EventViewPane.scss":
+/*!*************************************************************************************!*\
+  !*** ./publish/samplesite/scripts/controls/sidePane/eventViewer/EventViewPane.scss ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var content = __webpack_require__(/*! !../../../../../../node_modules/css-loader/dist/cjs.js??ref--6-1!../../../../../../node_modules/sass-loader/lib/loader.js!./EventViewPane.scss */ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/eventViewer/EventViewPane.scss");
+var loader = __webpack_require__(/*! ./node_modules/@microsoft/load-themed-styles/lib/index.js */ "./node_modules/@microsoft/load-themed-styles/lib/index.js");
+
+if(typeof content === "string") content = [[module.i, content]];
+
+// add the styles to the DOM
+for (var i = 0; i < content.length; i++) loader.loadStyles(content[i][1], false);
+
+if(content.locals) module.exports = content.locals;
+
+/***/ }),
+
 /***/ "./publish/samplesite/scripts/controls/sidePane/eventViewer/EventViewPane.tsx":
 /*!************************************************************************************!*\
   !*** ./publish/samplesite/scripts/controls/sidePane/eventViewer/EventViewPane.tsx ***!
@@ -37946,6 +38185,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var _a;
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var styles = __webpack_require__(/*! ./EventViewPane.scss */ "./publish/samplesite/scripts/controls/sidePane/eventViewer/EventViewPane.scss");
 var EventTypeMap = (_a = {},
     _a[11 /* BeforeDispose */] = 'BeforeDispose',
     _a[8 /* BeforePaste */] = 'BeforePaste',
@@ -37972,6 +38212,13 @@ var EventViewPane = /** @class */ (function (_super) {
                 currentIndex: -1,
             });
         };
+        _this.renderImage = function (img, imageFile) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                return (img.src = event.target.result);
+            };
+            reader.readAsDataURL(imageFile);
+        };
         _this.onDisplayCountChanged = function () {
             var value = parseInt(_this.displayCount.current.value);
             _this.setState({
@@ -37979,7 +38226,7 @@ var EventViewPane = /** @class */ (function (_super) {
             });
         };
         _this.state = {
-            displayCount: 0,
+            displayCount: 20,
             currentIndex: -1,
         };
         return _this;
@@ -38002,7 +38249,7 @@ var EventViewPane = /** @class */ (function (_super) {
             React.createElement("div", null, displayedEvents.map(function (event) { return (React.createElement("details", { key: event.index.toString() },
                 React.createElement("summary", null, event.time.getHours() + ":" + event.time.getMinutes() + ":" + event.time.getSeconds() + "." + event.time.getMilliseconds() + " ",
                     EventTypeMap[event.event.eventType]),
-                _this.renderEvent(event.event))); }))));
+                React.createElement("div", { className: styles.eventContent }, _this.renderEvent(event.event)))); }))));
     };
     EventViewPane.prototype.addEvent = function (event) {
         if (this.state.displayCount > 0) {
@@ -38020,6 +38267,7 @@ var EventViewPane = /** @class */ (function (_super) {
         }
     };
     EventViewPane.prototype.renderEvent = function (event) {
+        var _this = this;
         switch (event.eventType) {
             case 0 /* KeyDown */:
             case 1 /* KeyPress */:
@@ -38047,9 +38295,19 @@ var EventViewPane = /** @class */ (function (_super) {
             case 8 /* BeforePaste */:
                 return (React.createElement("span", null,
                     "Types=",
-                    event.clipboardData.types.join()));
+                    event.clipboardData.types.join(),
+                    this.renderPasteContent('Palin text', event.clipboardData.text),
+                    this.renderPasteContent('Sanitized HTML', event.clipboardData.html),
+                    this.renderPasteContent('Original HTML', event.clipboardData.rawHtml),
+                    this.renderPasteContent('Image', event.clipboardData.image, function (img) { return (React.createElement("img", { ref: function (ref) { return _this.renderImage(ref, img); }, className: styles.img })); })));
         }
         return null;
+    };
+    EventViewPane.prototype.renderPasteContent = function (title, content, renderer) {
+        if (renderer === void 0) { renderer = function (content) { return React.createElement("span", null, content); }; }
+        return (content && (React.createElement("details", null,
+            React.createElement("summary", null, title),
+            React.createElement("div", { className: styles.pasteContent }, renderer(content)))));
     };
     return EventViewPane;
 }(React.Component));
@@ -38152,6 +38410,7 @@ var FormatStatePane = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.state = {
             format: props.format,
+            inIME: props.inIME,
             x: props.x,
             y: props.y,
         };
@@ -38165,21 +38424,24 @@ var FormatStatePane = /** @class */ (function (_super) {
         return format ? (React.createElement("table", null,
             React.createElement("tbody", null,
                 React.createElement("tr", null,
-                    React.createElement("td", { className: styles.title }, 'Position'),
+                    React.createElement("td", { className: styles.title }, "Position"),
                     React.createElement("td", null, x + "," + y)),
                 React.createElement("tr", null,
-                    React.createElement("td", { className: styles.title }, 'Font'),
+                    React.createElement("td", { className: styles.title }, "Font"),
                     React.createElement("td", null,
                         React.createElement("span", null, format.fontName + ", " + format.fontSize))),
                 React.createElement("tr", null,
-                    React.createElement("td", { className: styles.title }, 'Colors'),
+                    React.createElement("td", { className: styles.title }, "Colors"),
                     React.createElement("td", null,
                         React.createElement("span", { style: {
                                 color: format.textColor,
                                 backgroundColor: format.backgroundColor,
                             } }, format.textColor + " / " + format.backgroundColor))),
                 React.createElement("tr", null,
-                    React.createElement("td", { className: styles.title }, 'Formats'),
+                    React.createElement("td", { className: styles.title }, "IME"),
+                    React.createElement("td", null, this.renderSpan(this.state.inIME, 'InIME'))),
+                React.createElement("tr", null,
+                    React.createElement("td", { className: styles.title }, "Formats"),
                     React.createElement("td", null,
                         this.renderSpan(format.isBold, 'Bold'),
                         this.renderSpan(format.isItalic, 'Italic'),
@@ -38188,7 +38450,7 @@ var FormatStatePane = /** @class */ (function (_super) {
                         this.renderSpan(format.isSubscript, 'Subscript'),
                         this.renderSpan(format.isSuperscript, 'Superscript'))),
                 React.createElement("tr", null,
-                    React.createElement("td", { className: styles.title }, 'Structure'),
+                    React.createElement("td", { className: styles.title }, "Structure"),
                     React.createElement("td", null,
                         this.renderSpan(format.isBullet, 'Bullet'),
                         this.renderSpan(format.isNumbering, 'Numbering'),
@@ -38197,12 +38459,12 @@ var FormatStatePane = /** @class */ (function (_super) {
                         this.renderSpan(format.canAddImageAltText, 'In Image'),
                         React.createElement("span", { className: format.headerLevel == 0 && styles.inactive }, "Header " + format.headerLevel))),
                 React.createElement("tr", null,
-                    React.createElement("td", { className: styles.title }, 'Undo'),
+                    React.createElement("td", { className: styles.title }, "Undo"),
                     React.createElement("td", null,
                         this.renderSpan(format.canUndo, 'Can Undo'),
                         this.renderSpan(format.canRedo, 'Can Redo'))),
                 React.createElement("tr", null,
-                    React.createElement("td", { className: styles.title }, 'Browser'),
+                    React.createElement("td", { className: styles.title }, "Browser"),
                     React.createElement("td", null,
                         this.renderSpan(roosterjs_editor_dom_1.Browser.isChrome, 'Chrome'),
                         this.renderSpan(roosterjs_editor_dom_1.Browser.isEdge, 'Edge'),
@@ -38213,16 +38475,16 @@ var FormatStatePane = /** @class */ (function (_super) {
                         this.renderSpan(roosterjs_editor_dom_1.Browser.isSafari, 'Safari'),
                         this.renderSpan(roosterjs_editor_dom_1.Browser.isWebKit, 'Webkit'))),
                 React.createElement("tr", null,
-                    React.createElement("td", { className: styles.title }, 'OS'),
+                    React.createElement("td", { className: styles.title }, "OS"),
                     React.createElement("td", null,
                         this.renderSpan(roosterjs_editor_dom_1.Browser.isMac, 'MacOS'),
                         this.renderSpan(roosterjs_editor_dom_1.Browser.isWin, 'Windows'))),
                 React.createElement("tr", null,
-                    React.createElement("td", { className: styles.title }, 'User Agent'),
+                    React.createElement("td", { className: styles.title }, "User Agent"),
                     React.createElement("td", null, window.navigator.userAgent)),
                 React.createElement("tr", null,
-                    React.createElement("td", { className: styles.title }, 'App Version'),
-                    React.createElement("td", null, window.navigator.appVersion))))) : (React.createElement("div", null, 'Please focus into editor'));
+                    React.createElement("td", { className: styles.title }, "App Version"),
+                    React.createElement("td", null, window.navigator.appVersion))))) : (React.createElement("div", null, "Please focus into editor"));
     };
     FormatStatePane.prototype.renderSpan = function (formatState, text) {
         return React.createElement("span", { className: formatState ? '' : styles.inactive }, text + ' ');
@@ -38292,6 +38554,7 @@ var FormatStatePlugin = /** @class */ (function (_super) {
         var rect = this.editor && this.editor.getCursorRect();
         return {
             format: format,
+            inIME: this.editor && this.editor.isInIME(),
             x: rect ? rect.left : 0,
             y: rect ? rect.top : 0,
         };
@@ -38299,145 +38562,6 @@ var FormatStatePlugin = /** @class */ (function (_super) {
     return FormatStatePlugin;
 }(SidePanePluginImpl_1.default));
 exports.default = FormatStatePlugin;
-
-
-/***/ }),
-
-/***/ "./publish/samplesite/scripts/controls/sidePane/pasteResult/PastePane.scss":
-/*!*********************************************************************************!*\
-  !*** ./publish/samplesite/scripts/controls/sidePane/pasteResult/PastePane.scss ***!
-  \*********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var content = __webpack_require__(/*! !../../../../../../node_modules/css-loader/dist/cjs.js??ref--6-1!../../../../../../node_modules/sass-loader/lib/loader.js!./PastePane.scss */ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/pasteResult/PastePane.scss");
-var loader = __webpack_require__(/*! ./node_modules/@microsoft/load-themed-styles/lib/index.js */ "./node_modules/@microsoft/load-themed-styles/lib/index.js");
-
-if(typeof content === "string") content = [[module.i, content]];
-
-// add the styles to the DOM
-for (var i = 0; i < content.length; i++) loader.loadStyles(content[i][1], false);
-
-if(content.locals) module.exports = content.locals;
-
-/***/ }),
-
-/***/ "./publish/samplesite/scripts/controls/sidePane/pasteResult/PastePane.tsx":
-/*!********************************************************************************!*\
-  !*** ./publish/samplesite/scripts/controls/sidePane/pasteResult/PastePane.tsx ***!
-  \********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-var styles = __webpack_require__(/*! ./PastePane.scss */ "./publish/samplesite/scripts/controls/sidePane/pasteResult/PastePane.scss");
-var PastePane = /** @class */ (function (_super) {
-    __extends(PastePane, _super);
-    function PastePane(props) {
-        var _this = _super.call(this, props) || this;
-        _this.image = React.createRef();
-        _this.onLoadImage = function (e) {
-            if (_this.image && _this.image.current) {
-                _this.image.current.src = event.target.result;
-            }
-        };
-        _this.state = {
-            clipboard: null,
-        };
-        return _this;
-    }
-    PastePane.prototype.render = function () {
-        var _this = this;
-        var clipboard = this.state.clipboard;
-        return clipboard ? (React.createElement(React.Fragment, null,
-            this.renderPasteContent('Palin text', clipboard.text),
-            this.renderPasteContent('Sanitized HTML', clipboard.html),
-            this.renderPasteContent('Original HTML', clipboard.rawHtml),
-            this.renderPasteContent('Image', clipboard.image, function (img) { return (React.createElement("img", { ref: _this.image, className: styles.img })); }))) : (React.createElement("div", null, "No paste event detected"));
-    };
-    PastePane.prototype.componentDidUpdate = function () {
-        if (this.state.clipboard && this.state.clipboard.image) {
-            var reader = new FileReader();
-            reader.onload = this.onLoadImage;
-            reader.readAsDataURL(this.state.clipboard.image);
-        }
-    };
-    PastePane.prototype.setClipboardData = function (clipboard) {
-        this.setState({
-            clipboard: clipboard,
-        });
-    };
-    PastePane.prototype.renderPasteContent = function (title, content, renderer) {
-        if (renderer === void 0) { renderer = function (content) { return React.createElement("span", null, content); }; }
-        return (content && (React.createElement("details", null,
-            React.createElement("summary", null,
-                React.createElement("b", null, title)),
-            React.createElement("div", { className: styles.pasteContent }, renderer(content)))));
-    };
-    return PastePane;
-}(React.Component));
-exports.default = PastePane;
-
-
-/***/ }),
-
-/***/ "./publish/samplesite/scripts/controls/sidePane/pasteResult/PasteResultPlugin.ts":
-/*!***************************************************************************************!*\
-  !*** ./publish/samplesite/scripts/controls/sidePane/pasteResult/PasteResultPlugin.ts ***!
-  \***************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var PastePane_1 = __webpack_require__(/*! ./PastePane */ "./publish/samplesite/scripts/controls/sidePane/pasteResult/PastePane.tsx");
-var SidePanePluginImpl_1 = __webpack_require__(/*! ../SidePanePluginImpl */ "./publish/samplesite/scripts/controls/sidePane/SidePanePluginImpl.tsx");
-var PasteResultPlugin = /** @class */ (function (_super) {
-    __extends(PasteResultPlugin, _super);
-    function PasteResultPlugin() {
-        return _super.call(this, PastePane_1.default, 'paste', 'Paste Event Viewer') || this;
-    }
-    PasteResultPlugin.prototype.onPluginEvent = function (e) {
-        if (e.eventType == 8 /* BeforePaste */) {
-            this.getComponent(function (component) { return component.setClipboardData(e.clipboardData); });
-        }
-    };
-    PasteResultPlugin.prototype.getComponentProps = function () {
-        return {};
-    };
-    return PasteResultPlugin;
-}(SidePanePluginImpl_1.default));
-exports.default = PasteResultPlugin;
 
 
 /***/ }),
@@ -38773,233 +38897,6 @@ var SnapshotPlugin = /** @class */ (function (_super) {
     return SnapshotPlugin;
 }(roosterjs_editor_core_1.Undo));
 exports.default = SnapshotPlugin;
-
-
-/***/ }),
-
-/***/ "./publish/samplesite/scripts/controls/sidePane/tableOptions/TableOptionsPlugin.ts":
-/*!*****************************************************************************************!*\
-  !*** ./publish/samplesite/scripts/controls/sidePane/tableOptions/TableOptionsPlugin.ts ***!
-  \*****************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var SidePanePluginImpl_1 = __webpack_require__(/*! ../SidePanePluginImpl */ "./publish/samplesite/scripts/controls/sidePane/SidePanePluginImpl.tsx");
-var TablePane_1 = __webpack_require__(/*! ./TablePane */ "./publish/samplesite/scripts/controls/sidePane/tableOptions/TablePane.tsx");
-var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
-var TableOptionsPlugin = /** @class */ (function (_super) {
-    __extends(TableOptionsPlugin, _super);
-    function TableOptionsPlugin() {
-        var _this = _super.call(this, TablePane_1.default, 'table', 'Table Options') || this;
-        _this.onEditTable = function (operation) {
-            roosterjs_editor_api_1.editTable(_this.editor, operation);
-        };
-        _this.onFormatTable = function (format) {
-            roosterjs_editor_api_1.formatTable(_this.editor, format);
-        };
-        _this.onInsertTable = function (cols, rows) {
-            roosterjs_editor_api_1.insertTable(_this.editor, cols, rows);
-        };
-        return _this;
-    }
-    TableOptionsPlugin.prototype.getComponentProps = function () {
-        return {
-            onEditTable: this.onEditTable,
-            onFormatTable: this.onFormatTable,
-            onInsertTable: this.onInsertTable,
-        };
-    };
-    return TableOptionsPlugin;
-}(SidePanePluginImpl_1.default));
-exports.default = TableOptionsPlugin;
-
-
-/***/ }),
-
-/***/ "./publish/samplesite/scripts/controls/sidePane/tableOptions/TablePane.scss":
-/*!**********************************************************************************!*\
-  !*** ./publish/samplesite/scripts/controls/sidePane/tableOptions/TablePane.scss ***!
-  \**********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var content = __webpack_require__(/*! !../../../../../../node_modules/css-loader/dist/cjs.js??ref--6-1!../../../../../../node_modules/sass-loader/lib/loader.js!./TablePane.scss */ "./node_modules/css-loader/dist/cjs.js?!./node_modules/sass-loader/lib/loader.js!./publish/samplesite/scripts/controls/sidePane/tableOptions/TablePane.scss");
-var loader = __webpack_require__(/*! ./node_modules/@microsoft/load-themed-styles/lib/index.js */ "./node_modules/@microsoft/load-themed-styles/lib/index.js");
-
-if(typeof content === "string") content = [[module.i, content]];
-
-// add the styles to the DOM
-for (var i = 0; i < content.length; i++) loader.loadStyles(content[i][1], false);
-
-if(content.locals) module.exports = content.locals;
-
-/***/ }),
-
-/***/ "./publish/samplesite/scripts/controls/sidePane/tableOptions/TablePane.tsx":
-/*!*********************************************************************************!*\
-  !*** ./publish/samplesite/scripts/controls/sidePane/tableOptions/TablePane.tsx ***!
-  \*********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-var styles = __webpack_require__(/*! ./TablePane.scss */ "./publish/samplesite/scripts/controls/sidePane/tableOptions/TablePane.scss");
-var TABLE_FORMAT = {
-    default: createTableFormat('#FFF', '#FFF', '#ABABAB', '#ABABAB', '#ABABAB'),
-    lightLines: createTableFormat('#FFF', '#FFF', null, '#92C0E0'),
-    towTones: createTableFormat('#C0E4FF', '#FFF'),
-    lightBands: createTableFormat('#D8D8D8', '#FFF'),
-    grid: createTableFormat('#D8D8D8', '#FFF', '#ABABAB', '#ABABAB', '#ABABAB'),
-    clear: createTableFormat('#FFF', '#FFF'),
-};
-var TablePane = /** @class */ (function (_super) {
-    __extends(TablePane, _super);
-    function TablePane() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.cols = React.createRef();
-        _this.rows = React.createRef();
-        _this.evenBgColor = React.createRef();
-        _this.oddBgColor = React.createRef();
-        _this.topBorderColor = React.createRef();
-        _this.bottomBorderColor = React.createRef();
-        _this.verticalBorderColor = React.createRef();
-        _this.onInsertTable = function () {
-            var cols = parseInt(_this.cols.current.value);
-            var rows = parseInt(_this.rows.current.value);
-            if (cols > 0 && cols <= 10 && rows > 0 && rows <= 10) {
-                _this.props.onInsertTable(cols, rows);
-            }
-        };
-        _this.onCustomizeFormat = function () {
-            var format = createTableFormat(_this.evenBgColor.current.value || undefined, _this.oddBgColor.current.value || undefined, _this.topBorderColor.current.value || undefined, _this.bottomBorderColor.current.value || undefined, _this.verticalBorderColor.current.value || undefined);
-            _this.props.onFormatTable(format);
-        };
-        return _this;
-    }
-    TablePane.prototype.render = function () {
-        return (React.createElement("div", null,
-            React.createElement("table", null,
-                React.createElement("tbody", null,
-                    React.createElement("tr", null,
-                        React.createElement("th", { colSpan: 2 }, "Insert Table")),
-                    React.createElement("tr", null,
-                        React.createElement("td", null, "Columns:"),
-                        React.createElement("td", null,
-                            React.createElement("input", { type: "text", ref: this.cols }))),
-                    React.createElement("tr", null,
-                        React.createElement("td", null, "Rows:"),
-                        React.createElement("td", null,
-                            React.createElement("input", { type: "text", ref: this.rows }))),
-                    React.createElement("tr", null,
-                        React.createElement("td", { colSpan: 2, className: styles.buttonRow },
-                            React.createElement("button", { onClick: this.onInsertTable, className: styles.button }, "Insert"))),
-                    React.createElement("tr", null,
-                        React.createElement("th", { colSpan: 2 }, "Edit Table")),
-                    React.createElement("tr", null,
-                        React.createElement("td", null, "Insert"),
-                        React.createElement("td", null,
-                            this.renderEditTableButton('Above', 0 /* InsertAbove */),
-                            this.renderEditTableButton('Below', 1 /* InsertBelow */),
-                            this.renderEditTableButton('Left', 2 /* InsertLeft */),
-                            this.renderEditTableButton('Right', 3 /* InsertRight */))),
-                    React.createElement("tr", null,
-                        React.createElement("td", null, "Delete"),
-                        React.createElement("td", null,
-                            this.renderEditTableButton('Table', 4 /* DeleteTable */),
-                            this.renderEditTableButton('Column', 5 /* DeleteColumn */),
-                            this.renderEditTableButton('Row', 6 /* DeleteRow */))),
-                    React.createElement("tr", null,
-                        React.createElement("td", null, "Merge"),
-                        React.createElement("td", null,
-                            this.renderEditTableButton('Above', 7 /* MergeAbove */),
-                            this.renderEditTableButton('Below', 8 /* MergeBelow */),
-                            this.renderEditTableButton('Left', 9 /* MergeLeft */),
-                            this.renderEditTableButton('Right', 10 /* MergeRight */))),
-                    React.createElement("tr", null,
-                        React.createElement("td", null, "Split"),
-                        React.createElement("td", null,
-                            this.renderEditTableButton('Horizontally', 11 /* SplitHorizontally */),
-                            this.renderEditTableButton('Vertically', 12 /* SplitVertically */))),
-                    React.createElement("tr", null,
-                        React.createElement("th", { colSpan: 2 }, "Format Table")),
-                    React.createElement("tr", null,
-                        React.createElement("td", null, "Predefined:"),
-                        React.createElement("td", null,
-                            this.renderFormatTableButton('Default', TABLE_FORMAT.default),
-                            this.renderFormatTableButton('Grid', TABLE_FORMAT.grid),
-                            this.renderFormatTableButton('Light lines', TABLE_FORMAT.lightLines),
-                            this.renderFormatTableButton('Two tones', TABLE_FORMAT.towTones),
-                            this.renderFormatTableButton('Light bands', TABLE_FORMAT.lightBands),
-                            this.renderFormatTableButton('Clear', TABLE_FORMAT.clear))),
-                    React.createElement("tr", null,
-                        React.createElement("th", { colSpan: 2, className: styles.buttonRow }, "Customized Colors:")),
-                    this.renderCustomizeFormatRow('Even row', this.evenBgColor),
-                    this.renderCustomizeFormatRow('Odd row', this.oddBgColor),
-                    this.renderCustomizeFormatRow('Top border', this.topBorderColor),
-                    this.renderCustomizeFormatRow('Bottom border', this.bottomBorderColor),
-                    this.renderCustomizeFormatRow('Vertical border', this.verticalBorderColor),
-                    React.createElement("tr", null,
-                        React.createElement("td", { colSpan: 2, className: styles.buttonRow, onClick: this.onCustomizeFormat },
-                            React.createElement("button", { className: styles.button }, "Apply Format")))))));
-    };
-    TablePane.prototype.renderEditTableButton = function (text, operation) {
-        var _this = this;
-        return (React.createElement("button", { className: styles.button, onClick: function () { return _this.props.onEditTable(operation); } }, text));
-    };
-    TablePane.prototype.renderFormatTableButton = function (text, format) {
-        var _this = this;
-        return (React.createElement("button", { className: styles.button, onClick: function () { return _this.props.onFormatTable(format); } }, text));
-    };
-    TablePane.prototype.renderCustomizeFormatRow = function (text, ref) {
-        return (React.createElement("tr", null,
-            React.createElement("td", { className: styles.label }, text),
-            React.createElement("td", null,
-                React.createElement("input", { type: "text", ref: ref }))));
-    };
-    return TablePane;
-}(React.Component));
-exports.default = TablePane;
-function createTableFormat(bgColorEven, bgColorOdd, topBorder, bottomBorder, verticalBorder) {
-    return {
-        bgColorEven: bgColorEven,
-        bgColorOdd: bgColorOdd,
-        topBorderColor: topBorder,
-        bottomBorderColor: bottomBorder,
-        verticalBorderColor: verticalBorder,
-    };
-}
 
 
 /***/ }),
