@@ -1,7 +1,10 @@
 import * as React from 'react';
+import { Editor } from 'roosterjs-editor-core';
+import { editTable, formatTable, insertTable } from 'roosterjs-editor-api';
 import { TableFormat, TableOperation } from 'roosterjs-editor-types';
 
-const styles = require('./TablePane.scss');
+const styles = require('./TableOptions.scss');
+
 const TABLE_FORMAT = {
     default: createTableFormat('#FFF', '#FFF', '#ABABAB', '#ABABAB', '#ABABAB'),
     lightLines: createTableFormat('#FFF', '#FFF', null, '#92C0E0'),
@@ -11,13 +14,12 @@ const TABLE_FORMAT = {
     clear: createTableFormat('#FFF', '#FFF'),
 };
 
-export interface TablePaneProps {
-    onInsertTable: (cols: number, rows: number) => void;
-    onEditTable: (operation: TableOperation) => void;
-    onFormatTable: (format: Partial<TableFormat>) => void;
+interface TableOptionsProps {
+    editor: Editor;
+    onDismiss: () => void;
 }
 
-export default class TablePane extends React.Component<TablePaneProps, {}> {
+class TableOptions extends React.Component<TableOptionsProps, {}> {
     private cols = React.createRef<HTMLInputElement>();
     private rows = React.createRef<HTMLInputElement>();
     private evenBgColor = React.createRef<HTMLInputElement>();
@@ -29,6 +31,9 @@ export default class TablePane extends React.Component<TablePaneProps, {}> {
     render() {
         return (
             <div>
+                <div className={styles.close}>
+                    <button onClick={this.props.onDismiss}>X</button>
+                </div>
                 <table>
                     <tbody>
                         <tr>
@@ -37,13 +42,13 @@ export default class TablePane extends React.Component<TablePaneProps, {}> {
                         <tr>
                             <td>Columns:</td>
                             <td>
-                                <input type="text" ref={this.cols} />
+                                <input type='text' ref={this.cols} />
                             </td>
                         </tr>
                         <tr>
                             <td>Rows:</td>
                             <td>
-                                <input type="text" ref={this.rows} />
+                                <input type='text' ref={this.rows} />
                             </td>
                         </tr>
                         <tr>
@@ -87,11 +92,11 @@ export default class TablePane extends React.Component<TablePaneProps, {}> {
                             <td>
                                 {this.renderEditTableButton(
                                     'Horizontally',
-                                    TableOperation.SplitHorizontally,
+                                    TableOperation.SplitHorizontally
                                 )}
                                 {this.renderEditTableButton(
                                     'Vertically',
-                                    TableOperation.SplitVertically,
+                                    TableOperation.SplitVertically
                                 )}
                             </td>
                         </tr>
@@ -105,12 +110,12 @@ export default class TablePane extends React.Component<TablePaneProps, {}> {
                                 {this.renderFormatTableButton('Grid', TABLE_FORMAT.grid)}
                                 {this.renderFormatTableButton(
                                     'Light lines',
-                                    TABLE_FORMAT.lightLines,
+                                    TABLE_FORMAT.lightLines
                                 )}
                                 {this.renderFormatTableButton('Two tones', TABLE_FORMAT.towTones)}
                                 {this.renderFormatTableButton(
                                     'Light bands',
-                                    TABLE_FORMAT.lightBands,
+                                    TABLE_FORMAT.lightBands
                                 )}
                                 {this.renderFormatTableButton('Clear', TABLE_FORMAT.clear)}
                             </td>
@@ -142,7 +147,13 @@ export default class TablePane extends React.Component<TablePaneProps, {}> {
 
     private renderEditTableButton(text: string, operation: TableOperation): JSX.Element {
         return (
-            <button className={styles.button} onClick={() => this.props.onEditTable(operation)}>
+            <button
+                className={styles.button}
+                onClick={() => {
+                    editTable(this.props.editor, operation);
+                    this.props.onDismiss();
+                }}
+            >
                 {text}
             </button>
         );
@@ -150,7 +161,13 @@ export default class TablePane extends React.Component<TablePaneProps, {}> {
 
     private renderFormatTableButton(text: string, format: TableFormat): JSX.Element {
         return (
-            <button className={styles.button} onClick={() => this.props.onFormatTable(format)}>
+            <button
+                className={styles.button}
+                onClick={() => {
+                    formatTable(this.props.editor, format);
+                    this.props.onDismiss();
+                }}
+            >
                 {text}
             </button>
         );
@@ -158,13 +175,13 @@ export default class TablePane extends React.Component<TablePaneProps, {}> {
 
     private renderCustomizeFormatRow(
         text: string,
-        ref: React.RefObject<HTMLInputElement>,
+        ref: React.RefObject<HTMLInputElement>
     ): JSX.Element {
         return (
             <tr>
                 <td className={styles.label}>{text}</td>
                 <td>
-                    <input type="text" ref={ref} />
+                    <input type='text' ref={ref} />
                 </td>
             </tr>
         );
@@ -174,8 +191,9 @@ export default class TablePane extends React.Component<TablePaneProps, {}> {
         let cols = parseInt(this.cols.current.value);
         let rows = parseInt(this.rows.current.value);
         if (cols > 0 && cols <= 10 && rows > 0 && rows <= 10) {
-            this.props.onInsertTable(cols, rows);
+            insertTable(this.props.editor, cols, rows);
         }
+        this.props.onDismiss();
     };
 
     private onCustomizeFormat = () => {
@@ -184,9 +202,11 @@ export default class TablePane extends React.Component<TablePaneProps, {}> {
             this.oddBgColor.current.value || undefined,
             this.topBorderColor.current.value || undefined,
             this.bottomBorderColor.current.value || undefined,
-            this.verticalBorderColor.current.value || undefined,
+            this.verticalBorderColor.current.value || undefined
         );
-        this.props.onFormatTable(format);
+
+        formatTable(this.props.editor, format);
+        this.props.onDismiss();
     };
 }
 
@@ -195,7 +215,7 @@ function createTableFormat(
     bgColorOdd?: string,
     topBorder?: string,
     bottomBorder?: string,
-    verticalBorder?: string,
+    verticalBorder?: string
 ): TableFormat {
     return {
         bgColorEven: bgColorEven,
@@ -204,4 +224,8 @@ function createTableFormat(
         bottomBorderColor: bottomBorder,
         verticalBorderColor: verticalBorder,
     };
+}
+
+export default function renderTableOptions(editor: Editor, onDismiss: () => void) {
+    return <TableOptions editor={editor} onDismiss={onDismiss} />;
 }

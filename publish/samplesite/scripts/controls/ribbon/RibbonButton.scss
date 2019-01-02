@@ -1,4 +1,4 @@
-@import "../theme/theme.scss";
+@import '../theme/theme.scss';
 
 .button {
     border-width: 0;
@@ -9,6 +9,9 @@
     cursor: pointer;
     &:hover {
         background-color: $primaryLighter2;
+    }
+    &.checked {
+        background-color: $primaryLighter;
     }
 }
 

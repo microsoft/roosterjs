@@ -2,12 +2,15 @@ import * as React from 'react';
 import MainPaneBase from '../MainPaneBase';
 import RibbonButtonType, { DropDownRenderer } from './RibbonButtonType';
 import RibbonPlugin from './RibbonPlugin';
+import { FormatState } from 'roosterjs-editor-types';
 
 const styles = require('./RibbonButton.scss');
 
 export interface RibbonButtonProps {
     plugin: RibbonPlugin;
     button: RibbonButtonType;
+    format: FormatState;
+    onClicked: () => void;
 }
 
 export interface RibbonButtonState {
@@ -26,11 +29,22 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
 
     render() {
         let button = this.props.button;
+        let editor = this.props.plugin.getEditor();
+        let className = styles.button;
+
+        if (
+            editor &&
+            this.props.format &&
+            button.checked &&
+            button.checked(this.props.format, editor)
+        ) {
+            className += ' ' + styles.checked;
+        }
         return (
             <span className={styles.dropDownButton}>
                 <button
                     onClick={() => (button.dropDownItems ? this.onShowDropDown() : this.onClick())}
-                    className={styles.button}
+                    className={className}
                 >
                     <img src={button.image} width={32} height={32} title={button.title} />
                 </button>
@@ -49,6 +63,8 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
             button.onClick(editor, value);
             MainPaneBase.getInstance().updateForamtState();
         }
+
+        this.props.onClicked();
     };
 
     private onShowDropDown = () => {
@@ -69,30 +85,29 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
 
     private renderDropDownItems(
         items: { [key: string]: string },
-        renderer: DropDownRenderer,
+        renderer: DropDownRenderer
     ): JSX.Element {
         return (
             <div ref={ref => (this.dropDown = ref)} className={styles.dropDown}>
-                {Object.keys(items).map(
-                    key =>
-                        renderer ? (
-                            <div key={key}>
-                                {renderer(
-                                    this.props.plugin.getEditor(),
-                                    this.onHideDropDown,
-                                    key,
-                                    items[key],
-                                )}
-                            </div>
-                        ) : (
-                            <div
-                                key={key}
-                                onClick={() => this.onClick(key)}
-                                className={styles.dropDownItem}
-                            >
-                                {items[key]}
-                            </div>
-                        ),
+                {Object.keys(items).map(key =>
+                    renderer ? (
+                        <div key={key}>
+                            {renderer(
+                                this.props.plugin.getEditor(),
+                                this.onHideDropDown,
+                                key,
+                                items[key]
+                            )}
+                        </div>
+                    ) : (
+                        <div
+                            key={key}
+                            onClick={() => this.onClick(key)}
+                            className={styles.dropDownItem}
+                        >
+                            {items[key]}
+                        </div>
+                    )
                 )}
             </div>
         );

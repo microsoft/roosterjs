@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
+const styles = require('./EventViewPane.scss');
+
 export interface EventEntry {
     index: number;
     time: Date;
@@ -34,7 +36,7 @@ export default class EventViewPane extends React.Component<{}, EventViewPaneStat
     constructor(props: {}) {
         super(props);
         this.state = {
-            displayCount: 0,
+            displayCount: 20,
             currentIndex: -1,
         };
     }
@@ -68,7 +70,9 @@ export default class EventViewPane extends React.Component<{}, EventViewPaneStat
                                 {`${event.time.getHours()}:${event.time.getMinutes()}:${event.time.getSeconds()}.${event.time.getMilliseconds()} `}
                                 {EventTypeMap[event.event.eventType]}
                             </summary>
-                            {this.renderEvent(event.event)}
+                            <div className={styles.eventContent}>
+                                {this.renderEvent(event.event)}
+                            </div>
                         </details>
                     ))}
                 </div>
@@ -131,6 +135,12 @@ export default class EventViewPane extends React.Component<{}, EventViewPaneStat
                     <span>
                         Types=
                         {event.clipboardData.types.join()}
+                        {this.renderPasteContent('Palin text', event.clipboardData.text)}
+                        {this.renderPasteContent('Sanitized HTML', event.clipboardData.html)}
+                        {this.renderPasteContent('Original HTML', event.clipboardData.rawHtml)}
+                        {this.renderPasteContent('Image', event.clipboardData.image, img => (
+                            <img ref={ref => this.renderImage(ref, img)} className={styles.img} />
+                        ))}
                     </span>
                 );
         }
@@ -144,10 +154,33 @@ export default class EventViewPane extends React.Component<{}, EventViewPaneStat
         });
     };
 
+    private renderImage = (img: HTMLImageElement, imageFile: File) => {
+        let reader = new FileReader();
+        reader.onload = (e: ProgressEvent) =>
+            (img.src = (event.target as FileReader).result as string);
+
+        reader.readAsDataURL(imageFile);
+    };
+
     private onDisplayCountChanged = () => {
         let value = parseInt(this.displayCount.current.value);
         this.setState({
             displayCount: value,
         });
     };
+
+    private renderPasteContent(
+        title: string,
+        content: any,
+        renderer: (content: any) => JSX.Element = content => <span>{content}</span>
+    ): JSX.Element {
+        return (
+            content && (
+                <details>
+                    <summary>{title}</summary>
+                    <div className={styles.pasteContent}>{renderer(content)}</div>
+                </details>
+            )
+        );
+    }
 }
