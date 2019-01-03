@@ -32,6 +32,7 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
     private eventHandledOnKeyDown: boolean;
     private blockSuggestions: boolean;
     private isSuggesting: boolean;
+    private isCharacterValue: boolean;
 
     constructor(
         public readonly dataProvider: PickerDataProvider,
@@ -54,7 +55,6 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
         this.dataProvider.onInitalize(
             (htmlNode: Node) => {
                 this.editor.focus();
-                this.editor.addUndoSnapshot();
 
                 let wordToReplace = this.getWord(null);
                 if (wordToReplace) {
@@ -111,6 +111,8 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
         }
         if (event.eventType == PluginEventType.KeyUp && !this.eventHandledOnKeyDown) {
             this.onKeyUpDomEvent(event);
+        } else if (event.eventType == PluginEventType.KeyPress) {
+            this.isCharacterValue = true;
         } else if (event.eventType == PluginEventType.MouseUp) {
             if (this.isSuggesting) {
                 this.setIsSuggesting(false);
@@ -199,7 +201,8 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
             } else {
                 this.setIsSuggesting(false);
             }
-        } else {
+        } else if (this.isCharacterValue) {
+            // Check for isCharacterValue to filter out events like Ctrl+Z and modifiers
             let wordBeforeCursor = this.getWordBeforeCursor(event);
             if (!this.blockSuggestions) {
                 if (
@@ -239,15 +242,14 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                             rect = rangeNode.getClientRects()[0];
                         }
 
-                        if (!rect) {
-                            return;
-                        }
-                        rangeNode.detach();
+                        if (rect) {
+                            rangeNode.detach();
 
-                        // Display the @mention popup in the correct place
-                        let targetPoint = { x: rect.left, y: (rect.bottom + rect.top) / 2 };
-                        let bufferZone = (rect.bottom - rect.top) / 2;
-                        this.dataProvider.setCursorPoint(targetPoint, bufferZone);
+                            // Display the @mention popup in the correct place
+                            let targetPoint = { x: rect.left, y: (rect.bottom + rect.top) / 2 };
+                            let bufferZone = (rect.bottom - rect.top) / 2;
+                            this.dataProvider.setCursorPoint(targetPoint, bufferZone);
+                        }
                     }
                 }
             } else {
@@ -259,6 +261,7 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                 }
             }
         }
+        this.isCharacterValue = false;
     }
 
     private onKeyDownEvent(event: PluginKeyboardEvent) {
