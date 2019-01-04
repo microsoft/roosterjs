@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').execSync;
@@ -22,15 +22,17 @@ var regConst = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+
 var regExport = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)(default\s+([0-9a-zA-Z_]+)\s*,?)?(\s*{([^}]+)})?\s*;/g;
 
 function enqueue(queue, filename, exports) {
-    if (queue.find(function(v) {
-        return v.filename == filename;
-    })) {
+    if (
+        queue.find(function(v) {
+            return v.filename == filename;
+        })
+    ) {
         return;
     }
     queue.push({
         filename,
         exports,
-        elements: {}
+        elements: {},
     });
 }
 
@@ -113,9 +115,17 @@ function appendText(elements, name, text) {
 
 function parseClasses(content, elements) {
     var matches;
-    while (matches = regClassInterface.exec(content)) {
+    while ((matches = regClassInterface.exec(content))) {
         var result = parsePair(content, matches.index + matches[0].length, '{', '}', 1);
-        var classText = (matches[1] || '') + matches[5] + ' ' + namePlaceholder + (matches[7] || '') + (matches[8] || '') + ' {' + result[0];
+        var classText =
+            (matches[1] || '') +
+            matches[5] +
+            ' ' +
+            namePlaceholder +
+            (matches[7] || '') +
+            (matches[8] || '') +
+            ' {' +
+            result[0];
         var name = getName(matches, 6);
         appendText(elements, name, classText);
         content = result[1];
@@ -125,8 +135,9 @@ function parseClasses(content, elements) {
 
 function parseFunctions(content, elements) {
     var matches;
-    while (matches = regFunction.exec(content)) {
-        var functionText = (matches[1] || '') + 'function ' + namePlaceholder + (matches[6] || '') + matches[7];
+    while ((matches = regFunction.exec(content))) {
+        var functionText =
+            (matches[1] || '') + 'function ' + namePlaceholder + (matches[6] || '') + matches[7];
         var name = getName(matches, 5);
         appendText(elements, name, functionText);
     }
@@ -135,9 +146,10 @@ function parseFunctions(content, elements) {
 
 function parseEnum(content, elements) {
     var matches;
-    while (matches = regEnum.exec(content)) {
+    while ((matches = regEnum.exec(content))) {
         var result = parsePair(content, matches.index + matches[0].length, '{', '}', 1);
-        var enumText = (matches[1] || '') + (matches[5] || '') + 'enum '+ namePlaceholder + ' {' + result[0];
+        var enumText =
+            (matches[1] || '') + (matches[5] || '') + 'enum ' + namePlaceholder + ' {' + result[0];
         var name = getName(matches, 6);
         appendText(elements, name, enumText);
         content = result[1];
@@ -147,9 +159,10 @@ function parseEnum(content, elements) {
 
 function parseType(content, elements) {
     var matches;
-    while (matches = regType.exec(content)) {
+    while ((matches = regType.exec(content))) {
         var result = parsePair(content, matches.index + matches[0].length, '{', '}', 0, ';');
-        var typeText = (matches[1] || '') + 'type ' + namePlaceholder + (matches[6] || '') + ' = ' + result[0];
+        var typeText =
+            (matches[1] || '') + 'type ' + namePlaceholder + (matches[6] || '') + ' = ' + result[0];
         var name = getName(matches, 5);
         appendText(elements, name, typeText);
         content = result[1];
@@ -160,7 +173,7 @@ function parseType(content, elements) {
 
 function parseConst(content, elements) {
     var matches;
-    while (matches = regConst.exec(content)) {
+    while ((matches = regConst.exec(content))) {
         var result = parsePair(content, matches.index + matches[0].length, '{', '}', 0, ';');
         var constText = (matches[1] || '') + 'const ' + namePlaceholder + ': ' + result[0];
         var name = getName(matches, 5);
@@ -173,7 +186,7 @@ function parseConst(content, elements) {
 
 function parseExport(content, elements) {
     var matches;
-    while (matches = regExport.exec(content)) {
+    while ((matches = regExport.exec(content))) {
         var defaultExport = matches[5];
         if (defaultExport) {
             elements['default'] = elements[defaultExport];
@@ -185,7 +198,7 @@ function parseExport(content, elements) {
 
 function parseExportFrom(content, currentFileName, queue, baseDir, projDir) {
     var matches;
-    while (matches = regExportFrom.exec(content)) {
+    while ((matches = regExportFrom.exec(content))) {
         var exports = parseExports(matches[1].trim());
         var fromFileName = parseFrom(matches[2].trim(), currentFileName, baseDir, projDir);
         enqueue(queue, fromFileName, exports);
@@ -195,7 +208,7 @@ function parseExportFrom(content, currentFileName, queue, baseDir, projDir) {
 
 function process(baseDir, queue, index, projDir) {
     var item = queue[index];
-    var currentFileName = item.filename
+    var currentFileName = item.filename;
     var file = fs.readFileSync(currentFileName);
     var content = file.toString();
 
@@ -227,19 +240,23 @@ function process(baseDir, queue, index, projDir) {
     content = parseExport(content, item.elements);
 
     if (content.trim() != '') {
-        throw new Error('File ' + currentFileName + ' contains unrecognized content:\r\n' + content);
+        throw new Error(
+            'File ' + currentFileName + ' contains unrecognized content:\r\n' + content
+        );
     }
 }
 
-function output(filename, library, queue) {
-    var version = JSON.stringify(require(path.join(__dirname, '..', 'package.json')).version).replace(/"/g, '');
+function output(targetDir, library, isAmd, queue) {
+    var version = JSON.stringify(
+        require(path.join(__dirname, '..', 'package.json')).version
+    ).replace(/"/g, '');
     var content = '';
     content += `// Type definitions for roosterjs (Version ${version})\r\n`;
     content += '// Generated by dts tool from roosterjs\r\n';
     content += '// Project: https://github.com/Microsoft/roosterjs\r\n';
     content += '\r\n';
 
-    if (library) {
+    if (!isAmd) {
         content += 'declare namespace ' + library + ' {\r\n';
     }
 
@@ -247,7 +264,7 @@ function output(filename, library, queue) {
         var exports = queue[i].exports;
         var elements = queue[i].elements;
         if (exports) {
-            for (var name in exports){
+            for (var name in exports) {
                 var alias = exports[name];
                 var texts = null;
                 if (elements[name]) {
@@ -267,30 +284,31 @@ function output(filename, library, queue) {
                 for (var text of texts) {
                     text = text.replace(namePlaceholder, alias);
 
-                    if (library) {
+                    if (!isAmd) {
                         content += '    ' + text.replace(/\r\n/g, '\r\n    ').trim() + '\r\n\r\n';
                     } else {
-                        content += (multiLineComment.test(text) ?
-                            text.replace(multiLineComment, '$1export ') :
-                            'export ' + text) + '\r\n\r\n';
+                        content +=
+                            (multiLineComment.test(text)
+                                ? text.replace(multiLineComment, '$1export ')
+                                : 'export ' + text) + '\r\n\r\n';
                     }
                 }
             }
         }
     }
 
-    if (library) {
+    if (!isAmd) {
         content += '}';
     }
+
+    var filename = `${path.resolve(targetDir, 'rooster')}${isAmd ? '-amd' : ''}.d.ts`;
     fs.writeFileSync(filename, content);
 
     // Test the .d.ts file
-    var options = {
+    exec(`node ../node_modules/typescript/lib/tsc.js ` + filename + ' -outFile nul', {
         stdio: 'inherit',
-        cwd: __dirname
-    };
-    exec(`node ../node_modules/typescript/lib/tsc.js ` + filename + ' -outFile nul', options);
-    console.log('Type definition file ' + filename + ' generated.');
+        cwd: __dirname,
+    });
 }
 
 // Param structure
@@ -303,23 +321,15 @@ function output(filename, library, queue) {
 //          included root files, must be relative with baseDir'
 //      ]
 // }
-function main(config) {
-    if (!config) {
-        throw new Error('config cannot be null');
-    }
-    if (!config.library) {
-        throw new Error('library cannot be empty in config');
-    }
-    if (!config.include || config.include.length == 0) {
-        throw new Error('config.include must contain include file array');
-    }
 
-    var projDir = config.projDir || __dirname;
-    var baseDir = config.baseDir || __dirname;
-    var library = config.library;
-    var commonJsOutputName = (config.output || library) + '.d.ts';
-    var amdOutputName = (config.output || library) + '-amd.d.ts';
-    var include = config.include;
+module.exports = isAmd => {
+    var mkdirp = require('mkdirp');
+    var projDir = path.resolve(__dirname, '..');
+    var baseDir = path.resolve(projDir, 'dist');
+    var targetDir = path.resolve(baseDir, 'roosterjs', 'dist');
+    mkdirp.sync(targetDir);
+
+    var include = ['roosterjs/lib/index.d.ts'];
     var queue = [];
 
     for (var i = 0; i < include.length; i++) {
@@ -330,22 +340,6 @@ function main(config) {
     for (var i = 0; i < queue.length; i++) {
         process(baseDir, queue, i, projDir);
     }
-    output(commonJsOutputName, library, queue);
-    output(amdOutputName, null, queue);
-}
 
-var projDir = path.resolve(__dirname, '..');
-var baseDir = path.resolve(projDir, 'dist');
-var targetDir = path.resolve(baseDir, 'roosterjs', 'dist');
-if (!fs.existsSync(targetDir)) {
-    fs.mkdirSync(targetDir);
-}
-main({
-    projDir,
-    baseDir,
-    library: 'roosterjs',
-    output: path.resolve(targetDir, 'rooster'),
-    include: [
-        'roosterjs/lib/index.d.ts'
-    ]
-});
+    output(targetDir, 'roosterjs', isAmd, queue);
+};
