@@ -10,11 +10,17 @@ To view the sample site, please click the link below:
 
 [RoosterJs Sample Site](https://microsoft.github.io/roosterjs/index.html).
 
+## Upgrade from RoosterJs 6.x
+
+If you are upgrading your project from RoosterJs 6.x, please read
+[here](https://github.com/Microsoft/roosterjs/wiki/RoosterJs-7) for a full
+list of API changes.
+
 ## Features
 
 ### Packages
 
-Rooster contains 6 packages.
+Rooster contains 9 packages.
 
 1. `roosterjs`:
    A facade of all Rooster code for those who want a quick start. Use the
@@ -39,6 +45,15 @@ Rooster contains 6 packages.
 
 6. `roosterjs-editor-types`:
    Defines public interfaces and enumerations.
+
+7. `roosterjs-html-sanitizer`
+   A common library to help sanitize HTML.
+
+8. `roosterjs-plugin-image-resize`
+   A plugin to help do inline image resize within the editor
+
+9. `roosterjs-plugin-picker`
+   A plugin to help build picker-like plugins
 
 ### APIs
 
@@ -69,6 +84,10 @@ an "a" is typed in the editor:
 
 ```typescript
 class HelloRooster implements EditorPlugin {
+    getName() {
+        return 'HelloRooster';
+    }
+
     initialize(editor: Editor) {}
 
     dispose() {}
@@ -94,13 +113,17 @@ or
 You can also install sub packages separately:
 
 `yarn add roosterjs-editor-core`
+
 `yarn add roosterjs-editor-api`
+
 `...`
 
 or
 
 `npm install roosterjs-editor-core --save`
+
 `npm install roosterjs-editor-api --save`
+
 `...`
 
 In order to run the code below, you may also need to install [webpack](https://webpack.js.org/):
@@ -121,9 +144,12 @@ or
 ```html
 <html>
     <body>
-        <div id='editorDiv' style='width: 500px; height: 300px; overflow: auto;
-        border: solid 1px black'></div>
-        <script src='editor.js'></script>
+        <div
+            id="editorDiv"
+            style="width: 500px; height: 300px; overflow: auto;
+        border: solid 1px black"
+        ></div>
+        <script src="editor.js"></script>
     </body>
 </html>
 ```
@@ -150,12 +176,14 @@ editor.setContent('Welcome to <b>RoosterJs</b>!');
 ```html
 <html>
     <body>
-        <div id='editorDiv' style='width: 500px; height: 300px; overflow: auto;
-        border: solid 1px black'></div>
-        <button id='buttonB'>B</button>
-        <button id='buttonI'>I</button>
-        <button id='buttonU'>U</button>
-        <script src='editor.js'></script>
+        <div
+            id="editorDiv"
+            style="width: 500px; height: 300px; overflow: auto;
+        border: solid 1px black"
+        ></div>
+        <button id="buttonB">B</button> <button id="buttonI">I</button>
+        <button id="buttonU">U</button>
+        <script src="editor.js"></script>
     </body>
 </html>
 ```

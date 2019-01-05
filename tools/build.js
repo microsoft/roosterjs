@@ -330,7 +330,7 @@ function publish() {
         var json = readPackageJson(package);
 
         if (!json.version) {
-            exec(`npm publish --dry-run`, {
+            exec(`npm publish`, {
                 stdio: 'inherit',
                 cwd: path.join(distPath, package),
             });
