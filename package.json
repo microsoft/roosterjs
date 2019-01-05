@@ -38,6 +38,7 @@
         "prettier": "1.15.3",
         "progress": "2.0.3",
         "rimraf": "2.6.2",
+        "source-map-explorer": "1.6.0",
         "toposort": "1.0.4",
         "ts-loader": "^5.3.1",
         "tslint": "5.11.0",

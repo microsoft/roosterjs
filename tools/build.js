@@ -22,6 +22,7 @@ var license = fs.readFileSync(path.join(rootPath, 'LICENSE')).toString();
 
 // Commands
 var commands = [
+    'checkdep', // Check circular dependency among files
     'clean', // Clean target folder
     'copysample', // Copy sample code to target folder
     'dts', // Generate type definitioin files (.d.ts)
@@ -85,6 +86,36 @@ async function clean() {
     exec(`node ${rimrafPath} ${distPath}`, {
         stdio: 'inherit',
         cwd: rootPath,
+    });
+}
+
+function checkDependency() {
+    function processFile(filename, files) {
+        if (!/\.ts.?$/.test(filename)) {
+            filename += '.ts';
+        }
+        var index = files.indexOf(filename);
+        if (index >= 0) {
+            files = files.slice(index);
+            files.push(filename);
+            throw new Error(`Circular dependency: \r\n${files.join(' =>\r\n')}`);
+        }
+
+        files.push(filename);
+        var dir = path.dirname(filename);
+        var content = fs.readFileSync(filename).toString();
+        var reg = /from\s+'([^']+)'/g;
+        var match;
+        while (match = reg.exec(content)) {
+            var nextfile = match[1];
+            if (nextfile && nextfile[0] == '.') {
+                processFile(path.resolve(dir, nextfile), files.slice());
+            }
+        }
+    }
+
+    packages.forEach(package => {
+        processFile(path.join(packagesPath, package, 'lib/index'), []);
     });
 }
 
@@ -214,6 +245,40 @@ async function pack(isProduction, isAmd) {
                 resolve();
             }
         });
+    });
+}
+
+function countWord() {
+    var targetPath = path.join(distPath, 'roosterjs/dist');
+    var inputFile = path.join(targetPath, 'rooster-min.js');
+    var outputFile = path.join(targetPath, 'wordstat.txt');
+    var file = fs.readFileSync(inputFile).toString();
+    var reg = /[a-zA-Z0-9_]+/g;
+    var match;
+    var map = {};
+
+    while (match = reg.exec(file)) {
+        map[match] = (map[match] || 0) + 1;
+    }
+
+    var array = Object.keys(map).map(key => ({
+        key,
+        len: key.length * map[key],
+    }));
+
+    array.sort((a, b) => b.len - a.len);
+    var result = array.reduce((result, item) => result + `${item.key},${item.len}\r\n`, '');
+    fs.writeFileSync(outputFile, result);
+}
+
+function exploreSourceMap() {
+    var commandPath = path.join(nodeModulesPath, 'source-map-explorer/index.js');
+    var targetPath = path.join(distPath, 'roosterjs/dist');
+    var inputFile = path.join(targetPath, 'rooster.js');
+    var targetFile = path.join(targetPath, 'sourceMap.html');
+    exec(`node ${commandPath} -m --html ${inputFile} > ${targetFile}`, {
+        stdio: 'inherit',
+        cwd: rootPath,
     });
 }
 
@@ -347,37 +412,42 @@ class Runner {
         });
     }
 
-    async run() {
-        console.log(`Start building roosterjs version ${version}\n`);
+    run() {
+        (async () => {
+            console.log(`Start building roosterjs version ${version}\n`);
 
-        var bar = new ProgressBar(':bar :message (:current/:total finished)', {
-            total: this.tasks.length,
-            width: 60,
-            complete: '>',
-        });
+            var bar = new ProgressBar(':bar :message (:current/:total finished)', {
+                total: this.tasks.length,
+                width: 80,
+                complete: '>',
+            });
 
-        for (var i = 0; i < this.tasks.length; i++) {
-            var task = this.tasks[i];
+            for (var i = 0; i < this.tasks.length; i++) {
+                var task = this.tasks[i];
 
-            if (i == 0) {
-                bar.tick(0, {
-                    message: task.name,
-                });
-            } else {
-                bar.tick({
-                    message: task.name,
+                if (i == 0) {
+                    bar.tick(0, {
+                        message: task.name,
+                    });
+                } else {
+                    bar.tick({
+                        message: task.name,
+                    });
+                }
+
+                await task.callback().catch(e => {
+                    throw e;
                 });
             }
 
-            await task.callback().catch(e => {
-                throw e;
+            bar.tick({
+                message: '',
             });
-        }
-
-        bar.tick({
-            message: '',
+            console.log('\nBuild completed successfully.');
+        })().catch(e => {
+            console.error('\n');
+            throw e;
         });
-        console.log('\nBuild completed successfully.');
     }
 }
 
@@ -387,6 +457,11 @@ async function buildAll(options) {
             message: 'Clearing destination folder',
             callback: clean,
             enabled: options.clean,
+        },
+        {
+            message: 'Checking cicular dependency',
+            callback: checkDependency,
+            enabled: options.checkdep,
         },
         {
             message: 'Normalizing packages',
@@ -423,6 +498,16 @@ async function buildAll(options) {
             callback: async () => pack(true, isAmd),
             enabled: options.packprod,
         })),
+        {
+            message: 'Generating source map explorer file',
+            callback: exploreSourceMap,
+            enabled: options.pack,
+        },
+        {
+            message: 'Counting words in target file',
+            callback: countWord,
+            enabled: options.packprod,
+        },
         ...[false, true].map(isAmd => ({
             message: `Generating type definition file for ${isAmd ? 'AMD' : 'CommonJs'}`,
             callback: () => buildDts(isAmd),
@@ -450,8 +535,8 @@ async function buildAll(options) {
     runner.run();
 }
 
-function parseOptions() {
-    var params = process.argv;
+function parseOptions(additionalParams) {
+    var params = [...process.argv, ...additionalParams];
     var options = {};
     for (var i = 0; i < params.length; i++) {
         var index = commands.indexOf(params[i]);
@@ -463,4 +548,4 @@ function parseOptions() {
     return options;
 }
 
-buildAll(parseOptions());
+buildAll(parseOptions(['pack']));
