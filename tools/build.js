@@ -81,15 +81,10 @@ function collectPackages() {
 }
 
 async function clean() {
-    var rimraf = require('rimraf');
-    await new Promise((resolve, reject) => {
-        rimraf(distPath, function(err) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve();
-            }
-        });
+    var rimrafPath = path.join(nodeModulesPath, 'rimraf/bin');
+    exec(`node ${rimrafPath} ${distPath}`, {
+        stdio: 'inherit',
+        cwd: rootPath,
     });
 }
 
@@ -355,7 +350,7 @@ class Runner {
     async run() {
         console.log(`Start building roosterjs version ${version}\n`);
 
-        var bar = new ProgressBar(':bar Running: :message (:current/:total)', {
+        var bar = new ProgressBar(':bar :message (:current/:total finished)', {
             total: this.tasks.length,
             width: 60,
             complete: '>',
@@ -363,15 +358,25 @@ class Runner {
 
         for (var i = 0; i < this.tasks.length; i++) {
             var task = this.tasks[i];
-            bar.tick({
-                message: task.name,
-            });
+
+            if (i == 0) {
+                bar.tick(0, {
+                    message: task.name,
+                });
+            } else {
+                bar.tick({
+                    message: task.name,
+                });
+            }
 
             await task.callback().catch(e => {
                 throw e;
             });
         }
 
+        bar.tick({
+            message: '',
+        });
         console.log('\nBuild completed successfully.');
     }
 }
@@ -379,62 +384,62 @@ class Runner {
 async function buildAll(options) {
     var tasks = [
         {
-            message: 'Clear destination folder',
+            message: 'Clearing destination folder',
             callback: clean,
             enabled: options.clean,
         },
         {
-            message: 'Normalize packages',
+            message: 'Normalizing packages',
             callback: normalize,
             enabled: options.normalize,
         },
         {
-            message: 'Check code styles',
+            message: 'Checking code styles',
             callback: tslint,
             enabled: options.tslint,
         },
         ...packages.map(package => ({
-            message: `Build package ${package} in AMD mode`,
+            message: `Building package ${package} in AMD mode`,
             callback: () => buildPackage(package, 'amd'),
             enabled: options.buildamd,
         })),
         {
-            message: 'Rename AMD library folders',
+            message: 'Renaming AMD library folders',
             callback: renameAmd,
             enabled: options.buildamd,
         },
         ...packages.map(package => ({
-            message: `Build package ${package} in CommonJs mode`,
+            message: `Building package ${package} in CommonJs mode`,
             callback: () => buildPackage(package, 'commonjs'),
             enabled: options.buildcommonjs,
         })),
         ...[false, true].map(isAmd => ({
-            message: `Pack ${getPackedFileName(false, isAmd)}`,
+            message: `Packing ${getPackedFileName(false, isAmd)}`,
             callback: async () => pack(false, isAmd),
             enabled: options.pack,
         })),
         ...[false, true].map(isAmd => ({
-            message: `Pack ${getPackedFileName(true, isAmd)}`,
+            message: `Packing ${getPackedFileName(true, isAmd)}`,
             callback: async () => pack(true, isAmd),
             enabled: options.packprod,
         })),
         ...[false, true].map(isAmd => ({
-            message: `Generate type definition file for ${isAmd ? 'AMD' : 'CommonJs'}`,
+            message: `Generating type definition file for ${isAmd ? 'AMD' : 'CommonJs'}`,
             callback: () => buildDts(isAmd),
             enabled: options.dts,
         })),
         {
-            message: 'Copy sample code',
+            message: 'Copying sample code',
             callback: copySample,
             enabled: options.copysample,
         },
         {
-            message: 'Build demo site',
+            message: 'Building demo site',
             callback: buildDemoSite,
             enabled: options.builddemo,
         },
         {
-            message: 'Publish to npm',
+            message: 'Publishing to npm',
             callback: publish,
             enabled: options.publish,
         },

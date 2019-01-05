@@ -1,17 +1,10 @@
 export { default as NodeBlockElement } from './blockElements/NodeBlockElement';
 export { default as getBlockElementAtNode } from './blockElements/getBlockElementAtNode';
-export {
-    getFirstBlockElement,
-    getFirstLastBlockElement,
-    getLastBlockElement,
-} from './blockElements/getFirstLastBlockElement';
+export { default as getFirstLastBlockElement } from './blockElements/getFirstLastBlockElement';
 export { default as StartEndBlockElement } from './blockElements/StartEndBlockElement';
 
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
 export { default as PositionContentSearcher } from './contentTraverser/PositionContentSearcher';
-
-export { getNextLeafSibling, getPreviousLeafSibling } from './utils/getLeafSibling';
-export { getFirstLeafNode, getLastLeafNode } from './utils/getLeafNode';
 
 export { default as getInlineElementAtNode } from './inlineElements/getInlineElementAtNode';
 export { default as ImageInlineElement } from './inlineElements/ImageInlineElement';
@@ -39,11 +32,12 @@ export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
 export { default as isVoidHtmlElement } from './utils/isVoidHtmlElement';
 export { default as matchLink } from './utils/matchLink';
-export { default as matchWhiteSpaces } from './utils/matchWhiteSpaces';
 export { default as queryElements } from './utils/queryElements';
 export { default as splitParentNode, splitBalancedNodeRange } from './utils/splitParentNode';
 export { default as unwrap } from './utils/unwrap';
 export { default as wrap } from './utils/wrap';
+export { getNextLeafSibling, getPreviousLeafSibling } from './utils/getLeafSibling';
+export { getFirstLeafNode, getLastLeafNode } from './utils/getLeafNode';
 
 export { default as VTable, VCell } from './table/VTable';
 

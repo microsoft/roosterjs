@@ -1,7 +1,13 @@
 import ContentTraverser from './ContentTraverser';
 import createRange from '../selection/createRange';
-import matchWhiteSpaces from '../utils/matchWhiteSpaces';
 import { InlineElement, NodePosition } from 'roosterjs-editor-types';
+
+// White space matching regex. It matches following chars:
+// \s: white space
+// \u00A0: no-breaking white space
+// \u200B: zero width space
+// \u3000: full width space (which can come from JPN IME)
+const WHITESPACE_REGEX = /[\s\u00A0\u200B\u3000]+([^\s\u00A0\u200B\u3000]*)$/i;
 
 /**
  * The class that helps search content around a position
@@ -36,7 +42,7 @@ export default class PositionContentSearcher {
      * @param rootNode Root node of the whole scope
      * @param position Start position
      */
-    constructor(private rootNode: Node, private position: NodePosition) {}
+    constructor(private rootNode: Node, private position: NodePosition) { }
 
     /**
      * Get the word before position. The word is determined by scanning backwards till the first white space, the portion
@@ -189,7 +195,7 @@ export default class PositionContentSearcher {
                 if (!this.word) {
                     // Match on the white space, the portion after space is on the index of 1 of the matched result
                     // (index at 0 is whole match result, index at 1 is the word)
-                    let matches = matchWhiteSpaces(textContent);
+                    let matches = WHITESPACE_REGEX.exec(textContent);
                     if (matches && matches.length == 2) {
                         this.word = matches[1] + this.text;
                     }

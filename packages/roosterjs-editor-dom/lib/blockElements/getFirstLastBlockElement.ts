@@ -7,7 +7,7 @@ import getBlockElementAtNode from './getBlockElementAtNode';
  * @param rootNode The root node to get BlockElement from
  * @param isFirst True to get first BlockElement, false to get last BlockElement
  */
-export function getFirstLastBlockElement(rootNode: Node, isFirst: boolean): BlockElement {
+export default function getFirstLastBlockElement(rootNode: Node, isFirst: boolean): BlockElement {
     let node = rootNode;
     do {
         node = node && (isFirst ? node.firstChild : node.lastChild);
