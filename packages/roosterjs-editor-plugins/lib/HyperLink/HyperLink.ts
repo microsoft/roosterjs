@@ -26,7 +26,7 @@ export default class HyperLink implements EditorPlugin {
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'hyperlink';
+        return 'Hyperlink';
     }
 
     /**

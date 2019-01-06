@@ -25,3 +25,8 @@ export {
     clearContentSearcherCache,
 } from './eventApi/cacheGetContentSearcher';
 export { default as cacheGetElementAtCursor } from './eventApi/cacheGetElementAtCursor';
+export {
+    default as ContentEditFeature,
+    GenericContentEditFeature,
+    ContentEditFeatureKeys,
+} from './editor/ContentEditFeature';

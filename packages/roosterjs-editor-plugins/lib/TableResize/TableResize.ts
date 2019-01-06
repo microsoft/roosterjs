@@ -37,7 +37,7 @@ export default class TableResize implements EditorPlugin {
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'tableresize';
+        return 'TableResize';
     }
 
     /**

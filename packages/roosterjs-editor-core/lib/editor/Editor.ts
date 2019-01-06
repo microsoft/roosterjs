@@ -1,6 +1,7 @@
 import createEditorCore from './createEditorCore';
 import EditorCore from './EditorCore';
 import EditorOptions from './EditorOptions';
+import { GenericContentEditFeature } from './ContentEditFeature';
 import { getRangeFromSelectionPath, getSelectionPath } from 'roosterjs-editor-dom';
 import {
     BlockElement,
@@ -75,7 +76,12 @@ export default class Editor {
             this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
         ];
 
-        // 6. Make the container editable and set its selection styles
+        // 6. Add additional content edit features to the editor if specified
+        if (options.additionalEditFeatures) {
+            options.additionalEditFeatures.forEach(feature => this.addContentEditFeature(feature));
+        }
+
+        // 7. Make the container editable and set its selection styles
         if (!options.omitContentEditableAttributeChanges && !contentDiv.isContentEditable) {
             contentDiv.setAttribute('contenteditable', 'true');
             let styles = contentDiv.style;
@@ -83,7 +89,7 @@ export default class Editor {
             this.contenteditableChanged = true;
         }
 
-        // 7. Disable these operations for firefox since its behavior is usually wrong
+        // 8. Disable these operations for firefox since its behavior is usually wrong
         // Catch any possible exception since this should not block the initialization of editor
         try {
             this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, <string>(
@@ -94,7 +100,7 @@ export default class Editor {
             >(<any>false));
         } catch (e) {}
 
-        // 8. Let plugins know that we are ready
+        // 9. Let plugins know that we are ready
         this.triggerEvent(
             {
                 eventType: PluginEventType.EditorReady,
@@ -102,7 +108,7 @@ export default class Editor {
             true /*broadcast*/
         );
 
-        // 9. Before give editor to user, make sure there is at least one DIV element to accept typing
+        // 10. Before give editor to user, make sure there is at least one DIV element to accept typing
         this.core.corePlugin.ensureTypeInElement(new Position(contentDiv, PositionType.Begin));
     }
 
@@ -779,6 +785,14 @@ export default class Editor {
         } else {
             this.core.contentDiv.setAttribute(name, value);
         }
+    }
+
+    /**
+     * Add a Content Edit feature. This is mostly called from ContentEdit plugin
+     * @param feature The feature to add
+     */
+    public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
+        this.core.corePlugin.addFeature(feature);
     }
 
     //#endregion

@@ -1,7 +1,8 @@
 import EditorPlugin from './EditorPlugin';
 import UndoService from './UndoService';
 import { CoreApiMap } from './EditorCore';
-import { DefaultFormat } from 'roosterjs-editor-types';
+import { DefaultFormat, PluginEvent } from 'roosterjs-editor-types';
+import { GenericContentEditFeature } from './ContentEditFeature';
 
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class
@@ -51,6 +52,11 @@ interface EditorOptions {
      * Default value is null
      */
     coreApiOverride?: Partial<CoreApiMap>;
+
+    /**
+     * Additional content edit features
+     */
+    additionalEditFeatures?: GenericContentEditFeature<PluginEvent>[];
 }
 
 export default EditorOptions;

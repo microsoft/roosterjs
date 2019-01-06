@@ -1,13 +1,9 @@
+import ContentEditFeatures, { getDefaultContentEditFeatures } from './ContentEditFeatures';
 import { AutoLink, UnlinkWhenBackspaceAfterLink } from './features/autoLinkFeatures';
 import { DefaultShortcut } from './features/shortcutFeatures';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { Editor, EditorPlugin, GenericContentEditFeature } from 'roosterjs-editor-core';
+import { PluginEvent } from 'roosterjs-editor-types';
 import { TabInTable, UpDownInTable } from './features/tableFeatures';
-import ContentEditFeatures, {
-    getDefaultContentEditFeatures,
-    GenericContentEditFeature,
-    Keys,
-} from './ContentEditFeatures';
 
 import {
     AutoBullet,
@@ -37,8 +33,6 @@ import {
  */
 export default class ContentEdit implements EditorPlugin {
     private editor: Editor;
-    private featureMap: { [key: number]: GenericContentEditFeature<PluginEvent>[] } = {};
-    private currentFeature: GenericContentEditFeature<PluginEvent>;
 
     /**
      * Create instance of ContentEdit plugin
@@ -50,7 +44,7 @@ export default class ContentEdit implements EditorPlugin {
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'contentedit';
+        return 'ContentEdit';
     }
 
     /**
@@ -59,34 +53,7 @@ export default class ContentEdit implements EditorPlugin {
      */
     public initialize(editor: Editor): void {
         this.editor = editor;
-        let featureSet = this.featureSet || getDefaultContentEditFeatures();
-        [
-            IndentWhenTab,
-            OutdentWhenShiftTab,
-            OutdentWhenBackOn1stEmptyLine,
-            OutdentWhenEnterOnEmptyLine,
-            MergeInNewLine,
-            UnquoteWhenBackOnEmpty1stLine,
-            UnquoteWhenEnterOnEmptyLine,
-            TabInTable,
-            UpDownInTable,
-            AutoBullet,
-            AutoLink,
-            UnlinkWhenBackspaceAfterLink,
-            DefaultShortcut,
-            getSmartOrderedList(featureSet.smartOrderedListStyles),
-        ]
-            .filter(feature => featureSet[feature.featureFlag])
-            .forEach(feature => {
-                if (feature.initialize) {
-                    feature.initialize(this.editor);
-                }
-                feature.keys.forEach(key => {
-                    let array = this.featureMap[key] || [];
-                    array.push(feature);
-                    this.featureMap[key] = array;
-                });
-            });
+        this.getFilteredFeatures().forEach(feature => this.editor.addContentEditFeature(feature));
     }
 
     /**
@@ -96,54 +63,27 @@ export default class ContentEdit implements EditorPlugin {
         this.editor = null;
     }
 
-    /**
-     * Check if the plugin should handle the given event exclusively.
-     * Handle an event exclusively means other plugin will not receive this event in
-     * onPluginEvent method.
-     * If two plugins will return true in willHandleEventExclusively() for the same event,
-     * the final result depends on the order of the plugins are added into editor
-     * @param event The event to check
-     */
-    public willHandleEventExclusively(event: PluginEvent): boolean {
-        this.findFeature(event);
-        return !!this.currentFeature;
-    }
-
-    /**
-     * Handle events triggered from editor
-     * @param event PluginEvent object
-     */
-    public onPluginEvent(event: PluginEvent) {
-        // ContentChangedEvent will be broadcast so we won't see it in willHandleEventExclusively(),
-        // we need to check it again here
-        if (!this.currentFeature && event.eventType == PluginEventType.ContentChanged) {
-            this.findFeature(event);
-        }
-
-        if (this.currentFeature) {
-            let feature = this.currentFeature;
-            this.currentFeature = null;
-            feature.handleEvent(event, this.editor);
-        }
-    }
-
-    private findFeature(event: PluginEvent) {
-        let hasFunctionKey = false;
-        let features: GenericContentEditFeature<PluginEvent>[];
-
-        if (event.eventType == PluginEventType.KeyDown) {
-            let rawEvent = event.rawEvent;
-            hasFunctionKey = rawEvent.ctrlKey || rawEvent.altKey || rawEvent.metaKey;
-            features = this.featureMap[rawEvent.which];
-        } else if (event.eventType == PluginEventType.ContentChanged) {
-            features = this.featureMap[Keys.CONTENTCHANGED];
-        }
-        this.currentFeature =
-            features &&
-            features.filter(
-                feature =>
-                    (feature.allowFunctionKeys || !hasFunctionKey) &&
-                    feature.shouldHandleEvent(event, this.editor)
-            )[0];
+    private getFilteredFeatures(): GenericContentEditFeature<PluginEvent>[] {
+        let featureSet = this.featureSet || getDefaultContentEditFeatures();
+        let allFeatures: {
+            [key in keyof Partial<ContentEditFeatures>]: GenericContentEditFeature<PluginEvent>
+        } = {
+            indentWhenTab: IndentWhenTab,
+            outdentWhenShiftTab: OutdentWhenShiftTab,
+            outdentWhenBackspaceOnEmptyFirstLine: OutdentWhenBackOn1stEmptyLine,
+            outdentWhenEnterOnEmptyLine: OutdentWhenEnterOnEmptyLine,
+            mergeInNewLineWhenBackspaceOnFirstChar: MergeInNewLine,
+            unquoteWhenBackspaceOnEmptyFirstLine: UnquoteWhenBackOnEmpty1stLine,
+            unquoteWhenEnterOnEmptyLine: UnquoteWhenEnterOnEmptyLine,
+            tabInTable: TabInTable,
+            upDownInTable: UpDownInTable,
+            autoBullet: AutoBullet,
+            autoLink: AutoLink,
+            unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink,
+            defaultShortcut: DefaultShortcut,
+            smartOrderedList: getSmartOrderedList(featureSet.smartOrderedListStyles),
+        };
+        let keys = Object.keys(allFeatures) as (keyof ContentEditFeatures)[];
+        return keys.filter(key => featureSet[key]).map(key => allFeatures[key]);
     }
 }

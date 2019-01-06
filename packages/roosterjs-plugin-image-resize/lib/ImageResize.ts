@@ -53,7 +53,7 @@ export default class ImageResize implements EditorPlugin {
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'imageresize';
+        return 'ImageResize';
     }
 
     /**

@@ -40,7 +40,7 @@ class Watermark implements EditorPlugin {
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'watermark';
+        return 'Watermark';
     }
 
     /**
