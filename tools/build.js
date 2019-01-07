@@ -13,6 +13,7 @@ var packagesPath = path.join(rootPath, 'packages');
 var nodeModulesPath = path.join(rootPath, 'node_modules');
 var typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 var distPath = path.join(rootPath, 'dist');
+var roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
 
 // Packages
 var packages = collectPackages(packagesPath);
@@ -82,10 +83,16 @@ function collectPackages() {
 }
 
 async function clean() {
-    var rimrafPath = path.join(nodeModulesPath, 'rimraf/bin');
-    exec(`node ${rimrafPath} ${distPath}`, {
-        stdio: 'inherit',
-        cwd: rootPath,
+    var rimraf = require('rimraf');
+    await new Promise((resolve, reject) => {
+        rimraf(distPath, err => {
+            if (err) {
+                reject(err);
+            } else {
+                // Wait a while to avoid creating folder failure
+                setTimeout(resolve, 200);
+            }
+        });
     });
 }
 
@@ -106,7 +113,7 @@ function checkDependency() {
         var content = fs.readFileSync(filename).toString();
         var reg = /from\s+'([^']+)'/g;
         var match;
-        while (match = reg.exec(content)) {
+        while ((match = reg.exec(content))) {
             var nextfile = match[1];
             if (nextfile && nextfile[0] == '.') {
                 processFile(path.resolve(dir, nextfile), files.slice());
@@ -198,14 +205,13 @@ function getPackedFileName(isProduction, isAmd) {
 }
 
 async function pack(isProduction, isAmd) {
-    var packFilePath = path.join(distPath, 'roosterjs/dist');
     var filename = getPackedFileName(isProduction, isAmd);
     var webpackConfig = {
         entry: path.join(packagesPath, 'roosterjs/lib/index.ts'),
         devtool: 'source-map',
         output: {
             filename,
-            path: packFilePath,
+            path: roosterJsDistPath,
             libraryTarget: isAmd ? 'amd' : undefined,
             library: isAmd ? undefined : 'roosterjs',
         },
@@ -234,7 +240,7 @@ async function pack(isProduction, isAmd) {
         },
     };
 
-    var targetFile = path.join(packFilePath, filename);
+    var targetFile = path.join(roosterJsDistPath, filename);
 
     await new Promise((resolve, reject) => {
         webpack(webpackConfig).run(err => {
@@ -249,15 +255,14 @@ async function pack(isProduction, isAmd) {
 }
 
 function countWord() {
-    var targetPath = path.join(distPath, 'roosterjs/dist');
-    var inputFile = path.join(targetPath, 'rooster-min.js');
-    var outputFile = path.join(targetPath, 'wordstat.txt');
+    var inputFile = path.join(roosterJsDistPath, 'rooster-min.js');
+    var outputFile = path.join(roosterJsDistPath, 'wordstat.txt');
     var file = fs.readFileSync(inputFile).toString();
     var reg = /[a-zA-Z0-9_]+/g;
     var match;
     var map = {};
 
-    while (match = reg.exec(file)) {
+    while ((match = reg.exec(file))) {
         map[match] = (map[match] || 0) + 1;
     }
 
@@ -273,9 +278,8 @@ function countWord() {
 
 function exploreSourceMap() {
     var commandPath = path.join(nodeModulesPath, 'source-map-explorer/index.js');
-    var targetPath = path.join(distPath, 'roosterjs/dist');
-    var inputFile = path.join(targetPath, 'rooster.js');
-    var targetFile = path.join(targetPath, 'sourceMap.html');
+    var inputFile = path.join(roosterJsDistPath, 'rooster.js');
+    var targetFile = path.join(roosterJsDistPath, 'sourceMap.html');
     exec(`node ${commandPath} -m --html ${inputFile} > ${targetFile}`, {
         stdio: 'inherit',
         cwd: rootPath,
@@ -548,4 +552,8 @@ function parseOptions(additionalParams) {
     return options;
 }
 
-buildAll(parseOptions(['pack']));
+// For debugging, put the build options below:
+// e.g.
+// let options = ['pack', 'packprod'];
+let options = [];
+buildAll(parseOptions(options));

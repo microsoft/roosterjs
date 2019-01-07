@@ -1,4 +1,4 @@
-import EditorCore, { GetCustomData } from '../editor/EditorCore';
+import EditorCore, { GetCustomData } from '../interfaces/EditorCore';
 
 const getCustomData: GetCustomData = <T>(
     core: EditorCore,

@@ -1,19 +1,8 @@
+import { createEditor } from 'roosterjs';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { createEditor } from 'roosterjs';
 
-const NUMBERS = [
-    'zero',
-    'one',
-    'two',
-    'three',
-    'four',
-    'five',
-    'six',
-    'seven',
-    'eight',
-    'nine',
-];
+const NUMBERS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
 const KEY_0 = 0x30;
 const KEY_9 = 0x39;
 
@@ -41,6 +30,6 @@ class MyPlugin implements EditorPlugin {
     }
 }
 
-let contentDiv = document.getElementById("contentDiv") as HTMLDivElement;
+let contentDiv = document.getElementById('contentDiv') as HTMLDivElement;
 let myPlugin = new MyPlugin();
-let editor = createEditor(contentDiv, [ myPlugin ]);
+let editor = createEditor(contentDiv, [myPlugin]);

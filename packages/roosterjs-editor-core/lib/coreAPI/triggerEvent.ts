@@ -1,5 +1,5 @@
-import EditorCore, { TriggerEvent } from '../editor/EditorCore';
-import EditorPlugin from '../editor/EditorPlugin';
+import EditorCore, { TriggerEvent } from '../interfaces/EditorCore';
+import EditorPlugin from '../interfaces/EditorPlugin';
 import { PluginEvent } from 'roosterjs-editor-types';
 
 const triggerEvent: TriggerEvent = (
@@ -7,8 +7,11 @@ const triggerEvent: TriggerEvent = (
     pluginEvent: PluginEvent,
     broadcast: boolean
 ) => {
-    if (broadcast || !core.plugins.some(plugin => handledExclusively(pluginEvent, plugin))) {
-        core.plugins.forEach(plugin => {
+    if (
+        broadcast ||
+        !core.eventHandlerPlugins.some(plugin => handledExclusively(pluginEvent, plugin))
+    ) {
+        core.eventHandlerPlugins.forEach(plugin => {
             if (plugin.onPluginEvent) {
                 plugin.onPluginEvent(pluginEvent);
             }

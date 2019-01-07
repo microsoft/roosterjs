@@ -5,7 +5,7 @@ import {
     Editor,
     ContentEditFeature,
     GenericContentEditFeature,
-    ContentEditFeatureKeys as Keys,
+    Keys,
 } from 'roosterjs-editor-core';
 import {
     ContentChangedEvent,

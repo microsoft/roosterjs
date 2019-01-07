@@ -1,5 +1,5 @@
 import createEditorCore from '../../editor/createEditorCore';
-import EditorCore from '../../editor/EditorCore';
+import EditorCore from '../../interfaces/EditorCore';
 import hasFocus from '../../coreAPI/hasFocus';
 
 describe('hasFocus', () => {
@@ -11,7 +11,7 @@ describe('hasFocus', () => {
         document.body.appendChild(div);
         core = createEditorCore(div, {});
         (<any>core).plugins = core.plugins.filter(
-            plugin => plugin != core.undo && plugin != core.corePlugin
+            plugin => plugin != core.corePlugins.undo && plugin != core.corePlugins.edit
         );
     });
 

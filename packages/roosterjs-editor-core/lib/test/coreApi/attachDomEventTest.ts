@@ -1,8 +1,8 @@
 import attachDomEvent from '../../coreAPI/attachDomEvent';
 import createEditorCore from '../../editor/createEditorCore';
 import Editor from '../../editor/Editor';
-import EditorCore from '../../editor/EditorCore';
-import EditorPlugin from '../../editor/EditorPlugin';
+import EditorCore from '../../interfaces/EditorCore';
+import EditorPlugin from '../../interfaces/EditorPlugin';
 import { PluginEvent, PluginEventType, PluginKeyboardEvent } from 'roosterjs-editor-types';
 
 class MockPlugin implements EditorPlugin {
@@ -25,7 +25,7 @@ describe('attachDomEvent', () => {
         document.body.appendChild(div);
         core = createEditorCore(div, {});
         (<any>core).plugins = core.plugins.filter(
-            plugin => plugin != core.undo && plugin != core.corePlugin
+            plugin => plugin != core.corePlugins.undo && plugin != core.corePlugins.edit
         );
     });
 

@@ -1,4 +1,4 @@
-import EditorCore, { Select } from '../editor/EditorCore';
+import EditorCore, { Select } from '../interfaces/EditorCore';
 import hasFocus from './hasFocus';
 import { Browser, contains, createRange, Position } from 'roosterjs-editor-dom';
 import { NodePosition, PositionType } from 'roosterjs-editor-types';

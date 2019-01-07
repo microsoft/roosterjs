@@ -19,5 +19,6 @@
     "prettier.trailingComma": "es5",
     "prettier.printWidth": 100,
     "typescript.extension.sortImports.sortOnSave": true,
-    "prettier.jsxBracketSameLine": true
+    "prettier.jsxBracketSameLine": true,
+    "typescript.extension.sortImports.maxNamedImportsInSingleLine": 4
 }

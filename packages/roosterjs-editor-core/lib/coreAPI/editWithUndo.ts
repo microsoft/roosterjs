@@ -1,4 +1,4 @@
-import EditorCore, { EditWithUndo } from '../editor/EditorCore';
+import EditorCore, { EditWithUndo } from '../interfaces/EditorCore';
 import { Position } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -16,7 +16,7 @@ const editWithUndo: EditWithUndo = (
     let data: any;
 
     if (!isNested) {
-        core.currentUndoSnapshot = core.undo.addUndoSnapshot();
+        core.currentUndoSnapshot = core.corePlugins.undo.addUndoSnapshot();
     }
 
     try {
@@ -29,7 +29,7 @@ const editWithUndo: EditWithUndo = (
             );
 
             if (!isNested) {
-                core.undo.addUndoSnapshot();
+                core.corePlugins.undo.addUndoSnapshot();
             }
         }
     } finally {

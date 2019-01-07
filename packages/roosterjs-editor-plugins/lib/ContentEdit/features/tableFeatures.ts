@@ -1,11 +1,11 @@
-import { contains, getTagOfNode, VTable } from 'roosterjs-editor-dom';
-import { PluginEvent, PositionType } from 'roosterjs-editor-types';
 import {
     cacheGetElementAtCursor,
-    Editor,
     ContentEditFeature,
-    ContentEditFeatureKeys as Keys,
-} from 'roosterjs-editor-core';
+    Editor,
+    Keys
+    } from 'roosterjs-editor-core';
+import { contains, getTagOfNode, VTable } from 'roosterjs-editor-dom';
+import { PluginEvent, PositionType } from 'roosterjs-editor-types';
 
 export const TabInTable: ContentEditFeature = {
     keys: [Keys.TAB],

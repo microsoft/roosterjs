@@ -1,11 +1,11 @@
 import { Browser } from 'roosterjs-editor-dom';
-import { FontSizeChange, PluginEventType, PluginKeyboardEvent } from 'roosterjs-editor-types';
 import {
     cacheGetEventData,
-    Editor,
     ContentEditFeature,
-    ContentEditFeatureKeys as Keys,
-} from 'roosterjs-editor-core';
+    Editor,
+    Keys
+    } from 'roosterjs-editor-core';
+import { FontSizeChange, PluginEventType, PluginKeyboardEvent } from 'roosterjs-editor-types';
 import {
     changeFontSize,
     toggleBold,

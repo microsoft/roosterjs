@@ -1,4 +1,4 @@
-import EditorCore, { InsertNode } from '../editor/EditorCore';
+import EditorCore, { InsertNode } from '../interfaces/EditorCore';
 import { ContentPosition, InsertOption, NodeType, PositionType } from 'roosterjs-editor-types';
 import {
     Position,

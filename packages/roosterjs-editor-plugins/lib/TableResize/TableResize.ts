@@ -1,9 +1,4 @@
-import {
-    contains,
-    fromHtml,
-    getComputedStyle,
-    VTable
-    } from 'roosterjs-editor-dom';
+import { contains, fromHtml, getComputedStyle, VTable } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     ContentPosition,

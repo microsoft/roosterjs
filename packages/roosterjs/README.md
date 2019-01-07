@@ -40,12 +40,13 @@ Rooster provides DOM level APIs (in `roosterjs-editor-dom`) and formatting APIs
 (in `roosterjs-editor-api`) to perform editing operations.
 
 `roosterjs-editor-dom` provides several levels of DOM operations:
-- Perform basic DOM operations such as `fromHtml()`, `wrap()`, `unwrap()`, ...
-- Wrap a given DOM node with `InlineElemen`t or `BlockElement` and perform
-  operations with DOM Walker API.
-- Perform DOM operations on a given scope using scopers.
-- Travel among `InlineElements` and `BlockElements` with scope using
-  ContentTraverser API.
+
+-   Perform basic DOM operations such as `fromHtml()`, `wrap()`, `unwrap()`, ...
+-   Wrap a given DOM node with `InlineElemen`t or `BlockElement` and perform
+    operations with DOM Walker API.
+-   Perform DOM operations on a given scope using scopers.
+-   Travel among `InlineElements` and `BlockElements` with scope using
+    ContentTraverser API.
 
 `roosterjs-editor-api` provides APIs for scenario-based operations triggered by
 user interaction.
@@ -62,15 +63,12 @@ an "a" is typed in the editor:
 
 ```typescript
 class HelloRooster implements EditorPlugin {
-    initialize(editor: Editor) {
-    }
+    initialize(editor: Editor) {}
 
-    dispose() {
-    }
+    dispose() {}
 
     onPluginEvent(e: PluginEvent) {
-        if ( e.eventType == PluginEventType.KeyPress &&
-            e.rawEvent.which == 65 ) {
+        if (e.eventType == PluginEventType.KeyPress && e.rawEvent.which == 65) {
             alert('Hello Rooster');
         }
     }
@@ -85,8 +83,7 @@ editor with default configurations.
 You should write this somewhere in your HTML DOM:
 
 ```html
-<div id='editor' style='width: 500px; height: 300px; border: solid 1px black'>
-</div>
+<div id="editor" style="width: 500px; height: 300px; border: solid 1px black"></div>
 ```
 
 You should then run these lines of code in the browser console:
@@ -108,19 +105,22 @@ In the `/sample/` folder is a sample editor that you can explore.
 To use the sample editor, follow these instructions:
 
 1. Get dependencies using npm.
-   ```cmd
-   npm install
-   ```
+
+    ```cmd
+    npm install
+    ```
 
 2. Build the source code.
-   ```
-   npm run build
-   ```
+
+    ```
+    npm run build
+    ```
 
 3. Start the sample editor.
-   ```
-   npm start
-   ```
+
+    ```
+    npm start
+    ```
 
 4. Navigate to the sample editor at http://localhost:3000/sample/sample.htm
 

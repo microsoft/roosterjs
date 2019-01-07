@@ -1,7 +1,7 @@
-import Editor from './Editor';
+import Editor from '../editor/Editor';
 import { ChangeSource, PluginEvent, PluginKeyboardEvent } from 'roosterjs-editor-types';
 
-export const enum ContentEditFeatureKeys {
+export const enum Keys {
     NULL = 0,
     BACKSPACE = 8,
     TAB = 9,

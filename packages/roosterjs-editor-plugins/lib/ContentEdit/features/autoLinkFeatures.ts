@@ -13,7 +13,7 @@ import {
     cacheGetContentSearcher,
     clearContentSearcherCache,
     GenericContentEditFeature,
-    ContentEditFeatureKeys as Keys,
+    Keys,
 } from 'roosterjs-editor-core';
 
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;

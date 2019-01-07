@@ -1,7 +1,7 @@
 import createEditorCore from './createEditorCore';
-import EditorCore from './EditorCore';
-import EditorOptions from './EditorOptions';
-import { GenericContentEditFeature } from './ContentEditFeature';
+import EditorCore from '../interfaces/EditorCore';
+import EditorOptions from '../interfaces/EditorOptions';
+import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import { getRangeFromSelectionPath, getSelectionPath } from 'roosterjs-editor-dom';
 import {
     BlockElement,
@@ -109,7 +109,9 @@ export default class Editor {
         );
 
         // 10. Before give editor to user, make sure there is at least one DIV element to accept typing
-        this.core.corePlugin.ensureTypeInElement(new Position(contentDiv, PositionType.Begin));
+        this.core.corePlugins.typeInContainer.ensureTypeInElement(
+            new Position(contentDiv, PositionType.Begin)
+        );
     }
 
     /**
@@ -628,7 +630,7 @@ export default class Editor {
      */
     public undo() {
         this.focus();
-        this.core.undo.undo();
+        this.core.corePlugins.undo.undo();
     }
 
     /**
@@ -636,7 +638,7 @@ export default class Editor {
      */
     public redo() {
         this.focus();
-        this.core.undo.redo();
+        this.core.corePlugins.undo.redo();
     }
 
     /**
@@ -662,21 +664,21 @@ export default class Editor {
      * @param changeSource Chagne source of ContentChangedEvent. If not passed, no ContentChangedEvent will be  triggered
      */
     public performAutoComplete(callback: () => any, changeSource?: ChangeSource | string) {
-        this.core.corePlugin.performAutoComplete(callback, changeSource);
+        this.core.corePlugins.edit.performAutoComplete(callback, changeSource);
     }
 
     /**
      * Whether there is an available undo snapshot
      */
     public canUndo(): boolean {
-        return this.core.undo.canUndo();
+        return this.core.corePlugins.undo.canUndo();
     }
 
     /**
      * Whether there is an available redo snapshot
      */
     public canRedo(): boolean {
-        return this.core.undo.canRedo();
+        return this.core.corePlugins.undo.canRedo();
     }
 
     //#endregion
@@ -708,7 +710,7 @@ export default class Editor {
      * @returns True if editor is in IME input sequence, otherwise false
      */
     public isInIME(): boolean {
-        return this.core.corePlugin.isInIME();
+        return this.core.corePlugins.ime.isInIME();
     }
 
     /**
@@ -792,7 +794,7 @@ export default class Editor {
      * @param feature The feature to add
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
-        this.core.corePlugin.addFeature(feature);
+        this.core.corePlugins.edit.addFeature(feature);
     }
 
     //#endregion

@@ -1,4 +1,4 @@
-import EditorCore, { AttachDomEvent } from '../editor/EditorCore';
+import EditorCore, { AttachDomEvent } from '../interfaces/EditorCore';
 import { PluginDomEvent, PluginEventType } from 'roosterjs-editor-types';
 
 const attachDomEvent: AttachDomEvent = (

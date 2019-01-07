@@ -1,4 +1,4 @@
-import EditorCore, { HasFocus } from '../editor/EditorCore';
+import EditorCore, { HasFocus } from '../interfaces/EditorCore';
 import { contains } from 'roosterjs-editor-dom';
 
 const hasFocus: HasFocus = (core: EditorCore) => {
