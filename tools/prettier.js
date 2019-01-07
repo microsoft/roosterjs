@@ -10,7 +10,7 @@ function run(target) {
         `node node_modules/prettier/bin-prettier --tab-width 4 --print-width 100 --write --trailing-comma es5 --jsx-bracket-same-line --single-quote --end-of-line crlf "` +
             target +
             '"',
-        options,
+        options
     );
 }
 

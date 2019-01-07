@@ -7,7 +7,6 @@ import { BlockElement } from 'roosterjs-editor-types';
  * In most cases, it corresponds to an HTML block level element, i.e. P, DIV, LI, TD etc.
  */
 export default class NodeBlockElement implements BlockElement {
-
     constructor(private element: HTMLElement) {}
 
     /**

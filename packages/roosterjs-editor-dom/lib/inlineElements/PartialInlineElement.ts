@@ -1,13 +1,8 @@
 import applyTextStyle from '../utils/applyTextStyle';
 import createRange from '../selection/createRange';
 import Position from '../selection/Position';
+import { BlockElement, InlineElement, NodePosition, PositionType } from 'roosterjs-editor-types';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../utils/getLeafSibling';
-import {
-    BlockElement,
-    InlineElement,
-    NodePosition,
-    PositionType,
-} from 'roosterjs-editor-types';
 
 /**
  * This is a special version of inline element that identifies a section of an inline element
@@ -17,13 +12,11 @@ import {
  * It also offers some special methods that others don't have, i.e. nextInlineElement etc.
  */
 class PartialInlineElement implements InlineElement {
-
     constructor(
         private inlineElement: InlineElement,
         private start?: NodePosition,
         private end?: NodePosition
-    ) {
-    }
+    ) {}
 
     /**
      * Get the full inline element that this partial inline decorates

@@ -5,12 +5,7 @@ import getNextPreviousInlineElement from '../inlineElements/getNextPreviousInlin
 import SelectionBlockScoper from './SelectionBlockScoper';
 import SelectionScoper from './SelectionScoper';
 import TraversingScoper from './TraversingScoper';
-import {
-    BlockElement,
-    ContentPosition,
-    InlineElement,
-    NodePosition
-    } from 'roosterjs-editor-types';
+import { BlockElement, ContentPosition, InlineElement, NodePosition } from 'roosterjs-editor-types';
 import { getInlineElementBeforeAfter } from '../inlineElements/getInlineElementBeforeAfter';
 import { getLeafSibling } from '../utils/getLeafSibling';
 

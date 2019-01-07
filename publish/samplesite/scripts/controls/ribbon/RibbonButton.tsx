@@ -2,8 +2,8 @@ import * as React from 'react';
 import MainPaneBase from '../MainPaneBase';
 import RibbonButtonType, { DropDownRenderer } from './RibbonButtonType';
 import RibbonPlugin from './RibbonPlugin';
-import { FormatState } from 'roosterjs-editor-types';
 import { Browser } from 'roosterjs-editor-dom';
+import { FormatState } from 'roosterjs-editor-types';
 
 const styles = require('./RibbonButton.scss');
 let currentPusingButton: RibbonButtonType;
@@ -50,16 +50,13 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
                     onClick={button.dropDownItems ? this.onShowDropDown : this.onMouseClick}
                     className={className}
                     onMouseDown={this.onMouseDown}
-                    onMouseUp={this.onMouseUp}
-                >
+                    onMouseUp={this.onMouseUp}>
                     <img src={button.image} width={32} height={32} title={button.title} />
                 </button>
-                {
-                    button.dropDownItems &&
+                {button.dropDownItems &&
                     this.state.isDropDownShown &&
-                    this.renderDropDownItems(button.dropDownItems, button.dropDownRenderer)
-                }
-            </span >
+                    this.renderDropDownItems(button.dropDownItems, button.dropDownRenderer)}
+            </span>
         );
     }
 
@@ -84,7 +81,7 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
         ) {
             this.onExecute();
         }
-    }
+    };
 
     private onExecute = (value?: string) => {
         const { button, plugin } = this.props;
@@ -131,14 +128,13 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
                             )}
                         </div>
                     ) : (
-                            <div
-                                key={key}
-                                onClick={() => this.onExecute(key)}
-                                className={styles.dropDownItem}
-                            >
-                                {items[key]}
-                            </div>
-                        )
+                        <div
+                            key={key}
+                            onClick={() => this.onExecute(key)}
+                            className={styles.dropDownItem}>
+                            {items[key]}
+                        </div>
+                    )
                 )}
             </div>
         );

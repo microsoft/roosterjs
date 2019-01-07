@@ -16,10 +16,10 @@ export default class SanitizerPane extends React.Component<{}, {}> {
                 <div>
                     <button className={styles.button} onClick={this.inline}>
                         Inline CSS
-                </button>
+                    </button>
                     <button className={styles.button} onClick={this.sanitize}>
                         Sanitize
-                </button>
+                    </button>
                 </div>
                 <h3>Result</h3>
                 <textarea className={styles.textarea} ref={this.result} />
@@ -28,7 +28,6 @@ export default class SanitizerPane extends React.Component<{}, {}> {
     }
 
     private inline = () => {
-
         this.result.current.value = this.sanitizer.exec(this.source.current.value, true);
     };
 

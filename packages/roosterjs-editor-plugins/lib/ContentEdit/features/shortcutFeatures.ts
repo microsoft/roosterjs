@@ -1,10 +1,5 @@
 import { Browser } from 'roosterjs-editor-dom';
-import {
-    cacheGetEventData,
-    ContentEditFeature,
-    Editor,
-    Keys
-    } from 'roosterjs-editor-core';
+import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
 import { FontSizeChange, PluginEventType, PluginKeyboardEvent } from 'roosterjs-editor-types';
 import {
     changeFontSize,

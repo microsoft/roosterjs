@@ -3,10 +3,10 @@ module.exports = {
     output: {
         filename: 'start.js',
         path: __dirname,
-        publicPath: '.'
+        publicPath: '.',
     },
     resolve: {
         extensions: ['.js'],
-        modules: ['./']
+        modules: ['./'],
     },
-}
+};

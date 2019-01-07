@@ -1,7 +1,7 @@
 import * as DomTestHelper from '../DomTestHelper';
+import getNextPreviousInlineElement from '../../inlineElements/getNextPreviousInlineElement';
 import Position from '../../selection/Position';
 import { InlineElement, PositionType } from 'roosterjs-editor-types';
-import getNextPreviousInlineElement from '../../inlineElements/getNextPreviousInlineElement';
 
 let testID = 'getNextPreviousInlineElement';
 

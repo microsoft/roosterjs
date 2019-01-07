@@ -21,26 +21,23 @@ export default class TitleBar extends React.Component<TitleBarProps, {}> {
                 <div className={styles.version}>{(window as WindowHack).roosterJsVer || ''}</div>
                 <div className={styles.links}>
                     <a
-                        href='https://github.com/microsoft/roosterjs'
-                        target='_blank'
-                        className={styles.link}
-                    >
+                        href="https://github.com/microsoft/roosterjs"
+                        target="_blank"
+                        className={styles.link}>
                         RoosterJs on Github
                     </a>
                     &nbsp;
                     <a
-                        href='https://www.npmjs.com/package/roosterjs'
-                        target='_blank'
-                        className={styles.link}
-                    >
+                        href="https://www.npmjs.com/package/roosterjs"
+                        target="_blank"
+                        className={styles.link}>
                         RoosterJs on NPM
                     </a>
                     &nbsp;
                     <a
-                        href='https://github.com/Microsoft/roosterjs/wiki'
-                        target='_blank'
-                        className={styles.link}
-                    >
+                        href="https://github.com/Microsoft/roosterjs/wiki"
+                        target="_blank"
+                        className={styles.link}>
                         Documentations
                     </a>
                 </div>

@@ -32,8 +32,7 @@ export default class BlockElementsPane extends React.Component<
                     <pre
                         key={index}
                         className={styles.block}
-                        onMouseOver={() => this.props.onMouseOver(block)}
-                    >
+                        onMouseOver={() => this.props.onMouseOver(block)}>
                         {getTextContent(block) || '<NO CONTENT>'}
                     </pre>
                 ))}

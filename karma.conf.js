@@ -6,12 +6,10 @@ module.exports = function(config) {
             'karma-chrome-launcher',
             'karma-phantomjs-launcher',
             'karma-jasmine',
-            'karma-sourcemap-loader'
+            'karma-sourcemap-loader',
         ],
         browsers: ['Chrome'],
-        files: [
-            'karma.tests.js'
-        ],
+        files: ['karma.tests.js'],
         frameworks: ['jasmine'],
         preprocessors: {
             'karma.tests.js': ['webpack', 'sourcemap'],
@@ -22,9 +20,9 @@ module.exports = function(config) {
         autoWatch: true,
 
         // to avoid DISCONNECTED messages
-        browserDisconnectTimeout : 10000, // default 2000
-        browserDisconnectTolerance : 1, // default 0
-        browserNoActivityTimeout : 60000, //default 10000
+        browserDisconnectTimeout: 10000, // default 2000
+        browserDisconnectTolerance: 1, // default 0
+        browserNoActivityTimeout: 60000, //default 10000
 
         singleRun: true,
         captureTimeout: 60000,
@@ -33,24 +31,26 @@ module.exports = function(config) {
             devtool: 'inline-source-map',
             mode: 'development',
             module: {
-                rules: [{
-                    test: /\.ts$/,
-                    loader: 'ts-loader',
-                    options: {
-                        compilerOptions: {
-                            rootDir: __dirname
+                rules: [
+                    {
+                        test: /\.ts$/,
+                        loader: 'ts-loader',
+                        options: {
+                            compilerOptions: {
+                                rootDir: __dirname,
+                            },
                         },
-                    }
-                }]
+                    },
+                ],
             },
             resolve: {
                 extensions: ['.ts', '.js'],
-                modules: ['./packages']
-            }
+                modules: ['./packages'],
+            },
         },
 
         // Concurrency level
         // how many browser should be started simultaneous
-        concurrency: Infinity
-    })
-}
+        concurrency: Infinity,
+    });
+};

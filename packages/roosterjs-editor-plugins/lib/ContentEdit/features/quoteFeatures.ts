@@ -1,9 +1,4 @@
-import {
-    cacheGetEventData,
-    ContentEditFeature,
-    Editor,
-    Keys
-    } from 'roosterjs-editor-core';
+import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
 import { PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
 import {
     getTagOfNode,

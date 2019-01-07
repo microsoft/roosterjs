@@ -1,9 +1,4 @@
-import {
-    cacheGetElementAtCursor,
-    ContentEditFeature,
-    Editor,
-    Keys
-    } from 'roosterjs-editor-core';
+import { cacheGetElementAtCursor, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
 import { contains, getTagOfNode, VTable } from 'roosterjs-editor-dom';
 import { PluginEvent, PositionType } from 'roosterjs-editor-types';
 
