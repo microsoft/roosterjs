@@ -1,6 +1,5 @@
 import attachDomEvent from '../../coreAPI/attachDomEvent';
 import createEditorCore from '../../editor/createEditorCore';
-import Editor from '../../editor/Editor';
 import EditorCore from '../../interfaces/EditorCore';
 import EditorPlugin from '../../interfaces/EditorPlugin';
 import { PluginEvent, PluginEventType, PluginKeyboardEvent } from 'roosterjs-editor-types';
@@ -10,7 +9,7 @@ class MockPlugin implements EditorPlugin {
     getName() {
         return 'Mock';
     }
-    initialize(editor: Editor) {}
+    initialize() {}
     dispose() {}
     onPluginEvent(e: PluginEvent) {
         this.lastEvent = e;
@@ -24,9 +23,7 @@ describe('attachDomEvent', () => {
         div = document.createElement('div');
         document.body.appendChild(div);
         core = createEditorCore(div, {});
-        (<any>core).plugins = core.plugins.filter(
-            plugin => plugin != core.corePlugins.undo && plugin != core.corePlugins.edit
-        );
+        (<any>core).eventHandlerPlugins = [];
     });
 
     afterEach(() => {
@@ -59,6 +56,7 @@ describe('attachDomEvent', () => {
     it('Check event dispatched to plugin', () => {
         let mockPlugin = new MockPlugin();
         core.plugins.push(mockPlugin);
+        core.eventHandlerPlugins.push(mockPlugin);
         expect(mockPlugin.lastEvent).toBeNull();
 
         let disposer = attachDomEvent(core, 'keydown', PluginEventType.KeyDown);
@@ -76,6 +74,7 @@ describe('attachDomEvent', () => {
     it('Check event not dispatched to plugin after dispose', () => {
         let mockPlugin = new MockPlugin();
         core.plugins.push(mockPlugin);
+        core.eventHandlerPlugins.push(mockPlugin);
         expect(mockPlugin.lastEvent).toBeNull();
 
         let disposer = attachDomEvent(core, 'keydown', PluginEventType.KeyDown);

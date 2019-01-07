@@ -420,10 +420,10 @@ class Runner {
         (async () => {
             console.log(`Start building roosterjs version ${version}\n`);
 
-            var bar = new ProgressBar(':bar :message (:current/:total finished)', {
+            var bar = new ProgressBar('[:bar] (:current/:total finished) :message', {
                 total: this.tasks.length,
-                width: 80,
-                complete: '>',
+                width: 40,
+                complete: '#',
             });
 
             for (var i = 0; i < this.tasks.length; i++) {
