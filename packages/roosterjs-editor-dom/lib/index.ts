@@ -11,7 +11,6 @@ export { default as ImageInlineElement } from './inlineElements/ImageInlineEleme
 export { default as LinkInlineElement } from './inlineElements/LinkInlineElement';
 export { default as NodeInlineElement } from './inlineElements/NodeInlineElement';
 export { default as PartialInlineElement } from './inlineElements/PartialInlineElement';
-export { default as TextInlineElement } from './inlineElements/TextInlineElement';
 export {
     getInlineElementBefore,
     getInlineElementAfter,

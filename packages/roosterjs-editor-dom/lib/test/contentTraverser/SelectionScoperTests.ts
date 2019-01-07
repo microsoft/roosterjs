@@ -117,7 +117,7 @@ describe('SelectionScoper getStartInlineElement()', () => {
         ).toBe(true);
     }
 
-    it('input = www.example.com<br>, startInlineElment is TextInlineElement', () => {
+    it('input = www.example.com<br>, startInlineElment is text InlineElement', () => {
         let rootNode = DomTestHelper.createElementFromContent(testID, 'www.example.com<br>');
         let range = DomTestHelper.createRangeFromChildNodes(rootNode);
         let node = document.createTextNode('www.example.com');
