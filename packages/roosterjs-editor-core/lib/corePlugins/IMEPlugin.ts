@@ -7,28 +7,28 @@ import { PluginCompositionEvent, PluginEventType } from 'roosterjs-editor-types'
  */
 export default class IMEPlugin implements EditorPlugin {
     private inIme = false;
-    private disposers: (() => void)[];
+    private disposer: () => void;
 
     getName() {
         return 'IME';
     }
 
     initialize(editor: Editor) {
-        this.disposers = [
-            editor.addDomEventHandler('compositionstart', () => (this.inIme = true)),
-            editor.addDomEventHandler('compositionend', (e: CompositionEvent) => {
+        this.disposer = editor.addDomEventHandler({
+            compositionstart: () => (this.inIme = true),
+            compositionend: (e: CompositionEvent) => {
                 this.inIme = false;
                 editor.triggerEvent(<PluginCompositionEvent>{
                     eventType: PluginEventType.CompositionEnd,
                     rawEvent: e,
                 });
-            }),
-        ];
+            },
+        });
     }
 
     dispose() {
-        this.disposers.forEach(d => d());
-        this.disposers = null;
+        this.disposer();
+        this.disposer = null;
     }
 
     /**

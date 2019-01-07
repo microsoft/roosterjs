@@ -6,7 +6,7 @@ import { Browser } from 'roosterjs-editor-dom';
  * Selection Component helps save/restore selection when blur/focus
  */
 export default class SelectionPlugin implements EditorPlugin {
-    private disposers: (() => void)[];
+    private disposer: () => void;
 
     constructor(private disableRestoreSelectionOnFocus: boolean) {}
 
@@ -15,17 +15,14 @@ export default class SelectionPlugin implements EditorPlugin {
     }
 
     initialize(editor: Editor) {
-        this.disposers = [
-            editor.addDomEventHandler(Browser.isIEOrEdge ? 'beforedeactivate' : 'blur', () =>
-                editor.saveSelectionRange()
-            ),
-            !this.disableRestoreSelectionOnFocus &&
-                editor.addDomEventHandler('focus', () => editor.restoreSavedRange()),
-        ].filter(x => x);
+        this.disposer = editor.addDomEventHandler({
+            [Browser.isIEOrEdge ? 'beforedeactivate' : 'blur']: () => editor.saveSelectionRange(),
+            focus: !this.disableRestoreSelectionOnFocus && (() => editor.restoreSavedRange()),
+        });
     }
 
     dispose() {
-        this.disposers.forEach(d => d());
-        this.disposers = null;
+        this.disposer();
+        this.disposer = null;
     }
 }

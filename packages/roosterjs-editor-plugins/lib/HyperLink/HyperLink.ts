@@ -7,7 +7,7 @@ import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
  */
 export default class HyperLink implements EditorPlugin {
     private editor: Editor;
-    private disposers: (() => void)[];
+    private disposer: () => void;
 
     /**
      * Create a new instance of HyperLink class
@@ -35,12 +35,9 @@ export default class HyperLink implements EditorPlugin {
      */
     public initialize(editor: Editor): void {
         this.editor = editor;
-        this.disposers = this.getTooltipCallback
-            ? [
-                  editor.addDomEventHandler('mouseover', this.onMouse),
-                  editor.addDomEventHandler('mouseout', this.onMouse),
-              ]
-            : [];
+        this.disposer =
+            this.getTooltipCallback &&
+            editor.addDomEventHandler({ mouseover: this.onMouse, mouseout: this.onMouse });
     }
 
     protected onMouse = (e: MouseEvent) => {
@@ -59,8 +56,8 @@ export default class HyperLink implements EditorPlugin {
      * Dispose this plugin
      */
     public dispose(): void {
-        this.disposers.forEach(disposer => disposer());
-        this.disposers = null;
+        this.disposer();
+        this.disposer = null;
         this.editor = null;
     }
 

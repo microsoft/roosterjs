@@ -586,13 +586,48 @@ export default class Editor {
      * @param handler Handler callback
      * @returns A dispose function. Call the function to dispose this event handler
      */
-    public addDomEventHandler(eventName: string, handler: (event: UIEvent) => void): () => void {
-        return this.core.api.attachDomEvent(
-            this.core,
-            eventName,
-            null /*pluginEventType*/,
-            handler
-        );
+    public addDomEventHandler(eventName: string, handler: (event: UIEvent) => void): () => void;
+
+    /**
+     * Add a bunch of custom DOM event handler to handle events not handled by roosterjs.
+     * Caller need to take the responsibility to dispose the handler properly
+     * @param handlerMap A event name => event handler map
+     * @returns A dispose function. Call the function to dispose all event handlers added by this function
+     */
+    public addDomEventHandler(handlerMap: {
+        [eventName: string]: (event: UIEvent) => void;
+    }): () => void;
+
+    public addDomEventHandler(
+        nameOrMap:
+            | string
+            | {
+                  [eventName: string]: (event: UIEvent) => void;
+              },
+        handler?: (event: UIEvent) => void
+    ): () => void {
+        if (nameOrMap instanceof Object) {
+            let handlers = Object.keys(nameOrMap)
+                .map(
+                    eventName =>
+                        nameOrMap[eventName] &&
+                        this.core.api.attachDomEvent(
+                            this.core,
+                            eventName,
+                            null /*pluginEventType*/,
+                            nameOrMap[eventName]
+                        )
+                )
+                .filter(x => x);
+            return () => handlers.forEach(handler => handler());
+        } else {
+            return this.core.api.attachDomEvent(
+                this.core,
+                nameOrMap,
+                null /*pluginEventType*/,
+                handler
+            );
+        }
     }
 
     /**

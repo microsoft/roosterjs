@@ -19,8 +19,7 @@ export default class Undo implements UndoService {
     private isRestoring: boolean;
     private hasNewContent: boolean;
     private lastKeyPress: number;
-    private onDropDisposer: () => void;
-    private onCutDisposer: () => void;
+    private disposer: () => void;
     public name = 'Undo';
 
     protected undoSnapshots: UndoSnapshotsService;
@@ -46,18 +45,18 @@ export default class Undo implements UndoService {
      */
     public initialize(editor: Editor): void {
         this.editor = editor;
-        this.onDropDisposer = this.editor.addDomEventHandler('drop', this.onNativeEvent);
-        this.onCutDisposer = this.editor.addDomEventHandler('cut', this.onNativeEvent);
+        this.disposer = this.editor.addDomEventHandler({
+            drop: this.onNativeEvent,
+            cut: this.onNativeEvent,
+        });
     }
 
     /**
      * Dispose this plugin
      */
     public dispose() {
-        this.onDropDisposer();
-        this.onCutDisposer();
-        this.onDropDisposer = null;
-        this.onCutDisposer = null;
+        this.disposer();
+        this.disposer = null;
         this.editor = null;
 
         if (!this.preserveSnapshots) {

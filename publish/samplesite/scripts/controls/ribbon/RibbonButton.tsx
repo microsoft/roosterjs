@@ -68,7 +68,11 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
     };
 
     private onMouseUp = (e: React.MouseEvent<EventTarget>) => {
-        if (e.button == 0 && currentPusingButton == this.props.button) {
+        if (
+            e.button == 0 &&
+            currentPusingButton == this.props.button &&
+            !this.props.button.dropDownItems
+        ) {
             this.onExecute();
         }
         currentPusingButton = null;
