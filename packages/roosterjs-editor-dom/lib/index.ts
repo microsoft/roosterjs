@@ -11,10 +11,6 @@ export { default as ImageInlineElement } from './inlineElements/ImageInlineEleme
 export { default as LinkInlineElement } from './inlineElements/LinkInlineElement';
 export { default as NodeInlineElement } from './inlineElements/NodeInlineElement';
 export { default as PartialInlineElement } from './inlineElements/PartialInlineElement';
-export {
-    getInlineElementBefore,
-    getInlineElementAfter,
-} from './inlineElements/getInlineElementBeforeAfter';
 
 export { default as applyTextStyle } from './utils/applyTextStyle';
 export { default as Browser, getBrowserInfo } from './utils/Browser';
