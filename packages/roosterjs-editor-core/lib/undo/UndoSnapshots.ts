@@ -1,13 +1,8 @@
+import UndoSnapshotsService from '../interfaces/UndoSnapshotsService';
+
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
 // to keep size under limit. This is kept at 10MB
-const MAXSIZELIMIT = 10000000;
-
-export interface UndoSnapshotsService {
-    canMove: (delta: number) => boolean;
-    move: (delta: number) => string;
-    addSnapshot: (snapshot: string) => void;
-    clearRedo: () => void;
-}
+const MAXSIZELIMIT = 1e7;
 
 export default class UndoSnapshots implements UndoSnapshotsService {
     private snapshots: string[];
@@ -20,11 +15,21 @@ export default class UndoSnapshots implements UndoSnapshotsService {
         this.currentIndex = -1;
     }
 
+    /**
+     * Check whether can move current undo snapshot with the given step
+     * @param step The step to check, can be positive, negative or 0
+     * @returns True if can move current snapshot with the given step, otherwise false
+     */
     public canMove(delta: number): boolean {
         let newIndex = this.currentIndex + delta;
         return newIndex >= 0 && newIndex < this.snapshots.length;
     }
 
+    /**
+     * Move current snapshot with the given step if can move this step. Otherwise no action and return null
+     * @param step The step to move
+     * @returns If can move with the given step, returns the snapshot after move, otherwise null
+     */
     public move(delta: number): string {
         if (this.canMove(delta)) {
             this.currentIndex += delta;
@@ -34,6 +39,10 @@ export default class UndoSnapshots implements UndoSnapshotsService {
         }
     }
 
+    /**
+     * Add a new undo snapshot
+     * @param snapshot The snapshot to add
+     */
     public addSnapshot(snapshot: string) {
         if (this.currentIndex < 0 || snapshot != this.snapshots[this.currentIndex]) {
             this.clearRedo();
@@ -54,6 +63,9 @@ export default class UndoSnapshots implements UndoSnapshotsService {
         }
     }
 
+    /**
+     * Clear all undo snapshots after the current one
+     */
     public clearRedo() {
         if (this.canMove(1)) {
             let removedSize = 0;

@@ -50,11 +50,6 @@ const enum PluginEventType {
     BeforePaste,
 
     /**
-     * @deprecated
-     */
-    Idle,
-
-    /**
      * Let plugin know editor is ready now
      */
     EditorReady,

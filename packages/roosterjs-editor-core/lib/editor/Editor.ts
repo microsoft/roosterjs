@@ -1,12 +1,12 @@
 import createEditorCore from './createEditorCore';
-import EditorCore from './EditorCore';
-import EditorOptions from './EditorOptions';
+import EditorCore from '../interfaces/EditorCore';
+import EditorOptions from '../interfaces/EditorOptions';
+import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import { getRangeFromSelectionPath, getSelectionPath } from 'roosterjs-editor-dom';
 import {
     BlockElement,
     ChangeSource,
     ContentPosition,
-    ContentScope,
     DefaultFormat,
     DocumentCommand,
     ExtractContentEvent,
@@ -22,7 +22,6 @@ import {
     Rect,
 } from 'roosterjs-editor-types';
 import {
-    Browser,
     PositionContentSearcher,
     ContentTraverser,
     Position,
@@ -34,9 +33,7 @@ import {
     getInlineElementAtNode,
     getTagOfNode,
     isNodeEmpty,
-    markSelection,
     queryElements,
-    removeMarker,
     collapseNodes,
     wrap,
 } from 'roosterjs-editor-dom';
@@ -79,7 +76,12 @@ export default class Editor {
             this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
         ];
 
-        // 6. Make the container editable and set its selection styles
+        // 6. Add additional content edit features to the editor if specified
+        if (options.additionalEditFeatures) {
+            options.additionalEditFeatures.forEach(feature => this.addContentEditFeature(feature));
+        }
+
+        // 7. Make the container editable and set its selection styles
         if (!options.omitContentEditableAttributeChanges && !contentDiv.isContentEditable) {
             contentDiv.setAttribute('contenteditable', 'true');
             let styles = contentDiv.style;
@@ -87,7 +89,7 @@ export default class Editor {
             this.contenteditableChanged = true;
         }
 
-        // 7. Disable these operations for firefox since its behavior is usually wrong
+        // 8. Disable these operations for firefox since its behavior is usually wrong
         // Catch any possible exception since this should not block the initialization of editor
         try {
             this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, <string>(
@@ -98,7 +100,7 @@ export default class Editor {
             >(<any>false));
         } catch (e) {}
 
-        // 8. Let plugins know that we are ready
+        // 9. Let plugins know that we are ready
         this.triggerEvent(
             {
                 eventType: PluginEventType.EditorReady,
@@ -106,8 +108,10 @@ export default class Editor {
             true /*broadcast*/
         );
 
-        // 9. Before give editor to user, make sure there is at least one DIV element to accept typing
-        this.core.corePlugin.ensureTypeInElement(new Position(contentDiv, PositionType.Begin));
+        // 10. Before give editor to user, make sure there is at least one DIV element to accept typing
+        this.core.corePlugins.typeInContainer.ensureTypeInElement(
+            new Position(contentDiv, PositionType.Begin)
+        );
     }
 
     /**
@@ -582,13 +586,48 @@ export default class Editor {
      * @param handler Handler callback
      * @returns A dispose function. Call the function to dispose this event handler
      */
-    public addDomEventHandler(eventName: string, handler: (event: UIEvent) => void): () => void {
-        return this.core.api.attachDomEvent(
-            this.core,
-            eventName,
-            null /*pluginEventType*/,
-            handler
-        );
+    public addDomEventHandler(eventName: string, handler: (event: UIEvent) => void): () => void;
+
+    /**
+     * Add a bunch of custom DOM event handler to handle events not handled by roosterjs.
+     * Caller need to take the responsibility to dispose the handler properly
+     * @param handlerMap A event name => event handler map
+     * @returns A dispose function. Call the function to dispose all event handlers added by this function
+     */
+    public addDomEventHandler(handlerMap: {
+        [eventName: string]: (event: UIEvent) => void;
+    }): () => void;
+
+    public addDomEventHandler(
+        nameOrMap:
+            | string
+            | {
+                  [eventName: string]: (event: UIEvent) => void;
+              },
+        handler?: (event: UIEvent) => void
+    ): () => void {
+        if (nameOrMap instanceof Object) {
+            let handlers = Object.keys(nameOrMap)
+                .map(
+                    eventName =>
+                        nameOrMap[eventName] &&
+                        this.core.api.attachDomEvent(
+                            this.core,
+                            eventName,
+                            null /*pluginEventType*/,
+                            nameOrMap[eventName]
+                        )
+                )
+                .filter(x => x);
+            return () => handlers.forEach(handler => handler());
+        } else {
+            return this.core.api.attachDomEvent(
+                this.core,
+                nameOrMap,
+                null /*pluginEventType*/,
+                handler
+            );
+        }
     }
 
     /**
@@ -626,7 +665,7 @@ export default class Editor {
      */
     public undo() {
         this.focus();
-        this.core.undo.undo();
+        this.core.corePlugins.undo.undo();
     }
 
     /**
@@ -634,7 +673,7 @@ export default class Editor {
      */
     public redo() {
         this.focus();
-        this.core.undo.redo();
+        this.core.corePlugins.undo.redo();
     }
 
     /**
@@ -660,21 +699,21 @@ export default class Editor {
      * @param changeSource Chagne source of ContentChangedEvent. If not passed, no ContentChangedEvent will be  triggered
      */
     public performAutoComplete(callback: () => any, changeSource?: ChangeSource | string) {
-        this.core.corePlugin.performAutoComplete(callback, changeSource);
+        this.core.corePlugins.edit.performAutoComplete(callback, changeSource);
     }
 
     /**
      * Whether there is an available undo snapshot
      */
     public canUndo(): boolean {
-        return this.core.undo.canUndo();
+        return this.core.corePlugins.undo.canUndo();
     }
 
     /**
      * Whether there is an available redo snapshot
      */
     public canRedo(): boolean {
-        return this.core.undo.canRedo();
+        return this.core.corePlugins.undo.canRedo();
     }
 
     //#endregion
@@ -706,7 +745,7 @@ export default class Editor {
      * @returns True if editor is in IME input sequence, otherwise false
      */
     public isInIME(): boolean {
-        return this.core.corePlugin.isInIME();
+        return this.core.corePlugins.domEvent.isInIME();
     }
 
     /**
@@ -785,84 +824,12 @@ export default class Editor {
         }
     }
 
-    //#endregion
-
-    //#region Deprecated methods
-
     /**
-     * @deprecated
-     * Insert selection marker element into content, so that after doing some modification,
-     * we can still restore the selection as long as the selection marker is still there
-     * @returns The return value of callback
+     * Add a Content Edit feature. This is mostly called from ContentEdit plugin
+     * @param feature The feature to add
      */
-    public runWithSelectionMarker<T>(callback: () => T, useInlineMarker?: boolean): T {
-        let selectionMarked = markSelection(
-            this.core.contentDiv,
-            this.getSelectionRange(),
-            useInlineMarker
-        );
-        try {
-            return callback && callback();
-        } finally {
-            if (selectionMarked) {
-                // In safari the selection will be lost after inserting markers, so need to restore it
-                // For other browsers we just need to delete markers here
-                this.select(
-                    removeMarker(
-                        this.core.contentDiv,
-                        Browser.isSafari || Browser.isChrome /*applySelection*/
-                    )
-                );
-            }
-        }
-    }
-
-    /**
-     * @deprecated Use queryElements instead
-     */
-    public queryContent(selector: string): NodeListOf<Element> {
-        return this.core.contentDiv.querySelectorAll(selector);
-    }
-
-    /**
-     * @deprecated Use select() instead
-     * Update selection in editor
-     * @param selectionRange The selection range to update to
-     * @returns true if selection range is updated. Otherwise false.
-     */
-    public updateSelection(selectionRange: Range): boolean {
-        return this.select(selectionRange);
-    }
-
-    /**
-     * @deprecated Use editWithUndo() instead
-     */
-    public runWithoutAddingUndoSnapshot(callback: () => void) {
-        try {
-            this.core.currentUndoSnapshot = this.getContent(false, true);
-            callback();
-        } finally {
-            this.core.currentUndoSnapshot = null;
-        }
-    }
-
-    /**
-     * @deprecated Use getBodyTraverser, getSelectionTraverser, getBlockTraverser instead
-     */
-    public getContentTraverser(
-        scope: ContentScope,
-        position: ContentPosition = ContentPosition.SelectionStart
-    ): ContentTraverser {
-        switch (scope) {
-            case ContentScope.Block:
-                return this.getBlockTraverser(position);
-            case ContentScope.Selection:
-                return this.getSelectionTraverser();
-            case ContentScope.Body:
-                return this.getBodyTraverser();
-        }
-
-        return null;
+    public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
+        this.core.corePlugins.edit.addFeature(feature);
     }
 
     //#endregion

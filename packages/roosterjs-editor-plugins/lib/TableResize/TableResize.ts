@@ -20,12 +20,6 @@ export default class TableResize implements EditorPlugin {
     private initialPageX: number;
 
     /**
-     * Constructor TableResize plugin
-     * @param preserved A deprecated parameter used for compatibility with old code
-     */
-    constructor(preserved?: any) {}
-
-    /**
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
@@ -38,7 +32,7 @@ export default class TableResize implements EditorPlugin {
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'tableresize';
+        return 'TableResize';
     }
 
     /**

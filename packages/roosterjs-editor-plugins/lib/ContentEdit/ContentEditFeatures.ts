@@ -1,6 +1,3 @@
-import { ChangeSource, PluginEvent, PluginKeyboardEvent } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
-
 /**
  * Feature set for ContentEdit plugin.
  * Call getDefaultContentEditFeatures() to get default feature set.
@@ -120,37 +117,4 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         smartOrderedList: false,
         smartOrderedListStyles: ['lower-alpha', 'lower-roman', 'decimal'],
     };
-}
-
-export interface GenericContentEditFeature<TEvent extends PluginEvent> {
-    keys: number[];
-    initialize?: (editor: Editor) => any;
-    featureFlag: keyof ContentEditFeatures;
-    shouldHandleEvent: (event: TEvent, editor: Editor) => any;
-    handleEvent: (event: TEvent, editor: Editor) => ChangeSource | void;
-    allowFunctionKeys?: boolean;
-}
-
-export type ContentEditFeature = GenericContentEditFeature<PluginKeyboardEvent>;
-
-export const enum Keys {
-    NULL = 0,
-    BACKSPACE = 8,
-    TAB = 9,
-    ENTER = 13,
-    SPACE = 32,
-    UP = 38,
-    DOWN = 40,
-    B = 66,
-    I = 73,
-    U = 85,
-    Y = 89,
-    Z = 90,
-    COMMA = 188,
-    PERIOD = 190,
-    FORWARDSLASH = 191,
-    Ctrl = 0x100,
-    Meta = 0x200,
-    Shift = 0x400,
-    CONTENTCHANGED = 0x800,
 }

@@ -1,5 +1,5 @@
-import { htmlToDom } from 'roosterjs-html-sanitizer';
 import fragmentHandler from '../Paste/fragmentHandler';
+import { htmlToDom } from 'roosterjs-html-sanitizer';
 
 describe('fragmentHandler', () => {
     function runTest(html: string, preserveFragmentOnly: boolean, expectedInnerHtml: string) {

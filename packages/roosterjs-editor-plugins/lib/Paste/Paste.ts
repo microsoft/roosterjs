@@ -1,8 +1,8 @@
-import { getFormatState } from 'roosterjs-editor-api';
 import buildClipboardData from './buildClipboardData';
 import fragmentHandler from './fragmentHandler';
 import textToHtml from './textToHtml';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { getFormatState } from 'roosterjs-editor-api';
 import { insertImage } from 'roosterjs-editor-api';
 import {
     AttributeCallbackMap,
@@ -50,7 +50,7 @@ export default class Paste implements EditorPlugin {
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'paste';
+        return 'Paste';
     }
 
     /**

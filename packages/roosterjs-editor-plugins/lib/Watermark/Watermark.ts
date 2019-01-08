@@ -22,8 +22,7 @@ const WATERMARK_REGEX = new RegExp(
 class Watermark implements EditorPlugin {
     private editor: Editor;
     private isWatermarkShowing: boolean;
-    private focusDisposer: () => void;
-    private blurDisposer: () => void;
+    private disposer: () => void;
 
     /**
      * Create an instance of Watermark plugin
@@ -40,7 +39,7 @@ class Watermark implements EditorPlugin {
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'watermark';
+        return 'Watermark';
     }
 
     /**
@@ -50,18 +49,18 @@ class Watermark implements EditorPlugin {
     initialize(editor: Editor) {
         this.editor = editor;
         this.showHideWatermark(false /*ignoreCachedState*/);
-        this.focusDisposer = this.editor.addDomEventHandler('focus', this.handleWatermark);
-        this.blurDisposer = this.editor.addDomEventHandler('blur', this.handleWatermark);
+        this.disposer = this.editor.addDomEventHandler({
+            focus: this.handleWatermark,
+            blur: this.handleWatermark,
+        });
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        this.focusDisposer();
-        this.blurDisposer();
-        this.focusDisposer = null;
-        this.blurDisposer = null;
+        this.disposer();
+        this.disposer = null;
         this.hideWatermark();
         this.editor = null;
     }

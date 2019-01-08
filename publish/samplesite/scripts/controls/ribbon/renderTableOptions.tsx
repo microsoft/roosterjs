@@ -42,13 +42,13 @@ class TableOptions extends React.Component<TableOptionsProps, {}> {
                         <tr>
                             <td>Columns:</td>
                             <td>
-                                <input type='text' ref={this.cols} />
+                                <input type="text" ref={this.cols} />
                             </td>
                         </tr>
                         <tr>
                             <td>Rows:</td>
                             <td>
-                                <input type='text' ref={this.rows} />
+                                <input type="text" ref={this.rows} />
                             </td>
                         </tr>
                         <tr>
@@ -134,8 +134,7 @@ class TableOptions extends React.Component<TableOptionsProps, {}> {
                             <td
                                 colSpan={2}
                                 className={styles.buttonRow}
-                                onClick={this.onCustomizeFormat}
-                            >
+                                onClick={this.onCustomizeFormat}>
                                 <button className={styles.button}>Apply Format</button>
                             </td>
                         </tr>
@@ -152,8 +151,7 @@ class TableOptions extends React.Component<TableOptionsProps, {}> {
                 onClick={() => {
                     editTable(this.props.editor, operation);
                     this.props.onDismiss();
-                }}
-            >
+                }}>
                 {text}
             </button>
         );
@@ -166,8 +164,7 @@ class TableOptions extends React.Component<TableOptionsProps, {}> {
                 onClick={() => {
                     formatTable(this.props.editor, format);
                     this.props.onDismiss();
-                }}
-            >
+                }}>
                 {text}
             </button>
         );
@@ -181,7 +178,7 @@ class TableOptions extends React.Component<TableOptionsProps, {}> {
             <tr>
                 <td className={styles.label}>{text}</td>
                 <td>
-                    <input type='text' ref={ref} />
+                    <input type="text" ref={ref} />
                 </td>
             </tr>
         );

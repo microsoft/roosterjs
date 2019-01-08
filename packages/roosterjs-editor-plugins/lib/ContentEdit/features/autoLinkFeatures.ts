@@ -1,5 +1,4 @@
 import { Browser, LinkInlineElement, matchLink } from 'roosterjs-editor-dom';
-import { GenericContentEditFeature, Keys } from '../ContentEditFeatures';
 import { removeLink, replaceWithNode } from 'roosterjs-editor-api';
 import {
     ChangeSource,
@@ -13,6 +12,8 @@ import {
     cacheGetEventData,
     cacheGetContentSearcher,
     clearContentSearcherCache,
+    GenericContentEditFeature,
+    Keys,
 } from 'roosterjs-editor-core';
 
 // When user type, they may end a link with a puncatuation, i.e. www.bing.com;
@@ -27,7 +28,6 @@ export const AutoLink: GenericContentEditFeature<PluginEvent> = {
         editor.getDocument().execCommand('AutoUrlDetect', false, <string>(<any>false)),
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
-    featureFlag: 'autoLink',
 };
 
 export const UnlinkWhenBackspaceAfterLink: GenericContentEditFeature<PluginKeyboardEvent> = {
@@ -37,7 +37,6 @@ export const UnlinkWhenBackspaceAfterLink: GenericContentEditFeature<PluginKeybo
         event.rawEvent.preventDefault();
         removeLink(editor);
     },
-    featureFlag: 'unlinkWhenBackspaceAfterLink',
 };
 
 function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {

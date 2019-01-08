@@ -1,6 +1,5 @@
 import { Browser } from 'roosterjs-editor-dom';
-import { cacheGetEventData, Editor } from 'roosterjs-editor-core';
-import { ContentEditFeature, Keys } from '../ContentEditFeatures';
+import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
 import { FontSizeChange, PluginEventType, PluginKeyboardEvent } from 'roosterjs-editor-types';
 import {
     changeFontSize,
@@ -57,7 +56,6 @@ export const DefaultShortcut: ContentEditFeature = {
             event.rawEvent.stopPropagation();
         }
     },
-    featureFlag: 'defaultShortcut',
 };
 
 function cacheGetCommand(event: PluginKeyboardEvent) {

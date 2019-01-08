@@ -99,7 +99,7 @@ export default class DefaultFormatPane extends React.Component<DefaultFormatProp
     private renderSelectItem(
         id: DefaultFormatItemId,
         label: string,
-        items: { [key: string]: string },
+        items: { [key: string]: string }
     ): JSX.Element {
         return (
             <tr>
@@ -108,8 +108,7 @@ export default class DefaultFormatPane extends React.Component<DefaultFormatProp
                     <select
                         id={id}
                         onChange={() => this.onSelectChanged(id)}
-                        defaultValue={(this.props.state[id] || NOT_SET) as string}
-                    >
+                        defaultValue={(this.props.state[id] || NOT_SET) as string}>
                         {Object.keys(items).map(key => (
                             <option value={key} key={key}>
                                 {items[key]}

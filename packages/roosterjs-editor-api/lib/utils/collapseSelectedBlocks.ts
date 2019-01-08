@@ -1,6 +1,6 @@
 import { BlockElement, NodeType } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { StartEndBlockElement, getTagOfNode } from 'roosterjs-editor-dom';
+import { getTagOfNode, StartEndBlockElement } from 'roosterjs-editor-dom';
 
 /**
  * Collapse all selected blocks, return single HTML elements for each block

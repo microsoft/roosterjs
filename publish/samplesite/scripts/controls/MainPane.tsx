@@ -1,11 +1,10 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import BuildInPluginState, { UrlPlaceholder } from './BuildInPluginState';
+import BuildInPluginState from './BuildInPluginState';
 import Editor from './editor/Editor';
 import MainPaneBase from './MainPaneBase';
 import Ribbon from './ribbon/Ribbon';
 import SidePane from './sidePane/SidePane';
-import SidePanePlugin from './SidePanePlugin';
 import TitleBar from './titleBar/TitleBar';
 import { getAllPluginArray, getPlugins, getSidePanePluginArray } from './plugins';
 

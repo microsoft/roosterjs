@@ -1,4 +1,5 @@
 import collapseSelectedBlocks from '../utils/collapseSelectedBlocks';
+import { ChangeSource, NodeType } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import {
     getTagOfNode,
@@ -7,7 +8,6 @@ import {
     wrap,
     splitBalancedNodeRange,
 } from 'roosterjs-editor-dom';
-import { ChangeSource, NodeType } from 'roosterjs-editor-types';
 
 export const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
     ','

@@ -1,6 +1,12 @@
-import { cacheGetContentSearcher, cacheGetElementAtCursor, Editor } from 'roosterjs-editor-core';
-import { ContentEditFeature, GenericContentEditFeature, Keys } from '../ContentEditFeatures';
 import { setIndentation, toggleBullet, toggleNumbering } from 'roosterjs-editor-api';
+import {
+    cacheGetContentSearcher,
+    cacheGetElementAtCursor,
+    Editor,
+    ContentEditFeature,
+    GenericContentEditFeature,
+    Keys,
+} from 'roosterjs-editor-core';
 import {
     ContentChangedEvent,
     Indentation,
@@ -23,7 +29,6 @@ export const IndentWhenTab: ContentEditFeature = {
         setIndentation(editor, Indentation.Increase);
         event.rawEvent.preventDefault();
     },
-    featureFlag: 'indentWhenTab',
 };
 
 export const OutdentWhenShiftTab: ContentEditFeature = {
@@ -34,7 +39,6 @@ export const OutdentWhenShiftTab: ContentEditFeature = {
         setIndentation(editor, Indentation.Decrease);
         event.rawEvent.preventDefault();
     },
-    featureFlag: 'outdentWhenShiftTab',
 };
 
 export const MergeInNewLine: ContentEditFeature = {
@@ -56,7 +60,6 @@ export const MergeInNewLine: ContentEditFeature = {
             toggleListAndPreventDefault(event, editor);
         }
     },
-    featureFlag: 'mergeInNewLineWhenBackspaceOnFirstChar',
 };
 
 export const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
@@ -66,7 +69,6 @@ export const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
         return li && isNodeEmpty(li) && !li.previousSibling;
     },
     handleEvent: toggleListAndPreventDefault,
-    featureFlag: 'outdentWhenBackspaceOnEmptyFirstLine',
 };
 
 export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
@@ -78,7 +80,6 @@ export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
     handleEvent: (event, editor) => {
         editor.performAutoComplete(() => toggleListAndPreventDefault(event, editor));
     },
-    featureFlag: 'outdentWhenEnterOnEmptyLine',
 };
 
 export const AutoBullet: ContentEditFeature = {
@@ -128,7 +129,6 @@ export const AutoBullet: ContentEditFeature = {
             });
         });
     },
-    featureFlag: 'autoBullet',
 };
 
 export function getSmartOrderedList(
@@ -147,7 +147,6 @@ export function getSmartOrderedList(
                     styles[(styles.indexOf(parentOl.style.listStyle) + 1) % styles.length];
             }
         },
-        featureFlag: 'smartOrderedList',
     };
 }
 

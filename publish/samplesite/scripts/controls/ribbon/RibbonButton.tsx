@@ -2,9 +2,11 @@ import * as React from 'react';
 import MainPaneBase from '../MainPaneBase';
 import RibbonButtonType, { DropDownRenderer } from './RibbonButtonType';
 import RibbonPlugin from './RibbonPlugin';
+import { Browser } from 'roosterjs-editor-dom';
 import { FormatState } from 'roosterjs-editor-types';
 
 const styles = require('./RibbonButton.scss');
+let currentPusingButton: RibbonButtonType;
 
 export interface RibbonButtonProps {
     plugin: RibbonPlugin;
@@ -17,9 +19,11 @@ export interface RibbonButtonState {
     isDropDownShown: boolean;
 }
 
-export default class RibbonButton extends React.Component<RibbonButtonProps, RibbonButtonState> {
-    private dropDown: HTMLDivElement;
+interface MouseEvent extends React.MouseEvent<EventTarget> {
+    detail: number;
+}
 
+export default class RibbonButton extends React.Component<RibbonButtonProps, RibbonButtonState> {
     constructor(props: RibbonButtonProps) {
         super(props);
         this.state = {
@@ -43,9 +47,10 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
         return (
             <span className={styles.dropDownButton}>
                 <button
-                    onClick={() => (button.dropDownItems ? this.onShowDropDown() : this.onClick())}
+                    onClick={button.dropDownItems ? this.onShowDropDown : this.onMouseClick}
                     className={className}
-                >
+                    onMouseDown={this.onMouseDown}
+                    onMouseUp={this.onMouseUp}>
                     <img src={button.image} width={32} height={32} title={button.title} />
                 </button>
                 {button.dropDownItems &&
@@ -55,7 +60,34 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
         );
     }
 
-    private onClick = (value?: string) => {
+    private onMouseDown = (e: React.MouseEvent<EventTarget>) => {
+        if (e.button == 0) {
+            currentPusingButton = this.props.button;
+            e.preventDefault();
+        }
+    };
+
+    private onMouseUp = (e: React.MouseEvent<EventTarget>) => {
+        if (
+            e.button == 0 &&
+            currentPusingButton == this.props.button &&
+            !this.props.button.dropDownItems
+        ) {
+            this.onExecute();
+        }
+        currentPusingButton = null;
+    };
+
+    private onMouseClick = (e: React.MouseEvent<EventTarget>) => {
+        if (
+            (Browser.isIE && e.nativeEvent.x < 0) ||
+            (!Browser.isIE && (e as MouseEvent).detail == 0)
+        ) {
+            this.onExecute();
+        }
+    };
+
+    private onExecute = (value?: string) => {
         const { button, plugin } = this.props;
         const editor = plugin.getEditor();
         this.onHideDropDown();
@@ -88,7 +120,7 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
         renderer: DropDownRenderer
     ): JSX.Element {
         return (
-            <div ref={ref => (this.dropDown = ref)} className={styles.dropDown}>
+            <div className={styles.dropDown}>
                 {Object.keys(items).map(key =>
                     renderer ? (
                         <div key={key}>
@@ -102,9 +134,8 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
                     ) : (
                         <div
                             key={key}
-                            onClick={() => this.onClick(key)}
-                            className={styles.dropDownItem}
-                        >
+                            onClick={() => this.onExecute(key)}
+                            className={styles.dropDownItem}>
                             {items[key]}
                         </div>
                     )

@@ -1,16 +1,8 @@
 import applyTextStyle from '../utils/applyTextStyle';
 import createRange from '../selection/createRange';
 import Position from '../selection/Position';
+import { BlockElement, InlineElement, NodePosition, PositionType } from 'roosterjs-editor-types';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../utils/getLeafSibling';
-import { safeGetPosition } from '../deprecated/positionUtils';
-import { toEditorPoint } from '../deprecated/positionUtils';
-import {
-    BlockElement,
-    EditorPoint,
-    InlineElement,
-    NodePosition,
-    PositionType,
-} from 'roosterjs-editor-types';
 
 /**
  * This is a special version of inline element that identifies a section of an inline element
@@ -20,17 +12,11 @@ import {
  * It also offers some special methods that others don't have, i.e. nextInlineElement etc.
  */
 class PartialInlineElement implements InlineElement {
-    private start: NodePosition;
-    private end: NodePosition;
-
     constructor(
         private inlineElement: InlineElement,
-        start?: NodePosition | EditorPoint,
-        end?: NodePosition | EditorPoint
-    ) {
-        this.start = safeGetPosition(start);
-        this.end = safeGetPosition(end);
-    }
+        private start?: NodePosition,
+        private end?: NodePosition
+    ) {}
 
     /**
      * Get the full inline element that this partial inline decorates
@@ -93,8 +79,7 @@ class PartialInlineElement implements InlineElement {
     /**
      * Checks if it contains a position
      */
-    public contains(p: NodePosition | EditorPoint): boolean {
-        const pos = safeGetPosition(p);
+    public contains(pos: NodePosition): boolean {
         return pos && pos.isAfter(this.getStartPosition()) && this.getEndPosition().isAfter(pos);
     }
 
@@ -132,22 +117,6 @@ class PartialInlineElement implements InlineElement {
         }
 
         applyTextStyle(container, styler, from, to);
-    }
-
-    /**
-     * @deprecated
-     * Gets the start point
-     */
-    public getStartPoint(): EditorPoint {
-        return toEditorPoint(this.getStartPosition());
-    }
-
-    /**
-     * @deprecated
-     * Gets the end point
-     */
-    public getEndPoint(): EditorPoint {
-        return toEditorPoint(this.getEndPosition());
     }
 }
 

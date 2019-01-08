@@ -1,4 +1,4 @@
-import EditorCore, { Focus } from '../editor/EditorCore';
+import EditorCore, { Focus } from '../interfaces/EditorCore';
 import { getFirstLeafNode } from 'roosterjs-editor-dom';
 import { PositionType } from 'roosterjs-editor-types';
 

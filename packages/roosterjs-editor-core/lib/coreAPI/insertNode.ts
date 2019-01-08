@@ -1,4 +1,4 @@
-import EditorCore, { InsertNode } from '../editor/EditorCore';
+import EditorCore, { InsertNode } from '../interfaces/EditorCore';
 import { ContentPosition, InsertOption, NodeType, PositionType } from 'roosterjs-editor-types';
 import {
     Position,
@@ -35,7 +35,6 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
             let insertedNode: Node;
             if (block) {
                 let refNode = isBegin ? block.getStartNode() : block.getEndNode();
-                let refParentNode = refNode.parentNode;
                 if (
                     insertOnNewLine ||
                     refNode.nodeType == NodeType.Text ||
@@ -44,7 +43,7 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
                     // For insert on new line, or refNode is text or void html element (HR, BR etc.)
                     // which cannot have children, i.e. <div>hello<br>world</div>. 'hello', 'world' are the
                     // first and last node. Insert before 'hello' or after 'world', but still inside DIV
-                    insertedNode = refParentNode.insertBefore(
+                    insertedNode = refNode.parentNode.insertBefore(
                         node,
                         isBegin ? refNode : refNode.nextSibling
                     );

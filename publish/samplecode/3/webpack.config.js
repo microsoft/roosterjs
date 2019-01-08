@@ -3,18 +3,13 @@ module.exports = {
     output: {
         filename: 'start.js',
         path: __dirname,
-        publicPath: '.'
+        publicPath: '.',
     },
     resolve: {
         extensions: ['.ts', '.js'],
-        modules: [
-            '.',
-            './node_modules'
-        ]
+        modules: ['.', './node_modules'],
     },
     module: {
-        loaders: [
-            { test: /\.ts$/, loader: 'ts-loader' }
-        ]
-    }
-}
+        loaders: [{ test: /\.ts$/, loader: 'ts-loader' }],
+    },
+};

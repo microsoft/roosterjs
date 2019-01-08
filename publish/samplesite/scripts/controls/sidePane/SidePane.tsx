@@ -50,8 +50,7 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
             <div key={title} className={isCurrent ? styles.activePane : styles.inactivePane}>
                 <div
                     className={styles.title}
-                    onClick={() => this.setState({ currentPane: plugin })}
-                >
+                    onClick={() => this.setState({ currentPane: plugin })}>
                     {title}
                 </div>
                 <div className={styles.bodyContainer}>

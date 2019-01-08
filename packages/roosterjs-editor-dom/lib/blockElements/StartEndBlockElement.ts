@@ -1,13 +1,10 @@
 import collapseNodes from '../utils/collapseNodes';
 import contains from '../utils/contains';
-import createRange from '../selection/createRange';
-import getInlineElementAtNode from '../inlineElements/getInlineElementAtNode';
-import getNextPreviousInlineElement from '../inlineElements/getNextPreviousInlineElement';
 import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import isNodeAfter from '../utils/isNodeAfter';
 import wrap from '../utils/wrap';
-import { BlockElement, InlineElement } from 'roosterjs-editor-types';
+import { BlockElement } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
 
 const STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
@@ -21,9 +18,6 @@ const STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
  * This start and end must be in same sibling level and have same parent in DOM tree
  */
 export default class StartEndBlockElement implements BlockElement {
-    private firstInline: InlineElement;
-    private lastInline: InlineElement;
-
     constructor(private rootNode: Node, private startNode: Node, private endNode: Node) {}
 
     static getBlockContext(node: Node): HTMLElement {
@@ -99,75 +93,5 @@ export default class StartEndBlockElement implements BlockElement {
             contains(this.endNode, node, true /*treatSameNodeAsContain*/) ||
             (isNodeAfter(node, this.startNode) && isNodeAfter(this.endNode, node))
         );
-    }
-
-    /**
-     * @deprecated
-     * Gets the text content
-     */
-    public getTextContent(): string {
-        let range = createRange(this.startNode, this.endNode);
-        return range.toString();
-    }
-
-    /**
-     * @deprecated
-     * Get all nodes represented in a Node array
-     * This only works for balanced node -- start and end is at same level
-     */
-    public getContentNodes(): Node[] {
-        return collapseNodes(
-            StartEndBlockElement.getBlockContext(this.startNode),
-            this.startNode,
-            this.endNode,
-            true /*canSplitParent*/
-        );
-    }
-
-    /**
-     * @deprecated
-     * Gets first inline
-     */
-    public getFirstInlineElement(): InlineElement {
-        if (!this.firstInline) {
-            this.firstInline = getInlineElementAtNode(this.rootNode, this.startNode);
-        }
-
-        return this.firstInline;
-    }
-
-    /**
-     * @deprecated
-     * Gets last inline
-     */
-    public getLastInlineElement(): InlineElement {
-        if (!this.lastInline) {
-            this.lastInline = getInlineElementAtNode(this.rootNode, this.endNode);
-        }
-
-        return this.lastInline;
-    }
-
-    /**
-     * @deprecated
-     * Gets all inline in the block
-     */
-    public getInlineElements(): InlineElement[] {
-        let allInlines: InlineElement[] = [];
-        let startInline = this.getFirstInlineElement();
-        while (startInline) {
-            allInlines.push(startInline);
-            startInline = getNextPreviousInlineElement(this.rootNode, startInline, true /*isNext*/);
-        }
-
-        return allInlines;
-    }
-
-    /**
-     * @deprecated
-     * Checks if an inline falls inside me
-     */
-    public isInBlock(inlineElement: InlineElement): boolean {
-        return this.contains(inlineElement.getContainerNode());
     }
 }

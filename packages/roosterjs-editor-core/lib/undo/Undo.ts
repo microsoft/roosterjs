@@ -1,12 +1,8 @@
 import Editor from '../editor/Editor';
-import UndoService from '../editor/UndoService';
-import UndoSnapshots, { UndoSnapshotsService } from './UndoSnapshots';
-import {
-    ChangeSource,
-    PluginEvent,
-    PluginEventType,
-    ContentChangedEvent,
-} from 'roosterjs-editor-types';
+import UndoService from '../interfaces/UndoService';
+import UndoSnapshots from './UndoSnapshots';
+import UndoSnapshotsService from '../interfaces/UndoSnapshotsService';
+import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 const KEY_BACKSPACE = 8;
 const KEY_DELETE = 46;
@@ -23,9 +19,6 @@ export default class Undo implements UndoService {
     private isRestoring: boolean;
     private hasNewContent: boolean;
     private lastKeyPress: number;
-    private onDropDisposer: () => void;
-    private onCutDisposer: () => void;
-    public name = 'Undo';
 
     protected undoSnapshots: UndoSnapshotsService;
 
@@ -50,18 +43,12 @@ export default class Undo implements UndoService {
      */
     public initialize(editor: Editor): void {
         this.editor = editor;
-        this.onDropDisposer = this.editor.addDomEventHandler('drop', this.onNativeEvent);
-        this.onCutDisposer = this.editor.addDomEventHandler('cut', this.onNativeEvent);
     }
 
     /**
      * Dispose this plugin
      */
     public dispose() {
-        this.onDropDisposer();
-        this.onCutDisposer();
-        this.onDropDisposer = null;
-        this.onCutDisposer = null;
         this.editor = null;
 
         if (!this.preserveSnapshots) {
@@ -91,9 +78,12 @@ export default class Undo implements UndoService {
                 break;
             case PluginEventType.CompositionEnd:
                 this.clearRedoForInput();
+                this.addUndoSnapshot();
                 break;
             case PluginEventType.ContentChanged:
-                this.onContentChanged(event);
+                if (!this.isRestoring) {
+                    this.clearRedoForInput();
+                }
                 break;
         }
     }
@@ -142,7 +132,10 @@ export default class Undo implements UndoService {
      * Add an undo snapshot
      */
     public addUndoSnapshot(): string {
-        let snapshot = this.getSnapshot();
+        let snapshot = this.editor.getContent(
+            false /*triggerExtractContentEvent*/,
+            true /*markSelection*/
+        );
         this.getSnapshotsManager().addSnapshot(snapshot);
         this.hasNewContent = false;
         return snapshot;
@@ -207,19 +200,12 @@ export default class Undo implements UndoService {
             return;
         }
 
-        let shouldTakeUndo = false;
-        let selectionRange = this.editor.getSelectionRange();
-        if (selectionRange && !selectionRange.collapsed) {
-            // The selection will be removed, should take undo
-            shouldTakeUndo = true;
-        } else if (
+        let range = this.editor.getSelectionRange();
+        if (
+            (range && !range.collapsed) ||
             (evt.which == KEY_SPACE && this.lastKeyPress != KEY_SPACE) ||
             evt.which == KEY_ENTER
         ) {
-            shouldTakeUndo = true;
-        }
-
-        if (shouldTakeUndo) {
             this.addUndoSnapshot();
             if (evt.which == KEY_ENTER) {
                 // Treat ENTER as new content so if there is no input after ENTER and undo,
@@ -233,32 +219,9 @@ export default class Undo implements UndoService {
         this.lastKeyPress = evt.which;
     }
 
-    private onContentChanged(evt: ContentChangedEvent) {
-        if (!this.isRestoring) {
-            let currentSnapshot = this.getSnapshot();
-
-            if (evt.lastSnapshot != currentSnapshot) {
-                this.clearRedoForInput();
-            }
-        }
-    }
-
-    private getSnapshot() {
-        return this.editor.getContent(false /*triggerExtractContentEvent*/, true /*markSelection*/);
-    }
-
     private clearRedoForInput() {
         this.getSnapshotsManager().clearRedo();
         this.lastKeyPress = 0;
         this.hasNewContent = true;
     }
-
-    private onNativeEvent = (e: UIEvent) => {
-        this.editor.runAsync(() => {
-            this.addUndoSnapshot();
-            this.editor.triggerContentChangedEvent(
-                e.type == 'cut' ? ChangeSource.Cut : ChangeSource.Drop
-            );
-        });
-    };
 }

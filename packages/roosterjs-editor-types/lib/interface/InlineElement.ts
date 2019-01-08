@@ -1,5 +1,4 @@
 import BlockElement from './BlockElement';
-import EditorPoint from '../legacy/EditorPoint';
 import NodePosition from './NodePosition';
 
 /**
@@ -52,24 +51,12 @@ interface InlineElement {
     /**
      * Checks if the given editor position is contained in this inline element
      */
-    contains(position: NodePosition | EditorPoint): boolean;
+    contains(position: NodePosition): boolean;
 
     /**
      * Apply inline style to a region of an inline element
      */
     applyStyle(styler: (element: HTMLElement) => any): void;
-
-    /**
-     * @deprecated
-     * Get the start position of this inline element
-     */
-    getStartPoint(): EditorPoint;
-
-    /**
-     * @deprecated
-     * Get the end position of this inline element
-     */
-    getEndPoint(): EditorPoint;
 }
 
 export default InlineElement;

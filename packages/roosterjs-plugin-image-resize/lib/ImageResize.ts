@@ -30,7 +30,7 @@ export default class ImageResize implements EditorPlugin {
     private startHeight: number;
     private resizeDiv: HTMLElement;
     private direction: string;
-    private disposers: (() => void)[];
+    private disposer: () => void;
 
     /**
      * Create a new instance of ImageResize
@@ -53,7 +53,7 @@ export default class ImageResize implements EditorPlugin {
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'imageresize';
+        return 'ImageResize';
     }
 
     /**
@@ -62,10 +62,10 @@ export default class ImageResize implements EditorPlugin {
      */
     initialize(editor: Editor) {
         this.editor = editor;
-        this.disposers = [
-            editor.addDomEventHandler('dragstart', this.onDragStart),
-            editor.addDomEventHandler('blur', this.onBlur),
-        ];
+        this.disposer = editor.addDomEventHandler({
+            dragstart: this.onDragStart,
+            blur: this.onBlur,
+        });
     }
 
     /**
@@ -75,8 +75,8 @@ export default class ImageResize implements EditorPlugin {
         if (this.resizeDiv) {
             this.hideResizeHandle();
         }
-        this.disposers.forEach(disposer => disposer());
-        this.disposers = null;
+        this.disposer();
+        this.disposer = null;
         this.editor = null;
     }
 
@@ -126,7 +126,7 @@ export default class ImageResize implements EditorPlugin {
                 event.which != CTRL_KEYCODE &&
                 event.which != ALT_KEYCODE
             ) {
-                this.hideResizeHandle();
+                this.hideResizeHandle(true /*selectImage*/);
             }
         } else if (
             e.eventType == PluginEventType.ContentChanged &&
@@ -359,22 +359,4 @@ export default class ImageResize implements EditorPlugin {
             this.hideResizeHandle(true);
         }
     };
-}
-
-/**
- * @deprecated Use ImageResize instead
- */
-export class ImageResizePlugin extends ImageResize {
-    /**
-     * @deprecated Use ImageResize instead
-     */
-    constructor(
-        minWidth: number = 10,
-        minHeight: number = 10,
-        selectionBorderColor: string = '#DB626C',
-        forcePreserveRatio: boolean = false
-    ) {
-        super(minWidth, minHeight, selectionBorderColor, forcePreserveRatio);
-        console.warn('ImageResizePlugin class is deprecated. Use ImageResize class instead');
-    }
 }

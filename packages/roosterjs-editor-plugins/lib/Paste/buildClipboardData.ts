@@ -1,6 +1,6 @@
-import { ContentPosition, ClipboardItems } from 'roosterjs-editor-types';
+import { ClipboardItems, ContentPosition } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { fromHtml, extractClipboardEvent } from 'roosterjs-editor-dom';
+import { extractClipboardEvent, fromHtml } from 'roosterjs-editor-dom';
 
 const CONTAINER_HTML =
     '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';

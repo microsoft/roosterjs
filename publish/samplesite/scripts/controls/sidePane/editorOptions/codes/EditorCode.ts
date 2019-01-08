@@ -38,17 +38,12 @@ export default class EditorCode extends CodeElement {
 
     getCode() {
         let defaultFormat = this.defaultFormat.getCode();
-        let code =
-            "let contentDiv = document.getElementById('contentDiv') as HTMLDivElement;\n";
+        let code = "let contentDiv = document.getElementById('contentDiv') as HTMLDivElement;\n";
         code += `let plugins = ${this.plugins.getCode()};\n`;
-        code += defaultFormat
-            ? `let defaultFormat: DefaultFormat = ${defaultFormat};\n`
-            : '';
+        code += defaultFormat ? `let defaultFormat: DefaultFormat = ${defaultFormat};\n` : '';
         code += 'let options: EditorOptions = {\n';
         code += this.indent('plugins: plugins,\n');
-        code += defaultFormat
-            ? this.indent('defaultFormat: defaultFormat,\n')
-            : '';
+        code += defaultFormat ? this.indent('defaultFormat: defaultFormat,\n') : '';
         code += '};\n';
         code += 'let editor = new Editor(contentDiv, options);\n';
 

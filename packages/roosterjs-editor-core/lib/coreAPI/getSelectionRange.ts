@@ -1,4 +1,4 @@
-import EditorCore, { GetSelectionRange } from '../editor/EditorCore';
+import EditorCore, { GetSelectionRange } from '../interfaces/EditorCore';
 import { contains } from 'roosterjs-editor-dom';
 
 const getSelectionRange: GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => {

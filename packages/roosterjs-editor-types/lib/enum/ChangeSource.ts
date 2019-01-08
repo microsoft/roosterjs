@@ -4,11 +4,6 @@
  */
 const enum ChangeSource {
     /**
-     * @deprecated
-     */
-    AutoBullet = 'AutoBullet',
-
-    /**
      * Content changed by auto link
      */
     AutoLink = 'AutoLink',
@@ -37,11 +32,6 @@ const enum ChangeSource {
      * Content changed by setContent API
      */
     SetContent = 'SetContent',
-
-    /**
-     * @deprecated
-     */
-    Undo = 'Undo',
 
     /**
      * Content changed by cut operation

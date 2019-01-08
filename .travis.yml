@@ -1,22 +1,22 @@
 language: node_js
 sudo: required
 addons:
-  chrome: stable
+    chrome: stable
 node_js:
-  - 9
+    - 9
 before_install:
-  - yarn
+    - yarn
 install:
-  - npm run build
+    - npm run build
 script:
-  - xvfb-run npm run test
+    - xvfb-run npm run test
 cache:
-  yarn: true
+    yarn: true
 deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  keep-history: true
-  on:
-    branch: master
-  local-dir: ./dist/roosterjs/samplesite
+    provider: pages
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN
+    keep-history: true
+    on:
+        branch: master
+    local-dir: ./dist/roosterjs/samplesite

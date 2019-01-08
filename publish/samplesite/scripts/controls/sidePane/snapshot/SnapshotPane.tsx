@@ -69,8 +69,7 @@ export default class SnapshotPane extends React.Component<SnapshotPaneProps, Sna
                 className={index == this.state.currentIndex ? styles.current : ''}
                 key={index}
                 onClick={() => this.setSnapshot(snapshot)}
-                onDoubleClick={() => this.props.onMove(index - this.state.currentIndex)}
-            >
+                onDoubleClick={() => this.props.onMove(index - this.state.currentIndex)}>
                 {snapshot || '<EMPTY SNAPSHOT>'}
             </pre>
         );

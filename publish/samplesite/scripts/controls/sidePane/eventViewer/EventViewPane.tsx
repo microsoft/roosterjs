@@ -54,8 +54,7 @@ export default class EventViewPane extends React.Component<{}, EventViewPaneStat
                     <select
                         defaultValue={this.state.displayCount.toString()}
                         ref={this.displayCount}
-                        onChange={this.onDisplayCountChanged}
-                    >
+                        onChange={this.onDisplayCountChanged}>
                         <option value={'0'}>Disabled</option>
                         <option value={'20'}>20</option>
                         <option value={'50'}>50</option>

@@ -1,5 +1,4 @@
-import { BlockElement, EditorPoint, InlineElement, NodePosition } from 'roosterjs-editor-types';
-import { toEditorPoint } from '../deprecated/positionUtils';
+import { BlockElement, InlineElement, NodePosition } from 'roosterjs-editor-types';
 
 /**
  * Represents an empty InlineElement.
@@ -61,7 +60,7 @@ export default class EmptyInlineElement implements InlineElement {
     /**
      * Checks if the given editor position is contained in this inline element
      */
-    contains(position: NodePosition | EditorPoint): boolean {
+    contains(position: NodePosition): boolean {
         return false;
     }
 
@@ -69,20 +68,4 @@ export default class EmptyInlineElement implements InlineElement {
      * Apply inline style to a region of an inline element.
      */
     applyStyle(styler: (element: HTMLElement) => any): void {}
-
-    /**
-     * @deprecated
-     * Get the start position of this inline element
-     */
-    getStartPoint(): EditorPoint {
-        return toEditorPoint(this.position);
-    }
-
-    /**
-     * @deprecated
-     * Get the end position of this inline element
-     */
-    getEndPoint(): EditorPoint {
-        return toEditorPoint(this.position);
-    }
 }

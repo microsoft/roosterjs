@@ -12,10 +12,7 @@ const styles = require('./OptionsPane.scss');
 
 export interface PluginsProps {
     state: BuildInPluginState;
-    resetState: (
-        callback: (state: BuildInPluginState) => void,
-        resetEditor: boolean,
-    ) => void;
+    resetState: (callback: (state: BuildInPluginState) => void, resetEditor: boolean) => void;
 }
 
 export default class Plugins extends React.Component<PluginsProps, {}> {
@@ -34,14 +31,14 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                             this.linkTitle,
                             this.props.state.linkTitle,
                             'Use "' + UrlPlaceholder + '" for the url string',
-                            (state, value) => (state.linkTitle = value),
-                        ),
+                            (state, value) => (state.linkTitle = value)
+                        )
                     )}
                     {this.renderPluginItem('paste', 'Paste Plugin')}
                     {this.renderPluginItem(
                         'contentEdit',
                         'ContentEdit Plugin',
-                        this.renderContentEditFeatures(),
+                        this.renderContentEditFeatures()
                     )}
                     {this.renderPluginItem(
                         'watermark',
@@ -51,17 +48,11 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                             this.watermarkText,
                             this.props.state.watermarkText,
                             '',
-                            (state, value) => (state.watermarkText = value),
-                        ),
+                            (state, value) => (state.watermarkText = value)
+                        )
                     )}
-                    {this.renderPluginItem(
-                        'imageResize',
-                        'Image Resize Plugin',
-                    )}
-                    {this.renderPluginItem(
-                        'tableResize',
-                        'Table Resize Plugin',
-                    )}
+                    {this.renderPluginItem('imageResize', 'Image Resize Plugin')}
+                    {this.renderPluginItem('tableResize', 'Table Resize Plugin')}
                 </tbody>
             </table>
         );
@@ -70,28 +61,28 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
     private renderPluginItem(
         id: PluginItemId,
         text: string,
-        moreOptions?: JSX.Element,
+        moreOptions?: JSX.Element
     ): JSX.Element {
         return this.renderItem(
             id,
             this.props.state.pluginList[id],
             text,
             moreOptions,
-            this.onPluginClick,
+            this.onPluginClick
         );
     }
 
     private renderContentEditItem(
         id: ContentEditItemId,
         text: string,
-        moreOptions?: JSX.Element,
+        moreOptions?: JSX.Element
     ): JSX.Element {
         return this.renderItem(
             id,
             this.props.state.contentEditFeatures[id],
             text,
             moreOptions,
-            this.onContentEditClick,
+            this.onContentEditClick
         );
     }
 
@@ -100,13 +91,13 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
         checked: boolean,
         text: string,
         moreOptions: JSX.Element,
-        onChange: (id: T) => void,
+        onChange: (id: T) => void
     ): JSX.Element {
         return (
             <tr>
                 <td className={styles.checkboxColumn}>
                     <input
-                        type='checkbox'
+                        type="checkbox"
                         id={id}
                         checked={checked}
                         onChange={() => onChange(id)}
@@ -127,21 +118,18 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
         ref: React.RefObject<HTMLInputElement>,
         value: string,
         placeholder: string,
-        onChange: (state: BuildInPluginState, value: string) => void,
+        onChange: (state: BuildInPluginState, value: string) => void
     ): JSX.Element {
         return (
             <div>
                 {label}
                 <input
-                    type='text'
+                    type="text"
                     ref={ref}
                     value={value}
                     placeholder={placeholder}
                     onChange={() =>
-                        this.props.resetState(
-                            state => onChange(state, ref.current.value),
-                            false,
-                        )
+                        this.props.resetState(state => onChange(state, ref.current.value), false)
                     }
                     onBlur={() => this.props.resetState(null, true)}
                 />
@@ -154,58 +142,37 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
             <table>
                 <tbody>
                     {this.renderContentEditItem('autoLink', 'Auto link')}
-                    {this.renderContentEditItem(
-                        'indentWhenTab',
-                        'Indent When Tab',
-                    )}
-                    {this.renderContentEditItem(
-                        'outdentWhenShiftTab',
-                        'Outdent When Shift+Tab',
-                    )}
+                    {this.renderContentEditItem('indentWhenTab', 'Indent When Tab')}
+                    {this.renderContentEditItem('outdentWhenShiftTab', 'Outdent When Shift+Tab')}
                     {this.renderContentEditItem(
                         'outdentWhenBackspaceOnEmptyFirstLine',
-                        'Outdent When Backspace On Empty FirstLine',
+                        'Outdent When Backspace On Empty FirstLine'
                     )}
                     {this.renderContentEditItem(
                         'outdentWhenEnterOnEmptyLine',
-                        'Outdent When Enter On Empty Line',
+                        'Outdent When Enter On Empty Line'
                     )}
                     {this.renderContentEditItem(
                         'mergeInNewLineWhenBackspaceOnFirstChar',
-                        'Merge In New Line When Backspace On FirstChar In List',
+                        'Merge In New Line When Backspace On FirstChar In List'
                     )}
                     {this.renderContentEditItem(
                         'unquoteWhenBackspaceOnEmptyFirstLine',
-                        'Unquote When Backspace On Empty First Line',
+                        'Unquote When Backspace On Empty First Line'
                     )}
                     {this.renderContentEditItem(
                         'unquoteWhenEnterOnEmptyLine',
-                        'Unquote When Enter On Empty Line',
+                        'Unquote When Enter On Empty Line'
                     )}
-                    {this.renderContentEditItem(
-                        'autoBullet',
-                        'Auto Bullet / Numbering',
-                    )}
-                    {this.renderContentEditItem(
-                        'tabInTable',
-                        'Tab To Jump Cell In Table',
-                    )}
-                    {this.renderContentEditItem(
-                        'upDownInTable',
-                        'Up / Down To Jump Cell In Table',
-                    )}
+                    {this.renderContentEditItem('autoBullet', 'Auto Bullet / Numbering')}
+                    {this.renderContentEditItem('tabInTable', 'Tab To Jump Cell In Table')}
+                    {this.renderContentEditItem('upDownInTable', 'Up / Down To Jump Cell In Table')}
                     {this.renderContentEditItem(
                         'unlinkWhenBackspaceAfterLink',
-                        'Auto unlink when backspace right after a hyperlink',
+                        'Auto unlink when backspace right after a hyperlink'
                     )}
-                    {this.renderContentEditItem(
-                        'defaultShortcut',
-                        'Default Shortcuts',
-                    )}
-                    {this.renderContentEditItem(
-                        'smartOrderedList',
-                        'Smart Ordered List Style',
-                    )}
+                    {this.renderContentEditItem('defaultShortcut', 'Default Shortcuts')}
+                    {this.renderContentEditItem('smartOrderedList', 'Smart Ordered List Style')}
                 </tbody>
             </table>
         );

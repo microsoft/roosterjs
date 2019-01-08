@@ -1,6 +1,6 @@
+import getInlineElementAtNode from './getInlineElementAtNode';
 import { getFirstLeafNode, getLastLeafNode } from '../utils/getLeafNode';
 import { InlineElement } from 'roosterjs-editor-types';
-import getInlineElementAtNode from './getInlineElementAtNode';
 
 /**
  * Get the first inline element inside the given node

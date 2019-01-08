@@ -26,14 +26,12 @@ export default function replaceWithNode(
  * @param node The node to replace the text with
  * @param exactMatch True if the text must appear exactly before selection,
  * otherwise there can be some text between the tearget text and selection
- * @param searcher Optional PositionContentSearcher of current selection to help search text
  */
 export default function replaceWithNode(
     editor: Editor,
     range: Range,
     node: Node,
-    exactMatch: boolean,
-    searcher?: PositionContentSearcher
+    exactMatch: boolean
 ): boolean;
 
 export default function replaceWithNode(
