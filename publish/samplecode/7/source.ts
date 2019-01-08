@@ -10,6 +10,10 @@ const KEY_9 = 0x39;
 class MyPlugin implements EditorPlugin {
     private editor: Editor;
 
+    getName() {
+        return 'MyPlugin';
+    }
+
     initialize(editor: Editor) {
         this.editor = editor;
     }

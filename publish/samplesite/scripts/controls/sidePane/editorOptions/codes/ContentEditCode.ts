@@ -26,9 +26,9 @@ export default class ContentEditCode extends CodeElement {
         let defaultValues = getDefaultContentEditFeatures();
         let features = Object.keys(defaultValues)
             .map(key => {
-                let checked = this.state[key];
+                let checked = (<any>this.state)[key];
 
-                return typeof checked != 'boolean' || checked == defaultValues[key]
+                return typeof checked != 'boolean' || checked == (<any>defaultValues)[key]
                     ? null
                     : `${key}: ${checked ? 'true' : 'false'},\n`;
             })

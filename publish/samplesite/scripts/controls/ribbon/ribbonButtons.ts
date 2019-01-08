@@ -1,9 +1,7 @@
-import MainPaneBase from '../MainPaneBase';
 import renderInsertLinkDialog from './renderInsertLinkDialog';
 import renderTableOptions from './renderTableOptions';
 import RibbonButtonType from './RibbonButtonType';
 import { Alignment, Direction, Indentation } from 'roosterjs-editor-types';
-import { getPlugins } from '../plugins';
 import {
     setBackgroundColor,
     setFontName,

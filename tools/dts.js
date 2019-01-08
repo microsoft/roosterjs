@@ -1,7 +1,6 @@
 'use strict';
 var fs = require('fs');
 var path = require('path');
-var exec = require('child_process').execSync;
 var namePlaceholder = '__NAME__';
 var regExportFrom = /export([^;]+)from\s+'([^']+)';/gm;
 var regImportFrom = /import[^;]+from[^;]+;/gm;
@@ -303,43 +302,18 @@ function output(targetDir, library, isAmd, queue) {
 
     var filename = `${path.resolve(targetDir, 'rooster')}${isAmd ? '-amd' : ''}.d.ts`;
     fs.writeFileSync(filename, content);
-
-    // Test the .d.ts file
-    exec(`node ../node_modules/typescript/lib/tsc.js ` + filename + ' -outFile nul', {
-        stdio: 'inherit',
-        cwd: __dirname,
-    });
+    return filename;
 }
 
-// Param structure
-// {
-//      projDir: project dir,
-//      baseDir: 'base dir, default is current dir',
-//      library: 'library name, should be the same with "library" in webpack config
-//      output:  'output file name, must be absolute path',
-//      include: [
-//          included root files, must be relative with baseDir'
-//      ]
-// }
-
-module.exports = isAmd => {
-    var mkdirp = require('mkdirp');
-    var projDir = path.resolve(__dirname, '..');
-    var baseDir = path.resolve(projDir, 'dist');
-    var targetDir = path.resolve(baseDir, 'roosterjs', 'dist');
-    mkdirp.sync(targetDir);
-
-    var include = ['roosterjs/lib/index.d.ts'];
+module.exports.prepareDts = (rootPath, baseDir, includes) => {
     var queue = [];
-
-    for (var i = 0; i < include.length; i++) {
-        var filename = path.resolve(baseDir, include[i]);
-        enqueue(queue, filename);
-    }
+    includes.forEach(include => enqueue(queue, path.join(baseDir, include)));
 
     for (var i = 0; i < queue.length; i++) {
-        process(baseDir, queue, i, projDir);
+        process(baseDir, queue, i, rootPath);
     }
 
-    output(targetDir, 'roosterjs', isAmd, queue);
+    return queue;
 };
+
+module.exports.output = output;

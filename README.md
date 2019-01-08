@@ -16,6 +16,12 @@ If you are upgrading your project from RoosterJs 6.x, please read
 [here](https://github.com/Microsoft/roosterjs/wiki/RoosterJs-7) for a full
 list of API changes.
 
+The code of RoosterJs 6.x is now moved to branch [roosterjs6](https://github.com/Microsoft/roosterjs/tree/roosterjs6).
+
+RoosterJs 6.x will be still support for a while. Most new features added into
+RoosterJs 7.x will also be merged into 6.x branch for now. We plan to stop the
+supporting of RoosterJs 6.x at the end of 2019/2.
+
 ## Features
 
 ### Packages

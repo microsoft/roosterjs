@@ -6,6 +6,8 @@ var webpack = require('webpack');
 var glob = require('glob');
 var toposort = require('toposort');
 var assign = require('object-assign');
+var dts = require('./dts');
+var mkdirp = require('mkdirp');
 
 // Paths
 var rootPath = path.join(__dirname, '..');
@@ -89,8 +91,7 @@ async function clean() {
             if (err) {
                 reject(err);
             } else {
-                // Wait a while to avoid creating folder failure
-                setTimeout(resolve, 200);
+                resolve();
             }
         });
     });
@@ -128,7 +129,6 @@ function checkDependency() {
 
 function normalize() {
     var knownCustomizedPackages = {};
-    const mkdirp = require('mkdirp');
 
     packages.forEach(package => {
         var packageJson = readPackageJson(package);
@@ -166,38 +166,41 @@ function normalize() {
     });
 }
 
+function runNode(command, cwd) {
+    exec('node ' + command, {
+        stdio: 'inherit',
+        cwd,
+    });
+}
+
 function tslint() {
     var tslintPath = path.join(nodeModulesPath, 'tslint/bin/tslint');
     var projectPath = path.join(rootPath, 'tools/tsconfig.tslint.json');
-    exec('node ' + tslintPath + ' --project ' + projectPath, {
-        stdio: 'inherit',
-        cwd: rootPath,
-    });
+    runNode(tslintPath + ' --project ' + projectPath, rootPath);
 }
 
-function buildPackage(package, module) {
-    var packagePath = path.join(packagesPath, package);
-    var copy = fileName => {
-        var source = path.join(packagePath, fileName);
-        var target = path.join(distPath, package, fileName);
-        fs.copyFileSync(source, target);
-    };
+function tsc(isAmd) {
+    runNode(
+        typescriptPath + ` -t es5 --moduleResolution node -m ${isAmd ? 'amd' : 'commonjs'}`,
+        packagesPath
+    );
 
-    glob.sync('@(README|readme)*.*').forEach(copy);
-    glob.sync('@(license|LICENSE)*').forEach(copy);
-
-    var typescriptCommand = 'node ' + typescriptPath;
-    exec(typescriptCommand + ` -t es5 --moduleResolution node -m ${module}`, {
-        stdio: 'inherit',
-        cwd: packagePath,
-    });
-}
-
-function renameAmd() {
-    packages.forEach(package => {
-        var packagePath = path.join(distPath, package);
-        fs.renameSync(`${packagePath}/lib`, `${packagePath}/lib-amd`);
-    });
+    if (isAmd) {
+        packages.forEach(package => {
+            var packagePath = path.join(distPath, package);
+            fs.renameSync(`${packagePath}/lib`, `${packagePath}/lib-amd`);
+        });
+    } else {
+        packages.forEach(package => {
+            var copy = fileName => {
+                var source = path.join(packagesPath, package, fileName);
+                var target = path.join(distPath, package, fileName);
+                fs.copyFileSync(source, target);
+            };
+            glob.sync('@(README|readme)*.*').forEach(copy);
+            glob.sync('@(license|LICENSE)*').forEach(copy);
+        });
+    }
 }
 
 function getPackedFileName(isProduction, isAmd) {
@@ -280,10 +283,7 @@ function exploreSourceMap() {
     var commandPath = path.join(nodeModulesPath, 'source-map-explorer/index.js');
     var inputFile = path.join(roosterJsDistPath, 'rooster.js');
     var targetFile = path.join(roosterJsDistPath, 'sourceMap.html');
-    exec(`node ${commandPath} -m --html ${inputFile} > ${targetFile}`, {
-        stdio: 'inherit',
-        cwd: rootPath,
-    });
+    runNode(`${commandPath} -m --html ${inputFile} > ${targetFile}`, rootPath);
 }
 
 function insertLicense(filename) {
@@ -294,9 +294,23 @@ function insertLicense(filename) {
     );
 }
 
+var dtsQueue = [];
+var dtsFileName;
+
+function prepareDts() {
+    dtsQueue = dts.prepareDts(rootPath, distPath, ['roosterjs/lib/index.d.ts']);
+}
+
 function buildDts(isAmd) {
-    var dts = require('./dts');
-    dts(isAmd);
+    mkdirp.sync(roosterJsDistPath);
+    let filename = dts.output(roosterJsDistPath, 'roosterjs', isAmd, dtsQueue);
+    if (!isAmd) {
+        dtsFileName = filename;
+    }
+}
+
+function verifyDts() {
+    runNode(typescriptPath + ' ' + dtsFileName + ' --noEmit', rootPath);
 }
 
 function copySample() {
@@ -314,11 +328,12 @@ function copySample() {
 
 async function buildDemoSite() {
     var sourcePath = path.join(rootPath, 'publish/samplesite/scripts');
+    runNode(typescriptPath + ' --noEmit ', sourcePath);
+
     var distPathRoot = path.join(distPath, 'roosterjs/samplesite');
     var distScriptPath = path.join(distPathRoot, 'scripts');
     var filename = 'demo.js';
     var targetFile = path.join(distScriptPath, filename);
-
     var webpackConfig = {
         entry: path.join(sourcePath, 'index.ts'),
         devtool: 'source-map',
@@ -362,13 +377,6 @@ async function buildDemoSite() {
         mode: 'development',
     };
 
-    // 1. Run tsc with --noEmit to do code check
-    exec('node ' + typescriptPath + ' --noEmit ', {
-        stdio: 'inherit',
-        cwd: sourcePath,
-    });
-
-    // 2. Run webpack to generate target code
     await new Promise((resolve, reject) => {
         webpack(webpackConfig).run(err => {
             if (err) {
@@ -442,6 +450,8 @@ class Runner {
                 await task.callback().catch(e => {
                     throw e;
                 });
+
+                await new Promise(resolve => setTimeout(resolve, 100));
             }
 
             bar.tick({
@@ -458,77 +468,82 @@ class Runner {
 async function buildAll(options) {
     var tasks = [
         {
-            message: 'Clearing destination folder',
-            callback: clean,
-            enabled: options.clean,
+            message: 'Running tslint...',
+            callback: tslint,
+            enabled: options.tslint,
         },
         {
-            message: 'Checking cicular dependency',
+            message: 'Checking cicular dependency...',
             callback: checkDependency,
             enabled: options.checkdep,
         },
         {
-            message: 'Normalizing packages',
+            message: 'Clearing destination folder...',
+            callback: clean,
+            enabled: options.clean,
+        },
+        {
+            message: 'Normalizing packages...',
             callback: normalize,
             enabled: options.normalize,
         },
         {
-            message: 'Checking code styles',
-            callback: tslint,
-            enabled: options.tslint,
-        },
-        ...packages.map(package => ({
-            message: `Building package ${package} in AMD mode`,
-            callback: () => buildPackage(package, 'amd'),
+            message: 'Building packages in AMD mode...',
+            callback: () => tsc(true),
             enabled: options.buildamd,
-        })),
+        },
         {
-            message: 'Renaming AMD library folders',
-            callback: renameAmd,
-            enabled: options.buildamd,
-        },
-        ...packages.map(package => ({
-            message: `Building package ${package} in CommonJs mode`,
-            callback: () => buildPackage(package, 'commonjs'),
+            message: 'Building packages in CommonJs mode...',
+            callback: () => tsc(false),
             enabled: options.buildcommonjs,
-        })),
+        },
         ...[false, true].map(isAmd => ({
-            message: `Packing ${getPackedFileName(false, isAmd)}`,
+            message: `Packing ${getPackedFileName(false, isAmd)}...`,
             callback: async () => pack(false, isAmd),
             enabled: options.pack,
         })),
         ...[false, true].map(isAmd => ({
-            message: `Packing ${getPackedFileName(true, isAmd)}`,
+            message: `Packing ${getPackedFileName(true, isAmd)}...`,
             callback: async () => pack(true, isAmd),
             enabled: options.packprod,
         })),
         {
-            message: 'Generating source map explorer file',
+            message: 'Generating source map explorer file...',
             callback: exploreSourceMap,
             enabled: options.pack,
         },
         {
-            message: 'Counting words in target file',
+            message: 'Counting words in target file...',
             callback: countWord,
             enabled: options.packprod,
         },
+        {
+            message: 'Collecting information for type definition file...',
+            callback: prepareDts,
+            enabled: options.dts,
+        },
         ...[false, true].map(isAmd => ({
-            message: `Generating type definition file for ${isAmd ? 'AMD' : 'CommonJs'}`,
+            message: `Generating type definition file for ${isAmd ? 'AMD' : 'CommonJs'}...`,
             callback: () => buildDts(isAmd),
             enabled: options.dts,
         })),
         {
-            message: 'Copying sample code',
+            message: 'Verifying type definition file...',
+            callback: verifyDts,
+            enabled: options.dts,
+        },
+        {
+            message: 'Copying sample code...',
             callback: copySample,
             enabled: options.copysample,
         },
         {
-            message: 'Building demo site',
+            message: 'Building demo site...',
             callback: buildDemoSite,
             enabled: options.builddemo,
         },
         {
-            message: 'Publishing to npm',
+            message: 'Publishing to npm...',
             callback: publish,
             enabled: options.publish,
         },
@@ -555,5 +570,5 @@ function parseOptions(additionalParams) {
 // For debugging, put the build options below:
 // e.g.
 // let options = ['pack', 'packprod'];
-let options = [];
+let options = ['builddemo'];
 buildAll(parseOptions(options));

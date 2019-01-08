@@ -1,14 +1,32 @@
+[![Build Status](https://travis-ci.org/Microsoft/roosterjs.svg?branch=master)](https://travis-ci.org/Microsoft/roosterjs)
+
 # Rooster
 
 Rooster is a framework-independent JavaScript rich-text editor neatly nested
 inside one HTML `<div>` element. Editing operations performed by end users are
 handled in simple ways to generate the final HTML.
 
+To view the sample site, please click the link below:
+
+[RoosterJs Sample Site](https://microsoft.github.io/roosterjs/index.html).
+
+## Upgrade from RoosterJs 6.x
+
+If you are upgrading your project from RoosterJs 6.x, please read
+[here](https://github.com/Microsoft/roosterjs/wiki/RoosterJs-7) for a full
+list of API changes.
+
+The code of RoosterJs 6.x is now moved to branch [roosterjs6](https://github.com/Microsoft/roosterjs/tree/roosterjs6).
+
+RoosterJs 6.x will be still support for a while. Most new features added into
+RoosterJs 7.x will also be merged into 6.x branch for now. We plan to stop the
+supporting of RoosterJs 6.x at the end of 2019/2.
+
 ## Features
 
 ### Packages
 
-Rooster contains 6 packages.
+Rooster contains 9 packages.
 
 1. `roosterjs`:
    A facade of all Rooster code for those who want a quick start. Use the
@@ -33,6 +51,15 @@ Rooster contains 6 packages.
 
 6. `roosterjs-editor-types`:
    Defines public interfaces and enumerations.
+
+7. `roosterjs-html-sanitizer`
+   A common library to help sanitize HTML.
+
+8. `roosterjs-plugin-image-resize`
+   A plugin to help do inline image resize within the editor
+
+9. `roosterjs-plugin-picker`
+   A plugin to help build picker-like plugins
 
 ### APIs
 
@@ -63,6 +90,10 @@ an "a" is typed in the editor:
 
 ```typescript
 class HelloRooster implements EditorPlugin {
+    getName() {
+        return 'HelloRooster';
+    }
+
     initialize(editor: Editor) {}
 
     dispose() {}
@@ -75,53 +106,159 @@ class HelloRooster implements EditorPlugin {
 }
 ```
 
+## Installation
+
+Install via NPM or Yarn:
+
+`yarn add roosterjs`
+
+or
+
+`npm install roosterjs --save`
+
+You can also install sub packages separately:
+
+`yarn add roosterjs-editor-core`
+
+`yarn add roosterjs-editor-api`
+
+`...`
+
+or
+
+`npm install roosterjs-editor-core --save`
+
+`npm install roosterjs-editor-api --save`
+
+`...`
+
+In order to run the code below, you may also need to install [webpack](https://webpack.js.org/):
+
+`yarn add webpack -g`
+
+or
+
+`npm install webpack -g`
+
 ## Usage
 
-As a quick start, use the `createEditor()` function in `roosterjs` to create an
-editor with default configurations.
+### A quick start
 
-You should write this somewhere in your HTML DOM:
+1. Create `editor.htm` contains a DIV with some styles, and a reference to a
+   .js file:
 
 ```html
-<div id="editor" style="width: 500px; height: 300px; border: solid 1px black"></div>
+<html>
+    <body>
+        <div
+            id="editorDiv"
+            style="width: 500px; height: 300px; overflow: auto;
+        border: solid 1px black"
+        ></div>
+        <script src="editor.js"></script>
+    </body>
+</html>
 ```
 
-You should then run these lines of code in the browser console:
+2. Create `source.js` to import roosterjs and create an editor:
 
 ```javascript
-let editor = createEditor(document.getElementById('editor'));
-editor.setContent('<div>Hello Rooster!</div>');
+var roosterjs = require('roosterjs');
+var editorDiv = document.getElementById('editorDiv');
+var editor = roosterjs.createEditor(editorDiv);
+editor.setContent('Welcome to <b>RoosterJs</b>!');
 ```
 
-To get the content of the editor, just run:
+3. Compile the javascript file using webpack:
+
+`webpack source.js editor.js`
+
+4. Navigate to editor.htm, you will see a editor shown in the page.
+
+### Add some format buttons
+
+1. Add some buttons into `editor.htm`:
+
+```html
+<html>
+    <body>
+        <div
+            id="editorDiv"
+            style="width: 500px; height: 300px; overflow: auto;
+        border: solid 1px black"
+        ></div>
+        <button id="buttonB">B</button> <button id="buttonI">I</button>
+        <button id="buttonU">U</button>
+        <script src="editor.js"></script>
+    </body>
+</html>
+```
+
+2. Add code to `source.js` to handle click event of the buttons:
 
 ```javascript
-let content = editor.getContent();
+var roosterjs = require('roosterjs');
+var editorDiv = document.getElementById('editorDiv');
+var editor = roosterjs.createEditor(editorDiv);
+editor.setContent('Welcome to <b>RoosterJs</b>!');
+
+document.getElementById('buttonB').addEventListener('click', function() {
+    roosterjs.toggleBold(editor);
+});
+document.getElementById('buttonI').addEventListener('click', function() {
+    roosterjs.toggleItalic(editor);
+});
+document.getElementById('buttonU').addEventListener('click', function() {
+    roosterjs.toggleUnderline(editor);
+});
 ```
+
+3. Compile the javascript file using webpack:
+
+`webpack source.js editor.js`
+
+4. Navigate to editor.htm, you will see buttons with bold, italic, underline
+   actions in the page.
 
 ## Sample code
 
-In the `/sample/` folder is a sample editor that you can explore.
-To use the sample editor, follow these instructions:
+To view the sample site, please click [here](https://microsoft.github.io/roosterjs/index.html).
 
-1. Get dependencies using npm.
+To build the sample site code yourself, follow these instructions:
+
+1. Get dependencies using [yarn](https://yarnpkg.com) or [npm](https://www.npmjs.com/):
+
+    ```cmd
+    yarn
+    ```
+
+    or
 
     ```cmd
     npm install
     ```
 
-2. Build the source code.
+2. Build the source code, and start the sample editor:
 
     ```
-    npm run build
+    yarn start
     ```
 
-3. Start the sample editor.
+    or
 
     ```
     npm start
     ```
 
-4. Navigate to the sample editor at http://localhost:3000/sample/sample.htm
+3. Navigate to the sample editor at http://localhost:3000/
+
+## More documentation
+
+We are still working on more documentation in [roosterjs wiki](https://github.com/Microsoft/roosterjs/wiki).
 
 ## License - MIT
+
+License
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+Licensed under the [MIT](LICENSE) License.
