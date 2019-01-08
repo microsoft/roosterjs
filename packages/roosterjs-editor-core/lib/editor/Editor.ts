@@ -745,7 +745,7 @@ export default class Editor {
      * @returns True if editor is in IME input sequence, otherwise false
      */
     public isInIME(): boolean {
-        return this.core.corePlugins.ime.isInIME();
+        return this.core.corePlugins.domEvent.isInIME();
     }
 
     /**

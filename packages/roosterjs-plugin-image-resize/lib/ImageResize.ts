@@ -126,7 +126,7 @@ export default class ImageResize implements EditorPlugin {
                 event.which != CTRL_KEYCODE &&
                 event.which != ALT_KEYCODE
             ) {
-                this.hideResizeHandle();
+                this.hideResizeHandle(true /*selectImage*/);
             }
         } else if (
             e.eventType == PluginEventType.ContentChanged &&

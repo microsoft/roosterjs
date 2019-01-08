@@ -243,13 +243,16 @@ async function pack(isProduction, isAmd) {
         },
     };
 
-    var targetFile = path.join(roosterJsDistPath, filename);
-
     await new Promise((resolve, reject) => {
         webpack(webpackConfig).run(err => {
             if (err) {
                 reject(err);
             } else {
+                var targetFile = path.join(roosterJsDistPath, filename);
+                if (isProduction && !isAmd) {
+                    countWord(targetFile);
+                    exploreSourceMap(targetFile);
+                }
                 insertLicense(targetFile);
                 resolve();
             }
@@ -257,8 +260,7 @@ async function pack(isProduction, isAmd) {
     });
 }
 
-function countWord() {
-    var inputFile = path.join(roosterJsDistPath, 'rooster-min.js');
+function countWord(inputFile) {
     var outputFile = path.join(roosterJsDistPath, 'wordstat.txt');
     var file = fs.readFileSync(inputFile).toString();
     var reg = /[a-zA-Z0-9_]+/g;
@@ -279,9 +281,8 @@ function countWord() {
     fs.writeFileSync(outputFile, result);
 }
 
-function exploreSourceMap() {
+function exploreSourceMap(inputFile) {
     var commandPath = path.join(nodeModulesPath, 'source-map-explorer/index.js');
-    var inputFile = path.join(roosterJsDistPath, 'rooster.js');
     var targetFile = path.join(roosterJsDistPath, 'sourceMap.html');
     runNode(`${commandPath} -m --html ${inputFile} > ${targetFile}`, rootPath);
 }
@@ -507,16 +508,6 @@ async function buildAll(options) {
             callback: async () => pack(true, isAmd),
             enabled: options.packprod,
         })),
-        {
-            message: 'Generating source map explorer file...',
-            callback: exploreSourceMap,
-            enabled: options.pack,
-        },
-        {
-            message: 'Counting words in target file...',
-            callback: countWord,
-            enabled: options.packprod,
-        },
         {
             message: 'Collecting information for type definition file...',
             callback: prepareDts,

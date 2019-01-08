@@ -2,7 +2,7 @@ import Editor from '../editor/Editor';
 import UndoService from '../interfaces/UndoService';
 import UndoSnapshots from './UndoSnapshots';
 import UndoSnapshotsService from '../interfaces/UndoSnapshotsService';
-import { ChangeSource, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 const KEY_BACKSPACE = 8;
 const KEY_DELETE = 46;
@@ -19,8 +19,6 @@ export default class Undo implements UndoService {
     private isRestoring: boolean;
     private hasNewContent: boolean;
     private lastKeyPress: number;
-    private disposer: () => void;
-    public name = 'Undo';
 
     protected undoSnapshots: UndoSnapshotsService;
 
@@ -45,18 +43,12 @@ export default class Undo implements UndoService {
      */
     public initialize(editor: Editor): void {
         this.editor = editor;
-        this.disposer = this.editor.addDomEventHandler({
-            drop: this.onNativeEvent,
-            cut: this.onNativeEvent,
-        });
     }
 
     /**
      * Dispose this plugin
      */
     public dispose() {
-        this.disposer();
-        this.disposer = null;
         this.editor = null;
 
         if (!this.preserveSnapshots) {
@@ -86,6 +78,7 @@ export default class Undo implements UndoService {
                 break;
             case PluginEventType.CompositionEnd:
                 this.clearRedoForInput();
+                this.addUndoSnapshot();
                 break;
             case PluginEventType.ContentChanged:
                 if (!this.isRestoring) {
@@ -207,19 +200,12 @@ export default class Undo implements UndoService {
             return;
         }
 
-        let shouldTakeUndo = false;
-        let selectionRange = this.editor.getSelectionRange();
-        if (selectionRange && !selectionRange.collapsed) {
-            // The selection will be removed, should take undo
-            shouldTakeUndo = true;
-        } else if (
+        let range = this.editor.getSelectionRange();
+        if (
+            (range && !range.collapsed) ||
             (evt.which == KEY_SPACE && this.lastKeyPress != KEY_SPACE) ||
             evt.which == KEY_ENTER
         ) {
-            shouldTakeUndo = true;
-        }
-
-        if (shouldTakeUndo) {
             this.addUndoSnapshot();
             if (evt.which == KEY_ENTER) {
                 // Treat ENTER as new content so if there is no input after ENTER and undo,
@@ -238,13 +224,4 @@ export default class Undo implements UndoService {
         this.lastKeyPress = 0;
         this.hasNewContent = true;
     }
-
-    private onNativeEvent = (e: UIEvent) => {
-        this.editor.runAsync(() => {
-            this.addUndoSnapshot();
-            this.editor.triggerContentChangedEvent(
-                e.type == 'cut' ? ChangeSource.Cut : ChangeSource.Drop
-            );
-        });
-    };
 }

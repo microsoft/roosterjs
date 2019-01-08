@@ -1,8 +1,7 @@
+import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorPlugin from './EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
-import IMEPlugin from '../corePlugins/IMEPlugin';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
-import SelectionPlugin from '../corePlugins/SelectionPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoService from './UndoService';
 import {
@@ -16,11 +15,10 @@ import {
 
 export interface CorePlugins {
     readonly edit: EditPlugin;
-    readonly ime: IMEPlugin;
     readonly undo: UndoService;
     readonly typeInContainer: TypeInContainerPlugin;
     readonly mouseUp: MouseUpPlugin;
-    readonly selection: SelectionPlugin;
+    readonly domEvent: DOMEventPlugin;
 }
 
 /**

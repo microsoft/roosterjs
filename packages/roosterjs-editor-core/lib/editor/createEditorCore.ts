@@ -1,4 +1,5 @@
 import attachDomEvent from '../coreAPI/attachDomEvent';
+import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorCore, { CoreApiMap, CorePlugins } from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import EditorPlugin from '../interfaces/EditorPlugin';
@@ -8,11 +9,9 @@ import focus from '../coreAPI/focus';
 import getCustomData from '../coreAPI/getCustomData';
 import getSelectionRange from '../coreAPI/getSelectionRange';
 import hasFocus from '../coreAPI/hasFocus';
-import IMEPlugin from '../corePlugins/IMEPlugin';
 import insertNode from '../coreAPI/insertNode';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import select from '../coreAPI/select';
-import SelectionPlugin from '../corePlugins/SelectionPlugin';
 import triggerEvent from '../coreAPI/triggerEvent';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import Undo from '../undo/Undo';
@@ -26,19 +25,17 @@ export default function createEditorCore(
     let corePlugins: CorePlugins = {
         undo: options.undo || new Undo(),
         edit: new EditPlugin(),
-        ime: new IMEPlugin(),
         typeInContainer: new TypeInContainerPlugin(),
         mouseUp: new MouseUpPlugin(),
-        selection: new SelectionPlugin(options.disableRestoreSelectionOnFocus),
+        domEvent: new DOMEventPlugin(options.disableRestoreSelectionOnFocus),
     };
     let allPlugins: EditorPlugin[] = [
         corePlugins.typeInContainer,
         corePlugins.edit,
         corePlugins.mouseUp,
-        corePlugins.ime,
         ...(options.plugins || []),
         corePlugins.undo,
-        corePlugins.selection,
+        corePlugins.domEvent,
     ].filter(plugin => !!plugin);
     let eventHandlerPlugins = allPlugins.filter(
         plugin => plugin.onPluginEvent || plugin.willHandleEventExclusively
