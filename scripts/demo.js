@@ -1,5 +1,5 @@
 /*
-    VERSION: 6.19.2
+    VERSION: 7.0.0
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -24364,347 +24364,6 @@ module.exports = g;
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-api/lib/deprecated/CursorData.ts":
-/*!********************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/deprecated/CursorData.ts ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
-var EVENTDATACACHE_CURSORDATA = 'CURSORDATA';
-/**
- * @deprecated Use PositionContentSearcher instead
- */
-var CursorData = /** @class */ (function () {
-    /**
-     * Create a new CursorData instance
-     * @param editor The editor instance
-     */
-    function CursorData(editor) {
-        this.searcher = editor.getContentSearcherOfCursor();
-    }
-    CursorData.prototype.getContentSearcher = function () {
-        return this.searcher;
-    };
-    Object.defineProperty(CursorData.prototype, "wordBeforeCursor", {
-        /**
-         * Get the word before cursor. The word is determined by scanning backwards till the first white space, the portion
-         * between cursor and the white space is the word before cursor
-         * @returns The word before cursor
-         */
-        get: function () {
-            return this.searcher.getWordBefore();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CursorData.prototype, "inlineElementBeforeCursor", {
-        /**
-         * Get the inline element before cursor
-         * @returns The inlineElement before cursor
-         */
-        get: function () {
-            return this.searcher.getInlineElementBefore();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CursorData.prototype, "inlineElementAfterCursor", {
-        /**
-         * Get the inline element after cursor
-         * @returns The inline element after cursor
-         */
-        get: function () {
-            return this.searcher.getInlineElementAfter();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    /**
-     * Get X number of chars before cursor
-     * The actual returned chars may be less than what is requested. e.g, length of text before cursor is less then X
-     * @param numChars The X number of chars user want to get
-     * @returns The actual chars we get as a string
-     */
-    CursorData.prototype.getXCharsBeforeCursor = function (numChars) {
-        return this.searcher.getSubStringBefore(numChars);
-    };
-    /**
-     * Get text section before cursor till stop condition is met.
-     * This offers consumers to retrieve text section by section
-     * The section essentially is just an inline element which has Container element
-     * so that the consumer can remember it for anchoring popup or verification purpose
-     * when cursor moves out of context etc.
-     * @param stopFunc The callback stop function
-     */
-    CursorData.prototype.getTextSectionBeforeCursorTill = function (stopFunc) {
-        return this.searcher.forEachTextInlineElement(stopFunc);
-    };
-    /**
-     * Get first non textual inline element before cursor
-     * @returns First non textutal inline element before cursor or null if no such element exists
-     */
-    CursorData.prototype.getFirstNonTextInlineBeforeCursor = function () {
-        return this.searcher.getNearestNonTextInlineElement();
-    };
-    return CursorData;
-}());
-exports.default = CursorData;
-/**
- * Read CursorData from plugin event cache. If not, create one
- * @param event The plugin event, it stores the event cached data for looking up.
- * If passed as null, we will create a new cursor data
- * @param editor The editor instance
- * @returns The cursor data
- */
-function cacheGetCursorEventData(event, editor) {
-    return roosterjs_editor_core_1.cacheGetEventData(event, EVENTDATACACHE_CURSORDATA, function () { return new CursorData(editor); });
-}
-exports.cacheGetCursorEventData = cacheGetCursorEventData;
-/**
- * Clear the cursor data in a plugin event.
- * This is called when the cursor data is changed, e.g, the text is replace with HyperLink
- * @param event The plugin event
- */
-function clearCursorEventDataCache(event) {
-    roosterjs_editor_core_1.clearEventDataCache(event, EVENTDATACACHE_CURSORDATA);
-}
-exports.clearCursorEventDataCache = clearCursorEventDataCache;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-api/lib/deprecated/cacheGetListState.ts":
-/*!***************************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/deprecated/cacheGetListState.ts ***!
-  \***************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * @deprecated use cacheGetElementAtCursor('OL,UL') instead
- * Get the list state at selection
- * The list state refers to the HTML elements <OL> or <UL>
- * @param editor The editor instance
- * @param event (Optional) The plugin event, it stores the event cached data for looking up.
- * If not passed, we will query the first <LI> node in selection and return the list state of its direct parent
- * @returns The list state. ListState.Numbering indicates <OL>, ListState.Bullets indicates <UL>,
- * ListState.None indicates no <OL> or <UL> elements found at current selection
- */
-function cacheGetListState(editor, event) {
-    var element = roosterjs_editor_core_1.cacheGetElementAtCursor(editor, event, 'OL, UL');
-    var tag = roosterjs_editor_dom_1.getTagOfNode(element);
-    return tag == 'OL' ? 2 /* Numbering */ : tag == 'UL' ? 1 /* Bullets */ : 0 /* None */;
-}
-exports.default = cacheGetListState;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-api/lib/deprecated/execFormatWithUndo.ts":
-/*!****************************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/deprecated/execFormatWithUndo.ts ***!
-  \****************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * @deprecated Use Editor.editWithUndo() instead
- */
-function execFormatWithUndo(editor, formatter, preserveSelection) {
-    editor.addUndoSnapshot(function (start, end) {
-        var startPoint = {
-            containerNode: start.node,
-            offset: start.offset,
-        };
-        var endPoint = {
-            containerNode: end.node,
-            offset: end.offset,
-        };
-        var node = formatter(startPoint, endPoint);
-        if (preserveSelection &&
-            !editor.select(startPoint.containerNode, startPoint.offset, endPoint.containerNode, endPoint.offset) &&
-            node instanceof Node) {
-            editor.select(node);
-        }
-    });
-}
-exports.default = execFormatWithUndo;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-api/lib/deprecated/getNodeAtCursor.ts":
-/*!*************************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/deprecated/getNodeAtCursor.ts ***!
-  \*************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
-/**
- * @deprecated Use editor.getElementAtCursor()
- * Get the node at selection. If an expectedTag is specified, return the nearest ancestor of current node
- * which matches the tag name, or null if no match found in editor.
- * @param editor The editor instance
- * @param expectedTags The expected tag names. If null, return the element at cursor
- * @param startNode If specified, use this node as start node to search instead of current node
- * @returns The node at cursor or the nearest ancestor with the tag name is specified
- */
-function getNodeAtCursor(editor, expectedTags, startNode) {
-    var selector = expectedTags instanceof Array ? expectedTags.join(',') : expectedTags;
-    return editor.getElementAtCursor(selector, startNode);
-}
-exports.default = getNodeAtCursor;
-/**
- * @deprecated Use cacheGetElementAtCursor instead
- * Get the node at selection from event cache if it exists.
- * If an expectedTag is specified, return the nearest ancestor of current node
- * which matches the tag name, or null if no match found in editor.
- * @param editor The editor instance
- * @param event Event object to get cached object from
- * @param expectedTags The expected tag names. If null, return the element at cursor
- * @returns The element at cursor or the nearest ancestor with the tag name is specified
- */
-function cacheGetNodeAtCursor(editor, event, expectedTags) {
-    var selector = expectedTags instanceof Array ? expectedTags.join(',') : expectedTags;
-    return roosterjs_editor_core_1.cacheGetEventData(event, 'GET_NODE_AT_CURSOR_' + selector, function () {
-        return getNodeAtCursor(editor, expectedTags);
-    });
-}
-exports.cacheGetNodeAtCursor = cacheGetNodeAtCursor;
-/**
- * @deprecated Use cacheGetElementAtCursor instead
- */
-function cacheGetListElement(editor, event) {
-    return roosterjs_editor_core_1.cacheGetElementAtCursor(editor, event, 'LI');
-}
-exports.cacheGetListElement = cacheGetListElement;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-api/lib/deprecated/queryNodesWithSelection.ts":
-/*!*********************************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/deprecated/queryNodesWithSelection.ts ***!
-  \*********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * @deprecated Use Editor.queryElements() instead
- * Query nodes intersected with current selection using a selector
- * @param editor The editor
- * @param selector The selector to query
- * @param nodeContainedByRangeOnly When set to true, only return the nodes contained by current selection. Default value is false
- * @param forEachCallback An optional callback to be invoked on each node in query result
- * @returns The nodes intersected with current selection, returns an empty array if no result is found
- */
-function queryNodesWithSelection(editor, selector, nodeContainedByRangeOnly, forEachCallback) {
-    return editor.queryElements(selector, nodeContainedByRangeOnly ? 2 /* InSelection */ : 1 /* OnSelection */, forEachCallback);
-}
-exports.default = queryNodesWithSelection;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-api/lib/deprecated/replaceRangeWithNode.ts":
-/*!******************************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/deprecated/replaceRangeWithNode.ts ***!
-  \******************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var replaceWithNode_1 = __webpack_require__(/*! ../format/replaceWithNode */ "./packages/roosterjs-editor-api/lib/format/replaceWithNode.ts");
-/**
- * @deprecated Use replaceWithNode instead
- * Replace the specified range with a node
- * @param editor The editor instance
- * @param range The range in which content needs to be replaced
- * @param node The node to be inserted
- * @param exactMatch exactMatch is to match exactly
- * @returns True if we complete the replacement, false otherwise
- */
-function replaceRangeWithNode(editor, range, node, exactMatch) {
-    return replaceWithNode_1.default(editor, range, node, exactMatch);
-}
-exports.default = replaceRangeWithNode;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-api/lib/deprecated/replaceTextBeforeCursorWithNode.ts":
-/*!*****************************************************************************************!*\
-  !*** ./packages/roosterjs-editor-api/lib/deprecated/replaceTextBeforeCursorWithNode.ts ***!
-  \*****************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var replaceWithNode_1 = __webpack_require__(/*! ../format/replaceWithNode */ "./packages/roosterjs-editor-api/lib/format/replaceWithNode.ts");
-/**
- * @deprecated Use PositionContentSearcher.getRangeFromText() instead
- * Validate the text matches what's before the cursor, and return the range for it
- * @param editor The editor instance
- * @param text The text to match against
- * @param exactMatch Whether it is an exact match
- * @param cursorData The cursor data
- * @returns The range for the matched text, null if unable to find a match
- */
-function validateAndGetRangeForTextBeforeCursor(editor, text, exactMatch, cursorData) {
-    if (!text || text.length == 0) {
-        return;
-    }
-    var searcher = cursorData
-        ? cursorData.getContentSearcher()
-        : editor.getContentSearcherOfCursor();
-    return searcher.getRangeFromText(text, exactMatch);
-}
-exports.validateAndGetRangeForTextBeforeCursor = validateAndGetRangeForTextBeforeCursor;
-/**
- * @deprecated
- * Replace text before cursor with a node
- * @param editor The editor instance
- * @param text The text for matching. We will try to match the text with the text before cursor
- * @param node The node to replace the text with
- * @param exactMatch exactMatch is to match exactly, i.e.
- * In auto linkification, users could type URL followed by some punctuation and hit space. The auto link will kick in on space,
- * at the moment, what is before cursor could be "<URL>,", however, only "<URL>" makes the link. by setting exactMatch = false, it does not match
- * from right before cursor, but can scan through till first same char is seen. On the other hand if set exactMatch = true, it starts the match right
- * before cursor.
- * @param cursorData The Cursor data of current selection
- */
-function replaceTextBeforeCursorWithNode(editor, text, node, exactMatch, cursorData) {
-    return replaceWithNode_1.default(editor, text, node, exactMatch, cursorData && cursorData.getContentSearcher());
-}
-exports.default = replaceTextBeforeCursorWithNode;
-
-
-/***/ }),
-
 /***/ "./packages/roosterjs-editor-api/lib/format/changeFontSize.ts":
 /*!********************************************************************!*\
   !*** ./packages/roosterjs-editor-api/lib/format/changeFontSize.ts ***!
@@ -24717,22 +24376,12 @@ exports.default = replaceTextBeforeCursorWithNode;
 Object.defineProperty(exports, "__esModule", { value: true });
 var applyInlineStyle_1 = __webpack_require__(/*! ../utils/applyInlineStyle */ "./packages/roosterjs-editor-api/lib/utils/applyInlineStyle.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * Default font size sequence, in pt. Suggest editor UI use this sequence as your font size list,
- * So that when increase/decrease font size, the font size can match the sequence of your font size picker
- */
 exports.FONT_SIZES = [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72];
 var MIN_FONT_SIZE = 1;
 var MAX_FONT_SIZE = 1000;
-/**
- * Increase or decrease font size in selection
- * @param editor The editor instance
- * @param change Whether increase or decrease font size
- * @param fontSizes A sorted font size array, in pt. Default value is FONT_SIZES
- */
 function changeFontSize(editor, change, fontSizes) {
     if (fontSizes === void 0) { fontSizes = exports.FONT_SIZES; }
-    var changeBase = change == 0 /* Increase */ ? 1 : -1;
+    var changeBase = change == 0 ? 1 : -1;
     applyInlineStyle_1.default(editor, function (element) {
         var pt = parseFloat(roosterjs_editor_dom_1.getComputedStyle(element, 'font-size'));
         element.style.fontSize = getNewFontSize(pt, changeBase, fontSizes) + 'pt';
@@ -24792,13 +24441,6 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
 exports.TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(',');
 exports.TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
 exports.ATTRIBUTES_TO_PRESERVE = ['href'];
-/**
- * Clear all formats of selected blocks.
- * When selection is collapsed, only clear format of current block.
- * @param editor The editor instance
- * @param tagsToUnwrap Optional. A string array contains HTML tags in upper case which we will unwrap when clear format
- * @param tagsToStopUnwrap Optional. A string array contains HTML tags in upper case which we will stop unwrap if these tags are hit
- */
 function clearBlockFormat(editor, tagsToUnwrap, tagsToStopUnwrap, attributesToPreserve) {
     if (tagsToUnwrap === void 0) { tagsToUnwrap = exports.TAGS_TO_UNWRAP; }
     if (tagsToStopUnwrap === void 0) { tagsToStopUnwrap = exports.TAGS_TO_STOP_UNWRAP; }
@@ -24807,7 +24449,6 @@ function clearBlockFormat(editor, tagsToUnwrap, tagsToStopUnwrap, attributesToPr
     editor.addUndoSnapshot(function (start, end) {
         var groups = [{}];
         var stopUnwrapSelector = tagsToStopUnwrap.join(',');
-        // 1. Collapse the selected blocks and get first and last element
         collapseSelectedBlocks_1.default(editor, function (element) {
             var group = groups[groups.length - 1];
             var td = editor.getElementAtCursor(stopUnwrapSelector, element);
@@ -24821,20 +24462,16 @@ function clearBlockFormat(editor, tagsToUnwrap, tagsToStopUnwrap, attributesToPr
         groups
             .filter(function (group) { return group.first; })
             .forEach(function (group) {
-            // 2. Collapse with first and last element to make them under same parent
-            var nodes = editor.collapseNodes(group.first, group.last, true /*canSplitParent*/);
-            // 3. Continue collapse until we can't collapse any more (hit root node, or a table)
+            var nodes = editor.collapseNodes(group.first, group.last, true);
             if (canCollapse(tagsToStopUnwrap, nodes[0])) {
                 while (editor.contains(nodes[0].parentNode) &&
                     canCollapse(tagsToStopUnwrap, nodes[0].parentNode)) {
                     nodes = [roosterjs_editor_dom_1.splitBalancedNodeRange(nodes)];
                 }
             }
-            // 4. Clear formats of the nodes
             nodes.forEach(function (node) {
                 return clearNodeFormat(node, tagsToUnwrap, tagsToStopUnwrap, attributesToPreserve);
             });
-            // 5. Clear CSS of container TD if exist
             if (group.td) {
                 var styles = group.td.getAttribute('style') || '';
                 var styleArray = styles.split(';');
@@ -24854,14 +24491,13 @@ function clearBlockFormat(editor, tagsToUnwrap, tagsToStopUnwrap, attributesToPr
             }
         });
         editor.select(start, end);
-    }, "Format" /* Format */);
+    }, "Format");
 }
 exports.default = clearBlockFormat;
 function clearNodeFormat(node, tagsToUnwrap, tagsToStopUnwrap, attributesToPreserve) {
-    if (node.nodeType != 1 /* Element */ || roosterjs_editor_dom_1.getTagOfNode(node) == 'BR') {
+    if (node.nodeType != 1 || roosterjs_editor_dom_1.getTagOfNode(node) == 'BR') {
         return false;
     }
-    // 1. Recursively clear format of all its child nodes
     var allChildrenAreBlock = [].slice.call(node.childNodes)
         .map(function (n) { return clearNodeFormat(n, tagsToUnwrap, tagsToStopUnwrap, attributesToPreserve); })
         .reduce(function (previousValue, value) { return previousValue && value; }, true);
@@ -24869,7 +24505,6 @@ function clearNodeFormat(node, tagsToUnwrap, tagsToStopUnwrap, attributesToPrese
         return false;
     }
     var returnBlockElement = roosterjs_editor_dom_1.isBlockElement(node);
-    // 2. If we should unwrap this tag, put it into an array and unwrap it later
     if (tagsToUnwrap.indexOf(roosterjs_editor_dom_1.getTagOfNode(node)) >= 0 || allChildrenAreBlock) {
         if (returnBlockElement && !allChildrenAreBlock) {
             roosterjs_editor_dom_1.wrap(node);
@@ -24877,7 +24512,6 @@ function clearNodeFormat(node, tagsToUnwrap, tagsToStopUnwrap, attributesToPrese
         roosterjs_editor_dom_1.unwrap(node);
     }
     else {
-        // 3. Otherwise, remove all attributes
         clearAttribute(node, attributesToPreserve);
     }
     return returnBlockElement;
@@ -24916,25 +24550,17 @@ var toggleBold_1 = __webpack_require__(/*! ./toggleBold */ "./packages/roosterjs
 var toggleItalic_1 = __webpack_require__(/*! ./toggleItalic */ "./packages/roosterjs-editor-api/lib/format/toggleItalic.ts");
 var toggleUnderline_1 = __webpack_require__(/*! ./toggleUnderline */ "./packages/roosterjs-editor-api/lib/format/toggleUnderline.ts");
 var STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
-/**
- * Clear the format in current selection, after cleaning, the format will be
- * changed to default format. The format that get cleaned include B/I/U/font name/
- * font size/text color/background color/align left/align right/align center/superscript/subscript
- * @param editor The editor instance
- */
 function clearFormat(editor) {
     editor.focus();
     editor.addUndoSnapshot(function () {
-        execCommand_1.default(editor, "removeFormat" /* RemoveFormat */);
-        editor.queryElements('[class]', 1 /* OnSelection */, function (node) {
+        execCommand_1.default(editor, "removeFormat");
+        editor.queryElements('[class]', 1, function (node) {
             return node.removeAttribute('class');
         });
         var defaultFormat = editor.getDefaultFormat();
         var isDefaultFormatEmpty = Object.keys(defaultFormat).length === 0;
-        editor.queryElements('[style]', 2 /* InSelection */, function (node) {
+        editor.queryElements('[style]', 2, function (node) {
             STYLES_TO_REMOVE.forEach(function (style) { return node.style.removeProperty(style); });
-            // when default format is empty, keep the HTML minimum by removing style attribute if there's no style
-            // (note: because default format is empty, we're not adding style back in)
             if (isDefaultFormatEmpty && node.getAttribute('style') === '') {
                 node.removeAttribute('style');
             }
@@ -24962,7 +24588,7 @@ function clearFormat(editor) {
                 toggleUnderline_1.default(editor);
             }
         }
-    }, "Format" /* Format */);
+    }, "Format");
 }
 exports.default = clearFormat;
 
@@ -24980,22 +24606,14 @@ exports.default = clearFormat;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-// Regex matching Uri scheme
 var URI_REGEX = /^[a-zA-Z]+:/i;
-// Regex matching begin of email address
 var MAILTO_REGEX = /^[\w.%+-]+@/i;
-// Regex matching begin of ftp, i.e. ftp.microsoft.com
 var FTP_REGEX = /^ftp\./i;
 var TEMP_TITLE = 'istemptitle';
 function applyLinkPrefix(url) {
     if (!url) {
         return url;
     }
-    // Add link prefix per rule:
-    // (a) if the url always starts with a URI scheme, leave it as it is
-    // (b) if the url is an email address, xxx@... add mailto: prefix
-    // (c) if the url starts with ftp., add ftp:// prefix
-    // (d) rest, add http:// prefix
     var prefix = '';
     if (url.search(URI_REGEX) < 0) {
         if (url.search(MAILTO_REGEX) == 0) {
@@ -25005,34 +24623,16 @@ function applyLinkPrefix(url) {
             prefix = 'ftp://';
         }
         else {
-            // fallback to http://
             prefix = 'http://';
         }
     }
     return prefix + url;
 }
-/**
- * Insert a hyperlink at cursor.
- * When there is a selection, hyperlink will be applied to the selection,
- * otherwise a hyperlink will be inserted to the cursor position.
- * @param editor Editor object
- * @param link Link address, can be http(s), mailto, notes, file, unc, ftp, news, telnet, gopher, wais.
- * When protocol is not specified, a best matched protocol will be predicted.
- * @param altText Optional alt text of the link, will be shown when hover on the link
- * @param displayText Optional display text for the link.
- * If specified, the display text of link will be replaced with this text.
- * If not specified and there wasn't a link, the link url will be used as display text.
- */
 function createLink(editor, link, altText, displayText) {
     editor.focus();
     var url = link ? link.trim() : '';
     if (url) {
         var linkData = roosterjs_editor_dom_1.matchLink(url);
-        // matchLink can match most links, but not all, i.e. if you pass link a link as "abc", it won't match
-        // we know in that case, users will want to insert a link like http://abc
-        // so we have separate logic in applyLinkPrefix to add link prefix depending on the format of the link
-        // i.e. if the link starts with something like abc@xxx, we will add mailto: prefix
-        // if the link starts with ftp.xxx, we will add ftp:// link. For more, see applyLinkPrefix
         var normalizedUrl_1 = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
         var originalUrl_1 = linkData ? linkData.originalUrl : url;
         editor.addUndoSnapshot(function () {
@@ -25040,10 +24640,8 @@ function createLink(editor, link, altText, displayText) {
             var anchor = null;
             if (range && range.collapsed) {
                 anchor = getAnchorNodeAtCursor(editor);
-                // If there is already a link, just change its href
                 if (anchor) {
                     anchor.href = normalizedUrl_1;
-                    // Change text content if it is specified
                     updateAnchorDisplayText(anchor, displayText);
                 }
                 else {
@@ -25054,25 +24652,21 @@ function createLink(editor, link, altText, displayText) {
                 }
             }
             else {
-                // the selection is not collapsed, use browser execCommand
-                editor.getDocument().execCommand("createLink" /* CreateLink */, false, normalizedUrl_1);
+                editor.getDocument().execCommand("createLink", false, normalizedUrl_1);
                 anchor = getAnchorNodeAtCursor(editor);
                 updateAnchorDisplayText(anchor, displayText);
             }
             if (altText && anchor) {
-                // Hack: Ideally this should be done by HyperLink plugin.
-                // We make a hack here since we don't have an event to notify HyperLink plugin
-                // before we apply the link.
                 anchor.removeAttribute(TEMP_TITLE);
                 anchor.title = altText;
             }
             return anchor;
-        }, "CreateLink" /* CreateLink */);
+        }, "CreateLink");
     }
 }
 exports.default = createLink;
 function getAnchorNodeAtCursor(editor) {
-    return editor.queryElements('a[href]', 1 /* OnSelection */)[0];
+    return editor.queryElements('a[href]', 1)[0];
 }
 function updateAnchorDisplayText(anchor, displayText) {
     if (displayText && anchor.textContent != displayText) {
@@ -25095,16 +24689,6 @@ function updateAnchorDisplayText(anchor, displayText) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * Get format state at cursor
- * A format state is a collection of all format related states, e.g.,
- * bold, italic, underline, font name, font size, etc.
- * @param editor The editor
- * @param (Optional) The plugin event, it stores the event cached data for looking up.
- * In this function the event cache is used to get list state and header level. If not passed,
- * it will query the node within selection to get the info
- * @returns The format state at cursor
- */
 function getFormatState(editor, event) {
     var range = editor.getSelectionRange();
     var node = range && roosterjs_editor_dom_1.Position.getStart(range).normalize().node;
@@ -25117,18 +24701,18 @@ function getFormatState(editor, event) {
         fontSize: styles[1],
         textColor: styles[2],
         backgroundColor: styles[3],
-        isBold: document.queryCommandState("bold" /* Bold */),
-        isItalic: document.queryCommandState("italic" /* Italic */),
-        isUnderline: document.queryCommandState("underline" /* Underline */),
-        isStrikeThrough: document.queryCommandState("strikeThrough" /* StrikeThrough */),
-        isSubscript: document.queryCommandState("subscript" /* Subscript */),
-        isSuperscript: document.queryCommandState("superscript" /* Superscript */),
+        isBold: document.queryCommandState("bold"),
+        isItalic: document.queryCommandState("italic"),
+        isUnderline: document.queryCommandState("underline"),
+        isStrikeThrough: document.queryCommandState("strikeThrough"),
+        isSubscript: document.queryCommandState("subscript"),
+        isSuperscript: document.queryCommandState("superscript"),
         isBullet: listTag == 'UL',
         isNumbering: listTag == 'OL',
         headerLevel: (headerTag && parseInt(headerTag[1])) || 0,
-        canUnlink: !!editor.queryElements('a[href]', 1 /* OnSelection */)[0],
-        canAddImageAltText: !!editor.queryElements('img', 1 /* OnSelection */)[0],
-        isBlockQuote: !!editor.queryElements('blockquote', 1 /* OnSelection */)[0],
+        canUnlink: !!editor.queryElements('a[href]', 1)[0],
+        canAddImageAltText: !!editor.queryElements('img', 1)[0],
+        isBlockQuote: !!editor.queryElements('blockquote', 1)[0],
         canUndo: editor.canUndo(),
         canRedo: editor.canRedo(),
     };
@@ -25148,12 +24732,6 @@ exports.default = getFormatState;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Insert an image to editor at current selection
- * @param editor The editor instance
- * @param imageFile The image file. There are at least 3 ways to obtain the file object:
- * From local file, from clipboard data, from drag-and-drop
- */
 function insertImage(editor, imageFile) {
     var reader = new FileReader();
     reader.onload = function (event) {
@@ -25163,7 +24741,7 @@ function insertImage(editor, imageFile) {
                 image.src = event.target.result;
                 image.style.maxWidth = '100%';
                 editor.insertNode(image);
-            }, "Format" /* Format */);
+            }, "Format");
         }
     };
     reader.readAsDataURL(imageFile);
@@ -25184,18 +24762,12 @@ exports.default = insertImage;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * Remove link at selection. If no links at selection, do nothing.
- * If selection contains multiple links, all of the link styles will be removed.
- * If only part of a link is selected, the whole link style will be removed.
- * @param editor The editor instance
- */
 function removeLink(editor) {
     editor.focus();
     editor.addUndoSnapshot(function (start, end) {
-        editor.queryElements('a[href]', 1 /* OnSelection */, roosterjs_editor_dom_1.unwrap);
+        editor.queryElements('a[href]', 1, roosterjs_editor_dom_1.unwrap);
         editor.select(start, end);
-    }, "Format" /* Format */);
+    }, "Format");
 }
 exports.default = removeLink;
 
@@ -25213,7 +24785,6 @@ exports.default = removeLink;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 function replaceWithNode(editor, textOrRange, node, exactMatch, searcher) {
-    // Make sure the text and node is valid
     if (!textOrRange || !node) {
         return false;
     }
@@ -25230,7 +24801,7 @@ function replaceWithNode(editor, textOrRange, node, exactMatch, searcher) {
         range.deleteContents();
         range.insertNode(node);
         if (exactMatch) {
-            editor.select(node, -3 /* After */);
+            editor.select(node, -3);
         }
         else {
             editor.select(backupRange);
@@ -25255,27 +24826,21 @@ exports.default = replaceWithNode;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var execCommand_1 = __webpack_require__(/*! ../utils/execCommand */ "./packages/roosterjs-editor-api/lib/utils/execCommand.ts");
-/**
- * Set content alignment
- * @param editor The editor instance
- * @param alignment The alignment option:
- * Alignment.Center, Alignment.Left, Alignment.Right
- */
 function setAlignment(editor, alignment) {
-    var command = "justifyLeft" /* JustifyLeft */;
+    var command = "justifyLeft";
     var align = 'left';
-    if (alignment == 1 /* Center */) {
-        command = "justifyCenter" /* JustifyCenter */;
+    if (alignment == 1) {
+        command = "justifyCenter";
         align = 'center';
     }
-    else if (alignment == 2 /* Right */) {
-        command = "justifyRight" /* JustifyRight */;
+    else if (alignment == 2) {
+        command = "justifyRight";
         align = 'right';
     }
     editor.addUndoSnapshot(function () {
         execCommand_1.default(editor, command);
-        editor.queryElements('[align]', 1 /* OnSelection */, function (node) { return (node.style.textAlign = align); });
-    }, "Format" /* Format */);
+        editor.queryElements('[align]', 1, function (node) { return (node.style.textAlign = align); });
+    }, "Format");
 }
 exports.default = setAlignment;
 
@@ -25293,13 +24858,6 @@ exports.default = setAlignment;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var applyInlineStyle_1 = __webpack_require__(/*! ../utils/applyInlineStyle */ "./packages/roosterjs-editor-api/lib/utils/applyInlineStyle.ts");
-/**
- * Set background color at current selection
- * @param editor The editor instance
- * @param color The color string, can be any of the predefined color names (e.g, 'red')
- * or hexadecimal color string (e.g, '#FF0000') or rgb value (e.g, 'rgb(255, 0, 0)') supported by browser.
- * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
- */
 function setBackgroundColor(editor, color) {
     color = color.trim();
     applyInlineStyle_1.default(editor, function (element) { return (element.style.backgroundColor = color); });
@@ -25320,21 +24878,15 @@ exports.default = setBackgroundColor;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var collapseSelectedBlocks_1 = __webpack_require__(/*! ../utils/collapseSelectedBlocks */ "./packages/roosterjs-editor-api/lib/utils/collapseSelectedBlocks.ts");
-/**
- * Change direction for the blocks/paragraph at selection
- * @param editor The editor instance
- * @param direction The direction option:
- * Direction.LeftToRight refers to 'ltr', Direction.RightToLeft refers to 'rtl'
- */
 function setDirection(editor, direction) {
     editor.focus();
     editor.addUndoSnapshot(function (start, end) {
         collapseSelectedBlocks_1.default(editor, function (element) {
-            element.setAttribute('dir', direction == 0 /* LeftToRight */ ? 'ltr' : 'rtl');
-            element.style.textAlign = direction == 0 /* LeftToRight */ ? 'left' : 'right';
+            element.setAttribute('dir', direction == 0 ? 'ltr' : 'rtl');
+            element.style.textAlign = direction == 0 ? 'left' : 'right';
         });
         editor.select(start, end);
-    }, "Format" /* Format */);
+    }, "Format");
 }
 exports.default = setDirection;
 
@@ -25352,17 +24904,8 @@ exports.default = setDirection;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var applyInlineStyle_1 = __webpack_require__(/*! ../utils/applyInlineStyle */ "./packages/roosterjs-editor-api/lib/utils/applyInlineStyle.ts");
-/**
- * Set font name at selection
- * @param editor The editor instance
- * @param fontName The fontName string, should be a valid CSS font-family style.
- * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
- */
 function setFontName(editor, fontName) {
     fontName = fontName.trim();
-    // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
-    // (http://www.w3schools.com/tags/tag_font.asp). Use applyInlineStyle which gives flexibility on applying inline style
-    // for here, we use CSS font-family style
     applyInlineStyle_1.default(editor, function (element) { return (element.style.fontFamily = fontName); });
 }
 exports.default = setFontName;
@@ -25382,17 +24925,8 @@ exports.default = setFontName;
 Object.defineProperty(exports, "__esModule", { value: true });
 var applyInlineStyle_1 = __webpack_require__(/*! ../utils/applyInlineStyle */ "./packages/roosterjs-editor-api/lib/utils/applyInlineStyle.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * Set font size at selection
- * @param editor The editor instance
- * @param fontSize The fontSize string, should be a valid CSS font-size style.
- * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
- */
 function setFontSize(editor, fontSize) {
     fontSize = fontSize.trim();
-    // The browser provided execCommand only accepts 1-7 point value. In addition, it uses HTML <font> tag with size attribute.
-    // <font> is not HTML5 standard (http://www.w3schools.com/tags/tag_font.asp). Use applyInlineStyle which gives flexibility on applying inline style
-    // for here, we use CSS font-size style
     applyInlineStyle_1.default(editor, function (element) {
         element.style.fontSize = fontSize;
         var lineHeight = roosterjs_editor_dom_1.getComputedStyle(element, 'line-height');
@@ -25416,22 +24950,13 @@ exports.default = setFontSize;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Set image alt text for all selected images at selection. If no images is contained
- * in selection, do nothing.
- * The alt attribute provides alternative information for an image if a user for some reason
- * cannot view it (because of slow connection, an error in the src attribute, or if the user
- * uses a screen reader). See https://www.w3schools.com/tags/att_img_alt.asp
- * @param editor The editor instance
- * @param altText The image alt text
- */
 function setImageAltText(editor, altText) {
     editor.focus();
     editor.addUndoSnapshot(function () {
-        editor.queryElements('img', 1 /* OnSelection */, function (node) {
+        editor.queryElements('img', 1, function (node) {
             return node.setAttribute('alt', altText);
         });
-    }, "Format" /* Format */);
+    }, "Format");
 }
 exports.default = setImageAltText;
 
@@ -25449,37 +24974,25 @@ exports.default = setImageAltText;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var processList_1 = __webpack_require__(/*! ../utils/processList */ "./packages/roosterjs-editor-api/lib/utils/processList.ts");
-/**
- * Set indentation at selection
- * If selection contains bullet/numbering list, increase/decrease indentation will
- * increase/decrease the list level by one.
- * @param editor The editor instance
- * @param indentation The indentation option:
- * Indentation.Increase to increase indentation or Indentation.Decrease to decrease indentation
- */
 function setIndentation(editor, indentation) {
-    var command = indentation == 0 /* Increase */ ? "indent" /* Indent */ : "outdent" /* Outdent */;
+    var command = indentation == 0 ? "indent" : "outdent";
     editor.addUndoSnapshot(function () {
         editor.focus();
         var listNode = editor.getElementAtCursor('OL,UL');
         var newNode;
         if (listNode) {
-            // There is already list node, setIndentation() will increase/decrease the list level,
-            // so we need to process the list when change indentation
             newNode = processList_1.default(editor, command);
         }
         else {
-            // No existing list node, browser will create <Blockquote> node for indentation.
-            // We need to set top and bottom margin to 0 to avoid unnecessary spaces
             editor.getDocument().execCommand(command, false, null);
-            editor.queryElements('BLOCKQUOTE', 1 /* OnSelection */, function (node) {
+            editor.queryElements('BLOCKQUOTE', 1, function (node) {
                 newNode = newNode || node;
                 node.style.marginTop = '0px';
                 node.style.marginBottom = '0px';
             });
         }
         return newNode;
-    }, "Format" /* Format */);
+    }, "Format");
 }
 exports.default = setIndentation;
 
@@ -25497,13 +25010,6 @@ exports.default = setIndentation;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var applyInlineStyle_1 = __webpack_require__(/*! ../utils/applyInlineStyle */ "./packages/roosterjs-editor-api/lib/utils/applyInlineStyle.ts");
-/**
- * Set text color at selection
- * @param editor The editor instance
- * @param color The color string, can be any of the predefined color names (e.g, 'red')
- * or hexadecimal color string (e.g, '#FF0000') or rgb value (e.g, 'rgb(255, 0, 0)') supported by browser.
- * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
- */
 function setTextColor(editor, color) {
     color = color.trim();
     applyInlineStyle_1.default(editor, function (element) { return (element.style.color = color); });
@@ -25531,12 +25037,6 @@ var DEFAULT_STYLER = function (element) {
     element.style.paddingLeft = '10px';
     element.style.color = '#666666';
 };
-/**
- * Toggle blockquote at selection, if selection already contains any blockquoted elements,
- * the blockquoted elements will be unblockquoted and other elements will take no affect
- * @param editor The editor instance
- * @param styler (Optional) The custom styler for setting the style for the blockquote element
- */
 function toggleBlockQuote(editor, styler) {
     toggleTagCore_1.default(editor, BLOCKQUOTE_TAG, styler || DEFAULT_STYLER);
 }
@@ -25556,16 +25056,8 @@ exports.default = toggleBlockQuote;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var execCommand_1 = __webpack_require__(/*! ../utils/execCommand */ "./packages/roosterjs-editor-api/lib/utils/execCommand.ts");
-/**
- * Toggle bold at selection
- * If selection is collapsed, it will only affect the following input after caret
- * If selection contains only bold text, the bold style will be removed
- * If selection contains only normal text, bold style will be added to the whole selected text
- * If selection contains both bold and normal text, bold stle will be added to the whole selected text
- * @param editor The editor instance
- */
 function toggleBold(editor) {
-    execCommand_1.default(editor, "bold" /* Bold */);
+    execCommand_1.default(editor, "bold");
 }
 exports.default = toggleBold;
 
@@ -25583,17 +25075,9 @@ exports.default = toggleBold;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var processList_1 = __webpack_require__(/*! ../utils/processList */ "./packages/roosterjs-editor-api/lib/utils/processList.ts");
-/**
- * Toggle bullet at selection
- * If selection contains bullet in deep level, toggle bullet will decrease the bullet level by one
- * If selection contains number list, toggle bullet will convert the number list into bullet list
- * If selection contains both bullet/numbering and normal text, the behavior is decided by corresponding
- * browser execCommand API
- * @param editor The editor instance
- */
 function toggleBullet(editor) {
     editor.focus();
-    editor.addUndoSnapshot(function () { return processList_1.default(editor, "insertUnorderedList" /* InsertUnorderedList */); }, "Format" /* Format */);
+    editor.addUndoSnapshot(function () { return processList_1.default(editor, "insertUnorderedList"); }, "Format");
 }
 exports.default = toggleBullet;
 
@@ -25615,12 +25099,6 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
 var PRE_TAG = 'pre';
 var CODE_TAG = 'code';
 var CODE_NODE_TAG = 'CODE';
-/**
- * Toggle code block at selection, if selection already contains any code blocked elements,
- * the code block elements will be no longer be code blocked and other elements will take no affect
- * @param editor The editor instance
- * @param styler (Optional) The custom styler for setting the style for the code block element
- */
 function toggleCodeBlock(editor, styler) {
     toggleTagCore_1.default(editor, PRE_TAG, styler, wrapFunction, unwrapFunction);
 }
@@ -25654,21 +25132,14 @@ function unwrapFunction(node) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * Toggle header at selection
- * @param editor The editor instance
- * @param level The header level, can be a number from 0 to 6, in which 1 ~ 6 refers to
- * the HTML header element <H1> to <H6>, 0 means no header
- * if passed in param is outside the range, will be rounded to nearest number in the range
- */
 function toggleHeader(editor, level) {
     level = Math.min(Math.max(Math.round(level), 0), 6);
     editor.addUndoSnapshot(function () {
         editor.focus();
         var wrapped = false;
-        editor.queryElements('H1,H2,H3,H4,H5,H6', 1 /* OnSelection */, function (header) {
+        editor.queryElements('H1,H2,H3,H4,H5,H6', 1, function (header) {
             if (!wrapped) {
-                editor.getDocument().execCommand("formatBlock" /* FormatBlock */, false, '<DIV>');
+                editor.getDocument().execCommand("formatBlock", false, '<DIV>');
                 wrapped = true;
             }
             var div = editor.getDocument().createElement('div');
@@ -25687,9 +25158,9 @@ function toggleHeader(editor, level) {
                 }
                 inlineElement = traverser.getNextInlineElement();
             }
-            editor.getDocument().execCommand("formatBlock" /* FormatBlock */, false, "<H" + level + ">");
+            editor.getDocument().execCommand("formatBlock", false, "<H" + level + ">");
         }
-    }, "Format" /* Format */);
+    }, "Format");
 }
 exports.default = toggleHeader;
 
@@ -25707,16 +25178,8 @@ exports.default = toggleHeader;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var execCommand_1 = __webpack_require__(/*! ../utils/execCommand */ "./packages/roosterjs-editor-api/lib/utils/execCommand.ts");
-/**
- * Toggle italic at selection
- * If selection is collapsed, it will only affect the input after caret
- * If selection contains only italic text, the italic style will be removed
- * If selection contains only normal text, italic style will be added to the whole selected text
- * If selection contains both italic and normal text, italic stlye will be added to the whole selected text
- * @param editor The editor instance
- */
 function toggleItalic(editor) {
-    execCommand_1.default(editor, "italic" /* Italic */);
+    execCommand_1.default(editor, "italic");
 }
 exports.default = toggleItalic;
 
@@ -25734,17 +25197,9 @@ exports.default = toggleItalic;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var processList_1 = __webpack_require__(/*! ../utils/processList */ "./packages/roosterjs-editor-api/lib/utils/processList.ts");
-/**
- * Toggle numbering at selection
- * If selection contains numbering in deep level, toggle numbering will decrease the numbering level by one
- * If selection contains bullet list, toggle numbering will convert the bullet list into number list
- * If selection contains both bullet/numbering and normal text, the behavior is decided by corresponding
- * realization of browser execCommand API
- * @param editor The editor instance
- */
 function toggleNumbering(editor) {
     editor.focus();
-    editor.addUndoSnapshot(function () { return processList_1.default(editor, "insertOrderedList" /* InsertOrderedList */); }, "Format" /* Format */);
+    editor.addUndoSnapshot(function () { return processList_1.default(editor, "insertOrderedList"); }, "Format");
 }
 exports.default = toggleNumbering;
 
@@ -25762,16 +25217,8 @@ exports.default = toggleNumbering;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var execCommand_1 = __webpack_require__(/*! ../utils/execCommand */ "./packages/roosterjs-editor-api/lib/utils/execCommand.ts");
-/**
- * Toggle strikethrough at selection
- * If selection is collapsed, it will only affect the input after caret
- * If selection contains only strikethrough text, the strikethrough style will be removed
- * If selection contains only normal text, strikethrough style will be added to the whole selected text
- * If selection contains both strikethrough and normal text, strikethrough stlye will be added to the whole selected text
- * @param editor The editor instance
- */
 function toggleStrikethrough(editor) {
-    execCommand_1.default(editor, "strikeThrough" /* StrikeThrough */);
+    execCommand_1.default(editor, "strikeThrough");
 }
 exports.default = toggleStrikethrough;
 
@@ -25789,18 +25236,8 @@ exports.default = toggleStrikethrough;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var execCommand_1 = __webpack_require__(/*! ../utils/execCommand */ "./packages/roosterjs-editor-api/lib/utils/execCommand.ts");
-/**
- * Toggle subscript at selection
- * If selection is collapsed, it will only affect the input after caret
- * If selection contains only subscript text, the subscript style will be removed
- * If selection contains only normal text, subscript style will be added to the whole selected text
- * If selection contains both subscript and normal text, the subscript style will be removed from whole selected text
- * If selection contains any superscript text, the behavior is determined by corresponding realization of browser
- * execCommand API
- * @param editor The editor instance
- */
 function toggleSubscript(editor) {
-    execCommand_1.default(editor, "subscript" /* Subscript */);
+    execCommand_1.default(editor, "subscript");
 }
 exports.default = toggleSubscript;
 
@@ -25818,18 +25255,8 @@ exports.default = toggleSubscript;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var execCommand_1 = __webpack_require__(/*! ../utils/execCommand */ "./packages/roosterjs-editor-api/lib/utils/execCommand.ts");
-/**
- * Toggle superscript at selection
- * If selection is collapsed, it will only affect the input after caret
- * If selection contains only superscript text, the superscript style will be removed
- * If selection contains only normal text, superscript style will be added to the whole selected text
- * If selection contains both superscript and normal text, the superscript style will be removed from whole selected text
- * If selection contains any subscript text, the behavior is determined by corresponding realization of browser
- * execCommand API
- * @param editor The editor instance
- */
 function toggleSuperscript(editor) {
-    execCommand_1.default(editor, "superscript" /* Superscript */);
+    execCommand_1.default(editor, "superscript");
 }
 exports.default = toggleSuperscript;
 
@@ -25847,16 +25274,8 @@ exports.default = toggleSuperscript;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var execCommand_1 = __webpack_require__(/*! ../utils/execCommand */ "./packages/roosterjs-editor-api/lib/utils/execCommand.ts");
-/**
- * Toggle underline at selection
- * If selection is collapsed, it will only affect the input after caret
- * If selection contains only underlined text, the underline style will be removed
- * If selection contains only normal text, underline style will be added to the whole selected text
- * If selection contains both underlined and normal text, the underline style will be added to the whole selected text
- * @param editor The editor instance
- */
 function toggleUnderline(editor) {
-    execCommand_1.default(editor, "underline" /* Underline */);
+    execCommand_1.default(editor, "underline");
 }
 exports.default = toggleUnderline;
 
@@ -25937,26 +25356,6 @@ var toggleUnderline_1 = __webpack_require__(/*! ./format/toggleUnderline */ "./p
 exports.toggleUnderline = toggleUnderline_1.default;
 var toggleHeader_1 = __webpack_require__(/*! ./format/toggleHeader */ "./packages/roosterjs-editor-api/lib/format/toggleHeader.ts");
 exports.toggleHeader = toggleHeader_1.default;
-// Deprecated
-var cacheGetListState_1 = __webpack_require__(/*! ./deprecated/cacheGetListState */ "./packages/roosterjs-editor-api/lib/deprecated/cacheGetListState.ts");
-exports.cacheGetListState = cacheGetListState_1.default;
-var execFormatWithUndo_1 = __webpack_require__(/*! ./deprecated/execFormatWithUndo */ "./packages/roosterjs-editor-api/lib/deprecated/execFormatWithUndo.ts");
-exports.execFormatWithUndo = execFormatWithUndo_1.default;
-var CursorData_1 = __webpack_require__(/*! ./deprecated/CursorData */ "./packages/roosterjs-editor-api/lib/deprecated/CursorData.ts");
-exports.CursorData = CursorData_1.default;
-exports.cacheGetCursorEventData = CursorData_1.cacheGetCursorEventData;
-exports.clearCursorEventDataCache = CursorData_1.clearCursorEventDataCache;
-var queryNodesWithSelection_1 = __webpack_require__(/*! ./deprecated/queryNodesWithSelection */ "./packages/roosterjs-editor-api/lib/deprecated/queryNodesWithSelection.ts");
-exports.queryNodesWithSelection = queryNodesWithSelection_1.default;
-var replaceTextBeforeCursorWithNode_1 = __webpack_require__(/*! ./deprecated/replaceTextBeforeCursorWithNode */ "./packages/roosterjs-editor-api/lib/deprecated/replaceTextBeforeCursorWithNode.ts");
-exports.replaceTextBeforeCursorWithNode = replaceTextBeforeCursorWithNode_1.default;
-exports.validateAndGetRangeForTextBeforeCursor = replaceTextBeforeCursorWithNode_1.validateAndGetRangeForTextBeforeCursor;
-var replaceRangeWithNode_1 = __webpack_require__(/*! ./deprecated/replaceRangeWithNode */ "./packages/roosterjs-editor-api/lib/deprecated/replaceRangeWithNode.ts");
-exports.replaceRangeWithNode = replaceRangeWithNode_1.default;
-var getNodeAtCursor_1 = __webpack_require__(/*! ./deprecated/getNodeAtCursor */ "./packages/roosterjs-editor-api/lib/deprecated/getNodeAtCursor.ts");
-exports.getNodeAtCursor = getNodeAtCursor_1.default;
-exports.cacheGetListElement = getNodeAtCursor_1.cacheGetListElement;
-exports.cacheGetNodeAtCursor = getNodeAtCursor_1.cacheGetNodeAtCursor;
 
 
 /***/ }),
@@ -25972,11 +25371,6 @@ exports.cacheGetNodeAtCursor = getNodeAtCursor_1.cacheGetNodeAtCursor;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * Edit table with given operation. If there is no table at cursor then no op.
- * @param editor The editor instance
- * @param operation Table operation
- */
 function editTable(editor, operation) {
     var td = editor.getElementAtCursor('TD,TH');
     if (td) {
@@ -25988,7 +25382,7 @@ function editTable(editor, operation) {
             if (!editor.select(start, end)) {
                 editor.select(editor.contains(td) ? td : vtable.getCurrentTd());
             }
-        }, "Format" /* Format */);
+        }, "Format");
     }
 }
 exports.default = editTable;
@@ -26007,12 +25401,6 @@ exports.default = editTable;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * Format table
- * @param editor The editor which contains the table to format
- * @param format A TableFormat object contains format information we want to apply to the table
- * @param table The table to format. This is optional. When not passed, the current table (if any) will be formatted
- */
 function formatTable(editor, format, table) {
     table = table || editor.getElementAtCursor('TABLE');
     if (table) {
@@ -26022,7 +25410,7 @@ function formatTable(editor, format, table) {
             vtable.writeBack();
             editor.focus();
             editor.select(start, end);
-        }, "Format" /* Format */);
+        }, "Format");
     }
 }
 exports.default = formatTable;
@@ -26041,15 +25429,6 @@ exports.default = formatTable;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var formatTable_1 = __webpack_require__(/*! ./formatTable */ "./packages/roosterjs-editor-api/lib/table/formatTable.ts");
-/**
- * Insert table into editor at current selection
- * @param editor The editor instance
- * @param columns Number of columns in table, it also controls the default table cell width:
- * if columns <= 4, width = 120px; if columns <= 6, width = 100px; else width = 70px
- * @param rows Number of rows in table
- * @param format (Optional) The table format. If not passed, the default format will be applied:
- * background color: #FFF; border color: #ABABAB
- */
 function insertTable(editor, columns, rows, format) {
     var document = editor.getDocument();
     var fragment = document.createDocumentFragment();
@@ -26077,8 +25456,8 @@ function insertTable(editor, columns, rows, format) {
             bottomBorderColor: '#ABABAB',
             verticalBorderColor: '#ABABAB',
         }, table);
-        editor.runAsync(function () { return editor.select(table, -3 /* After */); });
-    }, "Format" /* Format */);
+        editor.runAsync(function () { return editor.select(table, -3); });
+    }, "Format");
 }
 exports.default = insertTable;
 function getTableCellWidth(columns) {
@@ -26108,11 +25487,6 @@ function getTableCellWidth(columns) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var ZERO_WIDTH_SPACE = '\u200B';
-/**
- * Apply inline style to current selection
- * @param editor The editor instance
- * @param callback The callback function to apply style
- */
 function applyInlineStyle(editor, callback) {
     editor.focus();
     var range = editor.getSelectionRange();
@@ -26127,24 +25501,19 @@ function applyInlineStyle(editor, callback) {
         }
         else {
             var isZWSNode = node &&
-                node.nodeType == 3 /* Text */ &&
+                node.nodeType == 3 &&
                 node.nodeValue == ZERO_WIDTH_SPACE &&
                 roosterjs_editor_dom_1.getTagOfNode(node.parentNode) == 'SPAN';
             if (!isZWSNode) {
                 editor.addUndoSnapshot();
-                // Create a new text node to hold the selection.
-                // Some content is needed to position selection into the span
-                // for here, we inject ZWS - zero width space
                 node = editor.getDocument().createTextNode(ZERO_WIDTH_SPACE);
                 range.insertNode(node);
             }
             roosterjs_editor_dom_1.applyTextStyle(node, callback);
-            editor.select(node, -1 /* End */);
+            editor.select(node, -1);
         }
     }
     else {
-        // This is start and end node that get the style. The start and end needs to be recorded so that selection
-        // can be re-applied post-applying style
         editor.addUndoSnapshot(function () {
             var firstNode;
             var lastNode;
@@ -26160,9 +25529,9 @@ function applyInlineStyle(editor, callback) {
                 inlineElement = nextInlineElement;
             }
             if (firstNode && lastNode) {
-                editor.select(firstNode, -2 /* Before */, lastNode, -3 /* After */);
+                editor.select(firstNode, -2, lastNode, -3);
             }
-        }, "Format" /* Format */);
+        }, "Format");
     }
 }
 exports.default = applyInlineStyle;
@@ -26181,11 +25550,6 @@ exports.default = applyInlineStyle;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * Collapse all selected blocks, return single HTML elements for each block
- * @param editor The editor instance
- * @param forEachCallback A callback function to invoke for each of the collapsed element
- */
 function collapseSelectedBlocked(editor, forEachCallback) {
     var traverser = editor.getSelectionTraverser();
     var block = traverser && traverser.currentBlockElement;
@@ -26206,7 +25570,7 @@ function isEmptyBlockUnderTR(block) {
     var startNode = block.getStartNode();
     return (block instanceof roosterjs_editor_dom_1.StartEndBlockElement &&
         startNode == block.getEndNode() &&
-        startNode.nodeType == 3 /* Text */ &&
+        startNode.nodeType == 3 &&
         ['TR', 'TABLE'].indexOf(roosterjs_editor_dom_1.getTagOfNode(startNode.parentNode)) >= 0);
 }
 
@@ -26223,15 +25587,6 @@ function isEmptyBlockUnderTR(block) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Execute a document command
- * @param editor The editor instance
- * @param command The command to execute
- * @param addUndoSnapshotWhenCollapsed Optional, set to true to always add undo snapshot even current selection is collapsed.
- * Default value is false.
- * @param doWorkaroundForList Optional, set to true to do workaround for list in order to keep current format.
- * Default value is false.
- */
 function execCommand(editor, command) {
     editor.focus();
     var formatter = function () { return editor.getDocument().execCommand(command, false, null); };
@@ -26241,7 +25596,7 @@ function execCommand(editor, command) {
         formatter();
     }
     else {
-        editor.addUndoSnapshot(formatter, "Format" /* Format */);
+        editor.addUndoSnapshot(formatter, "Format");
     }
 }
 exports.default = execCommand;
@@ -26262,10 +25617,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
 var TEMP_NODE_HTML = "<img class=\"" + TEMP_NODE_CLASS + "\">";
-/**
- * Browsers don't handle bullet/numbering list well, especially the formats when switching list statue
- * So we workaround it by always adding format to list element
- */
 function processList(editor, command) {
     if (roosterjs_editor_dom_1.Browser.isChrome) {
         workaroundForChrome(editor);
@@ -26279,16 +25630,12 @@ function processList(editor, command) {
     if (newList == existingList) {
         newList = null;
     }
-    // If this is in a new number list, need to adjust the format of numbers according to its content
     if (newList && roosterjs_editor_dom_1.getTagOfNode(newList) == 'OL') {
         var LIs = [].slice.call(newList.childNodes).filter(function (node) { return roosterjs_editor_dom_1.getTagOfNode(node) == 'LI'; });
-        if (LIs.length == 1 && roosterjs_editor_dom_1.isNodeEmpty(LIs[0], true /*trim*/)) {
-            // When there's only one LI child element which has empty content, it means this LI is just created.
-            // We just format it with current format
+        if (LIs.length == 1 && roosterjs_editor_dom_1.isNodeEmpty(LIs[0], true)) {
             applyListFormat(LIs[0], currentFormat);
         }
         else {
-            // Otherwise, apply the format of first child non-empty element (if any) to LI node
             for (var _i = 0, LIs_1 = LIs; _i < LIs_1.length; _i++) {
                 var li = LIs_1[_i];
                 var formatNode = roosterjs_editor_dom_1.getFirstLeafNode(li);
@@ -26315,7 +25662,6 @@ function workaroundForChrome(editor) {
     while (block) {
         var container = block.getStartNode();
         if (container && !roosterjs_editor_dom_1.isNodeEmpty(container)) {
-            // Add a temp <IMG> tag before all other nodes in the block to avoid Chrome remove existing format when toggle list
             var tempNode = roosterjs_editor_dom_1.fromHtml(TEMP_NODE_HTML, editor.getDocument())[0];
             if (roosterjs_editor_dom_1.isVoidHtmlElement(container) || !roosterjs_editor_dom_1.isBlockElement(container)) {
                 container.parentNode.insertBefore(tempNode, container);
@@ -26345,15 +25691,6 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
 var ZERO_WIDTH_SPACE = '&#8203;';
 var UNWRAPPABLE_NODES = 'LI,THEAD,TBODY,TR,TD,TH'.split(',');
 var DEFAULT_STYLER = function (_) { };
-/**
- * Toggle a tag at selection, if selection already contains elements of such tag,
- * the elements will be untagge and other elements will take no affect
- * @param editor The editor instance
- * @param tag The tag name
- * @param styler (Optional) The styler for setting the style for the blockquote element
- * @param wrapFunction (Optional) The wrap function
- * @param unwrapFunction (Optional) The unwrap function
- */
 function toggleTagCore(editor, tag, styler, wrapFunction, unwrapFunction) {
     if (wrapFunction === void 0) { wrapFunction = function (nodes) { return roosterjs_editor_dom_1.wrap(nodes, tag); }; }
     if (unwrapFunction === void 0) { unwrapFunction = roosterjs_editor_dom_1.unwrap; }
@@ -26362,20 +25699,18 @@ function toggleTagCore(editor, tag, styler, wrapFunction, unwrapFunction) {
         var result;
         var range = editor.getSelectionRange();
         if (range &&
-            editor.queryElements(tag, 1 /* OnSelection */, unwrapFunction).length == 0) {
+            editor.queryElements(tag, 1, unwrapFunction).length == 0) {
             var startNode = roosterjs_editor_dom_1.Position.getStart(range).normalize().node;
             var startBlock = editor.getBlockElementAtNode(startNode);
             var endNode = roosterjs_editor_dom_1.Position.getEnd(range).normalize().node;
             var endBlock = editor.getBlockElementAtNode(endNode);
             var nodes = startBlock && endBlock
-                ? editor.collapseNodes(startBlock.getStartNode(), endBlock.getEndNode(), true /*canSplitParent*/)
+                ? editor.collapseNodes(startBlock.getStartNode(), endBlock.getEndNode(), true)
                 : [];
             if (nodes.length == 0) {
-                // Selection is collapsed and blockElement is null, we need to create an empty div.
-                // In case of IE and Edge, we insert ZWS to put cursor in the div, otherwise insert BR node.
                 nodes = roosterjs_editor_dom_1.fromHtml("<DIV>" + (roosterjs_editor_dom_1.Browser.isIEOrEdge ? ZERO_WIDTH_SPACE : '<BR>') + "</DIV>", editor.getDocument());
                 editor.insertNode(nodes[0]);
-                editor.select(nodes[0], 0 /* Begin */);
+                editor.select(nodes[0], 0);
             }
             else if (nodes.length == 1) {
                 var tag_1 = roosterjs_editor_dom_1.getTagOfNode(nodes[0]);
@@ -26400,7 +25735,7 @@ function toggleTagCore(editor, tag, styler, wrapFunction, unwrapFunction) {
             editor.select(result);
         }
         return result;
-    }, "Format" /* Format */);
+    }, "Format");
 }
 exports.default = toggleTagCore;
 
@@ -26426,7 +25761,7 @@ var attachDomEvent = function (core, eventName, pluginEventType, beforeDispatch)
             core.api.triggerEvent(core, {
                 eventType: pluginEventType,
                 rawEvent: event,
-            }, false /*broadcast*/);
+            }, false);
         }
     };
     core.contentDiv.addEventListener(eventName, onEvent);
@@ -26453,16 +25788,15 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
 var editWithUndo = function (core, callback, changeSource) {
     var isNested = core.currentUndoSnapshot !== null;
     var data;
-    var currentSnapshot;
     if (!isNested) {
-        core.currentUndoSnapshot = core.undo.addUndoSnapshot();
+        core.currentUndoSnapshot = core.corePlugins.undo.addUndoSnapshot();
     }
     try {
         if (callback) {
-            var range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
+            var range = core.api.getSelectionRange(core, true);
             data = callback(range && roosterjs_editor_dom_1.Position.getStart(range).normalize(), range && roosterjs_editor_dom_1.Position.getEnd(range).normalize(), core.currentUndoSnapshot);
             if (!isNested) {
-                currentSnapshot = core.undo.addUndoSnapshot();
+                core.corePlugins.undo.addUndoSnapshot();
             }
         }
     }
@@ -26473,12 +25807,11 @@ var editWithUndo = function (core, callback, changeSource) {
     }
     if (callback && changeSource) {
         var event_1 = {
-            eventType: 6 /* ContentChanged */,
+            eventType: 6,
             source: changeSource,
-            lastSnapshot: currentSnapshot,
             data: data,
         };
-        core.api.triggerEvent(core, event_1, true /*broadcast*/);
+        core.api.triggerEvent(core, event_1, true);
     }
 };
 exports.default = editWithUndo;
@@ -26498,22 +25831,13 @@ exports.default = editWithUndo;
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var focus = function (core) {
-    if (!core.api.hasFocus(core) || !core.api.getSelectionRange(core, false /*tryGetFromCache*/)) {
-        // Focus (document.activeElement indicates) and selection are mostly in sync, but could be out of sync in some extreme cases.
-        // i.e. if you programmatically change window selection to point to a non-focusable DOM element (i.e. tabindex=-1 etc.).
-        // On Chrome/Firefox, it does not change document.activeElement. On Edge/IE, it change document.activeElement to be body
-        // Although on Chrome/Firefox, document.activeElement points to editor, you cannot really type which we don't want (no cursor).
-        // So here we always do a live selection pull on DOM and make it point in Editor. The pitfall is, the cursor could be reset
-        // to very begin to of editor since we don't really have last saved selection (created on blur which does not fire in this case).
-        // It should be better than the case you cannot type
+    if (!core.api.hasFocus(core) || !core.api.getSelectionRange(core, false)) {
         if (!core.cachedSelectionRange || !core.api.select(core, core.cachedSelectionRange)) {
             var node = roosterjs_editor_dom_1.getFirstLeafNode(core.contentDiv) || core.contentDiv;
-            core.api.select(core, node, 0 /* Begin */);
+            core.api.select(core, node, 0);
         }
     }
-    // remember to clear cachedSelectionRange
     core.cachedSelectionRange = null;
-    // This is more a fallback to ensure editor gets focus if it didn't manage to move focus to editor
     if (!core.api.hasFocus(core)) {
         core.contentDiv.focus();
     }
@@ -26589,7 +25913,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var hasFocus = function (core) {
     var activeElement = core.document.activeElement;
-    return (activeElement && roosterjs_editor_dom_1.contains(core.contentDiv, activeElement, true /*treatSameNodeAsContain*/));
+    return (activeElement && roosterjs_editor_dom_1.contains(core.contentDiv, activeElement, true));
 };
 exports.default = hasFocus;
 
@@ -26608,7 +25932,7 @@ exports.default = hasFocus;
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var insertNode = function (core, node, option) {
-    var position = option ? option.position : 2 /* SelectionStart */;
+    var position = option ? option.position : 2;
     var updateCursor = option ? option.updateCursor : true;
     var replaceSelection = option ? option.replaceSelection : true;
     var insertOnNewLine = option ? option.insertOnNewLine : false;
@@ -26617,74 +25941,59 @@ var insertNode = function (core, node, option) {
         core.api.focus(core);
     }
     switch (position) {
-        case 0 /* Begin */:
-        case 1 /* End */:
-            var isBegin = position == 0 /* Begin */;
+        case 0:
+        case 1:
+            var isBegin = position == 0;
             var block = roosterjs_editor_dom_1.getFirstLastBlockElement(contentDiv, isBegin);
             var insertedNode = void 0;
             if (block) {
                 var refNode = isBegin ? block.getStartNode() : block.getEndNode();
-                var refParentNode = refNode.parentNode;
                 if (insertOnNewLine ||
-                    refNode.nodeType == 3 /* Text */ ||
+                    refNode.nodeType == 3 ||
                     roosterjs_editor_dom_1.isVoidHtmlElement(refNode)) {
-                    // For insert on new line, or refNode is text or void html element (HR, BR etc.)
-                    // which cannot have children, i.e. <div>hello<br>world</div>. 'hello', 'world' are the
-                    // first and last node. Insert before 'hello' or after 'world', but still inside DIV
-                    insertedNode = refParentNode.insertBefore(node, isBegin ? refNode : refNode.nextSibling);
+                    insertedNode = refNode.parentNode.insertBefore(node, isBegin ? refNode : refNode.nextSibling);
                 }
                 else {
-                    // if the refNode can have child, use appendChild (which is like to insert as first/last child)
-                    // i.e. <div>hello</div>, the content will be inserted before/after hello
                     insertedNode = refNode.insertBefore(node, isBegin ? refNode.firstChild : null);
                 }
             }
             else {
-                // No first block, this can happen when editor is empty. Use appendChild to insert the content in contentDiv
                 insertedNode = contentDiv.appendChild(node);
             }
-            // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
-            // add a DIV wrapping
             if (insertedNode && insertOnNewLine && !roosterjs_editor_dom_1.isBlockElement(insertedNode)) {
                 roosterjs_editor_dom_1.wrap(insertedNode);
             }
             break;
-        case 2 /* SelectionStart */:
-            var range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
+        case 2:
+            var range = core.api.getSelectionRange(core, true);
             if (range) {
-                // if to replace the selection and the selection is not collapsed, remove the the content at selection first
                 if (replaceSelection && !range.collapsed) {
                     range.deleteContents();
                 }
-                // Create a clone (backup) for the selection first as we may need to restore to it later
                 var clonedRange = range.cloneRange();
                 var position_1 = roosterjs_editor_dom_1.Position.getStart(range).normalize();
                 var blockElement = roosterjs_editor_dom_1.getBlockElementAtNode(contentDiv, position_1.node);
                 if (blockElement) {
                     var endNode = blockElement.getEndNode();
                     if (insertOnNewLine) {
-                        // Adjust the insertion point
-                        // option.insertOnNewLine means to insert on a block after the selection, not really right at the selection
-                        // This is commonly used when users want to insert signature. They could place cursor somewhere mid of a line
-                        // and insert signature, they actually want signature to be inserted the line after the selection
                         range.setEndAfter(endNode);
-                        range.collapse(false /*toStart*/);
+                        range.collapse(false);
                     }
                     else {
                         range = preprocessNode(core, range, node, endNode);
                     }
                 }
-                var nodeForCursor = node.nodeType == 11 /* DocumentFragment */ ? node.lastChild : node;
+                var nodeForCursor = node.nodeType == 11 ? node.lastChild : node;
                 range.insertNode(node);
                 if (updateCursor && nodeForCursor) {
-                    core.api.select(core, new roosterjs_editor_dom_1.Position(nodeForCursor, -3 /* After */).normalize());
+                    core.api.select(core, new roosterjs_editor_dom_1.Position(nodeForCursor, -3).normalize());
                 }
                 else {
                     core.api.select(core, clonedRange);
                 }
             }
             break;
-        case 3 /* Outside */:
+        case 3:
             core.contentDiv.parentNode.insertBefore(node, contentDiv.nextSibling);
             break;
     }
@@ -26693,7 +26002,7 @@ var insertNode = function (core, node, option) {
 exports.default = insertNode;
 function preprocessNode(core, range, nodeToInsert, currentNode) {
     var rootNodeToInsert = nodeToInsert;
-    if (rootNodeToInsert.nodeType == 11 /* DocumentFragment */) {
+    if (rootNodeToInsert.nodeType == 11) {
         var rootNodes = [].slice.call(rootNodeToInsert.childNodes).filter(function (n) { return roosterjs_editor_dom_1.getTagOfNode(n) != 'BR'; });
         rootNodeToInsert = rootNodes.length == 1 ? rootNodes[0] : null;
     }
@@ -26722,14 +26031,12 @@ function preprocessNode(core, range, nodeToInsert, currentNode) {
                 else {
                     range.setEndAfter(listNode);
                 }
-                range.collapse(false /*toStart*/);
+                range.collapse(false);
                 roosterjs_editor_dom_1.unwrap(rootNodeToInsert);
             }
         }
     }
     if (roosterjs_editor_dom_1.getTagOfNode(currentNode) == 'P') {
-        // Insert into a P tag may cause issues when the inserted content contains any block element.
-        // Change P tag to DIV to make sure it works well
         var start = roosterjs_editor_dom_1.Position.getStart(range).normalize();
         var end = roosterjs_editor_dom_1.Position.getEnd(range).normalize();
         var div = roosterjs_editor_dom_1.changeElementTag(currentNode, 'div');
@@ -26775,8 +26082,8 @@ var select = function (core, arg1, arg2, arg3, arg4) {
             var start = void 0;
             var end = void 0;
             if (arg2 == undefined) {
-                start = new roosterjs_editor_dom_1.Position(arg1, -2 /* Before */);
-                end = new roosterjs_editor_dom_1.Position(arg1, -3 /* After */);
+                start = new roosterjs_editor_dom_1.Position(arg1, -2);
+                end = new roosterjs_editor_dom_1.Position(arg1, -3);
             }
             else {
                 start = new roosterjs_editor_dom_1.Position(arg1, arg2);
@@ -26793,10 +26100,7 @@ var select = function (core, arg1, arg2, arg3, arg4) {
         if (selection) {
             var needAddRange = true;
             if (selection.rangeCount > 0) {
-                // Workaround IE exception 800a025e
                 try {
-                    // Do not remove/add range if current selection is the same with target range
-                    // Without this check, execCommand() may fail in Edge since we changed the selection
                     var currentRange = roosterjs_editor_dom_1.Browser.isEdge && selection.rangeCount == 1
                         ? selection.getRangeAt(0)
                         : null;
@@ -26840,8 +26144,9 @@ exports.default = select;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var triggerEvent = function (core, pluginEvent, broadcast) {
-    if (broadcast || !core.plugins.some(function (plugin) { return handledExclusively(pluginEvent, plugin); })) {
-        core.plugins.forEach(function (plugin) {
+    if (broadcast ||
+        !core.eventHandlerPlugins.some(function (plugin) { return handledExclusively(pluginEvent, plugin); })) {
+        core.eventHandlerPlugins.forEach(function (plugin) {
             if (plugin.onPluginEvent) {
                 plugin.onPluginEvent(pluginEvent);
             }
@@ -26862,9 +26167,69 @@ exports.default = triggerEvent;
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-core/lib/deprecated/BrowserData.ts":
+/***/ "./packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts":
+/*!**************************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var DOMEventPlugin = (function () {
+    function DOMEventPlugin(disableRestoreSelectionOnFocus) {
+        var _this = this;
+        this.disableRestoreSelectionOnFocus = disableRestoreSelectionOnFocus;
+        this.inIme = false;
+        this.onNativeEvent = function (e) {
+            _this.editor.runAsync(function () {
+                _this.editor.addUndoSnapshot(function () { }, e.type == 'cut' ? "Cut" : "Drop");
+            });
+        };
+    }
+    DOMEventPlugin.prototype.getName = function () {
+        return 'DOMEvent';
+    };
+    DOMEventPlugin.prototype.initialize = function (editor) {
+        var _this = this;
+        var _a;
+        this.editor = editor;
+        this.disposer = editor.addDomEventHandler((_a = {
+                compositionstart: function () { return (_this.inIme = true); },
+                compositionend: function (e) {
+                    _this.inIme = false;
+                    editor.triggerEvent({
+                        eventType: 3,
+                        rawEvent: e,
+                    });
+                }
+            },
+            _a[roosterjs_editor_dom_1.Browser.isIEOrEdge ? 'beforedeactivate' : 'blur'] = function () { return editor.saveSelectionRange(); },
+            _a.focus = !this.disableRestoreSelectionOnFocus && (function () { return editor.restoreSavedRange(); }),
+            _a.drop = this.onNativeEvent,
+            _a.cut = this.onNativeEvent,
+            _a));
+    };
+    DOMEventPlugin.prototype.dispose = function () {
+        this.disposer();
+        this.disposer = null;
+        this.editor = null;
+    };
+    DOMEventPlugin.prototype.isInIME = function () {
+        return this.inIme;
+    };
+    return DOMEventPlugin;
+}());
+exports.default = DOMEventPlugin;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-core/lib/corePlugins/EditPlugin.ts":
 /*!**********************************************************************!*\
-  !*** ./packages/roosterjs-editor-core/lib/deprecated/BrowserData.ts ***!
+  !*** ./packages/roosterjs-editor-core/lib/corePlugins/EditPlugin.ts ***!
   \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -26872,280 +26237,243 @@ exports.default = triggerEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * @deprecated
- */
-var browserData = roosterjs_editor_dom_1.Browser;
-var getBrowserData = roosterjs_editor_dom_1.getBrowserInfo;
-exports.getBrowserData = getBrowserData;
-exports.default = browserData;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-core/lib/deprecated/snapshotUtils.ts":
-/*!************************************************************************!*\
-  !*** ./packages/roosterjs-editor-core/lib/deprecated/snapshotUtils.ts ***!
-  \************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * @deprecated Use Editor.getContent(false, true) instead
- * Build undo snapshot
- */
-function buildSnapshot(editor) {
-    return editor.getContent(false /*triggerExtractContentEvent*/, true /*markSelection*/);
-}
-exports.buildSnapshot = buildSnapshot;
-/**
- * @deprecated Use Editor.setContent() instead
- * Restore a snapshot
- */
-function restoreSnapshot(editor, snapshot) {
-    editor.setContent(snapshot);
-}
-exports.restoreSnapshot = restoreSnapshot;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-core/lib/editor/CorePlugin.ts":
-/*!*****************************************************************!*\
-  !*** ./packages/roosterjs-editor-core/lib/editor/CorePlugin.ts ***!
-  \*****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var KEY_BACKSPACE = 8;
-/**
- * Provides core editing feature for editor:
- * 1. AutoComplete
- * 2. Ensure typing under HTMLElement
- * 3. IME state
- */
-var CorePlugin = /** @class */ (function () {
-    /**
-     * Creates an instance of Core plugin
-     * @param contentDiv The DIV HTML element which will be the container element of editor
-     * @param disableRestoreSelectionOnFocus Whether auto restore previous selection when focus to editor
-     */
-    function CorePlugin(contentDiv, disableRestoreSelectionOnFocus) {
+var EditPlugin = (function () {
+    function EditPlugin() {
+        this.currentFeature = null;
+        this.featureMap = {};
+        this.autoCompleteSnapshot = null;
+        this.autoCompleteChangeSource = null;
+    }
+    EditPlugin.prototype.getName = function () {
+        return 'Edit';
+    };
+    EditPlugin.prototype.initialize = function (editor) {
         var _this = this;
-        this.contentDiv = contentDiv;
-        this.disableRestoreSelectionOnFocus = disableRestoreSelectionOnFocus;
-        this.disposers = null;
-        this.onMouseDown = function () {
-            if (_this.editor && !_this.mouseUpEventListerAdded) {
-                _this.editor.getDocument().addEventListener('mouseup', _this.onMouseUp, true);
-                _this.mouseUpEventListerAdded = true;
-            }
-        };
-        this.onMouseUp = function (event) {
+        this.editor = editor;
+        this.addFeature({
+            keys: [8],
+            shouldHandleEvent: function () { return _this.autoCompleteSnapshot !== null; },
+            handleEvent: function (event, editor) {
+                event.rawEvent.preventDefault();
+                editor.setContent(_this.autoCompleteSnapshot, false);
+            },
+        });
+    };
+    EditPlugin.prototype.dispose = function () {
+        this.editor = null;
+    };
+    EditPlugin.prototype.onPluginEvent = function (event) {
+        var contentChanged = false;
+        switch (event.eventType) {
+            case 6:
+                if (this.autoCompleteChangeSource != event.source) {
+                    contentChanged = true;
+                }
+                if (!this.currentFeature) {
+                    this.findFeature(event);
+                }
+                break;
+            case 4:
+                contentChanged = true;
+                break;
+            case 0:
+                contentChanged = true;
+                break;
+        }
+        if (this.currentFeature) {
+            var feature = this.currentFeature;
+            this.currentFeature = null;
+            feature.handleEvent(event, this.editor);
+        }
+        if (contentChanged) {
+            this.autoCompleteSnapshot = null;
+            this.autoCompleteChangeSource = null;
+        }
+    };
+    EditPlugin.prototype.willHandleEventExclusively = function (event) {
+        this.findFeature(event);
+        return !!this.currentFeature;
+    };
+    EditPlugin.prototype.addFeature = function (feature) {
+        var _this = this;
+        if (feature.initialize) {
+            feature.initialize(this.editor);
+        }
+        feature.keys.forEach(function (key) {
+            var array = _this.featureMap[key] || [];
+            array.push(feature);
+            _this.featureMap[key] = array;
+        });
+    };
+    EditPlugin.prototype.performAutoComplete = function (callback, changeSource) {
+        var _this = this;
+        this.editor.addUndoSnapshot(function (start, end, snapshot) {
+            var data = callback();
+            _this.autoCompleteSnapshot = snapshot;
+            _this.autoCompleteChangeSource = changeSource;
+            return data;
+        }, changeSource);
+    };
+    EditPlugin.prototype.findFeature = function (event) {
+        var _this = this;
+        var hasFunctionKey = false;
+        var features;
+        if (event.eventType == 0) {
+            var rawEvent = event.rawEvent;
+            hasFunctionKey = rawEvent.ctrlKey || rawEvent.altKey || rawEvent.metaKey;
+            features = this.featureMap[rawEvent.which];
+        }
+        else if (event.eventType == 6) {
+            features = this.featureMap[2048];
+        }
+        this.currentFeature =
+            features &&
+                features.filter(function (feature) {
+                    return (feature.allowFunctionKeys || !hasFunctionKey) &&
+                        feature.shouldHandleEvent(event, _this.editor);
+                })[0];
+    };
+    return EditPlugin;
+}());
+exports.default = EditPlugin;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-core/lib/corePlugins/MouseUpPlugin.ts":
+/*!*************************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/corePlugins/MouseUpPlugin.ts ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var MouseUpPlugin = (function () {
+    function MouseUpPlugin() {
+        var _this = this;
+        this.onMouseUp = function (e) {
             if (_this.editor) {
                 _this.removeMouseUpEventListener();
                 _this.editor.triggerEvent({
-                    eventType: 5 /* MouseUp */,
-                    rawEvent: event,
+                    eventType: 5,
+                    rawEvent: e,
                 });
             }
         };
     }
-    /**
-     * Get a friendly name of  this plugin
-     */
-    CorePlugin.prototype.getName = function () {
-        return 'EditorCore';
+    MouseUpPlugin.prototype.getName = function () {
+        return 'MouseUp';
     };
-    /**
-     * Initialize this plugin. This should only be called from Editor
-     * @param editor Editor instance
-     */
-    CorePlugin.prototype.initialize = function (editor) {
-        var _this = this;
+    MouseUpPlugin.prototype.initialize = function (editor) {
         this.editor = editor;
-        this.disposers = [
-            this.editor.addDomEventHandler('compositionstart', function () { return (_this.inIME = true); }),
-            this.editor.addDomEventHandler('compositionend', function (event) {
-                _this.inIME = false;
-                _this.editor.triggerEvent({
-                    eventType: 3 /* CompositionEnd */,
-                    rawEvent: event,
-                });
-            }),
-            this.editor.addDomEventHandler(roosterjs_editor_dom_1.Browser.isIEOrEdge ? 'beforedeactivate' : 'blur', function () {
-                return _this.editor.saveSelectionRange();
-            }),
-            this.editor.addDomEventHandler('mousedown', this.onMouseDown),
-            this.disableRestoreSelectionOnFocus
-                ? null
-                : this.editor.addDomEventHandler('focus', function () { return _this.editor.restoreSavedRange(); }),
-        ];
     };
-    /**
-     * Dispose this plugin
-     */
-    CorePlugin.prototype.dispose = function () {
+    MouseUpPlugin.prototype.dispose = function () {
         this.removeMouseUpEventListener();
-        if (this.disposers) {
-            this.disposers.forEach(function (disposer) { return disposer && disposer(); });
-            this.disposers = null;
-        }
         this.editor = null;
     };
-    /**
-     * Check if editor is in IME input sequence
-     * @returns True if editor is in IME input sequence, otherwise false
-     */
-    CorePlugin.prototype.isInIME = function () {
-        return this.inIME;
-    };
-    /**
-     * Perform an auto complete action in the callback, save a snapsnot of content before the action,
-     * and trigger ContentChangedEvent with the change source if specified
-     * @param callback The auto complete callback, return value will be used as data field of ContentChangedEvent
-     * @param changeSource Chagne source of ContentChangedEvent. If not passed, no ContentChangedEvent will be  triggered
-     */
-    CorePlugin.prototype.performAutoComplete = function (callback, changeSource) {
-        var _this = this;
-        this.editor.addUndoSnapshot(function (start, end, snapshot) {
-            var data = callback();
-            _this.autoCompleteInfo = {
-                snapshot: snapshot,
-                changeSource: changeSource,
-            };
-            return data;
-        }, changeSource);
-    };
-    /**
-     * Ensure we are typing in an HTML Element inside editor, and apply default format if current block is empty
-     * @param node Current node
-     * @param event (optional) The keyboard event that we are ensuring is typing in an element.
-     * @returns A new position to select
-     */
-    CorePlugin.prototype.ensureTypeInElement = function (position, event) {
-        position = position.normalize();
-        var block = roosterjs_editor_dom_1.getBlockElementAtNode(this.contentDiv, position.node);
-        var formatNode;
-        if (!block) {
-            // Only reason we don't get the selection block is that we have an empty content div
-            // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
-            // The fix is to add a DIV wrapping, apply default format and move cursor over
-            var document_1 = this.editor.getDocument();
-            formatNode = roosterjs_editor_dom_1.fromHtml(roosterjs_editor_dom_1.Browser.isEdge ? '<div><span><br></span></div>' : '<div><br></div>', document_1)[0];
-            this.contentDiv.appendChild(formatNode);
-            // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
-            position = new roosterjs_editor_dom_1.Position(formatNode.firstChild, 0 /* Begin */);
-        }
-        else {
-            formatNode = block.collapseToSingleElement();
-            // if the block is empty, apply default format
-            // Otherwise, leave it as it is as we don't want to change the style for existing data
-            // unless the block was just created by the keyboard event (e.g. ctrl+a & start typing)
-            var shouldSetNodeStyles = roosterjs_editor_dom_1.isNodeEmpty(formatNode) || (event && this.wasNodeJustCreatedByKeyboardEvent(event, formatNode));
-            formatNode = formatNode && shouldSetNodeStyles ? formatNode : null;
-        }
-        if (formatNode) {
-            roosterjs_editor_dom_1.applyFormat(formatNode, this.editor.getDefaultFormat());
-        }
-        return position;
-    };
-    CorePlugin.prototype.wasNodeJustCreatedByKeyboardEvent = function (event, formatNode) {
-        return event.rawEvent.target instanceof Node && event.rawEvent.target.contains(formatNode) && event.rawEvent.key === formatNode.innerText;
-    };
-    /**
-     * Handle events triggered from editor
-     * @param event PluginEvent object
-     */
-    CorePlugin.prototype.onPluginEvent = function (event) {
-        switch (event.eventType) {
-            case 6 /* ContentChanged */:
-                if (this.autoCompleteInfo && this.autoCompleteInfo.changeSource != event.source) {
-                    this.onContentChanged();
-                }
-                break;
-            case 4 /* MouseDown */:
-                this.onContentChanged();
-                break;
-            case 0 /* KeyDown */:
-                this.onContentChanged(event.rawEvent);
-                break;
-            case 1 /* KeyPress */:
-                this.onKeyPress(event);
-                break;
+    MouseUpPlugin.prototype.onPluginEvent = function (event) {
+        if (event.eventType == 4 && !this.mouseUpEventListerAdded) {
+            this.editor
+                .getDocument()
+                .addEventListener('mouseup', this.onMouseUp, true);
+            this.mouseUpEventListerAdded = true;
         }
     };
-    /**
-     * Check if the plugin should handle the given event exclusively.
-     * Handle an event exclusively means other plugin will not receive this event in
-     * onPluginEvent method.
-     * If two plugins will return true in willHandleEventExclusively() for the same event,
-     * the final result depends on the order of the plugins are added into editor
-     * @param event The event to check
-     */
-    CorePlugin.prototype.willHandleEventExclusively = function (event) {
-        return (this.autoCompleteInfo &&
-            event.eventType == 0 /* KeyDown */ &&
-            event.rawEvent.which == KEY_BACKSPACE);
-    };
-    CorePlugin.prototype.onContentChanged = function (event) {
-        if (this.autoCompleteInfo) {
-            if (event && event.which == KEY_BACKSPACE) {
-                event.preventDefault();
-                this.editor.setContent(this.autoCompleteInfo.snapshot, false /*triggerContentChangedEvent*/);
-            }
-            this.autoCompleteInfo = null;
-        }
-    };
-    CorePlugin.prototype.onKeyPress = function (event) {
-        var _this = this;
-        // If normalization was not possible before the keypress,
-        // check again after the keyboard event has been processed by browser native behaviour.
-        //
-        // This handles the case where the keyboard event that first inserts content happens when
-        // there is already content under the selection (e.g. Ctrl+a -> type new content).
-        //
-        // Only scheudle when the range is not collapsed to catch this edge case.
-        var range = this.editor.getSelectionRange();
-        if (!this.tryNormalizeTyping(event) && !range.collapsed) {
-            requestAnimationFrame(function () {
-                _this.tryNormalizeTyping(event);
-            });
-        }
-    };
-    /**
-     * Check if user is typing right under the content div
-     * When typing goes directly under content div, many things can go wrong
-     * We fix it by wrapping it with a div and reposition cursor within the div
-     */
-    CorePlugin.prototype.tryNormalizeTyping = function (event) {
-        var range = this.editor.getSelectionRange();
-        if (range &&
-            range.collapsed &&
-            roosterjs_editor_dom_1.findClosestElementAncestor(range.startContainer) == this.contentDiv) {
-            var position = this.ensureTypeInElement(roosterjs_editor_dom_1.Position.getStart(range), event);
-            this.editor.select(position);
-            return true;
-        }
-        return false;
-    };
-    CorePlugin.prototype.removeMouseUpEventListener = function () {
+    MouseUpPlugin.prototype.removeMouseUpEventListener = function () {
         if (this.mouseUpEventListerAdded) {
             this.mouseUpEventListerAdded = false;
             this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
         }
     };
-    return CorePlugin;
+    return MouseUpPlugin;
 }());
-exports.default = CorePlugin;
+exports.default = MouseUpPlugin;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-core/lib/corePlugins/TypeInContainerPlugin.ts":
+/*!*********************************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/corePlugins/TypeInContainerPlugin.ts ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var TypeInContainerPlugin = (function () {
+    function TypeInContainerPlugin() {
+    }
+    TypeInContainerPlugin.prototype.getName = function () {
+        return 'TypeInContainer';
+    };
+    TypeInContainerPlugin.prototype.initialize = function (editor) {
+        this.editor = editor;
+    };
+    TypeInContainerPlugin.prototype.dispose = function () {
+        this.editor = null;
+    };
+    TypeInContainerPlugin.prototype.onPluginEvent = function (event) {
+        if (event.eventType == 1) {
+            this.onKeyPress(event);
+        }
+    };
+    TypeInContainerPlugin.prototype.ensureTypeInElement = function (position, event) {
+        var result = position.normalize();
+        var block = this.editor.getBlockElementAtNode(result.node);
+        var formatNode;
+        if (block) {
+            formatNode = block.collapseToSingleElement();
+            var shouldSetNodeStyles = roosterjs_editor_dom_1.isNodeEmpty(formatNode) ||
+                (event && this.wasNodeJustCreatedByKeyboardEvent(event, formatNode));
+            formatNode = formatNode && shouldSetNodeStyles ? formatNode : null;
+        }
+        else {
+            formatNode = roosterjs_editor_dom_1.fromHtml(roosterjs_editor_dom_1.Browser.isEdge ? '<div><span><br></span></div>' : '<div><br></div>', this.editor.getDocument())[0];
+            this.editor.insertNode(formatNode, {
+                position: 1,
+                updateCursor: false,
+                replaceSelection: false,
+                insertOnNewLine: false,
+            });
+            result = new roosterjs_editor_dom_1.Position(formatNode.firstChild, 0);
+        }
+        if (formatNode) {
+            roosterjs_editor_dom_1.applyFormat(formatNode, this.editor.getDefaultFormat());
+        }
+        return result;
+    };
+    TypeInContainerPlugin.prototype.onKeyPress = function (event) {
+        var _this = this;
+        var range = this.editor.getSelectionRange();
+        var shouldNormalizeTypingNow = range &&
+            range.collapsed &&
+            !this.editor.contains(roosterjs_editor_dom_1.findClosestElementAncestor(range.startContainer));
+        if (shouldNormalizeTypingNow) {
+            this.tryNormalizeTyping(event, range);
+        }
+        else if (!range.collapsed) {
+            this.editor.runAsync(function () {
+                _this.tryNormalizeTyping(event);
+            });
+        }
+    };
+    TypeInContainerPlugin.prototype.tryNormalizeTyping = function (event, range) {
+        var position = this.ensureTypeInElement(roosterjs_editor_dom_1.Position.getStart(range || this.editor.getSelectionRange()), event);
+        this.editor.select(position);
+    };
+    TypeInContainerPlugin.prototype.wasNodeJustCreatedByKeyboardEvent = function (event, formatNode) {
+        return (event.rawEvent.target instanceof Node &&
+            event.rawEvent.target.contains(formatNode) &&
+            event.rawEvent.key === formatNode.innerText);
+    };
+    return TypeInContainerPlugin;
+}());
+exports.default = TypeInContainerPlugin;
 
 
 /***/ }),
@@ -27163,64 +26491,45 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var createEditorCore_1 = __webpack_require__(/*! ./createEditorCore */ "./packages/roosterjs-editor-core/lib/editor/createEditorCore.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var roosterjs_editor_dom_2 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * RoosterJs core editor class
- */
-var Editor = /** @class */ (function () {
-    //#region Lifecycle
-    /**
-     * Creates an instance of Editor
-     * @param contentDiv The DIV HTML element which will be the container element of editor
-     * @param options An optional options object to customize the editor
-     */
+var Editor = (function () {
     function Editor(contentDiv, options) {
         if (options === void 0) { options = {}; }
         var _this = this;
-        // 1. Make sure all parameters are valid
         if (roosterjs_editor_dom_2.getTagOfNode(contentDiv) != 'DIV') {
             throw new Error('contentDiv must be an HTML DIV element');
         }
-        // 2. Store options values to local variables
         this.core = createEditorCore_1.default(contentDiv, options);
-        // 3. Initialize plugins
         this.core.plugins.forEach(function (plugin) { return plugin.initialize(_this); });
-        // 4. Ensure initial content and its format
         this.setContent(options.initialContent || contentDiv.innerHTML || '');
-        // 5. Create event handler to bind DOM events
         this.eventDisposers = [
-            this.core.api.attachDomEvent(this.core, 'keypress', 1 /* KeyPress */),
-            this.core.api.attachDomEvent(this.core, 'keydown', 0 /* KeyDown */),
-            this.core.api.attachDomEvent(this.core, 'keyup', 2 /* KeyUp */),
-            this.core.api.attachDomEvent(this.core, 'mousedown', 4 /* MouseDown */),
+            this.core.api.attachDomEvent(this.core, 'keypress', 1),
+            this.core.api.attachDomEvent(this.core, 'keydown', 0),
+            this.core.api.attachDomEvent(this.core, 'keyup', 2),
+            this.core.api.attachDomEvent(this.core, 'mousedown', 4),
         ];
-        // 6. Make the container editable and set its selection styles
+        if (options.additionalEditFeatures) {
+            options.additionalEditFeatures.forEach(function (feature) { return _this.addContentEditFeature(feature); });
+        }
         if (!options.omitContentEditableAttributeChanges && !contentDiv.isContentEditable) {
             contentDiv.setAttribute('contenteditable', 'true');
             var styles = contentDiv.style;
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
             this.contenteditableChanged = true;
         }
-        // 7. Disable these operations for firefox since its behavior is usually wrong
-        // Catch any possible exception since this should not block the initialization of editor
         try {
-            this.core.document.execCommand("enableObjectResizing" /* EnableObjectResizing */, false, (false));
-            this.core.document.execCommand("enableInlineTableEditing" /* EnableInlineTableEditing */, false, false);
+            this.core.document.execCommand("enableObjectResizing", false, (false));
+            this.core.document.execCommand("enableInlineTableEditing", false, false);
         }
         catch (e) { }
-        // 8. Let plugins know that we are ready
         this.triggerEvent({
-            eventType: 10 /* EditorReady */,
-        }, true /*broadcast*/);
-        // 9. Before give editor to user, make sure there is at least one DIV element to accept typing
-        this.core.corePlugin.ensureTypeInElement(new roosterjs_editor_dom_2.Position(contentDiv, 0 /* Begin */));
+            eventType: 9,
+        }, true);
+        this.core.corePlugins.typeInContainer.ensureTypeInElement(new roosterjs_editor_dom_2.Position(contentDiv, 0));
     }
-    /**
-     * Dispose this editor, dispose all plugins and custom data
-     */
     Editor.prototype.dispose = function () {
         this.triggerEvent({
-            eventType: 11 /* BeforeDispose */,
-        }, true /*broadcast*/);
+            eventType: 10,
+        }, true);
         this.core.plugins.forEach(function (plugin) { return plugin.dispose(); });
         this.eventDisposers.forEach(function (disposer) { return disposer(); });
         this.eventDisposers = null;
@@ -27239,68 +26548,29 @@ var Editor = /** @class */ (function () {
         }
         this.core = null;
     };
-    /**
-     * Get whether this editor is disposed
-     * @returns True if editor is disposed, otherwise false
-     */
     Editor.prototype.isDisposed = function () {
         return !this.core;
     };
-    //#endregion
-    //#region Node API
-    /**
-     * Insert node into editor
-     * @param node The node to insert
-     * @param option Insert options. Default value is:
-     *  position: ContentPosition.SelectionStart
-     *  updateCursor: true
-     *  replaceSelection: true
-     *  insertOnNewLine: false
-     * @returns true if node is inserted. Otherwise false
-     */
     Editor.prototype.insertNode = function (node, option) {
         return node ? this.core.api.insertNode(this.core, node, option) : false;
     };
-    /**
-     * Delete a node from editor content
-     * @param node The node to delete
-     * @returns true if node is deleted. Otherwise false
-     */
     Editor.prototype.deleteNode = function (node) {
-        // Only remove the node when it falls within editor
         if (node && this.contains(node)) {
             node.parentNode.removeChild(node);
             return true;
         }
         return false;
     };
-    /**
-     * Replace a node in editor content with another node
-     * @param existingNode The existing node to be replaced
-     * @param new node to replace to
-     * @returns true if node is replaced. Otherwise false
-     */
     Editor.prototype.replaceNode = function (existingNode, toNode) {
-        // Only replace the node when it falls within editor
         if (existingNode && toNode && this.contains(existingNode)) {
             existingNode.parentNode.replaceChild(toNode, existingNode);
             return true;
         }
         return false;
     };
-    /**
-     * Get InlineElement at given node
-     * @param node The node to create InlineElement
-     * @returns The InlineElement result
-     */
     Editor.prototype.getInlineElementAtNode = function (node) {
         return roosterjs_editor_dom_2.getInlineElementAtNode(this.core.contentDiv, node);
     };
-    /**
-     * Get BlockElement at given node
-     * @param node The node to create InlineElement
-     * @returns The BlockElement result
-     */
     Editor.prototype.getBlockElementAtNode = function (node) {
         return roosterjs_editor_dom_2.getBlockElementAtNode(this.core.contentDiv, node);
     };
@@ -27308,44 +26578,18 @@ var Editor = /** @class */ (function () {
         return roosterjs_editor_dom_2.contains(this.core.contentDiv, arg);
     };
     Editor.prototype.queryElements = function (selector, scopeOrCallback, callback) {
-        if (scopeOrCallback === void 0) { scopeOrCallback = 0 /* Body */; }
-        var scope = scopeOrCallback instanceof Function ? 0 /* Body */ : scopeOrCallback;
+        if (scopeOrCallback === void 0) { scopeOrCallback = 0; }
+        var scope = scopeOrCallback instanceof Function ? 0 : scopeOrCallback;
         callback = scopeOrCallback instanceof Function ? scopeOrCallback : callback;
-        var range = scope == 0 /* Body */ ? null : this.getSelectionRange();
+        var range = scope == 0 ? null : this.getSelectionRange();
         return roosterjs_editor_dom_2.queryElements(this.core.contentDiv, selector, callback, scope, range);
     };
-    /**
-     * Collapse nodes within the given start and end nodes to their common ascenstor node,
-     * split parent nodes if necessary
-     * @param start The start node
-     * @param end The end node
-     * @param canSplitParent True to allow split parent node there are nodes before start or after end under the same parent
-     * and the returned nodes will be all nodes from start trhough end after splitting
-     * False to disallow split parent
-     * @returns When cansplitParent is true, returns all node from start through end after splitting,
-     * otherwise just return start and end
-     */
     Editor.prototype.collapseNodes = function (start, end, canSplitParent) {
         return roosterjs_editor_dom_2.collapseNodes(this.core.contentDiv, start, end, canSplitParent);
     };
-    //#endregion
-    //#region Content API
-    /**
-     * Check whether the editor contains any visible content
-     * @param trim Whether trime the content string before check. Default is false
-     * @returns True if there's no visible content, otherwise false
-     */
     Editor.prototype.isEmpty = function (trim) {
         return roosterjs_editor_dom_2.isNodeEmpty(this.core.contentDiv, trim);
     };
-    /**
-     * Get current editor content as HTML string
-     * @param triggerExtractContentEvent Whether trigger ExtractContent event to all plugins
-     * before return. Use this parameter to remove any temporary content added by plugins.
-     * @param includeSelectionMarker Set to true if need include selection marker inside the content.
-     * When restore this content, editor will set the selection to the position marked by these markers
-     * @returns HTML string representing current editor content
-     */
     Editor.prototype.getContent = function (triggerExtractContentEvent, includeSelectionMarker) {
         if (triggerExtractContentEvent === void 0) { triggerExtractContentEvent = true; }
         if (includeSelectionMarker === void 0) { includeSelectionMarker = false; }
@@ -27358,33 +26602,24 @@ var Editor = /** @class */ (function () {
         }
         if (triggerExtractContentEvent) {
             var extractContentEvent = {
-                eventType: 7 /* ExtractContent */,
+                eventType: 7,
                 content: content,
             };
-            this.triggerEvent(extractContentEvent, true /*broadcast*/);
+            this.triggerEvent(extractContentEvent, true);
             content = extractContentEvent.content;
         }
         return content;
     };
-    /**
-     * Get plain text content inside editor
-     * @returns The text content inside editor
-     */
     Editor.prototype.getTextContent = function () {
         return this.core.contentDiv.innerText;
     };
-    /**
-     * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
-     * @param content HTML content to set in
-     * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
-     */
     Editor.prototype.setContent = function (content, triggerContentChangedEvent) {
         if (triggerContentChangedEvent === void 0) { triggerContentChangedEvent = true; }
         var contentDiv = this.core.contentDiv;
         if (contentDiv.innerHTML != content) {
             contentDiv.innerHTML = content || '';
             var pathComment = contentDiv.lastChild;
-            if (pathComment && pathComment.nodeType == 8 /* Comment */) {
+            if (pathComment && pathComment.nodeType == 8) {
                 try {
                     var path = JSON.parse(pathComment.nodeValue);
                     this.deleteNode(pathComment);
@@ -27398,21 +26633,9 @@ var Editor = /** @class */ (function () {
             }
         }
     };
-    /**
-     * Insert HTML content into editor
-     * @param HTML content to insert
-     * @param option Insert options. Default value is:
-     *  position: ContentPosition.SelectionStart
-     *  updateCursor: true
-     *  replaceSelection: true
-     *  insertOnNewLine: false
-     */
     Editor.prototype.insertContent = function (content, option) {
         if (content) {
             var allNodes = roosterjs_editor_dom_2.fromHtml(content, this.core.document);
-            // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with
-            // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
-            // separately to show up on its own line
             if (option && option.insertOnNewLine && allNodes.length > 0) {
                 allNodes = [roosterjs_editor_dom_2.wrap(allNodes)];
             }
@@ -27421,55 +26644,28 @@ var Editor = /** @class */ (function () {
             }
         }
     };
-    //#endregion
-    //#region Focus and Selection
-    /**
-     * Get current selection range from Editor.
-     * It does a live pull on the selection, if nothing retrieved, return whatever we have in cache.
-     * @returns current selection range, or null if editor never got focus before
-     */
     Editor.prototype.getSelectionRange = function () {
-        return this.core.api.getSelectionRange(this.core, true /*tryGetFromCache*/);
+        return this.core.api.getSelectionRange(this.core, true);
     };
-    /**
-     * Check if focus is in editor now
-     * @returns true if focus is in editor, otherwise false
-     */
     Editor.prototype.hasFocus = function () {
         return this.core.api.hasFocus(this.core);
     };
-    /**
-     * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
-     */
     Editor.prototype.focus = function () {
         this.core.api.focus(this.core);
     };
     Editor.prototype.select = function (arg1, arg2, arg3, arg4) {
         return this.core.api.select(this.core, arg1, arg2, arg3, arg4);
     };
-    /**
-     * Get current selection
-     * @return current selection object
-     */
     Editor.prototype.getSelection = function () {
         return this.core.document.defaultView.getSelection();
     };
-    /**
-     * Save the current selection in editor so that when focus again, the selection can be restored
-     */
     Editor.prototype.saveSelectionRange = function () {
-        this.core.cachedSelectionRange = this.core.api.getSelectionRange(this.core, false /*tryGetFromCache*/);
+        this.core.cachedSelectionRange = this.core.api.getSelectionRange(this.core, false);
     };
-    /**
-     * Restore the saved selection range and clear it
-     */
     Editor.prototype.restoreSavedRange = function () {
         this.select(this.core.cachedSelectionRange);
         this.core.cachedSelectionRange = null;
     };
-    /**
-     * Get current focused position. Return null if editor doesn't have focus at this time.
-     */
     Editor.prototype.getFocusedPosition = function () {
         var sel = this.getSelection();
         if (this.contains(sel && sel.focusNode)) {
@@ -27481,24 +26677,10 @@ var Editor = /** @class */ (function () {
         }
         return null;
     };
-    /**
-     * Get a rect representing the location of the cursor.
-     * @returns a Rect object representing cursor location
-     */
     Editor.prototype.getCursorRect = function () {
         var position = this.getFocusedPosition();
         return position && roosterjs_editor_dom_2.getPositionRect(position);
     };
-    /**
-     * Get an HTML element from current cursor position.
-     * When expectedTags is not specified, return value is the current node (if it is HTML element)
-     * or its parent node (if current node is a Text node).
-     * When expectedTags is specified, return value is the first anscestor of current node which has
-     * one of the expected tags.
-     * If no element found within editor by the given tag, return null.
-     * @param selector Optional, an HTML selector to find HTML element with.
-     * @param startFrom Start search from this node. If not specified, start from current focused position
-     */
     Editor.prototype.getElementAtCursor = function (selector, startFrom) {
         if (!startFrom) {
             var position = this.getFocusedPosition();
@@ -27506,158 +26688,82 @@ var Editor = /** @class */ (function () {
         }
         return startFrom && roosterjs_editor_dom_2.findClosestElementAncestor(startFrom, this.core.contentDiv, selector);
     };
-    //#endregion
-    //#region EVENT API
-    /**
-     * Add a custom DOM event handler to handle events not handled by roosterjs.
-     * Caller need to take the responsibility to dispose the handler properly
-     * @param eventName DOM event name to handle
-     * @param handler Handler callback
-     * @returns A dispose function. Call the function to dispose this event handler
-     */
-    Editor.prototype.addDomEventHandler = function (eventName, handler) {
-        return this.core.api.attachDomEvent(this.core, eventName, null /*pluginEventType*/, handler);
+    Editor.prototype.addDomEventHandler = function (nameOrMap, handler) {
+        var _this = this;
+        if (nameOrMap instanceof Object) {
+            var handlers_1 = Object.keys(nameOrMap)
+                .map(function (eventName) {
+                return nameOrMap[eventName] &&
+                    _this.core.api.attachDomEvent(_this.core, eventName, null, nameOrMap[eventName]);
+            })
+                .filter(function (x) { return x; });
+            return function () { return handlers_1.forEach(function (handler) { return handler(); }); };
+        }
+        else {
+            return this.core.api.attachDomEvent(this.core, nameOrMap, null, handler);
+        }
     };
-    /**
-     * Trigger an event to be dispatched to all plugins
-     * @param pluginEvent The event object to trigger
-     * @param broadcast indicates if the event needs to be dispatched to all plugins
-     * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
-     */
     Editor.prototype.triggerEvent = function (pluginEvent, broadcast) {
         if (broadcast === void 0) { broadcast = true; }
         this.core.api.triggerEvent(this.core, pluginEvent, broadcast);
     };
-    /**
-     * Trigger a ContentChangedEvent
-     * @param source Source of this event, by default is 'SetContent'
-     * @param data additional data for this event
-     */
     Editor.prototype.triggerContentChangedEvent = function (source, data) {
-        if (source === void 0) { source = "SetContent" /* SetContent */; }
+        if (source === void 0) { source = "SetContent"; }
         this.triggerEvent({
-            eventType: 6 /* ContentChanged */,
+            eventType: 6,
             source: source,
             data: data,
         });
     };
-    //#endregion
-    //#region Undo API
-    /**
-     * Undo last edit operation
-     */
     Editor.prototype.undo = function () {
         this.focus();
-        this.core.undo.undo();
+        this.core.corePlugins.undo.undo();
     };
-    /**
-     * Redo next edit operation
-     */
     Editor.prototype.redo = function () {
         this.focus();
-        this.core.undo.redo();
+        this.core.corePlugins.undo.redo();
     };
-    /**
-     * Add undo snapshot, and execute a format callback function, then add another undo snapshot, then trigger
-     * ContentChangedEvent with given change source.
-     * If this function is called nested, undo snapshot will only be added in the outside one
-     * @param callback The callback function to perform formatting, returns a data object which will be used as
-     * the data field in ContentChangedEvent if changeSource is not null.
-     * @param changeSource The change source to use when fire ContentChangedEvent. When the value is not null,
-     * a ContentChangedEvent will be fired with change source equal to this value
-     */
     Editor.prototype.addUndoSnapshot = function (callback, changeSource) {
         this.core.api.editWithUndo(this.core, callback, changeSource);
     };
-    /**
-     * Perform an auto complete action in the callback, save a snapsnot of content before the action,
-     * and trigger ContentChangedEvent with the change source if specified
-     * @param callback The auto complete callback, return value will be used as data field of ContentChangedEvent
-     * @param changeSource Chagne source of ContentChangedEvent. If not passed, no ContentChangedEvent will be  triggered
-     */
     Editor.prototype.performAutoComplete = function (callback, changeSource) {
-        this.core.corePlugin.performAutoComplete(callback, changeSource);
+        this.core.corePlugins.edit.performAutoComplete(callback, changeSource);
     };
-    /**
-     * Whether there is an available undo snapshot
-     */
     Editor.prototype.canUndo = function () {
-        return this.core.undo.canUndo();
+        return this.core.corePlugins.undo.canUndo();
     };
-    /**
-     * Whether there is an available redo snapshot
-     */
     Editor.prototype.canRedo = function () {
-        return this.core.undo.canRedo();
+        return this.core.corePlugins.undo.canRedo();
     };
-    //#endregion
-    //#region Misc
-    /**
-     * Get document which contains this editor
-     * @returns The HTML document which contains this editor
-     */
     Editor.prototype.getDocument = function () {
         return this.core.document;
     };
-    /**
-     * Get custom data related to this editor
-     * @param key Key of the custom data
-     * @param getter Getter function. If custom data for the given key doesn't exist,
-     * call this function to get one and store it.
-     * @param disposer An optional disposer function to dispose this custom data when
-     * dispose editor.
-     */
     Editor.prototype.getCustomData = function (key, getter, disposer) {
         return this.core.api.getCustomData(this.core, key, getter, disposer);
     };
-    /**
-     * Check if editor is in IME input sequence
-     * @returns True if editor is in IME input sequence, otherwise false
-     */
     Editor.prototype.isInIME = function () {
-        return this.core.corePlugin.isInIME();
+        return this.core.corePlugins.domEvent.isInIME();
     };
-    /**
-     * Get default format of this editor
-     * @returns Default format object of this editor
-     */
     Editor.prototype.getDefaultFormat = function () {
         return this.core.defaultFormat;
     };
-    /**
-     * Get a content traverser for the whole editor
-     */
     Editor.prototype.getBodyTraverser = function () {
         return roosterjs_editor_dom_2.ContentTraverser.createBodyTraverser(this.core.contentDiv);
     };
-    /**
-     * Get a content traverser for current selection
-     */
     Editor.prototype.getSelectionTraverser = function () {
         var range = this.getSelectionRange();
         return (range &&
             roosterjs_editor_dom_2.ContentTraverser.createSelectionTraverser(this.core.contentDiv, this.getSelectionRange()));
     };
-    /**
-     * Get a content traverser for current block element start from specified position
-     * @param startFrom Start position of the traverser. Default value is ContentPosition.SelectionStart
-     */
     Editor.prototype.getBlockTraverser = function (startFrom) {
-        if (startFrom === void 0) { startFrom = 2 /* SelectionStart */; }
+        if (startFrom === void 0) { startFrom = 2; }
         var range = this.getSelectionRange();
         return (range && roosterjs_editor_dom_2.ContentTraverser.createBlockTraverser(this.core.contentDiv, range, startFrom));
     };
-    /**
-     * Get a text traverser of current selection
-     */
     Editor.prototype.getContentSearcherOfCursor = function () {
         var range = this.getSelectionRange();
         return range && new roosterjs_editor_dom_2.PositionContentSearcher(this.core.contentDiv, roosterjs_editor_dom_2.Position.getStart(range));
     };
-    /**
-     * Run a callback function asynchronously
-     * @param callback The callback function to run
-     */
     Editor.prototype.runAsync = function (callback) {
         var _this = this;
         var win = this.core.contentDiv.ownerDocument.defaultView || window;
@@ -27667,11 +26773,6 @@ var Editor = /** @class */ (function () {
             }
         });
     };
-    /**
-     * Set DOM attribute of editor content DIV
-     * @param name Name of the attribute
-     * @param value Value of the attribute
-     */
     Editor.prototype.setEditorDomAttribute = function (name, value) {
         if (value === null) {
             this.core.contentDiv.removeAttribute(name);
@@ -27680,68 +26781,8 @@ var Editor = /** @class */ (function () {
             this.core.contentDiv.setAttribute(name, value);
         }
     };
-    //#endregion
-    //#region Deprecated methods
-    /**
-     * @deprecated
-     * Insert selection marker element into content, so that after doing some modification,
-     * we can still restore the selection as long as the selection marker is still there
-     * @returns The return value of callback
-     */
-    Editor.prototype.runWithSelectionMarker = function (callback, useInlineMarker) {
-        var selectionMarked = roosterjs_editor_dom_2.markSelection(this.core.contentDiv, this.getSelectionRange(), useInlineMarker);
-        try {
-            return callback && callback();
-        }
-        finally {
-            if (selectionMarked) {
-                // In safari the selection will be lost after inserting markers, so need to restore it
-                // For other browsers we just need to delete markers here
-                this.select(roosterjs_editor_dom_2.removeMarker(this.core.contentDiv, roosterjs_editor_dom_2.Browser.isSafari || roosterjs_editor_dom_2.Browser.isChrome /*applySelection*/));
-            }
-        }
-    };
-    /**
-     * @deprecated Use queryElements instead
-     */
-    Editor.prototype.queryContent = function (selector) {
-        return this.core.contentDiv.querySelectorAll(selector);
-    };
-    /**
-     * @deprecated Use select() instead
-     * Update selection in editor
-     * @param selectionRange The selection range to update to
-     * @returns true if selection range is updated. Otherwise false.
-     */
-    Editor.prototype.updateSelection = function (selectionRange) {
-        return this.select(selectionRange);
-    };
-    /**
-     * @deprecated Use editWithUndo() instead
-     */
-    Editor.prototype.runWithoutAddingUndoSnapshot = function (callback) {
-        try {
-            this.core.currentUndoSnapshot = this.getContent(false, true);
-            callback();
-        }
-        finally {
-            this.core.currentUndoSnapshot = null;
-        }
-    };
-    /**
-     * @deprecated Use getBodyTraverser, getSelectionTraverser, getBlockTraverser instead
-     */
-    Editor.prototype.getContentTraverser = function (scope, position) {
-        if (position === void 0) { position = 2 /* SelectionStart */; }
-        switch (scope) {
-            case 0 /* Block */:
-                return this.getBlockTraverser(position);
-            case 1 /* Selection */:
-                return this.getSelectionTraverser();
-            case 2 /* Body */:
-                return this.getBodyTraverser();
-        }
-        return null;
+    Editor.prototype.addContentEditFeature = function (feature) {
+        this.core.corePlugins.edit.addFeature(feature);
     };
     return Editor;
 }());
@@ -27761,30 +26802,47 @@ exports.default = Editor;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var attachDomEvent_1 = __webpack_require__(/*! ../coreAPI/attachDomEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/attachDomEvent.ts");
-var CorePlugin_1 = __webpack_require__(/*! ./CorePlugin */ "./packages/roosterjs-editor-core/lib/editor/CorePlugin.ts");
+var DOMEventPlugin_1 = __webpack_require__(/*! ../corePlugins/DOMEventPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts");
+var EditPlugin_1 = __webpack_require__(/*! ../corePlugins/EditPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/EditPlugin.ts");
 var editWithUndo_1 = __webpack_require__(/*! ../coreAPI/editWithUndo */ "./packages/roosterjs-editor-core/lib/coreAPI/editWithUndo.ts");
 var focus_1 = __webpack_require__(/*! ../coreAPI/focus */ "./packages/roosterjs-editor-core/lib/coreAPI/focus.ts");
 var getCustomData_1 = __webpack_require__(/*! ../coreAPI/getCustomData */ "./packages/roosterjs-editor-core/lib/coreAPI/getCustomData.ts");
 var getSelectionRange_1 = __webpack_require__(/*! ../coreAPI/getSelectionRange */ "./packages/roosterjs-editor-core/lib/coreAPI/getSelectionRange.ts");
 var hasFocus_1 = __webpack_require__(/*! ../coreAPI/hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
 var insertNode_1 = __webpack_require__(/*! ../coreAPI/insertNode */ "./packages/roosterjs-editor-core/lib/coreAPI/insertNode.ts");
+var MouseUpPlugin_1 = __webpack_require__(/*! ../corePlugins/MouseUpPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/MouseUpPlugin.ts");
 var select_1 = __webpack_require__(/*! ../coreAPI/select */ "./packages/roosterjs-editor-core/lib/coreAPI/select.ts");
 var triggerEvent_1 = __webpack_require__(/*! ../coreAPI/triggerEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/triggerEvent.ts");
+var TypeInContainerPlugin_1 = __webpack_require__(/*! ../corePlugins/TypeInContainerPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/TypeInContainerPlugin.ts");
 var Undo_1 = __webpack_require__(/*! ../undo/Undo */ "./packages/roosterjs-editor-core/lib/undo/Undo.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 function createEditorCore(contentDiv, options) {
-    var undo = options.undo || new Undo_1.default();
-    var corePlugin = new CorePlugin_1.default(contentDiv, options.disableRestoreSelectionOnFocus);
+    var corePlugins = {
+        undo: options.undo || new Undo_1.default(),
+        edit: new EditPlugin_1.default(),
+        typeInContainer: new TypeInContainerPlugin_1.default(),
+        mouseUp: new MouseUpPlugin_1.default(),
+        domEvent: new DOMEventPlugin_1.default(options.disableRestoreSelectionOnFocus),
+    };
+    var allPlugins = [
+        corePlugins.typeInContainer,
+        corePlugins.edit,
+        corePlugins.mouseUp
+    ].concat((options.plugins || []), [
+        corePlugins.undo,
+        corePlugins.domEvent,
+    ]).filter(function (plugin) { return !!plugin; });
+    var eventHandlerPlugins = allPlugins.filter(function (plugin) { return plugin.onPluginEvent || plugin.willHandleEventExclusively; });
     return {
         contentDiv: contentDiv,
         document: contentDiv.ownerDocument,
         defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
-        corePlugin: corePlugin,
-        undo: undo,
+        corePlugins: corePlugins,
         currentUndoSnapshot: null,
         customData: {},
         cachedSelectionRange: null,
-        plugins: [corePlugin].concat((options.plugins || []), [undo]).filter(function (plugin) { return !!plugin; }),
+        plugins: allPlugins,
+        eventHandlerPlugins: eventHandlerPlugins,
         api: createCoreApiMap(options.coreApiOverride),
         defaultApi: createCoreApiMap(),
     };
@@ -27837,22 +26895,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var cacheGetEventData_1 = __webpack_require__(/*! ./cacheGetEventData */ "./packages/roosterjs-editor-core/lib/eventApi/cacheGetEventData.ts");
 var clearEventDataCache_1 = __webpack_require__(/*! ./clearEventDataCache */ "./packages/roosterjs-editor-core/lib/eventApi/clearEventDataCache.ts");
 var CONTENTSEARCHER_KEY = 'CONTENTSEARCHER';
-/**
- * Try get existing PositionContentSearcher from an event. If there isn't one, create a new one from editor.
- * @param event The plugin event, it stores the event cached data for looking up.
- * If passed as null, we will create a new PositionContentSearcher
- * @param editor The editor instance
- * @returns The PositionContentSearcher object
- */
 function cacheGetContentSearcher(event, editor) {
     return cacheGetEventData_1.default(event, CONTENTSEARCHER_KEY, function () { return editor.getContentSearcherOfCursor(); });
 }
 exports.cacheGetContentSearcher = cacheGetContentSearcher;
-/**
- * Clear the PositionContentSearcher in a plugin event.
- * This is called when the content is changed
- * @param event The plugin event
- */
 function clearContentSearcherCache(event) {
     clearEventDataCache_1.default(event, CONTENTSEARCHER_KEY);
 }
@@ -27873,15 +26919,6 @@ exports.clearContentSearcherCache = clearContentSearcherCache;
 Object.defineProperty(exports, "__esModule", { value: true });
 var cacheGetEventData_1 = __webpack_require__(/*! ./cacheGetEventData */ "./packages/roosterjs-editor-core/lib/eventApi/cacheGetEventData.ts");
 var CACHE_KEY_PREFIX = 'GET_ELEMENT_AT_CURSOR_';
-/**
- * Get an HTML element at cursor from event cache if it exists.
- * If an selector is specified, return the nearest ancestor of current node
- * which matches the selector, or null if no match found in editor.
- * @param editor The editor instance
- * @param event Event object to get cached object from
- * @param selector The expected selector. If null, return the element at cursor
- * @returns The element at cursor or the nearest ancestor with the tag name is specified
- */
 function cacheGetElementAtCursor(editor, event, selector) {
     return cacheGetEventData_1.default(event, CACHE_KEY_PREFIX + selector, function () {
         return editor.getElementAtCursor(selector);
@@ -27902,13 +26939,6 @@ exports.default = cacheGetElementAtCursor;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Gets the cached event data by cache key from event object if there is already one.
- * Otherwise, call getter function to create one, and cache it.
- * @param event The event object
- * @param key Cache key string, need to be unique
- * @param getter Getter function to get the object when it is not in cache yet
- */
 function cacheGetEventData(event, key, getter) {
     var result = event && event.eventDataCache && event.eventDataCache.hasOwnProperty(key)
         ? event.eventDataCache[key]
@@ -27934,11 +26964,6 @@ exports.default = cacheGetEventData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Clear a cached object by its key from an event object
- * @param event The event object
- * @param key The cache key
- */
 function clearEventDataCache(event, key) {
     if (event && event.eventDataCache && event.eventDataCache.hasOwnProperty(key)) {
         delete event.eventDataCache[key];
@@ -27959,16 +26984,18 @@ exports.default = clearEventDataCache;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CorePlugin_1 = __webpack_require__(/*! ./editor/CorePlugin */ "./packages/roosterjs-editor-core/lib/editor/CorePlugin.ts");
-exports.CorePlugin = CorePlugin_1.default;
 var Editor_1 = __webpack_require__(/*! ./editor/Editor */ "./packages/roosterjs-editor-core/lib/editor/Editor.ts");
 exports.Editor = Editor_1.default;
 var Undo_1 = __webpack_require__(/*! ./undo/Undo */ "./packages/roosterjs-editor-core/lib/undo/Undo.ts");
 exports.Undo = Undo_1.default;
-var UndoSnapshots_1 = __webpack_require__(/*! ./undo/UndoSnapshots */ "./packages/roosterjs-editor-core/lib/undo/UndoSnapshots.ts");
-exports.UndoSnapshotsService = UndoSnapshots_1.default;
-var BrowserData_1 = __webpack_require__(/*! ./deprecated/BrowserData */ "./packages/roosterjs-editor-core/lib/deprecated/BrowserData.ts");
-exports.browserData = BrowserData_1.default;
+var EditPlugin_1 = __webpack_require__(/*! ./corePlugins/EditPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/EditPlugin.ts");
+exports.EditPlugin = EditPlugin_1.default;
+var MouseUpPlugin_1 = __webpack_require__(/*! ./corePlugins/MouseUpPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/MouseUpPlugin.ts");
+exports.MouseUpPlugin = MouseUpPlugin_1.default;
+var DOMEventPlugin_1 = __webpack_require__(/*! ./corePlugins/DOMEventPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts");
+exports.DOMEventPlugin = DOMEventPlugin_1.default;
+var TypeInContainerPlugin_1 = __webpack_require__(/*! ./corePlugins/TypeInContainerPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/TypeInContainerPlugin.ts");
+exports.TypeInContainerPlugin = TypeInContainerPlugin_1.default;
 var cacheGetEventData_1 = __webpack_require__(/*! ./eventApi/cacheGetEventData */ "./packages/roosterjs-editor-core/lib/eventApi/cacheGetEventData.ts");
 exports.cacheGetEventData = cacheGetEventData_1.default;
 var clearEventDataCache_1 = __webpack_require__(/*! ./eventApi/clearEventDataCache */ "./packages/roosterjs-editor-core/lib/eventApi/clearEventDataCache.ts");
@@ -27978,9 +27005,6 @@ exports.cacheGetContentSearcher = cacheGetContentSearcher_1.cacheGetContentSearc
 exports.clearContentSearcherCache = cacheGetContentSearcher_1.clearContentSearcherCache;
 var cacheGetElementAtCursor_1 = __webpack_require__(/*! ./eventApi/cacheGetElementAtCursor */ "./packages/roosterjs-editor-core/lib/eventApi/cacheGetElementAtCursor.ts");
 exports.cacheGetElementAtCursor = cacheGetElementAtCursor_1.default;
-var snapshotUtils_1 = __webpack_require__(/*! ./deprecated/snapshotUtils */ "./packages/roosterjs-editor-core/lib/deprecated/snapshotUtils.ts");
-exports.buildSnapshot = snapshotUtils_1.buildSnapshot;
-exports.restoreSnapshot = snapshotUtils_1.restoreSnapshot;
 
 
 /***/ }),
@@ -28002,123 +27026,70 @@ var KEY_SPACE = 32;
 var KEY_ENTER = 13;
 var KEY_PAGEUP = 33;
 var KEY_DOWN = 40;
-/**
- * Provides snapshot based undo service for Editor
- */
-var Undo = /** @class */ (function () {
-    /**
-     * Create an instance of Undo
-     * @param preserveSnapshots True to preserve the snapshots after dispose, this allows
-     * this object to be reused when editor is disposed and created again
-     * @param maxBufferSize The max buffer size for snapshots. Default value is 10MB
-     */
+var Undo = (function () {
     function Undo(preserveSnapshots, maxBufferSize) {
         if (maxBufferSize === void 0) { maxBufferSize = 1e7; }
-        var _this = this;
         this.preserveSnapshots = preserveSnapshots;
         this.maxBufferSize = maxBufferSize;
-        this.name = 'Undo';
-        this.onNativeEvent = function (e) {
-            _this.editor.runAsync(function () {
-                _this.addUndoSnapshot();
-                _this.editor.triggerContentChangedEvent(e.type == 'cut' ? "Cut" /* Cut */ : "Drop" /* Drop */);
-            });
-        };
     }
-    /**
-     * Get a friendly name of  this plugin
-     */
     Undo.prototype.getName = function () {
         return 'Undo';
     };
-    /**
-     * Initialize this plugin. This should only be called from Editor
-     * @param editor Editor instance
-     */
     Undo.prototype.initialize = function (editor) {
         this.editor = editor;
-        this.onDropDisposer = this.editor.addDomEventHandler('drop', this.onNativeEvent);
-        this.onCutDisposer = this.editor.addDomEventHandler('cut', this.onNativeEvent);
     };
-    /**
-     * Dispose this plugin
-     */
     Undo.prototype.dispose = function () {
-        this.onDropDisposer();
-        this.onCutDisposer();
-        this.onDropDisposer = null;
-        this.onCutDisposer = null;
         this.editor = null;
         if (!this.preserveSnapshots) {
             this.clear();
         }
     };
-    /**
-     * Handle events triggered from editor
-     * @param event PluginEvent object
-     */
     Undo.prototype.onPluginEvent = function (event) {
-        // if editor is in IME, don't do anything
         if (this.editor.isInIME()) {
             return;
         }
         switch (event.eventType) {
-            case 10 /* EditorReady */:
+            case 9:
                 this.addUndoSnapshot();
                 break;
-            case 0 /* KeyDown */:
+            case 0:
                 this.onKeyDown(event.rawEvent);
                 break;
-            case 1 /* KeyPress */:
+            case 1:
                 this.onKeyPress(event.rawEvent);
                 break;
-            case 3 /* CompositionEnd */:
+            case 3:
                 this.clearRedoForInput();
+                this.addUndoSnapshot();
                 break;
-            case 6 /* ContentChanged */:
-                this.onContentChanged(event);
+            case 6:
+                if (!this.isRestoring) {
+                    this.clearRedoForInput();
+                }
                 break;
         }
     };
-    /**
-     * Clear all existing undo snapshots
-     */
     Undo.prototype.clear = function () {
         this.undoSnapshots = null;
         this.hasNewContent = false;
     };
-    /**
-     * Restore an undo snapshot to editor
-     */
     Undo.prototype.undo = function () {
         if (this.hasNewContent) {
             this.addUndoSnapshot();
         }
-        this.restoreSnapshot(-1 /*previousSnapshot*/);
+        this.restoreSnapshot(-1);
     };
-    /**
-     * Restore a redo snapshot to editor
-     */
     Undo.prototype.redo = function () {
-        this.restoreSnapshot(1 /*nextSnapshot*/);
+        this.restoreSnapshot(1);
     };
-    /**
-     * Whether there is a snapshot for undo
-     */
     Undo.prototype.canUndo = function () {
-        return this.hasNewContent || this.getSnapshotsManager().canMove(-1 /*previousSnapshot*/);
+        return this.hasNewContent || this.getSnapshotsManager().canMove(-1);
     };
-    /**
-     * Whether there is a snapshot for redo
-     */
     Undo.prototype.canRedo = function () {
-        return this.getSnapshotsManager().canMove(1 /*nextSnapshot*/);
+        return this.getSnapshotsManager().canMove(1);
     };
-    /**
-     * Add an undo snapshot
-     */
     Undo.prototype.addUndoSnapshot = function () {
-        var snapshot = this.getSnapshot();
+        var snapshot = this.editor.getContent(false, true);
         this.getSnapshotsManager().addSnapshot(snapshot);
         this.hasNewContent = false;
         return snapshot;
@@ -28142,14 +27113,8 @@ var Undo = /** @class */ (function () {
         }
     };
     Undo.prototype.onKeyDown = function (evt) {
-        // Handle backspace/delete when there is a selection to take a snapshot
-        // since we want the state prior to deletion restorable
         if (evt.which == KEY_BACKSPACE || evt.which == KEY_DELETE) {
             var selectionRange = this.editor.getSelectionRange();
-            // Add snapshot when
-            // 1. Something has been selected (not collapsed), or
-            // 2. It has a different key code from the last keyDown event (to prevent adding too many snapshot when keeping press the same key), or
-            // 3. Ctrl/Meta key is pressed so that a whole word will be deleted
             if (selectionRange &&
                 (!selectionRange.collapsed ||
                     this.lastKeyPress != evt.which ||
@@ -28157,12 +27122,10 @@ var Undo = /** @class */ (function () {
                     evt.metaKey)) {
                 this.addUndoSnapshot();
             }
-            // Since some content is deleted, always set hasNewContent to true so that we will take undo snapshot next time
             this.hasNewContent = true;
             this.lastKeyPress = evt.which;
         }
         else if (evt.which >= KEY_PAGEUP && evt.which <= KEY_DOWN) {
-            // PageUp, PageDown, Home, End, Left, Right, Up, Down
             if (this.hasNewContent) {
                 this.addUndoSnapshot();
             }
@@ -28171,25 +27134,14 @@ var Undo = /** @class */ (function () {
     };
     Undo.prototype.onKeyPress = function (evt) {
         if (evt.metaKey) {
-            // if metaKey is pressed, simply return since no actual effect will be taken on the editor.
-            // this is to prevent changing hasNewContent to true when meta + v to paste on Safari.
             return;
         }
-        var shouldTakeUndo = false;
-        var selectionRange = this.editor.getSelectionRange();
-        if (selectionRange && !selectionRange.collapsed) {
-            // The selection will be removed, should take undo
-            shouldTakeUndo = true;
-        }
-        else if ((evt.which == KEY_SPACE && this.lastKeyPress != KEY_SPACE) ||
+        var range = this.editor.getSelectionRange();
+        if ((range && !range.collapsed) ||
+            (evt.which == KEY_SPACE && this.lastKeyPress != KEY_SPACE) ||
             evt.which == KEY_ENTER) {
-            shouldTakeUndo = true;
-        }
-        if (shouldTakeUndo) {
             this.addUndoSnapshot();
             if (evt.which == KEY_ENTER) {
-                // Treat ENTER as new content so if there is no input after ENTER and undo,
-                // we restore the snapshot before ENTER
                 this.hasNewContent = true;
             }
         }
@@ -28197,17 +27149,6 @@ var Undo = /** @class */ (function () {
             this.clearRedoForInput();
         }
         this.lastKeyPress = evt.which;
-    };
-    Undo.prototype.onContentChanged = function (evt) {
-        if (!this.isRestoring) {
-            var currentSnapshot = this.getSnapshot();
-            if (evt.lastSnapshot != currentSnapshot) {
-                this.clearRedoForInput();
-            }
-        }
-    };
-    Undo.prototype.getSnapshot = function () {
-        return this.editor.getContent(false /*triggerExtractContentEvent*/, true /*markSelection*/);
     };
     Undo.prototype.clearRedoForInput = function () {
         this.getSnapshotsManager().clearRedo();
@@ -28231,10 +27172,8 @@ exports.default = Undo;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-// Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
-// to keep size under limit. This is kept at 10MB
-var MAXSIZELIMIT = 10000000;
-var UndoSnapshots = /** @class */ (function () {
+var MAXSIZELIMIT = 1e7;
+var UndoSnapshots = (function () {
     function UndoSnapshots(maxSize) {
         if (maxSize === void 0) { maxSize = MAXSIZELIMIT; }
         this.maxSize = maxSize;
@@ -28300,112 +27239,28 @@ exports.default = UndoSnapshots;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(/*! ../utils/contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
-var getNextPreviousInlineElement_1 = __webpack_require__(/*! ../inlineElements/getNextPreviousInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getNextPreviousInlineElement.ts");
 var isNodeAfter_1 = __webpack_require__(/*! ../utils/isNodeAfter */ "./packages/roosterjs-editor-dom/lib/utils/isNodeAfter.ts");
-var getFirstLastInlineElement_1 = __webpack_require__(/*! ../inlineElements/getFirstLastInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElement.ts");
-/**
- * This presents a content block that can be reprented by a single html block type element.
- * In most cases, it corresponds to an HTML block level element, i.e. P, DIV, LI, TD etc.
- */
-var NodeBlockElement = /** @class */ (function () {
+var NodeBlockElement = (function () {
     function NodeBlockElement(element) {
         this.element = element;
     }
-    /**
-     * Collapse this element to a single DOM element.
-     * If the content nodes are separated in different root nodes, wrap them to a single node
-     * If the content nodes are included in root node with other nodes, split root node
-     */
     NodeBlockElement.prototype.collapseToSingleElement = function () {
         return this.element;
     };
-    /**
-     * @deprecated
-     * Get the text content in the block
-     */
-    NodeBlockElement.prototype.getTextContent = function () {
-        return this.element.textContent;
-    };
-    /**
-     * Get the start node of the block
-     * For NodeBlockElement, start and end essentially refers to same node
-     */
     NodeBlockElement.prototype.getStartNode = function () {
         return this.element;
     };
-    /**
-     * Get the end node of the block
-     * For NodeBlockElement, start and end essentially refers to same node
-     */
     NodeBlockElement.prototype.getEndNode = function () {
         return this.element;
     };
-    /**
-     * @deprecated
-     * Get all nodes represented in a Node array
-     */
-    NodeBlockElement.prototype.getContentNodes = function () {
-        return [this.element];
-    };
-    /**
-     * @deprecated
-     * Get the first inline element in the block
-     */
-    NodeBlockElement.prototype.getFirstInlineElement = function () {
-        if (!this.firstInline) {
-            this.firstInline = getFirstLastInlineElement_1.getFirstInlineElement(this.element);
-        }
-        return this.firstInline;
-    };
-    /**
-     * @deprecated
-     * Get the last inline element in the block
-     */
-    NodeBlockElement.prototype.getLastInlineElement = function () {
-        if (!this.lastInline) {
-            this.lastInline = getFirstLastInlineElement_1.getLastInlineElement(this.element);
-        }
-        return this.lastInline;
-    };
-    /**
-     * @deprecated
-     * Gets all inline in the block
-     */
-    NodeBlockElement.prototype.getInlineElements = function () {
-        var allInlines = [];
-        var startInline = this.getFirstInlineElement();
-        while (startInline) {
-            allInlines.push(startInline);
-            startInline = getNextPreviousInlineElement_1.default(this.element, startInline, true /*isNext*/);
-        }
-        return allInlines;
-    };
-    /**
-     * Checks if it refers to same block
-     */
     NodeBlockElement.prototype.equals = function (blockElement) {
-        // Ideally there is only one unique way to generate a block so we only need to compare the startNode
         return this.element == blockElement.getStartNode();
     };
-    /**
-     * Checks if a block is after the current block
-     */
     NodeBlockElement.prototype.isAfter = function (blockElement) {
-        // if the block's startNode is after current node endEnd, we say it is after
         return isNodeAfter_1.default(this.element, blockElement.getEndNode());
     };
-    /**
-     * @deprecated
-     * Checks if an inline element falls within the block
-     */
-    NodeBlockElement.prototype.isInBlock = function (inlineElement) {
-        return this.contains(inlineElement.getContainerNode());
-    };
-    /**
-     * Checks if a certain html node is within the block
-     */
     NodeBlockElement.prototype.contains = function (node) {
-        return contains_1.default(this.element, node, true /*treatSameNodeAsContain*/);
+        return contains_1.default(this.element, node, true);
     };
     return NodeBlockElement;
 }());
@@ -28426,24 +27281,13 @@ exports.default = NodeBlockElement;
 Object.defineProperty(exports, "__esModule", { value: true });
 var collapseNodes_1 = __webpack_require__(/*! ../utils/collapseNodes */ "./packages/roosterjs-editor-dom/lib/utils/collapseNodes.ts");
 var contains_1 = __webpack_require__(/*! ../utils/contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
-var createRange_1 = __webpack_require__(/*! ../selection/createRange */ "./packages/roosterjs-editor-dom/lib/selection/createRange.ts");
-var getInlineElementAtNode_1 = __webpack_require__(/*! ../inlineElements/getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
-var getNextPreviousInlineElement_1 = __webpack_require__(/*! ../inlineElements/getNextPreviousInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getNextPreviousInlineElement.ts");
 var getTagOfNode_1 = __webpack_require__(/*! ../utils/getTagOfNode */ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts");
 var isBlockElement_1 = __webpack_require__(/*! ../utils/isBlockElement */ "./packages/roosterjs-editor-dom/lib/utils/isBlockElement.ts");
 var isNodeAfter_1 = __webpack_require__(/*! ../utils/isNodeAfter */ "./packages/roosterjs-editor-dom/lib/utils/isNodeAfter.ts");
 var wrap_1 = __webpack_require__(/*! ../utils/wrap */ "./packages/roosterjs-editor-dom/lib/utils/wrap.ts");
 var splitParentNode_1 = __webpack_require__(/*! ../utils/splitParentNode */ "./packages/roosterjs-editor-dom/lib/utils/splitParentNode.ts");
 var STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
-/**
- * This reprents a block that is identified by a start and end node
- * This is for cases like <root>Hello<BR>World</root>
- * in that case, Hello<BR> is a block, World is another block
- * Such block cannot be represented by a NodeBlockElement since they don't chained up
- * to a single parent node, instead they have a start and end
- * This start and end must be in same sibling level and have same parent in DOM tree
- */
-var StartEndBlockElement = /** @class */ (function () {
+var StartEndBlockElement = (function () {
     function StartEndBlockElement(rootNode, startNode, endNode) {
         this.rootNode = rootNode;
         this.startNode = startNode;
@@ -28455,13 +27299,8 @@ var StartEndBlockElement = /** @class */ (function () {
         }
         return node;
     };
-    /**
-     * Collapse this element to a single DOM element.
-     * If the content nodes are separated in different root nodes, wrap them to a single node
-     * If the content nodes are included in root node with other nodes, split root node
-     */
     StartEndBlockElement.prototype.collapseToSingleElement = function () {
-        var nodes = collapseNodes_1.default(StartEndBlockElement.getBlockContext(this.startNode), this.startNode, this.endNode, true /*canSplitParent*/);
+        var nodes = collapseNodes_1.default(StartEndBlockElement.getBlockContext(this.startNode), this.startNode, this.endNode, true);
         var blockContext = StartEndBlockElement.getBlockContext(this.startNode);
         while (nodes[0] &&
             nodes[0] != blockContext &&
@@ -28473,94 +27312,23 @@ var StartEndBlockElement = /** @class */ (function () {
             ? nodes[0]
             : wrap_1.default(nodes);
     };
-    /**
-     * Gets the start node
-     */
     StartEndBlockElement.prototype.getStartNode = function () {
         return this.startNode;
     };
-    /**
-     * Gets the end node
-     */
     StartEndBlockElement.prototype.getEndNode = function () {
         return this.endNode;
     };
-    /**
-     * Checks equals of two blocks
-     */
     StartEndBlockElement.prototype.equals = function (blockElement) {
         return (this.startNode == blockElement.getStartNode() &&
             this.endNode == blockElement.getEndNode());
     };
-    /**
-     * Checks if another block is after this current
-     */
     StartEndBlockElement.prototype.isAfter = function (blockElement) {
         return isNodeAfter_1.default(this.getStartNode(), blockElement.getEndNode());
     };
-    /**
-     * Checks if an Html node is contained within the block
-     */
     StartEndBlockElement.prototype.contains = function (node) {
-        return (contains_1.default(this.startNode, node, true /*treatSameNodeAsContain*/) ||
-            contains_1.default(this.endNode, node, true /*treatSameNodeAsContain*/) ||
+        return (contains_1.default(this.startNode, node, true) ||
+            contains_1.default(this.endNode, node, true) ||
             (isNodeAfter_1.default(node, this.startNode) && isNodeAfter_1.default(this.endNode, node)));
-    };
-    /**
-     * @deprecated
-     * Gets the text content
-     */
-    StartEndBlockElement.prototype.getTextContent = function () {
-        var range = createRange_1.default(this.startNode, this.endNode);
-        return range.toString();
-    };
-    /**
-     * @deprecated
-     * Get all nodes represented in a Node array
-     * This only works for balanced node -- start and end is at same level
-     */
-    StartEndBlockElement.prototype.getContentNodes = function () {
-        return collapseNodes_1.default(StartEndBlockElement.getBlockContext(this.startNode), this.startNode, this.endNode, true /*canSplitParent*/);
-    };
-    /**
-     * @deprecated
-     * Gets first inline
-     */
-    StartEndBlockElement.prototype.getFirstInlineElement = function () {
-        if (!this.firstInline) {
-            this.firstInline = getInlineElementAtNode_1.default(this.rootNode, this.startNode);
-        }
-        return this.firstInline;
-    };
-    /**
-     * @deprecated
-     * Gets last inline
-     */
-    StartEndBlockElement.prototype.getLastInlineElement = function () {
-        if (!this.lastInline) {
-            this.lastInline = getInlineElementAtNode_1.default(this.rootNode, this.endNode);
-        }
-        return this.lastInline;
-    };
-    /**
-     * @deprecated
-     * Gets all inline in the block
-     */
-    StartEndBlockElement.prototype.getInlineElements = function () {
-        var allInlines = [];
-        var startInline = this.getFirstInlineElement();
-        while (startInline) {
-            allInlines.push(startInline);
-            startInline = getNextPreviousInlineElement_1.default(this.rootNode, startInline, true /*isNext*/);
-        }
-        return allInlines;
-    };
-    /**
-     * @deprecated
-     * Checks if an inline falls inside me
-     */
-    StartEndBlockElement.prototype.isInBlock = function (inlineElement) {
-        return this.contains(inlineElement.getContainerNode());
     };
     return StartEndBlockElement;
 }());
@@ -28585,89 +27353,41 @@ var getTagOfNode_1 = __webpack_require__(/*! ../utils/getTagOfNode */ "./package
 var isBlockElement_1 = __webpack_require__(/*! ../utils/isBlockElement */ "./packages/roosterjs-editor-dom/lib/utils/isBlockElement.ts");
 var NodeBlockElement_1 = __webpack_require__(/*! ./NodeBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/NodeBlockElement.ts");
 var StartEndBlockElement_1 = __webpack_require__(/*! ./StartEndBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/StartEndBlockElement.ts");
-/**
- * This produces a block element from a a node
- * It needs to account for various HTML structure. Examples:
- * 1) <root><div>abc</div></root>
- *   This is most common the case, user passes in a node pointing to abc, and get back a block representing <div>abc</div>
- * 2) <root><p><br></p></root>
- *   Common content for empty block, user passes node pointing to <br>, and get back a block representing <p><br></p>
- * 3) <root>abc</root>
- *   Not common, but does happen. It is still a block in user's view. User passes in abc, and get back a start-end block representing abc
- *   NOTE: abc could be just one node. However, since it is not a html block, it is more appropriate to use start-end block although they point to same node
- * 4) <root><div>abc<br>123</div></root>
- *   A bit tricky, but can happen when user use Ctrl+Enter which simply inserts a <BR> to create a link break. There're two blocks:
- *   block1: 1) abc<br> block2: 123
- * 5) <root><div>abc<div>123</div></div></root>
- *   Nesting div and there is text node in same level as a DIV. Two blocks: 1) abc 2) <div>123</div>
- * 6) <root><div>abc<span>123<br>456</span></div></root>
- *   This is really tricky. Essentially there is a <BR> in middle of a span breaking the span into two blocks;
- *   block1: abc<span>123<br> block2: 456
- * In summary, given any arbitary node (leaf), to identify the head and tail of the block, following rules need to be followed:
- * 1) to identify the head, it needs to crawl DOM tre left/up till a block node or BR is encountered
- * 2) same for identifying tail
- * 3) should also apply a block ceiling, meaning as it crawls up, it should stop at a block node
- * @param rootNode Root node of the scope, the block element will be inside of this node
- * @param node The node to get BlockElement start from
- */
 function getBlockElementAtNode(rootNode, node) {
     if (!contains_1.default(rootNode, node)) {
         return null;
     }
-    // Identify the containing block. This serves as ceiling for traversing down below
-    // NOTE: this container block could be just the rootNode,
-    // which cannot be used to create block element. We will special case handle it later on
     var containerBlockNode = StartEndBlockElement_1.default.getBlockContext(node);
     if (containerBlockNode == node) {
         return new NodeBlockElement_1.default(containerBlockNode);
     }
-    // Find the head and leaf node in the block
-    var headNode = findHeadTailLeafNode(node, containerBlockNode, false /*isTail*/);
-    var tailNode = findHeadTailLeafNode(node, containerBlockNode, true /*isTail*/);
-    // At this point, we have the head and tail of a block, here are some examples and where head and tail point to
-    // 1) <root><div>hello<br></div></root>, head: hello, tail: <br>
-    // 2) <root><div>hello<span style="font-family: Arial">world</span></div></root>, head: hello, tail: world
-    // Both are actually completely and exclusively wrapped in a parent div, and can be represented with a Node block
-    // So we shall try to collapse as much as we can to the nearest common ancester
-    var nodes = collapseNodes_1.default(rootNode, headNode, tailNode, false /*canSplitParent*/);
+    var headNode = findHeadTailLeafNode(node, containerBlockNode, false);
+    var tailNode = findHeadTailLeafNode(node, containerBlockNode, true);
+    var nodes = collapseNodes_1.default(rootNode, headNode, tailNode, false);
     headNode = nodes[0];
     tailNode = nodes[nodes.length - 1];
     if (headNode.parentNode != tailNode.parentNode) {
-        // Un-Balanced start and end, create a start-end block
         return new StartEndBlockElement_1.default(rootNode, headNode, tailNode);
     }
     else {
-        // Balanced start and end (point to same parent), need to see if further collapsing can be done
         while (!headNode.previousSibling && !tailNode.nextSibling) {
             var parentNode = headNode.parentNode;
             if (parentNode == containerBlockNode) {
-                // Has reached the container block
                 if (containerBlockNode != rootNode) {
-                    // If the container block is not the root, use the container block
                     headNode = tailNode = parentNode;
                 }
                 break;
             }
             else {
-                // Continue collapsing to parent
                 headNode = tailNode = parentNode;
             }
         }
-        // If head and tail are same and it is a block element, create NodeBlock, otherwise start-end block
         return headNode == tailNode && isBlockElement_1.default(headNode)
             ? new NodeBlockElement_1.default(headNode)
             : new StartEndBlockElement_1.default(rootNode, headNode, tailNode);
     }
 }
 exports.default = getBlockElementAtNode;
-/**
- * Given a node and container block, identify the first/last leaf node
- * A leaf node is defined as deepest first/last node in a block
- * i.e. <div><span style="font-family: Arial">abc</span></div>, abc is the head leaf of the block
- * Often <br> or a child <div> is used to create a block. In that case, the leaf after the sibling div or br should be the head leaf
- * i.e. <div>123<br>abc</div>, abc is the head of a block because of a previous sibling <br>
- * i.e. <div><div>123</div>abc</div>, abc is also the head of a block because of a previous sibling <div>
- */
 function findHeadTailLeafNode(node, containerBlockNode, isTail) {
     var result = node;
     if (getTagOfNode_1.default(result) == 'BR' && isTail) {
@@ -28710,12 +27430,6 @@ function findHeadTailLeafNode(node, containerBlockNode, isTail) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var getBlockElementAtNode_1 = __webpack_require__(/*! ./getBlockElementAtNode */ "./packages/roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode.ts");
-/**
- * Get the first/last BlockElement of under the root node.
- * If no suitable BlockElement found, returns null
- * @param rootNode The root node to get BlockElement from
- * @param isFirst True to get first BlockElement, false to get last BlockElement
- */
 function getFirstLastBlockElement(rootNode, isFirst) {
     var node = rootNode;
     do {
@@ -28723,23 +27437,13 @@ function getFirstLastBlockElement(rootNode, isFirst) {
     } while (node && node.firstChild);
     return node && getBlockElementAtNode_1.default(rootNode, node);
 }
-exports.getFirstLastBlockElement = getFirstLastBlockElement;
-/**
- * Get the first BlockElement of under the root node.
- * If no suitable BlockElement found, returns null
- * @param rootNode The root node to get BlockElement from
- */
+exports.default = getFirstLastBlockElement;
 function getFirstBlockElement(rootNode) {
-    return getFirstLastBlockElement(rootNode, true /*isFirst*/);
+    return getFirstLastBlockElement(rootNode, true);
 }
 exports.getFirstBlockElement = getFirstBlockElement;
-/**
- * Get the last BlockElement of under the root node.
- * If no suitable BlockElement found, returns null
- * @param rootNode The root node to get BlockElement from
- */
 function getLastBlockElement(rootNode) {
-    return getFirstLastBlockElement(rootNode, false /*isFirst*/);
+    return getFirstLastBlockElement(rootNode, false);
 }
 exports.getLastBlockElement = getLastBlockElement;
 
@@ -28759,38 +27463,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(/*! ../utils/contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
 var getFirstLastBlockElement_1 = __webpack_require__(/*! ../blockElements/getFirstLastBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/getFirstLastBlockElement.ts");
 var getFirstLastInlineElement_1 = __webpack_require__(/*! ../inlineElements/getFirstLastInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElement.ts");
-/**
- * provides scoper for traversing the entire editor body starting from the beginning
- */
-var BodyScoper = /** @class */ (function () {
-    /**
-     * Construct a new instance of BodyScoper class
-     * @param rootNode Root node of the body
-     */
+var BodyScoper = (function () {
     function BodyScoper(rootNode) {
         this.rootNode = rootNode;
     }
-    /**
-     * Get the start block element
-     */
     BodyScoper.prototype.getStartBlockElement = function () {
         return getFirstLastBlockElement_1.getFirstBlockElement(this.rootNode);
     };
-    /**
-     * Get the start inline element
-     */
     BodyScoper.prototype.getStartInlineElement = function () {
         return getFirstLastInlineElement_1.getFirstInlineElement(this.rootNode);
     };
-    /**
-     * Since the scope is global, all blocks under the root node are in scope
-     */
     BodyScoper.prototype.isBlockInScope = function (blockElement) {
         return contains_1.default(this.rootNode, blockElement.getStartNode());
     };
-    /**
-     * Since we're at body scope, inline elements never need to be trimmed
-     */
     BodyScoper.prototype.trimInlineElement = function (inlineElement) {
         return inlineElement;
     };
@@ -28814,58 +27499,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var BodyScoper_1 = __webpack_require__(/*! ./BodyScoper */ "./packages/roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts");
 var EmptyInlineElement_1 = __webpack_require__(/*! ../inlineElements/EmptyInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/EmptyInlineElement.ts");
 var getBlockElementAtNode_1 = __webpack_require__(/*! ../blockElements/getBlockElementAtNode */ "./packages/roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode.ts");
-var getNextPreviousInlineElement_1 = __webpack_require__(/*! ../inlineElements/getNextPreviousInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getNextPreviousInlineElement.ts");
+var getInlineElementAtNode_1 = __webpack_require__(/*! ../inlineElements/getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
+var PartialInlineElement_1 = __webpack_require__(/*! ../inlineElements/PartialInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts");
 var SelectionBlockScoper_1 = __webpack_require__(/*! ./SelectionBlockScoper */ "./packages/roosterjs-editor-dom/lib/contentTraverser/SelectionBlockScoper.ts");
 var SelectionScoper_1 = __webpack_require__(/*! ./SelectionScoper */ "./packages/roosterjs-editor-dom/lib/contentTraverser/SelectionScoper.ts");
 var getInlineElementBeforeAfter_1 = __webpack_require__(/*! ../inlineElements/getInlineElementBeforeAfter */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementBeforeAfter.ts");
 var getLeafSibling_1 = __webpack_require__(/*! ../utils/getLeafSibling */ "./packages/roosterjs-editor-dom/lib/utils/getLeafSibling.ts");
-/**
- * The provides traversing of content inside editor.
- * There are two ways to traverse, block by block, or inline element by inline element
- * Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
- * the current inline element position
- */
-var ContentTraverser = /** @class */ (function () {
-    /**
-     * @deprecated Use static methods create*Traverser() instead
-     * Create a content traverser for the whole body of given root node
-     * @param scoper Traversing scoper object to help scope the traversing
-     */
+var ContentTraverser = (function () {
     function ContentTraverser(scoper) {
         this.scoper = scoper;
     }
-    /**
-     * Create a content traverser for the whole body of given root node
-     * @param rootNode The root node to traverse in
-     */
     ContentTraverser.createBodyTraverser = function (rootNode) {
         return new ContentTraverser(new BodyScoper_1.default(rootNode));
     };
-    /**
-     * Create a content traverser for the given selection
-     * @param rootNode The root node to traverse in
-     * @param range The selection range to scope the traversing
-     */
     ContentTraverser.createSelectionTraverser = function (rootNode, range) {
         return new ContentTraverser(new SelectionScoper_1.default(rootNode, range));
     };
-    /**
-     * Create a content traverser for a block element which contains the given position
-     * @param rootNode The root node to traverse in
-     * @param position A position inside a block, traversing will be scoped within this block.
-     * If passing a range, the start position of this range will be used
-     * @param startFrom Start position of traversing. The value can be Begin, End, SelectionStart
-     */
     ContentTraverser.createBlockTraverser = function (rootNode, position, start) {
-        if (start === void 0) { start = 2 /* SelectionStart */; }
+        if (start === void 0) { start = 2; }
         return new ContentTraverser(new SelectionBlockScoper_1.default(rootNode, position, start));
     };
     Object.defineProperty(ContentTraverser.prototype, "currentBlockElement", {
-        /**
-         * Get current block
-         */
         get: function () {
-            // Prepare currentBlock from the scoper
             if (!this.currentBlock) {
                 this.currentBlock = this.scoper.getStartBlockElement();
             }
@@ -28874,27 +27529,16 @@ var ContentTraverser = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    /**
-     * Get next block element
-     */
     ContentTraverser.prototype.getNextBlockElement = function () {
-        return this.getPreviousNextBlockElement(true /*isNext*/);
+        return this.getPreviousNextBlockElement(true);
     };
-    /**
-     * Get previous block element
-     */
     ContentTraverser.prototype.getPreviousBlockElement = function () {
-        return this.getPreviousNextBlockElement(false /*isNext*/);
+        return this.getPreviousNextBlockElement(false);
     };
     ContentTraverser.prototype.getPreviousNextBlockElement = function (isNext) {
         var current = this.currentBlockElement;
         var leaf = getLeafSibling_1.getLeafSibling(this.scoper.rootNode, isNext ? current.getEndNode() : current.getStartNode(), isNext);
         var newBlock = leaf ? getBlockElementAtNode_1.default(this.scoper.rootNode, leaf) : null;
-        // Make sure this is right block:
-        // 1) the block is in scope per scoper
-        // 2) the block is after (for next) or before (for previous) the current block
-        // Then:
-        // 1) Re-position current block to newly found block
         if (newBlock &&
             this.scoper.isBlockInScope(newBlock) &&
             ((isNext && newBlock.isAfter(current)) || (!isNext && current.isAfter(newBlock)))) {
@@ -28904,11 +27548,7 @@ var ContentTraverser = /** @class */ (function () {
         return null;
     };
     Object.defineProperty(ContentTraverser.prototype, "currentInlineElement", {
-        /**
-         * Current inline element getter
-         */
         get: function () {
-            // Retrieve a start inline from scoper
             if (!this.currentInline) {
                 this.currentInline = this.scoper.getStartInlineElement();
             }
@@ -28917,17 +27557,11 @@ var ContentTraverser = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    /**
-     * Get next inline element
-     */
     ContentTraverser.prototype.getNextInlineElement = function () {
-        return this.getPreviousNextInlineElement(true /*isNext*/);
+        return this.getPreviousNextInlineElement(true);
     };
-    /**
-     * Get previous inline element
-     */
     ContentTraverser.prototype.getPreviousInlineElement = function () {
-        return this.getPreviousNextInlineElement(false /*isNext*/);
+        return this.getPreviousNextInlineElement(false);
     };
     ContentTraverser.prototype.getPreviousNextInlineElement = function (isNext) {
         var current = this.currentInlineElement || this.currentInline;
@@ -28939,7 +27573,7 @@ var ContentTraverser = /** @class */ (function () {
             }
         }
         else {
-            newInline = getNextPreviousInlineElement_1.default(this.scoper.rootNode, current, isNext);
+            newInline = getNextPreviousInlineElement(this.scoper.rootNode, current, isNext);
             newInline =
                 newInline &&
                     current &&
@@ -28947,11 +27581,6 @@ var ContentTraverser = /** @class */ (function () {
                     ? newInline
                     : null;
         }
-        // For inline, we need to make sure:
-        // 1) it is really next/previous to current
-        // 2) pass on the new inline to this.scoper to do the triming and we still get back an inline
-        // Then
-        // 1) re-position current inline
         if (newInline && (newInline = this.scoper.trimInlineElement(newInline))) {
             this.currentInline = newInline;
             return this.currentInline;
@@ -28961,6 +27590,20 @@ var ContentTraverser = /** @class */ (function () {
     return ContentTraverser;
 }());
 exports.default = ContentTraverser;
+function getNextPreviousInlineElement(rootNode, current, isNext) {
+    if (!current) {
+        return null;
+    }
+    if (current instanceof PartialInlineElement_1.default) {
+        var result = isNext ? current.nextInlineElement : current.previousInlineElement;
+        if (result) {
+            return result;
+        }
+    }
+    var startNode = current.getContainerNode();
+    startNode = getLeafSibling_1.getLeafSibling(rootNode, startNode, isNext);
+    return getInlineElementAtNode_1.default(rootNode, startNode);
+}
 
 
 /***/ }),
@@ -28977,29 +27620,14 @@ exports.default = ContentTraverser;
 Object.defineProperty(exports, "__esModule", { value: true });
 var ContentTraverser_1 = __webpack_require__(/*! ./ContentTraverser */ "./packages/roosterjs-editor-dom/lib/contentTraverser/ContentTraverser.ts");
 var createRange_1 = __webpack_require__(/*! ../selection/createRange */ "./packages/roosterjs-editor-dom/lib/selection/createRange.ts");
-var matchWhiteSpaces_1 = __webpack_require__(/*! ../utils/matchWhiteSpaces */ "./packages/roosterjs-editor-dom/lib/utils/matchWhiteSpaces.ts");
-/**
- * The class that helps search content around a position
- */
-var PositionContentSearcher = /** @class */ (function () {
-    /**
-     * Create a new CursorData instance
-     * @param rootNode Root node of the whole scope
-     * @param position Start position
-     */
+var WHITESPACE_REGEX = /[\s\u00A0\u200B\u3000]+([^\s\u00A0\u200B\u3000]*)$/i;
+var PositionContentSearcher = (function () {
     function PositionContentSearcher(rootNode, position) {
         this.rootNode = rootNode;
         this.position = position;
-        // The cached text before position that has been read so far
         this.text = '';
-        // All inline elements before position that have been read so far
         this.inlineElements = [];
     }
-    /**
-     * Get the word before position. The word is determined by scanning backwards till the first white space, the portion
-     * between position and the white space is the word before position
-     * @returns The word before position
-     */
     PositionContentSearcher.prototype.getWordBefore = function () {
         var _this = this;
         if (!this.word) {
@@ -29007,34 +27635,18 @@ var PositionContentSearcher = /** @class */ (function () {
         }
         return this.word;
     };
-    /**
-     * Get the inline element before position
-     * @returns The inlineElement before position
-     */
     PositionContentSearcher.prototype.getInlineElementBefore = function () {
         if (!this.inlineBefore) {
             this.traverse(null);
         }
         return this.inlineBefore;
     };
-    /**
-     * Get the inline element after position
-     * @returns The inline element after position
-     */
     PositionContentSearcher.prototype.getInlineElementAfter = function () {
         if (!this.inlineAfter) {
             this.inlineAfter = ContentTraverser_1.default.createBlockTraverser(this.rootNode, this.position).currentInlineElement;
         }
         return this.inlineAfter;
     };
-    /**
-     * Get X number of chars before position
-     * The actual returned chars may be less than what is requested.
-     * @param length The length of string user want to get, the string always ends at the position,
-     * so this length determins the start position of the string
-     * @returns The actual string we get as a sub string, or the whole string before position when
-     * there is not enough chars in the string
-     */
     PositionContentSearcher.prototype.getSubStringBefore = function (length) {
         var _this = this;
         if (this.text.length < length) {
@@ -29042,12 +27654,6 @@ var PositionContentSearcher = /** @class */ (function () {
         }
         return this.text.substr(Math.max(0, this.text.length - length));
     };
-    /**
-     * Try to get a range matches the given text before the position
-     * @param text The text to match against
-     * @param exactMatch Whether it is an exact match
-     * @returns The range for the matched text, null if unable to find a match
-     */
     PositionContentSearcher.prototype.getRangeFromText = function (text, exactMatch) {
         if (!text) {
             return null;
@@ -29061,17 +27667,14 @@ var PositionContentSearcher = /** @class */ (function () {
             for (; nodeIndex >= 0 && textIndex >= 0; nodeIndex--) {
                 if (text.charCodeAt(textIndex) == nodeContent.charCodeAt(nodeIndex)) {
                     textIndex--;
-                    // on first time when end is matched, set the end of range
                     if (!endPosition) {
                         endPosition = textInline.getStartPosition().move(nodeIndex + 1);
                     }
                 }
                 else if (exactMatch || endPosition) {
-                    // Mismatch found when exact match or end already match, so return since matching failed
                     return true;
                 }
             }
-            // when textIndex == -1, we have a successful complete match
             if (textIndex == -1) {
                 startPosition = textInline.getStartPosition().move(nodeIndex + 1);
                 return true;
@@ -29080,26 +27683,11 @@ var PositionContentSearcher = /** @class */ (function () {
         });
         return startPosition && endPosition && createRange_1.default(startPosition, endPosition);
     };
-    /**
-     * Get text section before position till stop condition is met.
-     * This offers consumers to retrieve text section by section
-     * The section essentially is just an inline element which has Container element
-     * so that the consumer can remember it for anchoring popup or verification purpose
-     * when position moves out of context etc.
-     * @param stopFunc The callback stop function
-     */
     PositionContentSearcher.prototype.forEachTextInlineElement = function (callback) {
-        // We cache all text sections read so far
-        // Every time when you ask for textSection, we start with the cached first
-        // and resort to further reading once we exhausted with the cache
         if (!this.inlineElements.some(callback)) {
             this.traverse(callback);
         }
     };
-    /**
-     * Get first non textual inline element before position
-     * @returns First non textutal inline element before position or null if no such element exists
-     */
     PositionContentSearcher.prototype.getNearestNonTextInlineElement = function () {
         var _this = this;
         if (!this.nearestNonTextInlineElement) {
@@ -29107,9 +27695,6 @@ var PositionContentSearcher = /** @class */ (function () {
         }
         return this.nearestNonTextInlineElement;
     };
-    /**
-     * Continue traversing backward till stop condition is met or begin of block is reached
-     */
     PositionContentSearcher.prototype.traverse = function (callback) {
         this.traverser =
             this.traverser || ContentTraverser_1.default.createBlockTraverser(this.rootNode, this.position);
@@ -29121,18 +27706,14 @@ var PositionContentSearcher = /** @class */ (function () {
             this.inlineBefore = this.inlineBefore || previousInline;
             if (previousInline && previousInline.isTextualInlineElement()) {
                 var textContent = previousInline.getTextContent();
-                // build the word before position if it is not built yet
                 if (!this.word) {
-                    // Match on the white space, the portion after space is on the index of 1 of the matched result
-                    // (index at 0 is whole match result, index at 1 is the word)
-                    var matches = matchWhiteSpaces_1.default(textContent);
+                    var matches = WHITESPACE_REGEX.exec(textContent);
                     if (matches && matches.length == 2) {
                         this.word = matches[1] + this.text;
                     }
                 }
                 this.text = textContent + this.text;
                 this.inlineElements.push(previousInline);
-                // Check if stop condition is met
                 if (callback && callback(previousInline)) {
                     break;
                 }
@@ -29141,12 +27722,8 @@ var PositionContentSearcher = /** @class */ (function () {
                 this.nearestNonTextInlineElement = previousInline;
                 this.traversingComplete = true;
                 if (!this.word) {
-                    // if parsing is done, whatever we get so far in this.cachedText should also be in this.cachedWordBeforeCursor
                     this.word = this.text;
                 }
-                // When a non-textual inline element, or null is seen, we consider parsing complete
-                // TODO: we may need to change this if there is a future need to parse beyond text, i.e.
-                // we have aaa @someone bbb<position>, and we want to read the text before @someone
                 break;
             }
             previousInline = this.traverser.getPreviousInlineElement();
@@ -29171,22 +27748,12 @@ exports.default = PositionContentSearcher;
 Object.defineProperty(exports, "__esModule", { value: true });
 var EmptyInlineElement_1 = __webpack_require__(/*! ../inlineElements/EmptyInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/EmptyInlineElement.ts");
 var getBlockElementAtNode_1 = __webpack_require__(/*! ../blockElements/getBlockElementAtNode */ "./packages/roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode.ts");
-var getFirstLastInlineElementFromBlockElement_1 = __webpack_require__(/*! ../inlineElements/getFirstLastInlineElementFromBlockElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElementFromBlockElement.ts");
+var getInlineElementAtNode_1 = __webpack_require__(/*! ../inlineElements/getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
+var NodeBlockElement_1 = __webpack_require__(/*! ../blockElements/NodeBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/NodeBlockElement.ts");
 var Position_1 = __webpack_require__(/*! ../selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
 var getInlineElementBeforeAfter_1 = __webpack_require__(/*! ../inlineElements/getInlineElementBeforeAfter */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementBeforeAfter.ts");
-/**
- * This provides traversing content in a selection start block
- * This is commonly used for those cursor context sensitive plugin,
- * they want to know text being typed at cursor
- * This provides a scope for parsing from cursor position up to begin of the selection block
- */
-var SelectionBlockScoper = /** @class */ (function () {
-    /**
-     * Create a new instance of SelectionBlockScoper class
-     * @param rootNode The root node of the whole scope
-     * @param position Position of the selection start
-     * @param startFrom Where to start, can be Begin, End, SelectionStart
-     */
+var getFirstLastInlineElement_1 = __webpack_require__(/*! ../inlineElements/getFirstLastInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElement.ts");
+var SelectionBlockScoper = (function () {
     function SelectionBlockScoper(rootNode, position, startFrom) {
         this.rootNode = rootNode;
         this.startFrom = startFrom;
@@ -29194,26 +27761,16 @@ var SelectionBlockScoper = /** @class */ (function () {
         this.position = position.normalize();
         this.block = getBlockElementAtNode_1.default(this.rootNode, this.position.node);
     }
-    /**
-     * Get the start block element
-     */
     SelectionBlockScoper.prototype.getStartBlockElement = function () {
         return this.block;
     };
-    /**
-     * Get the start inline element
-     * The start inline refers to inline before the selection start
-     *  The reason why we choose the one before rather after is, when cursor is at the end of a paragragh,
-     * the one after likely will point to inline in next paragragh which may be null if the cursor is at bottom of editor
-     */
     SelectionBlockScoper.prototype.getStartInlineElement = function () {
         if (this.block) {
             switch (this.startFrom) {
-                case 0 /* Begin */:
-                case 1 /* End */:
-                    return getFirstLastInlineElementFromBlockElement_1.default(this.block, this.startFrom == 0 /* Begin */);
-                case 2 /* SelectionStart */:
-                    // Get the inline before selection start point, and ensure it falls in the selection block
+                case 0:
+                case 1:
+                    return getFirstLastInlineElementFromBlockElement(this.block, this.startFrom == 0);
+                case 2:
                     var startInline = getInlineElementBeforeAfter_1.getInlineElementAfter(this.rootNode, this.position);
                     return startInline && this.block.contains(startInline.getContainerNode())
                         ? startInline
@@ -29222,19 +27779,9 @@ var SelectionBlockScoper = /** @class */ (function () {
         }
         return null;
     };
-    /**
-     * Check if the given block element is in current scope
-     * @param blockElement The block element to check
-     */
     SelectionBlockScoper.prototype.isBlockInScope = function (blockElement) {
         return this.block && blockElement ? this.block.equals(blockElement) : false;
     };
-    /**
-     * Trim the incoming inline element, and return an inline element
-     * This just tests and return the inline element if it is in block
-     * This is a block scoper, which is not like selection scoper where it may cut an inline element in half
-     * A block scoper does not cut an inline in half
-     */
     SelectionBlockScoper.prototype.trimInlineElement = function (inlineElement) {
         return this.block && inlineElement && this.block.contains(inlineElement.getContainerNode())
             ? inlineElement
@@ -29243,6 +27790,15 @@ var SelectionBlockScoper = /** @class */ (function () {
     return SelectionBlockScoper;
 }());
 exports.default = SelectionBlockScoper;
+function getFirstLastInlineElementFromBlockElement(block, isFirst) {
+    if (block instanceof NodeBlockElement_1.default) {
+        var blockNode = block.getStartNode();
+        return isFirst ? getFirstLastInlineElement_1.getFirstInlineElement(blockNode) : getFirstLastInlineElement_1.getLastInlineElement(blockNode);
+    }
+    else {
+        return getInlineElementAtNode_1.default(block, isFirst ? block.getStartNode() : block.getEndNode());
+    }
+}
 
 
 /***/ }),
@@ -29261,44 +27817,24 @@ var getBlockElementAtNode_1 = __webpack_require__(/*! ../blockElements/getBlockE
 var PartialInlineElement_1 = __webpack_require__(/*! ../inlineElements/PartialInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts");
 var Position_1 = __webpack_require__(/*! ../selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
 var getInlineElementBeforeAfter_1 = __webpack_require__(/*! ../inlineElements/getInlineElementBeforeAfter */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementBeforeAfter.ts");
-/**
- * This is selection scoper that provide a start inline as the start of the selection
- * and checks if a block falls in the selection (isBlockInScope)
- * last trimInlineElement to trim any inline element to return a partial that falls in the selection
- */
-var SelectionScoper = /** @class */ (function () {
-    /**
-     * Create a new instance of SelectionScoper class
-     * @param rootNode The root node of the content
-     * @param range The selection range to scope to
-     */
+var SelectionScoper = (function () {
     function SelectionScoper(rootNode, range) {
         this.rootNode = rootNode;
         this.start = Position_1.default.getStart(range).normalize();
         this.end = Position_1.default.getEnd(range).normalize();
     }
-    /**
-     * Provide a start block as the first block after the cursor
-     */
     SelectionScoper.prototype.getStartBlockElement = function () {
         if (!this.startBlock) {
             this.startBlock = getBlockElementAtNode_1.default(this.rootNode, this.start.node);
         }
         return this.startBlock;
     };
-    /**
-     * Provide a start inline as the first inline after the cursor
-     */
     SelectionScoper.prototype.getStartInlineElement = function () {
         if (!this.startInline) {
             this.startInline = this.trimInlineElement(getInlineElementBeforeAfter_1.getInlineElementAfter(this.rootNode, this.start));
         }
         return this.startInline;
     };
-    /**
-     * Checks if a block completely falls in the selection
-     * @param block The BlockElement to check
-     */
     SelectionScoper.prototype.isBlockInScope = function (block) {
         if (!block) {
             return false;
@@ -29310,10 +27846,6 @@ var SelectionScoper = /** @class */ (function () {
         }
         else {
             var selEndBlock = getBlockElementAtNode_1.default(this.rootNode, this.end.node);
-            // There are three cases that are considered as "block in scope"
-            // 1) The start of selection falls on the block
-            // 2) The end of selection falls on the block
-            // 3) the block falls in-between selection start and end
             inScope =
                 selStartBlock &&
                     selEndBlock &&
@@ -29323,16 +27855,10 @@ var SelectionScoper = /** @class */ (function () {
         }
         return inScope;
     };
-    /**
-     * Trim an incoming inline. If it falls completely outside selection, return null
-     * otherwise return a partial that represents the portion that falls in the selection
-     * @param inline The InlineElement to check
-     */
     SelectionScoper.prototype.trimInlineElement = function (inline) {
         if (!inline || this.start.equalTo(this.end)) {
             return null;
         }
-        // Temp code. Will be changed to using InlineElement.getStart/EndPosition() soon
         var start = inline.getStartPosition();
         var end = inline.getEndPosition();
         if (start.isAfter(this.end) || this.start.isAfter(end)) {
@@ -29361,198 +27887,6 @@ exports.default = SelectionScoper;
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-dom/lib/deprecated/isTextualInlineElement.ts":
-/*!********************************************************************************!*\
-  !*** ./packages/roosterjs-editor-dom/lib/deprecated/isTextualInlineElement.ts ***!
-  \********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * @deprecated Use inlineElement.isTextualInlineElement() instead
- */
-function isTextualInlineElement(inlineElement) {
-    return inlineElement && inlineElement.isTextualInlineElement();
-}
-exports.default = isTextualInlineElement;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-dom/lib/deprecated/positionUtils.ts":
-/*!***********************************************************************!*\
-  !*** ./packages/roosterjs-editor-dom/lib/deprecated/positionUtils.ts ***!
-  \***********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Position_1 = __webpack_require__(/*! ../selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
-/**
- * @deprecated Do not use
- */
-function toEditorPoint(position) {
-    return {
-        containerNode: position.node,
-        offset: position.offset == 0 && position.isAtEnd ? 1 : position.offset,
-    };
-}
-exports.toEditorPoint = toEditorPoint;
-/**
- * @deprecated Do not use
- */
-function safeGetPosition(p) {
-    return p && p.containerNode
-        ? new Position_1.default(p.containerNode, p.offset)
-        : p;
-}
-exports.safeGetPosition = safeGetPosition;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-dom/lib/deprecated/selectionMarker.ts":
-/*!*************************************************************************!*\
-  !*** ./packages/roosterjs-editor-dom/lib/deprecated/selectionMarker.ts ***!
-  \*************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var createRange_1 = __webpack_require__(/*! ../selection/createRange */ "./packages/roosterjs-editor-dom/lib/selection/createRange.ts");
-var Position_1 = __webpack_require__(/*! ../selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
-var queryElements_1 = __webpack_require__(/*! ../utils/queryElements */ "./packages/roosterjs-editor-dom/lib/utils/queryElements.ts");
-var OFFSET_1_ATTRIBUTE = 'data-offset1';
-var OFFSET_2_ATTRIBUTE = 'data-offset2';
-var CURSOR_START = 'cursor-start';
-var CURSOR_END = 'cursor-end';
-var CURSOR_SINGLE = 'cursor-single';
-var CURSOR_MARK_SELECTOR = "SPAN#" + CURSOR_START + ",SPAN#" + CURSOR_END + ",SPAN#" + CURSOR_SINGLE;
-/**
- * @deprecated
- * Insert selection marker element into content, so that after doing some modification,
- * we can still restore the selection as long as the selection marker is still there
- * @param container Container HTML element to query selection markers from
- * @param rawRange Current selection range
- * @param useInlineMarker Inline marker will be inserted at the position where current selection is,
- * so that even some content is changed, we can still still restore the selection. But this can cause
- * adjacent text nodes to be created. If we are sure the content won't be changed and we don't want to
- * create adjacent text nodes, set this parameter to false. This usually happens for undo/redo.
- * @returns True if selection markers are added, otherwise false.
- */
-function markSelection(container, range, useInlineMarker) {
-    if (!range || queryElements_1.default(container, CURSOR_MARK_SELECTOR).length > 0) {
-        return false;
-    }
-    var start = Position_1.default.getStart(range).normalize();
-    var end = Position_1.default.getEnd(range).normalize();
-    if (start.equalTo(end) || (!useInlineMarker && start.node == end.node)) {
-        insertMarker(CURSOR_SINGLE, useInlineMarker, start, end);
-    }
-    else {
-        insertMarker(CURSOR_END, useInlineMarker, end);
-        insertMarker(CURSOR_START, useInlineMarker, start);
-    }
-    return true;
-}
-exports.markSelection = markSelection;
-/**
- * @deprecated
- * If there is selection marker in content, convert into back to a selection range and remove the markers,
- * otherwise no op.
- * @param container Container HTML element to query selection markers from
- * @param retrieveSelectionRange Whether retrieve selection range from the markers if any
- * @returns The selection range converted from makers, or null if no valid marker found.
- */
-function removeMarker(container, retrieveSelectionRange) {
-    var start;
-    var end;
-    var range;
-    var markers = queryElements_1.default(container, CURSOR_MARK_SELECTOR, retrieveSelectionRange
-        ? function (marker) {
-            switch (marker.id) {
-                case CURSOR_START:
-                    start = safeCreatePosition(marker, OFFSET_1_ATTRIBUTE);
-                    break;
-                case CURSOR_END:
-                    end = safeCreatePosition(marker, OFFSET_1_ATTRIBUTE);
-                    break;
-                case CURSOR_SINGLE:
-                    start = safeCreatePosition(marker, OFFSET_1_ATTRIBUTE);
-                    end = safeCreatePosition(marker, OFFSET_2_ATTRIBUTE);
-                    break;
-            }
-        }
-        : null);
-    if (start && end && markers.length <= 2) {
-        range = createRange_1.default(start, end);
-    }
-    markers.forEach(function (marker) { return marker.parentNode && marker.parentNode.removeChild(marker); });
-    return range;
-}
-exports.removeMarker = removeMarker;
-function safeCreatePosition(marker, attrName) {
-    var node = marker.nextSibling;
-    var offset = parseInt(marker.getAttribute(attrName)) || 0;
-    return node ? new Position_1.default(node, offset) : new Position_1.default(marker, -3 /* After */);
-}
-function insertMarker(type, useInlineMarker, pos1, pos2) {
-    var node = pos1.node;
-    var marker = node.ownerDocument.createElement('SPAN');
-    var offset = getRestorableOffset(pos1);
-    marker.id = type;
-    marker.setAttribute(OFFSET_1_ATTRIBUTE, useInlineMarker ? '0' : '' + offset);
-    marker.setAttribute(OFFSET_2_ATTRIBUTE, useInlineMarker || !pos2 ? '0' : '' + getRestorableOffset(pos2));
-    if (!useInlineMarker || offset == 0) {
-        node.parentNode.insertBefore(marker, node);
-    }
-    else if (pos1.isAtEnd) {
-        node.parentNode.insertBefore(marker, node.nextSibling);
-    }
-    else {
-        var range = node.ownerDocument.createRange();
-        range.setStart(node, offset);
-        range.collapse(true /* toStart */);
-        range.insertNode(marker);
-    }
-}
-function getRestorableOffset(position) {
-    return position.offset == 0 && position.isAtEnd ? 1 : position.offset;
-}
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-dom/lib/deprecated/wrapAll.ts":
-/*!*****************************************************************!*\
-  !*** ./packages/roosterjs-editor-dom/lib/deprecated/wrapAll.ts ***!
-  \*****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var wrap_1 = __webpack_require__(/*! ../utils/wrap */ "./packages/roosterjs-editor-dom/lib/utils/wrap.ts");
-/**
- * @deprecated Use wrap() instead
- */
-function wrapAll(nodes, htmlFragment) {
-    if (htmlFragment === void 0) { htmlFragment = '<div></div>'; }
-    return wrap_1.default(nodes, htmlFragment);
-}
-exports.default = wrapAll;
-
-
-/***/ }),
-
 /***/ "./packages/roosterjs-editor-dom/lib/index.ts":
 /*!****************************************************!*\
   !*** ./packages/roosterjs-editor-dom/lib/index.ts ***!
@@ -29568,21 +27902,13 @@ exports.NodeBlockElement = NodeBlockElement_1.default;
 var getBlockElementAtNode_1 = __webpack_require__(/*! ./blockElements/getBlockElementAtNode */ "./packages/roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode.ts");
 exports.getBlockElementAtNode = getBlockElementAtNode_1.default;
 var getFirstLastBlockElement_1 = __webpack_require__(/*! ./blockElements/getFirstLastBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/getFirstLastBlockElement.ts");
-exports.getFirstBlockElement = getFirstLastBlockElement_1.getFirstBlockElement;
-exports.getFirstLastBlockElement = getFirstLastBlockElement_1.getFirstLastBlockElement;
-exports.getLastBlockElement = getFirstLastBlockElement_1.getLastBlockElement;
+exports.getFirstLastBlockElement = getFirstLastBlockElement_1.default;
 var StartEndBlockElement_1 = __webpack_require__(/*! ./blockElements/StartEndBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/StartEndBlockElement.ts");
 exports.StartEndBlockElement = StartEndBlockElement_1.default;
 var ContentTraverser_1 = __webpack_require__(/*! ./contentTraverser/ContentTraverser */ "./packages/roosterjs-editor-dom/lib/contentTraverser/ContentTraverser.ts");
 exports.ContentTraverser = ContentTraverser_1.default;
 var PositionContentSearcher_1 = __webpack_require__(/*! ./contentTraverser/PositionContentSearcher */ "./packages/roosterjs-editor-dom/lib/contentTraverser/PositionContentSearcher.ts");
 exports.PositionContentSearcher = PositionContentSearcher_1.default;
-var getLeafSibling_1 = __webpack_require__(/*! ./utils/getLeafSibling */ "./packages/roosterjs-editor-dom/lib/utils/getLeafSibling.ts");
-exports.getNextLeafSibling = getLeafSibling_1.getNextLeafSibling;
-exports.getPreviousLeafSibling = getLeafSibling_1.getPreviousLeafSibling;
-var getLeafNode_1 = __webpack_require__(/*! ./utils/getLeafNode */ "./packages/roosterjs-editor-dom/lib/utils/getLeafNode.ts");
-exports.getFirstLeafNode = getLeafNode_1.getFirstLeafNode;
-exports.getLastLeafNode = getLeafNode_1.getLastLeafNode;
 var getInlineElementAtNode_1 = __webpack_require__(/*! ./inlineElements/getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
 exports.getInlineElementAtNode = getInlineElementAtNode_1.default;
 var ImageInlineElement_1 = __webpack_require__(/*! ./inlineElements/ImageInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/ImageInlineElement.ts");
@@ -29593,11 +27919,6 @@ var NodeInlineElement_1 = __webpack_require__(/*! ./inlineElements/NodeInlineEle
 exports.NodeInlineElement = NodeInlineElement_1.default;
 var PartialInlineElement_1 = __webpack_require__(/*! ./inlineElements/PartialInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts");
 exports.PartialInlineElement = PartialInlineElement_1.default;
-var TextInlineElement_1 = __webpack_require__(/*! ./inlineElements/TextInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/TextInlineElement.ts");
-exports.TextInlineElement = TextInlineElement_1.default;
-var getInlineElementBeforeAfter_1 = __webpack_require__(/*! ./inlineElements/getInlineElementBeforeAfter */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementBeforeAfter.ts");
-exports.getInlineElementBefore = getInlineElementBeforeAfter_1.getInlineElementBefore;
-exports.getInlineElementAfter = getInlineElementBeforeAfter_1.getInlineElementAfter;
 var applyTextStyle_1 = __webpack_require__(/*! ./utils/applyTextStyle */ "./packages/roosterjs-editor-dom/lib/utils/applyTextStyle.ts");
 exports.applyTextStyle = applyTextStyle_1.default;
 var Browser_1 = __webpack_require__(/*! ./utils/Browser */ "./packages/roosterjs-editor-dom/lib/utils/Browser.ts");
@@ -29630,8 +27951,6 @@ var isVoidHtmlElement_1 = __webpack_require__(/*! ./utils/isVoidHtmlElement */ "
 exports.isVoidHtmlElement = isVoidHtmlElement_1.default;
 var matchLink_1 = __webpack_require__(/*! ./utils/matchLink */ "./packages/roosterjs-editor-dom/lib/utils/matchLink.ts");
 exports.matchLink = matchLink_1.default;
-var matchWhiteSpaces_1 = __webpack_require__(/*! ./utils/matchWhiteSpaces */ "./packages/roosterjs-editor-dom/lib/utils/matchWhiteSpaces.ts");
-exports.matchWhiteSpaces = matchWhiteSpaces_1.default;
 var queryElements_1 = __webpack_require__(/*! ./utils/queryElements */ "./packages/roosterjs-editor-dom/lib/utils/queryElements.ts");
 exports.queryElements = queryElements_1.default;
 var splitParentNode_1 = __webpack_require__(/*! ./utils/splitParentNode */ "./packages/roosterjs-editor-dom/lib/utils/splitParentNode.ts");
@@ -29641,6 +27960,12 @@ var unwrap_1 = __webpack_require__(/*! ./utils/unwrap */ "./packages/roosterjs-e
 exports.unwrap = unwrap_1.default;
 var wrap_1 = __webpack_require__(/*! ./utils/wrap */ "./packages/roosterjs-editor-dom/lib/utils/wrap.ts");
 exports.wrap = wrap_1.default;
+var getLeafSibling_1 = __webpack_require__(/*! ./utils/getLeafSibling */ "./packages/roosterjs-editor-dom/lib/utils/getLeafSibling.ts");
+exports.getNextLeafSibling = getLeafSibling_1.getNextLeafSibling;
+exports.getPreviousLeafSibling = getLeafSibling_1.getPreviousLeafSibling;
+var getLeafNode_1 = __webpack_require__(/*! ./utils/getLeafNode */ "./packages/roosterjs-editor-dom/lib/utils/getLeafNode.ts");
+exports.getFirstLeafNode = getLeafNode_1.getFirstLeafNode;
+exports.getLastLeafNode = getLeafNode_1.getLastLeafNode;
 var VTable_1 = __webpack_require__(/*! ./table/VTable */ "./packages/roosterjs-editor-dom/lib/table/VTable.ts");
 exports.VTable = VTable_1.default;
 var Position_1 = __webpack_require__(/*! ./selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
@@ -29654,18 +27979,6 @@ exports.isPositionAtBeginningOf = isPositionAtBeginningOf_1.default;
 var getSelectionPath_1 = __webpack_require__(/*! ./selection/getSelectionPath */ "./packages/roosterjs-editor-dom/lib/selection/getSelectionPath.ts");
 exports.getSelectionPath = getSelectionPath_1.default;
 exports.getRangeFromSelectionPath = getSelectionPath_1.getRangeFromSelectionPath;
-// Deprecated
-var isTextualInlineElement_1 = __webpack_require__(/*! ./deprecated/isTextualInlineElement */ "./packages/roosterjs-editor-dom/lib/deprecated/isTextualInlineElement.ts");
-exports.isTextualInlineElement = isTextualInlineElement_1.default;
-var wrapAll_1 = __webpack_require__(/*! ./deprecated/wrapAll */ "./packages/roosterjs-editor-dom/lib/deprecated/wrapAll.ts");
-exports.wrapAll = wrapAll_1.default;
-var convertInlineCss_1 = __webpack_require__(/*! ./utils/convertInlineCss */ "./packages/roosterjs-editor-dom/lib/utils/convertInlineCss.ts");
-exports.convertInlineCss = convertInlineCss_1.default;
-var sanitizeHtml_1 = __webpack_require__(/*! ./utils/sanitizeHtml */ "./packages/roosterjs-editor-dom/lib/utils/sanitizeHtml.ts");
-exports.sanitizeHtml = sanitizeHtml_1.default;
-var selectionMarker_1 = __webpack_require__(/*! ./deprecated/selectionMarker */ "./packages/roosterjs-editor-dom/lib/deprecated/selectionMarker.ts");
-exports.markSelection = selectionMarker_1.markSelection;
-exports.removeMarker = selectionMarker_1.removeMarker;
 
 
 /***/ }),
@@ -29680,83 +27993,36 @@ exports.removeMarker = selectionMarker_1.removeMarker;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var positionUtils_1 = __webpack_require__(/*! ../deprecated/positionUtils */ "./packages/roosterjs-editor-dom/lib/deprecated/positionUtils.ts");
-/**
- * Represents an empty InlineElement.
- * This is used for ContentTraverser internally only.
- * An empty InlineElement means current position is at the end of a tag so nothing is included inside this element
- */
-var EmptyInlineElement = /** @class */ (function () {
+var EmptyInlineElement = (function () {
     function EmptyInlineElement(position, parentBlock) {
         this.position = position;
         this.parentBlock = parentBlock;
     }
-    /**
-     * Get the text content of this inline element
-     */
     EmptyInlineElement.prototype.getTextContent = function () {
         return '';
     };
-    /**
-     * Get the container node of this inline element
-     */
     EmptyInlineElement.prototype.getContainerNode = function () {
         return this.position.node;
     };
-    /**
-     * Get the parent block element of this inline element
-     */
     EmptyInlineElement.prototype.getParentBlock = function () {
         return this.parentBlock;
     };
-    /**
-     * Get the start position of this inline element
-     */
     EmptyInlineElement.prototype.getStartPosition = function () {
         return this.position;
     };
-    /**
-     * Get the end position of this inline element
-     */
     EmptyInlineElement.prototype.getEndPosition = function () {
         return this.position;
     };
-    /**
-     * Checks if the given inline element is after this inline element
-     */
     EmptyInlineElement.prototype.isAfter = function (inlineElement) {
         return inlineElement && this.position.isAfter(inlineElement.getEndPosition());
     };
-    /**
-     * Checks if this inline element is a textual inline element
-     */
     EmptyInlineElement.prototype.isTextualInlineElement = function () {
         return false;
     };
-    /**
-     * Checks if the given editor position is contained in this inline element
-     */
     EmptyInlineElement.prototype.contains = function (position) {
         return false;
     };
-    /**
-     * Apply inline style to a region of an inline element.
-     */
     EmptyInlineElement.prototype.applyStyle = function (styler) { };
-    /**
-     * @deprecated
-     * Get the start position of this inline element
-     */
-    EmptyInlineElement.prototype.getStartPoint = function () {
-        return positionUtils_1.toEditorPoint(this.position);
-    };
-    /**
-     * @deprecated
-     * Get the end position of this inline element
-     */
-    EmptyInlineElement.prototype.getEndPoint = function () {
-        return positionUtils_1.toEditorPoint(this.position);
-    };
     return EmptyInlineElement;
 }());
 exports.default = EmptyInlineElement;
@@ -29788,10 +28054,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var NodeInlineElement_1 = __webpack_require__(/*! ./NodeInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts");
-/**
- * This is an inline element representing an Html image
- */
-var ImageInlineElement = /** @class */ (function (_super) {
+var ImageInlineElement = (function (_super) {
     __extends(ImageInlineElement, _super);
     function ImageInlineElement(containerNode, parentBlock) {
         return _super.call(this, containerNode, parentBlock) || this;
@@ -29827,10 +28090,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var NodeInlineElement_1 = __webpack_require__(/*! ./NodeInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts");
-/**
- * This is inline element presenting an html hyperlink
- */
-var LinkInlineElement = /** @class */ (function (_super) {
+var LinkInlineElement = (function (_super) {
     __extends(LinkInlineElement, _super);
     function LinkInlineElement(containerNode, parentBlock) {
         return _super.call(this, containerNode, parentBlock) || this;
@@ -29855,94 +28115,41 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var applyTextStyle_1 = __webpack_require__(/*! ../utils/applyTextStyle */ "./packages/roosterjs-editor-dom/lib/utils/applyTextStyle.ts");
 var isNodeAfter_1 = __webpack_require__(/*! ../utils/isNodeAfter */ "./packages/roosterjs-editor-dom/lib/utils/isNodeAfter.ts");
 var Position_1 = __webpack_require__(/*! ../selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
-var positionUtils_1 = __webpack_require__(/*! ../deprecated/positionUtils */ "./packages/roosterjs-editor-dom/lib/deprecated/positionUtils.ts");
-var positionUtils_2 = __webpack_require__(/*! ../deprecated/positionUtils */ "./packages/roosterjs-editor-dom/lib/deprecated/positionUtils.ts");
-/**
- * This presents an inline element that can be reprented by a single html node.
- * This serves as base for most inline element as it contains most implentation
- * of all operations that can happen on an inline element. Other sub inline elements mostly
- * just identify themself for a certain type
- */
-var NodeInlineElement = /** @class */ (function () {
+var NodeInlineElement = (function () {
     function NodeInlineElement(containerNode, parentBlock) {
         this.containerNode = containerNode;
         this.parentBlock = parentBlock;
     }
-    /**
-     * The text content for this inline element
-     */
     NodeInlineElement.prototype.getTextContent = function () {
-        // nodeValue is better way to retrieve content for a text. Others, just use textContent
-        return this.containerNode.nodeType == 3 /* Text */
+        return this.containerNode.nodeType == 3
             ? this.containerNode.nodeValue
             : this.containerNode.textContent;
     };
-    /**
-     * Get the container node
-     */
     NodeInlineElement.prototype.getContainerNode = function () {
         return this.containerNode;
     };
-    // Get the parent block
     NodeInlineElement.prototype.getParentBlock = function () {
         return this.parentBlock;
     };
-    /**
-     * Get the start position of the inline element
-     */
     NodeInlineElement.prototype.getStartPosition = function () {
-        // For a position, we always want it to point to a leaf node
-        // We should try to go get the lowest first child node from the container
         return new Position_1.default(this.containerNode, 0).normalize();
     };
-    /**
-     * Get the end position of the inline element
-     */
     NodeInlineElement.prototype.getEndPosition = function () {
-        // For a position, we always want it to point to a leaf node
-        // We should try to go get the lowest last child node from the container
-        return new Position_1.default(this.containerNode, -1 /* End */).normalize();
+        return new Position_1.default(this.containerNode, -1).normalize();
     };
-    /**
-     * Checks if this inline element is a textual inline element
-     */
     NodeInlineElement.prototype.isTextualInlineElement = function () {
-        return this.containerNode && this.containerNode.nodeType == 3 /* Text */;
+        return this.containerNode && this.containerNode.nodeType == 3;
     };
-    /**
-     * Checks if an inline element is after the current inline element
-     */
     NodeInlineElement.prototype.isAfter = function (inlineElement) {
         return inlineElement && isNodeAfter_1.default(this.containerNode, inlineElement.getContainerNode());
     };
-    /**
-     * Checks if the given position is contained in the inline element
-     */
-    NodeInlineElement.prototype.contains = function (p) {
+    NodeInlineElement.prototype.contains = function (pos) {
         var start = this.getStartPosition();
         var end = this.getEndPosition();
-        var pos = positionUtils_1.safeGetPosition(p);
         return pos && pos.isAfter(start) && end.isAfter(pos);
     };
-    /**
-     * Apply inline style to an inline element
-     */
     NodeInlineElement.prototype.applyStyle = function (styler) {
         applyTextStyle_1.default(this.containerNode, styler);
-    };
-    /**
-     * @deprecated
-     * Get the start point of the inline element
-     */
-    NodeInlineElement.prototype.getStartPoint = function () {
-        return positionUtils_2.toEditorPoint(this.getStartPosition());
-    };
-    /**
-     * @deprecated
-     * Get the end point of the inline element
-     */
-    NodeInlineElement.prototype.getEndPoint = function () {
-        return positionUtils_2.toEditorPoint(this.getEndPosition());
     };
     return NodeInlineElement;
 }());
@@ -29965,62 +28172,32 @@ var applyTextStyle_1 = __webpack_require__(/*! ../utils/applyTextStyle */ "./pac
 var createRange_1 = __webpack_require__(/*! ../selection/createRange */ "./packages/roosterjs-editor-dom/lib/selection/createRange.ts");
 var Position_1 = __webpack_require__(/*! ../selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
 var getLeafSibling_1 = __webpack_require__(/*! ../utils/getLeafSibling */ "./packages/roosterjs-editor-dom/lib/utils/getLeafSibling.ts");
-var positionUtils_1 = __webpack_require__(/*! ../deprecated/positionUtils */ "./packages/roosterjs-editor-dom/lib/deprecated/positionUtils.ts");
-var positionUtils_2 = __webpack_require__(/*! ../deprecated/positionUtils */ "./packages/roosterjs-editor-dom/lib/deprecated/positionUtils.ts");
-/**
- * This is a special version of inline element that identifies a section of an inline element
- * We often have the need to cut an inline element in half and perform some operation only on half of an inline element
- * i.e. users select only some text of a text node and apply format, in that case, format has to happen on partial of an inline element
- * PartialInlineElement is implemented in a way that decorate another full inline element with its own override on methods like isAfter
- * It also offers some special methods that others don't have, i.e. nextInlineElement etc.
- */
-var PartialInlineElement = /** @class */ (function () {
+var PartialInlineElement = (function () {
     function PartialInlineElement(inlineElement, start, end) {
         this.inlineElement = inlineElement;
-        this.start = positionUtils_1.safeGetPosition(start);
-        this.end = positionUtils_1.safeGetPosition(end);
+        this.start = start;
+        this.end = end;
     }
-    /**
-     * Get the full inline element that this partial inline decorates
-     */
     PartialInlineElement.prototype.getDecoratedInline = function () {
         return this.inlineElement;
     };
-    /**
-     * Gets the container node
-     */
     PartialInlineElement.prototype.getContainerNode = function () {
         return this.inlineElement.getContainerNode();
     };
-    /**
-     * Gets the parent block
-     */
     PartialInlineElement.prototype.getParentBlock = function () {
         return this.inlineElement.getParentBlock();
     };
-    /**
-     * Gets the text content
-     */
     PartialInlineElement.prototype.getTextContent = function () {
         var range = createRange_1.default(this.getStartPosition(), this.getEndPosition());
         return range.toString();
     };
-    /**
-     * Get start position of this inline element.
-     */
     PartialInlineElement.prototype.getStartPosition = function () {
         return this.start || this.inlineElement.getStartPosition();
     };
-    /**
-     * Get end position of this inline element.
-     */
     PartialInlineElement.prototype.getEndPosition = function () {
         return this.end || this.inlineElement.getEndPosition();
     };
     Object.defineProperty(PartialInlineElement.prototype, "nextInlineElement", {
-        /**
-         * Get next partial inline element if it is not at the end boundary yet
-         */
         get: function () {
             return this.end && new PartialInlineElement(this.inlineElement, this.end, null);
         },
@@ -30028,107 +28205,40 @@ var PartialInlineElement = /** @class */ (function () {
         configurable: true
     });
     Object.defineProperty(PartialInlineElement.prototype, "previousInlineElement", {
-        /**
-         * Get previous partial inline element if it is not at the begin boundary yet
-         */
         get: function () {
             return this.start && new PartialInlineElement(this.inlineElement, null, this.start);
         },
         enumerable: true,
         configurable: true
     });
-    /**
-     * Checks if it contains a position
-     */
-    PartialInlineElement.prototype.contains = function (p) {
-        var pos = positionUtils_1.safeGetPosition(p);
+    PartialInlineElement.prototype.contains = function (pos) {
         return pos && pos.isAfter(this.getStartPosition()) && this.getEndPosition().isAfter(pos);
     };
-    /**
-     * Checks if this inline element is a textual inline element
-     */
     PartialInlineElement.prototype.isTextualInlineElement = function () {
         return this.inlineElement && this.inlineElement.isTextualInlineElement();
     };
-    /**
-     * Check if this inline element is after the other inline element
-     */
     PartialInlineElement.prototype.isAfter = function (inlineElement) {
         var thisStart = this.getStartPosition();
         var otherEnd = inlineElement && inlineElement.getEndPosition();
         return otherEnd && (thisStart.isAfter(otherEnd) || thisStart.equalTo(otherEnd));
     };
-    /**
-     * apply style
-     */
     PartialInlineElement.prototype.applyStyle = function (styler) {
         var from = this.getStartPosition().normalize();
         var to = this.getEndPosition().normalize();
         var container = this.getContainerNode();
         if (from.isAtEnd) {
             var nextNode = getLeafSibling_1.getNextLeafSibling(container, from.node);
-            from = nextNode ? new Position_1.default(nextNode, 0 /* Begin */) : null;
+            from = nextNode ? new Position_1.default(nextNode, 0) : null;
         }
         if (to.offset == 0) {
             var previousNode = getLeafSibling_1.getPreviousLeafSibling(container, to.node);
-            to = previousNode ? new Position_1.default(previousNode, -1 /* End */) : null;
+            to = previousNode ? new Position_1.default(previousNode, -1) : null;
         }
         applyTextStyle_1.default(container, styler, from, to);
-    };
-    /**
-     * @deprecated
-     * Gets the start point
-     */
-    PartialInlineElement.prototype.getStartPoint = function () {
-        return positionUtils_2.toEditorPoint(this.getStartPosition());
-    };
-    /**
-     * @deprecated
-     * Gets the end point
-     */
-    PartialInlineElement.prototype.getEndPoint = function () {
-        return positionUtils_2.toEditorPoint(this.getEndPosition());
     };
     return PartialInlineElement;
 }());
 exports.default = PartialInlineElement;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-dom/lib/inlineElements/TextInlineElement.ts":
-/*!*******************************************************************************!*\
-  !*** ./packages/roosterjs-editor-dom/lib/inlineElements/TextInlineElement.ts ***!
-  \*******************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var NodeInlineElement_1 = __webpack_require__(/*! ./NodeInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts");
-// This refers to an inline element that represents a text node
-var TextInlineElement = /** @class */ (function (_super) {
-    __extends(TextInlineElement, _super);
-    function TextInlineElement(containerNode, parentBlock) {
-        return _super.call(this, containerNode, parentBlock) || this;
-    }
-    return TextInlineElement;
-}(NodeInlineElement_1.default));
-exports.default = TextInlineElement;
 
 
 /***/ }),
@@ -30143,60 +28253,18 @@ exports.default = TextInlineElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getLeafNode_1 = __webpack_require__(/*! ../utils/getLeafNode */ "./packages/roosterjs-editor-dom/lib/utils/getLeafNode.ts");
 var getInlineElementAtNode_1 = __webpack_require__(/*! ./getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
-/**
- * Get the first inline element inside the given node
- */
+var getLeafNode_1 = __webpack_require__(/*! ../utils/getLeafNode */ "./packages/roosterjs-editor-dom/lib/utils/getLeafNode.ts");
 function getFirstInlineElement(rootNode) {
-    // getFirstLeafNode can return null for empty container
-    // do check null before passing on to get inline from the node
     var node = getLeafNode_1.getFirstLeafNode(rootNode);
     return node ? getInlineElementAtNode_1.default(rootNode, node) : null;
 }
 exports.getFirstInlineElement = getFirstInlineElement;
-/**
- * Get the last inline element inside the given node
- */
 function getLastInlineElement(rootNode) {
-    // getLastLeafNode can return null for empty container
-    // do check null before passing on to get inline from the node
     var node = getLeafNode_1.getLastLeafNode(rootNode);
     return node ? getInlineElementAtNode_1.default(rootNode, node) : null;
 }
 exports.getLastInlineElement = getLastInlineElement;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElementFromBlockElement.ts":
-/*!*******************************************************************************************************!*\
-  !*** ./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElementFromBlockElement.ts ***!
-  \*******************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var getInlineElementAtNode_1 = __webpack_require__(/*! ./getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
-var NodeBlockElement_1 = __webpack_require__(/*! ../blockElements/NodeBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/NodeBlockElement.ts");
-var getFirstLastInlineElement_1 = __webpack_require__(/*! ./getFirstLastInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElement.ts");
-/**
- * Get first/last InlineElement of the given BlockElement
- * @param block The BlockElement to get InlineElement from
- * @param isFirst True to get first InlineElement, false to get last InlineElement
- */
-function getFirstLastInlineElementFromBlockElement(block, isFirst) {
-    if (block instanceof NodeBlockElement_1.default) {
-        var blockNode = block.getStartNode();
-        return isFirst ? getFirstLastInlineElement_1.getFirstInlineElement(blockNode) : getFirstLastInlineElement_1.getLastInlineElement(blockNode);
-    }
-    else {
-        return getInlineElementAtNode_1.default(block, isFirst ? block.getStartNode() : block.getEndNode());
-    }
-}
-exports.default = getFirstLastInlineElementFromBlockElement;
 
 
 /***/ }),
@@ -30216,18 +28284,11 @@ var getTagOfNode_1 = __webpack_require__(/*! ../utils/getTagOfNode */ "./package
 var ImageInlineElement_1 = __webpack_require__(/*! ./ImageInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/ImageInlineElement.ts");
 var LinkInlineElement_1 = __webpack_require__(/*! ./LinkInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/LinkInlineElement.ts");
 var NodeInlineElement_1 = __webpack_require__(/*! ./NodeInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts");
-var NodeInlineElement_2 = __webpack_require__(/*! ./NodeInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts");
 function getInlineElementAtNode(parent, node) {
-    // An inline element has to be in a block element, get the block first and then resolve through the factory
     var parentBlock = parent instanceof Node ? getBlockElementAtNode_1.default(parent, node) : parent;
     return node && parentBlock && resolveInlineElement(node, parentBlock);
 }
 exports.default = getInlineElementAtNode;
-/**
- * Resolve an inline element by a leaf node
- * @param node The node to resolve from
- * @param parentBlock The parent block element
- */
 function resolveInlineElement(node, parentBlock) {
     var nodeChain = [node];
     for (var parent_1 = node.parentNode; parent_1 && parentBlock.contains(parent_1); parent_1 = parent_1.parentNode) {
@@ -30242,9 +28303,6 @@ function resolveInlineElement(node, parentBlock) {
         }
         else if (tag == 'IMG') {
             inlineElement = new ImageInlineElement_1.default(currentNode, parentBlock);
-        }
-        else if (currentNode.nodeType == 3 /* Text */) {
-            inlineElement = new NodeInlineElement_2.default(currentNode, parentBlock);
         }
     }
     return inlineElement || new NodeInlineElement_1.default(node, parentBlock);
@@ -30267,30 +28325,12 @@ var getInlineElementAtNode_1 = __webpack_require__(/*! ./getInlineElementAtNode 
 var PartialInlineElement_1 = __webpack_require__(/*! ./PartialInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts");
 var shouldSkipNode_1 = __webpack_require__(/*! ../utils/shouldSkipNode */ "./packages/roosterjs-editor-dom/lib/utils/shouldSkipNode.ts");
 var getLeafSibling_1 = __webpack_require__(/*! ../utils/getLeafSibling */ "./packages/roosterjs-editor-dom/lib/utils/getLeafSibling.ts");
-/**
- * Get inline element before a position
- * This is mostly used when we want to get the inline element before selection/cursor
- * There is a possible that the cursor is in middle of an inline element (i.e. mid of a text node)
- * in this case, we only want to return what is before cursor (a partial of an inline) to indicate
- * that we're in middle.
- * @param root Root node of current scope, use for create InlineElement
- * @param position The position to get InlineElement before
- */
 function getInlineElementBefore(root, position) {
-    return getInlineElementBeforeAfter(root, position, false /*isAfter*/);
+    return getInlineElementBeforeAfter(root, position, false);
 }
 exports.getInlineElementBefore = getInlineElementBefore;
-/**
- * Get inline element after a position
- * This is mostly used when we want to get the inline element after selection/cursor
- * There is a possible that the cursor is in middle of an inline element (i.e. mid of a text node)
- * in this case, we only want to return what is before cursor (a partial of an inline) to indicate
- * that we're in middle.
- * @param root Root node of current scope, use for create InlineElement
- * @param position The position to get InlineElement after
- */
 function getInlineElementAfter(root, position) {
-    return getInlineElementBeforeAfter(root, position, true /*isAfter*/);
+    return getInlineElementBeforeAfter(root, position, true);
 }
 exports.getInlineElementAfter = getInlineElementAfter;
 function getInlineElementBeforeAfter(root, position, isAfter) {
@@ -30303,7 +28343,7 @@ function getInlineElementBeforeAfter(root, position, isAfter) {
     if ((!isAfter && offset == 0 && !isAtEnd) || (isAfter && isAtEnd)) {
         node = getLeafSibling_1.getLeafSibling(root, node, isAfter);
     }
-    else if (node.nodeType == 3 /* Text */ &&
+    else if (node.nodeType == 3 &&
         ((!isAfter && !isAtEnd) || (isAfter && offset > 0))) {
         isPartial = true;
     }
@@ -30323,40 +28363,6 @@ exports.getInlineElementBeforeAfter = getInlineElementBeforeAfter;
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-dom/lib/inlineElements/getNextPreviousInlineElement.ts":
-/*!******************************************************************************************!*\
-  !*** ./packages/roosterjs-editor-dom/lib/inlineElements/getNextPreviousInlineElement.ts ***!
-  \******************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var getInlineElementAtNode_1 = __webpack_require__(/*! ./getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
-var PartialInlineElement_1 = __webpack_require__(/*! ./PartialInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts");
-var getLeafSibling_1 = __webpack_require__(/*! ../utils/getLeafSibling */ "./packages/roosterjs-editor-dom/lib/utils/getLeafSibling.ts");
-function getNextPreviousInlineElement(rootNode, current, isNext) {
-    if (!current) {
-        return null;
-    }
-    if (current instanceof PartialInlineElement_1.default) {
-        // if current is partial, get the the othe half of the inline unless it is no more
-        var result = isNext ? current.nextInlineElement : current.previousInlineElement;
-        if (result) {
-            return result;
-        }
-    }
-    // Get a leaf node after startNode and use that base to find next inline
-    var startNode = current.getContainerNode();
-    startNode = getLeafSibling_1.getLeafSibling(rootNode, startNode, isNext);
-    return getInlineElementAtNode_1.default(rootNode, startNode);
-}
-exports.default = getNextPreviousInlineElement;
-
-
-/***/ }),
-
 /***/ "./packages/roosterjs-editor-dom/lib/selection/Position.ts":
 /*!*****************************************************************!*\
   !*** ./packages/roosterjs-editor-dom/lib/selection/Position.ts ***!
@@ -30369,10 +28375,7 @@ exports.default = getNextPreviousInlineElement;
 Object.defineProperty(exports, "__esModule", { value: true });
 var findClosestElementAncestor_1 = __webpack_require__(/*! ../utils/findClosestElementAncestor */ "./packages/roosterjs-editor-dom/lib/utils/findClosestElementAncestor.ts");
 var isNodeAfter_1 = __webpack_require__(/*! ../utils/isNodeAfter */ "./packages/roosterjs-editor-dom/lib/utils/isNodeAfter.ts");
-/**
- * Represent a position in DOM tree by the node and its offset index
- */
-var Position = /** @class */ (function () {
+var Position = (function () {
     function Position(nodeOrPosition, offsetOrPosType) {
         if (nodeOrPosition.node) {
             this.node = nodeOrPosition.node;
@@ -30382,17 +28385,17 @@ var Position = /** @class */ (function () {
             this.node = nodeOrPosition;
         }
         switch (offsetOrPosType) {
-            case -2 /* Before */:
+            case -2:
                 this.offset = getIndexOfNode(this.node);
                 this.node = this.node.parentNode;
                 this.isAtEnd = false;
                 break;
-            case -3 /* After */:
+            case -3:
                 this.offset = getIndexOfNode(this.node) + 1;
                 this.isAtEnd = !this.node.nextSibling;
                 this.node = this.node.parentNode;
                 break;
-            case -1 /* End */:
+            case -1:
                 this.offset = getEndOffset(this.node);
                 this.isAtEnd = true;
                 break;
@@ -30404,33 +28407,25 @@ var Position = /** @class */ (function () {
         }
         this.element = findClosestElementAncestor_1.default(this.node);
     }
-    /**
-     * Normalize this position to the leaf node, return the normalize result.
-     * If current position is already using leaf node, return this position object itself
-     */
     Position.prototype.normalize = function () {
-        if (this.node.nodeType == 3 /* Text */ || !this.node.firstChild) {
+        if (this.node.nodeType == 3 || !this.node.firstChild) {
             return this;
         }
         var node = this.node;
         var newOffset = this.isAtEnd
-            ? -1 /* End */
+            ? -1
             : this.offset;
-        while (node.nodeType == 1 /* Element */ && node.firstChild) {
+        while (node.nodeType == 1 && node.firstChild) {
             node =
-                newOffset == 0 /* Begin */
+                newOffset == 0
                     ? node.firstChild
-                    : newOffset == -1 /* End */
+                    : newOffset == -1
                         ? node.lastChild
                         : node.childNodes[newOffset];
-            newOffset = this.isAtEnd ? -1 /* End */ : 0 /* Begin */;
+            newOffset = this.isAtEnd ? -1 : 0;
         }
         return new Position(node, newOffset);
     };
-    /**
-     * Check if this position is equal to the given position
-     * @param position The position to check
-     */
     Position.prototype.equalTo = function (position) {
         return (position &&
             (this == position ||
@@ -30438,32 +28433,17 @@ var Position = /** @class */ (function () {
                     this.offset == position.offset &&
                     this.isAtEnd == position.isAtEnd)));
     };
-    /**
-     * Checks if this position is after the given position
-     */
     Position.prototype.isAfter = function (position) {
         return this.node == position.node
             ? (this.isAtEnd && !position.isAtEnd) || this.offset > position.offset
             : isNodeAfter_1.default(this.node, position.node);
     };
-    /**
-     * Move this position with offset, returns a new position with a valid offset in the same node
-     * @param offset Offset to move with
-     */
     Position.prototype.move = function (offset) {
         return new Position(this.node, Math.max(this.offset + offset, 0));
     };
-    /**
-     * Get start position of the given Range
-     * @param range The range to get position from
-     */
     Position.getStart = function (range) {
         return new Position(range.startContainer, range.startOffset);
     };
-    /**
-     * Get end position of the given Range
-     * @param range The range to get position from
-     */
     Position.getEnd = function (range) {
         return new Position(range.endContainer, range.endOffset);
     };
@@ -30478,10 +28458,10 @@ function getIndexOfNode(node) {
     return i;
 }
 function getEndOffset(node) {
-    if (node.nodeType == 3 /* Text */) {
+    if (node.nodeType == 3) {
         return node.nodeValue.length;
     }
-    else if (node.nodeType == 1 /* Element */) {
+    else if (node.nodeType == 1) {
         return node.childNodes.length;
     }
     else {
@@ -30509,8 +28489,8 @@ function createRange(start, end) {
         return null;
     }
     else if (start instanceof Node) {
-        end = new Position_1.default(end || start, -3 /* After */);
-        start = new Position_1.default(start, -2 /* Before */);
+        end = new Position_1.default(end || start, -3);
+        start = new Position_1.default(start, -2);
     }
     else {
         end = end || start;
@@ -30523,13 +28503,9 @@ function createRange(start, end) {
     return range;
 }
 exports.default = createRange;
-/**
- * Convert to focusable position
- * If current node is a void element, we need to move up one level to put cursor outside void element
- */
 function getFocusablePosition(position) {
-    return position.node.nodeType == 1 /* Element */ && isVoidHtmlElement_1.default(position.node)
-        ? new Position_1.default(position.node, position.isAtEnd ? -3 /* After */ : -2 /* Before */)
+    return position.node.nodeType == 1 && isVoidHtmlElement_1.default(position.node)
+        ? new Position_1.default(position.node, position.isAtEnd ? -3 : -2)
         : position;
 }
 
@@ -30547,29 +28523,22 @@ function getFocusablePosition(position) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var createRange_1 = __webpack_require__(/*! ./createRange */ "./packages/roosterjs-editor-dom/lib/selection/createRange.ts");
-/**
- * Get bounding rect of this position
- * @param position The positioin to get rect from
- */
 function getPositionRect(position) {
     if (!position) {
         return null;
     }
     var range = createRange_1.default(position);
-    // 1) try to get rect using range.getBoundingClientRect()
     var rect = range.getBoundingClientRect && normalizeRect(range.getBoundingClientRect());
     if (rect) {
         return rect;
     }
-    // 2) try to get rect using range.getClientRects
     position = position.normalize();
     var rects = range.getClientRects && range.getClientRects();
     rect = rects && rects.length == 1 && normalizeRect(rects[0]);
     if (rect) {
         return rect;
     }
-    // 3) if node is text node, try inserting a SPAN and get the rect of SPAN for others
-    if (position.node.nodeType == 3 /* Text */) {
+    if (position.node.nodeType == 3) {
         var span = document.createElement('SPAN');
         span.innerHTML = '\u200b';
         range = createRange_1.default(position);
@@ -30580,7 +28549,6 @@ function getPositionRect(position) {
             return rect;
         }
     }
-    // 4) try getBoundingClientRect on element
     var element = position.element;
     if (element && element.getBoundingClientRect) {
         rect = normalizeRect(element.getBoundingClientRect());
@@ -30592,8 +28560,6 @@ function getPositionRect(position) {
 }
 exports.default = getPositionRect;
 function normalizeRect(clientRect) {
-    // A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p
-    // We validate that and only return a rect when the passed in ClientRect is valid
     var _a = clientRect || {}, left = _a.left, right = _a.right, top = _a.top, bottom = _a.bottom;
     return left + right + top + bottom > 0
         ? {
@@ -30621,11 +28587,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(/*! ../utils/contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
 var createRange_1 = __webpack_require__(/*! ./createRange */ "./packages/roosterjs-editor-dom/lib/selection/createRange.ts");
 var Position_1 = __webpack_require__(/*! ./Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
-/**
- * Get path of the given selection range related to the given rootNode
- * @param rootNode The root node where the path start from
- * @param range The range of selection
- */
 function getSelectionPath(rootNode, range) {
     if (!range) {
         return null;
@@ -30637,11 +28598,6 @@ function getSelectionPath(rootNode, range) {
     return selectionPath;
 }
 exports.default = getSelectionPath;
-/**
- * Get range from the given selection path
- * @param rootNode Root node of the selection path
- * @param path The selection path which contains start and end position path
- */
 function getRangeFromSelectionPath(rootNode, path) {
     var start = getPositionFromPath(rootNode, path.start);
     var end = getPositionFromPath(rootNode, path.end);
@@ -30652,14 +28608,12 @@ function getPositionFromPath(node, path) {
     if (!node || !path) {
         return null;
     }
-    // Iterate with a for loop to avoid mutating the passed in element path stack
-    // or needing to copy it.
     var offset;
     for (var i = 0; i < path.length; i++) {
         offset = path[i];
         if (i < path.length - 1 &&
             node &&
-            node.nodeType == 1 /* Element */ &&
+            node.nodeType == 1 &&
             node.childNodes.length > offset) {
             node = node.childNodes[offset];
         }
@@ -30669,18 +28623,6 @@ function getPositionFromPath(node, path) {
     }
     return new Position_1.default(node, offset);
 }
-/**
- * Get the path of the node relative to rootNode.
- * The path of the node is an array of integer indecies into the childNodes of the given node.
- *
- * The node path will be what the node path will be on a _normalized_ dom
- * (e.g. empty text nodes will be ignored and adjacent text nodes will be concatenated)
- *
- * @param rootNode the node the path will be relative to
- * @param position the position to get indexes from. Follows the same semantics
- * as selectionRange (if node is of type Text, it is an offset into the text of that node.
- * If node is of type Element, it is the index of a child in that Element node.)
- */
 function getPositionPath(position, rootNode) {
     if (!position || !rootNode) {
         return [];
@@ -30691,9 +28633,9 @@ function getPositionPath(position, rootNode) {
     if (!contains_1.default(rootNode, node, true)) {
         return [];
     }
-    if (node.nodeType == 3 /* Text */) {
+    if (node.nodeType == 3) {
         parent = node.parentNode;
-        while (node.previousSibling && node.previousSibling.nodeType == 3 /* Text */) {
+        while (node.previousSibling && node.previousSibling.nodeType == 3) {
             offset += node.previousSibling.nodeValue.length;
             node = node.previousSibling;
         }
@@ -30707,7 +28649,7 @@ function getPositionPath(position, rootNode) {
         offset = 0;
         var isPreviousText = false;
         for (var c = parent.firstChild; c && c != node; c = c.nextSibling) {
-            if (c.nodeType == 3 /* Text */) {
+            if (c.nodeType == 3) {
                 if (c.nodeValue.length == 0 || isPreviousText) {
                     continue;
                 }
@@ -30740,13 +28682,6 @@ function getPositionPath(position, rootNode) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(/*! ../utils/contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
 var isNodeEmpty_1 = __webpack_require__(/*! ../utils/isNodeEmpty */ "./packages/roosterjs-editor-dom/lib/utils/isNodeEmpty.ts");
-/**
- * Check if this position is at beginning of the given node.
- * This will return true if all nodes between the beginning of target node and the position are empty.
- * @param position The position to check
- * @param targetNode The node to check
- * @returns True if position is at beginning of the node, otherwise false
- */
 function isPositionAtBeginningOf(position, targetNode) {
     if (position) {
         var _a = position.normalize(), node = _a.node, offset = _a.offset;
@@ -30783,14 +28718,7 @@ function areAllPrevousNodesEmpty(node) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
- */
-var VTable = /** @class */ (function () {
-    /**
-     * Create a new instance of VTable object using HTML TABLE or TD node
-     * @param node The HTML Table or TD node
-     */
+var VTable = (function () {
     function VTable(node) {
         var _this = this;
         this.trs = [];
@@ -30802,7 +28730,6 @@ var VTable = /** @class */ (function () {
             trs.forEach(function (tr, rowIndex) {
                 _this.trs[rowIndex % 2] = tr;
                 for (var sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
-                    // Skip the cells which already initialized
                     for (; _this.cells[rowIndex][targetCol]; targetCol++) { }
                     var td = tr.cells[sourceCol];
                     if (td == currentTd_1) {
@@ -30822,9 +28749,6 @@ var VTable = /** @class */ (function () {
             });
         }
     }
-    /**
-     * Write the virtual table back to DOM tree to represent the change of VTable
-     */
     VTable.prototype.writeBack = function () {
         var _this = this;
         if (this.cells) {
@@ -30844,10 +28768,6 @@ var VTable = /** @class */ (function () {
             this.table.parentNode.removeChild(this.table);
         }
     };
-    /**
-     * Apply the given table format to this virtual table
-     * @param format Table format to apply
-     */
     VTable.prototype.applyFormat = function (format) {
         if (!format || !this.table) {
             return;
@@ -30868,10 +28788,6 @@ var VTable = /** @class */ (function () {
             });
         });
     };
-    /**
-     * Edit table with given operation.
-     * @param operation Table operation
-     */
     VTable.prototype.edit = function (operation) {
         var _this = this;
         if (!this.table) {
@@ -30880,10 +28796,10 @@ var VTable = /** @class */ (function () {
         var currentRow = this.cells[this.row];
         var currentCell = currentRow[this.col];
         switch (operation) {
-            case 0 /* InsertAbove */:
+            case 0:
                 this.cells.splice(this.row, 0, currentRow.map(cloneCell));
                 break;
-            case 1 /* InsertBelow */:
+            case 1:
                 var newRow_1 = this.row + this.countSpanAbove(this.row, this.col);
                 this.cells.splice(newRow_1, 0, this.cells[newRow_1 - 1].map(function (cell, colIndex) {
                     var nextCell = _this.getCell(newRow_1, colIndex);
@@ -30902,12 +28818,12 @@ var VTable = /** @class */ (function () {
                     }
                 }));
                 break;
-            case 2 /* InsertLeft */:
+            case 2:
                 this.forEachCellOfCurrentColumn(function (cell, row) {
                     row.splice(_this.col, 0, cloneCell(cell));
                 });
                 break;
-            case 3 /* InsertRight */:
+            case 3:
                 var newCol_1 = this.col + this.countSpanLeft(this.row, this.col);
                 this.forEachCellOfColumn(newCol_1 - 1, function (cell, row, i) {
                     var nextCell = _this.getCell(i, newCol_1);
@@ -30927,7 +28843,7 @@ var VTable = /** @class */ (function () {
                     row.splice(newCol_1, 0, newCell);
                 });
                 break;
-            case 6 /* DeleteRow */:
+            case 6:
                 this.forEachCellOfCurrentRow(function (cell, i) {
                     var nextCell = _this.getCell(_this.row + 1, i);
                     if (cell.td && cell.td.rowSpan > 1 && nextCell.spanAbove) {
@@ -30936,7 +28852,7 @@ var VTable = /** @class */ (function () {
                 });
                 this.cells.splice(this.row, 1);
                 break;
-            case 5 /* DeleteColumn */:
+            case 5:
                 this.forEachCellOfCurrentColumn(function (cell, row, i) {
                     var nextCell = _this.getCell(i, _this.col + 1);
                     if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
@@ -30945,9 +28861,9 @@ var VTable = /** @class */ (function () {
                     row.splice(_this.col, 1);
                 });
                 break;
-            case 7 /* MergeAbove */:
-            case 8 /* MergeBelow */:
-                var rowStep = operation == 7 /* MergeAbove */ ? -1 : 1;
+            case 7:
+            case 8:
+                var rowStep = operation == 7 ? -1 : 1;
                 for (var rowIndex = this.row + rowStep; rowIndex >= 0 && rowIndex < this.cells.length; rowIndex += rowStep) {
                     var cell = this.getCell(rowIndex, this.col);
                     if (cell.td && !cell.spanAbove) {
@@ -30962,9 +28878,9 @@ var VTable = /** @class */ (function () {
                     }
                 }
                 break;
-            case 9 /* MergeLeft */:
-            case 10 /* MergeRight */:
-                var colStep = operation == 9 /* MergeLeft */ ? -1 : 1;
+            case 9:
+            case 10:
+                var colStep = operation == 9 ? -1 : 1;
                 for (var colIndex = this.col + colStep; colIndex >= 0 && colIndex < this.cells[this.row].length; colIndex += colStep) {
                     var cell = this.getCell(this.row, colIndex);
                     if (cell.td && !cell.spanLeft) {
@@ -30979,10 +28895,10 @@ var VTable = /** @class */ (function () {
                     }
                 }
                 break;
-            case 4 /* DeleteTable */:
+            case 4:
                 this.cells = null;
                 break;
-            case 12 /* SplitVertically */:
+            case 12:
                 if (currentCell.td.rowSpan > 1) {
                     this.getCell(this.row + 1, this.col).td = cloneNode(currentCell.td);
                 }
@@ -30997,7 +28913,7 @@ var VTable = /** @class */ (function () {
                     this.cells.splice(this.row + 1, 0, splitRow);
                 }
                 break;
-            case 11 /* SplitHorizontally */:
+            case 11:
                 if (currentCell.td.colSpan > 1) {
                     this.getCell(this.row, this.col + 1).td = cloneNode(currentCell.td);
                 }
@@ -31013,32 +28929,15 @@ var VTable = /** @class */ (function () {
                 break;
         }
     };
-    /**
-     * Loop each cell of current column and invoke a callback function
-     * @param callback The callback function to invoke
-     */
     VTable.prototype.forEachCellOfCurrentColumn = function (callback) {
         this.forEachCellOfColumn(this.col, callback);
     };
-    /**
-     * Loop each cell of current row and invoke a callback function
-     * @param callback The callback function to invoke
-     */
     VTable.prototype.forEachCellOfCurrentRow = function (callback) {
         this.forEachCellOfRow(this.row, callback);
     };
-    /**
-     * Get a table cell using its row and column index. This function will always return an object
-     * even if the given indexes don't exist in table.
-     * @param row The row index
-     * @param col The column index
-     */
     VTable.prototype.getCell = function (row, col) {
         return (this.cells && this.cells[row] && this.cells[row][col]) || {};
     };
-    /**
-     * Get current HTML table cell object. If the current table cell is a virtual expanded cell, return its root cell
-     */
     VTable.prototype.getCurrentTd = function () {
         return this.getTd(this.row, this.col);
     };
@@ -31120,10 +29019,6 @@ function getTableFromTd(td) {
 function getBorderStyle(style) {
     return 'solid 1px ' + (style || 'transparent');
 }
-/**
- * Clone a table cell
- * @param cell The cell to clone
- */
 function cloneCell(cell) {
     return {
         td: cloneNode(cell.td),
@@ -31131,12 +29026,8 @@ function cloneCell(cell) {
         spanLeft: cell.spanLeft,
     };
 }
-/**
- * Clone a node without its children.
- * @param node The node to clone
- */
 function cloneNode(node) {
-    var newNode = node ? node.cloneNode(false /*deep*/) : null;
+    var newNode = node ? node.cloneNode(false) : null;
     if (newNode && newNode instanceof HTMLTableCellElement) {
         newNode.removeAttribute('id');
         if (!newNode.firstChild) {
@@ -31145,11 +29036,6 @@ function cloneNode(node) {
     }
     return newNode;
 }
-/**
- * Move all children from one node to another
- * @param fromNode The source node to move children from
- * @param toNode Target node. If not passed, children nodes of source node will be removed
- */
 function moveChildren(fromNode, toNode) {
     while (fromNode.firstChild) {
         if (toNode) {
@@ -31174,20 +29060,9 @@ function moveChildren(fromNode, toNode) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Get current browser information from user agent string
- * @param userAgent The userAgent string of a browser
- * @param appVersion The appVersion string of a browser
- * @returns The BrowserInfo object calculated from the given userAgent and appVersion
- */
 function getBrowserInfo(userAgent, appVersion) {
-    // checks whether the browser is running in IE
-    // IE11 will use rv in UA instead of MSIE. Unfortunately Firefox also uses this. We should also look for "Trident" to confirm this.
-    // There have been cases where companies using older version of IE and custom UserAgents have broken this logic (e.g. IE 10 and KellyServices)
-    // therefore we should check that the Trident/rv combo is not just from an older IE browser
     var isIE11OrGreater = userAgent.indexOf('rv:') != -1 && userAgent.indexOf('Trident') != -1;
     var isIE = userAgent.indexOf('MSIE') != -1 || isIE11OrGreater;
-    // IE11+ may also have 'Chrome', 'Firefox' and 'Safari' in user agent. But it will have 'trident' as well
     var isChrome = false;
     var isFirefox = false;
     var isSafari = false;
@@ -31197,12 +29072,9 @@ function getBrowserInfo(userAgent, appVersion) {
         isChrome = userAgent.indexOf('Chrome') != -1;
         isFirefox = userAgent.indexOf('Firefox') != -1;
         if (userAgent.indexOf('Safari') != -1) {
-            // Android and Chrome have Safari in the user string
             isSafari = userAgent.indexOf('Chrome') == -1 && userAgent.indexOf('Android') == -1;
         }
-        // Sample Edge UA: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10121
         isEdge = userAgent.indexOf('Edge') != -1;
-        // When it is edge, it should not be chrome or firefox. and it is also not webkit
         if (isEdge) {
             isWebKit = isChrome = isFirefox = false;
         }
@@ -31241,11 +29113,6 @@ exports.default = Browser;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Apply format to an HTML element
- * @param element The HTML element to apply format to
- * @param format The format to apply
- */
 function applyFormat(element, format) {
     if (format) {
         var elementStyle = element.style;
@@ -31294,24 +29161,23 @@ var wrap_1 = __webpack_require__(/*! ./wrap */ "./packages/roosterjs-editor-dom/
 var getLeafSibling_1 = __webpack_require__(/*! ./getLeafSibling */ "./packages/roosterjs-editor-dom/lib/utils/getLeafSibling.ts");
 var splitParentNode_1 = __webpack_require__(/*! ./splitParentNode */ "./packages/roosterjs-editor-dom/lib/utils/splitParentNode.ts");
 function applyTextStyle(container, styler, from, to) {
-    if (from === void 0) { from = new Position_1.default(container, 0 /* Begin */).normalize(); }
-    if (to === void 0) { to = new Position_1.default(container, -1 /* End */).normalize(); }
+    if (from === void 0) { from = new Position_1.default(container, 0).normalize(); }
+    if (to === void 0) { to = new Position_1.default(container, -1).normalize(); }
     var formatNodes = [];
     while (from && to && to.isAfter(from)) {
         var formatNode = from.node;
         var parentTag = getTagOfNode_1.default(formatNode.parentNode);
-        // The code below modifies DOM. Need to get the next sibling first otherwise you won't be able to reliably get a good next sibling node
         var nextNode = getLeafSibling_1.getNextLeafSibling(container, formatNode);
-        if (formatNode.nodeType == 3 /* Text */ && ['TR', 'TABLE'].indexOf(parentTag) < 0) {
+        if (formatNode.nodeType == 3 && ['TR', 'TABLE'].indexOf(parentTag) < 0) {
             if (formatNode == to.node && !to.isAtEnd) {
-                formatNode = splitTextNode(formatNode, to.offset, true /*returnFirstPart*/);
+                formatNode = splitTextNode(formatNode, to.offset, true);
             }
             if (from.offset > 0) {
-                formatNode = splitTextNode(formatNode, from.offset, false /*returnFirstPart*/);
+                formatNode = splitTextNode(formatNode, from.offset, false);
             }
             formatNodes.push(formatNode);
         }
-        from = nextNode && new Position_1.default(nextNode, 0 /* Begin */);
+        from = nextNode && new Position_1.default(nextNode, 0);
     }
     if (formatNodes.length > 0) {
         if (formatNodes.every(function (node) { return node.parentNode == formatNodes[0].parentNode; })) {
@@ -31395,25 +29261,13 @@ exports.default = changeElementTag;
 Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(/*! ./contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
 var splitParentNode_1 = __webpack_require__(/*! ./splitParentNode */ "./packages/roosterjs-editor-dom/lib/utils/splitParentNode.ts");
-/**
- * Collapse nodes within the given start and end nodes to their common ascenstor node,
- * split parent nodes if necessary
- * @param root The root node of the scope
- * @param start The start node
- * @param end The end node
- * @param canSplitParent True to allow split parent node there are nodes before start or after end under the same parent
- * and the returned nodes will be all nodes from start trhough end after splitting
- * False to disallow split parent
- * @returns When cansplitParent is true, returns all node from start through end after splitting,
- * otherwise just return start and end
- */
 function collapseNodes(root, start, end, canSplitParent) {
     if (!contains_1.default(root, start) || !contains_1.default(root, end)) {
         return [];
     }
-    start = collapse(root, start, end, true /*isStart*/, canSplitParent);
-    end = collapse(root, end, start, false /*isStart*/, canSplitParent);
-    if (contains_1.default(start, end, true /*treateSameNodeAsContain*/)) {
+    start = collapse(root, start, end, true, canSplitParent);
+    end = collapse(root, end, start, false, canSplitParent);
+    if (contains_1.default(start, end, true)) {
         return [start];
     }
     else if (contains_1.default(end, start)) {
@@ -31467,39 +29321,16 @@ function contains(container, contained, treatSameNodeAsContain) {
         contained = contained && contained.commonAncestorContainer;
         treatSameNodeAsContain = true;
     }
-    if (contained && contained.nodeType == 3 /* Text */) {
+    if (contained && contained.nodeType == 3) {
         contained = contained.parentNode;
         treatSameNodeAsContain = true;
     }
-    if (container.nodeType != 1 /* Element */) {
+    if (container.nodeType != 1) {
         return !!treatSameNodeAsContain && container == contained;
     }
     return !!(treatSameNodeAsContain || container != contained) && container.contains(contained);
 }
 exports.default = contains;
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-dom/lib/utils/convertInlineCss.ts":
-/*!*********************************************************************!*\
-  !*** ./packages/roosterjs-editor-dom/lib/utils/convertInlineCss.ts ***!
-  \*********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_html_sanitizer_1 = __webpack_require__(/*! roosterjs-html-sanitizer */ "./packages/roosterjs-html-sanitizer/lib/index.ts");
-/**
- * @deprecated Use HtmlSanitizer.convertInlineCss from roosterjs-html-sanitizer package instead
- * Convert global CSS to inline CSS and remove the global CSS
- * @param html The source HTML string
- * @param additionalStyleNodes Optional additional style nodes
- */
-var convertInlineCss = roosterjs_html_sanitizer_1.HtmlSanitizer.convertInlineCss;
-exports.default = convertInlineCss;
 
 
 /***/ }),
@@ -31515,30 +29346,7 @@ exports.default = convertInlineCss;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Browser_1 = __webpack_require__(/*! ./Browser */ "./packages/roosterjs-editor-dom/lib/utils/Browser.ts");
-// HTML header to indicate where is the HTML content started from.
-// Sample header:
-// Version:0.9
-// StartHTML:71
-// EndHTML:170
-// StartFragment:140
-// EndFragment:160
-// StartSelection:140
-// EndSelection:160
 var CLIPBOARD_HTML_HEADER_REGEX = /^Version:[0-9\.]+\s+StartHTML:\s*([0-9]+)\s+EndHTML:\s*([0-9]+)\s+/i;
-/**
- * Extract a Clipboard event
- * @param event The paste event
- * @param callback Callback function when data is ready
- * @param fallbackHtmlRetriever If direct HTML retriving is not support (e.g. Internet Explorer), as a fallback,
- * using this helper function to retrieve HTML content
- * @returns An object with the following properties:
- *  types: Available types from the clipboard event
- *  text: Plain text from the clipboard event
- *  image: Image file from the clipboard event
- *  html: Html string from the clipboard event. When set to null, it means there's no HTML found from the event.
- *   When set to undefined, it means can't retrieve HTML string, there may be HTML string but direct retrieving is
- *   not supported by browser.
- */
 function extractClipboardEvent(event, callback) {
     var dataTransfer = event.clipboardData ||
         event.srcElement.ownerDocument.defaultView.clipboardData;
@@ -31561,14 +29369,12 @@ function extractClipboardEvent(event, callback) {
                 return;
             }
         }
-        // No HTML content found, set html to null
         result.html = null;
     }
     callback(result);
 }
 exports.default = extractClipboardEvent;
 function getImage(dataTransfer) {
-    // Chrome, Firefox, Edge support dataTransfer.items
     var fileCount = dataTransfer.items ? dataTransfer.items.length : 0;
     for (var i = 0; i < fileCount; i++) {
         var item = dataTransfer.items[i];
@@ -31576,7 +29382,6 @@ function getImage(dataTransfer) {
             return item.getAsFile();
         }
     }
-    // IE, Safari support dataTransfer.files
     fileCount = dataTransfer.files ? dataTransfer.files.length : 0;
     for (var i = 0; i < fileCount; i++) {
         var file = dataTransfer.files.item(i);
@@ -31586,11 +29391,6 @@ function getImage(dataTransfer) {
     }
     return null;
 }
-/**
- * Edge sometimes doesn't remove the headers, which cause we paste more things then expected.
- * So we need to remove it in our code
- * @param html The HTML string got from clipboard
- */
 function workaroundForEdge(html) {
     var headerValues = CLIPBOARD_HTML_HEADER_REGEX.exec(html);
     if (headerValues && headerValues.length == 3) {
@@ -31617,17 +29417,9 @@ function workaroundForEdge(html) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(/*! ./contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
-/**
- * Find closest element ancestor start from the given node which matches the given selector
- * @param node Find ancestor start from this node
- * @param root Root node where the search should stop at. The return value can never be this node
- * @param selector The expected selector. If null, return the first HTML Element found from start node
- * @returns An HTML element which matches the given selector. If the given start node matches the selector,
- * returns the given node
- */
 function findClosestElementAncestor(node, root, selector) {
-    node = !node ? null : node.nodeType == 1 /* Element */ ? node : node.parentNode;
-    var element = node && node.nodeType == 1 /* Element */ ? node : null;
+    node = !node ? null : node.nodeType == 1 ? node : node.parentNode;
+    var element = node && node.nodeType == 1 ? node : null;
     if (element && selector) {
         if (element.closest) {
             element = element.closest(selector);
@@ -31657,12 +29449,6 @@ exports.default = findClosestElementAncestor;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Creates an HTML node array from html
- * @param html the html string to create HTML elements from
- * @param ownerDocument Owner document of the result HTML elements
- * @returns An HTML node array to represent the given html string
- */
 function fromHtml(html, ownerDocument) {
     var element = ownerDocument.createElement('DIV');
     element.innerHTML = html;
@@ -31684,13 +29470,6 @@ exports.default = fromHtml;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var findClosestElementAncestor_1 = __webpack_require__(/*! ./findClosestElementAncestor */ "./packages/roosterjs-editor-dom/lib/utils/findClosestElementAncestor.ts");
-/**
- * Get computed styles of a node
- * @param node The node to get computed styles from
- * @param styleNames Names of style to get, can be a single name or an array.
- * Default value is font-family, font-size, color, background-color
- * @returns An array of the computed styles
- */
 function getComputedStyles(node, styleNames) {
     if (styleNames === void 0) { styleNames = ['font-family', 'font-size', 'color', 'background-color']; }
     var element = findClosestElementAncestor_1.default(node);
@@ -31711,20 +29490,12 @@ function getComputedStyles(node, styleNames) {
     return result;
 }
 exports.default = getComputedStyles;
-/**
- * A shortcut for getComputedStyles() when only one style is to be retrieved
- * @param node The node to get style from
- * @param styleName The style name
- * @returns The style value
- */
 function getComputedStyle(node, styleName) {
     return getComputedStyles(node, styleName)[0] || '';
 }
 exports.getComputedStyle = getComputedStyle;
 function px2Pt(px) {
     if (px && px.indexOf('px') == px.length - 2) {
-        // Edge may not handle the floating computing well which causes the calculated value is a little less than actual value
-        // So add 0.05 to fix it
         return Math.round(parseFloat(px) * 75 + 0.05) / 100 + 'pt';
     }
     return px;
@@ -31745,11 +29516,6 @@ function px2Pt(px) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var shouldSkipNode_1 = __webpack_require__(/*! ./shouldSkipNode */ "./packages/roosterjs-editor-dom/lib/utils/shouldSkipNode.ts");
 var getLeafSibling_1 = __webpack_require__(/*! ./getLeafSibling */ "./packages/roosterjs-editor-dom/lib/utils/getLeafSibling.ts");
-/**
- * Get first/last leaf node of the given root node.
- * @param rootNode Root node to get leaf node from
- * @param isFirst True to get first leaf node, false to get last leaf node
- */
 function getLeafNode(rootNode, isFirst) {
     var getChild = function (node) { return (isFirst ? node.firstChild : node.lastChild); };
     var result = getChild(rootNode);
@@ -31761,20 +29527,12 @@ function getLeafNode(rootNode, isFirst) {
     }
     return result;
 }
-/**
- * Get the first meaningful leaf node
- * @param rootNode Root node to get leaf node from
- */
 function getFirstLeafNode(rootNode) {
-    return getLeafNode(rootNode, true /*isFirst*/);
+    return getLeafNode(rootNode, true);
 }
 exports.getFirstLeafNode = getFirstLeafNode;
-/**
- * Get the last meaningful leaf node
- * @param rootNode Root node to get leaf node from
- */
 function getLastLeafNode(rootNode) {
-    return getLeafNode(rootNode, false /*isFirst*/);
+    return getLeafNode(rootNode, false);
 }
 exports.getLastLeafNode = getLastLeafNode;
 
@@ -31793,12 +29551,6 @@ exports.getLastLeafNode = getLastLeafNode;
 Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(/*! ./contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
 var shouldSkipNode_1 = __webpack_require__(/*! ./shouldSkipNode */ "./packages/roosterjs-editor-dom/lib/utils/shouldSkipNode.ts");
-/**
- * This walks forwards/backwards DOM tree to get next meaningful node
- * @param rootNode Root node to scope the leaf sibling node
- * @param startNode current node to get sibling node from
- * @param isNext True to get next leaf sibling node, false to get previous leaf sibling node
- */
 function getLeafSibling(rootNode, startNode, isNext) {
     var result = null;
     var getSibling = isNext
@@ -31809,22 +29561,17 @@ function getLeafSibling(rootNode, startNode, isNext) {
         var curNode = startNode;
         var shouldContinue = true;
         while (shouldContinue) {
-            // Find next/previous node, starting from next/previous sibling, then one level up to find next/previous sibling from parent
-            // till a non-null nextSibling/previousSibling is found or the ceiling is encountered (rootNode)
             var parentNode = curNode.parentNode;
             curNode = getSibling(curNode);
             while (!curNode && parentNode != rootNode) {
                 curNode = getSibling(parentNode);
                 parentNode = parentNode.parentNode;
             }
-            // Now traverse down to get first/last child
             while (curNode && getChild(curNode)) {
                 curNode = getChild(curNode);
             }
-            // Check special nodes (i.e. node that has a display:none etc.) and continue looping if so
             shouldContinue = curNode && shouldSkipNode_1.default(curNode);
             if (!shouldContinue) {
-                // Found a good leaf node, assign and exit
                 result = curNode;
                 break;
             }
@@ -31833,22 +29580,12 @@ function getLeafSibling(rootNode, startNode, isNext) {
     return result;
 }
 exports.getLeafSibling = getLeafSibling;
-/**
- * This walks forwards DOM tree to get next meaningful node
- * @param rootNode Root node to scope the leaf sibling node
- * @param startNode current node to get sibling node from
- */
 function getNextLeafSibling(rootNode, startNode) {
-    return getLeafSibling(rootNode, startNode, true /*isNext*/);
+    return getLeafSibling(rootNode, startNode, true);
 }
 exports.getNextLeafSibling = getNextLeafSibling;
-/**
- * This walks backwards DOM tree to get next meaningful node
- * @param rootNode Root node to scope the leaf sibling node
- * @param startNode current node to get sibling node from
- */
 function getPreviousLeafSibling(rootNode, startNode) {
-    return getLeafSibling(rootNode, startNode, false /*isNext*/);
+    return getLeafSibling(rootNode, startNode, false);
 }
 exports.getPreviousLeafSibling = getPreviousLeafSibling;
 
@@ -31865,13 +29602,8 @@ exports.getPreviousLeafSibling = getPreviousLeafSibling;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Get the html tag of a node, or empty if it is not an element
- * @param node The node to get tag of
- * @returns Tag name in upper case if the given node is an Element, or empty string otherwise
- */
 function getTagOfNode(node) {
-    return node && node.nodeType == 1 /* Element */ ? node.tagName.toUpperCase() : '';
+    return node && node.nodeType == 1 ? node.tagName.toUpperCase() : '';
 }
 exports.default = getTagOfNode;
 
@@ -31891,11 +29623,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var getTagOfNode_1 = __webpack_require__(/*! ./getTagOfNode */ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts");
 var BLOCK_ELEMENT_TAGS = 'ADDRESS,ARTICLE,ASIDE,BLOCKQUOTE,CANVAS,DD,DIV,DL,DT,FIELDSET,FIGCAPTION,FIGURE,FOOTER,FORM,H1,H2,H3,H4,H5,H6,HEADER,HR,LI,MAIN,NAV,NOSCRIPT,OL,OUTPUT,P,PRE,SECTION,TABLE,TD,TH,TFOOT,UL,VIDEO'.split(',');
 var BLOCK_DISPLAY_STYLES = ['block', 'list-item', 'table-cell'];
-/**
- * Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.
- * @param node The node to check
- * @returns True if the node is a block element, otherwise false
- */
 function isBlockElement(node) {
     var tag = getTagOfNode_1.default(node);
     return !!(tag &&
@@ -31917,17 +29644,11 @@ exports.default = isBlockElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Checks if node1 is after node2
- * @param node1 The node to check if it is after another node
- * @param node2 The node to check if another node is after this one
- * @returns True if node1 is after node2, otherwise false
- */
 function isNodeAfter(node1, node2) {
     return !!(node1 &&
         node2 &&
-        (node2.compareDocumentPosition(node1) & 4 /* Following */) ==
-            4 /* Following */);
+        (node2.compareDocumentPosition(node1) & 4) ==
+            4);
 }
 exports.default = isNodeAfter;
 
@@ -31948,21 +29669,14 @@ var getTagOfNode_1 = __webpack_require__(/*! ./getTagOfNode */ "./packages/roost
 var VISIBLE_ELEMENT_TAGS = ['IMG'];
 var VISIBLE_CHILD_ELEMENT_SELECTOR = ['TABLE', 'IMG', 'LI'].join(',');
 var ZERO_WIDTH_SPACE = /\u200b/g;
-/**
- * Check if a given node has no visible content
- * @param node The node to check
- * @param trimContent Whether trim the text content so that spaces will be treated as empty.
- * Default value is false
- * @returns True if there isn't any visible element inside node, otherwise false
- */
 function isNodeEmpty(node, trimContent) {
     if (!node) {
         return false;
     }
-    else if (node.nodeType == 3 /* Text */) {
+    else if (node.nodeType == 3) {
         return trim(node.nodeValue, trimContent) == '';
     }
-    else if (node.nodeType == 1 /* Element */) {
+    else if (node.nodeType == 1) {
         var element = node;
         var textContent = trim(element.textContent, trimContent);
         if (textContent != '' ||
@@ -31993,17 +29707,7 @@ function trim(s, trim) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var getTagOfNode_1 = __webpack_require__(/*! ./getTagOfNode */ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts");
-/**
- * HTML void elements
- * Per https://www.w3.org/TR/html/syntax.html#syntax-elements, cannot have child nodes
- * This regex is used when we move focus to very begin of editor. We should avoid putting focus inside
- * void elements so users don't accidently create child nodes in them
- */
 var HTML_VOID_ELEMENTS = 'AREA,BASE,BR,COL,COMMAND,EMBED,HR,IMG,INPUT,KEYGEN,LINK,META,PARAM,SOURCE,TRACK,WBR'.split(',');
-/**
- * Check if the given node is html void element. Void element cannot have childen
- * @param node The node to check
- */
 function isVoidHtmlElement(node) {
     return !!node && HTML_VOID_ELEMENTS.indexOf(getTagOfNode_1.default(node)) >= 0;
 }
@@ -32022,28 +29726,8 @@ exports.default = isVoidHtmlElement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-// http exclude matching regex
-// invalid URL example (in paricular on IE and Edge):
-// - http://www.bing.com%00, %00 before ? (question mark) is considered invalid. IE/Edge throws invalid argument exception
-// - http://www.bing.com%1, %1 is invalid
-// - http://www.bing.com%g, %g is invalid (IE and Edge expects a two hex value after a %)
-// - http://www.bing.com%, % as ending is invalid (IE and Edge expects a two hex value after a %)
-// All above % cases if they're after ? (question mark) is then considered valid again
-// Similar for @, it needs to be after / (forward slash), or ? (question mark). Otherwise IE/Edge will throw security exception
-// - http://www.bing.com@name, @name before ? (question mark) is considered invalid
-// - http://www.bing.com/@name, is valid sine it is after / (forward slash)
-// - http://www.bing.com?@name, is also valid sinve it is after ? (question mark)
-// The regex below is essentially a break down of:
-// ^[^?]+%[^0-9a-f]+ => to exclude URL like www.bing.com%%
-// ^[^?]+%[0-9a-f][^0-9a-f]+ => to exclude URL like www.bing.com%1
-// ^[^?]+%00 => to exclude URL like www.bing.com%00
-// ^[^?]+%$ => to exclude URL like www.bing.com%
-// ^https?:\/\/[^?\/]+@ => to exclude URL like http://www.bing.com@name
-// ^www\.[^?\/]+@ => to exclude URL like www.bing.com@name
-// , => to exclude url like www.bing,,com
 var httpExcludeRegEx = /^[^?]+%[^0-9a-f]+|^[^?]+%[0-9a-f][^0-9a-f]+|^[^?]+%00|^[^?]+%$|^https?:\/\/[^?\/]+@|^www\.[^?\/]+@/i;
-// via https://tools.ietf.org/html/rfc1035 Page 7
-var labelRegEx = '[a-z0-9](?:[a-z0-9-]*[a-z0-9])?'; // We're using case insensitive regexes below so don't bother including A-Z
+var labelRegEx = '[a-z0-9](?:[a-z0-9-]*[a-z0-9])?';
 var domainNameRegEx = "(?:" + labelRegEx + "\\.)*" + labelRegEx;
 var domainPortRegEx = domainNameRegEx + "(?:\\:[0-9]+)?";
 var domainPortWithUrlRegEx = domainPortRegEx + "(?:[\\/\\?]\\S*)?";
@@ -32072,16 +29756,6 @@ var linkMatchRules = {
     gopher: { match: new RegExp("^gopher:\\/\\/" + domainPortWithUrlRegEx, 'i') },
     wais: { match: new RegExp("^wais:(\\/\\/)?" + domainPortWithUrlRegEx, 'i') },
 };
-/**
- * Try to match a given string with link match rules, return matched link
- * @param url Input url to match
- * @param option Link match option, exact or partial. If it is exact match, we need
- * to check the length of matched link and url
- * @param rules Optional link match rules, if not passed, only the default link match
- * rules will be applied
- * @returns The matched link data, or null if no match found.
- * The link data includes an original url and a normalized url
- */
 function matchLink(url) {
     if (url) {
         for (var _i = 0, _a = Object.keys(linkMatchRules); _i < _a.length; _i++) {
@@ -32104,30 +29778,6 @@ exports.default = matchLink;
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-dom/lib/utils/matchWhiteSpaces.ts":
-/*!*********************************************************************!*\
-  !*** ./packages/roosterjs-editor-dom/lib/utils/matchWhiteSpaces.ts ***!
-  \*********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-// White space matching regex. It matches following chars:
-// \s: white space
-// \u00A0: no-breaking white space
-// \u200B: zero width space
-// \u3000: full width space (which can come from JPN IME)
-var WHITESPACE_REGEX = /[\s\u00A0\u200B\u3000]+([^\s\u00A0\u200B\u3000]*)$/i;
-function matchWhiteSpaces(source) {
-    return WHITESPACE_REGEX.exec(source);
-}
-exports.default = matchWhiteSpaces;
-
-
-/***/ }),
-
 /***/ "./packages/roosterjs-editor-dom/lib/utils/queryElements.ts":
 /*!******************************************************************!*\
   !*** ./packages/roosterjs-editor-dom/lib/utils/queryElements.ts ***!
@@ -32138,24 +29788,15 @@ exports.default = matchWhiteSpaces;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Query HTML elements in the container by a selector string
- * @param container Container element to query from
- * @param selector Selector string to query
- * @param forEachCallback An optional callback to be invoked on each node in query result
- * @param scope The scope of the query, default value is QueryScope.Body
- * @param range The selection range to query with. This is required when scope is not Body
- * @returns HTML Element array of the query result
- */
 function queryElements(container, selector, forEachCallback, scope, range) {
-    if (scope === void 0) { scope = 0 /* Body */; }
+    if (scope === void 0) { scope = 0; }
     if (!container || !selector) {
         return [];
     }
     var elements = [].slice.call(container.querySelectorAll(selector));
-    if (scope != 0 /* Body */ && range) {
+    if (scope != 0 && range) {
         elements = elements.filter(function (element) {
-            return isIntersectWithNodeRange(element, range, scope == 2 /* InSelection */);
+            return isIntersectWithNodeRange(element, range, scope == 2);
         });
     }
     if (forEachCallback) {
@@ -32167,61 +29808,23 @@ exports.default = queryElements;
 function isIntersectWithNodeRange(node, range, nodeContainedByRangeOnly) {
     var startPosition = node.compareDocumentPosition(range.startContainer);
     var endPosition = node.compareDocumentPosition(range.endContainer);
-    var targetPositions = [0 /* Same */, 8 /* Contains */];
+    var targetPositions = [0, 8];
     if (!nodeContainedByRangeOnly) {
-        targetPositions.push(16 /* ContainedBy */);
+        targetPositions.push(16);
     }
-    return (checkPosition(startPosition, targetPositions) || // intersectStart
-        checkPosition(endPosition, targetPositions) || // intersectEnd
-        (checkPosition(startPosition, [2 /* Preceding */]) && // Contains
-            checkPosition(endPosition, [4 /* Following */]) &&
-            !checkPosition(endPosition, [16 /* ContainedBy */])));
+    return (checkPosition(startPosition, targetPositions) ||
+        checkPosition(endPosition, targetPositions) ||
+        (checkPosition(startPosition, [2]) &&
+            checkPosition(endPosition, [4]) &&
+            !checkPosition(endPosition, [16])));
 }
 function checkPosition(position, targets) {
     return targets.some(function (target) {
-        return target == 0 /* Same */
-            ? position == 0 /* Same */
+        return target == 0
+            ? position == 0
             : (position & target) == target;
     });
 }
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-dom/lib/utils/sanitizeHtml.ts":
-/*!*****************************************************************!*\
-  !*** ./packages/roosterjs-editor-dom/lib/utils/sanitizeHtml.ts ***!
-  \*****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_html_sanitizer_1 = __webpack_require__(/*! roosterjs-html-sanitizer */ "./packages/roosterjs-html-sanitizer/lib/index.ts");
-/**
- * @deprecated Use HtmlSanitizer.sanitizeHtml from roosterjs-html-sanitizer instead
- * Sanitize HTML string
- * This function will do the following work:
- * 1. Convert global CSS into inline CSS
- * 2. Remove dangerous HTML tags and attributes
- * 3. Remove useless CSS properties
- * @param html The input HTML
- * @param additionalStyleNodes additional style nodes for inline css converting
- * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
- * @param propertyCallbacks A callback function map to handle HTML properties
- * @param preserveFragmentOnly If set to true, only preserve the html content between <!--StartFragment--> and <!--Endfragment-->
- */
-function sanitizeHtml(html, additionalStyleNodes, convertInlineCssOnly, propertyCallbacks, preserveFragmentOnly, currentStyle) {
-    return roosterjs_html_sanitizer_1.HtmlSanitizer.sanitizeHtml(html, {
-        additionalGlobalStyleNodes: additionalStyleNodes,
-        convertCssOnly: convertInlineCssOnly,
-        attributeCallbacks: propertyCallbacks,
-        currentElementOrStyle: currentStyle,
-        preserveFragmentOnly: preserveFragmentOnly,
-    });
-}
-exports.default = sanitizeHtml;
 
 
 /***/ }),
@@ -32238,18 +29841,11 @@ exports.default = sanitizeHtml;
 Object.defineProperty(exports, "__esModule", { value: true });
 var getComputedStyles_1 = __webpack_require__(/*! ./getComputedStyles */ "./packages/roosterjs-editor-dom/lib/utils/getComputedStyles.ts");
 var CRLF = /^[\r\n]+$/gm;
-/**
- * Skip a node when any of following conditions are true
- * - it is neither Element nor Text
- * - it is a text node but is empty
- * - it is a text node but contains just CRLF (noisy text node that often comes in-between elements)
- * - has a display:none
- */
 function shouldSkipNode(node) {
-    if (node.nodeType == 3 /* Text */) {
+    if (node.nodeType == 3) {
         return !node.nodeValue || node.textContent == '' || CRLF.test(node.nodeValue);
     }
-    else if (node.nodeType == 1 /* Element */) {
+    else if (node.nodeType == 1) {
         return getComputedStyles_1.getComputedStyle(node, 'display') == 'none';
     }
     else {
@@ -32272,23 +29868,12 @@ exports.default = shouldSkipNode;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var isNodeAfter_1 = __webpack_require__(/*! ./isNodeAfter */ "./packages/roosterjs-editor-dom/lib/utils/isNodeAfter.ts");
-/**
- * Split parent node of the given node before/after the given node.
- * When a parent node contains [A,B,C] and pass B as the given node,
- * If split before, the new nodes will be [A][B,C] and returns [A];
- * otherwise, it will be [A,B][C] and returns [C].
- * @param node The node to split before/after
- * @param splitBefore Whether split before or after
- * @param removeEmptyNewNode If the new node is empty (even then only child is space or ZER_WIDTH_SPACE),
- * we remove it. @default false
- * @returns The new parent node
- */
 function splitParentNode(node, splitBefore) {
     if (!node || !node.parentNode) {
         return null;
     }
     var parentNode = node.parentNode;
-    var newParent = parentNode.cloneNode(false /*deep*/);
+    var newParent = parentNode.cloneNode(false);
     newParent.removeAttribute('id');
     if (splitBefore) {
         while (parentNode.firstChild && parentNode.firstChild != node) {
@@ -32300,7 +29885,6 @@ function splitParentNode(node, splitBefore) {
             newParent.appendChild(node.nextSibling);
         }
     }
-    // When the only child of new parent is ZERO_WIDTH_SPACE, we can still prevent keeping it by set removeEmptyNewNode to true
     if (newParent.firstChild && newParent.innerHTML != '') {
         parentNode.parentNode.insertBefore(newParent, splitBefore ? parentNode : parentNode.nextSibling);
     }
@@ -32310,12 +29894,6 @@ function splitParentNode(node, splitBefore) {
     return newParent;
 }
 exports.default = splitParentNode;
-/**
- * Split parent node by a balanced node range
- * @param nodes The nodes to split from. If only one node is passed, split it from all its siblings.
- * If two or nodes are passed, will split before the first one and after the last one, all other nodes will be ignored
- * @returns The parent node of the given node range if the given nodes are balanced, otherwise null
- */
 function splitBalancedNodeRange(nodes) {
     var start = nodes instanceof Array ? nodes[0] : nodes;
     var end = nodes instanceof Array ? nodes[nodes.length - 1] : nodes;
@@ -32326,8 +29904,8 @@ function splitBalancedNodeRange(nodes) {
             end = start;
             start = temp;
         }
-        splitParentNode(start, true /*splitBefore*/);
-        splitParentNode(end, false /*splitBefore*/);
+        splitParentNode(start, true);
+        splitParentNode(end, false);
     }
     return parentNode;
 }
@@ -32346,12 +29924,7 @@ exports.splitBalancedNodeRange = splitBalancedNodeRange;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Removes the node and keep all children in place, return the parentNode where the children are attached
- * @param node the node to remove
- */
 function unwrap(node) {
-    // Unwrap requires a parentNode
     var parentNode = node ? node.parentNode : null;
     if (!parentNode) {
         return null;
@@ -32415,127 +29988,47 @@ exports.default = wrap;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var ContentEditFeatures_1 = __webpack_require__(/*! ./ContentEditFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/ContentEditFeatures.ts");
 var autoLinkFeatures_1 = __webpack_require__(/*! ./features/autoLinkFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/autoLinkFeatures.ts");
 var shortcutFeatures_1 = __webpack_require__(/*! ./features/shortcutFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/shortcutFeatures.ts");
 var tableFeatures_1 = __webpack_require__(/*! ./features/tableFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/tableFeatures.ts");
-var ContentEditFeatures_1 = __webpack_require__(/*! ./ContentEditFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/ContentEditFeatures.ts");
 var listFeatures_1 = __webpack_require__(/*! ./features/listFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/listFeatures.ts");
 var quoteFeatures_1 = __webpack_require__(/*! ./features/quoteFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/quoteFeatures.ts");
-/**
- * An editor plugin to handle content edit event.
- * The following cases are included:
- * 1. Auto increase/decrease indentation on Tab, Shift+tab
- * 2. Enter, Backspace on empty list item
- * 3. Enter, Backspace on empty blockquote line
- * 4. Auto bullet/numbering
- * 5. Auto link
- * 6. Tab in table
- * 7. Up/Down in table
- * 8. Manage list style
- */
-var ContentEdit = /** @class */ (function () {
-    /**
-     * Create instance of ContentEdit plugin
-     * @param features An optional feature set to determine which features the plugin should provide
-     */
+var ContentEdit = (function () {
     function ContentEdit(featureSet) {
         this.featureSet = featureSet;
-        this.featureMap = {};
     }
-    /**
-     * Get a friendly name of  this plugin
-     */
     ContentEdit.prototype.getName = function () {
-        return 'contentedit';
+        return 'ContentEdit';
     };
-    /**
-     * Initialize this plugin
-     * @param editor The editor instance
-     */
     ContentEdit.prototype.initialize = function (editor) {
         var _this = this;
         this.editor = editor;
-        var featureSet = this.featureSet || ContentEditFeatures_1.getDefaultContentEditFeatures();
-        [
-            listFeatures_1.IndentWhenTab,
-            listFeatures_1.OutdentWhenShiftTab,
-            listFeatures_1.OutdentWhenBackOn1stEmptyLine,
-            listFeatures_1.OutdentWhenEnterOnEmptyLine,
-            listFeatures_1.MergeInNewLine,
-            quoteFeatures_1.UnquoteWhenBackOnEmpty1stLine,
-            quoteFeatures_1.UnquoteWhenEnterOnEmptyLine,
-            tableFeatures_1.TabInTable,
-            tableFeatures_1.UpDownInTable,
-            listFeatures_1.AutoBullet,
-            autoLinkFeatures_1.AutoLink,
-            autoLinkFeatures_1.UnlinkWhenBackspaceAfterLink,
-            shortcutFeatures_1.DefaultShortcut,
-            listFeatures_1.getSmartOrderedList(featureSet.smartOrderedListStyles),
-        ]
-            .filter(function (feature) { return featureSet[feature.featureFlag]; })
-            .forEach(function (feature) {
-            if (feature.initialize) {
-                feature.initialize(_this.editor);
-            }
-            feature.keys.forEach(function (key) {
-                var array = _this.featureMap[key] || [];
-                array.push(feature);
-                _this.featureMap[key] = array;
-            });
-        });
+        this.getFilteredFeatures().forEach(function (feature) { return _this.editor.addContentEditFeature(feature); });
     };
-    /**
-     * Dispose this plugin
-     */
     ContentEdit.prototype.dispose = function () {
         this.editor = null;
     };
-    /**
-     * Check if the plugin should handle the given event exclusively.
-     * Handle an event exclusively means other plugin will not receive this event in
-     * onPluginEvent method.
-     * If two plugins will return true in willHandleEventExclusively() for the same event,
-     * the final result depends on the order of the plugins are added into editor
-     * @param event The event to check
-     */
-    ContentEdit.prototype.willHandleEventExclusively = function (event) {
-        this.findFeature(event);
-        return !!this.currentFeature;
-    };
-    /**
-     * Handle events triggered from editor
-     * @param event PluginEvent object
-     */
-    ContentEdit.prototype.onPluginEvent = function (event) {
-        // ContentChangedEvent will be broadcast so we won't see it in willHandleEventExclusively(),
-        // we need to check it again here
-        if (!this.currentFeature && event.eventType == 6 /* ContentChanged */) {
-            this.findFeature(event);
-        }
-        if (this.currentFeature) {
-            var feature = this.currentFeature;
-            this.currentFeature = null;
-            feature.handleEvent(event, this.editor);
-        }
-    };
-    ContentEdit.prototype.findFeature = function (event) {
-        var _this = this;
-        var hasFunctionKey = false;
-        var features;
-        if (event.eventType == 0 /* KeyDown */) {
-            var rawEvent = event.rawEvent;
-            hasFunctionKey = rawEvent.ctrlKey || rawEvent.altKey || rawEvent.metaKey;
-            features = this.featureMap[rawEvent.which];
-        }
-        else if (event.eventType == 6 /* ContentChanged */) {
-            features = this.featureMap[2048 /* CONTENTCHANGED */];
-        }
-        this.currentFeature =
-            features &&
-                features.filter(function (feature) {
-                    return (feature.allowFunctionKeys || !hasFunctionKey) &&
-                        feature.shouldHandleEvent(event, _this.editor);
-                })[0];
+    ContentEdit.prototype.getFilteredFeatures = function () {
+        var featureSet = this.featureSet || ContentEditFeatures_1.getDefaultContentEditFeatures();
+        var allFeatures = {
+            indentWhenTab: listFeatures_1.IndentWhenTab,
+            outdentWhenShiftTab: listFeatures_1.OutdentWhenShiftTab,
+            outdentWhenBackspaceOnEmptyFirstLine: listFeatures_1.OutdentWhenBackOn1stEmptyLine,
+            outdentWhenEnterOnEmptyLine: listFeatures_1.OutdentWhenEnterOnEmptyLine,
+            mergeInNewLineWhenBackspaceOnFirstChar: listFeatures_1.MergeInNewLine,
+            unquoteWhenBackspaceOnEmptyFirstLine: quoteFeatures_1.UnquoteWhenBackOnEmpty1stLine,
+            unquoteWhenEnterOnEmptyLine: quoteFeatures_1.UnquoteWhenEnterOnEmptyLine,
+            tabInTable: tableFeatures_1.TabInTable,
+            upDownInTable: tableFeatures_1.UpDownInTable,
+            autoBullet: listFeatures_1.AutoBullet,
+            autoLink: autoLinkFeatures_1.AutoLink,
+            unlinkWhenBackspaceAfterLink: autoLinkFeatures_1.UnlinkWhenBackspaceAfterLink,
+            defaultShortcut: shortcutFeatures_1.DefaultShortcut,
+            smartOrderedList: listFeatures_1.getSmartOrderedList(featureSet.smartOrderedListStyles),
+        };
+        var keys = Object.keys(allFeatures);
+        return keys.filter(function (key) { return featureSet[key]; }).map(function (key) { return allFeatures[key]; });
     };
     return ContentEdit;
 }());
@@ -32554,9 +30047,6 @@ exports.default = ContentEdit;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Get default feature set of ContentEdit plugin
- */
 function getDefaultContentEditFeatures() {
     return {
         autoLink: true,
@@ -32594,48 +30084,41 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
-// When user type, they may end a link with a puncatuation, i.e. www.bing.com;
-// we need to trim off the trailing puncatuation before turning it to link match
 var TRAILING_PUNCTUATION_REGEX = /[.+=\s:;"',>]+$/i;
 var MINIMUM_LENGTH = 5;
 exports.AutoLink = {
-    keys: [13 /* ENTER */, 32 /* SPACE */, 2048 /* CONTENTCHANGED */],
+    keys: [13, 32, 2048],
     initialize: function (editor) {
         return roosterjs_editor_dom_1.Browser.isIE &&
             editor.getDocument().execCommand('AutoUrlDetect', false, false);
     },
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
-    featureFlag: 'autoLink',
 };
 exports.UnlinkWhenBackspaceAfterLink = {
-    keys: [8 /* BACKSPACE */],
+    keys: [8],
     shouldHandleEvent: hasLinkBeforeCursor,
     handleEvent: function (event, editor) {
         event.rawEvent.preventDefault();
         roosterjs_editor_api_1.removeLink(editor);
     },
-    featureFlag: 'unlinkWhenBackspaceAfterLink',
 };
 function cacheGetLinkData(event, editor) {
-    return event.eventType == 0 /* KeyDown */ ||
-        (event.eventType == 6 /* ContentChanged */ && event.source == "Paste" /* Paste */)
+    return event.eventType == 0 ||
+        (event.eventType == 6 && event.source == "Paste")
         ? roosterjs_editor_core_1.cacheGetEventData(event, 'LINK_DATA', function () {
             var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, editor);
             var word = searcher && searcher.getWordBefore();
             if (word && word.length > MINIMUM_LENGTH) {
-                // Check for trailing punctuation
                 var trailingPunctuations = word.match(TRAILING_PUNCTUATION_REGEX);
                 var trailingPunctuation = (trailingPunctuations || [])[0] || '';
                 var candidate_1 = word.substring(0, word.length - trailingPunctuation.length);
-                // Do special handling for ')', '}', ']'
                 ['()', '{}', '[]'].forEach(function (str) {
                     if (candidate_1[candidate_1.length - 1] == str[1] &&
                         candidate_1.indexOf(str[0]) < 0) {
                         candidate_1 = candidate_1.substr(0, candidate_1.length - 1);
                     }
                 });
-                // Match and replace in editor
                 return roosterjs_editor_dom_1.matchLink(candidate_1);
             }
             return null;
@@ -32655,11 +30138,10 @@ function autoLink(event, editor) {
     anchor.href = linkData.normalizedUrl;
     editor.runAsync(function () {
         editor.performAutoComplete(function () {
-            roosterjs_editor_api_1.replaceWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */, searcher);
-            // The content at cursor has changed. Should also clear the cursor data cache
+            roosterjs_editor_api_1.replaceWithNode(editor, linkData.originalUrl, anchor, false, searcher);
             roosterjs_editor_core_1.clearContentSearcherCache(event);
             return anchor;
-        }, "AutoLink" /* AutoLink */);
+        }, "AutoLink");
     });
 }
 
@@ -32676,33 +30158,31 @@ function autoLink(event, editor) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
+var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 exports.IndentWhenTab = {
-    keys: [9 /* TAB */],
+    keys: [9],
     shouldHandleEvent: function (event, editor) {
         return !event.rawEvent.shiftKey && cacheGetListElement(event, editor);
     },
     handleEvent: function (event, editor) {
-        roosterjs_editor_api_1.setIndentation(editor, 0 /* Increase */);
+        roosterjs_editor_api_1.setIndentation(editor, 0);
         event.rawEvent.preventDefault();
     },
-    featureFlag: 'indentWhenTab',
 };
 exports.OutdentWhenShiftTab = {
-    keys: [9 /* TAB */],
+    keys: [9],
     shouldHandleEvent: function (event, editor) {
         return event.rawEvent.shiftKey && cacheGetListElement(event, editor);
     },
     handleEvent: function (event, editor) {
-        roosterjs_editor_api_1.setIndentation(editor, 1 /* Decrease */);
+        roosterjs_editor_api_1.setIndentation(editor, 1);
         event.rawEvent.preventDefault();
     },
-    featureFlag: 'outdentWhenShiftTab',
 };
 exports.MergeInNewLine = {
-    keys: [8 /* BACKSPACE */],
+    keys: [8],
     shouldHandleEvent: function (event, editor) {
         var li = roosterjs_editor_core_1.cacheGetElementAtCursor(editor, event, 'LI');
         var range = editor.getSelectionRange();
@@ -32714,26 +30194,24 @@ exports.MergeInNewLine = {
             editor.runAsync(function () {
                 var br = editor.getDocument().createElement('BR');
                 editor.insertNode(br);
-                editor.select(br, -3 /* After */);
+                editor.select(br, -3);
             });
         }
         else {
             toggleListAndPreventDefault(event, editor);
         }
     },
-    featureFlag: 'mergeInNewLineWhenBackspaceOnFirstChar',
 };
 exports.OutdentWhenBackOn1stEmptyLine = {
-    keys: [8 /* BACKSPACE */],
+    keys: [8],
     shouldHandleEvent: function (event, editor) {
         var li = roosterjs_editor_core_1.cacheGetElementAtCursor(editor, event, 'LI');
         return li && roosterjs_editor_dom_1.isNodeEmpty(li) && !li.previousSibling;
     },
     handleEvent: toggleListAndPreventDefault,
-    featureFlag: 'outdentWhenBackspaceOnEmptyFirstLine',
 };
 exports.OutdentWhenEnterOnEmptyLine = {
-    keys: [13 /* ENTER */],
+    keys: [13],
     shouldHandleEvent: function (event, editor) {
         var li = roosterjs_editor_core_1.cacheGetElementAtCursor(editor, event, 'LI');
         return !event.rawEvent.shiftKey && li && roosterjs_editor_dom_1.isNodeEmpty(li);
@@ -32741,17 +30219,13 @@ exports.OutdentWhenEnterOnEmptyLine = {
     handleEvent: function (event, editor) {
         editor.performAutoComplete(function () { return toggleListAndPreventDefault(event, editor); });
     },
-    featureFlag: 'outdentWhenEnterOnEmptyLine',
 };
 exports.AutoBullet = {
-    keys: [32 /* SPACE */],
+    keys: [32],
     shouldHandleEvent: function (event, editor) {
         if (!cacheGetListElement(event, editor)) {
             var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, editor);
             var textBeforeCursor = searcher.getSubStringBefore(3);
-            // Auto list is triggered if:
-            // 1. Text before cursor exactly mathces '*', '-' or '1.'
-            // 2. There's no non-text inline entities before cursor
             return (['*', '-', '1.'].indexOf(textBeforeCursor) >= 0 &&
                 !searcher.getNearestNonTextInlineElement());
         }
@@ -32762,11 +30236,10 @@ exports.AutoBullet = {
             editor.performAutoComplete(function () {
                 var searcher = editor.getContentSearcherOfCursor();
                 var textBeforeCursor = searcher.getSubStringBefore(3);
-                var rangeToDelete = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
+                var rangeToDelete = searcher.getRangeFromText(textBeforeCursor, true);
                 if (rangeToDelete) {
                     rangeToDelete.deleteContents();
                 }
-                // If not explicitly insert br, Chrome/Safari/IE will operate on the previous line
                 var tempBr = editor.getDocument().createElement('BR');
                 if (roosterjs_editor_dom_1.Browser.isChrome || roosterjs_editor_dom_1.Browser.isSafari || roosterjs_editor_dom_1.Browser.isIE11OrGreater) {
                     editor.insertNode(tempBr);
@@ -32781,23 +30254,20 @@ exports.AutoBullet = {
             });
         });
     },
-    featureFlag: 'autoBullet',
 };
 function getSmartOrderedList(styleList) {
     return {
-        keys: [2048 /* CONTENTCHANGED */],
+        keys: [2048],
         shouldHandleEvent: function (event, editor) { return event.data instanceof HTMLOListElement; },
         handleEvent: function (event, editor) {
             var ol = event.data;
             var parentOl = editor.getElementAtCursor('OL', ol.parentNode);
             if (parentOl) {
-                // The style list must has at least one value. If no value is passed in, fallback to decimal
                 var styles = styleList && styleList.length > 0 ? styleList : ['decimal'];
                 ol.style.listStyle =
                     styles[(styles.indexOf(parentOl.style.listStyle) + 1) % styles.length];
             }
         },
-        featureFlag: 'smartOrderedList',
     };
 }
 exports.getSmartOrderedList = getSmartOrderedList;
@@ -32840,23 +30310,21 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
 var QUOTE_TAG = 'BLOCKQUOTE';
 var STRUCTURED_TAGS = [QUOTE_TAG, 'LI', 'TD', 'TH'].join(',');
 exports.UnquoteWhenBackOnEmpty1stLine = {
-    keys: [8 /* BACKSPACE */],
+    keys: [8],
     shouldHandleEvent: function (event, editor) {
         var childOfQuote = cacheGetQuoteChild(event, editor);
         return childOfQuote && roosterjs_editor_dom_1.isNodeEmpty(childOfQuote) && !childOfQuote.previousSibling;
     },
     handleEvent: splitQuote,
-    featureFlag: 'unquoteWhenBackspaceOnEmptyFirstLine',
 };
 exports.UnquoteWhenEnterOnEmptyLine = {
-    keys: [13 /* ENTER */],
+    keys: [13],
     shouldHandleEvent: function (event, editor) {
         var childOfQuote = cacheGetQuoteChild(event, editor);
         var shift = event.rawEvent.shiftKey;
         return !shift && childOfQuote && roosterjs_editor_dom_1.isNodeEmpty(childOfQuote);
     },
     handleEvent: function (event, editor) { return editor.performAutoComplete(function () { return splitQuote(event, editor); }); },
-    featureFlag: 'unquoteWhenEnterOnEmptyLine',
 };
 function cacheGetQuoteChild(event, editor) {
     return roosterjs_editor_core_1.cacheGetEventData(event, 'QUOTE_CHILD', function () {
@@ -32883,7 +30351,7 @@ function splitQuote(event, editor) {
         }
         parent = roosterjs_editor_dom_1.splitBalancedNodeRange(childOfQuote);
         roosterjs_editor_dom_1.unwrap(parent);
-        editor.select(childOfQuote, 0 /* Begin */);
+        editor.select(childOfQuote, 0);
     });
     event.rawEvent.preventDefault();
 }
@@ -32912,19 +30380,19 @@ function createCommand(winKey, macKey, action) {
     };
 }
 var commands = [
-    createCommand(256 /* Ctrl */ | 66 /* B */, 512 /* Meta */ | 66 /* B */, roosterjs_editor_api_1.toggleBold),
-    createCommand(256 /* Ctrl */ | 73 /* I */, 512 /* Meta */ | 73 /* I */, roosterjs_editor_api_1.toggleItalic),
-    createCommand(256 /* Ctrl */ | 85 /* U */, 512 /* Meta */ | 85 /* U */, roosterjs_editor_api_1.toggleUnderline),
-    createCommand(256 /* Ctrl */ | 90 /* Z */, 512 /* Meta */ | 90 /* Z */, function (editor) { return editor.undo(); }),
-    createCommand(256 /* Ctrl */ | 89 /* Y */, 512 /* Meta */ | 1024 /* Shift */ | 90 /* Z */, function (editor) { return editor.redo(); }),
-    createCommand(256 /* Ctrl */ | 190 /* PERIOD */, 512 /* Meta */ | 190 /* PERIOD */, roosterjs_editor_api_1.toggleBullet),
-    createCommand(256 /* Ctrl */ | 191 /* FORWARDSLASH */, 512 /* Meta */ | 191 /* FORWARDSLASH */, roosterjs_editor_api_1.toggleNumbering),
-    createCommand(256 /* Ctrl */ | 1024 /* Shift */ | 190 /* PERIOD */, 512 /* Meta */ | 1024 /* Shift */ | 190 /* PERIOD */, function (editor) { return roosterjs_editor_api_1.changeFontSize(editor, 0 /* Increase */); }),
-    createCommand(256 /* Ctrl */ | 1024 /* Shift */ | 188 /* COMMA */, 512 /* Meta */ | 1024 /* Shift */ | 188 /* COMMA */, function (editor) { return roosterjs_editor_api_1.changeFontSize(editor, 1 /* Decrease */); }),
+    createCommand(256 | 66, 512 | 66, roosterjs_editor_api_1.toggleBold),
+    createCommand(256 | 73, 512 | 73, roosterjs_editor_api_1.toggleItalic),
+    createCommand(256 | 85, 512 | 85, roosterjs_editor_api_1.toggleUnderline),
+    createCommand(256 | 90, 512 | 90, function (editor) { return editor.undo(); }),
+    createCommand(256 | 89, 512 | 1024 | 90, function (editor) { return editor.redo(); }),
+    createCommand(256 | 190, 512 | 190, roosterjs_editor_api_1.toggleBullet),
+    createCommand(256 | 191, 512 | 191, roosterjs_editor_api_1.toggleNumbering),
+    createCommand(256 | 1024 | 190, 512 | 1024 | 190, function (editor) { return roosterjs_editor_api_1.changeFontSize(editor, 0); }),
+    createCommand(256 | 1024 | 188, 512 | 1024 | 188, function (editor) { return roosterjs_editor_api_1.changeFontSize(editor, 1); }),
 ];
 exports.DefaultShortcut = {
     allowFunctionKeys: true,
-    keys: [66 /* B */, 73 /* I */, 85 /* U */, 89 /* Y */, 90 /* Z */, 188 /* COMMA */, 190 /* PERIOD */, 191 /* FORWARDSLASH */],
+    keys: [66, 73, 85, 89, 90, 188, 190, 191],
     shouldHandleEvent: cacheGetCommand,
     handleEvent: function (event, editor) {
         var command = cacheGetCommand(event);
@@ -32934,19 +30402,15 @@ exports.DefaultShortcut = {
             event.rawEvent.stopPropagation();
         }
     },
-    featureFlag: 'defaultShortcut',
 };
 function cacheGetCommand(event) {
     return roosterjs_editor_core_1.cacheGetEventData(event, 'DEFAULT_SHORT_COMMAND', function () {
         var e = event.rawEvent;
-        var key = 
-        // Need to check ALT key to be false since in some language (e.g. Polski) uses AltGr to input some special charactors
-        // In that case, ctrlKey and altKey are both true in Edge, but we should not trigger any shortcut function here
-        event.eventType == 0 /* KeyDown */ && !e.altKey
+        var key = event.eventType == 0 && !e.altKey
             ? e.which |
-                (e.metaKey && 512 /* Meta */) |
-                (e.shiftKey && 1024 /* Shift */) |
-                (e.ctrlKey && 256 /* Ctrl */)
+                (e.metaKey && 512) |
+                (e.shiftKey && 1024) |
+                (e.ctrlKey && 256)
             : 0;
         return key && commands.filter(function (cmd) { return (roosterjs_editor_dom_1.Browser.isMac ? cmd.macKey : cmd.winKey) == key; })[0];
     });
@@ -32968,7 +30432,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 exports.TabInTable = {
-    keys: [9 /* TAB */],
+    keys: [9],
     shouldHandleEvent: cacheGetTableCell,
     handleEvent: function (event, editor) {
         var shift = event.rawEvent.shiftKey;
@@ -32977,28 +30441,27 @@ exports.TabInTable = {
             if (col < 0 || col >= vtable.cells[row].length) {
                 row += step;
                 if (row < 0 || row >= vtable.cells.length) {
-                    editor.select(vtable.table, shift ? -2 /* Before */ : -3 /* After */);
+                    editor.select(vtable.table, shift ? -2 : -3);
                     break;
                 }
                 col = shift ? vtable.cells[row].length - 1 : 0;
             }
             var cell = vtable.getCell(row, col);
             if (cell.td) {
-                editor.select(cell.td, 0 /* Begin */);
+                editor.select(cell.td, 0);
                 break;
             }
         }
         event.rawEvent.preventDefault();
     },
-    featureFlag: 'tabInTable',
 };
 exports.UpDownInTable = {
-    keys: [38 /* UP */, 40 /* DOWN */],
+    keys: [38, 40],
     shouldHandleEvent: cacheGetTableCell,
     handleEvent: function (event, editor) {
         var td = cacheGetTableCell(event, editor);
         var vtable = new roosterjs_editor_dom_1.VTable(td);
-        var isUp = event.rawEvent.which == 38 /* UP */;
+        var isUp = event.rawEvent.which == 38;
         var step = isUp ? -1 : 1;
         var targetTd = null;
         for (var row = vtable.row; row >= 0 && row < vtable.cells.length; row += step) {
@@ -33011,60 +30474,21 @@ exports.UpDownInTable = {
         editor.runAsync(function () {
             var newContainer = editor.getElementAtCursor();
             if (roosterjs_editor_dom_1.contains(vtable.table, newContainer) &&
-                !roosterjs_editor_dom_1.contains(td, newContainer, true /*treatSameNodeAsContain*/)) {
+                !roosterjs_editor_dom_1.contains(td, newContainer, true)) {
                 if (targetTd) {
-                    editor.select(targetTd, 0 /* Begin */);
+                    editor.select(targetTd, 0);
                 }
                 else {
-                    editor.select(vtable.table, isUp ? -2 /* Before */ : -3 /* After */);
+                    editor.select(vtable.table, isUp ? -2 : -3);
                 }
             }
         });
     },
-    featureFlag: 'upDownInTable',
 };
 function cacheGetTableCell(event, editor) {
     var firstTd = roosterjs_editor_core_1.cacheGetElementAtCursor(editor, event, 'TD,TH,LI');
     return roosterjs_editor_dom_1.getTagOfNode(firstTd) == 'LI' ? null : firstTd;
 }
-
-
-/***/ }),
-
-/***/ "./packages/roosterjs-editor-plugins/lib/DefaultShortcut/DefaultShortcut.ts":
-/*!**********************************************************************************!*\
-  !*** ./packages/roosterjs-editor-plugins/lib/DefaultShortcut/DefaultShortcut.ts ***!
-  \**********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * @deprecated Use ContentEdit plugin with fature DefaultShortcut instead
- */
-var DefaultShortcut = /** @class */ (function () {
-    function DefaultShortcut() {
-    }
-    /**
-     * Get a friendly name of  this plugin
-     */
-    DefaultShortcut.prototype.getName = function () {
-        return 'defaultshortcut';
-    };
-    /**
-     * Initialize this plugin
-     * @param editor The editor instance
-     */
-    DefaultShortcut.prototype.initialize = function (editor) { };
-    /**
-     * Dispose this plugin
-     */
-    DefaultShortcut.prototype.dispose = function () { };
-    return DefaultShortcut;
-}());
-exports.default = DefaultShortcut;
 
 
 /***/ }),
@@ -33080,17 +30504,7 @@ exports.default = DefaultShortcut;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * An editor plugin that show a tooltip for existing link
- */
-var HyperLink = /** @class */ (function () {
-    /**
-     * Create a new instance of HyperLink class
-     * @param getTooltipCallback A callback function to get tooltip text for an existing hyperlink.
-     * Default value is to return the href itself. If null, there will be no tooltip text.
-     * @param target (Optional) Target window name for hyperlink. If null, will use "_blank"
-     * @param onLinkClick (Optional) Open link callback
-     */
+var HyperLink = (function () {
     function HyperLink(getTooltipCallback, target, onLinkClick) {
         if (getTooltipCallback === void 0) { getTooltipCallback = function (href) { return href; }; }
         var _this = this;
@@ -33105,39 +30519,22 @@ var HyperLink = /** @class */ (function () {
             }
         };
     }
-    /**
-     * Get a friendly name of  this plugin
-     */
     HyperLink.prototype.getName = function () {
-        return 'hyperlink';
+        return 'Hyperlink';
     };
-    /**
-     * Initialize this plugin
-     * @param editor The editor instance
-     */
     HyperLink.prototype.initialize = function (editor) {
         this.editor = editor;
-        this.disposers = this.getTooltipCallback
-            ? [
-                editor.addDomEventHandler('mouseover', this.onMouse),
-                editor.addDomEventHandler('mouseout', this.onMouse),
-            ]
-            : [];
+        this.disposer =
+            this.getTooltipCallback &&
+                editor.addDomEventHandler({ mouseover: this.onMouse, mouseout: this.onMouse });
     };
-    /**
-     * Dispose this plugin
-     */
     HyperLink.prototype.dispose = function () {
-        this.disposers.forEach(function (disposer) { return disposer(); });
-        this.disposers = null;
+        this.disposer();
+        this.disposer = null;
         this.editor = null;
     };
-    /**
-     * Handle events triggered from editor
-     * @param event PluginEvent object
-     */
     HyperLink.prototype.onPluginEvent = function (event) {
-        if (event.eventType == 5 /* MouseUp */) {
+        if (event.eventType == 5) {
             var anchor = this.editor.getElementAtCursor('A', event.rawEvent.srcElement);
             if (anchor) {
                 if (this.onLinkClick) {
@@ -33158,11 +30555,6 @@ var HyperLink = /** @class */ (function () {
             }
         }
     };
-    /**
-     * Try get href from an anchor element
-     * The reason this is put in a try-catch is that
-     * it has been seen that accessing href may throw an exception, in particular on IE/Edge
-     */
     HyperLink.prototype.tryGetHref = function (anchor) {
         try {
             return anchor ? anchor.href : null;
@@ -33186,22 +30578,14 @@ exports.default = HyperLink;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var buildClipboardData_1 = __webpack_require__(/*! ./buildClipboardData */ "./packages/roosterjs-editor-plugins/lib/Paste/buildClipboardData.ts");
 var fragmentHandler_1 = __webpack_require__(/*! ./fragmentHandler */ "./packages/roosterjs-editor-plugins/lib/Paste/fragmentHandler.ts");
 var textToHtml_1 = __webpack_require__(/*! ./textToHtml */ "./packages/roosterjs-editor-plugins/lib/Paste/textToHtml.ts");
+var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var roosterjs_editor_api_2 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var roosterjs_html_sanitizer_1 = __webpack_require__(/*! roosterjs-html-sanitizer */ "./packages/roosterjs-html-sanitizer/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/**
- * Paste plugin, handles onPaste event and paste content into editor
- */
-var Paste = /** @class */ (function () {
-    /**
-     * Create an instance of Paste
-     * @param preserved Not used. Preserved parameter only used for compatibility with old code
-     * @param attributeCallbacks A set of callbacks to help handle html attribute during sanitization
-     */
+var Paste = (function () {
     function Paste(preserved, attributeCallbacks) {
         var _this = this;
         this.onPaste = function (event) {
@@ -33221,58 +30605,36 @@ var Paste = /** @class */ (function () {
             attributeCallbacks: attributeCallbacks,
         });
     }
-    /**
-     * Get a friendly name of  this plugin
-     */
     Paste.prototype.getName = function () {
-        return 'paste';
+        return 'Paste';
     };
-    /**
-     * Initialize this plugin. This should only be called from Editor
-     * @param editor Editor instance
-     */
     Paste.prototype.initialize = function (editor) {
         this.editor = editor;
         this.pasteDisposer = editor.addDomEventHandler('paste', this.onPaste);
     };
-    /**
-     * Dispose this plugin
-     */
     Paste.prototype.dispose = function () {
         this.pasteDisposer();
         this.pasteDisposer = null;
         this.editor = null;
     };
-    /**
-     * Paste into editor using passed in clipboardData with original format
-     * @param clipboardData The clipboardData to paste
-     */
     Paste.prototype.pasteOriginal = function (clipboardData) {
         this.paste(clipboardData, this.detectPasteOption(clipboardData));
     };
-    /**
-     * Paste plain text into editor using passed in clipboardData
-     * @param clipboardData The clipboardData to paste
-     */
     Paste.prototype.pasteText = function (clipboardData) {
-        this.paste(clipboardData, 1 /* PasteText */);
+        this.paste(clipboardData, 1);
     };
-    /**
-     * Paste into editor using passed in clipboardData with curent format
-     * @param clipboardData The clipboardData to paste
-     */
     Paste.prototype.pasteAndMergeFormat = function (clipboardData) {
-        this.paste(clipboardData, this.detectPasteOption(clipboardData), true /*mergeFormat*/);
+        this.paste(clipboardData, this.detectPasteOption(clipboardData), true);
     };
     Paste.prototype.detectPasteOption = function (clipboardData) {
         return clipboardData.text || !clipboardData.image
-            ? 0 /* PasteHtml */
-            : 2 /* PasteImage */;
+            ? 0
+            : 2;
     };
     Paste.prototype.paste = function (clipboardData, pasteOption, mergeCurrentFormat) {
         var document = this.editor.getDocument();
         var fragment = document.createDocumentFragment();
-        if (pasteOption == 0 /* PasteHtml */) {
+        if (pasteOption == 0) {
             var html = clipboardData.html;
             var nodes = roosterjs_editor_dom_1.fromHtml(html, document);
             for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
@@ -33284,12 +30646,12 @@ var Paste = /** @class */ (function () {
             }
         }
         var event = {
-            eventType: 8 /* BeforePaste */,
+            eventType: 8,
             clipboardData: clipboardData,
             fragment: fragment,
             pasteOption: pasteOption,
         };
-        this.editor.triggerEvent(event, true /*broadcast*/);
+        this.editor.triggerEvent(event, true);
         this.internalPaste(event);
     };
     Paste.prototype.internalPaste = function (event) {
@@ -33298,31 +30660,31 @@ var Paste = /** @class */ (function () {
         this.editor.focus();
         this.editor.addUndoSnapshot(function () {
             if (clipboardData.snapshotBeforePaste == null) {
-                clipboardData.snapshotBeforePaste = _this.editor.getContent(false /*triggerExtractContentEvent*/, true /*markSelection*/);
+                clipboardData.snapshotBeforePaste = _this.editor.getContent(false, true);
             }
             else {
                 _this.editor.setContent(clipboardData.snapshotBeforePaste);
             }
             switch (pasteOption) {
-                case 0 /* PasteHtml */:
+                case 0:
                     _this.editor.insertNode(fragment);
                     break;
-                case 1 /* PasteText */:
+                case 1:
                     var html = textToHtml_1.default(clipboardData.text);
                     _this.editor.insertContent(html);
                     break;
-                case 2 /* PasteImage */:
+                case 2:
                     roosterjs_editor_api_2.insertImage(_this.editor, clipboardData.image);
                     break;
             }
             return clipboardData;
-        }, "Paste" /* Paste */);
+        }, "Paste");
     };
     Paste.prototype.applyTextFormat = function (node, format) {
         var leaf = roosterjs_editor_dom_1.getFirstLeafNode(node);
         var parents = [];
         while (leaf) {
-            if (leaf.nodeType == 3 /* Text */ &&
+            if (leaf.nodeType == 3 &&
                 leaf.parentNode &&
                 parents.indexOf(leaf.parentNode) < 0) {
                 parents.push(leaf.parentNode);
@@ -33349,7 +30711,7 @@ var Paste = /** @class */ (function () {
             : {};
     };
     Paste.prototype.sanitizeHtml = function (html) {
-        var doc = roosterjs_html_sanitizer_1.htmlToDom(html, true /*preserveFragmentOnly*/, fragmentHandler_1.default);
+        var doc = roosterjs_html_sanitizer_1.htmlToDom(html, true, fragmentHandler_1.default);
         if (doc && doc.body) {
             this.sanitizer.convertGlobalCssToInlineCss(doc);
             var range = this.editor.getSelectionRange();
@@ -33379,12 +30741,6 @@ exports.default = Paste;
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var CONTAINER_HTML = '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
-/**
- * Build ClipboardData from a paste event
- * @param event The paste event
- * @param editor The editor
- * @param callback Callback function when data is ready
- */
 function buildClipboardData(event, editor, callback) {
     roosterjs_editor_dom_1.extractClipboardEvent(event, function (items) {
         if (items.html === undefined) {
@@ -33400,12 +30756,10 @@ function buildClipboardData(event, editor, callback) {
 }
 exports.default = buildClipboardData;
 function retrieveHtmlViaTempDiv(editor, callback) {
-    // cache original selection range in editor
     var originalSelectionRange = editor.getSelectionRange();
     var tempDiv = getTempDivForPaste(editor);
     tempDiv.focus();
     editor.runAsync(function () {
-        // restore original selection range in editor
         editor.select(originalSelectionRange);
         callback(tempDiv.innerHTML);
         tempDiv.style.display = 'none';
@@ -33416,7 +30770,7 @@ function getTempDivForPaste(editor) {
     var tempDiv = editor.getCustomData('PasteDiv', function () {
         var pasteDiv = roosterjs_editor_dom_1.fromHtml(CONTAINER_HTML, editor.getDocument())[0];
         editor.insertNode(pasteDiv, {
-            position: 3 /* Outside */,
+            position: 3,
             updateCursor: false,
             replaceSelection: false,
             insertOnNewLine: false,
@@ -33488,12 +30842,10 @@ function fragmentHandler(doc, source) {
     var firstNode = doc && doc.body && doc.querySelector('html');
     if (roosterjs_editor_dom_1.getTagOfNode(firstNode) == 'HTML') {
         if (firstNode.getAttribute(WORD_ATTRIBUTE_NAME) == WORD_ATTRIBUTE_VALUE) {
-            // Handle HTML copied from MS Word
             doc.body.innerHTML = html;
             convertPastedContentFromWord_1.default(doc);
         }
         else if (firstNode.getAttribute(EXCEL_ATTRIBUTE_NAME) == EXCEL_ATTRIBUTE_VALUE) {
-            // Handle HTML copied from MS Excel
             if (html.match(LAST_TD_END_REGEX)) {
                 var trMatch = before.match(LAST_TR_REGEX);
                 var tr = trMatch ? trMatch[0] : '<TR>';
@@ -33508,7 +30860,6 @@ function fragmentHandler(doc, source) {
             convertPastedContentFromExcel_1.default(doc);
         }
         else {
-            // Handle HTML copied from other places
             doc.body.innerHTML = html;
         }
     }
@@ -33530,11 +30881,6 @@ exports.default = fragmentHandler;
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var ZERO_WIDTH_SPACE = '&#8203;';
-/**
- * Convert plain to HTML
- * @param text The plain text to convert
- * @returns HTML string to present the input text
- */
 function textToHtml(text) {
     text = (text || '')
         .replace(/&/g, '&amp;')
@@ -33581,9 +30927,7 @@ exports.default = textToHtml;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/** NodeId attribute */
 var NODE_ID_ATTRIBUTE_NAME = 'NodeId';
-/** create an empty CustomData */
 function createCustomData() {
     return {
         dict: {},
@@ -33591,17 +30935,11 @@ function createCustomData() {
     };
 }
 exports.createCustomData = createCustomData;
-/**
- * Sets the specified object data
- */
 function setObject(customData, element, key, value) {
-    // Get the id for the element
-    if (element.nodeType == 1 /* Element */) {
+    if (element.nodeType == 1) {
         var id = getAndSetNodeId(customData, element);
         if (id != '') {
-            // Get the values for the element
             if (!customData.dict[id]) {
-                // First time dictionary creation
                 customData.dict[id] = {};
             }
             customData.dict[id][key] = value;
@@ -33609,11 +30947,8 @@ function setObject(customData, element, key, value) {
     }
 }
 exports.setObject = setObject;
-/**
- * Reads the specified object data
- */
 function getObject(customData, element, key) {
-    if (element.nodeType == 1 /* Element */) {
+    if (element.nodeType == 1) {
         var id = getAndSetNodeId(customData, element);
         if (id != '') {
             return customData.dict[id] && customData.dict[id][key];
@@ -33622,7 +30957,6 @@ function getObject(customData, element, key) {
     return null;
 }
 exports.getObject = getObject;
-/** Get the unique id for the specified node... */
 function getAndSetNodeId(customData, element) {
     var id = element.getAttribute(NODE_ID_ATTRIBUTE_NAME);
     if (!id) {
@@ -33646,7 +30980,6 @@ function getAndSetNodeId(customData, element) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/** create an empty LevelLists */
 function createLevelLists() {
     return {
         listsMetadata: {},
@@ -33669,7 +31002,6 @@ exports.createLevelLists = createLevelLists;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var LevelLists_1 = __webpack_require__(/*! ./LevelLists */ "./packages/roosterjs-editor-plugins/lib/Paste/wordConverter/LevelLists.ts");
-/** create an empty WordConverterArguments */
 function createWordConverterArguments(nodes) {
     return {
         nodes: nodes,
@@ -33699,7 +31031,6 @@ var wordConverter_1 = __webpack_require__(/*! ./wordConverter */ "./packages/roo
 var WordConverterArguments_1 = __webpack_require__(/*! ./WordConverterArguments */ "./packages/roosterjs-editor-plugins/lib/Paste/wordConverter/WordConverterArguments.ts");
 var roosterjs_html_sanitizer_1 = __webpack_require__(/*! roosterjs-html-sanitizer */ "./packages/roosterjs-html-sanitizer/lib/index.ts");
 var converterUtils_1 = __webpack_require__(/*! ./converterUtils */ "./packages/roosterjs-editor-plugins/lib/Paste/wordConverter/converterUtils.ts");
-/** Converts all the Word generated list items in the specified node into standard HTML UL and OL tags */
 function convertPastedContentFromWord(doc) {
     var _a;
     var sanitizer = new roosterjs_html_sanitizer_1.HtmlSanitizer({
@@ -33710,9 +31041,6 @@ function convertPastedContentFromWord(doc) {
     });
     sanitizer.sanitize(doc.body);
     var wordConverter = wordConverter_1.createWordConverter();
-    // First find all the nodes that we need to check for list item information
-    // This call will return all the p and header elements under the root node.. These are the elements that
-    // Word uses a list items, so we'll only process them and avoid walking the whole tree.
     var elements = doc.querySelectorAll('p');
     if (elements.length > 0) {
         wordConverter.wordConverterArgs = WordConverterArguments_1.createWordConverterArguments(elements);
@@ -33739,126 +31067,77 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var LevelLists_1 = __webpack_require__(/*! ./LevelLists */ "./packages/roosterjs-editor-plugins/lib/Paste/wordConverter/LevelLists.ts");
 var CustomData_1 = __webpack_require__(/*! ./CustomData */ "./packages/roosterjs-editor-plugins/lib/Paste/wordConverter/CustomData.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-/** Word list metadata style name */
 var LOOKUP_DEPTH = 5;
-/** Name for the word list id property in the custom data */
 var UNIQUE_LIST_ID_CUSTOM_DATA = 'UniqueListId';
-/** Word list metadata style name */
 var MSO_LIST_STYLE_NAME = 'mso-list';
-/** Regular expression to match line breaks */
 var LINE_BREAKS = /[\n|\r]/gi;
-/**
- * Handles the pass 1: Discovery
- * During discovery, we'll parse the metadata out of the elements and store it in the list items dictionary.
- * We'll detect cases where the list items for a particular ordered list are not next to each other. Word does these
- * for numbered headers, and we don't want to convert those, because the numbering would be completely wrong.
- */
 function processNodesDiscovery(wordConverter) {
     var args = wordConverter.wordConverterArgs;
     while (args.currentIndex < args.nodes.length) {
         var node = args.nodes.item(args.currentIndex);
-        // Try to get the list metadata for the specified node
         var itemMetadata = getListItemMetadata(node);
         if (itemMetadata) {
             var levelInfo = args.currentListIdsByLevels[itemMetadata.level - 1] || LevelLists_1.createLevelLists();
             args.currentListIdsByLevels[itemMetadata.level - 1] = levelInfo;
-            // We need to drop some list information if this is not an item next to another
             if (args.lastProcessedItem && getRealPreviousSibling(node) != args.lastProcessedItem) {
-                // This list item is not next to the previous one. This means that there is some content in between them
-                // so we need to reset our list of list ids per level
                 resetCurrentLists(args);
             }
-            // Get the list metadata for the list that will hold this item
             var listMetadata = levelInfo.listsMetadata[itemMetadata.wordListId];
             if (!listMetadata) {
-                // Get the first item fake bullet.. This will be used later to check what is the right type of list
                 var firstFakeBullet = getFakeBulletText(node, LOOKUP_DEPTH);
-                // This is a the first item of a list.. We'll create the list metadata using the information
-                // we already have from this first item
                 listMetadata = {
                     numberOfItems: 0,
                     uniqueListId: wordConverter.nextUniqueId++,
                     firstFakeBullet: firstFakeBullet,
-                    // If the bullet we got is emtpy or not found, we ignore the list out.. this means
-                    // that this is not an item we need to convert of that the format doesn't match what
-                    // we are expecting
                     ignore: !firstFakeBullet || firstFakeBullet.length == 0,
-                    // We'll use the first fake bullet to try to figure out which type of list we create. If this list has a second
-                    // item, we'll perform a better comparasion, but for one item lists, this will be check that will determine the list type
                     tagName: getFakeBulletTagName(firstFakeBullet),
                 };
                 levelInfo.listsMetadata[itemMetadata.wordListId] = listMetadata;
                 args.lists[listMetadata.uniqueListId.toString()] = listMetadata;
             }
             else if (!listMetadata.ignore && listMetadata.numberOfItems == 1) {
-                // This is the second item we've seen for this list.. we'll compare the 2 fake bullet
-                // items we have an decide if we create ordered or unordered lists based on this.
-                // This is the best way we can do this since we cannot read the metadata that Word
-                // puts in the head of the HTML...
                 var secondFakeBullet = getFakeBulletText(node, LOOKUP_DEPTH);
                 listMetadata.tagName =
                     listMetadata.firstFakeBullet == secondFakeBullet ? 'UL' : 'OL';
             }
-            // Set the unique id to the list
             itemMetadata.uniqueListId = listMetadata.uniqueListId;
-            // Check if we need to ignore this list... we'll either know already that we need to ignore
-            // it, or we'll know it because the previous list items are not next to this one
             if (listMetadata.ignore ||
                 (listMetadata.tagName == 'OL' &&
                     listMetadata.numberOfItems > 0 &&
                     levelInfo.currentUniqueListId != itemMetadata.uniqueListId)) {
-                // We need to ignore this item... and we also need to forget about the lists that
-                // are not at the root level
                 listMetadata.ignore = true;
                 args.currentListIdsByLevels[0].currentUniqueListId = -1;
                 args.currentListIdsByLevels = args.currentListIdsByLevels.slice(0, 1);
             }
             else {
-                // This is an item we don't need to ignore... If added lists deep under this one before
-                // we'll drop their ids from the list of ids per level.. this is because this list item
-                // breaks the deeper lists.
                 if (args.currentListIdsByLevels.length > itemMetadata.level) {
                     args.currentListIdsByLevels = args.currentListIdsByLevels.slice(0, itemMetadata.level);
                 }
                 levelInfo.currentUniqueListId = itemMetadata.uniqueListId;
-                // Add the list item into the list of items to be processed
                 args.listItems.push(itemMetadata);
                 listMetadata.numberOfItems++;
             }
             args.lastProcessedItem = node;
         }
         else {
-            // Here, we know that this is not a list item, but we'll want to check if it is one "no bullet" list items...
-            // these can be created by creating a bullet and hitting delete on it it... The content will continue to be indented, but there will
-            // be no bullet and the list will continue correctly after that. Visually, it looks like the previous item has multiple lines, but
-            // the HTML generated has multiple paragraphs with the same class. We'll merge these when we find them, so the logic doesn't skips
-            // the list conversion thinking that the list items are not together...
             var last = args.lastProcessedItem;
             if (last &&
                 getRealPreviousSibling(node) == last &&
                 node.tagName == last.tagName &&
                 node.className == last.className) {
-                // Add 2 line breaks and move all the nodes to the last item
                 last.appendChild(last.ownerDocument.createElement('br'));
                 last.appendChild(last.ownerDocument.createElement('br'));
                 while (node.firstChild != null) {
                     last.appendChild(node.firstChild);
                 }
-                // Remove the item that we don't need anymore
                 node.parentNode.removeChild(node);
             }
         }
-        // Move to the next element are return true if more elements need to be processed
         args.currentIndex++;
     }
     return args.listItems.length > 0;
 }
 exports.processNodesDiscovery = processNodesDiscovery;
-/**
- * Handles the pass 2: Conversion
- * During conversion, we'll go over the elements that belong to a list that we've marked as a list to convert, and we'll perform the
- * conversion needed
- */
 function processNodeConvert(wordConverter) {
     var args = wordConverter.wordConverterArgs;
     args.currentIndex = 0;
@@ -33867,20 +31146,14 @@ function processNodeConvert(wordConverter) {
         var node = metadata.originalNode;
         var listMetadata = args.lists[metadata.uniqueListId.toString()];
         if (!listMetadata.ignore) {
-            // We have a list item that we need to convert, get or create the list
-            // that hold this item out
             var list = getOrCreateListForNode(wordConverter, node, metadata, listMetadata);
             if (list) {
-                // Clean the element out.. this call gets rid of the fake bullet and unneeded nodes
                 cleanupListIgnore(node, LOOKUP_DEPTH);
-                // Create a new list item and transfer the children
                 var li = node.ownerDocument.createElement('LI');
                 while (node.firstChild) {
                     li.appendChild(node.firstChild);
                 }
-                // Append the list item into the list
                 list.appendChild(li);
-                // Remove the node we just converted
                 node.parentNode.removeChild(node);
                 if (listMetadata.tagName == 'UL') {
                     wordConverter.numBulletsConverted++;
@@ -33895,40 +31168,19 @@ function processNodeConvert(wordConverter) {
     return wordConverter.numBulletsConverted > 0 || wordConverter.numNumberedConverted > 0;
 }
 exports.processNodeConvert = processNodeConvert;
-/**
- * Gets or creates the list (UL or OL) that holds this item out based on the
- * items content and the specified metadata
- */
 function getOrCreateListForNode(wordConverter, node, metadata, listMetadata) {
-    // First get the last list next to this node under the specified level. This code
-    // path will return the list or will create lists if needed
     var list = recurringGetOrCreateListAtNode(node, metadata.level, listMetadata);
-    // Here use the unique list ID to detect if we have the right list...
-    // it is possible to have 2 different lists next to each other with different formats, so
-    // we want to detect this an create separate lists for those cases
     var listId = CustomData_1.getObject(wordConverter.customData, list, UNIQUE_LIST_ID_CUSTOM_DATA);
-    // If we have a list with and ID, but the ID is different than the ID for this list item, this
-    // is a completely new list, so we'll append a new list for that
     if ((listId && listId != metadata.uniqueListId) || (!listId && list.firstChild)) {
         var newList = node.ownerDocument.createElement(listMetadata.tagName);
         list.parentNode.insertBefore(newList, list.nextSibling);
         list = newList;
     }
-    // Set the list id into the custom data
     CustomData_1.setObject(wordConverter.customData, list, UNIQUE_LIST_ID_CUSTOM_DATA, metadata.uniqueListId);
-    // This call will convert the list if needed to the right type of list required. This can happen
-    // on the cases where the first list item for this list is located after a deeper list. for that
-    // case, we will have created a UL for it, and we may need to convert it
     return convertListIfNeeded(wordConverter, list, listMetadata);
 }
-/**
- * Converts the list between UL and OL if needed, by using the fake bullet and
- * information already stored in the list itself
- */
 function convertListIfNeeded(wordConverter, list, listMetadata) {
-    // Check if we need to convert the list out
     if (listMetadata.tagName != roosterjs_editor_dom_1.getTagOfNode(list)) {
-        // We have the wrong list type.. convert it, set the id again and tranfer all the childs
         var newList = list.ownerDocument.createElement(listMetadata.tagName);
         CustomData_1.setObject(wordConverter.customData, newList, UNIQUE_LIST_ID_CUSTOM_DATA, CustomData_1.getObject(wordConverter.customData, list, UNIQUE_LIST_ID_CUSTOM_DATA));
         while (list.firstChild) {
@@ -33940,82 +31192,49 @@ function convertListIfNeeded(wordConverter, list, listMetadata) {
     }
     return list;
 }
-/**
- * Gets or creates the specified list
- */
 function recurringGetOrCreateListAtNode(node, level, listMetadata) {
     var parent = null;
     var possibleList;
     if (level == 1) {
-        // Root case, we'll check if the list is the previous sibling of the node
         possibleList = getRealPreviousSibling(node);
     }
     else {
-        // If we get here, we are looking for level 2 or deeper... get the upper list
-        // and check if the last element is a list
         parent = recurringGetOrCreateListAtNode(node, level - 1, null);
         possibleList = parent.lastChild;
     }
-    // Check the element that we got and verify that it is a list
-    if (possibleList && possibleList.nodeType == 1 /* Element */) {
+    if (possibleList && possibleList.nodeType == 1) {
         var tag = roosterjs_editor_dom_1.getTagOfNode(possibleList);
         if (tag == 'UL' || tag == 'OL') {
-            // We have a list.. use it
             return possibleList;
         }
     }
-    // If we get here, it means we don't have a list and we need to create one
-    // this code path will always create new lists as UL lists
     var newList = node.ownerDocument.createElement(listMetadata ? listMetadata.tagName : 'UL');
     if (level == 1) {
-        // For level 1, we'll insert the list beofre the node
         node.parentNode.insertBefore(newList, node);
     }
     else {
-        // Any level 2 or above, we insert the list as the last
-        // child of the upper level list
         parent.appendChild(newList);
     }
     return newList;
 }
-/**
- * Cleans up the node children by removing the childs marked as mso-list: Ignore.
- * This nodes hold the fake bullet information that Word puts in and when
- * conversion is happening, we want to get rid of these elements
- */
 function cleanupListIgnore(node, levels) {
     var nodesToRemove = [];
     for (var child = node.firstChild; child; child = child.nextSibling) {
-        // Clean up the item internally first if we need to based on the number of levels
-        if (child.nodeType == 1 /* Element */ && levels > 1) {
+        if (child.nodeType == 1 && levels > 1) {
             cleanupListIgnore(child, levels - 1);
         }
-        // Try to convert word comments into ignore elements if we haven't done so for this element
-        child = fixWordListComments(child, true /*removeComments*/);
-        // Check if we can remove this item out
+        child = fixWordListComments(child, true);
         if (isEmptySpan(child) || isIgnoreNode(child)) {
             nodesToRemove.push(child);
         }
     }
     nodesToRemove.forEach(function (child) { return node.removeChild(child); });
 }
-/**
- * Reads the word list metadada out of the specified node. If the node
- * is not a Word list item, it returns null.
- */
 function getListItemMetadata(node) {
-    if (node.nodeType == 1 /* Element */) {
+    if (node.nodeType == 1) {
         var listatt = getStyleValue(node, MSO_LIST_STYLE_NAME);
         if (listatt && listatt.length > 0) {
             try {
-                // Word mso-list property holds 3 space separated values in the following format: lst1 level1 lfo0
-                // Where:
-                // (0) List identified for the metadata in the <head> of the document. We cannot read the <head> metada
-                // (1) Level of the list. This also maps to the <head> metadata that we cannot read, but
-                // for almost all cases, it maps to the list identation (or level). We'll use it as the
-                // list indentation value
-                // (2) Contains a specific list identifier.
-                // Example value: "l0 level1 lfo1"
                 var listprops = listatt.split(' ');
                 if (listprops.length == 3) {
                     return {
@@ -34034,62 +31253,31 @@ function getListItemMetadata(node) {
 function isFakeBullet(fakeBullet) {
     return ['o', '·', '§', '-'].indexOf(fakeBullet) >= 0;
 }
-/** Given a fake bullet text, returns the type of list that should be used for it */
 function getFakeBulletTagName(fakeBullet) {
     return isFakeBullet(fakeBullet) ? 'UL' : 'OL';
 }
-/**
- * Finds the fake bullet text out of the specified node and returns it. For images, it will return
- * a bullet string. If not found, it returns null...
- */
 function getFakeBulletText(node, levels) {
-    // Word uses the following format for their bullets:
-    // <p style="mso-list:l1 level1 lfo2">
-    // <span style="...">
-    // <span style="mso-list:Ignore">1.<span style="...">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
-    // </span>
-    // Content here...
-    // </p>
-    //
-    // Basically, we need to locate the mso-list:Ignore SPAN, which holds either one text or image node. That
-    // text or image node will be the fake bullet we are looking for
     var result = null;
     var child = node.firstChild;
     while (!result && child) {
-        // First, check if we need to convert the Word list comments into real elements
-        child = fixWordListComments(child, true /*removeComments*/);
-        // Check if this is the node that holds the fake bullets (mso-list: Ignore)
+        child = fixWordListComments(child, true);
         if (isIgnoreNode(child)) {
-            // Yes... this is the node that holds either the text or image data
             result = child.textContent.trim();
-            // This is the case for image case
             if (result.length == 0) {
                 result = 'o';
             }
         }
-        else if (child.nodeType == 1 /* Element */ && levels > 1) {
-            // If this is an element and we are not in the last level, try to get the fake bullet
-            // out of the child
+        else if (child.nodeType == 1 && levels > 1) {
             result = getFakeBulletText(child, levels - 1);
         }
         child = child.nextSibling;
     }
     return result;
 }
-/**
- * If the specified element is a Word List comments, this code verifies and fixes
- * the markup when needed to ensure that Chrome bullet conversions work as expected
- * -----
- * We'll convert <!--[if !supportLists]--> and <!--[endif]--> comments into
- * <span style="mso-list:Ignore"></span>... Chrome has a bug where it drops the
- * styles of the span, but we'll use these comments to recreate them out
- */
 function fixWordListComments(child, removeComments) {
-    if (child.nodeType == 8 /* Comment */) {
+    if (child.nodeType == 8) {
         var value = child.data;
         if (value && value.trim().toLowerCase() == '[if !supportlists]') {
-            // We have a list ignore start, find the end.. We know is not more than
-            // 3 nodes away, so we'll optimize our checks
             var nextElement = child;
             var endComment = null;
             for (var j = 0; j < 4; j++) {
@@ -34097,7 +31285,7 @@ function fixWordListComments(child, removeComments) {
                 if (!nextElement) {
                     break;
                 }
-                if (nextElement.nodeType == 8 /* Comment */) {
+                if (nextElement.nodeType == 8) {
                     value = nextElement.data;
                     if (value && value.trim().toLowerCase() == '[endif]') {
                         endComment = nextElement;
@@ -34105,7 +31293,6 @@ function fixWordListComments(child, removeComments) {
                     }
                 }
             }
-            // if we found the end node, wrap everything out
             if (endComment) {
                 var newSpan = child.ownerDocument.createElement('span');
                 newSpan.setAttribute('style', 'mso-list: ignore');
@@ -34114,21 +31301,17 @@ function fixWordListComments(child, removeComments) {
                     nextElement = nextElement.nextSibling;
                     newSpan.appendChild(nextElement.previousSibling);
                 }
-                // Insert the element out and use that one as the current child
                 endComment.parentNode.insertBefore(newSpan, endComment);
-                // Remove the comments out if the call specified it out
                 if (removeComments) {
                     child.parentNode.removeChild(child);
                     endComment.parentNode.removeChild(endComment);
                 }
-                // Last, make sure we return the new element out instead of the comment
                 child = newSpan;
             }
         }
     }
     return child;
 }
-/** Finds the real previous sibling, ignoring emtpy text nodes */
 function getRealPreviousSibling(node) {
     var prevSibling = node;
     do {
@@ -34136,7 +31319,6 @@ function getRealPreviousSibling(node) {
     } while (prevSibling && isEmptyTextNode(prevSibling));
     return prevSibling;
 }
-/** Finds the real next sibling, ignoring empty text nodes */
 function getRealNextSibling(node) {
     var nextSibling = node;
     do {
@@ -34144,13 +31326,8 @@ function getRealNextSibling(node) {
     } while (nextSibling && isEmptyTextNode(nextSibling));
     return nextSibling;
 }
-/**
- * Checks if the specified node is marked as a mso-list: Ignore. These
- * nodes need to be ignored when a list item is converted into standard
- * HTML lists
- */
 function isIgnoreNode(node) {
-    if (node.nodeType == 1 /* Element */) {
+    if (node.nodeType == 1) {
         var listatt = getStyleValue(node, MSO_LIST_STYLE_NAME);
         if (listatt && listatt.length > 0 && listatt.trim().toLowerCase() == 'ignore') {
             return true;
@@ -34158,54 +31335,37 @@ function isIgnoreNode(node) {
     }
     return false;
 }
-/** Checks if the specified node is an empty span. */
 function isEmptySpan(node) {
     return roosterjs_editor_dom_1.getTagOfNode(node) == 'SPAN' && !node.firstChild;
 }
-/** Reads the specified style value from the node */
 function getStyleValue(node, styleName) {
-    // Word uses non-standard names for the metadata that puts in the style of the element...
-    // Most browsers will not provide the information for those unstandard values throug the node.style
-    // property, so the only reliable way to read them is to get the attribute directly and do
-    // the required parsing..
     var textStyle = node.getAttribute('style');
     if (textStyle && textStyle.length > 0 && textStyle.indexOf(styleName) >= 0) {
-        // Split all the CSS name: value pairs
         var inStyles = textStyle.split(';');
         for (var i = 0; i < inStyles.length; i++) {
-            // Split the name and value
             var nvpair = inStyles[i].split(':');
             if (nvpair.length == 2 && nvpair[0].trim() == styleName) {
                 return nvpair[1].trim();
             }
         }
     }
-    // As a backup mechanism, we'll still try to get the value from the style object
-    // Dictionary styles = (Dictionary)(object)node.Style;
-    // return (string)styles[styleName];
     return null;
 }
-/** Checks if the node is an empty text node that can be ignored */
 function isEmptyTextNode(node) {
-    // No node is empty
     if (!node) {
         return true;
     }
-    // Empty text node is empty
-    if (node.nodeType == 3 /* Text */) {
+    if (node.nodeType == 3) {
         var value = node.nodeValue;
         value = value.replace(LINE_BREAKS, '');
         return value.trim().length == 0;
     }
-    // Span or Font with an empty child node is empty
     var tagName = roosterjs_editor_dom_1.getTagOfNode(node);
     if (node.firstChild == node.lastChild && (tagName == 'SPAN' || tagName == 'FONT')) {
         return isEmptyTextNode(node.firstChild);
     }
-    // If not found, then this is not empty
     return false;
 }
-/** Resets the list */
 function resetCurrentLists(args) {
     for (var i = 0; i < args.currentListIdsByLevels.length; i++) {
         var ll = args.currentListIdsByLevels[i];
@@ -34229,7 +31389,6 @@ function resetCurrentLists(args) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var CustomData_1 = __webpack_require__(/*! ./CustomData */ "./packages/roosterjs-editor-plugins/lib/Paste/wordConverter/CustomData.ts");
-/** create an empty WordConverter */
 function createWordConverter() {
     return {
         nextUniqueId: 1,
@@ -34258,12 +31417,8 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
 var TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
 var HANDLE_WIDTH = 6;
 var CONTAINER_HTML = "<div style=\"position: fixed; cursor: col-resize; width: " + HANDLE_WIDTH + "px; border: solid 0 #C6C6C6;\"></div>";
-var TableResize = /** @class */ (function () {
-    /**
-     * Constructor TableResize plugin
-     * @param preserved A deprecated parameter used for compatibility with old code
-     */
-    function TableResize(preserved) {
+var TableResize = (function () {
+    function TableResize() {
         var _this = this;
         this.pageX = -1;
         this.onMouseOver = function (e) {
@@ -34305,7 +31460,7 @@ var TableResize = /** @class */ (function () {
                 _this.editor.addUndoSnapshot(function (start, end) {
                     _this.setTableColumnWidth(newWidth_1 + 'px');
                     _this.editor.select(start, end);
-                }, "Format" /* Format */);
+                }, "Format");
             }
             _this.pageX = -1;
             _this.calcAndShowHandle();
@@ -34313,37 +31468,23 @@ var TableResize = /** @class */ (function () {
             _this.cancelEvent(e);
         };
     }
-    /**
-     * Initialize this plugin. This should only be called from Editor
-     * @param editor Editor instance
-     */
     TableResize.prototype.initialize = function (editor) {
         this.editor = editor;
         this.onMouseOverDisposer = this.editor.addDomEventHandler('mouseover', this.onMouseOver);
     };
-    /**
-     * Get a friendly name of  this plugin
-     */
     TableResize.prototype.getName = function () {
-        return 'tableresize';
+        return 'TableResize';
     };
-    /**
-     * Dispose this plugin
-     */
     TableResize.prototype.dispose = function () {
         this.detachMouseEvents();
         this.editor = null;
         this.onMouseOverDisposer();
     };
-    /**
-     * Handle events triggered from editor
-     * @param event PluginEvent object
-     */
     TableResize.prototype.onPluginEvent = function (event) {
         if (this.td &&
-            (event.eventType == 0 /* KeyDown */ ||
-                event.eventType == 6 /* ContentChanged */ ||
-                (event.eventType == 4 /* MouseDown */ && !this.clickIntoCurrentTd(event)))) {
+            (event.eventType == 0 ||
+                event.eventType == 6 ||
+                (event.eventType == 4 && !this.clickIntoCurrentTd(event)))) {
             this.td = null;
             this.calcAndShowHandle();
         }
@@ -34352,7 +31493,7 @@ var TableResize = /** @class */ (function () {
         var mouseEvent = event.rawEvent;
         var target = mouseEvent.target;
         return (target instanceof Node &&
-            roosterjs_editor_dom_1.contains(this.td, target, true /*treatSameNodeAsContain*/));
+            roosterjs_editor_dom_1.contains(this.td, target, true));
     };
     TableResize.prototype.calcAndShowHandle = function () {
         if (this.td) {
@@ -34390,7 +31531,7 @@ var TableResize = /** @class */ (function () {
             var document = _this.editor.getDocument();
             var handle = roosterjs_editor_dom_1.fromHtml(CONTAINER_HTML, document)[0];
             _this.editor.insertNode(handle, {
-                position: 3 /* Outside */,
+                position: 3,
                 updateCursor: false,
                 replaceSelection: false,
                 insertOnNewLine: false,
@@ -34456,64 +31597,41 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var WATERMARK_SPAN_ID = '_rooster_watermarkSpan';
 var WATERMARK_REGEX = new RegExp("<span[^>]*id=['\"]?" + WATERMARK_SPAN_ID + "['\"]?[^>]*>[^<]*</span>", 'ig');
-/**
- * A watermark plugin to manage watermark string for roosterjs
- */
-var Watermark = /** @class */ (function () {
-    /**
-     * Create an instance of Watermark plugin
-     * @param watermark The watermark string
-     */
+var Watermark = (function () {
     function Watermark(watermark, format) {
         var _this = this;
         this.watermark = watermark;
         this.format = format;
         this.handleWatermark = function () {
-            _this.showHideWatermark(false /*ignoreCachedState*/);
+            _this.showHideWatermark(false);
         };
         this.format = this.format || {
             fontSize: '14px',
             textColor: '#aaa',
         };
     }
-    /**
-     * Get a friendly name of  this plugin
-     */
     Watermark.prototype.getName = function () {
-        return 'watermark';
+        return 'Watermark';
     };
-    /**
-     * Initialize this plugin. This should only be called from Editor
-     * @param editor Editor instance
-     */
     Watermark.prototype.initialize = function (editor) {
         this.editor = editor;
-        this.showHideWatermark(false /*ignoreCachedState*/);
-        this.focusDisposer = this.editor.addDomEventHandler('focus', this.handleWatermark);
-        this.blurDisposer = this.editor.addDomEventHandler('blur', this.handleWatermark);
+        this.showHideWatermark(false);
+        this.disposer = this.editor.addDomEventHandler({
+            focus: this.handleWatermark,
+            blur: this.handleWatermark,
+        });
     };
-    /**
-     * Dispose this plugin
-     */
     Watermark.prototype.dispose = function () {
-        this.focusDisposer();
-        this.blurDisposer();
-        this.focusDisposer = null;
-        this.blurDisposer = null;
+        this.disposer();
+        this.disposer = null;
         this.hideWatermark();
         this.editor = null;
     };
-    /**
-     * Handle events triggered from editor
-     * @param event PluginEvent object
-     */
     Watermark.prototype.onPluginEvent = function (event) {
-        if (event.eventType == 6 /* ContentChanged */) {
-            // When content is changed from setContent() API, current cached state
-            // may not be accurate, so we ignore it
-            this.showHideWatermark(event.source == "SetContent" /* SetContent */);
+        if (event.eventType == 6) {
+            this.showHideWatermark(event.source == "SetContent");
         }
-        else if (event.eventType == 7 /* ExtractContent */ && this.isWatermarkShowing) {
+        else if (event.eventType == 7 && this.isWatermarkShowing) {
             this.removeWartermarkFromHtml(event);
         }
     };
@@ -34524,7 +31642,7 @@ var Watermark = /** @class */ (function () {
         }
         else if (!this.editor.hasFocus() &&
             (ignoreCachedState || !this.isWatermarkShowing) &&
-            this.editor.isEmpty(true /*trim*/)) {
+            this.editor.isEmpty(true)) {
             this.showWatermark();
         }
     };
@@ -34533,7 +31651,7 @@ var Watermark = /** @class */ (function () {
         var watermarkNode = roosterjs_editor_dom_1.wrap(document.createTextNode(this.watermark), "<span id=\"" + WATERMARK_SPAN_ID + "\"></span>");
         roosterjs_editor_dom_1.applyFormat(watermarkNode, this.format);
         this.editor.insertNode(watermarkNode, {
-            position: 0 /* Begin */,
+            position: 0,
             updateCursor: false,
             replaceSelection: false,
             insertOnNewLine: false,
@@ -34569,8 +31687,6 @@ exports.default = Watermark;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DefaultShortcut_1 = __webpack_require__(/*! ./DefaultShortcut/DefaultShortcut */ "./packages/roosterjs-editor-plugins/lib/DefaultShortcut/DefaultShortcut.ts");
-exports.DefaultShortcut = DefaultShortcut_1.default;
 var HyperLink_1 = __webpack_require__(/*! ./HyperLink/HyperLink */ "./packages/roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts");
 exports.HyperLink = HyperLink_1.default;
 var ContentEdit_1 = __webpack_require__(/*! ./ContentEdit/ContentEdit */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/ContentEdit.ts");
@@ -34622,7 +31738,7 @@ var cloneObject_1 = __webpack_require__(/*! ../utils/cloneObject */ "./packages/
 var getInheritableStyles_1 = __webpack_require__(/*! ../utils/getInheritableStyles */ "./packages/roosterjs-html-sanitizer/lib/utils/getInheritableStyles.ts");
 var htmlToDom_1 = __webpack_require__(/*! ../utils/htmlToDom */ "./packages/roosterjs-html-sanitizer/lib/utils/htmlToDom.ts");
 var getAllowedValues_1 = __webpack_require__(/*! ../utils/getAllowedValues */ "./packages/roosterjs-html-sanitizer/lib/utils/getAllowedValues.ts");
-var HtmlSanitizer = /** @class */ (function () {
+var HtmlSanitizer = (function () {
     function HtmlSanitizer(options) {
         options = options || {};
         this.elementCallbacks = cloneObject_1.default(options.elementCallbacks);
@@ -34634,22 +31750,12 @@ var HtmlSanitizer = /** @class */ (function () {
         this.additionalGlobalStyleNodes = options.additionalGlobalStyleNodes || [];
         this.allowPreserveWhiteSpace = options.allowPreserveWhiteSpace;
     }
-    /**
-     * Convert global CSS to inline CSS if any
-     * @param html HTML source
-     * @param additionalStyleNodes (Optional) additional HTML STYLE elements used as global CSS
-     */
     HtmlSanitizer.convertInlineCss = function (html, additionalStyleNodes) {
         var sanitizer = new HtmlSanitizer({
             additionalGlobalStyleNodes: additionalStyleNodes,
         });
-        return sanitizer.exec(html, true /*convertCssOnly*/);
+        return sanitizer.exec(html, true);
     };
-    /**
-     * Sanitize HTML string, remove any unuseful HTML node/attribute/CSS.
-     * @param html HTML source string
-     * @param options Options used for this sanitizing process
-     */
     HtmlSanitizer.sanitizeHtml = function (html, options) {
         options = options || {};
         var sanitizer = new HtmlSanitizer(options);
@@ -34658,17 +31764,6 @@ var HtmlSanitizer = /** @class */ (function () {
             : options.currentElementOrStyle;
         return sanitizer.exec(html, options.convertCssOnly, options.preserveFragmentOnly, currentStyles);
     };
-    /**
-     * Sanitize HTML string
-     * This function will do the following work:
-     * 1. Convert global CSS into inline CSS
-     * 2. Remove dangerous HTML tags and attributes
-     * 3. Remove useless CSS properties
-     * @param html The input HTML
-     * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
-     * @param preserveFragmentOnly If set to true, only preserve the html content between <!--StartFragment--> and <!--Endfragment-->
-     * @param currentStyles Current inheritable CSS styles
-     */
     HtmlSanitizer.prototype.exec = function (html, convertCssOnly, preserveFragmentOnly, currentStyles) {
         var doc = htmlToDom_1.default(html, preserveFragmentOnly);
         if (doc) {
@@ -34695,22 +31790,17 @@ var HtmlSanitizer = /** @class */ (function () {
         for (var _i = 0, styleSheets_1 = styleSheets; _i < styleSheets_1.length; _i++) {
             var styleSheet = styleSheets_1[_i];
             var _loop_1 = function (j) {
-                // Skip any none-style rule, i.e. @page
                 var styleRule = styleSheet.cssRules[j];
                 var text = styleRule && styleRule.style ? styleRule.style.cssText : null;
                 if (styleRule.type != CSSRule.STYLE_RULE || !text || !styleRule.selectorText) {
                     return "continue";
                 }
-                // Make sure the selector is not empty
                 for (var _i = 0, _a = styleRule.selectorText.split(','); _i < _a.length; _i++) {
                     var selector = _a[_i];
                     if (!selector || !selector.trim() || selector.indexOf(':') >= 0) {
                         continue;
                     }
                     var nodes = toArray(rootNode.querySelectorAll(selector));
-                    // Always put existing styles after so that they have higher priority
-                    // Which means if both global style and inline style apply to the same element,
-                    // inline style will have higher priority
                     nodes.forEach(function (node) {
                         return node.setAttribute('style', text + (node.getAttribute('style') || ''));
                     });
@@ -34746,7 +31836,6 @@ var HtmlSanitizer = /** @class */ (function () {
             var thisStyle = cloneObject_1.default(currentStyle);
             this.processAttributes(element, context);
             this.processCss(element, tag, thisStyle, context);
-            // Special handling for PRE tag, need to preserve \r\n inside PRE
             if (tag == 'PRE') {
                 thisStyle.insidePRE = 'true';
             }
@@ -34983,17 +32072,11 @@ function unique(array) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-// Inheritable CSS properties
-// Ref: https://www.w3.org/TR/CSS21/propidx.html
 var INHERITABLE_PROPERTIES = ('border-spacing,caption-side,color,' +
     'cursor,direction,empty-cells,font-family,font-size,font-style,font-variant,font-weight,' +
     'font,letter-spacing,line-height,list-style-image,list-style-position,list-style-type,' +
     'list-style,orphans,quotes,text-align,text-indent,text-transform,visibility,white-space,' +
     'widows,word-spacing').split(',');
-/**
- * Get inheritable CSS style values from the given element
- * @param element The element to get style from
- */
 function getInheritableStyles(element) {
     var win = element && element.ownerDocument && element.ownerDocument.defaultView;
     var styles = win && win.getComputedStyle(element);
@@ -35018,18 +32101,10 @@ exports.default = getInheritableStyles;
 Object.defineProperty(exports, "__esModule", { value: true });
 var START_FRAGMENT = '<!--StartFragment-->';
 var END_FRAGMENT = '<!--EndFragment-->';
-/**
- * Build DOM tree from the given HTML string
- * @param html Source HTML string
- * @param preserveFragmentOnly If there is fragment markup (<!--StartFragment--> and <!--EndFragment-->),
- * only preserve content between these markups
- * @param fragmentHandler An optional callback to do customized fragment handling
- */
 function htmlToDom(html, preserveFragmentOnly, fragmentHandler) {
     var parser = new DOMParser();
     var doc = parser.parseFromString(html || '', 'text/html');
     if (doc && doc.body && doc.body.firstChild) {
-        // 1. Filter out html code outside of Fragment tags if need
         if (preserveFragmentOnly) {
             (fragmentHandler || defaultFragmentTrimmer)(doc, html);
         }
@@ -35044,11 +32119,6 @@ function defaultFragmentTrimmer(doc, sourceHtml) {
     var html = splitWithFragment(sourceHtml)[0];
     doc.body.innerHTML = html;
 }
-/**
- * Split the HTML string using its fragment info
- * @param html Source html string
- * @returns [String within fragment, String before fragment, String after fragment]
- */
 function splitWithFragment(html) {
     var startIndex = html.indexOf(START_FRAGMENT);
     var endIndex = html.lastIndexOf(END_FRAGMENT);
@@ -35076,19 +32146,6 @@ exports.splitWithFragment = splitWithFragment;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var BEGIN_TAG = 'RoosterJsImageResizingBegin';
@@ -35099,16 +32156,7 @@ var BACKSPACE_KEYCODE = 8;
 var SHIFT_KEYCODE = 16;
 var CTRL_KEYCODE = 17;
 var ALT_KEYCODE = 18;
-var ImageResize = /** @class */ (function () {
-    /**
-     * Create a new instance of ImageResize
-     * @param minWidth Minimum width of image when resize in pixel, default value is 10
-     * @param minHeight Minimum height of image when resize in pixel, default value is 10
-     * @param selectionBorderColor Color of resize border and handles, default value is #DB626C
-     * @param forcePreserveRatio Whether always preserve width/height ratio when resize, default value is false
-     * @param resizableImageSelector Selector for picking which image is resizable (e.g. for all images not placeholders), note
-     * that the tag must be IMG regardless what the selector is
-     */
+var ImageResize = (function () {
     function ImageResize(minWidth, minHeight, selectionBorderColor, forcePreserveRatio, resizableImageSelector) {
         if (minWidth === void 0) { minWidth = 10; }
         if (minHeight === void 0) { minHeight = 10; }
@@ -35130,8 +32178,8 @@ var ImageResize = /** @class */ (function () {
                 _this.startHeight = img.clientHeight;
                 _this.editor.addUndoSnapshot();
                 var document_1 = _this.editor.getDocument();
-                document_1.addEventListener('mousemove', _this.doResize, true /*useCapture*/);
-                document_1.addEventListener('mouseup', _this.finishResize, true /*useCapture*/);
+                document_1.addEventListener('mousemove', _this.doResize, true);
+                document_1.addEventListener('mouseup', _this.finishResize, true);
                 _this.direction = (e.srcElement || e.target).style.cursor;
             }
             _this.stopEvent(e);
@@ -35165,8 +32213,8 @@ var ImageResize = /** @class */ (function () {
             var img = _this.getSelectedImage();
             if (_this.editor && img) {
                 var document_2 = _this.editor.getDocument();
-                document_2.removeEventListener('mousemove', _this.doResize, true /*useCapture*/);
-                document_2.removeEventListener('mouseup', _this.finishResize, true /*useCapture*/);
+                document_2.removeEventListener('mousemove', _this.doResize, true);
+                document_2.removeEventListener('mouseup', _this.finishResize, true);
                 var width = img.clientWidth;
                 var height = img.clientHeight;
                 img.style.width = width + 'px';
@@ -35178,7 +32226,7 @@ var ImageResize = /** @class */ (function () {
             }
             _this.direction = null;
             _this.editor.addUndoSnapshot();
-            _this.editor.triggerContentChangedEvent("ImageResize" /* ImageResize */);
+            _this.editor.triggerContentChangedEvent("ImageResize");
             _this.stopEvent(e);
         };
         this.stopEvent = function (e) {
@@ -35190,10 +32238,10 @@ var ImageResize = /** @class */ (function () {
             var previous = div && div.previousSibling;
             var next = div && div.nextSibling;
             if (previous &&
-                previous.nodeType == 8 /* Comment */ &&
+                previous.nodeType == 8 &&
                 previous.nodeValue == BEGIN_TAG &&
                 next &&
-                next.nodeType == 8 /* Comment */ &&
+                next.nodeType == 8 &&
                 next.nodeValue == END_TAG) {
                 div.parentNode.insertBefore(img, div);
                 _this.removeResizeDiv(div);
@@ -35208,41 +32256,27 @@ var ImageResize = /** @class */ (function () {
             }
         };
     }
-    /**
-     * Get a friendly name of  this plugin
-     */
     ImageResize.prototype.getName = function () {
-        return 'imageresize';
+        return 'ImageResize';
     };
-    /**
-     * Initialize this plugin. This should only be called from Editor
-     * @param editor Editor instance
-     */
     ImageResize.prototype.initialize = function (editor) {
         this.editor = editor;
-        this.disposers = [
-            editor.addDomEventHandler('dragstart', this.onDragStart),
-            editor.addDomEventHandler('blur', this.onBlur),
-        ];
+        this.disposer = editor.addDomEventHandler({
+            dragstart: this.onDragStart,
+            blur: this.onBlur,
+        });
     };
-    /**
-     * Dispose this plugin
-     */
     ImageResize.prototype.dispose = function () {
         if (this.resizeDiv) {
             this.hideResizeHandle();
         }
-        this.disposers.forEach(function (disposer) { return disposer(); });
-        this.disposers = null;
+        this.disposer();
+        this.disposer = null;
         this.editor = null;
     };
-    /**
-     * Handle events triggered from editor
-     * @param event PluginEvent object
-     */
     ImageResize.prototype.onPluginEvent = function (e) {
         var _this = this;
-        if (e.eventType == 4 /* MouseDown */) {
+        if (e.eventType == 4) {
             var event_1 = e.rawEvent;
             var target = (event_1.srcElement || event_1.target);
             if (roosterjs_editor_dom_1.getTagOfNode(target) == 'IMG') {
@@ -35266,7 +32300,7 @@ var ImageResize = /** @class */ (function () {
                 this.hideResizeHandle();
             }
         }
-        else if (e.eventType == 0 /* KeyDown */ && this.resizeDiv) {
+        else if (e.eventType == 0 && this.resizeDiv) {
             var event_2 = e.rawEvent;
             if (event_2.which == DELETE_KEYCODE || event_2.which == BACKSPACE_KEYCODE) {
                 this.editor.addUndoSnapshot(function () {
@@ -35279,32 +32313,24 @@ var ImageResize = /** @class */ (function () {
             else if (event_2.which != SHIFT_KEYCODE &&
                 event_2.which != CTRL_KEYCODE &&
                 event_2.which != ALT_KEYCODE) {
-                this.hideResizeHandle();
+                this.hideResizeHandle(true);
             }
         }
-        else if (e.eventType == 6 /* ContentChanged */ &&
-            e.source != "ImageResize" /* ImageResize */) {
+        else if (e.eventType == 6 &&
+            e.source != "ImageResize") {
             this.editor.queryElements('img', this.removeResizeDivIfAny);
             this.resizeDiv = null;
         }
-        else if (e.eventType == 7 /* ExtractContent */) {
+        else if (e.eventType == 7) {
             var event_3 = e;
             event_3.content = this.extractHtml(event_3.content);
         }
     };
-    /**
-     * Select a given IMG element, show the resize handle
-     * @param img The IMG element to select
-     */
     ImageResize.prototype.showResizeHandle = function (img) {
         this.resizeDiv = this.createResizeDiv(img);
         img.contentEditable = 'false';
-        this.editor.select(this.resizeDiv, -3 /* After */);
+        this.editor.select(this.resizeDiv, -3);
     };
-    /**
-     * Hide resize handle of current selected image
-     * @param selectImageAfterUnSelect Optional, when set to true, select the image element after hide the resize handle
-     */
     ImageResize.prototype.hideResizeHandle = function (selectImageAfterUnSelect) {
         var img = this.getSelectedImage();
         var parent = this.resizeDiv && this.resizeDiv.parentNode;
@@ -35312,7 +32338,7 @@ var ImageResize = /** @class */ (function () {
             if (img) {
                 img.removeAttribute('contentEditable');
                 var referenceNode = this.resizeDiv.previousSibling &&
-                    this.resizeDiv.previousSibling.nodeType == 8 /* Comment */
+                    this.resizeDiv.previousSibling.nodeType == 8
                     ? this.resizeDiv.previousSibling
                     : this.resizeDiv;
                 parent.insertBefore(img, referenceNode);
@@ -35320,7 +32346,7 @@ var ImageResize = /** @class */ (function () {
                     this.editor.select(img);
                 }
                 else {
-                    this.editor.select(img, -3 /* After */);
+                    this.editor.select(img, -3);
                 }
             }
             this.removeResizeDiv(this.resizeDiv);
@@ -35377,7 +32403,7 @@ var ImageResize = /** @class */ (function () {
         var _this = this;
         if (this.editor && this.editor.contains(resizeDiv)) {
             [resizeDiv.previousSibling, resizeDiv.nextSibling].forEach(function (comment) {
-                if (comment && comment.nodeType == 8 /* Comment */) {
+                if (comment && comment.nodeType == 8) {
                     _this.editor.deleteNode(comment);
                 }
             });
@@ -35405,26 +32431,6 @@ var ImageResize = /** @class */ (function () {
     return ImageResize;
 }());
 exports.default = ImageResize;
-/**
- * @deprecated Use ImageResize instead
- */
-var ImageResizePlugin = /** @class */ (function (_super) {
-    __extends(ImageResizePlugin, _super);
-    /**
-     * @deprecated Use ImageResize instead
-     */
-    function ImageResizePlugin(minWidth, minHeight, selectionBorderColor, forcePreserveRatio) {
-        if (minWidth === void 0) { minWidth = 10; }
-        if (minHeight === void 0) { minHeight = 10; }
-        if (selectionBorderColor === void 0) { selectionBorderColor = '#DB626C'; }
-        if (forcePreserveRatio === void 0) { forcePreserveRatio = false; }
-        var _this = _super.call(this, minWidth, minHeight, selectionBorderColor, forcePreserveRatio) || this;
-        console.warn('ImageResizePlugin class is deprecated. Use ImageResize class instead');
-        return _this;
-    }
-    return ImageResizePlugin;
-}(ImageResize));
-exports.ImageResizePlugin = ImageResizePlugin;
 
 
 /***/ }),
@@ -35441,7 +32447,6 @@ exports.ImageResizePlugin = ImageResizePlugin;
 Object.defineProperty(exports, "__esModule", { value: true });
 var ImageResize_1 = __webpack_require__(/*! ./ImageResize */ "./packages/roosterjs-plugin-image-resize/lib/ImageResize.ts");
 exports.ImageResize = ImageResize_1.default;
-exports.ImageResizePlugin = ImageResize_1.ImageResizePlugin;
 
 
 /***/ }),
@@ -35512,7 +32517,7 @@ var SidePane_1 = __webpack_require__(/*! ./sidePane/SidePane */ "./publish/sampl
 var TitleBar_1 = __webpack_require__(/*! ./titleBar/TitleBar */ "./publish/samplesite/scripts/controls/titleBar/TitleBar.tsx");
 var plugins_1 = __webpack_require__(/*! ./plugins */ "./publish/samplesite/scripts/controls/plugins.ts");
 var styles = __webpack_require__(/*! ./MainPane.scss */ "./publish/samplesite/scripts/controls/MainPane.scss");
-var MainPane = /** @class */ (function (_super) {
+var MainPane = (function (_super) {
     __extends(MainPane, _super);
     function MainPane() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -35585,7 +32590,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-var MainPaneBase = /** @class */ (function (_super) {
+var MainPaneBase = (function (_super) {
     __extends(MainPaneBase, _super);
     function MainPaneBase(props) {
         var _this = _super.call(this, props) || this;
@@ -35662,7 +32667,7 @@ var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "
 var roosterjs_editor_plugins_1 = __webpack_require__(/*! roosterjs-editor-plugins */ "./packages/roosterjs-editor-plugins/lib/index.ts");
 var styles = __webpack_require__(/*! ./Editor.scss */ "./publish/samplesite/scripts/controls/editor/Editor.scss");
 var assign = __webpack_require__(/*! object-assign */ "./node_modules/object-assign/index.js");
-var Editor = /** @class */ (function (_super) {
+var Editor = (function (_super) {
     __extends(Editor, _super);
     function Editor(props) {
         var _this = _super.call(this, props) || this;
@@ -35868,7 +32873,7 @@ var RibbonButton_1 = __webpack_require__(/*! ./RibbonButton */ "./publish/sample
 var ribbonButtons_1 = __webpack_require__(/*! ./ribbonButtons */ "./publish/samplesite/scripts/controls/ribbon/ribbonButtons.ts");
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var styles = __webpack_require__(/*! ./Ribbon.scss */ "./publish/samplesite/scripts/controls/ribbon/Ribbon.scss");
-var Ribbon = /** @class */ (function (_super) {
+var Ribbon = (function (_super) {
     __extends(Ribbon, _super);
     function Ribbon() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -35949,12 +32954,34 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var MainPaneBase_1 = __webpack_require__(/*! ../MainPaneBase */ "./publish/samplesite/scripts/controls/MainPaneBase.tsx");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var styles = __webpack_require__(/*! ./RibbonButton.scss */ "./publish/samplesite/scripts/controls/ribbon/RibbonButton.scss");
-var RibbonButton = /** @class */ (function (_super) {
+var currentPusingButton;
+var RibbonButton = (function (_super) {
     __extends(RibbonButton, _super);
     function RibbonButton(props) {
         var _this = _super.call(this, props) || this;
-        _this.onClick = function (value) {
+        _this.onMouseDown = function (e) {
+            if (e.button == 0) {
+                currentPusingButton = _this.props.button;
+                e.preventDefault();
+            }
+        };
+        _this.onMouseUp = function (e) {
+            if (e.button == 0 &&
+                currentPusingButton == _this.props.button &&
+                !_this.props.button.dropDownItems) {
+                _this.onExecute();
+            }
+            currentPusingButton = null;
+        };
+        _this.onMouseClick = function (e) {
+            if ((roosterjs_editor_dom_1.Browser.isIE && e.nativeEvent.x < 0) ||
+                (!roosterjs_editor_dom_1.Browser.isIE && e.detail == 0)) {
+                _this.onExecute();
+            }
+        };
+        _this.onExecute = function (value) {
             var _a = _this.props, button = _a.button, plugin = _a.plugin;
             var editor = plugin.getEditor();
             _this.onHideDropDown();
@@ -35984,7 +33011,6 @@ var RibbonButton = /** @class */ (function (_super) {
         return _this;
     }
     RibbonButton.prototype.render = function () {
-        var _this = this;
         var button = this.props.button;
         var editor = this.props.plugin.getEditor();
         var className = styles.button;
@@ -35995,7 +33021,7 @@ var RibbonButton = /** @class */ (function (_super) {
             className += ' ' + styles.checked;
         }
         return (React.createElement("span", { className: styles.dropDownButton },
-            React.createElement("button", { onClick: function () { return (button.dropDownItems ? _this.onShowDropDown() : _this.onClick()); }, className: className },
+            React.createElement("button", { onClick: button.dropDownItems ? this.onShowDropDown : this.onMouseClick, className: className, onMouseDown: this.onMouseDown, onMouseUp: this.onMouseUp },
                 React.createElement("img", { src: button.image, width: 32, height: 32, title: button.title })),
             button.dropDownItems &&
                 this.state.isDropDownShown &&
@@ -36003,8 +33029,8 @@ var RibbonButton = /** @class */ (function (_super) {
     };
     RibbonButton.prototype.renderDropDownItems = function (items, renderer) {
         var _this = this;
-        return (React.createElement("div", { ref: function (ref) { return (_this.dropDown = ref); }, className: styles.dropDown }, Object.keys(items).map(function (key) {
-            return renderer ? (React.createElement("div", { key: key }, renderer(_this.props.plugin.getEditor(), _this.onHideDropDown, key, items[key]))) : (React.createElement("div", { key: key, onClick: function () { return _this.onClick(key); }, className: styles.dropDownItem }, items[key]));
+        return (React.createElement("div", { className: styles.dropDown }, Object.keys(items).map(function (key) {
+            return renderer ? (React.createElement("div", { key: key }, renderer(_this.props.plugin.getEditor(), _this.onHideDropDown, key, items[key]))) : (React.createElement("div", { key: key, onClick: function () { return _this.onExecute(key); }, className: styles.dropDownItem }, items[key]));
         })));
     };
     return RibbonButton;
@@ -36024,7 +33050,7 @@ exports.default = RibbonButton;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var RibbonPlugin = /** @class */ (function () {
+var RibbonPlugin = (function () {
     function RibbonPlugin() {
         var _this = this;
         this.refCallback = function (ref) {
@@ -36045,9 +33071,9 @@ var RibbonPlugin = /** @class */ (function () {
     };
     RibbonPlugin.prototype.onPluginEvent = function (event) {
         if (this.ribbon &&
-            (event.eventType == 2 /* KeyUp */ ||
-                event.eventType == 5 /* MouseUp */ ||
-                event.eventType == 6 /* ContentChanged */)) {
+            (event.eventType == 2 ||
+                event.eventType == 5 ||
+                event.eventType == 6)) {
             this.ribbon.forceUpdate();
         }
     };
@@ -36103,7 +33129,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var styles = __webpack_require__(/*! ./InsertLink.scss */ "./publish/samplesite/scripts/controls/ribbon/InsertLink.scss");
-var InsertLink = /** @class */ (function (_super) {
+var InsertLink = (function (_super) {
     __extends(InsertLink, _super);
     function InsertLink() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -36179,7 +33205,7 @@ var TABLE_FORMAT = {
     grid: createTableFormat('#D8D8D8', '#FFF', '#ABABAB', '#ABABAB', '#ABABAB'),
     clear: createTableFormat('#FFF', '#FFF'),
 };
-var TableOptions = /** @class */ (function (_super) {
+var TableOptions = (function (_super) {
     __extends(TableOptions, _super);
     function TableOptions() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -36216,11 +33242,11 @@ var TableOptions = /** @class */ (function (_super) {
                     React.createElement("tr", null,
                         React.createElement("td", null, "Columns:"),
                         React.createElement("td", null,
-                            React.createElement("input", { type: 'text', ref: this.cols }))),
+                            React.createElement("input", { type: "text", ref: this.cols }))),
                     React.createElement("tr", null,
                         React.createElement("td", null, "Rows:"),
                         React.createElement("td", null,
-                            React.createElement("input", { type: 'text', ref: this.rows }))),
+                            React.createElement("input", { type: "text", ref: this.rows }))),
                     React.createElement("tr", null,
                         React.createElement("td", { colSpan: 2, className: styles.buttonRow },
                             React.createElement("button", { onClick: this.onInsertTable, className: styles.button }, "Insert"))),
@@ -36229,28 +33255,28 @@ var TableOptions = /** @class */ (function (_super) {
                     React.createElement("tr", null,
                         React.createElement("td", null, "Insert"),
                         React.createElement("td", null,
-                            this.renderEditTableButton('Above', 0 /* InsertAbove */),
-                            this.renderEditTableButton('Below', 1 /* InsertBelow */),
-                            this.renderEditTableButton('Left', 2 /* InsertLeft */),
-                            this.renderEditTableButton('Right', 3 /* InsertRight */))),
+                            this.renderEditTableButton('Above', 0),
+                            this.renderEditTableButton('Below', 1),
+                            this.renderEditTableButton('Left', 2),
+                            this.renderEditTableButton('Right', 3))),
                     React.createElement("tr", null,
                         React.createElement("td", null, "Delete"),
                         React.createElement("td", null,
-                            this.renderEditTableButton('Table', 4 /* DeleteTable */),
-                            this.renderEditTableButton('Column', 5 /* DeleteColumn */),
-                            this.renderEditTableButton('Row', 6 /* DeleteRow */))),
+                            this.renderEditTableButton('Table', 4),
+                            this.renderEditTableButton('Column', 5),
+                            this.renderEditTableButton('Row', 6))),
                     React.createElement("tr", null,
                         React.createElement("td", null, "Merge"),
                         React.createElement("td", null,
-                            this.renderEditTableButton('Above', 7 /* MergeAbove */),
-                            this.renderEditTableButton('Below', 8 /* MergeBelow */),
-                            this.renderEditTableButton('Left', 9 /* MergeLeft */),
-                            this.renderEditTableButton('Right', 10 /* MergeRight */))),
+                            this.renderEditTableButton('Above', 7),
+                            this.renderEditTableButton('Below', 8),
+                            this.renderEditTableButton('Left', 9),
+                            this.renderEditTableButton('Right', 10))),
                     React.createElement("tr", null,
                         React.createElement("td", null, "Split"),
                         React.createElement("td", null,
-                            this.renderEditTableButton('Horizontally', 11 /* SplitHorizontally */),
-                            this.renderEditTableButton('Vertically', 12 /* SplitVertically */))),
+                            this.renderEditTableButton('Horizontally', 11),
+                            this.renderEditTableButton('Vertically', 12))),
                     React.createElement("tr", null,
                         React.createElement("th", { colSpan: 2 }, "Format Table")),
                     React.createElement("tr", null,
@@ -36291,7 +33317,7 @@ var TableOptions = /** @class */ (function (_super) {
         return (React.createElement("tr", null,
             React.createElement("td", { className: styles.label }, text),
             React.createElement("td", null,
-                React.createElement("input", { type: 'text', ref: ref }))));
+                React.createElement("input", { type: "text", ref: ref }))));
     };
     return TableOptions;
 }(React.Component));
@@ -36419,12 +33445,12 @@ var buttons = {
     outdent: {
         title: 'Decrease indent',
         image: __webpack_require__(/*! ./svg/outdent.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/outdent.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setIndentation(editor, 1 /* Decrease */); },
+        onClick: function (editor) { return roosterjs_editor_api_1.setIndentation(editor, 1); },
     },
     indent: {
         title: 'Increase indent',
         image: __webpack_require__(/*! ./svg/indent.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/indent.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setIndentation(editor, 0 /* Increase */); },
+        onClick: function (editor) { return roosterjs_editor_api_1.setIndentation(editor, 0); },
     },
     blockQuote: {
         title: 'Quote',
@@ -36435,17 +33461,17 @@ var buttons = {
     alignLeft: {
         title: 'Align left',
         image: __webpack_require__(/*! ./svg/alignleft.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/alignleft.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setAlignment(editor, 0 /* Left */); },
+        onClick: function (editor) { return roosterjs_editor_api_1.setAlignment(editor, 0); },
     },
     alignCenter: {
         title: 'Align center',
         image: __webpack_require__(/*! ./svg/aligncenter.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/aligncenter.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setAlignment(editor, 1 /* Center */); },
+        onClick: function (editor) { return roosterjs_editor_api_1.setAlignment(editor, 1); },
     },
     alignRight: {
         title: 'Align right',
         image: __webpack_require__(/*! ./svg/alignright.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/alignright.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setAlignment(editor, 2 /* Right */); },
+        onClick: function (editor) { return roosterjs_editor_api_1.setAlignment(editor, 2); },
     },
     insertLink: {
         title: 'Insert hyperlink',
@@ -36527,12 +33553,12 @@ var buttons = {
     ltr: {
         title: 'Left-to-right',
         image: __webpack_require__(/*! ./svg/ltr.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/ltr.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setDirection(editor, 0 /* LeftToRight */); },
+        onClick: function (editor) { return roosterjs_editor_api_1.setDirection(editor, 0); },
     },
     rtl: {
         title: 'Right-to-left',
         image: __webpack_require__(/*! ./svg/rtl.svg */ "./publish/samplesite/scripts/controls/ribbon/svg/rtl.svg"),
-        onClick: function (editor) { return roosterjs_editor_api_1.setDirection(editor, 1 /* RightToLeft */); },
+        onClick: function (editor) { return roosterjs_editor_api_1.setDirection(editor, 1); },
     },
     undo: {
         title: 'Undo',
@@ -36922,7 +33948,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var styles = __webpack_require__(/*! ./SidePane.scss */ "./publish/samplesite/scripts/controls/sidePane/SidePane.scss");
-var SidePane = /** @class */ (function (_super) {
+var SidePane = (function (_super) {
     __extends(SidePane, _super);
     function SidePane(props) {
         var _this = _super.call(this, props) || this;
@@ -37005,7 +34031,7 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-var SidePanePluginImpl = /** @class */ (function () {
+var SidePanePluginImpl = (function () {
     function SidePanePluginImpl(componentCtor, pluginName, title) {
         this.componentCtor = componentCtor;
         this.pluginName = pluginName;
@@ -37084,7 +34110,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var styles = __webpack_require__(/*! ./BlockElementsPane.scss */ "./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPane.scss");
-var BlockElementsPane = /** @class */ (function (_super) {
+var BlockElementsPane = (function (_super) {
     __extends(BlockElementsPane, _super);
     function BlockElementsPane(props) {
         var _this = _super.call(this, props) || this;
@@ -37141,7 +34167,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var BlockElementsPane_1 = __webpack_require__(/*! ./BlockElementsPane */ "./publish/samplesite/scripts/controls/sidePane/blockElements/BlockElementsPane.tsx");
 var SidePanePluginImpl_1 = __webpack_require__(/*! ../SidePanePluginImpl */ "./publish/samplesite/scripts/controls/sidePane/SidePanePluginImpl.tsx");
-var BlockElementsPlugin = /** @class */ (function (_super) {
+var BlockElementsPlugin = (function (_super) {
     __extends(BlockElementsPlugin, _super);
     function BlockElementsPlugin() {
         var _this = _super.call(this, BlockElementsPane_1.default, 'block', 'Block Elements') || this;
@@ -37156,7 +34182,7 @@ var BlockElementsPlugin = /** @class */ (function (_super) {
             _this.getComponent(function (c) { return c.setBlocks(blocks); });
         };
         _this.onMouseOver = function (block) {
-            _this.editor.select(block.getStartNode(), 0, block.getEndNode(), -1 /* End */);
+            _this.editor.select(block.getStartNode(), 0, block.getEndNode(), -1);
         };
         return _this;
     }
@@ -37199,7 +34225,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var CodeElement_1 = __webpack_require__(/*! ./codes/CodeElement */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/codes/CodeElement.ts");
 var EditorCode_1 = __webpack_require__(/*! ./codes/EditorCode */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/codes/EditorCode.ts");
-var Code = /** @class */ (function (_super) {
+var Code = (function (_super) {
     __extends(Code, _super);
     function Code() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -37245,7 +34271,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var styles = __webpack_require__(/*! ./OptionsPane.scss */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/OptionsPane.scss");
 var NOT_SET = 'NotSet';
-var DefaultFormatPane = /** @class */ (function (_super) {
+var DefaultFormatPane = (function (_super) {
     __extends(DefaultFormatPane, _super);
     function DefaultFormatPane() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -37383,7 +34409,7 @@ var initialState = {
     linkTitle: 'Ctrl+Click to follow the link:' + BuildInPluginState_1.UrlPlaceholder,
     watermarkText: 'Type content here ...',
 };
-var EditorOptionsPlugin = /** @class */ (function (_super) {
+var EditorOptionsPlugin = (function (_super) {
     __extends(EditorOptionsPlugin, _super);
     function EditorOptionsPlugin() {
         return _super.call(this, OptionsPane_1.default, 'options', 'Editor Options') || this;
@@ -37461,13 +34487,13 @@ var Code_1 = __webpack_require__(/*! ./Code */ "./publish/samplesite/scripts/con
 var DefaultFormat_1 = __webpack_require__(/*! ./DefaultFormat */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/DefaultFormat.tsx");
 var MainPaneBase_1 = __webpack_require__(/*! ../../MainPaneBase */ "./publish/samplesite/scripts/controls/MainPaneBase.tsx");
 var Plugins_1 = __webpack_require__(/*! ./Plugins */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/Plugins.tsx");
-var html = "<html>\n" +
-    "<body>\n" +
+var html = '<html>\n' +
+    '<body>\n' +
     '<div id="contentDiv" style="width: 800px; height: 600px; border: solid 1px black; overflow: auto"></div>\n' +
     '<script src="editor.js"></script>\n' +
-    "</body>\n" +
-    "</html>";
-var OptionsPane = /** @class */ (function (_super) {
+    '</body>\n' +
+    '</html>';
+var OptionsPane = (function (_super) {
     __extends(OptionsPane, _super);
     function OptionsPane(props) {
         var _this = _super.call(this, props) || this;
@@ -37477,7 +34503,7 @@ var OptionsPane = /** @class */ (function (_super) {
                 watermarkText: _this.state.watermarkText,
                 pluginList: __assign({}, _this.state.pluginList),
                 contentEditFeatures: __assign({}, _this.state.contentEditFeatures),
-                defaultFormat: __assign({}, _this.state.defaultFormat)
+                defaultFormat: __assign({}, _this.state.defaultFormat),
             };
             if (callback) {
                 callback(state);
@@ -37548,7 +34574,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var BuildInPluginState_1 = __webpack_require__(/*! ../../BuildInPluginState */ "./publish/samplesite/scripts/controls/BuildInPluginState.ts");
 var styles = __webpack_require__(/*! ./OptionsPane.scss */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/OptionsPane.scss");
-var Plugins = /** @class */ (function (_super) {
+var Plugins = (function (_super) {
     __extends(Plugins, _super);
     function Plugins() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -37587,7 +34613,7 @@ var Plugins = /** @class */ (function (_super) {
     Plugins.prototype.renderItem = function (id, checked, text, moreOptions, onChange) {
         return (React.createElement("tr", null,
             React.createElement("td", { className: styles.checkboxColumn },
-                React.createElement("input", { type: 'checkbox', id: id, checked: checked, onChange: function () { return onChange(id); } })),
+                React.createElement("input", { type: "checkbox", id: id, checked: checked, onChange: function () { return onChange(id); } })),
             React.createElement("td", null,
                 React.createElement("div", null,
                     React.createElement("label", { htmlFor: id }, text)),
@@ -37597,7 +34623,7 @@ var Plugins = /** @class */ (function (_super) {
         var _this = this;
         return (React.createElement("div", null,
             label,
-            React.createElement("input", { type: 'text', ref: ref, value: value, placeholder: placeholder, onChange: function () {
+            React.createElement("input", { type: "text", ref: ref, value: value, placeholder: placeholder, onChange: function () {
                     return _this.props.resetState(function (state) { return onChange(state, ref.current.value); }, false);
                 }, onBlur: function () { return _this.props.resetState(null, true); } })));
     };
@@ -37636,7 +34662,7 @@ exports.default = Plugins;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var CodeElement = /** @class */ (function () {
+var CodeElement = (function () {
     function CodeElement() {
     }
     CodeElement.prototype.encode = function (src) {
@@ -37707,7 +34733,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var CodeElement_1 = __webpack_require__(/*! ./CodeElement */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/codes/CodeElement.ts");
 var roosterjs_editor_plugins_1 = __webpack_require__(/*! roosterjs-editor-plugins */ "./packages/roosterjs-editor-plugins/lib/index.ts");
-var ContentEditCode = /** @class */ (function (_super) {
+var ContentEditCode = (function (_super) {
     __extends(ContentEditCode, _super);
     function ContentEditCode(state) {
         var _this = _super.call(this) || this;
@@ -37776,7 +34802,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var CodeElement_1 = __webpack_require__(/*! ./CodeElement */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/codes/CodeElement.ts");
-var DefaultFormatCode = /** @class */ (function (_super) {
+var DefaultFormatCode = (function (_super) {
     __extends(DefaultFormatCode, _super);
     function DefaultFormatCode(defaultFormat) {
         var _this = _super.call(this) || this;
@@ -37838,7 +34864,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var CodeElement_1 = __webpack_require__(/*! ./CodeElement */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/codes/CodeElement.ts");
 var DefaultFormatCode_1 = __webpack_require__(/*! ./DefaultFormatCode */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/codes/DefaultFormatCode.ts");
 var PluginsCode_1 = __webpack_require__(/*! ./PluginsCode */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/codes/PluginsCode.ts");
-var EditorCode = /** @class */ (function (_super) {
+var EditorCode = (function (_super) {
     __extends(EditorCode, _super);
     function EditorCode(state) {
         var _this = _super.call(this) || this;
@@ -37868,14 +34894,10 @@ var EditorCode = /** @class */ (function (_super) {
         var defaultFormat = this.defaultFormat.getCode();
         var code = "let contentDiv = document.getElementById('contentDiv') as HTMLDivElement;\n";
         code += "let plugins = " + this.plugins.getCode() + ";\n";
-        code += defaultFormat
-            ? "let defaultFormat: DefaultFormat = " + defaultFormat + ";\n"
-            : '';
+        code += defaultFormat ? "let defaultFormat: DefaultFormat = " + defaultFormat + ";\n" : '';
         code += 'let options: EditorOptions = {\n';
         code += this.indent('plugins: plugins,\n');
-        code += defaultFormat
-            ? this.indent('defaultFormat: defaultFormat,\n')
-            : '';
+        code += defaultFormat ? this.indent('defaultFormat: defaultFormat,\n') : '';
         code += '};\n';
         code += 'let editor = new Editor(contentDiv, options);\n';
         return code;
@@ -37912,7 +34934,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var CodeElement_1 = __webpack_require__(/*! ./CodeElement */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/codes/CodeElement.ts");
 var BuildInPluginState_1 = __webpack_require__(/*! ../../../BuildInPluginState */ "./publish/samplesite/scripts/controls/BuildInPluginState.ts");
-var HyperLinkCode = /** @class */ (function (_super) {
+var HyperLinkCode = (function (_super) {
     __extends(HyperLinkCode, _super);
     function HyperLinkCode(linkTitle) {
         var _this = _super.call(this) || this;
@@ -37983,7 +35005,7 @@ var ContentEditCode_1 = __webpack_require__(/*! ./ContentEditCode */ "./publish/
 var HyperLinkCode_1 = __webpack_require__(/*! ./HyperLinkCode */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/codes/HyperLinkCode.ts");
 var WatermarkCode_1 = __webpack_require__(/*! ./WatermarkCode */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/codes/WatermarkCode.ts");
 var SimplePluginCode_1 = __webpack_require__(/*! ./SimplePluginCode */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/codes/SimplePluginCode.ts");
-var PluginsCode = /** @class */ (function (_super) {
+var PluginsCode = (function (_super) {
     __extends(PluginsCode, _super);
     function PluginsCode(state) {
         var _this = _super.call(this) || this;
@@ -37992,8 +35014,7 @@ var PluginsCode = /** @class */ (function (_super) {
         _this.plugins = [
             pluginList.hyperlink && new HyperLinkCode_1.default(state.linkTitle),
             pluginList.paste && new SimplePluginCode_1.PasteCode(),
-            pluginList.contentEdit &&
-                new ContentEditCode_1.default(_this.state.contentEditFeatures),
+            pluginList.contentEdit && new ContentEditCode_1.default(_this.state.contentEditFeatures),
             pluginList.watermark && new WatermarkCode_1.default(_this.state.watermarkText),
             pluginList.imageResize && new SimplePluginCode_1.ImageResizeCode(),
             pluginList.tableResize && new SimplePluginCode_1.TableResizeCode(),
@@ -38040,7 +35061,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var CodeElement_1 = __webpack_require__(/*! ./CodeElement */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/codes/CodeElement.ts");
-var SimplePluginCode = /** @class */ (function (_super) {
+var SimplePluginCode = (function (_super) {
     __extends(SimplePluginCode, _super);
     function SimplePluginCode(name, path, isDefault) {
         var _this = _super.call(this) || this;
@@ -38063,7 +35084,7 @@ var SimplePluginCode = /** @class */ (function (_super) {
     };
     return SimplePluginCode;
 }(CodeElement_1.default));
-var PasteCode = /** @class */ (function (_super) {
+var PasteCode = (function (_super) {
     __extends(PasteCode, _super);
     function PasteCode() {
         return _super.call(this, 'Paste', 'roosterjs-editor-plugins', false) || this;
@@ -38071,7 +35092,7 @@ var PasteCode = /** @class */ (function (_super) {
     return PasteCode;
 }(SimplePluginCode));
 exports.PasteCode = PasteCode;
-var ImageResizeCode = /** @class */ (function (_super) {
+var ImageResizeCode = (function (_super) {
     __extends(ImageResizeCode, _super);
     function ImageResizeCode() {
         return _super.call(this, 'ImageResize', 'roosterjs-plugin-image-resize', false) || this;
@@ -38079,7 +35100,7 @@ var ImageResizeCode = /** @class */ (function (_super) {
     return ImageResizeCode;
 }(SimplePluginCode));
 exports.ImageResizeCode = ImageResizeCode;
-var TableResizeCode = /** @class */ (function (_super) {
+var TableResizeCode = (function (_super) {
     __extends(TableResizeCode, _super);
     function TableResizeCode() {
         return _super.call(this, 'TableResize', 'roosterjs-editor-plugins', false) || this;
@@ -38115,7 +35136,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var CodeElement_1 = __webpack_require__(/*! ./CodeElement */ "./publish/samplesite/scripts/controls/sidePane/editorOptions/codes/CodeElement.ts");
-var WatermarkCode = /** @class */ (function (_super) {
+var WatermarkCode = (function (_super) {
     __extends(WatermarkCode, _super);
     function WatermarkCode(watermarkText) {
         var _this = _super.call(this) || this;
@@ -38187,19 +35208,19 @@ var _a;
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var styles = __webpack_require__(/*! ./EventViewPane.scss */ "./publish/samplesite/scripts/controls/sidePane/eventViewer/EventViewPane.scss");
 var EventTypeMap = (_a = {},
-    _a[11 /* BeforeDispose */] = 'BeforeDispose',
-    _a[8 /* BeforePaste */] = 'BeforePaste',
-    _a[3 /* CompositionEnd */] = 'CompositionEnd',
-    _a[6 /* ContentChanged */] = 'ContentChanged',
-    _a[10 /* EditorReady */] = 'EditorReady',
-    _a[7 /* ExtractContent */] = 'ExtractContent',
-    _a[0 /* KeyDown */] = 'KeyDown',
-    _a[1 /* KeyPress */] = 'KeyPress',
-    _a[2 /* KeyUp */] = 'KeyUp',
-    _a[4 /* MouseDown */] = 'MouseDown',
-    _a[5 /* MouseUp */] = 'MouseUp',
+    _a[10] = 'BeforeDispose',
+    _a[8] = 'BeforePaste',
+    _a[3] = 'CompositionEnd',
+    _a[6] = 'ContentChanged',
+    _a[9] = 'EditorReady',
+    _a[7] = 'ExtractContent',
+    _a[0] = 'KeyDown',
+    _a[1] = 'KeyPress',
+    _a[2] = 'KeyUp',
+    _a[4] = 'MouseDown',
+    _a[5] = 'MouseUp',
     _a);
-var EventViewPane = /** @class */ (function (_super) {
+var EventViewPane = (function (_super) {
     __extends(EventViewPane, _super);
     function EventViewPane(props) {
         var _this = _super.call(this, props) || this;
@@ -38269,14 +35290,14 @@ var EventViewPane = /** @class */ (function (_super) {
     EventViewPane.prototype.renderEvent = function (event) {
         var _this = this;
         switch (event.eventType) {
-            case 0 /* KeyDown */:
-            case 1 /* KeyPress */:
-            case 2 /* KeyUp */:
+            case 0:
+            case 1:
+            case 2:
                 return (React.createElement("span", null,
                     "Key=",
                     event.rawEvent.which));
-            case 4 /* MouseDown */:
-            case 5 /* MouseUp */:
+            case 4:
+            case 5:
                 return (React.createElement("span", null,
                     "Button=",
                     event.rawEvent.button,
@@ -38286,13 +35307,13 @@ var EventViewPane = /** @class */ (function (_super) {
                     event.rawEvent.pageX,
                     ", PageY=",
                     event.rawEvent.pageY));
-            case 6 /* ContentChanged */:
+            case 6:
                 return (React.createElement("span", null,
                     "Source=",
                     event.source,
                     ", Data=",
                     event.data && event.data.toString && event.data.toString()));
-            case 8 /* BeforePaste */:
+            case 8:
                 return (React.createElement("span", null,
                     "Types=",
                     event.clipboardData.types.join(),
@@ -38341,7 +35362,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var EventViewPane_1 = __webpack_require__(/*! ./EventViewPane */ "./publish/samplesite/scripts/controls/sidePane/eventViewer/EventViewPane.tsx");
 var SidePanePluginImpl_1 = __webpack_require__(/*! ../SidePanePluginImpl */ "./publish/samplesite/scripts/controls/sidePane/SidePanePluginImpl.tsx");
-var EventViewPlugin = /** @class */ (function (_super) {
+var EventViewPlugin = (function (_super) {
     __extends(EventViewPlugin, _super);
     function EventViewPlugin() {
         return _super.call(this, EventViewPane_1.default, 'event', 'Event Viewer') || this;
@@ -38404,7 +35425,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var styles = __webpack_require__(/*! ./FormatStatePane.scss */ "./publish/samplesite/scripts/controls/sidePane/formatState/FormatStatePane.scss");
-var FormatStatePane = /** @class */ (function (_super) {
+var FormatStatePane = (function (_super) {
     __extends(FormatStatePane, _super);
     function FormatStatePane(props) {
         var _this = _super.call(this, props) || this;
@@ -38522,7 +35543,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var FormatStatePane_1 = __webpack_require__(/*! ./FormatStatePane */ "./publish/samplesite/scripts/controls/sidePane/formatState/FormatStatePane.tsx");
 var SidePanePluginImpl_1 = __webpack_require__(/*! ../SidePanePluginImpl */ "./publish/samplesite/scripts/controls/sidePane/SidePanePluginImpl.tsx");
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
-var FormatStatePlugin = /** @class */ (function (_super) {
+var FormatStatePlugin = (function (_super) {
     __extends(FormatStatePlugin, _super);
     function FormatStatePlugin() {
         return _super.call(this, FormatStatePane_1.default, 'format', 'Format State') || this;
@@ -38539,9 +35560,9 @@ var FormatStatePlugin = /** @class */ (function (_super) {
         return this.getFormatState();
     };
     FormatStatePlugin.prototype.onPluginEvent = function (event) {
-        if (event.eventType == 2 /* KeyUp */ ||
-            event.eventType == 5 /* MouseUp */ ||
-            event.eventType == 6 /* ContentChanged */) {
+        if (event.eventType == 2 ||
+            event.eventType == 5 ||
+            event.eventType == 6) {
             this.updateForamtState();
         }
     };
@@ -38611,12 +35632,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var roosterjs_html_sanitizer_1 = __webpack_require__(/*! roosterjs-html-sanitizer */ "./packages/roosterjs-html-sanitizer/lib/index.ts");
 var styles = __webpack_require__(/*! ./SanitizerPane.scss */ "./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPane.scss");
-var SanitizerPane = /** @class */ (function (_super) {
+var SanitizerPane = (function (_super) {
     __extends(SanitizerPane, _super);
     function SanitizerPane() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.source = React.createRef();
         _this.result = React.createRef();
+        _this.sanitizer = new roosterjs_html_sanitizer_1.HtmlSanitizer();
+        _this.inline = function () {
+            _this.result.current.value = _this.sanitizer.exec(_this.source.current.value, true);
+        };
         _this.sanitize = function () {
             _this.result.current.value = roosterjs_html_sanitizer_1.HtmlSanitizer.sanitizeHtml(_this.source.current.value);
         };
@@ -38626,7 +35651,9 @@ var SanitizerPane = /** @class */ (function (_super) {
         return (React.createElement(React.Fragment, null,
             React.createElement("h3", null, "Input"),
             React.createElement("textarea", { className: styles.textarea, ref: this.source }),
-            React.createElement("button", { className: styles.button, onClick: this.sanitize }, "Sanitize"),
+            React.createElement("div", null,
+                React.createElement("button", { className: styles.button, onClick: this.inline }, "Inline CSS"),
+                React.createElement("button", { className: styles.button, onClick: this.sanitize }, "Sanitize")),
             React.createElement("h3", null, "Result"),
             React.createElement("textarea", { className: styles.textarea, ref: this.result })));
     };
@@ -38662,7 +35689,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var SanitizerPane_1 = __webpack_require__(/*! ./SanitizerPane */ "./publish/samplesite/scripts/controls/sidePane/sanitizer/SanitizerPane.tsx");
 var SidePanePluginImpl_1 = __webpack_require__(/*! ../SidePanePluginImpl */ "./publish/samplesite/scripts/controls/sidePane/SidePanePluginImpl.tsx");
-var SanitizerPlugin = /** @class */ (function (_super) {
+var SanitizerPlugin = (function (_super) {
     __extends(SanitizerPlugin, _super);
     function SanitizerPlugin() {
         return _super.call(this, SanitizerPane_1.default, 'sanitizer', 'HTML Sanitizer') || this;
@@ -38721,7 +35748,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var styles = __webpack_require__(/*! ./SnapshotPane.scss */ "./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPane.scss");
-var SnapshotPane = /** @class */ (function (_super) {
+var SnapshotPane = (function (_super) {
     __extends(SnapshotPane, _super);
     function SnapshotPane(props) {
         var _this = _super.call(this, props) || this;
@@ -38802,7 +35829,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var SnapshotPane_1 = __webpack_require__(/*! ./SnapshotPane */ "./publish/samplesite/scripts/controls/sidePane/snapshot/SnapshotPane.tsx");
 var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
-var SnapshotPlugin = /** @class */ (function (_super) {
+var SnapshotPlugin = (function (_super) {
     __extends(SnapshotPlugin, _super);
     function SnapshotPlugin() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -38822,7 +35849,7 @@ var SnapshotPlugin = /** @class */ (function (_super) {
         };
         _this.onRestoreSnapshot = function (snapshot) {
             _this.editorInstance.focus();
-            _this.editorInstance.setContent(snapshot, false /*triggerContentChangedEvent*/);
+            _this.editorInstance.setContent(snapshot, false);
         };
         return _this;
     }
@@ -38835,7 +35862,7 @@ var SnapshotPlugin = /** @class */ (function (_super) {
         _super.prototype.dispose.call(this);
     };
     SnapshotPlugin.prototype.onPluginEvent = function (e) {
-        if (e.eventType == 10 /* EditorReady */) {
+        if (e.eventType == 9) {
             this.updateSnapshots();
         }
         _super.prototype.onPluginEvent.call(this, e);
@@ -38945,7 +35972,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var styles = __webpack_require__(/*! ./TitleBar.scss */ "./publish/samplesite/scripts/controls/titleBar/TitleBar.scss");
-var TitleBar = /** @class */ (function (_super) {
+var TitleBar = (function (_super) {
     __extends(TitleBar, _super);
     function TitleBar() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -38957,11 +35984,11 @@ var TitleBar = /** @class */ (function (_super) {
                 React.createElement("span", { className: styles.titleText }, "RoosterJs Demo Site")),
             React.createElement("div", { className: styles.version }, window.roosterJsVer || ''),
             React.createElement("div", { className: styles.links },
-                React.createElement("a", { href: 'https://github.com/microsoft/roosterjs', target: '_blank', className: styles.link }, "RoosterJs on Github"),
+                React.createElement("a", { href: "https://github.com/microsoft/roosterjs", target: "_blank", className: styles.link }, "RoosterJs on Github"),
                 "\u00A0",
-                React.createElement("a", { href: 'https://www.npmjs.com/package/roosterjs', target: '_blank', className: styles.link }, "RoosterJs on NPM"),
+                React.createElement("a", { href: "https://www.npmjs.com/package/roosterjs", target: "_blank", className: styles.link }, "RoosterJs on NPM"),
                 "\u00A0",
-                React.createElement("a", { href: 'https://github.com/Microsoft/roosterjs/wiki', target: '_blank', className: styles.link }, "Documentations")),
+                React.createElement("a", { href: "https://github.com/Microsoft/roosterjs/wiki", target: "_blank", className: styles.link }, "Documentations")),
             React.createElement("div", { className: styles.logo },
                 React.createElement("div", { className: styles.rooster }, "\uD83D\uDC14"))));
     };
