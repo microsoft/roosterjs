@@ -112,6 +112,8 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
         if (event.eventType == PluginEventType.KeyUp && !this.eventHandledOnKeyDown) {
             this.onKeyUpDomEvent(event);
         } else if (event.eventType == PluginEventType.KeyPress) {
+            // The KeyPress event is fired when a key that produces a character value is pressed down
+            // Keys that don't produce character values include modifier keys like Ctrl and Backspace
             this.isCharacterValue = true;
         } else if (event.eventType == PluginEventType.MouseUp) {
             if (this.isSuggesting) {
@@ -202,7 +204,7 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                 this.setIsSuggesting(false);
             }
         } else if (this.isCharacterValue) {
-            // Check for isCharacterValue to filter out events like Ctrl+Z and modifiers
+            // Check for isCharacterValue to filter out modifiers like Ctrl+Z and Backspace
             let wordBeforeCursor = this.getWordBeforeCursor(event);
             if (!this.blockSuggestions) {
                 if (
