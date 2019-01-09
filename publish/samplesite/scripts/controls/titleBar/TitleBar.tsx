@@ -25,24 +25,19 @@ export default class TitleBar extends React.Component<TitleBarProps, {}> {
                         target="_blank"
                         className={styles.link}>
                         RoosterJs on Github
-                    </a>
-                    &nbsp;
+                    </a>{' '}
                     <a
                         href="https://www.npmjs.com/package/roosterjs"
                         target="_blank"
                         className={styles.link}>
                         RoosterJs on NPM
-                    </a>
-                    &nbsp;
+                    </a>{' '}
                     <a
                         href="https://github.com/Microsoft/roosterjs/wiki"
                         target="_blank"
                         className={styles.link}>
                         Documentations
                     </a>
-                </div>
-                <div className={styles.logo}>
-                    <div className={styles.rooster}>🐔</div>
                 </div>
             </div>
         );

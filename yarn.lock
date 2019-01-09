@@ -2403,11 +2403,6 @@ extsprintf@1.3.0, extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.3.0.tgz#96918440e3041a7a414f8c52e3c574eb3c3e1e05"
   integrity sha1-lpGEQOMEGnpBT4xS48V06zw+HgU=
 
-fail-on-errors-webpack-plugin@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/fail-on-errors-webpack-plugin/-/fail-on-errors-webpack-plugin-3.0.0.tgz#3ca3a3b8370d141ed63286874fbae45df1bf2bf5"
-  integrity sha512-U0WqfpDZV4HI9ueb7sWmZzEr+yjo0R3JCCw6nIfzJU6gnN1rU1k+1XPea7LqcZTOwmfbf4DuhMswWl1quxj7Xw==
-
 fast-deep-equal@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-1.0.0.tgz#96256a3bc975595eb36d82e9929d060d893439ff"

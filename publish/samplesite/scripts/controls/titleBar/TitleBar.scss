@@ -41,25 +41,3 @@
         text-decoration: underline;
     }
 }
-
-.logo {
-    flex: 0 0 auto;
-    text-align: right;
-    font-size: 42pt;
-    font-family: Calibri;
-    height: 36px;
-    overflow: visible;
-}
-
-.rooster {
-    background-color: $primaryLighter2;
-    margin-left: 10px;
-    border-radius: 400px;
-    box-shadow: 2px 2px 4px $primaryLighter;
-    overflow: hidden;
-    color: red;
-    width: 76px;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-}

@@ -328,13 +328,13 @@ function copySample() {
 }
 
 async function buildDemoSite() {
-    var sourcePath = path.join(rootPath, 'publish/samplesite/scripts');
+    var sourcePathRoot = path.join(rootPath, 'publish/samplesite');
+    var sourcePath = path.join(sourcePathRoot, 'scripts');
     runNode(typescriptPath + ' --noEmit ', sourcePath);
 
     var distPathRoot = path.join(distPath, 'roosterjs/samplesite');
     var distScriptPath = path.join(distPathRoot, 'scripts');
     var filename = 'demo.js';
-    var targetFile = path.join(distScriptPath, filename);
     var webpackConfig = {
         entry: path.join(sourcePath, 'index.ts'),
         devtool: 'source-map',
@@ -374,8 +374,21 @@ async function buildDemoSite() {
                 },
             ],
         },
+        externals: packages.reduce(
+            (externals, package) => {
+                externals[package] = 'roosterjs';
+                return externals;
+            },
+            {
+                react: 'React',
+                'react-dom': 'ReactDOM',
+            }
+        ),
         stats: 'minimal',
-        mode: 'development',
+        mode: 'production',
+        optimization: {
+            minimize: true,
+        },
     };
 
     await new Promise((resolve, reject) => {
@@ -383,10 +396,13 @@ async function buildDemoSite() {
             if (err) {
                 reject(err);
             } else {
-                insertLicense(targetFile);
                 fs.copyFileSync(
-                    path.resolve(rootPath, 'index.html'),
+                    path.resolve(sourcePathRoot, 'index.html'),
                     path.resolve(distPathRoot, 'index.html')
+                );
+                fs.copyFileSync(
+                    path.resolve(roosterJsDistPath, 'rooster-min.js'),
+                    path.resolve(distPathRoot, 'scripts', 'rooster-min.js')
                 );
                 fs.writeFileSync(
                     path.resolve(distPathRoot, 'scripts', 'version.js'),
@@ -466,7 +482,7 @@ class Runner {
     }
 }
 
-async function buildAll(options) {
+function buildAll(options) {
     var tasks = [
         {
             message: 'Running tslint...',
@@ -506,7 +522,7 @@ async function buildAll(options) {
         ...[false, true].map(isAmd => ({
             message: `Packing ${getPackedFileName(true, isAmd)}...`,
             callback: async () => pack(true, isAmd),
-            enabled: options.packprod,
+            enabled: options.packprod || (!isAmd && options.builddemo),
         })),
         {
             message: 'Collecting information for type definition file...',
@@ -561,5 +577,5 @@ function parseOptions(additionalParams) {
 // For debugging, put the build options below:
 // e.g.
 // let options = ['pack', 'packprod'];
-let options = ['builddemo'];
+let options = [];
 buildAll(parseOptions(options));
