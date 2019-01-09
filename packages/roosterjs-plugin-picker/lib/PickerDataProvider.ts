@@ -16,6 +16,9 @@ export interface PickerPluginOptions {
     // Vertical (the default, when this is false), will call shiftHighlight with up (false) and down (true).
     // Horizontal (when this is true), will call shiftHighlight with left (false) and right (true).
     isHorizontal?: boolean;
+
+    // Option for letting the editor handle autocomplete on node insertion
+    handleAutoComplete?: boolean;
 }
 
 export interface PickerDataProvider {
@@ -23,7 +26,7 @@ export interface PickerDataProvider {
     // The first is called in order to "commit" a new element to the editor body that isn't handled automatically by the editor plugin.
     // The second sets the isSuggesting value for situations wherethe UX needs to manipulate the suggesting state that's otherwise plugin managed.
     onInitalize: (
-        commitMentionCallback: (nodeToAvoiddd: HTMLElement) => void,
+        insertNodeCallback: (nodeToAvoid: HTMLElement) => void,
         setIsSuggestingCallback: (isSuggesting: boolean) => void,
         editor?: Editor
     ) => void;

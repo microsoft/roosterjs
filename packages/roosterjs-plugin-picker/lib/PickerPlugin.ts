@@ -32,11 +32,12 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
     private eventHandledOnKeyDown: boolean;
     private blockSuggestions: boolean;
     private isSuggesting: boolean;
+    private isCharacterValue: boolean;
 
     constructor(
         public readonly dataProvider: PickerDataProvider,
         private pickerOptions: PickerPluginOptions
-    ) {}
+    ) { }
 
     /**
      * Get a friendly name
@@ -53,20 +54,20 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
         this.editor = editor;
         this.dataProvider.onInitalize(
             (htmlNode: Node) => {
-                let nodeInserted = false;
                 this.editor.focus();
-                this.editor.addUndoSnapshot();
 
                 let wordToReplace = this.getWord(null);
                 if (wordToReplace) {
-                    replaceWithNode(this.editor, wordToReplace, htmlNode, true);
-                    nodeInserted = true;
-                    this.setIsSuggesting(false);
-                }
+                    let insertNode = () => {
+                        replaceWithNode(this.editor, wordToReplace, htmlNode, true /* exactMatch */);
+                        this.setIsSuggesting(false);
+                    }
 
-                if (nodeInserted) {
-                    this.editor.triggerContentChangedEvent(this.pickerOptions.changeSource);
-                    this.editor.addUndoSnapshot();
+                    if (this.pickerOptions.handleAutoComplete) {
+                        this.editor.performAutoComplete(insertNode, this.pickerOptions.changeSource);
+                    } else {
+                        this.editor.addUndoSnapshot(insertNode, this.pickerOptions.changeSource)
+                    }
                 }
             },
             (isSuggesting: boolean) => {
@@ -110,6 +111,10 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
         }
         if (event.eventType == PluginEventType.KeyUp && !this.eventHandledOnKeyDown) {
             this.onKeyUpDomEvent(event);
+        } else if (event.eventType == PluginEventType.KeyPress) {
+            // The KeyPress event is fired when a key that produces a character value is pressed down
+            // Keys that don't produce character values include modifier keys like Ctrl and Backspace
+            this.isCharacterValue = true;
         } else if (event.eventType == PluginEventType.MouseUp) {
             if (this.isSuggesting) {
                 this.setIsSuggesting(false);
@@ -198,7 +203,8 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
             } else {
                 this.setIsSuggesting(false);
             }
-        } else {
+        } else if (this.isCharacterValue) {
+            // Check for isCharacterValue to filter out modifiers like Ctrl+Z and Backspace
             let wordBeforeCursor = this.getWordBeforeCursor(event);
             if (!this.blockSuggestions) {
                 if (
@@ -238,15 +244,14 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                             rect = rangeNode.getClientRects()[0];
                         }
 
-                        if (!rect) {
-                            return;
-                        }
-                        rangeNode.detach();
+                        if (rect) {
+                            rangeNode.detach();
 
-                        // Display the @mention popup in the correct place
-                        let targetPoint = { x: rect.left, y: (rect.bottom + rect.top) / 2 };
-                        let bufferZone = (rect.bottom - rect.top) / 2;
-                        this.dataProvider.setCursorPoint(targetPoint, bufferZone);
+                            // Display the @mention popup in the correct place
+                            let targetPoint = { x: rect.left, y: (rect.bottom + rect.top) / 2 };
+                            let bufferZone = (rect.bottom - rect.top) / 2;
+                            this.dataProvider.setCursorPoint(targetPoint, bufferZone);
+                        }
                     }
                 }
             } else {
@@ -258,6 +263,7 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                 }
             }
         }
+        this.isCharacterValue = false;
     }
 
     private onKeyDownEvent(event: PluginKeyboardEvent) {
@@ -271,9 +277,9 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                 this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
                     ? keyboardEvent.key == LEFT_ARROW_CHARCODE ||
-                      keyboardEvent.key == RIGHT_ARROW_CHARCODE
+                    keyboardEvent.key == RIGHT_ARROW_CHARCODE
                     : keyboardEvent.key == UP_ARROW_CHARCODE ||
-                      keyboardEvent.key == DOWN_ARROW_CHARCODE)
+                    keyboardEvent.key == DOWN_ARROW_CHARCODE)
             ) {
                 this.dataProvider.shiftHighlight(
                     this.pickerOptions.isHorizontal
