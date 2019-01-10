@@ -1,0 +1,28 @@
+<html>
+    <body>
+        <h1>Welcome to RoosterJs!</h1>
+        <div>This is a demo to show how to use rooster.js to add format buttons</div>
+        <div
+            style="width: 500px; height: 400px; border: solid 1px black; overflow: auto"
+            id="contentDiv"
+        ></div>
+        <div>
+            <button id="bold"><b>B</b></button> <button id="italic"><i>I</i></button>
+            <button id="underline"><u>U</u></button>
+        </div>
+        <script src="../../dist/rooster.js"></script>
+        <script>
+            var contentDiv = document.getElementById('contentDiv');
+            var editor = roosterjs.createEditor(contentDiv);
+            document.getElementById('bold').addEventListener('click', function() {
+                roosterjs.toggleBold(editor);
+            });
+            document.getElementById('italic').addEventListener('click', function() {
+                roosterjs.toggleItalic(editor);
+            });
+            document.getElementById('underline').addEventListener('click', function() {
+                roosterjs.toggleUnderline(editor);
+            });
+        </script>
+    </body>
+</html>

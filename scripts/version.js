@@ -1,1 +1,0 @@
-window.roosterJsVer = "v7.0.0";

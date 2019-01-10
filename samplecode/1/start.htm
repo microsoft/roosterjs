@@ -1,0 +1,15 @@
+<html>
+    <body>
+        <h1>Welcome to RoosterJs!</h1>
+        <div>This is a demo to show how to use rooster.js directly with HTML page</div>
+        <div
+            style="width: 500px; height: 400px; border: solid 1px black; overflow: auto"
+            id="contentDiv"
+        ></div>
+        <script src="../../dist/rooster.js"></script>
+        <script>
+            var contentDiv = document.getElementById('contentDiv');
+            var editor = roosterjs.createEditor(contentDiv);
+        </script>
+    </body>
+</html>
