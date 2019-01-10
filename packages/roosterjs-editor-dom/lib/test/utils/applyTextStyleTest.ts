@@ -1,5 +1,6 @@
 import applyTextStyle from '../../utils/applyTextStyle';
 import Position from '../../selection/Position';
+import { PositionType } from 'roosterjs/lib';
 
 describe('applyTextStyle()', () => {
     function runTest1(
@@ -167,5 +168,16 @@ describe('applyTextStyle()', () => {
             '<span>te</span><span style="color: red;">st1test2te</span><span>st3</span>'
         );
         runTest3(6, -1, 0, -1, 0, '<span style="color: red;">test1test2test3</span>');
+    });
+
+    it('applyTextStyle() text node with B/I/U', () => {
+        let div = document.createElement('DIV');
+        div.innerHTML = 'test1<b>test2<i>test3</i></b><i>test4</i>test5<span>test6</span>';
+        let start = new Position(div, PositionType.Begin).normalize().move(2);
+        let end = new Position(div, PositionType.End).normalize().move(-2);
+        applyTextStyle(div, node => (node.style.color = 'red'), start, end);
+        expect(div.innerHTML).toBe(
+            'te<span style="color: red;">st1</span><span style="color: red;"><b>test2</b></span><span style="color: red;"><b><i>test3</i></b></span><span style="color: red;"><i>test4</i></span><span style="color: red;">test5</span><span style="color: red;">tes</span><span>t6</span>'
+        );
     });
 });

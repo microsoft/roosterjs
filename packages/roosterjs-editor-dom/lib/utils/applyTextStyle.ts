@@ -5,6 +5,8 @@ import { getNextLeafSibling } from './getLeafSibling';
 import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from './splitParentNode';
 
+const STYLETAGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL'.split(',');
+
 export default function applyTextStyle(
     container: Node,
     styler: (node: HTMLElement) => any,
@@ -45,13 +47,14 @@ export default function applyTextStyle(
             formatNodes = [newNode];
         }
 
-        formatNodes.forEach(node =>
-            styler(
-                getTagOfNode(node.parentNode) == 'SPAN'
-                    ? splitBalancedNodeRange(node)
-                    : wrap(node, 'span')
-            )
-        );
+        formatNodes.forEach(node => {
+            // When apply style within style tags like B/I/U/..., we split the tag and apply outside them
+            // So that the inner style tag such as U, STRIKE can inherit the style we added
+            while (STYLETAGS.indexOf(getTagOfNode(node.parentNode)) >= 0) {
+                node = splitBalancedNodeRange(node);
+            }
+            styler(getTagOfNode(node) == 'SPAN' ? <HTMLElement>node : wrap(node, 'span'));
+        });
     }
 }
 
