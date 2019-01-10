@@ -49,8 +49,6 @@
         "webpack-cli": "^3.1.2",
         "webpack-dev-server": "^3.1.10",
         "//": "Dependencies below are for sample site only",
-        "react": "^16.6.3",
-        "react-dom": "^16.6.3",
         "@microsoft/loader-load-themed-styles": "^1.7.118",
         "@types/node": "^10.12.15",
         "@types/object-assign": "4.0.30",

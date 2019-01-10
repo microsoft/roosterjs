@@ -332,15 +332,14 @@ async function buildDemoSite() {
     var sourcePath = path.join(sourcePathRoot, 'scripts');
     runNode(typescriptPath + ' --noEmit ', sourcePath);
 
-    var distPathRoot = path.join(distPath, 'roosterjs/samplesite');
-    var distScriptPath = path.join(distPathRoot, 'scripts');
+    var distPathRoot = path.join(distPath, 'roosterjs');
     var filename = 'demo.js';
     var webpackConfig = {
         entry: path.join(sourcePath, 'index.ts'),
         devtool: 'source-map',
         output: {
             filename,
-            path: distScriptPath,
+            path: distPathRoot,
         },
         resolve: {
             extensions: ['.ts', '.tsx', '.js', '.svg', '.scss', '.'],
@@ -400,13 +399,11 @@ async function buildDemoSite() {
                     path.resolve(sourcePathRoot, 'index.html'),
                     path.resolve(distPathRoot, 'index.html')
                 );
-                fs.copyFileSync(
-                    path.resolve(roosterJsDistPath, 'rooster-min.js'),
-                    path.resolve(distPathRoot, 'scripts', 'rooster-min.js')
-                );
+                var outputFilename = path.join(distPathRoot, filename);
                 fs.writeFileSync(
-                    path.resolve(distPathRoot, 'scripts', 'version.js'),
-                    `window.roosterJsVer = "v${version}";`
+                    outputFilename,
+                    `window.roosterJsVer = "v${version}";` +
+                        fs.readFileSync(outputFilename).toString()
                 );
                 resolve();
             }

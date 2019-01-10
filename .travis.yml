@@ -19,4 +19,4 @@ deploy:
     keep-history: true
     on:
         branch: master
-    local-dir: ./dist/roosterjs/samplesite
+    local-dir: ./dist/roosterjs
