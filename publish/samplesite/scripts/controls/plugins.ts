@@ -1,9 +1,8 @@
-import BlockElementsPlugin from './sidePane/blockElements/BlockElementsPlugin';
+import ApiPlaygroundPlugin from './sidePane/apiPlayground/ApiPlaygroundPlugin';
 import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
 import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
 import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
 import RibbonPlugin from './ribbon/RibbonPlugin';
-import SanitizerPlugin from './sidePane/sanitizer/SanitizerPlugin';
 import SidePanePlugin from './SidePanePlugin';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import { EditorPlugin } from 'roosterjs-editor-core';
@@ -14,8 +13,7 @@ export default interface Plugins {
     snapshot: SnapshotPlugin;
     editorOptions: EditorOptionsPlugin;
     eventView: EventViewPlugin;
-    blocks: BlockElementsPlugin;
-    sanitizer: SanitizerPlugin;
+    api: ApiPlaygroundPlugin;
 }
 
 let plugins: Plugins = null;
@@ -28,8 +26,7 @@ export function getPlugins(): Plugins {
             snapshot: new SnapshotPlugin(),
             editorOptions: new EditorOptionsPlugin(),
             eventView: new EventViewPlugin(),
-            blocks: new BlockElementsPlugin(),
-            sanitizer: new SanitizerPlugin(),
+            api: new ApiPlaygroundPlugin(),
         };
     }
     return plugins;
@@ -42,8 +39,7 @@ export function getAllPluginArray(): EditorPlugin[] {
         allPlugins.formatState,
         allPlugins.editorOptions,
         allPlugins.eventView,
-        allPlugins.blocks,
-        allPlugins.sanitizer,
+        allPlugins.api,
     ];
 }
 
@@ -54,7 +50,6 @@ export function getSidePanePluginArray(): SidePanePlugin[] {
         allPlugins.editorOptions,
         allPlugins.snapshot,
         allPlugins.eventView,
-        allPlugins.blocks,
-        allPlugins.sanitizer,
+        allPlugins.api,
     ];
 }
