@@ -1,9 +1,16 @@
 import * as React from 'react';
 import SidePanePlugin from '../SidePanePlugin';
 import { Editor } from 'roosterjs-editor-core';
+import { SidePaneElement, SidePaneElementProps } from './SidePaneElement';
 
-export default abstract class SidePanePluginImpl<T extends React.Component<P, any>, P>
-    implements SidePanePlugin {
+interface SidePaneComponent<P extends SidePaneElementProps>
+    extends React.Component<P, any>,
+        SidePaneElement {}
+
+export default abstract class SidePanePluginImpl<
+    T extends SidePaneComponent<P>,
+    P extends SidePaneElementProps
+> implements SidePanePlugin {
     protected editor: Editor;
     private component = React.createRef<T>();
 
@@ -29,11 +36,22 @@ export default abstract class SidePanePluginImpl<T extends React.Component<P, an
         return this.title;
     }
 
-    renderSidePane() {
-        return <this.componentCtor ref={this.component} {...this.getComponentProps()} />;
+    renderSidePane(updateHash: (pluginName?: string, path?: string[]) => void) {
+        return React.createElement<P>(this.componentCtor, {
+            ...this.getComponentProps({
+                updateHash,
+            }),
+            ref: this.component,
+        });
     }
 
-    protected abstract getComponentProps(): P;
+    setHashPath(path: string[]) {
+        if (this.component.current && this.component.current.setHashPath) {
+            this.component.current.setHashPath(path);
+        }
+    }
+
+    protected abstract getComponentProps(baseProps: SidePaneElementProps): P;
 
     protected getComponent(callback: (component: T) => void) {
         if (this.component.current) {

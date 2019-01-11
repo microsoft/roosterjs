@@ -1,5 +1,6 @@
 import { ContentEditFeatures } from 'roosterjs-editor-plugins';
 import { DefaultFormat } from 'roosterjs-editor-types';
+import { SidePaneElementProps } from './sidePane/SidePaneElement';
 
 export const UrlPlaceholder = '$url$';
 
@@ -24,3 +25,5 @@ export default interface BuildInPluginState {
     linkTitle: string;
     watermarkText: string;
 }
+
+export interface BuildInPluginProps extends BuildInPluginState, SidePaneElementProps {}

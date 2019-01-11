@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { SidePaneElementProps } from '../SidePaneElement';
 
 const styles = require('./EventViewPane.scss');
 
@@ -28,12 +29,15 @@ const EventTypeMap = {
     [PluginEventType.MouseUp]: 'MouseUp',
 };
 
-export default class EventViewPane extends React.Component<{}, EventViewPaneState> {
+export default class EventViewPane extends React.Component<
+    SidePaneElementProps,
+    EventViewPaneState
+> {
     private events: EventEntry[] = [];
     private displayCount = React.createRef<HTMLSelectElement>();
     private lasteIndex = 0;
 
-    constructor(props: {}) {
+    constructor(props: SidePaneElementProps) {
         super(props);
         this.state = {
             displayCount: 20,

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Browser } from 'roosterjs-editor-dom';
 import { FormatState } from 'roosterjs-editor-types';
+import { SidePaneElementProps } from '../SidePaneElement';
 
 const styles = require('./FormatStatePane.scss');
 
@@ -10,12 +11,13 @@ export interface FormatStatePaneState {
     x: number;
     y: number;
 }
+export interface FormatStatePaneProps extends FormatStatePaneState, SidePaneElementProps {}
 
 export default class FormatStatePane extends React.Component<
-    FormatStatePaneState,
+    FormatStatePaneProps,
     FormatStatePaneState
 > {
-    constructor(props: FormatStatePaneState) {
+    constructor(props: FormatStatePaneProps) {
         super(props);
         this.state = {
             format: props.format,

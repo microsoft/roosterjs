@@ -1,12 +1,13 @@
-import FormatStatePane, { FormatStatePaneState } from './FormatStatePane';
+import FormatStatePane, { FormatStatePaneProps } from './FormatStatePane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import { Editor } from 'roosterjs-editor-core';
 import { getFormatState } from 'roosterjs-editor-api';
 import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { SidePaneElementProps } from '../SidePaneElement';
 
 export default class FormatStatePlugin extends SidePanePluginImpl<
     FormatStatePane,
-    FormatStatePaneState
+    FormatStatePaneProps
 > {
     constructor() {
         super(FormatStatePane, 'format', 'Format State');
@@ -21,8 +22,11 @@ export default class FormatStatePlugin extends SidePanePluginImpl<
         });
     }
 
-    getComponentProps() {
-        return this.getFormatState();
+    getComponentProps(base: SidePaneElementProps) {
+        return {
+            ...base,
+            ...this.getFormatState(),
+        };
     }
 
     onPluginEvent(event: PluginEvent) {
@@ -39,7 +43,7 @@ export default class FormatStatePlugin extends SidePanePluginImpl<
         this.getComponent(component => component.setFormatState(this.getFormatState()));
     }
 
-    private getFormatState(): FormatStatePaneState {
+    private getFormatState() {
         let format = this.editor && getFormatState(this.editor);
         let rect = this.editor && this.editor.getCursorRect();
         return {

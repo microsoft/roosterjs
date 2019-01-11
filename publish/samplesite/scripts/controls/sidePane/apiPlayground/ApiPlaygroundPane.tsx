@@ -1,44 +1,19 @@
 import * as React from 'react';
-import ApiPaneProps, { ApiPlaygroundComponent } from './ApiPaneProps';
-import BlockElementsPane from './blockElements/BlockElementsPane';
-import SanitizerPane from './sanitizer/SanitizerPane';
+import apiEntries, { ApiPlaygroundReactComponent } from './apiEntries';
+import ApiPaneProps from './ApiPaneProps';
 import { PluginEvent } from 'roosterjs-editor-types';
+import { SidePaneElement } from '../SidePaneElement';
 
 const styles = require('./ApiPlaygroundPane.scss');
-
-interface ApiEntry {
-    name: string;
-    component?: { new (prpos: ApiPaneProps): ApiPlaygroundComponent };
-}
-
-const apiEntries: { [key: string]: ApiEntry } = {
-    empty: {
-        name: 'Please select',
-    },
-    block: {
-        name: 'Block Elements',
-        component: BlockElementsPane,
-    },
-    sanitizer: {
-        name: 'HTML Sanitizer',
-        component: SanitizerPane,
-    },
-    more: {
-        name: 'Coming soon...',
-    },
-};
 
 export interface ApiPlaygroundPaneState {
     current: string;
 }
 
-export default class ApiPlaygroundPane extends React.Component<
-    ApiPaneProps,
-    ApiPlaygroundPaneState
-> {
+export default class ApiPlaygroundPane extends React.Component<ApiPaneProps, ApiPlaygroundPaneState>
+    implements SidePaneElement {
     private select = React.createRef<HTMLSelectElement>();
-    private pane = React.createRef<ApiPlaygroundComponent>();
-
+    private pane = React.createRef<ApiPlaygroundReactComponent>();
     constructor(props: ApiPaneProps) {
         super(props);
         this.state = { current: 'empty' };
@@ -56,12 +31,11 @@ export default class ApiPlaygroundPane extends React.Component<
                 <div className={styles.header}>
                     <h3>Select an API to try</h3>
 
-                    <select
-                        ref={this.select}
-                        defaultValue={this.state.current}
-                        onChange={this.onChange}>
+                    <select ref={this.select} value={this.state.current} onChange={this.onChange}>
                         {Object.keys(apiEntries).map(key => (
-                            <option value={key}>{apiEntries[key].name}</option>
+                            <option value={key} key={key}>
+                                {apiEntries[key].name}
+                            </option>
                         ))}
                     </select>
                 </div>
@@ -71,14 +45,24 @@ export default class ApiPlaygroundPane extends React.Component<
     }
 
     onPluginEvent(e: PluginEvent) {
-        if (this.pane.current.onPluginEvent) {
+        if (this.pane.current && this.pane.current.onPluginEvent) {
             this.pane.current.onPluginEvent(e);
         }
     }
 
+    setHashPath(path: string[]) {
+        let paneName = path && Object.keys(apiEntries).indexOf(path[0]) >= 0 ? path[0] : null;
+
+        if (paneName && paneName != this.state.current) {
+            this.setState({
+                current: paneName,
+            });
+        } else {
+            this.props.updateHash(null, [this.state.current]);
+        }
+    }
+
     private onChange = () => {
-        this.setState({
-            current: this.select.current.value,
-        });
+        this.props.updateHash(null, [this.select.current.value]);
     };
 }

@@ -1,7 +1,8 @@
-import BuildInPluginState, { UrlPlaceholder } from '../../BuildInPluginState';
+import BuildInPluginState, { BuildInPluginProps, UrlPlaceholder } from '../../BuildInPluginState';
 import OptionsPane from './OptionsPane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import { getDefaultContentEditFeatures } from 'roosterjs-editor-plugins';
+import { SidePaneElementProps } from '../SidePaneElement';
 
 const initialState: BuildInPluginState = {
     pluginList: {
@@ -20,7 +21,7 @@ const initialState: BuildInPluginState = {
 
 export default class EditorOptionsPlugin extends SidePanePluginImpl<
     OptionsPane,
-    BuildInPluginState
+    BuildInPluginProps
 > {
     constructor() {
         super(OptionsPane, 'options', 'Editor Options');
@@ -32,7 +33,10 @@ export default class EditorOptionsPlugin extends SidePanePluginImpl<
         return result || initialState;
     }
 
-    getComponentProps() {
-        return initialState;
+    getComponentProps(base: SidePaneElementProps) {
+        return {
+            ...initialState,
+            ...base,
+        };
     }
 }

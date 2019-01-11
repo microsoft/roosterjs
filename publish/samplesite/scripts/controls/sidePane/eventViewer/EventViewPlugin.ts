@@ -1,8 +1,12 @@
 import EventViewPane from './EventViewPane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import { PluginEvent } from 'roosterjs-editor-types';
+import { SidePaneElementProps } from '../SidePaneElement';
 
-export default class EventViewPlugin extends SidePanePluginImpl<EventViewPane, {}> {
+export default class EventViewPlugin extends SidePanePluginImpl<
+    EventViewPane,
+    SidePaneElementProps
+> {
     constructor() {
         super(EventViewPane, 'event', 'Event Viewer');
     }
@@ -11,7 +15,7 @@ export default class EventViewPlugin extends SidePanePluginImpl<EventViewPane, {
         this.getComponent(component => component.addEvent(e));
     }
 
-    getComponentProps() {
-        return {};
+    getComponentProps(base: SidePaneElementProps) {
+        return base;
     }
 }

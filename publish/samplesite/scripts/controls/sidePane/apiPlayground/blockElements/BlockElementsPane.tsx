@@ -26,7 +26,12 @@ export default class BlockElementsPane extends React.Component<
         return (
             <div>
                 <button onClick={this.onGetBlocks}>Get blocks</button>
-                <input type="checkbox" id="checkGetBlocks" ref={this.checkGetBlocks} />
+                <input
+                    type="checkbox"
+                    id="checkGetBlocks"
+                    ref={this.checkGetBlocks}
+                    onClick={this.update}
+                />
                 <label htmlFor="checkGetBlocks">Auto refresh</label>
                 {this.state.blocks.map((block, index) => (
                     <pre
@@ -52,12 +57,16 @@ export default class BlockElementsPane extends React.Component<
             e.eventType == PluginEventType.ContentChanged
         ) {
             if (this.checkGetBlocks.current.checked) {
-                this.props.getEditor().runAsync(this.onGetBlocks);
+                this.update();
             } else {
                 this.setBlocks([]);
             }
         }
     }
+
+    private update = () => {
+        this.props.getEditor().runAsync(this.onGetBlocks);
+    };
 
     private collapse(block: BlockElement) {
         block.collapseToSingleElement();

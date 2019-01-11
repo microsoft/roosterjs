@@ -1,5 +1,5 @@
 import * as React from 'react';
-import BuildInPluginState from '../../BuildInPluginState';
+import BuildInPluginState, { BuildInPluginProps } from '../../BuildInPluginState';
 import Code from './Code';
 import DefaultFormatPane from './DefaultFormat';
 import MainPaneBase from '../../MainPaneBase';
@@ -13,8 +13,8 @@ const html =
     '</body>\n' +
     '</html>';
 
-export default class OptionsPane extends React.Component<BuildInPluginState, BuildInPluginState> {
-    constructor(props: BuildInPluginState) {
+export default class OptionsPane extends React.Component<BuildInPluginProps, BuildInPluginState> {
+    constructor(props: BuildInPluginProps) {
         super(props);
         this.state = { ...props };
     }

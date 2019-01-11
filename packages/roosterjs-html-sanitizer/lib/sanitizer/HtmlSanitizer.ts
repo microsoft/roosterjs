@@ -110,7 +110,8 @@ export default class HtmlSanitizer {
         let styleSheets = this.additionalGlobalStyleNodes
             .reverse()
             .map(node => node.sheet as CSSStyleSheet)
-            .concat(styleNodes.map(node => node.sheet as CSSStyleSheet).reverse());
+            .concat(styleNodes.map(node => node.sheet as CSSStyleSheet).reverse())
+            .filter(sheet => sheet);
         for (let styleSheet of styleSheets) {
             for (let j = styleSheet.cssRules.length - 1; j >= 0; j--) {
                 // Skip any none-style rule, i.e. @page

@@ -18,16 +18,17 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
     constructor(props: SidePaneProps) {
         super(props);
         this.state = {
-            currentPane: this.getCurrentPluginFromHash() || this.props.plugins[0],
+            currentPane: this.props.plugins[0],
         };
 
-        window.addEventListener('hashchange', this.setCurrentPlugin);
+        window.addEventListener('hashchange', this.updateStateFromHash);
+    }
+
+    componentDidMount() {
+        this.updateStateFromHash();
     }
 
     render() {
-        window.location.hash = this.state.currentPane.getName
-            ? this.state.currentPane.getName()
-            : '';
         let className = (this.props.className || '') + ' ' + styles.sidePane;
         return (
             <div className={className} ref={this.div}>
@@ -43,46 +44,44 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
         }
     }
 
+    updateHash = (pluginName?: string, path?: string[]) => {
+        window.location.hash =
+            (pluginName || this.state.currentPane.getName()) + (path ? '/' + path.join('/') : '');
+    };
+
+    private updateStateFromHash = () => {
+        let hash = window.location.hash;
+        let hashes = (hash ? hash.substr(1) : '').split('/');
+        let pluginName = hashes[0];
+        let plugin =
+            pluginName && this.props.plugins.filter(plugin => plugin.getName() == pluginName)[0];
+
+        if (plugin) {
+            this.setState({
+                currentPane: plugin,
+            });
+
+            window.setTimeout(() => {
+                hashes.splice(0, 1);
+                if (plugin.setHashPath) {
+                    plugin.setHashPath(hashes);
+                }
+            }, 0);
+        }
+    };
+
     private renderSidePane = (plugin: SidePanePlugin): JSX.Element => {
         let title = plugin.getTitle();
         let isCurrent = this.state.currentPane == plugin;
         return (
             <div key={title} className={isCurrent ? styles.activePane : styles.inactivePane}>
-                <div
-                    className={styles.title}
-                    onClick={() => this.setState({ currentPane: plugin })}>
+                <div className={styles.title} onClick={() => this.updateHash(plugin.getName())}>
                     {title}
                 </div>
                 <div className={styles.bodyContainer}>
-                    <div className={styles.body}>{plugin.renderSidePane()}</div>
+                    <div className={styles.body}>{plugin.renderSidePane(this.updateHash)}</div>
                 </div>
             </div>
         );
     };
-
-    private setCurrentPlugin = () => {
-        let plugin = this.getCurrentPluginFromHash();
-
-        if (plugin && this.state.currentPane != plugin) {
-            this.setState({
-                currentPane: plugin,
-            });
-        }
-    };
-
-    private getCurrentPluginFromHash() {
-        let hash = window.location.hash;
-        hash = hash ? hash.substr(1) : null;
-
-        if (hash) {
-            for (let plugin of this.props.plugins) {
-                let name = plugin.getName && plugin.getName();
-                if (name == hash) {
-                    return plugin;
-                }
-            }
-        }
-
-        return null;
-    }
 }
