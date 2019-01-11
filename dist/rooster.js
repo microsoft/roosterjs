@@ -9511,7 +9511,8 @@ var HtmlSanitizer = /** @class */ (function () {
         var styleSheets = this.additionalGlobalStyleNodes
             .reverse()
             .map(function (node) { return node.sheet; })
-            .concat(styleNodes.map(function (node) { return node.sheet; }).reverse());
+            .concat(styleNodes.map(function (node) { return node.sheet; }).reverse())
+            .filter(function (sheet) { return sheet; });
         for (var _i = 0, styleSheets_1 = styleSheets; _i < styleSheets_1.length; _i++) {
             var styleSheet = styleSheets_1[_i];
             var _loop_1 = function (j) {

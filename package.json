@@ -8,7 +8,7 @@
         "roosterjs-editor-api": "7.0.1",
         "roosterjs-editor-plugins": "7.0.1",
         "roosterjs-plugin-image-resize": "7.0.1",
-        "roosterjs-html-sanitizer": "1.1.2"
+        "roosterjs-html-sanitizer": "1.1.3"
     },
     "main": "./lib/index.js",
     "version": "7.0.1",
