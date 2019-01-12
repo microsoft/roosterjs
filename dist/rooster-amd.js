@@ -8024,7 +8024,9 @@ var Paste = /** @class */ (function () {
                     image: items.image,
                     text: items.text,
                     rawHtml: items.html,
-                    html: items.html ? _this.sanitizeHtml(items.html) : textToHtml_1.default(items.text),
+                    html: items.html
+                        ? _this.sanitizeHtml(items.html)
+                        : textToHtml_1.default(items.text, true /*parseLink*/),
                 });
             });
         };
@@ -8344,9 +8346,11 @@ var ZERO_WIDTH_SPACE = '&#8203;';
 /**
  * Convert plain to HTML
  * @param text The plain text to convert
+ * @param parseLink True to parse hyperlink from the text and generate HTML A tag, otherwise false
  * @returns HTML string to present the input text
  */
-function textToHtml(text) {
+function textToHtml(text, parseLink) {
+    var linkData = parseLink && roosterjs_editor_dom_1.matchLink(text);
     text = (text || '')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -8375,7 +8379,7 @@ function textToHtml(text) {
         });
     }
     text = text.replace(/\s\s/g, ' &nbsp;');
-    return text;
+    return linkData ? "<a href=\"" + linkData.normalizedUrl + "\">" + text + "</a>" : text;
 }
 exports.default = textToHtml;
 
