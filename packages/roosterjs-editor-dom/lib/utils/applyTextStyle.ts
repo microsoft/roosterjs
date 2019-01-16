@@ -50,7 +50,10 @@ export default function applyTextStyle(
         formatNodes.forEach(node => {
             // When apply style within style tags like B/I/U/..., we split the tag and apply outside them
             // So that the inner style tag such as U, STRIKE can inherit the style we added
-            while (STYLETAGS.indexOf(getTagOfNode(node.parentNode)) >= 0) {
+            while (
+                getTagOfNode(node) != 'SPAN' &&
+                STYLETAGS.indexOf(getTagOfNode(node.parentNode)) >= 0
+            ) {
                 node = splitBalancedNodeRange(node);
             }
             styler(getTagOfNode(node) == 'SPAN' ? <HTMLElement>node : wrap(node, 'span'));

@@ -1,3 +1,5 @@
+import { Browser } from 'roosterjs-editor-dom';
+
 /**
  * Feature set for ContentEdit plugin.
  * Call getDefaultContentEditFeatures() to get default feature set.
@@ -23,7 +25,7 @@ interface ContentEditFeatures {
 
     /**
      * When press Enter on empty line in a list, outdent current list item
-     * @default true
+     * @default true for IE, false for other browsers since they have already had the behavior
      */
     outdentWhenEnterOnEmptyLine: boolean;
 
@@ -105,7 +107,7 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         indentWhenTab: true,
         outdentWhenShiftTab: true,
         outdentWhenBackspaceOnEmptyFirstLine: true,
-        outdentWhenEnterOnEmptyLine: true,
+        outdentWhenEnterOnEmptyLine: Browser.isIE,
         mergeInNewLineWhenBackspaceOnFirstChar: false,
         unquoteWhenBackspaceOnEmptyFirstLine: true,
         unquoteWhenEnterOnEmptyLine: true,
