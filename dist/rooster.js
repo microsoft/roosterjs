@@ -1,5 +1,5 @@
 /*
-    VERSION: 7.0.1
+    VERSION: 7.0.2
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -1433,6 +1433,7 @@ exports.default = formatTable;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var formatTable_1 = __webpack_require__(/*! ./formatTable */ "./packages/roosterjs-editor-api/lib/table/formatTable.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 /**
  * Insert table into editor at current selection
  * @param editor The editor instance
@@ -1469,7 +1470,7 @@ function insertTable(editor, columns, rows, format) {
             bottomBorderColor: '#ABABAB',
             verticalBorderColor: '#ABABAB',
         }, table);
-        editor.runAsync(function () { return editor.select(table, -3 /* After */); });
+        editor.runAsync(function () { return editor.select(new roosterjs_editor_dom_1.Position(table, 0 /* Begin */).normalize()); });
     }, "Format" /* Format */);
 }
 exports.default = insertTable;
@@ -6328,7 +6329,8 @@ function applyTextStyle(container, styler, from, to) {
         formatNodes.forEach(function (node) {
             // When apply style within style tags like B/I/U/..., we split the tag and apply outside them
             // So that the inner style tag such as U, STRIKE can inherit the style we added
-            while (STYLETAGS.indexOf(getTagOfNode_1.default(node.parentNode)) >= 0) {
+            while (getTagOfNode_1.default(node) != 'SPAN' &&
+                STYLETAGS.indexOf(getTagOfNode_1.default(node.parentNode)) >= 0) {
                 node = splitParentNode_1.splitBalancedNodeRange(node);
             }
             styler(getTagOfNode_1.default(node) == 'SPAN' ? node : wrap_1.default(node, 'span'));
@@ -7421,6 +7423,7 @@ exports.default = ContentEdit;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 /**
  * Get default feature set of ContentEdit plugin
  */
@@ -7430,7 +7433,7 @@ function getDefaultContentEditFeatures() {
         indentWhenTab: true,
         outdentWhenShiftTab: true,
         outdentWhenBackspaceOnEmptyFirstLine: true,
-        outdentWhenEnterOnEmptyLine: true,
+        outdentWhenEnterOnEmptyLine: roosterjs_editor_dom_1.Browser.isIE,
         mergeInNewLineWhenBackspaceOnFirstChar: false,
         unquoteWhenBackspaceOnEmptyFirstLine: true,
         unquoteWhenEnterOnEmptyLine: true,
