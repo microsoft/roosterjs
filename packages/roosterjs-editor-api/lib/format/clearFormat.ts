@@ -49,7 +49,7 @@ export default function clearFormat(editor: Editor) {
                 setTextColor(editor, defaultFormat.textColor, defaultFormat.ogsc);
             }
             if (defaultFormat.backgroundColor) {
-                setBackgroundColor(editor, defaultFormat.backgroundColor);
+                setBackgroundColor(editor, defaultFormat.backgroundColor, defaultFormat.ogsb);
             }
             if (defaultFormat.bold) {
                 toggleBold(editor);

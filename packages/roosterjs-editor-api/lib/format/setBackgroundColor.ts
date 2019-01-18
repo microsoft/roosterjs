@@ -8,7 +8,12 @@ import { Editor } from 'roosterjs-editor-core';
  * or hexadecimal color string (e.g, '#FF0000') or rgb value (e.g, 'rgb(255, 0, 0)') supported by browser.
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
  */
-export default function setBackgroundColor(editor: Editor, color: string) {
+export default function setBackgroundColor(editor: Editor, color: string, ogsb?: string) {
     color = color.trim();
-    applyInlineStyle(editor, element => (element.style.backgroundColor = color));
+    applyInlineStyle(editor, element => {
+        element.style.backgroundColor = color;
+        if (ogsb) {
+            element.dataset.ogsb = ogsb.trim();
+        }
+    });
 }
