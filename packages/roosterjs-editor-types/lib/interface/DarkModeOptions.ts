@@ -19,7 +19,6 @@ interface DarkModeOptions {
      * It takes in the impacted HTMLElement
      */
     onExternalContentTransform?: (htmlIn: HTMLElement) => void;
-
 }
 
 export default DarkModeOptions;

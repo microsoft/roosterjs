@@ -40,12 +40,12 @@ interface DefaultFormat {
     /**
      * original source background, used for converting back to light mode
      */
-    ogsb?: string;
+    originalSourceBackgroundColor?: string;
 
      /**
-      * original source color, used for converting back to light mode
+      * original source text color, used for converting back to light mode
       */
-    ogsc?: string;
+    originalSourceTextColor?: string;
 }
 
 export default DefaultFormat;

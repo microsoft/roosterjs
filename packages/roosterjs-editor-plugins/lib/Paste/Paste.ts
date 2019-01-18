@@ -195,7 +195,7 @@ export default class Paste implements EditorPlugin {
         applyFormat(element, format);
     }
 
-    private applyToElements(node: Node, callback: (element: HTMLElement) => void) {
+    private applyToElements(node: Node, elementTransform: (element: HTMLElement) => void) {
         let leaf = getFirstLeafNode(node);
         let parents: HTMLElement[] = [];
         while (leaf) {
@@ -210,7 +210,7 @@ export default class Paste implements EditorPlugin {
         }
         parents.push(<HTMLElement>node);
         for (let parent of parents) {
-            callback(parent);
+            elementTransform(parent);
         }
     }
 

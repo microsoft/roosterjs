@@ -1,5 +1,4 @@
 import createEditorCore from './createEditorCore';
-import DarkModeOptions from '../interfaces/DarkModeOptions';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
@@ -8,6 +7,7 @@ import {
     BlockElement,
     ChangeSource,
     ContentPosition,
+    DarkModeOptions,
     DefaultFormat,
     DocumentCommand,
     ExtractContentEvent,
@@ -54,26 +54,14 @@ export default class Editor {
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(contentDiv: HTMLDivElement, options: EditorOptions = {}, darkMode: boolean | DarkModeOptions = false) {
+    constructor(contentDiv: HTMLDivElement, options: EditorOptions = {}) {
         // 1. Make sure all parameters are valid
         if (getTagOfNode(contentDiv) != 'DIV') {
             throw new Error('contentDiv must be an HTML DIV element');
         }
 
-        // Set up dark mode defaults if not provided.
-        if (darkMode && typeof darkMode === 'boolean') {
-            darkMode = <DarkModeOptions>{
-                defaultFormat: <DefaultFormat>{
-                    backgroundColor: 'rgb(51,51,51)',
-                    textColor: 'rgb(255,255,255)',
-                    ogsb: 'rgb(255,255,255)',
-                    ogsc: 'rgb(0,0,0)',
-                }
-            }
-        }
-
         // 2. Store options values to local variables
-        this.core = createEditorCore(contentDiv, options, darkMode as DarkModeOptions);
+        this.core = createEditorCore(contentDiv, options);
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
@@ -354,14 +342,14 @@ export default class Editor {
      * before return. Use this parameter to remove any temporary content added by plugins.
      * @param includeSelectionMarker Set to true if need include selection marker inside the content.
      * When restore this content, editor will set the selection to the position marked by these markers
-     * @param getInDarkMode Set to true if you want to get the content of the editor in dark mode
-     * This is a no-op when in light mode. If true, instead of converting to light, it will return the 'real' editor content.
+     * @param normalizeColor Set to false if you want to get the content of the editor "as is" with no normalization.
+     * This is a no-op when in light mode. If false, instead of normalizing the colors to light mode, it will return the 'real' editor content.
      * @returns HTML string representing current editor content
      */
     public getContent(
         triggerExtractContentEvent: boolean = true,
         includeSelectionMarker: boolean = false,
-        getInDarkMode: boolean = false,
+        normalizeColor: boolean = true,
     ): string {
         let contentDiv = this.core.contentDiv;
         let content = contentDiv.innerHTML;
@@ -383,14 +371,14 @@ export default class Editor {
             content = extractContentEvent.content;
         }
 
-        if (this.core.inDarkMode && !getInDarkMode) {
-            content = this.getLightModeContent(content);
+        if (this.core.inDarkMode && normalizeColor) {
+            content = this.getColorNormalizedContent(content);
         }
 
         return content;
     }
 
-    private getLightModeContent(content: string): string {
+    private getColorNormalizedContent(content: string): string {
         let el = document.createElement('div');
         el.innerHTML = content;
         const allChildElements = el.getElementsByTagName('*') as HTMLCollectionOf<HTMLElement>;
@@ -406,7 +394,6 @@ export default class Editor {
             }
         });
         const newContent = el.innerHTML;
-        //document.removeChild(el);
         return newContent;
     }
 
