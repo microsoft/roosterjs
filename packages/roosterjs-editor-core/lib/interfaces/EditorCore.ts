@@ -1,4 +1,3 @@
-import DarkModeOptions from './DarkModeOptions';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorPlugin from './EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
@@ -8,6 +7,7 @@ import UndoService from './UndoService';
 import {
     ChangeSource,
     DefaultFormat,
+    DarkModeOptions,
     InsertOption,
     NodePosition,
     PluginEvent,

@@ -46,10 +46,34 @@ export default function clearFormat(editor: Editor) {
                 setFontSize(editor, defaultFormat.fontSize);
             }
             if (defaultFormat.textColor) {
-                setTextColor(editor, defaultFormat.textColor, defaultFormat.ogsc);
+                if (defaultFormat.originalSourceTextColor) {
+                    const colorPair = {
+                        lightModeColor: editor.isDarkMode() ?
+                        defaultFormat.originalSourceTextColor :
+                        defaultFormat.textColor,
+                        darkModeColor: !editor.isDarkMode() ?
+                        defaultFormat.originalSourceTextColor :
+                        defaultFormat.textColor
+                    }
+                    setTextColor(editor, colorPair);
+                } else {
+                    setTextColor(editor, defaultFormat.textColor);
+                }
             }
             if (defaultFormat.backgroundColor) {
-                setBackgroundColor(editor, defaultFormat.backgroundColor, defaultFormat.ogsb);
+                if (defaultFormat.originalSourceBackgroundColor) {
+                    const colorPair = {
+                        lightModeColor: editor.isDarkMode() ?
+                        defaultFormat.originalSourceBackgroundColor :
+                        defaultFormat.backgroundColor,
+                        darkModeColor: !editor.isDarkMode() ?
+                        defaultFormat.originalSourceBackgroundColor :
+                        defaultFormat.backgroundColor
+                    }
+                    setBackgroundColor(editor, colorPair);
+                } else {
+                    setBackgroundColor(editor, defaultFormat.backgroundColor);
+                }
             }
             if (defaultFormat.bold) {
                 toggleBold(editor);

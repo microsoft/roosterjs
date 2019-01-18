@@ -31,10 +31,10 @@ export default function applyFormat(element: HTMLElement, format: DefaultFormat)
         if (underline) {
             elementStyle.textDecoration = 'underline';
         }
-        if (ogsb) {
+        if (originalSourceBackgroundColor) {
             element.dataset.ogsb = originalSourceBackgroundColor;
         }
-        if (ogsc) {
+        if (originalSourceTextColor) {
             element.dataset.ogsc = originalSourceTextColor;
         }
     }
