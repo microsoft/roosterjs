@@ -36,6 +36,16 @@ interface DefaultFormat {
      * Whether has underline
      */
     underline?: boolean;
+
+    /**
+     * original source background, used for converting back to light mode
+     */
+    ogsb?: string;
+
+     /**
+      * original source color, used for converting back to light mode
+      */
+    ogsc?: string;
 }
 
 export default DefaultFormat;

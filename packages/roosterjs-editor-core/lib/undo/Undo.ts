@@ -134,7 +134,8 @@ export default class Undo implements UndoService {
     public addUndoSnapshot(): string {
         let snapshot = this.editor.getContent(
             false /*triggerExtractContentEvent*/,
-            true /*markSelection*/
+            true /*markSelection*/,
+            this.editor.isDarkMode()
         );
         this.getSnapshotsManager().addSnapshot(snapshot);
         this.hasNewContent = false;

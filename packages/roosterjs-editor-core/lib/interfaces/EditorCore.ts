@@ -1,3 +1,4 @@
+import DarkModeOptions from './DarkModeOptions';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorPlugin from './EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
@@ -84,6 +85,16 @@ interface EditorCore {
      * Cached selection range of this editor
      */
     cachedSelectionRange: Range;
+
+    /**
+     * If the editor is in dark mode.
+     */
+    inDarkMode: boolean;
+
+    /***
+     * The dark mode options, if set.
+     */
+    darkModeOptions?: DarkModeOptions;
 }
 
 export default EditorCore;

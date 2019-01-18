@@ -1,4 +1,5 @@
 import attachDomEvent from '../coreAPI/attachDomEvent';
+import DarkModeOptions from '../interfaces/DarkModeOptions';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorCore, { CoreApiMap, CorePlugins } from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
@@ -20,7 +21,8 @@ import { getComputedStyles } from 'roosterjs-editor-dom';
 
 export default function createEditorCore(
     contentDiv: HTMLDivElement,
-    options: EditorOptions
+    options: EditorOptions,
+    darkModeOptions?: DarkModeOptions
 ): EditorCore {
     let corePlugins: CorePlugins = {
         undo: options.undo || new Undo(),
@@ -43,7 +45,7 @@ export default function createEditorCore(
     return {
         contentDiv,
         document: contentDiv.ownerDocument,
-        defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
+        defaultFormat: calcDefaultFormat(contentDiv, options, darkModeOptions),
         corePlugins,
         currentUndoSnapshot: null,
         customData: {},
@@ -52,10 +54,24 @@ export default function createEditorCore(
         eventHandlerPlugins: eventHandlerPlugins,
         api: createCoreApiMap(options.coreApiOverride),
         defaultApi: createCoreApiMap(),
+        inDarkMode: darkModeOptions ? true : false,
+        darkModeOptions: darkModeOptions,
     };
 }
 
-function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat {
+function calcDefaultFormat(node: Node, options: EditorOptions, darkModeOptions?: DarkModeOptions): DefaultFormat {
+    let baseFormat = null;
+    if (darkModeOptions) {
+        baseFormat = darkModeOptions.defaultFormat ? darkModeOptions.defaultFormat : <DefaultFormat>{
+            backgroundColor: 'rgb(51,51,51)',
+            textColor: 'rgb(255,255,255)',
+            ogsb: 'rgb(255,255,255)',
+            ogsc: 'rgb(0,0,0)',
+        };
+    } else {
+        baseFormat = options.defaultFormat;
+    }
+
     if (baseFormat && Object.keys(baseFormat).length === 0) {
         return {};
     }
@@ -70,6 +86,8 @@ function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat
         bold: baseFormat.bold,
         italic: baseFormat.italic,
         underline: baseFormat.underline,
+        ogsb: baseFormat.ogsb,
+        ogsc: baseFormat.ogsc,
     };
 }
 

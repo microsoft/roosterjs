@@ -46,7 +46,7 @@ export default function clearFormat(editor: Editor) {
                 setFontSize(editor, defaultFormat.fontSize);
             }
             if (defaultFormat.textColor) {
-                setTextColor(editor, defaultFormat.textColor);
+                setTextColor(editor, defaultFormat.textColor, defaultFormat.ogsc);
             }
             if (defaultFormat.backgroundColor) {
                 setBackgroundColor(editor, defaultFormat.backgroundColor);
