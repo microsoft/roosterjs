@@ -328,10 +328,18 @@ export default class Editor {
         return isNodeEmpty(this.core.contentDiv, trim);
     }
 
+    /**
+     * Check if the editor is in dark mode
+     * @returns True if the editor is in dark mode, otherwise false
+     */
     public isDarkMode(): boolean {
         return this.core.inDarkMode;
     }
 
+    /**
+     * Returns the dark mode options set on the editor
+     * @returns A DarkModeOptions object
+     */
     public getDarkModeOptions(): DarkModeOptions {
         return this.core.darkModeOptions;
     }
