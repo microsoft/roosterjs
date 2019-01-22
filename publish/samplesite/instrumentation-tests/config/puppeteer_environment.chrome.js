@@ -1,22 +1,24 @@
-// puppeteer_environment.js
 const NodeEnvironment = require('jest-environment-node');
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
+const CONSTANTS = require('./constants');
 
-const DIR = path.join(os.tmpdir(), 'jest_puppeteer_global_setup');
-
-class PuppeteerEnvironment extends NodeEnvironment {
+/**
+ * Test environment for a running a test in puppeteer-firefox.
+ *
+ * Re-uses the same chrome instance with new tabs for each test.
+ */
+class ChromePuppeteerEnvironment extends NodeEnvironment {
   constructor(config) {
     super(config);
   }
 
   async setup() {
     await super.setup();
-    // get the wsEndpoint (don't handle failure because wsEndpoint only works in Chrome)
-    const wsPath = path.join(DIR, 'wsEndpoint');
+    // get the wsEndpoint we created for the peristent chrome instance
+    const wsPath = path.join(CONSTANTS.CHROME_TEMP_DIR, 'wsEndpoint');
     const wsEndpoint = fs.readFileSync(wsPath, 'utf8');
-    // connect to exisiting chrome puppeteer
+    // connect to exisiting chrome puppeteer (see setup.chrome.js)
     const puppeteer = require('puppeteer');
     this.global.__BROWSER__ = await puppeteer.connect({
       browserWSEndpoint: wsEndpoint,
@@ -32,4 +34,4 @@ class PuppeteerEnvironment extends NodeEnvironment {
   }
 }
 
-module.exports = PuppeteerEnvironment
+module.exports = ChromePuppeteerEnvironment

@@ -2,11 +2,9 @@ const puppeteer = require('puppeteer');
 const mkdirp = require('mkdirp');
 const path = require('path');
 const fs = require('fs');
-const os = require('os');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
-
-const DIR = path.join(os.tmpdir(), 'jest_puppeteer_global_setup');
+const CONSTANTS = require('./constants');
 
 const repoRoot = path.join(__dirname, '../../../../');
 const config = require(path.join(repoRoot, 'webpack.config.js'));
@@ -17,7 +15,7 @@ module.exports = async function () {
         publicPath: config.output.publicPath,
         contentBase: path.join(repoRoot),
     });
-    devserver.listen(9090);
+    devserver.listen(CONSTANTS.DEVSERVER_PORT);
 
     const [, browser] = await Promise.all([
         new Promise((resolve) => {
@@ -35,6 +33,6 @@ module.exports = async function () {
 
     // Chrome reuses the same puppeteer instance. create the websocket endpoint so that
     // the puppeteer_environment can connect to it.
-    mkdirp.sync(DIR);
-    fs.writeFileSync(path.join(DIR, 'wsEndpoint'), browser.wsEndpoint());
+    mkdirp.sync(CONSTANTS.CHROME_TEMP_DIR);
+    fs.writeFileSync(path.join(CONSTANTS.CHROME_TEMP_DIR, 'wsEndpoint'), browser.wsEndpoint());
 }

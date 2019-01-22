@@ -1,10 +1,12 @@
-// puppeteer_environment.js
 const NodeEnvironment = require('jest-environment-node');
-const path = require('path');
-const os = require('os');
 const puppeteer = require('puppeteer-firefox');
 
-class PuppeteerEnvironment extends NodeEnvironment {
+/**
+ * Test environment for a running a test in puppeteer-firefox.
+ *
+ * Launches a new firefox instance for every test suite.
+ */
+class FirefoxPuppeteerEnvironment extends NodeEnvironment {
   constructor(config) {
     super(config);
   }
@@ -26,4 +28,4 @@ class PuppeteerEnvironment extends NodeEnvironment {
   }
 }
 
-module.exports = PuppeteerEnvironment
+module.exports = FirefoxPuppeteerEnvironment

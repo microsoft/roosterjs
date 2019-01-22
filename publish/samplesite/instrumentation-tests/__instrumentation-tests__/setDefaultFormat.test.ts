@@ -1,4 +1,4 @@
-import setupTest from './utils/setupTest';
+import loadSampleSite from './utils/loadSampleSite';
 import focusEditor from './utils/focusEditor';
 import setDefaultFormat from './utils/setDefaultFormat';
 import getTextStyleAtSelection from './utils/getTextStyleAtSelection'
@@ -7,7 +7,7 @@ import { Page } from 'puppeteer';
 describe('Test Harness setDefaultFormat', () => {
     let page: Page = null
     beforeEach(async () => {
-        page = await setupTest();
+        page = await loadSampleSite();
     })
 
     afterEach(async () => {

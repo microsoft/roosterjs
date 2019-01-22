@@ -10,6 +10,7 @@ install:
     - npm run build
 script:
     - xvfb-run npm run test
+    - xvfb-run npm run instrumentation
 cache:
     yarn: true
 deploy:

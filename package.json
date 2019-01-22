@@ -22,7 +22,8 @@
         "test": "karma start",
         "test:debug": "karma start --no-single-run",
         "prettier": "node tools/prettier.js",
-        "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo publish"
+        "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo publish",
+        "instrumentation": "cd publish/samplesite/instrumentation-tests && npm run instrumentation"
     },
     "devDependencies": {
         "@types/jasmine": "2.6.0",
