@@ -14,7 +14,7 @@ describe('Test Harness setDefaultFormat', () => {
         await page.close();
     })
 
-    it('defaults to nonbold nonitalic nonundelrined ', async () => {
+    it('defaults to nonbold nonitalic nonunderlined ', async () => {
         // Assert
         await focusEditor(page);
         const { fontWeight, fontStyle, textDecoration } = await page.evaluate(getTextStyleAtSelection);
