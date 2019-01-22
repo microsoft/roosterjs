@@ -1,7 +1,8 @@
+const path = require('path');
 const devServerPort = 3000;
 
 module.exports = {
-    entry: './publish/samplesite/scripts/index.ts',
+    entry: path.join(__dirname, './publish/samplesite/scripts/index.ts'),
     devtool: 'source-map',
     output: {
         filename: 'demo.js',
