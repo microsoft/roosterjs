@@ -47,17 +47,17 @@ class MainPane extends MainPaneBase {
                             <SidePane
                                 ref={ref => (this.sidePane = ref)}
                                 plugins={getSidePanePluginArray()}
-                                className={styles.sidePane}
+                                className={`main-pane ${styles.sidePane}`}
                             />
-                            <button className={styles.showSidePane} onClick={this.onHideSidePane}>
+                            <button className={`side-pane-toggle open ${styles.showSidePane}`} onClick={this.onHideSidePane}>
                                 <div>Hide side pane</div>
                             </button>
                         </>
                     ) : (
-                        <button className={styles.showSidePane} onClick={this.onShowSidePane}>
-                            <div>Show side pane</div>
-                        </button>
-                    )}
+                            <button className={`side-pane-toggle closed ${styles.showSidePane}`} onClick={this.onShowSidePane}>
+                                <div>Show side pane</div>
+                            </button>
+                        )}
                 </div>
             </div>
         );
