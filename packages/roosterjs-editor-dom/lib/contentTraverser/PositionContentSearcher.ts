@@ -42,7 +42,7 @@ export default class PositionContentSearcher {
      * @param rootNode Root node of the whole scope
      * @param position Start position
      */
-    constructor(private rootNode: Node, private position: NodePosition) {}
+    constructor(private rootNode: Node, private position: NodePosition) { }
 
     /**
      * Get the word before position. The word is determined by scanning backwards till the first white space, the portion

@@ -28,6 +28,8 @@ export interface EditorProps {
     undo?: UndoService;
 }
 
+let editorInstance: RoosterJsEditor | null = null;
+
 export default class Editor extends React.Component<EditorProps, BuildInPluginState> {
     private contentDiv: HTMLDivElement;
     private editor: RoosterJsEditor;
@@ -52,9 +54,11 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
 
     componentDidMount() {
         this.initEditor();
+        if (editorInstance == null) editorInstance = this.editor;
     }
 
     componentWillUnmount() {
+        if (editorInstance == this.editor) editorInstance = null;
         this.disposeEditor();
     }
 
@@ -112,3 +116,8 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
         return assign(defaultFeatures, this.state.contentEditFeatures);
     }
 }
+
+// expose the active editor the global window for integration tests
+Object.defineProperty(window, 'globalRoosterEditor', {
+    get: () => editorInstance
+});
