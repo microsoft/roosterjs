@@ -6,7 +6,7 @@ const CONSTANTS = require('./constants');
 const repoRoot = path.join(__dirname, '../../../../');
 const config = require(path.join(repoRoot, 'webpack.config.js'));
 
-module.exports = async function (puppeteer) {
+module.exports = async function () {
     const webpackCompiler = webpack(config);
     const devserver = new WebpackDevServer(webpackCompiler, {
         publicPath: config.output.publicPath,
