@@ -136,8 +136,9 @@ export default class Paste implements EditorPlugin {
                 if (this.editor.isDarkMode()) {
                     // either use their paste handler or ours, but check it here.
                     this.applyToElements(node, (element) => {
-                        if (this.editor.getDarkModeOptions().onExternalContentTransform) {
-                            this.editor.getDarkModeOptions().onExternalContentTransform(element);
+                        const darkModeOptions = this.editor.getDarkModeOptions();
+                        if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
+                            darkModeOptions.onExternalContentTransform(element);
                         } else {
                             element.style.color = null;
                             element.style.backgroundColor = null;
