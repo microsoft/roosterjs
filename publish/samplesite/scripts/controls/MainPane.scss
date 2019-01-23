@@ -31,6 +31,20 @@
     }
 }
 
+.showSidePane {
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 30px;
+    cursor: hand;
+    white-space: nowrap;
+    div {
+        transform: rotate(-90deg);
+    }
+    &:hover {
+        background-color: #ccc;
+    }
+}
+
 .sidePane {
     min-width: 340px;
     flex-shrink: 0;

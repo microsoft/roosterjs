@@ -2,7 +2,11 @@ import * as React from 'react';
 import BuildInPluginState from './BuildInPluginState';
 import SidePane from './sidePane/SidePane';
 
-export default abstract class MainPaneBase extends React.Component<{}, {}> {
+export interface MainPaneBaseState {
+    showSidePane: boolean;
+}
+
+export default abstract class MainPaneBase extends React.Component<{}, MainPaneBaseState> {
     protected sidePane: SidePane;
     private static instance: MainPaneBase;
 
@@ -18,5 +22,5 @@ export default abstract class MainPaneBase extends React.Component<{}, {}> {
 
     abstract resetEditorPlugin(pluginState: BuildInPluginState): void;
 
-    abstract updateForamtState(): void;
+    abstract updateFormatState(): void;
 }

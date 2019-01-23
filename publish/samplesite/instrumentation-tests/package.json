@@ -1,0 +1,19 @@
+{
+  "name": "instrumentation-tests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^23.3.13",
+    "@types/puppeteer": "^1.11.2",
+    "jest": "^23.6.0",
+    "puppeteer": "^1.11.0",
+    "puppeteer-firefox": "^0.4.2",
+    "ts-jest": "^23.10.5"
+  },
+  "scripts": {
+    "instrumentation": "yarn run instrumentation:chrome && yarn run instrumentation:firefox",
+    "instrumentation:chrome": "jest --config ./jest.chrome.config.js",
+    "instrumentation:firefox": "jest --config ./jest.firefox.config.js"
+  }
+}

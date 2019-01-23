@@ -14,6 +14,14 @@ class MainPane extends MainPaneBase {
     private mouseX: number;
     private editor = React.createRef<Editor>();
 
+    constructor(props: {}) {
+        super(props);
+
+        this.state = {
+            showSidePane: window.location.hash != '',
+        };
+    }
+
     render() {
         let plugins = getPlugins();
 
@@ -27,18 +35,29 @@ class MainPane extends MainPaneBase {
                 />
                 <div className={styles.body}>
                     <Editor
-                        plugins={getAllPluginArray()}
+                        plugins={getAllPluginArray(this.state.showSidePane)}
                         className={styles.editor}
                         ref={this.editor}
                         initState={plugins.editorOptions.getBuildInPluginState()}
                         undo={plugins.snapshot}
                     />
-                    <div className={styles.resizer} onMouseDown={this.onMouseDown} />
-                    <SidePane
-                        ref={ref => (this.sidePane = ref)}
-                        plugins={getSidePanePluginArray()}
-                        className={styles.sidePane}
-                    />
+                    {this.state.showSidePane ? (
+                        <>
+                            <div className={styles.resizer} onMouseDown={this.onMouseDown} />
+                            <SidePane
+                                ref={ref => (this.sidePane = ref)}
+                                plugins={getSidePanePluginArray()}
+                                className={`main-pane ${styles.sidePane}`}
+                            />
+                            <button className={`side-pane-toggle open ${styles.showSidePane}`} onClick={this.onHideSidePane}>
+                                <div>Hide side pane</div>
+                            </button>
+                        </>
+                    ) : (
+                            <button className={`side-pane-toggle closed ${styles.showSidePane}`} onClick={this.onShowSidePane}>
+                                <div>Show side pane</div>
+                            </button>
+                        )}
                 </div>
             </div>
         );
@@ -48,8 +67,8 @@ class MainPane extends MainPaneBase {
         this.editor.current.resetEditorPlugin(pluginState);
     }
 
-    updateForamtState() {
-        getPlugins().formatState.updateForamtState();
+    updateFormatState() {
+        getPlugins().formatState.updateFormatState();
     }
 
     private onMouseDown = (e: React.MouseEvent<EventTarget>) => {
@@ -68,6 +87,19 @@ class MainPane extends MainPaneBase {
         document.removeEventListener('mousemove', this.onMouseMove, true);
         document.removeEventListener('mouseup', this.onMouseUp, true);
         document.body.style.userSelect = '';
+    };
+
+    private onShowSidePane = () => {
+        this.setState({
+            showSidePane: true,
+        });
+    };
+
+    private onHideSidePane = () => {
+        this.setState({
+            showSidePane: false,
+        });
+        window.location.hash = '';
     };
 }
 

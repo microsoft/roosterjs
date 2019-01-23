@@ -32,14 +32,14 @@ export function getPlugins(): Plugins {
     return plugins;
 }
 
-export function getAllPluginArray(): EditorPlugin[] {
+export function getAllPluginArray(includeSidePanePlugins: boolean): EditorPlugin[] {
     let allPlugins = getPlugins();
     return [
         allPlugins.ribbon,
-        allPlugins.formatState,
-        allPlugins.editorOptions,
-        allPlugins.eventView,
-        allPlugins.api,
+        includeSidePanePlugins && allPlugins.formatState,
+        includeSidePanePlugins && allPlugins.editorOptions,
+        includeSidePanePlugins && allPlugins.eventView,
+        includeSidePanePlugins && allPlugins.api,
     ];
 }
 

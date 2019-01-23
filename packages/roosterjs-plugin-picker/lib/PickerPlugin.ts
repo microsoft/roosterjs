@@ -33,6 +33,7 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
     private blockSuggestions: boolean;
     private isSuggesting: boolean;
     private isCharacterValue: boolean;
+    private lastKnownRange: Range;
 
     constructor(
         public readonly dataProvider: PickerDataProvider,
@@ -57,6 +58,14 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                 this.editor.focus();
 
                 let wordToReplace = this.getWord(null);
+
+                // Safari drops our focus out so we get an empty word to replace when we call getWord.
+                // We fall back to using the lastKnownRange to try to get around this.
+                if ((!wordToReplace || wordToReplace.length == 0) && this.lastKnownRange) {
+                    this.editor.select(this.lastKnownRange);
+                    wordToReplace = this.getWord(null);
+                }
+
                 if (wordToReplace) {
                     let insertNode = () => {
                         replaceWithNode(this.editor, wordToReplace, htmlNode, true /* exactMatch */);
@@ -122,8 +131,16 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
         }
     }
 
+    private setLastKnownRange(range: Range) {
+        this.lastKnownRange = range;
+    }
+
     private setIsSuggesting(isSuggesting: boolean) {
         this.isSuggesting = isSuggesting;
+
+        if (!isSuggesting) {
+            this.setLastKnownRange(null);
+        }
         this.dataProvider.onIsSuggestingChanged(isSuggesting);
     }
 
@@ -200,6 +217,7 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                     trimmedWordBeforeCursor.split(' ').length <= 4)
             ) {
                 this.dataProvider.queryStringUpdated(trimmedWordBeforeCursor);
+                this.setLastKnownRange(this.editor.getSelectionRange());
             } else {
                 this.setIsSuggesting(false);
             }
@@ -215,6 +233,7 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                     this.setIsSuggesting(true);
                     let shortWord = wordBeforeCursor.substring(1).trim();
                     this.dataProvider.queryStringUpdated(shortWord);
+                    this.setLastKnownRange(this.editor.getSelectionRange());
                     if (this.dataProvider.setCursorPoint) {
                         // Determine the bounding rectangle for the @mention
                         let searcher = cacheGetContentSearcher(event, this.editor);
