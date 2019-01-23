@@ -93,7 +93,7 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
         this.onHideDropDown();
         if (button.onClick) {
             button.onClick(editor, value);
-            MainPaneBase.getInstance().updateForamtState();
+            MainPaneBase.getInstance().updateFormatState();
         }
 
         this.props.onClicked();
@@ -132,13 +132,13 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
                             )}
                         </div>
                     ) : (
-                        <div
-                            key={key}
-                            onClick={() => this.onExecute(key)}
-                            className={styles.dropDownItem}>
-                            {items[key]}
-                        </div>
-                    )
+                            <div
+                                key={key}
+                                onClick={() => this.onExecute(key)}
+                                className={styles.dropDownItem}>
+                                {items[key]}
+                            </div>
+                        )
                 )}
             </div>
         );

@@ -67,8 +67,8 @@ class MainPane extends MainPaneBase {
         this.editor.current.resetEditorPlugin(pluginState);
     }
 
-    updateForamtState() {
-        getPlugins().formatState.updateForamtState();
+    updateFormatState() {
+        getPlugins().formatState.updateFormatState();
     }
 
     private onMouseDown = (e: React.MouseEvent<EventTarget>) => {

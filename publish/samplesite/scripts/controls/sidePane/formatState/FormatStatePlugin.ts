@@ -8,7 +8,7 @@ import { SidePaneElementProps } from '../SidePaneElement';
 export default class FormatStatePlugin extends SidePanePluginImpl<
     FormatStatePane,
     FormatStatePaneProps
-> {
+    > {
     constructor() {
         super(FormatStatePane, 'format', 'Format State');
     }
@@ -18,7 +18,7 @@ export default class FormatStatePlugin extends SidePanePluginImpl<
         this.editor.runAsync(() => {
             this.editor.focus();
 
-            this.updateForamtState();
+            this.updateFormatState();
         });
     }
 
@@ -35,11 +35,11 @@ export default class FormatStatePlugin extends SidePanePluginImpl<
             event.eventType == PluginEventType.MouseUp ||
             event.eventType == PluginEventType.ContentChanged
         ) {
-            this.updateForamtState();
+            this.updateFormatState();
         }
     }
 
-    updateForamtState() {
+    updateFormatState() {
         this.getComponent(component => component.setFormatState(this.getFormatState()));
     }
 
