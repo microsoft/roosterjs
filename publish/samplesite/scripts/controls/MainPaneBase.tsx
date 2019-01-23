@@ -22,5 +22,5 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
 
     abstract resetEditorPlugin(pluginState: BuildInPluginState): void;
 
-    abstract updateForamtState(): void;
+    abstract updateFormatState(): void;
 }
