@@ -91,7 +91,7 @@ function calcDefaultFormat(node: Node, options: EditorOptions): DefaultFormat {
                 (options.inDarkMode ?
                     baseFormat.backgroundColors.darkModeColor :
                     baseFormat.backgroundColors.lightModeColor) :
-                (baseFormat.backgroundColor || styles[3]);
+                (baseFormat.backgroundColor || '');
         },
         backgroundColors: baseFormat.backgroundColors,
         bold: baseFormat.bold,
