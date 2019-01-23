@@ -20,7 +20,7 @@ describe('Editor', () => {
         await page.keyboard.type('<3');
 
         // Assert
-        const content = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
+        const content: string = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
         expect(content).toEqual("❤️")
     });
 
@@ -33,24 +33,69 @@ describe('Editor', () => {
         await page.keyboard.press('Backspace');
 
         // Assert
-        const content = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
-        expect(content).toEqual("")
+        const content: string = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
+        expect(content.trim()).toEqual("")
     });
 
     it('Should undo to the raw text before the autocomplete', async () => {
         // Arrange
         await focusEditor(page);
         await page.keyboard.type('<3');
-        const preconditionContent = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
+        const preconditionContent: string = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
         expect(preconditionContent).toEqual("❤️");
 
         // Act
-        await page.keyboard.down('Ctrl');
+        await page.keyboard.down('Control');
         await page.keyboard.press('z');
-        await page.keyboard.up('Ctrl');
+        await page.keyboard.up('Control');
 
         // Assert
-        const content = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
+        const content: string = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
         expect(content).toEqual("<3");
+    });
+
+    it('Should autocomplete replacements with spaces in them', async () => {
+        // Arrange
+        await page.evaluate(() => (window as any).editorPlugins.customReplace.updateReplacements([{
+            sourceString: 'this is a source string with spaces',
+            replacementHTML: '<_<',
+            matchSourceCaseSensitive: false,
+        }]));
+        await focusEditor(page);
+        await page.keyboard.type('this is a source string with spaces!!');
+
+        // Act
+        const resultContent: string = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
+        expect(resultContent).toEqual("<_<!!");
+    });
+
+    it('Should not match case sensitive replacements on insensitive matches', async () => {
+        // Arrange
+        await page.evaluate(() => (window as any).editorPlugins.customReplace.updateReplacements([{
+            sourceString: 'Hello',
+            replacementHTML: '👋',
+            matchSourceCaseSensitive: true,
+        }]));
+        await focusEditor(page);
+        await page.keyboard.type('hello');
+
+        // Act
+        const resultContent: string = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
+        expect(resultContent).toEqual("hello");
+    });
+
+    it('Should match case sensitive replacements on matches', async () => {
+        // Arrange
+        await page.evaluate(() => (window as any).editorPlugins.customReplace.updateReplacements([{
+            sourceString: 'Hello',
+            replacementHTML: '👋',
+            matchSourceCaseSensitive: false,
+        }]));
+        await focusEditor(page);
+        await page.keyboard.type('hello');
+
+        // Act
+        const resultContent: string = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
+        expect(resultContent).toEqual("👋");
     });
 });
