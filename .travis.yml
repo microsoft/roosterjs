@@ -11,7 +11,10 @@ install:
     - npm run build
 script:
     - xvfb-run npm run test
-    - xvfb-run npm run instrumentation
+    # puppeteer-firefox does not run in travis because it depends on a
+    # libstdc++6  that is not available in travis.
+    # See https://github.com/GoogleChrome/puppeteer/pull/3657
+    - xvfb-run npm run instrumentation:chrome
 cache:
     yarn: true
 deploy:

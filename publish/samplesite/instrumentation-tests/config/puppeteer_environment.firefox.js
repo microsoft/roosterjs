@@ -20,9 +20,7 @@ class FirefoxPuppeteerEnvironment extends NodeEnvironment {
 
   async teardown() {
     await super.teardown();
-    if (this.global.__BROWSER__) {
-      await this.global.__BROWSER__.close();
-    }
+    await this.global.__BROWSER__.close();
   }
 
   runScript(script) {
