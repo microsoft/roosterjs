@@ -1,4 +1,3 @@
-import DarkModeOptions from '../interface/DarkModeOptions';
 import DefaultFormat from '../interface/DefaultFormat';
 
 export const DARK_MODE_DEFAULT_FORMAT = <DefaultFormat>{

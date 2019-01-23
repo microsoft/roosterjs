@@ -1,5 +1,3 @@
-import { DefaultFormat } from 'roosterjs-editor-types';
-
 /**
  * The options to specify dark mode editor behavior
  */
