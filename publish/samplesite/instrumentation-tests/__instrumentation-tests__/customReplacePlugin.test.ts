@@ -21,7 +21,7 @@ describe('Editor', () => {
 
         // Assert
         const content: string = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
-        expect(content).toEqual("❤️")
+        expect(content.trim()).toEqual("❤️")
     });
 
     it('Should be able to delete unicode multipart emoji after autocomplete', async () => {
@@ -42,7 +42,7 @@ describe('Editor', () => {
         await focusEditor(page);
         await page.keyboard.type('<3');
         const preconditionContent: string = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
-        expect(preconditionContent).toEqual("❤️");
+        expect(preconditionContent.trim()).toEqual("❤️");
 
         // Act
         await page.keyboard.down('Control');
@@ -51,7 +51,7 @@ describe('Editor', () => {
 
         // Assert
         const content: string = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
-        expect(content).toEqual("<3");
+        expect(content.trim()).toEqual("<3");
     });
 
     it('Should autocomplete replacements with spaces in them', async () => {
@@ -66,7 +66,7 @@ describe('Editor', () => {
 
         // Act
         const resultContent: string = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
-        expect(resultContent).toEqual("<_<!!");
+        expect(resultContent.trim()).toEqual("<_<!!");
     });
 
     it('Should not match case sensitive replacements on insensitive matches', async () => {
@@ -81,7 +81,7 @@ describe('Editor', () => {
 
         // Act
         const resultContent: string = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
-        expect(resultContent).toEqual("hello");
+        expect(resultContent.trim()).toEqual("hello");
     });
 
     it('Should match case sensitive replacements on matches', async () => {
@@ -96,6 +96,6 @@ describe('Editor', () => {
 
         // Act
         const resultContent: string = await page.evaluate(() => (window as any).globalRoosterEditor.getTextContent());
-        expect(resultContent).toEqual("👋");
+        expect(resultContent.trim()).toEqual("👋");
     });
 });
