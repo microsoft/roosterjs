@@ -10,7 +10,7 @@ import { ModeIndependentColor } from 'roosterjs-editor-types';
  * or hexadecimal color string (e.g, '#FF0000') or rgb value (e.g, 'rgb(255, 0, 0)') supported by browser.
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
  * Alternatively, you can pass a @typedef ModeIndepenentColor. If in light mode, the lightModeColor property will be used.
- * If in dark mode, the darkModeColor will be used and the lightModeColor will be set as the ogsc.
+ * If in dark mode, the darkModeColor will be used and the lightModeColor will be used when converting back to light mode.
  **/
 export default function setBackgroundColor(editor: Editor, color: string | ModeIndependentColor) {
     if (typeof color === 'string') {
@@ -26,5 +26,4 @@ export default function setBackgroundColor(editor: Editor, color: string | ModeI
             }
         });
     }
-
 }

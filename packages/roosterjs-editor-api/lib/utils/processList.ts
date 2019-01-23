@@ -43,13 +43,13 @@ export default function processList(editor: Editor, command: DocumentCommand): N
         if (LIs.length == 1 && isNodeEmpty(LIs[0], true /*trim*/)) {
             // When there's only one LI child element which has empty content, it means this LI is just created.
             // We just format it with current format
-            applyListFormat(LIs[0], currentFormat);
+            applyListFormat(LIs[0], currentFormat, editor.isDarkMode());
         } else {
             // Otherwise, apply the format of first child non-empty element (if any) to LI node
             for (let li of LIs) {
                 let formatNode = getFirstLeafNode(li);
                 if (formatNode) {
-                    applyListFormat(li, getComputedStyles(formatNode));
+                    applyListFormat(li, getComputedStyles(formatNode), editor.isDarkMode());
                 }
             }
         }
@@ -58,13 +58,13 @@ export default function processList(editor: Editor, command: DocumentCommand): N
     return newList;
 }
 
-function applyListFormat(node: Node, formats: string[]) {
+function applyListFormat(node: Node, formats: string[], isDarkMode: boolean) {
     applyFormat(node as HTMLElement, {
         fontFamily: formats[0],
         fontSize: formats[1],
         textColor: formats[2],
         backgroundColor: formats[3],
-    });
+    }, isDarkMode);
 }
 
 function workaroundForChrome(editor: Editor) {

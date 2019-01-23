@@ -5,7 +5,7 @@ export { default as DocumentPosition } from './browser/DocumentPosition';
 export { default as NodeType } from './browser/NodeType';
 
 // Consts
-export { DARK_MODE_DEFAULT_FORMAT, DARK_MODE_DEFAULT_OPTIONS } from './consts/DarkMode';
+export { DARK_MODE_DEFAULT_FORMAT } from './consts/DarkMode';
 
 // Enum
 export { default as Alignment } from './enum/Alignment';

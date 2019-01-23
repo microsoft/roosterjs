@@ -15,7 +15,7 @@ import select from '../coreAPI/select';
 import triggerEvent from '../coreAPI/triggerEvent';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import Undo from '../undo/Undo';
-import { DARK_MODE_DEFAULT_FORMAT, DARK_MODE_DEFAULT_OPTIONS, DefaultFormat } from 'roosterjs-editor-types';
+import { DARK_MODE_DEFAULT_FORMAT, DefaultFormat } from 'roosterjs-editor-types';
 import { getComputedStyles } from 'roosterjs-editor-dom';
 
 export default function createEditorCore(
@@ -40,10 +40,6 @@ export default function createEditorCore(
     let eventHandlerPlugins = allPlugins.filter(
         plugin => plugin.onPluginEvent || plugin.willHandleEventExclusively
     );
-    // Set up dark mode defaults if not provided.
-    if (options.inDarkMode && options.darkModeOptions == null) {
-        options.darkModeOptions = DARK_MODE_DEFAULT_OPTIONS;
-    }
     return {
         contentDiv,
         document: contentDiv.ownerDocument,
@@ -63,6 +59,15 @@ export default function createEditorCore(
 
 function calcDefaultFormat(node: Node, options: EditorOptions): DefaultFormat {
     let baseFormat = options.defaultFormat;
+
+    if (options.inDarkMode) {
+        if (!baseFormat.backgroundColors) {
+            baseFormat.backgroundColors = DARK_MODE_DEFAULT_FORMAT.backgroundColors;
+        }
+        if (!baseFormat.textColors) {
+            baseFormat.textColors = DARK_MODE_DEFAULT_FORMAT.textColors;
+        }
+    }
 
     if (baseFormat && Object.keys(baseFormat).length === 0) {
         return {};
