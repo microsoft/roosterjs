@@ -62,12 +62,7 @@ export default function createEditorCore(
 }
 
 function calcDefaultFormat(node: Node, options: EditorOptions): DefaultFormat {
-    let baseFormat = null;
-    if (options.inDarkMode) {
-        baseFormat = options.darkModeOptions.defaultFormat ? options.darkModeOptions.defaultFormat : DARK_MODE_DEFAULT_FORMAT;
-    } else {
-        baseFormat = options.defaultFormat;
-    }
+    let baseFormat = options.defaultFormat;
 
     if (baseFormat && Object.keys(baseFormat).length === 0) {
         return {};
@@ -78,13 +73,25 @@ function calcDefaultFormat(node: Node, options: EditorOptions): DefaultFormat {
     return {
         fontFamily: baseFormat.fontFamily || styles[0],
         fontSize: baseFormat.fontSize || styles[1],
-        textColor: baseFormat.textColor || styles[2],
-        backgroundColor: baseFormat.backgroundColor || '',
+        get textColor() {
+            return baseFormat.textColors ?
+                (options.inDarkMode ?
+                    baseFormat.textColors.darkModeColor :
+                    baseFormat.textColors.lightModeColor) :
+                (baseFormat.textColor || styles[2]);
+        },
+        textColors: baseFormat.textColors,
+        get backgroundColor() {
+            return baseFormat.backgroundColors ?
+                (options.inDarkMode ?
+                    baseFormat.backgroundColors.darkModeColor :
+                    baseFormat.backgroundColors.lightModeColor) :
+                (baseFormat.backgroundColor || styles[3]);
+        },
+        backgroundColors: baseFormat.backgroundColors,
         bold: baseFormat.bold,
         italic: baseFormat.italic,
         underline: baseFormat.underline,
-        originalSourceBackgroundColor: baseFormat.originalSourceBackgroundColor,
-        originalSourceTextColor: baseFormat.originalSourceTextColor,
     };
 }
 

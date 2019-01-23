@@ -17,7 +17,7 @@ export default function setTextColor(editor: Editor, color: string | ModeIndepen
         const trimmedColor = color.trim();
         applyInlineStyle(editor, element => { element.style.color = trimmedColor });
     } else {
-        const darkMode =editor.isDarkMode();
+        const darkMode = editor.isDarkMode();
         const appliedColor =  darkMode ? color.darkModeColor : color.lightModeColor;
         applyInlineStyle(editor, (element) => {
             element.style.color = appliedColor;

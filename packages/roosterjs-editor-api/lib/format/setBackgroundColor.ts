@@ -17,7 +17,7 @@ export default function setBackgroundColor(editor: Editor, color: string | ModeI
         const trimmedColor = color.trim();
         applyInlineStyle(editor, element => { element.style.backgroundColor = trimmedColor });
     } else {
-        const darkMode =editor.isDarkMode();
+        const darkMode = editor.isDarkMode();
         const appliedColor =  darkMode ? color.darkModeColor : color.lightModeColor;
         applyInlineStyle(editor, (element) => {
             element.style.backgroundColor = appliedColor;

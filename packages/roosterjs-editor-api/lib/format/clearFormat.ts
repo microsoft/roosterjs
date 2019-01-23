@@ -46,31 +46,15 @@ export default function clearFormat(editor: Editor) {
                 setFontSize(editor, defaultFormat.fontSize);
             }
             if (defaultFormat.textColor) {
-                if (defaultFormat.originalSourceTextColor) {
-                    const colorPair = {
-                        lightModeColor: editor.isDarkMode() ?
-                        defaultFormat.originalSourceTextColor :
-                        defaultFormat.textColor,
-                        darkModeColor: !editor.isDarkMode() ?
-                        defaultFormat.originalSourceTextColor :
-                        defaultFormat.textColor
-                    }
-                    setTextColor(editor, colorPair);
+                if (defaultFormat.textColors) {
+                    setTextColor(editor, defaultFormat.textColors);
                 } else {
                     setTextColor(editor, defaultFormat.textColor);
                 }
             }
             if (defaultFormat.backgroundColor) {
-                if (defaultFormat.originalSourceBackgroundColor) {
-                    const colorPair = {
-                        lightModeColor: editor.isDarkMode() ?
-                        defaultFormat.originalSourceBackgroundColor :
-                        defaultFormat.backgroundColor,
-                        darkModeColor: !editor.isDarkMode() ?
-                        defaultFormat.originalSourceBackgroundColor :
-                        defaultFormat.backgroundColor
-                    }
-                    setBackgroundColor(editor, colorPair);
+                if (defaultFormat.backgroundColors) {
+                    setBackgroundColor(editor, defaultFormat.backgroundColors);
                 } else {
                     setBackgroundColor(editor, defaultFormat.backgroundColor);
                 }

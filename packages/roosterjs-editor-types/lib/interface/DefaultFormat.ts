@@ -1,3 +1,6 @@
+import ModeIndependentColor from './ModeIndependentColor';
+
+
 /**
  * Default format settings
  */
@@ -13,14 +16,24 @@ interface DefaultFormat {
     fontSize?: string;
 
     /**
-     * Text color
+     * Single text color (for non dark mode/single mode editor)
      */
     textColor?: string;
 
     /**
-     * Background Color
+     * Text color light/dark mode pair
+     */
+    textColors?: ModeIndependentColor;
+
+    /**
+     * Single background color (for non dark mode/single mode editor)
      */
     backgroundColor?: string;
+
+    /**
+     * Background color light/dark mode pair
+     */
+    backgroundColors?: ModeIndependentColor;
 
     /**
      * Whether is bold
@@ -36,16 +49,6 @@ interface DefaultFormat {
      * Whether has underline
      */
     underline?: boolean;
-
-    /**
-     * original source background, used for converting back to light mode
-     */
-    originalSourceBackgroundColor?: string;
-
-     /**
-      * original source text color, used for converting back to light mode
-      */
-    originalSourceTextColor?: string;
 }
 
 export default DefaultFormat;
