@@ -5,6 +5,7 @@ import EditorOptions from '../interfaces/EditorOptions';
 import EditorPlugin from '../interfaces/EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
 import editWithUndo from '../coreAPI/editWithUndo';
+import FirefoxTypeAfterLink from '../corePlugins/FirefoxTypeAfterLink';
 import focus from '../coreAPI/focus';
 import getCustomData from '../coreAPI/getCustomData';
 import getSelectionRange from '../coreAPI/getSelectionRange';
@@ -15,8 +16,8 @@ import select from '../coreAPI/select';
 import triggerEvent from '../coreAPI/triggerEvent';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import Undo from '../undo/Undo';
+import { Browser, getComputedStyles } from 'roosterjs-editor-dom';
 import { DefaultFormat } from 'roosterjs-editor-types';
-import { getComputedStyles } from 'roosterjs-editor-dom';
 
 export default function createEditorCore(
     contentDiv: HTMLDivElement,
@@ -28,12 +29,14 @@ export default function createEditorCore(
         typeInContainer: new TypeInContainerPlugin(),
         mouseUp: new MouseUpPlugin(),
         domEvent: new DOMEventPlugin(options.disableRestoreSelectionOnFocus),
+        firefoxTypeAfterLink: Browser.isFirefox && new FirefoxTypeAfterLink(),
     };
     let allPlugins: EditorPlugin[] = [
         corePlugins.typeInContainer,
         corePlugins.edit,
         corePlugins.mouseUp,
         ...(options.plugins || []),
+        corePlugins.firefoxTypeAfterLink,
         corePlugins.undo,
         corePlugins.domEvent,
     ].filter(plugin => !!plugin);
