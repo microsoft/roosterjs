@@ -1,5 +1,5 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType, PluginKeyPressEvent } from 'roosterjs-editor-types';
+import { PositionType, PluginEvent, PluginEventType, PluginKeyPressEvent } from 'roosterjs-editor-types';
 
 type Replacement = {
     sourceString: string,
@@ -7,33 +7,15 @@ type Replacement = {
     matchSourceCaseSensitive: boolean
 }
 
+const makeReplacement = (sourceString: string, replacementHTML: string, matchSourceCaseSensitive: boolean): Replacement =>
+    ({ sourceString, replacementHTML, matchSourceCaseSensitive });
 const defaultReplacements: Replacement[] = [
-    {
-        sourceString: ':)',
-        replacementHTML: '🙂',
-        matchSourceCaseSensitive: true,
-    },
-    {
-        sourceString: ';)',
-        replacementHTML: '😉',
-        matchSourceCaseSensitive: true,
-    },
-    {
-        sourceString: ':O',
-        replacementHTML: '😲',
-        matchSourceCaseSensitive: true,
-    },
-    {
-        sourceString: ':o',
-        replacementHTML: '😯',
-        matchSourceCaseSensitive: true,
-    },
-    {
-        sourceString: '<3',
-        replacementHTML: '❤️',
-        matchSourceCaseSensitive: true,
-    },
-]
+    makeReplacement(':)', '🙂', true),
+    makeReplacement(';)', '😉', true),
+    makeReplacement(':O', '😲', true),
+    makeReplacement(':o', '😯', true),
+    makeReplacement('<3', '❤️', true),
+];
 
 /**
  * Wrapper for CustomReplaceContentEditFeature that provides an API for updating the
@@ -41,6 +23,7 @@ const defaultReplacements: Replacement[] = [
  */
 export default class CustomReplacePlugin implements EditorPlugin {
     private longestReplacementLength: number;
+    private replacementEndCharacters: Set<string>;
     private editor: Editor;
 
     /**
@@ -49,11 +32,17 @@ export default class CustomReplacePlugin implements EditorPlugin {
      */
     constructor(private replacements: Replacement[] = defaultReplacements) {
         this.longestReplacementLength = getLongestReplacementSourceLength(this.replacements);
+        this.replacementEndCharacters = getReplacementEndCharacters(this.replacements);
     }
 
+    /**
+     * Set the replacements that this plugin is looking for.
+     * @param newReplacements new set of replacements for this plugin
+     */
     updateReplacements(newReplacements: Replacement[]) {
         this.replacements = newReplacements;
         this.longestReplacementLength = getLongestReplacementSourceLength(this.replacements);
+        this.replacementEndCharacters = getReplacementEndCharacters(this.replacements);
     }
 
     /**
@@ -75,6 +64,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
      * Dispose this plugin
      */
     public dispose(): void {
+        this.editor = null;
     }
 
     public onPluginEvent(event: PluginEvent) {
@@ -82,13 +72,18 @@ export default class CustomReplacePlugin implements EditorPlugin {
             return;
         }
 
+        // Exit early on keyboard events that do not use a replacement's final character.
+        if (!this.replacementEndCharacters.has(event.rawEvent.key)) {
+            return
+        }
+
         // This handler fires before the event's native behaviour -- defer until after it completes
-        setTimeout(() => this.handlePluginEvent(event), 0)
+        setTimeout(() => this.editor.isDisposed() || this.handlePluginEvent(event), 0);
     }
 
-    private handlePluginEvent(event: PluginKeyPressEvent) {
+    private handlePluginEvent(event: PluginKeyPressEvent): void {
         // Get the matching replacement
-        const range = document.getSelection().getRangeAt(0);
+        const range = this.editor.getSelectionRange();
         if (range == null) return;
         const searcher = this.editor.getContentSearcherOfCursor();
         const stringToSearch = searcher.getSubStringBefore(this.longestReplacementLength);
@@ -99,6 +94,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
         }
 
         const replacement = this.getMatchingReplacement(stringToSearch);
+        console.log('replacement', replacement);
         if (replacement == null) return;
 
         // Reconstruct a selection of the text on the document that matches the
@@ -112,22 +108,10 @@ export default class CustomReplacePlugin implements EditorPlugin {
         const nodeToInsert = (parsingSpan.childNodes.length == 1) ? parsingSpan.childNodes[0] : parsingSpan;
 
         // Switch the node for the selection range
-        this.editor.addUndoSnapshot(() => {
+        this.editor.performAutoComplete(() => {
             matchingRange.deleteContents();
             matchingRange.insertNode(nodeToInsert);
-            if (nodeToInsert instanceof Text) {
-                // Fix backspace after text node insertion
-                // (when collapsing the range to the end, the selection goes _after_ the text
-                // node, which lets it delete half of the unicode multipart heart.)
-                const endOfTextNodeRange = new Range();
-                endOfTextNodeRange.setStart(nodeToInsert, nodeToInsert.length);
-                endOfTextNodeRange.setEnd(nodeToInsert, nodeToInsert.length);
-                this.editor.select(endOfTextNodeRange);
-            } else {
-                // Collapse the range to the end and select it
-                matchingRange.collapse(false /* toStart */)
-                this.editor.select(matchingRange);
-            }
+            this.editor.select(nodeToInsert, PositionType.End);
         });
 
     }
@@ -142,7 +126,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
                 ? [stringToSearch, replacement.sourceString]
                 : [lowerCaseStringToSearch, replacement.sourceString.toLocaleLowerCase()];
 
-            if (sourceMatch.endsWith(replacementMatch)) {
+            if (sourceMatch.substring(sourceMatch.length - replacementMatch.length) == replacementMatch) {
                 return replacement;
             }
         }
@@ -154,4 +138,21 @@ function getLongestReplacementSourceLength(replacements: Replacement[]): number 
     return Math.max.apply(null, replacements
         .map(replacement => replacement.sourceString.length)
     );
+}
+
+function getReplacementEndCharacters(replacements: Replacement[]): Set<string> {
+    const endChars = new Set();
+    for (let replacement of replacements) {
+        const sourceString = replacement.sourceString;
+        if (sourceString.length == 0) continue;
+        const lastChar = sourceString[sourceString.length - 1]
+        if (!replacement.matchSourceCaseSensitive) {
+            endChars.add(lastChar.toLocaleLowerCase());
+            endChars.add(lastChar.toLocaleUpperCase());
+        } else {
+            endChars.add(lastChar);
+        }
+    }
+    console.log(Array.from(endChars));
+    return endChars;
 }
