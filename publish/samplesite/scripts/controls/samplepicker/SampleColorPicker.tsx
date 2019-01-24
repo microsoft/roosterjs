@@ -13,7 +13,7 @@ export type SampleColorPickerProps = {
 export default class SampleColorPicker<T> extends React.PureComponent<SampleColorPickerProps>  {
     render() {
         return <div
-            className={styles.samplePickerContainer}
+            className={`sample-color-picker ${styles.samplePickerContainer}`}
             style={{ top: this.props.cursorY, left: this.props.cursorX }}
         >
             {

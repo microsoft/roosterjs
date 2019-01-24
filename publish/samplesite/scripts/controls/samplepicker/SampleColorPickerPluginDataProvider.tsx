@@ -4,6 +4,11 @@ import { PickerDataProvider } from 'roosterjs-plugin-picker';
 import { Editor } from 'roosterjs-editor-core';
 import { default as SampleColorPicker, SampleColorPickerProps } from './SampleColorPicker';
 
+type LegalKeys<T> = T extends "onClick" ? never : T;
+type ComponentState = {
+    [l in LegalKeys<keyof SampleColorPickerProps>]: SampleColorPickerProps[l];
+}
+
 type InsertNodeCallback = (nodeToInsert: HTMLElement) => void;
 type setIsSuggestingCallback = (isSuggesting: boolean) => void;
 type Color = {
@@ -36,7 +41,7 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
      */
     private insertNodeCallback: InsertNodeCallback;
 
-    private componentState = {
+    private componentState: ComponentState = {
         queryString: '',
         selectedIndex: 0,
         colors: [],
@@ -85,7 +90,6 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
             .map(color => color.htmlColor);
         const newIndexOfCurrentSelectedColor = currentSelectedColor ? colors.indexOf(currentSelectedColor) : index;
         const selectedIndex = Math.max(0, Math.min(newIndexOfCurrentSelectedColor, colors.length - 1));
-        console.log(index, selectedIndex);
 
         let [cursorX, cursorY] = this.getTextCursorPosition();
 
@@ -129,7 +133,6 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
         const span = document.createElement('span');
         span.innerHTML = '⬤';
         span.style.color = color;
-        console.log('inserting', span);
         this.insertNodeCallback(span);
     }
 

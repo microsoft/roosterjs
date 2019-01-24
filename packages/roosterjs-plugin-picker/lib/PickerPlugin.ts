@@ -9,6 +9,7 @@ import {
     PluginEventType,
     PositionType,
 } from 'roosterjs-editor-types';
+import { PICKER_PLUGIN_SET_SUGGESTING_EVENT, PickerPluginSetSuggestingData } from './PickerPluginSetSuggestingEvent';
 
 // Character codes.
 // IE11 uses different character codes. which are noted below.
@@ -141,6 +142,17 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
         if (!isSuggesting) {
             this.setLastKnownRange(null);
         }
+        const eventData: PickerPluginSetSuggestingData = {
+            isSuggesting,
+            pickerId: this.pickerOptions.elementIdPrefix
+        }
+        this.editor.triggerEvent(
+            {
+                eventType: PluginEventType.ContentChanged,
+                source: PICKER_PLUGIN_SET_SUGGESTING_EVENT,
+                data: eventData
+            }, true /* broadcast */
+        )
         this.dataProvider.onIsSuggestingChanged(isSuggesting);
     }
 

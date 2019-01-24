@@ -1,5 +1,9 @@
 import { Editor, EditorPlugin, cacheGetContentSearcher } from 'roosterjs-editor-core';
 import { PositionType, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    PICKER_PLUGIN_SET_SUGGESTING_EVENT,
+    PickerPluginSetSuggestingData,
+} from 'roosterjs-plugin-picker';
 
 export type Replacement = {
     sourceString: string;
@@ -29,6 +33,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
     private editor: Editor;
     private replacements: Replacement[];
     private replacementEndCharacters: Set<string>;
+    private trackedOpenPickers: Set<string>;
 
     /**
      * Create instance of CustomReplace plugin
@@ -71,6 +76,19 @@ export default class CustomReplacePlugin implements EditorPlugin {
     }
 
     public onPluginEvent(event: PluginEvent) {
+        if (
+            event.eventType == PluginEventType.ContentChanged &&
+            event.source == PICKER_PLUGIN_SET_SUGGESTING_EVENT
+        ) {
+            const data: PickerPluginSetSuggestingData = event.data;
+            if (!this.trackedOpenPickers) this.trackedOpenPickers = new Set();
+            if (data.isSuggesting) {
+                this.trackedOpenPickers.add(data.pickerId);
+            } else {
+                this.trackedOpenPickers.delete(data.pickerId);
+            }
+        }
+
         if (this.editor.isInIME() || event.eventType != PluginEventType.Input) {
             return;
         }
