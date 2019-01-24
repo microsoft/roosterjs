@@ -7,6 +7,8 @@ import SidePanePlugin from './SidePanePlugin';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins'
 import { EditorPlugin } from 'roosterjs-editor-core';
+import { PickerPlugin } from 'roosterjs-plugin-picker';
+import SampleColorPickerPluginDataProvider from './samplepicker/SampleColorPickerPluginDataProvider';
 
 export default interface Plugins {
     ribbon: RibbonPlugin;
@@ -16,6 +18,7 @@ export default interface Plugins {
     eventView: EventViewPlugin;
     api: ApiPlaygroundPlugin;
     customReplace: CustomReplacePlugin,
+    picker: PickerPlugin,
 }
 
 let plugins: Plugins = null;
@@ -30,6 +33,15 @@ export function getPlugins(): Plugins {
             editorOptions: new EditorOptionsPlugin(),
             eventView: new EventViewPlugin(),
             api: new ApiPlaygroundPlugin(),
+            picker: new PickerPlugin(
+                new SampleColorPickerPluginDataProvider(),
+                {
+                    elementIdPrefix: 'samplepicker-',
+                    changeSource: 'SAMPLE_COLOR_PICKER',
+                    triggerCharacter: ':',
+                    isHorizontal: true,
+                }
+            )
         };
     }
     return plugins;
@@ -39,6 +51,7 @@ export function getAllPluginArray(includeSidePanePlugins: boolean): EditorPlugin
     let allPlugins = getPlugins();
     return [
         allPlugins.ribbon,
+        allPlugins.picker,
         allPlugins.customReplace,
         includeSidePanePlugins && allPlugins.formatState,
         includeSidePanePlugins && allPlugins.editorOptions,
