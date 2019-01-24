@@ -27,6 +27,7 @@ export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
 export { default as isVoidHtmlElement } from './utils/isVoidHtmlElement';
 export { default as matchLink } from './utils/matchLink';
+export { default as mergeNode } from './utils/mergeNode';
 export { default as queryElements } from './utils/queryElements';
 export { default as splitParentNode, splitBalancedNodeRange } from './utils/splitParentNode';
 export { default as unwrap } from './utils/unwrap';
