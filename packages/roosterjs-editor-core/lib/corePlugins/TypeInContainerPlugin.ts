@@ -86,7 +86,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
         }
 
         if (formatNode) {
-            applyFormat(formatNode, this.editor.getDefaultFormat());
+            applyFormat(formatNode, this.editor.getDefaultFormat(), this.editor.isDarkMode());
         }
 
         return result;

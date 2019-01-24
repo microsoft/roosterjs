@@ -131,7 +131,19 @@ export default class Paste implements EditorPlugin {
 
             for (let node of nodes) {
                 if (mergeCurrentFormat) {
-                    this.applyTextFormat(node, clipboardData.originalFormat);
+                    this.applyToElements(node, this.applyFormatting(clipboardData.originalFormat, this.editor.isDarkMode()));
+                }
+                if (this.editor.isDarkMode()) {
+                    // either use their paste handler or ours, but check it here.
+                    this.applyToElements(node, (element) => {
+                        const darkModeOptions = this.editor.getDarkModeOptions();
+                        if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
+                            darkModeOptions.onExternalContentTransform(element);
+                        } else {
+                            element.style.color = null;
+                            element.style.backgroundColor = null;
+                        }
+                    });
                 }
                 fragment.appendChild(node);
             }
@@ -180,7 +192,11 @@ export default class Paste implements EditorPlugin {
         }, ChangeSource.Paste);
     }
 
-    private applyTextFormat(node: Node, format: DefaultFormat) {
+    private applyFormatting = (format: DefaultFormat, isDarkMode: boolean) => (element: HTMLElement) => {
+        applyFormat(element, format, isDarkMode);
+    }
+
+    private applyToElements(node: Node, elementTransform: (element: HTMLElement) => void) {
         let leaf = getFirstLeafNode(node);
         let parents: HTMLElement[] = [];
         while (leaf) {
@@ -193,8 +209,9 @@ export default class Paste implements EditorPlugin {
             }
             leaf = getNextLeafSibling(node, leaf);
         }
+        parents.push(<HTMLElement>node);
         for (let parent of parents) {
-            applyFormat(parent, format);
+            elementTransform(parent);
         }
     }
 

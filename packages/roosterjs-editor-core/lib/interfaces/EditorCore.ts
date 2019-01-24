@@ -7,6 +7,7 @@ import UndoService from './UndoService';
 import {
     ChangeSource,
     DefaultFormat,
+    DarkModeOptions,
     InsertOption,
     NodePosition,
     PluginEvent,
@@ -84,6 +85,16 @@ interface EditorCore {
      * Cached selection range of this editor
      */
     cachedSelectionRange: Range;
+
+    /**
+     * If the editor is in dark mode.
+     */
+    inDarkMode: boolean;
+
+    /***
+     * The dark mode options, if set.
+     */
+    darkModeOptions?: DarkModeOptions;
 }
 
 export default EditorCore;

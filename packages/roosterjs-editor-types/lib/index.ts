@@ -4,6 +4,9 @@ export { default as DocumentCommand } from './browser/DocumentCommand';
 export { default as DocumentPosition } from './browser/DocumentPosition';
 export { default as NodeType } from './browser/NodeType';
 
+// Consts
+export { DARK_MODE_DEFAULT_FORMAT } from './consts/DarkMode';
+
 // Enum
 export { default as Alignment } from './enum/Alignment';
 export { default as ChangeSource } from './enum/ChangeSource';
@@ -41,11 +44,13 @@ export { default as PluginEventType } from './event/PluginEventType';
 export { default as BlockElement } from './interface/BlockElement';
 export { default as ClipboardData } from './interface/ClipboardData';
 export { default as ClipboardItems } from './interface/ClipboardItems';
+export { default as DarkModeOptions } from './interface/DarkModeOptions';
 export { default as DefaultFormat } from './interface/DefaultFormat';
 export { default as FormatState } from './interface/FormatState';
 export { default as InlineElement } from './interface/InlineElement';
 export { default as InsertOption } from './interface/InsertOption';
 export { default as LinkData } from './interface/LinkData';
+export { default as ModeIndependentColor } from './interface/ModeIndependentColor';
 export { default as NodePosition } from './interface/NodePosition';
 export { default as Rect } from './interface/Rect';
 export { default as SelectionPath } from './interface/SelectionPath';

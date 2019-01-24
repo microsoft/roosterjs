@@ -15,7 +15,7 @@ import select from '../coreAPI/select';
 import triggerEvent from '../coreAPI/triggerEvent';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import Undo from '../undo/Undo';
-import { DefaultFormat } from 'roosterjs-editor-types';
+import { DARK_MODE_DEFAULT_FORMAT, DefaultFormat } from 'roosterjs-editor-types';
 import { getComputedStyles } from 'roosterjs-editor-dom';
 
 export default function createEditorCore(
@@ -43,7 +43,7 @@ export default function createEditorCore(
     return {
         contentDiv,
         document: contentDiv.ownerDocument,
-        defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
+        defaultFormat: calcDefaultFormat(contentDiv, options),
         corePlugins,
         currentUndoSnapshot: null,
         customData: {},
@@ -52,10 +52,23 @@ export default function createEditorCore(
         eventHandlerPlugins: eventHandlerPlugins,
         api: createCoreApiMap(options.coreApiOverride),
         defaultApi: createCoreApiMap(),
+        inDarkMode: options.inDarkMode,
+        darkModeOptions: options.darkModeOptions,
     };
 }
 
-function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat {
+function calcDefaultFormat(node: Node, options: EditorOptions): DefaultFormat {
+    let baseFormat = options.defaultFormat;
+
+    if (options.inDarkMode) {
+        if (!baseFormat.backgroundColors) {
+            baseFormat.backgroundColors = DARK_MODE_DEFAULT_FORMAT.backgroundColors;
+        }
+        if (!baseFormat.textColors) {
+            baseFormat.textColors = DARK_MODE_DEFAULT_FORMAT.textColors;
+        }
+    }
+
     if (baseFormat && Object.keys(baseFormat).length === 0) {
         return {};
     }
@@ -65,8 +78,22 @@ function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat
     return {
         fontFamily: baseFormat.fontFamily || styles[0],
         fontSize: baseFormat.fontSize || styles[1],
-        textColor: baseFormat.textColor || styles[2],
-        backgroundColor: baseFormat.backgroundColor || '',
+        get textColor() {
+            return baseFormat.textColors ?
+                (options.inDarkMode ?
+                    baseFormat.textColors.darkModeColor :
+                    baseFormat.textColors.lightModeColor) :
+                (baseFormat.textColor || styles[2]);
+        },
+        textColors: baseFormat.textColors,
+        get backgroundColor() {
+            return baseFormat.backgroundColors ?
+                (options.inDarkMode ?
+                    baseFormat.backgroundColors.darkModeColor :
+                    baseFormat.backgroundColors.lightModeColor) :
+                (baseFormat.backgroundColor || '');
+        },
+        backgroundColors: baseFormat.backgroundColors,
         bold: baseFormat.bold,
         italic: baseFormat.italic,
         underline: baseFormat.underline,

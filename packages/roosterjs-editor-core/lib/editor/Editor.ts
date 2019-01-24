@@ -7,6 +7,7 @@ import {
     BlockElement,
     ChangeSource,
     ContentPosition,
+    DarkModeOptions,
     DefaultFormat,
     DocumentCommand,
     ExtractContentEvent,
@@ -328,16 +329,35 @@ export default class Editor {
     }
 
     /**
+     * Check if the editor is in dark mode
+     * @returns True if the editor is in dark mode, otherwise false
+     */
+    public isDarkMode(): boolean {
+        return this.core.inDarkMode;
+    }
+
+    /**
+     * Returns the dark mode options set on the editor
+     * @returns A DarkModeOptions object
+     */
+    public getDarkModeOptions(): DarkModeOptions {
+        return this.core.darkModeOptions;
+    }
+
+    /**
      * Get current editor content as HTML string
      * @param triggerExtractContentEvent Whether trigger ExtractContent event to all plugins
      * before return. Use this parameter to remove any temporary content added by plugins.
      * @param includeSelectionMarker Set to true if need include selection marker inside the content.
      * When restore this content, editor will set the selection to the position marked by these markers
+     * @param normalizeColor Set to false if you want to get the content of the editor "as is" with no normalization.
+     * This is a no-op when in light mode. If false, instead of normalizing the colors to light mode, it will return the 'real' editor content.
      * @returns HTML string representing current editor content
      */
     public getContent(
         triggerExtractContentEvent: boolean = true,
-        includeSelectionMarker: boolean = false
+        includeSelectionMarker: boolean = false,
+        normalizeColor: boolean = true,
     ): string {
         let contentDiv = this.core.contentDiv;
         let content = contentDiv.innerHTML;
@@ -359,7 +379,30 @@ export default class Editor {
             content = extractContentEvent.content;
         }
 
+        if (this.core.inDarkMode && normalizeColor) {
+            content = this.getColorNormalizedContent(content);
+        }
+
         return content;
+    }
+
+    private getColorNormalizedContent(content: string): string {
+        let el = document.createElement('div');
+        el.innerHTML = content;
+        const allChildElements = el.getElementsByTagName('*') as HTMLCollectionOf<HTMLElement>;
+        [].forEach.call(allChildElements, (element: HTMLElement) => {
+            if (element.dataset && (element.dataset.ogsc || element.dataset.ogsb)) {
+                if (element.dataset.ogsc) {
+                    element.style.color = element.dataset.ogsc;
+                }
+
+                if (element.dataset.ogsb) {
+                    element.style.backgroundColor = element.dataset.ogsb;
+                }
+            }
+        });
+        const newContent = el.innerHTML;
+        return newContent;
     }
 
     /**
