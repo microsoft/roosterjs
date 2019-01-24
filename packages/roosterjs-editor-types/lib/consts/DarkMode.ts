@@ -1,6 +1,4 @@
-import DefaultFormat from '../interface/DefaultFormat';
-
-export const DARK_MODE_DEFAULT_FORMAT = <DefaultFormat>{
+export const DARK_MODE_DEFAULT_FORMAT = {
     backgroundColors: {
         darkModeColor: 'rgb(51,51,51)',
         lightModeColor: 'rgb(255,255,255)',
