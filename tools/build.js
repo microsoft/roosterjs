@@ -106,7 +106,7 @@ function checkDependency() {
         if (index >= 0) {
             files = files.slice(index);
             files.push(filename);
-            throw new Error(`Circular dependency: \r\n${files.join(' =>\r\n')}`);
+            err(`Circular dependency: \r\n${files.join(' =>\r\n')}`);
         }
 
         files.push(filename);
@@ -320,9 +320,9 @@ function copySample() {
     var target = path.join(distPath, 'roosterjs/samplecode');
     var source = path.join(rootPath, 'publish/samplecode');
 
-    ncp.ncp(source, target, err => {
-        if (err) {
-            throw err;
+    ncp.ncp(source, target, error => {
+        if (error) {
+            err(error);
         }
     });
 }
@@ -411,6 +411,12 @@ async function buildDemoSite() {
     });
 }
 
+function err(message) {
+    let ex = new Error('\n' + message);
+    console.error(ex.message);
+    throw ex;
+}
+
 function publish() {
     packages.forEach(package => {
         var json = readPackageJson(package);
@@ -474,7 +480,7 @@ class Runner {
             console.log('\nBuild completed successfully.');
         })().catch(e => {
             console.error('\n');
-            throw e;
+            process.exit(1);
         });
     }
 }
