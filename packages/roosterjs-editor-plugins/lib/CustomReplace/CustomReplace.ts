@@ -28,6 +28,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
     private longestReplacementLength: number;
     private editor: Editor;
     private replacements: Replacement[];
+    private replacementEndCharacters: Set<string>;
 
     /**
      * Create instance of CustomReplace plugin
@@ -44,6 +45,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
     updateReplacements(newReplacements: Replacement[]) {
         this.replacements = newReplacements;
         this.longestReplacementLength = getLongestReplacementSourceLength(this.replacements);
+        this.replacementEndCharacters = getReplacementEndCharacters(this.replacements);
     }
 
     /**
@@ -70,6 +72,11 @@ export default class CustomReplacePlugin implements EditorPlugin {
 
     public onPluginEvent(event: PluginEvent) {
         if (this.editor.isInIME() || event.eventType != PluginEventType.Input) {
+            return;
+        }
+
+        // Exit early on input events that do not insert a replacement's final character.
+        if (event.rawEvent.data && !this.replacementEndCharacters.has(event.rawEvent.data)) {
             return;
         }
 
@@ -128,4 +135,22 @@ export default class CustomReplacePlugin implements EditorPlugin {
 
 function getLongestReplacementSourceLength(replacements: Replacement[]): number {
     return Math.max.apply(null, replacements.map(replacement => replacement.sourceString.length));
+}
+
+function getReplacementEndCharacters(replacements: Replacement[]): Set<string> {
+    const endChars = new Set();
+    for (let replacement of replacements) {
+        const sourceString = replacement.sourceString;
+        if (sourceString.length == 0) {
+            continue;
+        }
+        const lastChar = sourceString[sourceString.length - 1];
+        if (!replacement.matchSourceCaseSensitive) {
+            endChars.add(lastChar.toLocaleLowerCase());
+            endChars.add(lastChar.toLocaleUpperCase());
+        } else {
+            endChars.add(lastChar);
+        }
+    }
+    return endChars;
 }

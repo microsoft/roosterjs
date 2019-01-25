@@ -15,6 +15,11 @@
     "@microsoft/load-themed-styles" "1.8.51"
     loader-utils "~1.1.0"
 
+"@types/dom-inputevent@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@types/dom-inputevent/-/dom-inputevent-1.0.3.tgz#7831e0628a98a04bbac450c95220ded6e04a1f84"
+  integrity sha512-xuBw5JB6s3JGRv1w4O1Gz5Ryr7Y3GJbEHtrGNpuQAkrw3YR3IYEYbDPTaCPWf33tcXoeRwSYbkaHt4zE6xe14w==
+
 "@types/jasmine@2.6.0":
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.6.0.tgz#997b41a27752b4850af2683bc4a8d8222c25bd02"

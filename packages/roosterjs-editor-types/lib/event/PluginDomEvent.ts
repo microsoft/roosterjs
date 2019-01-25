@@ -51,17 +51,10 @@ export interface PluginKeyUpEvent extends BasePluginEvent<PluginEventType.KeyUp>
 export type PluginKeyboardEvent = PluginKeyDownEvent | PluginKeyPressEvent | PluginKeyUpEvent;
 
 /**
- * IE11 text input event (non-standard)
- */
-export interface InternetExplorer11TextInputEvent extends Event {
-    data: string;
-}
-
-/**
  * This represents a PluginEvent wrapping native input / textinput event
  */
 export interface PluginInputEvent extends BasePluginEvent<PluginEventType.Input> {
-    rawEvent: InternetExplorer11TextInputEvent | Event;
+    rawEvent: InputEvent;
 }
 
 /**
