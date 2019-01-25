@@ -101,8 +101,8 @@ export default class Editor {
             ));
             this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <
                 string
-                >(<any>false));
-        } catch (e) { }
+            >(<any>false));
+        } catch (e) {}
 
         // 9. Let plugins know that we are ready
         this.triggerEvent(
@@ -392,7 +392,7 @@ export default class Editor {
                     this.deleteNode(pathComment);
                     let range = getRangeFromSelectionPath(contentDiv, path);
                     this.select(range);
-                } catch { }
+                } catch {}
             }
 
             if (triggerContentChangedEvent) {
@@ -606,8 +606,8 @@ export default class Editor {
         nameOrMap:
             | string
             | {
-                [eventName: string]: (event: UIEvent) => void;
-            },
+                  [eventName: string]: (event: UIEvent) => void;
+              },
         handler?: (event: UIEvent) => void
     ): () => void {
         if (nameOrMap instanceof Object) {

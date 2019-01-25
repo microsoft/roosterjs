@@ -54,11 +54,15 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
 
     componentDidMount() {
         this.initEditor();
-        if (editorInstance == null) editorInstance = this.editor;
+        if (editorInstance == null) {
+            editorInstance = this.editor
+        };
     }
 
     componentWillUnmount() {
-        if (editorInstance == this.editor) editorInstance = null;
+        if (editorInstance == this.editor) {
+            editorInstance = null;
+        }
         this.disposeEditor();
     }
 
