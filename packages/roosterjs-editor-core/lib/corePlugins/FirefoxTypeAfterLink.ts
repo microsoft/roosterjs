@@ -31,7 +31,7 @@ export default class FirefoxTypeAfterLink implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.KeyPress) {
             let range = this.editor.getSelectionRange();
-            if (range && range.collapsed) {
+            if (range && range.collapsed && this.editor.getElementAtCursor('A[href]')) {
                 let searcher = cacheGetContentSearcher(event, this.editor);
                 let inlineElement = searcher.getInlineElementBefore();
                 if (inlineElement instanceof LinkInlineElement) {
