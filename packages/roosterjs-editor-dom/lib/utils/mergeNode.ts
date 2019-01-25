@@ -86,7 +86,10 @@ export default function mergeNode(
     }
 
     if (isVoidHtmlElement(positionToInsert.node)) {
-        positionToInsert = new Position(positionToInsert.node, PositionType.After);
+        positionToInsert = new Position(
+            positionToInsert.node,
+            positionToInsert.isAtEnd ? PositionType.After : PositionType.Before
+        );
     }
 
     return positionToInsert;

@@ -1,5 +1,11 @@
 import EditorCore, { InsertNode } from '../interfaces/EditorCore';
-import { ContentPosition, InsertOption, NodeType, PositionType } from 'roosterjs-editor-types';
+import {
+    ContentPosition,
+    InsertOption,
+    NodeType,
+    PositionType,
+    BlockElement,
+} from 'roosterjs-editor-types';
 import {
     Position,
     getBlockElementAtNode,
@@ -72,13 +78,16 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
 
             // Create a clone (backup) for the selection first as we may need to restore to it later
             let clonedRange = range.cloneRange();
-            let pos = Position.getStart(range).normalize();
-            let blockElement = getBlockElementAtNode(contentDiv, pos.node);
+            let pos = Position.getStart(range);
+            let blockElement: BlockElement;
 
-            if (blockElement) {
-                pos = insertOnNewLine
-                    ? new Position(blockElement.getEndNode(), PositionType.After)
-                    : mergeNode(contentDiv, node, pos);
+            if (
+                insertOnNewLine &&
+                (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
+            ) {
+                pos = new Position(blockElement.getEndNode(), PositionType.After);
+            } else {
+                pos = mergeNode(contentDiv, node, pos);
             }
 
             let nodeForCursor = node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
