@@ -1,14 +1,17 @@
 import { Editor, EditorPlugin, cacheGetContentSearcher } from 'roosterjs-editor-core';
 import { PositionType, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
-type Replacement = {
+export type Replacement = {
+    sourceString: string;
+    replacementHTML: string;
+    matchSourceCaseSensitive: boolean;
+};
+
+const makeReplacement = (
     sourceString: string,
     replacementHTML: string,
     matchSourceCaseSensitive: boolean
-}
-
-const makeReplacement = (sourceString: string, replacementHTML: string, matchSourceCaseSensitive: boolean): Replacement =>
-    ({ sourceString, replacementHTML, matchSourceCaseSensitive });
+): Replacement => ({ sourceString, replacementHTML, matchSourceCaseSensitive });
 const defaultReplacements: Replacement[] = [
     makeReplacement(':)', '🙂', true),
     makeReplacement(';)', '😉', true),
@@ -24,13 +27,14 @@ const defaultReplacements: Replacement[] = [
 export default class CustomReplacePlugin implements EditorPlugin {
     private longestReplacementLength: number;
     private editor: Editor;
+    private replacements: Replacement[];
 
     /**
      * Create instance of CustomReplace plugin
      * @param features An optional feature set to determine which features the plugin should provide
      */
-    constructor(private replacements: Replacement[] = defaultReplacements) {
-        this.longestReplacementLength = getLongestReplacementSourceLength(this.replacements);
+    constructor(replacements: Replacement[] = defaultReplacements) {
+        this.updateReplacements(replacements);
     }
 
     /**
@@ -84,13 +88,14 @@ export default class CustomReplacePlugin implements EditorPlugin {
 
         // Reconstruct a selection of the text on the document that matches the
         // replacement we selected.
-        const matchingText = searcher.getSubStringBefore(replacement.sourceString.length)
+        const matchingText = searcher.getSubStringBefore(replacement.sourceString.length);
         const matchingRange = searcher.getRangeFromText(matchingText, true /* exactMatch */);
 
         // parse the html string off the dom and inline the resulting element.
         const parsingSpan = document.createElement('span');
         parsingSpan.innerHTML = replacement.replacementHTML;
-        const nodeToInsert = (parsingSpan.childNodes.length == 1) ? parsingSpan.childNodes[0] : parsingSpan;
+        const nodeToInsert =
+            parsingSpan.childNodes.length == 1 ? parsingSpan.childNodes[0] : parsingSpan;
 
         // Switch the node for the selection range
         this.editor.performAutoComplete(() => {
@@ -110,7 +115,10 @@ export default class CustomReplacePlugin implements EditorPlugin {
                 ? [stringToSearch, replacement.sourceString]
                 : [lowerCaseStringToSearch, replacement.sourceString.toLocaleLowerCase()];
 
-            if (sourceMatch.substring(sourceMatch.length - replacementMatch.length) == replacementMatch) {
+            if (
+                sourceMatch.substring(sourceMatch.length - replacementMatch.length) ==
+                replacementMatch
+            ) {
                 return replacement;
             }
         }
@@ -119,7 +127,5 @@ export default class CustomReplacePlugin implements EditorPlugin {
 }
 
 function getLongestReplacementSourceLength(replacements: Replacement[]): number {
-    return Math.max.apply(null, replacements
-        .map(replacement => replacement.sourceString.length)
-    );
+    return Math.max.apply(null, replacements.map(replacement => replacement.sourceString.length));
 }

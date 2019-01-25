@@ -33,6 +33,8 @@ export {
     PluginMouseEvent,
     PluginMouseDownEvent,
     PluginMouseUpEvent,
+    PluginInputEvent,
+    InternetExplorer11TextInputEvent,
 } from './event/PluginDomEvent';
 export { default as PluginEvent } from './event/PluginEvent';
 export { default as PluginEventType } from './event/PluginEventType';
