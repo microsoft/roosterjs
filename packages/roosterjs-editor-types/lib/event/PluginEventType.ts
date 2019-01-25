@@ -58,6 +58,11 @@ const enum PluginEventType {
      * Let plugin know editor is about to dispose
      */
     BeforeDispose,
+
+    /**
+     * HTML Input / TextInput event
+     */
+    Input,
 }
 
 export default PluginEventType;

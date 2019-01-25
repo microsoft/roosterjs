@@ -2,7 +2,7 @@ import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
-import { getRangeFromSelectionPath, getSelectionPath } from 'roosterjs-editor-dom';
+import { getRangeFromSelectionPath, getSelectionPath, Browser } from 'roosterjs-editor-dom';
 import {
     BlockElement,
     ChangeSource,
@@ -74,6 +74,10 @@ export default class Editor {
             this.core.api.attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown),
             this.core.api.attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp),
             this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
+            this.core.api.attachDomEvent(this.core,
+                !Browser.isIE ? 'input' : 'textinput',
+                PluginEventType.Input
+            ),
         ];
 
         // 6. Add additional content edit features to the editor if specified
@@ -97,8 +101,8 @@ export default class Editor {
             ));
             this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <
                 string
-            >(<any>false));
-        } catch (e) {}
+                >(<any>false));
+        } catch (e) { }
 
         // 9. Let plugins know that we are ready
         this.triggerEvent(
@@ -388,7 +392,7 @@ export default class Editor {
                     this.deleteNode(pathComment);
                     let range = getRangeFromSelectionPath(contentDiv, path);
                     this.select(range);
-                } catch {}
+                } catch { }
             }
 
             if (triggerContentChangedEvent) {
@@ -602,8 +606,8 @@ export default class Editor {
         nameOrMap:
             | string
             | {
-                  [eventName: string]: (event: UIEvent) => void;
-              },
+                [eventName: string]: (event: UIEvent) => void;
+            },
         handler?: (event: UIEvent) => void
     ): () => void {
         if (nameOrMap instanceof Object) {

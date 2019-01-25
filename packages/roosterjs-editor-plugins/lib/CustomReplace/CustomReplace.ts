@@ -1,5 +1,5 @@
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { PositionType, PluginEvent, PluginEventType, PluginKeyPressEvent } from 'roosterjs-editor-types';
+import { Editor, EditorPlugin, cacheGetContentSearcher } from 'roosterjs-editor-core';
+import { PositionType, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 type Replacement = {
     sourceString: string,
@@ -23,7 +23,6 @@ const defaultReplacements: Replacement[] = [
  */
 export default class CustomReplacePlugin implements EditorPlugin {
     private longestReplacementLength: number;
-    private replacementEndCharacters: Set<string>;
     private editor: Editor;
 
     /**
@@ -32,7 +31,6 @@ export default class CustomReplacePlugin implements EditorPlugin {
      */
     constructor(private replacements: Replacement[] = defaultReplacements) {
         this.longestReplacementLength = getLongestReplacementSourceLength(this.replacements);
-        this.replacementEndCharacters = getReplacementEndCharacters(this.replacements);
     }
 
     /**
@@ -42,7 +40,6 @@ export default class CustomReplacePlugin implements EditorPlugin {
     updateReplacements(newReplacements: Replacement[]) {
         this.replacements = newReplacements;
         this.longestReplacementLength = getLongestReplacementSourceLength(this.replacements);
-        this.replacementEndCharacters = getReplacementEndCharacters(this.replacements);
     }
 
     /**
@@ -68,34 +65,22 @@ export default class CustomReplacePlugin implements EditorPlugin {
     }
 
     public onPluginEvent(event: PluginEvent) {
-        if (this.editor.isInIME() || event.eventType != PluginEventType.KeyPress) {
+        if (this.editor.isInIME() || event.eventType != PluginEventType.Input) {
             return;
         }
 
-        // Exit early on keyboard events that do not use a replacement's final character.
-        if (!this.replacementEndCharacters.has(event.rawEvent.key)) {
-            return
-        }
-
-        // This handler fires before the event's native behaviour -- defer until after it completes
-        setTimeout(() => this.editor.isDisposed() || this.handlePluginEvent(event), 0);
-    }
-
-    private handlePluginEvent(event: PluginKeyPressEvent): void {
         // Get the matching replacement
         const range = this.editor.getSelectionRange();
-        if (range == null) return;
-        const searcher = this.editor.getContentSearcherOfCursor();
+        if (range == null) {
+            return;
+        }
+        const searcher = cacheGetContentSearcher(event, this.editor);
         const stringToSearch = searcher.getSubStringBefore(this.longestReplacementLength);
 
-        // Do nothing on control / navigation keys (e.g. keys that did not just type the last character)
-        if (!stringToSearch.endsWith(event.rawEvent.key)) {
-            return
-        }
-
         const replacement = this.getMatchingReplacement(stringToSearch);
-        console.log('replacement', replacement);
-        if (replacement == null) return;
+        if (replacement == null) {
+            return;
+        }
 
         // Reconstruct a selection of the text on the document that matches the
         // replacement we selected.
@@ -113,7 +98,6 @@ export default class CustomReplacePlugin implements EditorPlugin {
             matchingRange.insertNode(nodeToInsert);
             this.editor.select(nodeToInsert, PositionType.End);
         });
-
     }
 
     private getMatchingReplacement(stringToSearch: string): Replacement | null {
@@ -138,21 +122,4 @@ function getLongestReplacementSourceLength(replacements: Replacement[]): number 
     return Math.max.apply(null, replacements
         .map(replacement => replacement.sourceString.length)
     );
-}
-
-function getReplacementEndCharacters(replacements: Replacement[]): Set<string> {
-    const endChars = new Set();
-    for (let replacement of replacements) {
-        const sourceString = replacement.sourceString;
-        if (sourceString.length == 0) continue;
-        const lastChar = sourceString[sourceString.length - 1]
-        if (!replacement.matchSourceCaseSensitive) {
-            endChars.add(lastChar.toLocaleLowerCase());
-            endChars.add(lastChar.toLocaleUpperCase());
-        } else {
-            endChars.add(lastChar);
-        }
-    }
-    console.log(Array.from(endChars));
-    return endChars;
 }
