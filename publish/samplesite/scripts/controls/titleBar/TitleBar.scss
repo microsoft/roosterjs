@@ -20,19 +20,15 @@
 }
 
 .version {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     color: white;
     font-family: Calibri;
-    font-size: 9pt;
-    margin: -32px 0 0px -20px;
-    position: relative;
-}
-
-.buildLinks {
-    flex: 1 1 auto;
+    font-size: 14pt;
+    margin: 10px 0 0 10px;
 }
 
 .links {
+    color: white;
     flex: 0 0 auto;
     text-align: right;
     font-size: 14pt;
