@@ -1,6 +1,6 @@
 {
     "name": "roosterjs",
-    "version": "7.0.2",
+    "version": "7.0.3",
     "description": "Framework-independent javascript editor",
     "repository": {
         "type": "git",
@@ -18,7 +18,8 @@
         "b": "node tools/build.js clean normalize buildcommonjs",
         "builddemo": "node tools/build.js builddemo",
         "builddoc": "node tools/build.js builddoc",
-        "build": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo builddoc",
+        "build": "node tools/build.js clean normalize tslint buildcommonjs dts pack:prod builddemo",
+        "build:ci": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo builddoc",
         "start": "webpack-dev-server",
         "test": "karma start",
         "test:debug": "karma start --no-single-run",
