@@ -1,7 +1,6 @@
-import formatTable from './formatTable';
 import { ChangeSource, PositionType, TableFormat } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { Position } from 'roosterjs-editor-dom';
+import { Position, VTable } from 'roosterjs-editor-dom';
 
 /**
  * Insert table into editor at current selection
@@ -37,18 +36,18 @@ export default function insertTable(
 
     editor.focus();
     editor.addUndoSnapshot(() => {
-        editor.insertNode(fragment);
-        formatTable(
-            editor,
+        let vtable = new VTable(table);
+        vtable.applyFormat(
             format || {
                 bgColorEven: '#FFF',
                 bgColorOdd: '#FFF',
                 topBorderColor: '#ABABAB',
                 bottomBorderColor: '#ABABAB',
                 verticalBorderColor: '#ABABAB',
-            },
-            table
+            }
         );
+        vtable.writeBack();
+        editor.insertNode(fragment);
         editor.runAsync(() => editor.select(new Position(table, PositionType.Begin).normalize()));
     }, ChangeSource.Format);
 }

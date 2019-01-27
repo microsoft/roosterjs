@@ -149,8 +149,8 @@ class TableOptions extends React.Component<TableOptionsProps, {}> {
             <button
                 className={styles.button}
                 onClick={() => {
-                    editTable(this.props.editor, operation);
                     this.props.onDismiss();
+                    editTable(this.props.editor, operation);
                 }}>
                 {text}
             </button>
@@ -162,8 +162,8 @@ class TableOptions extends React.Component<TableOptionsProps, {}> {
             <button
                 className={styles.button}
                 onClick={() => {
-                    formatTable(this.props.editor, format);
                     this.props.onDismiss();
+                    formatTable(this.props.editor, format);
                 }}>
                 {text}
             </button>
@@ -185,15 +185,18 @@ class TableOptions extends React.Component<TableOptionsProps, {}> {
     }
 
     private onInsertTable = () => {
+        this.props.onDismiss();
+
         let cols = parseInt(this.cols.current.value);
         let rows = parseInt(this.rows.current.value);
         if (cols > 0 && cols <= 10 && rows > 0 && rows <= 10) {
             insertTable(this.props.editor, cols, rows);
         }
-        this.props.onDismiss();
     };
 
     private onCustomizeFormat = () => {
+        this.props.onDismiss();
+
         let format = createTableFormat(
             this.evenBgColor.current.value || undefined,
             this.oddBgColor.current.value || undefined,
@@ -203,7 +206,6 @@ class TableOptions extends React.Component<TableOptionsProps, {}> {
         );
 
         formatTable(this.props.editor, format);
-        this.props.onDismiss();
     };
 }
 

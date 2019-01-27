@@ -1,6 +1,12 @@
-import { cacheGetElementAtCursor, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
-import { contains, getTagOfNode, VTable } from 'roosterjs-editor-dom';
-import { PluginEvent, PositionType } from 'roosterjs-editor-types';
+import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
+import {
+    contains,
+    getTagOfNode,
+    isVoidHtmlElement,
+    Position,
+    VTable
+    } from 'roosterjs-editor-dom';
+import { NodeType, PluginEvent, PositionType } from 'roosterjs-editor-types';
 
 export const TabInTable: ContentEditFeature = {
     keys: [Keys.TAB],
@@ -43,6 +49,8 @@ export const UpDownInTable: ContentEditFeature = {
         let isUp = event.rawEvent.which == Keys.UP;
         let step = isUp ? -1 : 1;
         let targetTd: HTMLTableCellElement = null;
+        let hasShiftKey = event.rawEvent.shiftKey;
+        let { anchorNode, anchorOffset } = editor.getSelection();
 
         for (let row = vtable.row; row >= 0 && row < vtable.cells.length; row += step) {
             let cell = vtable.getCell(row, vtable.col);
@@ -58,10 +66,22 @@ export const UpDownInTable: ContentEditFeature = {
                 contains(vtable.table, newContainer) &&
                 !contains(td, newContainer, true /*treatSameNodeAsContain*/)
             ) {
-                if (targetTd) {
-                    editor.select(targetTd, PositionType.Begin);
+                let newPos = targetTd
+                    ? new Position(targetTd, PositionType.Begin)
+                    : new Position(vtable.table, isUp ? PositionType.Before : PositionType.After);
+                if (hasShiftKey) {
+                    newPos =
+                        newPos.node.nodeType == NodeType.Element && isVoidHtmlElement(newPos.node)
+                            ? new Position(
+                                  newPos.node,
+                                  newPos.isAtEnd ? PositionType.After : PositionType.Before
+                              )
+                            : newPos;
+                    editor
+                        .getSelection()
+                        .setBaseAndExtent(anchorNode, anchorOffset, newPos.node, newPos.offset);
                 } else {
-                    editor.select(vtable.table, isUp ? PositionType.Before : PositionType.After);
+                    editor.select(newPos);
                 }
             }
         });
@@ -69,6 +89,9 @@ export const UpDownInTable: ContentEditFeature = {
 };
 
 function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellElement {
-    let firstTd = cacheGetElementAtCursor(editor, event, 'TD,TH,LI');
-    return getTagOfNode(firstTd) == 'LI' ? null : (firstTd as HTMLTableCellElement);
+    return cacheGetEventData(event, 'TABLECELL_FOR_TABLE_FEATURES', () => {
+        let pos = editor.getFocusedPosition();
+        let firstTd = editor.getElementAtCursor('TD,TH,LI', pos.node);
+        return getTagOfNode(firstTd) == 'LI' ? null : (firstTd as HTMLTableCellElement);
+    });
 }

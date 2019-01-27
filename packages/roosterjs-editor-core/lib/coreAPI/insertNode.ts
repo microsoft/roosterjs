@@ -1,19 +1,20 @@
 import EditorCore, { InsertNode } from '../interfaces/EditorCore';
-import { ContentPosition, InsertOption, NodeType, PositionType } from 'roosterjs-editor-types';
+import {
+    ContentPosition,
+    InsertOption,
+    NodeType,
+    PositionType,
+    BlockElement,
+} from 'roosterjs-editor-types';
 import {
     Position,
-    changeElementTag,
-    contains,
-    createRange,
     getBlockElementAtNode,
     getFirstLastBlockElement,
-    getTagOfNode,
     isBlockElement,
-    isNodeEmpty,
-    isPositionAtBeginningOf,
     isVoidHtmlElement,
-    unwrap,
     wrap,
+    adjustNodeInsertPosition,
+    createRange,
 } from 'roosterjs-editor-dom';
 
 const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOption) => {
@@ -66,43 +67,38 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
             break;
         case ContentPosition.SelectionStart:
             let range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-            if (range) {
-                // if to replace the selection and the selection is not collapsed, remove the the content at selection first
-                if (replaceSelection && !range.collapsed) {
-                    range.deleteContents();
-                }
-
-                // Create a clone (backup) for the selection first as we may need to restore to it later
-                let clonedRange = range.cloneRange();
-                let position = Position.getStart(range).normalize();
-                let blockElement = getBlockElementAtNode(contentDiv, position.node);
-
-                if (blockElement) {
-                    let endNode = blockElement.getEndNode();
-                    if (insertOnNewLine) {
-                        // Adjust the insertion point
-                        // option.insertOnNewLine means to insert on a block after the selection, not really right at the selection
-                        // This is commonly used when users want to insert signature. They could place cursor somewhere mid of a line
-                        // and insert signature, they actually want signature to be inserted the line after the selection
-                        range.setEndAfter(endNode);
-                        range.collapse(false /*toStart*/);
-                    } else {
-                        range = preprocessNode(core, range, node, endNode);
-                    }
-                }
-
-                let nodeForCursor =
-                    node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
-                range.insertNode(node);
-                if (updateCursor && nodeForCursor) {
-                    core.api.select(
-                        core,
-                        new Position(nodeForCursor, PositionType.After).normalize()
-                    );
-                } else {
-                    core.api.select(core, clonedRange);
-                }
+            if (!range) {
+                return;
             }
+
+            // if to replace the selection and the selection is not collapsed, remove the the content at selection first
+            if (replaceSelection && !range.collapsed) {
+                range.deleteContents();
+            }
+
+            // Create a clone (backup) for the selection first as we may need to restore to it later
+            let clonedRange = range.cloneRange();
+            let pos = Position.getStart(range);
+            let blockElement: BlockElement;
+
+            if (
+                insertOnNewLine &&
+                (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
+            ) {
+                pos = new Position(blockElement.getEndNode(), PositionType.After);
+            } else {
+                pos = adjustNodeInsertPosition(contentDiv, node, pos);
+            }
+
+            let nodeForCursor = node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
+            range = createRange(pos);
+            range.insertNode(node);
+            if (updateCursor && nodeForCursor) {
+                core.api.select(core, new Position(nodeForCursor, PositionType.After).normalize());
+            } else {
+                core.api.select(core, clonedRange);
+            }
+
             break;
         case ContentPosition.Outside:
             core.contentDiv.parentNode.insertBefore(node, contentDiv.nextSibling);
@@ -113,75 +109,3 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
 };
 
 export default insertNode;
-
-function preprocessNode(
-    core: EditorCore,
-    range: Range,
-    nodeToInsert: Node,
-    currentNode: Node
-): Range {
-    let rootNodeToInsert = nodeToInsert;
-
-    if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
-        let rootNodes = (<Node[]>[].slice.call(rootNodeToInsert.childNodes)).filter(
-            n => getTagOfNode(n) != 'BR'
-        );
-        rootNodeToInsert = rootNodes.length == 1 ? rootNodes[0] : null;
-    }
-
-    let tag = getTagOfNode(rootNodeToInsert);
-
-    if ((tag == 'OL' || tag == 'UL') && getTagOfNode(rootNodeToInsert.firstChild) == 'LI') {
-        let shouldInsertListAsText =
-            !rootNodeToInsert.firstChild.nextSibling &&
-            getTagOfNode(rootNodeToInsert.nextSibling) != 'BR';
-
-        if (getTagOfNode(rootNodeToInsert.nextSibling) == 'BR' && rootNodeToInsert.parentNode) {
-            rootNodeToInsert.parentNode.removeChild(rootNodeToInsert.nextSibling);
-        }
-
-        if (shouldInsertListAsText) {
-            unwrap(rootNodeToInsert.firstChild);
-            unwrap(rootNodeToInsert);
-        } else {
-            let listNode = currentNode;
-            while (
-                getTagOfNode(listNode.parentNode) != tag &&
-                contains(core.contentDiv, listNode)
-            ) {
-                listNode = listNode.parentNode;
-            }
-
-            if (getTagOfNode(listNode.parentNode) == tag) {
-                if (
-                    isNodeEmpty(listNode) ||
-                    isPositionAtBeginningOf(Position.getStart(range), listNode)
-                ) {
-                    range.setEndBefore(listNode);
-                } else {
-                    range.setEndAfter(listNode);
-                }
-                range.collapse(false /*toStart*/);
-                unwrap(rootNodeToInsert);
-            }
-        }
-    }
-
-    if (getTagOfNode(currentNode) == 'P') {
-        // Insert into a P tag may cause issues when the inserted content contains any block element.
-        // Change P tag to DIV to make sure it works well
-        let start = Position.getStart(range).normalize();
-        let end = Position.getEnd(range).normalize();
-        let div = changeElementTag(<HTMLElement>currentNode, 'div');
-        let newRange = createRange(start, end);
-        if (start.node != div && end.node != div && contains(core.contentDiv, newRange)) {
-            range = newRange;
-        }
-    }
-
-    if (isVoidHtmlElement(range.endContainer)) {
-        range.setEndBefore(range.endContainer);
-    }
-
-    return range;
-}

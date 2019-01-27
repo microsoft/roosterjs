@@ -1,6 +1,7 @@
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorPlugin from './EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
+import FirefoxTypeAfterLink from '../corePlugins/FirefoxTypeAfterLink';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoService from './UndoService';
@@ -19,6 +20,7 @@ export interface CorePlugins {
     readonly typeInContainer: TypeInContainerPlugin;
     readonly mouseUp: MouseUpPlugin;
     readonly domEvent: DOMEventPlugin;
+    readonly firefoxTypeAfterLink: FirefoxTypeAfterLink;
 }
 
 /**
