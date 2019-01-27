@@ -13,7 +13,7 @@ import {
     isBlockElement,
     isVoidHtmlElement,
     wrap,
-    mergeNode,
+    adjustNodeInsertPosition,
     createRange,
 } from 'roosterjs-editor-dom';
 
@@ -87,7 +87,7 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
             ) {
                 pos = new Position(blockElement.getEndNode(), PositionType.After);
             } else {
-                pos = mergeNode(contentDiv, node, pos);
+                pos = adjustNodeInsertPosition(contentDiv, node, pos);
             }
 
             let nodeForCursor = node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;

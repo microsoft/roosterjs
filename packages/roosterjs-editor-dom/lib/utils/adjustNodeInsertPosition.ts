@@ -9,10 +9,17 @@ import VTable from '../table/VTable';
 import wrap from './wrap';
 import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
 
-export default function mergeNode(
+/**
+ * Adjust the given position and return a better position (if any) or the given position
+ * which will be the best one for inserting the given node.
+ * @param root Root node of the scope
+ * @param nodeToInsert The node about to be inserted
+ * @param position The original position to insert the node
+ */
+export default function adjustNodeInsertPosition(
     root: Node,
     nodeToInsert: Node,
-    positionToInsert: NodePosition
+    position: NodePosition
 ): NodePosition {
     let rootNodeToInsert = nodeToInsert;
 
@@ -25,9 +32,9 @@ export default function mergeNode(
 
     let tag = getTagOfNode(rootNodeToInsert);
     let hasBrNextToRoot = tag && getTagOfNode(rootNodeToInsert.nextSibling) == 'BR';
-    let listItem = findClosestElementAncestor(positionToInsert.node, root, 'LI');
+    let listItem = findClosestElementAncestor(position.node, root, 'LI');
     let listNode = listItem && findClosestElementAncestor(listItem, root, 'OL,UL');
-    let tdNode = findClosestElementAncestor(positionToInsert.node, root, 'TD,TH');
+    let tdNode = findClosestElementAncestor(position.node, root, 'TD,TH');
     let trNode = tdNode && findClosestElementAncestor(tdNode, root, 'TR');
 
     if (tag == 'LI') {
@@ -47,14 +54,16 @@ export default function mergeNode(
             unwrap(rootNodeToInsert);
         } else if (getTagOfNode(listNode) == tag) {
             unwrap(rootNodeToInsert);
-            positionToInsert = new Position(
+            position = new Position(
                 listItem,
-                isPositionAtBeginningOf(positionToInsert, listItem)
+                isPositionAtBeginningOf(position, listItem)
                     ? PositionType.Before
                     : PositionType.After
             );
         }
     } else if (tag == 'TABLE' && trNode) {
+        // When inserting a table into a table, if these tables have the same column count, and
+        // current position is at beginning of a row, then merge these two tables
         let newTable = new VTable(<HTMLTableElement>rootNodeToInsert);
         let currentTable = new VTable(<HTMLTableCellElement>tdNode);
         if (
@@ -62,7 +71,7 @@ export default function mergeNode(
             tdNode == currentTable.getCell(currentTable.row, 0).td &&
             newTable.cells[0] &&
             newTable.cells[0].length == currentTable.cells[0].length &&
-            isPositionAtBeginningOf(positionToInsert, tdNode)
+            isPositionAtBeginningOf(position, tdNode)
         ) {
             if (
                 getTagOfNode(rootNodeToInsert.firstChild) == 'TBODY' &&
@@ -71,26 +80,26 @@ export default function mergeNode(
                 unwrap(rootNodeToInsert.firstChild);
             }
             unwrap(rootNodeToInsert);
-            positionToInsert = new Position(trNode, PositionType.After);
+            position = new Position(trNode, PositionType.After);
         }
     }
 
-    if (getTagOfNode(positionToInsert.node) == 'P') {
+    if (getTagOfNode(position.node) == 'P') {
         // Insert into a P tag may cause issues when the inserted content contains any block element.
         // Change P tag to DIV to make sure it works well
-        let pos = positionToInsert.normalize();
-        let div = changeElementTag(<HTMLElement>positionToInsert.node, 'div');
+        let pos = position.normalize();
+        let div = changeElementTag(<HTMLElement>position.node, 'div');
         if (pos.node != div) {
-            positionToInsert = pos;
+            position = pos;
         }
     }
 
-    if (isVoidHtmlElement(positionToInsert.node)) {
-        positionToInsert = new Position(
-            positionToInsert.node,
-            positionToInsert.isAtEnd ? PositionType.After : PositionType.Before
+    if (isVoidHtmlElement(position.node)) {
+        position = new Position(
+            position.node,
+            position.isAtEnd ? PositionType.After : PositionType.Before
         );
     }
 
-    return positionToInsert;
+    return position;
 }
