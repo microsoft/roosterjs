@@ -2,16 +2,16 @@
     "name": "roosterjs",
     "description": "A simple facade for all roosterjs code",
     "dependencies": {
-        "roosterjs-editor-types": "7.0.2",
-        "roosterjs-editor-dom": "7.0.2",
-        "roosterjs-editor-core": "7.0.2",
-        "roosterjs-editor-api": "7.0.2",
-        "roosterjs-editor-plugins": "7.0.2",
-        "roosterjs-plugin-image-resize": "7.0.2",
+        "roosterjs-editor-types": "7.0.3",
+        "roosterjs-editor-dom": "7.0.3",
+        "roosterjs-editor-core": "7.0.3",
+        "roosterjs-editor-api": "7.0.3",
+        "roosterjs-editor-plugins": "7.0.3",
+        "roosterjs-plugin-image-resize": "7.0.3",
         "roosterjs-html-sanitizer": "1.1.3"
     },
     "main": "./lib/index.js",
-    "version": "7.0.2",
+    "version": "7.0.3",
     "typings": "./lib/index.d.ts",
     "license": "MIT",
     "repository": {

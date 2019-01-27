@@ -1,5 +1,5 @@
 /*
-    VERSION: 7.0.2
+    VERSION: 7.0.3
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -1432,7 +1432,6 @@ exports.default = formatTable;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var formatTable_1 = __webpack_require__(/*! ./formatTable */ "./packages/roosterjs-editor-api/lib/table/formatTable.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 /**
  * Insert table into editor at current selection
@@ -1462,14 +1461,16 @@ function insertTable(editor, columns, rows, format) {
     }
     editor.focus();
     editor.addUndoSnapshot(function () {
-        editor.insertNode(fragment);
-        formatTable_1.default(editor, format || {
+        var vtable = new roosterjs_editor_dom_1.VTable(table);
+        vtable.applyFormat(format || {
             bgColorEven: '#FFF',
             bgColorOdd: '#FFF',
             topBorderColor: '#ABABAB',
             bottomBorderColor: '#ABABAB',
             verticalBorderColor: '#ABABAB',
-        }, table);
+        });
+        vtable.writeBack();
+        editor.insertNode(fragment);
         editor.runAsync(function () { return editor.select(new roosterjs_editor_dom_1.Position(table, 0 /* Begin */).normalize()); });
     }, "Format" /* Format */);
 }
@@ -2041,37 +2042,32 @@ var insertNode = function (core, node, option) {
             break;
         case 2 /* SelectionStart */:
             var range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-            if (range) {
-                // if to replace the selection and the selection is not collapsed, remove the the content at selection first
-                if (replaceSelection && !range.collapsed) {
-                    range.deleteContents();
-                }
-                // Create a clone (backup) for the selection first as we may need to restore to it later
-                var clonedRange = range.cloneRange();
-                var position_1 = roosterjs_editor_dom_1.Position.getStart(range).normalize();
-                var blockElement = roosterjs_editor_dom_1.getBlockElementAtNode(contentDiv, position_1.node);
-                if (blockElement) {
-                    var endNode = blockElement.getEndNode();
-                    if (insertOnNewLine) {
-                        // Adjust the insertion point
-                        // option.insertOnNewLine means to insert on a block after the selection, not really right at the selection
-                        // This is commonly used when users want to insert signature. They could place cursor somewhere mid of a line
-                        // and insert signature, they actually want signature to be inserted the line after the selection
-                        range.setEndAfter(endNode);
-                        range.collapse(false /*toStart*/);
-                    }
-                    else {
-                        range = preprocessNode(core, range, node, endNode);
-                    }
-                }
-                var nodeForCursor = node.nodeType == 11 /* DocumentFragment */ ? node.lastChild : node;
-                range.insertNode(node);
-                if (updateCursor && nodeForCursor) {
-                    core.api.select(core, new roosterjs_editor_dom_1.Position(nodeForCursor, -3 /* After */).normalize());
-                }
-                else {
-                    core.api.select(core, clonedRange);
-                }
+            if (!range) {
+                return;
+            }
+            // if to replace the selection and the selection is not collapsed, remove the the content at selection first
+            if (replaceSelection && !range.collapsed) {
+                range.deleteContents();
+            }
+            // Create a clone (backup) for the selection first as we may need to restore to it later
+            var clonedRange = range.cloneRange();
+            var pos = roosterjs_editor_dom_1.Position.getStart(range);
+            var blockElement = void 0;
+            if (insertOnNewLine &&
+                (blockElement = roosterjs_editor_dom_1.getBlockElementAtNode(contentDiv, pos.normalize().node))) {
+                pos = new roosterjs_editor_dom_1.Position(blockElement.getEndNode(), -3 /* After */);
+            }
+            else {
+                pos = roosterjs_editor_dom_1.adjustNodeInsertPosition(contentDiv, node, pos);
+            }
+            var nodeForCursor = node.nodeType == 11 /* DocumentFragment */ ? node.lastChild : node;
+            range = roosterjs_editor_dom_1.createRange(pos);
+            range.insertNode(node);
+            if (updateCursor && nodeForCursor) {
+                core.api.select(core, new roosterjs_editor_dom_1.Position(nodeForCursor, -3 /* After */).normalize());
+            }
+            else {
+                core.api.select(core, clonedRange);
             }
             break;
         case 3 /* Outside */:
@@ -2081,58 +2077,6 @@ var insertNode = function (core, node, option) {
     return true;
 };
 exports.default = insertNode;
-function preprocessNode(core, range, nodeToInsert, currentNode) {
-    var rootNodeToInsert = nodeToInsert;
-    if (rootNodeToInsert.nodeType == 11 /* DocumentFragment */) {
-        var rootNodes = [].slice.call(rootNodeToInsert.childNodes).filter(function (n) { return roosterjs_editor_dom_1.getTagOfNode(n) != 'BR'; });
-        rootNodeToInsert = rootNodes.length == 1 ? rootNodes[0] : null;
-    }
-    var tag = roosterjs_editor_dom_1.getTagOfNode(rootNodeToInsert);
-    if ((tag == 'OL' || tag == 'UL') && roosterjs_editor_dom_1.getTagOfNode(rootNodeToInsert.firstChild) == 'LI') {
-        var shouldInsertListAsText = !rootNodeToInsert.firstChild.nextSibling &&
-            roosterjs_editor_dom_1.getTagOfNode(rootNodeToInsert.nextSibling) != 'BR';
-        if (roosterjs_editor_dom_1.getTagOfNode(rootNodeToInsert.nextSibling) == 'BR' && rootNodeToInsert.parentNode) {
-            rootNodeToInsert.parentNode.removeChild(rootNodeToInsert.nextSibling);
-        }
-        if (shouldInsertListAsText) {
-            roosterjs_editor_dom_1.unwrap(rootNodeToInsert.firstChild);
-            roosterjs_editor_dom_1.unwrap(rootNodeToInsert);
-        }
-        else {
-            var listNode = currentNode;
-            while (roosterjs_editor_dom_1.getTagOfNode(listNode.parentNode) != tag &&
-                roosterjs_editor_dom_1.contains(core.contentDiv, listNode)) {
-                listNode = listNode.parentNode;
-            }
-            if (roosterjs_editor_dom_1.getTagOfNode(listNode.parentNode) == tag) {
-                if (roosterjs_editor_dom_1.isNodeEmpty(listNode) ||
-                    roosterjs_editor_dom_1.isPositionAtBeginningOf(roosterjs_editor_dom_1.Position.getStart(range), listNode)) {
-                    range.setEndBefore(listNode);
-                }
-                else {
-                    range.setEndAfter(listNode);
-                }
-                range.collapse(false /*toStart*/);
-                roosterjs_editor_dom_1.unwrap(rootNodeToInsert);
-            }
-        }
-    }
-    if (roosterjs_editor_dom_1.getTagOfNode(currentNode) == 'P') {
-        // Insert into a P tag may cause issues when the inserted content contains any block element.
-        // Change P tag to DIV to make sure it works well
-        var start = roosterjs_editor_dom_1.Position.getStart(range).normalize();
-        var end = roosterjs_editor_dom_1.Position.getEnd(range).normalize();
-        var div = roosterjs_editor_dom_1.changeElementTag(currentNode, 'div');
-        var newRange = roosterjs_editor_dom_1.createRange(start, end);
-        if (start.node != div && end.node != div && roosterjs_editor_dom_1.contains(core.contentDiv, newRange)) {
-            range = newRange;
-        }
-    }
-    if (roosterjs_editor_dom_1.isVoidHtmlElement(range.endContainer)) {
-        range.setEndBefore(range.endContainer);
-    }
-    return range;
-}
 
 
 /***/ }),
@@ -2464,6 +2408,58 @@ exports.default = EditPlugin;
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-core/lib/corePlugins/FirefoxTypeAfterLink.ts":
+/*!********************************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/corePlugins/FirefoxTypeAfterLink.ts ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var cacheGetContentSearcher_1 = __webpack_require__(/*! ../eventApi/cacheGetContentSearcher */ "./packages/roosterjs-editor-core/lib/eventApi/cacheGetContentSearcher.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+/**
+ * FirefoxTypeAfterLink Component helps handle typing event when cursor is right after a link.
+ * When typing after a link, Firefox will always put the new charactor inside link.
+ * This plugin overrides this behavior to make it consistent with other browsers.
+ */
+var FirefoxTypeAfterLink = /** @class */ (function () {
+    function FirefoxTypeAfterLink() {
+    }
+    FirefoxTypeAfterLink.prototype.getName = function () {
+        return 'FirefoxTypeAfterLink';
+    };
+    FirefoxTypeAfterLink.prototype.initialize = function (editor) {
+        this.editor = editor;
+    };
+    FirefoxTypeAfterLink.prototype.dispose = function () {
+        this.editor = null;
+    };
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
+    FirefoxTypeAfterLink.prototype.onPluginEvent = function (event) {
+        if (event.eventType == 1 /* KeyPress */) {
+            var range = this.editor.getSelectionRange();
+            if (range && range.collapsed && this.editor.getElementAtCursor('A[href]')) {
+                var searcher = cacheGetContentSearcher_1.cacheGetContentSearcher(event, this.editor);
+                var inlineElement = searcher.getInlineElementBefore();
+                if (inlineElement instanceof roosterjs_editor_dom_1.LinkInlineElement) {
+                    this.editor.select(new roosterjs_editor_dom_1.Position(inlineElement.getContainerNode(), -3 /* After */));
+                }
+            }
+        }
+    };
+    return FirefoxTypeAfterLink;
+}());
+exports.default = FirefoxTypeAfterLink;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-core/lib/corePlugins/MouseUpPlugin.ts":
 /*!*************************************************************************!*\
   !*** ./packages/roosterjs-editor-core/lib/corePlugins/MouseUpPlugin.ts ***!
@@ -2610,10 +2606,10 @@ var TypeInContainerPlugin = /** @class */ (function () {
         //
         // Only scheudle when the range is not collapsed to catch this edge case.
         var range = this.editor.getSelectionRange();
-        var shouldNormalizeTypingNow = range &&
-            range.collapsed &&
-            !this.editor.contains(roosterjs_editor_dom_1.findClosestElementAncestor(range.startContainer));
-        if (shouldNormalizeTypingNow) {
+        if (!range || this.editor.contains(roosterjs_editor_dom_1.findClosestElementAncestor(range.startContainer))) {
+            return;
+        }
+        if (range.collapsed) {
             this.tryNormalizeTyping(event, range);
         }
         else if (!range.collapsed) {
@@ -3207,6 +3203,7 @@ var attachDomEvent_1 = __webpack_require__(/*! ../coreAPI/attachDomEvent */ "./p
 var DOMEventPlugin_1 = __webpack_require__(/*! ../corePlugins/DOMEventPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts");
 var EditPlugin_1 = __webpack_require__(/*! ../corePlugins/EditPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/EditPlugin.ts");
 var editWithUndo_1 = __webpack_require__(/*! ../coreAPI/editWithUndo */ "./packages/roosterjs-editor-core/lib/coreAPI/editWithUndo.ts");
+var FirefoxTypeAfterLink_1 = __webpack_require__(/*! ../corePlugins/FirefoxTypeAfterLink */ "./packages/roosterjs-editor-core/lib/corePlugins/FirefoxTypeAfterLink.ts");
 var focus_1 = __webpack_require__(/*! ../coreAPI/focus */ "./packages/roosterjs-editor-core/lib/coreAPI/focus.ts");
 var getCustomData_1 = __webpack_require__(/*! ../coreAPI/getCustomData */ "./packages/roosterjs-editor-core/lib/coreAPI/getCustomData.ts");
 var getSelectionRange_1 = __webpack_require__(/*! ../coreAPI/getSelectionRange */ "./packages/roosterjs-editor-core/lib/coreAPI/getSelectionRange.ts");
@@ -3225,12 +3222,14 @@ function createEditorCore(contentDiv, options) {
         typeInContainer: new TypeInContainerPlugin_1.default(),
         mouseUp: new MouseUpPlugin_1.default(),
         domEvent: new DOMEventPlugin_1.default(options.disableRestoreSelectionOnFocus),
+        firefoxTypeAfterLink: roosterjs_editor_dom_1.Browser.isFirefox && new FirefoxTypeAfterLink_1.default(),
     };
     var allPlugins = [
         corePlugins.typeInContainer,
         corePlugins.edit,
         corePlugins.mouseUp
     ].concat((options.plugins || []), [
+        corePlugins.firefoxTypeAfterLink,
         corePlugins.undo,
         corePlugins.domEvent,
     ]).filter(function (plugin) { return !!plugin; });
@@ -3433,6 +3432,8 @@ var DOMEventPlugin_1 = __webpack_require__(/*! ./corePlugins/DOMEventPlugin */ "
 exports.DOMEventPlugin = DOMEventPlugin_1.default;
 var TypeInContainerPlugin_1 = __webpack_require__(/*! ./corePlugins/TypeInContainerPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/TypeInContainerPlugin.ts");
 exports.TypeInContainerPlugin = TypeInContainerPlugin_1.default;
+var FirefoxTypeAfterLink_1 = __webpack_require__(/*! ./corePlugins/FirefoxTypeAfterLink */ "./packages/roosterjs-editor-core/lib/corePlugins/FirefoxTypeAfterLink.ts");
+exports.FirefoxTypeAfterLink = FirefoxTypeAfterLink_1.default;
 // Event APIs
 var cacheGetEventData_1 = __webpack_require__(/*! ./eventApi/cacheGetEventData */ "./packages/roosterjs-editor-core/lib/eventApi/cacheGetEventData.ts");
 exports.cacheGetEventData = cacheGetEventData_1.default;
@@ -4797,6 +4798,8 @@ var isVoidHtmlElement_1 = __webpack_require__(/*! ./utils/isVoidHtmlElement */ "
 exports.isVoidHtmlElement = isVoidHtmlElement_1.default;
 var matchLink_1 = __webpack_require__(/*! ./utils/matchLink */ "./packages/roosterjs-editor-dom/lib/utils/matchLink.ts");
 exports.matchLink = matchLink_1.default;
+var adjustNodeInsertPosition_1 = __webpack_require__(/*! ./utils/adjustNodeInsertPosition */ "./packages/roosterjs-editor-dom/lib/utils/adjustNodeInsertPosition.ts");
+exports.adjustNodeInsertPosition = adjustNodeInsertPosition_1.default;
 var queryElements_1 = __webpack_require__(/*! ./utils/queryElements */ "./packages/roosterjs-editor-dom/lib/utils/queryElements.ts");
 exports.queryElements = queryElements_1.default;
 var splitParentNode_1 = __webpack_require__(/*! ./utils/splitParentNode */ "./packages/roosterjs-editor-dom/lib/utils/splitParentNode.ts");
@@ -6234,6 +6237,101 @@ exports.default = Browser;
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-dom/lib/utils/adjustNodeInsertPosition.ts":
+/*!*****************************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/utils/adjustNodeInsertPosition.ts ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var changeElementTag_1 = __webpack_require__(/*! ./changeElementTag */ "./packages/roosterjs-editor-dom/lib/utils/changeElementTag.ts");
+var findClosestElementAncestor_1 = __webpack_require__(/*! ./findClosestElementAncestor */ "./packages/roosterjs-editor-dom/lib/utils/findClosestElementAncestor.ts");
+var getTagOfNode_1 = __webpack_require__(/*! ./getTagOfNode */ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts");
+var isPositionAtBeginningOf_1 = __webpack_require__(/*! ../selection/isPositionAtBeginningOf */ "./packages/roosterjs-editor-dom/lib/selection/isPositionAtBeginningOf.ts");
+var isVoidHtmlElement_1 = __webpack_require__(/*! ./isVoidHtmlElement */ "./packages/roosterjs-editor-dom/lib/utils/isVoidHtmlElement.ts");
+var Position_1 = __webpack_require__(/*! ../selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
+var unwrap_1 = __webpack_require__(/*! ./unwrap */ "./packages/roosterjs-editor-dom/lib/utils/unwrap.ts");
+var VTable_1 = __webpack_require__(/*! ../table/VTable */ "./packages/roosterjs-editor-dom/lib/table/VTable.ts");
+var wrap_1 = __webpack_require__(/*! ./wrap */ "./packages/roosterjs-editor-dom/lib/utils/wrap.ts");
+/**
+ * Adjust the given position and return a better position (if any) or the given position
+ * which will be the best one for inserting the given node.
+ * @param root Root node of the scope
+ * @param nodeToInsert The node about to be inserted
+ * @param position The original position to insert the node
+ */
+function adjustNodeInsertPosition(root, nodeToInsert, position) {
+    var rootNodeToInsert = nodeToInsert;
+    if (rootNodeToInsert.nodeType == 11 /* DocumentFragment */) {
+        var rootNodes = [].slice.call(rootNodeToInsert.childNodes).filter(function (n) { return getTagOfNode_1.default(n) != 'BR'; });
+        rootNodeToInsert = rootNodes.length == 1 ? rootNodes[0] : null;
+    }
+    var tag = getTagOfNode_1.default(rootNodeToInsert);
+    var hasBrNextToRoot = tag && getTagOfNode_1.default(rootNodeToInsert.nextSibling) == 'BR';
+    var listItem = findClosestElementAncestor_1.default(position.node, root, 'LI');
+    var listNode = listItem && findClosestElementAncestor_1.default(listItem, root, 'OL,UL');
+    var tdNode = findClosestElementAncestor_1.default(position.node, root, 'TD,TH');
+    var trNode = tdNode && findClosestElementAncestor_1.default(tdNode, root, 'TR');
+    if (tag == 'LI') {
+        tag = listNode ? getTagOfNode_1.default(listNode) : 'UL';
+        rootNodeToInsert = wrap_1.default(rootNodeToInsert, tag);
+    }
+    if ((tag == 'OL' || tag == 'UL') && getTagOfNode_1.default(rootNodeToInsert.firstChild) == 'LI') {
+        var shouldInsertListAsText = !rootNodeToInsert.firstChild.nextSibling && !hasBrNextToRoot;
+        if (hasBrNextToRoot && rootNodeToInsert.parentNode) {
+            rootNodeToInsert.parentNode.removeChild(rootNodeToInsert.nextSibling);
+        }
+        if (shouldInsertListAsText) {
+            unwrap_1.default(rootNodeToInsert.firstChild);
+            unwrap_1.default(rootNodeToInsert);
+        }
+        else if (getTagOfNode_1.default(listNode) == tag) {
+            unwrap_1.default(rootNodeToInsert);
+            position = new Position_1.default(listItem, isPositionAtBeginningOf_1.default(position, listItem)
+                ? -2 /* Before */
+                : -3 /* After */);
+        }
+    }
+    else if (tag == 'TABLE' && trNode) {
+        // When inserting a table into a table, if these tables have the same column count, and
+        // current position is at beginning of a row, then merge these two tables
+        var newTable = new VTable_1.default(rootNodeToInsert);
+        var currentTable = new VTable_1.default(tdNode);
+        if (currentTable.col == 0 &&
+            tdNode == currentTable.getCell(currentTable.row, 0).td &&
+            newTable.cells[0] &&
+            newTable.cells[0].length == currentTable.cells[0].length &&
+            isPositionAtBeginningOf_1.default(position, tdNode)) {
+            if (getTagOfNode_1.default(rootNodeToInsert.firstChild) == 'TBODY' &&
+                !rootNodeToInsert.firstChild.nextSibling) {
+                unwrap_1.default(rootNodeToInsert.firstChild);
+            }
+            unwrap_1.default(rootNodeToInsert);
+            position = new Position_1.default(trNode, -3 /* After */);
+        }
+    }
+    if (getTagOfNode_1.default(position.node) == 'P') {
+        // Insert into a P tag may cause issues when the inserted content contains any block element.
+        // Change P tag to DIV to make sure it works well
+        var pos = position.normalize();
+        var div = changeElementTag_1.default(position.node, 'div');
+        if (pos.node != div) {
+            position = pos;
+        }
+    }
+    if (isVoidHtmlElement_1.default(position.node)) {
+        position = new Position_1.default(position.node, position.isAtEnd ? -3 /* After */ : -2 /* Before */);
+    }
+    return position;
+}
+exports.default = adjustNodeInsertPosition;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-dom/lib/utils/applyFormat.ts":
 /*!****************************************************************!*\
   !*** ./packages/roosterjs-editor-dom/lib/utils/applyFormat.ts ***!
@@ -7439,7 +7537,7 @@ function getDefaultContentEditFeatures() {
         unquoteWhenEnterOnEmptyLine: true,
         autoBullet: true,
         tabInTable: true,
-        upDownInTable: true,
+        upDownInTable: roosterjs_editor_dom_1.Browser.isChrome || roosterjs_editor_dom_1.Browser.isSafari,
         defaultShortcut: true,
         unlinkWhenBackspaceAfterLink: false,
         smartOrderedList: false,
@@ -7858,6 +7956,8 @@ exports.UpDownInTable = {
         var isUp = event.rawEvent.which == 38 /* UP */;
         var step = isUp ? -1 : 1;
         var targetTd = null;
+        var hasShiftKey = event.rawEvent.shiftKey;
+        var _a = editor.getSelection(), anchorNode = _a.anchorNode, anchorOffset = _a.anchorOffset;
         for (var row = vtable.row; row >= 0 && row < vtable.cells.length; row += step) {
             var cell = vtable.getCell(row, vtable.col);
             if (cell.td && cell.td != td) {
@@ -7869,19 +7969,31 @@ exports.UpDownInTable = {
             var newContainer = editor.getElementAtCursor();
             if (roosterjs_editor_dom_1.contains(vtable.table, newContainer) &&
                 !roosterjs_editor_dom_1.contains(td, newContainer, true /*treatSameNodeAsContain*/)) {
-                if (targetTd) {
-                    editor.select(targetTd, 0 /* Begin */);
+                var newPos = targetTd
+                    ? new roosterjs_editor_dom_1.Position(targetTd, 0 /* Begin */)
+                    : new roosterjs_editor_dom_1.Position(vtable.table, isUp ? -2 /* Before */ : -3 /* After */);
+                if (hasShiftKey) {
+                    newPos =
+                        newPos.node.nodeType == 1 /* Element */ && roosterjs_editor_dom_1.isVoidHtmlElement(newPos.node)
+                            ? new roosterjs_editor_dom_1.Position(newPos.node, newPos.isAtEnd ? -3 /* After */ : -2 /* Before */)
+                            : newPos;
+                    editor
+                        .getSelection()
+                        .setBaseAndExtent(anchorNode, anchorOffset, newPos.node, newPos.offset);
                 }
                 else {
-                    editor.select(vtable.table, isUp ? -2 /* Before */ : -3 /* After */);
+                    editor.select(newPos);
                 }
             }
         });
     },
 };
 function cacheGetTableCell(event, editor) {
-    var firstTd = roosterjs_editor_core_1.cacheGetElementAtCursor(editor, event, 'TD,TH,LI');
-    return roosterjs_editor_dom_1.getTagOfNode(firstTd) == 'LI' ? null : firstTd;
+    return roosterjs_editor_core_1.cacheGetEventData(event, 'TABLECELL_FOR_TABLE_FEATURES', function () {
+        var pos = editor.getFocusedPosition();
+        var firstTd = editor.getElementAtCursor('TD,TH,LI', pos.node);
+        return roosterjs_editor_dom_1.getTagOfNode(firstTd) == 'LI' ? null : firstTd;
+    });
 }
 
 
