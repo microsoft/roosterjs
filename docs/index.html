@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>RoosterJs</title>
+	<title>RoosterJs API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">RoosterJs</a>
+					<a href="index.html" class="title">RoosterJs API Reference</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -52,7 +52,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> RoosterJs</h1>
+			<h1> RoosterJs API Reference</h1>
 		</div>
 	</div>
 </header>
@@ -60,213 +60,47 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<p><a href="https://travis-ci.org/Microsoft/roosterjs"><img src="https://travis-ci.org/Microsoft/roosterjs.svg?branch=master" alt="Build Status"></a></p>
-				<h1 id="rooster">Rooster</h1>
-				<p>Rooster is a framework-independent JavaScript rich-text editor neatly nested
-					inside one HTML <code>&lt;div&gt;</code> element. Editing operations performed by end users are
-				handled in simple ways to generate the final HTML.</p>
-				<p>To view the sample site, please click the link below:</p>
-				<p><a href="https://microsoft.github.io/roosterjs/index.html">RoosterJs Sample Site</a>.</p>
-				<h2 id="upgrade-from-roosterjs-6-x">Upgrade from RoosterJs 6.x</h2>
-				<p>If you are upgrading your project from RoosterJs 6.x, please read
-					<a href="https://github.com/Microsoft/roosterjs/wiki/RoosterJs-7">here</a> for a full
-				list of API changes.</p>
-				<p>The code of RoosterJs 6.x is now moved to branch <a href="https://github.com/Microsoft/roosterjs/tree/roosterjs6">roosterjs6</a>.</p>
-				<p>RoosterJs 6.x will be still support for a while. Most new features added into
-					RoosterJs 7.x will also be merged into 6.x branch for now. We plan to stop the
-				supporting of RoosterJs 6.x at the end of 2019/2.</p>
-				<h2 id="features">Features</h2>
-				<h3 id="packages">Packages</h3>
+				<p>Welcome to RoosterJs API References!</p>
+				<h2 id="content">Content</h2>
 				<p>Rooster contains 9 packages.</p>
 				<ol>
-					<li><p><code>roosterjs</code>:
+					<li><p><a href="modules/roosterjs.html">roosterjs</a>:
 							A facade of all Rooster code for those who want a quick start. Use the
 							<code>createEditor()</code> function in roosterjs to create an editor with default
 						configurations.</p>
 					</li>
-					<li><p><code>roosterjs-editor-core</code>:
+					<li><p><a href="modules/roosterjs_editor_core.html">roosterjs-editor-core</a>:
 							Defines the core editor and plugin infrastructure. Use <code>roosterjs-editor-core</code>
 						instead of <code>roosterjs</code> to build and customize your own editor.</p>
 					</li>
-					<li><p><code>roosterjs-editor-api</code>:
+					<li><p><a href="modules/roosterjs_editor_api.html">roosterjs-editor-api</a>:
 							Defines APIs for editor operations. Use these APIs to modify content and
 						formatting in the editor you built using <code>roosterjs-editor-core</code>.</p>
 					</li>
-					<li><p><code>roosterjs-editor-dom</code>:
+					<li><p><a href="modules/roosterjs_editor_dom.html">roosterjs-editor-dom</a>:
 							Defines APIs for DOM operations. Use <code>roosterjs-editor-api</code> instead unless
 						you want to access DOM API directly.</p>
 					</li>
-					<li><p><code>roosterjs-editor-plugins</code>:
+					<li><p><a href="modules/roosterjs_editor_plugins.html">roosterjs-editor-plugins</a>:
 							Defines basic plugins for common features. Examples: making hyperlinks,
 						pasting HTML content, inserting inline images.</p>
 					</li>
-					<li><p><code>roosterjs-editor-types</code>:
+					<li><p><a href="modules/roosterjs_editor_types.html">roosterjs-editor-types</a>:
 						Defines public interfaces and enumerations.</p>
 					</li>
-					<li><p><code>roosterjs-html-sanitizer</code>
+					<li><p><a href="modules/roosterjs_html_sanitizer.html">roosterjs-html-sanitizer</a>
 						A common library to help sanitize HTML.</p>
 					</li>
-					<li><p><code>roosterjs-plugin-image-resize</code>
+					<li><p><a href="modules/roosterjs_plugin_image_resize.html">roosterjs-plugin-image-resize</a>
 						A plugin to help do inline image resize within the editor</p>
 					</li>
-					<li><p><code>roosterjs-plugin-picker</code>
+					<li><p><a href="modules/roosterjs_plugin_picker.html">roosterjs-plugin-picker</a>
 						A plugin to help build picker-like plugins</p>
 					</li>
 				</ol>
-				<h3 id="apis">APIs</h3>
-				<p>Rooster provides DOM level APIs (in <code>roosterjs-editor-dom</code>) and formatting APIs
-				(in <code>roosterjs-editor-api</code>) to perform editing operations.</p>
-				<p><code>roosterjs-editor-dom</code> provides several levels of DOM operations:</p>
-				<ul>
-					<li>Perform basic DOM operations such as <code>fromHtml()</code>, <code>wrap()</code>, <code>unwrap()</code>, ...</li>
-					<li>Wrap a given DOM node with <code>InlineElemen</code>t or <code>BlockElement</code> and perform
-					operations with DOM Walker API.</li>
-					<li>Perform DOM operations on a given scope using scopers.</li>
-					<li>Travel among <code>InlineElements</code> and <code>BlockElements</code> with scope using
-					ContentTraverser API.</li>
-				</ul>
-				<p><code>roosterjs-editor-api</code> provides APIs for scenario-based operations triggered by
-				user interaction.</p>
-				<h2 id="plugins">Plugins</h2>
-				<p>Rooster supports plugins. You can use built-in plugins or build your own.
-					Plugins call APIs to communicate with the editor. When an operation is
-					performed by the user or when content is changed by code, the editor will
-				trigger events for the plugins to handle.</p>
-				<p>Here&#39;s a sample plugin which will show a dialog containing &quot;Hello Rooster&quot; when
-				an &quot;a&quot; is typed in the editor:</p>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">class</span> HelloRooster <span class="hljs-keyword">implements</span> EditorPlugin {
-    getName() {
-        <span class="hljs-keyword">return</span> <span class="hljs-string">'HelloRooster'</span>;
-    }
-
-    initialize(editor: Editor) {}
-
-    dispose() {}
-
-    onPluginEvent(e: PluginEvent) {
-        <span class="hljs-keyword">if</span> (e.eventType == PluginEventType.KeyPress &amp;&amp; e.rawEvent.which == <span class="hljs-number">65</span>) {
-            alert(<span class="hljs-string">'Hello Rooster'</span>);
-        }
-    }
-}
-</code></pre>
-				<h2 id="installation">Installation</h2>
-				<p>Install via NPM or Yarn:</p>
-				<p><code>yarn add roosterjs</code></p>
-				<p>or</p>
-				<p><code>npm install roosterjs --save</code></p>
-				<p>You can also install sub packages separately:</p>
-				<p><code>yarn add roosterjs-editor-core</code></p>
-				<p><code>yarn add roosterjs-editor-api</code></p>
-				<p><code>...</code></p>
-				<p>or</p>
-				<p><code>npm install roosterjs-editor-core --save</code></p>
-				<p><code>npm install roosterjs-editor-api --save</code></p>
-				<p><code>...</code></p>
-				<p>In order to run the code below, you may also need to install <a href="https://webpack.js.org/">webpack</a>:</p>
-				<p><code>yarn add webpack -g</code></p>
-				<p>or</p>
-				<p><code>npm install webpack -g</code></p>
-				<h2 id="usage">Usage</h2>
-				<h3 id="a-quick-start">A quick start</h3>
-				<ol>
-					<li>Create <code>editor.htm</code> contains a DIV with some styles, and a reference to a
-					.js file:</li>
-				</ol>
-				<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>
-            <span class="hljs-attr">id</span>=<span class="hljs-string">"editorDiv"</span>
-            <span class="hljs-attr">style</span>=<span class="hljs-string">"width: 500px; height: 300px; overflow: auto;
-        border: solid 1px black"</span>
-        &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"editor.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
-</code></pre>
-				<ol start="2">
-					<li>Create <code>source.js</code> to import roosterjs and create an editor:</li>
-				</ol>
-				<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> roosterjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'roosterjs'</span>);
-<span class="hljs-keyword">var</span> editorDiv = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'editorDiv'</span>);
-<span class="hljs-keyword">var</span> editor = roosterjs.createEditor(editorDiv);
-editor.setContent(<span class="hljs-string">'Welcome to &lt;b&gt;RoosterJs&lt;/b&gt;!'</span>);
-</code></pre>
-				<ol start="3">
-					<li>Compile the javascript file using webpack:</li>
-				</ol>
-				<p><code>webpack source.js editor.js</code></p>
-				<ol start="4">
-					<li>Navigate to editor.htm, you will see a editor shown in the page.</li>
-				</ol>
-				<h3 id="add-some-format-buttons">Add some format buttons</h3>
-				<ol>
-					<li>Add some buttons into <code>editor.htm</code>:</li>
-				</ol>
-				<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>
-            <span class="hljs-attr">id</span>=<span class="hljs-string">"editorDiv"</span>
-            <span class="hljs-attr">style</span>=<span class="hljs-string">"width: 500px; height: 300px; overflow: auto;
-        border: solid 1px black"</span>
-        &gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"buttonB"</span>&gt;</span>B<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"buttonI"</span>&gt;</span>I<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"buttonU"</span>&gt;</span>U<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"editor.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
-</code></pre>
-				<ol start="2">
-					<li>Add code to <code>source.js</code> to handle click event of the buttons:</li>
-				</ol>
-				<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> roosterjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'roosterjs'</span>);
-<span class="hljs-keyword">var</span> editorDiv = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'editorDiv'</span>);
-<span class="hljs-keyword">var</span> editor = roosterjs.createEditor(editorDiv);
-editor.setContent(<span class="hljs-string">'Welcome to &lt;b&gt;RoosterJs&lt;/b&gt;!'</span>);
-
-<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'buttonB'</span>).addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-    roosterjs.toggleBold(editor);
-});
-<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'buttonI'</span>).addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-    roosterjs.toggleItalic(editor);
-});
-<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'buttonU'</span>).addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-    roosterjs.toggleUnderline(editor);
-});
-</code></pre>
-				<ol start="3">
-					<li>Compile the javascript file using webpack:</li>
-				</ol>
-				<p><code>webpack source.js editor.js</code></p>
-				<ol start="4">
-					<li>Navigate to editor.htm, you will see buttons with bold, italic, underline
-					actions in the page.</li>
-				</ol>
-				<h2 id="sample-code">Sample code</h2>
-				<p>To view the sample site, please click <a href="https://microsoft.github.io/roosterjs/index.html">here</a>.</p>
-				<p>To build the sample site code yourself, follow these instructions:</p>
-				<ol>
-					<li><p>Get dependencies using <a href="https://yarnpkg.com">yarn</a> or <a href="https://www.npmjs.com/">npm</a>:</p>
-						<pre><code class="lang-cmd"> yarn
-</code></pre>
-						<p> or</p>
-						<pre><code class="lang-cmd"> npm install
-</code></pre>
-					</li>
-					<li><p>Build the source code, and start the sample editor:</p>
-						<pre><code> yarn <span class="hljs-literal">start</span>
-</code></pre><p> or</p>
-						<pre><code> <span class="hljs-built_in">npm</span> start
-</code></pre></li>
-					<li><p>Navigate to the sample editor at <a href="http://localhost:3000/">http://localhost:3000/</a></p>
-					</li>
-				</ol>
-				<h2 id="more-documentation">More documentation</h2>
-				<p>We are still working on more documentation in <a href="https://github.com/Microsoft/roosterjs/wiki">roosterjs wiki</a> and <a href="https://microsoft.github.io/roosterjs/docs/index.html">API reference</a>.</p>
-				<h2 id="license-mit">License - MIT</h2>
-				<p>License
-				Copyright (c) Microsoft Corporation. All rights reserved.</p>
-				<p>Licensed under the <a href="LICENSE">MIT</a> License.</p>
+				<h2 id="see-also">See also</h2>
+				<p><a href="../index.html">RoosterJs Demo Site</a>.</p>
+				<p><a href="https://github.com/Microsoft/roosterjs/wiki">RoosterJs wiki</a></p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

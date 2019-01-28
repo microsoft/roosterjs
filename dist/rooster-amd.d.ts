@@ -64,12 +64,12 @@ export interface BrowserInfo {
 export const enum DocumentCommand {
     /**
      * Changes the document background color. In styleWithCss mode, it affects the background color of the containing block instead.
-     * This requires a <color> value string to be passed in as a value argument. Note that Internet Explorer uses this to set the
+     * This requires a &lt;color&gt; value string to be passed in as a value argument. Note that Internet Explorer uses this to set the
      * text background color.
      */
     BackColor = "backColor",
     /**
-     * Toggles bold on/off for the selection or at the insertion point. Internet Explorer uses the <strong> tag instead of <b>.
+     * Toggles bold on/off for the selection or at the insertion point. Internet Explorer uses the &lt;strong&gt; tag instead of &lt;b&gt;.
      */
     Bold = "bold",
     /**
@@ -98,7 +98,7 @@ export const enum DocumentCommand {
      */
     Cut = "cut",
     /**
-     * Adds a <small> tag around the selection or at the insertion point. (Not supported by Internet Explorer.)
+     * Adds a &lt;small&gt; tag around the selection or at the insertion point. (Not supported by Internet Explorer.)
      */
     DecreaseFontSize = "decreaseFontSize",
     /**
@@ -134,9 +134,9 @@ export const enum DocumentCommand {
     ForeColor = "foreColor",
     /**
      * Adds an HTML block-level element around the line containing the current selection, replacing the block element containing
-     * the line if one exists (in Firefox, <blockquote> is the exception — it will wrap any containing block element).
+     * the line if one exists (in Firefox, &lt;blockquote&gt; is the exception — it will wrap any containing block element).
      * Requires a tag-name string as a value argument. Virtually all block-level elements can be used.
-     * (Internet Explorer supports only heading tags H1–H6, ADDRESS, and PRE, which must be wrapped in angle brackets, such as "<H1>".)
+     * (Internet Explorer supports only heading tags H1–H6, ADDRESS, and PRE, which must be wrapped in angle brackets, such as "&lt;H1&gt;".)
      */
     FormatBlock = "formatBlock",
     /**
@@ -154,7 +154,7 @@ export const enum DocumentCommand {
      */
     HiliteColor = "hiliteColor",
     /**
-     * Adds a <big> tag around the selection or at the insertion point. (Not supported by Internet Explorer.)
+     * Adds a &lt;big&gt; tag around the selection or at the insertion point. (Not supported by Internet Explorer.)
      */
     IncreaseFontSize = "increaseFontSize",
     /**
@@ -163,12 +163,12 @@ export const enum DocumentCommand {
      */
     Indent = "indent",
     /**
-     * Controls whether the Enter key inserts a <br> element, or splits the current block element into two.
+     * Controls whether the Enter key inserts a &lt;br&gt; element, or splits the current block element into two.
      * (Not supported by Internet Explorer.)
      */
     InsertBrOnReturn = "insertBrOnReturn",
     /**
-     * Inserts a <hr> element at the insertion point, or replaces the selection with it.
+     * Inserts a &lt;hr&gt; element at the insertion point, or replaces the selection with it.
      */
     InsertHorizontalRule = "insertHorizontalRule",
     /**
@@ -200,7 +200,7 @@ export const enum DocumentCommand {
     InsertText = "insertText",
     /**
      * Toggles italics on/off for the selection or at the insertion point.
-     * (Internet Explorer uses the <em> element instead of <i>.)
+     * (Internet Explorer uses the &lt;em&gt; element instead of &lt;i&gt;.)
      */
     Italic = "italic",
     /**
@@ -305,7 +305,7 @@ export const enum DocumentPosition {
  */
 export const enum NodeType {
     /**
-     * An Element node such as <p> or <div>.
+     * An Element node such as &lt;p&gt; or &lt;div&gt;.
      */
     Element = 1,
     /**
@@ -313,7 +313,7 @@ export const enum NodeType {
      */
     Text = 3,
     /**
-     * A ProcessingInstruction of an XML document such as <?xml-stylesheet ... ?> declaration.
+     * A ProcessingInstruction of an XML document such as &lt;?xml-stylesheet ... ?&gt; declaration.
      */
     ProcessingInstruction = 7,
     /**
@@ -325,7 +325,7 @@ export const enum NodeType {
      */
     Document = 9,
     /**
-     * A DocumentType node e.g. <!DOCTYPE html> for HTML5 documents.
+     * A DocumentType node e.g. &lt;!DOCTYPE html&gt; for HTML5 documents.
      */
     DocumentType = 10,
     /**
@@ -770,9 +770,9 @@ export const enum PluginEventType {
 
 /**
  * This refers to a "content block" in editor that serves as a content parsing boundary
- * It is most those html block like tags, i.e. <p>, <div>, <li>, <td> etc.
- * but can also be just a text node, followed by a <br>, i.e.
- * for html fragment <div>abc<br>123</div>, abc<br> is a block, 123 is another block
+ * It is most those html block like tags, i.e. &lt;p&gt;, &lt;div&gt;, &lt;li&gt;, &lt;td&gt; etc.
+ * but can also be just a text node, followed by a &lt;br&gt;, i.e.
+ * for html fragment &lt;div&gt;abc&lt;br&gt;123&lt;/div&gt;, abc&lt;br&gt; is a block, 123 is another block
  */
 export interface BlockElement {
     /**
@@ -1193,21 +1193,21 @@ export class NodeBlockElement implements BlockElement {
 /**
  * This produces a block element from a a node
  * It needs to account for various HTML structure. Examples:
- * 1) <root><div>abc</div></root>
- *   This is most common the case, user passes in a node pointing to abc, and get back a block representing <div>abc</div>
- * 2) <root><p><br></p></root>
- *   Common content for empty block, user passes node pointing to <br>, and get back a block representing <p><br></p>
- * 3) <root>abc</root>
+ * 1) &lt;root&gt;&lt;div&gt;abc&lt;/div&gt;&lt;/root&gt;
+ *   This is most common the case, user passes in a node pointing to abc, and get back a block representing &lt;div&gt;abc&lt;/div&gt;
+ * 2) &lt;root&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;/root&gt;
+ *   Common content for empty block, user passes node pointing to &lt;br&gt;, and get back a block representing &lt;p&gt;&lt;br&gt;&lt;/p&gt;
+ * 3) &lt;root&gt;abc&lt;/root&gt;
  *   Not common, but does happen. It is still a block in user's view. User passes in abc, and get back a start-end block representing abc
  *   NOTE: abc could be just one node. However, since it is not a html block, it is more appropriate to use start-end block although they point to same node
- * 4) <root><div>abc<br>123</div></root>
- *   A bit tricky, but can happen when user use Ctrl+Enter which simply inserts a <BR> to create a link break. There're two blocks:
- *   block1: 1) abc<br> block2: 123
- * 5) <root><div>abc<div>123</div></div></root>
- *   Nesting div and there is text node in same level as a DIV. Two blocks: 1) abc 2) <div>123</div>
- * 6) <root><div>abc<span>123<br>456</span></div></root>
- *   This is really tricky. Essentially there is a <BR> in middle of a span breaking the span into two blocks;
- *   block1: abc<span>123<br> block2: 456
+ * 4) &lt;root&gt;&lt;div&gt;abc&lt;br&gt;123&lt;/div&gt;&lt;/root&gt;
+ *   A bit tricky, but can happen when user use Ctrl+Enter which simply inserts a &lt;BR&gt; to create a link break. There're two blocks:
+ *   block1: 1) abc&lt;br&gt; block2: 123
+ * 5) &lt;root&gt;&lt;div&gt;abc&lt;div&gt;123&lt;/div&gt;&lt;/div&gt;&lt;/root&gt;
+ *   Nesting div and there is text node in same level as a DIV. Two blocks: 1) abc 2) &lt;div&gt;123&lt;/div&gt;
+ * 6) &lt;root&gt;&lt;div&gt;abc&lt;span&gt;123&lt;br&gt;456&lt;/span&gt;&lt;/div&gt;&lt;/root&gt;
+ *   This is really tricky. Essentially there is a &lt;BR&gt; in middle of a span breaking the span into two blocks;
+ *   block1: abc&lt;span&gt;123&lt;br&gt; block2: 456
  * In summary, given any arbitary node (leaf), to identify the head and tail of the block, following rules need to be followed:
  * 1) to identify the head, it needs to crawl DOM tre left/up till a block node or BR is encountered
  * 2) same for identifying tail
@@ -1227,8 +1227,8 @@ export function getFirstLastBlockElement(rootNode: Node, isFirst: boolean): Bloc
 
 /**
  * This reprents a block that is identified by a start and end node
- * This is for cases like <root>Hello<BR>World</root>
- * in that case, Hello<BR> is a block, World is another block
+ * This is for cases like &lt;root&gt;Hello&lt;BR&gt;World&lt;/root&gt;
+ * in that case, Hello&lt;BR&gt; is a block, World is another block
  * Such block cannot be represented by a NodeBlockElement since they don't chained up
  * to a single parent node, instead they have a start and end
  * This start and end must be in same sibling level and have same parent in DOM tree
@@ -2142,22 +2142,75 @@ export interface CoreApiMap {
     triggerEvent: TriggerEvent;
 }
 
+/**
+ * Attach a DOM event to the editor content DIV
+ * @param core The EditorCore object
+ * @param eventName The DOM event name
+ * @param pluginEventType Optional event type. When specified, editor will trigger a plugin event with this name when the DOM event is triggered
+ * @param beforeDispatch Optional callback function to be invoked when the DOM event is triggered before trigger plugin event
+ */
 export type AttachDomEvent = (core: EditorCore, eventName: string, pluginEventType?: PluginEventType, beforeDispatch?: (event: UIEvent) => void) => () => void;
 
+/**
+ * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
+ * Undo snapshot will not be added if this call is nested inside another editWithUndo() call.
+ * @param core The EditorCore object
+ * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
+ * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
+ */
 export type EditWithUndo = (core: EditorCore, callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any, changeSource: ChangeSource | string) => void;
 
+/**
+ * Focus to editor. If there is a cached selection range, use it as current selection
+ * @param core The EditorCore object
+ */
 export type Focus = (core: EditorCore) => void;
 
+/**
+ * Get custom data related with this editor
+ * @param core The EditorCore object
+ * @param key Key of the custom data
+ * @param getter Getter function. If custom data for the given key doesn't exist,
+ * call this function to get one and store it.
+ * @param disposer An optional disposer function to dispose this custom data when
+ * dispose editor.
+ */
 export type GetCustomData = <T>(core: EditorCore, key: string, getter: () => T, disposer?: (value: T) => void) => T;
 
+/**
+ * Get current or cached selection range
+ * @param core The EditorCore object
+ * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
+ * @returns A Range object of the selection range
+ */
 export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => Range;
 
+/**
+ * Check if the editor has focus now
+ * @param core The EditorCore object
+ * @returns True if the editor has focus, otherwise false
+ */
 export type HasFocus = (core: EditorCore) => boolean;
 
+/**
+ * Insert a DOM node into editor content
+ * @param core The EditorCore object. No op if null.
+ * @param option An insert option object to specify how to insert the node
+ */
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
 
+/**
+ * Select content
+ * @param core The EditorCore object
+ */
 export type Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => boolean;
 
+/**
+ * Trigger a plugin event
+ * @param core The EditorCore object
+ * @param pluginEvent The event object to trigger
+ * @param broadcast Set to true to skip the shouldHandleEventExclusively check
+ */
 export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcast: boolean) => void;
 
 /**
@@ -2735,7 +2788,7 @@ export class Undo implements UndoService {
 /**
  * Edit Component helps handle Content edit features
  */
-export class EditPlugin implements EditPlugin {
+export class EditPlugin implements EditorPlugin {
     private editor;
     private currentFeature;
     private featureMap;
@@ -2980,7 +3033,7 @@ export function insertImage(editor: Editor, imageFile: File): void;
  * Insert table into editor at current selection
  * @param editor The editor instance
  * @param columns Number of columns in table, it also controls the default table cell width:
- * if columns <= 4, width = 120px; if columns <= 6, width = 100px; else width = 70px
+ * if columns &lt;= 4, width = 120px; if columns &lt;= 6, width = 100px; else width = 70px
  * @param rows Number of rows in table
  * @param format (Optional) The table format. If not passed, the default format will be applied:
  * background color: #FFF; border color: #ABABAB
@@ -3205,7 +3258,7 @@ export function toggleUnderline(editor: Editor): void;
  * Toggle header at selection
  * @param editor The editor instance
  * @param level The header level, can be a number from 0 to 6, in which 1 ~ 6 refers to
- * the HTML header element <H1> to <H6>, 0 means no header
+ * the HTML header element &lt;H1&gt; to &lt;H6&gt;, 0 means no header
  * if passed in param is outside the range, will be rounded to nearest number in the range
  */
 export function toggleHeader(editor: Editor, level: number): void;
@@ -3645,7 +3698,7 @@ export class HtmlSanitizer {
      * 3. Remove useless CSS properties
      * @param html The input HTML
      * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
-     * @param preserveFragmentOnly If set to true, only preserve the html content between <!--StartFragment--> and <!--Endfragment-->
+     * @param preserveFragmentOnly If set to true, only preserve the html content between &lt;!--StartFragment--&gt; and &lt;!--Endfragment--&gt;
      * @param currentStyles Current inheritable CSS styles
      */
     exec(html: string, convertCssOnly?: boolean, preserveFragmentOnly?: boolean, currentStyles?: StringMap): string;
@@ -3717,7 +3770,7 @@ export interface SanitizeHtmlOptions extends HtmlSanitizerOptions {
 /**
  * Build DOM tree from the given HTML string
  * @param html Source HTML string
- * @param preserveFragmentOnly If there is fragment markup (<!--StartFragment--> and <!--EndFragment-->),
+ * @param preserveFragmentOnly If there is fragment markup (&lt;!--StartFragment--&gt; and &lt;!--EndFragment--&gt;),
  * only preserve content between these markups
  * @param fragmentHandler An optional callback to do customized fragment handling
  */
@@ -3785,4 +3838,80 @@ export type StyleCallbackMap = Map<StyleCallback>;
  * A map of elements callback. Tag name should be in upper case
  */
 export type ElementCallbackMap = Map<ElementCallback>;
+
+export class PickerPlugin implements EditorPickerPluginInterface {
+    readonly dataProvider: PickerDataProvider;
+    private pickerOptions;
+    private editor;
+    private eventHandledOnKeyDown;
+    private blockSuggestions;
+    private isSuggesting;
+    private isCharacterValue;
+    private lastKnownRange;
+    constructor(dataProvider: PickerDataProvider, pickerOptions: PickerPluginOptions);
+    /**
+     * Get a friendly name
+     */
+    getName(): string;
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
+    initialize(editor: Editor): void;
+    /**
+     * Dispose this plugin
+     */
+    dispose(): void;
+    /**
+     * Check if the plugin should handle the given event exclusively.
+     * Handle an event exclusively means other plugin will not receive this event in
+     * onPluginEvent method.
+     * If two plugins will return true in willHandleEventExclusively() for the same event,
+     * the final result depends on the order of the plugins are added into editor
+     * @param event The event to check
+     */
+    willHandleEventExclusively(event: PluginEvent): boolean;
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
+    onPluginEvent(event: PluginEvent): void;
+    private setLastKnownRange;
+    private setIsSuggesting;
+    private handleKeyDownEvent;
+    private getIdValue;
+    private getWordBeforeCursor;
+    private replaceNode;
+    private getRangeUntilAt;
+    private onKeyUpDomEvent;
+    private onKeyDownEvent;
+    private getWord;
+    private setRangeStart;
+}
+
+export interface EditorPickerPluginInterface extends EditorPlugin {
+    dataProvider: PickerDataProvider;
+}
+
+export interface PickerPluginOptions {
+    elementIdPrefix: string;
+    changeSource: string;
+    triggerCharacter: string;
+    isHorizontal?: boolean;
+    handleAutoComplete?: boolean;
+}
+
+export interface PickerDataProvider {
+    onInitalize: (insertNodeCallback: (nodeToInsert: HTMLElement) => void, setIsSuggestingCallback: (isSuggesting: boolean) => void, editor?: Editor) => void;
+    onDispose: () => void;
+    onIsSuggestingChanged: (isSuggesting: boolean) => void;
+    queryStringUpdated: (queryString: string) => void;
+    selectOption?: () => void;
+    shiftHighlight?: (isIncrement: boolean) => void;
+    onRemove: (nodeRemoved: Node, isBackwards: boolean) => Node;
+    setCursorPoint?: (targetPoint: {
+        x: number;
+        y: number;
+    }, buffer: number) => void;
+}
 

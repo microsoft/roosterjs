@@ -1070,7 +1070,7 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
  * Toggle header at selection
  * @param editor The editor instance
  * @param level The header level, can be a number from 0 to 6, in which 1 ~ 6 refers to
- * the HTML header element <H1> to <H6>, 0 means no header
+ * the HTML header element &lt;H1&gt; to &lt;H6&gt;, 0 means no header
  * if passed in param is outside the range, will be rounded to nearest number in the range
  */
 function toggleHeader(editor, level) {
@@ -1437,7 +1437,7 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
  * Insert table into editor at current selection
  * @param editor The editor instance
  * @param columns Number of columns in table, it also controls the default table cell width:
- * if columns <= 4, width = 120px; if columns <= 6, width = 100px; else width = 70px
+ * if columns &lt;= 4, width = 120px; if columns &lt;= 6, width = 100px; else width = 70px
  * @param rows Number of rows in table
  * @param format (Optional) The table format. If not passed, the default format will be applied:
  * background color: #FFF; border color: #ABABAB
@@ -3830,8 +3830,8 @@ var splitParentNode_1 = __webpack_require__(/*! ../utils/splitParentNode */ "./p
 var STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
 /**
  * This reprents a block that is identified by a start and end node
- * This is for cases like <root>Hello<BR>World</root>
- * in that case, Hello<BR> is a block, World is another block
+ * This is for cases like &lt;root&gt;Hello&lt;BR&gt;World&lt;/root&gt;
+ * in that case, Hello&lt;BR&gt; is a block, World is another block
  * Such block cannot be represented by a NodeBlockElement since they don't chained up
  * to a single parent node, instead they have a start and end
  * This start and end must be in same sibling level and have same parent in DOM tree
@@ -3925,21 +3925,21 @@ var StartEndBlockElement_1 = __webpack_require__(/*! ./StartEndBlockElement */ "
 /**
  * This produces a block element from a a node
  * It needs to account for various HTML structure. Examples:
- * 1) <root><div>abc</div></root>
- *   This is most common the case, user passes in a node pointing to abc, and get back a block representing <div>abc</div>
- * 2) <root><p><br></p></root>
- *   Common content for empty block, user passes node pointing to <br>, and get back a block representing <p><br></p>
- * 3) <root>abc</root>
+ * 1) &lt;root&gt;&lt;div&gt;abc&lt;/div&gt;&lt;/root&gt;
+ *   This is most common the case, user passes in a node pointing to abc, and get back a block representing &lt;div&gt;abc&lt;/div&gt;
+ * 2) &lt;root&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;/root&gt;
+ *   Common content for empty block, user passes node pointing to &lt;br&gt;, and get back a block representing &lt;p&gt;&lt;br&gt;&lt;/p&gt;
+ * 3) &lt;root&gt;abc&lt;/root&gt;
  *   Not common, but does happen. It is still a block in user's view. User passes in abc, and get back a start-end block representing abc
  *   NOTE: abc could be just one node. However, since it is not a html block, it is more appropriate to use start-end block although they point to same node
- * 4) <root><div>abc<br>123</div></root>
- *   A bit tricky, but can happen when user use Ctrl+Enter which simply inserts a <BR> to create a link break. There're two blocks:
- *   block1: 1) abc<br> block2: 123
- * 5) <root><div>abc<div>123</div></div></root>
- *   Nesting div and there is text node in same level as a DIV. Two blocks: 1) abc 2) <div>123</div>
- * 6) <root><div>abc<span>123<br>456</span></div></root>
- *   This is really tricky. Essentially there is a <BR> in middle of a span breaking the span into two blocks;
- *   block1: abc<span>123<br> block2: 456
+ * 4) &lt;root&gt;&lt;div&gt;abc&lt;br&gt;123&lt;/div&gt;&lt;/root&gt;
+ *   A bit tricky, but can happen when user use Ctrl+Enter which simply inserts a &lt;BR&gt; to create a link break. There're two blocks:
+ *   block1: 1) abc&lt;br&gt; block2: 123
+ * 5) &lt;root&gt;&lt;div&gt;abc&lt;div&gt;123&lt;/div&gt;&lt;/div&gt;&lt;/root&gt;
+ *   Nesting div and there is text node in same level as a DIV. Two blocks: 1) abc 2) &lt;div&gt;123&lt;/div&gt;
+ * 6) &lt;root&gt;&lt;div&gt;abc&lt;span&gt;123&lt;br&gt;456&lt;/span&gt;&lt;/div&gt;&lt;/root&gt;
+ *   This is really tricky. Essentially there is a &lt;BR&gt; in middle of a span breaking the span into two blocks;
+ *   block1: abc&lt;span&gt;123&lt;br&gt; block2: 456
  * In summary, given any arbitary node (leaf), to identify the head and tail of the block, following rules need to be followed:
  * 1) to identify the head, it needs to crawl DOM tre left/up till a block node or BR is encountered
  * 2) same for identifying tail
@@ -3962,8 +3962,8 @@ function getBlockElementAtNode(rootNode, node) {
     var headNode = findHeadTailLeafNode(node, containerBlockNode, false /*isTail*/);
     var tailNode = findHeadTailLeafNode(node, containerBlockNode, true /*isTail*/);
     // At this point, we have the head and tail of a block, here are some examples and where head and tail point to
-    // 1) <root><div>hello<br></div></root>, head: hello, tail: <br>
-    // 2) <root><div>hello<span style="font-family: Arial">world</span></div></root>, head: hello, tail: world
+    // 1) &lt;root&gt;&lt;div&gt;hello&lt;br&gt;&lt;/div&gt;&lt;/root&gt;, head: hello, tail: &lt;br&gt;
+    // 2) &lt;root&gt;&lt;div&gt;hello&lt;span style="font-family: Arial"&gt;world&lt;/span&gt;&lt;/div&gt;&lt;/root&gt;, head: hello, tail: world
     // Both are actually completely and exclusively wrapped in a parent div, and can be represented with a Node block
     // So we shall try to collapse as much as we can to the nearest common ancester
     var nodes = collapseNodes_1.default(rootNode, headNode, tailNode, false /*canSplitParent*/);
@@ -4000,10 +4000,10 @@ exports.default = getBlockElementAtNode;
 /**
  * Given a node and container block, identify the first/last leaf node
  * A leaf node is defined as deepest first/last node in a block
- * i.e. <div><span style="font-family: Arial">abc</span></div>, abc is the head leaf of the block
- * Often <br> or a child <div> is used to create a block. In that case, the leaf after the sibling div or br should be the head leaf
- * i.e. <div>123<br>abc</div>, abc is the head of a block because of a previous sibling <br>
- * i.e. <div><div>123</div>abc</div>, abc is also the head of a block because of a previous sibling <div>
+ * i.e. &lt;div&gt;&lt;span style="font-family: Arial"&gt;abc&lt;/span&gt;&lt;/div&gt;, abc is the head leaf of the block
+ * Often &lt;br&gt; or a child &lt;div&gt; is used to create a block. In that case, the leaf after the sibling div or br should be the head leaf
+ * i.e. &lt;div&gt;123&lt;br&gt;abc&lt;/div&gt;, abc is the head of a block because of a previous sibling &lt;br&gt;
+ * i.e. &lt;div&gt;&lt;div&gt;123&lt;/div&gt;abc&lt;/div&gt;, abc is also the head of a block because of a previous sibling &lt;div&gt;
  */
 function findHeadTailLeafNode(node, containerBlockNode, isTail) {
     var result = node;
@@ -9083,8 +9083,8 @@ function getListItemMetadata(node) {
             try {
                 // Word mso-list property holds 3 space separated values in the following format: lst1 level1 lfo0
                 // Where:
-                // (0) List identified for the metadata in the <head> of the document. We cannot read the <head> metada
-                // (1) Level of the list. This also maps to the <head> metadata that we cannot read, but
+                // (0) List identified for the metadata in the &lt;head&gt; of the document. We cannot read the &lt;head&gt; metada
+                // (1) Level of the list. This also maps to the &lt;head&gt; metadata that we cannot read, but
                 // for almost all cases, it maps to the list identation (or level). We'll use it as the
                 // list indentation value
                 // (2) Contains a specific list identifier.
@@ -9117,12 +9117,12 @@ function getFakeBulletTagName(fakeBullet) {
  */
 function getFakeBulletText(node, levels) {
     // Word uses the following format for their bullets:
-    // <p style="mso-list:l1 level1 lfo2">
-    // <span style="...">
-    // <span style="mso-list:Ignore">1.<span style="...">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
-    // </span>
+    // &lt;p style="mso-list:l1 level1 lfo2"&gt;
+    // &lt;span style="..."&gt;
+    // &lt;span style="mso-list:Ignore"&gt;1.&lt;span style="..."&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/span&gt;&lt;/span&gt;
+    // &lt;/span&gt;
     // Content here...
-    // </p>
+    // &lt;/p&gt;
     //
     // Basically, we need to locate the mso-list:Ignore SPAN, which holds either one text or image node. That
     // text or image node will be the fake bullet we are looking for
@@ -9153,8 +9153,8 @@ function getFakeBulletText(node, levels) {
  * If the specified element is a Word List comments, this code verifies and fixes
  * the markup when needed to ensure that Chrome bullet conversions work as expected
  * -----
- * We'll convert <!--[if !supportLists]--> and <!--[endif]--> comments into
- * <span style="mso-list:Ignore"></span>... Chrome has a bug where it drops the
+ * We'll convert &lt;!--[if !supportLists]--&gt; and &lt;!--[endif]--&gt; comments into
+ * &lt;span style="mso-list:Ignore"&gt;&lt;/span&gt;... Chrome has a bug where it drops the
  * styles of the span, but we'll use these comments to recreate them out
  */
 function fixWordListComments(child, removeComments) {
@@ -9749,7 +9749,7 @@ var HtmlSanitizer = /** @class */ (function () {
      * 3. Remove useless CSS properties
      * @param html The input HTML
      * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
-     * @param preserveFragmentOnly If set to true, only preserve the html content between <!--StartFragment--> and <!--Endfragment-->
+     * @param preserveFragmentOnly If set to true, only preserve the html content between &lt;!--StartFragment--&gt; and &lt;!--Endfragment--&gt;
      * @param currentStyles Current inheritable CSS styles
      */
     HtmlSanitizer.prototype.exec = function (html, convertCssOnly, preserveFragmentOnly, currentStyles) {
@@ -10105,7 +10105,7 @@ var END_FRAGMENT = '<!--EndFragment-->';
 /**
  * Build DOM tree from the given HTML string
  * @param html Source HTML string
- * @param preserveFragmentOnly If there is fragment markup (<!--StartFragment--> and <!--EndFragment-->),
+ * @param preserveFragmentOnly If there is fragment markup (&lt;!--StartFragment--&gt; and &lt;!--EndFragment--&gt;),
  * only preserve content between these markups
  * @param fragmentHandler An optional callback to do customized fragment handling
  */
@@ -10496,6 +10496,349 @@ exports.ImageResize = ImageResize_1.default;
 
 /***/ }),
 
+/***/ "./packages/roosterjs-plugin-picker/lib/PickerPlugin.ts":
+/*!**************************************************************!*\
+  !*** ./packages/roosterjs-plugin-picker/lib/PickerPlugin.ts ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
+var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
+// Character codes.
+// IE11 uses different character codes. which are noted below.
+// If adding a new key, test in IE to figure out what the code is.
+var BACKSPACE_CHARCODE = 'Backspace';
+var TAB_CHARCODE = 'Tab';
+var ENTER_CHARCODE = 'Enter';
+var ESC_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'Escape' : 'Esc';
+var LEFT_ARROW_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'ArrowLeft' : 'Left';
+var UP_ARROW_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'ArrowUp' : 'Up';
+var RIGHT_ARROW_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'ArrowRight' : 'Right';
+var DOWN_ARROW_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'ArrowDown' : 'Down';
+var DELETE_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'Delete' : 'Del';
+var PickerPlugin = /** @class */ (function () {
+    function PickerPlugin(dataProvider, pickerOptions) {
+        this.dataProvider = dataProvider;
+        this.pickerOptions = pickerOptions;
+    }
+    /**
+     * Get a friendly name
+     */
+    PickerPlugin.prototype.getName = function () {
+        return 'Picker';
+    };
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
+    PickerPlugin.prototype.initialize = function (editor) {
+        var _this = this;
+        this.editor = editor;
+        this.dataProvider.onInitalize(function (htmlNode) {
+            _this.editor.focus();
+            var wordToReplace = _this.getWord(null);
+            // Safari drops our focus out so we get an empty word to replace when we call getWord.
+            // We fall back to using the lastKnownRange to try to get around this.
+            if ((!wordToReplace || wordToReplace.length == 0) && _this.lastKnownRange) {
+                _this.editor.select(_this.lastKnownRange);
+                wordToReplace = _this.getWord(null);
+            }
+            if (wordToReplace) {
+                var insertNode = function () {
+                    roosterjs_editor_api_1.replaceWithNode(_this.editor, wordToReplace, htmlNode, true /* exactMatch */);
+                    _this.setIsSuggesting(false);
+                };
+                if (_this.pickerOptions.handleAutoComplete) {
+                    _this.editor.performAutoComplete(insertNode, _this.pickerOptions.changeSource);
+                }
+                else {
+                    _this.editor.addUndoSnapshot(insertNode, _this.pickerOptions.changeSource);
+                }
+            }
+        }, function (isSuggesting) {
+            _this.setIsSuggesting(isSuggesting);
+        }, editor);
+    };
+    /**
+     * Dispose this plugin
+     */
+    PickerPlugin.prototype.dispose = function () {
+        this.editor = null;
+        this.dataProvider.onDispose();
+    };
+    /**
+     * Check if the plugin should handle the given event exclusively.
+     * Handle an event exclusively means other plugin will not receive this event in
+     * onPluginEvent method.
+     * If two plugins will return true in willHandleEventExclusively() for the same event,
+     * the final result depends on the order of the plugins are added into editor
+     * @param event The event to check
+     */
+    PickerPlugin.prototype.willHandleEventExclusively = function (event) {
+        return (this.isSuggesting &&
+            (event.eventType == 0 /* KeyDown */ ||
+                event.eventType == 2 /* KeyUp */ ||
+                event.eventType == 11 /* Input */));
+    };
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
+    PickerPlugin.prototype.onPluginEvent = function (event) {
+        if (event.eventType == 0 /* KeyDown */) {
+            this.eventHandledOnKeyDown = false;
+            this.onKeyDownEvent(event);
+        }
+        if (event.eventType == 2 /* KeyUp */ && !this.eventHandledOnKeyDown) {
+            this.onKeyUpDomEvent(event);
+        }
+        else if (event.eventType == 1 /* KeyPress */) {
+            // The KeyPress event is fired when a key that produces a character value is pressed down
+            // Keys that don't produce character values include modifier keys like Ctrl and Backspace
+            this.isCharacterValue = true;
+        }
+        else if (event.eventType == 5 /* MouseUp */) {
+            if (this.isSuggesting) {
+                this.setIsSuggesting(false);
+            }
+        }
+    };
+    PickerPlugin.prototype.setLastKnownRange = function (range) {
+        this.lastKnownRange = range;
+    };
+    PickerPlugin.prototype.setIsSuggesting = function (isSuggesting) {
+        this.isSuggesting = isSuggesting;
+        if (!isSuggesting) {
+            this.setLastKnownRange(null);
+        }
+        this.dataProvider.onIsSuggestingChanged(isSuggesting);
+    };
+    PickerPlugin.prototype.handleKeyDownEvent = function (event) {
+        this.eventHandledOnKeyDown = true;
+        event.rawEvent.preventDefault();
+        event.rawEvent.stopImmediatePropagation();
+    };
+    PickerPlugin.prototype.getIdValue = function (node) {
+        var element = node;
+        return element.attributes && element.attributes.getNamedItem('id')
+            ? element.attributes.getNamedItem('id').value
+            : null;
+    };
+    PickerPlugin.prototype.getWordBeforeCursor = function (event) {
+        var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, this.editor);
+        return searcher ? searcher.getWordBefore() : null;
+    };
+    PickerPlugin.prototype.replaceNode = function (currentNode, replacementNode) {
+        if (currentNode) {
+            this.editor.deleteNode(currentNode);
+        }
+        if (replacementNode) {
+            this.editor.insertNode(replacementNode);
+        }
+    };
+    PickerPlugin.prototype.getRangeUntilAt = function (event) {
+        var _this = this;
+        var PositionContentSearcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, this.editor);
+        var startPos;
+        var endPos;
+        PositionContentSearcher.forEachTextInlineElement(function (textInline) {
+            var hasMatched = false;
+            var nodeContent = textInline.getTextContent();
+            var nodeIndex = nodeContent ? nodeContent.length : -1;
+            while (nodeIndex >= 0) {
+                if (nodeContent[nodeIndex] == _this.pickerOptions.triggerCharacter) {
+                    startPos = textInline.getStartPosition().move(nodeIndex);
+                    hasMatched = true;
+                    break;
+                }
+                nodeIndex--;
+            }
+            if (hasMatched) {
+                endPos = textInline.getEndPosition();
+            }
+            return hasMatched;
+        });
+        return roosterjs_editor_dom_1.createRange(startPos, endPos) || this.editor.getDocument().createRange();
+    };
+    PickerPlugin.prototype.onKeyUpDomEvent = function (event) {
+        if (this.isSuggesting) {
+            // Word before cursor represents the text prior to the cursor, up to and including the trigger symbol.
+            var wordBeforeCursor = this.getWord(event);
+            var trimmedWordBeforeCursor = wordBeforeCursor.substring(1).trim();
+            // If we hit a case where wordBeforeCursor is just the trigger character,
+            // that means we've gotten a onKeyUp event right after it's been typed.
+            // Otherwise, update the query string when:
+            // 1. There's an actual value
+            // 2. That actual value isn't just pure whitespace
+            // 3. That actual value isn't more than 4 words long (at which point we assume the person kept typing)
+            // Otherwise, we want to dismiss the picker plugin's UX.
+            if (wordBeforeCursor == this.pickerOptions.triggerCharacter ||
+                (trimmedWordBeforeCursor &&
+                    trimmedWordBeforeCursor.length > 0 &&
+                    trimmedWordBeforeCursor.split(' ').length <= 4)) {
+                this.dataProvider.queryStringUpdated(trimmedWordBeforeCursor);
+                this.setLastKnownRange(this.editor.getSelectionRange());
+            }
+            else {
+                this.setIsSuggesting(false);
+            }
+        }
+        else if (this.isCharacterValue) {
+            // Check for isCharacterValue to filter out modifiers like Ctrl+Z and Backspace
+            var wordBeforeCursor = this.getWordBeforeCursor(event);
+            if (!this.blockSuggestions) {
+                if (wordBeforeCursor != null &&
+                    wordBeforeCursor.split(' ').length <= 4 &&
+                    wordBeforeCursor[0] == this.pickerOptions.triggerCharacter) {
+                    this.setIsSuggesting(true);
+                    var shortWord = wordBeforeCursor.substring(1).trim();
+                    this.dataProvider.queryStringUpdated(shortWord);
+                    this.setLastKnownRange(this.editor.getSelectionRange());
+                    if (this.dataProvider.setCursorPoint) {
+                        // Determine the bounding rectangle for the @mention
+                        var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, this.editor);
+                        var rangeNode = this.editor.getDocument().createRange();
+                        var nodeBeforeCursor = searcher.getInlineElementBefore().getContainerNode();
+                        var rangeStartSuccessfullySet = this.setRangeStart(rangeNode, nodeBeforeCursor, wordBeforeCursor);
+                        if (!rangeStartSuccessfullySet) {
+                            // VSO 24891: Out of range error is occurring because nodeBeforeCursor
+                            // is not including the trigger character. In this case, the node before
+                            // the node before cursor is the trigger character, and this is where the range should start.
+                            var nodeBeforeNodeBeforeCursor = nodeBeforeCursor.previousSibling;
+                            this.setRangeStart(rangeNode, nodeBeforeNodeBeforeCursor, this.pickerOptions.triggerCharacter);
+                        }
+                        var rect = rangeNode.getBoundingClientRect();
+                        // Safari's support for range.getBoundingClientRect is incomplete.
+                        // We perform this check to fall back to getClientRects in case it's at the page origin.
+                        if (rect.left == 0 && rect.bottom == 0 && rect.top == 0) {
+                            rect = rangeNode.getClientRects()[0];
+                        }
+                        if (rect) {
+                            rangeNode.detach();
+                            // Display the @mention popup in the correct place
+                            var targetPoint = { x: rect.left, y: (rect.bottom + rect.top) / 2 };
+                            var bufferZone = (rect.bottom - rect.top) / 2;
+                            this.dataProvider.setCursorPoint(targetPoint, bufferZone);
+                        }
+                    }
+                }
+            }
+            else {
+                if (wordBeforeCursor != null &&
+                    wordBeforeCursor[0] != this.pickerOptions.triggerCharacter) {
+                    this.blockSuggestions = false;
+                }
+            }
+        }
+        this.isCharacterValue = false;
+    };
+    PickerPlugin.prototype.onKeyDownEvent = function (event) {
+        var keyboardEvent = event.rawEvent;
+        if (this.isSuggesting) {
+            if (keyboardEvent.key == ESC_CHARCODE) {
+                this.setIsSuggesting(false);
+                this.blockSuggestions = true;
+                this.handleKeyDownEvent(event);
+            }
+            else if (this.dataProvider.shiftHighlight &&
+                (this.pickerOptions.isHorizontal
+                    ? keyboardEvent.key == LEFT_ARROW_CHARCODE ||
+                        keyboardEvent.key == RIGHT_ARROW_CHARCODE
+                    : keyboardEvent.key == UP_ARROW_CHARCODE ||
+                        keyboardEvent.key == DOWN_ARROW_CHARCODE)) {
+                this.dataProvider.shiftHighlight(this.pickerOptions.isHorizontal
+                    ? keyboardEvent.key == RIGHT_ARROW_CHARCODE
+                    : keyboardEvent.key == DOWN_ARROW_CHARCODE);
+                this.handleKeyDownEvent(event);
+            }
+            else if (this.dataProvider.selectOption &&
+                (keyboardEvent.key == ENTER_CHARCODE || keyboardEvent.key == TAB_CHARCODE)) {
+                this.dataProvider.selectOption();
+                this.handleKeyDownEvent(event);
+            }
+            else {
+                // Currently no op.
+            }
+        }
+        else {
+            if (keyboardEvent.key == BACKSPACE_CHARCODE) {
+                var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, this.editor);
+                var nodeBeforeCursor = searcher.getInlineElementBefore()
+                    ? searcher.getInlineElementBefore().getContainerNode()
+                    : null;
+                var nodeId = nodeBeforeCursor ? this.getIdValue(nodeBeforeCursor) : null;
+                if (nodeId &&
+                    nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0 &&
+                    (searcher.getInlineElementAfter() == null ||
+                        !(searcher.getInlineElementAfter() instanceof roosterjs_editor_dom_1.PartialInlineElement))) {
+                    var replacementNode = this.dataProvider.onRemove(nodeBeforeCursor, true);
+                    this.replaceNode(nodeBeforeCursor, replacementNode);
+                    this.editor.select(replacementNode, -3 /* After */);
+                    this.handleKeyDownEvent(event);
+                }
+            }
+            else if (keyboardEvent.key == DELETE_CHARCODE) {
+                var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, this.editor);
+                var nodeAfterCursor = searcher.getInlineElementAfter()
+                    ? searcher.getInlineElementAfter().getContainerNode()
+                    : null;
+                var nodeId = nodeAfterCursor ? this.getIdValue(nodeAfterCursor) : null;
+                if (nodeId && nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0) {
+                    var replacementNode = this.dataProvider.onRemove(nodeAfterCursor, false);
+                    this.replaceNode(nodeAfterCursor, replacementNode);
+                    this.handleKeyDownEvent(event);
+                }
+            }
+        }
+    };
+    PickerPlugin.prototype.getWord = function (event) {
+        var wordFromRange = this.getRangeUntilAt(event).toString();
+        var wordFromCache = this.getWordBeforeCursor(event);
+        // VSO 24891: In picker, trigger and mention are separated into two nodes.
+        // In this case, wordFromRange is the trigger character while wordFromCache is the whole string,
+        // so wordFromCache is what we want to return.
+        if (wordFromRange == this.pickerOptions.triggerCharacter &&
+            wordFromRange != wordFromCache) {
+            return wordFromCache;
+        }
+        return wordFromRange;
+    };
+    PickerPlugin.prototype.setRangeStart = function (rangeNode, node, target) {
+        var nodeOffset = node ? node.textContent.lastIndexOf(target) : -1;
+        if (nodeOffset > -1) {
+            rangeNode.setStart(node, nodeOffset);
+            return true;
+        }
+        return false;
+    };
+    return PickerPlugin;
+}());
+exports.default = PickerPlugin;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-plugin-picker/lib/index.ts":
+/*!*******************************************************!*\
+  !*** ./packages/roosterjs-plugin-picker/lib/index.ts ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var PickerPlugin_1 = __webpack_require__(/*! ./PickerPlugin */ "./packages/roosterjs-plugin-picker/lib/PickerPlugin.ts");
+exports.PickerPlugin = PickerPlugin_1.default;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs/lib/createEditor.ts":
 /*!************************************************!*\
   !*** ./packages/roosterjs/lib/createEditor.ts ***!
@@ -10559,6 +10902,7 @@ __export(__webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-e
 __export(__webpack_require__(/*! roosterjs-editor-plugins */ "./packages/roosterjs-editor-plugins/lib/index.ts"));
 __export(__webpack_require__(/*! roosterjs-plugin-image-resize */ "./packages/roosterjs-plugin-image-resize/lib/index.ts"));
 __export(__webpack_require__(/*! roosterjs-html-sanitizer */ "./packages/roosterjs-html-sanitizer/lib/index.ts"));
+__export(__webpack_require__(/*! roosterjs-plugin-picker */ "./packages/roosterjs-plugin-picker/lib/index.ts"));
 
 
 /***/ })
