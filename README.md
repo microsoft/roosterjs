@@ -33,11 +33,11 @@ Rooster contains 9 packages.
    `createEditor()` function in roosterjs to create an editor with default
    configurations.
 
-2. [roosterjs-editor-core](https://microsoft.github.io/roosterjs/docs/modules/roosterjs.html):
+2. [roosterjs-editor-core](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_core.html):
    Defines the core editor and plugin infrastructure. Use `roosterjs-editor-core`
    instead of `roosterjs` to build and customize your own editor.
 
-3. [roosterjs-editor-api](https://microsoft.github.io/roosterjs/docs/modules/roosterjs.html):
+3. [roosterjs-editor-api](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_api.html):
    Defines APIs for editor operations. Use these APIs to modify content and
    formatting in the editor you built using `roosterjs-editor-core`.
 
