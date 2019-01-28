@@ -24,6 +24,8 @@ interface MouseEvent extends React.MouseEvent<EventTarget> {
 }
 
 export default class RibbonButton extends React.Component<RibbonButtonProps, RibbonButtonState> {
+    private range: Range;
+
     constructor(props: RibbonButtonProps) {
         super(props);
         this.state = {
@@ -100,6 +102,8 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
     };
 
     private onShowDropDown = () => {
+        this.range = this.props.plugin.getEditor().getSelectionRange();
+
         if (!this.props.button.preserveOnClickAway) {
             document.addEventListener('click', this.onHideDropDown);
         }
@@ -109,6 +113,8 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
     };
 
     private onHideDropDown = () => {
+        this.props.plugin.getEditor().select(this.range);
+
         document.removeEventListener('click', this.onHideDropDown);
         this.setState({
             isDropDownShown: false,
@@ -132,13 +138,13 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
                             )}
                         </div>
                     ) : (
-                            <div
-                                key={key}
-                                onClick={() => this.onExecute(key)}
-                                className={styles.dropDownItem}>
-                                {items[key]}
-                            </div>
-                        )
+                        <div
+                            key={key}
+                            onClick={() => this.onExecute(key)}
+                            className={styles.dropDownItem}>
+                            {items[key]}
+                        </div>
+                    )
                 )}
             </div>
         );

@@ -254,7 +254,7 @@ To build the sample site code yourself, follow these instructions:
 
 ## More documentation
 
-We are still working on more documentation in [roosterjs wiki](https://github.com/Microsoft/roosterjs/wiki).
+We are still working on more documentation in [roosterjs wiki](https://github.com/Microsoft/roosterjs/wiki) and [API reference](https://microsoft.github.io/roosterjs/docs/index.html).
 
 ## License - MIT
 

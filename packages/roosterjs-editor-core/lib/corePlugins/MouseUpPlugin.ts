@@ -1,5 +1,5 @@
 import Editor from '../editor/Editor';
-import { EditorPlugin } from '..';
+import EditorPlugin from '../interfaces/EditorPlugin';
 import { PluginEvent, PluginEventType, PluginMouseUpEvent } from 'roosterjs-editor-types';
 
 /**

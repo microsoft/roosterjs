@@ -37,6 +37,7 @@ var commands = [
     'buildcommonjs', // Build in CommonJs mode
     'buildamd', // Build in AMD mode
     'publish', // Publish roosterjs packages to npm
+    'builddoc', // Build documents
 ];
 
 function readPackageJson(package) {
@@ -106,7 +107,7 @@ function checkDependency() {
         if (index >= 0) {
             files = files.slice(index);
             files.push(filename);
-            throw new Error(`Circular dependency: \r\n${files.join(' =>\r\n')}`);
+            err(`Circular dependency: \r\n${files.join(' =>\r\n')}`);
         }
 
         files.push(filename);
@@ -166,9 +167,9 @@ function normalize() {
     });
 }
 
-function runNode(command, cwd) {
+function runNode(command, cwd, stdio) {
     exec('node ' + command, {
-        stdio: 'inherit',
+        stdio: stdio || 'inherit',
         cwd,
     });
 }
@@ -314,15 +315,43 @@ function verifyDts() {
     runNode(typescriptPath + ' ' + dtsFileName + ' --noEmit', rootPath);
 }
 
+function buildDoc() {
+    let config = {
+        tsconfig: path.join(packagesPath, 'tsconfig.json'),
+        out: path.join(roosterJsDistPath, '..', 'docs'),
+        readme: path.join(rootPath, 'readme.md'),
+        name: 'RoosterJs',
+        mode: 'modules',
+        ignoreCompilerErrors: '',
+        preserveConstEnums: '',
+        stripInternal: '',
+        target: 'ES5',
+        excludeExternals: '',
+        logger: 'none',
+        exclude: '**/test/**/*.ts',
+        excludePrivate: '',
+        excludeNotExported: '',
+        'external-modulemap': '".*\\/(roosterjs[a-zA-Z0-9\\-]*)\\/lib\\/"',
+    };
+
+    let cmd = path.join(nodeModulesPath, 'typedoc/bin/typedoc');
+    for (let key of Object.keys(config)) {
+        let value = config[key];
+        cmd += ` --${key} ${value}`;
+    }
+
+    runNode(cmd, rootPath, 'pipe');
+}
+
 function copySample() {
     var ncp = require('ncp');
 
     var target = path.join(distPath, 'roosterjs/samplecode');
     var source = path.join(rootPath, 'publish/samplecode');
 
-    ncp.ncp(source, target, err => {
-        if (err) {
-            throw err;
+    ncp.ncp(source, target, error => {
+        if (error) {
+            err(error);
         }
     });
 }
@@ -411,6 +440,12 @@ async function buildDemoSite() {
     });
 }
 
+function err(message) {
+    let ex = new Error('\n' + message);
+    console.error(ex.message);
+    throw ex;
+}
+
 function publish() {
     packages.forEach(package => {
         var json = readPackageJson(package);
@@ -474,7 +509,8 @@ class Runner {
             console.log('\nBuild completed successfully.');
         })().catch(e => {
             console.error('\n');
-            throw e;
+            console.error(e);
+            process.exit(1);
         });
     }
 }
@@ -550,6 +586,11 @@ function buildAll(options) {
             message: 'Publishing to npm...',
             callback: publish,
             enabled: options.publish,
+        },
+        {
+            message: 'Building documents...',
+            callback: buildDoc,
+            enabled: options.builddoc,
         },
     ];
 

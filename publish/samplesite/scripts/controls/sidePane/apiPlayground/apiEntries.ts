@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ApiPaneProps, { ApiPlaygroundComponent } from './ApiPaneProps';
 import BlockElementsPane from './blockElements/BlockElementsPane';
+import InsertContentPane from './insertContent/InsertContentPane';
 import MatchLinkPane from './matchLink/MatchLinkPane';
 import SanitizerPane from './sanitizer/SanitizerPane';
 
@@ -28,6 +29,10 @@ const apiEntries: { [key: string]: ApiEntry } = {
     matchlink: {
         name: 'Match Link',
         component: MatchLinkPane,
+    },
+    insertContent: {
+        name: 'Insert Content',
+        component: InsertContentPane,
     },
     more: {
         name: 'Coming soon...',

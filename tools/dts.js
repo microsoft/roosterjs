@@ -68,7 +68,7 @@ function parseFrom(from, currentFileName, baseDir, projDir) {
             importFileName = path.resolve(projDir, 'node_modules', from, 'lib/index.d.ts');
         }
         if (!fs.existsSync(importFileName)) {
-            throw new Error(`Can\t resolve package name ${from} in file ${currentFileName}`);
+            err(`Can't resolve package name ${from} in file ${currentFileName}`);
         }
     }
     return importFileName;
@@ -239,9 +239,7 @@ function process(baseDir, queue, index, projDir) {
     content = parseExport(content, item.elements);
 
     if (content.trim() != '') {
-        throw new Error(
-            'File ' + currentFileName + ' contains unrecognized content:\r\n' + content
-        );
+        err('File ' + currentFileName + ' contains unrecognized content:\r\n' + content);
     }
 }
 
@@ -276,7 +274,7 @@ function output(targetDir, library, isAmd, queue) {
                         }
                     }
                     if (!texts) {
-                        throw new Error('Name not found: ' + name + '; alias: ' + alias);
+                        err('Name not found: ' + name + '; alias: ' + alias);
                     }
                 }
 
@@ -303,6 +301,12 @@ function output(targetDir, library, isAmd, queue) {
     var filename = `${path.resolve(targetDir, 'rooster')}${isAmd ? '-amd' : ''}.d.ts`;
     fs.writeFileSync(filename, content);
     return filename;
+}
+
+function err(message) {
+    let ex = new Error('\n' + message);
+    console.error(ex.message);
+    throw ex;
 }
 
 module.exports.prepareDts = (rootPath, baseDir, includes) => {
