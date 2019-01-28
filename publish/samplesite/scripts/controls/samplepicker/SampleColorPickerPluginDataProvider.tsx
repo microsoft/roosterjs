@@ -1,14 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { PickerDataProvider } from 'roosterjs-plugin-picker';
-import { Editor } from 'roosterjs-editor-core';
 import { default as SampleColorPicker, SampleColorPickerProps } from './SampleColorPicker';
 
 type LegalKeys<T> = T extends 'onClick' ? never : T;
 type ComponentState = { [l in LegalKeys<keyof SampleColorPickerProps>]: SampleColorPickerProps[l] };
 
 type InsertNodeCallback = (nodeToInsert: HTMLElement) => void;
-type setIsSuggestingCallback = (isSuggesting: boolean) => void;
 type Color = {
     htmlColor: string;
     names: string[];
@@ -56,11 +54,7 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
     // Function called when the plugin is intialized to register two callbacks with the data provider and a reference to the Editor.
     // The first is called in order to "commit" a new element to the editor body that isn't handled automatically by the editor plugin.
     // The second sets the isSuggesting value for situations wherethe UX needs to manipulate the suggesting state that's otherwise plugin managed.
-    onInitalize(
-        insertNodeCallback: InsertNodeCallback,
-        _setIsSuggestingCallback: setIsSuggestingCallback,
-        _editor?: Editor
-    ): void {
+    onInitalize(insertNodeCallback: InsertNodeCallback): void {
         this.insertNodeCallback = insertNodeCallback;
         this.updateToQuery('', 0);
     }
