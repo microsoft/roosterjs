@@ -37,3 +37,9 @@ export class TableResizeCode extends SimplePluginCode {
         super('TableResize', 'roosterjs-editor-plugins', false);
     }
 }
+
+export class CustomReplaceCode extends SimplePluginCode {
+    constructor() {
+        super('CustomReplace', 'roosterjs-editor-plugins', false);
+    }
+}

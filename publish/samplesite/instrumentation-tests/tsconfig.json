@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "react",
     "target": "es5",
     "module": "commonjs",
     "sourceMap": true,
@@ -25,4 +26,5 @@
       "node"
     ],
   },
+  "includeFiles": ["./typings/globals.d.ts"]
 }

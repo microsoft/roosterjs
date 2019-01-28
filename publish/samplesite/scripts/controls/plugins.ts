@@ -5,7 +5,6 @@ import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
 import RibbonPlugin from './ribbon/RibbonPlugin';
 import SidePanePlugin from './SidePanePlugin';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
-import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins'
 import { EditorPlugin } from 'roosterjs-editor-core';
 
 export default interface Plugins {
@@ -15,7 +14,6 @@ export default interface Plugins {
     editorOptions: EditorOptionsPlugin;
     eventView: EventViewPlugin;
     api: ApiPlaygroundPlugin;
-    customReplace: CustomReplacePlugin,
 }
 
 let plugins: Plugins = null;
@@ -24,7 +22,6 @@ export function getPlugins(): Plugins {
     if (!plugins) {
         plugins = {
             ribbon: new RibbonPlugin(),
-            customReplace: new CustomReplacePlugin(),
             formatState: new FormatStatePlugin(),
             snapshot: new SnapshotPlugin(),
             editorOptions: new EditorOptionsPlugin(),
@@ -39,7 +36,6 @@ export function getAllPluginArray(includeSidePanePlugins: boolean): EditorPlugin
     let allPlugins = getPlugins();
     return [
         allPlugins.ribbon,
-        allPlugins.customReplace,
         includeSidePanePlugins && allPlugins.formatState,
         includeSidePanePlugins && allPlugins.editorOptions,
         includeSidePanePlugins && allPlugins.eventView,
@@ -57,8 +53,3 @@ export function getSidePanePluginArray(): SidePanePlugin[] {
         allPlugins.api,
     ];
 }
-
-// expose to the global window for integration tests
-Object.defineProperty(window, 'editorPlugins', {
-    get: () => plugins
-});
