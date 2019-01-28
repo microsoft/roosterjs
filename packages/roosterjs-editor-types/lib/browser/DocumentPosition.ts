@@ -2,7 +2,7 @@
  * The is essentially an enum representing result from browser compareDocumentPosition API
  * https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
  */
-const enum DocumentPosition {
+export const enum DocumentPosition {
     /**
      * Same node
      */
@@ -33,5 +33,3 @@ const enum DocumentPosition {
      */
     ContainedBy = 16,
 }
-
-export default DocumentPosition;

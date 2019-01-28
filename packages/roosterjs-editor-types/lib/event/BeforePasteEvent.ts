@@ -1,7 +1,7 @@
 import BasePluginEvent from './BasePluginEvent';
 import ClipboardData from '../interface/ClipboardData';
-import PasteOption from '../enum/PasteOption';
-import PluginEventType from './PluginEventType';
+import { PasteOption } from '../enum/PasteOption';
+import { PluginEventType } from './PluginEventType';
 
 /**
  * Provides a chance for plugin to change the content before it is pasted into editor.

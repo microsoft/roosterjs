@@ -1,5 +1,5 @@
 import BasePluginEvent from './BasePluginEvent';
-import PluginEventType from './PluginEventType';
+import { PluginEventType } from './PluginEventType';
 
 /**
  * This represents a PluginEvent wrapping native CompositionEnd event

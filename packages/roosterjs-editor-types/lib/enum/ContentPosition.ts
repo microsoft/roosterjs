@@ -3,7 +3,7 @@
  * On insertion, we will need to specify where we want the content to be placed (begin, end, selection or outside)
  * On content traversing, we will need to specify the start position of traversing
  */
-const enum ContentPosition {
+export const enum ContentPosition {
     /**
      * Begin of the container
      */
@@ -24,5 +24,3 @@ const enum ContentPosition {
      */
     Outside,
 }
-
-export default ContentPosition;

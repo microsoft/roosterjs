@@ -1,4 +1,4 @@
-import PluginEventType from './PluginEventType';
+import { PluginEventType } from './PluginEventType';
 
 /**
  * Editor plugin event interface

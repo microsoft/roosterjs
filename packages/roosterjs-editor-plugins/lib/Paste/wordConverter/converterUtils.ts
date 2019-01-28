@@ -339,8 +339,8 @@ function getListItemMetadata(node: HTMLElement): ListItemMetadata {
             try {
                 // Word mso-list property holds 3 space separated values in the following format: lst1 level1 lfo0
                 // Where:
-                // (0) List identified for the metadata in the <head> of the document. We cannot read the <head> metada
-                // (1) Level of the list. This also maps to the <head> metadata that we cannot read, but
+                // (0) List identified for the metadata in the &lt;head&gt; of the document. We cannot read the &lt;head&gt; metada
+                // (1) Level of the list. This also maps to the &lt;head&gt; metadata that we cannot read, but
                 // for almost all cases, it maps to the list identation (or level). We'll use it as the
                 // list indentation value
                 // (2) Contains a specific list identifier.
@@ -375,12 +375,12 @@ function getFakeBulletTagName(fakeBullet: string): string {
  */
 function getFakeBulletText(node: Node, levels: number): string {
     // Word uses the following format for their bullets:
-    // <p style="mso-list:l1 level1 lfo2">
-    // <span style="...">
-    // <span style="mso-list:Ignore">1.<span style="...">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
-    // </span>
+    // &lt;p style="mso-list:l1 level1 lfo2"&gt;
+    // &lt;span style="..."&gt;
+    // &lt;span style="mso-list:Ignore"&gt;1.&lt;span style="..."&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/span&gt;&lt;/span&gt;
+    // &lt;/span&gt;
     // Content here...
-    // </p>
+    // &lt;/p&gt;
     //
     // Basically, we need to locate the mso-list:Ignore SPAN, which holds either one text or image node. That
     // text or image node will be the fake bullet we are looking for
@@ -415,8 +415,8 @@ function getFakeBulletText(node: Node, levels: number): string {
  * If the specified element is a Word List comments, this code verifies and fixes
  * the markup when needed to ensure that Chrome bullet conversions work as expected
  * -----
- * We'll convert <!--[if !supportLists]--> and <!--[endif]--> comments into
- * <span style="mso-list:Ignore"></span>... Chrome has a bug where it drops the
+ * We'll convert &lt;!--[if !supportLists]--&gt; and &lt;!--[endif]--&gt; comments into
+ * &lt;span style="mso-list:Ignore"&gt;&lt;/span&gt;... Chrome has a bug where it drops the
  * styles of the span, but we'll use these comments to recreate them out
  */
 function fixWordListComments(child: Node, removeComments: boolean): Node {

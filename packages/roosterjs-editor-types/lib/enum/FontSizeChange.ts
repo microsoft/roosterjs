@@ -2,7 +2,7 @@
  * The enum used for increase or decrease font size
  * Used by setFontSize API
  */
-const enum FontSizeChange {
+export const enum FontSizeChange {
     /**
      * Increase font size
      */
@@ -13,5 +13,3 @@ const enum FontSizeChange {
      */
     Decrease,
 }
-
-export default FontSizeChange;

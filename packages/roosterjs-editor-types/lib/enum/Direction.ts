@@ -1,7 +1,7 @@
 /**
  * enum for setting block direction, used by setDirection API
  */
-const enum Direction {
+export const enum Direction {
     /**
      * Left to right
      */
@@ -12,5 +12,3 @@ const enum Direction {
      */
     RightToLeft,
 }
-
-export default Direction;
