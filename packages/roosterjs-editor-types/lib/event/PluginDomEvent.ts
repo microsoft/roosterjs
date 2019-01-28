@@ -51,6 +51,17 @@ export interface PluginKeyUpEvent extends BasePluginEvent<PluginEventType.KeyUp>
 export type PluginKeyboardEvent = PluginKeyDownEvent | PluginKeyPressEvent | PluginKeyUpEvent;
 
 /**
+ * This represents a PluginEvent wrapping native input / textinput event
+ */
+export interface PluginInputEvent extends BasePluginEvent<PluginEventType.Input> {
+    rawEvent: InputEvent;
+}
+
+/**
  * This represents a PluginEvent wrapping native browser event
  */
-export type PluginDomEvent = PluginCompositionEvent | PluginMouseEvent | PluginKeyboardEvent;
+export type PluginDomEvent =
+    | PluginCompositionEvent
+    | PluginMouseEvent
+    | PluginKeyboardEvent
+    | PluginInputEvent;

@@ -31,6 +31,7 @@
     },
     "devDependencies": {
         "@types/jasmine": "2.6.0",
+        "@types/dom-inputevent": "^1.0.3",
         "glob": "7.1.2",
         "jasmine-core": "2.8.0",
         "karma": "2.0.0",

@@ -2,7 +2,7 @@ import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
-import { getRangeFromSelectionPath, getSelectionPath } from 'roosterjs-editor-dom';
+import { getRangeFromSelectionPath, getSelectionPath, Browser } from 'roosterjs-editor-dom';
 import {
     BlockElement,
     ChangeSource,
@@ -74,6 +74,10 @@ export default class Editor {
             this.core.api.attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown),
             this.core.api.attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp),
             this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
+            this.core.api.attachDomEvent(this.core,
+                !Browser.isIE ? 'input' : 'textinput',
+                PluginEventType.Input
+            ),
         ];
 
         // 6. Add additional content edit features to the editor if specified
