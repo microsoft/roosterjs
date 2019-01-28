@@ -18,6 +18,10 @@ import {
     getDefaultContentEditFeatures,
 } from 'roosterjs-editor-plugins';
 
+import SampleColorPickerPluginDataProvider from '../samplepicker/SampleColorPickerPluginDataProvider';
+import { PickerPlugin } from 'roosterjs-plugin-picker';
+import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins';
+
 const styles = require('./Editor.scss');
 const assign = require('object-assign');
 
@@ -55,8 +59,8 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
     componentDidMount() {
         this.initEditor();
         if (editorInstance == null) {
-            editorInstance = this.editor
-        };
+            editorInstance = this.editor;
+        }
     }
 
     componentWillUnmount() {
@@ -79,6 +83,15 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
             pluginList.watermark ? new Watermark(this.state.watermarkText) : null,
             pluginList.imageResize ? new ImageResize() : null,
             pluginList.tableResize ? new TableResize() : null,
+            pluginList.pickerPlugin
+                ? new PickerPlugin(new SampleColorPickerPluginDataProvider(), {
+                      elementIdPrefix: 'samplepicker-',
+                      changeSource: 'SAMPLE_COLOR_PICKER',
+                      triggerCharacter: ':',
+                      isHorizontal: true,
+                  })
+                : null,
+            pluginList.customReplace ? new CustomReplacePlugin() : null,
             ...this.props.plugins,
         ];
         let defaultFormat = { ...this.state.defaultFormat };
@@ -123,5 +136,5 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
 
 // expose the active editor the global window for integration tests
 Object.defineProperty(window, 'globalRoosterEditor', {
-    get: () => editorInstance
+    get: () => editorInstance,
 });
