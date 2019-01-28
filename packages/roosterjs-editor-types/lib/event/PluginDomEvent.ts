@@ -53,6 +53,4 @@ export type PluginKeyboardEvent = PluginKeyDownEvent | PluginKeyPressEvent | Plu
 /**
  * This represents a PluginEvent wrapping native browser event
  */
-type PluginDomEvent = PluginCompositionEvent | PluginMouseEvent | PluginKeyboardEvent;
-
-export default PluginDomEvent;
+export type PluginDomEvent = PluginCompositionEvent | PluginMouseEvent | PluginKeyboardEvent;

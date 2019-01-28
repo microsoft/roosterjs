@@ -3,7 +3,7 @@ import DefaultFormat from './DefaultFormat';
 /**
  * An object contains all related data for pasting
  */
-interface ClipboardData {
+export default interface ClipboardData {
     /**
      * An editor content snapshot before pasting happens. This is used for changing paste format
      */
@@ -39,5 +39,3 @@ interface ClipboardData {
      */
     rawHtml: string;
 }
-
-export default ClipboardData;

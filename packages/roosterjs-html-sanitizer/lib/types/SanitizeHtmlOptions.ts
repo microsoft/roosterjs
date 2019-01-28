@@ -4,7 +4,7 @@ import { StringMap } from '../types/maps';
 /**
  * Options for sanitizeHtml function
  */
-interface SanitizeHtmlOptions extends HtmlSanitizerOptions {
+export default interface SanitizeHtmlOptions extends HtmlSanitizerOptions {
     /**
      * Current HTML element, styles of this element will be used as current style values.
      * Or a string map represents current styles
@@ -21,5 +21,3 @@ interface SanitizeHtmlOptions extends HtmlSanitizerOptions {
      */
     preserveFragmentOnly?: boolean;
 }
-
-export default SanitizeHtmlOptions;

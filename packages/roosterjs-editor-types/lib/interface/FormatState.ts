@@ -1,7 +1,7 @@
 /**
  * The format state
  */
-interface FormatState {
+export default interface FormatState {
     /**
      * Font name
      */
@@ -92,5 +92,3 @@ interface FormatState {
      */
     headerLevel?: number;
 }
-
-export default FormatState;

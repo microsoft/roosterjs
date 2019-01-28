@@ -9,7 +9,7 @@ import { BlockElement, InlineElement } from 'roosterjs-editor-types';
  * selection scoping where the traverser may give a full inline element and only a partial of it
  * falls within the selection. In that case, we want to trim the inline to return a partial inline element
  */
-interface TraversingScoper {
+export default interface TraversingScoper {
     /**
      * The root node of this scoper
      */
@@ -35,5 +35,3 @@ interface TraversingScoper {
      */
     trimInlineElement: (inlineElement: InlineElement) => InlineElement;
 }
-
-export default TraversingScoper;

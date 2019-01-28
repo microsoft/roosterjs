@@ -1,7 +1,7 @@
 /**
  * This represents a rect inside editor
  */
-interface Rect {
+export default interface Rect {
     /**
      * Top
      */
@@ -22,5 +22,3 @@ interface Rect {
      */
     right: number;
 }
-
-export default Rect;

@@ -8,7 +8,7 @@ import {
 /**
  * Options for HtmlSanitizer
  */
-interface HtmlSanitizerOptions {
+export default interface HtmlSanitizerOptions {
     /**
      * Callbacks for HTML elements
      */
@@ -49,5 +49,3 @@ interface HtmlSanitizerOptions {
      */
     allowPreserveWhiteSpace?: boolean;
 }
-
-export default HtmlSanitizerOptions;

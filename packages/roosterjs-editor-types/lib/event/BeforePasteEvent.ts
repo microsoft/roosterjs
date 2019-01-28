@@ -6,7 +6,7 @@ import PluginEventType from './PluginEventType';
 /**
  * Provides a chance for plugin to change the content before it is pasted into editor.
  */
-interface BeforePasteEvent extends BasePluginEvent<PluginEventType.BeforePaste> {
+export default interface BeforePasteEvent extends BasePluginEvent<PluginEventType.BeforePaste> {
     /**
      * An object contains all related data for pasting
      */
@@ -22,5 +22,3 @@ interface BeforePasteEvent extends BasePluginEvent<PluginEventType.BeforePaste> 
      */
     pasteOption: PasteOption;
 }
-
-export default BeforePasteEvent;

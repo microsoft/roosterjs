@@ -1,6 +1,6 @@
 // Interfaces
 export {
-    default as ContentEditFeature,
+    ContentEditFeature,
     GenericContentEditFeature,
     Keys,
 } from './interfaces/ContentEditFeature';

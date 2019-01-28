@@ -24,7 +24,7 @@ export { default as ContentChangedEvent } from './event/ContentChangedEvent';
 export { default as EditorReadyEvent } from './event/EditorReadyEvent';
 export { default as ExtractContentEvent } from './event/ExtractContentEvent';
 export {
-    default as PluginDomEvent,
+    PluginDomEvent,
     PluginCompositionEvent,
     PluginKeyboardEvent,
     PluginKeyDownEvent,
@@ -34,7 +34,7 @@ export {
     PluginMouseDownEvent,
     PluginMouseUpEvent,
 } from './event/PluginDomEvent';
-export { default as PluginEvent } from './event/PluginEvent';
+export { PluginEvent } from './event/PluginEvent';
 export { default as PluginEventType } from './event/PluginEventType';
 
 // Interface

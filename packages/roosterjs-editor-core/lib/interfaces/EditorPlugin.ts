@@ -4,7 +4,7 @@ import { PluginEvent } from 'roosterjs-editor-types';
 /**
  * Interface of an editor plugin
  */
-interface EditorPlugin {
+export default interface EditorPlugin {
     /**
      * Get a friendly name of this plugin
      */
@@ -43,5 +43,3 @@ interface EditorPlugin {
      */
     onPluginEvent?: (event: PluginEvent) => void;
 }
-
-export default EditorPlugin;

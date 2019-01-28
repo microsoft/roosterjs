@@ -28,42 +28,42 @@ supporting of RoosterJs 6.x at the end of 2019/2.
 
 Rooster contains 9 packages.
 
-1. `roosterjs`:
+1. [roosterjs](https://microsoft.github.io/roosterjs/docs/modules/roosterjs.html):
    A facade of all Rooster code for those who want a quick start. Use the
    `createEditor()` function in roosterjs to create an editor with default
    configurations.
 
-2. `roosterjs-editor-core`:
+2. [roosterjs-editor-core](https://microsoft.github.io/roosterjs/docs/modules/roosterjs.html):
    Defines the core editor and plugin infrastructure. Use `roosterjs-editor-core`
    instead of `roosterjs` to build and customize your own editor.
 
-3. `roosterjs-editor-api`:
+3. [roosterjs-editor-api](https://microsoft.github.io/roosterjs/docs/modules/roosterjs.html):
    Defines APIs for editor operations. Use these APIs to modify content and
    formatting in the editor you built using `roosterjs-editor-core`.
 
-4. `roosterjs-editor-dom`:
+4. [roosterjs-editor-dom](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_dom.html):
    Defines APIs for DOM operations. Use `roosterjs-editor-api` instead unless
    you want to access DOM API directly.
 
-5. `roosterjs-editor-plugins`:
+5. [roosterjs-editor-plugins](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_plugins.html):
    Defines basic plugins for common features. Examples: making hyperlinks,
    pasting HTML content, inserting inline images.
 
-6. `roosterjs-editor-types`:
+6. [roosterjs-editor-types](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_types.html):
    Defines public interfaces and enumerations.
 
-7. `roosterjs-html-sanitizer`
+7. [roosterjs-html-sanitizer](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_html_sanitizer.html)
    A common library to help sanitize HTML.
 
-8. `roosterjs-plugin-image-resize`
+8. [roosterjs-plugin-image-resize](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_plugin_image_resize.html)
    A plugin to help do inline image resize within the editor
 
-9. `roosterjs-plugin-picker`
+9. [roosterjs-plugin-picker](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_plugin_picker.html)
    A plugin to help build picker-like plugins
 
 ### APIs
 
-Rooster provides DOM level APIs (in `roosterjs-editor-dom`) and formatting APIs
+Rooster provides DOM level APIs (in `roosterjs-editor-dom`), core APIs (in `roosterjs-editor-core`), and formatting APIs
 (in `roosterjs-editor-api`) to perform editing operations.
 
 `roosterjs-editor-dom` provides several levels of DOM operations:
@@ -74,6 +74,10 @@ Rooster provides DOM level APIs (in `roosterjs-editor-dom`) and formatting APIs
 -   Perform DOM operations on a given scope using scopers.
 -   Travel among `InlineElements` and `BlockElements` with scope using
     ContentTraverser API.
+
+`roosterjs-editor-core` provides APIs for editor core. Editor class will call such
+APIs to perform basic editor operations. These APIs are overridable by specifying
+API overrides in Editor options when creating the editor.
 
 `roosterjs-editor-api` provides APIs for scenario-based operations triggered by
 user interaction.
