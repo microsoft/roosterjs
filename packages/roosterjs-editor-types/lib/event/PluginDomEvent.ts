@@ -1,5 +1,5 @@
 import BasePluginEvent from './BasePluginEvent';
-import PluginEventType from './PluginEventType';
+import { PluginEventType } from './PluginEventType';
 
 /**
  * This represents a PluginEvent wrapping native CompositionEnd event
@@ -60,10 +60,8 @@ export interface PluginInputEvent extends BasePluginEvent<PluginEventType.Input>
 /**
  * This represents a PluginEvent wrapping native browser event
  */
-type PluginDomEvent =
+export type PluginDomEvent =
     | PluginCompositionEvent
     | PluginMouseEvent
     | PluginKeyboardEvent
     | PluginInputEvent;
-
-export default PluginDomEvent;

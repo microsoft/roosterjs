@@ -1,7 +1,7 @@
 /**
  * Editor plugin event type
  */
-const enum PluginEventType {
+export const enum PluginEventType {
     /**
      * HTML KeyDown event
      */
@@ -64,5 +64,3 @@ const enum PluginEventType {
      */
     Input,
 }
-
-export default PluginEventType;

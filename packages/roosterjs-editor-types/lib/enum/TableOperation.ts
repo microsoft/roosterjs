@@ -1,4 +1,4 @@
-const enum TableOperation {
+export const enum TableOperation {
     /**
      * Insert a row above current row
      */
@@ -64,5 +64,3 @@ const enum TableOperation {
      */
     SplitVertically,
 }
-
-export default TableOperation;

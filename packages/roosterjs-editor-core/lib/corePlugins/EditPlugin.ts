@@ -1,4 +1,5 @@
 import Editor from '../editor/Editor';
+import EditorPlugin from '../interfaces/EditorPlugin';
 import { GenericContentEditFeature, Keys } from '../interfaces/ContentEditFeature';
 import {
     ChangeSource,
@@ -10,7 +11,7 @@ import {
 /**
  * Edit Component helps handle Content edit features
  */
-export default class EditPlugin implements EditPlugin {
+export default class EditPlugin implements EditorPlugin {
     private editor: Editor;
     private currentFeature: GenericContentEditFeature<PluginEvent> = null;
     private featureMap: { [key: number]: GenericContentEditFeature<PluginEvent>[] } = {};

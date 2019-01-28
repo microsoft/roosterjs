@@ -1,9 +1,9 @@
-import PluginEventType from './PluginEventType';
+import { PluginEventType } from './PluginEventType';
 
 /**
  * Editor plugin event interface
  */
-interface BasePluginEvent<T extends PluginEventType> {
+export default interface BasePluginEvent<T extends PluginEventType> {
     /**
      * Type of this event
      */
@@ -16,5 +16,3 @@ interface BasePluginEvent<T extends PluginEventType> {
      */
     eventDataCache?: { [key: string]: any };
 }
-
-export default BasePluginEvent;

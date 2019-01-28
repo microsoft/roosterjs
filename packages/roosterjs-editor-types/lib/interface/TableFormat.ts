@@ -1,7 +1,7 @@
 /**
  * Table format
  */
-interface TableFormat {
+export default interface TableFormat {
     /**
      * Background color for even rows
      */
@@ -27,5 +27,3 @@ interface TableFormat {
      */
     verticalBorderColor: string;
 }
-
-export default TableFormat;

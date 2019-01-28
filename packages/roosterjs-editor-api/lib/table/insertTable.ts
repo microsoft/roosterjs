@@ -6,7 +6,7 @@ import { Position, VTable } from 'roosterjs-editor-dom';
  * Insert table into editor at current selection
  * @param editor The editor instance
  * @param columns Number of columns in table, it also controls the default table cell width:
- * if columns <= 4, width = 120px; if columns <= 6, width = 100px; else width = 70px
+ * if columns &lt;= 4, width = 120px; if columns &lt;= 6, width = 100px; else width = 70px
  * @param rows Number of rows in table
  * @param format (Optional) The table format. If not passed, the default format will be applied:
  * background color: #FFF; border color: #ABABAB

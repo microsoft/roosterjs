@@ -3,7 +3,7 @@ import EditorPlugin from './EditorPlugin';
 /**
  * Defines replaceable undo service for editor
  */
-interface UndoService extends EditorPlugin {
+export default interface UndoService extends EditorPlugin {
     /**
      * Undo last change if any
      */
@@ -36,5 +36,3 @@ interface UndoService extends EditorPlugin {
      */
     clear: () => void;
 }
-
-export default UndoService;

@@ -1,20 +1,20 @@
 // Browser
 export { default as BrowserInfo } from './browser/BrowserInfo';
-export { default as DocumentCommand } from './browser/DocumentCommand';
-export { default as DocumentPosition } from './browser/DocumentPosition';
-export { default as NodeType } from './browser/NodeType';
+export { DocumentCommand } from './browser/DocumentCommand';
+export { DocumentPosition } from './browser/DocumentPosition';
+export { NodeType } from './browser/NodeType';
 
 // Enum
-export { default as Alignment } from './enum/Alignment';
-export { default as ChangeSource } from './enum/ChangeSource';
-export { default as ContentPosition } from './enum/ContentPosition';
-export { default as Direction } from './enum/Direction';
-export { default as FontSizeChange } from './enum/FontSizeChange';
-export { default as Indentation } from './enum/Indentation';
-export { default as PasteOption } from './enum/PasteOption';
-export { default as PositionType } from './enum/PositionType';
-export { default as QueryScope } from './enum/QueryScope';
-export { default as TableOperation } from './enum/TableOperation';
+export { Alignment } from './enum/Alignment';
+export { ChangeSource } from './enum/ChangeSource';
+export { ContentPosition } from './enum/ContentPosition';
+export { Direction } from './enum/Direction';
+export { FontSizeChange } from './enum/FontSizeChange';
+export { Indentation } from './enum/Indentation';
+export { PasteOption } from './enum/PasteOption';
+export { PositionType } from './enum/PositionType';
+export { QueryScope } from './enum/QueryScope';
+export { TableOperation } from './enum/TableOperation';
 
 // Event
 export { default as BasePluginEvent } from './event/BasePluginEvent';
@@ -24,7 +24,7 @@ export { default as ContentChangedEvent } from './event/ContentChangedEvent';
 export { default as EditorReadyEvent } from './event/EditorReadyEvent';
 export { default as ExtractContentEvent } from './event/ExtractContentEvent';
 export {
-    default as PluginDomEvent,
+    PluginDomEvent,
     PluginCompositionEvent,
     PluginKeyboardEvent,
     PluginKeyDownEvent,
@@ -35,8 +35,8 @@ export {
     PluginMouseUpEvent,
     PluginInputEvent,
 } from './event/PluginDomEvent';
-export { default as PluginEvent } from './event/PluginEvent';
-export { default as PluginEventType } from './event/PluginEventType';
+export { PluginEvent } from './event/PluginEvent';
+export { PluginEventType } from './event/PluginEventType';
 
 // Interface
 export { default as BlockElement } from './interface/BlockElement';

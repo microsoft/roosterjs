@@ -1,7 +1,7 @@
 /**
  * Query scope for queryElements() API
  */
-const enum QueryScope {
+export const enum QueryScope {
     /**
      * Query from the whole body of root node. This is default value.
      */
@@ -18,5 +18,3 @@ const enum QueryScope {
      */
     InSelection,
 }
-
-export default QueryScope;

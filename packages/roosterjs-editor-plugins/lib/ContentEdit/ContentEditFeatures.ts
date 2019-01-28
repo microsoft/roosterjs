@@ -4,7 +4,7 @@ import { Browser } from 'roosterjs-editor-dom';
  * Feature set for ContentEdit plugin.
  * Call getDefaultContentEditFeatures() to get default feature set.
  */
-interface ContentEditFeatures {
+export default interface ContentEditFeatures {
     /**
      * When press Tab in a list, indent current list item
      * @default true
@@ -95,8 +95,6 @@ interface ContentEditFeatures {
      */
     smartOrderedListStyles: string[];
 }
-
-export default ContentEditFeatures;
 
 /**
  * Get default feature set of ContentEdit plugin

@@ -1,7 +1,7 @@
 /**
  * Represent the type of a position
  */
-const enum PositionType {
+export const enum PositionType {
     /**
      * At the begninning of a node
      */
@@ -22,5 +22,3 @@ const enum PositionType {
      */
     After = -3,
 }
-
-export default PositionType;

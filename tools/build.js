@@ -319,8 +319,8 @@ function buildDoc() {
     let config = {
         tsconfig: path.join(packagesPath, 'tsconfig.json'),
         out: path.join(roosterJsDistPath, '..', 'docs'),
-        readme: path.join(rootPath, 'readme.md'),
-        name: 'RoosterJs',
+        readme: path.join(rootPath, 'reference.md'),
+        name: '"RoosterJs API Reference"',
         mode: 'modules',
         ignoreCompilerErrors: '',
         preserveConstEnums: '',

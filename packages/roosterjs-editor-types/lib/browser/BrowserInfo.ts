@@ -1,7 +1,7 @@
 /**
  * Information of current OS and web browser
  */
-interface BrowserInfo {
+export default interface BrowserInfo {
     /**
      * Wether current OS is Mac
      */
@@ -52,5 +52,3 @@ interface BrowserInfo {
      */
     readonly isIEOrEdge?: boolean;
 }
-
-export default BrowserInfo;

@@ -2,7 +2,7 @@
  * Possible change sources. Here are the predefined sources.
  * It can also be other string if the change source can't fall into these sources.
  */
-const enum ChangeSource {
+export const enum ChangeSource {
     /**
      * Content changed by auto link
      */
@@ -43,5 +43,3 @@ const enum ChangeSource {
      */
     Drop = 'Drop',
 }
-
-export default ChangeSource;
