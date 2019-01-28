@@ -57,7 +57,7 @@ describe('CustomReplacePlugin', () => {
     it("does not autocomplete shortcuts starting with the picker's trigger character when the picker is open", async () => {
         // Arrange
         await page.evaluate(() =>
-            (window as any).editorPlugins.customReplace.updateReplacements([
+            window.globalRoosterEditorNamedPlugins.customReplace.updateReplacements([
                 {
                     sourceString: ':o',
                     replacementHTML: '🙀',
@@ -72,7 +72,7 @@ describe('CustomReplacePlugin', () => {
 
         // Assert
         const resultContent: string = await page.evaluate(() =>
-            (window as any).globalRoosterEditor.getTextContent()
+            window.globalRoosterEditor.getTextContent()
         );
         expect(resultContent.trim()).toEqual(':o');
     });
@@ -80,7 +80,7 @@ describe('CustomReplacePlugin', () => {
     it('does not autocomplete shortcuts in the picker search text when the picker is open', async () => {
         // Arrange
         await page.evaluate(() =>
-            (window as any).editorPlugins.customReplace.updateReplacements([
+            window.globalRoosterEditorNamedPlugins.customReplace.updateReplacements([
                 {
                     sourceString: ';o',
                     replacementHTML: '🙀',
@@ -95,7 +95,7 @@ describe('CustomReplacePlugin', () => {
 
         // Assert
         const resultContent: string = await page.evaluate(() =>
-            (window as any).globalRoosterEditor.getTextContent()
+            window.globalRoosterEditor.getTextContent()
         );
         expect(resultContent.trim()).toEqual(':zz;o');
     });
@@ -103,7 +103,7 @@ describe('CustomReplacePlugin', () => {
     it('does not autocomplete shortcuts immediately after the picker is dismissed', async () => {
         // Arrange
         await page.evaluate(() =>
-            (window as any).editorPlugins.customReplace.updateReplacements([
+            window.globalRoosterEditorNamedPlugins.customReplace.updateReplacements([
                 {
                     sourceString: ':o',
                     replacementHTML: '🙀',
@@ -119,7 +119,7 @@ describe('CustomReplacePlugin', () => {
 
         // Assert
         const resultContent: string = await page.evaluate(() =>
-            (window as any).globalRoosterEditor.getTextContent()
+            window.globalRoosterEditor.getTextContent()
         );
         expect(resultContent.trim()).toEqual(':o');
     });
@@ -127,7 +127,7 @@ describe('CustomReplacePlugin', () => {
     it("does autocomplete shortcuts in the picker's search text after the picker is dismissed", async () => {
         // Arrange
         await page.evaluate(() =>
-            (window as any).editorPlugins.customReplace.updateReplacements([
+            window.globalRoosterEditorNamedPlugins.customReplace.updateReplacements([
                 {
                     sourceString: ':o',
                     replacementHTML: '🙀',
@@ -144,7 +144,7 @@ describe('CustomReplacePlugin', () => {
 
         // Assert
         const resultContent: string = await page.evaluate(() =>
-            (window as any).globalRoosterEditor.getTextContent()
+            window.globalRoosterEditor.getTextContent()
         );
         expect(resultContent.trim()).toEqual('🙀');
     });

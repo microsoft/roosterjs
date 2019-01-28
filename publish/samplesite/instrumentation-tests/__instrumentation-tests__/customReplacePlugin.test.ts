@@ -21,7 +21,7 @@ describe('CustomReplacePlugin', () => {
 
         // Assert
         const content: string = await page.evaluate(() =>
-            (window as any).globalRoosterEditor.getTextContent()
+            window.globalRoosterEditor.getTextContent()
         );
         expect(content.trim()).toEqual('❤️');
     });
@@ -31,7 +31,7 @@ describe('CustomReplacePlugin', () => {
         await focusEditor(page);
         await page.keyboard.type('<3');
         const preconditionContent: string = await page.evaluate(() =>
-            (window as any).globalRoosterEditor.getTextContent()
+            window.globalRoosterEditor.getTextContent()
         );
         expect(preconditionContent.trim()).toEqual('❤️');
 
@@ -42,7 +42,7 @@ describe('CustomReplacePlugin', () => {
 
         // Assert
         const content: string = await page.evaluate(() =>
-            (window as any).globalRoosterEditor.getTextContent()
+            window.globalRoosterEditor.getTextContent()
         );
         expect(content.trim()).toEqual('<3');
     });
@@ -52,7 +52,7 @@ describe('CustomReplacePlugin', () => {
         await focusEditor(page);
         await page.keyboard.type('<3');
         const preconditionContent: string = await page.evaluate(() =>
-            (window as any).globalRoosterEditor.getTextContent()
+            window.globalRoosterEditor.getTextContent()
         );
         expect(preconditionContent.trim()).toEqual('❤️');
 
@@ -61,7 +61,7 @@ describe('CustomReplacePlugin', () => {
 
         // Assert
         const content: string = await page.evaluate(() =>
-            (window as any).globalRoosterEditor.getTextContent()
+            window.globalRoosterEditor.getTextContent()
         );
         expect(content.trim()).toEqual('<3');
     });
@@ -69,7 +69,7 @@ describe('CustomReplacePlugin', () => {
     it('Should autocomplete replacements with spaces in them', async () => {
         // Arrange
         await page.evaluate(() =>
-            (window as any).editorPlugins.customReplace.updateReplacements([
+            window.globalRoosterEditorNamedPlugins.customReplace.updateReplacements([
                 {
                     sourceString: 'this is a source string with spaces',
                     replacementHTML: '<_<',
@@ -82,7 +82,7 @@ describe('CustomReplacePlugin', () => {
 
         // Act
         const resultContent: string = await page.evaluate(() =>
-            (window as any).globalRoosterEditor.getTextContent()
+            window.globalRoosterEditor.getTextContent()
         );
         expect(resultContent.trim()).toEqual('<_<');
     });
@@ -90,7 +90,7 @@ describe('CustomReplacePlugin', () => {
     it('Should autocomplete when the user continues typing after a replacement', async () => {
         // Arrange
         await page.evaluate(() =>
-            (window as any).editorPlugins.customReplace.updateReplacements([
+            window.globalRoosterEditorNamedPlugins.customReplace.updateReplacements([
                 {
                     sourceString: 'this is a source string with spaces',
                     replacementHTML: '<_<',
@@ -103,7 +103,7 @@ describe('CustomReplacePlugin', () => {
 
         // Act
         const resultContent: string = await page.evaluate(() =>
-            (window as any).globalRoosterEditor.getTextContent()
+            window.globalRoosterEditor.getTextContent()
         );
         expect(resultContent.trim()).toEqual('<_<!!');
     });
@@ -111,7 +111,7 @@ describe('CustomReplacePlugin', () => {
     it('Should not match case other replacements on case sensitive matches', async () => {
         // Arrange
         await page.evaluate(() =>
-            (window as any).editorPlugins.customReplace.updateReplacements([
+            window.globalRoosterEditorNamedPlugins.customReplace.updateReplacements([
                 {
                     sourceString: 'Hello',
                     replacementHTML: '👋',
@@ -124,7 +124,7 @@ describe('CustomReplacePlugin', () => {
 
         // Act
         const resultContent: string = await page.evaluate(() =>
-            (window as any).globalRoosterEditor.getTextContent()
+            window.globalRoosterEditor.getTextContent()
         );
         expect(resultContent.trim()).toEqual('hello');
     });
@@ -132,7 +132,7 @@ describe('CustomReplacePlugin', () => {
     it('Should match case insensitive source strings on case insensitive matches', async () => {
         // Arrange
         await page.evaluate(() =>
-            (window as any).editorPlugins.customReplace.updateReplacements([
+            window.globalRoosterEditorNamedPlugins.customReplace.updateReplacements([
                 {
                     sourceString: 'Hello',
                     replacementHTML: '👋',
@@ -145,7 +145,7 @@ describe('CustomReplacePlugin', () => {
 
         // Act
         const resultContent: string = await page.evaluate(() =>
-            (window as any).globalRoosterEditor.getTextContent()
+            window.globalRoosterEditor.getTextContent()
         );
         expect(resultContent.trim()).toEqual('👋');
     });

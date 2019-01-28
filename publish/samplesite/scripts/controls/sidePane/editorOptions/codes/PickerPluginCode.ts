@@ -12,12 +12,17 @@ export default class PickerPluginCode extends CodeElement {
                 path: 'roosterjs-picker-plugin',
                 isDefault: false,
             },
+            {
+                name: 'YourPickerPluginDataProvider',
+                path: 'your-picker-plugin-data-provider',
+                isDefault: false,
+            },
         ];
     }
 
     getCode() {
         return (
-            'new PickerPlugin(new SampleColorPickerPluginDataProvider(), {\n' +
+            'new PickerPlugin(new YourPickerPluginDataProvider(), {\n' +
             "    elementIdPrefix: 'samplepicker-',\n" +
             "    changeSource: 'SAMPLE_COLOR_PICKER',\n" +
             "    triggerCharacter: ':',\n" +

@@ -53,8 +53,3 @@ export function getSidePanePluginArray(): SidePanePlugin[] {
         allPlugins.api,
     ];
 }
-
-// expose to the global window for integration tests
-Object.defineProperty(window, 'editorPlugins', {
-    get: () => plugins,
-});
