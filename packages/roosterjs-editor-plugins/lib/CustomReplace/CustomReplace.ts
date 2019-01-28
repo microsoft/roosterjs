@@ -81,12 +81,20 @@ export default class CustomReplacePlugin implements EditorPlugin {
             event.source == PICKER_PLUGIN_SET_SUGGESTING_EVENT
         ) {
             const data: PickerPluginSetSuggestingData = event.data;
-            if (!this.trackedOpenPickers) this.trackedOpenPickers = new Set();
+            if (!this.trackedOpenPickers) {
+                this.trackedOpenPickers = new Set();
+            }
             if (data.isSuggesting) {
                 this.trackedOpenPickers.add(data.pickerId);
             } else {
                 this.trackedOpenPickers.delete(data.pickerId);
             }
+            return;
+        }
+
+        // Exit early if a picker is open
+        if (this.trackedOpenPickers && this.trackedOpenPickers.size !== 0) {
+            return;
         }
 
         if (this.editor.isInIME() || event.eventType != PluginEventType.Input) {

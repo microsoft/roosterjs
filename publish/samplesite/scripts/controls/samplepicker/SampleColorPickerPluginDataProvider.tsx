@@ -4,36 +4,34 @@ import { PickerDataProvider } from 'roosterjs-plugin-picker';
 import { Editor } from 'roosterjs-editor-core';
 import { default as SampleColorPicker, SampleColorPickerProps } from './SampleColorPicker';
 
-type LegalKeys<T> = T extends "onClick" ? never : T;
-type ComponentState = {
-    [l in LegalKeys<keyof SampleColorPickerProps>]: SampleColorPickerProps[l];
-}
+type LegalKeys<T> = T extends 'onClick' ? never : T;
+type ComponentState = { [l in LegalKeys<keyof SampleColorPickerProps>]: SampleColorPickerProps[l] };
 
 type InsertNodeCallback = (nodeToInsert: HTMLElement) => void;
 type setIsSuggestingCallback = (isSuggesting: boolean) => void;
 type Color = {
-    htmlColor: string,
-    names: string[]
+    htmlColor: string;
+    names: string[];
 };
 
 const pickableColors: Color[] = [
     {
         htmlColor: '#F8b195',
-        names: ['pink', 'orange', 'peach']
+        names: ['pink', 'orange', 'peach'],
     },
     {
         htmlColor: '#f67280',
-        names: ['pink', 'cherry', 'apple', 'red']
+        names: ['pink', 'cherry', 'apple', 'red'],
     },
     {
         htmlColor: '#c06c84',
-        names: ['purple', 'violet', 'purplered', 'berry']
+        names: ['purple', 'violet', 'purplered', 'berry'],
     },
     {
         htmlColor: '#355c7d',
-        names: ['blue', 'azul', 'azure', 'dark', 'deep']
+        names: ['blue', 'azul', 'azure', 'dark', 'deep'],
     },
-]
+];
 
 export default class SampleColorPickerPluginDataProvider implements PickerDataProvider {
     /**
@@ -65,13 +63,15 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
     ): void {
         this.insertNodeCallback = insertNodeCallback;
         this.updateToQuery('', 0);
-    };
+    }
 
     // Function called when the plugin is disposed for the data provider to do any cleanup.
     onDispose(): void {
-        document.body.removeChild(this.mountPoint);
+        if (this.mountPoint) {
+            document.body.removeChild(this.mountPoint);
+        }
         this.mountPoint = null;
-    };
+    }
 
     // Function called when the picker changes suggesting state (e.g. when your dialog opens)
     onIsSuggestingChanged(isSuggesting: boolean) {
@@ -80,16 +80,24 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
         } else {
             ReactDOM.unmountComponentAtNode(this.mountPoint);
         }
-    };
+    }
 
     private updateToQuery(queryString: string, index: number = 0) {
         const lowerCaseQuery = queryString.toLowerCase();
-        const currentSelectedColor = (this.componentState && this.componentState.colors[index]) || null
+        const currentSelectedColor =
+            (this.componentState && this.componentState.colors[index]) || null;
         const colors = pickableColors
-            .filter(color => color.names.some(colorName => colorName.indexOf(lowerCaseQuery) !== -1))
+            .filter(color =>
+                color.names.some(colorName => colorName.indexOf(lowerCaseQuery) !== -1)
+            )
             .map(color => color.htmlColor);
-        const newIndexOfCurrentSelectedColor = currentSelectedColor ? colors.indexOf(currentSelectedColor) : index;
-        const selectedIndex = Math.max(0, Math.min(newIndexOfCurrentSelectedColor, colors.length - 1));
+        const newIndexOfCurrentSelectedColor = currentSelectedColor
+            ? colors.indexOf(currentSelectedColor)
+            : index;
+        const selectedIndex = Math.max(
+            0,
+            Math.min(newIndexOfCurrentSelectedColor, colors.length - 1)
+        );
 
         let [cursorX, cursorY] = this.getTextCursorPosition();
 
@@ -98,7 +106,7 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
             selectedIndex,
             colors,
             cursorX,
-            cursorY
+            cursorY,
         };
     }
 
@@ -113,20 +121,20 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
             if (container.parentElement == null) {
                 return [this.componentState.cursorX, this.componentState.cursorY];
             }
-            container = container.parentElement
+            container = container.parentElement;
         }
-        const boundingRect = container.getBoundingClientRect()
+        const boundingRect = container.getBoundingClientRect();
         return [
             window.pageXOffset + boundingRect.left,
-            window.pageYOffset + boundingRect.top + boundingRect.height
-        ]
+            window.pageYOffset + boundingRect.top + boundingRect.height,
+        ];
     }
 
     private updateRender() {
         ReactDOM.render(
             <SampleColorPicker {...this.componentState} onClick={this.insertColor} />,
-            this.mountPoint,
-        )
+            this.mountPoint
+        );
     }
 
     private insertColor = (color: string) => {
@@ -134,26 +142,32 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
         span.innerHTML = '⬤';
         span.style.color = color;
         this.insertNodeCallback(span);
-    }
+    };
 
     // Function called when the query string (text after the trigger symbol) is updated.
     queryStringUpdated(queryString: string) {
-        this.updateToQuery(queryString)
+        this.updateToQuery(queryString);
         this.updateRender();
-    };
+    }
 
     // Function called when a keypress is issued that would "select" a currently highlighted option.
     selectOption() {
-        const currentSelectedColor = (this.componentState && this.componentState.colors[this.componentState.selectedIndex]) || null;
+        const currentSelectedColor =
+            (this.componentState &&
+                this.componentState.colors[this.componentState.selectedIndex]) ||
+            null;
         if (currentSelectedColor == null) {
             return;
         }
         this.insertColor(currentSelectedColor);
-    };
+    }
 
     // Function called when a keypress is issued that would move the highlight on any picker UX.
     shiftHighlight(isIncrement: boolean) {
-        this.updateToQuery(this.componentState.queryString, this.componentState.selectedIndex + (isIncrement ? 1 : -1));
+        this.updateToQuery(
+            this.componentState.queryString,
+            this.componentState.selectedIndex + (isIncrement ? 1 : -1)
+        );
         this.updateRender();
     }
 
