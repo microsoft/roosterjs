@@ -27,12 +27,13 @@ const EventTypeMap = {
     [PluginEventType.KeyUp]: 'KeyUp',
     [PluginEventType.MouseDown]: 'MouseDown',
     [PluginEventType.MouseUp]: 'MouseUp',
+    [PluginEventType.Input]: 'Input',
 };
 
 export default class EventViewPane extends React.Component<
     SidePaneElementProps,
     EventViewPaneState
-> {
+    > {
     private events: EventEntry[] = [];
     private displayCount = React.createRef<HTMLSelectElement>();
     private lasteIndex = 0;
