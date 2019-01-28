@@ -3,7 +3,8 @@ import CodeElement from './CodeElement';
 import ContentEditCode from './ContentEditCode';
 import HyperLinkCode from './HyperLinkCode';
 import WatermarkCode from './WatermarkCode';
-import { ImageResizeCode, PasteCode, TableResizeCode } from './SimplePluginCode';
+import PickerPluginCode from './PickerPluginCode';
+import { ImageResizeCode, PasteCode, TableResizeCode, CustomReplaceCode } from './SimplePluginCode';
 
 export default class PluginsCode extends CodeElement {
     private plugins: CodeElement[];
@@ -19,6 +20,8 @@ export default class PluginsCode extends CodeElement {
             pluginList.watermark && new WatermarkCode(this.state.watermarkText),
             pluginList.imageResize && new ImageResizeCode(),
             pluginList.tableResize && new TableResizeCode(),
+            pluginList.pickerPlugin && new PickerPluginCode(),
+            pluginList.customReplace && new CustomReplaceCode(),
         ].filter(plugin => !!plugin);
     }
 

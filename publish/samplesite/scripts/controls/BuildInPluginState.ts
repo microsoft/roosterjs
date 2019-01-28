@@ -11,6 +11,8 @@ export interface BuildInPluginList {
     watermark: boolean;
     imageResize: boolean;
     tableResize: boolean;
+    customReplace: boolean;
+    pickerPlugin: boolean;
 }
 
 export type ContentEditFeatureState = Pick<

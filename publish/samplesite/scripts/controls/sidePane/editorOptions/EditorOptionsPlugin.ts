@@ -12,6 +12,8 @@ const initialState: BuildInPluginState = {
         watermark: false,
         imageResize: true,
         tableResize: true,
+        customReplace: true,
+        pickerPlugin: true,
     },
     contentEditFeatures: getDefaultContentEditFeatures(),
     defaultFormat: {},

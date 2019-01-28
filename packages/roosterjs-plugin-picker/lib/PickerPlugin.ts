@@ -105,7 +105,9 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
     public willHandleEventExclusively(event: PluginEvent) {
         return (
             this.isSuggesting &&
-            (event.eventType == PluginEventType.KeyDown || event.eventType == PluginEventType.KeyUp)
+            (event.eventType == PluginEventType.KeyDown
+                || event.eventType == PluginEventType.KeyUp
+                || event.eventType == PluginEventType.Input)
         );
     }
 
