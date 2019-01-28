@@ -649,7 +649,7 @@ export interface ExtractContentEvent extends BasePluginEvent<PluginEventType.Ext
 /**
  * This represents a PluginEvent wrapping native browser event
  */
-export type PluginDomEvent = PluginCompositionEvent | PluginMouseEvent | PluginKeyboardEvent;
+export type PluginDomEvent = PluginCompositionEvent | PluginMouseEvent | PluginKeyboardEvent | PluginInputEvent;
 
 /**
  * This represents a PluginEvent wrapping native CompositionEnd event
@@ -698,6 +698,13 @@ export interface PluginMouseDownEvent extends BasePluginEvent<PluginEventType.Mo
  */
 export interface PluginMouseUpEvent extends BasePluginEvent<PluginEventType.MouseUp> {
     rawEvent: MouseEvent;
+}
+
+/**
+ * This represents a PluginEvent wrapping native input / textinput event
+ */
+export interface PluginInputEvent extends BasePluginEvent<PluginEventType.Input> {
+    rawEvent: InputEvent;
 }
 
 /**
@@ -754,7 +761,11 @@ export const enum PluginEventType {
     /**
      * Let plugin know editor is about to dispose
      */
-    BeforeDispose = 10
+    BeforeDispose = 10,
+    /**
+     * HTML Input / TextInput event
+     */
+    Input = 11
 }
 
 /**
@@ -3494,6 +3505,48 @@ export class TableResize implements EditorPlugin {
     private setTableColumnWidth;
     private isRtl;
 }
+
+/**
+ * Wrapper for CustomReplaceContentEditFeature that provides an API for updating the
+ * content edit feature
+ */
+export class CustomReplace implements EditorPlugin {
+    private longestReplacementLength;
+    private editor;
+    private replacements;
+    private replacementEndCharacters;
+    /**
+     * Create instance of CustomReplace plugin
+     * @param features An optional feature set to determine which features the plugin should provide
+     */
+    constructor(replacements?: Replacement[]);
+    /**
+     * Set the replacements that this plugin is looking for.
+     * @param newReplacements new set of replacements for this plugin
+     */
+    updateReplacements(newReplacements: Replacement[]): void;
+    /**
+     * Get a friendly name of  this plugin
+     */
+    getName(): string;
+    /**
+     * Initialize this plugin
+     * @param editor The editor instance
+     */
+    initialize(editor: Editor): void;
+    /**
+     * Dispose this plugin
+     */
+    dispose(): void;
+    onPluginEvent(event: PluginEvent): void;
+    private getMatchingReplacement;
+}
+
+export type Replacement = {
+    sourceString: string;
+    replacementHTML: string;
+    matchSourceCaseSensitive: boolean;
+};
 
 export class ImageResize implements EditorPlugin {
     private minWidth;

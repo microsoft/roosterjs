@@ -2679,6 +2679,7 @@ var Editor = /** @class */ (function () {
             this.core.api.attachDomEvent(this.core, 'keydown', 0 /* KeyDown */),
             this.core.api.attachDomEvent(this.core, 'keyup', 2 /* KeyUp */),
             this.core.api.attachDomEvent(this.core, 'mousedown', 4 /* MouseDown */),
+            this.core.api.attachDomEvent(this.core, !roosterjs_editor_dom_1.Browser.isIE ? 'input' : 'textinput', 11 /* Input */),
         ];
         // 6. Add additional content edit features to the editor if specified
         if (options.additionalEditFeatures) {
@@ -7998,6 +7999,147 @@ function cacheGetTableCell(event, editor) {
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-plugins/lib/CustomReplace/CustomReplace.ts":
+/*!******************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/CustomReplace/CustomReplace.ts ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
+var makeReplacement = function (sourceString, replacementHTML, matchSourceCaseSensitive) { return ({ sourceString: sourceString, replacementHTML: replacementHTML, matchSourceCaseSensitive: matchSourceCaseSensitive }); };
+var defaultReplacements = [
+    makeReplacement(':)', '🙂', true),
+    makeReplacement(';)', '😉', true),
+    makeReplacement(':O', '😲', true),
+    makeReplacement(':o', '😯', true),
+    makeReplacement('<3', '❤️', true),
+];
+/**
+ * Wrapper for CustomReplaceContentEditFeature that provides an API for updating the
+ * content edit feature
+ */
+var CustomReplacePlugin = /** @class */ (function () {
+    /**
+     * Create instance of CustomReplace plugin
+     * @param features An optional feature set to determine which features the plugin should provide
+     */
+    function CustomReplacePlugin(replacements) {
+        if (replacements === void 0) { replacements = defaultReplacements; }
+        this.updateReplacements(replacements);
+    }
+    /**
+     * Set the replacements that this plugin is looking for.
+     * @param newReplacements new set of replacements for this plugin
+     */
+    CustomReplacePlugin.prototype.updateReplacements = function (newReplacements) {
+        this.replacements = newReplacements;
+        this.longestReplacementLength = getLongestReplacementSourceLength(this.replacements);
+        this.replacementEndCharacters = getReplacementEndCharacters(this.replacements);
+    };
+    /**
+     * Get a friendly name of  this plugin
+     */
+    CustomReplacePlugin.prototype.getName = function () {
+        return 'CustomReplace';
+    };
+    /**
+     * Initialize this plugin
+     * @param editor The editor instance
+     */
+    CustomReplacePlugin.prototype.initialize = function (editor) {
+        this.editor = editor;
+    };
+    /**
+     * Dispose this plugin
+     */
+    CustomReplacePlugin.prototype.dispose = function () {
+        this.editor = null;
+    };
+    CustomReplacePlugin.prototype.onPluginEvent = function (event) {
+        var _this = this;
+        if (this.editor.isInIME() || event.eventType != 11 /* Input */) {
+            return;
+        }
+        // Exit early on input events that do not insert a replacement's final character.
+        if (event.rawEvent.data && !this.replacementEndCharacters.has(event.rawEvent.data)) {
+            return;
+        }
+        // Get the matching replacement
+        var range = this.editor.getSelectionRange();
+        if (range == null) {
+            return;
+        }
+        var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, this.editor);
+        var stringToSearch = searcher.getSubStringBefore(this.longestReplacementLength);
+        var replacement = this.getMatchingReplacement(stringToSearch);
+        if (replacement == null) {
+            return;
+        }
+        // Reconstruct a selection of the text on the document that matches the
+        // replacement we selected.
+        var matchingText = searcher.getSubStringBefore(replacement.sourceString.length);
+        var matchingRange = searcher.getRangeFromText(matchingText, true /* exactMatch */);
+        // parse the html string off the dom and inline the resulting element.
+        var parsingSpan = document.createElement('span');
+        parsingSpan.innerHTML = replacement.replacementHTML;
+        var nodeToInsert = parsingSpan.childNodes.length == 1 ? parsingSpan.childNodes[0] : parsingSpan;
+        // Switch the node for the selection range
+        this.editor.performAutoComplete(function () {
+            matchingRange.deleteContents();
+            matchingRange.insertNode(nodeToInsert);
+            _this.editor.select(nodeToInsert, -1 /* End */);
+        });
+    };
+    CustomReplacePlugin.prototype.getMatchingReplacement = function (stringToSearch) {
+        if (stringToSearch.length == 0) {
+            return null;
+        }
+        var lowerCaseStringToSearch = stringToSearch.toLocaleLowerCase();
+        for (var _i = 0, _a = this.replacements; _i < _a.length; _i++) {
+            var replacement = _a[_i];
+            var _b = replacement.matchSourceCaseSensitive
+                ? [stringToSearch, replacement.sourceString]
+                : [lowerCaseStringToSearch, replacement.sourceString.toLocaleLowerCase()], sourceMatch = _b[0], replacementMatch = _b[1];
+            if (sourceMatch.substring(sourceMatch.length - replacementMatch.length) ==
+                replacementMatch) {
+                return replacement;
+            }
+        }
+        return null;
+    };
+    return CustomReplacePlugin;
+}());
+exports.default = CustomReplacePlugin;
+function getLongestReplacementSourceLength(replacements) {
+    return Math.max.apply(null, replacements.map(function (replacement) { return replacement.sourceString.length; }));
+}
+function getReplacementEndCharacters(replacements) {
+    var endChars = new Set();
+    for (var _i = 0, replacements_1 = replacements; _i < replacements_1.length; _i++) {
+        var replacement = replacements_1[_i];
+        var sourceString = replacement.sourceString;
+        if (sourceString.length == 0) {
+            continue;
+        }
+        var lastChar = sourceString[sourceString.length - 1];
+        if (!replacement.matchSourceCaseSensitive) {
+            endChars.add(lastChar.toLocaleLowerCase());
+            endChars.add(lastChar.toLocaleUpperCase());
+        }
+        else {
+            endChars.add(lastChar);
+        }
+    }
+    return endChars;
+}
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts":
 /*!**********************************************************************!*\
   !*** ./packages/roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts ***!
@@ -9507,6 +9649,8 @@ var Watermark_1 = __webpack_require__(/*! ./Watermark/Watermark */ "./packages/r
 exports.Watermark = Watermark_1.default;
 var TableResize_1 = __webpack_require__(/*! ./TableResize/TableResize */ "./packages/roosterjs-editor-plugins/lib/TableResize/TableResize.ts");
 exports.TableResize = TableResize_1.default;
+var CustomReplace_1 = __webpack_require__(/*! ./CustomReplace/CustomReplace */ "./packages/roosterjs-editor-plugins/lib/CustomReplace/CustomReplace.ts");
+exports.CustomReplace = CustomReplace_1.default;
 
 
 /***/ }),
