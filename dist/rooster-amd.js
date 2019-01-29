@@ -10547,17 +10547,20 @@ var PickerPlugin = /** @class */ (function () {
                 _this.editor.select(_this.lastKnownRange);
                 wordToReplace = _this.getWord(null);
             }
-            if (wordToReplace) {
-                var insertNode = function () {
+            var insertNode = function () {
+                if (wordToReplace) {
                     roosterjs_editor_api_1.replaceWithNode(_this.editor, wordToReplace, htmlNode, true /* exactMatch */);
-                    _this.setIsSuggesting(false);
-                };
-                if (_this.pickerOptions.handleAutoComplete) {
-                    _this.editor.performAutoComplete(insertNode, _this.pickerOptions.changeSource);
                 }
                 else {
-                    _this.editor.addUndoSnapshot(insertNode, _this.pickerOptions.changeSource);
+                    _this.editor.insertNode(htmlNode);
                 }
+                _this.setIsSuggesting(false);
+            };
+            if (_this.pickerOptions.handleAutoComplete) {
+                _this.editor.performAutoComplete(insertNode, _this.pickerOptions.changeSource);
+            }
+            else {
+                _this.editor.addUndoSnapshot(insertNode, _this.pickerOptions.changeSource);
             }
         }, function (isSuggesting) {
             _this.setIsSuggesting(isSuggesting);
