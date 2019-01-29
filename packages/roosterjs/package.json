@@ -8,6 +8,7 @@
     "roosterjs-editor-api": "",
     "roosterjs-editor-plugins": "",
     "roosterjs-plugin-image-resize": "",
+    "roosterjs-plugin-picker": "",
     "roosterjs-html-sanitizer": ""
   },
   "main": "./lib/index.ts"
