@@ -66,25 +66,24 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                     wordToReplace = this.getWord(null);
                 }
 
-                if (wordToReplace) {
-                    let insertNode = () => {
+                let insertNode = () => {
+                    if (wordToReplace) {
                         replaceWithNode(
                             this.editor,
                             wordToReplace,
                             htmlNode,
                             true /* exactMatch */
                         );
-                        this.setIsSuggesting(false);
-                    };
-
-                    if (this.pickerOptions.handleAutoComplete) {
-                        this.editor.performAutoComplete(
-                            insertNode,
-                            this.pickerOptions.changeSource
-                        );
                     } else {
-                        this.editor.addUndoSnapshot(insertNode, this.pickerOptions.changeSource);
+                        this.editor.insertNode(htmlNode);
                     }
+                    this.setIsSuggesting(false);
+                };
+
+                if (this.pickerOptions.handleAutoComplete) {
+                    this.editor.performAutoComplete(insertNode, this.pickerOptions.changeSource);
+                } else {
+                    this.editor.addUndoSnapshot(insertNode, this.pickerOptions.changeSource);
                 }
             },
             (isSuggesting: boolean) => {
