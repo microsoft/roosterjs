@@ -1,5 +1,5 @@
 /*
-    VERSION: 7.0.3
+    VERSION: 7.1.0
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -1700,7 +1700,6 @@ function applyListFormat(node, formats) {
         fontFamily: formats[0],
         fontSize: formats[1],
         textColor: formats[2],
-        backgroundColor: formats[3],
     });
 }
 function workaroundForChrome(editor) {
