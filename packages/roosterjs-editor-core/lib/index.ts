@@ -1,6 +1,6 @@
 // Interfaces
 export {
-    default as ContentEditFeature,
+    ContentEditFeature,
     GenericContentEditFeature,
     Keys,
 } from './interfaces/ContentEditFeature';
@@ -32,6 +32,7 @@ export { default as EditPlugin } from './corePlugins/EditPlugin';
 export { default as MouseUpPlugin } from './corePlugins/MouseUpPlugin';
 export { default as DOMEventPlugin } from './corePlugins/DOMEventPlugin';
 export { default as TypeInContainerPlugin } from './corePlugins/TypeInContainerPlugin';
+export { default as FirefoxTypeAfterLink } from './corePlugins/FirefoxTypeAfterLink';
 
 // Event APIs
 export { default as cacheGetEventData } from './eventApi/cacheGetEventData';

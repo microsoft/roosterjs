@@ -2,16 +2,16 @@
  * Command strings for Document.execCommand() API
  * https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
  */
-const enum DocumentCommand {
+export const enum DocumentCommand {
     /**
      * Changes the document background color. In styleWithCss mode, it affects the background color of the containing block instead.
-     * This requires a <color> value string to be passed in as a value argument. Note that Internet Explorer uses this to set the
+     * This requires a &lt;color&gt; value string to be passed in as a value argument. Note that Internet Explorer uses this to set the
      * text background color.
      */
     BackColor = 'backColor',
 
     /**
-     * Toggles bold on/off for the selection or at the insertion point. Internet Explorer uses the <strong> tag instead of <b>.
+     * Toggles bold on/off for the selection or at the insertion point. Internet Explorer uses the &lt;strong&gt; tag instead of &lt;b&gt;.
      */
     Bold = 'bold',
 
@@ -46,7 +46,7 @@ const enum DocumentCommand {
     Cut = 'cut',
 
     /**
-     * Adds a <small> tag around the selection or at the insertion point. (Not supported by Internet Explorer.)
+     * Adds a &lt;small&gt; tag around the selection or at the insertion point. (Not supported by Internet Explorer.)
      */
     DecreaseFontSize = 'decreaseFontSize',
 
@@ -90,9 +90,9 @@ const enum DocumentCommand {
 
     /**
      * Adds an HTML block-level element around the line containing the current selection, replacing the block element containing
-     * the line if one exists (in Firefox, <blockquote> is the exception — it will wrap any containing block element).
+     * the line if one exists (in Firefox, &lt;blockquote&gt; is the exception — it will wrap any containing block element).
      * Requires a tag-name string as a value argument. Virtually all block-level elements can be used.
-     * (Internet Explorer supports only heading tags H1–H6, ADDRESS, and PRE, which must be wrapped in angle brackets, such as "<H1>".)
+     * (Internet Explorer supports only heading tags H1–H6, ADDRESS, and PRE, which must be wrapped in angle brackets, such as "&lt;H1&gt;".)
      */
     FormatBlock = 'formatBlock',
 
@@ -114,7 +114,7 @@ const enum DocumentCommand {
     HiliteColor = 'hiliteColor',
 
     /**
-     * Adds a <big> tag around the selection or at the insertion point. (Not supported by Internet Explorer.)
+     * Adds a &lt;big&gt; tag around the selection or at the insertion point. (Not supported by Internet Explorer.)
      */
     IncreaseFontSize = 'increaseFontSize',
 
@@ -125,13 +125,13 @@ const enum DocumentCommand {
     Indent = 'indent',
 
     /**
-     * Controls whether the Enter key inserts a <br> element, or splits the current block element into two.
+     * Controls whether the Enter key inserts a &lt;br&gt; element, or splits the current block element into two.
      * (Not supported by Internet Explorer.)
      */
     InsertBrOnReturn = 'insertBrOnReturn',
 
     /**
-     * Inserts a <hr> element at the insertion point, or replaces the selection with it.
+     * Inserts a &lt;hr&gt; element at the insertion point, or replaces the selection with it.
      */
     InsertHorizontalRule = 'insertHorizontalRule',
 
@@ -170,7 +170,7 @@ const enum DocumentCommand {
 
     /**
      * Toggles italics on/off for the selection or at the insertion point.
-     * (Internet Explorer uses the <em> element instead of <i>.)
+     * (Internet Explorer uses the &lt;em&gt; element instead of &lt;i&gt;.)
      */
     Italic = 'italic',
 
@@ -254,5 +254,3 @@ const enum DocumentCommand {
      */
     StyleWithCSS = 'styleWithCSS',
 }
-
-export default DocumentCommand;

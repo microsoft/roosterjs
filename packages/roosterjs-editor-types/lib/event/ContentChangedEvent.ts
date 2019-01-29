@@ -1,11 +1,12 @@
 import BasePluginEvent from './BasePluginEvent';
-import ChangeSource from '../enum/ChangeSource';
-import PluginEventType from './PluginEventType';
+import { ChangeSource } from '../enum/ChangeSource';
+import { PluginEventType } from './PluginEventType';
 
 /**
  * Represents a change to the editor made by another plugin
  */
-interface ContentChangedEvent extends BasePluginEvent<PluginEventType.ContentChanged> {
+export default interface ContentChangedEvent
+    extends BasePluginEvent<PluginEventType.ContentChanged> {
     /**
      * Source of the change
      */
@@ -16,5 +17,3 @@ interface ContentChangedEvent extends BasePluginEvent<PluginEventType.ContentCha
      */
     data?: any;
 }
-
-export default ContentChangedEvent;

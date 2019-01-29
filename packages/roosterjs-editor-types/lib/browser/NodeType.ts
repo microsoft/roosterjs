@@ -3,9 +3,9 @@
  * https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
  * Values not listed here are deprecated.
  */
-const enum NodeType {
+export const enum NodeType {
     /**
-     * An Element node such as <p> or <div>.
+     * An Element node such as &lt;p&gt; or &lt;div&gt;.
      */
     Element = 1,
 
@@ -15,7 +15,7 @@ const enum NodeType {
     Text = 3,
 
     /**
-     * A ProcessingInstruction of an XML document such as <?xml-stylesheet ... ?> declaration.
+     * A ProcessingInstruction of an XML document such as &lt;?xml-stylesheet ... ?&gt; declaration.
      */
     ProcessingInstruction = 7,
 
@@ -30,7 +30,7 @@ const enum NodeType {
     Document = 9,
 
     /**
-     * A DocumentType node e.g. <!DOCTYPE html> for HTML5 documents.
+     * A DocumentType node e.g. &lt;!DOCTYPE html&gt; for HTML5 documents.
      */
     DocumentType = 10,
 
@@ -39,5 +39,3 @@ const enum NodeType {
      */
     DocumentFragment = 11,
 }
-
-export default NodeType;

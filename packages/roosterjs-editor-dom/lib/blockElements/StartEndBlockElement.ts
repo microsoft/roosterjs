@@ -11,8 +11,8 @@ const STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
 
 /**
  * This reprents a block that is identified by a start and end node
- * This is for cases like <root>Hello<BR>World</root>
- * in that case, Hello<BR> is a block, World is another block
+ * This is for cases like &lt;root&gt;Hello&lt;BR&gt;World&lt;/root&gt;
+ * in that case, Hello&lt;BR&gt; is a block, World is another block
  * Such block cannot be represented by a NodeBlockElement since they don't chained up
  * to a single parent node, instead they have a start and end
  * This start and end must be in same sibling level and have same parent in DOM tree

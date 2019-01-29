@@ -12,7 +12,7 @@ import NodePosition from './NodePosition';
  * 1) every inline element must have a container node (text or span, a etc.)
  * 2) inline element cannot be nested
  */
-interface InlineElement {
+export default interface InlineElement {
     /**
      * Get the text content of this inline element
      */
@@ -58,5 +58,3 @@ interface InlineElement {
      */
     applyStyle(styler: (element: HTMLElement) => any): void;
 }
-
-export default InlineElement;

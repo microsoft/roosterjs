@@ -32,6 +32,4 @@ export interface GenericContentEditFeature<TEvent extends PluginEvent> {
     allowFunctionKeys?: boolean;
 }
 
-type ContentEditFeature = GenericContentEditFeature<PluginKeyboardEvent>;
-
-export default ContentEditFeature;
+export type ContentEditFeature = GenericContentEditFeature<PluginKeyboardEvent>;

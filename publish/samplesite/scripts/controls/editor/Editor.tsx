@@ -7,6 +7,7 @@ import {
     EditorPlugin,
     UndoService,
 } from 'roosterjs-editor-core';
+import { PickerPlugin } from 'roosterjs-plugin-picker';
 
 import {
     HyperLink,
@@ -16,7 +17,11 @@ import {
     TableResize,
     ContentEditFeatures,
     getDefaultContentEditFeatures,
+    CustomReplace as CustomReplacePlugin
 } from 'roosterjs-editor-plugins';
+
+import { EditorInstanceToggleablePlugins} from './EditorInstanceToggleablePlugins';
+import SampleColorPickerPluginDataProvider from '../samplepicker/SampleColorPickerPluginDataProvider';
 
 const styles = require('./Editor.scss');
 const assign = require('object-assign');
@@ -27,6 +32,9 @@ export interface EditorProps {
     className?: string;
     undo?: UndoService;
 }
+
+let editorInstance: RoosterJsEditor | null = null;
+let editorInstanceToggleablePlugins: EditorInstanceToggleablePlugins | null = null;
 
 export default class Editor extends React.Component<EditorProps, BuildInPluginState> {
     private contentDiv: HTMLDivElement;
@@ -52,9 +60,15 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
 
     componentDidMount() {
         this.initEditor();
+        if (editorInstance == null) {
+            editorInstance = this.editor;
+        }
     }
 
     componentWillUnmount() {
+        if (editorInstance == this.editor) {
+            editorInstance = null;
+        }
         this.disposeEditor();
     }
 
@@ -64,13 +78,25 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
 
     private initEditor() {
         let pluginList = this.state.pluginList;
+        editorInstanceToggleablePlugins = {
+            hyperlink: pluginList.hyperlink ? new HyperLink(this.getLinkCallback()) : null,
+            paste: pluginList.paste ? new Paste() : null,
+            contentEdit: pluginList.contentEdit ? new ContentEdit(this.getContentEditOptions()) : null,
+            watermark: pluginList.watermark ? new Watermark(this.state.watermarkText) : null,
+            imageResize: pluginList.imageResize ? new ImageResize() : null,
+            tableResize: pluginList.tableResize ? new TableResize() : null,
+            pickerPlugin: pluginList.pickerPlugin
+                ? new PickerPlugin(new SampleColorPickerPluginDataProvider(), {
+                      elementIdPrefix: 'samplepicker-',
+                      changeSource: 'SAMPLE_COLOR_PICKER',
+                      triggerCharacter: ':',
+                      isHorizontal: true,
+                  })
+                : null,
+            customReplace: pluginList.customReplace ? new CustomReplacePlugin() : null,
+        };
         let plugins = [
-            pluginList.hyperlink ? new HyperLink(this.getLinkCallback()) : null,
-            pluginList.paste ? new Paste() : null,
-            pluginList.contentEdit ? new ContentEdit(this.getContentEditOptions()) : null,
-            pluginList.watermark ? new Watermark(this.state.watermarkText) : null,
-            pluginList.imageResize ? new ImageResize() : null,
-            pluginList.tableResize ? new TableResize() : null,
+            ...Object.keys(editorInstanceToggleablePlugins).map(k => (editorInstanceToggleablePlugins as any)[k]),
             ...this.props.plugins,
         ];
         let defaultFormat = { ...this.state.defaultFormat };
@@ -112,3 +138,13 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
         return assign(defaultFeatures, this.state.contentEditFeatures);
     }
 }
+
+// expose the active editor the global window for integration tests
+Object.defineProperty(window, 'globalRoosterEditor', {
+    get: () => editorInstance,
+});
+
+// expose to the global window for integration tests
+Object.defineProperty(window, 'globalRoosterEditorNamedPlugins', {
+    get: () => editorInstanceToggleablePlugins,
+});

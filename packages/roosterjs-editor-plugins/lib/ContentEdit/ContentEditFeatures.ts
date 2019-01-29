@@ -4,7 +4,7 @@ import { Browser } from 'roosterjs-editor-dom';
  * Feature set for ContentEdit plugin.
  * Call getDefaultContentEditFeatures() to get default feature set.
  */
-interface ContentEditFeatures {
+export default interface ContentEditFeatures {
     /**
      * When press Tab in a list, indent current list item
      * @default true
@@ -61,7 +61,7 @@ interface ContentEditFeatures {
 
     /**
      * When press Up or Down in table cell, jump to the table cell above/below
-     * @default true
+     * @default true for Chrome and safari, false for other browsers since they arleady have correct behavior
      */
     upDownInTable: boolean;
 
@@ -96,8 +96,6 @@ interface ContentEditFeatures {
     smartOrderedListStyles: string[];
 }
 
-export default ContentEditFeatures;
-
 /**
  * Get default feature set of ContentEdit plugin
  */
@@ -113,7 +111,7 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         unquoteWhenEnterOnEmptyLine: true,
         autoBullet: true,
         tabInTable: true,
-        upDownInTable: true,
+        upDownInTable: Browser.isChrome || Browser.isSafari,
         defaultShortcut: true,
         unlinkWhenBackspaceAfterLink: false,
         smartOrderedList: false,

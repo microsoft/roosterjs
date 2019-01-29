@@ -78,7 +78,7 @@ export default class HtmlSanitizer {
      * 3. Remove useless CSS properties
      * @param html The input HTML
      * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
-     * @param preserveFragmentOnly If set to true, only preserve the html content between <!--StartFragment--> and <!--Endfragment-->
+     * @param preserveFragmentOnly If set to true, only preserve the html content between &lt;!--StartFragment--&gt; and &lt;!--Endfragment--&gt;
      * @param currentStyles Current inheritable CSS styles
      */
     exec(

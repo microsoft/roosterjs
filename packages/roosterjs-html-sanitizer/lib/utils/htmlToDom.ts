@@ -4,7 +4,7 @@ const END_FRAGMENT = '<!--EndFragment-->';
 /**
  * Build DOM tree from the given HTML string
  * @param html Source HTML string
- * @param preserveFragmentOnly If there is fragment markup (<!--StartFragment--> and <!--EndFragment-->),
+ * @param preserveFragmentOnly If there is fragment markup (&lt;!--StartFragment--&gt; and &lt;!--EndFragment--&gt;),
  * only preserve content between these markups
  * @param fragmentHandler An optional callback to do customized fragment handling
  */

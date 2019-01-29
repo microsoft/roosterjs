@@ -101,11 +101,12 @@ export default class TypeInContainerPlugin implements EditorPlugin {
         //
         // Only scheudle when the range is not collapsed to catch this edge case.
         let range = this.editor.getSelectionRange();
-        let shouldNormalizeTypingNow =
-            range &&
-            range.collapsed &&
-            !this.editor.contains(findClosestElementAncestor(range.startContainer));
-        if (shouldNormalizeTypingNow) {
+
+        if (!range || this.editor.contains(findClosestElementAncestor(range.startContainer))) {
+            return;
+        }
+
+        if (range.collapsed) {
             this.tryNormalizeTyping(event, range);
         } else if (!range.collapsed) {
             this.editor.runAsync(() => {

@@ -5,6 +5,7 @@ import EditorOptions from '../interfaces/EditorOptions';
 import EditorPlugin from '../interfaces/EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
 import editWithUndo from '../coreAPI/editWithUndo';
+import FirefoxTypeAfterLink from '../corePlugins/FirefoxTypeAfterLink';
 import focus from '../coreAPI/focus';
 import getCustomData from '../coreAPI/getCustomData';
 import getSelectionRange from '../coreAPI/getSelectionRange';
@@ -15,8 +16,8 @@ import select from '../coreAPI/select';
 import triggerEvent from '../coreAPI/triggerEvent';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import Undo from '../undo/Undo';
+import { Browser, getComputedStyles } from 'roosterjs-editor-dom';
 import { DARK_MODE_DEFAULT_FORMAT, DefaultFormat } from 'roosterjs-editor-types';
-import { getComputedStyles } from 'roosterjs-editor-dom';
 
 export default function createEditorCore(
     contentDiv: HTMLDivElement,
@@ -28,12 +29,14 @@ export default function createEditorCore(
         typeInContainer: new TypeInContainerPlugin(),
         mouseUp: new MouseUpPlugin(),
         domEvent: new DOMEventPlugin(options.disableRestoreSelectionOnFocus),
+        firefoxTypeAfterLink: Browser.isFirefox && new FirefoxTypeAfterLink(),
     };
     let allPlugins: EditorPlugin[] = [
         corePlugins.typeInContainer,
         corePlugins.edit,
         corePlugins.mouseUp,
         ...(options.plugins || []),
+        corePlugins.firefoxTypeAfterLink,
         corePlugins.undo,
         corePlugins.domEvent,
     ].filter(plugin => !!plugin);
@@ -79,19 +82,19 @@ function calcDefaultFormat(node: Node, options: EditorOptions): DefaultFormat {
         fontFamily: baseFormat.fontFamily || styles[0],
         fontSize: baseFormat.fontSize || styles[1],
         get textColor() {
-            return baseFormat.textColors ?
-                (options.inDarkMode ?
-                    baseFormat.textColors.darkModeColor :
-                    baseFormat.textColors.lightModeColor) :
-                (baseFormat.textColor || styles[2]);
+            return baseFormat.textColors
+                ? options.inDarkMode
+                    ? baseFormat.textColors.darkModeColor
+                    : baseFormat.textColors.lightModeColor
+                : baseFormat.textColor || styles[2];
         },
         textColors: baseFormat.textColors,
         get backgroundColor() {
-            return baseFormat.backgroundColors ?
-                (options.inDarkMode ?
-                    baseFormat.backgroundColors.darkModeColor :
-                    baseFormat.backgroundColors.lightModeColor) :
-                (baseFormat.backgroundColor || '');
+            return baseFormat.backgroundColors
+                ? options.inDarkMode
+                    ? baseFormat.backgroundColors.darkModeColor
+                    : baseFormat.backgroundColors.lightModeColor
+                : baseFormat.backgroundColor || '';
         },
         backgroundColors: baseFormat.backgroundColors,
         bold: baseFormat.bold,

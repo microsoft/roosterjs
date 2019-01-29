@@ -13,15 +13,15 @@ import {
 // Character codes.
 // IE11 uses different character codes. which are noted below.
 // If adding a new key, test in IE to figure out what the code is.
-export const BACKSPACE_CHARCODE = 'Backspace';
-export const TAB_CHARCODE = 'Tab';
-export const ENTER_CHARCODE = 'Enter';
-export const ESC_CHARCODE = !Browser.isIE ? 'Escape' : 'Esc';
-export const LEFT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowLeft' : 'Left';
-export const UP_ARROW_CHARCODE = !Browser.isIE ? 'ArrowUp' : 'Up';
-export const RIGHT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowRight' : 'Right';
-export const DOWN_ARROW_CHARCODE = !Browser.isIE ? 'ArrowDown' : 'Down';
-export const DELETE_CHARCODE = !Browser.isIE ? 'Delete' : 'Del';
+const BACKSPACE_CHARCODE = 'Backspace';
+const TAB_CHARCODE = 'Tab';
+const ENTER_CHARCODE = 'Enter';
+const ESC_CHARCODE = !Browser.isIE ? 'Escape' : 'Esc';
+const LEFT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowLeft' : 'Left';
+const UP_ARROW_CHARCODE = !Browser.isIE ? 'ArrowUp' : 'Up';
+const RIGHT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowRight' : 'Right';
+const DOWN_ARROW_CHARCODE = !Browser.isIE ? 'ArrowDown' : 'Down';
+const DELETE_CHARCODE = !Browser.isIE ? 'Delete' : 'Del';
 
 export interface EditorPickerPluginInterface extends EditorPlugin {
     dataProvider: PickerDataProvider;
@@ -38,7 +38,7 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
     constructor(
         public readonly dataProvider: PickerDataProvider,
         private pickerOptions: PickerPluginOptions
-    ) { }
+    ) {}
 
     /**
      * Get a friendly name
@@ -66,17 +66,24 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                     wordToReplace = this.getWord(null);
                 }
 
-                if (wordToReplace) {
-                    let insertNode = () => {
-                        replaceWithNode(this.editor, wordToReplace, htmlNode, true /* exactMatch */);
-                        this.setIsSuggesting(false);
-                    }
-
-                    if (this.pickerOptions.handleAutoComplete) {
-                        this.editor.performAutoComplete(insertNode, this.pickerOptions.changeSource);
+                let insertNode = () => {
+                    if (wordToReplace) {
+                        replaceWithNode(
+                            this.editor,
+                            wordToReplace,
+                            htmlNode,
+                            true /* exactMatch */
+                        );
                     } else {
-                        this.editor.addUndoSnapshot(insertNode, this.pickerOptions.changeSource)
+                        this.editor.insertNode(htmlNode);
                     }
+                    this.setIsSuggesting(false);
+                };
+
+                if (this.pickerOptions.handleAutoComplete) {
+                    this.editor.performAutoComplete(insertNode, this.pickerOptions.changeSource);
+                } else {
+                    this.editor.addUndoSnapshot(insertNode, this.pickerOptions.changeSource);
                 }
             },
             (isSuggesting: boolean) => {
@@ -105,7 +112,9 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
     public willHandleEventExclusively(event: PluginEvent) {
         return (
             this.isSuggesting &&
-            (event.eventType == PluginEventType.KeyDown || event.eventType == PluginEventType.KeyUp)
+            (event.eventType == PluginEventType.KeyDown ||
+                event.eventType == PluginEventType.KeyUp ||
+                event.eventType == PluginEventType.Input)
         );
     }
 
@@ -296,9 +305,9 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                 this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
                     ? keyboardEvent.key == LEFT_ARROW_CHARCODE ||
-                    keyboardEvent.key == RIGHT_ARROW_CHARCODE
+                      keyboardEvent.key == RIGHT_ARROW_CHARCODE
                     : keyboardEvent.key == UP_ARROW_CHARCODE ||
-                    keyboardEvent.key == DOWN_ARROW_CHARCODE)
+                      keyboardEvent.key == DOWN_ARROW_CHARCODE)
             ) {
                 this.dataProvider.shiftHighlight(
                     this.pickerOptions.isHorizontal

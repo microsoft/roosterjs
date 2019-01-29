@@ -1,7 +1,7 @@
 /**
  * Paste option
  */
-const enum PasteOption {
+export const enum PasteOption {
     /**
      * Paste html with content type "text/html"
      */
@@ -17,5 +17,3 @@ const enum PasteOption {
      */
     PasteImage = 2,
 }
-
-export default PasteOption;

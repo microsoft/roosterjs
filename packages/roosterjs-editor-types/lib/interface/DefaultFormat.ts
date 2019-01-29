@@ -4,7 +4,7 @@ import ModeIndependentColor from './ModeIndependentColor';
 /**
  * Default format settings
  */
-interface DefaultFormat {
+export default interface DefaultFormat {
     /**
      * Font family
      */
@@ -50,5 +50,3 @@ interface DefaultFormat {
      */
     underline?: boolean;
 }
-
-export default DefaultFormat;

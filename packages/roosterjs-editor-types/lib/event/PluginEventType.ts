@@ -1,7 +1,7 @@
 /**
  * Editor plugin event type
  */
-const enum PluginEventType {
+export const enum PluginEventType {
     /**
      * HTML KeyDown event
      */
@@ -58,6 +58,9 @@ const enum PluginEventType {
      * Let plugin know editor is about to dispose
      */
     BeforeDispose,
-}
 
-export default PluginEventType;
+    /**
+     * HTML Input / TextInput event
+     */
+    Input,
+}

@@ -1,9 +1,9 @@
-import ContentPosition from '../enum/ContentPosition';
+import { ContentPosition } from '../enum/ContentPosition';
 
 /**
  * Options for insertContent API
  */
-interface InsertOption {
+export default interface InsertOption {
     /**
      * Target position
      */
@@ -24,5 +24,3 @@ interface InsertOption {
      */
     insertOnNewLine: boolean;
 }
-
-export default InsertOption;

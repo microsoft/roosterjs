@@ -59,12 +59,15 @@ export default function processList(editor: Editor, command: DocumentCommand): N
 }
 
 function applyListFormat(node: Node, formats: string[], isDarkMode: boolean) {
-    applyFormat(node as HTMLElement, {
-        fontFamily: formats[0],
-        fontSize: formats[1],
-        textColor: formats[2],
-        backgroundColor: formats[3],
-    }, isDarkMode);
+    applyFormat(
+        node as HTMLElement,
+        {
+            fontFamily: formats[0],
+            fontSize: formats[1],
+            textColor: formats[2],
+        },
+        isDarkMode
+    );
 }
 
 function workaroundForChrome(editor: Editor) {

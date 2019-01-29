@@ -7,7 +7,7 @@ import { GenericContentEditFeature } from './ContentEditFeature';
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class
  */
-interface EditorOptions {
+export default interface EditorOptions {
     /**
      * List of plugins.
      * The order of plugins here determines in what order each event will be dispatched.
@@ -68,5 +68,3 @@ interface EditorOptions {
      */
     darkModeOptions?: DarkModeOptions;
 }
-
-export default EditorOptions;

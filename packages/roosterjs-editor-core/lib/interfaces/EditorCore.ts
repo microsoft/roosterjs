@@ -1,6 +1,7 @@
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorPlugin from './EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
+import FirefoxTypeAfterLink from '../corePlugins/FirefoxTypeAfterLink';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoService from './UndoService';
@@ -20,12 +21,13 @@ export interface CorePlugins {
     readonly typeInContainer: TypeInContainerPlugin;
     readonly mouseUp: MouseUpPlugin;
     readonly domEvent: DOMEventPlugin;
+    readonly firefoxTypeAfterLink: FirefoxTypeAfterLink;
 }
 
 /**
  * Represents the core data structure of an editor
  */
-interface EditorCore {
+export default interface EditorCore {
     /**
      * HTML Document object of this editor
      */
@@ -97,30 +99,89 @@ interface EditorCore {
     darkModeOptions?: DarkModeOptions;
 }
 
-export default EditorCore;
-
+/**
+ * Attach a DOM event to the editor content DIV
+ * @param core The EditorCore object
+ * @param eventName The DOM event name
+ * @param pluginEventType Optional event type. When specified, editor will trigger a plugin event with this name when the DOM event is triggered
+ * @param beforeDispatch Optional callback function to be invoked when the DOM event is triggered before trigger plugin event
+ */
 export type AttachDomEvent = (
     core: EditorCore,
     eventName: string,
     pluginEventType?: PluginEventType,
     beforeDispatch?: (event: UIEvent) => void
 ) => () => void;
+
+/**
+ * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
+ * Undo snapshot will not be added if this call is nested inside another editWithUndo() call.
+ * @param core The EditorCore object
+ * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
+ * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
+ */
 export type EditWithUndo = (
     core: EditorCore,
     callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
     changeSource: ChangeSource | string
 ) => void;
+
+/**
+ * Focus to editor. If there is a cached selection range, use it as current selection
+ * @param core The EditorCore object
+ */
 export type Focus = (core: EditorCore) => void;
+
+/**
+ * Get custom data related with this editor
+ * @param core The EditorCore object
+ * @param key Key of the custom data
+ * @param getter Getter function. If custom data for the given key doesn't exist,
+ * call this function to get one and store it.
+ * @param disposer An optional disposer function to dispose this custom data when
+ * dispose editor.
+ */
 export type GetCustomData = <T>(
     core: EditorCore,
     key: string,
     getter: () => T,
     disposer?: (value: T) => void
 ) => T;
+
+/**
+ * Get current or cached selection range
+ * @param core The EditorCore object
+ * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
+ * @returns A Range object of the selection range
+ */
 export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => Range;
+
+/**
+ * Check if the editor has focus now
+ * @param core The EditorCore object
+ * @returns True if the editor has focus, otherwise false
+ */
 export type HasFocus = (core: EditorCore) => boolean;
+
+/**
+ * Insert a DOM node into editor content
+ * @param core The EditorCore object. No op if null.
+ * @param option An insert option object to specify how to insert the node
+ */
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
+
+/**
+ * Select content
+ * @param core The EditorCore object
+ */
 export type Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => boolean;
+
+/**
+ * Trigger a plugin event
+ * @param core The EditorCore object
+ * @param pluginEvent The event object to trigger
+ * @param broadcast Set to true to skip the shouldHandleEventExclusively check
+ */
 export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcast: boolean) => void;
 
 export interface CoreApiMap {

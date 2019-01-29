@@ -1,8 +1,8 @@
 /**
  * This refers to a "content block" in editor that serves as a content parsing boundary
- * It is most those html block like tags, i.e. <p>, <div>, <li>, <td> etc.
- * but can also be just a text node, followed by a <br>, i.e.
- * for html fragment <div>abc<br>123</div>, abc<br> is a block, 123 is another block
+ * It is most those html block like tags, i.e. &lt;p&gt;, &lt;div&gt;, &lt;li&gt;, &lt;td&gt; etc.
+ * but can also be just a text node, followed by a &lt;br&gt;, i.e.
+ * for html fragment &lt;div&gt;abc&lt;br&gt;123&lt;/div&gt;, abc&lt;br&gt; is a block, 123 is another block
  */
 export interface BlockElement {
     /**

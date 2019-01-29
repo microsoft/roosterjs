@@ -26,7 +26,7 @@ export interface PickerDataProvider {
     // The first is called in order to "commit" a new element to the editor body that isn't handled automatically by the editor plugin.
     // The second sets the isSuggesting value for situations wherethe UX needs to manipulate the suggesting state that's otherwise plugin managed.
     onInitalize: (
-        insertNodeCallback: (nodeToAvoid: HTMLElement) => void,
+        insertNodeCallback: (nodeToInsert: HTMLElement) => void,
         setIsSuggestingCallback: (isSuggesting: boolean) => void,
         editor?: Editor
     ) => void;

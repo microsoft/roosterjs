@@ -1,7 +1,7 @@
 /**
  * LinkData represents a link match result
  */
-interface LinkData {
+export default interface LinkData {
     /**
      * Schema of a hyperlink
      */
@@ -17,5 +17,3 @@ interface LinkData {
      */
     normalizedUrl: string;
 }
-
-export default LinkData;
