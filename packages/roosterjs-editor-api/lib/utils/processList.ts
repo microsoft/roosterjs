@@ -63,7 +63,6 @@ function applyListFormat(node: Node, formats: string[]) {
         fontFamily: formats[0],
         fontSize: formats[1],
         textColor: formats[2],
-        backgroundColor: formats[3],
     });
 }
 
