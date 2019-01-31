@@ -67,7 +67,11 @@ export default class Editor {
         this.core.plugins.forEach(plugin => plugin.initialize(this));
 
         // 4. Ensure initial content and its format
-        this.setContent(options.initialContent || contentDiv.innerHTML || '');
+        this.setContent(
+            options.initialContent || contentDiv.innerHTML || '',
+            true /* triggerContentChangedEvent */,
+            this.core.darkModeOptions.transformOnInitialize
+        );
 
         // 5. Create event handler to bind DOM events
         this.eventDisposers = [
@@ -170,7 +174,52 @@ export default class Editor {
      * @returns true if node is inserted. Otherwise false
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
-        return node ? this.core.api.insertNode(this.core, node, option) : false;
+        let darkModeNormalize = null;
+        if (this.isDarkMode()) {
+            darkModeNormalize = this.convertContentToDarkMode(node);
+        }
+
+        const result = node ? this.core.api.insertNode(this.core, node, option) : false;
+
+        if (result && darkModeNormalize) {
+            darkModeNormalize();
+        }
+        return result;
+    }
+
+    private isElement(node: Node | HTMLElement): node is HTMLElement {
+        return (<HTMLElement>node).getElementsByTagName !== undefined && (<HTMLElement>node).style !== undefined;
+    }
+
+    private isParentNode(node: Node | ParentNode): node is ParentNode {
+        return (<ParentNode>node).querySelectorAll !== undefined;
+    }
+
+    private convertContentToDarkMode(node: Node): () => void {
+        let childElements: HTMLElement[];
+        // For dark mode, we must ammass a list of all the decendents of a node.
+        // To do this, we have to take mulitple tactics, as a Node could be literally anything.
+        // If a node is an element, getElementsByTagName will return a list of HTML elements.
+        // If it's not an element, it could be a DocumentFragment. querySelectorAll has broad support and achieves the same result.
+        // If it's neither of these things, just give up.
+        if (this.isElement(node)) {
+            childElements = Array.prototype.slice.call(node.getElementsByTagName('*'));
+            childElements.unshift(node);
+        } else if (this.isParentNode(node)) {
+            childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
+        }
+
+        return () => {
+            childElements.forEach((element) => {
+                const darkModeOptions = this.getDarkModeOptions();
+                if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
+                    darkModeOptions.onExternalContentTransform(element);
+                } else {
+                    element.style.color = null;
+                    element.style.backgroundColor = null;
+                }
+            });
+        }
     }
 
     /**
@@ -418,7 +467,7 @@ export default class Editor {
      * @param content HTML content to set in
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
-    public setContent(content: string, triggerContentChangedEvent: boolean = true) {
+    public setContent(content: string, triggerContentChangedEvent: boolean = true, convertToDarkMode?: boolean) {
         let contentDiv = this.core.contentDiv;
         if (contentDiv.innerHTML != content) {
             contentDiv.innerHTML = content || '';
@@ -432,6 +481,10 @@ export default class Editor {
                     let range = getRangeFromSelectionPath(contentDiv, path);
                     this.select(range);
                 } catch {}
+            }
+
+            if (convertToDarkMode) {
+                this.convertContentToDarkMode(contentDiv)();
             }
 
             if (triggerContentChangedEvent) {
