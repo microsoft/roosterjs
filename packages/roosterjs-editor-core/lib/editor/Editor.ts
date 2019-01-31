@@ -174,42 +174,32 @@ export default class Editor {
      * @returns true if node is inserted. Otherwise false
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
-        let darkModeNormalize = null;
-        if (this.isDarkMode()) {
-            darkModeNormalize = this.convertContentToDarkMode(node);
-        }
+        // DocumentFragment type nodes become empty after they're inserted.
+        // Therefore, we get the list of nodes to transform prior to their insertion.
+        const darkModeTransform = this.isDarkMode() ? this.convertContentToDarkMode(node) : null;
 
         const result = node ? this.core.api.insertNode(this.core, node, option) : false;
 
-        if (result && darkModeNormalize) {
-            darkModeNormalize();
+        if (result && darkModeTransform) {
+            darkModeTransform();
         }
         return result;
     }
 
-    private isElement(node: Node | HTMLElement): node is HTMLElement {
-        return (<HTMLElement>node).getElementsByTagName !== undefined && (<HTMLElement>node).style !== undefined;
-    }
-
-    private isParentNode(node: Node | ParentNode): node is ParentNode {
-        return (<ParentNode>node).querySelectorAll !== undefined;
-    }
-
     private convertContentToDarkMode(node: Node): () => void {
-        let childElements: HTMLElement[];
-        // For dark mode, we must ammass a list of all the decendents of a node.
-        // To do this, we have to take mulitple tactics, as a Node could be literally anything.
-        // If a node is an element, getElementsByTagName will return a list of HTML elements.
-        // If it's not an element, it could be a DocumentFragment. querySelectorAll has broad support and achieves the same result.
-        // If it's neither of these things, just give up.
-        if (this.isElement(node)) {
+        let childElements: HTMLElement[] = [];
+
+        // Get a list of all the decendents of a node.
+        // querySelectorAll doesn't return a live list when called on an HTMLElement
+        // So we use getElementsByTagName instead for HTMLElement types.
+        if (node instanceof HTMLElement) {
             childElements = Array.prototype.slice.call(node.getElementsByTagName('*'));
             childElements.unshift(node);
-        } else if (this.isParentNode(node)) {
+        } else if (node instanceof DocumentFragment) {
             childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
         }
 
-        return () => {
+        return childElements.length > 0 ? () => {
             childElements.forEach((element) => {
                 const darkModeOptions = this.getDarkModeOptions();
                 if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
@@ -219,7 +209,7 @@ export default class Editor {
                     element.style.backgroundColor = null;
                 }
             });
-        }
+        } : null;
     }
 
     /**
