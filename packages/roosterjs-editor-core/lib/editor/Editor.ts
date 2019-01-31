@@ -67,7 +67,11 @@ export default class Editor {
         this.core.plugins.forEach(plugin => plugin.initialize(this));
 
         // 4. Ensure initial content and its format
-        this.setContent(options.initialContent || contentDiv.innerHTML || '');
+        this.setContent(
+            options.initialContent || contentDiv.innerHTML || '',
+            true /* triggerContentChangedEvent */,
+            this.core.darkModeOptions && this.core.darkModeOptions.transformOnInitialize
+        );
 
         // 5. Create event handler to bind DOM events
         this.eventDisposers = [
@@ -174,7 +178,42 @@ export default class Editor {
      * @returns true if node is inserted. Otherwise false
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
-        return node ? this.core.api.insertNode(this.core, node, option) : false;
+        // DocumentFragment type nodes become empty after they're inserted.
+        // Therefore, we get the list of nodes to transform prior to their insertion.
+        const darkModeTransform = this.isDarkMode() ? this.convertContentToDarkMode(node) : null;
+
+        const result = node ? this.core.api.insertNode(this.core, node, option) : false;
+
+        if (result && darkModeTransform) {
+            darkModeTransform();
+        }
+        return result;
+    }
+
+    private convertContentToDarkMode(node: Node): () => void {
+        let childElements: HTMLElement[] = [];
+
+        // Get a list of all the decendents of a node.
+        // querySelectorAll doesn't return a live list when called on an HTMLElement
+        // So we use getElementsByTagName instead for HTMLElement types.
+        if (node instanceof HTMLElement) {
+            childElements = Array.prototype.slice.call(node.getElementsByTagName('*'));
+            childElements.unshift(node);
+        } else if (node instanceof DocumentFragment) {
+            childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
+        }
+
+        return childElements.length > 0 ? () => {
+            childElements.forEach((element) => {
+                const darkModeOptions = this.getDarkModeOptions();
+                if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
+                    darkModeOptions.onExternalContentTransform(element);
+                } else {
+                    element.style.color = null;
+                    element.style.backgroundColor = null;
+                }
+            });
+        } : null;
     }
 
     /**
@@ -422,7 +461,7 @@ export default class Editor {
      * @param content HTML content to set in
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
-    public setContent(content: string, triggerContentChangedEvent: boolean = true) {
+    public setContent(content: string, triggerContentChangedEvent: boolean = true, convertToDarkMode?: boolean) {
         let contentDiv = this.core.contentDiv;
         if (contentDiv.innerHTML != content) {
             contentDiv.innerHTML = content || '';
@@ -436,6 +475,10 @@ export default class Editor {
                     let range = getRangeFromSelectionPath(contentDiv, path);
                     this.select(range);
                 } catch {}
+            }
+
+            if (convertToDarkMode) {
+                this.convertContentToDarkMode(contentDiv)();
             }
 
             if (triggerContentChangedEvent) {
