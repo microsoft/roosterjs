@@ -1,15 +1,13 @@
-import { Browser, matchLink } from 'roosterjs-editor-dom';
+import { Browser } from 'roosterjs-editor-dom';
 
 var ZERO_WIDTH_SPACE = '&#8203;';
 
 /**
  * Convert plain to HTML
  * @param text The plain text to convert
- * @param parseLink True to parse hyperlink from the text and generate HTML A tag, otherwise false
  * @returns HTML string to present the input text
  */
-export default function textToHtml(text: string, parseLink?: boolean): string {
-    let linkData = parseLink && matchLink(text);
+export default function textToHtml(text: string): string {
     text = (text || '')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -35,5 +33,5 @@ export default function textToHtml(text: string, parseLink?: boolean): string {
         });
     }
     text = text.replace(/\s\s/g, ' &nbsp;');
-    return linkData ? `<a href="${linkData.normalizedUrl}">${text}</a>` : text;
+    return text;
 }
