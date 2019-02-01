@@ -8,6 +8,7 @@ import {
     PluginEvent,
     PluginEventType,
     PositionType,
+    ChangeSource,
 } from 'roosterjs-editor-types';
 
 // Character codes.
@@ -123,6 +124,18 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
+        if (event.eventType == PluginEventType.ContentChanged &&
+            event.source == ChangeSource.SetContent && this.dataProvider.onContentChanged) {
+                // Undos and other major changes to document content fire this type of event.
+                // Inform the data provider of the current picker placed elements in the body.
+                const elementsInDocument = this.editor.getDocument()
+                                            .querySelectorAll("[id^='" + this.pickerOptions.elementIdPrefix + "']");
+                let elementIds: string[] = [];
+                elementsInDocument.forEach(element => {
+                    element.id && elementIds.push(element.id);
+                });
+                this.dataProvider.onContentChanged(elementIds);
+        }
         if (event.eventType == PluginEventType.KeyDown) {
             this.eventHandledOnKeyDown = false;
             this.onKeyDownEvent(event);
