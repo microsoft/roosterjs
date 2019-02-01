@@ -80,9 +80,7 @@ export default class Paste implements EditorPlugin {
                 image: items.image,
                 text: items.text,
                 rawHtml: items.html,
-                html: items.html
-                    ? this.sanitizeHtml(items.html)
-                    : textToHtml(items.text, true /*parseLink*/),
+                html: items.html ? this.sanitizeHtml(items.html) : textToHtml(items.text),
             });
         });
     };
