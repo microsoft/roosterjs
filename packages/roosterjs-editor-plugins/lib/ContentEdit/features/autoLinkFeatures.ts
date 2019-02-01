@@ -6,6 +6,7 @@ import {
     PluginEvent,
     PluginEventType,
     PluginKeyboardEvent,
+    ClipboardData,
 } from 'roosterjs-editor-types';
 import {
     Editor,
@@ -43,6 +44,19 @@ function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
     return event.eventType == PluginEventType.KeyDown ||
         (event.eventType == PluginEventType.ContentChanged && event.source == ChangeSource.Paste)
         ? cacheGetEventData(event, 'LINK_DATA', () => {
+              // First try to match link from the whole paste string from the plain text in clipboard.
+              // This helps when we paste a link next to some existing charactor, and the text we got
+              // from clipboard will only contain what we pasted, any existing charactors will not
+              // be included.
+              let clipboardData =
+                  event.eventType == PluginEventType.ContentChanged &&
+                  event.source == ChangeSource.Paste &&
+                  (event.data as ClipboardData);
+              let link = matchLink((clipboardData.text || '').trim());
+              if (link) {
+                  return link;
+              }
+
               let searcher = cacheGetContentSearcher(event, editor);
               let word = searcher && searcher.getWordBefore();
               if (word && word.length > MINIMUM_LENGTH) {
