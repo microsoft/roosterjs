@@ -1,5 +1,5 @@
 /*
-    VERSION: 7.1.1
+    VERSION: 7.1.2
 
     RoosterJS
     Copyright (c) Microsoft Corporation
@@ -638,6 +638,12 @@ function replaceWithNode(editor, textOrRange, node, exactMatch, searcher) {
     }
     if (range) {
         var backupRange = editor.getSelectionRange();
+        // If the range to replace is rgith before current cursor, it is actually an exact match
+        if (backupRange.collapsed &&
+            range.endContainer == backupRange.startContainer &&
+            range.endOffset == backupRange.startOffset) {
+            exactMatch = true;
+        }
         range.deleteContents();
         range.insertNode(node);
         if (exactMatch) {
@@ -7586,6 +7592,17 @@ function cacheGetLinkData(event, editor) {
     return event.eventType == 0 /* KeyDown */ ||
         (event.eventType == 6 /* ContentChanged */ && event.source == "Paste" /* Paste */)
         ? roosterjs_editor_core_1.cacheGetEventData(event, 'LINK_DATA', function () {
+            // First try to match link from the whole paste string from the plain text in clipboard.
+            // This helps when we paste a link next to some existing character, and the text we got
+            // from clipboard will only contain what we pasted, any existing characters will not
+            // be included.
+            var clipboardData = event.eventType == 6 /* ContentChanged */ &&
+                event.source == "Paste" /* Paste */ &&
+                event.data;
+            var link = roosterjs_editor_dom_1.matchLink((clipboardData.text || '').trim());
+            if (link) {
+                return link;
+            }
             var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, editor);
             var word = searcher && searcher.getWordBefore();
             if (word && word.length > MINIMUM_LENGTH) {
@@ -8280,9 +8297,7 @@ var Paste = /** @class */ (function () {
                     image: items.image,
                     text: items.text,
                     rawHtml: items.html,
-                    html: items.html
-                        ? _this.sanitizeHtml(items.html)
-                        : textToHtml_1.default(items.text, true /*parseLink*/),
+                    html: items.html ? _this.sanitizeHtml(items.html) : textToHtml_1.default(items.text),
                 });
             });
         };
@@ -8602,11 +8617,9 @@ var ZERO_WIDTH_SPACE = '&#8203;';
 /**
  * Convert plain to HTML
  * @param text The plain text to convert
- * @param parseLink True to parse hyperlink from the text and generate HTML A tag, otherwise false
  * @returns HTML string to present the input text
  */
-function textToHtml(text, parseLink) {
-    var linkData = parseLink && roosterjs_editor_dom_1.matchLink(text);
+function textToHtml(text) {
     text = (text || '')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -8635,7 +8648,7 @@ function textToHtml(text, parseLink) {
         });
     }
     text = text.replace(/\s\s/g, ' &nbsp;');
-    return linkData ? "<a href=\"" + linkData.normalizedUrl + "\">" + text + "</a>" : text;
+    return text;
 }
 exports.default = textToHtml;
 
