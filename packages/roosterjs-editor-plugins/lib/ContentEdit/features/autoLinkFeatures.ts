@@ -45,8 +45,8 @@ function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
         (event.eventType == PluginEventType.ContentChanged && event.source == ChangeSource.Paste)
         ? cacheGetEventData(event, 'LINK_DATA', () => {
               // First try to match link from the whole paste string from the plain text in clipboard.
-              // This helps when we paste a link next to some existing charactor, and the text we got
-              // from clipboard will only contain what we pasted, any existing charactors will not
+              // This helps when we paste a link next to some existing character, and the text we got
+              // from clipboard will only contain what we pasted, any existing characters will not
               // be included.
               let clipboardData =
                   event.eventType == PluginEventType.ContentChanged &&
