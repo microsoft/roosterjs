@@ -39,7 +39,7 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
     constructor(
         public readonly dataProvider: PickerDataProvider,
         private pickerOptions: PickerPluginOptions
-    ) {}
+    ) { }
 
     /**
      * Get a friendly name
@@ -126,15 +126,13 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
     public onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.ContentChanged &&
             event.source == ChangeSource.SetContent && this.dataProvider.onContentChanged) {
-                // Undos and other major changes to document content fire this type of event.
-                // Inform the data provider of the current picker placed elements in the body.
-                const elementsInDocument = this.editor.getDocument()
-                                            .querySelectorAll("[id^='" + this.pickerOptions.elementIdPrefix + "']");
-                let elementIds: string[] = [];
-                elementsInDocument.forEach(element => {
-                    element.id && elementIds.push(element.id);
-                });
-                this.dataProvider.onContentChanged(elementIds);
+            // Undos and other major changes to document content fire this type of event.
+            // Inform the data provider of the current picker placed elements in the body.
+            let elementIds: string[] = [];
+            this.editor.queryElements(
+                "[id^='" + this.pickerOptions.elementIdPrefix + "']",
+                (element) => { element.id && elementIds.push(element.id); });
+            this.dataProvider.onContentChanged(elementIds);
         }
         if (event.eventType == PluginEventType.KeyDown) {
             this.eventHandledOnKeyDown = false;
@@ -318,9 +316,9 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                 this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
                     ? keyboardEvent.key == LEFT_ARROW_CHARCODE ||
-                      keyboardEvent.key == RIGHT_ARROW_CHARCODE
+                    keyboardEvent.key == RIGHT_ARROW_CHARCODE
                     : keyboardEvent.key == UP_ARROW_CHARCODE ||
-                      keyboardEvent.key == DOWN_ARROW_CHARCODE)
+                    keyboardEvent.key == DOWN_ARROW_CHARCODE)
             ) {
                 this.dataProvider.shiftHighlight(
                     this.pickerOptions.isHorizontal
