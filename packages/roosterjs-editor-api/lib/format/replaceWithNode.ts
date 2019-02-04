@@ -56,6 +56,17 @@ export default function replaceWithNode(
     }
 
     if (range) {
+        const backupRange = editor.getSelectionRange();
+
+        // If the range to replace is right before current cursor, it is actually an exact match
+        if (
+            backupRange.collapsed &&
+            range.endContainer == backupRange.startContainer &&
+            range.endOffset == backupRange.startOffset
+        ) {
+            exactMatch = true;
+        }
+
         editor.insertNode(node, {
             position: ContentPosition.Range,
             updateCursor: exactMatch,
