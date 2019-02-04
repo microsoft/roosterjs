@@ -22,6 +22,7 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
     let updateCursor = option ? option.updateCursor : true;
     let replaceSelection = option ? option.replaceSelection : true;
     let insertOnNewLine = option ? option.insertOnNewLine : false;
+    let optionRange = option && option.position == ContentPosition.Range ? option.range : null;
     let contentDiv = core.contentDiv;
 
     if (updateCursor) {
@@ -65,10 +66,20 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
             }
 
             break;
+        case ContentPosition.Range:
         case ContentPosition.SelectionStart:
             let range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-            if (!range) {
-                return;
+            let clonedRange = null;
+            if (!optionRange) {
+                if (!range) {
+                    return;
+                } else {
+                    // Create a clone (backup) for the selection first as we may need to restore to it later
+                    clonedRange = range.cloneRange();
+                }
+            } else {
+                clonedRange = range;
+                range = optionRange;
             }
 
             // if to replace the selection and the selection is not collapsed, remove the the content at selection first
@@ -76,8 +87,6 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
                 range.deleteContents();
             }
 
-            // Create a clone (backup) for the selection first as we may need to restore to it later
-            let clonedRange = range.cloneRange();
             let pos = Position.getStart(range);
             let blockElement: BlockElement;
 

@@ -23,4 +23,6 @@ export default interface InsertOption {
      * Whether need to insert the content into a new line
      */
     insertOnNewLine: boolean;
+
+    range?: Range;
 }
