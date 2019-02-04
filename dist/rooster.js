@@ -10605,6 +10605,18 @@ var PickerPlugin = /** @class */ (function () {
      * @param event PluginEvent object
      */
     PickerPlugin.prototype.onPluginEvent = function (event) {
+        if (event.eventType == 6 /* ContentChanged */ &&
+            event.source == "SetContent" /* SetContent */ && this.dataProvider.onContentChanged) {
+            // Undos and other major changes to document content fire this type of event.
+            // Inform the data provider of the current picker placed elements in the body.
+            var elementIds_1 = [];
+            this.editor.queryElements("[id^='" + this.pickerOptions.elementIdPrefix + "']", function (element) {
+                if (element.id) {
+                    elementIds_1.push(element.id);
+                }
+            });
+            this.dataProvider.onContentChanged(elementIds_1);
+        }
         if (event.eventType == 0 /* KeyDown */) {
             this.eventHandledOnKeyDown = false;
             this.onKeyDownEvent(event);

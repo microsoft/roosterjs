@@ -3913,5 +3913,6 @@ export interface PickerDataProvider {
         x: number;
         y: number;
     }, buffer: number) => void;
+    onContentChanged?: (elementIds: string[]) => void;
 }
 

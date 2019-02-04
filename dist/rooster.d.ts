@@ -3914,6 +3914,7 @@ type ElementCallbackMap = Map<ElementCallback>;
         x: number;
         y: number;
     }, buffer: number) => void;
+    onContentChanged?: (elementIds: string[]) => void;
 }
 
 }
