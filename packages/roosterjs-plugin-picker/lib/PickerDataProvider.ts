@@ -52,4 +52,8 @@ export interface PickerDataProvider {
 
     // Function that returns the current cursor position as an anchor point for where to show UX.
     setCursorPoint?: (targetPoint: { x: number; y: number }, buffer: number) => void;
+
+    // Function that is called when the plugin detects the editor's content has changed.
+    // Provides a list of current picker placed elements in the document.
+    onContentChanged?: (elementIds: string[]) => void;
 }
