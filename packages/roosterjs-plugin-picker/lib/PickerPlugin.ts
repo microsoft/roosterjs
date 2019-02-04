@@ -131,7 +131,11 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
             let elementIds: string[] = [];
             this.editor.queryElements(
                 "[id^='" + this.pickerOptions.elementIdPrefix + "']",
-                (element) => { element.id && elementIds.push(element.id); });
+                (element) => {
+                    if (element.id) {
+                        elementIds.push(element.id);
+                    }
+                });
             this.dataProvider.onContentChanged(elementIds);
         }
         if (event.eventType == PluginEventType.KeyDown) {
