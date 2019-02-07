@@ -190,32 +190,6 @@ export default class Editor {
         return result;
     }
 
-    private convertContentToDarkMode(node: Node): () => void {
-        let childElements: HTMLElement[] = [];
-
-        // Get a list of all the decendents of a node.
-        // querySelectorAll doesn't return a live list when called on an HTMLElement
-        // So we use getElementsByTagName instead for HTMLElement types.
-        if (node instanceof HTMLElement) {
-            childElements = Array.prototype.slice.call(node.getElementsByTagName('*'));
-            childElements.unshift(node);
-        } else if (node instanceof DocumentFragment) {
-            childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
-        }
-
-        return childElements.length > 0 ? () => {
-            childElements.forEach((element) => {
-                const darkModeOptions = this.getDarkModeOptions();
-                if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
-                    darkModeOptions.onExternalContentTransform(element);
-                } else {
-                    element.style.color = null;
-                    element.style.backgroundColor = null;
-                }
-            });
-        } : null;
-    }
-
     /**
      * Delete a node from editor content
      * @param node The node to delete
@@ -369,22 +343,6 @@ export default class Editor {
      */
     public isEmpty(trim?: boolean): boolean {
         return isNodeEmpty(this.core.contentDiv, trim);
-    }
-
-    /**
-     * Check if the editor is in dark mode
-     * @returns True if the editor is in dark mode, otherwise false
-     */
-    public isDarkMode(): boolean {
-        return this.core.inDarkMode;
-    }
-
-    /**
-     * Returns the dark mode options set on the editor
-     * @returns A DarkModeOptions object
-     */
-    public getDarkModeOptions(): DarkModeOptions {
-        return this.core.darkModeOptions;
     }
 
     /**
@@ -920,6 +878,72 @@ export default class Editor {
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
         this.core.corePlugins.edit.addFeature(feature);
+    }
+
+    //#endregion
+
+    //#region Dark mode APIs
+
+        /**
+     * Set the dark mode state and converts the content.
+     * @param desiredDarkMode The desired status of dark mode. True if the editor should be in dark mode, false if not.
+     */
+    public setDarkModeState(desiredDarkMode?: boolean) {
+        if (this.isDarkMode() != desiredDarkMode) {
+            const currentContent = this.getContent(true /* triggerExtractContentEvent */, true /* getSelectionMarker */);
+            this.core.inDarkMode = desiredDarkMode;
+            if (desiredDarkMode) {
+                this.setContent(currentContent, true /* triggetContentChangedEvent */, true /* convertToDarkMode */);
+            } else {
+                this.setContent(currentContent);
+            }
+        }
+    }
+
+    /**
+     * Check if the editor is in dark mode
+     * @returns True if the editor is in dark mode, otherwise false
+     */
+    public isDarkMode(): boolean {
+        return this.core.inDarkMode;
+    }
+
+    /**
+     * Returns the dark mode options set on the editor
+     * @returns A DarkModeOptions object
+     */
+    public getDarkModeOptions(): DarkModeOptions {
+        return this.core.darkModeOptions;
+    }
+
+    /**
+     * Converter for dark mode that runs all child elements of a node through the content transform function.
+     * @param node The node containing HTML elements to convert.
+     */
+    private convertContentToDarkMode(node: Node): () => void {
+        let childElements: HTMLElement[] = [];
+
+        // Get a list of all the decendents of a node.
+        // querySelectorAll doesn't return a live list when called on an HTMLElement
+        // So we use getElementsByTagName instead for HTMLElement types.
+        if (node instanceof HTMLElement) {
+            childElements = Array.prototype.slice.call(node.getElementsByTagName('*'));
+            childElements.unshift(node);
+        } else if (node instanceof DocumentFragment) {
+            childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
+        }
+
+        return childElements.length > 0 ? () => {
+            childElements.forEach((element) => {
+                const darkModeOptions = this.getDarkModeOptions();
+                if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
+                    darkModeOptions.onExternalContentTransform(element);
+                } else {
+                    element.style.color = null;
+                    element.style.backgroundColor = null;
+                }
+            });
+        } : null;
     }
 
     //#endregion
