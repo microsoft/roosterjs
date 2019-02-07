@@ -639,20 +639,19 @@ function replaceWithNode(editor, textOrRange, node, exactMatch, searcher) {
     }
     if (range) {
         var backupRange = editor.getSelectionRange();
-        // If the range to replace is rgith before current cursor, it is actually an exact match
+        // If the range to replace is right before current cursor, it is actually an exact match
         if (backupRange.collapsed &&
             range.endContainer == backupRange.startContainer &&
             range.endOffset == backupRange.startOffset) {
             exactMatch = true;
         }
-        range.deleteContents();
-        range.insertNode(node);
-        if (exactMatch) {
-            editor.select(node, -3 /* After */);
-        }
-        else {
-            editor.select(backupRange);
-        }
+        editor.insertNode(node, {
+            position: 4 /* Range */,
+            updateCursor: exactMatch,
+            replaceSelection: true,
+            insertOnNewLine: false,
+            range: range,
+        });
         return true;
     }
     return false;
@@ -2005,23 +2004,27 @@ exports.default = hasFocus;
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var insertNode = function (core, node, option) {
-    var position = option ? option.position : 2 /* SelectionStart */;
-    var updateCursor = option ? option.updateCursor : true;
-    var replaceSelection = option ? option.replaceSelection : true;
-    var insertOnNewLine = option ? option.insertOnNewLine : false;
+    if (!option) {
+        option = {
+            position: 2 /* SelectionStart */,
+            insertOnNewLine: false,
+            updateCursor: true,
+            replaceSelection: true,
+        };
+    }
     var contentDiv = core.contentDiv;
-    if (updateCursor) {
+    if (option.updateCursor) {
         core.api.focus(core);
     }
-    switch (position) {
+    switch (option.position) {
         case 0 /* Begin */:
         case 1 /* End */:
-            var isBegin = position == 0 /* Begin */;
+            var isBegin = option.position == 0 /* Begin */;
             var block = roosterjs_editor_dom_1.getFirstLastBlockElement(contentDiv, isBegin);
             var insertedNode = void 0;
             if (block) {
                 var refNode = isBegin ? block.getStartNode() : block.getEndNode();
-                if (insertOnNewLine ||
+                if (option.insertOnNewLine ||
                     refNode.nodeType == 3 /* Text */ ||
                     roosterjs_editor_dom_1.isVoidHtmlElement(refNode)) {
                     // For insert on new line, or refNode is text or void html element (HR, BR etc.)
@@ -2041,24 +2044,38 @@ var insertNode = function (core, node, option) {
             }
             // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
             // add a DIV wrapping
-            if (insertedNode && insertOnNewLine && !roosterjs_editor_dom_1.isBlockElement(insertedNode)) {
+            if (insertedNode && option.insertOnNewLine && !roosterjs_editor_dom_1.isBlockElement(insertedNode)) {
                 roosterjs_editor_dom_1.wrap(insertedNode);
             }
             break;
+        case 4 /* Range */:
         case 2 /* SelectionStart */:
+            // Selection start replaces based on the current selection.
+            // Range inserts based on a provided range.
+            // Both have the potential to use the current selection to restore cursor position
+            // So in both cases we need to store the selection state.
             var range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-            if (!range) {
-                return;
+            var rangeToRestore = null;
+            if (option.position == 4 /* Range */) {
+                rangeToRestore = range;
+                range = option.range;
+            }
+            else {
+                if (!range) {
+                    return;
+                }
+                else {
+                    // Create a clone (backup) for the selection first as we may need to restore to it later
+                    rangeToRestore = range.cloneRange();
+                }
             }
             // if to replace the selection and the selection is not collapsed, remove the the content at selection first
-            if (replaceSelection && !range.collapsed) {
+            if (option.replaceSelection && !range.collapsed) {
                 range.deleteContents();
             }
-            // Create a clone (backup) for the selection first as we may need to restore to it later
-            var clonedRange = range.cloneRange();
             var pos = roosterjs_editor_dom_1.Position.getStart(range);
             var blockElement = void 0;
-            if (insertOnNewLine &&
+            if (option.insertOnNewLine &&
                 (blockElement = roosterjs_editor_dom_1.getBlockElementAtNode(contentDiv, pos.normalize().node))) {
                 pos = new roosterjs_editor_dom_1.Position(blockElement.getEndNode(), -3 /* After */);
             }
@@ -2068,11 +2085,11 @@ var insertNode = function (core, node, option) {
             var nodeForCursor = node.nodeType == 11 /* DocumentFragment */ ? node.lastChild : node;
             range = roosterjs_editor_dom_1.createRange(pos);
             range.insertNode(node);
-            if (updateCursor && nodeForCursor) {
+            if (option.updateCursor && nodeForCursor) {
                 core.api.select(core, new roosterjs_editor_dom_1.Position(nodeForCursor, -3 /* After */).normalize());
             }
             else {
-                core.api.select(core, clonedRange);
+                core.api.select(core, rangeToRestore);
             }
             break;
         case 3 /* Outside */:
