@@ -17,13 +17,30 @@ import {
     createRange,
 } from 'roosterjs-editor-dom';
 
+function getInitialRange(core: EditorCore, option: InsertOption): { range: Range, rangeToRestore: Range } {
+    // Selection start replaces based on the current selection.
+    // Range inserts based on a provided range.
+    // Both have the potential to use the current selection to restore cursor position
+    // So in both cases we need to store the selection state.
+    let range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
+    let rangeToRestore = null;
+    if (option.position == ContentPosition.Range) {
+        rangeToRestore = range;
+        range = option.range;
+    } else if (range) {
+        rangeToRestore = range.cloneRange();
+    }
+
+    return {range, rangeToRestore };
+}
+
 const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOption) => {
     if (!option) {
-        option = <InsertOption>{
+        option = {
             position: ContentPosition.SelectionStart,
-            insertOnNewLine: false,
-            updateCursor: true,
-            replaceSelection: true,
+            insertOnNewLine: option.insertOnNewLine != null ? option.insertOnNewLine : false,
+            updateCursor: option.updateCursor != null ? option.updateCursor : true,
+            replaceSelection: option.replaceSelection != null ? option.replaceSelection : true,
         }
     }
     let contentDiv = core.contentDiv;
@@ -71,22 +88,10 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
             break;
         case ContentPosition.Range:
         case ContentPosition.SelectionStart:
-            // Selection start replaces based on the current selection.
-            // Range inserts based on a provided range.
-            // Both have the potential to use the current selection to restore cursor position
-            // So in both cases we need to store the selection state.
-            let range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-            let rangeToRestore = null;
-            if (option.position == ContentPosition.Range) {
-                rangeToRestore = range;
-                range = option.range;
-            } else {
-                if (!range) {
-                    return;
-                } else {
-                    // Create a clone (backup) for the selection first as we may need to restore to it later
-                    rangeToRestore = range.cloneRange();
-                }
+            let { range, rangeToRestore } = getInitialRange(core, option);
+
+            if (!range) {
+                return;
             }
 
             // if to replace the selection and the selection is not collapsed, remove the the content at selection first
