@@ -1,11 +1,15 @@
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
-import { ContentPosition, InsertOption } from 'roosterjs-editor-types';
+import { ContentPosition, InsertOptionBasic } from 'roosterjs-editor-types';
 
 const styles = require('./InsertContentPane.scss');
 
-export interface InsertContentPaneState extends InsertOption {
+export interface InsertContentPaneState {
     content: string;
+    position: ContentPosition,
+    updateCursor: boolean,
+    replaceSelection: boolean,
+    insertOnNewLine: boolean,
 }
 
 export default class InsertContentPane extends React.Component<
@@ -92,7 +96,7 @@ export default class InsertContentPane extends React.Component<
                             id="insertUpdateCursor"
                             checked={this.state.updateCursor}
                             onClick={() =>
-                                this.setState({ updateCursor: !this.state.updateCursor })
+                                this.setState({updateCursor: !this.state.updateCursor })
                             }
                         />
                         <label htmlFor="insertUpdateCursor">Update cursor</label>
@@ -143,6 +147,14 @@ export default class InsertContentPane extends React.Component<
 
     private onClick = () => {
         let editor = this.props.getEditor();
-        editor.addUndoSnapshot(() => editor.insertContent(this.state.content, this.state));
+        if (this.state.position != ContentPosition.Range) {
+            const inputOption: InsertOptionBasic = {
+                position: this.state.position,
+                updateCursor: this.state.updateCursor,
+                replaceSelection: this.state.replaceSelection,
+                insertOnNewLine: this.state.insertOnNewLine,
+            }
+            editor.addUndoSnapshot(() => editor.insertContent(this.state.content, inputOption));
+        }
     };
 }

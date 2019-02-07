@@ -1,8 +1,8 @@
 import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
+import { Browser, getRangeFromSelectionPath, getSelectionPath } from 'roosterjs-editor-dom';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
-import { getRangeFromSelectionPath, getSelectionPath, Browser } from 'roosterjs-editor-dom';
 import {
     BlockElement,
     ChangeSource,
