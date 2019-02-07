@@ -27,7 +27,7 @@ function getInitialRange(core: EditorCore, option: InsertOption): { range: Range
     if (option.position == ContentPosition.Range) {
         rangeToRestore = range;
         range = option.range;
-    } else if(range) {
+    } else if (range) {
         rangeToRestore = range.cloneRange();
     }
 
