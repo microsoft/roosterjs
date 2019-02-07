@@ -18,26 +18,30 @@ import {
 } from 'roosterjs-editor-dom';
 
 const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOption) => {
-    let position = option ? option.position : ContentPosition.SelectionStart;
-    let updateCursor = option ? option.updateCursor : true;
-    let replaceSelection = option ? option.replaceSelection : true;
-    let insertOnNewLine = option ? option.insertOnNewLine : false;
+    if (!option) {
+        option = <InsertOption>{
+            position: ContentPosition.SelectionStart,
+            insertOnNewLine: false,
+            updateCursor: true,
+            replaceSelection: true,
+        }
+    }
     let contentDiv = core.contentDiv;
 
-    if (updateCursor) {
+    if (option.updateCursor) {
         core.api.focus(core);
     }
 
-    switch (position) {
+    switch (option.position) {
         case ContentPosition.Begin:
         case ContentPosition.End:
-            let isBegin = position == ContentPosition.Begin;
+            let isBegin = option.position == ContentPosition.Begin;
             let block = getFirstLastBlockElement(contentDiv, isBegin);
             let insertedNode: Node;
             if (block) {
                 let refNode = isBegin ? block.getStartNode() : block.getEndNode();
                 if (
-                    insertOnNewLine ||
+                    option.insertOnNewLine ||
                     refNode.nodeType == NodeType.Text ||
                     isVoidHtmlElement(refNode)
                 ) {
@@ -60,29 +64,41 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
 
             // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
             // add a DIV wrapping
-            if (insertedNode && insertOnNewLine && !isBlockElement(insertedNode)) {
+            if (insertedNode && option.insertOnNewLine && !isBlockElement(insertedNode)) {
                 wrap(insertedNode);
             }
 
             break;
+        case ContentPosition.Range:
         case ContentPosition.SelectionStart:
+            // Selection start replaces based on the current selection.
+            // Range inserts based on a provided range.
+            // Both have the potential to use the current selection to restore cursor position
+            // So in both cases we need to store the selection state.
             let range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-            if (!range) {
-                return;
+            let rangeToRestore = null;
+            if (option.position == ContentPosition.Range) {
+                rangeToRestore = range;
+                range = option.range;
+            } else {
+                if (!range) {
+                    return;
+                } else {
+                    // Create a clone (backup) for the selection first as we may need to restore to it later
+                    rangeToRestore = range.cloneRange();
+                }
             }
 
             // if to replace the selection and the selection is not collapsed, remove the the content at selection first
-            if (replaceSelection && !range.collapsed) {
+            if (option.replaceSelection && !range.collapsed) {
                 range.deleteContents();
             }
 
-            // Create a clone (backup) for the selection first as we may need to restore to it later
-            let clonedRange = range.cloneRange();
             let pos = Position.getStart(range);
             let blockElement: BlockElement;
 
             if (
-                insertOnNewLine &&
+                option.insertOnNewLine &&
                 (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
             ) {
                 pos = new Position(blockElement.getEndNode(), PositionType.After);
@@ -93,10 +109,10 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
             let nodeForCursor = node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
             range = createRange(pos);
             range.insertNode(node);
-            if (updateCursor && nodeForCursor) {
+            if (option.updateCursor && nodeForCursor) {
                 core.api.select(core, new Position(nodeForCursor, PositionType.After).normalize());
             } else {
-                core.api.select(core, clonedRange);
+                core.api.select(core, rangeToRestore);
             }
 
             break;
