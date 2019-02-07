@@ -49,7 +49,7 @@ export { default as DarkModeOptions } from './interface/DarkModeOptions';
 export { default as DefaultFormat } from './interface/DefaultFormat';
 export { default as FormatState } from './interface/FormatState';
 export { default as InlineElement } from './interface/InlineElement';
-export { default as InsertOption } from './interface/InsertOption';
+export { default as InsertOption, InsertOptionBase, InsertOptionBasic, InsertOptionRange } from './interface/InsertOption';
 export { default as LinkData } from './interface/LinkData';
 export { default as ModeIndependentColor } from './interface/ModeIndependentColor';
 export { default as NodePosition } from './interface/NodePosition';

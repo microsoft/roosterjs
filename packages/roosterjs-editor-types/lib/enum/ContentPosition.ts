@@ -23,4 +23,9 @@ export const enum ContentPosition {
      * Outside of editor
      */
     Outside,
+
+    /**
+     * Manually defined range
+     */
+    Range,
 }
