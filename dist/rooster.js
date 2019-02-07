@@ -2003,13 +2003,29 @@ exports.default = hasFocus;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+function getInitialRange(core, option) {
+    // Selection start replaces based on the current selection.
+    // Range inserts based on a provided range.
+    // Both have the potential to use the current selection to restore cursor position
+    // So in both cases we need to store the selection state.
+    var range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
+    var rangeToRestore = null;
+    if (option.position == 4 /* Range */) {
+        rangeToRestore = range;
+        range = option.range;
+    }
+    else if (range) {
+        rangeToRestore = range.cloneRange();
+    }
+    return { range: range, rangeToRestore: rangeToRestore };
+}
 var insertNode = function (core, node, option) {
     if (!option) {
         option = {
             position: 2 /* SelectionStart */,
-            insertOnNewLine: false,
-            updateCursor: true,
-            replaceSelection: true,
+            insertOnNewLine: option.insertOnNewLine != null ? option.insertOnNewLine : false,
+            updateCursor: option.updateCursor != null ? option.updateCursor : true,
+            replaceSelection: option.replaceSelection != null ? option.replaceSelection : true,
         };
     }
     var contentDiv = core.contentDiv;
@@ -2050,24 +2066,9 @@ var insertNode = function (core, node, option) {
             break;
         case 4 /* Range */:
         case 2 /* SelectionStart */:
-            // Selection start replaces based on the current selection.
-            // Range inserts based on a provided range.
-            // Both have the potential to use the current selection to restore cursor position
-            // So in both cases we need to store the selection state.
-            var range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-            var rangeToRestore = null;
-            if (option.position == 4 /* Range */) {
-                rangeToRestore = range;
-                range = option.range;
-            }
-            else {
-                if (!range) {
-                    return;
-                }
-                else {
-                    // Create a clone (backup) for the selection first as we may need to restore to it later
-                    rangeToRestore = range.cloneRange();
-                }
+            var _a = getInitialRange(core, option), range = _a.range, rangeToRestore = _a.rangeToRestore;
+            if (!range) {
+                return;
             }
             // if to replace the selection and the selection is not collapsed, remove the the content at selection first
             if (option.replaceSelection && !range.collapsed) {
