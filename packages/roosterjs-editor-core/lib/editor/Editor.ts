@@ -940,8 +940,8 @@ export default class Editor {
             childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
         }
 
-        const darkModeOptions = this.getDarkModeOptions();
         return childElements.length > 0 ? () => {
+            const darkModeOptions = this.getDarkModeOptions();
             childElements.forEach((element) => {
                 if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
                     darkModeOptions.onExternalContentTransform(element);
