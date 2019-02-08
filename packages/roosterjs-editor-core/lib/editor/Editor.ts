@@ -106,8 +106,8 @@ export default class Editor {
             ));
             this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <
                 string
-            >(<any>false));
-        } catch (e) {}
+                >(<any>false));
+        } catch (e) { }
 
         // 9. Let plugins know that we are ready
         this.triggerEvent(
@@ -432,7 +432,7 @@ export default class Editor {
                     this.deleteNode(pathComment);
                     let range = getRangeFromSelectionPath(contentDiv, path);
                     this.select(range);
-                } catch {}
+                } catch { }
             }
 
             if (convertToDarkMode) {
@@ -650,8 +650,8 @@ export default class Editor {
         nameOrMap:
             | string
             | {
-                  [eventName: string]: (event: UIEvent) => void;
-              },
+                [eventName: string]: (event: UIEvent) => void;
+            },
         handler?: (event: UIEvent) => void
     ): () => void {
         if (nameOrMap instanceof Object) {
@@ -884,19 +884,26 @@ export default class Editor {
 
     //#region Dark mode APIs
 
-        /**
-     * Set the dark mode state and converts the content.
-     * @param desiredDarkMode The desired status of dark mode. True if the editor should be in dark mode, false if not.
+    /**
+     * Set the dark mode state and transforms the content to match the new state.
+     * @param nextDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
      */
-    public setDarkModeState(desiredDarkMode?: boolean) {
-        if (this.isDarkMode() != desiredDarkMode) {
-            const currentContent = this.getContent(true /* triggerExtractContentEvent */, true /* getSelectionMarker */);
-            this.core.inDarkMode = desiredDarkMode;
-            if (desiredDarkMode) {
-                this.setContent(currentContent, true /* triggetContentChangedEvent */, true /* convertToDarkMode */);
-            } else {
-                this.setContent(currentContent);
-            }
+    public setDarkModeState(nextDarkMode?: boolean) {
+        if (this.isDarkMode() == nextDarkMode) {
+            return;
+        }
+
+        const currentContent = this.getContent(
+            undefined /* triggerContentChangedEvent */,
+            true /* getSelectionMarker */);
+        this.core.inDarkMode = nextDarkMode;
+        if (nextDarkMode) {
+            this.setContent(
+                currentContent,
+                undefined /* triggerContentChangedEvent */,
+                true /* convertToDarkMode */);
+        } else {
+            this.setContent(currentContent);
         }
     }
 
@@ -933,9 +940,9 @@ export default class Editor {
             childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
         }
 
+        const darkModeOptions = this.getDarkModeOptions();
         return childElements.length > 0 ? () => {
             childElements.forEach((element) => {
-                const darkModeOptions = this.getDarkModeOptions();
                 if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
                     darkModeOptions.onExternalContentTransform(element);
                 } else {
