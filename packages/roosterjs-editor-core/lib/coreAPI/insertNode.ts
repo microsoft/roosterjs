@@ -17,7 +17,10 @@ import {
     createRange,
 } from 'roosterjs-editor-dom';
 
-function getInitialRange(core: EditorCore, option: InsertOption): { range: Range, rangeToRestore: Range } {
+function getInitialRange(
+    core: EditorCore,
+    option: InsertOption
+): { range: Range; rangeToRestore: Range } {
     // Selection start replaces based on the current selection.
     // Range inserts based on a provided range.
     // Both have the potential to use the current selection to restore cursor position
@@ -31,18 +34,16 @@ function getInitialRange(core: EditorCore, option: InsertOption): { range: Range
         rangeToRestore = range.cloneRange();
     }
 
-    return {range, rangeToRestore };
+    return { range, rangeToRestore };
 }
 
 const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOption) => {
-    if (!option) {
-        option = {
-            position: ContentPosition.SelectionStart,
-            insertOnNewLine: option.insertOnNewLine != null ? option.insertOnNewLine : false,
-            updateCursor: option.updateCursor != null ? option.updateCursor : true,
-            replaceSelection: option.replaceSelection != null ? option.replaceSelection : true,
-        }
-    }
+    option = option || {
+        position: ContentPosition.SelectionStart,
+        insertOnNewLine: false,
+        updateCursor: true,
+        replaceSelection: true,
+    };
     let contentDiv = core.contentDiv;
 
     if (option.updateCursor) {
