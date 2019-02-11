@@ -1,6 +1,6 @@
 {
     "name": "roosterjs",
-    "version": "7.1.2",
+    "version": "7.2.0",
     "description": "Framework-independent javascript editor",
     "repository": {
         "type": "git",
