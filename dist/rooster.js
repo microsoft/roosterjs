@@ -2020,14 +2020,12 @@ function getInitialRange(core, option) {
     return { range: range, rangeToRestore: rangeToRestore };
 }
 var insertNode = function (core, node, option) {
-    if (!option) {
-        option = {
-            position: 2 /* SelectionStart */,
-            insertOnNewLine: option.insertOnNewLine != null ? option.insertOnNewLine : false,
-            updateCursor: option.updateCursor != null ? option.updateCursor : true,
-            replaceSelection: option.replaceSelection != null ? option.replaceSelection : true,
-        };
-    }
+    option = option || {
+        position: 2 /* SelectionStart */,
+        insertOnNewLine: false,
+        updateCursor: true,
+        replaceSelection: true,
+    };
     var contentDiv = core.contentDiv;
     if (option.updateCursor) {
         core.api.focus(core);
