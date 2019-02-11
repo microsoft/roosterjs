@@ -106,8 +106,8 @@ export default class Editor {
             ));
             this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <
                 string
-            >(<any>false));
-        } catch (e) {}
+                >(<any>false));
+        } catch (e) { }
 
         // 9. Let plugins know that we are ready
         this.triggerEvent(
@@ -188,32 +188,6 @@ export default class Editor {
             darkModeTransform();
         }
         return result;
-    }
-
-    private convertContentToDarkMode(node: Node): () => void {
-        let childElements: HTMLElement[] = [];
-
-        // Get a list of all the decendents of a node.
-        // querySelectorAll doesn't return a live list when called on an HTMLElement
-        // So we use getElementsByTagName instead for HTMLElement types.
-        if (node instanceof HTMLElement) {
-            childElements = Array.prototype.slice.call(node.getElementsByTagName('*'));
-            childElements.unshift(node);
-        } else if (node instanceof DocumentFragment) {
-            childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
-        }
-
-        return childElements.length > 0 ? () => {
-            childElements.forEach((element) => {
-                const darkModeOptions = this.getDarkModeOptions();
-                if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
-                    darkModeOptions.onExternalContentTransform(element);
-                } else {
-                    element.style.color = null;
-                    element.style.backgroundColor = null;
-                }
-            });
-        } : null;
     }
 
     /**
@@ -372,22 +346,6 @@ export default class Editor {
     }
 
     /**
-     * Check if the editor is in dark mode
-     * @returns True if the editor is in dark mode, otherwise false
-     */
-    public isDarkMode(): boolean {
-        return this.core.inDarkMode;
-    }
-
-    /**
-     * Returns the dark mode options set on the editor
-     * @returns A DarkModeOptions object
-     */
-    public getDarkModeOptions(): DarkModeOptions {
-        return this.core.darkModeOptions;
-    }
-
-    /**
      * Get current editor content as HTML string
      * @param triggerExtractContentEvent Whether trigger ExtractContent event to all plugins
      * before return. Use this parameter to remove any temporary content added by plugins.
@@ -474,7 +432,7 @@ export default class Editor {
                     this.deleteNode(pathComment);
                     let range = getRangeFromSelectionPath(contentDiv, path);
                     this.select(range);
-                } catch {}
+                } catch { }
             }
 
             if (convertToDarkMode) {
@@ -692,8 +650,8 @@ export default class Editor {
         nameOrMap:
             | string
             | {
-                  [eventName: string]: (event: UIEvent) => void;
-              },
+                [eventName: string]: (event: UIEvent) => void;
+            },
         handler?: (event: UIEvent) => void
     ): () => void {
         if (nameOrMap instanceof Object) {
@@ -920,6 +878,79 @@ export default class Editor {
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
         this.core.corePlugins.edit.addFeature(feature);
+    }
+
+    //#endregion
+
+    //#region Dark mode APIs
+
+    /**
+     * Set the dark mode state and transforms the content to match the new state.
+     * @param nextDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
+     */
+    public setDarkModeState(nextDarkMode?: boolean) {
+        if (this.isDarkMode() == nextDarkMode) {
+            return;
+        }
+
+        const currentContent = this.getContent(
+            undefined /* triggerContentChangedEvent */,
+            true /* getSelectionMarker */);
+        this.core.inDarkMode = nextDarkMode;
+        if (nextDarkMode) {
+            this.setContent(
+                currentContent,
+                undefined /* triggerContentChangedEvent */,
+                true /* convertToDarkMode */);
+        } else {
+            this.setContent(currentContent);
+        }
+    }
+
+    /**
+     * Check if the editor is in dark mode
+     * @returns True if the editor is in dark mode, otherwise false
+     */
+    public isDarkMode(): boolean {
+        return this.core.inDarkMode;
+    }
+
+    /**
+     * Returns the dark mode options set on the editor
+     * @returns A DarkModeOptions object
+     */
+    public getDarkModeOptions(): DarkModeOptions {
+        return this.core.darkModeOptions;
+    }
+
+    /**
+     * Converter for dark mode that runs all child elements of a node through the content transform function.
+     * @param node The node containing HTML elements to convert.
+     */
+    private convertContentToDarkMode(node: Node): () => void {
+        let childElements: HTMLElement[] = [];
+
+        // Get a list of all the decendents of a node.
+        // querySelectorAll doesn't return a live list when called on an HTMLElement
+        // So we use getElementsByTagName instead for HTMLElement types.
+        if (node instanceof HTMLElement) {
+            childElements = Array.prototype.slice.call(node.getElementsByTagName('*'));
+            childElements.unshift(node);
+        } else if (node instanceof DocumentFragment) {
+            childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
+        }
+
+        return childElements.length > 0 ? () => {
+            const darkModeOptions = this.getDarkModeOptions();
+            childElements.forEach((element) => {
+                if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
+                    darkModeOptions.onExternalContentTransform(element);
+                } else {
+                    element.style.color = null;
+                    element.style.backgroundColor = null;
+                }
+            });
+        } : null;
     }
 
     //#endregion
