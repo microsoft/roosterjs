@@ -1,6 +1,6 @@
 import { Editor } from 'roosterjs-editor-core';
 import { PositionContentSearcher } from 'roosterjs-editor-dom';
-import { PositionType } from 'roosterjs-editor-types';
+import { ContentPosition } from 'roosterjs-editor-types';
 
 /**
  * Replace text before current selection with a node, current selection will be kept if possible
@@ -56,16 +56,24 @@ export default function replaceWithNode(
     }
 
     if (range) {
-        let backupRange = editor.getSelectionRange();
+        const backupRange = editor.getSelectionRange();
 
-        range.deleteContents();
-        range.insertNode(node);
-
-        if (exactMatch) {
-            editor.select(node, PositionType.After);
-        } else {
-            editor.select(backupRange);
+        // If the range to replace is right before current cursor, it is actually an exact match
+        if (
+            backupRange.collapsed &&
+            range.endContainer == backupRange.startContainer &&
+            range.endOffset == backupRange.startOffset
+        ) {
+            exactMatch = true;
         }
+
+        editor.insertNode(node, {
+            position: ContentPosition.Range,
+            updateCursor: exactMatch,
+            replaceSelection: true,
+            insertOnNewLine: false,
+            range: range,
+        });
 
         return true;
     }
