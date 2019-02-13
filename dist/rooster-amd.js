@@ -1,33 +1,3 @@
-/*
-    VERSION: 7.2.0
-
-    RoosterJS
-    Copyright (c) Microsoft Corporation
-    All rights reserved.
-
-    MIT License
-
-    Copyright (c) Microsoft Corporation. All rights reserved.
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE
-
-*/
 define(function() { return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -2151,9 +2121,7 @@ var select = function (core, arg1, arg2, arg3, arg4) {
                 try {
                     // Do not remove/add range if current selection is the same with target range
                     // Without this check, execCommand() may fail in Edge since we changed the selection
-                    var currentRange = roosterjs_editor_dom_1.Browser.isEdge && selection.rangeCount == 1
-                        ? selection.getRangeAt(0)
-                        : null;
+                    var currentRange = selection.rangeCount == 1 ? selection.getRangeAt(0) : null;
                     if (currentRange &&
                         currentRange.startContainer == range.startContainer &&
                         currentRange.startOffset == range.startOffset &&
