@@ -66,6 +66,27 @@ export default interface ContentEditFeatures {
     upDownInTable: boolean;
 
     /**
+     * When press Enter in first table cell and the table is the first element of editor content,
+     * we create a new line before the table so that user got a chance to enter content before table
+     * @default false for Chrome and Safari, true for others
+     */
+    enterInFirstTableCell: boolean;
+
+    /**
+     * When press Enter in first list item and the list is the first element of editor content,
+     * we create a new line before the list so that user got a chance to enter content before list
+     * @default true
+     */
+    enterInFirstListItem: boolean;
+
+    /**
+     * When press Enter in first quote line and the quote is the first element of editor content,
+     * we create a new line before the quote so that user got a chance to enter content before quote
+     * @default true
+     */
+    enterInFirstQuoteLine: boolean;
+
+    /**
      * When press Space or Enter after a hyperlink-like string, convert the string to a hyperlink
      * @default true
      */
@@ -112,6 +133,9 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         autoBullet: true,
         tabInTable: true,
         upDownInTable: Browser.isChrome || Browser.isSafari,
+        enterInFirstTableCell: !(Browser.isChrome || Browser.isSafari),
+        enterInFirstListItem: true,
+        enterInFirstQuoteLine: true,
         defaultShortcut: true,
         unlinkWhenBackspaceAfterLink: false,
         smartOrderedList: false,

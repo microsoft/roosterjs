@@ -29,9 +29,10 @@ export default class ContentTraverser {
     /**
      * Create a content traverser for the whole body of given root node
      * @param rootNode The root node to traverse in
+     * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
-    public static createBodyTraverser(rootNode: Node): ContentTraverser {
-        return new ContentTraverser(new BodyScoper(rootNode));
+    public static createBodyTraverser(rootNode: Node, startNode?: Node): ContentTraverser {
+        return new ContentTraverser(new BodyScoper(rootNode, startNode));
     }
 
     /**

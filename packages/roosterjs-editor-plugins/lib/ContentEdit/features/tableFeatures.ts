@@ -1,12 +1,14 @@
+import shouldInsertLineBefore from './shouldInsertLineBefore';
 import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
+import { NodeType, PluginEvent, PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
 import {
     contains,
+    createNewLineNode,
     getTagOfNode,
     isVoidHtmlElement,
     Position,
-    VTable
-    } from 'roosterjs-editor-dom';
-import { NodeType, PluginEvent, PositionType } from 'roosterjs-editor-types';
+    VTable,
+} from 'roosterjs-editor-dom';
 
 export const TabInTable: ContentEditFeature = {
     keys: [Keys.TAB],
@@ -88,10 +90,34 @@ export const UpDownInTable: ContentEditFeature = {
     },
 };
 
+export const EnterInFirstTableCell: ContentEditFeature = {
+    keys: [Keys.ENTER],
+    shouldHandleEvent: getVTableForFirstCellOfStartingTable,
+    handleEvent: (event, editor) => {
+        let table = getVTableForFirstCellOfStartingTable(event, editor);
+        let div = createNewLineNode(editor.getDocument());
+        editor.addUndoSnapshot(() => {
+            table.parentNode.insertBefore(div, table);
+            editor.select(new Position(div, PositionType.Begin).normalize());
+        });
+        event.rawEvent.preventDefault();
+    },
+};
+
 function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellElement {
     return cacheGetEventData(event, 'TABLECELL_FOR_TABLE_FEATURES', () => {
         let pos = editor.getFocusedPosition();
         let firstTd = editor.getElementAtCursor('TD,TH,LI', pos.node);
         return getTagOfNode(firstTd) == 'LI' ? null : (firstTd as HTMLTableCellElement);
+    });
+}
+
+function getVTableForFirstCellOfStartingTable(event: PluginKeyboardEvent, editor: Editor) {
+    return cacheGetEventData(event, 'VTABLE_FOR_FIRST_CELL', () => {
+        // Provide a chance to keep browser default behavior by pressing SHIFT
+        let td = event.rawEvent.shiftKey ? null : cacheGetTableCell(event, editor);
+        return td && shouldInsertLineBefore(editor, td)
+            ? editor.getElementAtCursor('TABLE', td)
+            : null;
     });
 }

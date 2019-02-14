@@ -1,7 +1,9 @@
+import shouldInsertLineBefore from './shouldInsertLineBefore';
 import { setIndentation, toggleBullet, toggleNumbering } from 'roosterjs-editor-api';
 import {
     cacheGetContentSearcher,
     cacheGetElementAtCursor,
+    cacheGetEventData,
     Editor,
     ContentEditFeature,
     GenericContentEditFeature,
@@ -15,6 +17,7 @@ import {
 } from 'roosterjs-editor-types';
 import {
     Browser,
+    createNewLineNode,
     Position,
     getTagOfNode,
     isNodeEmpty,
@@ -79,6 +82,19 @@ export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
     },
     handleEvent: (event, editor) => {
         editor.performAutoComplete(() => toggleListAndPreventDefault(event, editor));
+    },
+};
+
+export const EnterInFirstListItem: ContentEditFeature = {
+    keys: [Keys.ENTER],
+    shouldHandleEvent: getListForFirstItemOfStartingList,
+    handleEvent: (event, editor) => {
+        let list = getListForFirstItemOfStartingList(event, editor);
+        let div = createNewLineNode(editor.getDocument());
+        editor.addUndoSnapshot(() => {
+            list.parentNode.insertBefore(div, list);
+        });
+        event.rawEvent.preventDefault();
     },
 };
 
@@ -169,4 +185,16 @@ function cacheGetListElement(event: PluginKeyboardEvent, editor: Editor) {
     let li = cacheGetElementAtCursor(editor, event, 'LI,TABLE');
     let listElement = li && getTagOfNode(li) == 'LI' && editor.getElementAtCursor('UL,OL', li);
     return listElement ? [listElement, li] : null;
+}
+
+function getListForFirstItemOfStartingList(
+    event: PluginKeyboardEvent,
+    editor: Editor
+): HTMLElement {
+    return cacheGetEventData(event, 'LIST_FOR_FIRST_ITEM', () => {
+        // Provide a chance to keep browser default behavior by pressing SHIFT
+        let listAndLi = event.rawEvent.shiftKey ? null : cacheGetListElement(event, editor);
+
+        return listAndLi && shouldInsertLineBefore(editor, listAndLi[1]) ? listAndLi[0] : null;
+    });
 }
