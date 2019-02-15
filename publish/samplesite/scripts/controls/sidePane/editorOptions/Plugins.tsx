@@ -170,16 +170,8 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                     {this.renderContentEditItem('tabInTable', 'Tab To Jump Cell In Table')}
                     {this.renderContentEditItem('upDownInTable', 'Up / Down To Jump Cell In Table')}
                     {this.renderContentEditItem(
-                        'enterInFirstTableCell',
-                        'Enter to create new line before table for first cell of a starting table'
-                    )}
-                    {this.renderContentEditItem(
-                        'enterInFirstListItem',
-                        'Enter to create new line before list for first item of a starting list'
-                    )}
-                    {this.renderContentEditItem(
-                        'enterInFirstQuoteLine',
-                        'Enter to create new line before quote for quote line of a starting quote'
+                        'insertLineBeforeStructuredNodeFeature',
+                        "Enter to create new line before table/list which doesn't have line before"
                     )}
                     {this.renderContentEditItem(
                         'unlinkWhenBackspaceAfterLink',

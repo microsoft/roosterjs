@@ -2,12 +2,12 @@ import ContentEditFeatures, { getDefaultContentEditFeatures } from './ContentEdi
 import { AutoLink, UnlinkWhenBackspaceAfterLink } from './features/autoLinkFeatures';
 import { DefaultShortcut } from './features/shortcutFeatures';
 import { Editor, EditorPlugin, GenericContentEditFeature } from 'roosterjs-editor-core';
-import { EnterInFirstTableCell, TabInTable, UpDownInTable } from './features/tableFeatures';
+import { InsertLineBeforeStructuredNodeFeature } from './features/insertLineBeforeStructuredNodeFeature';
 import { PluginEvent } from 'roosterjs-editor-types';
+import { TabInTable, UpDownInTable } from './features/tableFeatures';
 
 import {
     AutoBullet,
-    EnterInFirstListItem,
     IndentWhenTab,
     OutdentWhenShiftTab,
     MergeInNewLine,
@@ -16,7 +16,6 @@ import {
     getSmartOrderedList,
 } from './features/listFeatures';
 import {
-    EnterInFirstQuoteLine,
     UnquoteWhenBackOnEmpty1stLine,
     UnquoteWhenEnterOnEmptyLine,
 } from './features/quoteFeatures';
@@ -79,9 +78,7 @@ export default class ContentEdit implements EditorPlugin {
             unquoteWhenEnterOnEmptyLine: UnquoteWhenEnterOnEmptyLine,
             tabInTable: TabInTable,
             upDownInTable: UpDownInTable,
-            enterInFirstTableCell: EnterInFirstTableCell,
-            enterInFirstListItem: EnterInFirstListItem,
-            enterInFirstQuoteLine: EnterInFirstQuoteLine,
+            insertLineBeforeStructuredNodeFeature: InsertLineBeforeStructuredNodeFeature,
             autoBullet: AutoBullet,
             autoLink: AutoLink,
             unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink,

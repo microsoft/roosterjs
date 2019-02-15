@@ -1,8 +1,6 @@
-import shouldInsertLineBefore from './shouldInsertLineBefore';
 import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
 import { PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
 import {
-    createNewLineNode,
     getTagOfNode,
     isNodeEmpty,
     splitBalancedNodeRange,
@@ -32,19 +30,6 @@ export const UnquoteWhenEnterOnEmptyLine: ContentEditFeature = {
     handleEvent: (event, editor) => editor.performAutoComplete(() => splitQuote(event, editor)),
 };
 
-export const EnterInFirstQuoteLine: ContentEditFeature = {
-    keys: [Keys.ENTER],
-    shouldHandleEvent: getQuoteForFirstLineOfStartingQuote,
-    handleEvent: (event, editor) => {
-        let quote = getQuoteForFirstLineOfStartingQuote(event, editor);
-        let div = createNewLineNode(editor.getDocument());
-        editor.addUndoSnapshot(() => {
-            quote.parentNode.insertBefore(div, quote);
-        });
-        event.rawEvent.preventDefault();
-    },
-};
-
 function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: Editor): Node {
     return cacheGetEventData(event, 'QUOTE_CHILD', () => {
         let quote = editor.getElementAtCursor(STRUCTURED_TAGS);
@@ -52,9 +37,11 @@ function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: Editor): Node {
             let pos = editor.getFocusedPosition();
             let block = pos && editor.getBlockElementAtNode(pos.normalize().node);
             if (block) {
-                return block.getStartNode() == quote
-                    ? block.getStartNode()
-                    : block.collapseToSingleElement();
+                let node =
+                    block.getStartNode() == quote
+                        ? block.getStartNode()
+                        : block.collapseToSingleElement();
+                return isNodeEmpty(node) ? node : null;
             }
         }
 
@@ -74,20 +61,4 @@ function splitQuote(event: PluginKeyboardEvent, editor: Editor) {
         editor.select(childOfQuote, PositionType.Begin);
     });
     event.rawEvent.preventDefault();
-}
-
-function getQuoteForFirstLineOfStartingQuote(
-    event: PluginKeyboardEvent,
-    editor: Editor
-): HTMLElement {
-    return cacheGetEventData(event, 'QUOTE_FOR_FIRST_LINE', () => {
-        // Provide a chance to keep browser default behavior by pressing SHIFT
-        let quoteChild = event.rawEvent.shiftKey ? null : cacheGetQuoteChild(event, editor);
-
-        return (
-            quoteChild &&
-            shouldInsertLineBefore(editor, quoteChild) &&
-            editor.getElementAtCursor(QUOTE_TAG, quoteChild)
-        );
-    });
 }
