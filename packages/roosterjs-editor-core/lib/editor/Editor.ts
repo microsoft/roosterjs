@@ -94,18 +94,25 @@ export default class Editor {
             this.contenteditableChanged = true;
         }
 
-        // 8. Make settings change to make editor work better
+        // 8. Do proper change for browsers to disable some browser-specified behaviors.
         // Catch any possible exception since this should not block the initialization of editor
         try {
-            // Disable these operations for firefox since its behavior is usually wrong
-            this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, <string>(
-                (<any>false)
-            ));
-            this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <
-                string
-            >(<any>false));
-            // Change the default paragraph separater to DIV. This is mainly for IE since its default setting is P
-            this.core.document.execCommand(DocumentCommand.DefaultParagraphSeparator, false, 'div');
+            // Disable these object resizing for firefox since other browsers don't have these behaviors
+            if (Browser.isFirefox) {
+                this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, <
+                    string
+                >(<any>false));
+                this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <
+                    string
+                >(<any>false));
+            } else if (Browser.isIE) {
+                // Change the default paragraph separater to DIV. This is mainly for IE since its default setting is P
+                this.core.document.execCommand(
+                    DocumentCommand.DefaultParagraphSeparator,
+                    false,
+                    'div'
+                );
+            }
         } catch (e) {}
 
         // 9. Let plugins know that we are ready

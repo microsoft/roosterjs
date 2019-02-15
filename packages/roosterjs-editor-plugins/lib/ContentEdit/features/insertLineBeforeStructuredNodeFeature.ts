@@ -8,17 +8,22 @@ import {
     getTagOfNode,
 } from 'roosterjs-editor-dom';
 
+// Edge can sometimes lose current format when Enter to new line.
+// So here we add an extra SPAN for Edge to workaround this bug
+const NEWLINE_HTML = Browser.isEdge ? '<div><span><br></span></div>' : '<div><br></div>';
+const CHILD_PARENT_TAG_MAP: { [childTag: string]: string } = {
+    TD: 'TABLE',
+    TH: 'TABLE',
+    LI: 'OL,UL',
+};
+const CHILD_SELECTOR = Object.keys(CHILD_PARENT_TAG_MAP).join(',');
+
 export const InsertLineBeforeStructuredNodeFeature: ContentEditFeature = {
     keys: [Keys.ENTER],
     shouldHandleEvent: cacheGetStructuredElement,
     handleEvent: (event, editor) => {
         let element = cacheGetStructuredElement(event, editor);
-        let div = fromHtml(
-            // Edge can sometimes lose current format when Enter to new line.
-            // So here we add an extra SPAN for Edge to workaround this bug
-            Browser.isEdge ? '<div><span><br></span></div>' : '<div><br></div>',
-            editor.getDocument()
-        )[0] as HTMLElement;
+        let div = fromHtml(NEWLINE_HTML, editor.getDocument())[0] as HTMLElement;
         editor.addUndoSnapshot(() => {
             element.parentNode.insertBefore(div, element);
             // Select the new line when we are in table. This is the same behavior with Word
@@ -33,7 +38,7 @@ export const InsertLineBeforeStructuredNodeFeature: ContentEditFeature = {
 function cacheGetStructuredElement(event: PluginKeyboardEvent, editor: Editor) {
     return cacheGetEventData(event, 'FIRST_STRUCTURE', () => {
         // Provide a chance to keep browser default behavior by pressing SHIFT
-        let element = event.rawEvent.shiftKey ? null : editor.getElementAtCursor('TD,TH,LI');
+        let element = event.rawEvent.shiftKey ? null : editor.getElementAtCursor(CHILD_SELECTOR);
 
         if (element) {
             let range = editor.getSelectionRange();
@@ -43,10 +48,7 @@ function cacheGetStructuredElement(event: PluginKeyboardEvent, editor: Editor) {
                 isPositionAtBeginningOf(Position.getStart(range), element) &&
                 !editor.getBodyTraverser(element).getPreviousBlockElement()
             ) {
-                return editor.getElementAtCursor(
-                    getTagOfNode(element) == 'LI' ? 'OL,UL' : 'TABLE',
-                    element
-                );
+                return editor.getElementAtCursor(CHILD_PARENT_TAG_MAP[getTagOfNode(element)]);
             }
         }
 
