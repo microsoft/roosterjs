@@ -66,6 +66,13 @@ export default interface ContentEditFeatures {
     upDownInTable: boolean;
 
     /**
+     * When press Enter at the beginning of first structured element (table, list) and there isn't line before the position
+     * we create a new line before so that user got a chance to enter content before the table or list
+     * @default false
+     */
+    insertLineBeforeStructuredNodeFeature: boolean;
+
+    /**
      * When press Space or Enter after a hyperlink-like string, convert the string to a hyperlink
      * @default true
      */
@@ -112,6 +119,7 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         autoBullet: true,
         tabInTable: true,
         upDownInTable: Browser.isChrome || Browser.isSafari,
+        insertLineBeforeStructuredNodeFeature: false,
         defaultShortcut: true,
         unlinkWhenBackspaceAfterLink: false,
         smartOrderedList: false,
