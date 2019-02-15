@@ -1314,8 +1314,9 @@ class ContentTraverser {
     /**
      * Create a content traverser for the whole body of given root node
      * @param rootNode The root node to traverse in
+     * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
-    static createBodyTraverser(rootNode: Node): ContentTraverser;
+    static createBodyTraverser(rootNode: Node, startNode?: Node): ContentTraverser;
     /**
      * Create a content traverser for the given selection
      * @param rootNode The root node to traverse in
@@ -2714,8 +2715,9 @@ class Editor {
     getDefaultFormat(): DefaultFormat;
     /**
      * Get a content traverser for the whole editor
+     * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
-    getBodyTraverser(): ContentTraverser;
+    getBodyTraverser(startNode?: Node): ContentTraverser;
     /**
      * Get a content traverser for current selection
      */
@@ -3477,6 +3479,12 @@ interface ContentEditFeatures {
      * @default true for Chrome and safari, false for other browsers since they arleady have correct behavior
      */
     upDownInTable: boolean;
+    /**
+     * When press Enter at the beginning of first structured element (table, list) and there isn't line before the position
+     * we create a new line before so that user got a chance to enter content before the table or list
+     * @default false
+     */
+    insertLineBeforeStructuredNodeFeature: boolean;
     /**
      * When press Space or Enter after a hyperlink-like string, convert the string to a hyperlink
      * @default true

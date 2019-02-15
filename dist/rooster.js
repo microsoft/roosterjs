@@ -2682,11 +2682,18 @@ var Editor = /** @class */ (function () {
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
             this.contenteditableChanged = true;
         }
-        // 8. Disable these operations for firefox since its behavior is usually wrong
+        // 8. Do proper change for browsers to disable some browser-specified behaviors.
         // Catch any possible exception since this should not block the initialization of editor
         try {
-            this.core.document.execCommand("enableObjectResizing" /* EnableObjectResizing */, false, (false));
-            this.core.document.execCommand("enableInlineTableEditing" /* EnableInlineTableEditing */, false, false);
+            // Disable these object resizing for firefox since other browsers don't have these behaviors
+            if (roosterjs_editor_dom_1.Browser.isFirefox) {
+                this.core.document.execCommand("enableObjectResizing" /* EnableObjectResizing */, false, false);
+                this.core.document.execCommand("enableInlineTableEditing" /* EnableInlineTableEditing */, false, false);
+            }
+            else if (roosterjs_editor_dom_1.Browser.isIE) {
+                // Change the default paragraph separater to DIV. This is mainly for IE since its default setting is P
+                this.core.document.execCommand("defaultParagraphSeparator" /* DefaultParagraphSeparator */, false, 'div');
+            }
         }
         catch (e) { }
         // 9. Let plugins know that we are ready
@@ -3111,9 +3118,10 @@ var Editor = /** @class */ (function () {
     };
     /**
      * Get a content traverser for the whole editor
+     * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
-    Editor.prototype.getBodyTraverser = function () {
-        return roosterjs_editor_dom_2.ContentTraverser.createBodyTraverser(this.core.contentDiv);
+    Editor.prototype.getBodyTraverser = function (startNode) {
+        return roosterjs_editor_dom_2.ContentTraverser.createBodyTraverser(this.core.contentDiv, startNode);
     };
     /**
      * Get a content traverser for current selection
@@ -4083,6 +4091,8 @@ exports.getLastBlockElement = getLastBlockElement;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(/*! ../utils/contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
+var getBlockElementAtNode_1 = __webpack_require__(/*! ../blockElements/getBlockElementAtNode */ "./packages/roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode.ts");
+var getInlineElementAtNode_1 = __webpack_require__(/*! ../inlineElements/getInlineElementAtNode */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts");
 var getFirstLastBlockElement_1 = __webpack_require__(/*! ../blockElements/getFirstLastBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/getFirstLastBlockElement.ts");
 var getFirstLastInlineElement_1 = __webpack_require__(/*! ../inlineElements/getFirstLastInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElement.ts");
 /**
@@ -4092,21 +4102,27 @@ var BodyScoper = /** @class */ (function () {
     /**
      * Construct a new instance of BodyScoper class
      * @param rootNode Root node of the body
+     * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
-    function BodyScoper(rootNode) {
+    function BodyScoper(rootNode, startNode) {
         this.rootNode = rootNode;
+        this.startNode = contains_1.default(rootNode, startNode) ? startNode : null;
     }
     /**
      * Get the start block element
      */
     BodyScoper.prototype.getStartBlockElement = function () {
-        return getFirstLastBlockElement_1.getFirstBlockElement(this.rootNode);
+        return this.startNode
+            ? getBlockElementAtNode_1.default(this.rootNode, this.startNode)
+            : getFirstLastBlockElement_1.getFirstBlockElement(this.rootNode);
     };
     /**
      * Get the start inline element
      */
     BodyScoper.prototype.getStartInlineElement = function () {
-        return getFirstLastInlineElement_1.getFirstInlineElement(this.rootNode);
+        return this.startNode
+            ? getInlineElementAtNode_1.default(this.rootNode, this.startNode)
+            : getFirstLastInlineElement_1.getFirstInlineElement(this.rootNode);
     };
     /**
      * Since the scope is global, all blocks under the root node are in scope
@@ -4163,9 +4179,10 @@ var ContentTraverser = /** @class */ (function () {
     /**
      * Create a content traverser for the whole body of given root node
      * @param rootNode The root node to traverse in
+     * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
-    ContentTraverser.createBodyTraverser = function (rootNode) {
-        return new ContentTraverser(new BodyScoper_1.default(rootNode));
+    ContentTraverser.createBodyTraverser = function (rootNode, startNode) {
+        return new ContentTraverser(new BodyScoper_1.default(rootNode, startNode));
     };
     /**
      * Create a content traverser for the given selection
@@ -7429,6 +7446,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var ContentEditFeatures_1 = __webpack_require__(/*! ./ContentEditFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/ContentEditFeatures.ts");
 var autoLinkFeatures_1 = __webpack_require__(/*! ./features/autoLinkFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/autoLinkFeatures.ts");
 var shortcutFeatures_1 = __webpack_require__(/*! ./features/shortcutFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/shortcutFeatures.ts");
+var insertLineBeforeStructuredNodeFeature_1 = __webpack_require__(/*! ./features/insertLineBeforeStructuredNodeFeature */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/insertLineBeforeStructuredNodeFeature.ts");
 var tableFeatures_1 = __webpack_require__(/*! ./features/tableFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/tableFeatures.ts");
 var listFeatures_1 = __webpack_require__(/*! ./features/listFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/listFeatures.ts");
 var quoteFeatures_1 = __webpack_require__(/*! ./features/quoteFeatures */ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/quoteFeatures.ts");
@@ -7485,6 +7503,7 @@ var ContentEdit = /** @class */ (function () {
             unquoteWhenEnterOnEmptyLine: quoteFeatures_1.UnquoteWhenEnterOnEmptyLine,
             tabInTable: tableFeatures_1.TabInTable,
             upDownInTable: tableFeatures_1.UpDownInTable,
+            insertLineBeforeStructuredNodeFeature: insertLineBeforeStructuredNodeFeature_1.InsertLineBeforeStructuredNodeFeature,
             autoBullet: listFeatures_1.AutoBullet,
             autoLink: autoLinkFeatures_1.AutoLink,
             unlinkWhenBackspaceAfterLink: autoLinkFeatures_1.UnlinkWhenBackspaceAfterLink,
@@ -7528,6 +7547,7 @@ function getDefaultContentEditFeatures() {
         autoBullet: true,
         tabInTable: true,
         upDownInTable: roosterjs_editor_dom_1.Browser.isChrome || roosterjs_editor_dom_1.Browser.isSafari,
+        insertLineBeforeStructuredNodeFeature: false,
         defaultShortcut: true,
         unlinkWhenBackspaceAfterLink: false,
         smartOrderedList: false,
@@ -7627,6 +7647,63 @@ function autoLink(event, editor) {
             roosterjs_editor_core_1.clearContentSearcherCache(event);
             return anchor;
         }, "AutoLink" /* AutoLink */);
+    });
+}
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-plugins/lib/ContentEdit/features/insertLineBeforeStructuredNodeFeature.ts":
+/*!*************************************************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/ContentEdit/features/insertLineBeforeStructuredNodeFeature.ts ***!
+  \*************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+// Edge can sometimes lose current format when Enter to new line.
+// So here we add an extra SPAN for Edge to workaround this bug
+var NEWLINE_HTML = roosterjs_editor_dom_1.Browser.isEdge ? '<div><span><br></span></div>' : '<div><br></div>';
+var CHILD_PARENT_TAG_MAP = {
+    TD: 'TABLE',
+    TH: 'TABLE',
+    LI: 'OL,UL',
+};
+var CHILD_SELECTOR = Object.keys(CHILD_PARENT_TAG_MAP).join(',');
+exports.InsertLineBeforeStructuredNodeFeature = {
+    keys: [13 /* ENTER */],
+    shouldHandleEvent: cacheGetStructuredElement,
+    handleEvent: function (event, editor) {
+        var element = cacheGetStructuredElement(event, editor);
+        var div = roosterjs_editor_dom_1.fromHtml(NEWLINE_HTML, editor.getDocument())[0];
+        editor.addUndoSnapshot(function () {
+            element.parentNode.insertBefore(div, element);
+            // Select the new line when we are in table. This is the same behavior with Word
+            if (roosterjs_editor_dom_1.getTagOfNode(element) == 'TABLE') {
+                editor.select(new roosterjs_editor_dom_1.Position(div, 0 /* Begin */).normalize());
+            }
+        });
+        event.rawEvent.preventDefault();
+    },
+};
+function cacheGetStructuredElement(event, editor) {
+    return roosterjs_editor_core_1.cacheGetEventData(event, 'FIRST_STRUCTURE', function () {
+        // Provide a chance to keep browser default behavior by pressing SHIFT
+        var element = event.rawEvent.shiftKey ? null : editor.getElementAtCursor(CHILD_SELECTOR);
+        if (element) {
+            var range = editor.getSelectionRange();
+            if (range &&
+                range.collapsed &&
+                roosterjs_editor_dom_1.isPositionAtBeginningOf(roosterjs_editor_dom_1.Position.getStart(range), element) &&
+                !editor.getBodyTraverser(element).getPreviousBlockElement()) {
+                return editor.getElementAtCursor(CHILD_PARENT_TAG_MAP[roosterjs_editor_dom_1.getTagOfNode(element)]);
+            }
+        }
+        return null;
     });
 }
 
