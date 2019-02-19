@@ -6,7 +6,6 @@ import { Browser } from 'roosterjs-editor-dom';
 import { FormatState } from 'roosterjs-editor-types';
 
 const styles = require('./RibbonButton.scss');
-let currentPusingButton: RibbonButtonType;
 
 export interface RibbonButtonProps {
     plugin: RibbonPlugin;
@@ -17,10 +16,6 @@ export interface RibbonButtonProps {
 
 export interface RibbonButtonState {
     isDropDownShown: boolean;
-}
-
-interface MouseEvent extends React.MouseEvent<EventTarget> {
-    detail: number;
 }
 
 export default class RibbonButton extends React.Component<RibbonButtonProps, RibbonButtonState> {
@@ -49,10 +44,8 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
         return (
             <span className={styles.dropDownButton}>
                 <button
-                    onClick={button.dropDownItems ? this.onShowDropDown : this.onMouseClick}
-                    className={className}
-                    onMouseDown={this.onMouseDown}
-                    onMouseUp={this.onMouseUp}>
+                    onClick={button.dropDownItems ? this.onShowDropDown : () => this.onExecute()}
+                    className={className}>
                     <img src={button.image} width={32} height={32} title={button.title} />
                 </button>
                 {button.dropDownItems &&
@@ -61,33 +54,6 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
             </span>
         );
     }
-
-    private onMouseDown = (e: React.MouseEvent<EventTarget>) => {
-        if (e.button == 0) {
-            currentPusingButton = this.props.button;
-            e.preventDefault();
-        }
-    };
-
-    private onMouseUp = (e: React.MouseEvent<EventTarget>) => {
-        if (
-            e.button == 0 &&
-            currentPusingButton == this.props.button &&
-            !this.props.button.dropDownItems
-        ) {
-            this.onExecute();
-        }
-        currentPusingButton = null;
-    };
-
-    private onMouseClick = (e: React.MouseEvent<EventTarget>) => {
-        if (
-            (Browser.isIE && e.nativeEvent.x < 0) ||
-            (!Browser.isIE && (e as MouseEvent).detail == 0)
-        ) {
-            this.onExecute();
-        }
-    };
 
     private onExecute = (value?: string) => {
         const { button, plugin } = this.props;
@@ -102,7 +68,9 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
     };
 
     private onShowDropDown = () => {
-        this.range = this.props.plugin.getEditor().getSelectionRange();
+        if (Browser.isSafari) {
+            this.range = this.props.plugin.getEditor().getSelectionRange();
+        }
 
         if (!this.props.button.preserveOnClickAway) {
             document.addEventListener('click', this.onHideDropDown);
@@ -113,7 +81,9 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
     };
 
     private onHideDropDown = () => {
-        this.props.plugin.getEditor().select(this.range);
+        if (Browser.isSafari) {
+            this.props.plugin.getEditor().select(this.range);
+        }
 
         document.removeEventListener('click', this.onHideDropDown);
         this.setState({

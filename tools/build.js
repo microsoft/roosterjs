@@ -254,7 +254,6 @@ async function pack(isProduction, isAmd) {
                     countWord(targetFile);
                     exploreSourceMap(targetFile);
                 }
-                insertLicense(targetFile);
                 resolve();
             }
         });
@@ -286,14 +285,6 @@ function exploreSourceMap(inputFile) {
     var commandPath = path.join(nodeModulesPath, 'source-map-explorer/index.js');
     var targetFile = path.join(roosterJsDistPath, 'sourceMap.html');
     runNode(`${commandPath} -m --html ${inputFile} > ${targetFile}`, rootPath);
-}
-
-function insertLicense(filename) {
-    var fileContent = fs.readFileSync(filename).toString();
-    fs.writeFileSync(
-        filename,
-        `/*\r\n    VERSION: ${version}\r\n\r\n${license}\r\n*/\r\n${fileContent}`
-    );
 }
 
 var dtsQueue = [];

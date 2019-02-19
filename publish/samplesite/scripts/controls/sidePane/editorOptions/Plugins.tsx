@@ -170,6 +170,10 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                     {this.renderContentEditItem('tabInTable', 'Tab To Jump Cell In Table')}
                     {this.renderContentEditItem('upDownInTable', 'Up / Down To Jump Cell In Table')}
                     {this.renderContentEditItem(
+                        'insertLineBeforeStructuredNodeFeature',
+                        "Enter to create new line before table/list which doesn't have line before"
+                    )}
+                    {this.renderContentEditItem(
                         'unlinkWhenBackspaceAfterLink',
                         'Auto unlink when backspace right after a hyperlink'
                     )}
