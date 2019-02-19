@@ -418,6 +418,7 @@ export default class Editor {
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * @param content HTML content to set in
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
+     * @param convertToDarkMode True to conver the editor's new content to dark mode formatting. Default value is false.
      */
     public setContent(content: string, triggerContentChangedEvent: boolean = true, convertToDarkMode?: boolean) {
         let contentDiv = this.core.contentDiv;
@@ -436,7 +437,7 @@ export default class Editor {
             }
 
             if (convertToDarkMode) {
-                this.convertContentToDarkMode(contentDiv)();
+                this.convertContentToDarkMode(contentDiv, true /* skipRootElement */)();
             }
 
             if (triggerContentChangedEvent) {
@@ -926,8 +927,9 @@ export default class Editor {
     /**
      * Converter for dark mode that runs all child elements of a node through the content transform function.
      * @param node The node containing HTML elements to convert.
+     * @param skipRootElement Optional parameter to skip the root element of the Node passed in, if applicable.
      */
-    private convertContentToDarkMode(node: Node): () => void {
+    private convertContentToDarkMode(node: Node, skipRootElement?: boolean): () => void {
         let childElements: HTMLElement[] = [];
 
         // Get a list of all the decendents of a node.
@@ -935,7 +937,9 @@ export default class Editor {
         // So we use getElementsByTagName instead for HTMLElement types.
         if (node instanceof HTMLElement) {
             childElements = Array.prototype.slice.call(node.getElementsByTagName('*'));
-            childElements.unshift(node);
+            if (!skipRootElement) {
+                childElements.unshift(node);
+            }
         } else if (node instanceof DocumentFragment) {
             childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
         }
