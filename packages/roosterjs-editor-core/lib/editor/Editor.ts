@@ -79,7 +79,8 @@ export default class Editor {
             this.core.api.attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown),
             this.core.api.attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp),
             this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
-            this.core.api.attachDomEvent(this.core,
+            this.core.api.attachDomEvent(
+                this.core,
                 !Browser.isIE ? 'input' : 'textinput',
                 PluginEventType.Input
             ),
@@ -98,16 +99,26 @@ export default class Editor {
             this.contenteditableChanged = true;
         }
 
-        // 8. Disable these operations for firefox since its behavior is usually wrong
+        // 8. Do proper change for browsers to disable some browser-specified behaviors.
         // Catch any possible exception since this should not block the initialization of editor
         try {
-            this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, <string>(
-                (<any>false)
-            ));
-            this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <
-                string
+            // Disable these object resizing for firefox since other browsers don't have these behaviors
+            if (Browser.isFirefox) {
+                this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, <
+                    string
                 >(<any>false));
-        } catch (e) { }
+                this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <
+                    string
+                >(<any>false));
+            } else if (Browser.isIE) {
+                // Change the default paragraph separater to DIV. This is mainly for IE since its default setting is P
+                this.core.document.execCommand(
+                    DocumentCommand.DefaultParagraphSeparator,
+                    false,
+                    'div'
+                );
+            }
+        } catch (e) {}
 
         // 9. Let plugins know that we are ready
         this.triggerEvent(
@@ -807,9 +818,10 @@ export default class Editor {
 
     /**
      * Get a content traverser for the whole editor
+     * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
-    public getBodyTraverser(): ContentTraverser {
-        return ContentTraverser.createBodyTraverser(this.core.contentDiv);
+    public getBodyTraverser(startNode?: Node): ContentTraverser {
+        return ContentTraverser.createBodyTraverser(this.core.contentDiv, startNode);
     }
 
     /**
