@@ -24,7 +24,8 @@ const RIGHT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowRight' : 'Right';
 const DOWN_ARROW_CHARCODE = !Browser.isIE ? 'ArrowDown' : 'Down';
 const DELETE_CHARCODE = !Browser.isIE ? 'Delete' : 'Del';
 
-export interface EditorPickerPluginInterface<T extends PickerDataProvider> extends EditorPlugin {
+export interface EditorPickerPluginInterface<T extends PickerDataProvider = PickerDataProvider>
+    extends EditorPlugin {
     dataProvider: T;
 }
 
