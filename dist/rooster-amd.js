@@ -10676,7 +10676,8 @@ var PickerPlugin = /** @class */ (function () {
      */
     PickerPlugin.prototype.onPluginEvent = function (event) {
         if (event.eventType == 6 /* ContentChanged */ &&
-            event.source == "SetContent" /* SetContent */ && this.dataProvider.onContentChanged) {
+            event.source == "SetContent" /* SetContent */ &&
+            this.dataProvider.onContentChanged) {
             // Undos and other major changes to document content fire this type of event.
             // Inform the data provider of the current picker placed elements in the body.
             var elementIds_1 = [];

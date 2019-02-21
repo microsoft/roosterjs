@@ -3876,8 +3876,8 @@ type StyleCallbackMap = Map<StyleCallback>;
  */
 type ElementCallbackMap = Map<ElementCallback>;
 
-    class PickerPlugin implements EditorPickerPluginInterface {
-    readonly dataProvider: PickerDataProvider;
+    class PickerPlugin<T extends PickerDataProvider = PickerDataProvider> implements EditorPickerPluginInterface<T> {
+    readonly dataProvider: T;
     private pickerOptions;
     private editor;
     private eventHandledOnKeyDown;
@@ -3885,7 +3885,7 @@ type ElementCallbackMap = Map<ElementCallback>;
     private isSuggesting;
     private isCharacterValue;
     private lastKnownRange;
-    constructor(dataProvider: PickerDataProvider, pickerOptions: PickerPluginOptions);
+    constructor(dataProvider: T, pickerOptions: PickerPluginOptions);
     /**
      * Get a friendly name
      */
@@ -3926,8 +3926,8 @@ type ElementCallbackMap = Map<ElementCallback>;
     private setRangeStart;
 }
 
-    interface EditorPickerPluginInterface extends EditorPlugin {
-    dataProvider: PickerDataProvider;
+    interface EditorPickerPluginInterface<T extends PickerDataProvider = PickerDataProvider> extends EditorPlugin {
+    dataProvider: T;
 }
 
     interface PickerPluginOptions {
