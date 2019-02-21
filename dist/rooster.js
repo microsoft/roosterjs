@@ -1787,6 +1787,13 @@ exports.default = toggleTagCore;
 Object.defineProperty(exports, "__esModule", { value: true });
 var attachDomEvent = function (core, eventName, pluginEventType, beforeDispatch) {
     var onEvent = function (event) {
+        // Stop propagation of a printable keyboard event (a keyboard event which is caused by printable char input).
+        // This detection is not 100% accurate. event.key is not fully supported by all brwosers, and in some browser (e.g. IE)
+        // event.key is longer than 1 for num pad input. But here we just want to improve performance as mush as possible.
+        // So if we missed some case here it is still acceptable.
+        if (isKeyboardEvent(event) && event.key && event.key.length == 1) {
+            event.stopPropagation();
+        }
         if (beforeDispatch) {
             beforeDispatch(event);
         }
@@ -1803,6 +1810,9 @@ var attachDomEvent = function (core, eventName, pluginEventType, beforeDispatch)
     };
 };
 exports.default = attachDomEvent;
+function isKeyboardEvent(e) {
+    return e.type == 'keydown' || e.type == 'keypress' || e.type == 'keyup';
+}
 
 
 /***/ }),
