@@ -38,10 +38,7 @@ export { getFirstLeafNode, getLastLeafNode } from './utils/getLeafNode';
 export { default as VTable, VCell } from './table/VTable';
 
 export { default as Position } from './selection/Position';
-export { default as createRange } from './selection/createRange';
+export { default as createRange, getRangeFromSelectionPath } from './selection/createRange';
 export { default as getPositionRect } from './selection/getPositionRect';
 export { default as isPositionAtBeginningOf } from './selection/isPositionAtBeginningOf';
-export {
-    default as getSelectionPath,
-    getRangeFromSelectionPath,
-} from './selection/getSelectionPath';
+export { default as getSelectionPath } from './selection/getSelectionPath';

@@ -116,10 +116,11 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
             range = createRange(pos);
             range.insertNode(node);
             if (option.updateCursor && nodeForCursor) {
-                core.api.select(core, new Position(nodeForCursor, PositionType.After).normalize());
-            } else {
-                core.api.select(core, rangeToRestore);
+                rangeToRestore = createRange(
+                    new Position(nodeForCursor, PositionType.After).normalize()
+                );
             }
+            core.api.selectRange(core, rangeToRestore);
 
             break;
         case ContentPosition.Outside:
