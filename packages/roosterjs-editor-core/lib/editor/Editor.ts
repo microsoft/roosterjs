@@ -415,7 +415,7 @@ export default class Editor {
                 }
 
                 if (element.dataset.ogab) {
-                    element.setAttribute('bgcolor', element.dataset.ogac);
+                    element.setAttribute('bgcolor', element.dataset.ogab);
                 }
 
                 // Clean up any remaining data attributes.
