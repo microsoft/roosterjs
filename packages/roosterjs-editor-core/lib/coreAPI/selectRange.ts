@@ -11,12 +11,13 @@ const selectRange: SelectRange = (core: EditorCore, range: Range, skipSameRange?
             if (selection.rangeCount > 0) {
                 // Workaround IE exception 800a025e
                 try {
+                    let currentRange: Range;
                     // Do not remove/add range if current selection is the same with target range
                     // Without this check, execCommand() may fail in Edge since we changed the selection
-                    let currentRange = selection.rangeCount == 1 ? selection.getRangeAt(0) : null;
                     if (
                         (skipSameRange || Browser.isEdge) &&
-                        currentRange &&
+                        (currentRange =
+                            selection.rangeCount == 1 ? selection.getRangeAt(0) : null) &&
                         currentRange.startContainer == range.startContainer &&
                         currentRange.startOffset == range.startOffset &&
                         currentRange.endContainer == range.endContainer &&
