@@ -1881,9 +1881,10 @@ var focus = function (core) {
         // So here we always do a live selection pull on DOM and make it point in Editor. The pitfall is, the cursor could be reset
         // to very begin to of editor since we don't really have last saved selection (created on blur which does not fire in this case).
         // It should be better than the case you cannot type
-        if (!core.cachedSelectionRange || !core.api.select(core, core.cachedSelectionRange)) {
+        if (!core.cachedSelectionRange ||
+            !core.api.selectRange(core, core.cachedSelectionRange, true /*skipSameRange*/)) {
             var node = roosterjs_editor_dom_1.getFirstLeafNode(core.contentDiv) || core.contentDiv;
-            core.api.select(core, node, 0 /* Begin */);
+            core.api.selectRange(core, roosterjs_editor_dom_1.createRange(node, 0 /* Begin */), true /*skipSameRange*/);
         }
     }
     // remember to clear cachedSelectionRange
@@ -2064,11 +2065,9 @@ var insertNode = function (core, node, option) {
             range = roosterjs_editor_dom_1.createRange(pos);
             range.insertNode(node);
             if (option.updateCursor && nodeForCursor) {
-                core.api.select(core, new roosterjs_editor_dom_1.Position(nodeForCursor, -3 /* After */).normalize());
+                rangeToRestore = roosterjs_editor_dom_1.createRange(new roosterjs_editor_dom_1.Position(nodeForCursor, -3 /* After */).normalize());
             }
-            else {
-                core.api.select(core, rangeToRestore);
-            }
+            core.api.selectRange(core, rangeToRestore);
             break;
         case 3 /* Outside */:
             core.contentDiv.parentNode.insertBefore(node, contentDiv.nextSibling);
@@ -2081,10 +2080,10 @@ exports.default = insertNode;
 
 /***/ }),
 
-/***/ "./packages/roosterjs-editor-core/lib/coreAPI/select.ts":
-/*!**************************************************************!*\
-  !*** ./packages/roosterjs-editor-core/lib/coreAPI/select.ts ***!
-  \**************************************************************/
+/***/ "./packages/roosterjs-editor-core/lib/coreAPI/selectRange.ts":
+/*!*******************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/coreAPI/selectRange.ts ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2093,35 +2092,7 @@ exports.default = insertNode;
 Object.defineProperty(exports, "__esModule", { value: true });
 var hasFocus_1 = __webpack_require__(/*! ./hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var select = function (core, arg1, arg2, arg3, arg4) {
-    var range;
-    if (!arg1) {
-        return false;
-    }
-    else if (arg1 instanceof Range) {
-        range = arg1;
-    }
-    else {
-        if (arg1.node) {
-            range = roosterjs_editor_dom_1.createRange(new roosterjs_editor_dom_1.Position(arg1), arg2 && arg2.node ? new roosterjs_editor_dom_1.Position(arg2) : null);
-        }
-        else if (arg1 instanceof Node) {
-            var start = void 0;
-            var end = void 0;
-            if (arg2 == undefined) {
-                start = new roosterjs_editor_dom_1.Position(arg1, -2 /* Before */);
-                end = new roosterjs_editor_dom_1.Position(arg1, -3 /* After */);
-            }
-            else {
-                start = new roosterjs_editor_dom_1.Position(arg1, arg2);
-                end =
-                    arg3 instanceof Node
-                        ? new roosterjs_editor_dom_1.Position(arg3, arg4)
-                        : null;
-            }
-            range = roosterjs_editor_dom_1.createRange(start, end);
-        }
-    }
+var selectRange = function (core, range, skipSameRange) {
     if (roosterjs_editor_dom_1.contains(core.contentDiv, range)) {
         var selection = core.document.defaultView.getSelection();
         if (selection) {
@@ -2129,10 +2100,12 @@ var select = function (core, arg1, arg2, arg3, arg4) {
             if (selection.rangeCount > 0) {
                 // Workaround IE exception 800a025e
                 try {
+                    var currentRange = void 0;
                     // Do not remove/add range if current selection is the same with target range
                     // Without this check, execCommand() may fail in Edge since we changed the selection
-                    var currentRange = selection.rangeCount == 1 ? selection.getRangeAt(0) : null;
-                    if (currentRange &&
+                    if ((skipSameRange || roosterjs_editor_dom_1.Browser.isEdge) &&
+                        (currentRange =
+                            selection.rangeCount == 1 ? selection.getRangeAt(0) : null) &&
                         currentRange.startContainer == range.startContainer &&
                         currentRange.startOffset == range.startOffset &&
                         currentRange.endContainer == range.endContainer &&
@@ -2156,7 +2129,14 @@ var select = function (core, arg1, arg2, arg3, arg4) {
     }
     return false;
 };
-exports.default = select;
+exports.default = selectRange;
+/**
+ * @deprecated Only for compatibility with existing code, don't use ths function, use selectRange instead
+ */
+exports.select = function (core, arg1, arg2, arg3, arg4) {
+    var range = arg1 instanceof Range ? arg1 : roosterjs_editor_dom_1.createRange(arg1, arg2, arg3, arg4);
+    return core.api.selectRange(core, range);
+};
 
 
 /***/ }),
@@ -2648,7 +2628,6 @@ exports.default = TypeInContainerPlugin;
 Object.defineProperty(exports, "__esModule", { value: true });
 var createEditorCore_1 = __webpack_require__(/*! ./createEditorCore */ "./packages/roosterjs-editor-core/lib/editor/createEditorCore.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var roosterjs_editor_dom_2 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 /**
  * RoosterJs core editor class
  */
@@ -2663,7 +2642,7 @@ var Editor = /** @class */ (function () {
         if (options === void 0) { options = {}; }
         var _this = this;
         // 1. Make sure all parameters are valid
-        if (roosterjs_editor_dom_2.getTagOfNode(contentDiv) != 'DIV') {
+        if (roosterjs_editor_dom_1.getTagOfNode(contentDiv) != 'DIV') {
             throw new Error('contentDiv must be an HTML DIV element');
         }
         // 2. Store options values to local variables
@@ -2710,7 +2689,7 @@ var Editor = /** @class */ (function () {
             eventType: 9 /* EditorReady */,
         }, true /*broadcast*/);
         // 10. Before give editor to user, make sure there is at least one DIV element to accept typing
-        this.core.corePlugins.typeInContainer.ensureTypeInElement(new roosterjs_editor_dom_2.Position(contentDiv, 0 /* Begin */));
+        this.core.corePlugins.typeInContainer.ensureTypeInElement(new roosterjs_editor_dom_1.Position(contentDiv, 0 /* Begin */));
     }
     /**
      * Dispose this editor, dispose all plugins and custom data
@@ -2792,7 +2771,7 @@ var Editor = /** @class */ (function () {
      * @returns The InlineElement result
      */
     Editor.prototype.getInlineElementAtNode = function (node) {
-        return roosterjs_editor_dom_2.getInlineElementAtNode(this.core.contentDiv, node);
+        return roosterjs_editor_dom_1.getInlineElementAtNode(this.core.contentDiv, node);
     };
     /**
      * Get BlockElement at given node
@@ -2800,17 +2779,17 @@ var Editor = /** @class */ (function () {
      * @returns The BlockElement result
      */
     Editor.prototype.getBlockElementAtNode = function (node) {
-        return roosterjs_editor_dom_2.getBlockElementAtNode(this.core.contentDiv, node);
+        return roosterjs_editor_dom_1.getBlockElementAtNode(this.core.contentDiv, node);
     };
     Editor.prototype.contains = function (arg) {
-        return roosterjs_editor_dom_2.contains(this.core.contentDiv, arg);
+        return roosterjs_editor_dom_1.contains(this.core.contentDiv, arg);
     };
     Editor.prototype.queryElements = function (selector, scopeOrCallback, callback) {
         if (scopeOrCallback === void 0) { scopeOrCallback = 0 /* Body */; }
         var scope = scopeOrCallback instanceof Function ? 0 /* Body */ : scopeOrCallback;
         callback = scopeOrCallback instanceof Function ? scopeOrCallback : callback;
         var range = scope == 0 /* Body */ ? null : this.getSelectionRange();
-        return roosterjs_editor_dom_2.queryElements(this.core.contentDiv, selector, callback, scope, range);
+        return roosterjs_editor_dom_1.queryElements(this.core.contentDiv, selector, callback, scope, range);
     };
     /**
      * Collapse nodes within the given start and end nodes to their common ascenstor node,
@@ -2824,7 +2803,7 @@ var Editor = /** @class */ (function () {
      * otherwise just return start and end
      */
     Editor.prototype.collapseNodes = function (start, end, canSplitParent) {
-        return roosterjs_editor_dom_2.collapseNodes(this.core.contentDiv, start, end, canSplitParent);
+        return roosterjs_editor_dom_1.collapseNodes(this.core.contentDiv, start, end, canSplitParent);
     };
     //#endregion
     //#region Content API
@@ -2834,7 +2813,7 @@ var Editor = /** @class */ (function () {
      * @returns True if there's no visible content, otherwise false
      */
     Editor.prototype.isEmpty = function (trim) {
-        return roosterjs_editor_dom_2.isNodeEmpty(this.core.contentDiv, trim);
+        return roosterjs_editor_dom_1.isNodeEmpty(this.core.contentDiv, trim);
     };
     /**
      * Get current editor content as HTML string
@@ -2907,12 +2886,12 @@ var Editor = /** @class */ (function () {
      */
     Editor.prototype.insertContent = function (content, option) {
         if (content) {
-            var allNodes = roosterjs_editor_dom_2.fromHtml(content, this.core.document);
+            var allNodes = roosterjs_editor_dom_1.fromHtml(content, this.core.document);
             // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with
             // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
             // separately to show up on its own line
             if (option && option.insertOnNewLine && allNodes.length > 0) {
-                allNodes = [roosterjs_editor_dom_2.wrap(allNodes)];
+                allNodes = [roosterjs_editor_dom_1.wrap(allNodes)];
             }
             for (var i = 0; i < allNodes.length; i++) {
                 this.insertNode(allNodes[i], option);
@@ -2943,7 +2922,8 @@ var Editor = /** @class */ (function () {
         this.core.api.focus(this.core);
     };
     Editor.prototype.select = function (arg1, arg2, arg3, arg4) {
-        return this.core.api.select(this.core, arg1, arg2, arg3, arg4);
+        var range = arg1 instanceof Range ? arg1 : roosterjs_editor_dom_1.createRange(arg1, arg2, arg3, arg4);
+        return this.core.api.selectRange(this.core, range);
     };
     /**
      * Get current selection
@@ -2971,11 +2951,11 @@ var Editor = /** @class */ (function () {
     Editor.prototype.getFocusedPosition = function () {
         var sel = this.getSelection();
         if (this.contains(sel && sel.focusNode)) {
-            return new roosterjs_editor_dom_2.Position(sel.focusNode, sel.focusOffset);
+            return new roosterjs_editor_dom_1.Position(sel.focusNode, sel.focusOffset);
         }
         var range = this.getSelectionRange();
         if (range) {
-            return roosterjs_editor_dom_2.Position.getStart(range);
+            return roosterjs_editor_dom_1.Position.getStart(range);
         }
         return null;
     };
@@ -2985,7 +2965,7 @@ var Editor = /** @class */ (function () {
      */
     Editor.prototype.getCursorRect = function () {
         var position = this.getFocusedPosition();
-        return position && roosterjs_editor_dom_2.getPositionRect(position);
+        return position && roosterjs_editor_dom_1.getPositionRect(position);
     };
     /**
      * Get an HTML element from current cursor position.
@@ -3002,7 +2982,7 @@ var Editor = /** @class */ (function () {
             var position = this.getFocusedPosition();
             startFrom = position && position.node;
         }
-        return startFrom && roosterjs_editor_dom_2.findClosestElementAncestor(startFrom, this.core.contentDiv, selector);
+        return startFrom && roosterjs_editor_dom_1.findClosestElementAncestor(startFrom, this.core.contentDiv, selector);
     };
     Editor.prototype.addDomEventHandler = function (nameOrMap, handler) {
         var _this = this;
@@ -3130,7 +3110,7 @@ var Editor = /** @class */ (function () {
      * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
     Editor.prototype.getBodyTraverser = function (startNode) {
-        return roosterjs_editor_dom_2.ContentTraverser.createBodyTraverser(this.core.contentDiv, startNode);
+        return roosterjs_editor_dom_1.ContentTraverser.createBodyTraverser(this.core.contentDiv, startNode);
     };
     /**
      * Get a content traverser for current selection
@@ -3138,7 +3118,7 @@ var Editor = /** @class */ (function () {
     Editor.prototype.getSelectionTraverser = function () {
         var range = this.getSelectionRange();
         return (range &&
-            roosterjs_editor_dom_2.ContentTraverser.createSelectionTraverser(this.core.contentDiv, this.getSelectionRange()));
+            roosterjs_editor_dom_1.ContentTraverser.createSelectionTraverser(this.core.contentDiv, this.getSelectionRange()));
     };
     /**
      * Get a content traverser for current block element start from specified position
@@ -3147,14 +3127,14 @@ var Editor = /** @class */ (function () {
     Editor.prototype.getBlockTraverser = function (startFrom) {
         if (startFrom === void 0) { startFrom = 2 /* SelectionStart */; }
         var range = this.getSelectionRange();
-        return (range && roosterjs_editor_dom_2.ContentTraverser.createBlockTraverser(this.core.contentDiv, range, startFrom));
+        return (range && roosterjs_editor_dom_1.ContentTraverser.createBlockTraverser(this.core.contentDiv, range, startFrom));
     };
     /**
      * Get a text traverser of current selection
      */
     Editor.prototype.getContentSearcherOfCursor = function () {
         var range = this.getSelectionRange();
-        return range && new roosterjs_editor_dom_2.PositionContentSearcher(this.core.contentDiv, roosterjs_editor_dom_2.Position.getStart(range));
+        return range && new roosterjs_editor_dom_1.PositionContentSearcher(this.core.contentDiv, roosterjs_editor_dom_1.Position.getStart(range));
     };
     /**
      * Run a callback function asynchronously
@@ -3217,7 +3197,7 @@ var getSelectionRange_1 = __webpack_require__(/*! ../coreAPI/getSelectionRange *
 var hasFocus_1 = __webpack_require__(/*! ../coreAPI/hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
 var insertNode_1 = __webpack_require__(/*! ../coreAPI/insertNode */ "./packages/roosterjs-editor-core/lib/coreAPI/insertNode.ts");
 var MouseUpPlugin_1 = __webpack_require__(/*! ../corePlugins/MouseUpPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/MouseUpPlugin.ts");
-var select_1 = __webpack_require__(/*! ../coreAPI/select */ "./packages/roosterjs-editor-core/lib/coreAPI/select.ts");
+var selectRange_1 = __webpack_require__(/*! ../coreAPI/selectRange */ "./packages/roosterjs-editor-core/lib/coreAPI/selectRange.ts");
 var triggerEvent_1 = __webpack_require__(/*! ../coreAPI/triggerEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/triggerEvent.ts");
 var TypeInContainerPlugin_1 = __webpack_require__(/*! ../corePlugins/TypeInContainerPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/TypeInContainerPlugin.ts");
 var Undo_1 = __webpack_require__(/*! ../undo/Undo */ "./packages/roosterjs-editor-core/lib/undo/Undo.ts");
@@ -3282,7 +3262,8 @@ function createCoreApiMap(map) {
         getSelectionRange: map.getSelectionRange || getSelectionRange_1.default,
         hasFocus: map.hasFocus || hasFocus_1.default,
         insertNode: map.insertNode || insertNode_1.default,
-        select: map.select || select_1.default,
+        select: map.select || selectRange_1.select,
+        selectRange: map.selectRange || selectRange_1.default,
         triggerEvent: map.triggerEvent || triggerEvent_1.default,
     };
 }
@@ -4837,13 +4818,13 @@ var Position_1 = __webpack_require__(/*! ./selection/Position */ "./packages/roo
 exports.Position = Position_1.default;
 var createRange_1 = __webpack_require__(/*! ./selection/createRange */ "./packages/roosterjs-editor-dom/lib/selection/createRange.ts");
 exports.createRange = createRange_1.default;
+exports.getRangeFromSelectionPath = createRange_1.getRangeFromSelectionPath;
 var getPositionRect_1 = __webpack_require__(/*! ./selection/getPositionRect */ "./packages/roosterjs-editor-dom/lib/selection/getPositionRect.ts");
 exports.getPositionRect = getPositionRect_1.default;
 var isPositionAtBeginningOf_1 = __webpack_require__(/*! ./selection/isPositionAtBeginningOf */ "./packages/roosterjs-editor-dom/lib/selection/isPositionAtBeginningOf.ts");
 exports.isPositionAtBeginningOf = isPositionAtBeginningOf_1.default;
 var getSelectionPath_1 = __webpack_require__(/*! ./selection/getSelectionPath */ "./packages/roosterjs-editor-dom/lib/selection/getSelectionPath.ts");
 exports.getSelectionPath = getSelectionPath_1.default;
-exports.getRangeFromSelectionPath = getSelectionPath_1.getRangeFromSelectionPath;
 
 
 /***/ }),
@@ -5526,23 +5507,43 @@ function getEndOffset(node) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var isVoidHtmlElement_1 = __webpack_require__(/*! ../utils/isVoidHtmlElement */ "./packages/roosterjs-editor-dom/lib/utils/isVoidHtmlElement.ts");
 var Position_1 = __webpack_require__(/*! ./Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
-function createRange(start, end) {
-    if (!start) {
-        return null;
+function createRange(arg1, arg2, arg3, arg4) {
+    var start;
+    var end;
+    if (isNodePosition(arg1)) {
+        // function createRange(startPosition: NodePosition, endPosition?: NodePosition): Range;
+        start = arg1;
+        end = isNodePosition(arg2) ? arg2 : null;
     }
-    else if (start instanceof Node) {
-        end = new Position_1.default(end || start, -3 /* After */);
-        start = new Position_1.default(start, -2 /* Before */);
+    else if (arg1 instanceof Node) {
+        if (arg2 instanceof Array) {
+            // function createRange(rootNode: Node, startPath: number[], endPath?: number[]): Range;
+            start = getPositionFromPath(arg1, arg2);
+            end = arg3 instanceof Array ? getPositionFromPath(arg1, arg3) : null;
+        }
+        else if (typeof arg2 == 'number') {
+            // function createRange(node: Node, offset: number | PositionType): Range;
+            // function createRange(startNode: Node, startOffset: number | PositionType, endNode: Node, endOffset: number | PositionType): Range;
+            start = new Position_1.default(arg1, arg2);
+            end = arg3 instanceof Node ? new Position_1.default(arg3, arg4) : null;
+        }
+        else if (arg2 instanceof Node || !arg2) {
+            // function createRange(startNode: Node, endNode?: Node): Range;
+            start = new Position_1.default(arg1, -2 /* Before */);
+            end = new Position_1.default(arg2 || arg1, -3 /* After */);
+        }
+    }
+    if (start) {
+        var range = start.node.ownerDocument.createRange();
+        start = getFocusablePosition(start);
+        end = getFocusablePosition(end || start);
+        range.setStart(start.node, start.offset);
+        range.setEnd(end.node, end.offset);
+        return range;
     }
     else {
-        end = end || start;
+        return null;
     }
-    var range = start.node.ownerDocument.createRange();
-    start = getFocusablePosition(start);
-    end = getFocusablePosition(end);
-    range.setStart(start.node, start.offset);
-    range.setEnd(end.node, end.offset);
-    return range;
 }
 exports.default = createRange;
 /**
@@ -5554,6 +5555,40 @@ function getFocusablePosition(position) {
         ? new Position_1.default(position.node, position.isAtEnd ? -3 /* After */ : -2 /* Before */)
         : position;
 }
+function isNodePosition(arg) {
+    return arg && arg.node;
+}
+function getPositionFromPath(node, path) {
+    if (!node || !path) {
+        return null;
+    }
+    // Iterate with a for loop to avoid mutating the passed in element path stack
+    // or needing to copy it.
+    var offset;
+    for (var i = 0; i < path.length; i++) {
+        offset = path[i];
+        if (i < path.length - 1 &&
+            node &&
+            node.nodeType == 1 /* Element */ &&
+            node.childNodes.length > offset) {
+            node = node.childNodes[offset];
+        }
+        else {
+            break;
+        }
+    }
+    return new Position_1.default(node, offset);
+}
+/**
+ * @deprecated Use createRange instead
+ * Get range from the given selection path
+ * @param rootNode Root node of the selection path
+ * @param path The selection path which contains start and end position path
+ */
+function getRangeFromSelectionPath(rootNode, path) {
+    return createRange(rootNode, path.start, path.end);
+}
+exports.getRangeFromSelectionPath = getRangeFromSelectionPath;
 
 
 /***/ }),
@@ -5641,7 +5676,6 @@ function normalizeRect(clientRect) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(/*! ../utils/contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
-var createRange_1 = __webpack_require__(/*! ./createRange */ "./packages/roosterjs-editor-dom/lib/selection/createRange.ts");
 var Position_1 = __webpack_require__(/*! ./Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
 /**
  * Get path of the given selection range related to the given rootNode
@@ -5659,38 +5693,6 @@ function getSelectionPath(rootNode, range) {
     return selectionPath;
 }
 exports.default = getSelectionPath;
-/**
- * Get range from the given selection path
- * @param rootNode Root node of the selection path
- * @param path The selection path which contains start and end position path
- */
-function getRangeFromSelectionPath(rootNode, path) {
-    var start = getPositionFromPath(rootNode, path.start);
-    var end = getPositionFromPath(rootNode, path.end);
-    return createRange_1.default(start, end);
-}
-exports.getRangeFromSelectionPath = getRangeFromSelectionPath;
-function getPositionFromPath(node, path) {
-    if (!node || !path) {
-        return null;
-    }
-    // Iterate with a for loop to avoid mutating the passed in element path stack
-    // or needing to copy it.
-    var offset;
-    for (var i = 0; i < path.length; i++) {
-        offset = path[i];
-        if (i < path.length - 1 &&
-            node &&
-            node.nodeType == 1 /* Element */ &&
-            node.childNodes.length > offset) {
-            node = node.childNodes[offset];
-        }
-        else {
-            break;
-        }
-    }
-    return new Position_1.default(node, offset);
-}
 /**
  * Get the path of the node relative to rootNode.
  * The path of the node is an array of integer indecies into the childNodes of the given node.
@@ -7644,14 +7646,13 @@ function hasLinkBeforeCursor(event, editor) {
     return inline instanceof roosterjs_editor_dom_1.LinkInlineElement;
 }
 function autoLink(event, editor) {
-    var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, editor);
     var anchor = editor.getDocument().createElement('a');
     var linkData = cacheGetLinkData(event, editor);
     anchor.textContent = linkData.originalUrl;
     anchor.href = linkData.normalizedUrl;
     editor.runAsync(function () {
         editor.performAutoComplete(function () {
-            roosterjs_editor_api_1.replaceWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */, searcher);
+            roosterjs_editor_api_1.replaceWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */);
             // The content at cursor has changed. Should also clear the cursor data cache
             roosterjs_editor_core_1.clearContentSearcherCache(event);
             return anchor;
