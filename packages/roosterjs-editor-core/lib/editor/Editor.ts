@@ -23,19 +23,23 @@ import {
     Rect,
 } from 'roosterjs-editor-types';
 import {
-    PositionContentSearcher,
-    ContentTraverser,
-    Position,
+    Browser,
+    collapseNodes,
     contains,
+    ContentTraverser,
+    createRange,
+    findClosestElementAncestor,
     fromHtml,
     getBlockElementAtNode,
-    findClosestElementAncestor,
-    getPositionRect,
     getInlineElementAtNode,
+    getPositionRect,
+    getRangeFromSelectionPath,
+    getSelectionPath,
     getTagOfNode,
     isNodeEmpty,
+    Position,
+    PositionContentSearcher,
     queryElements,
-    collapseNodes,
     wrap,
 } from 'roosterjs-editor-dom';
 
@@ -562,7 +566,8 @@ export default class Editor {
     ): boolean;
 
     public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
-        return this.core.api.select(this.core, arg1, arg2, arg3, arg4);
+        let range = arg1 instanceof Range ? arg1 : createRange(arg1, arg2, arg3, arg4);
+        return this.core.api.selectRange(this.core, range);
     }
 
     /**

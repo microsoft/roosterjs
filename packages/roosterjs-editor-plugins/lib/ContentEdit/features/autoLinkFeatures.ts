@@ -90,7 +90,6 @@ function hasLinkBeforeCursor(event: PluginKeyboardEvent, editor: Editor): boolea
 }
 
 function autoLink(event: PluginEvent, editor: Editor) {
-    let searcher = cacheGetContentSearcher(event, editor);
     let anchor = editor.getDocument().createElement('a');
     let linkData = cacheGetLinkData(event, editor);
     anchor.textContent = linkData.originalUrl;
@@ -98,7 +97,7 @@ function autoLink(event: PluginEvent, editor: Editor) {
 
     editor.runAsync(() => {
         editor.performAutoComplete(() => {
-            replaceWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */, searcher);
+            replaceWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */);
 
             // The content at cursor has changed. Should also clear the cursor data cache
             clearContentSearcherCache(event);

@@ -1,5 +1,5 @@
 import EditorCore, { Focus } from '../interfaces/EditorCore';
-import { getFirstLeafNode } from 'roosterjs-editor-dom';
+import { createRange, getFirstLeafNode } from 'roosterjs-editor-dom';
 import { PositionType } from 'roosterjs-editor-types';
 
 const focus: Focus = (core: EditorCore) => {
@@ -11,9 +11,16 @@ const focus: Focus = (core: EditorCore) => {
         // So here we always do a live selection pull on DOM and make it point in Editor. The pitfall is, the cursor could be reset
         // to very begin to of editor since we don't really have last saved selection (created on blur which does not fire in this case).
         // It should be better than the case you cannot type
-        if (!core.cachedSelectionRange || !core.api.select(core, core.cachedSelectionRange)) {
+        if (
+            !core.cachedSelectionRange ||
+            !core.api.selectRange(core, core.cachedSelectionRange, true /*skipSameRange*/)
+        ) {
             let node = getFirstLeafNode(core.contentDiv) || core.contentDiv;
-            core.api.select(core, node, PositionType.Begin);
+            core.api.selectRange(
+                core,
+                createRange(node, PositionType.Begin),
+                true /*skipSameRange*/
+            );
         }
     }
 
