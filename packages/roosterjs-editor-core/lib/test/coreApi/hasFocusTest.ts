@@ -1,6 +1,7 @@
 import createEditorCore from '../../editor/createEditorCore';
 import EditorCore from '../../interfaces/EditorCore';
 import hasFocus from '../../coreAPI/hasFocus';
+import { createRange } from 'roosterjs-editor-dom';
 
 describe('hasFocus', () => {
     let div: HTMLDivElement;
@@ -44,7 +45,7 @@ describe('hasFocus', () => {
         expect(hasFocus(core)).toBe(false);
 
         let span = core.contentDiv.querySelector('span');
-        core.api.select(core, span.firstChild, 1);
+        core.api.selectRange(core, createRange(span.firstChild, 1));
         expect(hasFocus(core)).toBe(true);
     });
 });

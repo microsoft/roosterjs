@@ -16,6 +16,7 @@ export {
     HasFocus,
     InsertNode,
     Select,
+    SelectRange,
     TriggerEvent,
 } from './interfaces/EditorCore';
 export { default as EditorOptions } from './interfaces/EditorOptions';
