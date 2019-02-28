@@ -1,4 +1,5 @@
-import getSelectionPath, { getRangeFromSelectionPath } from '../../selection/getSelectionPath';
+import getSelectionPath from '../../selection/getSelectionPath';
+import { getRangeFromSelectionPath } from '../../selection/createRange';
 
 // Slim polyfill of Range since it is not defined by jsdom
 // see open issue https://github.com/jsdom/jsdom/issues/317

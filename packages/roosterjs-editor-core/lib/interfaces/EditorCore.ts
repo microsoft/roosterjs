@@ -160,10 +160,21 @@ export type HasFocus = (core: EditorCore) => boolean;
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
 
 /**
+ * @deprecated Use SelectRange instead
  * Select content
  * @param core The EditorCore object
  */
 export type Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => boolean;
+
+/**
+ * Change the editor selection to the given range
+ * @param core The EditorCore object
+ * @param range The range to select
+ * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
+ * in editor, otherwise it will always remove current selection ranage and set to the given one.
+ * This parameter is always treat as true in Edge to avoid some weird runtime exception.
+ */
+export type SelectRange = (core: EditorCore, range: Range, skipSameRange?: boolean) => boolean;
 
 /**
  * Trigger a plugin event
@@ -232,10 +243,21 @@ export interface CoreApiMap {
     insertNode: InsertNode;
 
     /**
+     * @deprecated Use SelectRange instead
      * Select content
      * @param core The EditorCore object
      */
     select: Select;
+
+    /**
+     * Change the editor selection to the given range
+     * @param core The EditorCore object
+     * @param range The range to select
+     * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
+     * in editor, otherwise it will always remove current selection ranage and set to the given one.
+     * This parameter is always treat as true in Edge to avoid some weird runtime exception.
+     */
+    selectRange: SelectRange;
 
     /**
      * Trigger a plugin event
