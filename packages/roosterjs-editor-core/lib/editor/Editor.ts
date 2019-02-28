@@ -403,14 +403,26 @@ export default class Editor {
         el.innerHTML = content;
         const allChildElements = el.getElementsByTagName('*') as HTMLCollectionOf<HTMLElement>;
         [].forEach.call(allChildElements, (element: HTMLElement) => {
-            if (element.dataset && (element.dataset.ogsc || element.dataset.ogsb)) {
-                if (element.dataset.ogsc) {
-                    element.style.color = element.dataset.ogsc;
+            if (element.dataset) {
+                // Reset color styles based on the content of the ogsc/ogsb data element.
+                // If those data properties are empty or do not exist, set them anyway to clear the content.
+                element.style.color = element.dataset.ogsc ? element.dataset.ogsc : '';
+                element.style.backgroundColor = element.dataset.ogsb ? element.dataset.ogsb : '';
+
+                // Some elements might have set attribute colors. We need to reset these as well.
+                if (element.dataset.ogac) {
+                    element.setAttribute('color', element.dataset.ogac);
                 }
 
-                if (element.dataset.ogsb) {
-                    element.style.backgroundColor = element.dataset.ogsb;
+                if (element.dataset.ogab) {
+                    element.setAttribute('bgcolor', element.dataset.ogab);
                 }
+
+                // Clean up any remaining data attributes.
+                delete element.dataset.ogsc;
+                delete element.dataset.ogsb;
+                delete element.dataset.ogac;
+                delete element.dataset.ogab;
             }
         });
         const newContent = el.innerHTML;
