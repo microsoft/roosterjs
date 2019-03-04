@@ -1,7 +1,6 @@
 import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
-import { Browser, getRangeFromSelectionPath, getSelectionPath } from 'roosterjs-editor-dom';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import {
     BlockElement,
@@ -23,19 +22,23 @@ import {
     Rect,
 } from 'roosterjs-editor-types';
 import {
-    PositionContentSearcher,
-    ContentTraverser,
-    Position,
+    Browser,
+    collapseNodes,
     contains,
+    ContentTraverser,
+    createRange,
+    findClosestElementAncestor,
     fromHtml,
     getBlockElementAtNode,
-    findClosestElementAncestor,
-    getPositionRect,
     getInlineElementAtNode,
+    getPositionRect,
+    getRangeFromSelectionPath,
+    getSelectionPath,
     getTagOfNode,
     isNodeEmpty,
+    Position,
+    PositionContentSearcher,
     queryElements,
-    collapseNodes,
     wrap,
 } from 'roosterjs-editor-dom';
 
@@ -369,7 +372,7 @@ export default class Editor {
     public getContent(
         triggerExtractContentEvent: boolean = true,
         includeSelectionMarker: boolean = false,
-        normalizeColor: boolean = true,
+        normalizeColor: boolean = true
     ): string {
         let contentDiv = this.core.contentDiv;
         let content = contentDiv.innerHTML;
@@ -443,7 +446,11 @@ export default class Editor {
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      * @param convertToDarkMode True to conver the editor's new content to dark mode formatting. Default value is false.
      */
-    public setContent(content: string, triggerContentChangedEvent: boolean = true, convertToDarkMode?: boolean) {
+    public setContent(
+        content: string,
+        triggerContentChangedEvent: boolean = true,
+        convertToDarkMode?: boolean
+    ) {
         let contentDiv = this.core.contentDiv;
         let contentChanged = false;
         if (contentDiv.innerHTML != content) {
@@ -458,7 +465,7 @@ export default class Editor {
                     this.deleteNode(pathComment);
                     let range = getRangeFromSelectionPath(contentDiv, path);
                     this.select(range);
-                } catch { }
+                } catch {}
             }
         }
 
@@ -581,7 +588,8 @@ export default class Editor {
     ): boolean;
 
     public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
-        return this.core.api.select(this.core, arg1, arg2, arg3, arg4);
+        let range = arg1 instanceof Range ? arg1 : createRange(arg1, arg2, arg3, arg4);
+        return this.core.api.selectRange(this.core, range);
     }
 
     /**
@@ -681,8 +689,8 @@ export default class Editor {
         nameOrMap:
             | string
             | {
-                [eventName: string]: (event: UIEvent) => void;
-            },
+                  [eventName: string]: (event: UIEvent) => void;
+              },
         handler?: (event: UIEvent) => void
     ): () => void {
         if (nameOrMap instanceof Object) {
@@ -927,13 +935,15 @@ export default class Editor {
 
         const currentContent = this.getContent(
             undefined /* triggerContentChangedEvent */,
-            true /* getSelectionMarker */);
+            true /* getSelectionMarker */
+        );
         this.core.inDarkMode = nextDarkMode;
         if (nextDarkMode) {
             this.setContent(
                 currentContent,
                 undefined /* triggerContentChangedEvent */,
-                true /* convertToDarkMode */);
+                true /* convertToDarkMode */
+            );
         } else {
             this.setContent(currentContent);
         }
@@ -975,17 +985,19 @@ export default class Editor {
             childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
         }
 
-        return childElements.length > 0 ? () => {
-            const darkModeOptions = this.getDarkModeOptions();
-            childElements.forEach((element) => {
-                if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
-                    darkModeOptions.onExternalContentTransform(element);
-                } else {
-                    element.style.color = null;
-                    element.style.backgroundColor = null;
-                }
-            });
-        } : null;
+        return childElements.length > 0
+            ? () => {
+                  const darkModeOptions = this.getDarkModeOptions();
+                  childElements.forEach(element => {
+                      if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
+                          darkModeOptions.onExternalContentTransform(element);
+                      } else {
+                          element.style.color = null;
+                          element.style.backgroundColor = null;
+                      }
+                  });
+              }
+            : null;
     }
 
     //#endregion

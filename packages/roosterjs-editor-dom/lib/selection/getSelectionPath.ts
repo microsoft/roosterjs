@@ -1,5 +1,4 @@
 import contains from '../utils/contains';
-import createRange from './createRange';
 import Position from './Position';
 import { NodePosition, NodeType, SelectionPath } from 'roosterjs-editor-types';
 
@@ -19,43 +18,6 @@ export default function getSelectionPath(rootNode: HTMLElement, range: Range): S
     };
 
     return selectionPath;
-}
-
-/**
- * Get range from the given selection path
- * @param rootNode Root node of the selection path
- * @param path The selection path which contains start and end position path
- */
-export function getRangeFromSelectionPath(rootNode: HTMLElement, path: SelectionPath) {
-    let start = getPositionFromPath(rootNode, path.start);
-    let end = getPositionFromPath(rootNode, path.end);
-    return createRange(start, end);
-}
-
-function getPositionFromPath(node: Node, path: number[]): NodePosition {
-    if (!node || !path) {
-        return null;
-    }
-
-    // Iterate with a for loop to avoid mutating the passed in element path stack
-    // or needing to copy it.
-    let offset: number;
-
-    for (let i = 0; i < path.length; i++) {
-        offset = path[i];
-        if (
-            i < path.length - 1 &&
-            node &&
-            node.nodeType == NodeType.Element &&
-            node.childNodes.length > offset
-        ) {
-            node = node.childNodes[offset];
-        } else {
-            break;
-        }
-    }
-
-    return new Position(node, offset);
 }
 
 /**

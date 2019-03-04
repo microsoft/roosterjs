@@ -24,11 +24,13 @@ const RIGHT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowRight' : 'Right';
 const DOWN_ARROW_CHARCODE = !Browser.isIE ? 'ArrowDown' : 'Down';
 const DELETE_CHARCODE = !Browser.isIE ? 'Delete' : 'Del';
 
-export interface EditorPickerPluginInterface extends EditorPlugin {
-    dataProvider: PickerDataProvider;
+export interface EditorPickerPluginInterface<T extends PickerDataProvider = PickerDataProvider>
+    extends EditorPlugin {
+    dataProvider: T;
 }
 
-export default class PickerPlugin implements EditorPickerPluginInterface {
+export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvider>
+    implements EditorPickerPluginInterface<T> {
     private editor: Editor;
     private eventHandledOnKeyDown: boolean;
     private blockSuggestions: boolean;
@@ -36,10 +38,7 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
     private isCharacterValue: boolean;
     private lastKnownRange: Range;
 
-    constructor(
-        public readonly dataProvider: PickerDataProvider,
-        private pickerOptions: PickerPluginOptions
-    ) { }
+    constructor(public readonly dataProvider: T, private pickerOptions: PickerPluginOptions) {}
 
     /**
      * Get a friendly name
@@ -124,18 +123,22 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.ContentChanged &&
-            event.source == ChangeSource.SetContent && this.dataProvider.onContentChanged) {
+        if (
+            event.eventType == PluginEventType.ContentChanged &&
+            event.source == ChangeSource.SetContent &&
+            this.dataProvider.onContentChanged
+        ) {
             // Undos and other major changes to document content fire this type of event.
             // Inform the data provider of the current picker placed elements in the body.
             let elementIds: string[] = [];
             this.editor.queryElements(
                 "[id^='" + this.pickerOptions.elementIdPrefix + "']",
-                (element) => {
+                element => {
                     if (element.id) {
                         elementIds.push(element.id);
                     }
-                });
+                }
+            );
             this.dataProvider.onContentChanged(elementIds);
         }
         if (event.eventType == PluginEventType.KeyDown) {
@@ -320,9 +323,9 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                 this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
                     ? keyboardEvent.key == LEFT_ARROW_CHARCODE ||
-                    keyboardEvent.key == RIGHT_ARROW_CHARCODE
+                      keyboardEvent.key == RIGHT_ARROW_CHARCODE
                     : keyboardEvent.key == UP_ARROW_CHARCODE ||
-                    keyboardEvent.key == DOWN_ARROW_CHARCODE)
+                      keyboardEvent.key == DOWN_ARROW_CHARCODE)
             ) {
                 this.dataProvider.shiftHighlight(
                     this.pickerOptions.isHorizontal
