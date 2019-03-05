@@ -66,10 +66,11 @@ function applyListFormat(node: Node, formats: string[], isDarkMode: boolean) {
         {
             fontFamily: formats[0],
             fontSize: formats[1],
-            textColors: {
+            textColors: isDarkMode ? {
                 lightModeColor: formats[4],
                 darkModeColor: formats[2],
-            },
+            } : null,
+            textColor: !isDarkMode ? formats[2] : null,
         },
         isDarkMode
     );
