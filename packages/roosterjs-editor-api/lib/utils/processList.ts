@@ -70,7 +70,7 @@ function applyListFormat(node: Node, formats: string[], isDarkMode: boolean) {
                 lightModeColor: formats[4],
                 darkModeColor: formats[2],
             } : null,
-            textColor: !isDarkMode ? formats[2] : null,
+            textColor: formats[2],
         },
         isDarkMode
     );
