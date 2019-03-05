@@ -3359,9 +3359,9 @@ export class HyperLink implements EditorPlugin {
      * @param getTooltipCallback A callback function to get tooltip text for an existing hyperlink.
      * Default value is to return the href itself. If null, there will be no tooltip text.
      * @param target (Optional) Target window name for hyperlink. If null, will use "_blank"
-     * @param onLinkClick (Optional) Open link callback
+     * @param onLinkClick (Optional) Open link callback (return false to use default behavior)
      */
-    constructor(getTooltipCallback?: (href: string, a: HTMLAnchorElement) => string, target?: string, onLinkClick?: (anchor: HTMLAnchorElement, mouseEvent: MouseEvent) => void);
+    constructor(getTooltipCallback?: (href: string, a: HTMLAnchorElement) => string, target?: string, onLinkClick?: (anchor: HTMLAnchorElement, mouseEvent: MouseEvent) => boolean | void);
     /**
      * Get a friendly name of  this plugin
      */

@@ -8254,7 +8254,7 @@ var HyperLink = /** @class */ (function () {
      * @param getTooltipCallback A callback function to get tooltip text for an existing hyperlink.
      * Default value is to return the href itself. If null, there will be no tooltip text.
      * @param target (Optional) Target window name for hyperlink. If null, will use "_blank"
-     * @param onLinkClick (Optional) Open link callback
+     * @param onLinkClick (Optional) Open link callback (return false to use default behavior)
      */
     function HyperLink(getTooltipCallback, target, onLinkClick) {
         if (getTooltipCallback === void 0) { getTooltipCallback = function (href) { return href; }; }
@@ -8302,8 +8302,7 @@ var HyperLink = /** @class */ (function () {
         if (event.eventType == 5 /* MouseUp */) {
             var anchor = this.editor.getElementAtCursor('A', event.rawEvent.srcElement);
             if (anchor) {
-                if (this.onLinkClick) {
-                    this.onLinkClick(anchor, event.rawEvent);
+                if (this.onLinkClick && this.onLinkClick(anchor, event.rawEvent) !== false) {
                     return;
                 }
                 var href = void 0;
