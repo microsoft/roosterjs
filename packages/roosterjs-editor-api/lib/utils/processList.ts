@@ -26,6 +26,8 @@ export default function processList(editor: Editor, command: DocumentCommand): N
 
     let currentNode = editor.getElementAtCursor();
     let currentFormat = getComputedStyles(currentNode);
+    let currentOgsc = currentNode.dataset.ogsc;
+    currentFormat.push(currentOgsc);
     let existingList = editor.getElementAtCursor('OL,UL');
     editor.getDocument().execCommand(command, false, null);
     editor.queryElements('.' + TEMP_NODE_CLASS, node => editor.deleteNode(node));
@@ -64,6 +66,10 @@ function applyListFormat(node: Node, formats: string[], isDarkMode: boolean) {
         {
             fontFamily: formats[0],
             fontSize: formats[1],
+            textColors: isDarkMode ? {
+                lightModeColor: formats[4],
+                darkModeColor: formats[2],
+            } : null,
             textColor: formats[2],
         },
         isDarkMode

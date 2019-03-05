@@ -452,8 +452,10 @@ export default class Editor {
         convertToDarkMode?: boolean
     ) {
         let contentDiv = this.core.contentDiv;
+        let contentChanged = false;
         if (contentDiv.innerHTML != content) {
             contentDiv.innerHTML = content || '';
+            contentChanged = true;
 
             let pathComment = contentDiv.lastChild;
 
@@ -465,14 +467,19 @@ export default class Editor {
                     this.select(range);
                 } catch {}
             }
+        }
 
-            if (convertToDarkMode) {
-                this.convertContentToDarkMode(contentDiv, true /* skipRootElement */)();
+        // Convert content even if it hasn't changed.
+        if (convertToDarkMode) {
+            const convertFunction = this.convertContentToDarkMode(contentDiv, true /* skipRootElement */);
+            if (convertFunction) {
+                convertFunction();
+                contentChanged = true;
             }
+        }
 
-            if (triggerContentChangedEvent) {
-                this.triggerContentChangedEvent();
-            }
+        if (triggerContentChangedEvent && contentChanged) {
+            this.triggerContentChangedEvent();
         }
     }
 
