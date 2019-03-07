@@ -73,7 +73,7 @@ export default class Editor {
         this.setContent(
             options.initialContent || contentDiv.innerHTML || '',
             true /* triggerContentChangedEvent */,
-            this.core.darkModeOptions && this.core.darkModeOptions.transformOnInitialize
+            this.core.inDarkMode
         );
 
         // 5. Create event handler to bind DOM events
