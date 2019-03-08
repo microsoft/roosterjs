@@ -8311,7 +8311,8 @@ var HyperLink = /** @class */ (function () {
                 var href = void 0;
                 if (!roosterjs_editor_dom_1.Browser.isFirefox &&
                     (href = this.tryGetHref(anchor)) &&
-                    (roosterjs_editor_dom_1.Browser.isMac ? event.rawEvent.metaKey : event.rawEvent.ctrlKey)) {
+                    (roosterjs_editor_dom_1.Browser.isMac ? event.rawEvent.metaKey : event.rawEvent.ctrlKey) &&
+                    event.rawEvent.button === 0) {
                     try {
                         var target = this.target || '_blank';
                         var window_1 = this.editor.getDocument().defaultView;
