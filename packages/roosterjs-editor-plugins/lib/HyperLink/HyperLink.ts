@@ -81,7 +81,8 @@ export default class HyperLink implements EditorPlugin {
                 if (
                     !Browser.isFirefox &&
                     (href = this.tryGetHref(anchor)) &&
-                    (Browser.isMac ? event.rawEvent.metaKey : event.rawEvent.ctrlKey)
+                    (Browser.isMac ? event.rawEvent.metaKey : event.rawEvent.ctrlKey) &&
+                    event.rawEvent.button === 0
                 ) {
                     try {
                         const target = this.target || '_blank';
