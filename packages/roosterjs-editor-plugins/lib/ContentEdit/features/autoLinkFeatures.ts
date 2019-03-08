@@ -92,12 +92,16 @@ function hasLinkBeforeCursor(event: PluginKeyboardEvent, editor: Editor): boolea
 function autoLink(event: PluginEvent, editor: Editor) {
     let anchor = editor.getDocument().createElement('a');
     let linkData = cacheGetLinkData(event, editor);
+
+    // Need to get searcher before we enter the async callback since the callback can happen when cursor is moved to next line
+    // and at that time a new searcher won't be able to find the link text to replace
+    let searcher = editor.getContentSearcherOfCursor();
     anchor.textContent = linkData.originalUrl;
     anchor.href = linkData.normalizedUrl;
 
     editor.runAsync(() => {
         editor.performAutoComplete(() => {
-            replaceWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */);
+            replaceWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */, searcher);
 
             // The content at cursor has changed. Should also clear the cursor data cache
             clearContentSearcherCache(event);
