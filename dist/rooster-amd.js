@@ -7653,11 +7653,14 @@ function hasLinkBeforeCursor(event, editor) {
 function autoLink(event, editor) {
     var anchor = editor.getDocument().createElement('a');
     var linkData = cacheGetLinkData(event, editor);
+    // Need to get searcher before we enter the async callback since the callback can happen when cursor is moved to next line
+    // and at that time a new searcher won't be able to find the link text to replace
+    var searcher = editor.getContentSearcherOfCursor();
     anchor.textContent = linkData.originalUrl;
     anchor.href = linkData.normalizedUrl;
     editor.runAsync(function () {
         editor.performAutoComplete(function () {
-            roosterjs_editor_api_1.replaceWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */);
+            roosterjs_editor_api_1.replaceWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */, searcher);
             // The content at cursor has changed. Should also clear the cursor data cache
             roosterjs_editor_core_1.clearContentSearcherCache(event);
             return anchor;
