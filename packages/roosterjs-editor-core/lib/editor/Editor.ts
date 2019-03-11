@@ -1,4 +1,4 @@
-import createEditorCore from './createEditorCore';
+import createEditorCore, { calcDefaultFormat } from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
@@ -937,7 +937,10 @@ export default class Editor {
             undefined /* triggerContentChangedEvent */,
             true /* getSelectionMarker */
         );
+
         this.core.inDarkMode = nextDarkMode;
+        this.core.defaultFormat = calcDefaultFormat(this.core.contentDiv, this.core.defaultFormat, this.core.inDarkMode);
+
         if (nextDarkMode) {
             this.setContent(
                 currentContent,

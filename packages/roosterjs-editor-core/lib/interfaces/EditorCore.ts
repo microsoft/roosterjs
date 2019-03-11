@@ -51,7 +51,7 @@ export default interface EditorCore {
     /**
      * Default format of this editor
      */
-    readonly defaultFormat: DefaultFormat;
+    defaultFormat: DefaultFormat;
 
     /**
      * Core plugin of this editor

@@ -46,7 +46,7 @@ export default function createEditorCore(
     return {
         contentDiv,
         document: contentDiv.ownerDocument,
-        defaultFormat: calcDefaultFormat(contentDiv, options),
+        defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat, options.inDarkMode),
         corePlugins,
         currentUndoSnapshot: null,
         customData: {},
@@ -60,10 +60,8 @@ export default function createEditorCore(
     };
 }
 
-function calcDefaultFormat(node: Node, options: EditorOptions): DefaultFormat {
-    let baseFormat = options.defaultFormat;
-
-    if (options.inDarkMode) {
+export function calcDefaultFormat(node: Node, baseFormat: DefaultFormat, inDarkMode: boolean): DefaultFormat {
+    if (inDarkMode) {
         if (!baseFormat.backgroundColors) {
             baseFormat.backgroundColors = DARK_MODE_DEFAULT_FORMAT.backgroundColors;
         }
@@ -83,7 +81,7 @@ function calcDefaultFormat(node: Node, options: EditorOptions): DefaultFormat {
         fontSize: baseFormat.fontSize || styles[1],
         get textColor() {
             return baseFormat.textColors
-                ? options.inDarkMode
+                ? inDarkMode
                     ? baseFormat.textColors.darkModeColor
                     : baseFormat.textColors.lightModeColor
                 : baseFormat.textColor || styles[2];
@@ -91,7 +89,7 @@ function calcDefaultFormat(node: Node, options: EditorOptions): DefaultFormat {
         textColors: baseFormat.textColors,
         get backgroundColor() {
             return baseFormat.backgroundColors
-                ? options.inDarkMode
+                ? inDarkMode
                     ? baseFormat.backgroundColors.darkModeColor
                     : baseFormat.backgroundColors.lightModeColor
                 : baseFormat.backgroundColor || '';
