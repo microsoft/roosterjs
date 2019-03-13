@@ -64,15 +64,16 @@ function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat
     }
 
     baseFormat = baseFormat || <DefaultFormat>{};
-    let styles = getComputedStyles(node);
+    let { fontFamily, fontSize, textColor, backgroundColor, bold, italic, underline } = baseFormat;
+    let currentStyles = fontFamily && fontSize && textColor ? null : getComputedStyles(node);
     return {
-        fontFamily: baseFormat.fontFamily || styles[0],
-        fontSize: baseFormat.fontSize || styles[1],
-        textColor: baseFormat.textColor || styles[2],
-        backgroundColor: baseFormat.backgroundColor || '',
-        bold: baseFormat.bold,
-        italic: baseFormat.italic,
-        underline: baseFormat.underline,
+        fontFamily: fontFamily || currentStyles[0],
+        fontSize: fontSize || currentStyles[1],
+        textColor: textColor || currentStyles[2],
+        backgroundColor: backgroundColor || '',
+        bold: bold,
+        italic: italic,
+        underline: underline,
     };
 }
 
