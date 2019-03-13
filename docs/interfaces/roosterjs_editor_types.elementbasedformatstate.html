@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>VCell | RoosterJs API Reference</title>
+	<title>ElementBasedFormatState | RoosterJs API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/roosterjs_editor_dom.html">roosterjs-editor-dom</a>
+					<a href="../modules/roosterjs_editor_types.html">roosterjs-editor-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_dom.vcell.html">VCell</a>
+					<a href="roosterjs_editor_types.elementbasedformatstate.html">ElementBasedFormatState</a>
 				</li>
 			</ul>
-			<h1>Interface VCell</h1>
+			<h1>Interface ElementBasedFormatState</h1>
 		</div>
 	</div>
 </header>
@@ -68,7 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represent a virtual cell of a virtual table</p>
+						<p>Format state represented by DOM element</p>
 					</div>
 				</div>
 			</section>
@@ -76,7 +76,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">VCell</span>
+						<span class="target">ElementBasedFormatState</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="roosterjs_editor_types.formatstate.html" class="tsd-signature-type">FormatState</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -87,9 +92,12 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_dom.vcell.html#spanabove" class="tsd-kind-icon">span<wbr>Above</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_dom.vcell.html#spanleft" class="tsd-kind-icon">span<wbr>Left</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_dom.vcell.html#td" class="tsd-kind-icon">td</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.elementbasedformatstate.html#canaddimagealttext" class="tsd-kind-icon">can<wbr>Add<wbr>Image<wbr>Alt<wbr>Text</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.elementbasedformatstate.html#canunlink" class="tsd-kind-icon">can<wbr>Unlink</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.elementbasedformatstate.html#headerlevel" class="tsd-kind-icon">header<wbr>Level</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.elementbasedformatstate.html#isblockquote" class="tsd-kind-icon">is<wbr>Block<wbr>Quote</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.elementbasedformatstate.html#isbullet" class="tsd-kind-icon">is<wbr>Bullet</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.elementbasedformatstate.html#isnumbering" class="tsd-kind-icon">is<wbr>Numbering</a></li>
 							</ul>
 						</section>
 					</div>
@@ -98,47 +106,92 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="spanabove" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> span<wbr>Above</h3>
-					<div class="tsd-signature tsd-kind-icon">span<wbr>Above<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="canaddimagealttext" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> can<wbr>Add<wbr>Image<wbr>Alt<wbr>Text</h3>
+					<div class="tsd-signature tsd-kind-icon">can<wbr>Add<wbr>Image<wbr>Alt<wbr>Text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-dom/lib/table/VTable.ts#L20">roosterjs-editor-dom/lib/table/VTable.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L67">roosterjs-editor-types/lib/interface/FormatState.ts:67</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Whether this cell is spanned from above</p>
+							<p>Whether add image alt text command can be called to the text</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="spanleft" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> span<wbr>Left</h3>
-					<div class="tsd-signature tsd-kind-icon">span<wbr>Left<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="canunlink" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> can<wbr>Unlink</h3>
+					<div class="tsd-signature tsd-kind-icon">can<wbr>Unlink<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-dom/lib/table/VTable.ts#L15">roosterjs-editor-dom/lib/table/VTable.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L62">roosterjs-editor-types/lib/interface/FormatState.ts:62</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Whether this cell is spanned from left</p>
+							<p>Whether unlink command can be called to the text</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="td" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> td</h3>
-					<div class="tsd-signature tsd-kind-icon">td<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLTableCellElement</span></div>
+					<a name="headerlevel" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> header<wbr>Level</h3>
+					<div class="tsd-signature tsd-kind-icon">header<wbr>Level<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-dom/lib/table/VTable.ts#L10">roosterjs-editor-dom/lib/table/VTable.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L72">roosterjs-editor-types/lib/interface/FormatState.ts:72</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The table cell object. The value will be null if this is an expanded virtual cell</p>
+							<p>Header level (0-6, 0 means no header)</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="isblockquote" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Block<wbr>Quote</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Block<wbr>Quote<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L57">roosterjs-editor-types/lib/interface/FormatState.ts:57</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the text is in block quote</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="isbullet" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Bullet</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Bullet<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L47">roosterjs-editor-types/lib/interface/FormatState.ts:47</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the text is in bullet mode</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="isnumbering" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Numbering</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Numbering<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L52">roosterjs-editor-types/lib/interface/FormatState.ts:52</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the text is in numbering mode</p>
 						</div>
 					</div>
 				</section>
@@ -159,13 +212,13 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_core.html">roosterjs-<wbr>editor-<wbr>core</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_dom.html">roosterjs-<wbr>editor-<wbr>dom</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_plugins.html">roosterjs-<wbr>editor-<wbr>plugins</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_types.html">roosterjs-<wbr>editor-<wbr>types</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -184,16 +237,25 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="roosterjs_editor_dom.vcell.html" class="tsd-kind-icon">VCell</a>
+						<a href="roosterjs_editor_types.elementbasedformatstate.html" class="tsd-kind-icon">Element<wbr>Based<wbr>Format<wbr>State</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_dom.vcell.html#spanabove" class="tsd-kind-icon">span<wbr>Above</a>
+								<a href="roosterjs_editor_types.elementbasedformatstate.html#canaddimagealttext" class="tsd-kind-icon">can<wbr>Add<wbr>Image<wbr>Alt<wbr>Text</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_dom.vcell.html#spanleft" class="tsd-kind-icon">span<wbr>Left</a>
+								<a href="roosterjs_editor_types.elementbasedformatstate.html#canunlink" class="tsd-kind-icon">can<wbr>Unlink</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_dom.vcell.html#td" class="tsd-kind-icon">td</a>
+								<a href="roosterjs_editor_types.elementbasedformatstate.html#headerlevel" class="tsd-kind-icon">header<wbr>Level</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.elementbasedformatstate.html#isblockquote" class="tsd-kind-icon">is<wbr>Block<wbr>Quote</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.elementbasedformatstate.html#isbullet" class="tsd-kind-icon">is<wbr>Bullet</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.elementbasedformatstate.html#isnumbering" class="tsd-kind-icon">is<wbr>Numbering</a>
 							</li>
 						</ul>
 					</li>

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>VCell | RoosterJs API Reference</title>
+	<title>StyleBasedFormatState | RoosterJs API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/roosterjs_editor_dom.html">roosterjs-editor-dom</a>
+					<a href="../modules/roosterjs_editor_types.html">roosterjs-editor-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_dom.vcell.html">VCell</a>
+					<a href="roosterjs_editor_types.stylebasedformatstate.html">StyleBasedFormatState</a>
 				</li>
 			</ul>
-			<h1>Interface VCell</h1>
+			<h1>Interface StyleBasedFormatState</h1>
 		</div>
 	</div>
 </header>
@@ -68,7 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represent a virtual cell of a virtual table</p>
+						<p>Format states represented by CSS style</p>
 					</div>
 				</div>
 			</section>
@@ -76,7 +76,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">VCell</span>
+						<span class="target">StyleBasedFormatState</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="roosterjs_editor_types.formatstate.html" class="tsd-signature-type">FormatState</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -87,9 +92,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_dom.vcell.html#spanabove" class="tsd-kind-icon">span<wbr>Above</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_dom.vcell.html#spanleft" class="tsd-kind-icon">span<wbr>Left</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_dom.vcell.html#td" class="tsd-kind-icon">td</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.stylebasedformatstate.html#backgroundcolor" class="tsd-kind-icon">background<wbr>Color</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.stylebasedformatstate.html#fontname" class="tsd-kind-icon">font<wbr>Name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.stylebasedformatstate.html#fontsize" class="tsd-kind-icon">font<wbr>Size</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.stylebasedformatstate.html#textcolor" class="tsd-kind-icon">text<wbr>Color</a></li>
 							</ul>
 						</section>
 					</div>
@@ -98,47 +104,62 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="spanabove" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> span<wbr>Above</h3>
-					<div class="tsd-signature tsd-kind-icon">span<wbr>Above<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="backgroundcolor" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> background<wbr>Color</h3>
+					<div class="tsd-signature tsd-kind-icon">background<wbr>Color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-dom/lib/table/VTable.ts#L20">roosterjs-editor-dom/lib/table/VTable.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L92">roosterjs-editor-types/lib/interface/FormatState.ts:92</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Whether this cell is spanned from above</p>
+							<p>Background color</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="spanleft" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> span<wbr>Left</h3>
-					<div class="tsd-signature tsd-kind-icon">span<wbr>Left<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="fontname" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> font<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">font<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-dom/lib/table/VTable.ts#L15">roosterjs-editor-dom/lib/table/VTable.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L82">roosterjs-editor-types/lib/interface/FormatState.ts:82</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Whether this cell is spanned from left</p>
+							<p>Font name</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="td" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> td</h3>
-					<div class="tsd-signature tsd-kind-icon">td<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLTableCellElement</span></div>
+					<a name="fontsize" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> font<wbr>Size</h3>
+					<div class="tsd-signature tsd-kind-icon">font<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-dom/lib/table/VTable.ts#L10">roosterjs-editor-dom/lib/table/VTable.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L87">roosterjs-editor-types/lib/interface/FormatState.ts:87</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The table cell object. The value will be null if this is an expanded virtual cell</p>
+							<p>Font size</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="textcolor" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> text<wbr>Color</h3>
+					<div class="tsd-signature tsd-kind-icon">text<wbr>Color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L97">roosterjs-editor-types/lib/interface/FormatState.ts:97</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Text color</p>
 						</div>
 					</div>
 				</section>
@@ -159,13 +180,13 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_core.html">roosterjs-<wbr>editor-<wbr>core</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_dom.html">roosterjs-<wbr>editor-<wbr>dom</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_plugins.html">roosterjs-<wbr>editor-<wbr>plugins</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_types.html">roosterjs-<wbr>editor-<wbr>types</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -184,16 +205,19 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="roosterjs_editor_dom.vcell.html" class="tsd-kind-icon">VCell</a>
+						<a href="roosterjs_editor_types.stylebasedformatstate.html" class="tsd-kind-icon">Style<wbr>Based<wbr>Format<wbr>State</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_dom.vcell.html#spanabove" class="tsd-kind-icon">span<wbr>Above</a>
+								<a href="roosterjs_editor_types.stylebasedformatstate.html#backgroundcolor" class="tsd-kind-icon">background<wbr>Color</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_dom.vcell.html#spanleft" class="tsd-kind-icon">span<wbr>Left</a>
+								<a href="roosterjs_editor_types.stylebasedformatstate.html#fontname" class="tsd-kind-icon">font<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_dom.vcell.html#td" class="tsd-kind-icon">td</a>
+								<a href="roosterjs_editor_types.stylebasedformatstate.html#fontsize" class="tsd-kind-icon">font<wbr>Size</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.stylebasedformatstate.html#textcolor" class="tsd-kind-icon">text<wbr>Color</a>
 							</li>
 						</ul>
 					</li>

@@ -473,46 +473,91 @@ function updateAnchorDisplayText(anchor, displayText) {
 
 "use strict";
 
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var PendableFormatCommandMap = {
+    isBold: "bold" /* Bold */,
+    isItalic: "italic" /* Italic */,
+    isUnderline: "underline" /* Underline */,
+    isStrikeThrough: "strikeThrough" /* StrikeThrough */,
+    isSubscript: "subscript" /* Subscript */,
+    isSuperscript: "superscript" /* Superscript */,
+};
 /**
- * Get format state at cursor
- * A format state is a collection of all format related states, e.g.,
- * bold, italic, underline, font name, font size, etc.
- * @param editor The editor
- * @param (Optional) The plugin event, it stores the event cached data for looking up.
+ * Get Pendable Format State at cursor.
+ * @param document The HTML Document to get format state from
+ * @returns A PendableFormatState object which contains the values of pendable format states
+ */
+function getPendableFormatState(document) {
+    var keys = Object.keys(PendableFormatCommandMap);
+    return keys.reduce(function (state, key) {
+        state[key] = document.queryCommandState(PendableFormatCommandMap[key]);
+        return state;
+    }, {});
+}
+exports.getPendableFormatState = getPendableFormatState;
+/**
+ * Get element based Format State at cursor
+ * @param editor The editor instance
+ * @param event (Optional) The plugin event, it stores the event cached data for looking up.
  * In this function the event cache is used to get list state and header level. If not passed,
  * it will query the node within selection to get the info
- * @returns The format state at cursor
+ * @returns An ElementBasedFormatState object
  */
-function getFormatState(editor, event) {
-    var range = editor.getSelectionRange();
-    var node = range && roosterjs_editor_dom_1.Position.getStart(range).normalize().node;
-    var styles = node ? roosterjs_editor_dom_1.getComputedStyles(node) : [];
+function getElementBasedFormatState(editor, event) {
     var listTag = roosterjs_editor_dom_1.getTagOfNode(roosterjs_editor_core_1.cacheGetElementAtCursor(editor, event, 'OL,UL'));
     var headerTag = roosterjs_editor_dom_1.getTagOfNode(roosterjs_editor_core_1.cacheGetElementAtCursor(editor, event, 'H1,H2,H3,H4,H5,H6'));
-    var document = editor.getDocument();
     return {
-        fontName: styles[0],
-        fontSize: styles[1],
-        textColor: styles[2],
-        backgroundColor: styles[3],
-        isBold: document.queryCommandState("bold" /* Bold */),
-        isItalic: document.queryCommandState("italic" /* Italic */),
-        isUnderline: document.queryCommandState("underline" /* Underline */),
-        isStrikeThrough: document.queryCommandState("strikeThrough" /* StrikeThrough */),
-        isSubscript: document.queryCommandState("subscript" /* Subscript */),
-        isSuperscript: document.queryCommandState("superscript" /* Superscript */),
         isBullet: listTag == 'UL',
         isNumbering: listTag == 'OL',
         headerLevel: (headerTag && parseInt(headerTag[1])) || 0,
         canUnlink: !!editor.queryElements('a[href]', 1 /* OnSelection */)[0],
         canAddImageAltText: !!editor.queryElements('img', 1 /* OnSelection */)[0],
         isBlockQuote: !!editor.queryElements('blockquote', 1 /* OnSelection */)[0],
-        canUndo: editor.canUndo(),
-        canRedo: editor.canRedo(),
     };
+}
+exports.getElementBasedFormatState = getElementBasedFormatState;
+/**
+ * Get style based Format State at cursor
+ * @param editor The editor instance
+ * @returns A StyleBasedFormatState object
+ */
+function getStyleBasedFormatState(editor) {
+    var range = editor.getSelectionRange();
+    var node = range && roosterjs_editor_dom_1.Position.getStart(range).normalize().node;
+    var styles = node ? roosterjs_editor_dom_1.getComputedStyles(node) : [];
+    return {
+        fontName: styles[0],
+        fontSize: styles[1],
+        textColor: styles[2],
+        backgroundColor: styles[3],
+    };
+}
+exports.getStyleBasedFormatState = getStyleBasedFormatState;
+/**
+ * Get format state at cursor
+ * A format state is a collection of all format related states, e.g.,
+ * bold, italic, underline, font name, font size, etc.
+ * @param editor The editor instance
+ * @param event (Optional) The plugin event, it stores the event cached data for looking up.
+ * In this function the event cache is used to get list state and header level. If not passed,
+ * it will query the node within selection to get the info
+ * @returns The format state at cursor
+ */
+function getFormatState(editor, event) {
+    return __assign({}, getPendableFormatState(editor.getDocument()), getElementBasedFormatState(editor, event), getStyleBasedFormatState(editor), { canUndo: editor.canUndo(), canRedo: editor.canRedo() });
 }
 exports.default = getFormatState;
 
@@ -1273,6 +1318,9 @@ var createLink_1 = __webpack_require__(/*! ./format/createLink */ "./packages/ro
 exports.createLink = createLink_1.default;
 var getFormatState_1 = __webpack_require__(/*! ./format/getFormatState */ "./packages/roosterjs-editor-api/lib/format/getFormatState.ts");
 exports.getFormatState = getFormatState_1.default;
+exports.getPendableFormatState = getFormatState_1.getPendableFormatState;
+exports.getElementBasedFormatState = getFormatState_1.getElementBasedFormatState;
+exports.getStyleBasedFormatState = getFormatState_1.getStyleBasedFormatState;
 var insertImage_1 = __webpack_require__(/*! ./format/insertImage */ "./packages/roosterjs-editor-api/lib/format/insertImage.ts");
 exports.insertImage = insertImage_1.default;
 var insertTable_1 = __webpack_require__(/*! ./table/insertTable */ "./packages/roosterjs-editor-api/lib/table/insertTable.ts");
@@ -3246,15 +3294,16 @@ function calcDefaultFormat(node, baseFormat) {
         return {};
     }
     baseFormat = baseFormat || {};
-    var styles = roosterjs_editor_dom_1.getComputedStyles(node);
+    var fontFamily = baseFormat.fontFamily, fontSize = baseFormat.fontSize, textColor = baseFormat.textColor, backgroundColor = baseFormat.backgroundColor, bold = baseFormat.bold, italic = baseFormat.italic, underline = baseFormat.underline;
+    var currentStyles = fontFamily && fontSize && textColor ? null : roosterjs_editor_dom_1.getComputedStyles(node);
     return {
-        fontFamily: baseFormat.fontFamily || styles[0],
-        fontSize: baseFormat.fontSize || styles[1],
-        textColor: baseFormat.textColor || styles[2],
-        backgroundColor: baseFormat.backgroundColor || '',
-        bold: baseFormat.bold,
-        italic: baseFormat.italic,
-        underline: baseFormat.underline,
+        fontFamily: fontFamily || currentStyles[0],
+        fontSize: fontSize || currentStyles[1],
+        textColor: textColor || currentStyles[2],
+        backgroundColor: backgroundColor || '',
+        bold: bold,
+        italic: italic,
+        underline: underline,
     };
 }
 function createCoreApiMap(map) {

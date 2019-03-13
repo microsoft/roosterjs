@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>VCell | RoosterJs API Reference</title>
+	<title>PendableFormatState | RoosterJs API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/roosterjs_editor_dom.html">roosterjs-editor-dom</a>
+					<a href="../modules/roosterjs_editor_types.html">roosterjs-editor-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_dom.vcell.html">VCell</a>
+					<a href="roosterjs_editor_types.pendableformatstate.html">PendableFormatState</a>
 				</li>
 			</ul>
-			<h1>Interface VCell</h1>
+			<h1>Interface PendableFormatState</h1>
 		</div>
 	</div>
 </header>
@@ -68,15 +68,23 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represent a virtual cell of a virtual table</p>
+						<p>Format states that can have pending state.</p>
 					</div>
+					<p>e.g., When using execCommand(&#39;bold&#39;) target to a collapsed selection, browser will enter bold state,
+						but there isn&#39;t a &lt;B&gt; tag until user type something, or the state will be rollback if selection
+					is changed.</p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">VCell</span>
+						<span class="target">PendableFormatState</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="roosterjs_editor_types.formatstate.html" class="tsd-signature-type">FormatState</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -87,9 +95,12 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_dom.vcell.html#spanabove" class="tsd-kind-icon">span<wbr>Above</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_dom.vcell.html#spanleft" class="tsd-kind-icon">span<wbr>Left</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_dom.vcell.html#td" class="tsd-kind-icon">td</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.pendableformatstate.html#isbold" class="tsd-kind-icon">is<wbr>Bold</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.pendableformatstate.html#isitalic" class="tsd-kind-icon">is<wbr>Italic</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.pendableformatstate.html#isstrikethrough" class="tsd-kind-icon">is<wbr>Strike<wbr>Through</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.pendableformatstate.html#issubscript" class="tsd-kind-icon">is<wbr>Subscript</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.pendableformatstate.html#issuperscript" class="tsd-kind-icon">is<wbr>Superscript</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.pendableformatstate.html#isunderline" class="tsd-kind-icon">is<wbr>Underline</a></li>
 							</ul>
 						</section>
 					</div>
@@ -98,47 +109,92 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="spanabove" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> span<wbr>Above</h3>
-					<div class="tsd-signature tsd-kind-icon">span<wbr>Above<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="isbold" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Bold</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Bold<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-dom/lib/table/VTable.ts#L20">roosterjs-editor-dom/lib/table/VTable.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L12">roosterjs-editor-types/lib/interface/FormatState.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Whether this cell is spanned from above</p>
+							<p>Whether the text is bolded</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="spanleft" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> span<wbr>Left</h3>
-					<div class="tsd-signature tsd-kind-icon">span<wbr>Left<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="isitalic" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Italic</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Italic<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-dom/lib/table/VTable.ts#L15">roosterjs-editor-dom/lib/table/VTable.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L17">roosterjs-editor-types/lib/interface/FormatState.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Whether this cell is spanned from left</p>
+							<p>Whether the text is italic</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="td" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> td</h3>
-					<div class="tsd-signature tsd-kind-icon">td<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLTableCellElement</span></div>
+					<a name="isstrikethrough" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Strike<wbr>Through</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Strike<wbr>Through<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-dom/lib/table/VTable.ts#L10">roosterjs-editor-dom/lib/table/VTable.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L27">roosterjs-editor-types/lib/interface/FormatState.ts:27</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The table cell object. The value will be null if this is an expanded virtual cell</p>
+							<p>Whether the text has strike through line</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="issubscript" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Subscript</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Subscript<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L32">roosterjs-editor-types/lib/interface/FormatState.ts:32</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the text is in subscript mode</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="issuperscript" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Superscript</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Superscript<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L37">roosterjs-editor-types/lib/interface/FormatState.ts:37</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the text is in superscript mode</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="isunderline" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> is<wbr>Underline</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Underline<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/roosterjs/blob/60aa561/packages/roosterjs-editor-types/lib/interface/FormatState.ts#L22">roosterjs-editor-types/lib/interface/FormatState.ts:22</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the text has underline</p>
 						</div>
 					</div>
 				</section>
@@ -159,13 +215,13 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_core.html">roosterjs-<wbr>editor-<wbr>core</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_dom.html">roosterjs-<wbr>editor-<wbr>dom</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_plugins.html">roosterjs-<wbr>editor-<wbr>plugins</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_types.html">roosterjs-<wbr>editor-<wbr>types</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -184,16 +240,25 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="roosterjs_editor_dom.vcell.html" class="tsd-kind-icon">VCell</a>
+						<a href="roosterjs_editor_types.pendableformatstate.html" class="tsd-kind-icon">Pendable<wbr>Format<wbr>State</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_dom.vcell.html#spanabove" class="tsd-kind-icon">span<wbr>Above</a>
+								<a href="roosterjs_editor_types.pendableformatstate.html#isbold" class="tsd-kind-icon">is<wbr>Bold</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_dom.vcell.html#spanleft" class="tsd-kind-icon">span<wbr>Left</a>
+								<a href="roosterjs_editor_types.pendableformatstate.html#isitalic" class="tsd-kind-icon">is<wbr>Italic</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_dom.vcell.html#td" class="tsd-kind-icon">td</a>
+								<a href="roosterjs_editor_types.pendableformatstate.html#isstrikethrough" class="tsd-kind-icon">is<wbr>Strike<wbr>Through</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.pendableformatstate.html#issubscript" class="tsd-kind-icon">is<wbr>Subscript</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.pendableformatstate.html#issuperscript" class="tsd-kind-icon">is<wbr>Superscript</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.pendableformatstate.html#isunderline" class="tsd-kind-icon">is<wbr>Underline</a>
 							</li>
 						</ul>
 					</li>
