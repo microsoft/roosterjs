@@ -60,7 +60,11 @@ export default function createEditorCore(
     };
 }
 
-export function calcDefaultFormat(node: Node, baseFormat: DefaultFormat, inDarkMode: boolean): DefaultFormat {
+export function calcDefaultFormat(
+    node: Node,
+    baseFormat: DefaultFormat,
+    inDarkMode: boolean
+): DefaultFormat {
     if (inDarkMode) {
         if (!baseFormat.backgroundColors) {
             baseFormat.backgroundColors = DARK_MODE_DEFAULT_FORMAT.backgroundColors;
@@ -75,29 +79,41 @@ export function calcDefaultFormat(node: Node, baseFormat: DefaultFormat, inDarkM
     }
 
     baseFormat = baseFormat || <DefaultFormat>{};
-    let styles = getComputedStyles(node);
+    let {
+        fontFamily,
+        fontSize,
+        textColor,
+        textColors,
+        backgroundColor,
+        backgroundColors,
+        bold,
+        italic,
+        underline,
+    } = baseFormat;
+    let currentStyles =
+        fontFamily && fontSize && (textColor || textColors) ? null : getComputedStyles(node);
     return {
-        fontFamily: baseFormat.fontFamily || styles[0],
-        fontSize: baseFormat.fontSize || styles[1],
+        fontFamily: fontFamily || currentStyles[0],
+        fontSize: fontSize || currentStyles[1],
         get textColor() {
-            return baseFormat.textColors
+            return textColors
                 ? inDarkMode
-                    ? baseFormat.textColors.darkModeColor
-                    : baseFormat.textColors.lightModeColor
-                : baseFormat.textColor || styles[2];
+                    ? textColors.darkModeColor
+                    : textColors.lightModeColor
+                : textColor || currentStyles[2];
         },
-        textColors: baseFormat.textColors,
+        textColors: textColors,
         get backgroundColor() {
-            return baseFormat.backgroundColors
+            return backgroundColors
                 ? inDarkMode
-                    ? baseFormat.backgroundColors.darkModeColor
-                    : baseFormat.backgroundColors.lightModeColor
-                : baseFormat.backgroundColor || '';
+                    ? backgroundColors.darkModeColor
+                    : backgroundColors.lightModeColor
+                : backgroundColor || '';
         },
-        backgroundColors: baseFormat.backgroundColors,
-        bold: baseFormat.bold,
-        italic: baseFormat.italic,
-        underline: baseFormat.underline,
+        backgroundColors: backgroundColors,
+        bold: bold,
+        italic: italic,
+        underline: underline,
     };
 }
 
