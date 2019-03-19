@@ -35,7 +35,6 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     private eventHandledOnKeyDown: boolean;
     private blockSuggestions: boolean;
     private isSuggesting: boolean;
-    private isCharacterValue: boolean;
     private lastKnownRange: Range;
 
     constructor(public readonly dataProvider: T, private pickerOptions: PickerPluginOptions) {}
@@ -125,21 +124,28 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     public onPluginEvent(event: PluginEvent) {
         if (
             event.eventType == PluginEventType.ContentChanged &&
-            event.source == ChangeSource.SetContent &&
-            this.dataProvider.onContentChanged
         ) {
-            // Undos and other major changes to document content fire this type of event.
-            // Inform the data provider of the current picker placed elements in the body.
-            let elementIds: string[] = [];
-            this.editor.queryElements(
-                "[id^='" + this.pickerOptions.elementIdPrefix + "']",
-                element => {
-                    if (element.id) {
-                        elementIds.push(element.id);
+            if (event.source == ChangeSource.SetContent &&
+                this.dataProvider.onContentChanged) {
+                // Undos and other major changes to document content fire this type of event.
+                // Inform the data provider of the current picker placed elements in the body.
+                let elementIds: string[] = [];
+                this.editor.queryElements(
+                    "[id^='" + this.pickerOptions.elementIdPrefix + "']",
+                    element => {
+                        if (element.id) {
+                            elementIds.push(element.id);
+                        }
                     }
+                );
+                this.dataProvider.onContentChanged(elementIds);
+            } else if (event.source == ChangeSource.CustomReplace) {
+                // Emoji shortcut autocomplete is handled by a separate plugin, CustomReplace
+                // When CustomReplace performs autocomplete, we can stop suggesting
+                if (this.isSuggesting) {
+                    this.setIsSuggesting(false);
                 }
-            );
-            this.dataProvider.onContentChanged(elementIds);
+            }
         }
         if (event.eventType == PluginEventType.KeyDown) {
             this.eventHandledOnKeyDown = false;
@@ -147,10 +153,6 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         }
         if (event.eventType == PluginEventType.KeyUp && !this.eventHandledOnKeyDown) {
             this.onKeyUpDomEvent(event);
-        } else if (event.eventType == PluginEventType.KeyPress) {
-            // The KeyPress event is fired when a key that produces a character value is pressed down
-            // Keys that don't produce character values include modifier keys like Ctrl and Backspace
-            this.isCharacterValue = true;
         } else if (event.eventType == PluginEventType.MouseUp) {
             if (this.isSuggesting) {
                 this.setIsSuggesting(false);
@@ -248,8 +250,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             } else {
                 this.setIsSuggesting(false);
             }
-        } else if (this.isCharacterValue) {
-            // Check for isCharacterValue to filter out modifiers like Ctrl+Z and Backspace
+        } else {
             let wordBeforeCursor = this.getWordBeforeCursor(event);
             if (!this.blockSuggestions) {
                 if (
@@ -309,7 +310,6 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 }
             }
         }
-        this.isCharacterValue = false;
     }
 
     private onKeyDownEvent(event: PluginKeyboardEvent) {

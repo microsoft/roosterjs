@@ -42,4 +42,9 @@ export const enum ChangeSource {
      * Content changed by drag & drop operation
      */
     Drop = 'Drop',
+
+    /**
+     * Content changed by custom replace
+     */
+    CustomReplace = 'CustomReplace',
 }
