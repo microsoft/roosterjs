@@ -122,11 +122,8 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
-        if (
-            event.eventType == PluginEventType.ContentChanged &&
-        ) {
-            if (event.source == ChangeSource.SetContent &&
-                this.dataProvider.onContentChanged) {
+        if (event.eventType == PluginEventType.ContentChanged) {
+            if (event.source == ChangeSource.SetContent && this.dataProvider.onContentChanged) {
                 // Undos and other major changes to document content fire this type of event.
                 // Inform the data provider of the current picker placed elements in the body.
                 let elementIds: string[] = [];
