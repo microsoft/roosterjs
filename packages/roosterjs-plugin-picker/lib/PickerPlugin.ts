@@ -111,9 +111,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     public willHandleEventExclusively(event: PluginEvent) {
         return (
             this.isSuggesting &&
-            (event.eventType == PluginEventType.KeyDown ||
-                event.eventType == PluginEventType.KeyUp ||
-                event.eventType == PluginEventType.Input)
+            (event.eventType == PluginEventType.KeyDown || event.eventType == PluginEventType.KeyUp)
         );
     }
 
