@@ -19,8 +19,6 @@ type ValidProcessListDocumentCommands = DocumentCommand.Outdent | DocumentComman
  * So we workaround it by always adding format to list element
  */
 export default function processList(editor: Editor, command: ValidProcessListDocumentCommands): Node {
-    let currentNode = editor.getElementAtCursor();
-
     // track the current cursor position with a dummy element.
     const currentRange = editor.getSelectionRange();
     if (currentRange) {
@@ -33,15 +31,15 @@ export default function processList(editor: Editor, command: ValidProcessListDoc
         // Chrome has some bad behavior when outdenting
         // in order to work around this, we need to take steps to deep clone the current node
         // after the outdent, we'll replace the new LI with the cloned content.
-        clonedNode = currentNode.cloneNode(true);
+        clonedNode =  editor.getElementAtCursor('LI').cloneNode(true);
         workaroundForChrome(editor);
     }
 
     let existingList = editor.getElementAtCursor('OL,UL');
     editor.getDocument().execCommand(command, false, null);
-    let newLIParent: HTMLElement;
+    let newParentNode: HTMLElement;
     editor.queryElements('.' + TEMP_NODE_CLASS, node => {
-        newLIParent = node.parentElement;
+        newParentNode = node.parentElement;
         editor.deleteNode(node);
     });
     let newList = editor.getElementAtCursor('OL,UL');
@@ -49,11 +47,11 @@ export default function processList(editor: Editor, command: ValidProcessListDoc
         newList = null;
     }
 
-    if (newList && clonedNode && newLIParent) {
+    if (newList && clonedNode && newParentNode) {
         // if the clonedNode and the newLIParent share the same tag name
         // we can 1:1 swap them
-        if ((clonedNode instanceof HTMLElement) && clonedNode.tagName == newLIParent.tagName) {
-            newList.replaceChild(clonedNode, newLIParent);
+        if ((clonedNode instanceof HTMLElement) && clonedNode.tagName == newParentNode.tagName) {
+            newList.replaceChild(clonedNode, newParentNode);
         }
         // The alternative case is harder to solve, but we didn't specifically handle this before either.
     }
