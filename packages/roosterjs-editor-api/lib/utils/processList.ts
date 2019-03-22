@@ -5,12 +5,14 @@ import {
     isVoidHtmlElement,
     isBlockElement,
     Browser,
+    getSelectionPath,
+    getRangeFromSelectionPath,
 } from 'roosterjs-editor-dom';
 
 const TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
 const TEMP_NODE_HTML = "<img class=\"" + TEMP_NODE_CLASS + "\">";
-const SELECTION_NODE_CLASS = 'ROOSTERJS_SELECTION_NODE';
-const SELECTION_NODE_HTML = "<img class=\"" + SELECTION_NODE_CLASS + "\">";
+//const SELECTION_NODE_CLASS = 'ROOSTERJS_SELECTION_NODE';
+//const SELECTION_NODE_HTML = "<img class=\"" + SELECTION_NODE_CLASS + "\">";
 
 type ValidProcessListDocumentCommands = DocumentCommand.Outdent | DocumentCommand.Indent | DocumentCommand.InsertOrderedList | DocumentCommand.InsertUnorderedList;
 
@@ -19,19 +21,19 @@ type ValidProcessListDocumentCommands = DocumentCommand.Outdent | DocumentComman
  * So we workaround it by always adding format to list element
  */
 export default function processList(editor: Editor, command: ValidProcessListDocumentCommands): Node {
-    // track the current cursor position with a dummy element.
-    const currentRange = editor.getSelectionRange();
-    if (currentRange) {
-        const selectionNode = fromHtml(SELECTION_NODE_HTML, editor.getDocument())[0];
-        editor.getSelectionRange().insertNode(selectionNode);
-    }
-
-    let clonedNode;
+    let clonedNode: Node;
+    let relativeSelectionPath;
     if (Browser.isChrome && command == DocumentCommand.Outdent) {
-        // Chrome has some bad behavior when outdenting
-        // in order to work around this, we need to take steps to deep clone the current node
-        // after the outdent, we'll replace the new LI with the cloned content.
-        clonedNode =  editor.getElementAtCursor('LI').cloneNode(true);
+        const parentLINode =  editor.getElementAtCursor('LI');
+        if (parentLINode) {
+            let currentRange = editor.getSelectionRange();
+            relativeSelectionPath = getSelectionPath(parentLINode, currentRange);
+            // Chrome has some bad behavior when outdenting
+            // in order to work around this, we need to take steps to deep clone the current node
+            // after the outdent, we'll replace the new LI with the cloned content.
+            clonedNode =  parentLINode.cloneNode(true);
+        }
+
         workaroundForChrome(editor);
     }
 
@@ -50,16 +52,18 @@ export default function processList(editor: Editor, command: ValidProcessListDoc
     if (newList && clonedNode && newParentNode) {
         // if the clonedNode and the newLIParent share the same tag name
         // we can 1:1 swap them
-        if ((clonedNode instanceof HTMLElement) && clonedNode.tagName == newParentNode.tagName) {
-            newList.replaceChild(clonedNode, newParentNode);
+        if ((clonedNode instanceof HTMLElement)) {
+            if (clonedNode.tagName == newParentNode.tagName) {
+                newList.replaceChild(clonedNode, newParentNode);
+            }
+            if (relativeSelectionPath && document.body.contains(clonedNode)) {
+                let newRange = getRangeFromSelectionPath(clonedNode, relativeSelectionPath);
+                editor.select(newRange);
+            }
+
         }
         // The alternative case is harder to solve, but we didn't specifically handle this before either.
     }
-
-    editor.queryElements("." + SELECTION_NODE_CLASS, node => {
-        editor.select(node);
-        editor.deleteNode(node);
-    });
 
     return newList;
 }
