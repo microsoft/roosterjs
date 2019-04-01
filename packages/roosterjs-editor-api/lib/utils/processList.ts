@@ -11,10 +11,12 @@ import {
 
 const TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
 const TEMP_NODE_HTML = "<img class=\"" + TEMP_NODE_CLASS + "\">";
-//const SELECTION_NODE_CLASS = 'ROOSTERJS_SELECTION_NODE';
-//const SELECTION_NODE_HTML = "<img class=\"" + SELECTION_NODE_CLASS + "\">";
 
-type ValidProcessListDocumentCommands = DocumentCommand.Outdent | DocumentCommand.Indent | DocumentCommand.InsertOrderedList | DocumentCommand.InsertUnorderedList;
+type ValidProcessListDocumentCommands =
+    DocumentCommand.Outdent |
+    DocumentCommand.Indent |
+    DocumentCommand.InsertOrderedList |
+    DocumentCommand.InsertUnorderedList;
 
 /**
  * Browsers don't handle bullet/numbering list well, especially the formats when switching list statue
@@ -27,11 +29,19 @@ export default function processList(editor: Editor, command: ValidProcessListDoc
         const parentLINode =  editor.getElementAtCursor('LI');
         if (parentLINode) {
             let currentRange = editor.getSelectionRange();
-            relativeSelectionPath = getSelectionPath(parentLINode, currentRange);
-            // Chrome has some bad behavior when outdenting
-            // in order to work around this, we need to take steps to deep clone the current node
-            // after the outdent, we'll replace the new LI with the cloned content.
-            clonedNode =  parentLINode.cloneNode(true);
+            if (
+                currentRange.collapsed ||
+                (
+                    editor.getElementAtCursor('LI', currentRange.startContainer) == parentLINode &&
+                    editor.getElementAtCursor('LI', currentRange.endContainer) == parentLINode
+                )
+            ) {
+                relativeSelectionPath = getSelectionPath(parentLINode, currentRange);
+                // Chrome has some bad behavior when outdenting
+                // in order to work around this, we need to take steps to deep clone the current node
+                // after the outdent, we'll replace the new LI with the cloned content.
+                clonedNode =  parentLINode.cloneNode(true);
+            }
         }
 
         workaroundForChrome(editor);
@@ -39,9 +49,9 @@ export default function processList(editor: Editor, command: ValidProcessListDoc
 
     let existingList = editor.getElementAtCursor('OL,UL');
     editor.getDocument().execCommand(command, false, null);
-    let newParentNode: HTMLElement;
+    let newParentNode: Node;
     editor.queryElements('.' + TEMP_NODE_CLASS, node => {
-        newParentNode = node.parentElement;
+        newParentNode = node.parentNode;
         editor.deleteNode(node);
     });
     let newList = editor.getElementAtCursor('OL,UL');
@@ -53,7 +63,7 @@ export default function processList(editor: Editor, command: ValidProcessListDoc
         // if the clonedNode and the newLIParent share the same tag name
         // we can 1:1 swap them
         if ((clonedNode instanceof HTMLElement)) {
-            if (clonedNode.tagName == newParentNode.tagName) {
+            if (newParentNode instanceof HTMLElement && clonedNode.tagName == newParentNode.tagName) {
                 newList.replaceChild(clonedNode, newParentNode);
             }
             if (relativeSelectionPath && document.body.contains(clonedNode)) {
