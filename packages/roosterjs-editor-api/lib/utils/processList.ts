@@ -5,75 +5,77 @@ import {
     isVoidHtmlElement,
     isBlockElement,
     Browser,
-    isNodeEmpty,
-    getTagOfNode,
-    getComputedStyles,
-    applyFormat,
-    getFirstLeafNode,
+    getSelectionPath,
+    getRangeFromSelectionPath,
 } from 'roosterjs-editor-dom';
 
 const TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
-const TEMP_NODE_HTML = `<img class="${TEMP_NODE_CLASS}">`;
+const TEMP_NODE_HTML = "<img class=\"" + TEMP_NODE_CLASS + "\">";
+
+type ValidProcessListDocumentCommands =
+    DocumentCommand.Outdent |
+    DocumentCommand.Indent |
+    DocumentCommand.InsertOrderedList |
+    DocumentCommand.InsertUnorderedList;
 
 /**
  * Browsers don't handle bullet/numbering list well, especially the formats when switching list statue
  * So we workaround it by always adding format to list element
  */
-export default function processList(editor: Editor, command: DocumentCommand): Node {
-    if (Browser.isChrome) {
+export default function processList(editor: Editor, command: ValidProcessListDocumentCommands): Node {
+    let clonedNode: Node;
+    let relativeSelectionPath;
+    if (Browser.isChrome && command == DocumentCommand.Outdent) {
+        const parentLINode =  editor.getElementAtCursor('LI');
+        if (parentLINode) {
+            let currentRange = editor.getSelectionRange();
+            if (
+                currentRange.collapsed ||
+                (
+                    editor.getElementAtCursor('LI', currentRange.startContainer) == parentLINode &&
+                    editor.getElementAtCursor('LI', currentRange.endContainer) == parentLINode
+                )
+            ) {
+                relativeSelectionPath = getSelectionPath(parentLINode, currentRange);
+                // Chrome has some bad behavior when outdenting
+                // in order to work around this, we need to take steps to deep clone the current node
+                // after the outdent, we'll replace the new LI with the cloned content.
+                clonedNode =  parentLINode.cloneNode(true);
+            }
+        }
+
         workaroundForChrome(editor);
     }
 
-    let currentNode = editor.getElementAtCursor();
-    let currentFormat = getComputedStyles(currentNode);
-    let currentOgsc = currentNode.dataset.ogsc;
-    currentFormat.push(currentOgsc);
     let existingList = editor.getElementAtCursor('OL,UL');
     editor.getDocument().execCommand(command, false, null);
-    editor.queryElements('.' + TEMP_NODE_CLASS, node => editor.deleteNode(node));
+    let newParentNode: Node;
+    editor.queryElements('.' + TEMP_NODE_CLASS, node => {
+        newParentNode = node.parentNode;
+        editor.deleteNode(node);
+    });
     let newList = editor.getElementAtCursor('OL,UL');
     if (newList == existingList) {
         newList = null;
     }
 
-    // If this is in a new number list, need to adjust the format of numbers according to its content
-    if (newList && getTagOfNode(newList) == 'OL') {
-        let LIs = ([].slice.call(newList.childNodes) as Node[]).filter(
-            node => getTagOfNode(node) == 'LI'
-        );
-
-        if (LIs.length == 1 && isNodeEmpty(LIs[0], true /*trim*/)) {
-            // When there's only one LI child element which has empty content, it means this LI is just created.
-            // We just format it with current format
-            applyListFormat(LIs[0], currentFormat, editor.isDarkMode());
-        } else {
-            // Otherwise, apply the format of first child non-empty element (if any) to LI node
-            for (let li of LIs) {
-                let formatNode = getFirstLeafNode(li);
-                if (formatNode) {
-                    applyListFormat(li, getComputedStyles(formatNode), editor.isDarkMode());
-                }
+    if (newList && clonedNode && newParentNode) {
+        // if the clonedNode and the newLIParent share the same tag name
+        // we can 1:1 swap them
+        if ((clonedNode instanceof HTMLElement)) {
+            if (newParentNode instanceof HTMLElement && clonedNode.tagName == newParentNode.tagName) {
+                newList.replaceChild(clonedNode, newParentNode);
             }
+            if (relativeSelectionPath && document.body.contains(clonedNode)) {
+                let newRange = getRangeFromSelectionPath(clonedNode, relativeSelectionPath);
+                editor.select(newRange);
+            }
+
         }
+        // The alternative case is harder to solve, but we didn't specifically handle this before either.
     }
 
     return newList;
-}
-
-function applyListFormat(node: Node, formats: string[], isDarkMode: boolean) {
-    applyFormat(
-        node as HTMLElement,
-        {
-            fontFamily: formats[0],
-            fontSize: formats[1],
-            textColors: isDarkMode ? {
-                lightModeColor: formats[4],
-                darkModeColor: formats[2],
-            } : null,
-            textColor: formats[2],
-        },
-        isDarkMode
-    );
 }
 
 function workaroundForChrome(editor: Editor) {
@@ -82,9 +84,9 @@ function workaroundForChrome(editor: Editor) {
     while (block) {
         let container = block.getStartNode();
 
-        if (container && !isNodeEmpty(container)) {
+        if (container) {
             // Add a temp <IMG> tag before all other nodes in the block to avoid Chrome remove existing format when toggle list
-            let tempNode = fromHtml(TEMP_NODE_HTML, editor.getDocument())[0];
+            const tempNode = fromHtml(TEMP_NODE_HTML, editor.getDocument())[0];
             if (isVoidHtmlElement(container) || !isBlockElement(container)) {
                 container.parentNode.insertBefore(tempNode, container);
             } else {
