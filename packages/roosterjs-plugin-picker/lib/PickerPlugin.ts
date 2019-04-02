@@ -1,3 +1,4 @@
+import isCharacterValue from 'roosterjs-editor-core/lib/eventApi/isCharacterValue';
 import { Browser, createRange, PartialInlineElement } from 'roosterjs-editor-dom';
 import { cacheGetContentSearcher, Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
@@ -111,7 +112,9 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     public willHandleEventExclusively(event: PluginEvent) {
         return (
             this.isSuggesting &&
-            (event.eventType == PluginEventType.KeyDown || event.eventType == PluginEventType.KeyUp)
+            (event.eventType == PluginEventType.KeyDown ||
+                event.eventType == PluginEventType.KeyUp ||
+                event.eventType == PluginEventType.Input)
         );
     }
 
@@ -120,33 +123,33 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.ContentChanged) {
-            if (event.source == ChangeSource.SetContent && this.dataProvider.onContentChanged) {
-                // Undos and other major changes to document content fire this type of event.
-                // Inform the data provider of the current picker placed elements in the body.
-                let elementIds: string[] = [];
-                this.editor.queryElements(
-                    "[id^='" + this.pickerOptions.elementIdPrefix + "']",
-                    element => {
-                        if (element.id) {
-                            elementIds.push(element.id);
-                        }
+        if (
+            event.eventType == PluginEventType.ContentChanged &&
+            event.source == ChangeSource.SetContent &&
+            this.dataProvider.onContentChanged
+        ) {
+            // Undos and other major changes to document content fire this type of event.
+            // Inform the data provider of the current picker placed elements in the body.
+            let elementIds: string[] = [];
+            this.editor.queryElements(
+                "[id^='" + this.pickerOptions.elementIdPrefix + "']",
+                element => {
+                    if (element.id) {
+                        elementIds.push(element.id);
                     }
-                );
-                this.dataProvider.onContentChanged(elementIds);
-            } else if (event.source == ChangeSource.CustomReplace) {
-                // Emoji shortcut autocomplete is handled by a separate plugin, CustomReplace
-                // When CustomReplace performs autocomplete, we can stop suggesting
-                if (this.isSuggesting) {
-                    this.setIsSuggesting(false);
                 }
-            }
+            );
+            this.dataProvider.onContentChanged(elementIds);
         }
         if (event.eventType == PluginEventType.KeyDown) {
             this.eventHandledOnKeyDown = false;
             this.onKeyDownEvent(event);
         }
-        if (event.eventType == PluginEventType.KeyUp && !this.eventHandledOnKeyDown) {
+        if (
+            event.eventType == PluginEventType.KeyUp &&
+            !this.eventHandledOnKeyDown &&
+            isCharacterValue(event.rawEvent)
+        ) {
             this.onKeyUpDomEvent(event);
         } else if (event.eventType == PluginEventType.MouseUp) {
             if (this.isSuggesting) {

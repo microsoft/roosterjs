@@ -1,5 +1,5 @@
 import { cacheGetContentSearcher, Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { ChangeSource, PluginEvent, PluginEventType, PositionType } from 'roosterjs-editor-types';
+import { PluginEvent, PluginEventType, PositionType } from 'roosterjs-editor-types';
 
 export type Replacement = {
     sourceString: string;
@@ -109,7 +109,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
             matchingRange.deleteContents();
             matchingRange.insertNode(nodeToInsert);
             this.editor.select(nodeToInsert, PositionType.End);
-        }, ChangeSource.CustomReplace);
+        });
     }
 
     private getMatchingReplacement(stringToSearch: string): Replacement | null {
