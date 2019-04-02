@@ -1683,53 +1683,58 @@ var TEMP_NODE_HTML = "<img class=\"" + TEMP_NODE_CLASS + "\">";
  * So we workaround it by always adding format to list element
  */
 function processList(editor, command) {
-    if (roosterjs_editor_dom_1.Browser.isChrome) {
+    var clonedNode;
+    var relativeSelectionPath;
+    if (roosterjs_editor_dom_1.Browser.isChrome && command == "outdent" /* Outdent */) {
+        var parentLINode = editor.getElementAtCursor('LI');
+        if (parentLINode) {
+            var currentRange = editor.getSelectionRange();
+            if (currentRange.collapsed ||
+                (editor.getElementAtCursor('LI', currentRange.startContainer) == parentLINode &&
+                    editor.getElementAtCursor('LI', currentRange.endContainer) == parentLINode)) {
+                relativeSelectionPath = roosterjs_editor_dom_1.getSelectionPath(parentLINode, currentRange);
+                // Chrome has some bad behavior when outdenting
+                // in order to work around this, we need to take steps to deep clone the current node
+                // after the outdent, we'll replace the new LI with the cloned content.
+                clonedNode = parentLINode.cloneNode(true);
+            }
+        }
         workaroundForChrome(editor);
     }
-    var currentNode = editor.getElementAtCursor();
-    var currentFormat = roosterjs_editor_dom_1.getComputedStyles(currentNode);
     var existingList = editor.getElementAtCursor('OL,UL');
     editor.getDocument().execCommand(command, false, null);
-    editor.queryElements('.' + TEMP_NODE_CLASS, function (node) { return editor.deleteNode(node); });
+    var newParentNode;
+    editor.queryElements('.' + TEMP_NODE_CLASS, function (node) {
+        newParentNode = node.parentNode;
+        editor.deleteNode(node);
+    });
     var newList = editor.getElementAtCursor('OL,UL');
     if (newList == existingList) {
         newList = null;
     }
-    // If this is in a new number list, need to adjust the format of numbers according to its content
-    if (newList && roosterjs_editor_dom_1.getTagOfNode(newList) == 'OL') {
-        var LIs = [].slice.call(newList.childNodes).filter(function (node) { return roosterjs_editor_dom_1.getTagOfNode(node) == 'LI'; });
-        if (LIs.length == 1 && roosterjs_editor_dom_1.isNodeEmpty(LIs[0], true /*trim*/)) {
-            // When there's only one LI child element which has empty content, it means this LI is just created.
-            // We just format it with current format
-            applyListFormat(LIs[0], currentFormat);
-        }
-        else {
-            // Otherwise, apply the format of first child non-empty element (if any) to LI node
-            for (var _i = 0, LIs_1 = LIs; _i < LIs_1.length; _i++) {
-                var li = LIs_1[_i];
-                var formatNode = roosterjs_editor_dom_1.getFirstLeafNode(li);
-                if (formatNode) {
-                    applyListFormat(li, roosterjs_editor_dom_1.getComputedStyles(formatNode));
-                }
+    if (newList && clonedNode && newParentNode) {
+        // if the clonedNode and the newLIParent share the same tag name
+        // we can 1:1 swap them
+        if ((clonedNode instanceof HTMLElement)) {
+            if (newParentNode instanceof HTMLElement && clonedNode.tagName == newParentNode.tagName) {
+                newList.replaceChild(clonedNode, newParentNode);
+            }
+            if (relativeSelectionPath && document.body.contains(clonedNode)) {
+                var newRange = roosterjs_editor_dom_1.getRangeFromSelectionPath(clonedNode, relativeSelectionPath);
+                editor.select(newRange);
             }
         }
+        // The alternative case is harder to solve, but we didn't specifically handle this before either.
     }
     return newList;
 }
 exports.default = processList;
-function applyListFormat(node, formats) {
-    roosterjs_editor_dom_1.applyFormat(node, {
-        fontFamily: formats[0],
-        fontSize: formats[1],
-        textColor: formats[2],
-    });
-}
 function workaroundForChrome(editor) {
     var traverser = editor.getSelectionTraverser();
     var block = traverser && traverser.currentBlockElement;
     while (block) {
         var container = block.getStartNode();
-        if (container && !roosterjs_editor_dom_1.isNodeEmpty(container)) {
+        if (container) {
             // Add a temp <IMG> tag before all other nodes in the block to avoid Chrome remove existing format when toggle list
             var tempNode = roosterjs_editor_dom_1.fromHtml(TEMP_NODE_HTML, editor.getDocument())[0];
             if (roosterjs_editor_dom_1.isVoidHtmlElement(container) || !roosterjs_editor_dom_1.isBlockElement(container)) {
