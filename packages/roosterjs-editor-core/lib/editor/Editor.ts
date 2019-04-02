@@ -409,16 +409,20 @@ export default class Editor {
             if (element.dataset) {
                 // Reset color styles based on the content of the ogsc/ogsb data element.
                 // If those data properties are empty or do not exist, set them anyway to clear the content.
-                element.style.color = element.dataset.ogsc ? element.dataset.ogsc : '';
-                element.style.backgroundColor = element.dataset.ogsb ? element.dataset.ogsb : '';
+                element.style.color = this.isDataAttributeSettable(element.dataset.ogsc) ? element.dataset.ogsc : '';
+                element.style.backgroundColor = this.isDataAttributeSettable(element.dataset.ogsb) ? element.dataset.ogsb : '';
 
                 // Some elements might have set attribute colors. We need to reset these as well.
-                if (element.dataset.ogac) {
+                if (this.isDataAttributeSettable(element.dataset.ogac)) {
                     element.setAttribute('color', element.dataset.ogac);
+                } else {
+                    element.removeAttribute('color');
                 }
 
-                if (element.dataset.ogab) {
+                if (this.isDataAttributeSettable(element.dataset.ogab)) {
                     element.setAttribute('bgcolor', element.dataset.ogab);
+                } else {
+                    element.removeAttribute('bgcolor');
                 }
 
                 // Clean up any remaining data attributes.
@@ -430,6 +434,10 @@ export default class Editor {
         });
         const newContent = el.innerHTML;
         return newContent;
+    }
+
+    private isDataAttributeSettable(newStyle: string) {
+        return (newStyle && newStyle != "undefined" && newStyle != "null")
     }
 
     /**
