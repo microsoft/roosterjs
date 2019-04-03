@@ -171,7 +171,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         this.dataProvider.onIsSuggestingChanged(isSuggesting);
 
         this.setAriaOwns(isSuggesting);
-        this.setAriaActiveDescendant(isSuggesting ? 0 : undefined);
+        this.setAriaActiveDescendant(isSuggesting ? 0 : null);
     }
 
     private handleKeyDownEvent(event: PluginKeyboardEvent) {
@@ -419,7 +419,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     private setAriaActiveDescendant(selectedIndex: number) {
         this.editor.setEditorDomAttribute(
             'aria-activedescendant',
-            selectedIndex && this.pickerOptions.suggestionLabelPrefix
+            selectedIndex != null && this.pickerOptions.suggestionLabelPrefix
                 ? this.pickerOptions.suggestionLabelPrefix + selectedIndex.toString()
                 : undefined
         );
