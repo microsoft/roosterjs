@@ -169,6 +169,9 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             this.setLastKnownRange(null);
         }
         this.dataProvider.onIsSuggestingChanged(isSuggesting);
+
+        this.setAriaOwns(isSuggesting);
+        this.setAriaActiveDescendant(isSuggesting ? 0 : undefined);
     }
 
     private handleKeyDownEvent(event: PluginKeyboardEvent) {
@@ -332,6 +335,11 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                         ? keyboardEvent.key == RIGHT_ARROW_CHARCODE
                         : keyboardEvent.key == DOWN_ARROW_CHARCODE
                 );
+
+                if (this.dataProvider.getSelectedIndex) {
+                    this.setAriaActiveDescendant(this.dataProvider.getSelectedIndex());
+                }
+
                 this.handleKeyDownEvent(event);
             } else if (
                 this.dataProvider.selectOption &&
@@ -397,5 +405,23 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             return true;
         }
         return false;
+    }
+
+    private setAriaOwns(isSuggesting: boolean) {
+        this.editor.setEditorDomAttribute(
+            'aria-owns',
+            isSuggesting && this.pickerOptions.suggestionsLabel
+                ? this.pickerOptions.suggestionsLabel
+                : undefined
+        );
+    }
+
+    private setAriaActiveDescendant(selectedIndex: number) {
+        this.editor.setEditorDomAttribute(
+            'aria-activedescendant',
+            selectedIndex && this.pickerOptions.suggestionLabelPrefix
+                ? this.pickerOptions.suggestionLabelPrefix + selectedIndex.toString()
+                : undefined
+        );
     }
 }
