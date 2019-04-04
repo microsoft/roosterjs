@@ -1837,18 +1837,11 @@ exports.default = toggleTagCore;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var isCharacterValue_1 = __webpack_require__(/*! ../eventApi/isCharacterValue */ "./packages/roosterjs-editor-core/lib/eventApi/isCharacterValue.ts");
 var attachDomEvent = function (core, eventName, pluginEventType, beforeDispatch) {
     var onEvent = function (event) {
         // Stop propagation of a printable keyboard event (a keyboard event which is caused by printable char input).
-        // This detection is not 100% accurate. event.key is not fully supported by all brwosers, and in some browser (e.g. IE)
-        // event.key is longer than 1 for num pad input. But here we just want to improve performance as mush as possible.
-        // So if we missed some case here it is still acceptable.
-        if ((isKeyboardEvent(event) &&
-            !event.ctrlKey &&
-            !event.altKey &&
-            !event.metaKey &&
-            event.key &&
-            event.key.length == 1) ||
+        if ((isKeyboardEvent(event) && isCharacterValue_1.default(event)) ||
             pluginEventType == 11 /* Input */) {
             event.stopPropagation();
         }
@@ -3456,6 +3449,28 @@ exports.default = clearEventDataCache;
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-core/lib/eventApi/isCharacterValue.ts":
+/*!*************************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/eventApi/isCharacterValue.ts ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+// Returns true when the event was fired from a key that produces a character value, otherwise false
+// This detection is not 100% accurate. event.key is not fully supported by all browsers, and in some browsers (e.g. IE),
+// event.key is longer than 1 for num pad input. But here we just want to improve performance as much as possible.
+// So if we missed some case here it is still acceptable.
+function isCharacterValue(event) {
+    return !event.ctrlKey && !event.altKey && !event.metaKey && event.key && event.key.length == 1;
+}
+exports.default = isCharacterValue;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-core/lib/index.ts":
 /*!*****************************************************!*\
   !*** ./packages/roosterjs-editor-core/lib/index.ts ***!
@@ -3492,6 +3507,8 @@ exports.cacheGetContentSearcher = cacheGetContentSearcher_1.cacheGetContentSearc
 exports.clearContentSearcherCache = cacheGetContentSearcher_1.clearContentSearcherCache;
 var cacheGetElementAtCursor_1 = __webpack_require__(/*! ./eventApi/cacheGetElementAtCursor */ "./packages/roosterjs-editor-core/lib/eventApi/cacheGetElementAtCursor.ts");
 exports.cacheGetElementAtCursor = cacheGetElementAtCursor_1.default;
+var isCharacterValue_1 = __webpack_require__(/*! ./eventApi/isCharacterValue */ "./packages/roosterjs-editor-core/lib/eventApi/isCharacterValue.ts");
+exports.isCharacterValue = isCharacterValue_1.default;
 
 
 /***/ }),
@@ -10654,6 +10671,7 @@ exports.ImageResize = ImageResize_1.default;
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
+var roosterjs_editor_core_2 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 // Character codes.
 // IE11 uses different character codes. which are noted below.
@@ -10756,13 +10774,10 @@ var PickerPlugin = /** @class */ (function () {
             this.eventHandledOnKeyDown = false;
             this.onKeyDownEvent(event);
         }
-        if (event.eventType == 2 /* KeyUp */ && !this.eventHandledOnKeyDown) {
+        if (event.eventType == 2 /* KeyUp */ &&
+            !this.eventHandledOnKeyDown &&
+            roosterjs_editor_core_2.isCharacterValue(event.rawEvent)) {
             this.onKeyUpDomEvent(event);
-        }
-        else if (event.eventType == 1 /* KeyPress */) {
-            // The KeyPress event is fired when a key that produces a character value is pressed down
-            // Keys that don't produce character values include modifier keys like Ctrl and Backspace
-            this.isCharacterValue = true;
         }
         else if (event.eventType == 5 /* MouseUp */) {
             if (this.isSuggesting) {
@@ -10779,6 +10794,8 @@ var PickerPlugin = /** @class */ (function () {
             this.setLastKnownRange(null);
         }
         this.dataProvider.onIsSuggestingChanged(isSuggesting);
+        this.setAriaOwns(isSuggesting);
+        this.setAriaActiveDescendant(isSuggesting ? 0 : null);
     };
     PickerPlugin.prototype.handleKeyDownEvent = function (event) {
         this.eventHandledOnKeyDown = true;
@@ -10850,8 +10867,7 @@ var PickerPlugin = /** @class */ (function () {
                 this.setIsSuggesting(false);
             }
         }
-        else if (this.isCharacterValue) {
-            // Check for isCharacterValue to filter out modifiers like Ctrl+Z and Backspace
+        else {
             var wordBeforeCursor = this.getWordBeforeCursor(event);
             if (!this.blockSuggestions) {
                 if (wordBeforeCursor != null &&
@@ -10897,7 +10913,6 @@ var PickerPlugin = /** @class */ (function () {
                 }
             }
         }
-        this.isCharacterValue = false;
     };
     PickerPlugin.prototype.onKeyDownEvent = function (event) {
         var keyboardEvent = event.rawEvent;
@@ -10916,6 +10931,9 @@ var PickerPlugin = /** @class */ (function () {
                 this.dataProvider.shiftHighlight(this.pickerOptions.isHorizontal
                     ? keyboardEvent.key == RIGHT_ARROW_CHARCODE
                     : keyboardEvent.key == DOWN_ARROW_CHARCODE);
+                if (this.dataProvider.getSelectedIndex) {
+                    this.setAriaActiveDescendant(this.dataProvider.getSelectedIndex());
+                }
                 this.handleKeyDownEvent(event);
             }
             else if (this.dataProvider.selectOption &&
@@ -10977,6 +10995,16 @@ var PickerPlugin = /** @class */ (function () {
             return true;
         }
         return false;
+    };
+    PickerPlugin.prototype.setAriaOwns = function (isSuggesting) {
+        this.editor.setEditorDomAttribute('aria-owns', isSuggesting && this.pickerOptions.suggestionsLabel
+            ? this.pickerOptions.suggestionsLabel
+            : null);
+    };
+    PickerPlugin.prototype.setAriaActiveDescendant = function (selectedIndex) {
+        this.editor.setEditorDomAttribute('aria-activedescendant', selectedIndex != null && this.pickerOptions.suggestionLabelPrefix
+            ? this.pickerOptions.suggestionLabelPrefix + selectedIndex.toString()
+            : null);
     };
     return PickerPlugin;
 }());

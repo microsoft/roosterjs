@@ -3065,6 +3065,8 @@ function clearContentSearcherCache(event: PluginEvent): void;
  */
 function cacheGetElementAtCursor(editor: Editor, event: PluginEvent, selector: string): HTMLElement;
 
+    function isCharacterValue(event: KeyboardEvent): boolean;
+
     /**
  * Increase or decrease font size in selection
  * @param editor The editor instance
@@ -3983,7 +3985,6 @@ type ElementCallbackMap = Map<ElementCallback>;
     private eventHandledOnKeyDown;
     private blockSuggestions;
     private isSuggesting;
-    private isCharacterValue;
     private lastKnownRange;
     constructor(dataProvider: T, pickerOptions: PickerPluginOptions);
     /**
@@ -4024,6 +4025,8 @@ type ElementCallbackMap = Map<ElementCallback>;
     private onKeyDownEvent;
     private getWord;
     private setRangeStart;
+    private setAriaOwns;
+    private setAriaActiveDescendant;
 }
 
     interface EditorPickerPluginInterface<T extends PickerDataProvider = PickerDataProvider> extends EditorPlugin  {
@@ -4036,6 +4039,8 @@ type ElementCallbackMap = Map<ElementCallback>;
     triggerCharacter: string;
     isHorizontal?: boolean;
     handleAutoComplete?: boolean;
+    suggestionsLabel?: string;
+    suggestionLabelPrefix?: string;
 }
 
     interface PickerDataProvider {
@@ -4051,6 +4056,7 @@ type ElementCallbackMap = Map<ElementCallback>;
         y: number;
     }, buffer: number) => void;
     onContentChanged?: (elementIds: string[]) => void;
+    getSelectedIndex?: () => number;
 }
 
 }
