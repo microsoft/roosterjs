@@ -1,6 +1,6 @@
-import isCharacterValue from 'roosterjs-editor-core/lib/eventApi/isCharacterValue';
 import { Browser, createRange, PartialInlineElement } from 'roosterjs-editor-dom';
 import { cacheGetContentSearcher, Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { isCharacterValue } from 'roosterjs-editor-core';
 import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import {
