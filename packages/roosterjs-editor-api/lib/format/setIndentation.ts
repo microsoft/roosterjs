@@ -11,7 +11,7 @@ import { Editor } from 'roosterjs-editor-core';
  * Indentation.Increase to increase indentation or Indentation.Decrease to decrease indentation
  */
 export default function setIndentation(editor: Editor, indentation: Indentation) {
-    let command =
+    let command: DocumentCommand.Indent | DocumentCommand.Outdent =
         indentation == Indentation.Increase ? DocumentCommand.Indent : DocumentCommand.Outdent;
     editor.addUndoSnapshot(() => {
         editor.focus();
