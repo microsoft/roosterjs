@@ -1,5 +1,5 @@
-import { cacheGetContentSearcher, Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType, PositionType } from 'roosterjs-editor-types';
+import { Editor, EditorPlugin, cacheGetContentSearcher } from 'roosterjs-editor-core';	import { cacheGetContentSearcher, Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { PositionType, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 export type Replacement = {
     sourceString: string;
