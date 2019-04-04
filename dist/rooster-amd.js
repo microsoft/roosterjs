@@ -2982,7 +2982,7 @@ var Editor = /** @class */ (function () {
     };
     Editor.prototype.select = function (arg1, arg2, arg3, arg4) {
         var range = arg1 instanceof Range ? arg1 : roosterjs_editor_dom_1.createRange(arg1, arg2, arg3, arg4);
-        return this.core.api.selectRange(this.core, range);
+        return this.contains(range) && this.core.api.selectRange(this.core, range);
     };
     /**
      * Get current selection
@@ -5593,7 +5593,7 @@ function createRange(arg1, arg2, arg3, arg4) {
             end = new Position_1.default(arg2 || arg1, -3 /* After */);
         }
     }
-    if (start) {
+    if (start && start.node) {
         var range = start.node.ownerDocument.createRange();
         start = getFocusablePosition(start);
         end = getFocusablePosition(end || start);
