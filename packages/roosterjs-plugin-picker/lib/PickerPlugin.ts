@@ -412,7 +412,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             'aria-owns',
             isSuggesting && this.pickerOptions.suggestionsLabel
                 ? this.pickerOptions.suggestionsLabel
-                : undefined
+                : null
         );
     }
 
@@ -421,7 +421,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             'aria-activedescendant',
             selectedIndex != null && this.pickerOptions.suggestionLabelPrefix
                 ? this.pickerOptions.suggestionLabelPrefix + selectedIndex.toString()
-                : undefined
+                : null
         );
     }
 }
