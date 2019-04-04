@@ -1,5 +1,6 @@
 import { Browser, createRange, PartialInlineElement } from 'roosterjs-editor-dom';
 import { cacheGetContentSearcher, Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { isCharacterValue } from 'roosterjs-editor-core';
 import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import {
@@ -35,7 +36,6 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     private eventHandledOnKeyDown: boolean;
     private blockSuggestions: boolean;
     private isSuggesting: boolean;
-    private isCharacterValue: boolean;
     private lastKnownRange: Range;
 
     constructor(public readonly dataProvider: T, private pickerOptions: PickerPluginOptions) {}
@@ -145,12 +145,12 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             this.eventHandledOnKeyDown = false;
             this.onKeyDownEvent(event);
         }
-        if (event.eventType == PluginEventType.KeyUp && !this.eventHandledOnKeyDown) {
+        if (
+            event.eventType == PluginEventType.KeyUp &&
+            !this.eventHandledOnKeyDown &&
+            isCharacterValue(event.rawEvent)
+        ) {
             this.onKeyUpDomEvent(event);
-        } else if (event.eventType == PluginEventType.KeyPress) {
-            // The KeyPress event is fired when a key that produces a character value is pressed down
-            // Keys that don't produce character values include modifier keys like Ctrl and Backspace
-            this.isCharacterValue = true;
         } else if (event.eventType == PluginEventType.MouseUp) {
             if (this.isSuggesting) {
                 this.setIsSuggesting(false);
@@ -251,8 +251,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             } else {
                 this.setIsSuggesting(false);
             }
-        } else if (this.isCharacterValue) {
-            // Check for isCharacterValue to filter out modifiers like Ctrl+Z and Backspace
+        } else {
             let wordBeforeCursor = this.getWordBeforeCursor(event);
             if (!this.blockSuggestions) {
                 if (
@@ -312,7 +311,6 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 }
             }
         }
-        this.isCharacterValue = false;
     }
 
     private onKeyDownEvent(event: PluginKeyboardEvent) {
