@@ -19,6 +19,14 @@ export interface PickerPluginOptions {
 
     // Option for letting the editor handle autocomplete on node insertion
     handleAutoComplete?: boolean;
+
+    // Constant that defines the ID label for the picker.
+    // Used for setting the ariaOwns attribute of the editor when a picker is open.
+    suggestionsLabel?: string;
+
+    // Constant that defines the prefix of the ID label for the picker's options.
+    // Used for setting the ariaActiveDescendant attribute of the editor when a picker option is selected.
+    suggestionLabelPrefix?: string;
 }
 
 export interface PickerDataProvider {
@@ -56,4 +64,7 @@ export interface PickerDataProvider {
     // Function that is called when the plugin detects the editor's content has changed.
     // Provides a list of current picker placed elements in the document.
     onContentChanged?: (elementIds: string[]) => void;
+
+    // Function that returns the index of the option currently selected in the picker.
+    getSelectedIndex?: () => number;
 }

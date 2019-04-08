@@ -1,6 +1,6 @@
 {
     "name": "roosterjs",
-    "version": "7.2.6-darkmode.0",
+    "version": "7.3.0",
     "description": "Framework-independent javascript editor",
     "repository": {
         "type": "git",

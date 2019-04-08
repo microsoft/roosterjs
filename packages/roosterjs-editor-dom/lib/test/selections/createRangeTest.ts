@@ -1,5 +1,6 @@
 import createRange from '../../selection/createRange';
 import Position from '../../selection/Position';
+import { PositionType } from 'roosterjs/lib';
 
 describe('createRange() with nodes', () => {
     function runTest(
@@ -124,6 +125,14 @@ describe('createRange() with positions', () => {
             () => [$p('id2', 0), $p('id3', 1)],
             () => [$('id1'), 0, $('id1'), 2]
         );
+    });
+
+    it('Before/After orphan node', () => {
+        let range = createRange(document.createElement('div'), PositionType.After);
+        expect(range).toBeNull();
+
+        range = createRange(document.createElement('div'), PositionType.Before);
+        expect(range).toBeNull();
     });
 });
 
