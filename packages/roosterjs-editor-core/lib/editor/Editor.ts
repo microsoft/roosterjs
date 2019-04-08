@@ -521,7 +521,7 @@ export default class Editor {
 
     public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
         let range = arg1 instanceof Range ? arg1 : createRange(arg1, arg2, arg3, arg4);
-        return this.core.api.selectRange(this.core, range);
+        return this.contains(range) && this.core.api.selectRange(this.core, range);
     }
 
     /**
