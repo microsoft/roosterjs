@@ -2,7 +2,13 @@ import EditorCore, { TriggerEvent } from '../interfaces/EditorCore';
 import EditorPlugin from '../interfaces/EditorPlugin';
 import { PluginEvent } from 'roosterjs-editor-types';
 
-const triggerEvent: TriggerEvent = (
+/**
+ * Trigger a plugin event
+ * @param core The EditorCore object
+ * @param pluginEvent The event object to trigger
+ * @param broadcast Set to true to skip the shouldHandleEventExclusively check
+ */
+export const triggerEvent: TriggerEvent = (
     core: EditorCore,
     pluginEvent: PluginEvent,
     broadcast: boolean
@@ -31,5 +37,3 @@ function handledExclusively(event: PluginEvent, plugin: EditorPlugin): boolean {
 
     return false;
 }
-
-export default triggerEvent;

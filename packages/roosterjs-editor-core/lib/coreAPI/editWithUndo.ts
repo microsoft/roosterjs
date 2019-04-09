@@ -7,7 +7,14 @@ import {
     PluginEventType,
 } from 'roosterjs-editor-types';
 
-const editWithUndo: EditWithUndo = (
+/**
+ * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
+ * Undo snapshot will not be added if this call is nested inside another editWithUndo() call.
+ * @param core The EditorCore object
+ * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
+ * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
+ */
+export const editWithUndo: EditWithUndo = (
     core: EditorCore,
     callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
     changeSource: ChangeSource | string
@@ -47,5 +54,3 @@ const editWithUndo: EditWithUndo = (
         core.api.triggerEvent(core, event, true /*broadcast*/);
     }
 };
-
-export default editWithUndo;

@@ -14,6 +14,4 @@ function customClone<T>(source: Map<T>, existingObj?: Map<T>): Map<T> {
     return result;
 }
 
-const cloneObject = Object.assign ? nativeClone : customClone;
-
-export default cloneObject;
+export const cloneObject = Object.assign ? nativeClone : customClone;

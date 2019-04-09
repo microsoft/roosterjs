@@ -11,7 +11,7 @@ import { getNextLeafSibling, getPreviousLeafSibling } from '../utils/getLeafSibl
  * PartialInlineElement is implemented in a way that decorate another full inline element with its own override on methods like isAfter
  * It also offers some special methods that others don't have, i.e. nextInlineElement etc.
  */
-class PartialInlineElement implements InlineElement {
+export default class PartialInlineElement implements InlineElement {
     constructor(
         private inlineElement: InlineElement,
         private start?: NodePosition,
@@ -119,5 +119,3 @@ class PartialInlineElement implements InlineElement {
         applyTextStyle(container, styler, from, to);
     }
 }
-
-export default PartialInlineElement;
