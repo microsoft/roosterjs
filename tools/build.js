@@ -37,6 +37,7 @@ var commands = [
     'buildcommonjs', // Build in CommonJs mode
     'buildamd', // Build in AMD mode
     'publish', // Publish roosterjs packages to npm
+    'publishdark', // Publish roosterjs packages to npm with the darkmode tag.
     'builddoc', // Build documents
 ];
 
@@ -437,12 +438,14 @@ function err(message) {
     throw ex;
 }
 
-function publish() {
+function publish(tagname) {
     packages.forEach(package => {
         var json = readPackageJson(package);
 
         if (!json.version) {
-            exec(`npm publish`, {
+            const basePublishString = `npm publish`;
+            const publishString = basePublishString + (tagname ? ` --tag ${tagname}` : ``);
+            exec(publishString, {
                 stdio: 'inherit',
                 cwd: path.join(distPath, package),
             });
@@ -577,6 +580,11 @@ function buildAll(options) {
             message: 'Publishing to npm...',
             callback: publish,
             enabled: options.publish,
+        },
+        {
+            message: 'Publishing dark mode variants to npm...',
+            callback: () => publish('darkmode'),
+            enabled: options.publishdark,
         },
         {
             message: 'Building documents...',
