@@ -438,13 +438,13 @@ function err(message) {
     throw ex;
 }
 
-function publish(isDark) {
+function publish(tagname) {
     packages.forEach(package => {
         var json = readPackageJson(package);
 
         if (!json.version) {
             const basePublishString = `npm publish`;
-            const publishString = basePublishString + (isDark ? ` --tag darkmode` : ``);
+            const publishString = basePublishString + (tagname ? ` --tag ${tagname}` : ``);
             exec(publishString, {
                 stdio: 'inherit',
                 cwd: path.join(distPath, package),
@@ -583,7 +583,7 @@ function buildAll(options) {
         },
         {
             message: 'Publishing dark mode variants to npm...',
-            callback: () => publish(true),
+            callback: () => publish('darkmode'),
             enabled: options.publishdark,
         },
         {
