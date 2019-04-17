@@ -7693,10 +7693,12 @@ function cacheGetLinkData(event, editor) {
                 event.source == "Paste" /* Paste */ &&
                 event.data;
             var link = roosterjs_editor_dom_1.matchLink((clipboardData.text || '').trim());
-            if (link) {
+            var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, editor);
+            // In case the matched link is already inside a <A> tag, we do a range search.
+            // getRangeFromText will return null if the given text is already in a LinkInlineElement
+            if (link && searcher.getRangeFromText(link.originalUrl, false /*exactMatch*/)) {
                 return link;
             }
-            var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, editor);
             var word = searcher && searcher.getWordBefore();
             if (word && word.length > MINIMUM_LENGTH) {
                 // Check for trailing punctuation
