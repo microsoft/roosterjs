@@ -26,6 +26,7 @@ export default interface BuildInPluginState {
     defaultFormat: DefaultFormat;
     linkTitle: string;
     watermarkText: string;
+    showRibbon: boolean;
 }
 
 export interface BuildInPluginProps extends BuildInPluginState, SidePaneElementProps {}
