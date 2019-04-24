@@ -9,7 +9,7 @@ const STYLETAGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL'.split(',');
 
 export default function applyTextStyle(
     container: Node,
-    styler: (node: HTMLElement) => any,
+    styler: (node: HTMLElement, isInnerNode?: boolean) => any,
     from: NodePosition = new Position(container, PositionType.Begin).normalize(),
     to: NodePosition = new Position(container, PositionType.End).normalize()
 ) {
@@ -54,10 +54,25 @@ export default function applyTextStyle(
                 getTagOfNode(node) != 'SPAN' &&
                 STYLETAGS.indexOf(getTagOfNode(node.parentNode)) >= 0
             ) {
+                callStylerWithInnerNode(node, styler);
                 node = splitBalancedNodeRange(node);
             }
-            styler(getTagOfNode(node) == 'SPAN' ? <HTMLElement>node : wrap(node, 'span'));
+
+            if (getTagOfNode(node) != 'SPAN') {
+                callStylerWithInnerNode(node, styler);
+                node = wrap(node, 'SPAN');
+            }
+            styler(<HTMLElement>node);
         });
+    }
+}
+
+function callStylerWithInnerNode(
+    node: Node,
+    styler: (node: HTMLElement, isInnerNode?: boolean) => any
+) {
+    if (node && node.nodeType == NodeType.Element) {
+        styler(node as HTMLElement, true /*isInnerNode*/);
     }
 }
 

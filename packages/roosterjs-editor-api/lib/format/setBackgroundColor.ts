@@ -10,5 +10,7 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function setBackgroundColor(editor: Editor, color: string) {
     color = color.trim();
-    applyInlineStyle(editor, element => (element.style.backgroundColor = color));
+    applyInlineStyle(editor, (element, isInnerNode) => {
+        element.style.backgroundColor = isInnerNode ? '' : color;
+    });
 }
