@@ -10,5 +10,7 @@ import { Editor } from 'roosterjs-editor-core';
  */
 export default function setTextColor(editor: Editor, color: string) {
     color = color.trim();
-    applyInlineStyle(editor, element => (element.style.color = color));
+    applyInlineStyle(editor, (element, isInnerNode) => {
+        element.style.color = isInnerNode ? '' : color;
+    });
 }
