@@ -1046,7 +1046,7 @@ export interface InlineElement {
     /**
      * Apply inline style to a region of an inline element
      */
-    applyStyle(styler: (element: HTMLElement) => any): void;
+    applyStyle(styler: (element: HTMLElement, isInnerNode?: boolean) => any): void;
 }
 
 /**
@@ -1524,7 +1524,7 @@ export class NodeInlineElement implements InlineElement  {
     /**
      * Apply inline style to an inline element
      */
-    applyStyle(styler: (element: HTMLElement) => any): void;
+    applyStyle(styler: (element: HTMLElement, isInnerNode?: boolean) => any): void;
 }
 
 /**
@@ -1586,10 +1586,10 @@ export class PartialInlineElement implements InlineElement  {
     /**
      * apply style
      */
-    applyStyle(styler: (element: HTMLElement) => any): void;
+    applyStyle(styler: (element: HTMLElement, isInnerNode?: boolean) => any): void;
 }
 
-export function applyTextStyle(container: Node, styler: (node: HTMLElement) => any, from?: NodePosition, to?: NodePosition): void;
+export function applyTextStyle(container: Node, styler: (node: HTMLElement, isInnerNode?: boolean) => any, from?: NodePosition, to?: NodePosition): void;
 
 export const Browser: BrowserInfo;
 

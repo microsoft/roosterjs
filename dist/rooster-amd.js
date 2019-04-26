@@ -733,7 +733,9 @@ var applyInlineStyle_1 = __webpack_require__(/*! ../utils/applyInlineStyle */ ".
  */
 function setBackgroundColor(editor, color) {
     color = color.trim();
-    applyInlineStyle_1.default(editor, function (element) { return (element.style.backgroundColor = color); });
+    applyInlineStyle_1.default(editor, function (element, isInnerNode) {
+        element.style.backgroundColor = isInnerNode ? '' : color;
+    });
 }
 exports.default = setBackgroundColor;
 
@@ -794,7 +796,9 @@ function setFontName(editor, fontName) {
     // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
     // (http://www.w3schools.com/tags/tag_font.asp). Use applyInlineStyle which gives flexibility on applying inline style
     // for here, we use CSS font-family style
-    applyInlineStyle_1.default(editor, function (element) { return (element.style.fontFamily = fontName); });
+    applyInlineStyle_1.default(editor, function (element, isInnerNode) {
+        element.style.fontFamily = isInnerNode ? '' : fontName;
+    });
 }
 exports.default = setFontName;
 
@@ -824,8 +828,8 @@ function setFontSize(editor, fontSize) {
     // The browser provided execCommand only accepts 1-7 point value. In addition, it uses HTML <font> tag with size attribute.
     // <font> is not HTML5 standard (http://www.w3schools.com/tags/tag_font.asp). Use applyInlineStyle which gives flexibility on applying inline style
     // for here, we use CSS font-size style
-    applyInlineStyle_1.default(editor, function (element) {
-        element.style.fontSize = fontSize;
+    applyInlineStyle_1.default(editor, function (element, isInnerNode) {
+        element.style.fontSize = isInnerNode ? '' : fontSize;
         var lineHeight = roosterjs_editor_dom_1.getComputedStyle(element, 'line-height');
         if (lineHeight != 'normal') {
             element.style.lineHeight = 'normal';
@@ -937,7 +941,9 @@ var applyInlineStyle_1 = __webpack_require__(/*! ../utils/applyInlineStyle */ ".
  */
 function setTextColor(editor, color) {
     color = color.trim();
-    applyInlineStyle_1.default(editor, function (element) { return (element.style.color = color); });
+    applyInlineStyle_1.default(editor, function (element, isInnerNode) {
+        element.style.color = isInnerNode ? '' : color;
+    });
 }
 exports.default = setTextColor;
 
@@ -1568,8 +1574,8 @@ function applyInlineStyle(editor, callback) {
             var inlineElement = contentTraverser && contentTraverser.currentInlineElement;
             while (inlineElement) {
                 var nextInlineElement = contentTraverser.getNextInlineElement();
-                inlineElement.applyStyle(function (element) {
-                    callback(element);
+                inlineElement.applyStyle(function (element, isInnerNode) {
+                    callback(element, isInnerNode);
                     firstNode = firstNode || element;
                     lastNode = element;
                 });
@@ -6524,13 +6530,23 @@ function applyTextStyle(container, styler, from, to) {
             // So that the inner style tag such as U, STRIKE can inherit the style we added
             while (getTagOfNode_1.default(node) != 'SPAN' &&
                 STYLETAGS.indexOf(getTagOfNode_1.default(node.parentNode)) >= 0) {
+                callStylerWithInnerNode(node, styler);
                 node = splitParentNode_1.splitBalancedNodeRange(node);
             }
-            styler(getTagOfNode_1.default(node) == 'SPAN' ? node : wrap_1.default(node, 'span'));
+            if (getTagOfNode_1.default(node) != 'SPAN') {
+                callStylerWithInnerNode(node, styler);
+                node = wrap_1.default(node, 'SPAN');
+            }
+            styler(node);
         });
     }
 }
 exports.default = applyTextStyle;
+function callStylerWithInnerNode(node, styler) {
+    if (node && node.nodeType == 1 /* Element */) {
+        styler(node, true /*isInnerNode*/);
+    }
+}
 function splitTextNode(textNode, offset, returnFirstPart) {
     var firstPart = textNode.nodeValue.substr(0, offset);
     var secondPart = textNode.nodeValue.substr(offset);
