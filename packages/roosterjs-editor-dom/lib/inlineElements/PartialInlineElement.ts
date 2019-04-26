@@ -102,7 +102,7 @@ class PartialInlineElement implements InlineElement {
     /**
      * apply style
      */
-    public applyStyle(styler: (element: HTMLElement) => any) {
+    public applyStyle(styler: (element: HTMLElement, isInnerNode?: boolean) => any) {
         let from = this.getStartPosition().normalize();
         let to = this.getEndPosition().normalize();
         let container = this.getContainerNode();
