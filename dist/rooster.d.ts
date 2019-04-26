@@ -3065,7 +3065,7 @@ function clearContentSearcherCache(event: PluginEvent): void;
  */
 function cacheGetElementAtCursor(editor: Editor, event: PluginEvent, selector: string): HTMLElement;
 
-    function isCharacterValue(event: KeyboardEvent): boolean;
+    function isModifierKey(event: KeyboardEvent): boolean;
 
     /**
  * Increase or decrease font size in selection
