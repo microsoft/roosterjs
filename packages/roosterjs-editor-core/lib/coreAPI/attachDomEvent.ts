@@ -1,5 +1,5 @@
 import EditorCore, { AttachDomEvent } from '../interfaces/EditorCore';
-import isModifierKey from '../eventApi/isModifierKey';
+import isCharacterValue from '../eventApi/isCharacterValue';
 import { PluginDomEvent, PluginEventType } from 'roosterjs-editor-types';
 
 const attachDomEvent: AttachDomEvent = (
@@ -14,10 +14,7 @@ const attachDomEvent: AttachDomEvent = (
         // event.key is longer than 1 for num pad input. But here we just want to improve performance as much as possible.
         // So if we missed some case here it is still acceptable.
         if (
-            (isKeyboardEvent(event) &&
-                !isModifierKey(event) &&
-                event.key &&
-                event.key.length == 1) ||
+            (isKeyboardEvent(event) && isCharacterValue(event)) ||
             pluginEventType == PluginEventType.Input
         ) {
             event.stopPropagation();
