@@ -46,7 +46,7 @@ export interface PickerDataProvider {
     onIsSuggestingChanged: (isSuggesting: boolean) => void;
 
     // Function called when the query string (text after the trigger symbol) is updated.
-    queryStringUpdated: (queryString: string) => void;
+    queryStringUpdated: (queryString: string, isExactMatch: boolean) => void;
 
     // Function called when a keypress is issued that would "select" a currently highlighted option.
     selectOption?: () => void;
