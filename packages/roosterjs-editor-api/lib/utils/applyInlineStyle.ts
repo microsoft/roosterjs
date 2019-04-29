@@ -9,7 +9,10 @@ const ZERO_WIDTH_SPACE = '\u200B';
  * @param editor The editor instance
  * @param callback The callback function to apply style
  */
-export default function applyInlineStyle(editor: Editor, callback: (element: HTMLElement) => any) {
+export default function applyInlineStyle(
+    editor: Editor,
+    callback: (element: HTMLElement, isInnerNode?: boolean) => any
+) {
     editor.focus();
     let range = editor.getSelectionRange();
 
@@ -51,8 +54,8 @@ export default function applyInlineStyle(editor: Editor, callback: (element: HTM
             let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
             while (inlineElement) {
                 let nextInlineElement = contentTraverser.getNextInlineElement();
-                inlineElement.applyStyle(element => {
-                    callback(element);
+                inlineElement.applyStyle((element, isInnerNode) => {
+                    callback(element, isInnerNode);
                     firstNode = firstNode || element;
                     lastNode = element;
                 });

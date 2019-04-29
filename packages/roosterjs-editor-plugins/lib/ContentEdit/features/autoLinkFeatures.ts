@@ -53,11 +53,14 @@ function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
                   event.source == ChangeSource.Paste &&
                   (event.data as ClipboardData);
               let link = matchLink((clipboardData.text || '').trim());
-              if (link) {
+              let searcher = cacheGetContentSearcher(event, editor);
+
+              // In case the matched link is already inside a <A> tag, we do a range search.
+              // getRangeFromText will return null if the given text is already in a LinkInlineElement
+              if (link && searcher.getRangeFromText(link.originalUrl, false /*exactMatch*/)) {
                   return link;
               }
 
-              let searcher = cacheGetContentSearcher(event, editor);
               let word = searcher && searcher.getWordBefore();
               if (word && word.length > MINIMUM_LENGTH) {
                   // Check for trailing punctuation
