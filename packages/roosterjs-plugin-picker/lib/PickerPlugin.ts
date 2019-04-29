@@ -1,8 +1,13 @@
 import { Browser, createRange, PartialInlineElement } from 'roosterjs-editor-dom';
-import { cacheGetContentSearcher, Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { isModifierKey } from 'roosterjs-editor-core';
 import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
+import {
+    cacheGetContentSearcher,
+    Editor,
+    EditorPlugin,
+    isCharacterValue,
+    isModifierKey,
+} from 'roosterjs-editor-core';
 import {
     NodePosition,
     PluginKeyboardEvent,
@@ -148,7 +153,8 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         if (
             event.eventType == PluginEventType.KeyUp &&
             !this.eventHandledOnKeyDown &&
-            !isModifierKey(event.rawEvent)
+            (isCharacterValue(event.rawEvent) ||
+                (!isModifierKey(event.rawEvent) && this.isSuggesting))
         ) {
             this.onKeyUpDomEvent(event);
         } else if (event.eventType == PluginEventType.MouseUp) {
