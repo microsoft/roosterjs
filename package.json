@@ -1,6 +1,6 @@
 {
     "name": "roosterjs",
-    "version": "7.3.0-darkmode.0",
+    "version": "7.3.1-darkmode.0",
     "description": "Framework-independent javascript editor",
     "repository": {
         "type": "git",
@@ -25,6 +25,7 @@
         "test:debug": "karma start --no-single-run",
         "prettier": "node tools/prettier.js",
         "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo publish",
+        "publish:dark": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo publishdark",
         "instrumentation": "cd publish/samplesite/instrumentation-tests && npm run instrumentation",
         "instrumentation:chrome": "cd publish/samplesite/instrumentation-tests && npm run instrumentation:chrome",
         "instrumentation:firefox": "cd publish/samplesite/instrumentation-tests && npm run instrumentation:firefox"

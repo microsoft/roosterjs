@@ -13,8 +13,8 @@ export default function setFontSize(editor: Editor, fontSize: string) {
     // The browser provided execCommand only accepts 1-7 point value. In addition, it uses HTML <font> tag with size attribute.
     // <font> is not HTML5 standard (http://www.w3schools.com/tags/tag_font.asp). Use applyInlineStyle which gives flexibility on applying inline style
     // for here, we use CSS font-size style
-    applyInlineStyle(editor, element => {
-        element.style.fontSize = fontSize;
+    applyInlineStyle(editor, (element, isInnerNode) => {
+        element.style.fontSize = isInnerNode ? '' : fontSize;
         let lineHeight = getComputedStyle(element, 'line-height');
         if (lineHeight != 'normal') {
             element.style.lineHeight = 'normal';

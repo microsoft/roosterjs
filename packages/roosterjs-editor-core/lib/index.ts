@@ -43,4 +43,4 @@ export {
     clearContentSearcherCache,
 } from './eventApi/cacheGetContentSearcher';
 export { default as cacheGetElementAtCursor } from './eventApi/cacheGetElementAtCursor';
-export { default as isCharacterValue } from './eventApi/isCharacterValue';
+export { default as isModifierKey } from './eventApi/isModifierKey';
