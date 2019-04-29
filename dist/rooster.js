@@ -1844,17 +1844,14 @@ exports.default = toggleTagCore;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var isModifierKey_1 = __webpack_require__(/*! ../eventApi/isModifierKey */ "./packages/roosterjs-editor-core/lib/eventApi/isModifierKey.ts");
+var isCharacterValue_1 = __webpack_require__(/*! ../eventApi/isCharacterValue */ "./packages/roosterjs-editor-core/lib/eventApi/isCharacterValue.ts");
 var attachDomEvent = function (core, eventName, pluginEventType, beforeDispatch) {
     var onEvent = function (event) {
         // Stop propagation of a printable keyboard event (a keyboard event which is caused by printable char input).
         // This detection is not 100% accurate. event.key is not fully supported by all browsers, and in some browsers (e.g. IE),
         // event.key is longer than 1 for num pad input. But here we just want to improve performance as much as possible.
         // So if we missed some case here it is still acceptable.
-        if ((isKeyboardEvent(event) &&
-            !isModifierKey_1.default(event) &&
-            event.key &&
-            event.key.length == 1) ||
+        if ((isKeyboardEvent(event) && isCharacterValue_1.default(event)) ||
             pluginEventType == 11 /* Input */) {
             event.stopPropagation();
         }
@@ -3462,6 +3459,32 @@ exports.default = clearEventDataCache;
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-core/lib/eventApi/isCharacterValue.ts":
+/*!*************************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/eventApi/isCharacterValue.ts ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var isModifierKey_1 = __webpack_require__(/*! ./isModifierKey */ "./packages/roosterjs-editor-core/lib/eventApi/isModifierKey.ts");
+/**
+ * Returns true when the event was fired from a key that produces a character value, otherwise false
+ * This detection is not 100% accurate. event.key is not fully supported by all browsers, and in some browsers (e.g. IE),
+ * event.key is longer than 1 for num pad input. But here we just want to improve performance as much as possible.
+ * So if we missed some case here it is still acceptable.
+ * @param event The keyboard event object
+ */
+function isCharacterValue(event) {
+    return !isModifierKey_1.default(event) && event.key && event.key.length == 1;
+}
+exports.default = isCharacterValue;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-core/lib/eventApi/isModifierKey.ts":
 /*!**********************************************************************!*\
   !*** ./packages/roosterjs-editor-core/lib/eventApi/isModifierKey.ts ***!
@@ -3475,7 +3498,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var CTRL_CHARCODE = 'Control';
 var ALT_CHARCODE = 'Alt';
 var META_CHARCODE = 'Meta';
-// Returns true when the event was fired from a modifier key, otherwise false
+/**
+ * Returns true when the event was fired from a modifier key, otherwise false
+ * @param event The keyboard event object
+ */
 function isModifierKey(event) {
     var isCtrlKey = event.ctrlKey || event.key === CTRL_CHARCODE;
     var isAltKey = event.altKey || event.key === ALT_CHARCODE;
@@ -3525,6 +3551,8 @@ var cacheGetElementAtCursor_1 = __webpack_require__(/*! ./eventApi/cacheGetEleme
 exports.cacheGetElementAtCursor = cacheGetElementAtCursor_1.default;
 var isModifierKey_1 = __webpack_require__(/*! ./eventApi/isModifierKey */ "./packages/roosterjs-editor-core/lib/eventApi/isModifierKey.ts");
 exports.isModifierKey = isModifierKey_1.default;
+var isCharacterValue_1 = __webpack_require__(/*! ./eventApi/isCharacterValue */ "./packages/roosterjs-editor-core/lib/eventApi/isCharacterValue.ts");
+exports.isCharacterValue = isCharacterValue_1.default;
 
 
 /***/ }),
@@ -10698,9 +10726,8 @@ exports.ImageResize = ImageResize_1.default;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
-var roosterjs_editor_core_2 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
+var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 // Character codes.
 // IE11 uses different character codes. which are noted below.
 // If adding a new key, test in IE to figure out what the code is.
@@ -10788,6 +10815,10 @@ var PickerPlugin = /** @class */ (function () {
         if (event.eventType == 6 /* ContentChanged */ &&
             event.source == "SetContent" /* SetContent */ &&
             this.dataProvider.onContentChanged) {
+            // Stop suggesting since content is fully changed
+            if (this.isSuggesting) {
+                this.setIsSuggesting(false);
+            }
             // Undos and other major changes to document content fire this type of event.
             // Inform the data provider of the current picker placed elements in the body.
             var elementIds_1 = [];
@@ -10804,7 +10835,8 @@ var PickerPlugin = /** @class */ (function () {
         }
         if (event.eventType == 2 /* KeyUp */ &&
             !this.eventHandledOnKeyDown &&
-            !roosterjs_editor_core_2.isModifierKey(event.rawEvent)) {
+            (roosterjs_editor_core_1.isCharacterValue(event.rawEvent) ||
+                (!roosterjs_editor_core_1.isModifierKey(event.rawEvent) && this.isSuggesting))) {
             this.onKeyUpDomEvent(event);
         }
         else if (event.eventType == 5 /* MouseUp */) {
@@ -10876,7 +10908,8 @@ var PickerPlugin = /** @class */ (function () {
         if (this.isSuggesting) {
             // Word before cursor represents the text prior to the cursor, up to and including the trigger symbol.
             var wordBeforeCursor = this.getWord(event);
-            var trimmedWordBeforeCursor = wordBeforeCursor.substring(1).trim();
+            var wordBeforeCursorWithoutTriggerChar = wordBeforeCursor.substring(1);
+            var trimmedWordBeforeCursor = wordBeforeCursorWithoutTriggerChar.trim();
             // If we hit a case where wordBeforeCursor is just the trigger character,
             // that means we've gotten a onKeyUp event right after it's been typed.
             // Otherwise, update the query string when:
@@ -10888,7 +10921,7 @@ var PickerPlugin = /** @class */ (function () {
                 (trimmedWordBeforeCursor &&
                     trimmedWordBeforeCursor.length > 0 &&
                     trimmedWordBeforeCursor.split(' ').length <= 4)) {
-                this.dataProvider.queryStringUpdated(trimmedWordBeforeCursor);
+                this.dataProvider.queryStringUpdated(trimmedWordBeforeCursor, wordBeforeCursorWithoutTriggerChar == trimmedWordBeforeCursor);
                 this.setLastKnownRange(this.editor.getSelectionRange());
             }
             else {
@@ -10902,8 +10935,9 @@ var PickerPlugin = /** @class */ (function () {
                     wordBeforeCursor.split(' ').length <= 4 &&
                     wordBeforeCursor[0] == this.pickerOptions.triggerCharacter) {
                     this.setIsSuggesting(true);
-                    var shortWord = wordBeforeCursor.substring(1).trim();
-                    this.dataProvider.queryStringUpdated(shortWord);
+                    var wordBeforeCursorWithoutTriggerChar = wordBeforeCursor.substring(1);
+                    var trimmedWordBeforeCursor = wordBeforeCursorWithoutTriggerChar.trim();
+                    this.dataProvider.queryStringUpdated(trimmedWordBeforeCursor, wordBeforeCursorWithoutTriggerChar == trimmedWordBeforeCursor);
                     this.setLastKnownRange(this.editor.getSelectionRange());
                     if (this.dataProvider.setCursorPoint) {
                         // Determine the bounding rectangle for the @mention
