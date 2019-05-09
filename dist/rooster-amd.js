@@ -3274,9 +3274,9 @@ function createEditorCore(contentDiv, options) {
     };
     var allPlugins = [
         corePlugins.typeInContainer,
-        corePlugins.edit,
         corePlugins.mouseUp
     ].concat((options.plugins || []), [
+        corePlugins.edit,
         corePlugins.firefoxTypeAfterLink,
         corePlugins.undo,
         corePlugins.domEvent,
