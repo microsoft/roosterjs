@@ -32,8 +32,8 @@ export default function createEditorCore(
         firefoxTypeAfterLink: Browser.isFirefox && new FirefoxTypeAfterLink(),
     };
     let allPlugins: EditorPlugin[] = [
-        ...(options.plugins || []),
         corePlugins.typeInContainer,
+        ...(options.plugins || []),
         corePlugins.edit,
         corePlugins.mouseUp,
         corePlugins.firefoxTypeAfterLink,
