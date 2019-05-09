@@ -158,7 +158,7 @@ function normalize() {
         packageJson.license = 'MIT';
         packageJson.repository = {
             type: 'git',
-            url: 'https://github.com/Microsoft/roosterjs',
+            url: 'https://github.com/microsoft/roosterjs',
         };
 
         var targetPackagePath = path.join(distPath, package);

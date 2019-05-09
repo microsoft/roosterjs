@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Microsoft/roosterjs.svg?branch=master)](https://travis-ci.org/Microsoft/roosterjs)
+[![Build Status](https://travis-ci.org/microsoft/roosterjs.svg?branch=master)](https://travis-ci.org/microsoft/roosterjs)
 
 # Rooster
 
@@ -13,10 +13,10 @@ To view the sample site, please click the link below:
 ## Upgrade from RoosterJs 6.x
 
 If you are upgrading your project from RoosterJs 6.x, please read
-[here](https://github.com/Microsoft/roosterjs/wiki/RoosterJs-7) for a full
+[here](https://github.com/microsoft/roosterjs/wiki/RoosterJs-7) for a full
 list of API changes.
 
-The code of RoosterJs 6.x is now moved to branch [roosterjs6](https://github.com/Microsoft/roosterjs/tree/roosterjs6).
+The code of RoosterJs 6.x is now moved to branch [roosterjs6](https://github.com/microsoft/roosterjs/tree/roosterjs6).
 
 RoosterJs 6.x will be still support for a while. Most new features added into
 RoosterJs 7.x will also be merged into 6.x branch for now. We plan to stop the
@@ -258,7 +258,7 @@ To build the sample site code yourself, follow these instructions:
 
 ## More documentation
 
-We are still working on more documentation in [roosterjs wiki](https://github.com/Microsoft/roosterjs/wiki) and [API reference](https://microsoft.github.io/roosterjs/docs/index.html).
+We are still working on more documentation in [roosterjs wiki](https://github.com/microsoft/roosterjs/wiki) and [API reference](https://microsoft.github.io/roosterjs/docs/index.html).
 
 ## License - MIT
 

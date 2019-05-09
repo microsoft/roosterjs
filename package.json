@@ -4,7 +4,7 @@
     "description": "Framework-independent javascript editor",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Microsoft/roosterjs"
+        "url": "https://github.com/microsoft/roosterjs"
     },
     "license": "MIT",
     "scripts": {

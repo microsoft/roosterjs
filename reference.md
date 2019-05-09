@@ -41,4 +41,4 @@ Rooster contains 9 packages.
 
 [RoosterJs Demo Site](../index.html).
 
-[RoosterJs wiki](https://github.com/Microsoft/roosterjs/wiki)
+[RoosterJs wiki](https://github.com/microsoft/roosterjs/wiki)
