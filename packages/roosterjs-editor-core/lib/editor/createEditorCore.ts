@@ -33,9 +33,9 @@ export default function createEditorCore(
     };
     let allPlugins: EditorPlugin[] = [
         corePlugins.typeInContainer,
+        corePlugins.mouseUp,
         ...(options.plugins || []),
         corePlugins.edit,
-        corePlugins.mouseUp,
         corePlugins.firefoxTypeAfterLink,
         corePlugins.undo,
         corePlugins.domEvent,
