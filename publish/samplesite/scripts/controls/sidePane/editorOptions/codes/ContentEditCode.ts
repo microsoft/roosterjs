@@ -7,21 +7,6 @@ export default class ContentEditCode extends CodeElement {
         super();
     }
 
-    getImports() {
-        return [
-            {
-                name: 'ContentEdit',
-                path: 'roosterjs-editor-plugins',
-                isDefault: false,
-            },
-            {
-                name: 'getDefaultContentEditFeatures',
-                path: 'roosterjs-editor-plugins',
-                isDefault: false,
-            },
-        ];
-    }
-
     getCode() {
         let defaultValues = getDefaultContentEditFeatures();
         let features = Object.keys(defaultValues)
@@ -34,9 +19,9 @@ export default class ContentEditCode extends CodeElement {
             })
             .filter(line => !!line);
         return features.length > 0
-            ? 'new ContentEdit(Object.assign(getDefaultContentEditFeatures(), {\n' +
+            ? 'new roosterjs.ContentEdit(Object.assign(roosterjs.getDefaultContentEditFeatures(), {\n' +
                   this.indent(features.join('')) +
                   '}))'
-            : 'new ContentEdit()';
+            : 'new roosterjs.ContentEdit()';
     }
 }

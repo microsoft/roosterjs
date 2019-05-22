@@ -4,6 +4,7 @@ import SidePane from './sidePane/SidePane';
 
 export interface MainPaneBaseState {
     showSidePane: boolean;
+    showRibbon: boolean;
 }
 
 export default abstract class MainPaneBase extends React.Component<{}, MainPaneBaseState> {
@@ -23,4 +24,6 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
     abstract resetEditorPlugin(pluginState: BuildInPluginState): void;
 
     abstract updateFormatState(): void;
+
+    abstract setIsRibbonShown(isShown: boolean): void;
 }

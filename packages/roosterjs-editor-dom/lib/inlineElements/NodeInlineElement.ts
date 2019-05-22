@@ -84,7 +84,7 @@ export default class NodeInlineElement implements InlineElement {
     /**
      * Apply inline style to an inline element
      */
-    public applyStyle(styler: (element: HTMLElement) => any): void {
+    public applyStyle(styler: (element: HTMLElement, isInnerNode?: boolean) => any): void {
         applyTextStyle(this.containerNode, styler);
     }
 }

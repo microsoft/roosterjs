@@ -1,6 +1,5 @@
 import * as React from 'react';
 import BuildInPluginState from '../../BuildInPluginState';
-import CodeElement from './codes/CodeElement';
 import EditorCode from './codes/EditorCode';
 
 export interface CodeProps {
@@ -12,11 +11,7 @@ export default class Code extends React.Component<CodeProps, {}> {
         let editor = new EditorCode(this.props.state);
         return (
             <div>
-                <pre>
-                    {CodeElement.mergeImport(editor.getImports())}
-                    {'\n'}
-                    {editor.getCode()}
-                </pre>
+                <pre>{editor.getCode()}</pre>
             </div>
         );
     }

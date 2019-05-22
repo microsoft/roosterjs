@@ -6,18 +6,8 @@ export default class HyperLinkCode extends CodeElement {
         super();
     }
 
-    getImports() {
-        return [
-            {
-                name: 'HyperLink',
-                path: 'roosterjs-editor-plugins',
-                isDefault: false,
-            },
-        ];
-    }
-
     getCode() {
-        return 'new HyperLink(' + this.getLinkCallback() + ')';
+        return 'new roosterjs.HyperLink(' + this.getLinkCallback() + ')';
     }
 
     private getLinkCallback() {

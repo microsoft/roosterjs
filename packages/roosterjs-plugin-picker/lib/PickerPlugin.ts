@@ -1,8 +1,13 @@
 import { Browser, createRange, PartialInlineElement } from 'roosterjs-editor-dom';
-import { cacheGetContentSearcher, Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { isCharacterValue } from 'roosterjs-editor-core';
 import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
+import {
+    cacheGetContentSearcher,
+    Editor,
+    EditorPlugin,
+    isCharacterValue,
+    isModifierKey,
+} from 'roosterjs-editor-core';
 import {
     NodePosition,
     PluginKeyboardEvent,
@@ -128,6 +133,11 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             event.source == ChangeSource.SetContent &&
             this.dataProvider.onContentChanged
         ) {
+            // Stop suggesting since content is fully changed
+            if (this.isSuggesting) {
+                this.setIsSuggesting(false);
+            }
+
             // Undos and other major changes to document content fire this type of event.
             // Inform the data provider of the current picker placed elements in the body.
             let elementIds: string[] = [];
@@ -148,7 +158,8 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         if (
             event.eventType == PluginEventType.KeyUp &&
             !this.eventHandledOnKeyDown &&
-            isCharacterValue(event.rawEvent)
+            (isCharacterValue(event.rawEvent) ||
+                (!isModifierKey(event.rawEvent) && this.isSuggesting))
         ) {
             this.onKeyUpDomEvent(event);
         } else if (event.eventType == PluginEventType.MouseUp) {
@@ -231,7 +242,8 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         if (this.isSuggesting) {
             // Word before cursor represents the text prior to the cursor, up to and including the trigger symbol.
             const wordBeforeCursor = this.getWord(event);
-            const trimmedWordBeforeCursor = wordBeforeCursor.substring(1).trim();
+            const wordBeforeCursorWithoutTriggerChar = wordBeforeCursor.substring(1);
+            const trimmedWordBeforeCursor = wordBeforeCursorWithoutTriggerChar.trim();
 
             // If we hit a case where wordBeforeCursor is just the trigger character,
             // that means we've gotten a onKeyUp event right after it's been typed.
@@ -246,7 +258,10 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     trimmedWordBeforeCursor.length > 0 &&
                     trimmedWordBeforeCursor.split(' ').length <= 4)
             ) {
-                this.dataProvider.queryStringUpdated(trimmedWordBeforeCursor);
+                this.dataProvider.queryStringUpdated(
+                    trimmedWordBeforeCursor,
+                    wordBeforeCursorWithoutTriggerChar == trimmedWordBeforeCursor
+                );
                 this.setLastKnownRange(this.editor.getSelectionRange());
             } else {
                 this.setIsSuggesting(false);
@@ -260,8 +275,12 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     wordBeforeCursor[0] == this.pickerOptions.triggerCharacter
                 ) {
                     this.setIsSuggesting(true);
-                    let shortWord = wordBeforeCursor.substring(1).trim();
-                    this.dataProvider.queryStringUpdated(shortWord);
+                    const wordBeforeCursorWithoutTriggerChar = wordBeforeCursor.substring(1);
+                    let trimmedWordBeforeCursor = wordBeforeCursorWithoutTriggerChar.trim();
+                    this.dataProvider.queryStringUpdated(
+                        trimmedWordBeforeCursor,
+                        wordBeforeCursorWithoutTriggerChar == trimmedWordBeforeCursor
+                    );
                     this.setLastKnownRange(this.editor.getSelectionRange());
                     if (this.dataProvider.setCursorPoint) {
                         // Determine the bounding rectangle for the @mention
