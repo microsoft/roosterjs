@@ -30,11 +30,25 @@ const RIGHT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowRight' : 'Right';
 const DOWN_ARROW_CHARCODE = !Browser.isIE ? 'ArrowDown' : 'Down';
 const DELETE_CHARCODE = !Browser.isIE ? 'Delete' : 'Del';
 
+/**
+ * Interface for PickerPlugin
+ */
 export interface EditorPickerPluginInterface<T extends PickerDataProvider = PickerDataProvider>
     extends EditorPlugin {
     dataProvider: T;
 }
 
+/**
+ * PickerPlugin represents a plugin of editor which can handle picker related behaviors, including
+ * - Show picker when special trigger key is pressed
+ * - Hide picker
+ * - Change selection in picker by Up/Down/Left/Right
+ * - Apply selected item in picker
+ *
+ * PickerPlugin doesn't provide any UI, it just wraps related DOM events and invoke callback functions.
+ * To show a picker UI, you need to build your own UI component. Please reference to
+ * https://github.com/microsoft/roosterjs/tree/master/publish/samplesite/scripts/controls/samplepicker
+ */
 export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvider>
     implements EditorPickerPluginInterface<T> {
     private editor: Editor;

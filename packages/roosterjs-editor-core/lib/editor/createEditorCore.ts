@@ -1,24 +1,29 @@
-import attachDomEvent from '../coreAPI/attachDomEvent';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorCore, { CoreApiMap, CorePlugins } from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import EditorPlugin from '../interfaces/EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
-import editWithUndo from '../coreAPI/editWithUndo';
 import FirefoxTypeAfterLink from '../corePlugins/FirefoxTypeAfterLink';
-import focus from '../coreAPI/focus';
-import getCustomData from '../coreAPI/getCustomData';
-import getSelectionRange from '../coreAPI/getSelectionRange';
-import hasFocus from '../coreAPI/hasFocus';
-import insertNode from '../coreAPI/insertNode';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
-import selectRange, { select } from '../coreAPI/selectRange';
-import triggerEvent from '../coreAPI/triggerEvent';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import Undo from '../undo/Undo';
+import { attachDomEvent } from '../coreAPI/attachDomEvent';
 import { Browser, getComputedStyles } from 'roosterjs-editor-dom';
 import { DefaultFormat } from 'roosterjs-editor-types';
+import { editWithUndo } from '../coreAPI/editWithUndo';
+import { focus } from '../coreAPI/focus';
+import { getCustomData } from '../coreAPI/getCustomData';
+import { getSelectionRange } from '../coreAPI/getSelectionRange';
+import { hasFocus } from '../coreAPI/hasFocus';
+import { insertNode } from '../coreAPI/insertNode';
+import { select, selectRange } from '../coreAPI/selectRange';
+import { triggerEvent } from '../coreAPI/triggerEvent';
 
+/**
+ * Create core object for editor
+ * @param contentDiv The DIV element used for editor
+ * @param options Options to create an editor
+ */
 export default function createEditorCore(
     contentDiv: HTMLDivElement,
     options: EditorOptions
@@ -31,15 +36,7 @@ export default function createEditorCore(
         domEvent: new DOMEventPlugin(options.disableRestoreSelectionOnFocus),
         firefoxTypeAfterLink: Browser.isFirefox && new FirefoxTypeAfterLink(),
     };
-    let allPlugins: EditorPlugin[] = [
-        corePlugins.typeInContainer,
-        corePlugins.mouseUp,
-        ...(options.plugins || []),
-        corePlugins.edit,
-        corePlugins.firefoxTypeAfterLink,
-        corePlugins.undo,
-        corePlugins.domEvent,
-    ].filter(plugin => !!plugin);
+    let allPlugins = buildPluginList(corePlugins, options.plugins);
     let eventHandlerPlugins = allPlugins.filter(
         plugin => plugin.onPluginEvent || plugin.willHandleEventExclusively
     );
@@ -56,6 +53,18 @@ export default function createEditorCore(
         api: createCoreApiMap(options.coreApiOverride),
         defaultApi: createCoreApiMap(),
     };
+}
+
+function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): EditorPlugin[] {
+    return [
+        corePlugins.typeInContainer,
+        corePlugins.mouseUp,
+        ...(plugins || []),
+        corePlugins.edit,
+        corePlugins.firefoxTypeAfterLink,
+        corePlugins.undo,
+        corePlugins.domEvent,
+    ].filter(plugin => !!plugin);
 }
 
 function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat {

@@ -2,7 +2,14 @@ import EditorCore, { AttachDomEvent } from '../interfaces/EditorCore';
 import isCharacterValue from '../eventApi/isCharacterValue';
 import { PluginDomEvent, PluginEventType } from 'roosterjs-editor-types';
 
-const attachDomEvent: AttachDomEvent = (
+/**
+ * Attach a DOM event to the editor content DIV
+ * @param core The EditorCore object
+ * @param eventName The DOM event name
+ * @param pluginEventType Optional event type. When specified, editor will trigger a plugin event with this name when the DOM event is triggered
+ * @param beforeDispatch Optional callback function to be invoked when the DOM event is triggered before trigger plugin event
+ */
+export const attachDomEvent: AttachDomEvent = (
     core: EditorCore,
     eventName: string,
     pluginEventType?: PluginEventType,
@@ -39,8 +46,6 @@ const attachDomEvent: AttachDomEvent = (
         core.contentDiv.removeEventListener(eventName, onEvent);
     };
 };
-
-export default attachDomEvent;
 
 function isKeyboardEvent(e: UIEvent): e is KeyboardEvent {
     return e.type == 'keydown' || e.type == 'keypress' || e.type == 'keyup';

@@ -1,4 +1,4 @@
-import Browser from './Browser';
+import { Browser } from './Browser';
 import { ClipboardItems } from 'roosterjs-editor-types';
 
 // HTML header to indicate where is the HTML content started from.

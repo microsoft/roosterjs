@@ -1,7 +1,7 @@
-import attachDomEvent from '../../coreAPI/attachDomEvent';
 import createEditorCore from '../../editor/createEditorCore';
 import EditorCore from '../../interfaces/EditorCore';
 import EditorPlugin from '../../interfaces/EditorPlugin';
+import { attachDomEvent } from '../../coreAPI/attachDomEvent';
 import { PluginEvent, PluginEventType, PluginKeyboardEvent } from 'roosterjs-editor-types';
 
 class MockPlugin implements EditorPlugin {
