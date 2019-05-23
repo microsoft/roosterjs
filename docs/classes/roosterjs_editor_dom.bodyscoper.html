@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>DOMEventPlugin | RoosterJs API Reference</title>
+	<title>BodyScoper | RoosterJs API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/roosterjs_editor_core.html">roosterjs-editor-core</a>
+					<a href="../modules/roosterjs_editor_dom.html">roosterjs-editor-dom</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_core.domeventplugin.html">DOMEventPlugin</a>
+					<a href="roosterjs_editor_dom.bodyscoper.html">BodyScoper</a>
 				</li>
 			</ul>
-			<h1>Class DOMEventPlugin</h1>
+			<h1>Class BodyScoper</h1>
 		</div>
 	</div>
 </header>
@@ -68,12 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>DOMEventPlugin handles customized DOM events, including:</p>
-						<ol>
-							<li>IME state management</li>
-							<li>Selection management</li>
-							<li>Cut and Drop management</li>
-						</ol>
+						<p>provides scoper for traversing the entire editor body starting from the beginning</p>
 					</div>
 				</div>
 			</section>
@@ -81,14 +76,14 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">DOMEventPlugin</span>
+						<span class="target">BodyScoper</span>
 					</li>
 				</ul>
 			</section>
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/roosterjs_editor_core.editorplugin.html" class="tsd-signature-type">EditorPlugin</a></li>
+					<li><a href="../interfaces/roosterjs_editor_dom.traversingscoper.html" class="tsd-signature-type">TraversingScoper</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -98,16 +93,22 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_dom.bodyscoper.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="roosterjs_editor_dom.bodyscoper.html#rootnode" class="tsd-kind-icon">root<wbr>Node</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#dispose" class="tsd-kind-icon">dispose</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#initialize" class="tsd-kind-icon">initialize</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#isinime" class="tsd-kind-icon">is<wbr>InIME</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.bodyscoper.html#getstartblockelement" class="tsd-kind-icon">get<wbr>Start<wbr>Block<wbr>Element</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.bodyscoper.html#getstartinlineelement" class="tsd-kind-icon">get<wbr>Start<wbr>Inline<wbr>Element</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.bodyscoper.html#isblockinscope" class="tsd-kind-icon">is<wbr>Block<wbr>InScope</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.bodyscoper.html#triminlineelement" class="tsd-kind-icon">trim<wbr>Inline<wbr>Element</a></li>
 							</ul>
 						</section>
 					</div>
@@ -119,105 +120,162 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new DOMEvent<wbr>Plugin<span class="tsd-signature-symbol">(</span>disableRestoreSelectionOnFocus<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_core.domeventplugin.html" class="tsd-signature-type">DOMEventPlugin</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Body<wbr>Scoper<span class="tsd-signature-symbol">(</span>rootNode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span>, startNode<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Node</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_dom.bodyscoper.html" class="tsd-signature-type">BodyScoper</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L15">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts#L13">roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts:13</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Construct a new instance of BodyScoper class</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>disableRestoreSelectionOnFocus: <span class="tsd-signature-type">boolean</span></h5>
+									<h5>rootNode: <span class="tsd-signature-type">Node</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Root node of the body</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> startNode: <span class="tsd-signature-type">Node</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The node to start from. If not passed, it will start from the beginning of the body</p>
+										</div>
+									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_core.domeventplugin.html" class="tsd-signature-type">DOMEventPlugin</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_dom.bodyscoper.html" class="tsd-signature-type">BodyScoper</a></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="rootnode" class="tsd-anchor"></a>
+					<h3>root<wbr>Node</h3>
+					<div class="tsd-signature tsd-kind-icon">root<wbr>Node<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Node</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/roosterjs_editor_dom.traversingscoper.html">TraversingScoper</a>.<a href="../interfaces/roosterjs_editor_dom.traversingscoper.html#rootnode">rootNode</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts#L20">roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts:20</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Root node of the body</p>
+						</div>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="dispose" class="tsd-anchor"></a>
-					<h3>dispose</h3>
+					<a name="getstartblockelement" class="tsd-anchor"></a>
+					<h3>get<wbr>Start<wbr>Block<wbr>Element</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">dispose<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Start<wbr>Block<wbr>Element<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.blockelement.html" class="tsd-signature-type">BlockElement</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L47">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:47</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getname" class="tsd-anchor"></a>
-					<h3>get<wbr>Name</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Name<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L19">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:19</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="initialize" class="tsd-anchor"></a>
-					<h3>initialize</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">initialize<span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_core.editor.html" class="tsd-signature-type">Editor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L23">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:23</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>editor: <a href="roosterjs_editor_core.editor.html" class="tsd-signature-type">Editor</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="isinime" class="tsd-anchor"></a>
-					<h3>is<wbr>InIME</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">is<wbr>InIME<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L57">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts#L27">roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts:27</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Check if editor is in IME input sequence</p>
+									<p>Get the start block element</p>
 								</div>
 							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.blockelement.html" class="tsd-signature-type">BlockElement</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getstartinlineelement" class="tsd-anchor"></a>
+					<h3>get<wbr>Start<wbr>Inline<wbr>Element</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Start<wbr>Inline<wbr>Element<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.inlineelement.html" class="tsd-signature-type">InlineElement</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts#L36">roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts:36</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the start inline element</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.inlineelement.html" class="tsd-signature-type">InlineElement</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isblockinscope" class="tsd-anchor"></a>
+					<h3>is<wbr>Block<wbr>InScope</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Block<wbr>InScope<span class="tsd-signature-symbol">(</span>blockElement<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.blockelement.html" class="tsd-signature-type">BlockElement</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts#L45">roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts:45</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Since the scope is global, all blocks under the root node are in scope</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>blockElement: <a href="../interfaces/roosterjs_editor_types.blockelement.html" class="tsd-signature-type">BlockElement</a></h5>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-							<p>True if editor is in IME input sequence, otherwise false</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="triminlineelement" class="tsd-anchor"></a>
+					<h3>trim<wbr>Inline<wbr>Element</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">trim<wbr>Inline<wbr>Element<span class="tsd-signature-symbol">(</span>inlineElement<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.inlineelement.html" class="tsd-signature-type">InlineElement</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.inlineelement.html" class="tsd-signature-type">InlineElement</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts#L52">roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts:52</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Since we&#39;re at body scope, inline elements never need to be trimmed</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>inlineElement: <a href="../interfaces/roosterjs_editor_types.inlineelement.html" class="tsd-signature-type">InlineElement</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.inlineelement.html" class="tsd-signature-type">InlineElement</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -235,10 +293,10 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_api.html">roosterjs-<wbr>editor-<wbr>api</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_core.html">roosterjs-<wbr>editor-<wbr>core</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_dom.html">roosterjs-<wbr>editor-<wbr>dom</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -263,22 +321,25 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="roosterjs_editor_core.domeventplugin.html" class="tsd-kind-icon">DOMEvent<wbr>Plugin</a>
+						<a href="roosterjs_editor_dom.bodyscoper.html" class="tsd-kind-icon">Body<wbr>Scoper</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="roosterjs_editor_core.domeventplugin.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="roosterjs_editor_dom.bodyscoper.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.bodyscoper.html#rootnode" class="tsd-kind-icon">root<wbr>Node</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_core.domeventplugin.html#dispose" class="tsd-kind-icon">dispose</a>
+								<a href="roosterjs_editor_dom.bodyscoper.html#getstartblockelement" class="tsd-kind-icon">get<wbr>Start<wbr>Block<wbr>Element</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_core.domeventplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
+								<a href="roosterjs_editor_dom.bodyscoper.html#getstartinlineelement" class="tsd-kind-icon">get<wbr>Start<wbr>Inline<wbr>Element</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_core.domeventplugin.html#initialize" class="tsd-kind-icon">initialize</a>
+								<a href="roosterjs_editor_dom.bodyscoper.html#isblockinscope" class="tsd-kind-icon">is<wbr>Block<wbr>InScope</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_core.domeventplugin.html#isinime" class="tsd-kind-icon">is<wbr>InIME</a>
+								<a href="roosterjs_editor_dom.bodyscoper.html#triminlineelement" class="tsd-kind-icon">trim<wbr>Inline<wbr>Element</a>
 							</li>
 						</ul>
 					</li>

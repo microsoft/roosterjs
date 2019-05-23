@@ -65,6 +65,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Options for PickerPlugin</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -100,9 +107,15 @@
 					<div class="tsd-signature tsd-kind-icon">change<wbr>Source<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b700c20/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L9">roosterjs-plugin-picker/lib/PickerDataProvider.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L17">roosterjs-plugin-picker/lib/PickerDataProvider.ts:17</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>When apply the selected item in picker, a ContentChangedEvent will be broadcasted.
+							This value will be used as the ChangeSource of this event.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="elementidprefix" class="tsd-anchor"></a>
@@ -110,9 +123,15 @@
 					<div class="tsd-signature tsd-kind-icon">element<wbr>IdPrefix<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b700c20/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L6">roosterjs-plugin-picker/lib/PickerDataProvider.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L11">roosterjs-plugin-picker/lib/PickerDataProvider.ts:11</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Constant that defines the element ID prefix to look for.
+							If it matches, this element should be handled by the plugin</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="handleautocomplete" class="tsd-anchor"></a>
@@ -120,9 +139,15 @@
 					<div class="tsd-signature tsd-kind-icon">handle<wbr>Auto<wbr>Complete<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b700c20/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L21">roosterjs-plugin-picker/lib/PickerDataProvider.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L35">roosterjs-plugin-picker/lib/PickerDataProvider.ts:35</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>When apply the selected item in picker, perform as an auto-complete behavior (can be undone by BACKSPACE key)
+							if this option is set to true</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="ishorizontal" class="tsd-anchor"></a>
@@ -130,9 +155,16 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Horizontal<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b700c20/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L18">roosterjs-plugin-picker/lib/PickerDataProvider.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L29">roosterjs-plugin-picker/lib/PickerDataProvider.ts:29</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Option for using the picker in the horizontal state:
+								Vertical (the default, when this is false), will call shiftHighlight with up (false) and down (true).
+							Horizontal (when this is true), will call shiftHighlight with left (false) and right (true).</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="suggestionlabelprefix" class="tsd-anchor"></a>
@@ -140,9 +172,15 @@
 					<div class="tsd-signature tsd-kind-icon">suggestion<wbr>Label<wbr>Prefix<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b700c20/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L29">roosterjs-plugin-picker/lib/PickerDataProvider.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L47">roosterjs-plugin-picker/lib/PickerDataProvider.ts:47</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Constant that defines the prefix of the ID label for the picker&#39;s options.
+							Used for setting the ariaActiveDescendant attribute of the editor when a picker option is selected.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="suggestionslabel" class="tsd-anchor"></a>
@@ -150,9 +188,15 @@
 					<div class="tsd-signature tsd-kind-icon">suggestions<wbr>Label<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b700c20/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L25">roosterjs-plugin-picker/lib/PickerDataProvider.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L41">roosterjs-plugin-picker/lib/PickerDataProvider.ts:41</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Constant that defines the ID label for the picker.
+							Used for setting the ariaOwns attribute of the editor when a picker is open.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="triggercharacter" class="tsd-anchor"></a>
@@ -160,9 +204,14 @@
 					<div class="tsd-signature tsd-kind-icon">trigger<wbr>Character<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b700c20/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L13">roosterjs-plugin-picker/lib/PickerDataProvider.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-plugin-picker/lib/PickerDataProvider.ts#L22">roosterjs-plugin-picker/lib/PickerDataProvider.ts:22</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Constant that defines the character(s) that will trigger the suggesting state in the plugin.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>

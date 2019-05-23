@@ -523,7 +523,10 @@ const enum QueryScope {
     InSelection = 2
 }
 
-    const enum TableOperation {
+    /**
+ * Operations used by editTable() API
+ */
+const enum TableOperation {
     /**
      * Insert a row above current row
      */
@@ -663,7 +666,10 @@ interface PluginCompositionEvent extends BasePluginEvent<PluginEventType.Composi
     rawEvent: CompositionEvent;
 }
 
-    type PluginKeyboardEvent = PluginKeyDownEvent | PluginKeyPressEvent | PluginKeyUpEvent;
+    /**
+ * The represents a PluginEvent wrapping native Keyboard event
+ */
+type PluginKeyboardEvent = PluginKeyDownEvent | PluginKeyPressEvent | PluginKeyUpEvent;
 
     /**
  * This represents a PluginEvent wrapping native KeyDown event
@@ -1590,9 +1596,19 @@ class PartialInlineElement implements InlineElement  {
     applyStyle(styler: (element: HTMLElement, isInnerNode?: boolean) => any): void;
 }
 
-    function applyTextStyle(container: Node, styler: (node: HTMLElement, isInnerNode?: boolean) => any, from?: NodePosition, to?: NodePosition): void;
+    /**
+ * Apply style using a styler function to the given container node in the given range
+ * @param container The container node to apply style to
+ * @param styler The styler function
+ * @param from From position
+ * @param to To position
+ */
+function applyTextStyle(container: Node, styler: (node: HTMLElement, isInnerNode?: boolean) => any, from?: NodePosition, to?: NodePosition): void;
 
-    const Browser: BrowserInfo;
+    /**
+ * Browser object contains browser and operating system informations of current environment
+ */
+const Browser: BrowserInfo;
 
     /**
  * Get current browser information from user agent string
@@ -2065,9 +2081,15 @@ function isPositionAtBeginningOf(position: NodePosition, targetNode: Node): bool
  */
 function getSelectionPath(rootNode: HTMLElement, range: Range): SelectionPath;
 
-    type ContentEditFeature = GenericContentEditFeature<PluginKeyboardEvent>;
+    /**
+ * ContentEditFeature interface that handles keyboard event
+ */
+type ContentEditFeature = GenericContentEditFeature<PluginKeyboardEvent>;
 
-    interface GenericContentEditFeature<TEvent extends PluginEvent> {
+    /**
+ * Generic ContentEditFeature interface
+ */
+interface GenericContentEditFeature<TEvent extends PluginEvent> {
     keys: number[];
     initialize?: (editor: Editor) => any;
     shouldHandleEvent: (event: TEvent, editor: Editor) => any;
@@ -2075,7 +2097,10 @@ function getSelectionPath(rootNode: HTMLElement, range: Range): SelectionPath;
     allowFunctionKeys?: boolean;
 }
 
-    const enum Keys {
+    /**
+ * Key numbers used for ContentEditFeature
+ */
+const enum Keys {
     NULL = 0,
     BACKSPACE = 8,
     TAB = 9,
@@ -2153,12 +2178,34 @@ interface EditorCore {
     cachedSelectionRange: Range;
 }
 
-    interface CorePlugins {
+    /**
+ * An interface for editor core plugins.
+ * These plugins are built-in and most of them are not able to be replaced
+ */
+interface CorePlugins {
+    /**
+     * Edit plugin handles ContentEditFeatures
+     */
     readonly edit: EditPlugin;
+    /**
+     * Undo plugin provides the ability to undo/redo
+     */
     readonly undo: UndoService;
+    /**
+     * TypeInContainer plugin makes sure user is always type under a container element under editor DIV
+     */
     readonly typeInContainer: TypeInContainerPlugin;
+    /**
+     * MouseUp plugin helps generate MouseUp event even mouse is out of editor area
+     */
     readonly mouseUp: MouseUpPlugin;
+    /**
+     * DomEvent plugin helps handle additional DOM events such as IME composition, cut, drop.
+     */
     readonly domEvent: DOMEventPlugin;
+    /**
+     * FirefoxTypeAfterLink plugin helps workaround a Firefox bug to allow type outside a hyperlink
+     */
     readonly firefoxTypeAfterLink: FirefoxTypeAfterLink;
 }
 
@@ -3671,7 +3718,10 @@ class Watermark implements EditorPlugin  {
     private removeWartermarkFromHtml;
 }
 
-    class TableResize implements EditorPlugin  {
+    /**
+ * TableResize plugin, provides the ability to resize a table by drag-and-drop
+ */
+class TableResize implements EditorPlugin  {
     private editor;
     private onMouseOverDisposer;
     private td;
@@ -3722,7 +3772,7 @@ class CustomReplace implements EditorPlugin  {
     private replacementEndCharacters;
     /**
      * Create instance of CustomReplace plugin
-     * @param features An optional feature set to determine which features the plugin should provide
+     * @param replacements Replacement rules. If not passed, a default replacement rule set will be applied
      */
     constructor(replacements?: Replacement[]);
     /**
@@ -3747,13 +3797,28 @@ class CustomReplace implements EditorPlugin  {
     private getMatchingReplacement;
 }
 
-    type Replacement = {
+    /**
+ * An interface to define a replacement rule for CustomReplace plugin
+ */
+type Replacement = {
+    /**
+     * Source string to replace from
+     */
     sourceString: string;
+    /**
+     * HTML string to replace to
+     */
     replacementHTML: string;
+    /**
+     * Whether the matching should be case sensitive
+     */
     matchSourceCaseSensitive: boolean;
 };
 
-    class ImageResize implements EditorPlugin  {
+    /**
+ * ImageResize plugin provides the ability to resize an inline image in editor
+ */
+class ImageResize implements EditorPlugin  {
     private minWidth;
     private minHeight;
     private selectionBorderColor;
@@ -3820,7 +3885,12 @@ class CustomReplace implements EditorPlugin  {
     private onDragStart;
 }
 
-    class HtmlSanitizer {
+    /**
+ * HTML sanitizer class provides two featuers:
+ * 1. Convert global CSS to inline CSS
+ * 2. Sanitize an HTML document, remove unnecessary/dangerous attribute/nodes
+ */
+class HtmlSanitizer {
     /**
      * Convert global CSS to inline CSS if any
      * @param html HTML source
@@ -3841,6 +3911,10 @@ class CustomReplace implements EditorPlugin  {
     private defaultStyleValues;
     private additionalGlobalStyleNodes;
     private allowPreserveWhiteSpace;
+    /**
+     * Construct a new instance of HtmlSanitizer
+     * @param options Options for HtmlSanitizer
+     */
     constructor(options?: HtmlSanitizerOptions);
     /**
      * Sanitize HTML string
@@ -3854,7 +3928,17 @@ class CustomReplace implements EditorPlugin  {
      * @param currentStyles Current inheritable CSS styles
      */
     exec(html: string, convertCssOnly?: boolean, preserveFragmentOnly?: boolean, currentStyles?: StringMap): string;
+    /**
+     * Sanitize an HTML element, remove unnecessary or dangerous elements/attribute/CSS rules
+     * @param rootNode Root node to sanitize
+     * @param currentStyles Current CSS styles. Inheritable styles in the given node which has
+     * the same value with current styles will be ignored.
+     */
     sanitize(rootNode: HTMLElement, currentStyles?: StringMap): string;
+    /**
+     * Convert global CSS into inline CSS
+     * @param rootNode The HTML Document
+     */
     convertGlobalCssToInlineCss(rootNode: HTMLDocument): void;
     private processNode;
     private processCss;
@@ -3991,7 +4075,17 @@ type StyleCallbackMap = Map<StyleCallback>;
  */
 type ElementCallbackMap = Map<ElementCallback>;
 
-    class PickerPlugin<T extends PickerDataProvider = PickerDataProvider> implements EditorPickerPluginInterface<T> {
+    /**
+ * PickerPlugin represents a plugin of editor which can handle picker related behaviors, including
+ * - Show picker when special trigger key is pressed
+ * - Hide picker
+ * - Change selection in picker by Up/Down/Left/Right
+ * - Apply selected item in picker
+ *
+ * PickerPlugin doesn't provide any UI, it just wraps related DOM events and invoke callback functions.
+ * To show a picker UI, you need to build your own UI component. Please reference to
+ * https: */
+class PickerPlugin<T extends PickerDataProvider = PickerDataProvider> implements EditorPickerPluginInterface<T> {
     readonly dataProvider: T;
     private pickerOptions;
     private editor;
@@ -4042,33 +4136,104 @@ type ElementCallbackMap = Map<ElementCallback>;
     private setAriaActiveDescendant;
 }
 
-    interface EditorPickerPluginInterface<T extends PickerDataProvider = PickerDataProvider> extends EditorPlugin  {
+    /**
+ * Interface for PickerPlugin
+ */
+interface EditorPickerPluginInterface<T extends PickerDataProvider = PickerDataProvider> extends EditorPlugin  {
     dataProvider: T;
 }
 
-    interface PickerPluginOptions {
+    /**
+ * Options for PickerPlugin
+ */
+interface PickerPluginOptions {
+    /**
+     * Constant that defines the element ID prefix to look for.
+     * If it matches, this element should be handled by the plugin
+     */
     elementIdPrefix: string;
+    /**
+     * When apply the selected item in picker, a ContentChangedEvent will be broadcasted.
+     * This value will be used as the ChangeSource of this event.
+     */
     changeSource: string;
+    /**
+     * Constant that defines the character(s) that will trigger the suggesting state in the plugin.
+     */
     triggerCharacter: string;
+    /**
+     * Option for using the picker in the horizontal state:
+     * Vertical (the default, when this is false), will call shiftHighlight with up (false) and down (true).
+     * Horizontal (when this is true), will call shiftHighlight with left (false) and right (true).
+     */
     isHorizontal?: boolean;
+    /**
+     * When apply the selected item in picker, perform as an auto-complete behavior (can be undone by BACKSPACE key)
+     * if this option is set to true
+     */
     handleAutoComplete?: boolean;
+    /**
+     * Constant that defines the ID label for the picker.
+     * Used for setting the ariaOwns attribute of the editor when a picker is open.
+     */
     suggestionsLabel?: string;
+    /**
+     * Constant that defines the prefix of the ID label for the picker's options.
+     * Used for setting the ariaActiveDescendant attribute of the editor when a picker option is selected.
+     */
     suggestionLabelPrefix?: string;
 }
 
-    interface PickerDataProvider {
+    /**
+ * Data provider for PickerPlugin
+ */
+interface PickerDataProvider {
+    /**
+     * Function called when the plugin is intialized to register two callbacks with the data provider and a reference to the Editor.
+     * The first is called in order to "commit" a new element to the editor body that isn't handled automatically by the editor plugin.
+     * The second sets the isSuggesting value for situations wherethe UX needs to manipulate the suggesting state that's otherwise plugin managed.
+     */
     onInitalize: (insertNodeCallback: (nodeToInsert: HTMLElement) => void, setIsSuggestingCallback: (isSuggesting: boolean) => void, editor?: Editor) => void;
+    /**
+     * Function called when the plugin is disposed for the data provider to do any cleanup.
+     */
     onDispose: () => void;
+    /**
+     * Function called when the picker changes suggesting state.
+     */
     onIsSuggestingChanged: (isSuggesting: boolean) => void;
+    /**
+     * Function called when the query string (text after the trigger symbol) is updated.
+     */
     queryStringUpdated: (queryString: string, isExactMatch: boolean) => void;
+    /**
+     * Function called when a keypress is issued that would "select" a currently highlighted option.
+     */
     selectOption?: () => void;
+    /**
+     * Function called when a keypress is issued that would move the highlight on any picker UX.
+     */
     shiftHighlight?: (isIncrement: boolean) => void;
+    /**
+     * Function that is called when a delete command is issued.
+     * Returns the intended replacement node (if partial delete) or null (if full delete)
+     */
     onRemove: (nodeRemoved: Node, isBackwards: boolean) => Node;
+    /**
+     * Function that returns the current cursor position as an anchor point for where to show UX.
+     */
     setCursorPoint?: (targetPoint: {
         x: number;
         y: number;
     }, buffer: number) => void;
+    /**
+     * Function that is called when the plugin detects the editor's content has changed.
+     * Provides a list of current picker placed elements in the document.
+     */
     onContentChanged?: (elementIds: string[]) => void;
+    /**
+     * Function that returns the index of the option currently selected in the picker.
+     */
     getSelectedIndex?: () => number;
 }
 

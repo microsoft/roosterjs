@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LinkInlineElement | RoosterJs API Reference</title>
+	<title>PartialInlineElement | RoosterJs API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/roosterjs_editor_dom.html">roosterjs-editor-dom</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_dom.linkinlineelement.html">LinkInlineElement</a>
+					<a href="roosterjs_editor_dom.partialinlineelement.html">PartialInlineElement</a>
 				</li>
 			</ul>
-			<h1>Class LinkInlineElement</h1>
+			<h1>Class PartialInlineElement</h1>
 		</div>
 	</div>
 </header>
@@ -68,7 +68,11 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>This is inline element presenting an html hyperlink</p>
+						<p>This is a special version of inline element that identifies a section of an inline element
+							We often have the need to cut an inline element in half and perform some operation only on half of an inline element
+							i.e. users select only some text of a text node and apply format, in that case, format has to happen on partial of an inline element
+							PartialInlineElement is implemented in a way that decorate another full inline element with its own override on methods like isAfter
+						It also offers some special methods that others don&#39;t have, i.e. nextInlineElement etc.</p>
 					</div>
 				</div>
 			</section>
@@ -76,12 +80,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="roosterjs_editor_dom.nodeinlineelement.html" class="tsd-signature-type">NodeInlineElement</a>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">LinkInlineElement</span>
-							</li>
-						</ul>
+						<span class="target">PartialInlineElement</span>
 					</li>
 				</ul>
 			</section>
@@ -98,21 +97,29 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="roosterjs_editor_dom.linkinlineelement.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_dom.partialinlineelement.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-inherited">
+						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="roosterjs_editor_dom.partialinlineelement.html#nextinlineelement" class="tsd-kind-icon">next<wbr>Inline<wbr>Element</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="roosterjs_editor_dom.partialinlineelement.html#previousinlineelement" class="tsd-kind-icon">previous<wbr>Inline<wbr>Element</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="roosterjs_editor_dom.linkinlineelement.html#applystyle" class="tsd-kind-icon">apply<wbr>Style</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="roosterjs_editor_dom.linkinlineelement.html#contains" class="tsd-kind-icon">contains</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="roosterjs_editor_dom.linkinlineelement.html#getcontainernode" class="tsd-kind-icon">get<wbr>Container<wbr>Node</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="roosterjs_editor_dom.linkinlineelement.html#getendposition" class="tsd-kind-icon">get<wbr>End<wbr>Position</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="roosterjs_editor_dom.linkinlineelement.html#getparentblock" class="tsd-kind-icon">get<wbr>Parent<wbr>Block</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="roosterjs_editor_dom.linkinlineelement.html#getstartposition" class="tsd-kind-icon">get<wbr>Start<wbr>Position</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="roosterjs_editor_dom.linkinlineelement.html#gettextcontent" class="tsd-kind-icon">get<wbr>Text<wbr>Content</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="roosterjs_editor_dom.linkinlineelement.html#isafter" class="tsd-kind-icon">is<wbr>After</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="roosterjs_editor_dom.linkinlineelement.html#istextualinlineelement" class="tsd-kind-icon">is<wbr>Textual<wbr>Inline<wbr>Element</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.partialinlineelement.html#applystyle" class="tsd-kind-icon">apply<wbr>Style</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.partialinlineelement.html#contains" class="tsd-kind-icon">contains</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.partialinlineelement.html#getcontainernode" class="tsd-kind-icon">get<wbr>Container<wbr>Node</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.partialinlineelement.html#getdecoratedinline" class="tsd-kind-icon">get<wbr>Decorated<wbr>Inline</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.partialinlineelement.html#getendposition" class="tsd-kind-icon">get<wbr>End<wbr>Position</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.partialinlineelement.html#getparentblock" class="tsd-kind-icon">get<wbr>Parent<wbr>Block</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.partialinlineelement.html#getstartposition" class="tsd-kind-icon">get<wbr>Start<wbr>Position</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.partialinlineelement.html#gettextcontent" class="tsd-kind-icon">get<wbr>Text<wbr>Content</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.partialinlineelement.html#isafter" class="tsd-kind-icon">is<wbr>After</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.partialinlineelement.html#istextualinlineelement" class="tsd-kind-icon">is<wbr>Textual<wbr>Inline<wbr>Element</a></li>
 							</ul>
 						</section>
 					</div>
@@ -120,53 +127,101 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Link<wbr>Inline<wbr>Element<span class="tsd-signature-symbol">(</span>containerNode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span>, parentBlock<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.blockelement.html" class="tsd-signature-type">BlockElement</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_dom.linkinlineelement.html" class="tsd-signature-type">LinkInlineElement</a></li>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Partial<wbr>Inline<wbr>Element<span class="tsd-signature-symbol">(</span>inlineElement<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.inlineelement.html" class="tsd-signature-type">InlineElement</a>, start<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type">NodePosition</a>, end<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type">NodePosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_dom.partialinlineelement.html" class="tsd-signature-type">PartialInlineElement</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="roosterjs_editor_dom.nodeinlineelement.html">NodeInlineElement</a>.<a href="roosterjs_editor_dom.nodeinlineelement.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/LinkInlineElement.ts#L7">roosterjs-editor-dom/lib/inlineElements/LinkInlineElement.ts:7</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts#L14">roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts:14</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>containerNode: <span class="tsd-signature-type">Node</span></h5>
+									<h5>inlineElement: <a href="../interfaces/roosterjs_editor_types.inlineelement.html" class="tsd-signature-type">InlineElement</a></h5>
 								</li>
 								<li>
-									<h5>parentBlock: <a href="../interfaces/roosterjs_editor_types.blockelement.html" class="tsd-signature-type">BlockElement</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> start: <a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type">NodePosition</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> end: <a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type">NodePosition</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_dom.linkinlineelement.html" class="tsd-signature-type">LinkInlineElement</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_dom.partialinlineelement.html" class="tsd-signature-type">PartialInlineElement</a></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="nextinlineelement" class="tsd-anchor"></a>
+					<h3>next<wbr>Inline<wbr>Element</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> nextInlineElement<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_dom.partialinlineelement.html" class="tsd-signature-type">PartialInlineElement</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts#L68">roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts:68</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get next partial inline element if it is not at the end boundary yet</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_dom.partialinlineelement.html" class="tsd-signature-type">PartialInlineElement</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="previousinlineelement" class="tsd-anchor"></a>
+					<h3>previous<wbr>Inline<wbr>Element</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> previousInlineElement<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_dom.partialinlineelement.html" class="tsd-signature-type">PartialInlineElement</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts#L75">roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts:75</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get previous partial inline element if it is not at the begin boundary yet</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_dom.partialinlineelement.html" class="tsd-signature-type">PartialInlineElement</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="applystyle" class="tsd-anchor"></a>
 					<h3>apply<wbr>Style</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">apply<wbr>Style<span class="tsd-signature-symbol">(</span>styler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="roosterjs_editor_dom.nodeinlineelement.html">NodeInlineElement</a>.<a href="roosterjs_editor_dom.nodeinlineelement.html#applystyle">applyStyle</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts#L87">roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts#L105">roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts:105</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Apply inline style to an inline element</p>
+									<p>apply style</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -200,23 +255,22 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="contains" class="tsd-anchor"></a>
 					<h3>contains</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">contains<span class="tsd-signature-symbol">(</span>pos<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type">NodePosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="roosterjs_editor_dom.nodeinlineelement.html">NodeInlineElement</a>.<a href="roosterjs_editor_dom.nodeinlineelement.html#contains">contains</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts#L78">roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts#L82">roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts:82</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Checks if the given position is contained in the inline element</p>
+									<p>Checks if it contains a position</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -229,133 +283,154 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="getcontainernode" class="tsd-anchor"></a>
 					<h3>get<wbr>Container<wbr>Node</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">get<wbr>Container<wbr>Node<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="roosterjs_editor_dom.nodeinlineelement.html">NodeInlineElement</a>.<a href="roosterjs_editor_dom.nodeinlineelement.html#getcontainernode">getContainerNode</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts#L34">roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts#L31">roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts:31</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Get the container node</p>
+									<p>Gets the container node</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Node</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getdecoratedinline" class="tsd-anchor"></a>
+					<h3>get<wbr>Decorated<wbr>Inline</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Decorated<wbr>Inline<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.inlineelement.html" class="tsd-signature-type">InlineElement</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts#L24">roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts:24</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the full inline element that this partial inline decorates</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.inlineelement.html" class="tsd-signature-type">InlineElement</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="getendposition" class="tsd-anchor"></a>
 					<h3>get<wbr>End<wbr>Position</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">get<wbr>End<wbr>Position<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type">NodePosition</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="roosterjs_editor_dom.nodeinlineelement.html">NodeInlineElement</a>.<a href="roosterjs_editor_dom.nodeinlineelement.html#getendposition">getEndPosition</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts#L55">roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts:55</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts#L61">roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts:61</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Get the end position of the inline element</p>
+									<p>Get end position of this inline element.</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type">NodePosition</a></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="getparentblock" class="tsd-anchor"></a>
 					<h3>get<wbr>Parent<wbr>Block</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">get<wbr>Parent<wbr>Block<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.blockelement.html" class="tsd-signature-type">BlockElement</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="roosterjs_editor_dom.nodeinlineelement.html">NodeInlineElement</a>.<a href="roosterjs_editor_dom.nodeinlineelement.html#getparentblock">getParentBlock</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts#L39">roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts#L38">roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts:38</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the parent block</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.blockelement.html" class="tsd-signature-type">BlockElement</a></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="getstartposition" class="tsd-anchor"></a>
 					<h3>get<wbr>Start<wbr>Position</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">get<wbr>Start<wbr>Position<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type">NodePosition</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="roosterjs_editor_dom.nodeinlineelement.html">NodeInlineElement</a>.<a href="roosterjs_editor_dom.nodeinlineelement.html#getstartposition">getStartPosition</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts#L46">roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts#L54">roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts:54</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Get the start position of the inline element</p>
+									<p>Get start position of this inline element.</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.nodeposition.html" class="tsd-signature-type">NodePosition</a></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="gettextcontent" class="tsd-anchor"></a>
 					<h3>get<wbr>Text<wbr>Content</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">get<wbr>Text<wbr>Content<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="roosterjs_editor_dom.nodeinlineelement.html">NodeInlineElement</a>.<a href="roosterjs_editor_dom.nodeinlineelement.html#gettextcontent">getTextContent</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts#L24">roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts#L45">roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts:45</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>The text content for this inline element</p>
+									<p>Gets the text content</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="isafter" class="tsd-anchor"></a>
 					<h3>is<wbr>After</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">is<wbr>After<span class="tsd-signature-symbol">(</span>inlineElement<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.inlineelement.html" class="tsd-signature-type">InlineElement</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="roosterjs_editor_dom.nodeinlineelement.html">NodeInlineElement</a>.<a href="roosterjs_editor_dom.nodeinlineelement.html#isafter">isAfter</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts#L71">roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts#L96">roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts:96</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Checks if an inline element is after the current inline element</p>
+									<p>Check if this inline element is after the other inline element</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -368,18 +443,17 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="istextualinlineelement" class="tsd-anchor"></a>
 					<h3>is<wbr>Textual<wbr>Inline<wbr>Element</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">is<wbr>Textual<wbr>Inline<wbr>Element<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="roosterjs_editor_dom.nodeinlineelement.html">NodeInlineElement</a>.<a href="roosterjs_editor_dom.nodeinlineelement.html#istextualinlineelement">isTextualInlineElement</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts#L64">roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts#L89">roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts:89</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -433,37 +507,46 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="roosterjs_editor_dom.linkinlineelement.html" class="tsd-kind-icon">Link<wbr>Inline<wbr>Element</a>
+						<a href="roosterjs_editor_dom.partialinlineelement.html" class="tsd-kind-icon">Partial<wbr>Inline<wbr>Element</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-								<a href="roosterjs_editor_dom.linkinlineelement.html#constructor" class="tsd-kind-icon">constructor</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.partialinlineelement.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="roosterjs_editor_dom.linkinlineelement.html#applystyle" class="tsd-kind-icon">apply<wbr>Style</a>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.partialinlineelement.html#nextinlineelement" class="tsd-kind-icon">next<wbr>Inline<wbr>Element</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="roosterjs_editor_dom.linkinlineelement.html#contains" class="tsd-kind-icon">contains</a>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.partialinlineelement.html#previousinlineelement" class="tsd-kind-icon">previous<wbr>Inline<wbr>Element</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="roosterjs_editor_dom.linkinlineelement.html#getcontainernode" class="tsd-kind-icon">get<wbr>Container<wbr>Node</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.partialinlineelement.html#applystyle" class="tsd-kind-icon">apply<wbr>Style</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="roosterjs_editor_dom.linkinlineelement.html#getendposition" class="tsd-kind-icon">get<wbr>End<wbr>Position</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.partialinlineelement.html#contains" class="tsd-kind-icon">contains</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="roosterjs_editor_dom.linkinlineelement.html#getparentblock" class="tsd-kind-icon">get<wbr>Parent<wbr>Block</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.partialinlineelement.html#getcontainernode" class="tsd-kind-icon">get<wbr>Container<wbr>Node</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="roosterjs_editor_dom.linkinlineelement.html#getstartposition" class="tsd-kind-icon">get<wbr>Start<wbr>Position</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.partialinlineelement.html#getdecoratedinline" class="tsd-kind-icon">get<wbr>Decorated<wbr>Inline</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="roosterjs_editor_dom.linkinlineelement.html#gettextcontent" class="tsd-kind-icon">get<wbr>Text<wbr>Content</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.partialinlineelement.html#getendposition" class="tsd-kind-icon">get<wbr>End<wbr>Position</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="roosterjs_editor_dom.linkinlineelement.html#isafter" class="tsd-kind-icon">is<wbr>After</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.partialinlineelement.html#getparentblock" class="tsd-kind-icon">get<wbr>Parent<wbr>Block</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="roosterjs_editor_dom.linkinlineelement.html#istextualinlineelement" class="tsd-kind-icon">is<wbr>Textual<wbr>Inline<wbr>Element</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.partialinlineelement.html#getstartposition" class="tsd-kind-icon">get<wbr>Start<wbr>Position</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.partialinlineelement.html#gettextcontent" class="tsd-kind-icon">get<wbr>Text<wbr>Content</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.partialinlineelement.html#isafter" class="tsd-kind-icon">is<wbr>After</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.partialinlineelement.html#istextualinlineelement" class="tsd-kind-icon">is<wbr>Textual<wbr>Inline<wbr>Element</a>
 							</li>
 						</ul>
 					</li>

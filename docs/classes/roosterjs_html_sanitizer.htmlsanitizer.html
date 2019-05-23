@@ -65,6 +65,17 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>HTML sanitizer class provides two featuers:</p>
+						<ol>
+							<li>Convert global CSS to inline CSS</li>
+							<li>Sanitize an HTML document, remove unnecessary/dangerous attribute/nodes</li>
+						</ol>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -108,13 +119,23 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b700c20/packages/roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts#L59">roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts#L64">roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts:64</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Construct a new instance of HtmlSanitizer</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/roosterjs_html_sanitizer.htmlsanitizeroptions.html" class="tsd-signature-type">HtmlSanitizerOptions</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Options for HtmlSanitizer</p>
+										</div>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="roosterjs_html_sanitizer.htmlsanitizer.html" class="tsd-signature-type">HtmlSanitizer</a></h4>
@@ -134,13 +155,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b700c20/packages/roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts#L108">roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts:108</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts#L127">roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts:127</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Convert global CSS into inline CSS</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>rootNode: <span class="tsd-signature-type">HTMLDocument</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The HTML Document</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -157,7 +186,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b700c20/packages/roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts#L84">roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts#L93">roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts:93</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -209,16 +238,28 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b700c20/packages/roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts#L100">roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts:100</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts#L115">roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts:115</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sanitize an HTML element, remove unnecessary or dangerous elements/attribute/CSS rules</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>rootNode: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Root node to sanitize</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> currentStyles: <a href="../modules/roosterjs_html_sanitizer.html#stringmap" class="tsd-signature-type">StringMap</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Current CSS styles. Inheritable styles in the given node which has
+										the same value with current styles will be ignored.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -235,7 +276,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b700c20/packages/roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts#L25">roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts#L30">roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts:30</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -272,7 +313,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/b700c20/packages/roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts#L37">roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts#L42">roosterjs-html-sanitizer/lib/sanitizer/HtmlSanitizer.ts:42</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -394,6 +435,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/roosterjs_html_sanitizer.html#stylecallbackmap" class="tsd-kind-icon">Style<wbr>Callback<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
+						<a href="../modules/roosterjs_html_sanitizer.html#cloneobject" class="tsd-kind-icon">clone<wbr>Object</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="../modules/roosterjs_html_sanitizer.html#getallowedattributes" class="tsd-kind-icon">get<wbr>Allowed<wbr>Attributes</a>

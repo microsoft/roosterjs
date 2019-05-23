@@ -1845,7 +1845,14 @@ exports.default = toggleTagCore;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var isCharacterValue_1 = __webpack_require__(/*! ../eventApi/isCharacterValue */ "./packages/roosterjs-editor-core/lib/eventApi/isCharacterValue.ts");
-var attachDomEvent = function (core, eventName, pluginEventType, beforeDispatch) {
+/**
+ * Attach a DOM event to the editor content DIV
+ * @param core The EditorCore object
+ * @param eventName The DOM event name
+ * @param pluginEventType Optional event type. When specified, editor will trigger a plugin event with this name when the DOM event is triggered
+ * @param beforeDispatch Optional callback function to be invoked when the DOM event is triggered before trigger plugin event
+ */
+exports.attachDomEvent = function (core, eventName, pluginEventType, beforeDispatch) {
     var onEvent = function (event) {
         // Stop propagation of a printable keyboard event (a keyboard event which is caused by printable char input).
         // This detection is not 100% accurate. event.key is not fully supported by all browsers, and in some browsers (e.g. IE),
@@ -1870,7 +1877,6 @@ var attachDomEvent = function (core, eventName, pluginEventType, beforeDispatch)
         core.contentDiv.removeEventListener(eventName, onEvent);
     };
 };
-exports.default = attachDomEvent;
 function isKeyboardEvent(e) {
     return e.type == 'keydown' || e.type == 'keypress' || e.type == 'keyup';
 }
@@ -1889,7 +1895,14 @@ function isKeyboardEvent(e) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var editWithUndo = function (core, callback, changeSource) {
+/**
+ * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
+ * Undo snapshot will not be added if this call is nested inside another editWithUndo() call.
+ * @param core The EditorCore object
+ * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
+ * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
+ */
+exports.editWithUndo = function (core, callback, changeSource) {
     var isNested = core.currentUndoSnapshot !== null;
     var data;
     if (!isNested) {
@@ -1918,7 +1931,6 @@ var editWithUndo = function (core, callback, changeSource) {
         core.api.triggerEvent(core, event_1, true /*broadcast*/);
     }
 };
-exports.default = editWithUndo;
 
 
 /***/ }),
@@ -1934,7 +1946,11 @@ exports.default = editWithUndo;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var focus = function (core) {
+/**
+ * Focus to editor. If there is a cached selection range, use it as current selection
+ * @param core The EditorCore object
+ */
+exports.focus = function (core) {
     if (!core.api.hasFocus(core) || !core.api.getSelectionRange(core, false /*tryGetFromCache*/)) {
         // Focus (document.activeElement indicates) and selection are mostly in sync, but could be out of sync in some extreme cases.
         // i.e. if you programmatically change window selection to point to a non-focusable DOM element (i.e. tabindex=-1 etc.).
@@ -1956,7 +1972,6 @@ var focus = function (core) {
         core.contentDiv.focus();
     }
 };
-exports.default = focus;
 
 
 /***/ }),
@@ -1971,13 +1986,21 @@ exports.default = focus;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var getCustomData = function (core, key, getter, disposer) {
+/**
+ * Get custom data related with this editor
+ * @param core The EditorCore object
+ * @param key Key of the custom data
+ * @param getter Getter function. If custom data for the given key doesn't exist,
+ * call this function to get one and store it.
+ * @param disposer An optional disposer function to dispose this custom data when
+ * dispose editor.
+ */
+exports.getCustomData = function (core, key, getter, disposer) {
     return (core.customData[key] = core.customData[key] || {
         value: getter(),
         disposer: disposer,
     }).value;
 };
-exports.default = getCustomData;
 
 
 /***/ }),
@@ -1993,7 +2016,13 @@ exports.default = getCustomData;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var getSelectionRange = function (core, tryGetFromCache) {
+/**
+ * Get current or cached selection range
+ * @param core The EditorCore object
+ * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
+ * @returns A Range object of the selection range
+ */
+exports.getSelectionRange = function (core, tryGetFromCache) {
     var result = null;
     if (!tryGetFromCache || core.api.hasFocus(core)) {
         var selection = core.document.defaultView.getSelection();
@@ -2009,7 +2038,6 @@ var getSelectionRange = function (core, tryGetFromCache) {
     }
     return result;
 };
-exports.default = getSelectionRange;
 
 
 /***/ }),
@@ -2025,11 +2053,15 @@ exports.default = getSelectionRange;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var hasFocus = function (core) {
+/**
+ * Check if the editor has focus now
+ * @param core The EditorCore object
+ * @returns True if the editor has focus, otherwise false
+ */
+exports.hasFocus = function (core) {
     var activeElement = core.document.activeElement;
     return (activeElement && roosterjs_editor_dom_1.contains(core.contentDiv, activeElement, true /*treatSameNodeAsContain*/));
 };
-exports.default = hasFocus;
 
 
 /***/ }),
@@ -2061,7 +2093,12 @@ function getInitialRange(core, option) {
     }
     return { range: range, rangeToRestore: rangeToRestore };
 }
-var insertNode = function (core, node, option) {
+/**
+ * Insert a DOM node into editor content
+ * @param core The EditorCore object. No op if null.
+ * @param option An insert option object to specify how to insert the node
+ */
+exports.insertNode = function (core, node, option) {
     option = option || {
         position: 2 /* SelectionStart */,
         insertOnNewLine: false,
@@ -2137,7 +2174,6 @@ var insertNode = function (core, node, option) {
     }
     return true;
 };
-exports.default = insertNode;
 
 
 /***/ }),
@@ -2152,9 +2188,17 @@ exports.default = insertNode;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var hasFocus_1 = __webpack_require__(/*! ./hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var selectRange = function (core, range, skipSameRange) {
+var hasFocus_1 = __webpack_require__(/*! ./hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
+/**
+ * Change the editor selection to the given range
+ * @param core The EditorCore object
+ * @param range The range to select
+ * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
+ * in editor, otherwise it will always remove current selection ranage and set to the given one.
+ * This parameter is always treat as true in Edge to avoid some weird runtime exception.
+ */
+exports.selectRange = function (core, range, skipSameRange) {
     if (roosterjs_editor_dom_1.contains(core.contentDiv, range)) {
         var selection = core.document.defaultView.getSelection();
         if (selection) {
@@ -2183,7 +2227,7 @@ var selectRange = function (core, range, skipSameRange) {
             if (needAddRange) {
                 selection.addRange(range);
             }
-            if (!hasFocus_1.default(core)) {
+            if (!hasFocus_1.hasFocus(core)) {
                 core.cachedSelectionRange = range;
             }
             return true;
@@ -2191,7 +2235,6 @@ var selectRange = function (core, range, skipSameRange) {
     }
     return false;
 };
-exports.default = selectRange;
 /**
  * @deprecated Only for compatibility with existing code, don't use ths function, use selectRange instead
  */
@@ -2213,7 +2256,13 @@ exports.select = function (core, arg1, arg2, arg3, arg4) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var triggerEvent = function (core, pluginEvent, broadcast) {
+/**
+ * Trigger a plugin event
+ * @param core The EditorCore object
+ * @param pluginEvent The event object to trigger
+ * @param broadcast Set to true to skip the shouldHandleEventExclusively check
+ */
+exports.triggerEvent = function (core, pluginEvent, broadcast) {
     if (broadcast ||
         !core.eventHandlerPlugins.some(function (plugin) { return handledExclusively(pluginEvent, plugin); })) {
         core.eventHandlerPlugins.forEach(function (plugin) {
@@ -2232,7 +2281,6 @@ function handledExclusively(event, plugin) {
     }
     return false;
 }
-exports.default = triggerEvent;
 
 
 /***/ }),
@@ -3248,22 +3296,27 @@ exports.default = Editor;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var attachDomEvent_1 = __webpack_require__(/*! ../coreAPI/attachDomEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/attachDomEvent.ts");
 var DOMEventPlugin_1 = __webpack_require__(/*! ../corePlugins/DOMEventPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts");
 var EditPlugin_1 = __webpack_require__(/*! ../corePlugins/EditPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/EditPlugin.ts");
-var editWithUndo_1 = __webpack_require__(/*! ../coreAPI/editWithUndo */ "./packages/roosterjs-editor-core/lib/coreAPI/editWithUndo.ts");
 var FirefoxTypeAfterLink_1 = __webpack_require__(/*! ../corePlugins/FirefoxTypeAfterLink */ "./packages/roosterjs-editor-core/lib/corePlugins/FirefoxTypeAfterLink.ts");
+var MouseUpPlugin_1 = __webpack_require__(/*! ../corePlugins/MouseUpPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/MouseUpPlugin.ts");
+var TypeInContainerPlugin_1 = __webpack_require__(/*! ../corePlugins/TypeInContainerPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/TypeInContainerPlugin.ts");
+var Undo_1 = __webpack_require__(/*! ../undo/Undo */ "./packages/roosterjs-editor-core/lib/undo/Undo.ts");
+var attachDomEvent_1 = __webpack_require__(/*! ../coreAPI/attachDomEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/attachDomEvent.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var editWithUndo_1 = __webpack_require__(/*! ../coreAPI/editWithUndo */ "./packages/roosterjs-editor-core/lib/coreAPI/editWithUndo.ts");
 var focus_1 = __webpack_require__(/*! ../coreAPI/focus */ "./packages/roosterjs-editor-core/lib/coreAPI/focus.ts");
 var getCustomData_1 = __webpack_require__(/*! ../coreAPI/getCustomData */ "./packages/roosterjs-editor-core/lib/coreAPI/getCustomData.ts");
 var getSelectionRange_1 = __webpack_require__(/*! ../coreAPI/getSelectionRange */ "./packages/roosterjs-editor-core/lib/coreAPI/getSelectionRange.ts");
 var hasFocus_1 = __webpack_require__(/*! ../coreAPI/hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
 var insertNode_1 = __webpack_require__(/*! ../coreAPI/insertNode */ "./packages/roosterjs-editor-core/lib/coreAPI/insertNode.ts");
-var MouseUpPlugin_1 = __webpack_require__(/*! ../corePlugins/MouseUpPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/MouseUpPlugin.ts");
 var selectRange_1 = __webpack_require__(/*! ../coreAPI/selectRange */ "./packages/roosterjs-editor-core/lib/coreAPI/selectRange.ts");
 var triggerEvent_1 = __webpack_require__(/*! ../coreAPI/triggerEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/triggerEvent.ts");
-var TypeInContainerPlugin_1 = __webpack_require__(/*! ../corePlugins/TypeInContainerPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/TypeInContainerPlugin.ts");
-var Undo_1 = __webpack_require__(/*! ../undo/Undo */ "./packages/roosterjs-editor-core/lib/undo/Undo.ts");
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+/**
+ * Create core object for editor
+ * @param contentDiv The DIV element used for editor
+ * @param options Options to create an editor
+ */
 function createEditorCore(contentDiv, options) {
     var corePlugins = {
         undo: options.undo || new Undo_1.default(),
@@ -3273,15 +3326,7 @@ function createEditorCore(contentDiv, options) {
         domEvent: new DOMEventPlugin_1.default(options.disableRestoreSelectionOnFocus),
         firefoxTypeAfterLink: roosterjs_editor_dom_1.Browser.isFirefox && new FirefoxTypeAfterLink_1.default(),
     };
-    var allPlugins = [
-        corePlugins.typeInContainer,
-        corePlugins.mouseUp
-    ].concat((options.plugins || []), [
-        corePlugins.edit,
-        corePlugins.firefoxTypeAfterLink,
-        corePlugins.undo,
-        corePlugins.domEvent,
-    ]).filter(function (plugin) { return !!plugin; });
+    var allPlugins = buildPluginList(corePlugins, options.plugins);
     var eventHandlerPlugins = allPlugins.filter(function (plugin) { return plugin.onPluginEvent || plugin.willHandleEventExclusively; });
     return {
         contentDiv: contentDiv,
@@ -3298,6 +3343,17 @@ function createEditorCore(contentDiv, options) {
     };
 }
 exports.default = createEditorCore;
+function buildPluginList(corePlugins, plugins) {
+    return [
+        corePlugins.typeInContainer,
+        corePlugins.mouseUp
+    ].concat((plugins || []), [
+        corePlugins.edit,
+        corePlugins.firefoxTypeAfterLink,
+        corePlugins.undo,
+        corePlugins.domEvent,
+    ]).filter(function (plugin) { return !!plugin; });
+}
 function calcDefaultFormat(node, baseFormat) {
     if (baseFormat && Object.keys(baseFormat).length === 0) {
         return {};
@@ -3318,16 +3374,16 @@ function calcDefaultFormat(node, baseFormat) {
 function createCoreApiMap(map) {
     map = map || {};
     return {
-        attachDomEvent: map.attachDomEvent || attachDomEvent_1.default,
-        editWithUndo: map.editWithUndo || editWithUndo_1.default,
-        focus: map.focus || focus_1.default,
-        getCustomData: map.getCustomData || getCustomData_1.default,
-        getSelectionRange: map.getSelectionRange || getSelectionRange_1.default,
-        hasFocus: map.hasFocus || hasFocus_1.default,
-        insertNode: map.insertNode || insertNode_1.default,
+        attachDomEvent: map.attachDomEvent || attachDomEvent_1.attachDomEvent,
+        editWithUndo: map.editWithUndo || editWithUndo_1.editWithUndo,
+        focus: map.focus || focus_1.focus,
+        getCustomData: map.getCustomData || getCustomData_1.getCustomData,
+        getSelectionRange: map.getSelectionRange || getSelectionRange_1.getSelectionRange,
+        hasFocus: map.hasFocus || hasFocus_1.hasFocus,
+        insertNode: map.insertNode || insertNode_1.insertNode,
         select: map.select || selectRange_1.select,
-        selectRange: map.selectRange || selectRange_1.default,
-        triggerEvent: map.triggerEvent || triggerEvent_1.default,
+        selectRange: map.selectRange || selectRange_1.selectRange,
+        triggerEvent: map.triggerEvent || triggerEvent_1.triggerEvent,
     };
 }
 
@@ -3777,6 +3833,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
 // to keep size under limit. This is kept at 10MB
 var MAXSIZELIMIT = 1e7;
+/**
+ * A class to help manage undo snapshots
+ */
 var UndoSnapshots = /** @class */ (function () {
     function UndoSnapshots(maxSize) {
         if (maxSize === void 0) { maxSize = MAXSIZELIMIT; }
@@ -4887,7 +4946,7 @@ exports.PartialInlineElement = PartialInlineElement_1.default;
 var applyTextStyle_1 = __webpack_require__(/*! ./utils/applyTextStyle */ "./packages/roosterjs-editor-dom/lib/utils/applyTextStyle.ts");
 exports.applyTextStyle = applyTextStyle_1.default;
 var Browser_1 = __webpack_require__(/*! ./utils/Browser */ "./packages/roosterjs-editor-dom/lib/utils/Browser.ts");
-exports.Browser = Browser_1.default;
+exports.Browser = Browser_1.Browser;
 exports.getBrowserInfo = Browser_1.getBrowserInfo;
 var applyFormat_1 = __webpack_require__(/*! ./utils/applyFormat */ "./packages/roosterjs-editor-dom/lib/utils/applyFormat.ts");
 exports.applyFormat = applyFormat_1.default;
@@ -6368,10 +6427,12 @@ function getBrowserInfo(userAgent, appVersion) {
     };
 }
 exports.getBrowserInfo = getBrowserInfo;
-var Browser = window
+/**
+ * Browser object contains browser and operating system informations of current environment
+ */
+exports.Browser = window
     ? getBrowserInfo(window.navigator.userAgent, window.navigator.appVersion)
     : {};
-exports.default = Browser;
 
 
 /***/ }),
@@ -6534,6 +6595,13 @@ var wrap_1 = __webpack_require__(/*! ./wrap */ "./packages/roosterjs-editor-dom/
 var getLeafSibling_1 = __webpack_require__(/*! ./getLeafSibling */ "./packages/roosterjs-editor-dom/lib/utils/getLeafSibling.ts");
 var splitParentNode_1 = __webpack_require__(/*! ./splitParentNode */ "./packages/roosterjs-editor-dom/lib/utils/splitParentNode.ts");
 var STYLETAGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL'.split(',');
+/**
+ * Apply style using a styler function to the given container node in the given range
+ * @param container The container node to apply style to
+ * @param styler The styler function
+ * @param from From position
+ * @param to To position
+ */
 function applyTextStyle(container, styler, from, to) {
     if (from === void 0) { from = new Position_1.default(container, 0 /* Begin */).normalize(); }
     if (to === void 0) { to = new Position_1.default(container, -1 /* End */).normalize(); }
@@ -6787,7 +6855,7 @@ function extractClipboardEvent(event, callback) {
             var item = items[i];
             if (item.type && item.type.indexOf('text/html') == 0) {
                 item.getAsString(function (html) {
-                    result.html = Browser_1.default.isEdge ? workaroundForEdge(html) : html;
+                    result.html = Browser_1.Browser.isEdge ? workaroundForEdge(html) : html;
                     callback(result);
                 });
                 return;
@@ -7714,10 +7782,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
-// When user type, they may end a link with a puncatuation, i.e. www.bing.com;
-// we need to trim off the trailing puncatuation before turning it to link match
+/**
+ * When user type, they may end a link with a puncatuation, i.e. www.bing.com;
+ * we need to trim off the trailing puncatuation before turning it to link match
+ */
 var TRAILING_PUNCTUATION_REGEX = /[.+=\s:;"',>]+$/i;
 var MINIMUM_LENGTH = 5;
+/**
+ * AutoLink edit feature, provides the ability to automatically convert text user typed or pasted
+ * in hyperlink format into a real hyperlink
+ */
 exports.AutoLink = {
     keys: [13 /* ENTER */, 32 /* SPACE */, 2048 /* CONTENTCHANGED */],
     initialize: function (editor) {
@@ -7727,6 +7801,10 @@ exports.AutoLink = {
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
 };
+/**
+ * UnlinkWhenBackspaceAfterLink edit feature, provides the ability to convert a hyperlink back into text
+ * if user presses BACKSPACE right after a hyperlink
+ */
 exports.UnlinkWhenBackspaceAfterLink = {
     keys: [8 /* BACKSPACE */],
     shouldHandleEvent: hasLinkBeforeCursor,
@@ -7820,6 +7898,11 @@ var CHILD_PARENT_TAG_MAP = {
     LI: 'OL,UL',
 };
 var CHILD_SELECTOR = Object.keys(CHILD_PARENT_TAG_MAP).join(',');
+/**
+ * InsertLineBeforeStructuredNode edit feature, provides the ability to insert an empty line before
+ * a structured element (bullet/numbering list, blockquote, table) if the element is at beginning of
+ * document
+ */
 exports.InsertLineBeforeStructuredNodeFeature = {
     keys: [13 /* ENTER */],
     shouldHandleEvent: cacheGetStructuredElement,
@@ -7869,6 +7952,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+/**
+ * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
+ */
 exports.IndentWhenTab = {
     keys: [9 /* TAB */],
     shouldHandleEvent: function (event, editor) {
@@ -7879,6 +7965,9 @@ exports.IndentWhenTab = {
         event.rawEvent.preventDefault();
     },
 };
+/**
+ * OutdentWhenShiftTab edit feature, provides the ability to outdent current list when user press Shift+TAB
+ */
 exports.OutdentWhenShiftTab = {
     keys: [9 /* TAB */],
     shouldHandleEvent: function (event, editor) {
@@ -7889,6 +7978,10 @@ exports.OutdentWhenShiftTab = {
         event.rawEvent.preventDefault();
     },
 };
+/**
+ * MergeInNewLine edit feature, provides the ability to merge current line into a new line when user press
+ * BACKSPACE at beginning of a list item
+ */
 exports.MergeInNewLine = {
     keys: [8 /* BACKSPACE */],
     shouldHandleEvent: function (event, editor) {
@@ -7910,6 +8003,10 @@ exports.MergeInNewLine = {
         }
     },
 };
+/**
+ * OutdentWhenBackOn1stEmptyLine edit feature, provides the ability to outdent current item if user press
+ * BACKSPACE at the first and empty line of a list
+ */
 exports.OutdentWhenBackOn1stEmptyLine = {
     keys: [8 /* BACKSPACE */],
     shouldHandleEvent: function (event, editor) {
@@ -7918,6 +8015,10 @@ exports.OutdentWhenBackOn1stEmptyLine = {
     },
     handleEvent: toggleListAndPreventDefault,
 };
+/**
+ * OutdentWhenEnterOnEmptyLine edit feature, provides the ability to outdent current item if user press
+ * ENTER at the beginning of an empty line of a list
+ */
 exports.OutdentWhenEnterOnEmptyLine = {
     keys: [13 /* ENTER */],
     shouldHandleEvent: function (event, editor) {
@@ -7928,6 +8029,11 @@ exports.OutdentWhenEnterOnEmptyLine = {
         editor.performAutoComplete(function () { return toggleListAndPreventDefault(event, editor); });
     },
 };
+/**
+ * AutoBullet edit feature, provides the ablility to automatically convert current line into a list.
+ * When user input "1. ", convert into a numbering list
+ * When user input "- " or "* ", convert into a bullet list
+ */
 exports.AutoBullet = {
     keys: [32 /* SPACE */],
     shouldHandleEvent: function (event, editor) {
@@ -7967,6 +8073,12 @@ exports.AutoBullet = {
         });
     },
 };
+/**
+ * Get an instance of SmartOrderedList edit feature. This feature provides the ability to use different
+ * number style for different level of numbering list.
+ * @param styleList The list of number styles used for this feature.
+ * See https://www.w3schools.com/cssref/pr_list-style-type.asp for more information
+ */
 function getSmartOrderedList(styleList) {
     return {
         keys: [2048 /* CONTENTCHANGED */],
@@ -8022,6 +8134,10 @@ var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var QUOTE_TAG = 'BLOCKQUOTE';
 var STRUCTURED_TAGS = [QUOTE_TAG, 'LI', 'TD', 'TH'].join(',');
+/**
+ * UnquoteWhenBackOnEmpty1stLine edit feature, provides the ability to Unquote current line when
+ * user press BACKSPACE on first and empty line of a BLOCKQUOTE
+ */
 exports.UnquoteWhenBackOnEmpty1stLine = {
     keys: [8 /* BACKSPACE */],
     shouldHandleEvent: function (event, editor) {
@@ -8030,6 +8146,10 @@ exports.UnquoteWhenBackOnEmpty1stLine = {
     },
     handleEvent: splitQuote,
 };
+/**
+ * UnquoteWhenEnterOnEmptyLine edit feature, provides the ability to Unquote current line when
+ * user press ENTER on an empty line of a BLOCKQUOTE
+ */
 exports.UnquoteWhenEnterOnEmptyLine = {
     keys: [13 /* ENTER */],
     shouldHandleEvent: function (event, editor) {
@@ -8103,6 +8223,18 @@ var commands = [
     createCommand(256 /* Ctrl */ | 1024 /* Shift */ | 190 /* PERIOD */, 512 /* Meta */ | 1024 /* Shift */ | 190 /* PERIOD */, function (editor) { return roosterjs_editor_api_1.changeFontSize(editor, 0 /* Increase */); }),
     createCommand(256 /* Ctrl */ | 1024 /* Shift */ | 188 /* COMMA */, 512 /* Meta */ | 1024 /* Shift */ | 188 /* COMMA */, function (editor) { return roosterjs_editor_api_1.changeFontSize(editor, 1 /* Decrease */); }),
 ];
+/**
+ * DefaultShortcut edit feature, provides shortcuts for the following features:
+ * Ctrl/Meta+B: toggle bold style
+ * Ctrl/Meta+I: toggle italic style
+ * Ctrl/Meta+U: toggle underline style
+ * Ctrl/Meta+Z: undo
+ * Ctrl+Y/Meta+Shift+Z: redo
+ * Ctrl/Meta+PERIOD: toggle bullet list
+ * Ctrl/Meta+/: toggle numbering list
+ * Ctrl/Meta+Shift+>: increase font size
+ * Ctrl/Meta+Shift+<: decrease font size
+ */
 exports.DefaultShortcut = {
     allowFunctionKeys: true,
     keys: [66 /* B */, 73 /* I */, 85 /* U */, 89 /* Y */, 90 /* Z */, 188 /* COMMA */, 190 /* PERIOD */, 191 /* FORWARDSLASH */],
@@ -8147,6 +8279,9 @@ function cacheGetCommand(event) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+/**
+ * TabInTable edit feature, provides the ability to jump between cells when user press TAB in table
+ */
 exports.TabInTable = {
     keys: [9 /* TAB */],
     shouldHandleEvent: cacheGetTableCell,
@@ -8171,6 +8306,10 @@ exports.TabInTable = {
         event.rawEvent.preventDefault();
     },
 };
+/**
+ * UpDownInTable edit feature, provides the ability to jump to cell above/below when user press UP/DOWN
+ * in table
+ */
 exports.UpDownInTable = {
     keys: [38 /* UP */, 40 /* DOWN */],
     shouldHandleEvent: cacheGetTableCell,
@@ -8249,7 +8388,7 @@ var defaultReplacements = [
 var CustomReplacePlugin = /** @class */ (function () {
     /**
      * Create instance of CustomReplace plugin
-     * @param features An optional feature set to determine which features the plugin should provide
+     * @param replacements Replacement rules. If not passed, a default replacement rule set will be applied
      */
     function CustomReplacePlugin(replacements) {
         if (replacements === void 0) { replacements = defaultReplacements; }
@@ -8735,6 +8874,10 @@ function getTempDivForPaste(editor) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_html_sanitizer_1 = __webpack_require__(/*! roosterjs-html-sanitizer */ "./packages/roosterjs-html-sanitizer/lib/index.ts");
+/**
+ * Convert pasted content from Excel, add borders when source doc doesn't have a border
+ * @param doc HTML Document which contains the content from Excel
+ */
 function convertPastedContentFromExcel(doc) {
     var sanitizer = new roosterjs_html_sanitizer_1.HtmlSanitizer({
         styleCallbacks: {
@@ -9550,6 +9693,9 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
 var TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
 var HANDLE_WIDTH = 6;
 var CONTAINER_HTML = "<div style=\"position: fixed; cursor: col-resize; width: " + HANDLE_WIDTH + "px; border: solid 0 #C6C6C6;\"></div>";
+/**
+ * TableResize plugin, provides the ability to resize a table by drag-and-drop
+ */
 var TableResize = /** @class */ (function () {
     function TableResize() {
         var _this = this;
@@ -9920,16 +10066,25 @@ exports.getInheritableStyles = getInheritableStyles_1.default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cloneObject_1 = __webpack_require__(/*! ../utils/cloneObject */ "./packages/roosterjs-html-sanitizer/lib/utils/cloneObject.ts");
 var getInheritableStyles_1 = __webpack_require__(/*! ../utils/getInheritableStyles */ "./packages/roosterjs-html-sanitizer/lib/utils/getInheritableStyles.ts");
 var htmlToDom_1 = __webpack_require__(/*! ../utils/htmlToDom */ "./packages/roosterjs-html-sanitizer/lib/utils/htmlToDom.ts");
+var cloneObject_1 = __webpack_require__(/*! ../utils/cloneObject */ "./packages/roosterjs-html-sanitizer/lib/utils/cloneObject.ts");
 var getAllowedValues_1 = __webpack_require__(/*! ../utils/getAllowedValues */ "./packages/roosterjs-html-sanitizer/lib/utils/getAllowedValues.ts");
+/**
+ * HTML sanitizer class provides two featuers:
+ * 1. Convert global CSS to inline CSS
+ * 2. Sanitize an HTML document, remove unnecessary/dangerous attribute/nodes
+ */
 var HtmlSanitizer = /** @class */ (function () {
+    /**
+     * Construct a new instance of HtmlSanitizer
+     * @param options Options for HtmlSanitizer
+     */
     function HtmlSanitizer(options) {
         options = options || {};
-        this.elementCallbacks = cloneObject_1.default(options.elementCallbacks);
+        this.elementCallbacks = cloneObject_1.cloneObject(options.elementCallbacks);
         this.styleCallbacks = getAllowedValues_1.getStyleCallbacks(options.styleCallbacks);
-        this.attributeCallbacks = cloneObject_1.default(options.attributeCallbacks);
+        this.attributeCallbacks = cloneObject_1.cloneObject(options.attributeCallbacks);
         this.allowedTags = getAllowedValues_1.getAllowedTags(options.additionalAllowedTags);
         this.allowedAttributes = getAllowedValues_1.getAllowedAttributes(options.additionalAllowAttributes);
         this.defaultStyleValues = getAllowedValues_1.getDefaultStyleValues(options.additionalDefaultStyleValues);
@@ -9981,13 +10136,23 @@ var HtmlSanitizer = /** @class */ (function () {
         }
         return (doc && doc.body && doc.body.innerHTML) || '';
     };
+    /**
+     * Sanitize an HTML element, remove unnecessary or dangerous elements/attribute/CSS rules
+     * @param rootNode Root node to sanitize
+     * @param currentStyles Current CSS styles. Inheritable styles in the given node which has
+     * the same value with current styles will be ignored.
+     */
     HtmlSanitizer.prototype.sanitize = function (rootNode, currentStyles) {
         if (!rootNode) {
             return '';
         }
-        currentStyles = cloneObject_1.default(currentStyles, getInheritableStyles_1.default(null));
+        currentStyles = cloneObject_1.cloneObject(currentStyles, getInheritableStyles_1.default(null));
         this.processNode(rootNode, currentStyles, {});
     };
+    /**
+     * Convert global CSS into inline CSS
+     * @param rootNode The HTML Document
+     */
     HtmlSanitizer.prototype.convertGlobalCssToInlineCss = function (rootNode) {
         var styleNodes = toArray(rootNode.querySelectorAll('style'));
         var styleSheets = this.additionalGlobalStyleNodes
@@ -10046,7 +10211,7 @@ var HtmlSanitizer = /** @class */ (function () {
             node.nodeValue = node.nodeValue.replace(/^ /gm, '\u00A0').replace(/ {2}/g, ' \u00A0');
         }
         else if (isElement) {
-            var thisStyle = cloneObject_1.default(currentStyle);
+            var thisStyle = cloneObject_1.cloneObject(currentStyle);
             this.processAttributes(element, context);
             this.processCss(element, tag, thisStyle, context);
             // Special handling for PRE tag, need to preserve \r\n inside PRE
@@ -10159,8 +10324,7 @@ function customClone(source, existingObj) {
     }
     return result;
 }
-var cloneObject = Object.assign ? nativeClone : customClone;
-exports.default = cloneObject;
+exports.cloneObject = Object.assign ? nativeClone : customClone;
 
 
 /***/ }),
@@ -10240,7 +10404,7 @@ function getAllowedAttributes(additionalAttributes) {
 }
 exports.getAllowedAttributes = getAllowedAttributes;
 function getDefaultStyleValues(additionalDefaultStyles) {
-    var result = cloneObject_1.default(DEFAULT_STYLE_VALUES);
+    var result = cloneObject_1.cloneObject(DEFAULT_STYLE_VALUES);
     if (additionalDefaultStyles) {
         Object.keys(additionalDefaultStyles).forEach(function (name) {
             var value = additionalDefaultStyles[name];
@@ -10256,7 +10420,7 @@ function getDefaultStyleValues(additionalDefaultStyles) {
 }
 exports.getDefaultStyleValues = getDefaultStyleValues;
 function getStyleCallbacks(callbacks) {
-    var result = cloneObject_1.default(callbacks);
+    var result = cloneObject_1.cloneObject(callbacks);
     result.position = result.position || removeValue;
     result.width = result.width || removeWidthForLiAndDiv;
     return result;
@@ -10389,6 +10553,9 @@ var BACKSPACE_KEYCODE = 8;
 var SHIFT_KEYCODE = 16;
 var CTRL_KEYCODE = 17;
 var ALT_KEYCODE = 18;
+/**
+ * ImageResize plugin provides the ability to resize an inline image in editor
+ */
 var ImageResize = /** @class */ (function () {
     /**
      * Create a new instance of ImageResize
@@ -10740,6 +10907,17 @@ var UP_ARROW_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'ArrowUp' : 'Up';
 var RIGHT_ARROW_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'ArrowRight' : 'Right';
 var DOWN_ARROW_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'ArrowDown' : 'Down';
 var DELETE_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'Delete' : 'Del';
+/**
+ * PickerPlugin represents a plugin of editor which can handle picker related behaviors, including
+ * - Show picker when special trigger key is pressed
+ * - Hide picker
+ * - Change selection in picker by Up/Down/Left/Right
+ * - Apply selected item in picker
+ *
+ * PickerPlugin doesn't provide any UI, it just wraps related DOM events and invoke callback functions.
+ * To show a picker UI, you need to build your own UI component. Please reference to
+ * https://github.com/microsoft/roosterjs/tree/master/publish/samplesite/scripts/controls/samplepicker
+ */
 var PickerPlugin = /** @class */ (function () {
     function PickerPlugin(dataProvider, pickerOptions) {
         this.dataProvider = dataProvider;

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>DOMEventPlugin | RoosterJs API Reference</title>
+	<title>Watermark | RoosterJs API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/roosterjs_editor_core.html">roosterjs-editor-core</a>
+					<a href="../modules/roosterjs_editor_plugins.html">roosterjs-editor-plugins</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_core.domeventplugin.html">DOMEventPlugin</a>
+					<a href="roosterjs_editor_plugins.watermark.html">Watermark</a>
 				</li>
 			</ul>
-			<h1>Class DOMEventPlugin</h1>
+			<h1>Class Watermark</h1>
 		</div>
 	</div>
 </header>
@@ -68,12 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>DOMEventPlugin handles customized DOM events, including:</p>
-						<ol>
-							<li>IME state management</li>
-							<li>Selection management</li>
-							<li>Cut and Drop management</li>
-						</ol>
+						<p>A watermark plugin to manage watermark string for roosterjs</p>
 					</div>
 				</div>
 			</section>
@@ -81,14 +76,14 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">DOMEventPlugin</span>
+						<span class="target">Watermark</span>
 					</li>
 				</ul>
 			</section>
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/roosterjs_editor_core.editorplugin.html" class="tsd-signature-type">EditorPlugin</a></li>
+					<li><span class="tsd-signature-type">any</span></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -98,16 +93,16 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_plugins.watermark.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#dispose" class="tsd-kind-icon">dispose</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#initialize" class="tsd-kind-icon">initialize</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#isinime" class="tsd-kind-icon">is<wbr>InIME</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.watermark.html#dispose" class="tsd-kind-icon">dispose</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.watermark.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.watermark.html#initialize" class="tsd-kind-icon">initialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.watermark.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
 							</ul>
 						</section>
 					</div>
@@ -119,22 +114,35 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new DOMEvent<wbr>Plugin<span class="tsd-signature-symbol">(</span>disableRestoreSelectionOnFocus<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_core.domeventplugin.html" class="tsd-signature-type">DOMEventPlugin</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Watermark<span class="tsd-signature-symbol">(</span>watermark<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, format<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_editor_types.defaultformat.html" class="tsd-signature-type">DefaultFormat</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.watermark.html" class="tsd-signature-type">Watermark</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L15">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-plugins/lib/Watermark/Watermark.ts#L25">roosterjs-editor-plugins/lib/Watermark/Watermark.ts:25</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create an instance of Watermark plugin</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>disableRestoreSelectionOnFocus: <span class="tsd-signature-type">boolean</span></h5>
+									<h5>watermark: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The watermark string</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> format: <a href="../interfaces/roosterjs_editor_types.defaultformat.html" class="tsd-signature-type">DefaultFormat</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_core.domeventplugin.html" class="tsd-signature-type">DOMEventPlugin</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_plugins.watermark.html" class="tsd-signature-type">Watermark</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -151,9 +159,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L47">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-plugins/lib/Watermark/Watermark.ts#L61">roosterjs-editor-plugins/lib/Watermark/Watermark.ts:61</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Dispose this plugin</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -168,9 +181,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L19">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-plugins/lib/Watermark/Watermark.ts#L41">roosterjs-editor-plugins/lib/Watermark/Watermark.ts:41</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get a friendly name of  this plugin</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
@@ -185,13 +203,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L23">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-plugins/lib/Watermark/Watermark.ts#L49">roosterjs-editor-plugins/lib/Watermark/Watermark.ts:49</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Initialize this plugin. This should only be called from Editor</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>editor: <a href="roosterjs_editor_core.editor.html" class="tsd-signature-type">Editor</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Editor instance</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -199,25 +225,33 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="isinime" class="tsd-anchor"></a>
-					<h3>is<wbr>InIME</h3>
+					<a name="onpluginevent" class="tsd-anchor"></a>
+					<h3>on<wbr>Plugin<wbr>Event</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">is<wbr>InIME<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Plugin<wbr>Event<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L57">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/deb6cf7/packages/roosterjs-editor-plugins/lib/Watermark/Watermark.ts#L72">roosterjs-editor-plugins/lib/Watermark/Watermark.ts:72</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Check if editor is in IME input sequence</p>
+									<p>Handle events triggered from editor</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-							<p>True if editor is in IME input sequence, otherwise false</p>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>event: <a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type">PluginEvent</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>PluginEvent object</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -235,13 +269,13 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_api.html">roosterjs-<wbr>editor-<wbr>api</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_core.html">roosterjs-<wbr>editor-<wbr>core</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_dom.html">roosterjs-<wbr>editor-<wbr>dom</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_plugins.html">roosterjs-<wbr>editor-<wbr>plugins</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -263,22 +297,22 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="roosterjs_editor_core.domeventplugin.html" class="tsd-kind-icon">DOMEvent<wbr>Plugin</a>
+						<a href="roosterjs_editor_plugins.watermark.html" class="tsd-kind-icon">Watermark</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="roosterjs_editor_core.domeventplugin.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="roosterjs_editor_plugins.watermark.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_core.domeventplugin.html#dispose" class="tsd-kind-icon">dispose</a>
+								<a href="roosterjs_editor_plugins.watermark.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_core.domeventplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
+								<a href="roosterjs_editor_plugins.watermark.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_core.domeventplugin.html#initialize" class="tsd-kind-icon">initialize</a>
+								<a href="roosterjs_editor_plugins.watermark.html#initialize" class="tsd-kind-icon">initialize</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_core.domeventplugin.html#isinime" class="tsd-kind-icon">is<wbr>InIME</a>
+								<a href="roosterjs_editor_plugins.watermark.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
 							</li>
 						</ul>
 					</li>
