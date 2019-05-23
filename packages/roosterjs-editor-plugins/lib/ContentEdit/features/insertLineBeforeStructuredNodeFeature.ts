@@ -18,6 +18,11 @@ const CHILD_PARENT_TAG_MAP: { [childTag: string]: string } = {
 };
 const CHILD_SELECTOR = Object.keys(CHILD_PARENT_TAG_MAP).join(',');
 
+/**
+ * InsertLineBeforeStructuredNode edit feature, provides the ability to insert an empty line before
+ * a structured element (bullet/numbering list, blockquote, table) if the element is at beginning of
+ * document
+ */
 export const InsertLineBeforeStructuredNodeFeature: ContentEditFeature = {
     keys: [Keys.ENTER],
     shouldHandleEvent: cacheGetStructuredElement,

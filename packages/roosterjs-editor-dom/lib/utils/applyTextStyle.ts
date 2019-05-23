@@ -7,6 +7,13 @@ import { splitBalancedNodeRange } from './splitParentNode';
 
 const STYLETAGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL'.split(',');
 
+/**
+ * Apply style using a styler function to the given container node in the given range
+ * @param container The container node to apply style to
+ * @param styler The styler function
+ * @param from From position
+ * @param to To position
+ */
 export default function applyTextStyle(
     container: Node,
     styler: (node: HTMLElement, isInnerNode?: boolean) => any,

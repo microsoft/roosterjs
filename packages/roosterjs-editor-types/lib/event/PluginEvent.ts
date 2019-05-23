@@ -8,7 +8,6 @@ import { PluginDomEvent } from './PluginDomEvent';
 /**
  * Editor plugin event interface
  */
-
 export type PluginEvent =
     | BeforePasteEvent
     | ContentChangedEvent

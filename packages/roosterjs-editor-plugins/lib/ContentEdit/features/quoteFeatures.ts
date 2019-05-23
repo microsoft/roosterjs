@@ -11,6 +11,10 @@ import {
 const QUOTE_TAG = 'BLOCKQUOTE';
 const STRUCTURED_TAGS = [QUOTE_TAG, 'LI', 'TD', 'TH'].join(',');
 
+/**
+ * UnquoteWhenBackOnEmpty1stLine edit feature, provides the ability to Unquote current line when
+ * user press BACKSPACE on first and empty line of a BLOCKQUOTE
+ */
 export const UnquoteWhenBackOnEmpty1stLine: ContentEditFeature = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
@@ -20,6 +24,10 @@ export const UnquoteWhenBackOnEmpty1stLine: ContentEditFeature = {
     handleEvent: splitQuote,
 };
 
+/**
+ * UnquoteWhenEnterOnEmptyLine edit feature, provides the ability to Unquote current line when
+ * user press ENTER on an empty line of a BLOCKQUOTE
+ */
 export const UnquoteWhenEnterOnEmptyLine: ContentEditFeature = {
     keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {

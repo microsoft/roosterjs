@@ -19,6 +19,11 @@ import { insertNode } from '../coreAPI/insertNode';
 import { select, selectRange } from '../coreAPI/selectRange';
 import { triggerEvent } from '../coreAPI/triggerEvent';
 
+/**
+ * Create core object for editor
+ * @param contentDiv The DIV element used for editor
+ * @param options Options to create an editor
+ */
 export default function createEditorCore(
     contentDiv: HTMLDivElement,
     options: EditorOptions
@@ -31,15 +36,7 @@ export default function createEditorCore(
         domEvent: new DOMEventPlugin(options.disableRestoreSelectionOnFocus),
         firefoxTypeAfterLink: Browser.isFirefox && new FirefoxTypeAfterLink(),
     };
-    let allPlugins: EditorPlugin[] = [
-        corePlugins.typeInContainer,
-        corePlugins.mouseUp,
-        ...(options.plugins || []),
-        corePlugins.edit,
-        corePlugins.firefoxTypeAfterLink,
-        corePlugins.undo,
-        corePlugins.domEvent,
-    ].filter(plugin => !!plugin);
+    let allPlugins = buildPluginList(corePlugins, options.plugins);
     let eventHandlerPlugins = allPlugins.filter(
         plugin => plugin.onPluginEvent || plugin.willHandleEventExclusively
     );
@@ -56,6 +53,18 @@ export default function createEditorCore(
         api: createCoreApiMap(options.coreApiOverride),
         defaultApi: createCoreApiMap(),
     };
+}
+
+function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): EditorPlugin[] {
+    return [
+        corePlugins.typeInContainer,
+        corePlugins.mouseUp,
+        ...(plugins || []),
+        corePlugins.edit,
+        corePlugins.firefoxTypeAfterLink,
+        corePlugins.undo,
+        corePlugins.domEvent,
+    ].filter(plugin => !!plugin);
 }
 
 function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat {

@@ -4,6 +4,9 @@ import UndoSnapshotsService from '../interfaces/UndoSnapshotsService';
 // to keep size under limit. This is kept at 10MB
 const MAXSIZELIMIT = 1e7;
 
+/**
+ * A class to help manage undo snapshots
+ */
 export default class UndoSnapshots implements UndoSnapshotsService {
     private snapshots: string[];
     private totalSize: number;
