@@ -5943,6 +5943,7 @@ function getPositionPath(position, rootNode) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(/*! ../utils/contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
+var getTagOfNode_1 = __webpack_require__(/*! ../utils/getTagOfNode */ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts");
 var isNodeEmpty_1 = __webpack_require__(/*! ../utils/isNodeEmpty */ "./packages/roosterjs-editor-dom/lib/utils/isNodeEmpty.ts");
 /**
  * Check if this position is at beginning of the given node.
@@ -5967,7 +5968,7 @@ exports.default = isPositionAtBeginningOf;
 function areAllPrevousNodesEmpty(node) {
     while (node.previousSibling) {
         node = node.previousSibling;
-        if (!isNodeEmpty_1.default(node)) {
+        if (getTagOfNode_1.default(node) == 'BR' || !isNodeEmpty_1.default(node)) {
             return false;
         }
     }
