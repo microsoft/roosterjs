@@ -29,6 +29,7 @@ import {
     findClosestElementAncestor,
     fromHtml,
     getBlockElementAtNode,
+    getBlockElementTextContent,
     getInlineElementAtNode,
     getPositionRect,
     getRangeFromSelectionPath,
@@ -385,33 +386,7 @@ export default class Editor {
      * @returns The text content inside editor
      */
     public getTextContent(): string {
-        const traverser = this.getBodyTraverser();
-        let block = traverser && traverser.currentBlockElement;
-        let blocks: BlockElement[] = [];
-        let textContent: string = '';
-
-        while (block) {
-            blocks.push(block);
-            block = traverser.getNextBlockElement();
-        }
-
-        blocks.forEach((block, index) => {
-            const blockTextContent = this.getBlockTextContent(block);
-            if (blockTextContent) {
-                textContent = `${textContent}${blockTextContent}`;
-            }
-            if (index != blocks.length - 1) {
-                textContent = `${textContent}\n`
-            }
-        });
-
-        return textContent;
-    }
-
-    private getBlockTextContent(block: BlockElement) {
-        return block.getStartNode() == block.getEndNode()
-            ? block.getStartNode().textContent
-            : createRange(block.getStartNode(), block.getEndNode()).toString();
+        return getBlockElementTextContent(this.core.contentDiv);
     }
 
     /**
