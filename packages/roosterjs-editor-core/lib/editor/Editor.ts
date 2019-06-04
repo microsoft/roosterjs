@@ -29,7 +29,7 @@ import {
     findClosestElementAncestor,
     fromHtml,
     getBlockElementAtNode,
-    getBlockElementTextContent,
+    getTextContent,
     getInlineElementAtNode,
     getPositionRect,
     getRangeFromSelectionPath,
@@ -386,7 +386,7 @@ export default class Editor {
      * @returns The text content inside editor
      */
     public getTextContent(): string {
-        return getBlockElementTextContent(this.core.contentDiv);
+        return getTextContent(this.core.contentDiv);
     }
 
     /**
