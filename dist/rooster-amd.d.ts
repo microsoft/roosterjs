@@ -809,6 +809,10 @@ export interface BlockElement {
      * Check if the given node is within this block element
      */
     contains(node: Node): boolean;
+    /**
+     * Get the text content of this block element
+     */
+    getTextContent(): string;
 }
 
 /**
@@ -1246,6 +1250,10 @@ export class NodeBlockElement implements BlockElement  {
      * Checks if a certain html node is within the block
      */
     contains(node: Node): boolean;
+    /**
+     * Get the text content of this block element
+     */
+    getTextContent(): string;
 }
 
 /**
@@ -1323,6 +1331,10 @@ export class StartEndBlockElement implements BlockElement  {
      * Checks if an Html node is contained within the block
      */
     contains(node: Node): boolean;
+    /**
+     * Get the text content of this block element
+     */
+    getTextContent(): string;
 }
 
 /**
@@ -1861,6 +1873,13 @@ export function getFirstLeafNode(rootNode: Node): Node;
  * @param rootNode Root node to get leaf node from
  */
 export function getLastLeafNode(rootNode: Node): Node;
+
+/**
+ * get block element's text content.
+ * @param rootNode Root node that the get the textContent of.
+ * @returns text content of given text content.
+ */
+export function getTextContent(rootNode: Node): string;
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells

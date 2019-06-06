@@ -2957,7 +2957,7 @@ var Editor = /** @class */ (function () {
      * @returns The text content inside editor
      */
     Editor.prototype.getTextContent = function () {
-        return this.core.contentDiv.innerText;
+        return roosterjs_editor_dom_1.getTextContent(this.core.contentDiv);
     };
     /**
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
@@ -3969,6 +3969,12 @@ var NodeBlockElement = /** @class */ (function () {
     NodeBlockElement.prototype.contains = function (node) {
         return contains_1.default(this.element, node, true /*treatSameNodeAsContain*/);
     };
+    /**
+     * Get the text content of this block element
+     */
+    NodeBlockElement.prototype.getTextContent = function () {
+        return this.element.textContent;
+    };
     return NodeBlockElement;
 }());
 exports.default = NodeBlockElement;
@@ -3993,6 +3999,7 @@ var isBlockElement_1 = __webpack_require__(/*! ../utils/isBlockElement */ "./pac
 var isNodeAfter_1 = __webpack_require__(/*! ../utils/isNodeAfter */ "./packages/roosterjs-editor-dom/lib/utils/isNodeAfter.ts");
 var wrap_1 = __webpack_require__(/*! ../utils/wrap */ "./packages/roosterjs-editor-dom/lib/utils/wrap.ts");
 var splitParentNode_1 = __webpack_require__(/*! ../utils/splitParentNode */ "./packages/roosterjs-editor-dom/lib/utils/splitParentNode.ts");
+var createRange_1 = __webpack_require__(/*! ../selection/createRange */ "./packages/roosterjs-editor-dom/lib/selection/createRange.ts");
 var STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
 /**
  * This reprents a block that is identified by a start and end node
@@ -4064,6 +4071,12 @@ var StartEndBlockElement = /** @class */ (function () {
         return (contains_1.default(this.startNode, node, true /*treatSameNodeAsContain*/) ||
             contains_1.default(this.endNode, node, true /*treatSameNodeAsContain*/) ||
             (isNodeAfter_1.default(node, this.startNode) && isNodeAfter_1.default(this.endNode, node)));
+    };
+    /**
+     * Get the text content of this block element
+     */
+    StartEndBlockElement.prototype.getTextContent = function () {
+        return createRange_1.default(this.getStartNode(), this.getEndNode()).toString();
     };
     return StartEndBlockElement;
 }());
@@ -4991,6 +5004,8 @@ exports.getPreviousLeafSibling = getLeafSibling_1.getPreviousLeafSibling;
 var getLeafNode_1 = __webpack_require__(/*! ./utils/getLeafNode */ "./packages/roosterjs-editor-dom/lib/utils/getLeafNode.ts");
 exports.getFirstLeafNode = getLeafNode_1.getFirstLeafNode;
 exports.getLastLeafNode = getLeafNode_1.getLastLeafNode;
+var getTextContent_1 = __webpack_require__(/*! ./utils/getTextContent */ "./packages/roosterjs-editor-dom/lib/utils/getTextContent.ts");
+exports.getTextContent = getTextContent_1.default;
 var VTable_1 = __webpack_require__(/*! ./table/VTable */ "./packages/roosterjs-editor-dom/lib/table/VTable.ts");
 exports.VTable = VTable_1.default;
 var Position_1 = __webpack_require__(/*! ./selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
@@ -7174,6 +7189,37 @@ function getTagOfNode(node) {
     return node && node.nodeType == 1 /* Element */ ? node.tagName.toUpperCase() : '';
 }
 exports.default = getTagOfNode;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-dom/lib/utils/getTextContent.ts":
+/*!*******************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/utils/getTextContent.ts ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ContentTraverser_1 = __webpack_require__(/*! ../contentTraverser/ContentTraverser */ "./packages/roosterjs-editor-dom/lib/contentTraverser/ContentTraverser.ts");
+/**
+ * get block element's text content.
+ * @param rootNode Root node that the get the textContent of.
+ * @returns text content of given text content.
+ */
+function getTextContent(rootNode) {
+    var traverser = ContentTraverser_1.default.createBodyTraverser(rootNode);
+    var block = traverser && traverser.currentBlockElement;
+    var textContent = [];
+    while (block) {
+        textContent.push(block.getTextContent());
+        block = traverser.getNextBlockElement();
+    }
+    return textContent.join('\n');
+}
+exports.default = getTextContent;
 
 
 /***/ }),
