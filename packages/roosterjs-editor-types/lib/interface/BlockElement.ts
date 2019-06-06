@@ -34,4 +34,9 @@ export default interface BlockElement {
      * Check if the given node is within this block element
      */
     contains(node: Node): boolean;
+
+    /**
+     * Get the text content of this block element
+     */
+    getTextContent(): string;
 }
