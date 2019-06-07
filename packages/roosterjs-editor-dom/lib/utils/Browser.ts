@@ -20,6 +20,7 @@ export function getBrowserInfo(userAgent: string, appVersion: string): BrowserIn
     let isSafari = false;
     let isEdge = false;
     let isWebKit = userAgent.indexOf('WebKit') != -1;
+    let isAndroid = userAgent.indexOf('Android') != -1;
 
     if (!isIE) {
         isChrome = userAgent.indexOf('Chrome') != -1;
@@ -52,6 +53,7 @@ export function getBrowserInfo(userAgent: string, appVersion: string): BrowserIn
         isFirefox,
         isEdge,
         isIEOrEdge: isIE || isEdge,
+        isAndroid,
     };
 }
 
