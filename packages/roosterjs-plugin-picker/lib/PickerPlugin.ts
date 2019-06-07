@@ -223,11 +223,11 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         this.setAriaActiveDescendant(isSuggesting ? 0 : null);
     }
 
-    private handleKeyDownEvent(event: any) {
+    private handleKeyDownEvent(event: PluginEvent) {
         this.eventHandledOnKeyDown = true;
-        if (event.rawEvent) {
-            (event as PluginKeyboardEvent).rawEvent.preventDefault();
-            (event as PluginKeyboardEvent).rawEvent.stopImmediatePropagation();
+        if ('rawEvent' in event) {
+            event.rawEvent.preventDefault();
+            event.rawEvent.stopImmediatePropagation();
         }
     }
 
