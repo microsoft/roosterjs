@@ -55,7 +55,7 @@ export {
 } from './interface/FormatState';
 export { default as InlineElement } from './interface/InlineElement';
 export {
-    default as InsertOption,
+    InsertOption,
     InsertOptionBase,
     InsertOptionBasic,
     InsertOptionRange,

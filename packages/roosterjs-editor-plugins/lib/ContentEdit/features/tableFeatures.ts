@@ -8,6 +8,9 @@ import {
     } from 'roosterjs-editor-dom';
 import { NodeType, PluginEvent, PositionType } from 'roosterjs-editor-types';
 
+/**
+ * TabInTable edit feature, provides the ability to jump between cells when user press TAB in table
+ */
 export const TabInTable: ContentEditFeature = {
     keys: [Keys.TAB],
     shouldHandleEvent: cacheGetTableCell,
@@ -40,6 +43,10 @@ export const TabInTable: ContentEditFeature = {
     },
 };
 
+/**
+ * UpDownInTable edit feature, provides the ability to jump to cell above/below when user press UP/DOWN
+ * in table
+ */
 export const UpDownInTable: ContentEditFeature = {
     keys: [Keys.UP, Keys.DOWN],
     shouldHandleEvent: cacheGetTableCell,

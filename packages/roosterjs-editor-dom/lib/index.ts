@@ -13,7 +13,7 @@ export { default as NodeInlineElement } from './inlineElements/NodeInlineElement
 export { default as PartialInlineElement } from './inlineElements/PartialInlineElement';
 
 export { default as applyTextStyle } from './utils/applyTextStyle';
-export { default as Browser, getBrowserInfo } from './utils/Browser';
+export { Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
 export { default as collapseNodes } from './utils/collapseNodes';
@@ -34,6 +34,7 @@ export { default as unwrap } from './utils/unwrap';
 export { default as wrap } from './utils/wrap';
 export { getNextLeafSibling, getPreviousLeafSibling } from './utils/getLeafSibling';
 export { getFirstLeafNode, getLastLeafNode } from './utils/getLeafNode';
+export { default as getTextContent } from './utils/getTextContent';
 
 export { default as VTable, VCell } from './table/VTable';
 

@@ -1,7 +1,16 @@
 import EditorCore, { GetSelectionRange } from '../interfaces/EditorCore';
 import { contains } from 'roosterjs-editor-dom';
 
-const getSelectionRange: GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => {
+/**
+ * Get current or cached selection range
+ * @param core The EditorCore object
+ * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
+ * @returns A Range object of the selection range
+ */
+export const getSelectionRange: GetSelectionRange = (
+    core: EditorCore,
+    tryGetFromCache: boolean
+) => {
     let result: Range = null;
 
     if (!tryGetFromCache || core.api.hasFocus(core)) {
@@ -20,5 +29,3 @@ const getSelectionRange: GetSelectionRange = (core: EditorCore, tryGetFromCache:
 
     return result;
 };
-
-export default getSelectionRange;

@@ -44,6 +44,18 @@ const commands: ShortcutCommand[] = [
     ),
 ];
 
+/**
+ * DefaultShortcut edit feature, provides shortcuts for the following features:
+ * Ctrl/Meta+B: toggle bold style
+ * Ctrl/Meta+I: toggle italic style
+ * Ctrl/Meta+U: toggle underline style
+ * Ctrl/Meta+Z: undo
+ * Ctrl+Y/Meta+Shift+Z: redo
+ * Ctrl/Meta+PERIOD: toggle bullet list
+ * Ctrl/Meta+/: toggle numbering list
+ * Ctrl/Meta+Shift+>: increase font size
+ * Ctrl/Meta+Shift+<: decrease font size
+ */
 export const DefaultShortcut: ContentEditFeature = {
     allowFunctionKeys: true,
     keys: [Keys.B, Keys.I, Keys.U, Keys.Y, Keys.Z, Keys.COMMA, Keys.PERIOD, Keys.FORWARDSLASH],

@@ -21,6 +21,9 @@ import {
     isPositionAtBeginningOf,
 } from 'roosterjs-editor-dom';
 
+/**
+ * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
+ */
 export const IndentWhenTab: ContentEditFeature = {
     keys: [Keys.TAB],
     shouldHandleEvent: (event, editor) =>
@@ -31,6 +34,9 @@ export const IndentWhenTab: ContentEditFeature = {
     },
 };
 
+/**
+ * OutdentWhenShiftTab edit feature, provides the ability to outdent current list when user press Shift+TAB
+ */
 export const OutdentWhenShiftTab: ContentEditFeature = {
     keys: [Keys.TAB],
     shouldHandleEvent: (event, editor) =>
@@ -41,6 +47,10 @@ export const OutdentWhenShiftTab: ContentEditFeature = {
     },
 };
 
+/**
+ * MergeInNewLine edit feature, provides the ability to merge current line into a new line when user press
+ * BACKSPACE at beginning of a list item
+ */
 export const MergeInNewLine: ContentEditFeature = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
@@ -62,6 +72,10 @@ export const MergeInNewLine: ContentEditFeature = {
     },
 };
 
+/**
+ * OutdentWhenBackOn1stEmptyLine edit feature, provides the ability to outdent current item if user press
+ * BACKSPACE at the first and empty line of a list
+ */
 export const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
@@ -71,6 +85,10 @@ export const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
     handleEvent: toggleListAndPreventDefault,
 };
 
+/**
+ * OutdentWhenEnterOnEmptyLine edit feature, provides the ability to outdent current item if user press
+ * ENTER at the beginning of an empty line of a list
+ */
 export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
     keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {
@@ -82,6 +100,11 @@ export const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
     },
 };
 
+/**
+ * AutoBullet edit feature, provides the ablility to automatically convert current line into a list.
+ * When user input "1. ", convert into a numbering list
+ * When user input "- " or "* ", convert into a bullet list
+ */
 export const AutoBullet: ContentEditFeature = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
@@ -131,6 +154,12 @@ export const AutoBullet: ContentEditFeature = {
     },
 };
 
+/**
+ * Get an instance of SmartOrderedList edit feature. This feature provides the ability to use different
+ * number style for different level of numbering list.
+ * @param styleList The list of number styles used for this feature.
+ * See https://www.w3schools.com/cssref/pr_list-style-type.asp for more information
+ */
 export function getSmartOrderedList(
     styleList: string[]
 ): GenericContentEditFeature<ContentChangedEvent> {

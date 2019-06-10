@@ -48,6 +48,9 @@ export interface PluginKeyUpEvent extends BasePluginEvent<PluginEventType.KeyUp>
     rawEvent: KeyboardEvent;
 }
 
+/**
+ * The represents a PluginEvent wrapping native Keyboard event
+ */
 export type PluginKeyboardEvent = PluginKeyDownEvent | PluginKeyPressEvent | PluginKeyUpEvent;
 
 /**

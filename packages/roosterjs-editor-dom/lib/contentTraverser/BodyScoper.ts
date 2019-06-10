@@ -9,7 +9,7 @@ import { getFirstInlineElement } from '../inlineElements/getFirstLastInlineEleme
 /**
  * provides scoper for traversing the entire editor body starting from the beginning
  */
-class BodyScoper implements TraversingScoper {
+export default class BodyScoper implements TraversingScoper {
     private startNode: Node;
 
     /**
@@ -53,5 +53,3 @@ class BodyScoper implements TraversingScoper {
         return inlineElement;
     }
 }
-
-export default BodyScoper;

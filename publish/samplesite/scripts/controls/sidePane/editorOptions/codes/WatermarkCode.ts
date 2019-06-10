@@ -5,17 +5,7 @@ export default class WatermarkCode extends CodeElement {
         super();
     }
 
-    getImports() {
-        return [
-            {
-                name: 'Watermark',
-                path: 'roosterjs-editor-plugins',
-                isDefault: false,
-            },
-        ];
-    }
-
     getCode() {
-        return `new Watermark('${this.encode(this.watermarkText)}')`;
+        return `new roosterjs.Watermark('${this.encode(this.watermarkText)}')`;
     }
 }

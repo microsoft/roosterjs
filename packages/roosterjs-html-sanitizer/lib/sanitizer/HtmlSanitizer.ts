@@ -1,8 +1,8 @@
-import cloneObject from '../utils/cloneObject';
 import getInheritableStyles from '../utils/getInheritableStyles';
 import HtmlSanitizerOptions from '../types/HtmlSanitizerOptions';
 import htmlToDom from '../utils/htmlToDom';
 import SanitizeHtmlOptions from '../types/SanitizeHtmlOptions';
+import { cloneObject } from '../utils/cloneObject';
 import {
     StringMap,
     StyleCallbackMap,
@@ -16,6 +16,11 @@ import {
     getStyleCallbacks,
 } from '../utils/getAllowedValues';
 
+/**
+ * HTML sanitizer class provides two featuers:
+ * 1. Convert global CSS to inline CSS
+ * 2. Sanitize an HTML document, remove unnecessary/dangerous attribute/nodes
+ */
 export default class HtmlSanitizer {
     /**
      * Convert global CSS to inline CSS if any
@@ -58,6 +63,10 @@ export default class HtmlSanitizer {
     private additionalGlobalStyleNodes: HTMLStyleElement[];
     private allowPreserveWhiteSpace: boolean;
 
+    /**
+     * Construct a new instance of HtmlSanitizer
+     * @param options Options for HtmlSanitizer
+     */
     constructor(options?: HtmlSanitizerOptions) {
         options = options || {};
         this.elementCallbacks = cloneObject(options.elementCallbacks);
@@ -97,6 +106,12 @@ export default class HtmlSanitizer {
         return (doc && doc.body && doc.body.innerHTML) || '';
     }
 
+    /**
+     * Sanitize an HTML element, remove unnecessary or dangerous elements/attribute/CSS rules
+     * @param rootNode Root node to sanitize
+     * @param currentStyles Current CSS styles. Inheritable styles in the given node which has
+     * the same value with current styles will be ignored.
+     */
     sanitize(rootNode: HTMLElement, currentStyles?: StringMap) {
         if (!rootNode) {
             return '';
@@ -105,6 +120,10 @@ export default class HtmlSanitizer {
         this.processNode(rootNode, currentStyles, {});
     }
 
+    /**
+     * Convert global CSS into inline CSS
+     * @param rootNode The HTML Document
+     */
     convertGlobalCssToInlineCss(rootNode: HTMLDocument) {
         let styleNodes = toArray(rootNode.querySelectorAll('style'));
         let styleSheets = this.additionalGlobalStyleNodes
