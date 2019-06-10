@@ -30,6 +30,7 @@ import {
     findClosestElementAncestor,
     fromHtml,
     getBlockElementAtNode,
+    getTextContent,
     getInlineElementAtNode,
     getPositionRect,
     getRangeFromSelectionPath,
@@ -409,8 +410,12 @@ export default class Editor {
             if (element.dataset) {
                 // Reset color styles based on the content of the ogsc/ogsb data element.
                 // If those data properties are empty or do not exist, set them anyway to clear the content.
-                element.style.color = this.isDataAttributeSettable(element.dataset.ogsc) ? element.dataset.ogsc : '';
-                element.style.backgroundColor = this.isDataAttributeSettable(element.dataset.ogsb) ? element.dataset.ogsb : '';
+                element.style.color = this.isDataAttributeSettable(element.dataset.ogsc)
+                    ? element.dataset.ogsc
+                    : '';
+                element.style.backgroundColor = this.isDataAttributeSettable(element.dataset.ogsb)
+                    ? element.dataset.ogsb
+                    : '';
 
                 // Some elements might have set attribute colors. We need to reset these as well.
                 if (this.isDataAttributeSettable(element.dataset.ogac)) {
@@ -437,7 +442,7 @@ export default class Editor {
     }
 
     private isDataAttributeSettable(newStyle: string) {
-        return (newStyle && newStyle != "undefined" && newStyle != "null")
+        return newStyle && newStyle != 'undefined' && newStyle != 'null';
     }
 
     /**
@@ -445,7 +450,7 @@ export default class Editor {
      * @returns The text content inside editor
      */
     public getTextContent(): string {
-        return this.core.contentDiv.innerText;
+        return getTextContent(this.core.contentDiv);
     }
 
     /**
@@ -479,7 +484,10 @@ export default class Editor {
 
         // Convert content even if it hasn't changed.
         if (convertToDarkMode) {
-            const convertFunction = this.convertContentToDarkMode(contentDiv, true /* skipRootElement */);
+            const convertFunction = this.convertContentToDarkMode(
+                contentDiv,
+                true /* skipRootElement */
+            );
             if (convertFunction) {
                 convertFunction();
                 contentChanged = true;
@@ -947,7 +955,11 @@ export default class Editor {
         );
 
         this.core.inDarkMode = nextDarkMode;
-        this.core.defaultFormat = calcDefaultFormat(this.core.contentDiv, this.core.defaultFormat, this.core.inDarkMode);
+        this.core.defaultFormat = calcDefaultFormat(
+            this.core.contentDiv,
+            this.core.defaultFormat,
+            this.core.inDarkMode
+        );
 
         if (nextDarkMode) {
             this.setContent(

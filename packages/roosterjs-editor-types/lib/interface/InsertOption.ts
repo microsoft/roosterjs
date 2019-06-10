@@ -26,7 +26,11 @@ export interface InsertOptionBase {
  * The "basic" insertNode related ContentPositions that require no additional parameters to use.
  */
 export interface InsertOptionBasic extends InsertOptionBase {
-    position: ContentPosition.Begin | ContentPosition.End | ContentPosition.Outside | ContentPosition.SelectionStart;
+    position:
+        | ContentPosition.Begin
+        | ContentPosition.End
+        | ContentPosition.Outside
+        | ContentPosition.SelectionStart;
 }
 
 /**
@@ -47,6 +51,4 @@ export interface InsertOptionRange extends InsertOptionBase {
  * In a future revision, this will become strongly typed
  * Only parameters applicable to the given position will be accepted.
  */
-type InsertOption = InsertOptionRange | InsertOptionBasic;
-
-export default InsertOption;
+export type InsertOption = InsertOptionRange | InsertOptionBasic;

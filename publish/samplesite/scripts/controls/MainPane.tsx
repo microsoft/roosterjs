@@ -19,6 +19,7 @@ class MainPane extends MainPaneBase {
 
         this.state = {
             showSidePane: window.location.hash != '',
+            showRibbon: true,
         };
     }
 
@@ -28,11 +29,13 @@ class MainPane extends MainPaneBase {
         return (
             <div className={styles.mainPane}>
                 <TitleBar className={styles.noGrow} />
-                <Ribbon
-                    plugin={plugins.ribbon}
-                    className={styles.noGrow}
-                    ref={plugins.ribbon.refCallback}
-                />
+                {this.state.showRibbon && (
+                    <Ribbon
+                        plugin={plugins.ribbon}
+                        className={styles.noGrow}
+                        ref={plugins.ribbon.refCallback}
+                    />
+                )}
                 <div className={styles.body}>
                     <Editor
                         plugins={getAllPluginArray(this.state.showSidePane)}
@@ -49,15 +52,19 @@ class MainPane extends MainPaneBase {
                                 plugins={getSidePanePluginArray()}
                                 className={`main-pane ${styles.sidePane}`}
                             />
-                            <button className={`side-pane-toggle open ${styles.showSidePane}`} onClick={this.onHideSidePane}>
+                            <button
+                                className={`side-pane-toggle open ${styles.showSidePane}`}
+                                onClick={this.onHideSidePane}>
                                 <div>Hide side pane</div>
                             </button>
                         </>
                     ) : (
-                            <button className={`side-pane-toggle closed ${styles.showSidePane}`} onClick={this.onShowSidePane}>
-                                <div>Show side pane</div>
-                            </button>
-                        )}
+                        <button
+                            className={`side-pane-toggle closed ${styles.showSidePane}`}
+                            onClick={this.onShowSidePane}>
+                            <div>Show side pane</div>
+                        </button>
+                    )}
                 </div>
             </div>
         );
@@ -69,6 +76,12 @@ class MainPane extends MainPaneBase {
 
     updateFormatState() {
         getPlugins().formatState.updateFormatState();
+    }
+
+    setIsRibbonShown(isShown: boolean) {
+        this.setState({
+            showRibbon: isShown,
+        });
     }
 
     private onMouseDown = (e: React.MouseEvent<EventTarget>) => {

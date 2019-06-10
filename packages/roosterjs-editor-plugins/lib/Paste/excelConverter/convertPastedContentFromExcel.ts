@@ -1,5 +1,9 @@
 import { HtmlSanitizer } from 'roosterjs-html-sanitizer';
 
+/**
+ * Convert pasted content from Excel, add borders when source doc doesn't have a border
+ * @param doc HTML Document which contains the content from Excel
+ */
 export default function convertPastedContentFromExcel(doc: HTMLDocument) {
     let sanitizer = new HtmlSanitizer({
         styleCallbacks: {

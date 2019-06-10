@@ -17,11 +17,17 @@ import {
     Keys,
 } from 'roosterjs-editor-core';
 
-// When user type, they may end a link with a puncatuation, i.e. www.bing.com;
-// we need to trim off the trailing puncatuation before turning it to link match
+/**
+ * When user type, they may end a link with a puncatuation, i.e. www.bing.com;
+ * we need to trim off the trailing puncatuation before turning it to link match
+ */
 const TRAILING_PUNCTUATION_REGEX = /[.+=\s:;"',>]+$/i;
 const MINIMUM_LENGTH = 5;
 
+/**
+ * AutoLink edit feature, provides the ability to automatically convert text user typed or pasted
+ * in hyperlink format into a real hyperlink
+ */
 export const AutoLink: GenericContentEditFeature<PluginEvent> = {
     keys: [Keys.ENTER, Keys.SPACE, Keys.CONTENTCHANGED],
     initialize: editor =>
@@ -31,6 +37,10 @@ export const AutoLink: GenericContentEditFeature<PluginEvent> = {
     handleEvent: autoLink,
 };
 
+/**
+ * UnlinkWhenBackspaceAfterLink edit feature, provides the ability to convert a hyperlink back into text
+ * if user presses BACKSPACE right after a hyperlink
+ */
 export const UnlinkWhenBackspaceAfterLink: GenericContentEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: hasLinkBeforeCursor,

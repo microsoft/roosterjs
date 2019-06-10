@@ -15,12 +15,39 @@ import {
     PluginEventType,
 } from 'roosterjs-editor-types';
 
+/**
+ * An interface for editor core plugins.
+ * These plugins are built-in and most of them are not able to be replaced
+ */
 export interface CorePlugins {
+    /**
+     * Edit plugin handles ContentEditFeatures
+     */
     readonly edit: EditPlugin;
+
+    /**
+     * Undo plugin provides the ability to undo/redo
+     */
     readonly undo: UndoService;
+
+    /**
+     * TypeInContainer plugin makes sure user is always type under a container element under editor DIV
+     */
     readonly typeInContainer: TypeInContainerPlugin;
+
+    /**
+     * MouseUp plugin helps generate MouseUp event even mouse is out of editor area
+     */
     readonly mouseUp: MouseUpPlugin;
+
+    /**
+     * DomEvent plugin helps handle additional DOM events such as IME composition, cut, drop.
+     */
     readonly domEvent: DOMEventPlugin;
+
+    /**
+     * FirefoxTypeAfterLink plugin helps workaround a Firefox bug to allow type outside a hyperlink
+     */
     readonly firefoxTypeAfterLink: FirefoxTypeAfterLink;
 }
 

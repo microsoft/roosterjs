@@ -15,7 +15,7 @@ import {
  * of all operations that can happen on an inline element. Other sub inline elements mostly
  * just identify themself for a certain type
  */
-class NodeInlineElement implements InlineElement {
+export default class NodeInlineElement implements InlineElement {
     constructor(private containerNode: Node, private parentBlock: BlockElement) {}
 
     /**
@@ -88,5 +88,3 @@ class NodeInlineElement implements InlineElement {
         applyTextStyle(this.containerNode, styler);
     }
 }
-
-export default NodeInlineElement;

@@ -1,8 +1,20 @@
 import EditorCore, { Select, SelectRange } from '../interfaces/EditorCore';
-import hasFocus from './hasFocus';
 import { Browser, contains, createRange } from 'roosterjs-editor-dom';
+import { hasFocus } from './hasFocus';
 
-const selectRange: SelectRange = (core: EditorCore, range: Range, skipSameRange?: boolean) => {
+/**
+ * Change the editor selection to the given range
+ * @param core The EditorCore object
+ * @param range The range to select
+ * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
+ * in editor, otherwise it will always remove current selection ranage and set to the given one.
+ * This parameter is always treat as true in Edge to avoid some weird runtime exception.
+ */
+export const selectRange: SelectRange = (
+    core: EditorCore,
+    range: Range,
+    skipSameRange?: boolean
+) => {
     if (contains(core.contentDiv, range)) {
         let selection = core.document.defaultView.getSelection();
         if (selection) {
@@ -44,8 +56,6 @@ const selectRange: SelectRange = (core: EditorCore, range: Range, skipSameRange?
 
     return false;
 };
-
-export default selectRange;
 
 /**
  * @deprecated Only for compatibility with existing code, don't use ths function, use selectRange instead
