@@ -3345,9 +3345,9 @@ exports.default = createEditorCore;
 function buildPluginList(corePlugins, plugins) {
     return [
         corePlugins.typeInContainer,
+        corePlugins.edit,
         corePlugins.mouseUp
     ].concat((plugins || []), [
-        corePlugins.edit,
         corePlugins.firefoxTypeAfterLink,
         corePlugins.undo,
         corePlugins.domEvent,
