@@ -47,8 +47,6 @@ export const attachDomEvent: AttachDomEvent = (
     };
 };
 
-export default attachDomEvent;
-
 function isKeyboardEvent(e: UIEvent): e is KeyboardEvent {
     return e.type == 'keydown' || e.type == 'keypress' || e.type == 'keyup';
 }
