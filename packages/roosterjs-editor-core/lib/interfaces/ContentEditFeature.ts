@@ -32,7 +32,6 @@ export const enum Keys {
  */
 export interface GenericContentEditFeature<TEvent extends PluginEvent> {
     keys: number[];
-    initialize?: (editor: Editor) => any;
     shouldHandleEvent: (event: TEvent, editor: Editor) => any;
     handleEvent: (event: TEvent, editor: Editor) => ChangeSource | void;
     allowFunctionKeys?: boolean;

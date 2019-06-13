@@ -1,4 +1,4 @@
-import { Browser, LinkInlineElement, matchLink } from 'roosterjs-editor-dom';
+import { LinkInlineElement, matchLink } from 'roosterjs-editor-dom';
 import { removeLink, replaceWithNode } from 'roosterjs-editor-api';
 import {
     ChangeSource,
@@ -30,9 +30,6 @@ const MINIMUM_LENGTH = 5;
  */
 export const AutoLink: GenericContentEditFeature<PluginEvent> = {
     keys: [Keys.ENTER, Keys.SPACE, Keys.CONTENTCHANGED],
-    initialize: editor =>
-        Browser.isIE &&
-        editor.getDocument().execCommand('AutoUrlDetect', false, <string>(<any>false)),
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
 };
