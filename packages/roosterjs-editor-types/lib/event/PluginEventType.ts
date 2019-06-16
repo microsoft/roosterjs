@@ -63,4 +63,9 @@ export const enum PluginEventType {
      * HTML Input / TextInput event
      */
     Input,
+
+    /**
+     * Pending format state (bold, italic, underline, ... with collapsed selection) is changed
+     */
+    PendingFormatStateChanged,
 }

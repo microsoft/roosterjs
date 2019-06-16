@@ -23,6 +23,7 @@ export { default as BeforePasteEvent } from './event/BeforePasteEvent';
 export { default as ContentChangedEvent } from './event/ContentChangedEvent';
 export { default as EditorReadyEvent } from './event/EditorReadyEvent';
 export { default as ExtractContentEvent } from './event/ExtractContentEvent';
+export { default as PendingFormatStateChangedEvent } from './event/PendingFormatStateChangedEvent';
 export {
     PluginDomEvent,
     PluginCompositionEvent,
