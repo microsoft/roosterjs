@@ -93,10 +93,6 @@ export default class EditPlugin implements EditorPlugin {
      * @param feature The feature to add
      */
     addFeature(feature: GenericContentEditFeature<PluginEvent>) {
-        if (feature.initialize) {
-            feature.initialize(this.editor);
-        }
-
         feature.keys.forEach(key => {
             let array = this.featureMap[key] || [];
             array.push(feature);
