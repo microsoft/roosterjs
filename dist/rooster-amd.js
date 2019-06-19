@@ -2445,9 +2445,6 @@ var EditPlugin = /** @class */ (function () {
      */
     EditPlugin.prototype.addFeature = function (feature) {
         var _this = this;
-        if (feature.initialize) {
-            feature.initialize(this.editor);
-        }
         feature.keys.forEach(function (key) {
             var array = _this.featureMap[key] || [];
             array.push(feature);
@@ -2735,7 +2732,9 @@ exports.default = TypeInContainerPlugin;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var adjustBrowserBehavior_1 = __webpack_require__(/*! ./adjustBrowserBehavior */ "./packages/roosterjs-editor-core/lib/editor/adjustBrowserBehavior.ts");
 var createEditorCore_1 = __webpack_require__(/*! ./createEditorCore */ "./packages/roosterjs-editor-core/lib/editor/createEditorCore.ts");
+var mapPluginEvents_1 = __webpack_require__(/*! ./mapPluginEvents */ "./packages/roosterjs-editor-core/lib/editor/mapPluginEvents.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 /**
  * RoosterJs core editor class
@@ -2761,13 +2760,7 @@ var Editor = /** @class */ (function () {
         // 4. Ensure initial content and its format
         this.setContent(options.initialContent || contentDiv.innerHTML || '');
         // 5. Create event handler to bind DOM events
-        this.eventDisposers = [
-            this.core.api.attachDomEvent(this.core, 'keypress', 1 /* KeyPress */),
-            this.core.api.attachDomEvent(this.core, 'keydown', 0 /* KeyDown */),
-            this.core.api.attachDomEvent(this.core, 'keyup', 2 /* KeyUp */),
-            this.core.api.attachDomEvent(this.core, 'mousedown', 4 /* MouseDown */),
-            this.core.api.attachDomEvent(this.core, !roosterjs_editor_dom_1.Browser.isIE ? 'input' : 'textinput', 11 /* Input */),
-        ];
+        this.eventDisposers = mapPluginEvents_1.default(this.core);
         // 6. Add additional content edit features to the editor if specified
         if (options.additionalEditFeatures) {
             options.additionalEditFeatures.forEach(function (feature) { return _this.addContentEditFeature(feature); });
@@ -2780,19 +2773,7 @@ var Editor = /** @class */ (function () {
             this.contenteditableChanged = true;
         }
         // 8. Do proper change for browsers to disable some browser-specified behaviors.
-        // Catch any possible exception since this should not block the initialization of editor
-        try {
-            // Disable these object resizing for firefox since other browsers don't have these behaviors
-            if (roosterjs_editor_dom_1.Browser.isFirefox) {
-                this.core.document.execCommand("enableObjectResizing" /* EnableObjectResizing */, false, false);
-                this.core.document.execCommand("enableInlineTableEditing" /* EnableInlineTableEditing */, false, false);
-            }
-            else if (roosterjs_editor_dom_1.Browser.isIE) {
-                // Change the default paragraph separater to DIV. This is mainly for IE since its default setting is P
-                this.core.document.execCommand("defaultParagraphSeparator" /* DefaultParagraphSeparator */, false, 'div');
-            }
-        }
-        catch (e) { }
+        adjustBrowserBehavior_1.default();
         // 9. Let plugins know that we are ready
         this.triggerEvent({
             eventType: 9 /* EditorReady */,
@@ -3285,6 +3266,53 @@ exports.default = Editor;
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-core/lib/editor/adjustBrowserBehavior.ts":
+/*!****************************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/editor/adjustBrowserBehavior.ts ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var _a, _b;
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var COMMANDS = roosterjs_editor_dom_1.Browser.isFirefox
+    ? (_a = {},
+        /**
+         * Disable these object resizing for firefox since other browsers don't have these behaviors
+         */
+        _a["enableObjectResizing" /* EnableObjectResizing */] = false,
+        _a["enableInlineTableEditing" /* EnableInlineTableEditing */] = false,
+        _a) : roosterjs_editor_dom_1.Browser.isIE
+    ? (_b = {},
+        /**
+         * Change the default paragraph separater to DIV. This is mainly for IE since its default setting is P
+         */
+        _b["defaultParagraphSeparator" /* DefaultParagraphSeparator */] = 'div',
+        /**
+         * Disable auto link feature in IE since we have our own implementation
+         */
+        _b["AutoUrlDetect" /* AutoUrlDetect */] = false,
+        _b) : {};
+/**
+ * Execute document command to adjust browser default behavior
+ */
+function adjustBrowserBehavior() {
+    Object.keys(COMMANDS).forEach(function (command) {
+        // Catch any possible exception since this should not block the initialization of editor
+        try {
+            document.execCommand(command, false, COMMANDS[command]);
+        }
+        catch (_a) { }
+    });
+}
+exports.default = adjustBrowserBehavior;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-core/lib/editor/createEditorCore.ts":
 /*!***********************************************************************!*\
   !*** ./packages/roosterjs-editor-core/lib/editor/createEditorCore.ts ***!
@@ -3385,6 +3413,40 @@ function createCoreApiMap(map) {
         triggerEvent: map.triggerEvent || triggerEvent_1.triggerEvent,
     };
 }
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-core/lib/editor/mapPluginEvents.ts":
+/*!**********************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/editor/mapPluginEvents.ts ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var _a;
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var EVENT_MAPPING = (_a = {
+        keypress: 1 /* KeyPress */,
+        keydown: 0 /* KeyDown */,
+        keyup: 2 /* KeyUp */,
+        mousedown: 4 /* MouseDown */
+    },
+    _a[roosterjs_editor_dom_1.Browser.isIE ? 'textinput' : 'input'] = 11 /* Input */,
+    _a);
+/**
+ * Map DOM events to editor plugin events
+ * @param core The EditorCore object
+ */
+function mapPluginEvents(core) {
+    return Object.keys(EVENT_MAPPING).map(function (pluginEvent) {
+        return core.api.attachDomEvent(core, pluginEvent, EVENT_MAPPING[pluginEvent]);
+    });
+}
+exports.default = mapPluginEvents;
 
 
 /***/ }),
@@ -7840,10 +7902,6 @@ var MINIMUM_LENGTH = 5;
  */
 exports.AutoLink = {
     keys: [13 /* ENTER */, 32 /* SPACE */, 2048 /* CONTENTCHANGED */],
-    initialize: function (editor) {
-        return roosterjs_editor_dom_1.Browser.isIE &&
-            editor.getDocument().execCommand('AutoUrlDetect', false, false);
-    },
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
 };
