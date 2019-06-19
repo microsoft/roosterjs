@@ -1,13 +1,14 @@
+import adjustBrowserBehavior from './adjustBrowserBehavior';
 import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
+import mapPluginEvents from './mapPluginEvents';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import {
     BlockElement,
     ChangeSource,
     ContentPosition,
     DefaultFormat,
-    DocumentCommand,
     ExtractContentEvent,
     InlineElement,
     InsertOption,
@@ -21,7 +22,6 @@ import {
     Rect,
 } from 'roosterjs-editor-types';
 import {
-    Browser,
     collapseNodes,
     contains,
     ContentTraverser,
@@ -73,17 +73,7 @@ export default class Editor {
         this.setContent(options.initialContent || contentDiv.innerHTML || '');
 
         // 5. Create event handler to bind DOM events
-        this.eventDisposers = [
-            this.core.api.attachDomEvent(this.core, 'keypress', PluginEventType.KeyPress),
-            this.core.api.attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown),
-            this.core.api.attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp),
-            this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
-            this.core.api.attachDomEvent(
-                this.core,
-                !Browser.isIE ? 'input' : 'textinput',
-                PluginEventType.Input
-            ),
-        ];
+        this.eventDisposers = mapPluginEvents(this.core);
 
         // 6. Add additional content edit features to the editor if specified
         if (options.additionalEditFeatures) {
@@ -99,25 +89,7 @@ export default class Editor {
         }
 
         // 8. Do proper change for browsers to disable some browser-specified behaviors.
-        // Catch any possible exception since this should not block the initialization of editor
-        try {
-            // Disable these object resizing for firefox since other browsers don't have these behaviors
-            if (Browser.isFirefox) {
-                this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, <
-                    string
-                >(<any>false));
-                this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <
-                    string
-                >(<any>false));
-            } else if (Browser.isIE) {
-                // Change the default paragraph separater to DIV. This is mainly for IE since its default setting is P
-                this.core.document.execCommand(
-                    DocumentCommand.DefaultParagraphSeparator,
-                    false,
-                    'div'
-                );
-            }
-        } catch (e) {}
+        adjustBrowserBehavior();
 
         // 9. Let plugins know that we are ready
         this.triggerEvent(
