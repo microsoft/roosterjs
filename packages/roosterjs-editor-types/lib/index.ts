@@ -38,6 +38,12 @@ export {
 } from './event/PluginDomEvent';
 export { PluginEvent } from './event/PluginEvent';
 export { PluginEventType } from './event/PluginEventType';
+export {
+    PluginEventData,
+    PluginEventDataGeneric,
+    PluginEventFromType,
+    PluginEventFromTypeGeneric,
+} from './event/PluginEventData';
 
 // Interface
 export { default as BlockElement } from './interface/BlockElement';

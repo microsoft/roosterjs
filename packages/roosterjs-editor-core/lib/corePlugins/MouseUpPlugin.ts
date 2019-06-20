@@ -1,6 +1,6 @@
 import Editor from '../editor/Editor';
 import EditorPlugin from '../interfaces/EditorPlugin';
-import { PluginEvent, PluginEventType, PluginMouseUpEvent } from 'roosterjs-editor-types';
+import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 /**
  * MouseUp Component helps handle mouse up event
@@ -44,12 +44,11 @@ export default class MouseUpPlugin implements EditorPlugin {
         }
     }
 
-    private onMouseUp = (e: MouseEvent) => {
+    private onMouseUp = (rawEvent: MouseEvent) => {
         if (this.editor) {
             this.removeMouseUpEventListener();
-            this.editor.triggerEvent(<PluginMouseUpEvent>{
-                eventType: PluginEventType.MouseUp,
-                rawEvent: e,
+            this.editor.triggerPluginEvent(PluginEventType.MouseUp, {
+                rawEvent,
             });
         }
     };

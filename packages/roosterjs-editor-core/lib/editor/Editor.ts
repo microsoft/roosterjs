@@ -9,12 +9,13 @@ import {
     ChangeSource,
     ContentPosition,
     DefaultFormat,
-    ExtractContentEvent,
     InlineElement,
     InsertOption,
     NodePosition,
     NodeType,
     PluginEvent,
+    PluginEventData,
+    PluginEventFromType,
     PluginEventType,
     PositionType,
     QueryScope,
@@ -92,12 +93,7 @@ export default class Editor {
         adjustBrowserBehavior();
 
         // 9. Let plugins know that we are ready
-        this.triggerEvent(
-            {
-                eventType: PluginEventType.EditorReady,
-            },
-            true /*broadcast*/
-        );
+        this.triggerPluginEvent(PluginEventType.EditorReady, {}, true /*broadcast*/);
 
         // 10. Before give editor to user, make sure there is at least one DIV element to accept typing
         this.core.corePlugins.typeInContainer.ensureTypeInElement(
@@ -109,12 +105,7 @@ export default class Editor {
      * Dispose this editor, dispose all plugins and custom data
      */
     public dispose(): void {
-        this.triggerEvent(
-            {
-                eventType: PluginEventType.BeforeDispose,
-            },
-            true /*broadcast*/
-        );
+        this.triggerPluginEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
 
         this.core.plugins.forEach(plugin => plugin.dispose());
         this.eventDisposers.forEach(disposer => disposer());
@@ -342,12 +333,11 @@ export default class Editor {
         }
 
         if (triggerExtractContentEvent) {
-            let extractContentEvent: ExtractContentEvent = {
-                eventType: PluginEventType.ExtractContent,
-                content: content,
-            };
-            this.triggerEvent(extractContentEvent, true /*broadcast*/);
-            content = extractContentEvent.content;
+            content = this.triggerPluginEvent(
+                PluginEventType.ExtractContent,
+                { content },
+                true /*broadcast*/
+            ).content;
         }
 
         return content;
@@ -624,9 +614,27 @@ export default class Editor {
 
     /**
      * Trigger an event to be dispatched to all plugins
-     * @param pluginEvent The event object to trigger
+     * @param eventType Type of the event
+     * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
      * @param broadcast indicates if the event needs to be dispatched to all plugins
      * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
+     */
+    public triggerPluginEvent<T extends PluginEventType>(
+        eventType: T,
+        data: PluginEventData<T>,
+        broadcast?: boolean
+    ): PluginEventFromType<T> {
+        let event = ({
+            eventType,
+            ...data,
+        } as any) as PluginEventFromType<T>;
+        this.core.api.triggerEvent(this.core, event, broadcast);
+
+        return event;
+    }
+
+    /**
+     * @deprecated Use triggerPluginEvent instead
      */
     public triggerEvent(pluginEvent: PluginEvent, broadcast: boolean = true) {
         this.core.api.triggerEvent(this.core, pluginEvent, broadcast);
@@ -641,11 +649,10 @@ export default class Editor {
         source: ChangeSource | string = ChangeSource.SetContent,
         data?: any
     ) {
-        this.triggerEvent({
-            eventType: PluginEventType.ContentChanged,
-            source: source,
-            data: data,
-        } as PluginEvent);
+        this.triggerPluginEvent(PluginEventType.ContentChanged, {
+            source,
+            data,
+        });
     }
 
     //#endregion
