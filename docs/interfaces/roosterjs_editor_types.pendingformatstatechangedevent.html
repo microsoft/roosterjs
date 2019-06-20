@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>PluginKeyUpEvent | RoosterJs API Reference</title>
+	<title>PendingFormatStateChangedEvent | RoosterJs API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/roosterjs_editor_types.html">roosterjs-editor-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_types.pluginkeyupevent.html">PluginKeyUpEvent</a>
+					<a href="roosterjs_editor_types.pendingformatstatechangedevent.html">PendingFormatStateChangedEvent</a>
 				</li>
 			</ul>
-			<h1>Interface PluginKeyUpEvent</h1>
+			<h1>Interface PendingFormatStateChangedEvent</h1>
 		</div>
 	</div>
 </header>
@@ -68,7 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>This represents a PluginEvent wrapping native KeyUp event</p>
+						<p>An event fired when pending format state (bold, italic, underline, ... with collapsed selection) is changed</p>
 					</div>
 				</div>
 			</section>
@@ -76,10 +76,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="roosterjs_editor_types.basepluginevent.html" class="tsd-signature-type">BasePluginEvent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PluginEventType.KeyUp</span><span class="tsd-signature-symbol">&gt;</span>
+						<a href="roosterjs_editor_types.basepluginevent.html" class="tsd-signature-type">BasePluginEvent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PluginEventType.PendingFormatStateChanged</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">PluginKeyUpEvent</span>
+								<span class="target">PendingFormatStateChangedEvent</span>
 							</li>
 						</ul>
 					</li>
@@ -92,9 +92,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.pluginkeyupevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.pluginkeyupevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.pluginkeyupevent.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.pendingformatstatechangedevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.pendingformatstatechangedevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.pendingformatstatechangedevent.html#formatstate" class="tsd-kind-icon">format<wbr>State</a></li>
 							</ul>
 						</section>
 					</div>
@@ -131,7 +131,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="eventtype" class="tsd-anchor"></a>
 					<h3>event<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">event<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">PluginEventType.KeyUp</span></div>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">PluginEventType.PendingFormatStateChanged</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_editor_types.basepluginevent.html">BasePluginEvent</a>.<a href="roosterjs_editor_types.basepluginevent.html#eventtype">eventType</a></p>
 						<ul>
@@ -145,12 +145,12 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="rawevent" class="tsd-anchor"></a>
-					<h3>raw<wbr>Event</h3>
-					<div class="tsd-signature tsd-kind-icon">raw<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">KeyboardEvent</span></div>
+					<a name="formatstate" class="tsd-anchor"></a>
+					<h3>format<wbr>State</h3>
+					<div class="tsd-signature tsd-kind-icon">format<wbr>State<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.pendableformatstate.html" class="tsd-signature-type">PendableFormatState</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/edf2355/packages/roosterjs-editor-types/lib/event/PluginDomEvent.ts#L48">roosterjs-editor-types/lib/event/PluginDomEvent.ts:48</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/edf2355/packages/roosterjs-editor-types/lib/event/PendingFormatStateChangedEvent.ts#L10">roosterjs-editor-types/lib/event/PendingFormatStateChangedEvent.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -196,16 +196,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="roosterjs_editor_types.pluginkeyupevent.html" class="tsd-kind-icon">Plugin<wbr>Key<wbr>UpEvent</a>
+						<a href="roosterjs_editor_types.pendingformatstatechangedevent.html" class="tsd-kind-icon">Pending<wbr>Format<wbr>State<wbr>Changed<wbr>Event</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_editor_types.pluginkeyupevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
+								<a href="roosterjs_editor_types.pendingformatstatechangedevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_editor_types.pluginkeyupevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
+								<a href="roosterjs_editor_types.pendingformatstatechangedevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.pluginkeyupevent.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a>
+								<a href="roosterjs_editor_types.pendingformatstatechangedevent.html#formatstate" class="tsd-kind-icon">format<wbr>State</a>
 							</li>
 						</ul>
 					</li>

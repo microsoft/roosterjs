@@ -488,27 +488,7 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var PendableFormatCommandMap = {
-    isBold: "bold" /* Bold */,
-    isItalic: "italic" /* Italic */,
-    isUnderline: "underline" /* Underline */,
-    isStrikeThrough: "strikeThrough" /* StrikeThrough */,
-    isSubscript: "subscript" /* Subscript */,
-    isSuperscript: "superscript" /* Superscript */,
-};
-/**
- * Get Pendable Format State at cursor.
- * @param document The HTML Document to get format state from
- * @returns A PendableFormatState object which contains the values of pendable format states
- */
-function getPendableFormatState(document) {
-    var keys = Object.keys(PendableFormatCommandMap);
-    return keys.reduce(function (state, key) {
-        state[key] = document.queryCommandState(PendableFormatCommandMap[key]);
-        return state;
-    }, {});
-}
-exports.getPendableFormatState = getPendableFormatState;
+var roosterjs_editor_dom_2 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 /**
  * Get element based Format State at cursor
  * @param editor The editor instance
@@ -558,7 +538,7 @@ exports.getStyleBasedFormatState = getStyleBasedFormatState;
  * @returns The format state at cursor
  */
 function getFormatState(editor, event) {
-    return __assign({}, getPendableFormatState(editor.getDocument()), getElementBasedFormatState(editor, event), getStyleBasedFormatState(editor), { canUndo: editor.canUndo(), canRedo: editor.canRedo() });
+    return __assign({}, roosterjs_editor_dom_2.getPendableFormatState(editor.getDocument()), getElementBasedFormatState(editor, event), getStyleBasedFormatState(editor), { canUndo: editor.canUndo(), canRedo: editor.canRedo() });
 }
 exports.default = getFormatState;
 
@@ -1325,7 +1305,6 @@ var createLink_1 = __webpack_require__(/*! ./format/createLink */ "./packages/ro
 exports.createLink = createLink_1.default;
 var getFormatState_1 = __webpack_require__(/*! ./format/getFormatState */ "./packages/roosterjs-editor-api/lib/format/getFormatState.ts");
 exports.getFormatState = getFormatState_1.default;
-exports.getPendableFormatState = getFormatState_1.getPendableFormatState;
 exports.getElementBasedFormatState = getFormatState_1.getElementBasedFormatState;
 exports.getStyleBasedFormatState = getFormatState_1.getStyleBasedFormatState;
 var insertImage_1 = __webpack_require__(/*! ./format/insertImage */ "./packages/roosterjs-editor-api/lib/format/insertImage.ts");
@@ -1378,6 +1357,10 @@ var toggleUnderline_1 = __webpack_require__(/*! ./format/toggleUnderline */ "./p
 exports.toggleUnderline = toggleUnderline_1.default;
 var toggleHeader_1 = __webpack_require__(/*! ./format/toggleHeader */ "./packages/roosterjs-editor-api/lib/format/toggleHeader.ts");
 exports.toggleHeader = toggleHeader_1.default;
+// @deprecated the function getPendableFormatState will still be available from
+// roosterjs-editor-dom package, keep export it here just for compatibility
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+exports.getPendableFormatState = roosterjs_editor_dom_1.getPendableFormatState;
 
 
 /***/ }),
@@ -1646,6 +1629,8 @@ function isEmptyBlockUnderTR(block) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var pendableFormatCommands = null;
 /**
  * Execute a document command
  * @param editor The editor instance
@@ -1662,12 +1647,25 @@ function execCommand(editor, command) {
     if (range && range.collapsed) {
         editor.addUndoSnapshot();
         formatter();
+        if (isPendableFormatCommand(command)) {
+            // Trigger PendingFormatStateChanged event since we changed pending format state
+            editor.triggerEvent({
+                eventType: 12 /* PendingFormatStateChanged */,
+                formatState: roosterjs_editor_dom_1.getPendableFormatState(editor.getDocument()),
+            });
+        }
     }
     else {
         editor.addUndoSnapshot(formatter, "Format" /* Format */);
     }
 }
 exports.default = execCommand;
+function isPendableFormatCommand(command) {
+    if (!pendableFormatCommands) {
+        pendableFormatCommands = Object.keys(roosterjs_editor_dom_1.PendableFormatCommandMap).map(function (key) { return roosterjs_editor_dom_1.PendableFormatCommandMap[key]; });
+    }
+    return pendableFormatCommands.indexOf(command) >= 0;
+}
 
 
 /***/ }),
@@ -2199,41 +2197,44 @@ var hasFocus_1 = __webpack_require__(/*! ./hasFocus */ "./packages/roosterjs-edi
  * This parameter is always treat as true in Edge to avoid some weird runtime exception.
  */
 exports.selectRange = function (core, range, skipSameRange) {
-    if (roosterjs_editor_dom_1.contains(core.contentDiv, range)) {
-        var selection = core.document.defaultView.getSelection();
-        if (selection) {
-            var needAddRange = true;
-            if (selection.rangeCount > 0) {
-                // Workaround IE exception 800a025e
-                try {
-                    var currentRange = void 0;
-                    // Do not remove/add range if current selection is the same with target range
-                    // Without this check, execCommand() may fail in Edge since we changed the selection
-                    if ((skipSameRange || roosterjs_editor_dom_1.Browser.isEdge) &&
-                        (currentRange =
-                            selection.rangeCount == 1 ? selection.getRangeAt(0) : null) &&
-                        currentRange.startContainer == range.startContainer &&
-                        currentRange.startOffset == range.startOffset &&
-                        currentRange.endContainer == range.endContainer &&
-                        currentRange.endOffset == range.endOffset) {
-                        needAddRange = false;
-                    }
-                    else {
-                        selection.removeAllRanges();
-                    }
-                }
-                catch (e) { }
-            }
-            if (needAddRange) {
-                selection.addRange(range);
-            }
-            if (!hasFocus_1.hasFocus(core)) {
-                core.cachedSelectionRange = range;
-            }
-            return true;
-        }
+    var selection;
+    var needAddRange = true;
+    if (!roosterjs_editor_dom_1.contains(core.contentDiv, range) ||
+        !(selection = core.document.defaultView.getSelection())) {
+        return false;
     }
-    return false;
+    if (selection.rangeCount > 0) {
+        // Workaround IE exception 800a025e
+        try {
+            var currentRange = void 0;
+            // Do not remove/add range if current selection is the same with target range
+            // Without this check, execCommand() may fail in Edge since we changed the selection
+            if ((skipSameRange || roosterjs_editor_dom_1.Browser.isEdge) &&
+                (currentRange = selection.rangeCount == 1 ? selection.getRangeAt(0) : null) &&
+                currentRange.startContainer == range.startContainer &&
+                currentRange.startOffset == range.startOffset &&
+                currentRange.endContainer == range.endContainer &&
+                currentRange.endOffset == range.endOffset) {
+                needAddRange = false;
+            }
+            else {
+                selection.removeAllRanges();
+            }
+        }
+        catch (e) { }
+    }
+    if (needAddRange) {
+        selection.addRange(range);
+    }
+    if (!hasFocus_1.hasFocus(core)) {
+        core.cachedSelectionRange = range;
+    }
+    if (range.collapsed) {
+        // If selected, and current selection is collapsed,
+        // need to restore pending format state if exists.
+        core.corePlugins.domEvent.restorePendingFormatState();
+    }
+    return true;
 };
 /**
  * @deprecated Only for compatibility with existing code, don't use ths function, use selectRange instead
@@ -2301,6 +2302,7 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
  * 1. IME state management
  * 2. Selection management
  * 3. Cut and Drop management
+ * 4. Pending format state management
  */
 var DOMEventPlugin = /** @class */ (function () {
     function DOMEventPlugin(disableRestoreSelectionOnFocus) {
@@ -2311,6 +2313,28 @@ var DOMEventPlugin = /** @class */ (function () {
             _this.editor.runAsync(function () {
                 _this.editor.addUndoSnapshot(function () { }, e.type == 'cut' ? "Cut" /* Cut */ : "Drop" /* Drop */);
             });
+        };
+        this.onFocus = function () {
+            if (_this.disableRestoreSelectionOnFocus) {
+                if (_this.cachedPosition && _this.cachedFormatState) {
+                    var range = _this.editor.getSelectionRange();
+                    if (range.collapsed &&
+                        roosterjs_editor_dom_1.Position.getStart(range)
+                            .normalize()
+                            .equalTo(_this.cachedPosition)) {
+                        _this.restorePendingFormatState();
+                    }
+                    else {
+                        _this.clear();
+                    }
+                }
+            }
+            else {
+                _this.editor.restoreSavedRange();
+            }
+        };
+        this.onBlur = function () {
+            _this.editor.saveSelectionRange();
         };
     }
     DOMEventPlugin.prototype.getName = function () {
@@ -2329,20 +2353,62 @@ var DOMEventPlugin = /** @class */ (function () {
                         eventType: 3 /* CompositionEnd */,
                         rawEvent: e,
                     });
-                }
+                },
+                // 2. Cut and drop management
+                drop: this.onNativeEvent,
+                cut: this.onNativeEvent,
+                // 3. Selection mangement
+                focus: this.onFocus
             },
-            // 2. Selection mangement
-            _a[roosterjs_editor_dom_1.Browser.isIEOrEdge ? 'beforedeactivate' : 'blur'] = function () { return editor.saveSelectionRange(); },
-            _a.focus = !this.disableRestoreSelectionOnFocus && (function () { return editor.restoreSavedRange(); }),
-            // 3. Cut and drop management
-            _a.drop = this.onNativeEvent,
-            _a.cut = this.onNativeEvent,
+            _a[roosterjs_editor_dom_1.Browser.isIEOrEdge ? 'beforedeactivate' : 'blur'] = this.onBlur,
             _a));
     };
     DOMEventPlugin.prototype.dispose = function () {
         this.disposer();
         this.disposer = null;
         this.editor = null;
+        this.clear();
+    };
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
+    DOMEventPlugin.prototype.onPluginEvent = function (event) {
+        switch (event.eventType) {
+            case 12 /* PendingFormatStateChanged */:
+                // Got PendingFormatStateChagned event, cache current position and pending format
+                this.cachedPosition = this.getCurrentPosition();
+                this.cachedFormatState = event.formatState;
+                break;
+            case 0 /* KeyDown */:
+            case 4 /* MouseDown */:
+            case 6 /* ContentChanged */:
+                // If content or position is changed (by keyboard, mouse, or code),
+                // check if current position is still the same with the cached one (if exist),
+                // and clear cached format if position is changed since it is out-of-date now
+                if (this.cachedPosition &&
+                    !this.cachedPosition.equalTo(this.getCurrentPosition())) {
+                    this.clear();
+                }
+                break;
+        }
+    };
+    /**
+     * Restore cached pending format state (if exist) to current selection
+     */
+    DOMEventPlugin.prototype.restorePendingFormatState = function () {
+        var _this = this;
+        if (this.cachedFormatState) {
+            var formatState_1 = roosterjs_editor_dom_1.getPendableFormatState(this.editor.getDocument());
+            Object.keys(roosterjs_editor_dom_1.PendableFormatCommandMap).forEach(function (key) {
+                if (_this.cachedFormatState[key] != formatState_1[key]) {
+                    _this.editor
+                        .getDocument()
+                        .execCommand(roosterjs_editor_dom_1.PendableFormatCommandMap[key], false, null);
+                }
+            });
+            this.cachedPosition = this.getCurrentPosition();
+        }
     };
     /**
      * Check if editor is in IME input sequence
@@ -2350,6 +2416,14 @@ var DOMEventPlugin = /** @class */ (function () {
      */
     DOMEventPlugin.prototype.isInIME = function () {
         return this.inIme;
+    };
+    DOMEventPlugin.prototype.clear = function () {
+        this.cachedPosition = null;
+        this.cachedFormatState = null;
+    };
+    DOMEventPlugin.prototype.getCurrentPosition = function () {
+        var range = this.editor.getSelectionRange();
+        return range && roosterjs_editor_dom_1.Position.getStart(range).normalize();
     };
     return DOMEventPlugin;
 }());
@@ -5040,6 +5114,9 @@ exports.fromHtml = fromHtml_1.default;
 var getComputedStyles_1 = __webpack_require__(/*! ./utils/getComputedStyles */ "./packages/roosterjs-editor-dom/lib/utils/getComputedStyles.ts");
 exports.getComputedStyles = getComputedStyles_1.default;
 exports.getComputedStyle = getComputedStyles_1.getComputedStyle;
+var getPendableFormatState_1 = __webpack_require__(/*! ./utils/getPendableFormatState */ "./packages/roosterjs-editor-dom/lib/utils/getPendableFormatState.ts");
+exports.getPendableFormatState = getPendableFormatState_1.default;
+exports.PendableFormatCommandMap = getPendableFormatState_1.PendableFormatCommandMap;
 var getTagOfNode_1 = __webpack_require__(/*! ./utils/getTagOfNode */ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts");
 exports.getTagOfNode = getTagOfNode_1.default;
 var isBlockElement_1 = __webpack_require__(/*! ./utils/isBlockElement */ "./packages/roosterjs-editor-dom/lib/utils/isBlockElement.ts");
@@ -7229,6 +7306,62 @@ function getPreviousLeafSibling(rootNode, startNode) {
     return getLeafSibling(rootNode, startNode, false /*isNext*/);
 }
 exports.getPreviousLeafSibling = getPreviousLeafSibling;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-dom/lib/utils/getPendableFormatState.ts":
+/*!***************************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/utils/getPendableFormatState.ts ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * A map from pendable format name to document command
+ */
+exports.PendableFormatCommandMap = {
+    /**
+     * Bold
+     */
+    isBold: "bold" /* Bold */,
+    /**
+     * Italic
+     */
+    isItalic: "italic" /* Italic */,
+    /**
+     * Underline
+     */
+    isUnderline: "underline" /* Underline */,
+    /**
+     * StrikeThrough
+     */
+    isStrikeThrough: "strikeThrough" /* StrikeThrough */,
+    /**
+     * Subscript
+     */
+    isSubscript: "subscript" /* Subscript */,
+    /**
+     * Superscript
+     */
+    isSuperscript: "superscript" /* Superscript */,
+};
+/**
+ * Get Pendable Format State at cursor.
+ * @param document The HTML Document to get format state from
+ * @returns A PendableFormatState object which contains the values of pendable format states
+ */
+function getPendableFormatState(document) {
+    var keys = Object.keys(exports.PendableFormatCommandMap);
+    return keys.reduce(function (state, key) {
+        state[key] = document.queryCommandState(exports.PendableFormatCommandMap[key]);
+        return state;
+    }, {});
+}
+exports.default = getPendableFormatState;
 
 
 /***/ }),

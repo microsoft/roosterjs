@@ -659,6 +659,13 @@ interface ExtractContentEvent extends BasePluginEvent<PluginEventType.ExtractCon
 }
 
     /**
+ * An event fired when pending format state (bold, italic, underline, ... with collapsed selection) is changed
+ */
+interface PendingFormatStateChangedEvent extends BasePluginEvent<PluginEventType.PendingFormatStateChanged> {
+    formatState: PendableFormatState;
+}
+
+    /**
  * This represents a PluginEvent wrapping native browser event
  */
 type PluginDomEvent = PluginCompositionEvent | PluginMouseEvent | PluginKeyboardEvent | PluginInputEvent;
@@ -725,7 +732,7 @@ interface PluginInputEvent extends BasePluginEvent<PluginEventType.Input> {
     /**
  * Editor plugin event interface
  */
-type PluginEvent = BeforePasteEvent | ContentChangedEvent | ExtractContentEvent | PluginDomEvent | EditorReadyEvent | BeforeDisposeEvent;
+type PluginEvent = BeforePasteEvent | ContentChangedEvent | ExtractContentEvent | PluginDomEvent | EditorReadyEvent | BeforeDisposeEvent | PendingFormatStateChangedEvent;
 
     /**
  * Editor plugin event type
@@ -780,7 +787,11 @@ const enum PluginEventType {
     /**
      * HTML Input / TextInput event
      */
-    Input = 11
+    Input = 11,
+    /**
+     * Pending format state (bold, italic, underline, ... with collapsed selection) is changed
+     */
+    PendingFormatStateChanged = 12
 }
 
     /**
@@ -1740,6 +1751,25 @@ function getComputedStyles(node: Node, styleNames?: string | string[]): string[]
  * @returns The style value
  */
 function getComputedStyle(node: Node, styleName: string): string;
+
+    /**
+ * Get Pendable Format State at cursor.
+ * @param document The HTML Document to get format state from
+ * @returns A PendableFormatState object which contains the values of pendable format states
+ */
+function getPendableFormatState(document: Document): PendableFormatState;
+
+    /**
+ * A map from pendable format name to document command
+ */
+const PendableFormatCommandMap: {
+    [key in PendableFormatNames]: DocumentCommand;
+};
+
+    /**
+ * Names of Pendable formats
+ */
+type PendableFormatNames = keyof PendableFormatState;
 
     /**
  * Get the html tag of a node, or empty if it is not an element
@@ -3027,22 +3057,38 @@ class MouseUpPlugin implements EditorPlugin  {
  * 1. IME state management
  * 2. Selection management
  * 3. Cut and Drop management
+ * 4. Pending format state management
  */
 class DOMEventPlugin implements EditorPlugin  {
     private disableRestoreSelectionOnFocus;
     private editor;
     private inIme;
     private disposer;
+    private cachedPosition;
+    private cachedFormatState;
     constructor(disableRestoreSelectionOnFocus: boolean);
     getName(): string;
     initialize(editor: Editor): void;
     dispose(): void;
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
+    onPluginEvent(event: PluginEvent): void;
+    /**
+     * Restore cached pending format state (if exist) to current selection
+     */
+    restorePendingFormatState(): void;
     /**
      * Check if editor is in IME input sequence
      * @returns True if editor is in IME input sequence, otherwise false
      */
     isInIME(): boolean;
     private onNativeEvent;
+    private onFocus;
+    private onBlur;
+    private clear;
+    private getCurrentPosition;
 }
 
     /**
@@ -3211,13 +3257,6 @@ function createLink(editor: Editor, link: string, altText?: string, displayText?
  * @returns The format state at cursor
  */
 function getFormatState(editor: Editor, event?: PluginEvent): FormatState;
-
-    /**
- * Get Pendable Format State at cursor.
- * @param document The HTML Document to get format state from
- * @returns A PendableFormatState object which contains the values of pendable format states
- */
-function getPendableFormatState(document: Document): PendableFormatState;
 
     /**
  * Get element based Format State at cursor

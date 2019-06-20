@@ -73,6 +73,7 @@
 							<li>IME state management</li>
 							<li>Selection management</li>
 							<li>Cut and Drop management</li>
+							<li>Pending format state management</li>
 						</ol>
 					</div>
 				</div>
@@ -108,6 +109,8 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#initialize" class="tsd-kind-icon">initialize</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#isinime" class="tsd-kind-icon">is<wbr>InIME</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_core.domeventplugin.html#restorependingformatstate" class="tsd-kind-icon">restore<wbr>Pending<wbr>Format<wbr>State</a></li>
 							</ul>
 						</section>
 					</div>
@@ -125,7 +128,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/23c8521/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L15">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/edf2355/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L31">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:31</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -151,7 +154,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/23c8521/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L47">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/edf2355/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L63">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:63</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -168,7 +171,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/23c8521/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L19">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/edf2355/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L35">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:35</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -185,7 +188,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/23c8521/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L23">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/edf2355/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L39">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:39</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -208,7 +211,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/23c8521/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L57">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/edf2355/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L118">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:118</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -218,6 +221,59 @@
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 							<p>True if editor is in IME input sequence, otherwise false</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="onpluginevent" class="tsd-anchor"></a>
+					<h3>on<wbr>Plugin<wbr>Event</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Plugin<wbr>Event<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/edf2355/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L74">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:74</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Handle events triggered from editor</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>event: <a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type">PluginEvent</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>PluginEvent object</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="restorependingformatstate" class="tsd-anchor"></a>
+					<h3>restore<wbr>Pending<wbr>Format<wbr>State</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">restore<wbr>Pending<wbr>Format<wbr>State<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/edf2355/packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts#L100">roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts:100</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Restore cached pending format state (if exist) to current selection</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -279,6 +335,12 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="roosterjs_editor_core.domeventplugin.html#isinime" class="tsd-kind-icon">is<wbr>InIME</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_core.domeventplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_core.domeventplugin.html#restorependingformatstate" class="tsd-kind-icon">restore<wbr>Pending<wbr>Format<wbr>State</a>
 							</li>
 						</ul>
 					</li>
