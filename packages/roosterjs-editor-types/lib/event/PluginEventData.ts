@@ -32,7 +32,3 @@ export type PluginEventDataGeneric<
  * A type to extract data part of a plugin event type. Data part is the plugin event without eventType field.
  */
 export type PluginEventData<T extends PluginEventType> = PluginEventDataGeneric<PluginEvent, T>;
-// export type PluginEventData<T extends PluginEventType> = Pick<
-//     PluginEventFromType<T>,
-//     Exclude<keyof PluginEventFromType<T>, 'eventType'>
-// >;

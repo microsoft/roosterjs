@@ -618,6 +618,8 @@ export default class Editor {
      * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
      * @param broadcast indicates if the event needs to be dispatched to all plugins
      * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
+     * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
+     * the result of this function provides a chance to read the modified result
      */
     public triggerPluginEvent<T extends PluginEventType>(
         eventType: T,
