@@ -55,7 +55,7 @@ export default class DOMEventPlugin implements EditorPlugin {
             cut: this.onNativeEvent,
 
             // 3. Selection mangement
-            focus: !this.disableRestoreSelectionOnFocus && this.onFocus,
+            focus: this.onFocus,
             [Browser.isIEOrEdge ? 'beforedeactivate' : 'blur']: this.onBlur,
         });
     }
@@ -129,20 +129,22 @@ export default class DOMEventPlugin implements EditorPlugin {
     };
 
     private onFocus = () => {
-        this.editor.restoreSavedRange();
-
-        if (this.cachedPosition && this.cachedFormatState && this.editor) {
-            let range = this.editor.getSelectionRange();
-            if (
-                range.collapsed &&
-                Position.getStart(range)
-                    .normalize()
-                    .equalTo(this.cachedPosition)
-            ) {
-                this.restorePendingFormatState();
-            } else {
-                this.clear();
+        if (this.disableRestoreSelectionOnFocus) {
+            if (this.cachedPosition && this.cachedFormatState) {
+                let range = this.editor.getSelectionRange();
+                if (
+                    range.collapsed &&
+                    Position.getStart(range)
+                        .normalize()
+                        .equalTo(this.cachedPosition)
+                ) {
+                    this.restorePendingFormatState();
+                } else {
+                    this.clear();
+                }
             }
+        } else {
+            this.editor.restoreSavedRange();
         }
     };
 

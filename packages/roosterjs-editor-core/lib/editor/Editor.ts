@@ -494,15 +494,7 @@ export default class Editor {
 
     public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
         let range = arg1 instanceof Range ? arg1 : createRange(arg1, arg2, arg3, arg4);
-        let result = this.contains(range) && this.core.api.selectRange(this.core, range);
-
-        if (result && range.collapsed) {
-            // If selected, and current selection is collapsed,
-            // need to restore pending format state if exists.
-            this.core.corePlugins.domEvent.restorePendingFormatState();
-        }
-
-        return result;
+        return this.contains(range) && this.core.api.selectRange(this.core, range);
     }
 
     /**
