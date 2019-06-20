@@ -158,6 +158,7 @@ export default class DOMEventPlugin implements EditorPlugin {
     }
 
     private getCurrentPosition() {
-        return Position.getStart(this.editor.getSelectionRange()).normalize();
+        let range = this.editor.getSelectionRange();
+        return range && Position.getStart(range).normalize();
     }
 }
