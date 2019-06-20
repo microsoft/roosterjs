@@ -15,46 +15,52 @@ export const selectRange: SelectRange = (
     range: Range,
     skipSameRange?: boolean
 ) => {
-    if (contains(core.contentDiv, range)) {
-        let selection = core.document.defaultView.getSelection();
-        if (selection) {
-            let needAddRange = true;
+    let selection: Selection;
+    let needAddRange = true;
 
-            if (selection.rangeCount > 0) {
-                // Workaround IE exception 800a025e
-                try {
-                    let currentRange: Range;
-                    // Do not remove/add range if current selection is the same with target range
-                    // Without this check, execCommand() may fail in Edge since we changed the selection
-                    if (
-                        (skipSameRange || Browser.isEdge) &&
-                        (currentRange =
-                            selection.rangeCount == 1 ? selection.getRangeAt(0) : null) &&
-                        currentRange.startContainer == range.startContainer &&
-                        currentRange.startOffset == range.startOffset &&
-                        currentRange.endContainer == range.endContainer &&
-                        currentRange.endOffset == range.endOffset
-                    ) {
-                        needAddRange = false;
-                    } else {
-                        selection.removeAllRanges();
-                    }
-                } catch (e) {}
-            }
-
-            if (needAddRange) {
-                selection.addRange(range);
-            }
-
-            if (!hasFocus(core)) {
-                core.cachedSelectionRange = range;
-            }
-
-            return true;
-        }
+    if (
+        !contains(core.contentDiv, range) ||
+        !(selection = core.document.defaultView.getSelection())
+    ) {
+        return false;
     }
 
-    return false;
+    if (selection.rangeCount > 0) {
+        // Workaround IE exception 800a025e
+        try {
+            let currentRange: Range;
+            // Do not remove/add range if current selection is the same with target range
+            // Without this check, execCommand() may fail in Edge since we changed the selection
+            if (
+                (skipSameRange || Browser.isEdge) &&
+                (currentRange = selection.rangeCount == 1 ? selection.getRangeAt(0) : null) &&
+                currentRange.startContainer == range.startContainer &&
+                currentRange.startOffset == range.startOffset &&
+                currentRange.endContainer == range.endContainer &&
+                currentRange.endOffset == range.endOffset
+            ) {
+                needAddRange = false;
+            } else {
+                selection.removeAllRanges();
+            }
+        } catch (e) {}
+    }
+
+    if (needAddRange) {
+        selection.addRange(range);
+    }
+
+    if (!hasFocus(core)) {
+        core.cachedSelectionRange = range;
+    }
+
+    if (range.collapsed) {
+        // If selected, and current selection is collapsed,
+        // need to restore pending format state if exists.
+        core.corePlugins.domEvent.restorePendingFormatState();
+    }
+
+    return true;
 };
 
 /**

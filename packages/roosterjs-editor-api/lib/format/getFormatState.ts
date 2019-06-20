@@ -1,42 +1,13 @@
 import { cacheGetElementAtCursor, Editor } from 'roosterjs-editor-core';
 import { getComputedStyles, getTagOfNode, Position } from 'roosterjs-editor-dom';
+import { getPendableFormatState } from 'roosterjs-editor-dom';
 import {
-    DocumentCommand,
     ElementBasedFormatState,
     FormatState,
-    PendableFormatState,
     PluginEvent,
     QueryScope,
     StyleBasedFormatState,
 } from 'roosterjs-editor-types';
-
-type PendableFormatNames = keyof PendableFormatState;
-
-const PendableFormatCommandMap: { [key in PendableFormatNames]: DocumentCommand } = {
-    isBold: DocumentCommand.Bold,
-    isItalic: DocumentCommand.Italic,
-    isUnderline: DocumentCommand.Underline,
-    isStrikeThrough: DocumentCommand.StrikeThrough,
-    isSubscript: DocumentCommand.Subscript,
-    isSuperscript: DocumentCommand.Superscript,
-};
-
-/**
- * Get Pendable Format State at cursor.
- * @param document The HTML Document to get format state from
- * @returns A PendableFormatState object which contains the values of pendable format states
- */
-export function getPendableFormatState(document: Document): PendableFormatState {
-    let keys = Object.keys(PendableFormatCommandMap) as PendableFormatNames[];
-
-    return keys.reduce(
-        (state, key) => {
-            state[key] = document.queryCommandState(PendableFormatCommandMap[key]);
-            return state;
-        },
-        <PendableFormatState>{}
-    );
-}
 
 /**
  * Get element based Format State at cursor
