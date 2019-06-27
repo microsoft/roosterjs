@@ -15,6 +15,7 @@ import {
     PluginEventType,
     PositionType,
     ChangeSource,
+    PluginInputEvent,
 } from 'roosterjs-editor-types';
 
 // Character codes.
@@ -29,6 +30,7 @@ const UP_ARROW_CHARCODE = !Browser.isIE ? 'ArrowUp' : 'Up';
 const RIGHT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowRight' : 'Right';
 const DOWN_ARROW_CHARCODE = !Browser.isIE ? 'ArrowDown' : 'Down';
 const DELETE_CHARCODE = !Browser.isIE ? 'Delete' : 'Del';
+const IS_ANDROID = Browser.isAndroid || false;
 
 // Input event input types.
 const DELETE_CONTENT_BACKWARDS_INPUT_TYPE = 'deleteContentBackwards';
@@ -173,17 +175,16 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         }
 
         // On Android, a keyboard event's key will be "undefined", so ignore
-        // in all cases where the key is checked against
-        if (event.eventType == PluginEventType.KeyDown && !Browser.isAndroid) {
+        // onKeyDownEvent and handle below (see onAndroidInputEvent)
+        if (event.eventType == PluginEventType.KeyDown && !IS_ANDROID) {
             this.eventHandledOnKeyDown = false;
             this.onKeyDownEvent(event);
         }
+
         if (
             event.eventType == PluginEventType.KeyUp &&
             !this.eventHandledOnKeyDown &&
-            (!Browser.isAndroid &&
-                (isCharacterValue(event.rawEvent) ||
-                    (this.isSuggesting && !isModifierKey(event.rawEvent))))
+            this.shouldHandleKeyUpEvent(event)
         ) {
             this.onKeyUpDomEvent(event);
         } else if (event.eventType == PluginEventType.MouseUp) {
@@ -192,19 +193,38 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             }
         }
 
-        // Replacement logic for the Android key case
-        if (event.eventType == PluginEventType.Input && Browser.isAndroid) {
-            const wordBeforCursor = this.getWordBeforeCursor(event);
-            this.newInputLength = wordBeforCursor ? wordBeforCursor.length : 0;
-            if (
-                this.newInputLength < this.currentInputLength ||
-                (event.rawEvent as InputEvent).inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE
-            ) {
-                this.removeNode(event);
-            }
-
-            this.currentInputLength = this.newInputLength;
+        // Backspace for the Android case
+        if (event.eventType == PluginEventType.Input && IS_ANDROID) {
+            this.onAndroidInputEvent(event);
         }
+    }
+
+    private onAndroidInputEvent(event: PluginInputEvent) {
+        const wordBeforCursor = this.getWordBeforeCursor(event);
+        this.newInputLength = wordBeforCursor ? wordBeforCursor.length : 0;
+        if (
+            this.newInputLength < this.currentInputLength ||
+            (event.rawEvent as any).inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE
+        ) {
+            this.removeNode(event);
+        }
+
+        this.currentInputLength = this.newInputLength;
+    }
+
+    private shouldHandleKeyUpEvent(event: PluginKeyboardEvent) {
+        // onKeyUpDomEvent should only be called when a key that produces a character value is pressed
+        // This check will always fail in Android because the keyboard event's key is "undefined"
+        // However, we don't need to check for modifier events on mobile, so can ignore this check
+
+        if (IS_ANDROID) {
+            return true;
+        }
+
+        return (
+            isCharacterValue(event.rawEvent) ||
+            (this.isSuggesting && !isModifierKey(event.rawEvent))
+        );
     }
 
     private setLastKnownRange(range: Range) {
