@@ -6,6 +6,7 @@ import isNodeAfter from '../utils/isNodeAfter';
 import wrap from '../utils/wrap';
 import { BlockElement } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
+import createRange from '../selection/createRange';
 
 const STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
 
@@ -18,7 +19,7 @@ const STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
  * This start and end must be in same sibling level and have same parent in DOM tree
  */
 export default class StartEndBlockElement implements BlockElement {
-    constructor(private rootNode: Node, private startNode: Node, private endNode: Node) {}
+    constructor(private rootNode: Node, private startNode: Node, private endNode: Node) { }
 
     static getBlockContext(node: Node): HTMLElement {
         while (node && !isBlockElement(node)) {
@@ -93,5 +94,12 @@ export default class StartEndBlockElement implements BlockElement {
             contains(this.endNode, node, true /*treatSameNodeAsContain*/) ||
             (isNodeAfter(node, this.startNode) && isNodeAfter(this.endNode, node))
         );
+    }
+
+    /**
+     * Get the text content of this block element
+     */
+    public getTextContent(): string {
+        return createRange(this.getStartNode(), this.getEndNode()).toString();
     }
 }

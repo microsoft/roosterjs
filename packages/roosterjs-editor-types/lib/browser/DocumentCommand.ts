@@ -4,6 +4,11 @@
  */
 export const enum DocumentCommand {
     /**
+     * Changes the browser auto-link behavior (Internet Explorer only)
+     */
+    AutoUrlDetect = 'AutoUrlDetect',
+
+    /**
      * Changes the document background color. In styleWithCss mode, it affects the background color of the containing block instead.
      * This requires a &lt;color&gt; value string to be passed in as a value argument. Note that Internet Explorer uses this to set the
      * text background color.
