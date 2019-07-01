@@ -128,9 +128,10 @@ describe('getBrowserData', () => {
         );
     });
 
-    it('Android Pixel 2XL', () => {
+    it('Chrome on Android Pixel 2XL', () => {
         runBrowserDataTest(
             'Mozilla/5.0 (Linux; Android 9; Pixel 2 XL Build/PQ2A.190405.003; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/75.0.3770.101 Mobile Safari/537.36',
+            '5.0 (Linux; Android 9; Android SDK built for x86 Build/PSR1.180720.075; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/69.0.3497.100 Mobile Safari/537.36',
             {
                 isChrome: true,
                 isEdge: false,
