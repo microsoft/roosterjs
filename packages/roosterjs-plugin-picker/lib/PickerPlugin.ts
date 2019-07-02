@@ -9,6 +9,7 @@ import {
     PluginInputEvent,
     PluginKeyboardEvent,
     PositionType,
+    PluginDomEvent,
 } from 'roosterjs-editor-types';
 import {
     cacheGetContentSearcher,
@@ -30,13 +31,12 @@ const UP_ARROW_CHARCODE = !Browser.isIE ? 'ArrowUp' : 'Up';
 const RIGHT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowRight' : 'Right';
 const DOWN_ARROW_CHARCODE = !Browser.isIE ? 'ArrowDown' : 'Down';
 const DELETE_CHARCODE = !Browser.isIE ? 'Delete' : 'Del';
-const IS_ANDROID = Browser.isAndroid || false;
-
-// Key codes.
-const UNDEFINED_KEYCODE = 229;
 
 // Input event input types.
 const DELETE_CONTENT_BACKWARDS_INPUT_TYPE = 'deleteContentBackwards';
+
+// Device check for Android, which has special handling.
+const IS_ANDROID = Browser.isAndroid || false;
 
 /**
  * Interface for PickerPlugin
@@ -65,8 +65,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     private isSuggesting: boolean;
     private lastKnownRange: Range;
 
-    // For detecting backspace in Android, we use InputEvent instead of
-    // KeyboardEvent since its key can be "undefined"
+    // For detecting backspace in Android
     private currentInputLength: number;
     private newInputLength: number;
 
@@ -178,7 +177,9 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             );
             this.dataProvider.onContentChanged(elementIds);
         }
-        if (event.eventType == PluginEventType.KeyDown && !this.isAndroid(event)) {
+        if (event.eventType == PluginEventType.KeyDown && !IS_ANDROID) {
+            // On Android, the key for KeyboardEvent is "undefined",
+            // so ignore onKeyDownEvent and handle with InputEvent instead
             this.eventHandledOnKeyDown = false;
             this.onKeyDownEvent(event);
         }
@@ -195,7 +196,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             }
         }
 
-        if (event.eventType == PluginEventType.Input && this.isAndroid()) {
+        if (event.eventType == PluginEventType.Input && IS_ANDROID) {
             this.onAndroidInputEvent(event);
         }
     }
@@ -216,7 +217,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         this.setAriaActiveDescendant(isSuggesting ? 0 : null);
     }
 
-    private handleKeyDownEvent(event: any) {
+    private handleKeyDownEvent(event: PluginDomEvent) {
         this.eventHandledOnKeyDown = true;
         event.rawEvent.preventDefault();
         event.rawEvent.stopImmediatePropagation();
@@ -271,14 +272,10 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
     private shouldHandleKeyUpEvent(event: PluginKeyboardEvent) {
         // onKeyUpDomEvent should only be called when a key that produces a character value is pressed
-        // This check will always fail in Android because the keyboard event's key is "undefined"
+        // This check will always fail on Android since the KeyboardEvent's key is "undefined"
         // However, we don't need to check for modifier events on mobile, so can ignore this check
-
-        if (this.isAndroid()) {
-            return true;
-        }
-
         return (
+            IS_ANDROID ||
             isCharacterValue(event.rawEvent) ||
             (this.isSuggesting && !isModifierKey(event.rawEvent))
         );
@@ -431,29 +428,20 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         }
     }
 
-    private isAndroid(keyboardEvent?: PluginKeyboardEvent): boolean {
-        return IS_ANDROID
-            ? true
-            : keyboardEvent && keyboardEvent.rawEvent.keyCode === UNDEFINED_KEYCODE
-            ? true
-            : false;
-    }
-
     private onAndroidInputEvent(event: PluginInputEvent) {
         const wordBeforCursor = this.getWordBeforeCursor(event);
         this.newInputLength = wordBeforCursor ? wordBeforCursor.length : 0;
-        if (this.newInputLength < this.currentInputLength) {
+        if (
+            this.newInputLength < this.currentInputLength ||
+            event.rawEvent.inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE
+        ) {
             this.removeNode(event);
         }
 
         this.currentInputLength = this.newInputLength;
-
-        if ((event.rawEvent as any).inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE) {
-            this.removeNode(event);
-        }
     }
 
-    private removeNode(event: PluginEvent) {
+    private removeNode(event: PluginDomEvent) {
         const searcher = cacheGetContentSearcher(event, this.editor);
         let nodeBeforeCursor = searcher.getInlineElementBefore()
             ? searcher.getInlineElementBefore().getContainerNode()
