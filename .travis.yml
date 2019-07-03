@@ -3,7 +3,7 @@ sudo: required
 addons:
     chrome: stable
 node_js:
-    - 9
+    - 10
 before_install:
     - yarn
     - cd publish/samplesite/instrumentation-tests && yarn && cd ../../..
