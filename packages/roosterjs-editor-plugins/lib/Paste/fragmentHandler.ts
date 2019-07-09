@@ -1,5 +1,6 @@
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
+import convertPastedContentFromWac, { isWAC } from './wacConverter/convertPastedContentFromWac';
 import { getTagOfNode } from 'roosterjs-editor-dom';
 import { splitWithFragment } from 'roosterjs-html-sanitizer';
 
@@ -21,6 +22,8 @@ export default function fragmentHandler(doc: HTMLDocument, source: string) {
             // Handle HTML copied from MS Word
             doc.body.innerHTML = html;
             convertPastedContentFromWord(doc);
+        } else if (isWAC(firstNode)) {
+            convertPastedContentFromWac(doc);
         } else if (firstNode.getAttribute(EXCEL_ATTRIBUTE_NAME) == EXCEL_ATTRIBUTE_VALUE) {
             // Handle HTML copied from MS Excel
             if (html.match(LAST_TD_END_REGEX)) {
