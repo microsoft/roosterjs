@@ -23,6 +23,7 @@ export default function fragmentHandler(doc: HTMLDocument, source: string) {
             doc.body.innerHTML = html;
             convertPastedContentFromWord(doc);
         } else if (isWAC(firstNode)) {
+            // The WAC converter only supports word for now.
             convertPastedContentFromWac(doc);
         } else if (firstNode.getAttribute(EXCEL_ATTRIBUTE_NAME) == EXCEL_ATTRIBUTE_VALUE) {
             // Handle HTML copied from MS Excel

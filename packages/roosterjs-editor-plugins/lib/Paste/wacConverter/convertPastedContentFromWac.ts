@@ -19,7 +19,7 @@ export function isWAC(node: HTMLElement): boolean {
  * Convert text copied from word online into text that's workable with rooster editor
  * @param doc Document that is being pasted into editor.
  */
-export default function convertPastedContentFromWord(doc: HTMLDocument) {
+export default function convertPastedContentFromWac(doc: HTMLDocument) {
     // From word online rows are wrapped with OutlineGroup class, which
     // makes each row not direct siblings. For the ease of converting,
     // the following code flatens the row elements and make them direct
