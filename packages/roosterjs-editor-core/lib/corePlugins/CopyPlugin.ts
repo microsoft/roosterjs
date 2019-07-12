@@ -1,7 +1,7 @@
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 
 /**
- * Paste plugin, handles onPaste event and paste content into editor
+ * Copy plugin, hijacks copy events to normalize the content to the clipboard.
  */
 export default class CopyPlugin implements EditorPlugin {
     private editor: Editor;
