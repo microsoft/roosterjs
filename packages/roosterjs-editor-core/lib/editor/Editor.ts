@@ -64,6 +64,9 @@ export default class Editor {
             throw new Error('contentDiv must be an HTML DIV element');
         }
 
+        // 1a. REMOVE THIS PLEASE DON'T CHECK IN YOU BADDY
+        options.inDarkMode = true;
+
         // 2. Store options values to local variables
         this.core = createEditorCore(contentDiv, options);
 
@@ -374,7 +377,7 @@ export default class Editor {
         return content;
     }
 
-    private getColorNormalizedContent(content: string): string {
+    public getColorNormalizedContent(content: string): string {
         let el = document.createElement('div');
         el.innerHTML = content;
         const allChildElements = el.getElementsByTagName('*') as HTMLCollectionOf<HTMLElement>;
