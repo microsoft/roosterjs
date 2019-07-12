@@ -213,11 +213,15 @@ function insertConvertedListToDoc(convertedListElement: Element, rootElement: El
     const { insertPositionElement } = listItemBlock;
     if (insertPositionElement) {
         const { parentElement } = insertPositionElement;
-        parentElement && parentElement.insertBefore(convertedListElement, insertPositionElement);
+        if (parentElement) {
+            parentElement.insertBefore(convertedListElement, insertPositionElement);
+        }
     } else {
         const { parentElement } = listItemBlock.startElement;
-        parentElement
-            ? parentElement.appendChild(convertedListElement)
-            : rootElement.append(convertedListElement);
+        if (parentElement) {
+            parentElement.appendChild(convertedListElement)
+        } else {
+            rootElement.append(convertedListElement);
+        }
     }
 }
