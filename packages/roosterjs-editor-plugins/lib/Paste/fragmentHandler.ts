@@ -1,6 +1,6 @@
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
-import convertPastedContentFromWac, { isWAC } from './wacConverter/convertPastedContentFromWac';
+import convertPastedContentFromWordOnline, { isWordOnlineWithList } from './officeOnlineConverter/convertPastedContentFromWordOnline';
 import { getTagOfNode } from 'roosterjs-editor-dom';
 import { splitWithFragment } from 'roosterjs-html-sanitizer';
 
@@ -22,9 +22,10 @@ export default function fragmentHandler(doc: HTMLDocument, source: string) {
             // Handle HTML copied from MS Word
             doc.body.innerHTML = html;
             convertPastedContentFromWord(doc);
-        } else if (isWAC(firstNode)) {
-            // The WAC converter only supports word for now.
-            convertPastedContentFromWac(doc);
+        } else if (isWordOnlineWithList(firstNode)) {
+            // call conversion function if the pasted content is from word online and
+            // has list element in the pasted content.
+            convertPastedContentFromWordOnline(doc);
         } else if (firstNode.getAttribute(EXCEL_ATTRIBUTE_NAME) == EXCEL_ATTRIBUTE_VALUE) {
             // Handle HTML copied from MS Excel
             if (html.match(LAST_TD_END_REGEX)) {
