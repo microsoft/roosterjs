@@ -57,4 +57,11 @@ export default interface EditorOptions {
      * Additional content edit features
      */
     additionalEditFeatures?: GenericContentEditFeature<PluginEvent>[];
+
+    /**
+     * Initial custom data.
+     * Use this option to set custom data before any plugin is initialized,
+     * so that plugins can access the custom data safely
+     */
+    customData?: { [key: string]: any };
 }

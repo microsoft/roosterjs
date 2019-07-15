@@ -9,6 +9,7 @@ import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import Undo from '../undo/Undo';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
 import { Browser, getComputedStyles } from 'roosterjs-editor-dom';
+import { CustomDataSet } from '../interfaces/CustomData';
 import { DefaultFormat } from 'roosterjs-editor-types';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
@@ -46,7 +47,7 @@ export default function createEditorCore(
         defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
         corePlugins,
         currentUndoSnapshot: null,
-        customData: {},
+        customData: createCustomData(options.customData || {}),
         cachedSelectionRange: null,
         plugins: allPlugins,
         eventHandlerPlugins: eventHandlerPlugins,
@@ -100,4 +101,17 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
         selectRange: map.selectRange || selectRange,
         triggerEvent: map.triggerEvent || triggerEvent,
     };
+}
+
+function createCustomData(initValue: { [key: string]: any }): CustomDataSet {
+    let result: CustomDataSet = {};
+
+    Object.keys(initValue).forEach(key => {
+        result[key] = {
+            value: initValue[key],
+            disposer: null,
+        };
+    });
+
+    return result;
 }

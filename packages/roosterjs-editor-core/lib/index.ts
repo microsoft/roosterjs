@@ -4,6 +4,7 @@ export {
     GenericContentEditFeature,
     Keys,
 } from './interfaces/ContentEditFeature';
+export { default as CustomData, CustomDataSet } from './interfaces/CustomData';
 export {
     default as EditorCore,
     CorePlugins,

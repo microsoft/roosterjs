@@ -5,6 +5,7 @@ import FirefoxTypeAfterLink from '../corePlugins/FirefoxTypeAfterLink';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoService from './UndoService';
+import { CustomDataSet } from './CustomData';
 import {
     ChangeSource,
     DefaultFormat,
@@ -87,12 +88,7 @@ export default interface EditorCore {
     /**
      * Custom data of this editor
      */
-    readonly customData: {
-        [Key: string]: {
-            value: any;
-            disposer: (value: any) => void;
-        };
-    };
+    readonly customData: CustomDataSet;
 
     /**
      * Core API map of this editor
