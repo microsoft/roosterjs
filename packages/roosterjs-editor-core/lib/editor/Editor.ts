@@ -365,7 +365,7 @@ export default class Editor {
         }
 
         if (this.core.inDarkMode) {
-            content = this.getColorNormalizedContent(content);
+            content = getColorNormalizedContent(content);
         }
 
         return content;
