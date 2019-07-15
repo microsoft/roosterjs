@@ -1,3 +1,4 @@
+import CopyPlugin from '../corePlugins/CopyPlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorPlugin from './EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
@@ -49,6 +50,11 @@ export interface CorePlugins {
      * FirefoxTypeAfterLink plugin helps workaround a Firefox bug to allow type outside a hyperlink
      */
     readonly firefoxTypeAfterLink: FirefoxTypeAfterLink;
+
+    /**
+     * Copy plguin for handling dark mode copy.
+     */
+    readonly copyPlugin: CopyPlugin;
 }
 
 /**
