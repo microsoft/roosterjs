@@ -28,7 +28,7 @@ export default class Undo implements UndoService {
      * this object to be reused when editor is disposed and created again
      * @param maxBufferSize The max buffer size for snapshots. Default value is 10MB
      */
-    constructor(private preserveSnapshots?: boolean, private maxBufferSize: number = 1e7) {}
+    constructor(private preserveSnapshots?: boolean, private maxBufferSize: number = 1e7) { }
 
     /**
      * Get a friendly name of  this plugin
@@ -134,7 +134,7 @@ export default class Undo implements UndoService {
     public addUndoSnapshot(): string {
         let snapshot = this.editor.getContent(
             false /*triggerExtractContentEvent*/,
-            true /* includeSelectionmarker */
+            true /* includeSelectionMarker */
         );
         this.getSnapshotsManager().addSnapshot(snapshot);
         this.hasNewContent = false;
