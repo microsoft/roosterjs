@@ -338,8 +338,6 @@ export default class Editor {
      * before return. Use this parameter to remove any temporary content added by plugins.
      * @param includeSelectionMarker Set to true if need include selection marker inside the content.
      * When restore this content, editor will set the selection to the position marked by these markers
-     * @param normalizeColor Set to false if you want to get the content of the editor "as is" with no normalization.
-     * This is a no-op when in light mode. If false, instead of normalizing the colors to light mode, it will return the 'real' editor content.
      * @returns HTML string representing current editor content
      */
     public getContent(
@@ -385,7 +383,6 @@ export default class Editor {
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * @param content HTML content to set in
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
-     * @param convertToDarkMode True to conver the editor's new content to dark mode formatting. Default value is false.
      */
     public setContent(
         content: string,
