@@ -154,10 +154,7 @@ export default class Undo implements UndoService {
         if (snapshot != null) {
             try {
                 this.isRestoring = true;
-                this.editor.setContent(
-                    snapshot,
-                    undefined /* triggerContentChangedEvent */,
-                );
+                this.editor.setContent(snapshot);
             } finally {
                 this.isRestoring = false;
             }
