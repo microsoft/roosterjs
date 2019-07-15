@@ -45,6 +45,8 @@ export default class CopyPlugin implements EditorPlugin {
                 // revert just this selected range to light mode colors
                 const normalizedContent = getColorNormalizedContent(copyFragment);
                 const containerDiv = this.editor.getDocument().createElement('div');
+
+                // Leverage script execution policy on CEDs to try and prevent XSS
                 containerDiv.setAttribute('contenteditable', 'true');
                 containerDiv.innerHTML = normalizedContent;
 

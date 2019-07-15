@@ -36,7 +36,7 @@ export default function createEditorCore(
         mouseUp: new MouseUpPlugin(),
         domEvent: new DOMEventPlugin(options.disableRestoreSelectionOnFocus),
         firefoxTypeAfterLink: Browser.isFirefox && new FirefoxTypeAfterLink(),
-        copyPlugin: options.inDarkMode && new CopyPlugin(),
+        copyPlugin: options.inDarkMode && Browser.isIE && new CopyPlugin(),
     };
     let allPlugins = buildPluginList(corePlugins, options.plugins);
     let eventHandlerPlugins = allPlugins.filter(
