@@ -157,7 +157,6 @@ export default class Undo implements UndoService {
                 this.editor.setContent(
                     snapshot,
                     undefined /* triggerContentChangedEvent */,
-                    this.editor.isDarkMode()
                 );
             } finally {
                 this.isRestoring = false;
