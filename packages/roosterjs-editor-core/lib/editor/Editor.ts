@@ -75,7 +75,6 @@ export default class Editor {
         this.setContent(
             options.initialContent || contentDiv.innerHTML || '',
             true /* triggerContentChangedEvent */,
-            this.core.inDarkMode
         );
 
         // 5. Create event handler to bind DOM events
@@ -339,14 +338,11 @@ export default class Editor {
      * before return. Use this parameter to remove any temporary content added by plugins.
      * @param includeSelectionMarker Set to true if need include selection marker inside the content.
      * When restore this content, editor will set the selection to the position marked by these markers
-     * @param normalizeColor Set to false if you want to get the content of the editor "as is" with no normalization.
-     * This is a no-op when in light mode. If false, instead of normalizing the colors to light mode, it will return the 'real' editor content.
      * @returns HTML string representing current editor content
      */
     public getContent(
         triggerExtractContentEvent: boolean = true,
         includeSelectionMarker: boolean = false,
-        normalizeColor: boolean = true
     ): string {
         let contentDiv = this.core.contentDiv;
         let content = contentDiv.innerHTML;
@@ -368,7 +364,7 @@ export default class Editor {
             content = extractContentEvent.content;
         }
 
-        if (this.core.inDarkMode && normalizeColor) {
+        if (this.core.inDarkMode) {
             content = getColorNormalizedContent(content);
         }
 
@@ -387,12 +383,10 @@ export default class Editor {
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * @param content HTML content to set in
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
-     * @param convertToDarkMode True to conver the editor's new content to dark mode formatting. Default value is false.
      */
     public setContent(
         content: string,
         triggerContentChangedEvent: boolean = true,
-        convertToDarkMode?: boolean
     ) {
         let contentDiv = this.core.contentDiv;
         let contentChanged = false;
@@ -413,7 +407,7 @@ export default class Editor {
         }
 
         // Convert content even if it hasn't changed.
-        if (convertToDarkMode) {
+        if (this.core.inDarkMode) {
             const convertFunction = this.convertContentToDarkMode(
                 contentDiv,
                 true /* skipRootElement */
@@ -895,7 +889,6 @@ export default class Editor {
             this.setContent(
                 currentContent,
                 undefined /* triggerContentChangedEvent */,
-                true /* convertToDarkMode */
             );
         } else {
             this.setContent(currentContent);

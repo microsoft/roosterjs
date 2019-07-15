@@ -156,7 +156,7 @@ export default class Paste implements EditorPlugin {
                     true /*markSelection*/
                 );
             } else {
-                this.editor.setContent(clipboardData.snapshotBeforePaste, undefined, this.editor.isDarkMode());
+                this.editor.setContent(clipboardData.snapshotBeforePaste, undefined);
             }
 
             switch (pasteOption) {
@@ -205,14 +205,14 @@ export default class Paste implements EditorPlugin {
         let format = getFormatState(this.editor);
         return format
             ? {
-                  fontFamily: format.fontName,
-                  fontSize: format.fontSize,
-                  textColor: format.textColor,
-                  backgroundColor: format.backgroundColor,
-                  bold: format.isBold,
-                  italic: format.isItalic,
-                  underline: format.isUnderline,
-              }
+                fontFamily: format.fontName,
+                fontSize: format.fontSize,
+                textColor: format.textColor,
+                backgroundColor: format.backgroundColor,
+                bold: format.isBold,
+                italic: format.isItalic,
+                underline: format.isUnderline,
+            }
             : {};
     }
 
