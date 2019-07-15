@@ -1,9 +1,23 @@
-import { Editor, EditorPlugin, cacheGetContentSearcher } from 'roosterjs-editor-core';
-import { PositionType, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { cacheGetContentSearcher, Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { PluginEvent, PluginEventType, PositionType } from 'roosterjs-editor-types';
 
+/**
+ * An interface to define a replacement rule for CustomReplace plugin
+ */
 export type Replacement = {
+    /**
+     * Source string to replace from
+     */
     sourceString: string;
+
+    /**
+     * HTML string to replace to
+     */
     replacementHTML: string;
+
+    /**
+     * Whether the matching should be case sensitive
+     */
     matchSourceCaseSensitive: boolean;
 };
 
@@ -12,6 +26,7 @@ const makeReplacement = (
     replacementHTML: string,
     matchSourceCaseSensitive: boolean
 ): Replacement => ({ sourceString, replacementHTML, matchSourceCaseSensitive });
+
 const defaultReplacements: Replacement[] = [
     makeReplacement(':)', '🙂', true),
     makeReplacement(';)', '😉', true),
@@ -32,7 +47,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
 
     /**
      * Create instance of CustomReplace plugin
-     * @param features An optional feature set to determine which features the plugin should provide
+     * @param replacements Replacement rules. If not passed, a default replacement rule set will be applied
      */
     constructor(replacements: Replacement[] = defaultReplacements) {
         this.updateReplacements(replacements);

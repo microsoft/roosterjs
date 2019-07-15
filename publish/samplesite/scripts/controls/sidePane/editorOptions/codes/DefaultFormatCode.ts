@@ -6,16 +6,6 @@ export default class DefaultFormatCode extends CodeElement {
         super();
     }
 
-    getImports() {
-        return [
-            {
-                name: 'DefaultFormat',
-                path: 'roosterjs-editor-types',
-                isDefault: false,
-            },
-        ];
-    }
-
     getCode() {
         let {
             bold,

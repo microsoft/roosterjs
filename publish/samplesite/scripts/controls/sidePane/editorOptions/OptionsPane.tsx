@@ -2,18 +2,32 @@ import * as React from 'react';
 import BuildInPluginState, { BuildInPluginProps } from '../../BuildInPluginState';
 import Code from './Code';
 import DefaultFormatPane from './DefaultFormat';
+import EditorCode from './codes/EditorCode';
 import MainPaneBase from '../../MainPaneBase';
 import Plugins from './Plugins';
 
-const html =
+const htmlStart =
     '<html>\n' +
     '<body>\n' +
-    '<div id="contentDiv" style="width: 800px; height: 600px; border: solid 1px black; overflow: auto"></div>\n' +
-    '<script src="editor.js"></script>\n' +
+    '<div id="contentDiv" style="width: 800px; height: 400px; border: solid 1px black; overflow: auto"></div>\n';
+const htmlButtons =
+    '<button id=buttonB><b>B</b></button>\n' +
+    '<button id=buttonI><i>I</i></button>\n' +
+    '<button id=buttonU><u>U</u></button>\n' +
+    '<button id=buttonBullet>Bullet</button>\n' +
+    '<button id=buttonNumbering>Numbering</button>\n' +
+    '<button id=buttonUndo>Undo</button>\n' +
+    '<button id=buttonRedo>Redo</button>\n';
+const htmlEnd =
+    '<script src="https://microsoft.github.io/roosterjs/dist/rooster.js"></script>\n' +
     '</body>\n' +
     '</html>';
 
 export default class OptionsPane extends React.Component<BuildInPluginProps, BuildInPluginState> {
+    private exportForm = React.createRef<HTMLFormElement>();
+    private exportData = React.createRef<HTMLInputElement>();
+    private showRibbon = React.createRef<HTMLInputElement>();
+
     constructor(props: BuildInPluginProps) {
         super(props);
         this.state = { ...props };
@@ -21,6 +35,10 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
     render() {
         return (
             <div>
+                <div>
+                    <button onClick={this.onExport}>Export to CodePen</button>
+                </div>
+
                 <details>
                     <summary>
                         <b>Plugins:</b>
@@ -38,6 +56,15 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
                     />
                 </details>
 
+                <input
+                    id="showRibbon"
+                    type="checkbox"
+                    checked={this.state.showRibbon}
+                    onChange={this.onToggleRibbon}
+                    ref={this.showRibbon}
+                />
+                <label htmlFor="showRibbon">Show format buttons</label>
+
                 <hr />
 
                 <details>
@@ -46,7 +73,7 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
                     </summary>
                     <div>
                         <code>
-                            <pre>{html}</pre>
+                            <pre>{this.getHtml()}</pre>
                         </code>
                     </div>
                 </details>
@@ -57,6 +84,14 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
                     </summary>
                     <Code state={this.state} />
                 </details>
+
+                <form
+                    ref={this.exportForm}
+                    method="POST"
+                    action="https://codepen.io/pen/define"
+                    target="_blank">
+                    <input name="data" type="hidden" ref={this.exportData} />
+                </form>
             </div>
         );
     }
@@ -69,6 +104,7 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
         let state: BuildInPluginState = {
             linkTitle: this.state.linkTitle,
             watermarkText: this.state.watermarkText,
+            showRibbon: this.state.showRibbon,
             pluginList: { ...this.state.pluginList },
             contentEditFeatures: { ...this.state.contentEditFeatures },
             defaultFormat: { ...this.state.defaultFormat },
@@ -83,4 +119,30 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             MainPaneBase.getInstance().resetEditorPlugin(state);
         }
     };
+
+    private onExport = () => {
+        let editor = new EditorCode(this.state);
+        let code = editor.getCode();
+        let json = {
+            title: 'RoosterJs',
+            html: this.getHtml(),
+            head: '',
+            js: code,
+            js_pre_processor: 'typescript',
+        };
+        this.exportData.current.value = JSON.stringify(json);
+        this.exportForm.current.submit();
+    };
+
+    private onToggleRibbon = () => {
+        let showRibbon = this.showRibbon.current.checked;
+        this.setState({
+            showRibbon,
+        });
+        MainPaneBase.getInstance().setIsRibbonShown(showRibbon);
+    };
+
+    private getHtml() {
+        return `${htmlStart}${this.state.showRibbon ? htmlButtons : ''}${htmlEnd}`;
+    }
 }

@@ -1,7 +1,13 @@
 import { Browser, createRange, PartialInlineElement } from 'roosterjs-editor-dom';
-import { cacheGetContentSearcher, Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
+import {
+    cacheGetContentSearcher,
+    Editor,
+    EditorPlugin,
+    isCharacterValue,
+    isModifierKey,
+} from 'roosterjs-editor-core';
 import {
     NodePosition,
     PluginKeyboardEvent,
@@ -24,22 +30,34 @@ const RIGHT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowRight' : 'Right';
 const DOWN_ARROW_CHARCODE = !Browser.isIE ? 'ArrowDown' : 'Down';
 const DELETE_CHARCODE = !Browser.isIE ? 'Delete' : 'Del';
 
-export interface EditorPickerPluginInterface extends EditorPlugin {
-    dataProvider: PickerDataProvider;
+/**
+ * Interface for PickerPlugin
+ */
+export interface EditorPickerPluginInterface<T extends PickerDataProvider = PickerDataProvider>
+    extends EditorPlugin {
+    dataProvider: T;
 }
 
-export default class PickerPlugin implements EditorPickerPluginInterface {
+/**
+ * PickerPlugin represents a plugin of editor which can handle picker related behaviors, including
+ * - Show picker when special trigger key is pressed
+ * - Hide picker
+ * - Change selection in picker by Up/Down/Left/Right
+ * - Apply selected item in picker
+ *
+ * PickerPlugin doesn't provide any UI, it just wraps related DOM events and invoke callback functions.
+ * To show a picker UI, you need to build your own UI component. Please reference to
+ * https://github.com/microsoft/roosterjs/tree/master/publish/samplesite/scripts/controls/samplepicker
+ */
+export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvider>
+    implements EditorPickerPluginInterface<T> {
     private editor: Editor;
     private eventHandledOnKeyDown: boolean;
     private blockSuggestions: boolean;
     private isSuggesting: boolean;
-    private isCharacterValue: boolean;
     private lastKnownRange: Range;
 
-    constructor(
-        public readonly dataProvider: PickerDataProvider,
-        private pickerOptions: PickerPluginOptions
-    ) { }
+    constructor(public readonly dataProvider: T, private pickerOptions: PickerPluginOptions) {}
 
     /**
      * Get a friendly name
@@ -124,30 +142,40 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.ContentChanged &&
-            event.source == ChangeSource.SetContent && this.dataProvider.onContentChanged) {
+        if (
+            event.eventType == PluginEventType.ContentChanged &&
+            event.source == ChangeSource.SetContent &&
+            this.dataProvider.onContentChanged
+        ) {
+            // Stop suggesting since content is fully changed
+            if (this.isSuggesting) {
+                this.setIsSuggesting(false);
+            }
+
             // Undos and other major changes to document content fire this type of event.
             // Inform the data provider of the current picker placed elements in the body.
             let elementIds: string[] = [];
             this.editor.queryElements(
                 "[id^='" + this.pickerOptions.elementIdPrefix + "']",
-                (element) => {
+                element => {
                     if (element.id) {
                         elementIds.push(element.id);
                     }
-                });
+                }
+            );
             this.dataProvider.onContentChanged(elementIds);
         }
         if (event.eventType == PluginEventType.KeyDown) {
             this.eventHandledOnKeyDown = false;
             this.onKeyDownEvent(event);
         }
-        if (event.eventType == PluginEventType.KeyUp && !this.eventHandledOnKeyDown) {
+        if (
+            event.eventType == PluginEventType.KeyUp &&
+            !this.eventHandledOnKeyDown &&
+            (isCharacterValue(event.rawEvent) ||
+                (!isModifierKey(event.rawEvent) && this.isSuggesting))
+        ) {
             this.onKeyUpDomEvent(event);
-        } else if (event.eventType == PluginEventType.KeyPress) {
-            // The KeyPress event is fired when a key that produces a character value is pressed down
-            // Keys that don't produce character values include modifier keys like Ctrl and Backspace
-            this.isCharacterValue = true;
         } else if (event.eventType == PluginEventType.MouseUp) {
             if (this.isSuggesting) {
                 this.setIsSuggesting(false);
@@ -166,6 +194,9 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
             this.setLastKnownRange(null);
         }
         this.dataProvider.onIsSuggestingChanged(isSuggesting);
+
+        this.setAriaOwns(isSuggesting);
+        this.setAriaActiveDescendant(isSuggesting ? 0 : null);
     }
 
     private handleKeyDownEvent(event: PluginKeyboardEvent) {
@@ -225,7 +256,8 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
         if (this.isSuggesting) {
             // Word before cursor represents the text prior to the cursor, up to and including the trigger symbol.
             const wordBeforeCursor = this.getWord(event);
-            const trimmedWordBeforeCursor = wordBeforeCursor.substring(1).trim();
+            const wordBeforeCursorWithoutTriggerChar = wordBeforeCursor.substring(1);
+            const trimmedWordBeforeCursor = wordBeforeCursorWithoutTriggerChar.trim();
 
             // If we hit a case where wordBeforeCursor is just the trigger character,
             // that means we've gotten a onKeyUp event right after it's been typed.
@@ -240,13 +272,15 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                     trimmedWordBeforeCursor.length > 0 &&
                     trimmedWordBeforeCursor.split(' ').length <= 4)
             ) {
-                this.dataProvider.queryStringUpdated(trimmedWordBeforeCursor);
+                this.dataProvider.queryStringUpdated(
+                    trimmedWordBeforeCursor,
+                    wordBeforeCursorWithoutTriggerChar == trimmedWordBeforeCursor
+                );
                 this.setLastKnownRange(this.editor.getSelectionRange());
             } else {
                 this.setIsSuggesting(false);
             }
-        } else if (this.isCharacterValue) {
-            // Check for isCharacterValue to filter out modifiers like Ctrl+Z and Backspace
+        } else {
             let wordBeforeCursor = this.getWordBeforeCursor(event);
             if (!this.blockSuggestions) {
                 if (
@@ -255,8 +289,12 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                     wordBeforeCursor[0] == this.pickerOptions.triggerCharacter
                 ) {
                     this.setIsSuggesting(true);
-                    let shortWord = wordBeforeCursor.substring(1).trim();
-                    this.dataProvider.queryStringUpdated(shortWord);
+                    const wordBeforeCursorWithoutTriggerChar = wordBeforeCursor.substring(1);
+                    let trimmedWordBeforeCursor = wordBeforeCursorWithoutTriggerChar.trim();
+                    this.dataProvider.queryStringUpdated(
+                        trimmedWordBeforeCursor,
+                        wordBeforeCursorWithoutTriggerChar == trimmedWordBeforeCursor
+                    );
                     this.setLastKnownRange(this.editor.getSelectionRange());
                     if (this.dataProvider.setCursorPoint) {
                         // Determine the bounding rectangle for the @mention
@@ -306,7 +344,6 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                 }
             }
         }
-        this.isCharacterValue = false;
     }
 
     private onKeyDownEvent(event: PluginKeyboardEvent) {
@@ -320,15 +357,20 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
                 this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
                     ? keyboardEvent.key == LEFT_ARROW_CHARCODE ||
-                    keyboardEvent.key == RIGHT_ARROW_CHARCODE
+                      keyboardEvent.key == RIGHT_ARROW_CHARCODE
                     : keyboardEvent.key == UP_ARROW_CHARCODE ||
-                    keyboardEvent.key == DOWN_ARROW_CHARCODE)
+                      keyboardEvent.key == DOWN_ARROW_CHARCODE)
             ) {
                 this.dataProvider.shiftHighlight(
                     this.pickerOptions.isHorizontal
                         ? keyboardEvent.key == RIGHT_ARROW_CHARCODE
                         : keyboardEvent.key == DOWN_ARROW_CHARCODE
                 );
+
+                if (this.dataProvider.getSelectedIndex) {
+                    this.setAriaActiveDescendant(this.dataProvider.getSelectedIndex());
+                }
+
                 this.handleKeyDownEvent(event);
             } else if (
                 this.dataProvider.selectOption &&
@@ -394,5 +436,23 @@ export default class PickerPlugin implements EditorPickerPluginInterface {
             return true;
         }
         return false;
+    }
+
+    private setAriaOwns(isSuggesting: boolean) {
+        this.editor.setEditorDomAttribute(
+            'aria-owns',
+            isSuggesting && this.pickerOptions.suggestionsLabel
+                ? this.pickerOptions.suggestionsLabel
+                : null
+        );
+    }
+
+    private setAriaActiveDescendant(selectedIndex: number) {
+        this.editor.setEditorDomAttribute(
+            'aria-activedescendant',
+            selectedIndex != null && this.pickerOptions.suggestionLabelPrefix
+                ? this.pickerOptions.suggestionLabelPrefix + selectedIndex.toString()
+                : null
+        );
     }
 }

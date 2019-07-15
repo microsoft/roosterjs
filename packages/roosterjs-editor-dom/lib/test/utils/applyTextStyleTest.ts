@@ -175,7 +175,12 @@ describe('applyTextStyle()', () => {
         div.innerHTML = 'test1<b>test2<i>test3</i></b><i>test4</i>test5<span>test6</span>';
         let start = new Position(div, PositionType.Begin).normalize().move(2);
         let end = new Position(div, PositionType.End).normalize().move(-2);
-        applyTextStyle(div, node => (node.style.color = 'red'), start, end);
+        applyTextStyle(
+            div,
+            (node, isInnerNode) => (node.style.color = isInnerNode ? '' : 'red'),
+            start,
+            end
+        );
         expect(div.innerHTML).toBe(
             'te<span style="color: red;">st1</span><span style="color: red;"><b>test2</b></span><span style="color: red;"><b><i>test3</i></b></span><span style="color: red;"><i>test4</i></span><span style="color: red;">test5</span><span style="color: red;">tes</span><span>t6</span>'
         );
@@ -189,6 +194,22 @@ describe('applyTextStyle()', () => {
         applyTextStyle(div, node => (node.style.color = 'red'), start, end);
         expect(div.innerHTML).toBe(
             '<span><span>t</span><span style="color: red;">ex</span><span>t</span></span>'
+        );
+    });
+
+    it('applyTextStyle() inner node has conflict style', () => {
+        let div = document.createElement('DIV');
+        div.innerHTML = 'aabb<b style="color:yellow">cc</b>ddee';
+        let start = new Position(div, PositionType.Begin).normalize().move(2);
+        let end = new Position(div, PositionType.End).normalize().move(-2);
+        applyTextStyle(
+            div,
+            (node, isInnerNode) => (node.style.color = isInnerNode ? '' : 'red'),
+            start,
+            end
+        );
+        expect(div.innerHTML).toBe(
+            'aa<span style="color: red;">bb</span><span style="color: red;"><b style="">cc</b></span><span style="color: red;">dd</span>ee'
         );
     });
 });

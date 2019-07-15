@@ -1,8 +1,12 @@
 import EditorCore, { Focus } from '../interfaces/EditorCore';
-import { getFirstLeafNode } from 'roosterjs-editor-dom';
+import { createRange, getFirstLeafNode } from 'roosterjs-editor-dom';
 import { PositionType } from 'roosterjs-editor-types';
 
-const focus: Focus = (core: EditorCore) => {
+/**
+ * Focus to editor. If there is a cached selection range, use it as current selection
+ * @param core The EditorCore object
+ */
+export const focus: Focus = (core: EditorCore) => {
     if (!core.api.hasFocus(core) || !core.api.getSelectionRange(core, false /*tryGetFromCache*/)) {
         // Focus (document.activeElement indicates) and selection are mostly in sync, but could be out of sync in some extreme cases.
         // i.e. if you programmatically change window selection to point to a non-focusable DOM element (i.e. tabindex=-1 etc.).
@@ -11,9 +15,16 @@ const focus: Focus = (core: EditorCore) => {
         // So here we always do a live selection pull on DOM and make it point in Editor. The pitfall is, the cursor could be reset
         // to very begin to of editor since we don't really have last saved selection (created on blur which does not fire in this case).
         // It should be better than the case you cannot type
-        if (!core.cachedSelectionRange || !core.api.select(core, core.cachedSelectionRange)) {
+        if (
+            !core.cachedSelectionRange ||
+            !core.api.selectRange(core, core.cachedSelectionRange, true /*skipSameRange*/)
+        ) {
             let node = getFirstLeafNode(core.contentDiv) || core.contentDiv;
-            core.api.select(core, node, PositionType.Begin);
+            core.api.selectRange(
+                core,
+                createRange(node, PositionType.Begin),
+                true /*skipSameRange*/
+            );
         }
     }
 
@@ -25,5 +36,3 @@ const focus: Focus = (core: EditorCore) => {
         core.contentDiv.focus();
     }
 };
-
-export default focus;

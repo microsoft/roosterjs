@@ -4,7 +4,7 @@
  * but can also be just a text node, followed by a &lt;br&gt;, i.e.
  * for html fragment &lt;div&gt;abc&lt;br&gt;123&lt;/div&gt;, abc&lt;br&gt; is a block, 123 is another block
  */
-export interface BlockElement {
+export default interface BlockElement {
     /**
      * Collapse this block element to a single DOM element.
      */
@@ -34,6 +34,9 @@ export interface BlockElement {
      * Check if the given node is within this block element
      */
     contains(node: Node): boolean;
-}
 
-export default BlockElement;
+    /**
+     * Get the text content of this block element
+     */
+    getTextContent(): string;
+}

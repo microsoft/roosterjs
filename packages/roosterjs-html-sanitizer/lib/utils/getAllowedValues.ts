@@ -1,4 +1,4 @@
-import cloneObject from './cloneObject';
+import { cloneObject } from './cloneObject';
 import { StringMap, StyleCallbackMap } from '../types/maps';
 
 const ALLOWED_HTML_TAGS = (

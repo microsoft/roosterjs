@@ -29,7 +29,7 @@ describe('Editor getSelectionRange()', () => {
 
     it('getSelectionRange shold return null if not in focus', () => {
         // Arrange
-        spyOn(getSelectionRange, 'default').and.callThrough();
+        spyOn(getSelectionRange, 'getSelectionRange').and.callThrough();
 
         // Act
         let selectionRange = editor.getSelectionRange();

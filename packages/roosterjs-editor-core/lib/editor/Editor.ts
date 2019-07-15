@@ -1,7 +1,6 @@
-import createEditorCore from './createEditorCore';
+import createEditorCore, { calcDefaultFormat } from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
-import { Browser, getRangeFromSelectionPath, getSelectionPath } from 'roosterjs-editor-dom';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import {
     BlockElement,
@@ -23,19 +22,24 @@ import {
     Rect,
 } from 'roosterjs-editor-types';
 import {
-    PositionContentSearcher,
-    ContentTraverser,
-    Position,
+    Browser,
+    collapseNodes,
     contains,
+    ContentTraverser,
+    createRange,
+    findClosestElementAncestor,
     fromHtml,
     getBlockElementAtNode,
-    findClosestElementAncestor,
-    getPositionRect,
+    getTextContent,
     getInlineElementAtNode,
+    getPositionRect,
+    getRangeFromSelectionPath,
+    getSelectionPath,
     getTagOfNode,
     isNodeEmpty,
+    Position,
+    PositionContentSearcher,
     queryElements,
-    collapseNodes,
     wrap,
 } from 'roosterjs-editor-dom';
 
@@ -70,7 +74,7 @@ export default class Editor {
         this.setContent(
             options.initialContent || contentDiv.innerHTML || '',
             true /* triggerContentChangedEvent */,
-            this.core.darkModeOptions && this.core.darkModeOptions.transformOnInitialize
+            this.core.inDarkMode
         );
 
         // 5. Create event handler to bind DOM events
@@ -79,7 +83,8 @@ export default class Editor {
             this.core.api.attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown),
             this.core.api.attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp),
             this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
-            this.core.api.attachDomEvent(this.core,
+            this.core.api.attachDomEvent(
+                this.core,
                 !Browser.isIE ? 'input' : 'textinput',
                 PluginEventType.Input
             ),
@@ -98,16 +103,26 @@ export default class Editor {
             this.contenteditableChanged = true;
         }
 
-        // 8. Disable these operations for firefox since its behavior is usually wrong
+        // 8. Do proper change for browsers to disable some browser-specified behaviors.
         // Catch any possible exception since this should not block the initialization of editor
         try {
-            this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, <string>(
-                (<any>false)
-            ));
-            this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <
-                string
+            // Disable these object resizing for firefox since other browsers don't have these behaviors
+            if (Browser.isFirefox) {
+                this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, <
+                    string
                 >(<any>false));
-        } catch (e) { }
+                this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <
+                    string
+                >(<any>false));
+            } else if (Browser.isIE) {
+                // Change the default paragraph separater to DIV. This is mainly for IE since its default setting is P
+                this.core.document.execCommand(
+                    DocumentCommand.DefaultParagraphSeparator,
+                    false,
+                    'div'
+                );
+            }
+        } catch (e) {}
 
         // 9. Let plugins know that we are ready
         this.triggerEvent(
@@ -358,7 +373,7 @@ export default class Editor {
     public getContent(
         triggerExtractContentEvent: boolean = true,
         includeSelectionMarker: boolean = false,
-        normalizeColor: boolean = true,
+        normalizeColor: boolean = true
     ): string {
         let contentDiv = this.core.contentDiv;
         let content = contentDiv.innerHTML;
@@ -392,18 +407,42 @@ export default class Editor {
         el.innerHTML = content;
         const allChildElements = el.getElementsByTagName('*') as HTMLCollectionOf<HTMLElement>;
         [].forEach.call(allChildElements, (element: HTMLElement) => {
-            if (element.dataset && (element.dataset.ogsc || element.dataset.ogsb)) {
-                if (element.dataset.ogsc) {
-                    element.style.color = element.dataset.ogsc;
+            if (element.dataset) {
+                // Reset color styles based on the content of the ogsc/ogsb data element.
+                // If those data properties are empty or do not exist, set them anyway to clear the content.
+                element.style.color = this.isDataAttributeSettable(element.dataset.ogsc)
+                    ? element.dataset.ogsc
+                    : '';
+                element.style.backgroundColor = this.isDataAttributeSettable(element.dataset.ogsb)
+                    ? element.dataset.ogsb
+                    : '';
+
+                // Some elements might have set attribute colors. We need to reset these as well.
+                if (this.isDataAttributeSettable(element.dataset.ogac)) {
+                    element.setAttribute('color', element.dataset.ogac);
+                } else {
+                    element.removeAttribute('color');
                 }
 
-                if (element.dataset.ogsb) {
-                    element.style.backgroundColor = element.dataset.ogsb;
+                if (this.isDataAttributeSettable(element.dataset.ogab)) {
+                    element.setAttribute('bgcolor', element.dataset.ogab);
+                } else {
+                    element.removeAttribute('bgcolor');
                 }
+
+                // Clean up any remaining data attributes.
+                delete element.dataset.ogsc;
+                delete element.dataset.ogsb;
+                delete element.dataset.ogac;
+                delete element.dataset.ogab;
             }
         });
         const newContent = el.innerHTML;
         return newContent;
+    }
+
+    private isDataAttributeSettable(newStyle: string) {
+        return newStyle && newStyle != 'undefined' && newStyle != 'null';
     }
 
     /**
@@ -411,18 +450,25 @@ export default class Editor {
      * @returns The text content inside editor
      */
     public getTextContent(): string {
-        return this.core.contentDiv.innerText;
+        return getTextContent(this.core.contentDiv);
     }
 
     /**
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
      * @param content HTML content to set in
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
+     * @param convertToDarkMode True to conver the editor's new content to dark mode formatting. Default value is false.
      */
-    public setContent(content: string, triggerContentChangedEvent: boolean = true, convertToDarkMode?: boolean) {
+    public setContent(
+        content: string,
+        triggerContentChangedEvent: boolean = true,
+        convertToDarkMode?: boolean
+    ) {
         let contentDiv = this.core.contentDiv;
+        let contentChanged = false;
         if (contentDiv.innerHTML != content) {
             contentDiv.innerHTML = content || '';
+            contentChanged = true;
 
             let pathComment = contentDiv.lastChild;
 
@@ -432,16 +478,24 @@ export default class Editor {
                     this.deleteNode(pathComment);
                     let range = getRangeFromSelectionPath(contentDiv, path);
                     this.select(range);
-                } catch { }
+                } catch {}
             }
+        }
 
-            if (convertToDarkMode) {
-                this.convertContentToDarkMode(contentDiv)();
+        // Convert content even if it hasn't changed.
+        if (convertToDarkMode) {
+            const convertFunction = this.convertContentToDarkMode(
+                contentDiv,
+                true /* skipRootElement */
+            );
+            if (convertFunction) {
+                convertFunction();
+                contentChanged = true;
             }
+        }
 
-            if (triggerContentChangedEvent) {
-                this.triggerContentChangedEvent();
-            }
+        if (triggerContentChangedEvent && contentChanged) {
+            this.triggerContentChangedEvent();
         }
     }
 
@@ -550,7 +604,8 @@ export default class Editor {
     ): boolean;
 
     public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
-        return this.core.api.select(this.core, arg1, arg2, arg3, arg4);
+        let range = arg1 instanceof Range ? arg1 : createRange(arg1, arg2, arg3, arg4);
+        return this.contains(range) && this.core.api.selectRange(this.core, range);
     }
 
     /**
@@ -650,8 +705,8 @@ export default class Editor {
         nameOrMap:
             | string
             | {
-                [eventName: string]: (event: UIEvent) => void;
-            },
+                  [eventName: string]: (event: UIEvent) => void;
+              },
         handler?: (event: UIEvent) => void
     ): () => void {
         if (nameOrMap instanceof Object) {
@@ -806,9 +861,10 @@ export default class Editor {
 
     /**
      * Get a content traverser for the whole editor
+     * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
-    public getBodyTraverser(): ContentTraverser {
-        return ContentTraverser.createBodyTraverser(this.core.contentDiv);
+    public getBodyTraverser(startNode?: Node): ContentTraverser {
+        return ContentTraverser.createBodyTraverser(this.core.contentDiv, startNode);
     }
 
     /**
@@ -895,13 +951,22 @@ export default class Editor {
 
         const currentContent = this.getContent(
             undefined /* triggerContentChangedEvent */,
-            true /* getSelectionMarker */);
+            true /* getSelectionMarker */
+        );
+
         this.core.inDarkMode = nextDarkMode;
+        this.core.defaultFormat = calcDefaultFormat(
+            this.core.contentDiv,
+            this.core.defaultFormat,
+            this.core.inDarkMode
+        );
+
         if (nextDarkMode) {
             this.setContent(
                 currentContent,
                 undefined /* triggerContentChangedEvent */,
-                true /* convertToDarkMode */);
+                true /* convertToDarkMode */
+            );
         } else {
             this.setContent(currentContent);
         }
@@ -926,8 +991,9 @@ export default class Editor {
     /**
      * Converter for dark mode that runs all child elements of a node through the content transform function.
      * @param node The node containing HTML elements to convert.
+     * @param skipRootElement Optional parameter to skip the root element of the Node passed in, if applicable.
      */
-    private convertContentToDarkMode(node: Node): () => void {
+    private convertContentToDarkMode(node: Node, skipRootElement?: boolean): () => void {
         let childElements: HTMLElement[] = [];
 
         // Get a list of all the decendents of a node.
@@ -935,22 +1001,26 @@ export default class Editor {
         // So we use getElementsByTagName instead for HTMLElement types.
         if (node instanceof HTMLElement) {
             childElements = Array.prototype.slice.call(node.getElementsByTagName('*'));
-            childElements.unshift(node);
+            if (!skipRootElement) {
+                childElements.unshift(node);
+            }
         } else if (node instanceof DocumentFragment) {
             childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
         }
 
-        return childElements.length > 0 ? () => {
-            const darkModeOptions = this.getDarkModeOptions();
-            childElements.forEach((element) => {
-                if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
-                    darkModeOptions.onExternalContentTransform(element);
-                } else {
-                    element.style.color = null;
-                    element.style.backgroundColor = null;
-                }
-            });
-        } : null;
+        return childElements.length > 0
+            ? () => {
+                  const darkModeOptions = this.getDarkModeOptions();
+                  childElements.forEach(element => {
+                      if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
+                          darkModeOptions.onExternalContentTransform(element);
+                      } else {
+                          element.style.color = null;
+                          element.style.backgroundColor = null;
+                      }
+                  });
+              }
+            : null;
     }
 
     //#endregion

@@ -1,4 +1,5 @@
 import contains from '../utils/contains';
+import getTagOfNode from '../utils/getTagOfNode';
 import isNodeEmpty from '../utils/isNodeEmpty';
 import { NodePosition } from 'roosterjs-editor-types';
 
@@ -27,7 +28,7 @@ export default function isPositionAtBeginningOf(position: NodePosition, targetNo
 function areAllPrevousNodesEmpty(node: Node): boolean {
     while (node.previousSibling) {
         node = node.previousSibling;
-        if (!isNodeEmpty(node)) {
+        if (getTagOfNode(node) == 'BR' || !isNodeEmpty(node)) {
             return false;
         }
     }

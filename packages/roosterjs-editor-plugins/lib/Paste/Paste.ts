@@ -156,7 +156,7 @@ export default class Paste implements EditorPlugin {
                     true /*markSelection*/
                 );
             } else {
-                this.editor.setContent(clipboardData.snapshotBeforePaste);
+                this.editor.setContent(clipboardData.snapshotBeforePaste, undefined, this.editor.isDarkMode());
             }
 
             switch (pasteOption) {

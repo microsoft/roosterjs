@@ -37,7 +37,12 @@ function getInitialRange(
     return { range, rangeToRestore };
 }
 
-const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOption) => {
+/**
+ * Insert a DOM node into editor content
+ * @param core The EditorCore object. No op if null.
+ * @param option An insert option object to specify how to insert the node
+ */
+export const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOption) => {
     option = option || {
         position: ContentPosition.SelectionStart,
         insertOnNewLine: false,
@@ -116,10 +121,11 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
             range = createRange(pos);
             range.insertNode(node);
             if (option.updateCursor && nodeForCursor) {
-                core.api.select(core, new Position(nodeForCursor, PositionType.After).normalize());
-            } else {
-                core.api.select(core, rangeToRestore);
+                rangeToRestore = createRange(
+                    new Position(nodeForCursor, PositionType.After).normalize()
+                );
             }
+            core.api.selectRange(core, rangeToRestore);
 
             break;
         case ContentPosition.Outside:
@@ -129,5 +135,3 @@ const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOpti
 
     return true;
 };
-
-export default insertNode;

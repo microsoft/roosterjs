@@ -15,12 +15,14 @@ import { ModeIndependentColor } from 'roosterjs-editor-types';
 export default function setTextColor(editor: Editor, color: string | ModeIndependentColor) {
     if (typeof color === 'string') {
         const trimmedColor = color.trim();
-        applyInlineStyle(editor, element => { element.style.color = trimmedColor });
+        applyInlineStyle(editor, (element, isInnerNode) => {
+            element.style.color = isInnerNode ? '' : trimmedColor;
+        });
     } else {
         const darkMode = editor.isDarkMode();
-        const appliedColor =  darkMode ? color.darkModeColor : color.lightModeColor;
-        applyInlineStyle(editor, (element) => {
-            element.style.color = appliedColor;
+        const appliedColor = darkMode ? color.darkModeColor : color.lightModeColor;
+        applyInlineStyle(editor, (element, isInnerNode) => {
+            element.style.color = isInnerNode ? '' : appliedColor;
             if (darkMode) {
                 element.dataset.ogsc = color.lightModeColor;
             }
