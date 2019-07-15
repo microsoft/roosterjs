@@ -1,3 +1,4 @@
+import getColorNormalizedContent from '../darkMode/getColorNormalizedContent';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 
 /**
@@ -36,16 +37,23 @@ export default class CopyPlugin implements EditorPlugin {
         // if it's dark mode...
         if (this.editor && this.editor.isDarkMode()) {
             // get whatever the current selection range is
-            const copyFragment = this.editor.getSelection().getRangeAt(0).cloneContents();
+            const selectionRange = this.editor.getSelectionRange();
+            if (selectionRange && !selectionRange.collapsed) {
+                const clipboardEvent = (event as ClipboardEvent);
+                const copyFragment = this.editor.getSelectionRange().cloneContents();
 
-            // revert just this selected range to light mode colors
-            const normalizerDiv = document.createElement('div');
-            normalizerDiv.appendChild(copyFragment);
-            const normalizedFragment = this.editor.getColorNormalizedContent(normalizerDiv.innerHTML);
+                // revert just this selected range to light mode colors
+                const normalizedContent = getColorNormalizedContent(copyFragment);
+                const containerDiv = this.editor.getDocument().createElement('div');
+                containerDiv.setAttribute('contenteditable', 'true');
+                containerDiv.innerHTML = normalizedContent;
 
-            // put it on the clipboard
-            (event as ClipboardEvent).clipboardData.setData('text/html', normalizedFragment);
-            event.preventDefault();
+                // put it on the clipboard
+                clipboardEvent.clipboardData.setData('text/html', normalizedContent);
+                clipboardEvent.clipboardData.setData('text/plain', containerDiv.innerText)
+
+                event.preventDefault();
+            }
         }
     }
 }
