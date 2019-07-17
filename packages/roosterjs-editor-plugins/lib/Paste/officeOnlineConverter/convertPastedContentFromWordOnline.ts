@@ -8,6 +8,7 @@ import {
 import {
     getNextLeafSibling,
     getFirstLeafNode,
+    getTagOfNode,
     collapseNodes,
     unwrap
 } from 'roosterjs-editor-dom';
@@ -60,7 +61,7 @@ export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
 
         flattenListBlock(doc.body, itemBlock);
 
-        itemBlock.insertPositionElement = itemBlock.endElement.nextElementSibling;
+        itemBlock.insertPositionNode = itemBlock.endElement.nextSibling;
 
         let convertedListElement: Element;
         itemBlock.listItemContainers.forEach((listItemContainer) => {
@@ -104,7 +105,7 @@ function getListItemBlocks(doc: HTMLDocument): ListItemBlock[] {
         } else {
             const { listItemContainers } = curListItemBlock;
             const lastItemInCurBlock = listItemContainers[listItemContainers.length - 1];
-            if (curItem.isEqualNode(lastItemInCurBlock.nextElementSibling)
+            if (curItem == lastItemInCurBlock.nextSibling
                 || getFirstLeafNode(curItem) == getNextLeafSibling(doc.body, lastItemInCurBlock)) {
                 listItemContainers.push(curItem);
                 curListItemBlock.endElement = curItem
@@ -130,13 +131,11 @@ function getListItemBlocks(doc: HTMLDocument): ListItemBlock[] {
  */
 function flattenListBlock(rootElement: Element, listItemBlock: ListItemBlock) {
     const collapsedListItemSections = collapseNodes(rootElement, listItemBlock.startElement, listItemBlock.endElement, true);
-    if (collapsedListItemSections.length > 1) {
-        collapsedListItemSections.forEach((section) => {
-            if (section.firstChild && section.firstChild.nodeName == 'DIV') {
-                unwrap(section)
-            }
-        })
-    }
+    collapsedListItemSections.forEach((section) => {
+        if (getTagOfNode(section.firstChild) == 'DIV') {
+            unwrap(section)
+        }
+    })
 }
 
 /**
@@ -145,9 +144,9 @@ function flattenListBlock(rootElement: Element, listItemBlock: ListItemBlock) {
  * @param listItemContainer Container that contains a list
  */
 function getContainerListType(listItemContainer: Element): string {
-    if (listItemContainer.querySelector(UNORDERED_LIST_TAG_NAME)) {
+    if (getTagOfNode(listItemContainer.firstChild) == UNORDERED_LIST_TAG_NAME) {
         return UNORDERED_LIST_TAG_NAME;
-    } else if (listItemContainer.querySelector(ORDERED_LIST_TAG_NAME)) {
+    } else if (getTagOfNode(listItemContainer.firstChild) == ORDERED_LIST_TAG_NAME) {
         return ORDERED_LIST_TAG_NAME
     } else {
         return null
@@ -210,11 +209,11 @@ function insertConvertedListToDoc(convertedListElement: Element, rootElement: El
         return;
     }
 
-    const { insertPositionElement } = listItemBlock;
-    if (insertPositionElement) {
-        const { parentElement } = insertPositionElement;
+    const { insertPositionNode } = listItemBlock;
+    if (insertPositionNode) {
+        const { parentElement } = insertPositionNode;
         if (parentElement) {
-            parentElement.insertBefore(convertedListElement, insertPositionElement);
+            parentElement.insertBefore(convertedListElement, insertPositionNode);
         }
     } else {
         const { parentElement } = listItemBlock.startElement;
