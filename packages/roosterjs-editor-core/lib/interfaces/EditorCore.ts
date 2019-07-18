@@ -5,7 +5,7 @@ import FirefoxTypeAfterLink from '../corePlugins/FirefoxTypeAfterLink';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoService from './UndoService';
-import { CustomDataSet } from './CustomData';
+import { CustomDataMap } from './CustomData';
 import {
     ChangeSource,
     DefaultFormat,
@@ -88,7 +88,7 @@ export default interface EditorCore {
     /**
      * Custom data of this editor
      */
-    readonly customData: CustomDataSet;
+    readonly customData: CustomDataMap;
 
     /**
      * Core API map of this editor
@@ -149,7 +149,7 @@ export type Focus = (core: EditorCore) => void;
  * @param core The EditorCore object
  * @param key Key of the custom data
  * @param getter Getter function. If custom data for the given key doesn't exist,
- * call this function to get one and store it.
+ * call this function to get one and store it if it is specified. Otherwise return undefined
  * @param disposer An optional disposer function to dispose this custom data when
  * dispose editor.
  */

@@ -9,7 +9,7 @@ import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import Undo from '../undo/Undo';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
 import { Browser, getComputedStyles } from 'roosterjs-editor-dom';
-import { CustomDataSet } from '../interfaces/CustomData';
+import { CustomDataMap } from '../interfaces/CustomData';
 import { DefaultFormat } from 'roosterjs-editor-types';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
@@ -103,15 +103,14 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
     };
 }
 
-function createCustomData(initValue: { [key: string]: any }): CustomDataSet {
-    let result: CustomDataSet = {};
-
-    Object.keys(initValue).forEach(key => {
-        result[key] = {
-            value: initValue[key],
-            disposer: null,
-        };
-    });
-
-    return result;
+function createCustomData(initValue: { [key: string]: any }): CustomDataMap {
+    return Object.keys(initValue).reduce(
+        (result, key) => {
+            result[key] = {
+                value: initValue[key],
+            };
+            return result;
+        },
+        <CustomDataMap>{}
+    );
 }

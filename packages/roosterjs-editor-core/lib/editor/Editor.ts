@@ -724,11 +724,11 @@ export default class Editor {
      * Get custom data related to this editor
      * @param key Key of the custom data
      * @param getter Getter function. If custom data for the given key doesn't exist,
-     * call this function to get one and store it.
+     * call this function to get one and store it if it is specified. Otherwise return undefined
      * @param disposer An optional disposer function to dispose this custom data when
      * dispose editor.
      */
-    public getCustomData<T>(key: string, getter: () => T, disposer?: (value: T) => void): T {
+    public getCustomData<T>(key: string, getter?: () => T, disposer?: (value: T) => void): T {
         return this.core.api.getCustomData(this.core, key, getter, disposer);
     }
 
