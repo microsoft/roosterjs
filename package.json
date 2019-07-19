@@ -23,7 +23,6 @@
         "start": "webpack-dev-server",
         "test": "karma start",
         "test:debug": "karma start --no-single-run",
-        "prettier": "node tools/prettier.js",
         "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo publish",
         "publish:dark": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo publishdark",
         "instrumentation": "cd publish/samplesite/instrumentation-tests && npm run instrumentation",
@@ -34,6 +33,7 @@
         "@types/jasmine": "2.6.0",
         "@types/dom-inputevent": "1.0.5",
         "glob": "7.1.4",
+        "husky": "^3.0.1",
         "jasmine-core": "3.4.0",
         "karma": "4.1.0",
         "karma-chrome-launcher": "2.2.0",
@@ -42,7 +42,7 @@
         "karma-sourcemap-loader": "0.3.7",
         "karma-webpack": "4.0.2",
         "ncp": "2.0.0",
-        "prettier": "1.18.2",
+        "pretty-quick": "^1.11.1",
         "progress": "2.0.3",
         "rimraf": "2.6.3",
         "source-map-explorer": "2.0.1",
@@ -65,5 +65,10 @@
         "node-sass": "4.12.0",
         "sass-loader": "7.1.0",
         "url-loader": "2.0.1"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "pretty-quick --staged"
+        }
     }
 }
