@@ -42,6 +42,7 @@
         "karma-sourcemap-loader": "0.3.7",
         "karma-webpack": "4.0.2",
         "ncp": "2.0.0",
+        "prettier": "1.18.2",
         "pretty-quick": "^1.11.1",
         "progress": "2.0.3",
         "rimraf": "2.6.3",
