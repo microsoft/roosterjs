@@ -1,3 +1,4 @@
+import CopyPlugin from '../corePlugins/CopyPlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorPlugin from './EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
@@ -8,6 +9,7 @@ import UndoService from './UndoService';
 import {
     ChangeSource,
     DefaultFormat,
+    DarkModeOptions,
     InsertOption,
     NodePosition,
     PluginEvent,
@@ -48,6 +50,11 @@ export interface CorePlugins {
      * FirefoxTypeAfterLink plugin helps workaround a Firefox bug to allow type outside a hyperlink
      */
     readonly firefoxTypeAfterLink: FirefoxTypeAfterLink;
+
+    /**
+     * Copy plguin for handling dark mode copy.
+     */
+    readonly copyPlugin: CopyPlugin;
 }
 
 /**
@@ -77,7 +84,7 @@ export default interface EditorCore {
     /**
      * Default format of this editor
      */
-    readonly defaultFormat: DefaultFormat;
+    defaultFormat: DefaultFormat;
 
     /**
      * Core plugin of this editor
@@ -113,6 +120,16 @@ export default interface EditorCore {
      * Cached selection range of this editor
      */
     cachedSelectionRange: Range;
+
+    /**
+     * If the editor is in dark mode.
+     */
+    inDarkMode: boolean;
+
+    /***
+     * The dark mode options, if set.
+     */
+    darkModeOptions?: DarkModeOptions;
 }
 
 /**
