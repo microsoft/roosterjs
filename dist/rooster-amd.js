@@ -328,10 +328,20 @@ function clearFormat(editor) {
                 setFontSize_1.default(editor, defaultFormat.fontSize);
             }
             if (defaultFormat.textColor) {
-                setTextColor_1.default(editor, defaultFormat.textColor);
+                if (defaultFormat.textColors) {
+                    setTextColor_1.default(editor, defaultFormat.textColors);
+                }
+                else {
+                    setTextColor_1.default(editor, defaultFormat.textColor);
+                }
             }
             if (defaultFormat.backgroundColor) {
-                setBackgroundColor_1.default(editor, defaultFormat.backgroundColor);
+                if (defaultFormat.backgroundColors) {
+                    setBackgroundColor_1.default(editor, defaultFormat.backgroundColors);
+                }
+                else {
+                    setBackgroundColor_1.default(editor, defaultFormat.backgroundColor);
+                }
             }
             if (defaultFormat.bold) {
                 toggleBold_1.default(editor);
@@ -707,15 +717,30 @@ var applyInlineStyle_1 = __webpack_require__(/*! ../utils/applyInlineStyle */ ".
 /**
  * Set background color at current selection
  * @param editor The editor instance
- * @param color The color string, can be any of the predefined color names (e.g, 'red')
+ * @param color One of two options:
+ * The color string, can be any of the predefined color names (e.g, 'red')
  * or hexadecimal color string (e.g, '#FF0000') or rgb value (e.g, 'rgb(255, 0, 0)') supported by browser.
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
- */
+ * Alternatively, you can pass a @typedef ModeIndepenentColor. If in light mode, the lightModeColor property will be used.
+ * If in dark mode, the darkModeColor will be used and the lightModeColor will be used when converting back to light mode.
+ **/
 function setBackgroundColor(editor, color) {
-    color = color.trim();
-    applyInlineStyle_1.default(editor, function (element, isInnerNode) {
-        element.style.backgroundColor = isInnerNode ? '' : color;
-    });
+    if (typeof color === 'string') {
+        var trimmedColor_1 = color.trim();
+        applyInlineStyle_1.default(editor, function (element, isInnerNode) {
+            element.style.backgroundColor = isInnerNode ? '' : trimmedColor_1;
+        });
+    }
+    else {
+        var darkMode_1 = editor.isDarkMode();
+        var appliedColor_1 = darkMode_1 ? color.darkModeColor : color.lightModeColor;
+        applyInlineStyle_1.default(editor, function (element, isInnerNode) {
+            element.style.backgroundColor = isInnerNode ? '' : appliedColor_1;
+            if (darkMode_1) {
+                element.dataset.ogsb = color.lightModeColor;
+            }
+        });
+    }
 }
 exports.default = setBackgroundColor;
 
@@ -915,15 +940,30 @@ var applyInlineStyle_1 = __webpack_require__(/*! ../utils/applyInlineStyle */ ".
 /**
  * Set text color at selection
  * @param editor The editor instance
- * @param color The color string, can be any of the predefined color names (e.g, 'red')
+ * @param color One of two options:
+ * The color string, can be any of the predefined color names (e.g, 'red')
  * or hexadecimal color string (e.g, '#FF0000') or rgb value (e.g, 'rgb(255, 0, 0)') supported by browser.
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
+ * Alternatively, you can pass a @typedef ModeIndepenentColor. If in light mode, the lightModeColor property will be used.
+ * If in dark mode, the darkModeColor will be used and the lightModeColor will be used when converting back to light mode.
  */
 function setTextColor(editor, color) {
-    color = color.trim();
-    applyInlineStyle_1.default(editor, function (element, isInnerNode) {
-        element.style.color = isInnerNode ? '' : color;
-    });
+    if (typeof color === 'string') {
+        var trimmedColor_1 = color.trim();
+        applyInlineStyle_1.default(editor, function (element, isInnerNode) {
+            element.style.color = isInnerNode ? '' : trimmedColor_1;
+        });
+    }
+    else {
+        var darkMode_1 = editor.isDarkMode();
+        var appliedColor_1 = darkMode_1 ? color.darkModeColor : color.lightModeColor;
+        applyInlineStyle_1.default(editor, function (element, isInnerNode) {
+            element.style.color = isInnerNode ? '' : appliedColor_1;
+            if (darkMode_1) {
+                element.dataset.ogsc = color.lightModeColor;
+            }
+        });
+    }
 }
 exports.default = setTextColor;
 
@@ -1881,6 +1921,71 @@ function isKeyboardEvent(e) {
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-core/lib/coreAPI/calculateDefaultFormat.ts":
+/*!******************************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/coreAPI/calculateDefaultFormat.ts ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var DARK_MODE_DEFAULT_FORMAT = {
+    backgroundColors: {
+        darkModeColor: 'rgb(51,51,51)',
+        lightModeColor: 'rgb(255,255,255)',
+    },
+    textColors: {
+        darkModeColor: 'rgb(255,255,255)',
+        lightModeColor: 'rgb(0,0,0)',
+    }
+};
+function calculateDefaultFormat(node, baseFormat, inDarkMode) {
+    if (inDarkMode) {
+        if (!baseFormat.backgroundColors) {
+            baseFormat.backgroundColors = DARK_MODE_DEFAULT_FORMAT.backgroundColors;
+        }
+        if (!baseFormat.textColors) {
+            baseFormat.textColors = DARK_MODE_DEFAULT_FORMAT.textColors;
+        }
+    }
+    if (baseFormat && Object.keys(baseFormat).length === 0) {
+        return {};
+    }
+    baseFormat = baseFormat || {};
+    var fontFamily = baseFormat.fontFamily, fontSize = baseFormat.fontSize, textColor = baseFormat.textColor, textColors = baseFormat.textColors, backgroundColor = baseFormat.backgroundColor, backgroundColors = baseFormat.backgroundColors, bold = baseFormat.bold, italic = baseFormat.italic, underline = baseFormat.underline;
+    var currentStyles = fontFamily && fontSize && (textColor || textColors) ? null : roosterjs_editor_dom_1.getComputedStyles(node);
+    return {
+        fontFamily: fontFamily || currentStyles[0],
+        fontSize: fontSize || currentStyles[1],
+        get textColor() {
+            return textColors
+                ? inDarkMode
+                    ? textColors.darkModeColor
+                    : textColors.lightModeColor
+                : textColor || currentStyles[2];
+        },
+        textColors: textColors,
+        get backgroundColor() {
+            return backgroundColors
+                ? inDarkMode
+                    ? backgroundColors.darkModeColor
+                    : backgroundColors.lightModeColor
+                : backgroundColor || '';
+        },
+        backgroundColors: backgroundColors,
+        bold: bold,
+        italic: italic,
+        underline: underline,
+    };
+}
+exports.calculateDefaultFormat = calculateDefaultFormat;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-core/lib/coreAPI/editWithUndo.ts":
 /*!********************************************************************!*\
   !*** ./packages/roosterjs-editor-core/lib/coreAPI/editWithUndo.ts ***!
@@ -2281,6 +2386,74 @@ function handledExclusively(event, plugin) {
     }
     return false;
 }
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-core/lib/corePlugins/CopyPlugin.ts":
+/*!**********************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/corePlugins/CopyPlugin.ts ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getColorNormalizedContent_1 = __webpack_require__(/*! ../darkMode/getColorNormalizedContent */ "./packages/roosterjs-editor-core/lib/darkMode/getColorNormalizedContent.ts");
+/**
+ * Copy plugin, hijacks copy events to normalize the content to the clipboard.
+ */
+var CopyPlugin = /** @class */ (function () {
+    function CopyPlugin() {
+        var _this = this;
+        this.onCopy = function (event) {
+            // if it's dark mode...
+            if (_this.editor && _this.editor.isDarkMode()) {
+                // get whatever the current selection range is
+                var selectionRange = _this.editor.getSelectionRange();
+                if (selectionRange && !selectionRange.collapsed) {
+                    var clipboardEvent = event;
+                    var copyFragment = _this.editor.getSelectionRange().cloneContents();
+                    // revert just this selected range to light mode colors
+                    var normalizedContent = getColorNormalizedContent_1.default(copyFragment);
+                    var containerDiv = _this.editor.getDocument().createElement('div');
+                    // Leverage script execution policy on CEDs to try and prevent XSS
+                    containerDiv.setAttribute('contenteditable', 'true');
+                    containerDiv.innerHTML = normalizedContent;
+                    // put it on the clipboard
+                    clipboardEvent.clipboardData.setData('text/html', normalizedContent);
+                    clipboardEvent.clipboardData.setData('text/plain', containerDiv.innerText);
+                    event.preventDefault();
+                }
+            }
+        };
+    }
+    /**
+     * Get a friendly name of  this plugin
+     */
+    CopyPlugin.prototype.getName = function () {
+        return 'Copy';
+    };
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
+    CopyPlugin.prototype.initialize = function (editor) {
+        this.editor = editor;
+        this.copyDisposer = editor.addDomEventHandler('copy', this.onCopy);
+    };
+    /**
+     * Dispose this plugin
+     */
+    CopyPlugin.prototype.dispose = function () {
+        this.copyDisposer();
+        this.copyDisposer = null;
+        this.editor = null;
+    };
+    return CopyPlugin;
+}());
+exports.default = CopyPlugin;
 
 
 /***/ }),
@@ -2750,7 +2923,7 @@ var TypeInContainerPlugin = /** @class */ (function () {
             result = new roosterjs_editor_dom_1.Position(formatNode.firstChild, 0 /* Begin */);
         }
         if (formatNode) {
-            roosterjs_editor_dom_1.applyFormat(formatNode, this.editor.getDefaultFormat());
+            roosterjs_editor_dom_1.applyFormat(formatNode, this.editor.getDefaultFormat(), this.editor.isDarkMode());
         }
         return result;
     };
@@ -2796,6 +2969,124 @@ exports.default = TypeInContainerPlugin;
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-core/lib/darkMode/convertContentToDarkMode.ts":
+/*!*********************************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/darkMode/convertContentToDarkMode.ts ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Converter for dark mode that runs all child elements of a node through the content transform function.
+ * @param node The node containing HTML elements to convert.
+ * @param skipRootElement Optional parameter to skip the root element of the Node passed in, if applicable.
+ */
+function convertContentToDarkMode(node, onExternalContentTransform, skipRootElement) {
+    var childElements = [];
+    // Get a list of all the decendents of a node.
+    // querySelectorAll doesn't return a live list when called on an HTMLElement
+    // So we use getElementsByTagName instead for HTMLElement types.
+    if (node instanceof HTMLElement) {
+        childElements = Array.prototype.slice.call(node.getElementsByTagName('*'));
+        if (!skipRootElement) {
+            childElements.unshift(node);
+        }
+    }
+    else if (node instanceof DocumentFragment) {
+        childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
+    }
+    return childElements.length > 0
+        ? function () {
+            childElements.forEach(function (element) {
+                if (onExternalContentTransform) {
+                    onExternalContentTransform(element);
+                }
+                else {
+                    element.style.color = null;
+                    element.style.backgroundColor = null;
+                }
+            });
+        }
+        : null;
+}
+exports.convertContentToDarkMode = convertContentToDarkMode;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-core/lib/darkMode/getColorNormalizedContent.ts":
+/*!**********************************************************************************!*\
+  !*** ./packages/roosterjs-editor-core/lib/darkMode/getColorNormalizedContent.ts ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function getColorNormalizedContent(content) {
+    var el = document.createElement('div');
+    // Leverage script execution policy on CEDs to try and prevent XSS
+    el.setAttribute('contenteditable', 'true');
+    if (content instanceof DocumentFragment) {
+        el.appendChild(content);
+    }
+    else {
+        el.innerHTML = content;
+    }
+    var allChildElements = el.getElementsByTagName('*');
+    [].forEach.call(allChildElements, function (element) {
+        if (element.dataset) {
+            // Reset color styles based on the content of the ogsc/ogsb data element.
+            // If those data properties are empty or do not exist, set them anyway to clear the content.
+            element.style.color = isDataAttributeSettable(element.dataset.ogsc)
+                ? element.dataset.ogsc
+                : '';
+            element.style.backgroundColor = isDataAttributeSettable(element.dataset.ogsb)
+                ? element.dataset.ogsb
+                : '';
+            // Some elements might have set attribute colors. We need to reset these as well.
+            if (isDataAttributeSettable(element.dataset.ogac)) {
+                element.setAttribute('color', element.dataset.ogac);
+            }
+            else {
+                element.removeAttribute('color');
+            }
+            if (isDataAttributeSettable(element.dataset.ogab)) {
+                element.setAttribute('bgcolor', element.dataset.ogab);
+            }
+            else {
+                element.removeAttribute('bgcolor');
+            }
+            // Clean up any remaining data attributes.
+            if (element.dataset.ogsc) {
+                delete element.dataset.ogsc;
+            }
+            if (element.dataset.ogsb) {
+                delete element.dataset.ogsb;
+            }
+            if (element.dataset.ogac) {
+                delete element.dataset.ogac;
+            }
+            if (element.dataset.ogab) {
+                delete element.dataset.ogab;
+            }
+        }
+    });
+    var newContent = el.innerHTML;
+    return newContent;
+}
+exports.default = getColorNormalizedContent;
+function isDataAttributeSettable(newStyle) {
+    return newStyle && newStyle != 'undefined' && newStyle != 'null';
+}
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-core/lib/editor/Editor.ts":
 /*!*************************************************************!*\
   !*** ./packages/roosterjs-editor-core/lib/editor/Editor.ts ***!
@@ -2808,7 +3099,10 @@ exports.default = TypeInContainerPlugin;
 Object.defineProperty(exports, "__esModule", { value: true });
 var adjustBrowserBehavior_1 = __webpack_require__(/*! ./adjustBrowserBehavior */ "./packages/roosterjs-editor-core/lib/editor/adjustBrowserBehavior.ts");
 var createEditorCore_1 = __webpack_require__(/*! ./createEditorCore */ "./packages/roosterjs-editor-core/lib/editor/createEditorCore.ts");
+var getColorNormalizedContent_1 = __webpack_require__(/*! ../darkMode/getColorNormalizedContent */ "./packages/roosterjs-editor-core/lib/darkMode/getColorNormalizedContent.ts");
 var mapPluginEvents_1 = __webpack_require__(/*! ./mapPluginEvents */ "./packages/roosterjs-editor-core/lib/editor/mapPluginEvents.ts");
+var calculateDefaultFormat_1 = __webpack_require__(/*! ../coreAPI/calculateDefaultFormat */ "./packages/roosterjs-editor-core/lib/coreAPI/calculateDefaultFormat.ts");
+var convertContentToDarkMode_1 = __webpack_require__(/*! ../darkMode/convertContentToDarkMode */ "./packages/roosterjs-editor-core/lib/darkMode/convertContentToDarkMode.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 /**
  * RoosterJs core editor class
@@ -2900,7 +3194,18 @@ var Editor = /** @class */ (function () {
      * @returns true if node is inserted. Otherwise false
      */
     Editor.prototype.insertNode = function (node, option) {
-        return node ? this.core.api.insertNode(this.core, node, option) : false;
+        // DocumentFragment type nodes become empty after they're inserted.
+        // Therefore, we get the list of nodes to transform prior to their insertion.
+        var darkModeOptions = this.getDarkModeOptions();
+        var darkModeTransform = this.isDarkMode()
+            ? convertContentToDarkMode_1.convertContentToDarkMode(node, (darkModeOptions && darkModeOptions.onExternalContentTransform)
+                ? darkModeOptions.onExternalContentTransform
+                : undefined) : null;
+        var result = node ? this.core.api.insertNode(this.core, node, option) : false;
+        if (result && darkModeTransform) {
+            darkModeTransform();
+        }
+        return result;
     };
     /**
      * Delete a node from editor content
@@ -3005,6 +3310,9 @@ var Editor = /** @class */ (function () {
             this.triggerEvent(extractContentEvent, true /*broadcast*/);
             content = extractContentEvent.content;
         }
+        if (this.core.inDarkMode) {
+            content = getColorNormalizedContent_1.default(content);
+        }
         return content;
     };
     /**
@@ -3022,8 +3330,10 @@ var Editor = /** @class */ (function () {
     Editor.prototype.setContent = function (content, triggerContentChangedEvent) {
         if (triggerContentChangedEvent === void 0) { triggerContentChangedEvent = true; }
         var contentDiv = this.core.contentDiv;
+        var contentChanged = false;
         if (contentDiv.innerHTML != content) {
             contentDiv.innerHTML = content || '';
+            contentChanged = true;
             var pathComment = contentDiv.lastChild;
             if (pathComment && pathComment.nodeType == 8 /* Comment */) {
                 try {
@@ -3034,9 +3344,20 @@ var Editor = /** @class */ (function () {
                 }
                 catch (_a) { }
             }
-            if (triggerContentChangedEvent) {
-                this.triggerContentChangedEvent();
+        }
+        // Convert content even if it hasn't changed.
+        if (this.core.inDarkMode) {
+            var darkModeOptions = this.getDarkModeOptions();
+            var convertFunction = convertContentToDarkMode_1.convertContentToDarkMode(contentDiv, (darkModeOptions && darkModeOptions.onExternalContentTransform)
+                ? darkModeOptions.onExternalContentTransform
+                : undefined, true /* skipRootElement */);
+            if (convertFunction) {
+                convertFunction();
+                contentChanged = true;
             }
+        }
+        if (triggerContentChangedEvent && contentChanged) {
+            this.triggerContentChangedEvent();
         }
     };
     /**
@@ -3333,6 +3654,35 @@ var Editor = /** @class */ (function () {
     Editor.prototype.addContentEditFeature = function (feature) {
         this.core.corePlugins.edit.addFeature(feature);
     };
+    //#endregion
+    //#region Dark mode APIs
+    /**
+     * Set the dark mode state and transforms the content to match the new state.
+     * @param nextDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
+     */
+    Editor.prototype.setDarkModeState = function (nextDarkMode) {
+        if (this.isDarkMode() == nextDarkMode) {
+            return;
+        }
+        var currentContent = this.getContent(undefined /* triggerContentChangedEvent */, true /* getSelectionMarker */);
+        this.core.inDarkMode = nextDarkMode;
+        this.core.defaultFormat = calculateDefaultFormat_1.calculateDefaultFormat(this.core.contentDiv, this.core.defaultFormat, this.core.inDarkMode);
+        this.setContent(currentContent);
+    };
+    /**
+     * Check if the editor is in dark mode
+     * @returns True if the editor is in dark mode, otherwise false
+     */
+    Editor.prototype.isDarkMode = function () {
+        return this.core.inDarkMode;
+    };
+    /**
+     * Returns the dark mode options set on the editor
+     * @returns A DarkModeOptions object
+     */
+    Editor.prototype.getDarkModeOptions = function () {
+        return this.core.darkModeOptions;
+    };
     return Editor;
 }());
 exports.default = Editor;
@@ -3397,6 +3747,7 @@ exports.default = adjustBrowserBehavior;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var CopyPlugin_1 = __webpack_require__(/*! ../corePlugins/CopyPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/CopyPlugin.ts");
 var DOMEventPlugin_1 = __webpack_require__(/*! ../corePlugins/DOMEventPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts");
 var EditPlugin_1 = __webpack_require__(/*! ../corePlugins/EditPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/EditPlugin.ts");
 var FirefoxTypeAfterLink_1 = __webpack_require__(/*! ../corePlugins/FirefoxTypeAfterLink */ "./packages/roosterjs-editor-core/lib/corePlugins/FirefoxTypeAfterLink.ts");
@@ -3405,6 +3756,7 @@ var TypeInContainerPlugin_1 = __webpack_require__(/*! ../corePlugins/TypeInConta
 var Undo_1 = __webpack_require__(/*! ../undo/Undo */ "./packages/roosterjs-editor-core/lib/undo/Undo.ts");
 var attachDomEvent_1 = __webpack_require__(/*! ../coreAPI/attachDomEvent */ "./packages/roosterjs-editor-core/lib/coreAPI/attachDomEvent.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var calculateDefaultFormat_1 = __webpack_require__(/*! ../coreAPI/calculateDefaultFormat */ "./packages/roosterjs-editor-core/lib/coreAPI/calculateDefaultFormat.ts");
 var editWithUndo_1 = __webpack_require__(/*! ../coreAPI/editWithUndo */ "./packages/roosterjs-editor-core/lib/coreAPI/editWithUndo.ts");
 var focus_1 = __webpack_require__(/*! ../coreAPI/focus */ "./packages/roosterjs-editor-core/lib/coreAPI/focus.ts");
 var getCustomData_1 = __webpack_require__(/*! ../coreAPI/getCustomData */ "./packages/roosterjs-editor-core/lib/coreAPI/getCustomData.ts");
@@ -3426,13 +3778,14 @@ function createEditorCore(contentDiv, options) {
         mouseUp: new MouseUpPlugin_1.default(),
         domEvent: new DOMEventPlugin_1.default(options.disableRestoreSelectionOnFocus),
         firefoxTypeAfterLink: roosterjs_editor_dom_1.Browser.isFirefox && new FirefoxTypeAfterLink_1.default(),
+        copyPlugin: !roosterjs_editor_dom_1.Browser.isIE && new CopyPlugin_1.default(),
     };
     var allPlugins = buildPluginList(corePlugins, options.plugins);
     var eventHandlerPlugins = allPlugins.filter(function (plugin) { return plugin.onPluginEvent || plugin.willHandleEventExclusively; });
     return {
         contentDiv: contentDiv,
         document: contentDiv.ownerDocument,
-        defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
+        defaultFormat: calculateDefaultFormat_1.calculateDefaultFormat(contentDiv, options.defaultFormat, options.inDarkMode),
         corePlugins: corePlugins,
         currentUndoSnapshot: null,
         customData: {},
@@ -3441,6 +3794,8 @@ function createEditorCore(contentDiv, options) {
         eventHandlerPlugins: eventHandlerPlugins,
         api: createCoreApiMap(options.coreApiOverride),
         defaultApi: createCoreApiMap(),
+        inDarkMode: options.inDarkMode,
+        darkModeOptions: options.darkModeOptions,
     };
 }
 exports.default = createEditorCore;
@@ -3453,24 +3808,8 @@ function buildPluginList(corePlugins, plugins) {
         corePlugins.firefoxTypeAfterLink,
         corePlugins.undo,
         corePlugins.domEvent,
+        corePlugins.copyPlugin,
     ]).filter(function (plugin) { return !!plugin; });
-}
-function calcDefaultFormat(node, baseFormat) {
-    if (baseFormat && Object.keys(baseFormat).length === 0) {
-        return {};
-    }
-    baseFormat = baseFormat || {};
-    var fontFamily = baseFormat.fontFamily, fontSize = baseFormat.fontSize, textColor = baseFormat.textColor, backgroundColor = baseFormat.backgroundColor, bold = baseFormat.bold, italic = baseFormat.italic, underline = baseFormat.underline;
-    var currentStyles = fontFamily && fontSize && textColor ? null : roosterjs_editor_dom_1.getComputedStyles(node);
-    return {
-        fontFamily: fontFamily || currentStyles[0],
-        fontSize: fontSize || currentStyles[1],
-        textColor: textColor || currentStyles[2],
-        backgroundColor: backgroundColor || '',
-        bold: bold,
-        italic: italic,
-        underline: underline,
-    };
 }
 function createCoreApiMap(map) {
     map = map || {};
@@ -3730,6 +4069,8 @@ var TypeInContainerPlugin_1 = __webpack_require__(/*! ./corePlugins/TypeInContai
 exports.TypeInContainerPlugin = TypeInContainerPlugin_1.default;
 var FirefoxTypeAfterLink_1 = __webpack_require__(/*! ./corePlugins/FirefoxTypeAfterLink */ "./packages/roosterjs-editor-core/lib/corePlugins/FirefoxTypeAfterLink.ts");
 exports.FirefoxTypeAfterLink = FirefoxTypeAfterLink_1.default;
+var CopyPlugin_1 = __webpack_require__(/*! ./corePlugins/CopyPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/CopyPlugin.ts");
+exports.CopyPlugin = CopyPlugin_1.default;
 // Event APIs
 var cacheGetEventData_1 = __webpack_require__(/*! ./eventApi/cacheGetEventData */ "./packages/roosterjs-editor-core/lib/eventApi/cacheGetEventData.ts");
 exports.cacheGetEventData = cacheGetEventData_1.default;
@@ -3870,7 +4211,7 @@ var Undo = /** @class */ (function () {
      * Add an undo snapshot
      */
     Undo.prototype.addUndoSnapshot = function () {
-        var snapshot = this.editor.getContent(false /*triggerExtractContentEvent*/, true /*markSelection*/);
+        var snapshot = this.editor.getContent(false /*triggerExtractContentEvent*/, true /* includeSelectionMarker */);
         this.getSnapshotsManager().addSnapshot(snapshot);
         this.hasNewContent = false;
         return snapshot;
@@ -6701,20 +7042,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @param element The HTML element to apply format to
  * @param format The format to apply
  */
-function applyFormat(element, format) {
+function applyFormat(element, format, isDarkMode) {
     if (format) {
         var elementStyle = element.style;
-        var fontFamily = format.fontFamily, fontSize = format.fontSize, textColor = format.textColor, backgroundColor = format.backgroundColor, bold = format.bold, italic = format.italic, underline = format.underline;
+        var fontFamily = format.fontFamily, fontSize = format.fontSize, textColor = format.textColor, textColors = format.textColors, backgroundColor = format.backgroundColor, backgroundColors = format.backgroundColors, bold = format.bold, italic = format.italic, underline = format.underline;
         if (fontFamily) {
             elementStyle.fontFamily = fontFamily;
         }
         if (fontSize) {
             elementStyle.fontSize = fontSize;
         }
-        if (textColor) {
+        if (textColor || textColors) {
+            if (textColors && isDarkMode) {
+                element.dataset.ogsc = textColors.lightModeColor;
+            }
             elementStyle.color = textColor;
         }
-        if (backgroundColor) {
+        if (backgroundColor || backgroundColors) {
+            if (backgroundColors && isDarkMode) {
+                element.dataset.ogsb = backgroundColors.lightModeColor;
+            }
             elementStyle.backgroundColor = backgroundColor;
         }
         if (bold) {
@@ -8885,6 +9232,9 @@ var Paste = /** @class */ (function () {
                 });
             });
         };
+        this.applyFormatting = function (format, isDarkMode) { return function (element) {
+            roosterjs_editor_dom_1.applyFormat(element, format, isDarkMode);
+        }; };
         this.sanitizer = new roosterjs_html_sanitizer_1.HtmlSanitizer({
             attributeCallbacks: attributeCallbacks,
         });
@@ -8946,7 +9296,7 @@ var Paste = /** @class */ (function () {
             for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
                 var node = nodes_1[_i];
                 if (mergeCurrentFormat) {
-                    this.applyTextFormat(node, clipboardData.originalFormat);
+                    this.applyToElements(node, this.applyFormatting(clipboardData.originalFormat, this.editor.isDarkMode()));
                 }
                 fragment.appendChild(node);
             }
@@ -8986,7 +9336,7 @@ var Paste = /** @class */ (function () {
             return clipboardData;
         }, "Paste" /* Paste */);
     };
-    Paste.prototype.applyTextFormat = function (node, format) {
+    Paste.prototype.applyToElements = function (node, elementTransform) {
         var leaf = roosterjs_editor_dom_1.getFirstLeafNode(node);
         var parents = [];
         while (leaf) {
@@ -8997,9 +9347,10 @@ var Paste = /** @class */ (function () {
             }
             leaf = roosterjs_editor_dom_1.getNextLeafSibling(node, leaf);
         }
+        parents.push(node);
         for (var _i = 0, parents_1 = parents; _i < parents_1.length; _i++) {
             var parent_1 = parents_1[_i];
-            roosterjs_editor_dom_1.applyFormat(parent_1, format);
+            elementTransform(parent_1);
         }
     };
     Paste.prototype.getCurrentFormat = function () {
@@ -10202,7 +10553,7 @@ var Watermark = /** @class */ (function () {
     Watermark.prototype.showWatermark = function () {
         var document = this.editor.getDocument();
         var watermarkNode = roosterjs_editor_dom_1.wrap(document.createTextNode(this.watermark), "<span id=\"" + WATERMARK_SPAN_ID + "\"></span>");
-        roosterjs_editor_dom_1.applyFormat(watermarkNode, this.format);
+        roosterjs_editor_dom_1.applyFormat(watermarkNode, this.format, this.editor.isDarkMode());
         this.editor.insertNode(watermarkNode, {
             position: 0 /* Begin */,
             updateCursor: false,

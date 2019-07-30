@@ -890,6 +890,25 @@ interface ClipboardItems {
 }
 
     /**
+ * The options to specify dark mode editor behavior
+ */
+interface DarkModeOptions {
+    /** Transform on insert controls if, when the editor is initialized, content should be transformed for dark mode.
+     *  Set this to true to run the content being set to the editor through an initial transform into dark mode.
+     *  Set this to false if you are setting dark mode compliant content initialy.
+     */
+    transformOnInitialize?: boolean;
+    /**
+     * RoosterJS provides an experemental "external content handler" that transforms text
+     * This is used when content is pasted or inserted via a method we can hook into.
+     * This transform is currently "lossy" and will eliminate color information.
+     * If you want change this behavior, you may define a different function here.
+     * It takes in the impacted HTMLElement
+     */
+    onExternalContentTransform?: (htmlIn: HTMLElement) => void;
+}
+
+    /**
  * Default format settings
  */
 interface DefaultFormat {
@@ -902,13 +921,21 @@ interface DefaultFormat {
      */
     fontSize?: string;
     /**
-     * Text color
+     * Single text color (for non dark mode/single mode editor)
      */
     textColor?: string;
     /**
-     * Background Color
+     * Text color light/dark mode pair
+     */
+    textColors?: ModeIndependentColor;
+    /**
+     * Single background color (for non dark mode/single mode editor)
      */
     backgroundColor?: string;
+    /**
+     * Background color light/dark mode pair
+     */
+    backgroundColors?: ModeIndependentColor;
     /**
      * Whether is bold
      */
@@ -1137,6 +1164,17 @@ interface LinkData {
      * Normalized url of a hyperlink
      */
     normalizedUrl: string;
+}
+
+    interface ModeIndependentColor {
+    /**
+     * The color to be used in dark mode, if enabled.
+     */
+    darkModeColor: string;
+    /**
+     * The color to be used in light mode, or stored as the original color in dark mode.
+     */
+    lightModeColor: string;
 }
 
     /**
@@ -1650,7 +1688,7 @@ function getBrowserInfo(userAgent: string, appVersion: string): BrowserInfo;
  * @param element The HTML element to apply format to
  * @param format The format to apply
  */
-function applyFormat(element: HTMLElement, format: DefaultFormat): void;
+function applyFormat(element: HTMLElement, format: DefaultFormat, isDarkMode?: boolean): void;
 
     /**
  * Change tag of an HTML Element to a new one, and replace it from DOM tree
@@ -2198,7 +2236,7 @@ interface EditorCore {
     /**
      * Default format of this editor
      */
-    readonly defaultFormat: DefaultFormat;
+    defaultFormat: DefaultFormat;
     /**
      * Core plugin of this editor
      */
@@ -2228,6 +2266,14 @@ interface EditorCore {
      * Cached selection range of this editor
      */
     cachedSelectionRange: Range;
+    /**
+     * If the editor is in dark mode.
+     */
+    inDarkMode: boolean;
+    /***
+     * The dark mode options, if set.
+     */
+    darkModeOptions?: DarkModeOptions;
 }
 
     /**
@@ -2259,6 +2305,10 @@ interface CorePlugins {
      * FirefoxTypeAfterLink plugin helps workaround a Firefox bug to allow type outside a hyperlink
      */
     readonly firefoxTypeAfterLink: FirefoxTypeAfterLink;
+    /**
+     * Copy plguin for handling dark mode copy.
+     */
+    readonly copyPlugin: CopyPlugin;
 }
 
     interface CoreApiMap {
@@ -2464,6 +2514,14 @@ interface EditorOptions {
      * Additional content edit features
      */
     additionalEditFeatures?: GenericContentEditFeature<PluginEvent>[];
+    /**
+     * If the editor is currently in dark mode
+     */
+    inDarkMode?: boolean;
+    /**
+     * Dark mode options for default format and paste handler
+     */
+    darkModeOptions?: DarkModeOptions;
 }
 
     /**
@@ -2922,6 +2980,21 @@ class Editor {
      * @param feature The feature to add
      */
     addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>): void;
+    /**
+     * Set the dark mode state and transforms the content to match the new state.
+     * @param nextDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
+     */
+    setDarkModeState(nextDarkMode?: boolean): void;
+    /**
+     * Check if the editor is in dark mode
+     * @returns True if the editor is in dark mode, otherwise false
+     */
+    isDarkMode(): boolean;
+    /**
+     * Returns the dark mode options set on the editor
+     * @returns A DarkModeOptions object
+     */
+    getDarkModeOptions(): DarkModeOptions;
 }
 
     /**
@@ -3138,6 +3211,28 @@ class FirefoxTypeAfterLink implements EditorPlugin  {
 }
 
     /**
+ * Copy plugin, hijacks copy events to normalize the content to the clipboard.
+ */
+class CopyPlugin implements EditorPlugin  {
+    private editor;
+    private copyDisposer;
+    /**
+     * Get a friendly name of  this plugin
+     */
+    getName(): string;
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
+    initialize(editor: Editor): void;
+    /**
+     * Dispose this plugin
+     */
+    dispose(): void;
+    private onCopy;
+}
+
+    /**
  * Gets the cached event data by cache key from event object if there is already one.
  * Otherwise, call getter function to create one, and cache it.
  * @param event The event object
@@ -3349,20 +3444,26 @@ function setAlignment(editor: Editor, alignment: Alignment): void;
     /**
  * Set background color at current selection
  * @param editor The editor instance
- * @param color The color string, can be any of the predefined color names (e.g, 'red')
+ * @param color One of two options:
+ * The color string, can be any of the predefined color names (e.g, 'red')
  * or hexadecimal color string (e.g, '#FF0000') or rgb value (e.g, 'rgb(255, 0, 0)') supported by browser.
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
- */
-function setBackgroundColor(editor: Editor, color: string): void;
+ * Alternatively, you can pass a @typedef ModeIndepenentColor. If in light mode, the lightModeColor property will be used.
+ * If in dark mode, the darkModeColor will be used and the lightModeColor will be used when converting back to light mode.
+ **/
+function setBackgroundColor(editor: Editor, color: string | ModeIndependentColor): void;
 
     /**
  * Set text color at selection
  * @param editor The editor instance
- * @param color The color string, can be any of the predefined color names (e.g, 'red')
+ * @param color One of two options:
+ * The color string, can be any of the predefined color names (e.g, 'red')
  * or hexadecimal color string (e.g, '#FF0000') or rgb value (e.g, 'rgb(255, 0, 0)') supported by browser.
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
+ * Alternatively, you can pass a @typedef ModeIndepenentColor. If in light mode, the lightModeColor property will be used.
+ * If in dark mode, the darkModeColor will be used and the lightModeColor will be used when converting back to light mode.
  */
-function setTextColor(editor: Editor, color: string): void;
+function setTextColor(editor: Editor, color: string | ModeIndependentColor): void;
 
     /**
  * Change direction for the blocks/paragraph at selection
@@ -3642,7 +3743,8 @@ class Paste implements EditorPlugin  {
     private detectPasteOption;
     private paste;
     private internalPaste;
-    private applyTextFormat;
+    private applyFormatting;
+    private applyToElements;
     private getCurrentFormat;
     private sanitizeHtml;
 }
