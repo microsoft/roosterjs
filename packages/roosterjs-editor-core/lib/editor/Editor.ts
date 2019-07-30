@@ -72,10 +72,7 @@ export default class Editor {
         this.core.plugins.forEach(plugin => plugin.initialize(this));
 
         // 4. Ensure initial content and its format
-        this.setContent(
-            options.initialContent || contentDiv.innerHTML || '',
-            true /* triggerContentChangedEvent */,
-        );
+        this.setContent(options.initialContent || contentDiv.innerHTML || '');
 
         // 5. Create event handler to bind DOM events
         this.eventDisposers = mapPluginEvents(this.core);
