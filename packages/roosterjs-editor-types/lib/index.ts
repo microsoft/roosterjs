@@ -43,6 +43,7 @@ export { PluginEventType } from './event/PluginEventType';
 export { default as BlockElement } from './interface/BlockElement';
 export { default as ClipboardData } from './interface/ClipboardData';
 export { default as ClipboardItems } from './interface/ClipboardItems';
+export { default as DarkModeOptions } from './interface/DarkModeOptions';
 export { default as DefaultFormat } from './interface/DefaultFormat';
 export {
     default as FormatState,
@@ -58,6 +59,7 @@ export {
     InsertOptionRange,
 } from './interface/InsertOption';
 export { default as LinkData } from './interface/LinkData';
+export { default as ModeIndependentColor } from './interface/ModeIndependentColor';
 export { default as NodePosition } from './interface/NodePosition';
 export { default as Rect } from './interface/Rect';
 export { default as SelectionPath } from './interface/SelectionPath';

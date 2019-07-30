@@ -1,3 +1,6 @@
+import ModeIndependentColor from './ModeIndependentColor';
+
+
 /**
  * Default format settings
  */
@@ -13,14 +16,24 @@ export default interface DefaultFormat {
     fontSize?: string;
 
     /**
-     * Text color
+     * Single text color (for non dark mode/single mode editor)
      */
     textColor?: string;
 
     /**
-     * Background Color
+     * Text color light/dark mode pair
+     */
+    textColors?: ModeIndependentColor;
+
+    /**
+     * Single background color (for non dark mode/single mode editor)
      */
     backgroundColor?: string;
+
+    /**
+     * Background color light/dark mode pair
+     */
+    backgroundColors?: ModeIndependentColor;
 
     /**
      * Whether is bold
