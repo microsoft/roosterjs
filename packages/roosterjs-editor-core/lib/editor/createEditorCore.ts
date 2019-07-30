@@ -10,7 +10,7 @@ import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import Undo from '../undo/Undo';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
 import { Browser } from 'roosterjs-editor-dom';
-import { calculateDefaultFormat } from '../coreApi/calculateDefaultFormat';
+import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
 import { getCustomData } from '../coreAPI/getCustomData';
