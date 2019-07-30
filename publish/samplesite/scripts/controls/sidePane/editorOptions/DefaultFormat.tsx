@@ -3,7 +3,8 @@ import BuildInPluginState from '../../BuildInPluginState';
 import { DefaultFormat } from 'roosterjs-editor-types';
 
 type ToggleFormatId = 'bold' | 'italic' | 'underline';
-type SelectFormatId = Exclude<keyof DefaultFormat, ToggleFormatId>;
+type ModeIndependentColorId = 'textColors' | 'backgroundColors';
+type SelectFormatId = Exclude<keyof DefaultFormat, ToggleFormatId | ModeIndependentColorId>;
 
 const styles = require('./OptionsPane.scss');
 const NOT_SET = 'NotSet';
