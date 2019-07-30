@@ -1,9 +1,11 @@
 import adjustBrowserBehavior from './adjustBrowserBehavior';
-import createEditorCore, { calcDefaultFormat } from './createEditorCore';
+import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import getColorNormalizedContent from '../darkMode/getColorNormalizedContent';
 import mapPluginEvents from './mapPluginEvents';
+import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
+import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import {
     BlockElement,
@@ -164,7 +166,15 @@ export default class Editor {
     public insertNode(node: Node, option?: InsertOption): boolean {
         // DocumentFragment type nodes become empty after they're inserted.
         // Therefore, we get the list of nodes to transform prior to their insertion.
-        const darkModeTransform = this.isDarkMode() ? this.convertContentToDarkMode(node) : null;
+        const darkModeOptions = this.getDarkModeOptions();
+        const darkModeTransform =
+            this.isDarkMode()
+                ? convertContentToDarkMode(
+                    node,
+                    (darkModeOptions && darkModeOptions.onExternalContentTransform)
+                        ? darkModeOptions.onExternalContentTransform
+                        : undefined,
+                ) : null
 
         const result = node ? this.core.api.insertNode(this.core, node, option) : false;
 
@@ -339,7 +349,7 @@ export default class Editor {
      */
     public getContent(
         triggerExtractContentEvent: boolean = true,
-        includeSelectionMarker: boolean = false,
+        includeSelectionMarker: boolean = false
     ): string {
         let contentDiv = this.core.contentDiv;
         let content = contentDiv.innerHTML;
@@ -405,8 +415,12 @@ export default class Editor {
 
         // Convert content even if it hasn't changed.
         if (this.core.inDarkMode) {
-            const convertFunction = this.convertContentToDarkMode(
+            const darkModeOptions = this.getDarkModeOptions();
+            const convertFunction = convertContentToDarkMode(
                 contentDiv,
+                (darkModeOptions && darkModeOptions.onExternalContentTransform)
+                    ? darkModeOptions.onExternalContentTransform
+                    : undefined,
                 true /* skipRootElement */
             );
             if (convertFunction) {
@@ -876,20 +890,13 @@ export default class Editor {
         );
 
         this.core.inDarkMode = nextDarkMode;
-        this.core.defaultFormat = calcDefaultFormat(
+        this.core.defaultFormat = calculateDefaultFormat(
             this.core.contentDiv,
             this.core.defaultFormat,
             this.core.inDarkMode
         );
 
-        if (nextDarkMode) {
-            this.setContent(
-                currentContent,
-                undefined /* triggerContentChangedEvent */,
-            );
-        } else {
-            this.setContent(currentContent);
-        }
+        this.setContent(currentContent);
     }
 
     /**
@@ -906,41 +913,6 @@ export default class Editor {
      */
     public getDarkModeOptions(): DarkModeOptions {
         return this.core.darkModeOptions;
-    }
-
-    /**
-     * Converter for dark mode that runs all child elements of a node through the content transform function.
-     * @param node The node containing HTML elements to convert.
-     * @param skipRootElement Optional parameter to skip the root element of the Node passed in, if applicable.
-     */
-    private convertContentToDarkMode(node: Node, skipRootElement?: boolean): () => void {
-        let childElements: HTMLElement[] = [];
-
-        // Get a list of all the decendents of a node.
-        // querySelectorAll doesn't return a live list when called on an HTMLElement
-        // So we use getElementsByTagName instead for HTMLElement types.
-        if (node instanceof HTMLElement) {
-            childElements = Array.prototype.slice.call(node.getElementsByTagName('*'));
-            if (!skipRootElement) {
-                childElements.unshift(node);
-            }
-        } else if (node instanceof DocumentFragment) {
-            childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
-        }
-
-        return childElements.length > 0
-            ? () => {
-                const darkModeOptions = this.getDarkModeOptions();
-                childElements.forEach(element => {
-                    if (darkModeOptions && darkModeOptions.onExternalContentTransform) {
-                        darkModeOptions.onExternalContentTransform(element);
-                    } else {
-                        element.style.color = null;
-                        element.style.backgroundColor = null;
-                    }
-                });
-            }
-            : null;
     }
 
     //#endregion

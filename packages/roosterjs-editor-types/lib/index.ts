@@ -4,9 +4,6 @@ export { DocumentCommand } from './browser/DocumentCommand';
 export { DocumentPosition } from './browser/DocumentPosition';
 export { NodeType } from './browser/NodeType';
 
-// Consts
-export { DARK_MODE_DEFAULT_FORMAT } from './consts/DarkMode';
-
 // Enum
 export { Alignment } from './enum/Alignment';
 export { ChangeSource } from './enum/ChangeSource';

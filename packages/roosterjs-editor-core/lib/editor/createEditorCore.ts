@@ -9,8 +9,8 @@ import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import Undo from '../undo/Undo';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
-import { Browser, getComputedStyles } from 'roosterjs-editor-dom';
-import { DARK_MODE_DEFAULT_FORMAT, DefaultFormat } from 'roosterjs-editor-types';
+import { Browser } from 'roosterjs-editor-dom';
+import { calculateDefaultFormat } from '../coreApi/calculateDefaultFormat';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
 import { getCustomData } from '../coreAPI/getCustomData';
@@ -36,7 +36,7 @@ export default function createEditorCore(
         mouseUp: new MouseUpPlugin(),
         domEvent: new DOMEventPlugin(options.disableRestoreSelectionOnFocus),
         firefoxTypeAfterLink: Browser.isFirefox && new FirefoxTypeAfterLink(),
-        copyPlugin: options.inDarkMode && Browser.isIE && new CopyPlugin(),
+        copyPlugin: !Browser.isIE && new CopyPlugin(),
     };
     let allPlugins = buildPluginList(corePlugins, options.plugins);
     let eventHandlerPlugins = allPlugins.filter(
@@ -45,7 +45,7 @@ export default function createEditorCore(
     return {
         contentDiv,
         document: contentDiv.ownerDocument,
-        defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat, options.inDarkMode),
+        defaultFormat: calculateDefaultFormat(contentDiv, options.defaultFormat, options.inDarkMode),
         corePlugins,
         currentUndoSnapshot: null,
         customData: {},
@@ -70,63 +70,6 @@ function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): Edi
         corePlugins.domEvent,
         corePlugins.copyPlugin,
     ].filter(plugin => !!plugin);
-}
-
-export function calcDefaultFormat(
-    node: Node,
-    baseFormat: DefaultFormat,
-    inDarkMode: boolean
-): DefaultFormat {
-    if (inDarkMode) {
-        if (!baseFormat.backgroundColors) {
-            baseFormat.backgroundColors = DARK_MODE_DEFAULT_FORMAT.backgroundColors;
-        }
-        if (!baseFormat.textColors) {
-            baseFormat.textColors = DARK_MODE_DEFAULT_FORMAT.textColors;
-        }
-    }
-
-    if (baseFormat && Object.keys(baseFormat).length === 0) {
-        return {};
-    }
-
-    baseFormat = baseFormat || <DefaultFormat>{};
-    let {
-        fontFamily,
-        fontSize,
-        textColor,
-        textColors,
-        backgroundColor,
-        backgroundColors,
-        bold,
-        italic,
-        underline,
-    } = baseFormat;
-    let currentStyles =
-        fontFamily && fontSize && (textColor || textColors) ? null : getComputedStyles(node);
-    return {
-        fontFamily: fontFamily || currentStyles[0],
-        fontSize: fontSize || currentStyles[1],
-        get textColor() {
-            return textColors
-                ? inDarkMode
-                    ? textColors.darkModeColor
-                    : textColors.lightModeColor
-                : textColor || currentStyles[2];
-        },
-        textColors: textColors,
-        get backgroundColor() {
-            return backgroundColors
-                ? inDarkMode
-                    ? backgroundColors.darkModeColor
-                    : backgroundColors.lightModeColor
-                : backgroundColor || '';
-        },
-        backgroundColors: backgroundColors,
-        bold: bold,
-        italic: italic,
-        underline: underline,
-    };
 }
 
 function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
