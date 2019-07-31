@@ -5,7 +5,7 @@ import EditorCore, { GetCustomData } from '../interfaces/EditorCore';
  * @param core The EditorCore object
  * @param key Key of the custom data
  * @param getter Getter function. If custom data for the given key doesn't exist,
- * call this function to get one and store it.
+ * call this function to get one and store it if it is specified. Otherwise return undefined
  * @param disposer An optional disposer function to dispose this custom data when
  * dispose editor.
  */
@@ -16,7 +16,7 @@ export const getCustomData: GetCustomData = <T>(
     disposer?: (value: T) => void
 ): T => {
     return (core.customData[key] = core.customData[key] || {
-        value: getter(),
+        value: getter ? getter() : undefined,
         disposer,
     }).value as T;
 };
