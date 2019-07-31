@@ -2617,7 +2617,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 var EditPlugin = /** @class */ (function () {
     function EditPlugin() {
-        this.currentFeature = null;
         this.featureMap = {};
         this.autoCompleteSnapshot = null;
         this.autoCompleteChangeSource = null;
@@ -2646,43 +2645,23 @@ var EditPlugin = /** @class */ (function () {
      */
     EditPlugin.prototype.onPluginEvent = function (event) {
         var contentChanged = false;
+        var currentFeature = this.findFeature(event);
         switch (event.eventType) {
             case 6 /* ContentChanged */:
-                if (this.autoCompleteChangeSource != event.source) {
-                    contentChanged = true;
-                }
-                if (!this.currentFeature) {
-                    this.findFeature(event);
-                }
+                contentChanged = this.autoCompleteChangeSource != event.source;
                 break;
             case 4 /* MouseDown */:
-                contentChanged = true;
-                break;
             case 0 /* KeyDown */:
                 contentChanged = true;
                 break;
         }
-        if (this.currentFeature) {
-            var feature = this.currentFeature;
-            this.currentFeature = null;
-            feature.handleEvent(event, this.editor);
+        if (currentFeature) {
+            currentFeature.handleEvent(event, this.editor);
         }
         if (contentChanged) {
             this.autoCompleteSnapshot = null;
             this.autoCompleteChangeSource = null;
         }
-    };
-    /**
-     * Check if the plugin should handle the given event exclusively.
-     * Handle an event exclusively means other plugin will not receive this event in
-     * onPluginEvent method.
-     * If two plugins will return true in willHandleEventExclusively() for the same event,
-     * the final result depends on the order of the plugins are added into editor
-     * @param event The event to check
-     */
-    EditPlugin.prototype.willHandleEventExclusively = function (event) {
-        this.findFeature(event);
-        return !!this.currentFeature;
     };
     /**
      * Add a Content Edit feature
@@ -2723,12 +2702,11 @@ var EditPlugin = /** @class */ (function () {
         else if (event.eventType == 6 /* ContentChanged */) {
             features = this.featureMap[2048 /* CONTENTCHANGED */];
         }
-        this.currentFeature =
-            features &&
-                features.filter(function (feature) {
-                    return (feature.allowFunctionKeys || !hasFunctionKey) &&
-                        feature.shouldHandleEvent(event, _this.editor);
-                })[0];
+        return (features &&
+            features.filter(function (feature) {
+                return (feature.allowFunctionKeys || !hasFunctionKey) &&
+                    feature.shouldHandleEvent(event, _this.editor);
+            })[0]);
     };
     return EditPlugin;
 }());
