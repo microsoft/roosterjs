@@ -46,10 +46,18 @@ export default function clearFormat(editor: Editor) {
                 setFontSize(editor, defaultFormat.fontSize);
             }
             if (defaultFormat.textColor) {
-                setTextColor(editor, defaultFormat.textColor);
+                if (defaultFormat.textColors) {
+                    setTextColor(editor, defaultFormat.textColors);
+                } else {
+                    setTextColor(editor, defaultFormat.textColor);
+                }
             }
             if (defaultFormat.backgroundColor) {
-                setBackgroundColor(editor, defaultFormat.backgroundColor);
+                if (defaultFormat.backgroundColors) {
+                    setBackgroundColor(editor, defaultFormat.backgroundColors);
+                } else {
+                    setBackgroundColor(editor, defaultFormat.backgroundColor);
+                }
             }
             if (defaultFormat.bold) {
                 toggleBold(editor);

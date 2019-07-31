@@ -1,3 +1,4 @@
+import CopyPlugin from '../corePlugins/CopyPlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorCore, { CoreApiMap, CorePlugins } from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
@@ -8,8 +9,8 @@ import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import Undo from '../undo/Undo';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
-import { Browser, getComputedStyles } from 'roosterjs-editor-dom';
-import { DefaultFormat } from 'roosterjs-editor-types';
+import { Browser } from 'roosterjs-editor-dom';
+import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
 import { getCustomData } from '../coreAPI/getCustomData';
@@ -35,6 +36,7 @@ export default function createEditorCore(
         mouseUp: new MouseUpPlugin(),
         domEvent: new DOMEventPlugin(options.disableRestoreSelectionOnFocus),
         firefoxTypeAfterLink: Browser.isFirefox && new FirefoxTypeAfterLink(),
+        copyPlugin: !Browser.isIE && new CopyPlugin(),
     };
     let allPlugins = buildPluginList(corePlugins, options.plugins);
     let eventHandlerPlugins = allPlugins.filter(
@@ -43,7 +45,7 @@ export default function createEditorCore(
     return {
         contentDiv,
         document: contentDiv.ownerDocument,
-        defaultFormat: calcDefaultFormat(contentDiv, options.defaultFormat),
+        defaultFormat: calculateDefaultFormat(contentDiv, options.defaultFormat, options.inDarkMode),
         corePlugins,
         currentUndoSnapshot: null,
         customData: {},
@@ -52,6 +54,8 @@ export default function createEditorCore(
         eventHandlerPlugins: eventHandlerPlugins,
         api: createCoreApiMap(options.coreApiOverride),
         defaultApi: createCoreApiMap(),
+        inDarkMode: options.inDarkMode,
+        darkModeOptions: options.darkModeOptions,
     };
 }
 
@@ -64,26 +68,8 @@ function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): Edi
         corePlugins.firefoxTypeAfterLink,
         corePlugins.undo,
         corePlugins.domEvent,
+        corePlugins.copyPlugin,
     ].filter(plugin => !!plugin);
-}
-
-function calcDefaultFormat(node: Node, baseFormat: DefaultFormat): DefaultFormat {
-    if (baseFormat && Object.keys(baseFormat).length === 0) {
-        return {};
-    }
-
-    baseFormat = baseFormat || <DefaultFormat>{};
-    let { fontFamily, fontSize, textColor, backgroundColor, bold, italic, underline } = baseFormat;
-    let currentStyles = fontFamily && fontSize && textColor ? null : getComputedStyles(node);
-    return {
-        fontFamily: fontFamily || currentStyles[0],
-        fontSize: fontSize || currentStyles[1],
-        textColor: textColor || currentStyles[2],
-        backgroundColor: backgroundColor || '',
-        bold: bold,
-        italic: italic,
-        underline: underline,
-    };
 }
 
 function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {

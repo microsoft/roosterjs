@@ -129,7 +129,7 @@ export default class Paste implements EditorPlugin {
 
             for (let node of nodes) {
                 if (mergeCurrentFormat) {
-                    this.applyTextFormat(node, clipboardData.originalFormat);
+                    this.applyToElements(node, this.applyFormatting(clipboardData.originalFormat, this.editor.isDarkMode()));
                 }
                 fragment.appendChild(node);
             }
@@ -179,7 +179,11 @@ export default class Paste implements EditorPlugin {
         }, ChangeSource.Paste);
     }
 
-    private applyTextFormat(node: Node, format: DefaultFormat) {
+    private applyFormatting = (format: DefaultFormat, isDarkMode: boolean) => (element: HTMLElement) => {
+        applyFormat(element, format, isDarkMode);
+    }
+
+    private applyToElements(node: Node, elementTransform: (element: HTMLElement) => void) {
         let leaf = getFirstLeafNode(node);
         let parents: HTMLElement[] = [];
         while (leaf) {
@@ -192,8 +196,9 @@ export default class Paste implements EditorPlugin {
             }
             leaf = getNextLeafSibling(node, leaf);
         }
+        parents.push(<HTMLElement>node);
         for (let parent of parents) {
-            applyFormat(parent, format);
+            elementTransform(parent);
         }
     }
 
@@ -201,14 +206,14 @@ export default class Paste implements EditorPlugin {
         let format = getFormatState(this.editor);
         return format
             ? {
-                  fontFamily: format.fontName,
-                  fontSize: format.fontSize,
-                  textColor: format.textColor,
-                  backgroundColor: format.backgroundColor,
-                  bold: format.isBold,
-                  italic: format.isItalic,
-                  underline: format.isUnderline,
-              }
+                fontFamily: format.fontName,
+                fontSize: format.fontSize,
+                textColor: format.textColor,
+                backgroundColor: format.backgroundColor,
+                bold: format.isBold,
+                italic: format.isItalic,
+                underline: format.isUnderline,
+            }
             : {};
     }
 

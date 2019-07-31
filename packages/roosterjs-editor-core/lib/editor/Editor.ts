@@ -2,12 +2,16 @@ import adjustBrowserBehavior from './adjustBrowserBehavior';
 import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
+import getColorNormalizedContent from '../darkMode/getColorNormalizedContent';
 import mapPluginEvents from './mapPluginEvents';
+import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
+import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import {
     BlockElement,
     ChangeSource,
     ContentPosition,
+    DarkModeOptions,
     DefaultFormat,
     InlineElement,
     InsertOption,
@@ -151,7 +155,24 @@ export default class Editor {
      * @returns true if node is inserted. Otherwise false
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
-        return node ? this.core.api.insertNode(this.core, node, option) : false;
+        // DocumentFragment type nodes become empty after they're inserted.
+        // Therefore, we get the list of nodes to transform prior to their insertion.
+        const darkModeOptions = this.getDarkModeOptions();
+        const darkModeTransform = this.isDarkMode()
+            ? convertContentToDarkMode(
+                  node,
+                  darkModeOptions && darkModeOptions.onExternalContentTransform
+                      ? darkModeOptions.onExternalContentTransform
+                      : undefined
+              )
+            : null;
+
+        const result = node ? this.core.api.insertNode(this.core, node, option) : false;
+
+        if (result && darkModeTransform) {
+            darkModeTransform();
+        }
+        return result;
     }
 
     /**
@@ -340,6 +361,10 @@ export default class Editor {
             ).content;
         }
 
+        if (this.core.inDarkMode) {
+            content = getColorNormalizedContent(content);
+        }
+
         return content;
     }
 
@@ -358,8 +383,10 @@ export default class Editor {
      */
     public setContent(content: string, triggerContentChangedEvent: boolean = true) {
         let contentDiv = this.core.contentDiv;
+        let contentChanged = false;
         if (contentDiv.innerHTML != content) {
             contentDiv.innerHTML = content || '';
+            contentChanged = true;
 
             let pathComment = contentDiv.lastChild;
 
@@ -371,10 +398,26 @@ export default class Editor {
                     this.select(range);
                 } catch {}
             }
+        }
 
-            if (triggerContentChangedEvent) {
-                this.triggerContentChangedEvent();
+        // Convert content even if it hasn't changed.
+        if (this.core.inDarkMode) {
+            const darkModeOptions = this.getDarkModeOptions();
+            const convertFunction = convertContentToDarkMode(
+                contentDiv,
+                darkModeOptions && darkModeOptions.onExternalContentTransform
+                    ? darkModeOptions.onExternalContentTransform
+                    : undefined,
+                true /* skipRootElement */
+            );
+            if (convertFunction) {
+                convertFunction();
+                contentChanged = true;
             }
+        }
+
+        if (triggerContentChangedEvent && contentChanged) {
+            this.triggerContentChangedEvent();
         }
     }
 
@@ -832,6 +875,50 @@ export default class Editor {
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
         this.core.corePlugins.edit.addFeature(feature);
+    }
+
+    //#endregion
+
+    //#region Dark mode APIs
+
+    /**
+     * Set the dark mode state and transforms the content to match the new state.
+     * @param nextDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
+     */
+    public setDarkModeState(nextDarkMode?: boolean) {
+        if (this.isDarkMode() == nextDarkMode) {
+            return;
+        }
+
+        const currentContent = this.getContent(
+            undefined /* triggerContentChangedEvent */,
+            true /* getSelectionMarker */
+        );
+
+        this.core.inDarkMode = nextDarkMode;
+        this.core.defaultFormat = calculateDefaultFormat(
+            this.core.contentDiv,
+            this.core.defaultFormat,
+            this.core.inDarkMode
+        );
+
+        this.setContent(currentContent);
+    }
+
+    /**
+     * Check if the editor is in dark mode
+     * @returns True if the editor is in dark mode, otherwise false
+     */
+    public isDarkMode(): boolean {
+        return this.core.inDarkMode;
+    }
+
+    /**
+     * Returns the dark mode options set on the editor
+     * @returns A DarkModeOptions object
+     */
+    public getDarkModeOptions(): DarkModeOptions {
+        return this.core.darkModeOptions;
     }
 
     //#endregion
