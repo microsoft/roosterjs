@@ -155,7 +155,6 @@ export default class Editor {
      * @returns true if node is inserted. Otherwise false
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
-        return node ? this.core.api.insertNode(this.core, node, option) : false;
         // DocumentFragment type nodes become empty after they're inserted.
         // Therefore, we get the list of nodes to transform prior to their insertion.
         const darkModeOptions = this.getDarkModeOptions();
