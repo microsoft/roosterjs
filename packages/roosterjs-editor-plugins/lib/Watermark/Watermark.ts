@@ -102,7 +102,7 @@ export default class Watermark implements EditorPlugin {
             document.createTextNode(this.watermark),
             `<span id="${WATERMARK_SPAN_ID}"></span>`
         ) as HTMLElement;
-        applyFormat(watermarkNode, this.format);
+        applyFormat(watermarkNode, this.format, this.editor.isDarkMode());
         this.editor.insertNode(watermarkNode, {
             position: ContentPosition.Begin,
             updateCursor: false,

@@ -1,7 +1,7 @@
 import EditorPlugin from './EditorPlugin';
 import UndoService from './UndoService';
 import { CoreApiMap } from './EditorCore';
-import { DefaultFormat, PluginEvent } from 'roosterjs-editor-types';
+import { DarkModeOptions, DefaultFormat, PluginEvent } from 'roosterjs-editor-types';
 import { GenericContentEditFeature } from './ContentEditFeature';
 
 /**
@@ -57,4 +57,24 @@ export default interface EditorOptions {
      * Additional content edit features
      */
     additionalEditFeatures?: GenericContentEditFeature<PluginEvent>[];
+
+    /**
+     * If the editor is currently in dark mode
+     */
+    inDarkMode?: boolean;
+
+    /**
+     * Dark mode options for default format and paste handler
+     */
+    darkModeOptions?: DarkModeOptions;
+
+    /**
+     * Initial custom data.
+     * Use this option to set custom data before any plugin is initialized,
+     * so that plugins can access the custom data safely.
+     * The value of this map is the value of each custom data. No disposer function to specify here.
+     * Because when set custom data via this way, it means the custom data value is created before editor,
+     * so editor shouldn't control the lifecycle of these objects, and caller need to manage its lifecycle.
+     */
+    customData?: { [key: string]: any };
 }

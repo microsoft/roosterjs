@@ -4,6 +4,7 @@ export {
     GenericContentEditFeature,
     Keys,
 } from './interfaces/ContentEditFeature';
+export { default as CustomData, CustomDataMap } from './interfaces/CustomData';
 export {
     default as EditorCore,
     CorePlugins,
@@ -34,6 +35,7 @@ export { default as MouseUpPlugin } from './corePlugins/MouseUpPlugin';
 export { default as DOMEventPlugin } from './corePlugins/DOMEventPlugin';
 export { default as TypeInContainerPlugin } from './corePlugins/TypeInContainerPlugin';
 export { default as FirefoxTypeAfterLink } from './corePlugins/FirefoxTypeAfterLink';
+export { default as CopyPlugin } from './corePlugins/CopyPlugin';
 
 // Event APIs
 export { default as cacheGetEventData } from './eventApi/cacheGetEventData';

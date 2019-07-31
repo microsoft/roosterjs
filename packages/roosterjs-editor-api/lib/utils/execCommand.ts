@@ -28,8 +28,7 @@ export default function execCommand(editor: Editor, command: DocumentCommand) {
 
         if (isPendableFormatCommand(command)) {
             // Trigger PendingFormatStateChanged event since we changed pending format state
-            editor.triggerEvent({
-                eventType: PluginEventType.PendingFormatStateChanged,
+            editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
                 formatState: getPendableFormatState(editor.getDocument()),
             });
         }

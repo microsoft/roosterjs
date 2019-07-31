@@ -9,7 +9,6 @@ import {
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
-    PluginCompositionEvent,
     PluginEventType,
     NodePosition,
     PendableFormatState,
@@ -42,11 +41,10 @@ export default class DOMEventPlugin implements EditorPlugin {
         this.disposer = editor.addDomEventHandler({
             // 1. IME state management
             compositionstart: () => (this.inIme = true),
-            compositionend: (e: CompositionEvent) => {
+            compositionend: (rawEvent: CompositionEvent) => {
                 this.inIme = false;
-                editor.triggerEvent(<PluginCompositionEvent>{
-                    eventType: PluginEventType.CompositionEnd,
-                    rawEvent: e,
+                editor.triggerPluginEvent(PluginEventType.CompositionEnd, {
+                    rawEvent,
                 });
             },
 
