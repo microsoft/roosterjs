@@ -2512,8 +2512,8 @@ var DOMEventPlugin = /** @class */ (function () {
         return 'DOMEvent';
     };
     DOMEventPlugin.prototype.initialize = function (editor) {
-        var _this = this;
         var _a;
+        var _this = this;
         this.editor = editor;
         this.disposer = editor.addDomEventHandler((_a = {
                 // 1. IME state management
@@ -3101,8 +3101,8 @@ var Editor = /** @class */ (function () {
      * @param options An optional options object to customize the editor
      */
     function Editor(contentDiv, options) {
-        if (options === void 0) { options = {}; }
         var _this = this;
+        if (options === void 0) { options = {}; }
         // 1. Make sure all parameters are valid
         if (roosterjs_editor_dom_1.getTagOfNode(contentDiv) != 'DIV') {
             throw new Error('contentDiv must be an HTML DIV element');
@@ -3687,8 +3687,8 @@ exports.default = Editor;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
 var _a, _b;
+Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var COMMANDS = roosterjs_editor_dom_1.Browser.isFirefox
     ? (_a = {},
@@ -3835,8 +3835,8 @@ function createCustomData(initValue) {
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
 var _a;
+Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var EVENT_MAPPING = (_a = {
         keypress: 1 /* KeyPress */,
@@ -7342,7 +7342,7 @@ var CLIPBOARD_HTML_HEADER_REGEX = /^Version:[0-9\.]+\s+StartHTML:\s*([0-9]+)\s+E
  */
 function extractClipboardEvent(event, callback) {
     var dataTransfer = event.clipboardData ||
-        event.srcElement.ownerDocument.defaultView.clipboardData;
+        event.target.ownerDocument.defaultView.clipboardData;
     var result = {
         types: dataTransfer.types ? [].slice.call(dataTransfer.types) : [],
         text: dataTransfer.getData('text'),
@@ -9110,13 +9110,13 @@ var HyperLink = /** @class */ (function () {
      * @param onLinkClick (Optional) Open link callback (return false to use default behavior)
      */
     function HyperLink(getTooltipCallback, target, onLinkClick) {
-        if (getTooltipCallback === void 0) { getTooltipCallback = function (href) { return href; }; }
         var _this = this;
+        if (getTooltipCallback === void 0) { getTooltipCallback = function (href) { return href; }; }
         this.getTooltipCallback = getTooltipCallback;
         this.target = target;
         this.onLinkClick = onLinkClick;
         this.onMouse = function (e) {
-            var a = _this.editor.getElementAtCursor('a[href]', e.srcElement);
+            var a = _this.editor.getElementAtCursor('a[href]', e.target);
             var href = _this.tryGetHref(a);
             if (href) {
                 _this.editor.setEditorDomAttribute('title', e.type == 'mouseover' ? _this.getTooltipCallback(href, a) : null);
@@ -9153,7 +9153,7 @@ var HyperLink = /** @class */ (function () {
      */
     HyperLink.prototype.onPluginEvent = function (event) {
         if (event.eventType == 5 /* MouseUp */) {
-            var anchor = this.editor.getElementAtCursor('A', event.rawEvent.srcElement);
+            var anchor = this.editor.getElementAtCursor('A', (event.rawEvent.srcElement));
             if (anchor) {
                 if (this.onLinkClick && this.onLinkClick(anchor, event.rawEvent) !== false) {
                     return;
@@ -11153,12 +11153,12 @@ var ImageResize = /** @class */ (function () {
      * that the tag must be IMG regardless what the selector is
      */
     function ImageResize(minWidth, minHeight, selectionBorderColor, forcePreserveRatio, resizableImageSelector) {
+        var _this = this;
         if (minWidth === void 0) { minWidth = 10; }
         if (minHeight === void 0) { minHeight = 10; }
         if (selectionBorderColor === void 0) { selectionBorderColor = '#DB626C'; }
         if (forcePreserveRatio === void 0) { forcePreserveRatio = false; }
         if (resizableImageSelector === void 0) { resizableImageSelector = 'img'; }
-        var _this = this;
         this.minWidth = minWidth;
         this.minHeight = minHeight;
         this.selectionBorderColor = selectionBorderColor;
