@@ -1,7 +1,7 @@
 import EditorPlugin from './EditorPlugin';
 import UndoService from './UndoService';
 import { CoreApiMap } from './EditorCore';
-import { DefaultFormat, PluginEvent } from 'roosterjs-editor-types';
+import { DarkModeOptions, DefaultFormat, PluginEvent } from 'roosterjs-editor-types';
 import { GenericContentEditFeature } from './ContentEditFeature';
 
 /**
@@ -57,6 +57,16 @@ export default interface EditorOptions {
      * Additional content edit features
      */
     additionalEditFeatures?: GenericContentEditFeature<PluginEvent>[];
+
+    /**
+     * If the editor is currently in dark mode
+     */
+    inDarkMode?: boolean;
+
+    /**
+     * Dark mode options for default format and paste handler
+     */
+    darkModeOptions?: DarkModeOptions;
 
     /**
      * Initial custom data.
