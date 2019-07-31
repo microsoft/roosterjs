@@ -11,6 +11,7 @@ import Undo from '../undo/Undo';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
 import { Browser } from 'roosterjs-editor-dom';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
+import { CustomDataMap } from '../interfaces/CustomData';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
 import { getCustomData } from '../coreAPI/getCustomData';
@@ -45,10 +46,14 @@ export default function createEditorCore(
     return {
         contentDiv,
         document: contentDiv.ownerDocument,
-        defaultFormat: calculateDefaultFormat(contentDiv, options.defaultFormat, options.inDarkMode),
+        defaultFormat: calculateDefaultFormat(
+            contentDiv,
+            options.defaultFormat,
+            options.inDarkMode
+        ),
         corePlugins,
         currentUndoSnapshot: null,
-        customData: {},
+        customData: createCustomData(options.customData || {}),
         cachedSelectionRange: null,
         plugins: allPlugins,
         eventHandlerPlugins: eventHandlerPlugins,
@@ -86,4 +91,16 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
         selectRange: map.selectRange || selectRange,
         triggerEvent: map.triggerEvent || triggerEvent,
     };
+}
+
+function createCustomData(initValue: { [key: string]: any }): CustomDataMap {
+    return Object.keys(initValue).reduce(
+        (result, key) => {
+            result[key] = {
+                value: initValue[key],
+            };
+            return result;
+        },
+        <CustomDataMap>{}
+    );
 }
