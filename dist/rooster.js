@@ -1689,8 +1689,7 @@ function execCommand(editor, command) {
         formatter();
         if (isPendableFormatCommand(command)) {
             // Trigger PendingFormatStateChanged event since we changed pending format state
-            editor.triggerEvent({
-                eventType: 12 /* PendingFormatStateChanged */,
+            editor.triggerPluginEvent(12 /* PendingFormatStateChanged */, {
                 formatState: roosterjs_editor_dom_1.getPendableFormatState(editor.getDocument()),
             });
         }
@@ -2520,11 +2519,10 @@ var DOMEventPlugin = /** @class */ (function () {
         this.disposer = editor.addDomEventHandler((_a = {
                 // 1. IME state management
                 compositionstart: function () { return (_this.inIme = true); },
-                compositionend: function (e) {
+                compositionend: function (rawEvent) {
                     _this.inIme = false;
-                    editor.triggerEvent({
-                        eventType: 3 /* CompositionEnd */,
-                        rawEvent: e,
+                    editor.triggerPluginEvent(3 /* CompositionEnd */, {
+                        rawEvent: rawEvent,
                     });
                 },
                 // 2. Cut and drop management
@@ -2810,12 +2808,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var MouseUpPlugin = /** @class */ (function () {
     function MouseUpPlugin() {
         var _this = this;
-        this.onMouseUp = function (e) {
+        this.onMouseUp = function (rawEvent) {
             if (_this.editor) {
                 _this.removeMouseUpEventListener();
-                _this.editor.triggerEvent({
-                    eventType: 5 /* MouseUp */,
-                    rawEvent: e,
+                _this.editor.triggerPluginEvent(5 /* MouseUp */, {
+                    rawEvent: rawEvent,
                 });
             }
         };
@@ -3097,6 +3094,17 @@ function isDataAttributeSettable(newStyle) {
 
 "use strict";
 
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var adjustBrowserBehavior_1 = __webpack_require__(/*! ./adjustBrowserBehavior */ "./packages/roosterjs-editor-core/lib/editor/adjustBrowserBehavior.ts");
 var createEditorCore_1 = __webpack_require__(/*! ./createEditorCore */ "./packages/roosterjs-editor-core/lib/editor/createEditorCore.ts");
@@ -3144,9 +3152,7 @@ var Editor = /** @class */ (function () {
         // 8. Do proper change for browsers to disable some browser-specified behaviors.
         adjustBrowserBehavior_1.default();
         // 9. Let plugins know that we are ready
-        this.triggerEvent({
-            eventType: 9 /* EditorReady */,
-        }, true /*broadcast*/);
+        this.triggerPluginEvent(9 /* EditorReady */, {}, true /*broadcast*/);
         // 10. Before give editor to user, make sure there is at least one DIV element to accept typing
         this.core.corePlugins.typeInContainer.ensureTypeInElement(new roosterjs_editor_dom_1.Position(contentDiv, 0 /* Begin */));
     }
@@ -3154,9 +3160,7 @@ var Editor = /** @class */ (function () {
      * Dispose this editor, dispose all plugins and custom data
      */
     Editor.prototype.dispose = function () {
-        this.triggerEvent({
-            eventType: 10 /* BeforeDispose */,
-        }, true /*broadcast*/);
+        this.triggerPluginEvent(10 /* BeforeDispose */, {}, true /*broadcast*/);
         this.core.plugins.forEach(function (plugin) { return plugin.dispose(); });
         this.eventDisposers.forEach(function (disposer) { return disposer(); });
         this.eventDisposers = null;
@@ -3199,9 +3203,10 @@ var Editor = /** @class */ (function () {
         // Therefore, we get the list of nodes to transform prior to their insertion.
         var darkModeOptions = this.getDarkModeOptions();
         var darkModeTransform = this.isDarkMode()
-            ? convertContentToDarkMode_1.convertContentToDarkMode(node, (darkModeOptions && darkModeOptions.onExternalContentTransform)
+            ? convertContentToDarkMode_1.convertContentToDarkMode(node, darkModeOptions && darkModeOptions.onExternalContentTransform
                 ? darkModeOptions.onExternalContentTransform
-                : undefined) : null;
+                : undefined)
+            : null;
         var result = node ? this.core.api.insertNode(this.core, node, option) : false;
         if (result && darkModeTransform) {
             darkModeTransform();
@@ -3304,12 +3309,7 @@ var Editor = /** @class */ (function () {
             content += "<!--" + JSON.stringify(selectionPath) + "-->";
         }
         if (triggerExtractContentEvent) {
-            var extractContentEvent = {
-                eventType: 7 /* ExtractContent */,
-                content: content,
-            };
-            this.triggerEvent(extractContentEvent, true /*broadcast*/);
-            content = extractContentEvent.content;
+            content = this.triggerPluginEvent(7 /* ExtractContent */, { content: content }, true /*broadcast*/).content;
         }
         if (this.core.inDarkMode) {
             content = getColorNormalizedContent_1.default(content);
@@ -3349,7 +3349,7 @@ var Editor = /** @class */ (function () {
         // Convert content even if it hasn't changed.
         if (this.core.inDarkMode) {
             var darkModeOptions = this.getDarkModeOptions();
-            var convertFunction = convertContentToDarkMode_1.convertContentToDarkMode(contentDiv, (darkModeOptions && darkModeOptions.onExternalContentTransform)
+            var convertFunction = convertContentToDarkMode_1.convertContentToDarkMode(contentDiv, darkModeOptions && darkModeOptions.onExternalContentTransform
                 ? darkModeOptions.onExternalContentTransform
                 : undefined, true /* skipRootElement */);
             if (convertFunction) {
@@ -3487,9 +3487,20 @@ var Editor = /** @class */ (function () {
     };
     /**
      * Trigger an event to be dispatched to all plugins
-     * @param pluginEvent The event object to trigger
+     * @param eventType Type of the event
+     * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
      * @param broadcast indicates if the event needs to be dispatched to all plugins
      * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
+     * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
+     * the result of this function provides a chance to read the modified result
+     */
+    Editor.prototype.triggerPluginEvent = function (eventType, data, broadcast) {
+        var event = __assign({ eventType: eventType }, data);
+        this.core.api.triggerEvent(this.core, event, broadcast);
+        return event;
+    };
+    /**
+     * @deprecated Use triggerPluginEvent instead
      */
     Editor.prototype.triggerEvent = function (pluginEvent, broadcast) {
         if (broadcast === void 0) { broadcast = true; }
@@ -3502,8 +3513,7 @@ var Editor = /** @class */ (function () {
      */
     Editor.prototype.triggerContentChangedEvent = function (source, data) {
         if (source === void 0) { source = "SetContent" /* SetContent */; }
-        this.triggerEvent({
-            eventType: 6 /* ContentChanged */,
+        this.triggerPluginEvent(6 /* ContentChanged */, {
             source: source,
             data: data,
         });
@@ -9302,13 +9312,11 @@ var Paste = /** @class */ (function () {
                 fragment.appendChild(node);
             }
         }
-        var event = {
-            eventType: 8 /* BeforePaste */,
+        var event = this.editor.triggerPluginEvent(8 /* BeforePaste */, {
             clipboardData: clipboardData,
             fragment: fragment,
             pasteOption: pasteOption,
-        };
-        this.editor.triggerEvent(event, true /*broadcast*/);
+        }, true /*broadcast*/);
         this.internalPaste(event);
     };
     Paste.prototype.internalPaste = function (event) {

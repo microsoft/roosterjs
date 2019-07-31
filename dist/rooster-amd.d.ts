@@ -794,6 +794,28 @@ export const enum PluginEventType {
 }
 
 /**
+ * A type to extract data part of a plugin event type. Data part is the plugin event without eventType field.
+ */
+export type PluginEventData<T extends PluginEventType> = PluginEventDataGeneric<PluginEvent, T>;
+
+/**
+ * A type to extract data part of a plugin event type. Data part is the plugin event without eventType field.
+ * This type is a middle result and only used by PluginEventData type
+ */
+export type PluginEventDataGeneric<E extends PluginEvent, T extends PluginEventType> = E extends BasePluginEvent<T> ? Pick<E, Exclude<keyof E, 'eventType'>> : never;
+
+/**
+ * A type to get specify plugin event type from eventType parameter.
+ */
+export type PluginEventFromType<T extends PluginEventType> = PluginEventFromTypeGeneric<PluginEvent, T>;
+
+/**
+ * A type to get specify plugin event type from eventType parameter.
+ * This type is a middle result and only used by PluginEventFromType type
+ */
+export type PluginEventFromTypeGeneric<E extends PluginEvent, T extends PluginEventType> = E extends BasePluginEvent<T> ? E : never;
+
+/**
  * This refers to a "content block" in editor that serves as a content parsing boundary
  * It is most those html block like tags, i.e. &lt;p&gt;, &lt;div&gt;, &lt;li&gt;, &lt;td&gt; etc.
  * but can also be just a text node, followed by a &lt;br&gt;, i.e.
@@ -2877,9 +2899,16 @@ export class Editor {
     }): () => void;
     /**
      * Trigger an event to be dispatched to all plugins
-     * @param pluginEvent The event object to trigger
+     * @param eventType Type of the event
+     * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
      * @param broadcast indicates if the event needs to be dispatched to all plugins
      * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
+     * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
+     * the result of this function provides a chance to read the modified result
+     */
+    triggerPluginEvent<T extends PluginEventType>(eventType: T, data: PluginEventData<T>, broadcast?: boolean): PluginEventFromType<T>;
+    /**
+     * @deprecated Use triggerPluginEvent instead
      */
     triggerEvent(pluginEvent: PluginEvent, broadcast?: boolean): void;
     /**
