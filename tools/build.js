@@ -283,9 +283,9 @@ function countWord(inputFile) {
 }
 
 function exploreSourceMap(inputFile) {
-    var commandPath = path.join(nodeModulesPath, 'source-map-explorer/index.js');
+    var commandPath = path.join(nodeModulesPath, 'source-map-explorer/dist/cli.js');
     var targetFile = path.join(roosterJsDistPath, 'sourceMap.html');
-    runNode(`${commandPath} -m --html ${inputFile} > ${targetFile}`, rootPath);
+    runNode(`${commandPath} ${inputFile} -m --html > ${targetFile}`, rootPath);
 }
 
 var dtsQueue = [];

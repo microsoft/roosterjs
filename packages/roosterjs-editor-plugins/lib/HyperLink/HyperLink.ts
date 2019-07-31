@@ -41,7 +41,7 @@ export default class HyperLink implements EditorPlugin {
     }
 
     protected onMouse = (e: MouseEvent) => {
-        const a = this.editor.getElementAtCursor('a[href]', e.srcElement) as HTMLAnchorElement;
+        const a = this.editor.getElementAtCursor('a[href]', <Node>e.target) as HTMLAnchorElement;
         const href = this.tryGetHref(a);
 
         if (href) {
@@ -67,10 +67,9 @@ export default class HyperLink implements EditorPlugin {
      */
     public onPluginEvent(event: PluginEvent): void {
         if (event.eventType == PluginEventType.MouseUp) {
-            const anchor = this.editor.getElementAtCursor(
-                'A',
+            const anchor = this.editor.getElementAtCursor('A', <Node>(
                 event.rawEvent.srcElement
-            ) as HTMLAnchorElement;
+            )) as HTMLAnchorElement;
 
             if (anchor) {
                 if (this.onLinkClick && this.onLinkClick(anchor, event.rawEvent) !== false) {

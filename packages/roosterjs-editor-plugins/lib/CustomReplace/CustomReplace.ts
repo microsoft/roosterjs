@@ -153,7 +153,7 @@ function getLongestReplacementSourceLength(replacements: Replacement[]): number 
 }
 
 function getReplacementEndCharacters(replacements: Replacement[]): Set<string> {
-    const endChars = new Set();
+    const endChars = new Set<string>();
     for (let replacement of replacements) {
         const sourceString = replacement.sourceString;
         if (sourceString.length == 0) {
