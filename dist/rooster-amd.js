@@ -2092,13 +2092,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @param core The EditorCore object
  * @param key Key of the custom data
  * @param getter Getter function. If custom data for the given key doesn't exist,
- * call this function to get one and store it.
+ * call this function to get one and store it if it is specified. Otherwise return undefined
  * @param disposer An optional disposer function to dispose this custom data when
  * dispose editor.
  */
 exports.getCustomData = function (core, key, getter, disposer) {
     return (core.customData[key] = core.customData[key] || {
-        value: getter(),
+        value: getter ? getter() : undefined,
         disposer: disposer,
     }).value;
 };
@@ -3579,7 +3579,7 @@ var Editor = /** @class */ (function () {
      * Get custom data related to this editor
      * @param key Key of the custom data
      * @param getter Getter function. If custom data for the given key doesn't exist,
-     * call this function to get one and store it.
+     * call this function to get one and store it if it is specified. Otherwise return undefined
      * @param disposer An optional disposer function to dispose this custom data when
      * dispose editor.
      */
@@ -3798,7 +3798,7 @@ function createEditorCore(contentDiv, options) {
         defaultFormat: calculateDefaultFormat_1.calculateDefaultFormat(contentDiv, options.defaultFormat, options.inDarkMode),
         corePlugins: corePlugins,
         currentUndoSnapshot: null,
-        customData: {},
+        customData: createCustomData(options.customData || {}),
         cachedSelectionRange: null,
         plugins: allPlugins,
         eventHandlerPlugins: eventHandlerPlugins,
@@ -3835,6 +3835,14 @@ function createCoreApiMap(map) {
         selectRange: map.selectRange || selectRange_1.selectRange,
         triggerEvent: map.triggerEvent || triggerEvent_1.triggerEvent,
     };
+}
+function createCustomData(initValue) {
+    return Object.keys(initValue).reduce(function (result, key) {
+        result[key] = {
+            value: initValue[key],
+        };
+        return result;
+    }, {});
 }
 
 
@@ -4164,7 +4172,11 @@ var Undo = /** @class */ (function () {
         }
         switch (event.eventType) {
             case 9 /* EditorReady */:
-                this.addUndoSnapshot();
+                if (!this.preserveSnapshots || (!this.canUndo() && !this.canRedo())) {
+                    // Only add initial snapshot when we don't need to preserve snapshots or there is no existing snapshot
+                    // Otherwise preserved undo/redo state may be ruined
+                    this.addUndoSnapshot();
+                }
                 break;
             case 0 /* KeyDown */:
                 this.onKeyDown(event.rawEvent);

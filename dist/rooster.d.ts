@@ -2236,6 +2236,28 @@ const enum Keys {
 }
 
     /**
+ * Custom data stored in editor
+ */
+interface CustomData {
+    /**
+     * Value of this custom data
+     */
+    value: any;
+    /**
+     * Optional disposer function of the custom data.
+     * When a valid value is set, it will be invoked when editor is disposing
+     */
+    disposer?: (value: any) => void;
+}
+
+    /**
+ * Define the type of a map from key to custom data
+ */
+type CustomDataMap = {
+    [key: string]: CustomData;
+};
+
+    /**
  * Represents the core data structure of an editor
  */
 interface EditorCore {
@@ -2266,12 +2288,7 @@ interface EditorCore {
     /**
      * Custom data of this editor
      */
-    readonly customData: {
-        [Key: string]: {
-            value: any;
-            disposer: (value: any) => void;
-        };
-    };
+    readonly customData: CustomDataMap;
     /**
      * Core API map of this editor
      */
@@ -2437,7 +2454,7 @@ type Focus = (core: EditorCore) => void;
  * @param core The EditorCore object
  * @param key Key of the custom data
  * @param getter Getter function. If custom data for the given key doesn't exist,
- * call this function to get one and store it.
+ * call this function to get one and store it if it is specified. Otherwise return undefined
  * @param disposer An optional disposer function to dispose this custom data when
  * dispose editor.
  */
@@ -2544,6 +2561,17 @@ interface EditorOptions {
      * Dark mode options for default format and paste handler
      */
     darkModeOptions?: DarkModeOptions;
+    /**
+     * Initial custom data.
+     * Use this option to set custom data before any plugin is initialized,
+     * so that plugins can access the custom data safely.
+     * The value of this map is the value of each custom data. No disposer function to specify here.
+     * Because when set custom data via this way, it means the custom data value is created before editor,
+     * so editor shouldn't control the lifecycle of these objects, and caller need to manage its lifecycle.
+     */
+    customData?: {
+        [key: string]: any;
+    };
 }
 
     /**
@@ -2960,11 +2988,11 @@ class Editor {
      * Get custom data related to this editor
      * @param key Key of the custom data
      * @param getter Getter function. If custom data for the given key doesn't exist,
-     * call this function to get one and store it.
+     * call this function to get one and store it if it is specified. Otherwise return undefined
      * @param disposer An optional disposer function to dispose this custom data when
      * dispose editor.
      */
-    getCustomData<T>(key: string, getter: () => T, disposer?: (value: T) => void): T;
+    getCustomData<T>(key: string, getter?: () => T, disposer?: (value: T) => void): T;
     /**
      * Check if editor is in IME input sequence
      * @returns True if editor is in IME input sequence, otherwise false
