@@ -1,3 +1,4 @@
+import CopyPlugin from '../corePlugins/CopyPlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorPlugin from './EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
@@ -5,22 +6,56 @@ import FirefoxTypeAfterLink from '../corePlugins/FirefoxTypeAfterLink';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoService from './UndoService';
+import { CustomDataMap } from './CustomData';
 import {
     ChangeSource,
     DefaultFormat,
+    DarkModeOptions,
     InsertOption,
     NodePosition,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
 
+/**
+ * An interface for editor core plugins.
+ * These plugins are built-in and most of them are not able to be replaced
+ */
 export interface CorePlugins {
+    /**
+     * Edit plugin handles ContentEditFeatures
+     */
     readonly edit: EditPlugin;
+
+    /**
+     * Undo plugin provides the ability to undo/redo
+     */
     readonly undo: UndoService;
+
+    /**
+     * TypeInContainer plugin makes sure user is always type under a container element under editor DIV
+     */
     readonly typeInContainer: TypeInContainerPlugin;
+
+    /**
+     * MouseUp plugin helps generate MouseUp event even mouse is out of editor area
+     */
     readonly mouseUp: MouseUpPlugin;
+
+    /**
+     * DomEvent plugin helps handle additional DOM events such as IME composition, cut, drop.
+     */
     readonly domEvent: DOMEventPlugin;
+
+    /**
+     * FirefoxTypeAfterLink plugin helps workaround a Firefox bug to allow type outside a hyperlink
+     */
     readonly firefoxTypeAfterLink: FirefoxTypeAfterLink;
+
+    /**
+     * Copy plguin for handling dark mode copy.
+     */
+    readonly copyPlugin: CopyPlugin;
 }
 
 /**
@@ -50,7 +85,7 @@ export default interface EditorCore {
     /**
      * Default format of this editor
      */
-    readonly defaultFormat: DefaultFormat;
+    defaultFormat: DefaultFormat;
 
     /**
      * Core plugin of this editor
@@ -60,12 +95,7 @@ export default interface EditorCore {
     /**
      * Custom data of this editor
      */
-    readonly customData: {
-        [Key: string]: {
-            value: any;
-            disposer: (value: any) => void;
-        };
-    };
+    readonly customData: CustomDataMap;
 
     /**
      * Core API map of this editor
@@ -86,6 +116,16 @@ export default interface EditorCore {
      * Cached selection range of this editor
      */
     cachedSelectionRange: Range;
+
+    /**
+     * If the editor is in dark mode.
+     */
+    inDarkMode: boolean;
+
+    /***
+     * The dark mode options, if set.
+     */
+    darkModeOptions?: DarkModeOptions;
 }
 
 /**
@@ -126,7 +166,7 @@ export type Focus = (core: EditorCore) => void;
  * @param core The EditorCore object
  * @param key Key of the custom data
  * @param getter Getter function. If custom data for the given key doesn't exist,
- * call this function to get one and store it.
+ * call this function to get one and store it if it is specified. Otherwise return undefined
  * @param disposer An optional disposer function to dispose this custom data when
  * dispose editor.
  */
@@ -160,10 +200,21 @@ export type HasFocus = (core: EditorCore) => boolean;
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
 
 /**
+ * @deprecated Use SelectRange instead
  * Select content
  * @param core The EditorCore object
  */
 export type Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => boolean;
+
+/**
+ * Change the editor selection to the given range
+ * @param core The EditorCore object
+ * @param range The range to select
+ * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
+ * in editor, otherwise it will always remove current selection ranage and set to the given one.
+ * This parameter is always treat as true in Edge to avoid some weird runtime exception.
+ */
+export type SelectRange = (core: EditorCore, range: Range, skipSameRange?: boolean) => boolean;
 
 /**
  * Trigger a plugin event
@@ -232,10 +283,21 @@ export interface CoreApiMap {
     insertNode: InsertNode;
 
     /**
+     * @deprecated Use SelectRange instead
      * Select content
      * @param core The EditorCore object
      */
     select: Select;
+
+    /**
+     * Change the editor selection to the given range
+     * @param core The EditorCore object
+     * @param range The range to select
+     * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
+     * in editor, otherwise it will always remove current selection ranage and set to the given one.
+     * This parameter is always treat as true in Edge to avoid some weird runtime exception.
+     */
+    selectRange: SelectRange;
 
     /**
      * Trigger a plugin event

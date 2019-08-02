@@ -37,6 +37,7 @@ var commands = [
     'buildcommonjs', // Build in CommonJs mode
     'buildamd', // Build in AMD mode
     'publish', // Publish roosterjs packages to npm
+    'publishdark', // Publish roosterjs packages to npm with the darkmode tag.
     'builddoc', // Build documents
 ];
 
@@ -254,7 +255,6 @@ async function pack(isProduction, isAmd) {
                     countWord(targetFile);
                     exploreSourceMap(targetFile);
                 }
-                insertLicense(targetFile);
                 resolve();
             }
         });
@@ -283,17 +283,9 @@ function countWord(inputFile) {
 }
 
 function exploreSourceMap(inputFile) {
-    var commandPath = path.join(nodeModulesPath, 'source-map-explorer/index.js');
+    var commandPath = path.join(nodeModulesPath, 'source-map-explorer/dist/cli.js');
     var targetFile = path.join(roosterJsDistPath, 'sourceMap.html');
-    runNode(`${commandPath} -m --html ${inputFile} > ${targetFile}`, rootPath);
-}
-
-function insertLicense(filename) {
-    var fileContent = fs.readFileSync(filename).toString();
-    fs.writeFileSync(
-        filename,
-        `/*\r\n    VERSION: ${version}\r\n\r\n${license}\r\n*/\r\n${fileContent}`
-    );
+    runNode(`${commandPath} ${inputFile} -m --html > ${targetFile}`, rootPath);
 }
 
 var dtsQueue = [];
@@ -446,12 +438,14 @@ function err(message) {
     throw ex;
 }
 
-function publish() {
+function publish(tagname) {
     packages.forEach(package => {
         var json = readPackageJson(package);
 
         if (!json.version) {
-            exec(`npm publish`, {
+            const basePublishString = `npm publish`;
+            const publishString = basePublishString + (tagname ? ` --tag ${tagname}` : ``);
+            exec(publishString, {
                 stdio: 'inherit',
                 cwd: path.join(distPath, package),
             });
@@ -586,6 +580,11 @@ function buildAll(options) {
             message: 'Publishing to npm...',
             callback: publish,
             enabled: options.publish,
+        },
+        {
+            message: 'Publishing dark mode variants to npm...',
+            callback: () => publish('darkmode'),
+            enabled: options.publishdark,
         },
         {
             message: 'Building documents...',

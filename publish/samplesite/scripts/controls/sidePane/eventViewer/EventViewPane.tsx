@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { getTagOfNode } from 'roosterjs-editor-dom';
+import { PendableFormatState, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { SidePaneElementProps } from '../SidePaneElement';
 
 const styles = require('./EventViewPane.scss');
@@ -28,12 +29,13 @@ const EventTypeMap = {
     [PluginEventType.MouseDown]: 'MouseDown',
     [PluginEventType.MouseUp]: 'MouseUp',
     [PluginEventType.Input]: 'Input',
+    [PluginEventType.PendingFormatStateChanged]: 'PendingFormatStateChanged',
 };
 
 export default class EventViewPane extends React.Component<
     SidePaneElementProps,
     EventViewPaneState
-    > {
+> {
     private events: EventEntry[] = [];
     private displayCount = React.createRef<HTMLSelectElement>();
     private lasteIndex = 0;
@@ -119,7 +121,8 @@ export default class EventViewPane extends React.Component<
                     <span>
                         Button=
                         {event.rawEvent.button}, SrcElement=
-                        {event.rawEvent.srcElement && event.rawEvent.srcElement.tagName}, PageX=
+                        {event.rawEvent.target && getTagOfNode(event.rawEvent.target as Node)},
+                        PageX=
                         {event.rawEvent.pageX}, PageY=
                         {event.rawEvent.pageY}
                     </span>
@@ -147,6 +150,10 @@ export default class EventViewPane extends React.Component<
                         ))}
                     </span>
                 );
+            case PluginEventType.PendingFormatStateChanged:
+                const formatState = event.formatState;
+                const keys = Object.keys(formatState) as (keyof PendableFormatState)[];
+                return <span>{keys.map(key => `${key}=${event.formatState[key]}; `)}</span>;
         }
         return null;
     }

@@ -111,6 +111,16 @@ describe('isPositionAtBeginningOf()', () => {
             true
         );
     });
+
+    it('There is a BR before the position', () => {
+        runTest(
+            '<div id=id1><br><span id=span1></div>',
+            () => $('span1'),
+            0,
+            () => $('id1'),
+            false
+        );
+    });
 });
 
 function $(id: string) {

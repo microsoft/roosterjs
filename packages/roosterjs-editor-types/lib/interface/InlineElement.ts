@@ -56,5 +56,5 @@ export default interface InlineElement {
     /**
      * Apply inline style to a region of an inline element
      */
-    applyStyle(styler: (element: HTMLElement) => any): void;
+    applyStyle(styler: (element: HTMLElement, isInnerNode?: boolean) => any): void;
 }

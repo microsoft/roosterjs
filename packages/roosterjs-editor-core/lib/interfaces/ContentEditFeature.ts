@@ -1,6 +1,9 @@
 import Editor from '../editor/Editor';
 import { ChangeSource, PluginEvent, PluginKeyboardEvent } from 'roosterjs-editor-types';
 
+/**
+ * Key numbers used for ContentEditFeature
+ */
 export const enum Keys {
     NULL = 0,
     BACKSPACE = 8,
@@ -24,12 +27,17 @@ export const enum Keys {
     MOUSEDOWN = 0x1000,
 }
 
+/**
+ * Generic ContentEditFeature interface
+ */
 export interface GenericContentEditFeature<TEvent extends PluginEvent> {
     keys: number[];
-    initialize?: (editor: Editor) => any;
     shouldHandleEvent: (event: TEvent, editor: Editor) => any;
     handleEvent: (event: TEvent, editor: Editor) => ChangeSource | void;
     allowFunctionKeys?: boolean;
 }
 
+/**
+ * ContentEditFeature interface that handles keyboard event
+ */
 export type ContentEditFeature = GenericContentEditFeature<PluginKeyboardEvent>;

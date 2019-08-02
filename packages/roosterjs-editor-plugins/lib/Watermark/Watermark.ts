@@ -19,7 +19,7 @@ const WATERMARK_REGEX = new RegExp(
 /**
  * A watermark plugin to manage watermark string for roosterjs
  */
-class Watermark implements EditorPlugin {
+export default class Watermark implements EditorPlugin {
     private editor: Editor;
     private isWatermarkShowing: boolean;
     private disposer: () => void;
@@ -102,7 +102,7 @@ class Watermark implements EditorPlugin {
             document.createTextNode(this.watermark),
             `<span id="${WATERMARK_SPAN_ID}"></span>`
         ) as HTMLElement;
-        applyFormat(watermarkNode, this.format);
+        applyFormat(watermarkNode, this.format, this.editor.isDarkMode());
         this.editor.insertNode(watermarkNode, {
             position: ContentPosition.Begin,
             updateCursor: false,
@@ -125,5 +125,3 @@ class Watermark implements EditorPlugin {
         event.content = content;
     }
 }
-
-export default Watermark;

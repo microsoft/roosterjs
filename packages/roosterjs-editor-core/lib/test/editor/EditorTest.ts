@@ -29,7 +29,7 @@ describe('Editor getSelectionRange()', () => {
 
     it('getSelectionRange shold return null if not in focus', () => {
         // Arrange
-        spyOn(getSelectionRange, 'default').and.callThrough();
+        spyOn(getSelectionRange, 'getSelectionRange').and.callThrough();
 
         // Act
         let selectionRange = editor.getSelectionRange();
@@ -425,5 +425,69 @@ describe('Editor contains()', () => {
 
         // Assert
         expect(containsNode).toBe(false);
+    });
+});
+
+describe('Editor getCustomData()', () => {
+    const CustomDataKey = 'DATA';
+    it('Get custom data with getter', () => {
+        editor = TestHelper.initEditor(testID);
+
+        let data = {
+            test: 'result',
+        };
+        let callCount = 0;
+        let callback = () => {
+            callCount++;
+            return data;
+        };
+        let result = editor.getCustomData(CustomDataKey, callback);
+        expect(result).toBe(data);
+        expect(callCount).toBe(1);
+
+        result = null;
+        result = editor.getCustomData(CustomDataKey, callback);
+        expect(result).toBe(data);
+        expect(callCount).toBe(1);
+    });
+
+    it('Get custom data without getter', () => {
+        editor = TestHelper.initEditor(testID);
+
+        let result = editor.getCustomData(CustomDataKey);
+        expect(result).toBeUndefined();
+    });
+
+    it('Get custom data with disposer', () => {
+        editor = TestHelper.initEditor(testID);
+
+        let objCount = 1;
+        let data = {
+            test: 'result',
+        };
+
+        editor.getCustomData(
+            CustomDataKey,
+            () => data,
+            () => {
+                objCount--;
+            }
+        );
+        expect(objCount).toBe(1);
+
+        editor.dispose();
+        expect(objCount).toBe(0);
+    });
+
+    it('Get predefined custom data', () => {
+        let data = {
+            test: 'result',
+        };
+        editor = TestHelper.initEditor(testID, null, null, {
+            [CustomDataKey]: data,
+        });
+
+        let result = editor.getCustomData(CustomDataKey);
+        expect(result).toBe(data);
     });
 });

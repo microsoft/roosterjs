@@ -5,7 +5,12 @@ import UndoService from '../interfaces/UndoService';
 
 export * from 'roosterjs-editor-dom/lib/test/DomTestHelper';
 
-export function initEditor(id: string, plugins?: EditorPlugin[], undo?: UndoService) {
+export function initEditor(
+    id: string,
+    plugins?: EditorPlugin[],
+    undo?: UndoService,
+    customData?: { [key: string]: any }
+) {
     let node = document.createElement('div');
     node.id = id;
     document.body.insertBefore(node, document.body.childNodes[0]);
@@ -18,6 +23,7 @@ export function initEditor(id: string, plugins?: EditorPlugin[], undo?: UndoServ
             fontSize: '11pt',
             textColor: '#000000',
         },
+        customData: customData,
     };
 
     let editor = new Editor(node as HTMLDivElement, options);

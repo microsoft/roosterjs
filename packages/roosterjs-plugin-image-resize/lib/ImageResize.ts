@@ -22,6 +22,9 @@ const SHIFT_KEYCODE = 16;
 const CTRL_KEYCODE = 17;
 const ALT_KEYCODE = 18;
 
+/**
+ * ImageResize plugin provides the ability to resize an inline image in editor
+ */
 export default class ImageResize implements EditorPlugin {
     private editor: Editor;
     private startPageX: number;

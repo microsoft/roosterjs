@@ -12,5 +12,7 @@ export default function setFontName(editor: Editor, fontName: string) {
     // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
     // (http://www.w3schools.com/tags/tag_font.asp). Use applyInlineStyle which gives flexibility on applying inline style
     // for here, we use CSS font-family style
-    applyInlineStyle(editor, element => (element.style.fontFamily = fontName));
+    applyInlineStyle(editor, (element, isInnerNode) => {
+        element.style.fontFamily = isInnerNode ? '' : fontName;
+    });
 }

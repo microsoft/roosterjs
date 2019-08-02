@@ -2,9 +2,9 @@ import BuildInPluginState from '../../../BuildInPluginState';
 import CodeElement from './CodeElement';
 import ContentEditCode from './ContentEditCode';
 import HyperLinkCode from './HyperLinkCode';
-import WatermarkCode from './WatermarkCode';
 import PickerPluginCode from './PickerPluginCode';
-import { ImageResizeCode, PasteCode, TableResizeCode, CustomReplaceCode } from './SimplePluginCode';
+import WatermarkCode from './WatermarkCode';
+import { CustomReplaceCode, ImageResizeCode, PasteCode, TableResizeCode } from './SimplePluginCode';
 
 export default class PluginsCode extends CodeElement {
     private plugins: CodeElement[];
@@ -23,10 +23,6 @@ export default class PluginsCode extends CodeElement {
             pluginList.pickerPlugin && new PickerPluginCode(),
             pluginList.customReplace && new CustomReplaceCode(),
         ].filter(plugin => !!plugin);
-    }
-
-    getImports() {
-        return this.plugins.reduce((imports, plugin) => imports.concat(plugin.getImports()), []);
     }
 
     getCode() {

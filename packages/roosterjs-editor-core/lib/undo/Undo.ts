@@ -28,7 +28,7 @@ export default class Undo implements UndoService {
      * this object to be reused when editor is disposed and created again
      * @param maxBufferSize The max buffer size for snapshots. Default value is 10MB
      */
-    constructor(private preserveSnapshots?: boolean, private maxBufferSize: number = 1e7) {}
+    constructor(private preserveSnapshots?: boolean, private maxBufferSize: number = 1e7) { }
 
     /**
      * Get a friendly name of  this plugin
@@ -68,7 +68,11 @@ export default class Undo implements UndoService {
 
         switch (event.eventType) {
             case PluginEventType.EditorReady:
-                this.addUndoSnapshot();
+                if (!this.preserveSnapshots || (!this.canUndo() && !this.canRedo())) {
+                    // Only add initial snapshot when we don't need to preserve snapshots or there is no existing snapshot
+                    // Otherwise preserved undo/redo state may be ruined
+                    this.addUndoSnapshot();
+                }
                 break;
             case PluginEventType.KeyDown:
                 this.onKeyDown(event.rawEvent);
@@ -134,7 +138,7 @@ export default class Undo implements UndoService {
     public addUndoSnapshot(): string {
         let snapshot = this.editor.getContent(
             false /*triggerExtractContentEvent*/,
-            true /*markSelection*/
+            true /* includeSelectionMarker */
         );
         this.getSnapshotsManager().addSnapshot(snapshot);
         this.hasNewContent = false;

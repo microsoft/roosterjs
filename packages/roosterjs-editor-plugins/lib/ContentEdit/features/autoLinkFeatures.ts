@@ -1,4 +1,4 @@
-import { Browser, LinkInlineElement, matchLink } from 'roosterjs-editor-dom';
+import { LinkInlineElement, matchLink } from 'roosterjs-editor-dom';
 import { removeLink, replaceWithNode } from 'roosterjs-editor-api';
 import {
     ChangeSource,
@@ -17,20 +17,27 @@ import {
     Keys,
 } from 'roosterjs-editor-core';
 
-// When user type, they may end a link with a puncatuation, i.e. www.bing.com;
-// we need to trim off the trailing puncatuation before turning it to link match
+/**
+ * When user type, they may end a link with a puncatuation, i.e. www.bing.com;
+ * we need to trim off the trailing puncatuation before turning it to link match
+ */
 const TRAILING_PUNCTUATION_REGEX = /[.+=\s:;"',>]+$/i;
 const MINIMUM_LENGTH = 5;
 
+/**
+ * AutoLink edit feature, provides the ability to automatically convert text user typed or pasted
+ * in hyperlink format into a real hyperlink
+ */
 export const AutoLink: GenericContentEditFeature<PluginEvent> = {
     keys: [Keys.ENTER, Keys.SPACE, Keys.CONTENTCHANGED],
-    initialize: editor =>
-        Browser.isIE &&
-        editor.getDocument().execCommand('AutoUrlDetect', false, <string>(<any>false)),
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
 };
 
+/**
+ * UnlinkWhenBackspaceAfterLink edit feature, provides the ability to convert a hyperlink back into text
+ * if user presses BACKSPACE right after a hyperlink
+ */
 export const UnlinkWhenBackspaceAfterLink: GenericContentEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: hasLinkBeforeCursor,
@@ -53,11 +60,14 @@ function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
                   event.source == ChangeSource.Paste &&
                   (event.data as ClipboardData);
               let link = matchLink((clipboardData.text || '').trim());
-              if (link) {
+              let searcher = cacheGetContentSearcher(event, editor);
+
+              // In case the matched link is already inside a <A> tag, we do a range search.
+              // getRangeFromText will return null if the given text is already in a LinkInlineElement
+              if (link && searcher.getRangeFromText(link.originalUrl, false /*exactMatch*/)) {
                   return link;
               }
 
-              let searcher = cacheGetContentSearcher(event, editor);
               let word = searcher && searcher.getWordBefore();
               if (word && word.length > MINIMUM_LENGTH) {
                   // Check for trailing punctuation
@@ -90,9 +100,12 @@ function hasLinkBeforeCursor(event: PluginKeyboardEvent, editor: Editor): boolea
 }
 
 function autoLink(event: PluginEvent, editor: Editor) {
-    let searcher = cacheGetContentSearcher(event, editor);
     let anchor = editor.getDocument().createElement('a');
     let linkData = cacheGetLinkData(event, editor);
+
+    // Need to get searcher before we enter the async callback since the callback can happen when cursor is moved to next line
+    // and at that time a new searcher won't be able to find the link text to replace
+    let searcher = editor.getContentSearcherOfCursor();
     anchor.textContent = linkData.originalUrl;
     anchor.href = linkData.normalizedUrl;
 

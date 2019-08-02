@@ -1,20 +1,25 @@
+import adjustBrowserBehavior from './adjustBrowserBehavior';
 import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
-import { Browser, getRangeFromSelectionPath, getSelectionPath } from 'roosterjs-editor-dom';
+import getColorNormalizedContent from '../darkMode/getColorNormalizedContent';
+import mapPluginEvents from './mapPluginEvents';
+import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
+import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import {
     BlockElement,
     ChangeSource,
     ContentPosition,
+    DarkModeOptions,
     DefaultFormat,
-    DocumentCommand,
-    ExtractContentEvent,
     InlineElement,
     InsertOption,
     NodePosition,
     NodeType,
     PluginEvent,
+    PluginEventData,
+    PluginEventFromType,
     PluginEventType,
     PositionType,
     QueryScope,
@@ -22,19 +27,23 @@ import {
     Rect,
 } from 'roosterjs-editor-types';
 import {
-    PositionContentSearcher,
-    ContentTraverser,
-    Position,
+    collapseNodes,
     contains,
+    ContentTraverser,
+    createRange,
+    findClosestElementAncestor,
     fromHtml,
     getBlockElementAtNode,
-    findClosestElementAncestor,
-    getPositionRect,
+    getTextContent,
     getInlineElementAtNode,
+    getPositionRect,
+    getRangeFromSelectionPath,
+    getSelectionPath,
     getTagOfNode,
     isNodeEmpty,
+    Position,
+    PositionContentSearcher,
     queryElements,
-    collapseNodes,
     wrap,
 } from 'roosterjs-editor-dom';
 
@@ -69,16 +78,7 @@ export default class Editor {
         this.setContent(options.initialContent || contentDiv.innerHTML || '');
 
         // 5. Create event handler to bind DOM events
-        this.eventDisposers = [
-            this.core.api.attachDomEvent(this.core, 'keypress', PluginEventType.KeyPress),
-            this.core.api.attachDomEvent(this.core, 'keydown', PluginEventType.KeyDown),
-            this.core.api.attachDomEvent(this.core, 'keyup', PluginEventType.KeyUp),
-            this.core.api.attachDomEvent(this.core, 'mousedown', PluginEventType.MouseDown),
-            this.core.api.attachDomEvent(this.core,
-                !Browser.isIE ? 'input' : 'textinput',
-                PluginEventType.Input
-            ),
-        ];
+        this.eventDisposers = mapPluginEvents(this.core);
 
         // 6. Add additional content edit features to the editor if specified
         if (options.additionalEditFeatures) {
@@ -93,24 +93,11 @@ export default class Editor {
             this.contenteditableChanged = true;
         }
 
-        // 8. Disable these operations for firefox since its behavior is usually wrong
-        // Catch any possible exception since this should not block the initialization of editor
-        try {
-            this.core.document.execCommand(DocumentCommand.EnableObjectResizing, false, <string>(
-                (<any>false)
-            ));
-            this.core.document.execCommand(DocumentCommand.EnableInlineTableEditing, false, <
-                string
-            >(<any>false));
-        } catch (e) {}
+        // 8. Do proper change for browsers to disable some browser-specified behaviors.
+        adjustBrowserBehavior();
 
         // 9. Let plugins know that we are ready
-        this.triggerEvent(
-            {
-                eventType: PluginEventType.EditorReady,
-            },
-            true /*broadcast*/
-        );
+        this.triggerPluginEvent(PluginEventType.EditorReady, {}, true /*broadcast*/);
 
         // 10. Before give editor to user, make sure there is at least one DIV element to accept typing
         this.core.corePlugins.typeInContainer.ensureTypeInElement(
@@ -122,12 +109,7 @@ export default class Editor {
      * Dispose this editor, dispose all plugins and custom data
      */
     public dispose(): void {
-        this.triggerEvent(
-            {
-                eventType: PluginEventType.BeforeDispose,
-            },
-            true /*broadcast*/
-        );
+        this.triggerPluginEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
 
         this.core.plugins.forEach(plugin => plugin.dispose());
         this.eventDisposers.forEach(disposer => disposer());
@@ -173,7 +155,24 @@ export default class Editor {
      * @returns true if node is inserted. Otherwise false
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
-        return node ? this.core.api.insertNode(this.core, node, option) : false;
+        // DocumentFragment type nodes become empty after they're inserted.
+        // Therefore, we get the list of nodes to transform prior to their insertion.
+        const darkModeOptions = this.getDarkModeOptions();
+        const darkModeTransform = this.isDarkMode()
+            ? convertContentToDarkMode(
+                  node,
+                  darkModeOptions && darkModeOptions.onExternalContentTransform
+                      ? darkModeOptions.onExternalContentTransform
+                      : undefined
+              )
+            : null;
+
+        const result = node ? this.core.api.insertNode(this.core, node, option) : false;
+
+        if (result && darkModeTransform) {
+            darkModeTransform();
+        }
+        return result;
     }
 
     /**
@@ -355,12 +354,15 @@ export default class Editor {
         }
 
         if (triggerExtractContentEvent) {
-            let extractContentEvent: ExtractContentEvent = {
-                eventType: PluginEventType.ExtractContent,
-                content: content,
-            };
-            this.triggerEvent(extractContentEvent, true /*broadcast*/);
-            content = extractContentEvent.content;
+            content = this.triggerPluginEvent(
+                PluginEventType.ExtractContent,
+                { content },
+                true /*broadcast*/
+            ).content;
+        }
+
+        if (this.core.inDarkMode) {
+            content = getColorNormalizedContent(content);
         }
 
         return content;
@@ -371,7 +373,7 @@ export default class Editor {
      * @returns The text content inside editor
      */
     public getTextContent(): string {
-        return this.core.contentDiv.innerText;
+        return getTextContent(this.core.contentDiv);
     }
 
     /**
@@ -381,8 +383,10 @@ export default class Editor {
      */
     public setContent(content: string, triggerContentChangedEvent: boolean = true) {
         let contentDiv = this.core.contentDiv;
+        let contentChanged = false;
         if (contentDiv.innerHTML != content) {
             contentDiv.innerHTML = content || '';
+            contentChanged = true;
 
             let pathComment = contentDiv.lastChild;
 
@@ -394,10 +398,26 @@ export default class Editor {
                     this.select(range);
                 } catch {}
             }
+        }
 
-            if (triggerContentChangedEvent) {
-                this.triggerContentChangedEvent();
+        // Convert content even if it hasn't changed.
+        if (this.core.inDarkMode) {
+            const darkModeOptions = this.getDarkModeOptions();
+            const convertFunction = convertContentToDarkMode(
+                contentDiv,
+                darkModeOptions && darkModeOptions.onExternalContentTransform
+                    ? darkModeOptions.onExternalContentTransform
+                    : undefined,
+                true /* skipRootElement */
+            );
+            if (convertFunction) {
+                convertFunction();
+                contentChanged = true;
             }
+        }
+
+        if (triggerContentChangedEvent && contentChanged) {
+            this.triggerContentChangedEvent();
         }
     }
 
@@ -506,7 +526,8 @@ export default class Editor {
     ): boolean;
 
     public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
-        return this.core.api.select(this.core, arg1, arg2, arg3, arg4);
+        let range = arg1 instanceof Range ? arg1 : createRange(arg1, arg2, arg3, arg4);
+        return this.contains(range) && this.core.api.selectRange(this.core, range);
     }
 
     /**
@@ -636,9 +657,29 @@ export default class Editor {
 
     /**
      * Trigger an event to be dispatched to all plugins
-     * @param pluginEvent The event object to trigger
+     * @param eventType Type of the event
+     * @param data data of the event with given type, this is the rest part of PluginEvent with the given type
      * @param broadcast indicates if the event needs to be dispatched to all plugins
      * True means to all, false means to allow exclusive handling from one plugin unless no one wants that
+     * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
+     * the result of this function provides a chance to read the modified result
+     */
+    public triggerPluginEvent<T extends PluginEventType>(
+        eventType: T,
+        data: PluginEventData<T>,
+        broadcast?: boolean
+    ): PluginEventFromType<T> {
+        let event = ({
+            eventType,
+            ...data,
+        } as any) as PluginEventFromType<T>;
+        this.core.api.triggerEvent(this.core, event, broadcast);
+
+        return event;
+    }
+
+    /**
+     * @deprecated Use triggerPluginEvent instead
      */
     public triggerEvent(pluginEvent: PluginEvent, broadcast: boolean = true) {
         this.core.api.triggerEvent(this.core, pluginEvent, broadcast);
@@ -653,11 +694,10 @@ export default class Editor {
         source: ChangeSource | string = ChangeSource.SetContent,
         data?: any
     ) {
-        this.triggerEvent({
-            eventType: PluginEventType.ContentChanged,
-            source: source,
-            data: data,
-        } as PluginEvent);
+        this.triggerPluginEvent(PluginEventType.ContentChanged, {
+            source,
+            data,
+        });
     }
 
     //#endregion
@@ -736,11 +776,11 @@ export default class Editor {
      * Get custom data related to this editor
      * @param key Key of the custom data
      * @param getter Getter function. If custom data for the given key doesn't exist,
-     * call this function to get one and store it.
+     * call this function to get one and store it if it is specified. Otherwise return undefined
      * @param disposer An optional disposer function to dispose this custom data when
      * dispose editor.
      */
-    public getCustomData<T>(key: string, getter: () => T, disposer?: (value: T) => void): T {
+    public getCustomData<T>(key: string, getter?: () => T, disposer?: (value: T) => void): T {
         return this.core.api.getCustomData(this.core, key, getter, disposer);
     }
 
@@ -762,9 +802,10 @@ export default class Editor {
 
     /**
      * Get a content traverser for the whole editor
+     * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
-    public getBodyTraverser(): ContentTraverser {
-        return ContentTraverser.createBodyTraverser(this.core.contentDiv);
+    public getBodyTraverser(startNode?: Node): ContentTraverser {
+        return ContentTraverser.createBodyTraverser(this.core.contentDiv, startNode);
     }
 
     /**
@@ -834,6 +875,50 @@ export default class Editor {
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
         this.core.corePlugins.edit.addFeature(feature);
+    }
+
+    //#endregion
+
+    //#region Dark mode APIs
+
+    /**
+     * Set the dark mode state and transforms the content to match the new state.
+     * @param nextDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
+     */
+    public setDarkModeState(nextDarkMode?: boolean) {
+        if (this.isDarkMode() == nextDarkMode) {
+            return;
+        }
+
+        const currentContent = this.getContent(
+            undefined /* triggerContentChangedEvent */,
+            true /* getSelectionMarker */
+        );
+
+        this.core.inDarkMode = nextDarkMode;
+        this.core.defaultFormat = calculateDefaultFormat(
+            this.core.contentDiv,
+            this.core.defaultFormat,
+            this.core.inDarkMode
+        );
+
+        this.setContent(currentContent);
+    }
+
+    /**
+     * Check if the editor is in dark mode
+     * @returns True if the editor is in dark mode, otherwise false
+     */
+    public isDarkMode(): boolean {
+        return this.core.inDarkMode;
+    }
+
+    /**
+     * Returns the dark mode options set on the editor
+     * @returns A DarkModeOptions object
+     */
+    public getDarkModeOptions(): DarkModeOptions {
+        return this.core.darkModeOptions;
     }
 
     //#endregion

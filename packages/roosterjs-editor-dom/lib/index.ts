@@ -13,7 +13,7 @@ export { default as NodeInlineElement } from './inlineElements/NodeInlineElement
 export { default as PartialInlineElement } from './inlineElements/PartialInlineElement';
 
 export { default as applyTextStyle } from './utils/applyTextStyle';
-export { default as Browser, getBrowserInfo } from './utils/Browser';
+export { Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
 export { default as collapseNodes } from './utils/collapseNodes';
@@ -22,6 +22,11 @@ export { default as extractClipboardEvent } from './utils/extractClipboardEvent'
 export { default as findClosestElementAncestor } from './utils/findClosestElementAncestor';
 export { default as fromHtml } from './utils/fromHtml';
 export { default as getComputedStyles, getComputedStyle } from './utils/getComputedStyles';
+export {
+    default as getPendableFormatState,
+    PendableFormatCommandMap,
+    PendableFormatNames,
+} from './utils/getPendableFormatState';
 export { default as getTagOfNode } from './utils/getTagOfNode';
 export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
@@ -34,14 +39,12 @@ export { default as unwrap } from './utils/unwrap';
 export { default as wrap } from './utils/wrap';
 export { getNextLeafSibling, getPreviousLeafSibling } from './utils/getLeafSibling';
 export { getFirstLeafNode, getLastLeafNode } from './utils/getLeafNode';
+export { default as getTextContent } from './utils/getTextContent';
 
 export { default as VTable, VCell } from './table/VTable';
 
 export { default as Position } from './selection/Position';
-export { default as createRange } from './selection/createRange';
+export { default as createRange, getRangeFromSelectionPath } from './selection/createRange';
 export { default as getPositionRect } from './selection/getPositionRect';
 export { default as isPositionAtBeginningOf } from './selection/isPositionAtBeginningOf';
-export {
-    default as getSelectionPath,
-    getRangeFromSelectionPath,
-} from './selection/getSelectionPath';
+export { default as getSelectionPath } from './selection/getSelectionPath';

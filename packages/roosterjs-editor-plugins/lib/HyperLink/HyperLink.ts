@@ -14,12 +14,12 @@ export default class HyperLink implements EditorPlugin {
      * @param getTooltipCallback A callback function to get tooltip text for an existing hyperlink.
      * Default value is to return the href itself. If null, there will be no tooltip text.
      * @param target (Optional) Target window name for hyperlink. If null, will use "_blank"
-     * @param onLinkClick (Optional) Open link callback
+     * @param onLinkClick (Optional) Open link callback (return false to use default behavior)
      */
     constructor(
         private getTooltipCallback: (href: string, a: HTMLAnchorElement) => string = href => href,
         private target?: string,
-        private onLinkClick?: (anchor: HTMLAnchorElement, mouseEvent: MouseEvent) => void
+        private onLinkClick?: (anchor: HTMLAnchorElement, mouseEvent: MouseEvent) => boolean | void
     ) {}
 
     /**
@@ -41,7 +41,7 @@ export default class HyperLink implements EditorPlugin {
     }
 
     protected onMouse = (e: MouseEvent) => {
-        const a = this.editor.getElementAtCursor('a[href]', e.srcElement) as HTMLAnchorElement;
+        const a = this.editor.getElementAtCursor('a[href]', <Node>e.target) as HTMLAnchorElement;
         const href = this.tryGetHref(a);
 
         if (href) {
@@ -67,14 +67,12 @@ export default class HyperLink implements EditorPlugin {
      */
     public onPluginEvent(event: PluginEvent): void {
         if (event.eventType == PluginEventType.MouseUp) {
-            const anchor = this.editor.getElementAtCursor(
-                'A',
+            const anchor = this.editor.getElementAtCursor('A', <Node>(
                 event.rawEvent.srcElement
-            ) as HTMLAnchorElement;
+            )) as HTMLAnchorElement;
 
             if (anchor) {
-                if (this.onLinkClick) {
-                    this.onLinkClick(anchor, event.rawEvent);
+                if (this.onLinkClick && this.onLinkClick(anchor, event.rawEvent) !== false) {
                     return;
                 }
 
@@ -82,7 +80,8 @@ export default class HyperLink implements EditorPlugin {
                 if (
                     !Browser.isFirefox &&
                     (href = this.tryGetHref(anchor)) &&
-                    (Browser.isMac ? event.rawEvent.metaKey : event.rawEvent.ctrlKey)
+                    (Browser.isMac ? event.rawEvent.metaKey : event.rawEvent.ctrlKey) &&
+                    event.rawEvent.button === 0
                 ) {
                     try {
                         const target = this.target || '_blank';
