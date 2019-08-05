@@ -903,6 +903,9 @@ export default class Editor {
         );
 
         this.setContent(currentContent);
+        this.triggerPluginEvent(PluginEventType.DarkModeChanged, {
+            changedToDarkMode: nextDarkMode,
+        });
     }
 
     /**

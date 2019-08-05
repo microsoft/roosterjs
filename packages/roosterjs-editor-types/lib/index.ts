@@ -44,6 +44,7 @@ export {
     PluginEventFromType,
     PluginEventFromTypeGeneric,
 } from './event/PluginEventData';
+export { default as DarkModeChangedEvent } from './event/DarkModeChangedEvent';
 
 // Interface
 export { default as BlockElement } from './interface/BlockElement';
