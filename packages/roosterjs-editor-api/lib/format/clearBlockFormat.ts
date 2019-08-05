@@ -137,7 +137,10 @@ function clearNodeFormat(
 
 function clearAttribute(element: HTMLElement, attributesToPreserve: string[]) {
     for (let attr of [].slice.call(element.attributes) as Attr[]) {
-        if (attributesToPreserve.indexOf(attr.name.toLowerCase()) < 0) {
+        if (
+            attributesToPreserve.indexOf(attr.name.toLowerCase()) < 0 &&
+            attr.name.indexOf('data-') != 0
+        ) {
             element.removeAttribute(attr.name);
         }
     }
