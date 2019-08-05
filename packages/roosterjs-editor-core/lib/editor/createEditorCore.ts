@@ -35,7 +35,10 @@ export default function createEditorCore(
         edit: new EditPlugin(),
         typeInContainer: new TypeInContainerPlugin(),
         mouseUp: new MouseUpPlugin(),
-        domEvent: new DOMEventPlugin(options.disableRestoreSelectionOnFocus),
+        domEvent: new DOMEventPlugin(
+            options.disableRestoreSelectionOnFocus,
+            options.scrollContainer || contentDiv
+        ),
         firefoxTypeAfterLink: Browser.isFirefox && new FirefoxTypeAfterLink(),
         copyPlugin: !Browser.isIE && new CopyPlugin(),
     };

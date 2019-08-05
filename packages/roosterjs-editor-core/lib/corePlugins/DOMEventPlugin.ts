@@ -21,6 +21,7 @@ import {
  * 2. Selection management
  * 3. Cut and Drop management
  * 4. Pending format state management
+ * 5. Scroll container and scroll event management
  */
 export default class DOMEventPlugin implements EditorPlugin {
     private editor: Editor;
@@ -29,7 +30,10 @@ export default class DOMEventPlugin implements EditorPlugin {
     private cachedPosition: NodePosition;
     private cachedFormatState: PendableFormatState;
 
-    constructor(private disableRestoreSelectionOnFocus: boolean) {}
+    constructor(
+        private disableRestoreSelectionOnFocus: boolean,
+        public readonly scrollContainer?: HTMLElement
+    ) {}
 
     getName() {
         return 'DOMEvent';
@@ -56,9 +60,17 @@ export default class DOMEventPlugin implements EditorPlugin {
             focus: this.onFocus,
             [Browser.isIEOrEdge ? 'beforedeactivate' : 'blur']: this.onBlur,
         });
+
+        if (this.scrollContainer) {
+            this.scrollContainer.addEventListener('scroll', this.onScroll);
+        }
     }
 
     dispose() {
+        if (this.scrollContainer) {
+            this.scrollContainer.removeEventListener('scroll', this.onScroll);
+        }
+
         this.disposer();
         this.disposer = null;
         this.editor = null;
@@ -148,6 +160,13 @@ export default class DOMEventPlugin implements EditorPlugin {
 
     private onBlur = () => {
         this.editor.saveSelectionRange();
+    };
+
+    private onScroll = (e: UIEvent) => {
+        this.editor.triggerPluginEvent(PluginEventType.Scroll, {
+            rawEvent: e,
+            scrollContainer: this.scrollContainer,
+        });
     };
 
     private clear() {

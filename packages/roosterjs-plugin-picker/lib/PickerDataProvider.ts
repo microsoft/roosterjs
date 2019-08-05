@@ -108,4 +108,9 @@ export interface PickerDataProvider {
      * Function that returns the index of the option currently selected in the picker.
      */
     getSelectedIndex?: () => number;
+
+    /**
+     * Handler of scroll event from scroll container of editor
+     */
+    onScroll?: (scrollContainer: HTMLElement) => void;
 }
