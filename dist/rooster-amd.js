@@ -266,7 +266,8 @@ function clearNodeFormat(node, tagsToUnwrap, tagsToStopUnwrap, attributesToPrese
 function clearAttribute(element, attributesToPreserve) {
     for (var _i = 0, _a = [].slice.call(element.attributes); _i < _a.length; _i++) {
         var attr = _a[_i];
-        if (attributesToPreserve.indexOf(attr.name.toLowerCase()) < 0) {
+        if (attributesToPreserve.indexOf(attr.name.toLowerCase()) < 0 &&
+            attr.name.indexOf('data-') != 0) {
             element.removeAttribute(attr.name);
         }
     }
