@@ -36,7 +36,7 @@ export default function extractClipboardEvent(
 ) {
     let dataTransfer =
         event.clipboardData ||
-        (<WindowForIE>event.srcElement.ownerDocument.defaultView).clipboardData;
+        (<WindowForIE>(<Node>event.target).ownerDocument.defaultView).clipboardData;
     let result: ClipboardItems = {
         types: dataTransfer.types ? [].slice.call(dataTransfer.types) : [],
         text: dataTransfer.getData('text'),

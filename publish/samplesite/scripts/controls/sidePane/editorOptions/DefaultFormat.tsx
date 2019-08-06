@@ -2,7 +2,9 @@ import * as React from 'react';
 import BuildInPluginState from '../../BuildInPluginState';
 import { DefaultFormat } from 'roosterjs-editor-types';
 
-type DefaultFormatItemId = keyof DefaultFormat;
+type ToggleFormatId = 'bold' | 'italic' | 'underline';
+type ModeIndependentColorId = 'textColors' | 'backgroundColors';
+type SelectFormatId = Exclude<keyof DefaultFormat, ToggleFormatId | ModeIndependentColorId>;
 
 const styles = require('./OptionsPane.scss');
 const NOT_SET = 'NotSet';
@@ -75,7 +77,7 @@ export default class DefaultFormatPane extends React.Component<DefaultFormatProp
         );
     }
 
-    private renderFormatItem(id: DefaultFormatItemId, text: string): JSX.Element {
+    private renderFormatItem(id: ToggleFormatId, text: string): JSX.Element {
         let checked = (this.props.state[id] as boolean) || false;
         return (
             <tr>
@@ -97,7 +99,7 @@ export default class DefaultFormatPane extends React.Component<DefaultFormatProp
     }
 
     private renderSelectItem(
-        id: DefaultFormatItemId,
+        id: SelectFormatId,
         label: string,
         items: { [key: string]: string }
     ): JSX.Element {
@@ -120,14 +122,14 @@ export default class DefaultFormatPane extends React.Component<DefaultFormatProp
         );
     }
 
-    private onFormatClick = (id: DefaultFormatItemId) => {
+    private onFormatClick = (id: ToggleFormatId) => {
         this.props.resetState(state => {
             let checkbox = document.getElementById(id) as HTMLInputElement;
             state.defaultFormat[id] = checkbox.checked;
         }, true);
     };
 
-    private onSelectChanged = (id: DefaultFormatItemId) => {
+    private onSelectChanged = (id: SelectFormatId) => {
         this.props.resetState(state => {
             let value = (document.getElementById(id) as HTMLSelectElement).value;
             state.defaultFormat[id] = value == NOT_SET ? null : value;

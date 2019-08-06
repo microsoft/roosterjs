@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { getTagOfNode } from 'roosterjs-editor-dom';
 import { PendableFormatState, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { SidePaneElementProps } from '../SidePaneElement';
 
@@ -120,7 +121,8 @@ export default class EventViewPane extends React.Component<
                     <span>
                         Button=
                         {event.rawEvent.button}, SrcElement=
-                        {event.rawEvent.srcElement && event.rawEvent.srcElement.tagName}, PageX=
+                        {event.rawEvent.target && getTagOfNode(event.rawEvent.target as Node)},
+                        PageX=
                         {event.rawEvent.pageX}, PageY=
                         {event.rawEvent.pageY}
                     </span>
