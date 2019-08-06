@@ -4,12 +4,12 @@ import { replaceWithNode } from 'roosterjs-editor-api';
 import {
     ChangeSource,
     NodePosition,
+    PluginDomEvent,
     PluginEvent,
     PluginEventType,
     PluginInputEvent,
     PluginKeyboardEvent,
     PositionType,
-    PluginDomEvent,
 } from 'roosterjs-editor-types';
 import {
     cacheGetContentSearcher,
@@ -194,7 +194,6 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         }
 
         if (event.eventType == PluginEventType.Input && this.isUnidentifiedKey) {
-            this.eventHandledOnKeyDown = false;
             this.onAndroidInputEvent(event);
         }
 
@@ -241,7 +240,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             : null;
     }
 
-    private getWordBeforeCursor(event: PluginEvent): string {
+    private getWordBeforeCursor(event: PluginKeyboardEvent): string {
         let searcher = cacheGetContentSearcher(event, this.editor);
         return searcher ? searcher.getWordBefore() : null;
     }
