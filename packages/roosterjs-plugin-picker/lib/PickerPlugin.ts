@@ -35,8 +35,8 @@ const DELETE_CHARCODE = !Browser.isIE ? 'Delete' : 'Del';
 // Input event input types.
 const DELETE_CONTENT_BACKWARDS_INPUT_TYPE = 'deleteContentBackwards';
 
-// Device check for Android, which has special handling.
-const IS_ANDROID = Browser.isAndroid || false;
+// Unidentified key, the code for Android keyboard events.
+const UNIDENTIFIED_KEY = 'Unidentified';
 
 /**
  * Interface for PickerPlugin
@@ -66,6 +66,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     private lastKnownRange: Range;
 
     // For detecting backspace in Android
+    private isUnidentifiedKey: boolean = false;
     private currentInputLength: number;
     private newInputLength: number;
 
@@ -116,6 +117,8 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 } else {
                     this.editor.addUndoSnapshot(insertNode, this.pickerOptions.changeSource);
                 }
+
+                this.currentInputLength = htmlNode.textContent ? htmlNode.textContent.length : 0;
             },
             (isSuggesting: boolean) => {
                 this.setIsSuggesting(isSuggesting);
@@ -177,11 +180,22 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             );
             this.dataProvider.onContentChanged(elementIds);
         }
-        if (event.eventType == PluginEventType.KeyDown && !IS_ANDROID) {
-            // On Android, the key for KeyboardEvent is "undefined",
-            // so ignore onKeyDownEvent and handle with InputEvent instead
+
+        if (event.eventType == PluginEventType.KeyDown) {
+            if (event.rawEvent.key == UNIDENTIFIED_KEY) {
+                // On Android, the key for KeyboardEvent is "Unidentified",
+                // so ignore onKeyDownEvent and handle with InputEvent instead
+                this.isUnidentifiedKey = true;
+            } else {
+                this.isUnidentifiedKey = false;
+                this.eventHandledOnKeyDown = false;
+                this.onKeyDownEvent(event);
+            }
+        }
+
+        if (event.eventType == PluginEventType.Input && this.isUnidentifiedKey) {
             this.eventHandledOnKeyDown = false;
-            this.onKeyDownEvent(event);
+            this.onAndroidInputEvent(event);
         }
 
         if (
@@ -189,15 +203,12 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             !this.eventHandledOnKeyDown &&
             this.shouldHandleKeyUpEvent(event)
         ) {
+            this.isUnidentifiedKey = false;
             this.onKeyUpDomEvent(event);
         } else if (event.eventType == PluginEventType.MouseUp) {
             if (this.isSuggesting) {
                 this.setIsSuggesting(false);
             }
-        }
-
-        if (event.eventType == PluginEventType.Input && IS_ANDROID) {
-            this.onAndroidInputEvent(event);
         }
     }
 
@@ -272,10 +283,10 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
     private shouldHandleKeyUpEvent(event: PluginKeyboardEvent) {
         // onKeyUpDomEvent should only be called when a key that produces a character value is pressed
-        // This check will always fail on Android since the KeyboardEvent's key is "undefined"
+        // This check will always fail on Android since the KeyboardEvent's key is "Unidentified"
         // However, we don't need to check for modifier events on mobile, so can ignore this check
         return (
-            IS_ANDROID ||
+            event.rawEvent.key == UNIDENTIFIED_KEY ||
             isCharacterValue(event.rawEvent) ||
             (this.isSuggesting && !isModifierKey(event.rawEvent))
         );
@@ -429,11 +440,12 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private onAndroidInputEvent(event: PluginInputEvent) {
-        const wordBeforCursor = this.getWordBeforeCursor(event);
+        const wordBeforCursor = this.getInlineElementBeforeCursor(event);
         this.newInputLength = wordBeforCursor ? wordBeforCursor.length : 0;
+
         if (
             this.newInputLength < this.currentInputLength ||
-            event.rawEvent.inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE
+            (event.rawEvent as any).inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE
         ) {
             this.removeNode(event);
         }
@@ -443,20 +455,23 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
     private removeNode(event: PluginDomEvent) {
         const searcher = cacheGetContentSearcher(event, this.editor);
-        let nodeBeforeCursor = searcher.getInlineElementBefore()
+        const nodeBeforeCursor = searcher.getInlineElementBefore()
             ? searcher.getInlineElementBefore().getContainerNode()
             : null;
-        let nodeId = nodeBeforeCursor ? this.getIdValue(nodeBeforeCursor) : null;
+        const nodeId = nodeBeforeCursor ? this.getIdValue(nodeBeforeCursor) : null;
+        const nodeAfterCursor = searcher.getInlineElementAfter();
+
         if (
             nodeId &&
             nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0 &&
-            (searcher.getInlineElementAfter() == null ||
-                !(searcher.getInlineElementAfter() instanceof PartialInlineElement))
+            (nodeAfterCursor == null || !(nodeAfterCursor instanceof PartialInlineElement))
         ) {
             let replacementNode = this.dataProvider.onRemove(nodeBeforeCursor, true);
-            this.replaceNode(nodeBeforeCursor, replacementNode);
             if (replacementNode) {
-                this.editor.select(replacementNode, PositionType.After);
+                this.replaceNode(nodeBeforeCursor, replacementNode);
+                this.editor.runAsync(() => {
+                    this.editor.select(replacementNode, PositionType.After);
+                });
             } else {
                 this.editor.deleteNode(nodeBeforeCursor);
             }
@@ -504,5 +519,11 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 ? this.pickerOptions.suggestionLabelPrefix + selectedIndex.toString()
                 : null
         );
+    }
+
+    private getInlineElementBeforeCursor(event: PluginEvent): string {
+        const searcher = cacheGetContentSearcher(event, this.editor);
+        const element = searcher ? searcher.getInlineElementBefore() : null;
+        return element ? element.getTextContent() : null;
     }
 }

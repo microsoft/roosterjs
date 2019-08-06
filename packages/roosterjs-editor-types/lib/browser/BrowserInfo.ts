@@ -3,7 +3,7 @@
  */
 export default interface BrowserInfo {
     /**
-     * Whether current OS is Mac
+     * Wether current OS is Mac
      */
     readonly isMac?: boolean;
 
@@ -51,9 +51,4 @@ export default interface BrowserInfo {
      * Whether current browser is IE/Edge
      */
     readonly isIEOrEdge?: boolean;
-
-    /**
-     * Whether current device is Android
-     */
-    readonly isAndroid?: boolean;
 }
