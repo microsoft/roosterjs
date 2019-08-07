@@ -66,7 +66,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     private lastKnownRange: Range;
 
     // For detecting backspace in Android
-    private isUnidentifiedKey: boolean = false;
+    private isPendingInputEventHandling: boolean = false;
     private currentInputLength: number;
     private newInputLength: number;
 
@@ -185,15 +185,15 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             if (event.rawEvent.key == UNIDENTIFIED_KEY) {
                 // On Android, the key for KeyboardEvent is "Unidentified",
                 // so ignore onKeyDownEvent and handle with InputEvent instead
-                this.isUnidentifiedKey = true;
+                this.isPendingInputEventHandling = true;
             } else {
-                this.isUnidentifiedKey = false;
+                this.isPendingInputEventHandling = false;
                 this.eventHandledOnKeyDown = false;
                 this.onKeyDownEvent(event);
             }
         }
 
-        if (event.eventType == PluginEventType.Input && this.isUnidentifiedKey) {
+        if (event.eventType == PluginEventType.Input && this.isPendingInputEventHandling) {
             this.onAndroidInputEvent(event);
         }
 
@@ -202,7 +202,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             !this.eventHandledOnKeyDown &&
             this.shouldHandleKeyUpEvent(event)
         ) {
-            this.isUnidentifiedKey = false;
+            this.isPendingInputEventHandling = false;
             this.onKeyUpDomEvent(event);
         } else if (event.eventType == PluginEventType.MouseUp) {
             if (this.isSuggesting) {
@@ -227,7 +227,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         this.setAriaActiveDescendant(isSuggesting ? 0 : null);
     }
 
-    private handleKeyDownEvent(event: PluginDomEvent) {
+    private cancelDefaultKeyDownEvent(event: PluginKeyboardEvent) {
         this.eventHandledOnKeyDown = true;
         event.rawEvent.preventDefault();
         event.rawEvent.stopImmediatePropagation();
@@ -391,7 +391,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             if (keyboardEvent.key == ESC_CHARCODE) {
                 this.setIsSuggesting(false);
                 this.blockSuggestions = true;
-                this.handleKeyDownEvent(event);
+                this.cancelDefaultKeyDownEvent(event);
             } else if (
                 this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
@@ -410,19 +410,20 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     this.setAriaActiveDescendant(this.dataProvider.getSelectedIndex());
                 }
 
-                this.handleKeyDownEvent(event);
+                this.cancelDefaultKeyDownEvent(event);
             } else if (
                 this.dataProvider.selectOption &&
                 (keyboardEvent.key == ENTER_CHARCODE || keyboardEvent.key == TAB_CHARCODE)
             ) {
                 this.dataProvider.selectOption();
-                this.handleKeyDownEvent(event);
+                this.cancelDefaultKeyDownEvent(event);
             } else {
                 // Currently no op.
             }
         } else {
             if (keyboardEvent.key == BACKSPACE_CHARCODE) {
                 this.removeNode(event);
+                this.cancelDefaultKeyDownEvent(event);
             } else if (keyboardEvent.key == DELETE_CHARCODE) {
                 let searcher = cacheGetContentSearcher(event, this.editor);
                 let nodeAfterCursor = searcher.getInlineElementAfter()
@@ -432,7 +433,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 if (nodeId && nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0) {
                     let replacementNode = this.dataProvider.onRemove(nodeAfterCursor, false);
                     this.replaceNode(nodeAfterCursor, replacementNode);
-                    this.handleKeyDownEvent(event);
+                    this.cancelDefaultKeyDownEvent(event);
                 }
             }
         }
@@ -454,27 +455,32 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
     private removeNode(event: PluginDomEvent) {
         const searcher = cacheGetContentSearcher(event, this.editor);
-        const nodeBeforeCursor = searcher.getInlineElementBefore()
-            ? searcher.getInlineElementBefore().getContainerNode()
+        const inlineElementBefore = searcher.getInlineElementBefore();
+        const nodeBeforeCursor = inlineElementBefore
+            ? inlineElementBefore.getContainerNode()
             : null;
         const nodeId = nodeBeforeCursor ? this.getIdValue(nodeBeforeCursor) : null;
-        const nodeAfterCursor = searcher.getInlineElementAfter();
+        const inlineElementAfter = searcher.getInlineElementAfter();
 
         if (
             nodeId &&
             nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0 &&
-            (nodeAfterCursor == null || !(nodeAfterCursor instanceof PartialInlineElement))
+            (inlineElementAfter == null || !(inlineElementAfter instanceof PartialInlineElement))
         ) {
-            let replacementNode = this.dataProvider.onRemove(nodeBeforeCursor, true);
-            if (replacementNode) {
-                this.replaceNode(nodeBeforeCursor, replacementNode);
-                this.editor.runAsync(() => {
-                    this.editor.select(replacementNode, PositionType.After);
-                });
+            const replacementNode = this.dataProvider.onRemove(nodeBeforeCursor, true);
+            if (this.isPendingInputEventHandling) {
+                if (replacementNode) {
+                    this.replaceNode(nodeBeforeCursor, replacementNode);
+                    this.editor.runAsync(() => {
+                        this.editor.select(replacementNode, PositionType.After);
+                    });
+                } else {
+                    this.editor.deleteNode(nodeBeforeCursor);
+                }
             } else {
-                this.editor.deleteNode(nodeBeforeCursor);
+                this.replaceNode(nodeBeforeCursor, replacementNode);
+                this.editor.select(replacementNode, PositionType.After);
             }
-            this.handleKeyDownEvent(event);
         }
     }
 
