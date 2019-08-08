@@ -40,6 +40,7 @@ export { default as wrap } from './utils/wrap';
 export { getNextLeafSibling, getPreviousLeafSibling } from './utils/getLeafSibling';
 export { getFirstLeafNode, getLastLeafNode } from './utils/getLeafNode';
 export { default as getTextContent } from './utils/getTextContent';
+export { default as splitTextNode } from './utils/splitTextNode';
 
 export { default as VTable, VCell } from './table/VTable';
 

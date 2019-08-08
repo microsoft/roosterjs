@@ -1,5 +1,6 @@
 import getTagOfNode from './getTagOfNode';
 import Position from '../selection/Position';
+import splitTextNode from './splitTextNode';
 import wrap from './wrap';
 import { getNextLeafSibling } from './getLeafSibling';
 import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
@@ -31,11 +32,15 @@ export default function applyTextStyle(
 
         if (formatNode.nodeType == NodeType.Text && ['TR', 'TABLE'].indexOf(parentTag) < 0) {
             if (formatNode == to.node && !to.isAtEnd) {
-                formatNode = splitTextNode(formatNode, to.offset, true /*returnFirstPart*/);
+                formatNode = splitTextNode(<Text>formatNode, to.offset, true /*returnFirstPart*/);
             }
 
             if (from.offset > 0) {
-                formatNode = splitTextNode(formatNode, from.offset, false /*returnFirstPart*/);
+                formatNode = splitTextNode(
+                    <Text>formatNode,
+                    from.offset,
+                    false /*returnFirstPart*/
+                );
             }
 
             formatNodes.push(formatNode);
@@ -81,13 +86,4 @@ function callStylerWithInnerNode(
     if (node && node.nodeType == NodeType.Element) {
         styler(node as HTMLElement, true /*isInnerNode*/);
     }
-}
-
-function splitTextNode(textNode: Node, offset: number, returnFirstPart: boolean) {
-    let firstPart = textNode.nodeValue.substr(0, offset);
-    let secondPart = textNode.nodeValue.substr(offset);
-    let newNode = textNode.ownerDocument.createTextNode(returnFirstPart ? firstPart : secondPart);
-    textNode.nodeValue = returnFirstPart ? secondPart : firstPart;
-    textNode.parentNode.insertBefore(newNode, returnFirstPart ? textNode : textNode.nextSibling);
-    return newNode;
 }
