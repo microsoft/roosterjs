@@ -117,8 +117,6 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 } else {
                     this.editor.addUndoSnapshot(insertNode, this.pickerOptions.changeSource);
                 }
-
-                this.currentInputLength = htmlNode.textContent ? htmlNode.textContent.length : 0;
             },
             (isSuggesting: boolean) => {
                 this.setIsSuggesting(isSuggesting);
@@ -184,7 +182,10 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         if (event.eventType == PluginEventType.KeyDown) {
             if (event.rawEvent.key == UNIDENTIFIED_KEY) {
                 // On Android, the key for KeyboardEvent is "Unidentified",
-                // so ignore onKeyDownEvent and handle with InputEvent instead
+                // so handling should be done using the input rather than key down event
+                // Since the key down event happens right before the input event, calculate the input
+                // length here in preparation for onAndroidInputEvent
+                this.currentInputLength = this.calcInputLength(event);
                 this.isPendingInputEventHandling = true;
             } else {
                 this.isPendingInputEventHandling = false;
@@ -440,8 +441,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private onAndroidInputEvent(event: PluginInputEvent) {
-        const wordBeforCursor = this.getInlineElementBeforeCursor(event);
-        this.newInputLength = wordBeforCursor ? wordBeforCursor.length : 0;
+        this.newInputLength = this.calcInputLength(event);
 
         if (
             this.newInputLength < this.currentInputLength ||
@@ -451,6 +451,11 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         }
 
         this.currentInputLength = this.newInputLength;
+    }
+
+    private calcInputLength(event: PluginEvent) {
+        const wordBeforCursor = this.getInlineElementBeforeCursor(event);
+        return wordBeforCursor ? wordBeforCursor.length : 0;
     }
 
     private removeNode(event: PluginDomEvent) {
@@ -468,18 +473,17 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             (inlineElementAfter == null || !(inlineElementAfter instanceof PartialInlineElement))
         ) {
             const replacementNode = this.dataProvider.onRemove(nodeBeforeCursor, true);
-            if (this.isPendingInputEventHandling) {
-                if (replacementNode) {
-                    this.replaceNode(nodeBeforeCursor, replacementNode);
+            if (replacementNode) {
+                this.replaceNode(nodeBeforeCursor, replacementNode);
+                if (this.isPendingInputEventHandling) {
                     this.editor.runAsync(() => {
                         this.editor.select(replacementNode, PositionType.After);
                     });
                 } else {
-                    this.editor.deleteNode(nodeBeforeCursor);
+                    this.editor.select(replacementNode, PositionType.After);
                 }
             } else {
-                this.replaceNode(nodeBeforeCursor, replacementNode);
-                this.editor.select(replacementNode, PositionType.After);
+                this.editor.deleteNode(nodeBeforeCursor);
             }
         }
     }
