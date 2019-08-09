@@ -9,7 +9,7 @@
     "license": "MIT",
     "scripts": {
         "b": "node tools/build.js clean normalize buildcommonjs",
-        "build": "node tools/build.js clean normalize tslint buildcommonjs dts pack:prod builddemo builddoc",
+        "build": "node tools/build.js clean normalize tslint buildcommonjs dts pack:prod builddemo",
         "build:ci": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo builddoc",
         "start": "webpack-dev-server",
         "test": "karma start",

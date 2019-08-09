@@ -460,8 +460,6 @@ function publish() {
                 fs.writeFileSync(npmrcName, npmrc);
             }
 
-            console.log(`Publishing ${package}@${localVersion} with tag ${tagname}`);
-
             try {
                 const basePublishString = `npm publish`;
                 const publishString = basePublishString + ` --tag ${tagname}` + ' --dry-run';

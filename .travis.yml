@@ -28,7 +28,7 @@ deploy:
       local-dir: ./dist/roosterjs
     # Auto publish if version is changed
     - provider: script
-      script: node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo builddoc publish --token $NPM_TOKEN
+      script: node tools/build.js publish --token $NPM_TOKEN
       skip-cleanup: true
       on:
           branch: master
