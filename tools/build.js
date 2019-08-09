@@ -470,7 +470,9 @@ function publish() {
                     cwd: path.join(distPath, package),
                 });
             } finally {
-                fs.unlinkSync(npmrcName);
+                if (token) {
+                    fs.unlinkSync(npmrcName);
+                }
             }
         } else {
             console.log(
@@ -604,14 +606,14 @@ function buildAll(options) {
             enabled: options.builddemo,
         },
         {
-            message: 'Publishing to npm...',
-            callback: publish,
-            enabled: options.publish,
-        },
-        {
             message: 'Building documents...',
             callback: buildDoc,
             enabled: options.builddoc,
+        },
+        {
+            message: 'Publishing to npm...',
+            callback: publish,
+            enabled: options.publish,
         },
     ];
 
