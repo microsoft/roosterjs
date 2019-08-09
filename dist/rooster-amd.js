@@ -3113,7 +3113,7 @@ var Editor = /** @class */ (function () {
         // 3. Initialize plugins
         this.core.plugins.forEach(function (plugin) { return plugin.initialize(_this); });
         // 4. Ensure initial content and its format
-        this.setContent(options.initialContent || contentDiv.innerHTML || '');
+        this.setContent(options.initialContent || contentDiv.innerHTML || '', false /*triggerContentChangedEvent*/);
         // 5. Create event handler to bind DOM events
         this.eventDisposers = mapPluginEvents_1.default(this.core);
         // 6. Add additional content edit features to the editor if specified

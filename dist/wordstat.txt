@@ -38,7 +38,7 @@ rawEvent,344
 previousSibling,330
 getTagOfNode,324
 contentDiv,320
-1,316
+1,317
 appendChild,308
 core,304
 for,300
