@@ -21,7 +21,9 @@ var roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
 var packages = collectPackages(packagesPath);
 var mainPackageJson = JSON.parse(fs.readFileSync(path.join(rootPath, 'package.json')));
 var version = mainPackageJson.version;
-var license = fs.readFileSync(path.join(rootPath, 'LICENSE')).toString();
+
+// Token
+var token = null;
 
 // Commands
 var commands = [
@@ -37,12 +39,15 @@ var commands = [
     'buildcommonjs', // Build in CommonJs mode
     'buildamd', // Build in AMD mode
     'publish', // Publish roosterjs packages to npm
-    'publishdark', // Publish roosterjs packages to npm with the darkmode tag.
     'builddoc', // Build documents
 ];
 
-function readPackageJson(package) {
-    var packageJsonFilePath = path.join(packagesPath, package, 'package.json');
+function readPackageJson(package, readFromSourceFolder) {
+    var packageJsonFilePath = path.join(
+        readFromSourceFolder ? packagesPath : distPath,
+        package,
+        'package.json'
+    );
     var content = fs.readFileSync(packageJsonFilePath);
     var packageJson = JSON.parse(content);
     return packageJson;
@@ -133,7 +138,7 @@ function normalize() {
     var knownCustomizedPackages = {};
 
     packages.forEach(package => {
-        var packageJson = readPackageJson(package);
+        var packageJson = readPackageJson(package, true /*readFromSourceFolder*/);
 
         Object.keys(packageJson.dependencies).forEach(dep => {
             if (knownCustomizedPackages[dep]) {
@@ -438,17 +443,39 @@ function err(message) {
     throw ex;
 }
 
-function publish(tagname) {
+function publish() {
     packages.forEach(package => {
-        var json = readPackageJson(package);
+        var json = readPackageJson(package, false /*readFromSourceFolder*/);
+        var localVersion = json.version;
+        var versionMatch = /\d+\.\d+\.\d+(-([^\.]+)(\.\d+)?)?/.exec(localVersion);
+        var tagname = (versionMatch && versionMatch[2]) || 'latest';
+        var npmVersion = exec(`npm view ${package}@${tagname} version`)
+            .toString()
+            .trim();
 
-        if (!json.version) {
-            const basePublishString = `npm publish`;
-            const publishString = basePublishString + (tagname ? ` --tag ${tagname}` : ``);
-            exec(publishString, {
-                stdio: 'inherit',
-                cwd: path.join(distPath, package),
-            });
+        if (localVersion != npmVersion) {
+            let npmrcName = path.join(distPath, package, '.npmrc');
+            if (token) {
+                var npmrc = `registry=https://registry.npmjs.com/\n//registry.npmjs.com/:_authToken=${token}\n`;
+                fs.writeFileSync(npmrcName, npmrc);
+            }
+
+            console.log(`Publishing ${package}@${localVersion} with tag ${tagname}`);
+
+            try {
+                const basePublishString = `npm publish`;
+                const publishString = basePublishString + ` --tag ${tagname}` + ' --dry-run';
+                exec(publishString, {
+                    stdio: 'inherit',
+                    cwd: path.join(distPath, package),
+                });
+            } finally {
+                fs.unlinkSync(npmrcName);
+            }
+        } else {
+            console.log(
+                `Skip publishing package ${package}, because version (${npmVersion}) is not changed`
+            );
         }
     });
 }
@@ -582,11 +609,6 @@ function buildAll(options) {
             enabled: options.publish,
         },
         {
-            message: 'Publishing dark mode variants to npm...',
-            callback: () => publish('darkmode'),
-            enabled: options.publishdark,
-        },
-        {
             message: 'Building documents...',
             callback: buildDoc,
             enabled: options.builddoc,
@@ -602,6 +624,11 @@ function parseOptions(additionalParams) {
     var params = [...process.argv, ...additionalParams];
     var options = {};
     for (var i = 0; i < params.length; i++) {
+        if (params[i] == '--token') {
+            token = params[++i];
+            continue;
+        }
+
         var index = commands.indexOf(params[i]);
 
         if (index >= 0) {
