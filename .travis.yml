@@ -8,7 +8,7 @@ before_install:
     - yarn
     - cd publish/samplesite/instrumentation-tests && yarn && cd ../../..
 install:
-    - npm run build
+    - npm run build:ci
 script:
     - xvfb-run npm run test
     # puppeteer-firefox does not run in travis because it depends on a
