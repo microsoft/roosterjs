@@ -1,6 +1,6 @@
 {
     "name": "roosterjs",
-    "version": "7.5.0",
+    "version": "7.5.0-test.0",
     "description": "Framework-independent javascript editor",
     "repository": {
         "type": "git",
@@ -8,23 +8,11 @@
     },
     "license": "MIT",
     "scripts": {
-        "clean": "node tools/build.js clean",
-        "copysample": "node tools/build.js copysample",
-        "dts": "node tools/build.js dts",
-        "tslint": "node tools/build.js tslint",
-        "normalize": "node tools/build.js normalize",
-        "pack": "node tools/build.js pack",
-        "pack:prod": "node tools/build.js packprod",
         "b": "node tools/build.js clean normalize buildcommonjs",
-        "builddemo": "node tools/build.js builddemo",
-        "builddoc": "node tools/build.js builddoc",
         "build": "node tools/build.js clean normalize tslint buildcommonjs dts pack:prod builddemo",
-        "build:ci": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo builddoc",
         "start": "webpack-dev-server",
         "test": "karma start",
         "test:debug": "karma start --no-single-run",
-        "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo publish",
-        "publish:dark": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo publishdark",
         "instrumentation": "cd publish/samplesite/instrumentation-tests && npm run instrumentation",
         "instrumentation:chrome": "cd publish/samplesite/instrumentation-tests && npm run instrumentation:chrome",
         "instrumentation:firefox": "cd publish/samplesite/instrumentation-tests && npm run instrumentation:firefox"
