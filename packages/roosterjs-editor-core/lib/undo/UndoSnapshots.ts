@@ -4,7 +4,7 @@ import {
     addSnapshot,
     canMoveCurrentSnapshot,
     moveCurrentSnapsnot,
-    clearSnapshotsAfterCurrent,
+    clearProceedingSnapshots,
 } from 'roosterjs-editor-dom';
 
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
@@ -51,6 +51,6 @@ export default class UndoSnapshots implements UndoSnapshotsService, Snapshots {
      * Clear all undo snapshots after the current one
      */
     public clearRedo() {
-        clearSnapshotsAfterCurrent(this);
+        clearProceedingSnapshots(this);
     }
 }

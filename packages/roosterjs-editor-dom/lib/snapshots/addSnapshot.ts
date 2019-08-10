@@ -1,4 +1,4 @@
-import clearSnapshotsAfterCurrent from './clearSnapshotsAfterCurrent';
+import clearProceedingSnapshots from './clearProceedingSnapshots';
 import { Snapshots } from 'roosterjs-editor-types';
 
 /**
@@ -8,7 +8,7 @@ import { Snapshots } from 'roosterjs-editor-types';
  */
 export default function addSnapshot(snapshots: Snapshots, snapshot: string) {
     if (snapshots.currentIndex < 0 || snapshot != snapshots.snapshots[snapshots.currentIndex]) {
-        clearSnapshotsAfterCurrent(snapshots);
+        clearProceedingSnapshots(snapshots);
         snapshots.snapshots.push(snapshot);
         snapshots.currentIndex++;
         snapshots.totalSize += snapshot.length;

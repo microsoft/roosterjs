@@ -51,5 +51,5 @@ export { default as getSelectionPath } from './selection/getSelectionPath';
 
 export { default as addSnapshot } from './snapshots/addSnapshot';
 export { default as canMoveCurrentSnapshot } from './snapshots/canMoveCurrentSnapshot';
-export { default as clearSnapshotsAfterCurrent } from './snapshots/clearSnapshotsAfterCurrent';
+export { default as clearProceedingSnapshots } from './snapshots/clearProceedingSnapshots';
 export { default as moveCurrentSnapsnot } from './snapshots/moveCurrentSnapsnot';
