@@ -77,4 +77,10 @@ export default interface EditorOptions {
      * so editor shouldn't control the lifecycle of these objects, and caller need to manage its lifecycle.
      */
     customData?: { [key: string]: any };
+
+    /**
+     * The scroll container to get scroll event from.
+     * By default, the scroll container will be the same with editor content DIV
+     */
+    scrollContainer?: HTMLElement;
 }

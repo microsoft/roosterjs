@@ -30,6 +30,7 @@ const EventTypeMap = {
     [PluginEventType.MouseUp]: 'MouseUp',
     [PluginEventType.Input]: 'Input',
     [PluginEventType.PendingFormatStateChanged]: 'PendingFormatStateChanged',
+    [PluginEventType.Scroll]: 'Scroll',
 };
 
 export default class EventViewPane extends React.Component<

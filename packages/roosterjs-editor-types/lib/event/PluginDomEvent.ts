@@ -60,6 +60,11 @@ export interface PluginInputEvent extends BasePluginEvent<PluginEventType.Input>
     rawEvent: InputEvent;
 }
 
+export interface PluginScrollEvent extends BasePluginEvent<PluginEventType.Scroll> {
+    rawEvent: UIEvent;
+    scrollContainer: HTMLElement;
+}
+
 /**
  * This represents a PluginEvent wrapping native browser event
  */
@@ -67,4 +72,5 @@ export type PluginDomEvent =
     | PluginCompositionEvent
     | PluginMouseEvent
     | PluginKeyboardEvent
-    | PluginInputEvent;
+    | PluginInputEvent
+    | PluginScrollEvent;
