@@ -40,7 +40,7 @@ describe('hasFocus', () => {
         document.body.removeChild(button);
     });
 
-    it('Check editor has focus after select', () => {
+    xit('Check editor has focus after select', () => {
         core.contentDiv.innerHTML = '<span>test</span>';
         expect(hasFocus(core)).toBe(false);
 

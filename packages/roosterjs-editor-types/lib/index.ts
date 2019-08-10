@@ -69,4 +69,5 @@ export { default as ModeIndependentColor } from './interface/ModeIndependentColo
 export { default as NodePosition } from './interface/NodePosition';
 export { default as Rect } from './interface/Rect';
 export { default as SelectionPath } from './interface/SelectionPath';
+export { default as Snapshots } from './interface/Snapshots';
 export { default as TableFormat } from './interface/TableFormat';
