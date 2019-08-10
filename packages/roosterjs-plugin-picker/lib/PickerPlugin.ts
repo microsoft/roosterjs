@@ -142,44 +142,56 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
-        if (
-            event.eventType == PluginEventType.ContentChanged &&
-            event.source == ChangeSource.SetContent &&
-            this.dataProvider.onContentChanged
-        ) {
-            // Stop suggesting since content is fully changed
-            if (this.isSuggesting) {
-                this.setIsSuggesting(false);
-            }
-
-            // Undos and other major changes to document content fire this type of event.
-            // Inform the data provider of the current picker placed elements in the body.
-            let elementIds: string[] = [];
-            this.editor.queryElements(
-                "[id^='" + this.pickerOptions.elementIdPrefix + "']",
-                element => {
-                    if (element.id) {
-                        elementIds.push(element.id);
+        switch (event.eventType) {
+            case PluginEventType.ContentChanged:
+                if (event.source == ChangeSource.SetContent && this.dataProvider.onContentChanged) {
+                    // Stop suggesting since content is fully changed
+                    if (this.isSuggesting) {
+                        this.setIsSuggesting(false);
                     }
+
+                    // Undos and other major changes to document content fire this type of event.
+                    // Inform the data provider of the current picker placed elements in the body.
+                    let elementIds: string[] = [];
+                    this.editor.queryElements(
+                        "[id^='" + this.pickerOptions.elementIdPrefix + "']",
+                        element => {
+                            if (element.id) {
+                                elementIds.push(element.id);
+                            }
+                        }
+                    );
+                    this.dataProvider.onContentChanged(elementIds);
                 }
-            );
-            this.dataProvider.onContentChanged(elementIds);
-        }
-        if (event.eventType == PluginEventType.KeyDown) {
-            this.eventHandledOnKeyDown = false;
-            this.onKeyDownEvent(event);
-        }
-        if (
-            event.eventType == PluginEventType.KeyUp &&
-            !this.eventHandledOnKeyDown &&
-            (isCharacterValue(event.rawEvent) ||
-                (!isModifierKey(event.rawEvent) && this.isSuggesting))
-        ) {
-            this.onKeyUpDomEvent(event);
-        } else if (event.eventType == PluginEventType.MouseUp) {
-            if (this.isSuggesting) {
-                this.setIsSuggesting(false);
-            }
+                break;
+
+            case PluginEventType.KeyDown:
+                this.eventHandledOnKeyDown = false;
+                this.onKeyDownEvent(event);
+                break;
+
+            case PluginEventType.KeyUp:
+                if (
+                    !this.eventHandledOnKeyDown &&
+                    (isCharacterValue(event.rawEvent) ||
+                        (!isModifierKey(event.rawEvent) && this.isSuggesting))
+                ) {
+                    this.onKeyUpDomEvent(event);
+                }
+                break;
+
+            case PluginEventType.MouseUp:
+                if (this.isSuggesting) {
+                    this.setIsSuggesting(false);
+                }
+                break;
+
+            case PluginEventType.Scroll:
+                if (this.dataProvider.onScroll) {
+                    // Dispatch scroll event to data provider
+                    this.dataProvider.onScroll(event.scrollContainer);
+                }
+                break;
         }
     }
 
