@@ -668,7 +668,7 @@ interface PendingFormatStateChangedEvent extends BasePluginEvent<PluginEventType
     /**
  * This represents a PluginEvent wrapping native browser event
  */
-type PluginDomEvent = PluginCompositionEvent | PluginMouseEvent | PluginKeyboardEvent | PluginInputEvent;
+type PluginDomEvent = PluginCompositionEvent | PluginMouseEvent | PluginKeyboardEvent | PluginInputEvent | PluginScrollEvent;
 
     /**
  * This represents a PluginEvent wrapping native CompositionEnd event
@@ -727,6 +727,11 @@ interface PluginMouseUpEvent extends BasePluginEvent<PluginEventType.MouseUp> {
  */
 interface PluginInputEvent extends BasePluginEvent<PluginEventType.Input> {
     rawEvent: InputEvent;
+}
+
+    interface PluginScrollEvent extends BasePluginEvent<PluginEventType.Scroll> {
+    rawEvent: UIEvent;
+    scrollContainer: HTMLElement;
 }
 
     /**
@@ -791,7 +796,11 @@ const enum PluginEventType {
     /**
      * Pending format state (bold, italic, underline, ... with collapsed selection) is changed
      */
-    PendingFormatStateChanged = 12
+    PendingFormatStateChanged = 12,
+    /**
+     * Scroll event triggered by scroll container
+     */
+    Scroll = 13
 }
 
     /**
@@ -2327,6 +2336,11 @@ interface EditorCore {
      */
     readonly contentDiv: HTMLDivElement;
     /**
+     * The scroll container of editor, it can be the same with contentDiv,
+     * or some level of its scrollable parent.
+     */
+    readonly scrollContainer: HTMLElement;
+    /**
      * An array of editor plugins.
      */
     readonly plugins: EditorPlugin[];
@@ -2629,6 +2643,11 @@ interface EditorOptions {
     customData?: {
         [key: string]: any;
     };
+    /**
+     * The scroll container to get scroll event from.
+     * By default, the scroll container will be the same with editor content DIV
+     */
+    scrollContainer?: HTMLElement;
 }
 
     /**
@@ -3042,6 +3061,10 @@ class Editor {
      */
     getDocument(): Document;
     /**
+     * Get the scroll container of the editor
+     */
+    getScrollContainer(): HTMLElement;
+    /**
      * Get custom data related to this editor
      * @param key Key of the custom data
      * @param getter Getter function. If custom data for the given key doesn't exist,
@@ -3235,6 +3258,7 @@ class MouseUpPlugin implements EditorPlugin  {
  * 2. Selection management
  * 3. Cut and Drop management
  * 4. Pending format state management
+ * 5. Scroll container and scroll event management
  */
 class DOMEventPlugin implements EditorPlugin  {
     private disableRestoreSelectionOnFocus;
@@ -3264,6 +3288,7 @@ class DOMEventPlugin implements EditorPlugin  {
     private onNativeEvent;
     private onFocus;
     private onBlur;
+    private onScroll;
     private clear;
     private getCurrentPosition;
 }
@@ -4502,6 +4527,10 @@ interface PickerDataProvider {
      * Function that returns the index of the option currently selected in the picker.
      */
     getSelectedIndex?: () => number;
+    /**
+     * Handler of scroll event from scroll container of editor
+     */
+    onScroll?: (scrollContainer: HTMLElement) => void;
 }
 
 }

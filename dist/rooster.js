@@ -2476,6 +2476,7 @@ var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./
  * 2. Selection management
  * 3. Cut and Drop management
  * 4. Pending format state management
+ * 5. Scroll container and scroll event management
  */
 var DOMEventPlugin = /** @class */ (function () {
     function DOMEventPlugin(disableRestoreSelectionOnFocus) {
@@ -2509,6 +2510,12 @@ var DOMEventPlugin = /** @class */ (function () {
         this.onBlur = function () {
             _this.editor.saveSelectionRange();
         };
+        this.onScroll = function (e) {
+            _this.editor.triggerPluginEvent(13 /* Scroll */, {
+                rawEvent: e,
+                scrollContainer: _this.editor.getScrollContainer(),
+            });
+        };
     }
     DOMEventPlugin.prototype.getName = function () {
         return 'DOMEvent';
@@ -2534,8 +2541,10 @@ var DOMEventPlugin = /** @class */ (function () {
             },
             _a[roosterjs_editor_dom_1.Browser.isIEOrEdge ? 'beforedeactivate' : 'blur'] = this.onBlur,
             _a));
+        this.editor.getScrollContainer().addEventListener('scroll', this.onScroll);
     };
     DOMEventPlugin.prototype.dispose = function () {
+        this.editor.getScrollContainer().removeEventListener('scroll', this.onScroll);
         this.disposer();
         this.disposer = null;
         this.editor = null;
@@ -3556,6 +3565,12 @@ var Editor = /** @class */ (function () {
         return this.core.document;
     };
     /**
+     * Get the scroll container of the editor
+     */
+    Editor.prototype.getScrollContainer = function () {
+        return this.core.scrollContainer;
+    };
+    /**
      * Get custom data related to this editor
      * @param key Key of the custom data
      * @param getter Getter function. If custom data for the given key doesn't exist,
@@ -3774,6 +3789,7 @@ function createEditorCore(contentDiv, options) {
     var eventHandlerPlugins = allPlugins.filter(function (plugin) { return plugin.onPluginEvent || plugin.willHandleEventExclusively; });
     return {
         contentDiv: contentDiv,
+        scrollContainer: options.scrollContainer || contentDiv,
         document: contentDiv.ownerDocument,
         defaultFormat: calculateDefaultFormat_1.calculateDefaultFormat(contentDiv, options.defaultFormat, options.inDarkMode),
         corePlugins: corePlugins,
@@ -11718,37 +11734,46 @@ var PickerPlugin = /** @class */ (function () {
      * @param event PluginEvent object
      */
     PickerPlugin.prototype.onPluginEvent = function (event) {
-        if (event.eventType == 6 /* ContentChanged */ &&
-            event.source == "SetContent" /* SetContent */ &&
-            this.dataProvider.onContentChanged) {
-            // Stop suggesting since content is fully changed
-            if (this.isSuggesting) {
-                this.setIsSuggesting(false);
-            }
-            // Undos and other major changes to document content fire this type of event.
-            // Inform the data provider of the current picker placed elements in the body.
-            var elementIds_1 = [];
-            this.editor.queryElements("[id^='" + this.pickerOptions.elementIdPrefix + "']", function (element) {
-                if (element.id) {
-                    elementIds_1.push(element.id);
+        switch (event.eventType) {
+            case 6 /* ContentChanged */:
+                if (event.source == "SetContent" /* SetContent */ && this.dataProvider.onContentChanged) {
+                    // Stop suggesting since content is fully changed
+                    if (this.isSuggesting) {
+                        this.setIsSuggesting(false);
+                    }
+                    // Undos and other major changes to document content fire this type of event.
+                    // Inform the data provider of the current picker placed elements in the body.
+                    var elementIds_1 = [];
+                    this.editor.queryElements("[id^='" + this.pickerOptions.elementIdPrefix + "']", function (element) {
+                        if (element.id) {
+                            elementIds_1.push(element.id);
+                        }
+                    });
+                    this.dataProvider.onContentChanged(elementIds_1);
                 }
-            });
-            this.dataProvider.onContentChanged(elementIds_1);
-        }
-        if (event.eventType == 0 /* KeyDown */) {
-            this.eventHandledOnKeyDown = false;
-            this.onKeyDownEvent(event);
-        }
-        if (event.eventType == 2 /* KeyUp */ &&
-            !this.eventHandledOnKeyDown &&
-            (roosterjs_editor_core_1.isCharacterValue(event.rawEvent) ||
-                (!roosterjs_editor_core_1.isModifierKey(event.rawEvent) && this.isSuggesting))) {
-            this.onKeyUpDomEvent(event);
-        }
-        else if (event.eventType == 5 /* MouseUp */) {
-            if (this.isSuggesting) {
-                this.setIsSuggesting(false);
-            }
+                break;
+            case 0 /* KeyDown */:
+                this.eventHandledOnKeyDown = false;
+                this.onKeyDownEvent(event);
+                break;
+            case 2 /* KeyUp */:
+                if (!this.eventHandledOnKeyDown &&
+                    (roosterjs_editor_core_1.isCharacterValue(event.rawEvent) ||
+                        (!roosterjs_editor_core_1.isModifierKey(event.rawEvent) && this.isSuggesting))) {
+                    this.onKeyUpDomEvent(event);
+                }
+                break;
+            case 5 /* MouseUp */:
+                if (this.isSuggesting) {
+                    this.setIsSuggesting(false);
+                }
+                break;
+            case 13 /* Scroll */:
+                if (this.dataProvider.onScroll) {
+                    // Dispatch scroll event to data provider
+                    this.dataProvider.onScroll(event.scrollContainer);
+                }
+                break;
         }
     };
     PickerPlugin.prototype.setLastKnownRange = function (range) {

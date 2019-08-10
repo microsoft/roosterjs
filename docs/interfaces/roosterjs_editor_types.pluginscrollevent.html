@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BeforeDisposeEvent | RoosterJs API Reference</title>
+	<title>PluginScrollEvent | RoosterJs API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,31 +55,24 @@
 					<a href="../modules/roosterjs_editor_types.html">roosterjs-editor-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_types.beforedisposeevent.html">BeforeDisposeEvent</a>
+					<a href="roosterjs_editor_types.pluginscrollevent.html">PluginScrollEvent</a>
 				</li>
 			</ul>
-			<h1>Interface BeforeDisposeEvent</h1>
+			<h1>Interface PluginScrollEvent</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Provides a chance for plugin to change the content before it is pasted into editor.</p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="roosterjs_editor_types.basepluginevent.html" class="tsd-signature-type">BasePluginEvent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PluginEventType.BeforeDispose</span><span class="tsd-signature-symbol">&gt;</span>
+						<a href="roosterjs_editor_types.basepluginevent.html" class="tsd-signature-type">BasePluginEvent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PluginEventType.Scroll</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">BeforeDisposeEvent</span>
+								<span class="target">PluginScrollEvent</span>
 							</li>
 						</ul>
 					</li>
@@ -89,17 +82,19 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-inherited">
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.beforedisposeevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.beforedisposeevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.pluginscrollevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.pluginscrollevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.pluginscrollevent.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.pluginscrollevent.html#scrollcontainer" class="tsd-kind-icon">scroll<wbr>Container</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="eventdatacache" class="tsd-anchor"></a>
@@ -130,7 +125,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="eventtype" class="tsd-anchor"></a>
 					<h3>event<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">event<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">PluginEventType.BeforeDispose</span></div>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">PluginEventType.Scroll</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_editor_types.basepluginevent.html">BasePluginEvent</a>.<a href="roosterjs_editor_types.basepluginevent.html#eventtype">eventType</a></p>
 						<ul>
@@ -142,6 +137,26 @@
 							<p>Type of this event</p>
 						</div>
 					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="rawevent" class="tsd-anchor"></a>
+					<h3>raw<wbr>Event</h3>
+					<div class="tsd-signature tsd-kind-icon">raw<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">UIEvent</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/17c45b1/packages/roosterjs-editor-types/lib/event/PluginDomEvent.ts#L64">roosterjs-editor-types/lib/event/PluginDomEvent.ts:64</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="scrollcontainer" class="tsd-anchor"></a>
+					<h3>scroll<wbr>Container</h3>
+					<div class="tsd-signature tsd-kind-icon">scroll<wbr>Container<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/17c45b1/packages/roosterjs-editor-types/lib/event/PluginDomEvent.ts#L65">roosterjs-editor-types/lib/event/PluginDomEvent.ts:65</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -185,13 +200,19 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="roosterjs_editor_types.beforedisposeevent.html" class="tsd-kind-icon">Before<wbr>Dispose<wbr>Event</a>
+						<a href="roosterjs_editor_types.pluginscrollevent.html" class="tsd-kind-icon">Plugin<wbr>Scroll<wbr>Event</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_editor_types.beforedisposeevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
+								<a href="roosterjs_editor_types.pluginscrollevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_editor_types.beforedisposeevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
+								<a href="roosterjs_editor_types.pluginscrollevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.pluginscrollevent.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.pluginscrollevent.html#scrollcontainer" class="tsd-kind-icon">scroll<wbr>Container</a>
 							</li>
 						</ul>
 					</li>
