@@ -35,10 +35,7 @@ export default function createEditorCore(
         edit: new EditPlugin(),
         typeInContainer: new TypeInContainerPlugin(),
         mouseUp: new MouseUpPlugin(),
-        domEvent: new DOMEventPlugin(
-            options.disableRestoreSelectionOnFocus,
-            options.scrollContainer || contentDiv
-        ),
+        domEvent: new DOMEventPlugin(options.disableRestoreSelectionOnFocus),
         firefoxTypeAfterLink: Browser.isFirefox && new FirefoxTypeAfterLink(),
         copyPlugin: !Browser.isIE && new CopyPlugin(),
     };
@@ -48,6 +45,7 @@ export default function createEditorCore(
     );
     return {
         contentDiv,
+        scrollContainer: options.scrollContainer || contentDiv,
         document: contentDiv.ownerDocument,
         defaultFormat: calculateDefaultFormat(
             contentDiv,

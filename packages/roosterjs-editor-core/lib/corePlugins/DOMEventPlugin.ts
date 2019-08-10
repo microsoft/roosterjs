@@ -30,10 +30,7 @@ export default class DOMEventPlugin implements EditorPlugin {
     private cachedPosition: NodePosition;
     private cachedFormatState: PendableFormatState;
 
-    constructor(
-        private disableRestoreSelectionOnFocus: boolean,
-        public readonly scrollContainer?: HTMLElement
-    ) {}
+    constructor(private disableRestoreSelectionOnFocus: boolean) {}
 
     getName() {
         return 'DOMEvent';
@@ -61,15 +58,11 @@ export default class DOMEventPlugin implements EditorPlugin {
             [Browser.isIEOrEdge ? 'beforedeactivate' : 'blur']: this.onBlur,
         });
 
-        if (this.scrollContainer) {
-            this.scrollContainer.addEventListener('scroll', this.onScroll);
-        }
+        this.editor.getScrollContainer().addEventListener('scroll', this.onScroll);
     }
 
     dispose() {
-        if (this.scrollContainer) {
-            this.scrollContainer.removeEventListener('scroll', this.onScroll);
-        }
+        this.editor.getScrollContainer().removeEventListener('scroll', this.onScroll);
 
         this.disposer();
         this.disposer = null;
@@ -165,7 +158,7 @@ export default class DOMEventPlugin implements EditorPlugin {
     private onScroll = (e: UIEvent) => {
         this.editor.triggerPluginEvent(PluginEventType.Scroll, {
             rawEvent: e,
-            scrollContainer: this.scrollContainer,
+            scrollContainer: this.editor.getScrollContainer(),
         });
     };
 

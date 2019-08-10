@@ -779,7 +779,7 @@ export default class Editor {
      * Get the scroll container of the editor
      */
     public getScrollContainer(): HTMLElement {
-        return this.core.corePlugins.domEvent.scrollContainer;
+        return this.core.scrollContainer;
     }
 
     /**
