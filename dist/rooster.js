@@ -10565,7 +10565,14 @@ var Watermark = /** @class */ (function () {
     Watermark.prototype.hideWatermark = function () {
         var _this = this;
         this.editor.queryElements("span[id=\"" + WATERMARK_SPAN_ID + "\"]", function (span) {
-            return _this.editor.deleteNode(span);
+            var parentNode = span.parentNode;
+            _this.editor.deleteNode(span);
+            // After remove watermark node, if it leaves an empty DIV, append a BR node into it to make it a regular empty line
+            if (_this.editor.contains(parentNode) &&
+                roosterjs_editor_dom_1.getTagOfNode(parentNode) == 'DIV' &&
+                !parentNode.firstChild) {
+                parentNode.appendChild(_this.editor.getDocument().createElement('BR'));
+            }
         });
         this.isWatermarkShowing = false;
     };
