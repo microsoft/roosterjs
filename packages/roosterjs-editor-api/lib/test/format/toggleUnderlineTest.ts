@@ -26,7 +26,7 @@ describe('toggleUnderline()', () => {
         expect(document.execCommand).toHaveBeenCalledWith('underline', false, null);
     });
 
-    it('if select a normal string and then toggle underline, the string will wrap with <u></u>', () => {
+    xit('if select a normal string and then toggle underline, the string will wrap with <u></u>', () => {
         // Arrange
         editor.setContent(originalContent);
         TestHelper.selectNode(document.getElementById('text'));
@@ -40,7 +40,7 @@ describe('toggleUnderline()', () => {
         );
     });
 
-    it('if select a normal string and then toggle underline, only the selected string will wrap with <u></u>', () => {
+    xit('if select a normal string and then toggle underline, only the selected string will wrap with <u></u>', () => {
         // Arrange
         editor.setContent(originalContent);
         TestHelper.selectText(document.getElementById('text').firstChild, 0, 3);
@@ -54,7 +54,7 @@ describe('toggleUnderline()', () => {
         );
     });
 
-    it('if select an underline string and then toggle underline, the string will be normal', () => {
+    xit('if select an underline string and then toggle underline, the string will be normal', () => {
         // Arrange
         editor.setContent(
             '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><u>text</u></div>'
@@ -68,7 +68,7 @@ describe('toggleUnderline()', () => {
         expect(editor.getContent()).toBe(originalContent);
     });
 
-    it('if select a string with text-decoration set as underline and then toggle underline, the text-decoration style will be removed', () => {
+    xit('if select a string with text-decoration set as underline and then toggle underline, the text-decoration style will be removed', () => {
         // Arrange
         editor.setContent(
             '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0); text-decoration: underline;">text</div>'
