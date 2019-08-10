@@ -31,6 +31,7 @@ const EventTypeMap = {
     [PluginEventType.Input]: 'Input',
     [PluginEventType.PendingFormatStateChanged]: 'PendingFormatStateChanged',
     [PluginEventType.DarkModeChanged]: 'DarkModeChanged',
+    [PluginEventType.Scroll]: 'Scroll',
 };
 
 export default class EventViewPane extends React.Component<

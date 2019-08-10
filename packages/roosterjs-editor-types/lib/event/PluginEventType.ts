@@ -73,4 +73,9 @@ export const enum PluginEventType {
      * Dark mode state is changed
      */
     DarkModeChanged,
+  
+    /**
+     * Scroll event triggered by scroll container
+     */
+    Scroll,
 }

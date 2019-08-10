@@ -45,6 +45,7 @@ export default function createEditorCore(
     );
     return {
         contentDiv,
+        scrollContainer: options.scrollContainer || contentDiv,
         document: contentDiv.ownerDocument,
         defaultFormat: calculateDefaultFormat(
             contentDiv,
