@@ -1,4 +1,4 @@
-import { applyFormat, wrap } from 'roosterjs-editor-dom';
+import { applyFormat, getTagOfNode, wrap } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     ChangeSource,
@@ -113,9 +113,19 @@ export default class Watermark implements EditorPlugin {
     }
 
     private hideWatermark() {
-        this.editor.queryElements(`span[id="${WATERMARK_SPAN_ID}"]`, span =>
-            this.editor.deleteNode(span)
-        );
+        this.editor.queryElements(`span[id="${WATERMARK_SPAN_ID}"]`, span => {
+            let parentNode = span.parentNode;
+            this.editor.deleteNode(span);
+
+            // After remove watermark node, if it leaves an empty DIV, append a BR node into it to make it a regular empty line
+            if (
+                this.editor.contains(parentNode) &&
+                getTagOfNode(parentNode) == 'DIV' &&
+                !parentNode.firstChild
+            ) {
+                parentNode.appendChild(this.editor.getDocument().createElement('BR'));
+            }
+        });
         this.isWatermarkShowing = false;
     }
 
