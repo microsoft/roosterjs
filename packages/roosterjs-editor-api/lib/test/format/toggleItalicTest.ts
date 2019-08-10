@@ -26,7 +26,7 @@ describe('toggleItalic()', () => {
         expect(document.execCommand).toHaveBeenCalledWith('italic', false, null);
     });
 
-    it('if select an unItalic string and then toggle italic, the string will wrap with <i></i>', () => {
+    xit('if select an unItalic string and then toggle italic, the string will wrap with <i></i>', () => {
         // Arrange
         editor.setContent(originalContent);
         TestHelper.selectNode(document.getElementById('text'));
@@ -40,7 +40,7 @@ describe('toggleItalic()', () => {
         );
     });
 
-    it('if select an unItalic string and then toggle italic, only the selected string will wrap with <i></i>', () => {
+    xit('if select an unItalic string and then toggle italic, only the selected string will wrap with <i></i>', () => {
         // Arrange
         editor.setContent(originalContent);
         TestHelper.selectText(document.getElementById('text').firstChild, 0, 3);
@@ -54,7 +54,7 @@ describe('toggleItalic()', () => {
         );
     });
 
-    it('if select an italic string and then toggle italic, the string will be unItalic', () => {
+    xit('if select an italic string and then toggle italic, the string will be unItalic', () => {
         // Arrange
         editor.setContent(
             '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><i>text</i></div>'
@@ -68,7 +68,7 @@ describe('toggleItalic()', () => {
         expect(editor.getContent()).toBe(originalContent);
     });
 
-    it('if select a string with font-style set as italic and then toggle italic, the font-style style will be removed', () => {
+    xit('if select a string with font-style set as italic and then toggle italic, the font-style style will be removed', () => {
         // Arrange
         editor.setContent(
             '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);font-style: italic;">text</div>'

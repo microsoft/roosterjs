@@ -17,7 +17,7 @@ describe('createLink()', () => {
         TestHelper.removeElement(testID);
     });
 
-    it('adds <a></a> as link', () => {
+    xit('adds <a></a> as link', () => {
         // Arrange
         editor.setContent(originalContent);
         TestHelper.selectNode(document.getElementById('text'));
@@ -30,7 +30,7 @@ describe('createLink()', () => {
         expect(link.outerHTML).toBe('<a href="http://www.example.com">text</a>');
     });
 
-    it('adds altText in the link', () => {
+    xit('adds altText in the link', () => {
         // Arrange
         editor.setContent(originalContent);
         TestHelper.selectNode(document.getElementById('text'));
