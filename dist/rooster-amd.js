@@ -4307,6 +4307,7 @@ exports.default = Undo;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
 // to keep size under limit. This is kept at 10MB
 var MAXSIZELIMIT = 1e7;
@@ -4317,9 +4318,7 @@ var UndoSnapshots = /** @class */ (function () {
     function UndoSnapshots(maxSize) {
         if (maxSize === void 0) { maxSize = MAXSIZELIMIT; }
         this.maxSize = maxSize;
-        this.snapshots = [];
-        this.totalSize = 0;
-        this.currentIndex = -1;
+        this.snapshots = roosterjs_editor_dom_1.createSnapshots(maxSize);
     }
     /**
      * Check whether can move current undo snapshot with the given step
@@ -4327,8 +4326,7 @@ var UndoSnapshots = /** @class */ (function () {
      * @returns True if can move current snapshot with the given step, otherwise false
      */
     UndoSnapshots.prototype.canMove = function (delta) {
-        var newIndex = this.currentIndex + delta;
-        return newIndex >= 0 && newIndex < this.snapshots.length;
+        return roosterjs_editor_dom_1.canMoveCurrentSnapshot(this.snapshots, delta);
     };
     /**
      * Move current snapshot with the given step if can move this step. Otherwise no action and return null
@@ -4336,47 +4334,20 @@ var UndoSnapshots = /** @class */ (function () {
      * @returns If can move with the given step, returns the snapshot after move, otherwise null
      */
     UndoSnapshots.prototype.move = function (delta) {
-        if (this.canMove(delta)) {
-            this.currentIndex += delta;
-            return this.snapshots[this.currentIndex];
-        }
-        else {
-            return null;
-        }
+        return roosterjs_editor_dom_1.moveCurrentSnapsnot(this.snapshots, delta);
     };
     /**
      * Add a new undo snapshot
      * @param snapshot The snapshot to add
      */
     UndoSnapshots.prototype.addSnapshot = function (snapshot) {
-        if (this.currentIndex < 0 || snapshot != this.snapshots[this.currentIndex]) {
-            this.clearRedo();
-            this.snapshots.push(snapshot);
-            this.currentIndex++;
-            this.totalSize += snapshot.length;
-            var removeCount = 0;
-            while (removeCount < this.snapshots.length && this.totalSize > this.maxSize) {
-                this.totalSize -= this.snapshots[removeCount].length;
-                removeCount++;
-            }
-            if (removeCount > 0) {
-                this.snapshots.splice(0, removeCount);
-                this.currentIndex -= removeCount;
-            }
-        }
+        roosterjs_editor_dom_1.addSnapshot(this.snapshots, snapshot);
     };
     /**
      * Clear all undo snapshots after the current one
      */
     UndoSnapshots.prototype.clearRedo = function () {
-        if (this.canMove(1)) {
-            var removedSize = 0;
-            for (var i = this.currentIndex + 1; i < this.snapshots.length; i++) {
-                removedSize += this.snapshots[i].length;
-            }
-            this.snapshots.splice(this.currentIndex + 1);
-            this.totalSize -= removedSize;
-        }
+        roosterjs_editor_dom_1.clearProceedingSnapshots(this.snapshots);
     };
     return UndoSnapshots;
 }());
@@ -5500,6 +5471,16 @@ var isPositionAtBeginningOf_1 = __webpack_require__(/*! ./selection/isPositionAt
 exports.isPositionAtBeginningOf = isPositionAtBeginningOf_1.default;
 var getSelectionPath_1 = __webpack_require__(/*! ./selection/getSelectionPath */ "./packages/roosterjs-editor-dom/lib/selection/getSelectionPath.ts");
 exports.getSelectionPath = getSelectionPath_1.default;
+var addSnapshot_1 = __webpack_require__(/*! ./snapshots/addSnapshot */ "./packages/roosterjs-editor-dom/lib/snapshots/addSnapshot.ts");
+exports.addSnapshot = addSnapshot_1.default;
+var canMoveCurrentSnapshot_1 = __webpack_require__(/*! ./snapshots/canMoveCurrentSnapshot */ "./packages/roosterjs-editor-dom/lib/snapshots/canMoveCurrentSnapshot.ts");
+exports.canMoveCurrentSnapshot = canMoveCurrentSnapshot_1.default;
+var clearProceedingSnapshots_1 = __webpack_require__(/*! ./snapshots/clearProceedingSnapshots */ "./packages/roosterjs-editor-dom/lib/snapshots/clearProceedingSnapshots.ts");
+exports.clearProceedingSnapshots = clearProceedingSnapshots_1.default;
+var moveCurrentSnapsnot_1 = __webpack_require__(/*! ./snapshots/moveCurrentSnapsnot */ "./packages/roosterjs-editor-dom/lib/snapshots/moveCurrentSnapsnot.ts");
+exports.moveCurrentSnapsnot = moveCurrentSnapsnot_1.default;
+var createSnapshots_1 = __webpack_require__(/*! ./snapshots/createSnapshots */ "./packages/roosterjs-editor-dom/lib/snapshots/createSnapshots.ts");
+exports.createSnapshots = createSnapshots_1.default;
 
 
 /***/ }),
@@ -6469,6 +6450,158 @@ function areAllPrevousNodesEmpty(node) {
     }
     return true;
 }
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-dom/lib/snapshots/addSnapshot.ts":
+/*!********************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/snapshots/addSnapshot.ts ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var clearProceedingSnapshots_1 = __webpack_require__(/*! ./clearProceedingSnapshots */ "./packages/roosterjs-editor-dom/lib/snapshots/clearProceedingSnapshots.ts");
+/**
+ * Add a new snapshot to the given snapshots data structure
+ * @param snapshots The snapshots data structure to add new snapshot into
+ * @param snapshot The snapshot to add
+ */
+function addSnapshot(snapshots, snapshot) {
+    if (snapshots.currentIndex < 0 || snapshot != snapshots.snapshots[snapshots.currentIndex]) {
+        clearProceedingSnapshots_1.default(snapshots);
+        snapshots.snapshots.push(snapshot);
+        snapshots.currentIndex++;
+        snapshots.totalSize += snapshot.length;
+        var removeCount = 0;
+        while (removeCount < snapshots.snapshots.length &&
+            snapshots.totalSize > snapshots.maxSize) {
+            snapshots.totalSize -= snapshots.snapshots[removeCount].length;
+            removeCount++;
+        }
+        if (removeCount > 0) {
+            snapshots.snapshots.splice(0, removeCount);
+            snapshots.currentIndex -= removeCount;
+        }
+    }
+}
+exports.default = addSnapshot;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-dom/lib/snapshots/canMoveCurrentSnapshot.ts":
+/*!*******************************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/snapshots/canMoveCurrentSnapshot.ts ***!
+  \*******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Check whether can move current snapshot with the given step
+ * @param snapshots The snapshots data structure to check
+ * @param step The step to check, can be positive, negative or 0
+ * @returns True if can move current snapshot with the given step, otherwise false
+ */
+function canMoveCurrentSnapshot(snapshots, step) {
+    var newIndex = snapshots.currentIndex + step;
+    return newIndex >= 0 && newIndex < snapshots.snapshots.length;
+}
+exports.default = canMoveCurrentSnapshot;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-dom/lib/snapshots/clearProceedingSnapshots.ts":
+/*!*********************************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/snapshots/clearProceedingSnapshots.ts ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var canMoveCurrentSnapshot_1 = __webpack_require__(/*! ./canMoveCurrentSnapshot */ "./packages/roosterjs-editor-dom/lib/snapshots/canMoveCurrentSnapshot.ts");
+/**
+ * Clear all snapshots after the current one
+ * @param snapshots The snapshots data structure to clear
+ */
+function clearProceedingSnapshots(snapshots) {
+    if (canMoveCurrentSnapshot_1.default(snapshots, 1)) {
+        var removedSize = 0;
+        for (var i = snapshots.currentIndex + 1; i < snapshots.snapshots.length; i++) {
+            removedSize += snapshots.snapshots[i].length;
+        }
+        snapshots.snapshots.splice(snapshots.currentIndex + 1);
+        snapshots.totalSize -= removedSize;
+    }
+}
+exports.default = clearProceedingSnapshots;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-dom/lib/snapshots/createSnapshots.ts":
+/*!************************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/snapshots/createSnapshots.ts ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Create initial snapshots
+ * @param maxSize max size of all snapshots
+ */
+function createSnapshots(maxSize) {
+    return {
+        snapshots: [],
+        totalSize: 0,
+        currentIndex: -1,
+        maxSize: maxSize,
+    };
+}
+exports.default = createSnapshots;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-dom/lib/snapshots/moveCurrentSnapsnot.ts":
+/*!****************************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/snapshots/moveCurrentSnapsnot.ts ***!
+  \****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var canMoveCurrentSnapshot_1 = __webpack_require__(/*! ./canMoveCurrentSnapshot */ "./packages/roosterjs-editor-dom/lib/snapshots/canMoveCurrentSnapshot.ts");
+/**
+ * Move current snapshot with the given step if can move this step. Otherwise no action and return null
+ * @param snapshots The snapshots data structure to move
+ * @param step The step to move
+ * @returns If can move with the given step, returns the snapshot after move, otherwise null
+ */
+function moveCurrentSnapsnot(snapshots, step) {
+    if (canMoveCurrentSnapshot_1.default(snapshots, step)) {
+        snapshots.currentIndex += step;
+        return snapshots.snapshots[snapshots.currentIndex];
+    }
+    else {
+        return null;
+    }
+}
+exports.default = moveCurrentSnapsnot;
 
 
 /***/ }),

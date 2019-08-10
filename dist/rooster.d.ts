@@ -1266,6 +1266,28 @@ interface SelectionPath {
 }
 
     /**
+ * Represents a data structure of snapshots, this is usually used for undo snapshots
+ */
+interface Snapshots {
+    /**
+     * The snapshot array
+     */
+    snapshots: string[];
+    /**
+     * Size of all snapshots
+     */
+    totalSize: number;
+    /**
+     * Current index
+     */
+    currentIndex: number;
+    /**
+     * Max size of all snapshots
+     */
+    readonly maxSize: number;
+}
+
+    /**
  * Table format
  */
 interface TableFormat {
@@ -2193,6 +2215,41 @@ function isPositionAtBeginningOf(position: NodePosition, targetNode: Node): bool
  * @param range The range of selection
  */
 function getSelectionPath(rootNode: HTMLElement, range: Range): SelectionPath;
+
+    /**
+ * Add a new snapshot to the given snapshots data structure
+ * @param snapshots The snapshots data structure to add new snapshot into
+ * @param snapshot The snapshot to add
+ */
+function addSnapshot(snapshots: Snapshots, snapshot: string): void;
+
+    /**
+ * Check whether can move current snapshot with the given step
+ * @param snapshots The snapshots data structure to check
+ * @param step The step to check, can be positive, negative or 0
+ * @returns True if can move current snapshot with the given step, otherwise false
+ */
+function canMoveCurrentSnapshot(snapshots: Snapshots, step: number): boolean;
+
+    /**
+ * Clear all snapshots after the current one
+ * @param snapshots The snapshots data structure to clear
+ */
+function clearProceedingSnapshots(snapshots: Snapshots): void;
+
+    /**
+ * Move current snapshot with the given step if can move this step. Otherwise no action and return null
+ * @param snapshots The snapshots data structure to move
+ * @param step The step to move
+ * @returns If can move with the given step, returns the snapshot after move, otherwise null
+ */
+function moveCurrentSnapsnot(snapshots: Snapshots, step: number): string;
+
+    /**
+ * Create initial snapshots
+ * @param maxSize max size of all snapshots
+ */
+function createSnapshots(maxSize: number): Snapshots;
 
     /**
  * ContentEditFeature interface that handles keyboard event
