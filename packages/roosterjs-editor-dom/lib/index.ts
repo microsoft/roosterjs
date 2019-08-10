@@ -53,3 +53,4 @@ export { default as addSnapshot } from './snapshots/addSnapshot';
 export { default as canMoveCurrentSnapshot } from './snapshots/canMoveCurrentSnapshot';
 export { default as clearProceedingSnapshots } from './snapshots/clearProceedingSnapshots';
 export { default as moveCurrentSnapsnot } from './snapshots/moveCurrentSnapsnot';
+export { default as createSnapshots } from './snapshots/createSnapshots';

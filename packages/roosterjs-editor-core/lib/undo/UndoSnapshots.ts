@@ -5,6 +5,7 @@ import {
     canMoveCurrentSnapshot,
     moveCurrentSnapsnot,
     clearProceedingSnapshots,
+    createSnapshots,
 } from 'roosterjs-editor-dom';
 
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
@@ -14,12 +15,12 @@ const MAXSIZELIMIT = 1e7;
 /**
  * A class to help manage undo snapshots
  */
-export default class UndoSnapshots implements UndoSnapshotsService, Snapshots {
-    snapshots: string[] = [];
-    totalSize = 0;
-    currentIndex = -1;
+export default class UndoSnapshots implements UndoSnapshotsService {
+    private snapshots: Snapshots;
 
-    constructor(public readonly maxSize: number = MAXSIZELIMIT) {}
+    constructor(public readonly maxSize: number = MAXSIZELIMIT) {
+        this.snapshots = createSnapshots(maxSize);
+    }
 
     /**
      * Check whether can move current undo snapshot with the given step
@@ -27,7 +28,7 @@ export default class UndoSnapshots implements UndoSnapshotsService, Snapshots {
      * @returns True if can move current snapshot with the given step, otherwise false
      */
     public canMove(delta: number): boolean {
-        return canMoveCurrentSnapshot(this, delta);
+        return canMoveCurrentSnapshot(this.snapshots, delta);
     }
 
     /**
@@ -36,7 +37,7 @@ export default class UndoSnapshots implements UndoSnapshotsService, Snapshots {
      * @returns If can move with the given step, returns the snapshot after move, otherwise null
      */
     public move(delta: number): string {
-        return moveCurrentSnapsnot(this, delta);
+        return moveCurrentSnapsnot(this.snapshots, delta);
     }
 
     /**
@@ -44,13 +45,13 @@ export default class UndoSnapshots implements UndoSnapshotsService, Snapshots {
      * @param snapshot The snapshot to add
      */
     public addSnapshot(snapshot: string) {
-        addSnapshot(this, snapshot);
+        addSnapshot(this.snapshots, snapshot);
     }
 
     /**
      * Clear all undo snapshots after the current one
      */
     public clearRedo() {
-        clearProceedingSnapshots(this);
+        clearProceedingSnapshots(this.snapshots);
     }
 }
