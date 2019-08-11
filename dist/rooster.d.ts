@@ -737,7 +737,7 @@ interface PluginInputEvent extends BasePluginEvent<PluginEventType.Input> {
     /**
  * Editor plugin event interface
  */
-type PluginEvent = BeforePasteEvent | ContentChangedEvent | ExtractContentEvent | PluginDomEvent | EditorReadyEvent | BeforeDisposeEvent | PendingFormatStateChangedEvent;
+type PluginEvent = BeforePasteEvent | ContentChangedEvent | ExtractContentEvent | PluginDomEvent | EditorReadyEvent | BeforeDisposeEvent | PendingFormatStateChangedEvent | DarkModeChangedEvent;
 
     /**
  * Editor plugin event type
@@ -798,9 +798,13 @@ const enum PluginEventType {
      */
     PendingFormatStateChanged = 12,
     /**
+     * Dark mode state is changed
+     */
+    DarkModeChanged = 13,
+    /**
      * Scroll event triggered by scroll container
      */
-    Scroll = 13
+    Scroll = 14
 }
 
     /**
@@ -824,6 +828,10 @@ type PluginEventFromType<T extends PluginEventType> = PluginEventFromTypeGeneric
  * This type is a middle result and only used by PluginEventFromType type
  */
 type PluginEventFromTypeGeneric<E extends PluginEvent, T extends PluginEventType> = E extends BasePluginEvent<T> ? E : never;
+
+    interface DarkModeChangedEvent extends BasePluginEvent<PluginEventType.DarkModeChanged> {
+    changedToDarkMode: boolean;
+}
 
     /**
  * This refers to a "content block" in editor that serves as a content parsing boundary

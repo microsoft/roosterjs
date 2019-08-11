@@ -2511,7 +2511,7 @@ var DOMEventPlugin = /** @class */ (function () {
             _this.editor.saveSelectionRange();
         };
         this.onScroll = function (e) {
-            _this.editor.triggerPluginEvent(13 /* Scroll */, {
+            _this.editor.triggerPluginEvent(14 /* Scroll */, {
                 rawEvent: e,
                 scrollContainer: _this.editor.getScrollContainer(),
             });
@@ -3673,6 +3673,9 @@ var Editor = /** @class */ (function () {
         this.core.inDarkMode = nextDarkMode;
         this.core.defaultFormat = calculateDefaultFormat_1.calculateDefaultFormat(this.core.contentDiv, this.core.defaultFormat, this.core.inDarkMode);
         this.setContent(currentContent);
+        this.triggerPluginEvent(13 /* DarkModeChanged */, {
+            changedToDarkMode: nextDarkMode,
+        });
     };
     /**
      * Check if the editor is in dark mode
@@ -11768,7 +11771,7 @@ var PickerPlugin = /** @class */ (function () {
                     this.setIsSuggesting(false);
                 }
                 break;
-            case 13 /* Scroll */:
+            case 14 /* Scroll */:
                 if (this.dataProvider.onScroll) {
                     // Dispatch scroll event to data provider
                     this.dataProvider.onScroll(event.scrollContainer);

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>VCell | RoosterJs API Reference</title>
+	<title>DarkModeChangedEvent | RoosterJs API Reference</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,31 +52,29 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/roosterjs_editor_dom.html">roosterjs-editor-dom</a>
+					<a href="../modules/roosterjs_editor_types.html">roosterjs-editor-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_dom.vcell.html">VCell</a>
+					<a href="roosterjs_editor_types.darkmodechangedevent.html">DarkModeChangedEvent</a>
 				</li>
 			</ul>
-			<h1>Interface VCell</h1>
+			<h1>Interface DarkModeChangedEvent</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Represent a virtual cell of a virtual table</p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">VCell</span>
+						<a href="roosterjs_editor_types.basepluginevent.html" class="tsd-signature-type">BasePluginEvent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PluginEventType.DarkModeChanged</span><span class="tsd-signature-symbol">&gt;</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">DarkModeChangedEvent</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -87,9 +85,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_dom.vcell.html#spanabove" class="tsd-kind-icon">span<wbr>Above</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_dom.vcell.html#spanleft" class="tsd-kind-icon">span<wbr>Left</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_dom.vcell.html#td" class="tsd-kind-icon">td</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.darkmodechangedevent.html#changedtodarkmode" class="tsd-kind-icon">changed<wbr>ToDark<wbr>Mode</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.darkmodechangedevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.darkmodechangedevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
 							</ul>
 						</section>
 					</div>
@@ -98,47 +96,54 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="spanabove" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> span<wbr>Above</h3>
-					<div class="tsd-signature tsd-kind-icon">span<wbr>Above<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="changedtodarkmode" class="tsd-anchor"></a>
+					<h3>changed<wbr>ToDark<wbr>Mode</h3>
+					<div class="tsd-signature tsd-kind-icon">changed<wbr>ToDark<wbr>Mode<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e9ca0ed/packages/roosterjs-editor-dom/lib/table/VTable.ts#L20">roosterjs-editor-dom/lib/table/VTable.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e9ca0ed/packages/roosterjs-editor-types/lib/event/DarkModeChangedEvent.ts#L6">roosterjs-editor-types/lib/event/DarkModeChangedEvent.ts:6</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="eventdatacache" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> event<wbr>Data<wbr>Cache</h3>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Data<wbr>Cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_editor_types.basepluginevent.html">BasePluginEvent</a>.<a href="roosterjs_editor_types.basepluginevent.html#eventdatacache">eventDataCache</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e9ca0ed/packages/roosterjs-editor-types/lib/event/BasePluginEvent.ts#L17">roosterjs-editor-types/lib/event/BasePluginEvent.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Whether this cell is spanned from above</p>
+							<p>An optional event cache.
+								This will be consumed by event cache API to store some expensive calculation result.
+							So that for the same event across plugins, the result doesn&#39;t need to be calculated again</p>
 						</div>
 					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="spanleft" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> span<wbr>Left</h3>
-					<div class="tsd-signature tsd-kind-icon">span<wbr>Left<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e9ca0ed/packages/roosterjs-editor-dom/lib/table/VTable.ts#L15">roosterjs-editor-dom/lib/table/VTable.ts:15</a></li>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></h5>
+							</li>
 						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Whether this cell is spanned from left</p>
-						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="td" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> td</h3>
-					<div class="tsd-signature tsd-kind-icon">td<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLTableCellElement</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="eventtype" class="tsd-anchor"></a>
+					<h3>event<wbr>Type</h3>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">PluginEventType.DarkModeChanged</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_editor_types.basepluginevent.html">BasePluginEvent</a>.<a href="roosterjs_editor_types.basepluginevent.html#eventtype">eventType</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e9ca0ed/packages/roosterjs-editor-dom/lib/table/VTable.ts#L10">roosterjs-editor-dom/lib/table/VTable.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e9ca0ed/packages/roosterjs-editor-types/lib/event/BasePluginEvent.ts#L10">roosterjs-editor-types/lib/event/BasePluginEvent.ts:10</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The table cell object. The value will be null if this is an expanded virtual cell</p>
+							<p>Type of this event</p>
 						</div>
 					</div>
 				</section>
@@ -159,13 +164,13 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_core.html">roosterjs-<wbr>editor-<wbr>core</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_dom.html">roosterjs-<wbr>editor-<wbr>dom</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_plugins.html">roosterjs-<wbr>editor-<wbr>plugins</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/roosterjs_editor_types.html">roosterjs-<wbr>editor-<wbr>types</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -184,16 +189,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="roosterjs_editor_dom.vcell.html" class="tsd-kind-icon">VCell</a>
+						<a href="roosterjs_editor_types.darkmodechangedevent.html" class="tsd-kind-icon">Dark<wbr>Mode<wbr>Changed<wbr>Event</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_dom.vcell.html#spanabove" class="tsd-kind-icon">span<wbr>Above</a>
+								<a href="roosterjs_editor_types.darkmodechangedevent.html#changedtodarkmode" class="tsd-kind-icon">changed<wbr>ToDark<wbr>Mode</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_dom.vcell.html#spanleft" class="tsd-kind-icon">span<wbr>Left</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_editor_types.darkmodechangedevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_dom.vcell.html#td" class="tsd-kind-icon">td</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_editor_types.darkmodechangedevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
 							</li>
 						</ul>
 					</li>
