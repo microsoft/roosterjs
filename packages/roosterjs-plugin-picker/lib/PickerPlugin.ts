@@ -461,7 +461,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         return wordBeforCursor ? wordBeforCursor.length : 0;
     }
 
-    private tryRemoveNode(event: PluginEvent): boolean {
+    private tryRemoveNode(event: PluginDomEvent): boolean {
         const searcher = cacheGetContentSearcher(event, this.editor);
         const inlineElementBefore = searcher.getInlineElementBefore();
         const nodeBeforeCursor = inlineElementBefore
