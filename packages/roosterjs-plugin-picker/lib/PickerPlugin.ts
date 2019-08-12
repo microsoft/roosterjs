@@ -189,9 +189,9 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 this.isPendingInputEventHandling = true;
             } else {
                 this.isPendingInputEventHandling = false;
-                this.eventHandledOnKeyDown = false;
                 this.onKeyDownEvent(event);
             }
+            this.eventHandledOnKeyDown = false;
         }
 
         if (event.eventType == PluginEventType.Input && this.isPendingInputEventHandling) {
@@ -423,8 +423,10 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             }
         } else {
             if (keyboardEvent.key == BACKSPACE_CHARCODE) {
-                this.removeNode(event);
-                this.cancelDefaultKeyDownEvent(event);
+                const nodeRemoved = this.tryRemoveNode(event);
+                if (nodeRemoved) {
+                    this.cancelDefaultKeyDownEvent(event);
+                }
             } else if (keyboardEvent.key == DELETE_CHARCODE) {
                 let searcher = cacheGetContentSearcher(event, this.editor);
                 let nodeAfterCursor = searcher.getInlineElementAfter()
@@ -447,10 +449,11 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             this.newInputLength < this.currentInputLength ||
             (event.rawEvent as any).inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE
         ) {
-            this.removeNode(event);
+            const nodeRemoved = this.tryRemoveNode(event);
+            if (nodeRemoved) {
+                this.eventHandledOnKeyDown = true;
+            }
         }
-
-        this.currentInputLength = this.newInputLength;
     }
 
     private calcInputLength(event: PluginEvent) {
@@ -458,7 +461,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         return wordBeforCursor ? wordBeforCursor.length : 0;
     }
 
-    private removeNode(event: PluginDomEvent) {
+    private tryRemoveNode(event: PluginEvent): boolean {
         const searcher = cacheGetContentSearcher(event, this.editor);
         const inlineElementBefore = searcher.getInlineElementBefore();
         const nodeBeforeCursor = inlineElementBefore
@@ -485,7 +488,9 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             } else {
                 this.editor.deleteNode(nodeBeforeCursor);
             }
+            return true;
         }
+        return false;
     }
 
     private getWord(event: PluginKeyboardEvent) {
