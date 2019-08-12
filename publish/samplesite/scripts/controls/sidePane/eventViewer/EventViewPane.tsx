@@ -30,6 +30,7 @@ const EventTypeMap = {
     [PluginEventType.MouseUp]: 'MouseUp',
     [PluginEventType.Input]: 'Input',
     [PluginEventType.PendingFormatStateChanged]: 'PendingFormatStateChanged',
+    [PluginEventType.DarkModeChanged]: 'DarkModeChanged',
     [PluginEventType.Scroll]: 'Scroll',
 };
 
