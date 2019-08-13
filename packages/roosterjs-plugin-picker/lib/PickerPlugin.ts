@@ -155,60 +155,69 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
-        if (
-            event.eventType == PluginEventType.ContentChanged &&
-            event.source == ChangeSource.SetContent &&
-            this.dataProvider.onContentChanged
-        ) {
-            // Stop suggesting since content is fully changed
-            if (this.isSuggesting) {
-                this.setIsSuggesting(false);
-            }
-
-            // Undos and other major changes to document content fire this type of event.
-            // Inform the data provider of the current picker placed elements in the body.
-            let elementIds: string[] = [];
-            this.editor.queryElements(
-                "[id^='" + this.pickerOptions.elementIdPrefix + "']",
-                element => {
-                    if (element.id) {
-                        elementIds.push(element.id);
+        switch (event.eventType) {
+            case PluginEventType.ContentChanged:
+                if (event.source == ChangeSource.SetContent && this.dataProvider.onContentChanged) {
+                    // Stop suggesting since content is fully changed
+                    if (this.isSuggesting) {
+                        this.setIsSuggesting(false);
                     }
+
+                    // Undos and other major changes to document content fire this type of event.
+                    // Inform the data provider of the current picker placed elements in the body.
+                    let elementIds: string[] = [];
+                    this.editor.queryElements(
+                        "[id^='" + this.pickerOptions.elementIdPrefix + "']",
+                        element => {
+                            if (element.id) {
+                                elementIds.push(element.id);
+                            }
+                        }
+                    );
+                    this.dataProvider.onContentChanged(elementIds);
                 }
-            );
-            this.dataProvider.onContentChanged(elementIds);
-        }
+                break;
 
-        if (event.eventType == PluginEventType.KeyDown) {
-            if (event.rawEvent.key == UNIDENTIFIED_KEY) {
-                // On Android, the key for KeyboardEvent is "Unidentified",
-                // so handling should be done using the input rather than key down event
-                // Since the key down event happens right before the input event, calculate the input
-                // length here in preparation for onAndroidInputEvent
-                this.currentInputLength = this.calcInputLength(event);
-                this.isPendingInputEventHandling = true;
-            } else {
-                this.isPendingInputEventHandling = false;
-                this.onKeyDownEvent(event);
-            }
-            this.eventHandledOnKeyDown = false;
-        }
+            case PluginEventType.KeyDown:
+                this.eventHandledOnKeyDown = false;
+                if (event.rawEvent.key == UNIDENTIFIED_KEY) {
+                    // On Android, the key for KeyboardEvent is "Unidentified",
+                    // so handling should be done using the input rather than key down event
+                    // Since the key down event happens right before the input event, calculate the input
+                    // length here in preparation for onAndroidInputEvent
+                    this.currentInputLength = this.calcInputLength(event);
+                    this.isPendingInputEventHandling = true;
+                } else {
+                    this.onKeyDownEvent(event);
+                    this.isPendingInputEventHandling = false;
+                }
+                break;
 
-        if (event.eventType == PluginEventType.Input && this.isPendingInputEventHandling) {
-            this.onAndroidInputEvent(event);
-        }
+            case PluginEventType.Input:
+                if (this.isPendingInputEventHandling) {
+                    this.onAndroidInputEvent(event);
+                }
+                break;
 
-        if (
-            event.eventType == PluginEventType.KeyUp &&
-            !this.eventHandledOnKeyDown &&
-            this.shouldHandleKeyUpEvent(event)
-        ) {
-            this.isPendingInputEventHandling = false;
-            this.onKeyUpDomEvent(event);
-        } else if (event.eventType == PluginEventType.MouseUp) {
-            if (this.isSuggesting) {
-                this.setIsSuggesting(false);
-            }
+            case PluginEventType.KeyUp:
+                if (!this.eventHandledOnKeyDown && this.shouldHandleKeyUpEvent(event)) {
+                    this.onKeyUpDomEvent(event);
+                    this.isPendingInputEventHandling = false;
+                }
+                break;
+
+            case PluginEventType.MouseUp:
+                if (this.isSuggesting) {
+                    this.setIsSuggesting(false);
+                }
+                break;
+
+            case PluginEventType.Scroll:
+                if (this.dataProvider.onScroll) {
+                    // Dispatch scroll event to data provider
+                    this.dataProvider.onScroll(event.scrollContainer);
+                }
+                break;
         }
     }
 

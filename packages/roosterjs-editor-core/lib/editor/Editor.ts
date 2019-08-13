@@ -75,7 +75,10 @@ export default class Editor {
         this.core.plugins.forEach(plugin => plugin.initialize(this));
 
         // 4. Ensure initial content and its format
-        this.setContent(options.initialContent || contentDiv.innerHTML || '');
+        this.setContent(
+            options.initialContent || contentDiv.innerHTML || '',
+            false /*triggerContentChangedEvent*/
+        );
 
         // 5. Create event handler to bind DOM events
         this.eventDisposers = mapPluginEvents(this.core);
@@ -773,6 +776,13 @@ export default class Editor {
     }
 
     /**
+     * Get the scroll container of the editor
+     */
+    public getScrollContainer(): HTMLElement {
+        return this.core.scrollContainer;
+    }
+
+    /**
      * Get custom data related to this editor
      * @param key Key of the custom data
      * @param getter Getter function. If custom data for the given key doesn't exist,
@@ -903,6 +913,9 @@ export default class Editor {
         );
 
         this.setContent(currentContent);
+        this.triggerPluginEvent(PluginEventType.DarkModeChanged, {
+            changedToDarkMode: nextDarkMode,
+        });
     }
 
     /**

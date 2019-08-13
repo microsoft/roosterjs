@@ -28,7 +28,7 @@ describe('clearFormat()', () => {
         expect(document.execCommand).toHaveBeenCalledWith('removeFormat', false, null);
     });
 
-    it('removes the existing formats', () => {
+    xit('removes the existing formats', () => {
         // Arrange
         editor.setContent(originalContent);
         TestHelper.selectNode(document.getElementById('text'));

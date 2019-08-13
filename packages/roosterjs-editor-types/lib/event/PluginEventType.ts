@@ -68,4 +68,14 @@ export const enum PluginEventType {
      * Pending format state (bold, italic, underline, ... with collapsed selection) is changed
      */
     PendingFormatStateChanged,
+
+    /**
+     * Dark mode state is changed
+     */
+    DarkModeChanged,
+
+    /**
+     * Scroll event triggered by scroll container
+     */
+    Scroll,
 }

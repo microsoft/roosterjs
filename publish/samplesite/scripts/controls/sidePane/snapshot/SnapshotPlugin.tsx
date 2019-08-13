@@ -1,12 +1,22 @@
 import * as React from 'react';
 import SidePanePlugin from '../../SidePanePlugin';
 import SnapshotPane from './SnapshotPane';
-import { Editor, Undo } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import UndoSnapshots from './UndoSnapshots';
+import { createSnapshots } from 'roosterjs-editor-dom';
+import { Editor, Undo, UndoSnapshotsService } from 'roosterjs-editor-core';
+import { PluginEvent, PluginEventType, Snapshots } from 'roosterjs-editor-types';
 
 export default class SnapshotPlugin extends Undo implements SidePanePlugin {
     private editorInstance: Editor;
     private component: SnapshotPane;
+    private snapshots: Snapshots;
+    private snapshotService: UndoSnapshotsService;
+
+    constructor() {
+        super();
+        this.snapshots = createSnapshots(1e7);
+        this.snapshotService = new UndoSnapshots(this.snapshots);
+    }
 
     initialize(editor: Editor) {
         super.initialize(editor);
@@ -55,6 +65,10 @@ export default class SnapshotPlugin extends Undo implements SidePanePlugin {
         this.updateSnapshots();
     }
 
+    protected getSnapshotsManager() {
+        return this.snapshotService;
+    }
+
     private refCallback = (ref: SnapshotPane) => {
         this.component = ref;
         if (ref) {
@@ -90,28 +104,6 @@ export default class SnapshotPlugin extends Undo implements SidePanePlugin {
             return;
         }
 
-        let manager = this.getSnapshotsManager();
-        let snapshots: string[] = [];
-        let currentIndex = -1;
-
-        let step = 0;
-        while (manager.canMove(step)) {
-            currentIndex++;
-
-            let snapshot = manager.move(step);
-            manager.move(-step);
-            step--;
-            snapshots.unshift(snapshot);
-        }
-
-        step = 1;
-        while (manager.canMove(step)) {
-            let snapshot = manager.move(step);
-            manager.move(-step);
-            step++;
-            snapshots.push(snapshot);
-        }
-
-        this.component.updateSnapshots(snapshots, currentIndex);
+        this.component.updateSnapshots(this.snapshots.snapshots, this.snapshots.currentIndex);
     }
 }
