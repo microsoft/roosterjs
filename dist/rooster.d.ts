@@ -4402,6 +4402,9 @@ class PickerPlugin<T extends PickerDataProvider = PickerDataProvider> implements
     private blockSuggestions;
     private isSuggesting;
     private lastKnownRange;
+    private isPendingInputEventHandling;
+    private currentInputLength;
+    private newInputLength;
     constructor(dataProvider: T, pickerOptions: PickerPluginOptions);
     /**
      * Get a friendly name
@@ -4432,17 +4435,22 @@ class PickerPlugin<T extends PickerDataProvider = PickerDataProvider> implements
     onPluginEvent(event: PluginEvent): void;
     private setLastKnownRange;
     private setIsSuggesting;
-    private handleKeyDownEvent;
+    private cancelDefaultKeyDownEvent;
     private getIdValue;
     private getWordBeforeCursor;
     private replaceNode;
     private getRangeUntilAt;
+    private shouldHandleKeyUpEvent;
     private onKeyUpDomEvent;
     private onKeyDownEvent;
+    private onAndroidInputEvent;
+    private calcInputLength;
+    private tryRemoveNode;
     private getWord;
     private setRangeStart;
     private setAriaOwns;
     private setAriaActiveDescendant;
+    private getInlineElementBeforeCursor;
 }
 
     /**

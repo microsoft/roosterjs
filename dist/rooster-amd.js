@@ -11736,6 +11736,10 @@ var UP_ARROW_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'ArrowUp' : 'Up';
 var RIGHT_ARROW_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'ArrowRight' : 'Right';
 var DOWN_ARROW_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'ArrowDown' : 'Down';
 var DELETE_CHARCODE = !roosterjs_editor_dom_1.Browser.isIE ? 'Delete' : 'Del';
+// Input event input types.
+var DELETE_CONTENT_BACKWARDS_INPUT_TYPE = 'deleteContentBackwards';
+// Unidentified key, the code for Android keyboard events.
+var UNIDENTIFIED_KEY = 'Unidentified';
 /**
  * PickerPlugin represents a plugin of editor which can handle picker related behaviors, including
  * - Show picker when special trigger key is pressed
@@ -11751,6 +11755,8 @@ var PickerPlugin = /** @class */ (function () {
     function PickerPlugin(dataProvider, pickerOptions) {
         this.dataProvider = dataProvider;
         this.pickerOptions = pickerOptions;
+        // For detecting backspace in Android
+        this.isPendingInputEventHandling = false;
     }
     /**
      * Get a friendly name
@@ -11839,13 +11845,28 @@ var PickerPlugin = /** @class */ (function () {
                 break;
             case 0 /* KeyDown */:
                 this.eventHandledOnKeyDown = false;
-                this.onKeyDownEvent(event);
+                if (event.rawEvent.key == UNIDENTIFIED_KEY) {
+                    // On Android, the key for KeyboardEvent is "Unidentified",
+                    // so handling should be done using the input rather than key down event
+                    // Since the key down event happens right before the input event, calculate the input
+                    // length here in preparation for onAndroidInputEvent
+                    this.currentInputLength = this.calcInputLength(event);
+                    this.isPendingInputEventHandling = true;
+                }
+                else {
+                    this.onKeyDownEvent(event);
+                    this.isPendingInputEventHandling = false;
+                }
+                break;
+            case 11 /* Input */:
+                if (this.isPendingInputEventHandling) {
+                    this.onAndroidInputEvent(event);
+                }
                 break;
             case 2 /* KeyUp */:
-                if (!this.eventHandledOnKeyDown &&
-                    (roosterjs_editor_core_1.isCharacterValue(event.rawEvent) ||
-                        (!roosterjs_editor_core_1.isModifierKey(event.rawEvent) && this.isSuggesting))) {
+                if (!this.eventHandledOnKeyDown && this.shouldHandleKeyUpEvent(event)) {
                     this.onKeyUpDomEvent(event);
+                    this.isPendingInputEventHandling = false;
                 }
                 break;
             case 5 /* MouseUp */:
@@ -11873,7 +11894,7 @@ var PickerPlugin = /** @class */ (function () {
         this.setAriaOwns(isSuggesting);
         this.setAriaActiveDescendant(isSuggesting ? 0 : null);
     };
-    PickerPlugin.prototype.handleKeyDownEvent = function (event) {
+    PickerPlugin.prototype.cancelDefaultKeyDownEvent = function (event) {
         this.eventHandledOnKeyDown = true;
         event.rawEvent.preventDefault();
         event.rawEvent.stopImmediatePropagation();
@@ -11919,6 +11940,14 @@ var PickerPlugin = /** @class */ (function () {
             return hasMatched;
         });
         return roosterjs_editor_dom_1.createRange(startPos, endPos) || this.editor.getDocument().createRange();
+    };
+    PickerPlugin.prototype.shouldHandleKeyUpEvent = function (event) {
+        // onKeyUpDomEvent should only be called when a key that produces a character value is pressed
+        // This check will always fail on Android since the KeyboardEvent's key is "Unidentified"
+        // However, we don't need to check for modifier events on mobile, so can ignore this check
+        return (event.rawEvent.key == UNIDENTIFIED_KEY ||
+            roosterjs_editor_core_1.isCharacterValue(event.rawEvent) ||
+            (this.isSuggesting && !roosterjs_editor_core_1.isModifierKey(event.rawEvent)));
     };
     PickerPlugin.prototype.onKeyUpDomEvent = function (event) {
         if (this.isSuggesting) {
@@ -11998,7 +12027,7 @@ var PickerPlugin = /** @class */ (function () {
             if (keyboardEvent.key == ESC_CHARCODE) {
                 this.setIsSuggesting(false);
                 this.blockSuggestions = true;
-                this.handleKeyDownEvent(event);
+                this.cancelDefaultKeyDownEvent(event);
             }
             else if (this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
@@ -12012,12 +12041,12 @@ var PickerPlugin = /** @class */ (function () {
                 if (this.dataProvider.getSelectedIndex) {
                     this.setAriaActiveDescendant(this.dataProvider.getSelectedIndex());
                 }
-                this.handleKeyDownEvent(event);
+                this.cancelDefaultKeyDownEvent(event);
             }
             else if (this.dataProvider.selectOption &&
                 (keyboardEvent.key == ENTER_CHARCODE || keyboardEvent.key == TAB_CHARCODE)) {
                 this.dataProvider.selectOption();
-                this.handleKeyDownEvent(event);
+                this.cancelDefaultKeyDownEvent(event);
             }
             else {
                 // Currently no op.
@@ -12025,19 +12054,9 @@ var PickerPlugin = /** @class */ (function () {
         }
         else {
             if (keyboardEvent.key == BACKSPACE_CHARCODE) {
-                var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, this.editor);
-                var nodeBeforeCursor = searcher.getInlineElementBefore()
-                    ? searcher.getInlineElementBefore().getContainerNode()
-                    : null;
-                var nodeId = nodeBeforeCursor ? this.getIdValue(nodeBeforeCursor) : null;
-                if (nodeId &&
-                    nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0 &&
-                    (searcher.getInlineElementAfter() == null ||
-                        !(searcher.getInlineElementAfter() instanceof roosterjs_editor_dom_1.PartialInlineElement))) {
-                    var replacementNode = this.dataProvider.onRemove(nodeBeforeCursor, true);
-                    this.replaceNode(nodeBeforeCursor, replacementNode);
-                    this.editor.select(replacementNode, -3 /* After */);
-                    this.handleKeyDownEvent(event);
+                var nodeRemoved = this.tryRemoveNode(event);
+                if (nodeRemoved) {
+                    this.cancelDefaultKeyDownEvent(event);
                 }
             }
             else if (keyboardEvent.key == DELETE_CHARCODE) {
@@ -12049,10 +12068,55 @@ var PickerPlugin = /** @class */ (function () {
                 if (nodeId && nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0) {
                     var replacementNode = this.dataProvider.onRemove(nodeAfterCursor, false);
                     this.replaceNode(nodeAfterCursor, replacementNode);
-                    this.handleKeyDownEvent(event);
+                    this.cancelDefaultKeyDownEvent(event);
                 }
             }
         }
+    };
+    PickerPlugin.prototype.onAndroidInputEvent = function (event) {
+        this.newInputLength = this.calcInputLength(event);
+        if (this.newInputLength < this.currentInputLength ||
+            event.rawEvent.inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE) {
+            var nodeRemoved = this.tryRemoveNode(event);
+            if (nodeRemoved) {
+                this.eventHandledOnKeyDown = true;
+            }
+        }
+    };
+    PickerPlugin.prototype.calcInputLength = function (event) {
+        var wordBeforCursor = this.getInlineElementBeforeCursor(event);
+        return wordBeforCursor ? wordBeforCursor.length : 0;
+    };
+    PickerPlugin.prototype.tryRemoveNode = function (event) {
+        var _this = this;
+        var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, this.editor);
+        var inlineElementBefore = searcher.getInlineElementBefore();
+        var nodeBeforeCursor = inlineElementBefore
+            ? inlineElementBefore.getContainerNode()
+            : null;
+        var nodeId = nodeBeforeCursor ? this.getIdValue(nodeBeforeCursor) : null;
+        var inlineElementAfter = searcher.getInlineElementAfter();
+        if (nodeId &&
+            nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0 &&
+            (inlineElementAfter == null || !(inlineElementAfter instanceof roosterjs_editor_dom_1.PartialInlineElement))) {
+            var replacementNode_1 = this.dataProvider.onRemove(nodeBeforeCursor, true);
+            if (replacementNode_1) {
+                this.replaceNode(nodeBeforeCursor, replacementNode_1);
+                if (this.isPendingInputEventHandling) {
+                    this.editor.runAsync(function () {
+                        _this.editor.select(replacementNode_1, -3 /* After */);
+                    });
+                }
+                else {
+                    this.editor.select(replacementNode_1, -3 /* After */);
+                }
+            }
+            else {
+                this.editor.deleteNode(nodeBeforeCursor);
+            }
+            return true;
+        }
+        return false;
     };
     PickerPlugin.prototype.getWord = function (event) {
         var wordFromRange = this.getRangeUntilAt(event).toString();
@@ -12083,6 +12147,11 @@ var PickerPlugin = /** @class */ (function () {
         this.editor.setEditorDomAttribute('aria-activedescendant', selectedIndex != null && this.pickerOptions.suggestionLabelPrefix
             ? this.pickerOptions.suggestionLabelPrefix + selectedIndex.toString()
             : null);
+    };
+    PickerPlugin.prototype.getInlineElementBeforeCursor = function (event) {
+        var searcher = roosterjs_editor_core_1.cacheGetContentSearcher(event, this.editor);
+        var element = searcher ? searcher.getInlineElementBefore() : null;
+        return element ? element.getTextContent() : null;
     };
     return PickerPlugin;
 }());
