@@ -222,7 +222,8 @@ describe('Editor insertNode() with multiple nodes', () => {
     it('insert two nodes at the end', () => {
         let node = document.createElement('div');
         node.id = 'signature';
-        node.innerHTML = `Thank you,<br><a href="https://github.com/microsoft/roosterjs">roosterjs</a>`;
+        node.innerHTML =
+            'Thank you,<br><a href="https://github.com/microsoft/roosterjs">roosterjs</a>';
 
         // Act
         editor.insertNode(node, {
@@ -239,7 +240,7 @@ describe('Editor insertNode() with multiple nodes', () => {
 
         node = document.createElement('div');
         node.id = 'reference-message';
-        node.innerHTML = `Hello<br>Lorem ipsum<br>Regards,<br>The roosterjs Team.`;
+        node.innerHTML = 'Hello<br>Lorem ipsum<br>Regards,<br>The roosterjs Team.';
 
         // Act
         editor.insertNode(node, {
