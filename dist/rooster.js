@@ -5478,6 +5478,8 @@ exports.getFirstLeafNode = getLeafNode_1.getFirstLeafNode;
 exports.getLastLeafNode = getLeafNode_1.getLastLeafNode;
 var getTextContent_1 = __webpack_require__(/*! ./utils/getTextContent */ "./packages/roosterjs-editor-dom/lib/utils/getTextContent.ts");
 exports.getTextContent = getTextContent_1.default;
+var splitTextNode_1 = __webpack_require__(/*! ./utils/splitTextNode */ "./packages/roosterjs-editor-dom/lib/utils/splitTextNode.ts");
+exports.splitTextNode = splitTextNode_1.default;
 var VTable_1 = __webpack_require__(/*! ./table/VTable */ "./packages/roosterjs-editor-dom/lib/table/VTable.ts");
 exports.VTable = VTable_1.default;
 var Position_1 = __webpack_require__(/*! ./selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
@@ -7097,14 +7099,22 @@ exports.Browser = window
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var changeElementTag_1 = __webpack_require__(/*! ./changeElementTag */ "./packages/roosterjs-editor-dom/lib/utils/changeElementTag.ts");
+var contains_1 = __webpack_require__(/*! ./contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
+var createRange_1 = __webpack_require__(/*! ../selection/createRange */ "./packages/roosterjs-editor-dom/lib/selection/createRange.ts");
 var findClosestElementAncestor_1 = __webpack_require__(/*! ./findClosestElementAncestor */ "./packages/roosterjs-editor-dom/lib/utils/findClosestElementAncestor.ts");
+var getBlockElementAtNode_1 = __webpack_require__(/*! ../blockElements/getBlockElementAtNode */ "./packages/roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode.ts");
 var getTagOfNode_1 = __webpack_require__(/*! ./getTagOfNode */ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts");
+var isNodeEmpty_1 = __webpack_require__(/*! ./isNodeEmpty */ "./packages/roosterjs-editor-dom/lib/utils/isNodeEmpty.ts");
 var isPositionAtBeginningOf_1 = __webpack_require__(/*! ../selection/isPositionAtBeginningOf */ "./packages/roosterjs-editor-dom/lib/selection/isPositionAtBeginningOf.ts");
 var isVoidHtmlElement_1 = __webpack_require__(/*! ./isVoidHtmlElement */ "./packages/roosterjs-editor-dom/lib/utils/isVoidHtmlElement.ts");
 var Position_1 = __webpack_require__(/*! ../selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
+var queryElements_1 = __webpack_require__(/*! ./queryElements */ "./packages/roosterjs-editor-dom/lib/utils/queryElements.ts");
+var splitTextNode_1 = __webpack_require__(/*! ./splitTextNode */ "./packages/roosterjs-editor-dom/lib/utils/splitTextNode.ts");
 var unwrap_1 = __webpack_require__(/*! ./unwrap */ "./packages/roosterjs-editor-dom/lib/utils/unwrap.ts");
 var VTable_1 = __webpack_require__(/*! ../table/VTable */ "./packages/roosterjs-editor-dom/lib/table/VTable.ts");
 var wrap_1 = __webpack_require__(/*! ./wrap */ "./packages/roosterjs-editor-dom/lib/utils/wrap.ts");
+var splitParentNode_1 = __webpack_require__(/*! ./splitParentNode */ "./packages/roosterjs-editor-dom/lib/utils/splitParentNode.ts");
+var adjustSteps = [handleHyperLink, handleStructuredNode, handleParagraph, handleVoidElement];
 /**
  * Adjust the given position and return a better position (if any) or the given position
  * which will be the best one for inserting the given node.
@@ -7113,6 +7123,46 @@ var wrap_1 = __webpack_require__(/*! ./wrap */ "./packages/roosterjs-editor-dom/
  * @param position The original position to insert the node
  */
 function adjustNodeInsertPosition(root, nodeToInsert, position) {
+    adjustSteps.forEach(function (handler) {
+        position = handler(root, nodeToInsert, position);
+    });
+    return position;
+}
+exports.default = adjustNodeInsertPosition;
+function handleHyperLink(root, nodeToInsert, position) {
+    var blockElement = getBlockElementAtNode_1.default(root, position.node);
+    // Find the first <A> tag within current block which covers current selection
+    // If there are more than one nested, let's handle the first one only since that is not a common scenario.
+    var anchor = queryElements_1.default(root, 'a[href]', null /*forEachCallback*/, 1 /* OnSelection */, createRange_1.default(position)).filter(function (a) { return blockElement.contains(a); })[0];
+    // If this is about to insert node to an empty A tag, clear the A tag and reset position
+    if (anchor && isNodeEmpty_1.default(anchor)) {
+        position = new Position_1.default(anchor, -2 /* Before */);
+        safeRemove(anchor);
+        anchor = null;
+    }
+    // If this is about to insert nodes which contains A tag into another A tag, need to break current A tag
+    // otherwise we will have nested A tags which is a wrong HTML structure
+    if (anchor &&
+        nodeToInsert.querySelector &&
+        nodeToInsert.querySelector('a[href]')) {
+        var normalizedPosition = position.normalize();
+        var parentNode = normalizedPosition.node.parentNode;
+        var nextNode = normalizedPosition.node.nodeType == 3 /* Text */
+            ? splitTextNode_1.default(normalizedPosition.node, normalizedPosition.offset, false /*returnFirstPart*/)
+            : normalizedPosition.isAtEnd
+                ? normalizedPosition.node.nextSibling
+                : normalizedPosition.node;
+        var splitter = root.ownerDocument.createTextNode('');
+        parentNode.insertBefore(splitter, nextNode);
+        while (contains_1.default(anchor, splitter)) {
+            splitter = splitParentNode_1.splitBalancedNodeRange(splitter);
+        }
+        position = new Position_1.default(splitter, -2 /* Before */);
+        safeRemove(splitter);
+    }
+    return position;
+}
+function handleStructuredNode(root, nodeToInsert, position) {
     var rootNodeToInsert = nodeToInsert;
     if (rootNodeToInsert.nodeType == 11 /* DocumentFragment */) {
         var rootNodes = [].slice.call(rootNodeToInsert.childNodes).filter(function (n) { return getTagOfNode_1.default(n) != 'BR'; });
@@ -7131,7 +7181,7 @@ function adjustNodeInsertPosition(root, nodeToInsert, position) {
     if ((tag == 'OL' || tag == 'UL') && getTagOfNode_1.default(rootNodeToInsert.firstChild) == 'LI') {
         var shouldInsertListAsText = !rootNodeToInsert.firstChild.nextSibling && !hasBrNextToRoot;
         if (hasBrNextToRoot && rootNodeToInsert.parentNode) {
-            rootNodeToInsert.parentNode.removeChild(rootNodeToInsert.nextSibling);
+            safeRemove(rootNodeToInsert.nextSibling);
         }
         if (shouldInsertListAsText) {
             unwrap_1.default(rootNodeToInsert.firstChild);
@@ -7162,6 +7212,9 @@ function adjustNodeInsertPosition(root, nodeToInsert, position) {
             position = new Position_1.default(trNode, -3 /* After */);
         }
     }
+    return position;
+}
+function handleParagraph(root, nodeToInsert, position) {
     if (getTagOfNode_1.default(position.node) == 'P') {
         // Insert into a P tag may cause issues when the inserted content contains any block element.
         // Change P tag to DIV to make sure it works well
@@ -7171,12 +7224,19 @@ function adjustNodeInsertPosition(root, nodeToInsert, position) {
             position = pos;
         }
     }
+    return position;
+}
+function handleVoidElement(root, nodeToInsert, position) {
     if (isVoidHtmlElement_1.default(position.node)) {
         position = new Position_1.default(position.node, position.isAtEnd ? -3 /* After */ : -2 /* Before */);
     }
     return position;
 }
-exports.default = adjustNodeInsertPosition;
+function safeRemove(node) {
+    if (node && node.parentNode) {
+        node.parentNode.removeChild(node);
+    }
+}
 
 
 /***/ }),
@@ -7246,6 +7306,7 @@ exports.default = applyFormat;
 Object.defineProperty(exports, "__esModule", { value: true });
 var getTagOfNode_1 = __webpack_require__(/*! ./getTagOfNode */ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts");
 var Position_1 = __webpack_require__(/*! ../selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
+var splitTextNode_1 = __webpack_require__(/*! ./splitTextNode */ "./packages/roosterjs-editor-dom/lib/utils/splitTextNode.ts");
 var wrap_1 = __webpack_require__(/*! ./wrap */ "./packages/roosterjs-editor-dom/lib/utils/wrap.ts");
 var getLeafSibling_1 = __webpack_require__(/*! ./getLeafSibling */ "./packages/roosterjs-editor-dom/lib/utils/getLeafSibling.ts");
 var splitParentNode_1 = __webpack_require__(/*! ./splitParentNode */ "./packages/roosterjs-editor-dom/lib/utils/splitParentNode.ts");
@@ -7268,10 +7329,10 @@ function applyTextStyle(container, styler, from, to) {
         var nextNode = getLeafSibling_1.getNextLeafSibling(container, formatNode);
         if (formatNode.nodeType == 3 /* Text */ && ['TR', 'TABLE'].indexOf(parentTag) < 0) {
             if (formatNode == to.node && !to.isAtEnd) {
-                formatNode = splitTextNode(formatNode, to.offset, true /*returnFirstPart*/);
+                formatNode = splitTextNode_1.default(formatNode, to.offset, true /*returnFirstPart*/);
             }
             if (from.offset > 0) {
-                formatNode = splitTextNode(formatNode, from.offset, false /*returnFirstPart*/);
+                formatNode = splitTextNode_1.default(formatNode, from.offset, false /*returnFirstPart*/);
             }
             formatNodes.push(formatNode);
         }
@@ -7307,14 +7368,6 @@ function callStylerWithInnerNode(node, styler) {
     if (node && node.nodeType == 1 /* Element */) {
         styler(node, true /*isInnerNode*/);
     }
-}
-function splitTextNode(textNode, offset, returnFirstPart) {
-    var firstPart = textNode.nodeValue.substr(0, offset);
-    var secondPart = textNode.nodeValue.substr(offset);
-    var newNode = textNode.ownerDocument.createTextNode(returnFirstPart ? firstPart : secondPart);
-    textNode.nodeValue = returnFirstPart ? secondPart : firstPart;
-    textNode.parentNode.insertBefore(newNode, returnFirstPart ? textNode : textNode.nextSibling);
-    return newNode;
 }
 
 
@@ -8312,6 +8365,36 @@ function splitBalancedNodeRange(nodes) {
     return parentNode;
 }
 exports.splitBalancedNodeRange = splitBalancedNodeRange;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-dom/lib/utils/splitTextNode.ts":
+/*!******************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/utils/splitTextNode.ts ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Split a text node into two parts by an offset number, and return one of them
+ * @param textNode The text node to split
+ * @param offset The offset number to split at
+ * @param returnFirstPart True to return the first part, then the passed in textNode will become the second part.
+ * Otherwise return the second part, and the passed in textNode will become the first part
+ */
+function splitTextNode(textNode, offset, returnFirstPart) {
+    var firstPart = textNode.nodeValue.substr(0, offset);
+    var secondPart = textNode.nodeValue.substr(offset);
+    var newNode = textNode.ownerDocument.createTextNode(returnFirstPart ? firstPart : secondPart);
+    textNode.nodeValue = returnFirstPart ? secondPart : firstPart;
+    textNode.parentNode.insertBefore(newNode, returnFirstPart ? textNode : textNode.nextSibling);
+    return newNode;
+}
+exports.default = splitTextNode;
 
 
 /***/ }),

@@ -1918,7 +1918,7 @@ function matchLink(url: string): LinkData;
  * @param nodeToInsert The node about to be inserted
  * @param position The original position to insert the node
  */
-function adjustNodeInsertPosition(root: Node, nodeToInsert: Node, position: NodePosition): NodePosition;
+function adjustNodeInsertPosition(root: HTMLElement, nodeToInsert: Node, position: NodePosition): NodePosition;
 
     /**
  * Query HTML elements in the container by a selector string
@@ -2014,6 +2014,15 @@ function getLastLeafNode(rootNode: Node): Node;
  * @returns text content of given text content.
  */
 function getTextContent(rootNode: Node): string;
+
+    /**
+ * Split a text node into two parts by an offset number, and return one of them
+ * @param textNode The text node to split
+ * @param offset The offset number to split at
+ * @param returnFirstPart True to return the first part, then the passed in textNode will become the second part.
+ * Otherwise return the second part, and the passed in textNode will become the first part
+ */
+function splitTextNode(textNode: Text, offset: number, returnFirstPart: boolean): Text;
 
     /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
