@@ -211,6 +211,51 @@ describe('Editor insertNode()', () => {
     });
 });
 
+describe('Editor insertNode() with multiple nodes', () => {
+    let originalContent = '<div id="text">text</div>';
+
+    beforeEach(() => {
+        editor = TestHelper.initEditor(testID);
+        editor.setContent(originalContent);
+    });
+
+    it('insert two nodes at the end', () => {
+        let node = document.createElement('div');
+        node.id = 'signature';
+        node.innerHTML = `Thank you,<br><a href="https://github.com/microsoft/roosterjs">roosterjs</a>`;
+
+        // Act
+        editor.insertNode(node, {
+            position: ContentPosition.End,
+            insertOnNewLine: true,
+            updateCursor: false,
+            replaceSelection: false,
+        });
+
+        // Assert
+        expect(editor.getContent()).toBe(
+            '<div id="text">text</div><div id="signature">Thank you,<br><a href="https://github.com/microsoft/roosterjs">roosterjs</a></div>'
+        );
+
+        node = document.createElement('div');
+        node.id = 'reference-message';
+        node.innerHTML = `Hello<br>Lorem ipsum<br>Regards,<br>The roosterjs Team.`;
+
+        // Act
+        editor.insertNode(node, {
+            position: ContentPosition.End,
+            insertOnNewLine: true,
+            updateCursor: false,
+            replaceSelection: false,
+        });
+
+        // Assert
+        expect(editor.getContent()).toBe(
+            '<div id="text">text</div><div id="signature">Thank you,<br><a href="https://github.com/microsoft/roosterjs">roosterjs</a></div><div id="reference-message">Hello<br>Lorem ipsum<br>Regards,<br>The roosterjs Team.</div>'
+        );
+    });
+});
+
 describe('Editor deleteNode()', () => {
     let originalContent = '<p id="first">abc</p><p id="second">123</p>';
 
