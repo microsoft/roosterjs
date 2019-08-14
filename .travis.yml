@@ -18,10 +18,17 @@ script:
 cache:
     yarn: true
 deploy:
-    provider: pages
-    skip-cleanup: true
-    github-token: $GITHUB_TOKEN
-    keep-history: true
-    on:
-        branch: master
-    local-dir: ./dist/roosterjs
+    # Deploy demo site to gh-pages
+    - provider: pages
+      skip-cleanup: true
+      github-token: $GITHUB_TOKEN
+      keep-history: true
+      on:
+          branch: master
+      local-dir: ./dist/roosterjs
+    # Auto publish if version is changed
+    - provider: script
+      script: node tools/build.js publish --token $NPM_TOKEN
+      skip-cleanup: true
+      on:
+          branch: master
