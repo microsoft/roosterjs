@@ -42,6 +42,9 @@ var commands = [
     'builddoc', // Build documents
 ];
 
+var VersionRegex = /\d+\.\d+\.\d+(-([^\.]+)(\.\d+)?)?/;
+var NpmrcContent = 'registry=https://registry.npmjs.com/\n//registry.npmjs.com/:_authToken=';
+
 function readPackageJson(package, readFromSourceFolder) {
     var packageJsonFilePath = path.join(
         readFromSourceFolder ? packagesPath : distPath,
@@ -447,7 +450,7 @@ function publish() {
     packages.forEach(package => {
         var json = readPackageJson(package, false /*readFromSourceFolder*/);
         var localVersion = json.version;
-        var versionMatch = /\d+\.\d+\.\d+(-([^\.]+)(\.\d+)?)?/.exec(localVersion);
+        var versionMatch = VersionRegex.exec(localVersion);
         var tagname = (versionMatch && versionMatch[2]) || 'latest';
         var npmVersion = exec(`npm view ${package}@${tagname} version`)
             .toString()
@@ -456,7 +459,7 @@ function publish() {
         if (localVersion != npmVersion) {
             let npmrcName = path.join(distPath, package, '.npmrc');
             if (token) {
-                var npmrc = `registry=https://registry.npmjs.com/\n//registry.npmjs.com/:_authToken=${token}\n`;
+                var npmrc = `${NpmrcContent}${token}\n`;
                 fs.writeFileSync(npmrcName, npmrc);
             }
 
