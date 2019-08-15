@@ -48,51 +48,53 @@ function handleHyperLink(
 ): NodePosition {
     let blockElement = getBlockElementAtNode(root, position.node);
 
-    // Find the first <A> tag within current block which covers current selection
-    // If there are more than one nested, let's handle the first one only since that is not a common scenario.
-    let anchor = queryElements(
-        root,
-        'a[href]',
-        null /*forEachCallback*/,
-        QueryScope.OnSelection,
-        createRange(position)
-    ).filter(a => blockElement.contains(a))[0];
+    if (blockElement) {
+        // Find the first <A> tag within current block which covers current selection
+        // If there are more than one nested, let's handle the first one only since that is not a common scenario.
+        let anchor = queryElements(
+            root,
+            'a[href]',
+            null /*forEachCallback*/,
+            QueryScope.OnSelection,
+            createRange(position)
+        ).filter(a => blockElement.contains(a))[0];
 
-    // If this is about to insert node to an empty A tag, clear the A tag and reset position
-    if (anchor && isNodeEmpty(anchor)) {
-        position = new Position(anchor, PositionType.Before);
-        safeRemove(anchor);
-        anchor = null;
-    }
-
-    // If this is about to insert nodes which contains A tag into another A tag, need to break current A tag
-    // otherwise we will have nested A tags which is a wrong HTML structure
-    if (
-        anchor &&
-        (<ParentNode>(<any>nodeToInsert)).querySelector &&
-        (<ParentNode>(<any>nodeToInsert)).querySelector('a[href]')
-    ) {
-        let normalizedPosition = position.normalize();
-        let parentNode = normalizedPosition.node.parentNode;
-        let nextNode =
-            normalizedPosition.node.nodeType == NodeType.Text
-                ? splitTextNode(
-                      <Text>normalizedPosition.node,
-                      normalizedPosition.offset,
-                      false /*returnFirstPart*/
-                  )
-                : normalizedPosition.isAtEnd
-                ? normalizedPosition.node.nextSibling
-                : normalizedPosition.node;
-        let splitter: Node = root.ownerDocument.createTextNode('');
-        parentNode.insertBefore(splitter, nextNode);
-
-        while (contains(anchor, splitter)) {
-            splitter = splitBalancedNodeRange(splitter);
+        // If this is about to insert node to an empty A tag, clear the A tag and reset position
+        if (anchor && isNodeEmpty(anchor)) {
+            position = new Position(anchor, PositionType.Before);
+            safeRemove(anchor);
+            anchor = null;
         }
 
-        position = new Position(splitter, PositionType.Before);
-        safeRemove(splitter);
+        // If this is about to insert nodes which contains A tag into another A tag, need to break current A tag
+        // otherwise we will have nested A tags which is a wrong HTML structure
+        if (
+            anchor &&
+            (<ParentNode>(<any>nodeToInsert)).querySelector &&
+            (<ParentNode>(<any>nodeToInsert)).querySelector('a[href]')
+        ) {
+            let normalizedPosition = position.normalize();
+            let parentNode = normalizedPosition.node.parentNode;
+            let nextNode =
+                normalizedPosition.node.nodeType == NodeType.Text
+                    ? splitTextNode(
+                          <Text>normalizedPosition.node,
+                          normalizedPosition.offset,
+                          false /*returnFirstPart*/
+                      )
+                    : normalizedPosition.isAtEnd
+                    ? normalizedPosition.node.nextSibling
+                    : normalizedPosition.node;
+            let splitter: Node = root.ownerDocument.createTextNode('');
+            parentNode.insertBefore(splitter, nextNode);
+
+            while (contains(anchor, splitter)) {
+                splitter = splitBalancedNodeRange(splitter);
+            }
+
+            position = new Position(splitter, PositionType.Before);
+            safeRemove(splitter);
+        }
     }
 
     return position;
