@@ -5,14 +5,14 @@ default,3059
 e,2685
 prototype,2655
 defineProperty,2352
-var,2253
+var,2256
 t,2109
 __esModule,1630
 n,1597
 Object,1176
 editor,1020
 strict,960
-r,901
+r,902
 value,865
 parentNode,820
 null,768
@@ -23,7 +23,7 @@ getSelectionRange,680
 addUndoSnapshot,615
 i,546
 style,540
-if,522
+if,524
 firstChild,500
 use,480
 getElementAtCursor,432

@@ -7130,34 +7130,36 @@ function adjustNodeInsertPosition(root, nodeToInsert, position) {
 exports.default = adjustNodeInsertPosition;
 function handleHyperLink(root, nodeToInsert, position) {
     var blockElement = getBlockElementAtNode_1.default(root, position.node);
-    // Find the first <A> tag within current block which covers current selection
-    // If there are more than one nested, let's handle the first one only since that is not a common scenario.
-    var anchor = queryElements_1.default(root, 'a[href]', null /*forEachCallback*/, 1 /* OnSelection */, createRange_1.default(position)).filter(function (a) { return blockElement.contains(a); })[0];
-    // If this is about to insert node to an empty A tag, clear the A tag and reset position
-    if (anchor && isNodeEmpty_1.default(anchor)) {
-        position = new Position_1.default(anchor, -2 /* Before */);
-        safeRemove(anchor);
-        anchor = null;
-    }
-    // If this is about to insert nodes which contains A tag into another A tag, need to break current A tag
-    // otherwise we will have nested A tags which is a wrong HTML structure
-    if (anchor &&
-        nodeToInsert.querySelector &&
-        nodeToInsert.querySelector('a[href]')) {
-        var normalizedPosition = position.normalize();
-        var parentNode = normalizedPosition.node.parentNode;
-        var nextNode = normalizedPosition.node.nodeType == 3 /* Text */
-            ? splitTextNode_1.default(normalizedPosition.node, normalizedPosition.offset, false /*returnFirstPart*/)
-            : normalizedPosition.isAtEnd
-                ? normalizedPosition.node.nextSibling
-                : normalizedPosition.node;
-        var splitter = root.ownerDocument.createTextNode('');
-        parentNode.insertBefore(splitter, nextNode);
-        while (contains_1.default(anchor, splitter)) {
-            splitter = splitParentNode_1.splitBalancedNodeRange(splitter);
+    if (blockElement) {
+        // Find the first <A> tag within current block which covers current selection
+        // If there are more than one nested, let's handle the first one only since that is not a common scenario.
+        var anchor = queryElements_1.default(root, 'a[href]', null /*forEachCallback*/, 1 /* OnSelection */, createRange_1.default(position)).filter(function (a) { return blockElement.contains(a); })[0];
+        // If this is about to insert node to an empty A tag, clear the A tag and reset position
+        if (anchor && isNodeEmpty_1.default(anchor)) {
+            position = new Position_1.default(anchor, -2 /* Before */);
+            safeRemove(anchor);
+            anchor = null;
         }
-        position = new Position_1.default(splitter, -2 /* Before */);
-        safeRemove(splitter);
+        // If this is about to insert nodes which contains A tag into another A tag, need to break current A tag
+        // otherwise we will have nested A tags which is a wrong HTML structure
+        if (anchor &&
+            nodeToInsert.querySelector &&
+            nodeToInsert.querySelector('a[href]')) {
+            var normalizedPosition = position.normalize();
+            var parentNode = normalizedPosition.node.parentNode;
+            var nextNode = normalizedPosition.node.nodeType == 3 /* Text */
+                ? splitTextNode_1.default(normalizedPosition.node, normalizedPosition.offset, false /*returnFirstPart*/)
+                : normalizedPosition.isAtEnd
+                    ? normalizedPosition.node.nextSibling
+                    : normalizedPosition.node;
+            var splitter = root.ownerDocument.createTextNode('');
+            parentNode.insertBefore(splitter, nextNode);
+            while (contains_1.default(anchor, splitter)) {
+                splitter = splitParentNode_1.splitBalancedNodeRange(splitter);
+            }
+            position = new Position_1.default(splitter, -2 /* Before */);
+            safeRemove(splitter);
+        }
     }
     return position;
 }
