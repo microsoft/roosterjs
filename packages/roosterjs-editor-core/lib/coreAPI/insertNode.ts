@@ -77,7 +77,8 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                             isBegin ? refNode : refNode.nextSibling
                         );
                     } else {
-                        contentDiv.appendChild(node);
+                        // Inserting at the end on a new line - use appendChild to insert the content in contentDiv
+                        insertedNode = contentDiv.appendChild(node);
                     }
                 } else {
                     // if the refNode can have child, use appendChild (which is like to insert as first/last child)
