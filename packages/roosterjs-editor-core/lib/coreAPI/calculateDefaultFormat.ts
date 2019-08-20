@@ -9,8 +9,8 @@ const DARK_MODE_DEFAULT_FORMAT = {
     textColors: {
         darkModeColor: 'rgb(255,255,255)',
         lightModeColor: 'rgb(0,0,0)',
-    }
-}
+    },
+};
 
 export function calculateDefaultFormat(
     node: Node,

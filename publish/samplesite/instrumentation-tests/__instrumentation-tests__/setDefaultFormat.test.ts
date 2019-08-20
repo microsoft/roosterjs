@@ -1,23 +1,25 @@
 import loadSampleSite from './utils/loadSampleSite';
 import focusEditor from './utils/focusEditor';
 import setDefaultFormat from './utils/setDefaultFormat';
-import getTextStyleAtSelection from './utils/getTextStyleAtSelection'
+import getTextStyleAtSelection from './utils/getTextStyleAtSelection';
 import { Page } from 'puppeteer';
 
 describe('Test Harness setDefaultFormat', () => {
-    let page: Page = null
+    let page: Page = null;
     beforeEach(async () => {
         page = await loadSampleSite();
-    })
+    });
 
     afterEach(async () => {
         await page.close();
-    })
+    });
 
     it('defaults to nonbold nonitalic nonunderlined ', async () => {
         // Assert
         await focusEditor(page);
-        const { fontWeight, fontStyle, textDecoration } = await page.evaluate(getTextStyleAtSelection);
+        const { fontWeight, fontStyle, textDecoration } = await page.evaluate(
+            getTextStyleAtSelection
+        );
         expect(fontWeight).toBe('400');
         expect(fontStyle).toBe('normal');
         expect(textDecoration).not.toContain('underline');
@@ -41,7 +43,7 @@ describe('Test Harness setDefaultFormat', () => {
     it('makes new text italic when the default format has italic:true ', async () => {
         // Arrange
         await setDefaultFormat(page, {
-            italic: true
+            italic: true,
         });
         await focusEditor(page);
 
@@ -56,7 +58,7 @@ describe('Test Harness setDefaultFormat', () => {
     it('makes new text underlined when the default format has underline:true ', async () => {
         // Arrange
         await setDefaultFormat(page, {
-            underline: true
+            underline: true,
         });
         await focusEditor(page);
 
@@ -67,4 +69,4 @@ describe('Test Harness setDefaultFormat', () => {
         const { textDecoration } = await page.evaluate(getTextStyleAtSelection);
         expect(textDecoration).toContain('underline');
     });
-})
+});

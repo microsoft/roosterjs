@@ -8,7 +8,7 @@ import { SidePaneElementProps } from '../SidePaneElement';
 export default class FormatStatePlugin extends SidePanePluginImpl<
     FormatStatePane,
     FormatStatePaneProps
-    > {
+> {
     constructor() {
         super(FormatStatePane, 'format', 'Format State');
     }
