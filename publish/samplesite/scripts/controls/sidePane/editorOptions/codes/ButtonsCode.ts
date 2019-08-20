@@ -15,9 +15,7 @@ export default class ButtonsCode extends CodeElement {
         return Object.keys(codeMap)
             .map(
                 id =>
-                    `document.getElementById('${id}').addEventListener('click', () => ${
-                        codeMap[id]
-                    });\n`
+                    `document.getElementById('${id}').addEventListener('click', () => ${codeMap[id]});\n`
             )
             .join('');
     }

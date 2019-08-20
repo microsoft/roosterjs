@@ -6,10 +6,10 @@ const styles = require('./InsertContentPane.scss');
 
 export interface InsertContentPaneState {
     content: string;
-    position: ContentPosition,
-    updateCursor: boolean,
-    replaceSelection: boolean,
-    insertOnNewLine: boolean,
+    position: ContentPosition;
+    updateCursor: boolean;
+    replaceSelection: boolean;
+    insertOnNewLine: boolean;
 }
 
 export default class InsertContentPane extends React.Component<
@@ -96,7 +96,7 @@ export default class InsertContentPane extends React.Component<
                             id="insertUpdateCursor"
                             checked={this.state.updateCursor}
                             onClick={() =>
-                                this.setState({updateCursor: !this.state.updateCursor })
+                                this.setState({ updateCursor: !this.state.updateCursor })
                             }
                         />
                         <label htmlFor="insertUpdateCursor">Update cursor</label>
@@ -153,7 +153,7 @@ export default class InsertContentPane extends React.Component<
                 updateCursor: this.state.updateCursor,
                 replaceSelection: this.state.replaceSelection,
                 insertOnNewLine: this.state.insertOnNewLine,
-            }
+            };
             editor.addUndoSnapshot(() => editor.insertContent(this.state.content, inputOption));
         }
     };

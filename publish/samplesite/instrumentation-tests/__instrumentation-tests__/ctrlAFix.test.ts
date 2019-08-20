@@ -5,14 +5,14 @@ import getTextStyleAtSelection from './utils/getTextStyleAtSelection';
 import { Page } from 'puppeteer';
 
 describe('Editor', () => {
-    let page: Page = null
+    let page: Page = null;
     beforeEach(async () => {
         page = await loadSampleSite();
-    })
+    });
 
     afterEach(async () => {
         await page.close();
-    })
+    });
 
     it('should type with default styles when the user types after pressing ctrl+a', async () => {
         // Arrange
@@ -31,9 +31,11 @@ describe('Editor', () => {
         await page.keyboard.type('bye');
 
         // Assert
-        const { fontWeight, fontStyle, textDecoration } = await page.evaluate(getTextStyleAtSelection);
+        const { fontWeight, fontStyle, textDecoration } = await page.evaluate(
+            getTextStyleAtSelection
+        );
         expect(fontWeight | 0).toBeGreaterThan(400);
         expect(fontStyle).toBe('italic');
         expect(textDecoration).toContain('underline');
-    })
-})
+    });
+});

@@ -1,4 +1,4 @@
-import { EditorInstanceToggleablePlugins} from '../../scripts/controls/editor/EditorInstanceToggleablePlugins';
+import { EditorInstanceToggleablePlugins } from '../../scripts/controls/editor/EditorInstanceToggleablePlugins';
 // import Plugins from '../../scripts/controls/plugins';
 import { Editor } from 'roosterjs-editor-core';
 

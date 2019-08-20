@@ -4,7 +4,7 @@ export default async function ensureSidePaneOpen(page: Page) {
     if (await page.evaluate(() => document.querySelector('.side-pane-toggle.closed') != null)) {
         page.click('.side-pane-toggle.closed');
     } else {
-        console.log('no closed toggle')
+        console.log('no closed toggle');
     }
     await page.waitForSelector('.main-pane');
 }
