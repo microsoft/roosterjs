@@ -3,7 +3,11 @@
  * @param node The node containing HTML elements to convert.
  * @param skipRootElement Optional parameter to skip the root element of the Node passed in, if applicable.
  */
-export function convertContentToDarkMode(node: Node, onExternalContentTransform?: (element: Element) => void, skipRootElement?: boolean): () => void {
+export function convertContentToDarkMode(
+    node: Node,
+    onExternalContentTransform?: (element: Element) => void,
+    skipRootElement?: boolean
+): () => void {
     let childElements: HTMLElement[] = [];
 
     // Get a list of all the decendents of a node.
@@ -20,14 +24,14 @@ export function convertContentToDarkMode(node: Node, onExternalContentTransform?
 
     return childElements.length > 0
         ? () => {
-            childElements.forEach(element => {
-                if (onExternalContentTransform) {
-                    onExternalContentTransform(element);
-                } else {
-                    element.style.color = null;
-                    element.style.backgroundColor = null;
-                }
-            });
-        }
+              childElements.forEach(element => {
+                  if (onExternalContentTransform) {
+                      onExternalContentTransform(element);
+                  } else {
+                      element.style.color = null;
+                      element.style.backgroundColor = null;
+                  }
+              });
+          }
         : null;
 }

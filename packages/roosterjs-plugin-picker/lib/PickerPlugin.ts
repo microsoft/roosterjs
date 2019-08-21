@@ -2,20 +2,22 @@ import { Browser, createRange, PartialInlineElement } from 'roosterjs-editor-dom
 import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import {
+    ChangeSource,
+    NodePosition,
+    PluginDomEvent,
+    PluginEvent,
+    PluginEventType,
+    PluginInputEvent,
+    PluginKeyboardEvent,
+    PositionType,
+} from 'roosterjs-editor-types';
+import {
     cacheGetContentSearcher,
     Editor,
     EditorPlugin,
     isCharacterValue,
     isModifierKey,
 } from 'roosterjs-editor-core';
-import {
-    NodePosition,
-    PluginKeyboardEvent,
-    PluginEvent,
-    PluginEventType,
-    PositionType,
-    ChangeSource,
-} from 'roosterjs-editor-types';
 
 // Character codes.
 // IE11 uses different character codes. which are noted below.
@@ -29,6 +31,12 @@ const UP_ARROW_CHARCODE = !Browser.isIE ? 'ArrowUp' : 'Up';
 const RIGHT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowRight' : 'Right';
 const DOWN_ARROW_CHARCODE = !Browser.isIE ? 'ArrowDown' : 'Down';
 const DELETE_CHARCODE = !Browser.isIE ? 'Delete' : 'Del';
+
+// Input event input types.
+const DELETE_CONTENT_BACKWARDS_INPUT_TYPE = 'deleteContentBackwards';
+
+// Unidentified key, the code for Android keyboard events.
+const UNIDENTIFIED_KEY = 'Unidentified';
 
 /**
  * Interface for PickerPlugin
@@ -56,6 +64,11 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     private blockSuggestions: boolean;
     private isSuggesting: boolean;
     private lastKnownRange: Range;
+
+    // For detecting backspace in Android
+    private isPendingInputEventHandling: boolean = false;
+    private currentInputLength: number;
+    private newInputLength: number;
 
     constructor(public readonly dataProvider: T, private pickerOptions: PickerPluginOptions) {}
 
@@ -142,44 +155,69 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
-        if (
-            event.eventType == PluginEventType.ContentChanged &&
-            event.source == ChangeSource.SetContent &&
-            this.dataProvider.onContentChanged
-        ) {
-            // Stop suggesting since content is fully changed
-            if (this.isSuggesting) {
-                this.setIsSuggesting(false);
-            }
-
-            // Undos and other major changes to document content fire this type of event.
-            // Inform the data provider of the current picker placed elements in the body.
-            let elementIds: string[] = [];
-            this.editor.queryElements(
-                "[id^='" + this.pickerOptions.elementIdPrefix + "']",
-                element => {
-                    if (element.id) {
-                        elementIds.push(element.id);
+        switch (event.eventType) {
+            case PluginEventType.ContentChanged:
+                if (event.source == ChangeSource.SetContent && this.dataProvider.onContentChanged) {
+                    // Stop suggesting since content is fully changed
+                    if (this.isSuggesting) {
+                        this.setIsSuggesting(false);
                     }
+
+                    // Undos and other major changes to document content fire this type of event.
+                    // Inform the data provider of the current picker placed elements in the body.
+                    let elementIds: string[] = [];
+                    this.editor.queryElements(
+                        "[id^='" + this.pickerOptions.elementIdPrefix + "']",
+                        element => {
+                            if (element.id) {
+                                elementIds.push(element.id);
+                            }
+                        }
+                    );
+                    this.dataProvider.onContentChanged(elementIds);
                 }
-            );
-            this.dataProvider.onContentChanged(elementIds);
-        }
-        if (event.eventType == PluginEventType.KeyDown) {
-            this.eventHandledOnKeyDown = false;
-            this.onKeyDownEvent(event);
-        }
-        if (
-            event.eventType == PluginEventType.KeyUp &&
-            !this.eventHandledOnKeyDown &&
-            (isCharacterValue(event.rawEvent) ||
-                (!isModifierKey(event.rawEvent) && this.isSuggesting))
-        ) {
-            this.onKeyUpDomEvent(event);
-        } else if (event.eventType == PluginEventType.MouseUp) {
-            if (this.isSuggesting) {
-                this.setIsSuggesting(false);
-            }
+                break;
+
+            case PluginEventType.KeyDown:
+                this.eventHandledOnKeyDown = false;
+                if (event.rawEvent.key == UNIDENTIFIED_KEY) {
+                    // On Android, the key for KeyboardEvent is "Unidentified",
+                    // so handling should be done using the input rather than key down event
+                    // Since the key down event happens right before the input event, calculate the input
+                    // length here in preparation for onAndroidInputEvent
+                    this.currentInputLength = this.calcInputLength(event);
+                    this.isPendingInputEventHandling = true;
+                } else {
+                    this.onKeyDownEvent(event);
+                    this.isPendingInputEventHandling = false;
+                }
+                break;
+
+            case PluginEventType.Input:
+                if (this.isPendingInputEventHandling) {
+                    this.onAndroidInputEvent(event);
+                }
+                break;
+
+            case PluginEventType.KeyUp:
+                if (!this.eventHandledOnKeyDown && this.shouldHandleKeyUpEvent(event)) {
+                    this.onKeyUpDomEvent(event);
+                    this.isPendingInputEventHandling = false;
+                }
+                break;
+
+            case PluginEventType.MouseUp:
+                if (this.isSuggesting) {
+                    this.setIsSuggesting(false);
+                }
+                break;
+
+            case PluginEventType.Scroll:
+                if (this.dataProvider.onScroll) {
+                    // Dispatch scroll event to data provider
+                    this.dataProvider.onScroll(event.scrollContainer);
+                }
+                break;
         }
     }
 
@@ -199,7 +237,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         this.setAriaActiveDescendant(isSuggesting ? 0 : null);
     }
 
-    private handleKeyDownEvent(event: PluginKeyboardEvent) {
+    private cancelDefaultKeyDownEvent(event: PluginKeyboardEvent) {
         this.eventHandledOnKeyDown = true;
         event.rawEvent.preventDefault();
         event.rawEvent.stopImmediatePropagation();
@@ -250,6 +288,17 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             return hasMatched;
         });
         return createRange(startPos, endPos) || this.editor.getDocument().createRange();
+    }
+
+    private shouldHandleKeyUpEvent(event: PluginKeyboardEvent) {
+        // onKeyUpDomEvent should only be called when a key that produces a character value is pressed
+        // This check will always fail on Android since the KeyboardEvent's key is "Unidentified"
+        // However, we don't need to check for modifier events on mobile, so can ignore this check
+        return (
+            event.rawEvent.key == UNIDENTIFIED_KEY ||
+            isCharacterValue(event.rawEvent) ||
+            (this.isSuggesting && !isModifierKey(event.rawEvent))
+        );
     }
 
     private onKeyUpDomEvent(event: PluginKeyboardEvent) {
@@ -352,7 +401,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             if (keyboardEvent.key == ESC_CHARCODE) {
                 this.setIsSuggesting(false);
                 this.blockSuggestions = true;
-                this.handleKeyDownEvent(event);
+                this.cancelDefaultKeyDownEvent(event);
             } else if (
                 this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
@@ -371,33 +420,21 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     this.setAriaActiveDescendant(this.dataProvider.getSelectedIndex());
                 }
 
-                this.handleKeyDownEvent(event);
+                this.cancelDefaultKeyDownEvent(event);
             } else if (
                 this.dataProvider.selectOption &&
                 (keyboardEvent.key == ENTER_CHARCODE || keyboardEvent.key == TAB_CHARCODE)
             ) {
                 this.dataProvider.selectOption();
-                this.handleKeyDownEvent(event);
+                this.cancelDefaultKeyDownEvent(event);
             } else {
                 // Currently no op.
             }
         } else {
             if (keyboardEvent.key == BACKSPACE_CHARCODE) {
-                let searcher = cacheGetContentSearcher(event, this.editor);
-                let nodeBeforeCursor = searcher.getInlineElementBefore()
-                    ? searcher.getInlineElementBefore().getContainerNode()
-                    : null;
-                let nodeId = nodeBeforeCursor ? this.getIdValue(nodeBeforeCursor) : null;
-                if (
-                    nodeId &&
-                    nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0 &&
-                    (searcher.getInlineElementAfter() == null ||
-                        !(searcher.getInlineElementAfter() instanceof PartialInlineElement))
-                ) {
-                    let replacementNode = this.dataProvider.onRemove(nodeBeforeCursor, true);
-                    this.replaceNode(nodeBeforeCursor, replacementNode);
-                    this.editor.select(replacementNode, PositionType.After);
-                    this.handleKeyDownEvent(event);
+                const nodeRemoved = this.tryRemoveNode(event);
+                if (nodeRemoved) {
+                    this.cancelDefaultKeyDownEvent(event);
                 }
             } else if (keyboardEvent.key == DELETE_CHARCODE) {
                 let searcher = cacheGetContentSearcher(event, this.editor);
@@ -408,10 +445,61 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 if (nodeId && nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0) {
                     let replacementNode = this.dataProvider.onRemove(nodeAfterCursor, false);
                     this.replaceNode(nodeAfterCursor, replacementNode);
-                    this.handleKeyDownEvent(event);
+                    this.cancelDefaultKeyDownEvent(event);
                 }
             }
         }
+    }
+
+    private onAndroidInputEvent(event: PluginInputEvent) {
+        this.newInputLength = this.calcInputLength(event);
+
+        if (
+            this.newInputLength < this.currentInputLength ||
+            (event.rawEvent as any).inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE
+        ) {
+            const nodeRemoved = this.tryRemoveNode(event);
+            if (nodeRemoved) {
+                this.eventHandledOnKeyDown = true;
+            }
+        }
+    }
+
+    private calcInputLength(event: PluginEvent) {
+        const wordBeforCursor = this.getInlineElementBeforeCursor(event);
+        return wordBeforCursor ? wordBeforCursor.length : 0;
+    }
+
+    private tryRemoveNode(event: PluginDomEvent): boolean {
+        const searcher = cacheGetContentSearcher(event, this.editor);
+        const inlineElementBefore = searcher.getInlineElementBefore();
+        const nodeBeforeCursor = inlineElementBefore
+            ? inlineElementBefore.getContainerNode()
+            : null;
+        const nodeId = nodeBeforeCursor ? this.getIdValue(nodeBeforeCursor) : null;
+        const inlineElementAfter = searcher.getInlineElementAfter();
+
+        if (
+            nodeId &&
+            nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0 &&
+            (inlineElementAfter == null || !(inlineElementAfter instanceof PartialInlineElement))
+        ) {
+            const replacementNode = this.dataProvider.onRemove(nodeBeforeCursor, true);
+            if (replacementNode) {
+                this.replaceNode(nodeBeforeCursor, replacementNode);
+                if (this.isPendingInputEventHandling) {
+                    this.editor.runAsync(() => {
+                        this.editor.select(replacementNode, PositionType.After);
+                    });
+                } else {
+                    this.editor.select(replacementNode, PositionType.After);
+                }
+            } else {
+                this.editor.deleteNode(nodeBeforeCursor);
+            }
+            return true;
+        }
+        return false;
     }
 
     private getWord(event: PluginKeyboardEvent) {
@@ -454,5 +542,11 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 ? this.pickerOptions.suggestionLabelPrefix + selectedIndex.toString()
                 : null
         );
+    }
+
+    private getInlineElementBeforeCursor(event: PluginEvent): string {
+        const searcher = cacheGetContentSearcher(event, this.editor);
+        const element = searcher ? searcher.getInlineElementBefore() : null;
+        return element ? element.getTextContent() : null;
     }
 }

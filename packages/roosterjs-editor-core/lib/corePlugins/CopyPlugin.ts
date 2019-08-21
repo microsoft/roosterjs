@@ -39,7 +39,7 @@ export default class CopyPlugin implements EditorPlugin {
             // get whatever the current selection range is
             const selectionRange = this.editor.getSelectionRange();
             if (selectionRange && !selectionRange.collapsed) {
-                const clipboardEvent = (event as ClipboardEvent);
+                const clipboardEvent = event as ClipboardEvent;
                 const copyFragment = this.editor.getSelectionRange().cloneContents();
 
                 // revert just this selected range to light mode colors
@@ -52,10 +52,10 @@ export default class CopyPlugin implements EditorPlugin {
 
                 // put it on the clipboard
                 clipboardEvent.clipboardData.setData('text/html', normalizedContent);
-                clipboardEvent.clipboardData.setData('text/plain', containerDiv.innerText)
+                clipboardEvent.clipboardData.setData('text/plain', containerDiv.innerText);
 
                 event.preventDefault();
             }
         }
-    }
+    };
 }

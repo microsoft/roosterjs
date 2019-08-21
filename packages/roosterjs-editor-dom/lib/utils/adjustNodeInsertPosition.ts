@@ -1,13 +1,26 @@
 import changeElementTag from './changeElementTag';
+import contains from './contains';
+import createRange from '../selection/createRange';
 import findClosestElementAncestor from './findClosestElementAncestor';
+import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
 import getTagOfNode from './getTagOfNode';
+import isNodeEmpty from './isNodeEmpty';
 import isPositionAtBeginningOf from '../selection/isPositionAtBeginningOf';
 import isVoidHtmlElement from './isVoidHtmlElement';
 import Position from '../selection/Position';
+import queryElements from './queryElements';
+import splitTextNode from './splitTextNode';
 import unwrap from './unwrap';
 import VTable from '../table/VTable';
 import wrap from './wrap';
-import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
+import { NodePosition, NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
+import { splitBalancedNodeRange } from './splitParentNode';
+
+const adjustSteps: ((
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: NodePosition
+) => NodePosition)[] = [handleHyperLink, handleStructuredNode, handleParagraph, handleVoidElement];
 
 /**
  * Adjust the given position and return a better position (if any) or the given position
@@ -17,7 +30,78 @@ import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
  * @param position The original position to insert the node
  */
 export default function adjustNodeInsertPosition(
-    root: Node,
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: NodePosition
+): NodePosition {
+    adjustSteps.forEach(handler => {
+        position = handler(root, nodeToInsert, position);
+    });
+
+    return position;
+}
+
+function handleHyperLink(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: NodePosition
+): NodePosition {
+    let blockElement = getBlockElementAtNode(root, position.node);
+
+    if (blockElement) {
+        // Find the first <A> tag within current block which covers current selection
+        // If there are more than one nested, let's handle the first one only since that is not a common scenario.
+        let anchor = queryElements(
+            root,
+            'a[href]',
+            null /*forEachCallback*/,
+            QueryScope.OnSelection,
+            createRange(position)
+        ).filter(a => blockElement.contains(a))[0];
+
+        // If this is about to insert node to an empty A tag, clear the A tag and reset position
+        if (anchor && isNodeEmpty(anchor)) {
+            position = new Position(anchor, PositionType.Before);
+            safeRemove(anchor);
+            anchor = null;
+        }
+
+        // If this is about to insert nodes which contains A tag into another A tag, need to break current A tag
+        // otherwise we will have nested A tags which is a wrong HTML structure
+        if (
+            anchor &&
+            (<ParentNode>(<any>nodeToInsert)).querySelector &&
+            (<ParentNode>(<any>nodeToInsert)).querySelector('a[href]')
+        ) {
+            let normalizedPosition = position.normalize();
+            let parentNode = normalizedPosition.node.parentNode;
+            let nextNode =
+                normalizedPosition.node.nodeType == NodeType.Text
+                    ? splitTextNode(
+                          <Text>normalizedPosition.node,
+                          normalizedPosition.offset,
+                          false /*returnFirstPart*/
+                      )
+                    : normalizedPosition.isAtEnd
+                    ? normalizedPosition.node.nextSibling
+                    : normalizedPosition.node;
+            let splitter: Node = root.ownerDocument.createTextNode('');
+            parentNode.insertBefore(splitter, nextNode);
+
+            while (contains(anchor, splitter)) {
+                splitter = splitBalancedNodeRange(splitter);
+            }
+
+            position = new Position(splitter, PositionType.Before);
+            safeRemove(splitter);
+        }
+    }
+
+    return position;
+}
+
+function handleStructuredNode(
+    root: HTMLElement,
     nodeToInsert: Node,
     position: NodePosition
 ): NodePosition {
@@ -46,7 +130,7 @@ export default function adjustNodeInsertPosition(
         let shouldInsertListAsText = !rootNodeToInsert.firstChild.nextSibling && !hasBrNextToRoot;
 
         if (hasBrNextToRoot && rootNodeToInsert.parentNode) {
-            rootNodeToInsert.parentNode.removeChild(rootNodeToInsert.nextSibling);
+            safeRemove(rootNodeToInsert.nextSibling);
         }
 
         if (shouldInsertListAsText) {
@@ -84,6 +168,14 @@ export default function adjustNodeInsertPosition(
         }
     }
 
+    return position;
+}
+
+function handleParagraph(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: NodePosition
+): NodePosition {
     if (getTagOfNode(position.node) == 'P') {
         // Insert into a P tag may cause issues when the inserted content contains any block element.
         // Change P tag to DIV to make sure it works well
@@ -94,6 +186,14 @@ export default function adjustNodeInsertPosition(
         }
     }
 
+    return position;
+}
+
+function handleVoidElement(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: NodePosition
+): NodePosition {
     if (isVoidHtmlElement(position.node)) {
         position = new Position(
             position.node,
@@ -102,4 +202,10 @@ export default function adjustNodeInsertPosition(
     }
 
     return position;
+}
+
+function safeRemove(node: Node) {
+    if (node && node.parentNode) {
+        node.parentNode.removeChild(node);
+    }
 }

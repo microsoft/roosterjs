@@ -73,6 +73,12 @@ export default interface EditorCore {
     readonly contentDiv: HTMLDivElement;
 
     /**
+     * The scroll container of editor, it can be the same with contentDiv,
+     * or some level of its scrollable parent.
+     */
+    readonly scrollContainer: HTMLElement;
+
+    /**
      * An array of editor plugins.
      */
     readonly plugins: EditorPlugin[];

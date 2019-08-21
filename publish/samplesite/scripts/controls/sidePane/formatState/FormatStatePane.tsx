@@ -79,9 +79,10 @@ export default class FormatStatePane extends React.Component<
                             {this.renderSpan(format.isBlockQuote, 'Quote')}
                             {this.renderSpan(format.canUnlink, 'In Link')}
                             {this.renderSpan(format.canAddImageAltText, 'In Image')}
-                            <span className={format.headerLevel == 0 && styles.inactive}>{`Header ${
-                                format.headerLevel
-                            }`}</span>
+                            <span
+                                className={
+                                    format.headerLevel == 0 && styles.inactive
+                                }>{`Header ${format.headerLevel}`}</span>
                         </td>
                     </tr>
                     <tr>
