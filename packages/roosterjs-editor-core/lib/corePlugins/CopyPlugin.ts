@@ -22,8 +22,8 @@ export default class CopyPlugin implements EditorPlugin {
      */
     public initialize(editor: Editor) {
         this.editor = editor;
-        this.copyDisposer = editor.addDomEventHandler('copy', this.onCopy);
-        this.cutDisposer = editor.addDomEventHandler('cut', this.onCopy);
+        this.copyDisposer = editor.addDomEventHandler('copy', this.onExtract(false));
+        this.cutDisposer = editor.addDomEventHandler('cut', this.onExtract(true));
     }
 
     /**
@@ -37,7 +37,7 @@ export default class CopyPlugin implements EditorPlugin {
         this.editor = null;
     }
 
-    private onCopy = (event: Event) => {
+    private onExtract = (isCut: boolean) => (event: Event) => {
         // if it's dark mode...
         if (this.editor && this.editor.isDarkMode()) {
             // get whatever the current selection range is
@@ -57,6 +57,11 @@ export default class CopyPlugin implements EditorPlugin {
                 // put it on the clipboard
                 clipboardEvent.clipboardData.setData('text/html', normalizedContent);
                 clipboardEvent.clipboardData.setData('text/plain', containerDiv.innerText);
+
+                // if it's cut, delete the contents
+                if (isCut) {
+                    this.editor.getSelectionRange().deleteContents();
+                }
 
                 event.preventDefault();
             }
