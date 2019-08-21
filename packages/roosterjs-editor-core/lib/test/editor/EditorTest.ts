@@ -138,7 +138,7 @@ describe('Editor insertContent()', () => {
     });
 });
 
-describe('Editor insertNode() with multiple nodes', () => {
+describe('Editor insertNode() at end of content div', () => {
     let originalContent = '<div id="text">text</div>';
 
     beforeEach(() => {
