@@ -29,6 +29,7 @@ export interface InsertOptionBasic extends InsertOptionBase {
     position:
         | ContentPosition.Begin
         | ContentPosition.End
+        | ContentPosition.DomEnd
         | ContentPosition.Outside
         | ContentPosition.SelectionStart;
 }

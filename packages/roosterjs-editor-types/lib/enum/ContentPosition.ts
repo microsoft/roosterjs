@@ -15,6 +15,11 @@ export const enum ContentPosition {
     End,
 
     /**
+     * End of the content div domain.
+     */
+    DomEnd,
+
+    /**
      * Selection start
      */
     SelectionStart,

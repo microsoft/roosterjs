@@ -57,7 +57,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
 
     switch (option.position) {
         case ContentPosition.Begin:
-        case ContentPosition.End:
+        case ContentPosition.End: {
             let isBegin = option.position == ContentPosition.Begin;
             let block = getFirstLastBlockElement(contentDiv, isBegin);
             let insertedNode: Node;
@@ -71,15 +71,10 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                     // For insert on new line, or refNode is text or void html element (HR, BR etc.)
                     // which cannot have children, i.e. <div>hello<br>world</div>. 'hello', 'world' are the
                     // first and last node. Insert before 'hello' or after 'world', but still inside DIV
-                    if (isBegin || !option.insertOnNewLine) {
-                        insertedNode = refNode.parentNode.insertBefore(
-                            node,
-                            isBegin ? refNode : refNode.nextSibling
-                        );
-                    } else {
-                        // Inserting at the end on a new line - use appendChild to insert the content in contentDiv
-                        insertedNode = contentDiv.appendChild(node);
-                    }
+                    insertedNode = refNode.parentNode.insertBefore(
+                        node,
+                        isBegin ? refNode : refNode.nextSibling
+                    );
                 } else {
                     // if the refNode can have child, use appendChild (which is like to insert as first/last child)
                     // i.e. <div>hello</div>, the content will be inserted before/after hello
@@ -96,6 +91,15 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                 wrap(insertedNode);
             }
 
+            break;
+        }
+        case ContentPosition.DomEnd:
+            let insertedNode = contentDiv.appendChild(node);
+            // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
+            // add a DIV wrapping
+            if (insertedNode && option.insertOnNewLine && !isBlockElement(insertedNode)) {
+                wrap(insertedNode);
+            }
             break;
         case ContentPosition.Range:
         case ContentPosition.SelectionStart:
