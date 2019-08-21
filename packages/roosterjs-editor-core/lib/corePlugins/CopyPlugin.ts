@@ -7,6 +7,7 @@ import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 export default class CopyPlugin implements EditorPlugin {
     private editor: Editor;
     private copyDisposer: () => void;
+    private cutDisposer: () => void;
 
     /**
      * Get a friendly name of  this plugin
@@ -22,6 +23,7 @@ export default class CopyPlugin implements EditorPlugin {
     public initialize(editor: Editor) {
         this.editor = editor;
         this.copyDisposer = editor.addDomEventHandler('copy', this.onCopy);
+        this.cutDisposer = editor.addDomEventHandler('cut', this.onCopy);
     }
 
     /**
@@ -30,6 +32,8 @@ export default class CopyPlugin implements EditorPlugin {
     public dispose() {
         this.copyDisposer();
         this.copyDisposer = null;
+        this.cutDisposer();
+        this.cutDisposer = null;
         this.editor = null;
     }
 
