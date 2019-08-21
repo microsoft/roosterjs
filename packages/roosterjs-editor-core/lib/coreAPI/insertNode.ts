@@ -57,7 +57,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
 
     switch (option.position) {
         case ContentPosition.Begin:
-        case ContentPosition.End:
+        case ContentPosition.End: {
             let isBegin = option.position == ContentPosition.Begin;
             let block = getFirstLastBlockElement(contentDiv, isBegin);
             let insertedNode: Node;
@@ -91,6 +91,16 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                 wrap(insertedNode);
             }
 
+            break;
+        }
+        case ContentPosition.DomEnd:
+            // Use appendChild to insert the node at the end of the content div.
+            let insertedNode = contentDiv.appendChild(node);
+            // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
+            // add a DIV wrapping
+            if (insertedNode && option.insertOnNewLine && !isBlockElement(insertedNode)) {
+                wrap(insertedNode);
+            }
             break;
         case ContentPosition.Range:
         case ContentPosition.SelectionStart:

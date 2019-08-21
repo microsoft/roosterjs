@@ -55,6 +55,7 @@ export default class SelectionBlockScoper implements TraversingScoper {
             switch (this.startFrom) {
                 case ContentPosition.Begin:
                 case ContentPosition.End:
+                case ContentPosition.DomEnd:
                     return getFirstLastInlineElementFromBlockElement(
                         this.block,
                         this.startFrom == ContentPosition.Begin
