@@ -94,6 +94,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
             break;
         }
         case ContentPosition.DomEnd:
+            // Use appendChild to insert the node at the end of the content div.
             let insertedNode = contentDiv.appendChild(node);
             // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
             // add a DIV wrapping
