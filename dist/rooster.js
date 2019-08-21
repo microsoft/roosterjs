@@ -652,7 +652,7 @@ function replaceWithNode(editor, textOrRange, node, exactMatch, searcher) {
             exactMatch = true;
         }
         editor.insertNode(node, {
-            position: 4 /* Range */,
+            position: 5 /* Range */,
             updateCursor: exactMatch,
             replaceSelection: true,
             insertOnNewLine: false,
@@ -2187,7 +2187,7 @@ function getInitialRange(core, option) {
     // So in both cases we need to store the selection state.
     var range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
     var rangeToRestore = null;
-    if (option.position == 4 /* Range */) {
+    if (option.position == 5 /* Range */) {
         rangeToRestore = range;
         range = option.range;
     }
@@ -2203,7 +2203,7 @@ function getInitialRange(core, option) {
  */
 exports.insertNode = function (core, node, option) {
     option = option || {
-        position: 2 /* SelectionStart */,
+        position: 3 /* SelectionStart */,
         insertOnNewLine: false,
         updateCursor: true,
         replaceSelection: true,
@@ -2214,10 +2214,10 @@ exports.insertNode = function (core, node, option) {
     }
     switch (option.position) {
         case 0 /* Begin */:
-        case 1 /* End */:
+        case 1 /* End */: {
             var isBegin = option.position == 0 /* Begin */;
             var block = roosterjs_editor_dom_1.getFirstLastBlockElement(contentDiv, isBegin);
-            var insertedNode = void 0;
+            var insertedNode_1;
             if (block) {
                 var refNode = isBegin ? block.getStartNode() : block.getEndNode();
                 if (option.insertOnNewLine ||
@@ -2226,26 +2226,36 @@ exports.insertNode = function (core, node, option) {
                     // For insert on new line, or refNode is text or void html element (HR, BR etc.)
                     // which cannot have children, i.e. <div>hello<br>world</div>. 'hello', 'world' are the
                     // first and last node. Insert before 'hello' or after 'world', but still inside DIV
-                    insertedNode = refNode.parentNode.insertBefore(node, isBegin ? refNode : refNode.nextSibling);
+                    insertedNode_1 = refNode.parentNode.insertBefore(node, isBegin ? refNode : refNode.nextSibling);
                 }
                 else {
                     // if the refNode can have child, use appendChild (which is like to insert as first/last child)
                     // i.e. <div>hello</div>, the content will be inserted before/after hello
-                    insertedNode = refNode.insertBefore(node, isBegin ? refNode.firstChild : null);
+                    insertedNode_1 = refNode.insertBefore(node, isBegin ? refNode.firstChild : null);
                 }
             }
             else {
                 // No first block, this can happen when editor is empty. Use appendChild to insert the content in contentDiv
-                insertedNode = contentDiv.appendChild(node);
+                insertedNode_1 = contentDiv.appendChild(node);
             }
+            // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
+            // add a DIV wrapping
+            if (insertedNode_1 && option.insertOnNewLine && !roosterjs_editor_dom_1.isBlockElement(insertedNode_1)) {
+                roosterjs_editor_dom_1.wrap(insertedNode_1);
+            }
+            break;
+        }
+        case 2 /* DomEnd */:
+            // Use appendChild to insert the node at the end of the content div.
+            var insertedNode = contentDiv.appendChild(node);
             // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
             // add a DIV wrapping
             if (insertedNode && option.insertOnNewLine && !roosterjs_editor_dom_1.isBlockElement(insertedNode)) {
                 roosterjs_editor_dom_1.wrap(insertedNode);
             }
             break;
-        case 4 /* Range */:
-        case 2 /* SelectionStart */:
+        case 5 /* Range */:
+        case 3 /* SelectionStart */:
             var _a = getInitialRange(core, option), range = _a.range, rangeToRestore = _a.rangeToRestore;
             if (!range) {
                 return;
@@ -2271,7 +2281,7 @@ exports.insertNode = function (core, node, option) {
             }
             core.api.selectRange(core, rangeToRestore);
             break;
-        case 3 /* Outside */:
+        case 4 /* Outside */:
             core.contentDiv.parentNode.insertBefore(node, contentDiv.nextSibling);
             break;
     }
@@ -3615,7 +3625,7 @@ var Editor = /** @class */ (function () {
      * @param startFrom Start position of the traverser. Default value is ContentPosition.SelectionStart
      */
     Editor.prototype.getBlockTraverser = function (startFrom) {
-        if (startFrom === void 0) { startFrom = 2 /* SelectionStart */; }
+        if (startFrom === void 0) { startFrom = 3 /* SelectionStart */; }
         var range = this.getSelectionRange();
         return (range && roosterjs_editor_dom_1.ContentTraverser.createBlockTraverser(this.core.contentDiv, range, startFrom));
     };
@@ -4851,7 +4861,7 @@ var ContentTraverser = /** @class */ (function () {
      * @param startFrom Start position of traversing. The value can be Begin, End, SelectionStart
      */
     ContentTraverser.createBlockTraverser = function (rootNode, position, start) {
-        if (start === void 0) { start = 2 /* SelectionStart */; }
+        if (start === void 0) { start = 3 /* SelectionStart */; }
         return new ContentTraverser(new SelectionBlockScoper_1.default(rootNode, position, start));
     };
     Object.defineProperty(ContentTraverser.prototype, "currentBlockElement", {
@@ -5228,8 +5238,9 @@ var SelectionBlockScoper = /** @class */ (function () {
             switch (this.startFrom) {
                 case 0 /* Begin */:
                 case 1 /* End */:
+                case 2 /* DomEnd */:
                     return getFirstLastInlineElementFromBlockElement(this.block, this.startFrom == 0 /* Begin */);
-                case 2 /* SelectionStart */:
+                case 3 /* SelectionStart */:
                     // Get the inline before selection start point, and ensure it falls in the selection block
                     var startInline = getInlineElementBeforeAfter_1.getInlineElementAfter(this.rootNode, this.position);
                     return startInline && this.block.contains(startInline.getContainerNode())
@@ -9672,7 +9683,7 @@ function getTempDivForPaste(editor) {
     var tempDiv = editor.getCustomData('PasteDiv', function () {
         var pasteDiv = roosterjs_editor_dom_1.fromHtml(CONTAINER_HTML, editor.getDocument())[0];
         editor.insertNode(pasteDiv, {
-            position: 3 /* Outside */,
+            position: 4 /* Outside */,
             updateCursor: false,
             replaceSelection: false,
             insertOnNewLine: false,
@@ -10649,7 +10660,7 @@ var TableResize = /** @class */ (function () {
             var document = _this.editor.getDocument();
             var handle = roosterjs_editor_dom_1.fromHtml(CONTAINER_HTML, document)[0];
             _this.editor.insertNode(handle, {
-                position: 3 /* Outside */,
+                position: 4 /* Outside */,
                 updateCursor: false,
                 replaceSelection: false,
                 insertOnNewLine: false,

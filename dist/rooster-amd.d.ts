@@ -410,17 +410,21 @@ export const enum ContentPosition {
      */
     End = 1,
     /**
+     * End of the content div domain.
+     */
+    DomEnd = 2,
+    /**
      * Selection start
      */
-    SelectionStart = 2,
+    SelectionStart = 3,
     /**
      * Outside of editor
      */
-    Outside = 3,
+    Outside = 4,
     /**
      * Manually defined range
      */
-    Range = 4
+    Range = 5
 }
 
 /**
@@ -1172,7 +1176,7 @@ export interface InsertOptionBase {
  * The "basic" insertNode related ContentPositions that require no additional parameters to use.
  */
 export interface InsertOptionBasic extends InsertOptionBase  {
-    position: ContentPosition.Begin | ContentPosition.End | ContentPosition.Outside | ContentPosition.SelectionStart;
+    position: ContentPosition.Begin | ContentPosition.End | ContentPosition.DomEnd | ContentPosition.Outside | ContentPosition.SelectionStart;
 }
 
 /**
