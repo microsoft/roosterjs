@@ -49,6 +49,8 @@ export { default as createRange, getRangeFromSelectionPath } from './selection/c
 export { default as getPositionRect } from './selection/getPositionRect';
 export { default as isPositionAtBeginningOf } from './selection/isPositionAtBeginningOf';
 export { default as getSelectionPath } from './selection/getSelectionPath';
+export { default as getHtmlWithSelectionPath } from './selection/getHtmlWithSelectionPath';
+export { default as setHtmlWithSelectionPath } from './selection/setHtmlWithSelectionPath';
 
 export { default as addSnapshot } from './snapshots/addSnapshot';
 export { default as canMoveCurrentSnapshot } from './snapshots/canMoveCurrentSnapshot';
