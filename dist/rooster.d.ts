@@ -3365,7 +3365,7 @@ class FirefoxTypeAfterLink implements EditorPlugin  {
  */
 class CopyPlugin implements EditorPlugin  {
     private editor;
-    private copyDisposer;
+    private eventDisposer;
     /**
      * Get a friendly name of  this plugin
      */
@@ -3379,7 +3379,7 @@ class CopyPlugin implements EditorPlugin  {
      * Dispose this plugin
      */
     dispose(): void;
-    private onCopy;
+    private onExtract;
 }
 
     /**

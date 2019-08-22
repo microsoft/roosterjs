@@ -2418,7 +2418,7 @@ var getColorNormalizedContent_1 = __webpack_require__(/*! ../darkMode/getColorNo
 var CopyPlugin = /** @class */ (function () {
     function CopyPlugin() {
         var _this = this;
-        this.onCopy = function (event) {
+        this.onExtract = function (isCut) { return function (event) {
             // if it's dark mode...
             if (_this.editor && _this.editor.isDarkMode()) {
                 // get whatever the current selection range is
@@ -2435,10 +2435,14 @@ var CopyPlugin = /** @class */ (function () {
                     // put it on the clipboard
                     clipboardEvent.clipboardData.setData('text/html', normalizedContent);
                     clipboardEvent.clipboardData.setData('text/plain', containerDiv.innerText);
+                    // if it's cut, delete the contents
+                    if (isCut) {
+                        _this.editor.getSelectionRange().deleteContents();
+                    }
                     event.preventDefault();
                 }
             }
-        };
+        }; };
     }
     /**
      * Get a friendly name of  this plugin
@@ -2452,14 +2456,17 @@ var CopyPlugin = /** @class */ (function () {
      */
     CopyPlugin.prototype.initialize = function (editor) {
         this.editor = editor;
-        this.copyDisposer = editor.addDomEventHandler('copy', this.onCopy);
+        this.eventDisposer = editor.addDomEventHandler({
+            copy: this.onExtract(false),
+            cut: this.onExtract(true),
+        });
     };
     /**
      * Dispose this plugin
      */
     CopyPlugin.prototype.dispose = function () {
-        this.copyDisposer();
-        this.copyDisposer = null;
+        this.eventDisposer();
+        this.eventDisposer = null;
         this.editor = null;
     };
     return CopyPlugin;
