@@ -101,9 +101,8 @@ export default class Editor {
         this.triggerPluginEvent(PluginEventType.EditorReady, {}, true /*broadcast*/);
 
         // 10. Before give editor to user, make sure there is at least one DIV element to accept typing
-        const range = this.getSelectionRange();
         this.core.corePlugins.typeInContainer.ensureTypeInElement(
-            range ? Position.getStart(range) : new Position(contentDiv, PositionType.Begin)
+            this.getFocusedPosition() || new Position(contentDiv, PositionType.Begin)
         );
     }
 
