@@ -8,7 +8,7 @@ import { NodeType, SelectionPath } from 'roosterjs-editor-types';
  * @param html The html to restore
  * @returns A selection range if the html contains a valid selection path, otherwise null
  */
-export default function getHtmlWithSelectionPath(rootNode: HTMLElement, html: string): Range {
+export default function setHtmlWithSelectionPath(rootNode: HTMLElement, html: string): Range {
     rootNode.innerHTML = html || '';
     let path: SelectionPath = null;
     let pathComment = rootNode.lastChild;
