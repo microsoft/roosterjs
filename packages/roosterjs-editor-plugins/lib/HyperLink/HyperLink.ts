@@ -56,8 +56,10 @@ export default class HyperLink implements EditorPlugin {
      * Dispose this plugin
      */
     public dispose(): void {
-        this.disposer();
-        this.disposer = null;
+        if (this.disposer) {
+            this.disposer();
+            this.disposer = null;
+        }
         this.editor = null;
     }
 
