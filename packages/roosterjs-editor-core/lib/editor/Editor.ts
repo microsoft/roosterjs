@@ -16,14 +16,12 @@ import {
     InlineElement,
     InsertOption,
     NodePosition,
-    NodeType,
     PluginEvent,
     PluginEventData,
     PluginEventFromType,
     PluginEventType,
     PositionType,
     QueryScope,
-    SelectionPath,
     Rect,
 } from 'roosterjs-editor-types';
 import {
@@ -34,16 +32,16 @@ import {
     findClosestElementAncestor,
     fromHtml,
     getBlockElementAtNode,
+    getHtmlWithSelectionPath,
     getTextContent,
     getInlineElementAtNode,
     getPositionRect,
-    getRangeFromSelectionPath,
-    getSelectionPath,
     getTagOfNode,
     isNodeEmpty,
     Position,
     PositionContentSearcher,
     queryElements,
+    setHtmlWithSelectionPath,
     wrap,
 } from 'roosterjs-editor-dom';
 
@@ -104,7 +102,7 @@ export default class Editor {
 
         // 10. Before give editor to user, make sure there is at least one DIV element to accept typing
         this.core.corePlugins.typeInContainer.ensureTypeInElement(
-            new Position(contentDiv, PositionType.Begin)
+            this.getFocusedPosition() || new Position(contentDiv, PositionType.Begin)
         );
     }
 
@@ -345,16 +343,10 @@ export default class Editor {
         triggerExtractContentEvent: boolean = true,
         includeSelectionMarker: boolean = false
     ): string {
-        let contentDiv = this.core.contentDiv;
-        let content = contentDiv.innerHTML;
-        let selectionPath: SelectionPath;
-
-        if (
-            includeSelectionMarker &&
-            (selectionPath = getSelectionPath(contentDiv, this.getSelectionRange()))
-        ) {
-            content += `<!--${JSON.stringify(selectionPath)}-->`;
-        }
+        let content = getHtmlWithSelectionPath(
+            this.core.contentDiv,
+            includeSelectionMarker && this.getSelectionRange()
+        );
 
         if (triggerExtractContentEvent) {
             content = this.triggerPluginEvent(
@@ -388,19 +380,9 @@ export default class Editor {
         let contentDiv = this.core.contentDiv;
         let contentChanged = false;
         if (contentDiv.innerHTML != content) {
-            contentDiv.innerHTML = content || '';
+            let range = setHtmlWithSelectionPath(contentDiv, content);
+            this.select(range);
             contentChanged = true;
-
-            let pathComment = contentDiv.lastChild;
-
-            if (pathComment && pathComment.nodeType == NodeType.Comment) {
-                try {
-                    let path = JSON.parse(pathComment.nodeValue) as SelectionPath;
-                    this.deleteNode(pathComment);
-                    let range = getRangeFromSelectionPath(contentDiv, path);
-                    this.select(range);
-                } catch {}
-            }
         }
 
         // Convert content even if it hasn't changed.
@@ -436,10 +418,11 @@ export default class Editor {
     public insertContent(content: string, option?: InsertOption) {
         if (content) {
             let allNodes = fromHtml(content, this.core.document);
+
             // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with
             // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
             // separately to show up on its own line
-            if (option && option.insertOnNewLine && allNodes.length > 0) {
+            if (option && option.insertOnNewLine && allNodes.length > 1) {
                 allNodes = [wrap(allNodes)];
             }
             for (let i = 0; i < allNodes.length; i++) {
