@@ -3159,7 +3159,7 @@ var Editor = /** @class */ (function () {
         // 9. Let plugins know that we are ready
         this.triggerPluginEvent(9 /* EditorReady */, {}, true /*broadcast*/);
         // 10. Before give editor to user, make sure there is at least one DIV element to accept typing
-        this.core.corePlugins.typeInContainer.ensureTypeInElement(new roosterjs_editor_dom_1.Position(contentDiv, 0 /* Begin */));
+        this.core.corePlugins.typeInContainer.ensureTypeInElement(this.getFocusedPosition() || new roosterjs_editor_dom_1.Position(contentDiv, 0 /* Begin */));
     }
     /**
      * Dispose this editor, dispose all plugins and custom data
@@ -3306,13 +3306,7 @@ var Editor = /** @class */ (function () {
     Editor.prototype.getContent = function (triggerExtractContentEvent, includeSelectionMarker) {
         if (triggerExtractContentEvent === void 0) { triggerExtractContentEvent = true; }
         if (includeSelectionMarker === void 0) { includeSelectionMarker = false; }
-        var contentDiv = this.core.contentDiv;
-        var content = contentDiv.innerHTML;
-        var selectionPath;
-        if (includeSelectionMarker &&
-            (selectionPath = roosterjs_editor_dom_1.getSelectionPath(contentDiv, this.getSelectionRange()))) {
-            content += "<!--" + JSON.stringify(selectionPath) + "-->";
-        }
+        var content = roosterjs_editor_dom_1.getHtmlWithSelectionPath(this.core.contentDiv, includeSelectionMarker && this.getSelectionRange());
         if (triggerExtractContentEvent) {
             content = this.triggerPluginEvent(7 /* ExtractContent */, { content: content }, true /*broadcast*/).content;
         }
@@ -3338,18 +3332,9 @@ var Editor = /** @class */ (function () {
         var contentDiv = this.core.contentDiv;
         var contentChanged = false;
         if (contentDiv.innerHTML != content) {
-            contentDiv.innerHTML = content || '';
+            var range = roosterjs_editor_dom_1.setHtmlWithSelectionPath(contentDiv, content);
+            this.select(range);
             contentChanged = true;
-            var pathComment = contentDiv.lastChild;
-            if (pathComment && pathComment.nodeType == 8 /* Comment */) {
-                try {
-                    var path = JSON.parse(pathComment.nodeValue);
-                    this.deleteNode(pathComment);
-                    var range = roosterjs_editor_dom_1.getRangeFromSelectionPath(contentDiv, path);
-                    this.select(range);
-                }
-                catch (_a) { }
-            }
         }
         // Convert content even if it hasn't changed.
         if (this.core.inDarkMode) {
@@ -3381,7 +3366,7 @@ var Editor = /** @class */ (function () {
             // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with
             // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
             // separately to show up on its own line
-            if (option && option.insertOnNewLine && allNodes.length > 0) {
+            if (option && option.insertOnNewLine && allNodes.length > 1) {
                 allNodes = [roosterjs_editor_dom_1.wrap(allNodes)];
             }
             for (var i = 0; i < allNodes.length; i++) {
@@ -5511,6 +5496,10 @@ var isPositionAtBeginningOf_1 = __webpack_require__(/*! ./selection/isPositionAt
 exports.isPositionAtBeginningOf = isPositionAtBeginningOf_1.default;
 var getSelectionPath_1 = __webpack_require__(/*! ./selection/getSelectionPath */ "./packages/roosterjs-editor-dom/lib/selection/getSelectionPath.ts");
 exports.getSelectionPath = getSelectionPath_1.default;
+var getHtmlWithSelectionPath_1 = __webpack_require__(/*! ./selection/getHtmlWithSelectionPath */ "./packages/roosterjs-editor-dom/lib/selection/getHtmlWithSelectionPath.ts");
+exports.getHtmlWithSelectionPath = getHtmlWithSelectionPath_1.default;
+var setHtmlWithSelectionPath_1 = __webpack_require__(/*! ./selection/setHtmlWithSelectionPath */ "./packages/roosterjs-editor-dom/lib/selection/setHtmlWithSelectionPath.ts");
+exports.setHtmlWithSelectionPath = setHtmlWithSelectionPath_1.default;
 var addSnapshot_1 = __webpack_require__(/*! ./snapshots/addSnapshot */ "./packages/roosterjs-editor-dom/lib/snapshots/addSnapshot.ts");
 exports.addSnapshot = addSnapshot_1.default;
 var canMoveCurrentSnapshot_1 = __webpack_require__(/*! ./snapshots/canMoveCurrentSnapshot */ "./packages/roosterjs-editor-dom/lib/snapshots/canMoveCurrentSnapshot.ts");
@@ -6289,6 +6278,37 @@ exports.getRangeFromSelectionPath = getRangeFromSelectionPath;
 
 /***/ }),
 
+/***/ "./packages/roosterjs-editor-dom/lib/selection/getHtmlWithSelectionPath.ts":
+/*!*********************************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/selection/getHtmlWithSelectionPath.ts ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var getSelectionPath_1 = __webpack_require__(/*! ./getSelectionPath */ "./packages/roosterjs-editor-dom/lib/selection/getSelectionPath.ts");
+/**
+ * Get inner Html of a root node with a selection path which can be used for restore selection.
+ * The result string can be used by setHtmlWithSelectionPath() to restore the HTML and selection.
+ * @param rootNode Root node to get inner Html from
+ * @param range The range of selection. If pass null, no selection path will be added
+ * @returns Inner HTML of the root node, followed by HTML comment contains selection path if the given range is valid
+ */
+function getHtmlWithSelectionPath(rootNode, range) {
+    if (!rootNode) {
+        return '';
+    }
+    var content = rootNode.innerHTML;
+    var selectionPath = range && getSelectionPath_1.default(rootNode, range);
+    return selectionPath ? content + "<!--" + JSON.stringify(selectionPath) + "-->" : content;
+}
+exports.default = getHtmlWithSelectionPath;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-dom/lib/selection/getPositionRect.ts":
 /*!************************************************************************!*\
   !*** ./packages/roosterjs-editor-dom/lib/selection/getPositionRect.ts ***!
@@ -6490,6 +6510,48 @@ function areAllPrevousNodesEmpty(node) {
     }
     return true;
 }
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-dom/lib/selection/setHtmlWithSelectionPath.ts":
+/*!*********************************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/selection/setHtmlWithSelectionPath.ts ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var createRange_1 = __webpack_require__(/*! ./createRange */ "./packages/roosterjs-editor-dom/lib/selection/createRange.ts");
+/**
+ * Restore inner Html of a root element from given html string. If the string contains selection path,
+ * remove the selection path and return a range represented by the path
+ * @param root The root element
+ * @param html The html to restore
+ * @returns A selection range if the html contains a valid selection path, otherwise null
+ */
+function setHtmlWithSelectionPath(rootNode, html) {
+    rootNode.innerHTML = html || '';
+    var path = null;
+    var pathComment = rootNode.lastChild;
+    try {
+        path =
+            pathComment &&
+                pathComment.nodeType == 8 /* Comment */ &&
+                JSON.parse(pathComment.nodeValue);
+        if (path && path.end && path.end.length > 0 && path.start && path.start.length > 0) {
+            rootNode.removeChild(pathComment);
+        }
+        else {
+            path = null;
+        }
+    }
+    catch (_a) { }
+    return path && createRange_1.default(rootNode, path.start, path.end);
+}
+exports.default = setHtmlWithSelectionPath;
 
 
 /***/ }),

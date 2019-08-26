@@ -2246,6 +2246,24 @@ export function isPositionAtBeginningOf(position: NodePosition, targetNode: Node
 export function getSelectionPath(rootNode: HTMLElement, range: Range): SelectionPath;
 
 /**
+ * Get inner Html of a root node with a selection path which can be used for restore selection.
+ * The result string can be used by setHtmlWithSelectionPath() to restore the HTML and selection.
+ * @param rootNode Root node to get inner Html from
+ * @param range The range of selection. If pass null, no selection path will be added
+ * @returns Inner HTML of the root node, followed by HTML comment contains selection path if the given range is valid
+ */
+export function getHtmlWithSelectionPath(rootNode: HTMLElement, range: Range): string;
+
+/**
+ * Restore inner Html of a root element from given html string. If the string contains selection path,
+ * remove the selection path and return a range represented by the path
+ * @param root The root element
+ * @param html The html to restore
+ * @returns A selection range if the html contains a valid selection path, otherwise null
+ */
+export function setHtmlWithSelectionPath(rootNode: HTMLElement, html: string): Range;
+
+/**
  * Add a new snapshot to the given snapshots data structure
  * @param snapshots The snapshots data structure to add new snapshot into
  * @param snapshot The snapshot to add
