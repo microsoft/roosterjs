@@ -9399,8 +9399,10 @@ var HyperLink = /** @class */ (function () {
      * Dispose this plugin
      */
     HyperLink.prototype.dispose = function () {
-        this.disposer();
-        this.disposer = null;
+        if (this.disposer) {
+            this.disposer();
+            this.disposer = null;
+        }
         this.editor = null;
     };
     /**
