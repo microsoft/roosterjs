@@ -5,6 +5,7 @@ interface DarkModeOptions {
     /** Transform on insert controls if, when the editor is initialized, content should be transformed for dark mode.
      *  Set this to true to run the content being set to the editor through an initial transform into dark mode.
      *  Set this to false if you are setting dark mode compliant content initialy.
+     *  If this value is undefined, it will default to true.
      */
     transformOnInitialize?: boolean;
 

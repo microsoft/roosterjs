@@ -43,6 +43,10 @@ export default function createEditorCore(
     let eventHandlerPlugins = allPlugins.filter(
         plugin => plugin.onPluginEvent || plugin.willHandleEventExclusively
     );
+    if (options.darkModeOptions && options.darkModeOptions.transformOnInitialize === undefined) {
+        // Since you can't provide default values on interfaces, provide the default here.
+        options.darkModeOptions.transformOnInitialize = true;
+    }
     return {
         contentDiv,
         scrollContainer: options.scrollContainer || contentDiv,

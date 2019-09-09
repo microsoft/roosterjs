@@ -73,9 +73,10 @@ export default class Editor {
         this.core.plugins.forEach(plugin => plugin.initialize(this));
 
         // 4. Ensure initial content and its format
-        this.setContent(
+        this.setContentInternal(
             options.initialContent || contentDiv.innerHTML || '',
-            false /*triggerContentChangedEvent*/
+            false /*triggerContentChangedEvent*/,
+            true /* firstRun */
         );
 
         // 5. Create event handler to bind DOM events
@@ -377,6 +378,14 @@ export default class Editor {
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     public setContent(content: string, triggerContentChangedEvent: boolean = true) {
+        this.setContentInternal(content, triggerContentChangedEvent);
+    }
+
+    private setContentInternal(
+        content: string,
+        triggerContentChangedEvent: boolean,
+        firstRun?: boolean
+    ) {
         let contentDiv = this.core.contentDiv;
         let contentChanged = false;
         if (contentDiv.innerHTML != content) {
@@ -385,9 +394,13 @@ export default class Editor {
             contentChanged = true;
         }
 
-        // Convert content even if it hasn't changed.
-        if (this.core.inDarkMode) {
-            const darkModeOptions = this.getDarkModeOptions();
+        const darkModeOptions = this.getDarkModeOptions();
+        // Convert when...
+        // It's in dark mode, AND it's either not the first run OR transformOnInitialze is true
+        if (
+            this.core.inDarkMode &&
+            (!firstRun || (darkModeOptions && darkModeOptions.transformOnInitialize))
+        ) {
             const convertFunction = convertContentToDarkMode(
                 contentDiv,
                 darkModeOptions && darkModeOptions.onExternalContentTransform
