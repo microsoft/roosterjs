@@ -7,7 +7,7 @@ import { processNodeConvert, processNodesDiscovery } from './converterUtils';
 export default function convertPastedContentFromWord(doc: HTMLDocument) {
     let sanitizer = new HtmlSanitizer({
         elementCallbacks: {
-            ['O:P']: () => false,
+            ['O:P']: element => element.innerHTML == '&nbsp;', // Preserve <o:p> when its innerHTML is "&nbsp;" to avoid dropping an empty line
         },
         additionalAllowAttributes: ['class'],
     });
