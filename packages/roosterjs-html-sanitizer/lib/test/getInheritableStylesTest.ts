@@ -40,7 +40,8 @@ describe('getInheritableStyles', () => {
         node.style.fontFamily = '"Times New Roman"';
         let styles = getInheritableStyles(node);
         document.body.removeChild(node);
-        expect(styles).toEqual({
+
+        const expectedResult: any = {
             ['border-spacing']: '0px 0px',
             ['caption-side']: 'top',
             color: 'rgb(0, 0, 0)',
@@ -68,6 +69,17 @@ describe('getInheritableStyles', () => {
             ['white-space']: 'normal',
             widows: '2',
             ['word-spacing']: '0px',
+        };
+        Object.keys(styles).forEach(key => {
+            const value = styles[key];
+            expect(sort(value)).toEqual(sort(expectedResult[key]), key);
         });
     });
 });
+
+function sort(str: string) {
+    return str
+        .split(' ')
+        .sort()
+        .join(' ');
+}
