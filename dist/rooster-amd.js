@@ -10045,7 +10045,7 @@ function convertPastedContentFromWord(doc) {
     var _a;
     var sanitizer = new roosterjs_html_sanitizer_1.HtmlSanitizer({
         elementCallbacks: (_a = {},
-            _a['O:P'] = function () { return false; },
+            _a['O:P'] = function (element) { return element.innerHTML == '&nbsp;'; },
             _a),
         additionalAllowAttributes: ['class'],
     });
