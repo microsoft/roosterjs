@@ -13,7 +13,7 @@ const REACT_COMPONENT_DATA_KEY = 'data-rcp-compid';
 const REACT_COMPONENT_INSTANCE_ID = 'data-rcp-instid';
 const REACT_COMPONENT_SHARABLE_STATE = 'data-rcp-st';
 
-interface ReactPluginComponentProps {
+export interface ReactPluginComponentProps {
     /**
      * The DOM node that the mounted component is copied into when it is updated.
      *
@@ -26,9 +26,16 @@ interface ReactPluginComponentProps {
      */
     initialSerializedSharableState: string | null;
     /**
-     * the serialzied state of the component.
+     * the serialized state of the component.
      */
     updateSerialziedSharableState: (newState: string) => void;
+    /**
+     * triggers the listener to update the DOM in the editor.
+     *
+     * Call this in your `componentDidMount`+`componentDidUpdate`, or
+     * in a `useEffect` hook.
+     */
+    updateDomInEditor: () => void;
 }
 
 interface MountedComponentInstance {
@@ -49,9 +56,12 @@ export default class ReactComponentPlugin implements EditorPlugin {
     private elementToInstances: Map<HTMLElement, MountedComponentInstance> = new Map();
     private idToInstances: Map<string, MountedComponentInstance> = new Map();
     private componentId: string;
-    private componentType: ReffableComponent<ReactPluginComponentProps>;
+    private componentType: React.ComponentType<ReactPluginComponentProps>;
 
-    constructor(componentId: string, componentType: ReffableComponent<ReactPluginComponentProps>) {
+    constructor(
+        componentId: string,
+        componentType: React.ComponentType<ReactPluginComponentProps>
+    ) {
         this.componentId = componentId;
         this.componentType = componentType;
     }
@@ -76,6 +86,9 @@ export default class ReactComponentPlugin implements EditorPlugin {
      */
     public dispose() {
         this.editor = undefined;
+        for (let activeInstance of this.elementToInstances.values()) {
+            this.unmountInstance(activeInstance);
+        }
     }
 
     /**
@@ -215,7 +228,7 @@ export default class ReactComponentPlugin implements EditorPlugin {
      * @param instanceToMount the instance to mount
      */
     private mountInstanceOnShadowDom(instanceToMount: MountedComponentInstance) {
-        const Component: ReffableComponent<ReactPluginComponentProps> = this.componentType;
+        const Component: React.ComponentType<ReactPluginComponentProps> = this.componentType;
         const offDocumentReactRoot = instanceToMount.offDocumentReactRoot;
 
         const serializedState = instanceToMount.inEditorMountRoot.getAttribute(
@@ -228,40 +241,42 @@ export default class ReactComponentPlugin implements EditorPlugin {
             );
         };
 
+        const onRenderCallback = () => {
+            // If the mountpoint has been removed from the editor, do nothing.
+            // Rely on the editor event handling above to clean up this mounted component.
+            if (!this.editor || !this.editor.contains(instanceToMount.inEditorMountRoot)) {
+                return;
+            }
+
+            // Clone the rendered DOM
+            const shadowRootClone = offDocumentReactRoot.cloneNode();
+
+            // highlight all children of the mount root as insert point
+            const insertRange = document.createRange();
+            // Work by reference here, so that if the partialInstance's in-editor mount
+            // point is updated over the lifetime of the component, this will write to the
+            // new mount point.
+            insertRange.setStart(instanceToMount.inEditorMountRoot, 0);
+            insertRange.setEnd(
+                instanceToMount.inEditorMountRoot,
+                instanceToMount.inEditorMountRoot.childNodes.length
+            );
+
+            // replace the contents of the node with updated DOM.
+            this.editor.insertNode(shadowRootClone, {
+                position: ContentPosition.Range,
+                range: insertRange,
+            });
+        };
+
         ReactDOM.render(
             <Component
                 inEditorMountRoot={instanceToMount.inEditorMountRoot}
                 initialSerializedSharableState={serializedState}
                 updateSerialziedSharableState={updateSerializedSharableStateOnDom}
+                updateDomInEditor={onRenderCallback}
             />,
-            offDocumentReactRoot,
-            () => {
-                // If the mountpoint has been removed from the editor, do nothing.
-                // Rely on the editor event handling above to clean up this mounted component.
-                if (!this.editor || !this.editor.contains(instanceToMount.inEditorMountRoot)) {
-                    return;
-                }
-
-                // Clone the rendered DOM
-                const shadowRootClone = offDocumentReactRoot.cloneNode();
-
-                // highlight all children of the mount root as insert point
-                const insertRange = document.createRange();
-                // Work by reference here, so that if the partialInstance's in-editor mount
-                // point is updated over the lifetime of the component, this will write to the
-                // new mount point.
-                insertRange.setStart(instanceToMount.inEditorMountRoot, 0);
-                insertRange.setEnd(
-                    instanceToMount.inEditorMountRoot,
-                    instanceToMount.inEditorMountRoot.childNodes.length
-                );
-
-                // replace the contents of the node with updated DOM.
-                this.editor.insertNode(shadowRootClone, {
-                    position: ContentPosition.Range,
-                    range: insertRange,
-                });
-            }
+            offDocumentReactRoot
         );
 
         return instanceToMount;

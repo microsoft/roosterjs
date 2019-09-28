@@ -19,5 +19,5 @@
         "rootDir": ".",
         "lib": ["es6", "dom"]
     },
-    "include": ["**/*.ts", "roosterjs-plugin-react/lib/ReactPlugin.tsx"]
+    "include": ["**/*.ts", "**/*.tsx", "roosterjs-plugin-react/lib/ReactPlugin.tsx"]
 }
