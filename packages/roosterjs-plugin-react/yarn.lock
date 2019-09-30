@@ -319,11 +319,6 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/dom-inputevent@^1.0.3":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@types/dom-inputevent/-/dom-inputevent-1.0.5.tgz#c880fa9b4482b49accc107e4a950117a1af7a61b"
-  integrity sha512-oL8NzIAn1J8vsIigjEM2qip6PUBRkb1kE+3gbM+NvSCzrScgz+Ixymuv9Z9jmktVjeHWMJc9zhP49YBUBeCTaQ==
-
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.1.tgz#42995b446db9a48a11a07ec083499a860e9138ff"
@@ -3519,43 +3514,6 @@ rimraf@^2.5.4, rimraf@^2.6.0, rimraf@^2.6.1, rimraf@^2.6.3:
   integrity sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==
   dependencies:
     glob "^7.1.3"
-
-roosterjs-editor-api@:
-  version "7.7.1"
-  resolved "https://registry.yarnpkg.com/roosterjs-editor-api/-/roosterjs-editor-api-7.7.1.tgz#5a0487e16b27011632362583c832e30efcb919a5"
-  integrity sha512-dIx8sa5GOCPvJ5uL0OKfbppOdMax8m43JGbJKg6GTB6WaNUto9Wzu4F3cqZyYbp0ubvz+BkWWm6G92HppFJITA==
-  dependencies:
-    roosterjs-editor-core "7.7.1"
-    roosterjs-editor-dom "7.7.1"
-    roosterjs-editor-types "7.7.1"
-
-roosterjs-editor-core@, roosterjs-editor-core@7.7.1:
-  version "7.7.1"
-  resolved "https://registry.yarnpkg.com/roosterjs-editor-core/-/roosterjs-editor-core-7.7.1.tgz#38309ae815236e67f23cf9a97bdb5db76b582217"
-  integrity sha512-ttHcFCEehS0bhwan0AsXb9uxylUHoUdtKbjJ2HVvfKdj/UvpAO1MyL9vjoThzldiFdOFI+hst6hBSUEPP1WEYA==
-  dependencies:
-    roosterjs-editor-dom "7.7.1"
-    roosterjs-editor-types "7.7.1"
-
-roosterjs-editor-dom@, roosterjs-editor-dom@7.7.1:
-  version "7.7.1"
-  resolved "https://registry.yarnpkg.com/roosterjs-editor-dom/-/roosterjs-editor-dom-7.7.1.tgz#47b8774223b3ff697656c3a16e75d8750d281672"
-  integrity sha512-XTYILfSIniaGsE7bfk81gQAHr1YE3ZLGSD9Jki77H9T+6mje4jrEEo4depLNksJD/bl3EhZ/uFd6CA38g2rBTg==
-  dependencies:
-    roosterjs-editor-types "7.7.1"
-    roosterjs-html-sanitizer "1.1.3"
-
-roosterjs-editor-types@, roosterjs-editor-types@7.7.1:
-  version "7.7.1"
-  resolved "https://registry.yarnpkg.com/roosterjs-editor-types/-/roosterjs-editor-types-7.7.1.tgz#75e0aa396770f06091ee27562dfe708425ddee34"
-  integrity sha512-gZHV7dbXSlCwhWEttgqA75kcee1W/zFgBi+QtFr58nU3iaQ9xMo61snOUWGQRvCEMmdQrVv1vmxSW6zbh73cOQ==
-  dependencies:
-    "@types/dom-inputevent" "^1.0.3"
-
-roosterjs-html-sanitizer@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/roosterjs-html-sanitizer/-/roosterjs-html-sanitizer-1.1.3.tgz#bd75ca9714d81012b4bc2285490dea5255cee8cb"
-  integrity sha512-hw9Pwqc7ur0AJhpmWsNGPGgoRLnacrYTn7sAq7UJflRCpD7vrMlsc1J+nowUOKE1Jo07VOvub2AnvFD9rZ8aDw==
 
 rsvp@^4.8.4:
   version "4.8.5"

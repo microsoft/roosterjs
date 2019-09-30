@@ -50,6 +50,11 @@ interface MountedComponentInstance {
     instanceId: string;
 }
 
+const legalChangeSources = new Set();
+legalChangeSources.add(ChangeSource.SetContent);
+legalChangeSources.add(ChangeSource.Paste);
+legalChangeSources.add(ChangeSource.Drop);
+
 export default class ReactComponentPlugin implements EditorPlugin {
     private editor: Editor | undefined;
     private nextId: number = 0;
@@ -108,11 +113,7 @@ export default class ReactComponentPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
-        if (
-            !this.editor ||
-            event.eventType !== PluginEventType.ContentChanged ||
-            event.source !== ChangeSource.SetContent
-        ) {
+        if (!this.editor || !this.isTriggeringEvent(event)) {
             return;
         }
 
@@ -202,6 +203,10 @@ export default class ReactComponentPlugin implements EditorPlugin {
      */
     private mountNewInstanceInEditor(newInstance: MountedComponentInstance) {
         this.elementToInstances.set(newInstance.inEditorMountRoot, newInstance);
+        newInstance.inEditorMountRoot.setAttribute(
+            REACT_COMPONENT_INSTANCE_ID,
+            newInstance.instanceId
+        );
         this.idToInstances.set(newInstance.instanceId, newInstance);
         this.mountInstanceOnShadowDom(newInstance);
     }
@@ -249,21 +254,28 @@ export default class ReactComponentPlugin implements EditorPlugin {
             }
 
             // Clone the rendered DOM
-            const shadowRootClone = offDocumentReactRoot.cloneNode();
+            const shadowRootClone = offDocumentReactRoot.cloneNode(true);
 
             // highlight all children of the mount root as insert point
             const insertRange = document.createRange();
             // Work by reference here, so that if the partialInstance's in-editor mount
             // point is updated over the lifetime of the component, this will write to the
             // new mount point.
-            insertRange.setStart(instanceToMount.inEditorMountRoot, 0);
-            insertRange.setEnd(
-                instanceToMount.inEditorMountRoot,
-                instanceToMount.inEditorMountRoot.childNodes.length
-            );
+            const currentInEditorMountRoot = instanceToMount.inEditorMountRoot;
+            while (currentInEditorMountRoot.childNodes.length) {
+                currentInEditorMountRoot.removeChild(currentInEditorMountRoot.childNodes[0]);
+            }
+            insertRange.setStart(currentInEditorMountRoot, 0);
+            insertRange.setEnd(currentInEditorMountRoot, 0);
+
+            if (shadowRootClone.childNodes.length !== 1) {
+                throw new Error(
+                    'ReactPlugin only supports components that render a single root element'
+                );
+            }
 
             // replace the contents of the node with updated DOM.
-            this.editor.insertNode(shadowRootClone, {
+            this.editor.insertNode(shadowRootClone.childNodes[0], {
                 position: ContentPosition.Range,
                 range: insertRange,
             });
@@ -284,5 +296,17 @@ export default class ReactComponentPlugin implements EditorPlugin {
 
     private unmountInstance(mountedInstance: MountedComponentInstance) {
         ReactDOM.unmountComponentAtNode(mountedInstance.offDocumentReactRoot);
+    }
+
+    private isTriggeringEvent(event: PluginEvent): boolean {
+        if (event.eventType === PluginEventType.EditorReady) {
+            return true;
+        } else if (
+            event.eventType == PluginEventType.ContentChanged &&
+            legalChangeSources.has(event.source)
+        ) {
+            return true;
+        }
+        return false;
     }
 }

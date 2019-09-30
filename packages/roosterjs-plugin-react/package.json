@@ -1,15 +1,14 @@
 {
     "name": "roosterjs-plugin-react",
     "description": "Inline react element plugin for roosterjs",
-    "dependencies": {
+    "dependencies": {},
+    "peerDependencies": {
+        "react": "^16.10.0",
+        "react-dom": "^16.10.0",
         "roosterjs-editor-api": "",
         "roosterjs-editor-core": "",
         "roosterjs-editor-dom": "",
         "roosterjs-editor-types": ""
-    },
-    "peerDependencies": {
-        "react": "^16.10.0",
-        "react-dom": "^16.10.0"
     },
     "main": "./lib/index.ts",
     "devDependencies": {

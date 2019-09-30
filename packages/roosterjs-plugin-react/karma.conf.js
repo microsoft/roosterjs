@@ -1,3 +1,4 @@
+const path = require('path');
 module.exports = function(config) {
     config.set({
         basePath: '.',
@@ -35,12 +36,16 @@ module.exports = function(config) {
                     {
                         test: /tsx?$/,
                         loader: 'ts-loader',
+                        options: {
+                            allowTsInNodeModules: true,
+                        },
                     },
                 ],
             },
             resolve: {
                 extensions: ['.js', '.tsx', '.ts'],
-                modules: [`${__dirname}/..`, `${__dirname}/node_modules`],
+                // prefer local implementations over from node_modules
+                modules: [path.join(__dirname, '..'), 'node_modules'],
             },
         },
 
