@@ -21,7 +21,7 @@
         "build": "node tools/build.js clean normalize tslint buildcommonjs dts pack:prod builddemo",
         "build:ci": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo builddoc",
         "start": "webpack-dev-server",
-        "test": "karma start",
+        "test": "karma start && cd packages/roosterjs-plugin-react && karma start",
         "test:debug": "karma start --no-single-run",
         "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo publish",
         "publish:dark": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod copysample builddemo publishdark",
@@ -30,13 +30,8 @@
         "instrumentation:firefox": "cd publish/samplesite/instrumentation-tests && npm run instrumentation:firefox"
     },
     "devDependencies": {
-        "@microsoft/loader-load-themed-styles": "1.7.166",
-        "@types/dom-inputevent": "1.0.5",
         "@types/jasmine": "2.6.0",
-        "@types/node": "12.0.10",
-        "@types/object-assign": "4.0.30",
-        "@types/react-dom": "16.8.4",
-        "css-loader": "3.0.0",
+        "@types/dom-inputevent": "1.0.5",
         "glob": "7.1.4",
         "husky": "^3.0.1",
         "jasmine-core": "3.4.0",
@@ -47,12 +42,10 @@
         "karma-sourcemap-loader": "0.3.7",
         "karma-webpack": "4.0.2",
         "ncp": "2.0.0",
-        "node-sass": "4.12.0",
         "prettier": "1.18.2",
         "pretty-quick": "^1.11.1",
         "progress": "2.0.3",
         "rimraf": "2.6.3",
-        "sass-loader": "7.1.0",
         "source-map-explorer": "2.0.1",
         "toposort": "2.0.2",
         "ts-loader": "6.0.4",
@@ -62,17 +55,21 @@
         "typedoc": "0.8.0",
         "typedoc-plugin-external-module-map": "1.0.0",
         "typescript": "3.5.2",
-        "url-loader": "2.0.1",
         "webpack": "4.35.2",
         "webpack-cli": "3.3.5",
-        "webpack-dev-server": "3.7.2"
+        "webpack-dev-server": "3.7.2",
+        "@microsoft/loader-load-themed-styles": "1.7.166",
+        "@types/node": "12.0.10",
+        "@types/object-assign": "4.0.30",
+        "@types/react-dom": "16.8.4",
+        "css-loader": "3.0.0",
+        "node-sass": "4.12.0",
+        "sass-loader": "7.1.0",
+        "url-loader": "2.0.1"
     },
     "husky": {
         "hooks": {
             "pre-commit": "pretty-quick --staged"
         }
-    },
-    "dependencies": {
-        "react-dom": "^16.10.1"
     }
 }

@@ -46,7 +46,6 @@ module.exports = function(config) {
             resolve: {
                 extensions: ['.ts', '.js'],
                 modules: ['./packages'],
-                z,
             },
         },
 
