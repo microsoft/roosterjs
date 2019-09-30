@@ -1,6 +1,6 @@
 {
-    "name": "roosterjs-plugin-picker",
-    "description": "Inline picker plugin for roosterjs",
+    "name": "roosterjs-plugin-react",
+    "description": "Inline react element plugin for roosterjs",
     "dependencies": {
         "roosterjs-editor-api": "",
         "roosterjs-editor-core": "",
@@ -16,6 +16,7 @@
         "@types/react": "^16.9.3",
         "@types/react-dom": "^16.9.1",
         "jest": "^24.9.0",
+        "karma": "^4.3.0",
         "react": "^16.10.0",
         "react-dom": "^16.10.0",
         "ts-jest": "^24.1.0"

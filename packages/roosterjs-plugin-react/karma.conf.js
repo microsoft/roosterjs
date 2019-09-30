@@ -33,20 +33,14 @@ module.exports = function(config) {
             module: {
                 rules: [
                     {
-                        test: /\.ts$/,
+                        test: /tsx?$/,
                         loader: 'ts-loader',
-                        options: {
-                            compilerOptions: {
-                                rootDir: __dirname,
-                            },
-                        },
                     },
                 ],
             },
             resolve: {
-                extensions: ['.ts', '.js'],
-                modules: ['./packages'],
-                z,
+                extensions: ['.js', '.tsx', '.ts'],
+                modules: [`${__dirname}/..`, `${__dirname}/node_modules`],
             },
         },
 

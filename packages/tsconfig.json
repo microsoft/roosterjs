@@ -3,6 +3,10 @@
         "target": "es5",
         "module": "commonjs",
         "outDir": "../dist",
+
+        "jsx": "react",
+        "downlevelIteration": true,
+
         "sourceMap": true,
         "declaration": true,
         "removeComments": false,

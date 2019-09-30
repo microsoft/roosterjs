@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "strict": true,
+        // "strict": true,
         "jsx": "react",
         "downlevelIteration": true,
         "target": "es5",
@@ -16,8 +16,11 @@
         "paths": {
             "*": ["*"]
         },
-        "rootDir": ".",
         "lib": ["es6", "dom"]
     },
-    "include": ["**/*.ts", "**/*.tsx", "roosterjs-plugin-react/lib/ReactPlugin.tsx"]
+    "include": ["**/*.ts", "**/*.tsx"],
+    "exclude": ["node_modules"],
+    "paths": {
+        "roosterjs-*": ["../roosterjs-*"]
+    }
 }
