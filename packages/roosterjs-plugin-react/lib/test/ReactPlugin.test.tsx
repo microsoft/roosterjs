@@ -51,7 +51,7 @@ const ExampleComponent = (props: Partial<ReactPluginComponentProps>) => {
             updateCounter: (newVal: number) => setCounter(newVal),
             counterVal: counter,
         }),
-        [setCounter, counter]
+        [counter]
     );
 
     // Trigger callback after render
@@ -130,6 +130,10 @@ describe('ReactPlugin', () => {
 
     afterEach(() => {
         editor && editor.dispose();
+        const host = document.getElementById('ReactPlugin');
+        if (host && host.parentElement) {
+            host.parentElement.removeChild(host);
+        }
     });
 
     it('initializes a react element if the initial content had a trigger node in it.', () => {
@@ -163,6 +167,10 @@ describe('ReactPlugin', () => {
 
     afterEach(() => {
         editor.dispose();
+        const host = document.getElementById('ReactPlugin');
+        if (host && host.parentElement) {
+            host.parentElement.removeChild(host);
+        }
     });
 
     it('Does nothing when there is no mountpoint in the DOM', () => {
@@ -171,24 +179,13 @@ describe('ReactPlugin', () => {
     });
 
     describe('when a new mountpoint is added to the document', () => {
-        it('renders a component', async () => {
+        it('renders a component', () => {
             editor.insertContent('<div data-rcp-compid="example-component"></div>');
             editor.triggerContentChangedEvent();
             expect(activeRefs.length).toBe(1);
         });
 
-        it('renders a component into the mountpoint', async () => {
-            editor.insertContent('<div data-rcp-compid="example-component"></div>');
-            editor.triggerContentChangedEvent();
-
-            const queriedElements = editor.queryElements('[data-rcp-compid="example-component"]');
-            expect(queriedElements.length).toBe(1);
-            expect(queriedElements[0].innerHTML).toEqual(
-                '<div class="example-component">Counter: 0</div>'
-            );
-        });
-
-        it('renders a component into the mountpoint', async () => {
+        it('renders a component into the mountpoint', () => {
             editor.insertContent('<div data-rcp-compid="example-component"></div>');
             editor.triggerContentChangedEvent();
 
@@ -233,7 +230,7 @@ describe('ReactPlugin', () => {
 
             // Assert
             expect(initialInstance.current).not.toBeFalsy();
-            // Check the ref still hiuts the initialInstance's HTML.
+            // Check the ref still points to the component mounted at initialInstance's HTML.
             initialInstance.current.updateCounter(113);
             expect(moveToTarget.children[0].innerHTML).toEqual(
                 '<div class="example-component">Counter: 113</div>'
@@ -443,7 +440,7 @@ describe('ReactPlugin', () => {
     describe('when a mountpoint is removed entirely from the document', () => {
         it('unmounts the react component from the shadow root', () => {
             // Arrange
-            globalShouldUpdateState = true;
+            globalShouldUpdateState = false;
             editor.insertContent(
                 '<div data-rcp-compid="example-component" data-rcp-st="{&quot;counter&quot;: 888}"></div>'
             );
@@ -520,6 +517,10 @@ describe('interaction with darkmode', () => {
         }
     };
 
+    beforeEach(() => {
+        globalShouldUpdateState = false;
+    });
+
     describe('in lightmode', () => {
         beforeEach(() => {
             let node = document.createElement('div');
@@ -543,6 +544,10 @@ describe('interaction with darkmode', () => {
 
         afterEach(() => {
             editor.dispose();
+            const host = document.getElementById('ReactPlugin');
+            if (host && host.parentElement) {
+                host.parentElement.removeChild(host);
+            }
         });
 
         it('renders with normal colors outside of darkmode', () => {
@@ -581,6 +586,10 @@ describe('interaction with darkmode', () => {
 
         afterEach(() => {
             editor.dispose();
+            const host = document.getElementById('ReactPlugin');
+            if (host && host.parentElement) {
+                host.parentElement.removeChild(host);
+            }
         });
 
         it('transforms elements into their darkmode colours', () => {

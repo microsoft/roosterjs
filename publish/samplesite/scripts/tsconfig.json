@@ -5,6 +5,7 @@
         "baseUrl": "../../../",
         "lib": ["es6", "dom"],
         "jsx": "react",
+        "downlevelIteration": true,
         "sourceMap": true,
         "removeComments": true,
         "noImplicitAny": true,

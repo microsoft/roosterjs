@@ -92,8 +92,8 @@ export default class ReactComponentPlugin implements EditorPlugin {
      */
     public dispose() {
         this.editor = undefined;
-        for (let activeInstance of Array.prototype.slice.call(this.elementToInstances.values())) {
-            this.unmountInstance(activeInstance);
+        for (let mountedInstance of [...this.elementToInstances.values()]) {
+            this.unmountInstance(mountedInstance);
         }
     }
 
@@ -127,7 +127,7 @@ export default class ReactComponentPlugin implements EditorPlugin {
 
         const unresolvedMountPoints: Array<{ element: HTMLElement; id: string }> = [];
         const unresolvedInstanceIds: Set<string> = new Set();
-        for (let id of Array.prototype.splice.call(this.idToInstances.keys())) {
+        for (let id of [...this.idToInstances.keys()]) {
             unresolvedInstanceIds.add(id);
         }
         const resolvedIds: Set<string> = new Set();
@@ -194,8 +194,8 @@ export default class ReactComponentPlugin implements EditorPlugin {
         this.elementToInstances.set(element, oldInstance);
         if (!oldInstance.updateMountPointCallback) {
             throw new Error('Tried to move a component that was never mounted');
-            oldInstance.updateMountPointCallback(element);
         }
+        oldInstance.updateMountPointCallback(element);
     }
 
     /**
