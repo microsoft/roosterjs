@@ -1,1 +1,1 @@
-export { default as ReactPlugin } from './ReactPlugin';
+export { default as ReactPlugin, ReactPluginComponentProps } from './ReactPlugin';

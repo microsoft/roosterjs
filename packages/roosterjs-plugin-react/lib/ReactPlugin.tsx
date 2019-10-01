@@ -48,6 +48,7 @@ interface MountedComponentInstance {
      */
     offDocumentReactRoot: HTMLElement;
     instanceId: string;
+    updateMountPointCallback?: (element: HTMLElement) => void;
 }
 
 const legalChangeSources = new Set();
@@ -91,7 +92,7 @@ export default class ReactComponentPlugin implements EditorPlugin {
      */
     public dispose() {
         this.editor = undefined;
-        for (let activeInstance of this.elementToInstances.values()) {
+        for (let activeInstance of Array.prototype.slice.call(this.elementToInstances.values())) {
             this.unmountInstance(activeInstance);
         }
     }
@@ -126,7 +127,7 @@ export default class ReactComponentPlugin implements EditorPlugin {
 
         const unresolvedMountPoints: Array<{ element: HTMLElement; id: string }> = [];
         const unresolvedInstanceIds: Set<string> = new Set();
-        for (let id of this.idToInstances.keys()) {
+        for (let id of Array.prototype.splice.call(this.idToInstances.keys())) {
             unresolvedInstanceIds.add(id);
         }
         const resolvedIds: Set<string> = new Set();
@@ -137,7 +138,7 @@ export default class ReactComponentPlugin implements EditorPlugin {
 
             const existingEntry = this.elementToInstances.get(foundMountPoint);
             if (existingEntry && existingEntry.instanceId === foundId) {
-                // Same component. do nothingReactPluginComponentProps
+                // Same component. do nothing
                 unresolvedInstanceIds.delete(foundId);
                 resolvedIds.add(foundId);
                 return;
@@ -188,9 +189,13 @@ export default class ReactComponentPlugin implements EditorPlugin {
         element: HTMLElement,
         oldInstance: MountedComponentInstance
     ) {
+        // Update our data on the instance
         this.elementToInstances.delete(oldInstance.inEditorMountRoot);
-        oldInstance.inEditorMountRoot = element;
         this.elementToInstances.set(element, oldInstance);
+        if (!oldInstance.updateMountPointCallback) {
+            throw new Error('Tried to move a component that was never mounted');
+            oldInstance.updateMountPointCallback(element);
+        }
     }
 
     /**
@@ -207,6 +212,8 @@ export default class ReactComponentPlugin implements EditorPlugin {
             REACT_COMPONENT_INSTANCE_ID,
             newInstance.instanceId
         );
+        newInstance.inEditorMountRoot.setAttribute('contenteditable', 'false');
+
         this.idToInstances.set(newInstance.instanceId, newInstance);
         this.mountInstanceOnShadowDom(newInstance);
     }
@@ -290,6 +297,20 @@ export default class ReactComponentPlugin implements EditorPlugin {
             />,
             offDocumentReactRoot
         );
+
+        // Change the tracked value and re-render.
+        instanceToMount.updateMountPointCallback = (element: HTMLElement) => {
+            instanceToMount.inEditorMountRoot = element;
+            ReactDOM.render(
+                <Component
+                    inEditorMountRoot={instanceToMount.inEditorMountRoot}
+                    initialSerializedSharableState={serializedState}
+                    updateSerialziedSharableState={updateSerializedSharableStateOnDom}
+                    updateDomInEditor={onRenderCallback}
+                />,
+                offDocumentReactRoot
+            );
+        };
 
         return instanceToMount;
     }

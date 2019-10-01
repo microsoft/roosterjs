@@ -1,9 +1,11 @@
 import * as React from 'react';
 import BuildInPluginState, { UrlPlaceholder } from '../BuildInPluginState';
 import SampleColorPickerPluginDataProvider from '../samplepicker/SampleColorPickerPluginDataProvider';
+import { EditorEmbeddedReactComponent } from '../editorEmbeddedReactComponent/EditorEmbeddedReactComponent';
 import { EditorInstanceToggleablePlugins } from './EditorInstanceToggleablePlugins';
 import { ImageResize } from 'roosterjs-plugin-image-resize';
 import { PickerPlugin } from 'roosterjs-plugin-picker';
+import { ReactPlugin } from 'roosterjs-plugin-react';
 import {
     Editor as RoosterJsEditor,
     EditorOptions,
@@ -96,6 +98,9 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
                       triggerCharacter: ':',
                       isHorizontal: true,
                   })
+                : null,
+            reactPlugin: pluginList.reactPlugin
+                ? new ReactPlugin('react-plugin-example', EditorEmbeddedReactComponent)
                 : null,
             customReplace: pluginList.customReplace ? new CustomReplacePlugin() : null,
         };

@@ -4,6 +4,7 @@ import BuildInPluginState, {
     ContentEditFeatureState,
     UrlPlaceholder,
 } from '../../BuildInPluginState';
+import { EditorEmbeddedReactComponent } from '../../editorEmbeddedReactComponent/EditorEmbeddedReactComponent';
 
 type PluginItemId = keyof BuildInPluginList;
 type ContentEditItemId = keyof ContentEditFeatureState;
@@ -54,6 +55,16 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                     {this.renderPluginItem('imageResize', 'Image Resize Plugin')}
                     {this.renderPluginItem('tableResize', 'Table Resize Plugin')}
                     {this.renderPluginItem('pickerPlugin', 'Sample Picker Plugin')}
+                    {this.renderPluginItem(
+                        'reactPlugin',
+                        'Sample React Plugin',
+                        <div>
+                            Copy the below block into the editor for an example
+                            <span data-rcp-compid="react-plugin-example" data-rcp-st="┐(￣∀￣)┌">
+                                <EditorEmbeddedReactComponent initialSerializedSharableState="┐(￣∀￣)┌" />
+                            </span>
+                        </div>
+                    )}
                     {this.renderPluginItem('customReplace', 'Custom Replace Plugin (autocomplete)')}
                 </tbody>
             </table>
