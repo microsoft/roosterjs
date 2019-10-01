@@ -86,9 +86,9 @@ function collectPackages() {
             graph.push([child, packageName]);
         });
 
-        if (deps.length == 0) {
-            graph.push([packageName]);
-        }
+        // if (deps.length == 0) {
+        //     graph.push([packageName]);
+        // }
     });
 
     return toposort(graph).filter(n => n);

@@ -49,11 +49,15 @@ export const EditorEmbeddedReactComponent = (props: Partial<ReactPluginComponent
     }, [mountRoot]);
 
     React.useEffect(() => {
-        props.updateSerialziedSharableState && props.updateSerialziedSharableState(shrug);
+        if (props.updateSerialziedSharableState) {
+            props.updateSerialziedSharableState(shrug);
+        }
     }, [shrug]);
 
     React.useLayoutEffect(() => {
-        props.updateDomInEditor && props.updateDomInEditor();
+        if (props.updateDomInEditor) {
+            props.updateDomInEditor();
+        }
     });
 
     return (
