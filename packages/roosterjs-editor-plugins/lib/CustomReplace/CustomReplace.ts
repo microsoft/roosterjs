@@ -91,7 +91,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
         }
 
         // Exit early on input events that do not insert a replacement's final character.
-        if (event.rawEvent.data && !this.replacementEndCharacters.has(event.rawEvent.data)) {
+        if (!event.rawEvent.data || !this.replacementEndCharacters.has(event.rawEvent.data)) {
             return;
         }
 
