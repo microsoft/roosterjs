@@ -67,7 +67,7 @@ export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
         itemBlock.listItemContainers.forEach((listItemContainer) => {
             let listType: string = getContainerListType(listItemContainer); // list type that is contained by iterator.
 
-            // Initialize processed element with propery listType if the
+            // Initialize processed element with propery listType if this is the first element
             if (!convertedListElement) {
                 convertedListElement = document.createElement(listType);
             }
@@ -75,8 +75,15 @@ export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
             // Get all list items(<li>) in the current iterator element.
             const currentListItems = listItemContainer.querySelectorAll('li');
             currentListItems.forEach((item) => {
+                // If item is in root level and the type of list changes then
+                // insert the current list into body and then reinitialize the convertedListElement
+                const itemLevel = parseInt(item.getAttribute('data-aria-level'));
+                if (convertedListElement.tagName.toUpperCase() != listType && itemLevel == 1) {
+                    insertConvertedListToDoc(convertedListElement, doc.body, itemBlock);
+                    convertedListElement = document.createElement(listType);
+                }
                 insertListItem(convertedListElement, item, listType);
-            })
+            });
         });
 
         insertConvertedListToDoc(convertedListElement, doc.body, itemBlock);

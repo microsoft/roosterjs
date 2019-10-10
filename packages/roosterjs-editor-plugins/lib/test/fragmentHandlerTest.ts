@@ -87,7 +87,7 @@ describe('fragmentHandler', () => {
             //     2.c2
             //   .d
             //text text
-            it('only has text and ', () => {
+            it('only has text and list', () => {
                 runTest(
                     '<html><body><div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 24px;"> A </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> B </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C1 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C2 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> D </li></ul></div></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div></body></html>',
                     true,
@@ -148,7 +148,7 @@ describe('fragmentHandler', () => {
             });
         });
 
-        describe('When html is not strictly formatted as word online, but can be identified as word online', () => {
+        describe('When html is not strictly formatted as word online, but can be identified as word online only contains one type of list', () => {
             // html:
             // <div class="ListContainerWrapper">
             //     <ul class="BulletListStyle1"><li>text</li></ul>
@@ -166,8 +166,23 @@ describe('fragmentHandler', () => {
                 );
             });
 
-            it('shuold process html properly, if ListContainerWrapper when list items are not in side ul tag', () => {
-
+            // html:
+            // <div class="ListContainerWrapper">
+            //     <ul></ul>
+            //     <li>text</li>
+            //     <li>text</li>
+            //     <li>text</li>
+            // <div>
+            // result:
+            // .test
+            // .test
+            // .test
+            it('shuold process html properly, when list items are not in side ul tag', () => {
+                runTest(
+                    '<html><body><div class="ListContainerWrapper"><ul class="BulletListStyle1" role="list"></ul><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></div></body></html>',
+                    true,
+                    '<ul><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></ul>'
+                );
             });
 
             // html:
@@ -182,34 +197,15 @@ describe('fragmentHandler', () => {
             //     </ul>
             // <div>
             // result:
-            // .a
-            //   .b
-            //     .c
-            //   .d
-            //     .e
+            // .text
+            // .text
+            //   .text
+            //   .text
             it('should process html properly, if ListContainerWrapper contains list that is already well formatted', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper SCXW81557186 BCX0"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186">A</li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186">B</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0">C</li></ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0">D</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186">E</li></ul></ul></ul></div></body></html>',
                     true,
                     '<ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186">A</li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186">B</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0">C</li></ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0">D</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186">E</li></ul></ul></ul>'
-                );
-            });
-
-            // html:
-            // <div class="ListContainerWrapper">
-            //     <ul class="BulletListStyle1"></ul>
-            //     <li>text</li>
-            //     <li>text</li>
-            // <div>
-            // result:
-            // .a
-            // .b
-            // .c
-            it('should process html properly, if list item in a ListContainerWrapper are not inside ul', () => {
-                runTest(
-                    '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"></ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ul></div></body></html>',
-                    true,
-                    '<ul><li role="listitem" data-aria-level="1">A</li><li role="listitem" data-aria-level="1">B</li><li role="listitem" data-aria-level="1">C</li></ul>'
                 );
             });
 
@@ -221,14 +217,122 @@ describe('fragmentHandler', () => {
             //     </ol>
             // <div>
             // result:
-            // 1. a
-            // 2. b
-            // 3. c
+            // 1. text
+            // 2. text
             it('should process html properly, if there are multiple list item in ol (word online has one list item in each ol for ordered list)', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div></body></html>',
                     true,
                     '<ol><li role="listitem" data-aria-level="1">A</li><li role="listitem" data-aria-level="1">B</li><li role="listitem" data-aria-level="1">C</li></ol>'
+                );
+            });
+
+            // html:
+            // <div class="ListContainerWrapper">
+            //     <ol class="NumberedListStyle1"></ol>
+            //     <li>text</li>
+            //     <li>text</li>
+            // <div>
+            // result:
+            // 1. text
+            // 2. text
+            it('shuold process html properly, if list item in a ListContainerWrapper are not inside ol ', () => {
+                runTest(
+                    '<html><body><div class="ListContainerWrapper"><ol class="NumberListStyle1" role="list"></ol><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></div></body></html>',
+                    true,
+                    '<ol><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></ol>'
+                );
+            });
+        });
+
+        describe('When html is not strictly formatted as word online, but can be identified as word online only contains both types of list', () => {
+            // html:
+            // <div class="ListContainerWrapper">
+            //     <ul class="BulletListStyle1"><li>text</li></ul>
+            //     <ol><li>text</li></ol>
+            // <div>
+            // result:
+            // . text
+            // 1. text
+            it('should process html properly, if ListContainerWrapper contains well formated UL and non formated ol', () => {
+                runTest(
+                    '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol></div></body></html>',
+                    true,
+                    '<ul><li role="listitem" data-aria-level="1">A</li></ul><ol><li role="listitem" data-aria-level="1">B</li></ol>'
+                );
+            });
+
+            // html:
+            // <div class="ListContainerWrapper">
+            //     <ul class="BulletListStyle1"><li>text</li></ul>
+            // <div>
+            // <div class="ListContainerWrapper">
+            //     <ol class="NumberListStyle1"><li>text</li></ol>
+            //     <ol><li>text</li></ol>
+            // <div>
+            // result:
+            // . text
+            // 1. text
+            // 2. text
+            it('should process html properly, if ListContainerWrapper contains two UL', () => {
+                runTest(
+                    '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div></body></html>',
+                    true,
+                    '<ul><li role="listitem" data-aria-level="1">A</li></ul><ol><li role="listitem" data-aria-level="1">B</li><li role="listitem" data-aria-level="1">C</li></ol>'
+                );
+            });
+
+            // html:
+            // <div class="ListContainerWrapper">
+            //     <ul class="BulletListStyle1"><li>text</li></ul>
+            //     <ol><li>text</li></ol>
+            //     <ol><li>text</li></ol>
+            // <div>
+            // result:
+            // . text
+            // . text
+            // . text
+            it('should process html properly, if ListContainerWrapper contains two UL', () => {
+                runTest(
+                    '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div></body></html>',
+                    true,
+                    '<ul><li role="listitem" data-aria-level="1">A</li><li role="listitem" data-aria-level="1">B</li><li role="listitem" data-aria-level="1">C</li></ul>'
+                );
+            });
+
+            // html:
+            // <div class="ListContainerWrapper">
+            //     <ol class="NumberListStyle1"><li>text</li></ol>
+            // <div>
+            // <ul class="BulletListStyle1"><li>text</li></ul>
+            // result:
+            // 1. text
+            // . text
+            it('should process html properly, if ListContainerWrapper contains two UL', () => {
+                runTest(
+                    '<div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>',
+                    true,
+                    '<ol><li role="listitem" data-aria-level="1">C</li></ol><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>'
+                );
+            });
+
+            // html:
+            // <div class="ListContainerWrapper">
+            //     <ol class="NumberListStyle1"><li>text</li></ol>
+            // <div>
+            // <ul class="BulletListStyle1"><li>text</li></ul>
+            // <ul class="BulletListStyle1"><li>text</li></ul>
+            // <ul class="BulletListStyle1"><li>text</li></ul>
+            // result:
+            // 1. text
+            // . text
+            // . text
+            // . text
+            it('should process html properly, if ListContainerWrapper contains two UL', () => {
+                runTest(
+                    '<div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>',
+                    true,
+                    '<ol><li role="listitem" data-aria-level="1">C</li></ol><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>'
                 );
             });
         });
