@@ -43,6 +43,7 @@ import {
     queryElements,
     setHtmlWithSelectionPath,
     wrap,
+    isPositionAtBeginningOf,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -584,6 +585,16 @@ export default class Editor {
             startFrom = position && position.node;
         }
         return startFrom && findClosestElementAncestor(startFrom, this.core.contentDiv, selector);
+    }
+
+    /**
+     * Check if this position is at beginning of the editor.
+     * This will return true if all nodes between the beginning of target node and the position are empty.
+     * @param position The position to check
+     * @returns True if position is at beginning of the editor, otherwise false
+     */
+    public isPositionAtBeginning(position: NodePosition): boolean {
+        return isPositionAtBeginningOf(position, this.core.contentDiv);
     }
 
     //#endregion

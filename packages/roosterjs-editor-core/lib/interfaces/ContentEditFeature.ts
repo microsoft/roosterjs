@@ -10,6 +10,7 @@ export const enum Keys {
     TAB = 9,
     ENTER = 13,
     SPACE = 32,
+    LEFT = 37,
     UP = 38,
     DOWN = 40,
     B = 66,
