@@ -6103,14 +6103,19 @@ var Position = /** @class */ (function () {
         var newOffset = this.isAtEnd
             ? -1 /* End */
             : this.offset;
-        while (node.nodeType == 1 /* Element */ && node.firstChild) {
-            node =
-                newOffset == 0 /* Begin */
-                    ? node.firstChild
-                    : newOffset == -1 /* End */
-                        ? node.lastChild
-                        : node.childNodes[newOffset];
-            newOffset = this.isAtEnd ? -1 /* End */ : 0 /* Begin */;
+        while (node.nodeType == 1 /* Element */) {
+            var nextNode = newOffset == 0 /* Begin */
+                ? node.firstChild
+                : newOffset == -1 /* End */
+                    ? node.lastChild
+                    : node.childNodes[newOffset];
+            if (nextNode) {
+                node = nextNode;
+                newOffset = this.isAtEnd ? -1 /* End */ : 0 /* Begin */;
+            }
+            else {
+                break;
+            }
         }
         return new Position(node, newOffset);
     };
