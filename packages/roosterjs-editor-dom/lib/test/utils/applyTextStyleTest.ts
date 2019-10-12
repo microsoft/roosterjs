@@ -1,6 +1,6 @@
 import applyTextStyle from '../../utils/applyTextStyle';
 import Position from '../../selection/Position';
-import { PositionType } from 'roosterjs/lib';
+import { PositionType } from 'roosterjs-editor-types';
 
 describe('applyTextStyle()', () => {
     function runTest1(

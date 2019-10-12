@@ -30,6 +30,7 @@ export {
 export { default as getTagOfNode } from './utils/getTagOfNode';
 export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
+export { default as isRtl } from './utils/isRtl';
 export { default as isVoidHtmlElement } from './utils/isVoidHtmlElement';
 export { default as matchLink } from './utils/matchLink';
 export { default as adjustNodeInsertPosition } from './utils/adjustNodeInsertPosition';

@@ -1,6 +1,7 @@
 import Editor from '../editor/Editor';
 import EditorPlugin from '../interfaces/EditorPlugin';
 import { GenericContentEditFeature, Keys } from '../interfaces/ContentEditFeature';
+import { isCtrlOrMetaPressed } from 'roosterjs-editor-core';
 import {
     ChangeSource,
     PluginEvent,
@@ -96,10 +97,12 @@ export default class EditPlugin implements EditorPlugin {
     private findFeature(event: PluginEvent) {
         let hasFunctionKey = false;
         let features: GenericContentEditFeature<PluginEvent>[];
+        let ctrlOrMeta = false;
 
         if (event.eventType == PluginEventType.KeyDown) {
             let rawEvent = event.rawEvent;
-            hasFunctionKey = rawEvent.ctrlKey || rawEvent.altKey || rawEvent.metaKey;
+            ctrlOrMeta = isCtrlOrMetaPressed(rawEvent);
+            hasFunctionKey = ctrlOrMeta || rawEvent.altKey;
             features = this.featureMap[rawEvent.which];
         } else if (event.eventType == PluginEventType.ContentChanged) {
             features = this.featureMap[Keys.CONTENTCHANGED];
@@ -109,7 +112,7 @@ export default class EditPlugin implements EditorPlugin {
             features.filter(
                 feature =>
                     (feature.allowFunctionKeys || !hasFunctionKey) &&
-                    feature.shouldHandleEvent(event, this.editor)
+                    feature.shouldHandleEvent(event, this.editor, ctrlOrMeta)
             )[0]
         );
     }
