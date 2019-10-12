@@ -1898,6 +1898,13 @@ function isBlockElement(node: Node): boolean;
 function isNodeEmpty(node: Node, trimContent?: boolean): boolean;
 
     /**
+ * Check if the given element is using right-to-left layout
+ * @param element An HTML element to check
+ * @returns True if the given element is using right-to-left layout, otherwise false
+ */
+function isRtl(element: HTMLElement): boolean;
+
+    /**
  * Check if the given node is html void element. Void element cannot have childen
  * @param node The node to check
  */
@@ -2309,7 +2316,7 @@ type ContentEditFeature = GenericContentEditFeature<PluginKeyboardEvent>;
  */
 interface GenericContentEditFeature<TEvent extends PluginEvent> {
     keys: number[];
-    shouldHandleEvent: (event: TEvent, editor: Editor) => any;
+    shouldHandleEvent: (event: TEvent, editor: Editor, ctrlOrMeta: boolean) => any;
     handleEvent: (event: TEvent, editor: Editor) => ChangeSource | void;
     allowFunctionKeys?: boolean;
 }
@@ -2323,7 +2330,9 @@ const enum Keys {
     TAB = 9,
     ENTER = 13,
     SPACE = 32,
+    LEFT = 37,
     UP = 38,
+    RIGHT = 39,
     DOWN = 40,
     B = 66,
     I = 73,
@@ -3025,6 +3034,13 @@ class Editor {
      */
     getElementAtCursor(selector?: string, startFrom?: Node): HTMLElement;
     /**
+     * Check if this position is at beginning of the editor.
+     * This will return true if all nodes between the beginning of target node and the position are empty.
+     * @param position The position to check
+     * @returns True if position is at beginning of the editor, otherwise false
+     */
+    isPositionAtBeginning(position: NodePosition): boolean;
+    /**
      * Add a custom DOM event handler to handle events not handled by roosterjs.
      * Caller need to take the responsibility to dispose the handler properly
      * @param eventName DOM event name to handle
@@ -3457,6 +3473,13 @@ function isModifierKey(event: KeyboardEvent): boolean;
  * @param event The keyboard event object
  */
 function isCharacterValue(event: KeyboardEvent): boolean;
+
+    /**
+ * Check if Ctrl key (Windows) or Meta key (Mac) is pressed for the given Event
+ * @param event A Keyboard event or Mouse event object
+ * @returns True if Ctrl key is pressed on Windows or Meta key is pressed on Mac
+ */
+const isCtrlOrMetaPressed: (event: KeyboardEvent | MouseEvent) => boolean;
 
     /**
  * Increase or decrease font size in selection
@@ -3994,6 +4017,11 @@ interface ContentEditFeatures {
      */
     unlinkWhenBackspaceAfterLink: boolean;
     /**
+     * Chrome may make the cursor move the then end of document if press Ctrl+Left at the beginning of document
+     * Let's disable this behaivor
+     */
+    noCycleCursorMove: boolean;
+    /**
      * When generate ordered list, the list bullet will variare according its nesting level, in a loop of '1', 'a', 'i'
      * @default false
      */
@@ -4089,7 +4117,6 @@ class TableResize implements EditorPlugin  {
     private attachMouseEvents;
     private detachMouseEvents;
     private setTableColumnWidth;
-    private isRtl;
 }
 
     /**
