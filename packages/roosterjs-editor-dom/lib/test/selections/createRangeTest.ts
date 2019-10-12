@@ -1,6 +1,6 @@
 import createRange from '../../selection/createRange';
 import Position from '../../selection/Position';
-import { PositionType } from 'roosterjs/lib';
+import { PositionType } from 'roosterjs-editor-types';
 
 describe('createRange() with nodes', () => {
     function runTest(
