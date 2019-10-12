@@ -10,7 +10,9 @@ export const enum Keys {
     TAB = 9,
     ENTER = 13,
     SPACE = 32,
+    LEFT = 37,
     UP = 38,
+    RIGHT = 39,
     DOWN = 40,
     B = 66,
     I = 73,
@@ -32,7 +34,7 @@ export const enum Keys {
  */
 export interface GenericContentEditFeature<TEvent extends PluginEvent> {
     keys: number[];
-    shouldHandleEvent: (event: TEvent, editor: Editor) => any;
+    shouldHandleEvent: (event: TEvent, editor: Editor, ctrlOrMeta: boolean) => any;
     handleEvent: (event: TEvent, editor: Editor) => ChangeSource | void;
     allowFunctionKeys?: boolean;
 }

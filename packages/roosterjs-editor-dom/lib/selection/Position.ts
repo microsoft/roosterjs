@@ -81,14 +81,20 @@ export default class Position implements NodePosition {
         let newOffset: number | PositionType.Begin | PositionType.End = this.isAtEnd
             ? PositionType.End
             : this.offset;
-        while (node.nodeType == NodeType.Element && node.firstChild) {
-            node =
+        while (node.nodeType == NodeType.Element) {
+            const nextNode =
                 newOffset == PositionType.Begin
                     ? node.firstChild
                     : newOffset == PositionType.End
                     ? node.lastChild
                     : node.childNodes[<number>newOffset];
-            newOffset = this.isAtEnd ? PositionType.End : PositionType.Begin;
+
+            if (nextNode) {
+                node = nextNode;
+                newOffset = this.isAtEnd ? PositionType.End : PositionType.Begin;
+            } else {
+                break;
+            }
         }
         return new Position(node, newOffset);
     }

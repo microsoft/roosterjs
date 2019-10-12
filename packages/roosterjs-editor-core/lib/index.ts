@@ -47,3 +47,4 @@ export {
 export { default as cacheGetElementAtCursor } from './eventApi/cacheGetElementAtCursor';
 export { default as isModifierKey } from './eventApi/isModifierKey';
 export { default as isCharacterValue } from './eventApi/isCharacterValue';
+export { default as isCtrlOrMetaPressed } from './eventApi/isCtrlOrMetaPressed';

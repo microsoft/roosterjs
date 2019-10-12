@@ -91,6 +91,12 @@ export default interface ContentEditFeatures {
     unlinkWhenBackspaceAfterLink: boolean;
 
     /**
+     * Chrome may make the cursor move the then end of document if press Ctrl+Left at the beginning of document
+     * Let's disable this behaivor
+     */
+    noCycleCursorMove: boolean;
+
+    /**
      * When generate ordered list, the list bullet will variare according its nesting level, in a loop of '1', 'a', 'i'
      * @default false
      */
@@ -122,6 +128,7 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         insertLineBeforeStructuredNodeFeature: false,
         defaultShortcut: true,
         unlinkWhenBackspaceAfterLink: false,
+        noCycleCursorMove: Browser.isChrome,
         smartOrderedList: false,
         smartOrderedListStyles: ['lower-alpha', 'lower-roman', 'decimal'],
     };

@@ -3,6 +3,7 @@ import { AutoLink, UnlinkWhenBackspaceAfterLink } from './features/autoLinkFeatu
 import { DefaultShortcut } from './features/shortcutFeatures';
 import { Editor, EditorPlugin, GenericContentEditFeature } from 'roosterjs-editor-core';
 import { InsertLineBeforeStructuredNodeFeature } from './features/insertLineBeforeStructuredNodeFeature';
+import { NoCycleCursorMove } from './features/noCycleCursorMove';
 import { PluginEvent } from 'roosterjs-editor-types';
 import { TabInTable, UpDownInTable } from './features/tableFeatures';
 
@@ -67,7 +68,7 @@ export default class ContentEdit implements EditorPlugin {
     private getFilteredFeatures(): GenericContentEditFeature<PluginEvent>[] {
         let featureSet = this.featureSet || getDefaultContentEditFeatures();
         let allFeatures: {
-            [key in keyof Partial<ContentEditFeatures>]: GenericContentEditFeature<PluginEvent>
+            [key in keyof Partial<ContentEditFeatures>]: GenericContentEditFeature<PluginEvent>;
         } = {
             indentWhenTab: IndentWhenTab,
             outdentWhenShiftTab: OutdentWhenShiftTab,
@@ -83,6 +84,7 @@ export default class ContentEdit implements EditorPlugin {
             autoLink: AutoLink,
             unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink,
             defaultShortcut: DefaultShortcut,
+            noCycleCursorMove: NoCycleCursorMove,
             smartOrderedList: getSmartOrderedList(featureSet.smartOrderedListStyles),
         };
         let keys = Object.keys(allFeatures) as (keyof ContentEditFeatures)[];
