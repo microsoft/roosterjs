@@ -30,7 +30,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ul></div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1">A</li><li role="listitem" data-aria-level="1">B</li><li role="listitem" data-aria-level="1">C</li></ul>'
+                    '<ul><li role="listitem" data-aria-level="1" style="">A</li><li role="listitem" data-aria-level="1" style="">B</li><li role="listitem" data-aria-level="1" style="">C</li></ul>'
                 );
             });
 
@@ -42,7 +42,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW200751125"><ul class="BulletListStyle1 BCX0 SCXW200751125"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW200751125" style="margin: 0px 0px 0px 24px;">A</li></ul></div><div class="ListContainerWrapper BCX0 SCXW200751125"><ul class="BulletListStyle2 BCX0 SCXW200751125" role="list"><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW200751125" style="margin: 0px 0px 0px 72px;">B</li></ul></div><div class="ListContainerWrapper BCX0 SCXW200751125" style="margin: 0px;"><ul class="BulletListStyle2 BCX0 SCXW200751125" role="list"><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW200751125" style="margin: 0px 0px 0px 72px;">C</li></ul></div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW200751125">A</li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW200751125">B</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW200751125">C</li></ul></ul></ul>'
+                    '<ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW200751125" style="">A</li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW200751125" style="">B</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW200751125" style="">C</li></ul></ul></ul>'
                 )
             });
 
@@ -57,7 +57,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper SCXW81557186 BCX0"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 24px;">A</li></ul></div><div class="ListContainerWrapper SCXW81557186 BCX0"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 72px;">B</li></ul></div><div class="ListContainerWrapper SCXW81557186 BCX0"><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 120px;">C</li></ul></div><div class="ListContainerWrapper SCXW81557186 BCX0"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 72px;">D</li></ul></div><div class="ListContainerWrapper SCXW81557186 BCX0"><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 120px;">E</li></ul></div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186">A</li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186">B</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0">C</li></ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0">D</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186">E</li></ul></ul></ul>'
+                    '<ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186" style="">A</li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186" style="">B</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0" style="">C</li></ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0" style="">D</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186" style="">E</li></ul></ul></ul>'
                 )
             });
 
@@ -73,7 +73,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW221836524"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 24px;"> A </li></ul></div><div class="ListContainerWrapper BCX0 SCXW221836524"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 72px;"> B </li></ul></div><div class="ListContainerWrapper BCX0 SCXW221836524"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 120px;"> C1 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW221836524"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 120px;"> C2 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW221836524"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 72px;"> D </li></ul></div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW221836524"> A </li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524"> B </li><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524"> C1 </li><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524"> C2 </li></ol><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524"> D </li></ul></ul>'
+                    '<ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW221836524" style=""> A </li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524" style=""> B </li><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524" style=""> C1 </li><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524" style=""> C2 </li></ol><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524" style=""> D </li></ul></ul>'
                 )
             })
         });
@@ -91,7 +91,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 24px;"> A </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> B </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C1 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C2 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> D </li></ul></div></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div></body></html>',
                     true,
-                    '<div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461"> A </li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461"> B </li><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461"> C1 </li><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461"> C2 </li></ol><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461"> D </li></ul></ul></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div>'
+                    '<div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> A </li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> B </li><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> C1 </li><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> C2 </li></ol><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> D </li></ul></ul></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div>'
                 )
             });
 
@@ -115,7 +115,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 24px;"> A </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> B </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C1 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C2 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> D </li></ul></div></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><div class="TableContainer SCXW244795937 BCX0"><table><tbody><tr><td><div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div></div></td></tr><tr><td><div><div class="ListContainerWrapper SCXW244795937 BCX0"><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> A </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> B </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> C </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> D </li></ul></div></div></td></tr></tbody></table></div></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><p><span><span></span></span><span></span></p></div></body></html>',
                     true,
-                    '<div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461"> A </li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461"> B </li><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461"> C1 </li><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461"> C2 </li></ol><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461"> D </li></ul></ul></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><div class="TableContainer SCXW244795937 BCX0"><table><tbody><tr><td><div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div></div></td></tr><tr><td><div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937"> A </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937"> B </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937"> C </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937"> D </li></ul></div></td></tr></tbody></table></div></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><p><span><span></span></span><span></span></p></div>'
+                    '<div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> A </li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> B </li><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> C1 </li><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> C2 </li></ol><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> D </li></ul></ul></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><div class="TableContainer SCXW244795937 BCX0"><table><tbody><tr><td><div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div></div></td></tr><tr><td><div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style=""> A </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style=""> B </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style=""> C </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style=""> D </li></ul></div></td></tr></tbody></table></div></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><p><span><span></span></span><span></span></p></div>'
                 );
             });
         });
@@ -162,7 +162,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ul></div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1">A</li><li role="listitem" data-aria-level="1">B</li><li role="listitem" data-aria-level="1">C</li></ul>'
+                    '<ul><li role="listitem" data-aria-level="1" style="">A</li><li role="listitem" data-aria-level="1" style="">B</li><li role="listitem" data-aria-level="1" style="">C</li></ul>'
                 );
             });
 
@@ -223,7 +223,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div></body></html>',
                     true,
-                    '<ol><li role="listitem" data-aria-level="1">A</li><li role="listitem" data-aria-level="1">B</li><li role="listitem" data-aria-level="1">C</li></ol>'
+                    '<ol><li role="listitem" data-aria-level="1" style="">A</li><li role="listitem" data-aria-level="1" style="">B</li><li role="listitem" data-aria-level="1" style="">C</li></ol>'
                 );
             });
 
@@ -258,7 +258,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol></div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1">A</li></ul><ol><li role="listitem" data-aria-level="1">B</li></ol>'
+                    '<ul><li role="listitem" data-aria-level="1" style="">A</li></ul><ol><li role="listitem" data-aria-level="1" style="">B</li></ol>'
                 );
             });
 
@@ -278,7 +278,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1">A</li></ul><ol><li role="listitem" data-aria-level="1">B</li><li role="listitem" data-aria-level="1">C</li></ol>'
+                    '<ul><li role="listitem" data-aria-level="1" style="">A</li></ul><ol><li role="listitem" data-aria-level="1" style="">B</li><li role="listitem" data-aria-level="1" style="">C</li></ol>'
                 );
             });
 
@@ -296,7 +296,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1">A</li><li role="listitem" data-aria-level="1">B</li><li role="listitem" data-aria-level="1">C</li></ul>'
+                    '<ul><li role="listitem" data-aria-level="1" style="">A</li><li role="listitem" data-aria-level="1" style="">B</li><li role="listitem" data-aria-level="1" style="">C</li></ul>'
                 );
             });
 
@@ -312,7 +312,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>',
                     true,
-                    '<ol><li role="listitem" data-aria-level="1">C</li></ol><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>'
+                    '<ol><li role="listitem" data-aria-level="1" style="">C</li></ol><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>'
                 );
             });
 
@@ -332,7 +332,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>',
                     true,
-                    '<ol><li role="listitem" data-aria-level="1">C</li></ol><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>'
+                    '<ol><li role="listitem" data-aria-level="1" style="">C</li></ol><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>'
                 );
             });
         });

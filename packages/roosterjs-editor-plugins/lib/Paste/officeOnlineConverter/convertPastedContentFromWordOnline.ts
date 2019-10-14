@@ -206,7 +206,7 @@ function insertListItem(listRootElement: Element, itemToInsert: HTMLElement, lis
     // Word only uses margin to indent and hide list-style(bullet point)
     // So we need to remove the style from the list item.
     itemToInsert.style.margin = null; // remove word added margin to the li
-    itemToInsert.style.display = 'initial'; // set display to default value for li
+    itemToInsert.style.display = null; // remove display style
     // if the itemLevel is 1 it means the level iterator is at the correct place.
     while (itemLevel > 1) {
         if (!curListLevel.firstChild) {
