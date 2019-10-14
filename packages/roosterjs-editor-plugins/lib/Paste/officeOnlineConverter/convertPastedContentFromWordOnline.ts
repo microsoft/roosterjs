@@ -59,17 +59,45 @@ export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
 
     listItemBlocks.forEach((itemBlock) => {
 
+        // There are cases where consecutive List Elements are seperated into different divs:
+        // <div>
+        //   <div>
+        //      <ol></ol>
+        //   </div>
+        //   <div>
+        //      <ol></ol>
+        //   </div>
+        // </div>
+        // <div>
+        //   <div>
+        //      <ol></ol>
+        //   </div>
+        // </div>
+        // in the above case we want to collapse the two root level div into one and unwrap the list item divs.
+        // after the following flattening the list will become following:
+        //
+        // <div>
+        //    <ol></ol>
+        // </div>
+        // <div>
+        //    <ol></ol>
+        // </div>
+        // <div>
+        //    <ol></ol>
+        // </div>
+        // Then we are start processing.
         flattenListBlock(doc.body, itemBlock);
 
+        // Find the node to insertBefore, which is next sibling node of the end of a listItemBlock.
         itemBlock.insertPositionNode = itemBlock.endElement.nextSibling;
 
         let convertedListElement: Element;
         itemBlock.listItemContainers.forEach((listItemContainer) => {
-            let listType: string = getContainerListType(listItemContainer); // list type that is contained by iterator.
+            let listType: 'OL' | 'UL' = getContainerListType(listItemContainer); // list type that is contained by iterator.
 
             // Initialize processed element with propery listType if this is the first element
             if (!convertedListElement) {
-                convertedListElement = document.createElement(listType);
+                convertedListElement = doc.createElement(listType);
             }
 
             // Get all list items(<li>) in the current iterator element.
@@ -77,18 +105,25 @@ export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
             currentListItems.forEach((item) => {
                 // If item is in root level and the type of list changes then
                 // insert the current list into body and then reinitialize the convertedListElement
+                // Word Online is using data-aria-level to determine the the depth of the list item.
                 const itemLevel = parseInt(item.getAttribute('data-aria-level'));
-                if (convertedListElement.tagName.toUpperCase() != listType && itemLevel == 1) {
+                // In first level list, there are cases where a consecutive list item divs may have different list type
+                // When that happens we need to insert the processed elements into the document, then change the list type
+                // and keep the processing going.
+                if (getTagOfNode(convertedListElement) != listType && itemLevel == 1) {
                     insertConvertedListToDoc(convertedListElement, doc.body, itemBlock);
-                    convertedListElement = document.createElement(listType);
+                    convertedListElement = doc.createElement(listType);
                 }
-                insertListItem(convertedListElement, item, listType);
+                insertListItem(convertedListElement, item, listType, doc);
             });
         });
 
         insertConvertedListToDoc(convertedListElement, doc.body, itemBlock);
 
-        const parentContainer = itemBlock.startElement.parentElement;
+        // Once we finish the process the list items and put them into a list.
+        // After inserting the processed element,
+        // we need to remove all the non processed node from the parent node.
+        const parentContainer = itemBlock.startElement.parentNode;
         if (parentContainer) {
             itemBlock.listItemContainers.forEach((listItemContainer) => {
                 parentContainer.removeChild(listItemContainer);
@@ -150,14 +185,9 @@ function flattenListBlock(rootElement: Element, listItemBlock: ListItemBlock) {
  * return null;
  * @param listItemContainer Container that contains a list
  */
-function getContainerListType(listItemContainer: Element): string {
-    if (getTagOfNode(listItemContainer.firstChild) == UNORDERED_LIST_TAG_NAME) {
-        return UNORDERED_LIST_TAG_NAME;
-    } else if (getTagOfNode(listItemContainer.firstChild) == ORDERED_LIST_TAG_NAME) {
-        return ORDERED_LIST_TAG_NAME
-    } else {
-        return null
-    }
+function getContainerListType(listItemContainer: Element): 'OL' | 'UL' | null {
+    const tag = getTagOfNode(listItemContainer.firstChild);
+    return tag == UNORDERED_LIST_TAG_NAME || tag == ORDERED_LIST_TAG_NAME ? tag : null;
 }
 
 /**
@@ -166,7 +196,7 @@ function getContainerListType(listItemContainer: Element): string {
  * @param itemToInsert List item that needed to be inserted.
  * @param listType Type of list(ul/ol)
  */
-function insertListItem(listRootElement: Element, itemToInsert: Element, listType: string): void {
+function insertListItem(listRootElement: Element, itemToInsert: HTMLElement, listType: string, doc: HTMLDocument): void {
     if (!listType) {
         return
     }
@@ -175,27 +205,28 @@ function insertListItem(listRootElement: Element, itemToInsert: Element, listTyp
     let curListLevel = listRootElement; // Level iterator to find the correct place for the current element.
     // Word only uses margin to indent and hide list-style(bullet point)
     // So we need to remove the style from the list item.
-    itemToInsert.removeAttribute('style');
+    itemToInsert.style.margin = null; // remove word added margin to the li
+    itemToInsert.style.display = 'initial'; // set display to default value for li
     // if the itemLevel is 1 it means the level iterator is at the correct place.
     while (itemLevel > 1) {
-        if (curListLevel.children.length == 0) {
+        if (!curListLevel.firstChild) {
             // If the current level is empty, create empty list within the current level
             // then move the level iterator into the next level.
-            curListLevel.append(document.createElement(listType));
-            curListLevel = curListLevel.children[0];
+            curListLevel.append(doc.createElement(listType));
+            curListLevel = curListLevel.firstElementChild;
         } else {
             // If the current level is not empty, the last item in the needs to be a UL or OL
             // and the level iterator should move to the UL/OL at the last position.
-            let { children } = curListLevel;
-            let lastChild = children[children.length - 1];
-            if (lastChild.tagName == UNORDERED_LIST_TAG_NAME || lastChild.tagName == ORDERED_LIST_TAG_NAME) {
+            let lastChild = curListLevel.lastElementChild;
+            let lastChildTag = getTagOfNode(lastChild);
+            if (lastChildTag == UNORDERED_LIST_TAG_NAME || lastChildTag == ORDERED_LIST_TAG_NAME) {
                 // If the last child is a list(UL/OL), then move the level iterator to last child.
                 curListLevel = lastChild;
             } else {
                 // If the last child is not a list, then append a new list to the level
                 // and move the level iterator to the new level.
-                curListLevel.append(document.createElement(listType))
-                curListLevel = children[children.length - 1];
+                curListLevel.append(doc.createElement(listType))
+                curListLevel = curListLevel.lastElementChild;
             }
         }
         itemLevel--;
