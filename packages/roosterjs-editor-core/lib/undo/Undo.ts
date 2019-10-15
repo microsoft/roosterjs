@@ -2,6 +2,7 @@ import Editor from '../editor/Editor';
 import UndoService from '../interfaces/UndoService';
 import UndoSnapshots from './UndoSnapshots';
 import UndoSnapshotsService from '../interfaces/UndoSnapshotsService';
+import { isCtrlOrMetaPressed } from 'roosterjs-editor-core';
 import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 const KEY_BACKSPACE = 8;
@@ -28,7 +29,7 @@ export default class Undo implements UndoService {
      * this object to be reused when editor is disposed and created again
      * @param maxBufferSize The max buffer size for snapshots. Default value is 10MB
      */
-    constructor(private preserveSnapshots?: boolean, private maxBufferSize: number = 1e7) { }
+    constructor(private preserveSnapshots?: boolean, private maxBufferSize: number = 1e7) {}
 
     /**
      * Get a friendly name of  this plugin
@@ -179,8 +180,7 @@ export default class Undo implements UndoService {
                 selectionRange &&
                 (!selectionRange.collapsed ||
                     this.lastKeyPress != evt.which ||
-                    evt.ctrlKey ||
-                    evt.metaKey)
+                    isCtrlOrMetaPressed(evt))
             ) {
                 this.addUndoSnapshot();
             }

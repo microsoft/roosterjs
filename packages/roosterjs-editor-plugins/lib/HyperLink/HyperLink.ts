@@ -1,5 +1,5 @@
 import { Browser } from 'roosterjs-editor-dom';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { Editor, EditorPlugin, isCtrlOrMetaPressed } from 'roosterjs-editor-core';
 import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 /**
@@ -82,7 +82,7 @@ export default class HyperLink implements EditorPlugin {
                 if (
                     !Browser.isFirefox &&
                     (href = this.tryGetHref(anchor)) &&
-                    (Browser.isMac ? event.rawEvent.metaKey : event.rawEvent.ctrlKey) &&
+                    isCtrlOrMetaPressed(event.rawEvent) &&
                     event.rawEvent.button === 0
                 ) {
                     try {
