@@ -34,7 +34,7 @@ describe('getInheritableStyles', () => {
         });
     });
 
-    describe('Element', () => {
+    it('Element', () => {
         let node = document.createElement('SPAN');
         document.body.appendChild(node);
         node.style.fontFamily = '"Times New Roman"';
@@ -53,7 +53,7 @@ describe('getInheritableStyles', () => {
             ['font-style']: 'normal',
             ['font-variant']: 'normal',
             ['font-weight']: '400',
-            font: '16px "Times New Roman"',
+            font: 'normal normal 400 normal 16px / normal "Times New Roman"',
             ['letter-spacing']: 'normal',
             ['line-height']: 'normal',
             ['list-style-image']: 'none',
@@ -71,10 +71,8 @@ describe('getInheritableStyles', () => {
             ['word-spacing']: '0px',
         };
         Object.keys(styles).forEach(key => {
-            it(`reads property '${key}' correctly`, () => {
-                const value = styles[key];
-                expect(sort(value)).toEqual(sort(expectedResult[key]), key);
-            });
+            const value = styles[key];
+            expect(sort(value)).toEqual(sort(expectedResult[key]), key);
         });
     });
 });
