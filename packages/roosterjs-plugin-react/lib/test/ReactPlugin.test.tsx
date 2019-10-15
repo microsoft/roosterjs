@@ -1,11 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-
-import { act } from 'react-dom/test-utils'; // ES6import * as TestHelper from 'roosterjs-editor-api/lib/test/TestHelper';
 import * as TestHelper from 'roosterjs-editor-api/lib/test/TestHelper';
-import { Editor } from 'roosterjs-editor-core';
-import { default as ReactPlugin, ReactPluginComponentProps } from '../ReactPlugin';
+import { act } from 'react-dom/test-utils';
 import { ChangeSource } from 'roosterjs-editor-types/lib';
+import { default as ReactPlugin, ReactPluginComponentProps } from '../ReactPlugin';
+import { Editor } from 'roosterjs-editor-core';
+
+// ES6import * as TestHelper from 'roosterjs-editor-api/lib/test/TestHelper';
 
 interface ExampleComponentRef {
     updateCounter: (newVal: number) => void;
@@ -23,18 +24,21 @@ const ExampleComponent = (props: Partial<ReactPluginComponentProps>) => {
     );
 
     // Trigger serializable state callback
-    React.useLayoutEffect(() => {
-        globalShouldUpdateState &&
-            props.updateSerialziedSharableState &&
-            props.updateSerialziedSharableState(
-                JSON.stringify({
-                    counter,
-                })
-            );
-    }, [counter]);
+    React.useLayoutEffect(
+        () => {
+            if (globalShouldUpdateState && props.updateSerialziedSharableState) {
+                props.updateSerialziedSharableState(
+                    JSON.stringify({
+                        counter,
+                    })
+                );
+            }
+        },
+        [counter]
+    );
 
     // Create and store a ref in the test list + bind it to this component's state
-    const meRef = React.useRef<ExampleComponentRef>();
+    const meRef = React.useRef<ExampleComponentRef>(null);
     React.useLayoutEffect(() => {
         activeRefs.push(meRef);
 
@@ -468,11 +472,13 @@ const ExampleColouredComponent = (props: Partial<ReactPluginComponentProps>) => 
 
     // Trigger callback after render
     React.useLayoutEffect(() => {
-        props.updateDomInEditor && props.updateDomInEditor();
+        if (props.updateDomInEditor) {
+            props.updateDomInEditor();
+        }
     });
 
     // Create and store a ref in the test list + bind it to this component's state
-    const meRef = React.useRef<ColorComponentRef>();
+    const meRef = React.useRef<ColorComponentRef>(null);
     React.useLayoutEffect(() => {
         activeColorComponentRefs.push(meRef);
 

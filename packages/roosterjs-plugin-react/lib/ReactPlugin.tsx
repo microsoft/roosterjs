@@ -1,17 +1,19 @@
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import removeReactTagsOnExtractContent from './util/removeReactTagsOnExtractContent';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     ChangeSource,
     PluginEvent,
     PluginEventType,
     ContentPosition,
+    ExtractContentEvent,
 } from 'roosterjs-editor-types';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-
-// Unidentified key, the code for Android keyboard events.
-const REACT_COMPONENT_DATA_KEY = 'data-rcp-compid';
-const REACT_COMPONENT_INSTANCE_ID = 'data-rcp-instid';
-const REACT_COMPONENT_SHARABLE_STATE = 'data-rcp-st';
+import {
+    REACT_COMPONENT_DATA_KEY,
+    REACT_COMPONENT_INSTANCE_ID,
+    REACT_COMPONENT_SHARABLE_STATE,
+} from './util/constants';
 
 export interface ReactPluginComponentProps {
     /**
@@ -22,7 +24,7 @@ export interface ReactPluginComponentProps {
      */
     inEditorMountRoot: HTMLElement;
     /**
-     * the serialzied state of the component.
+     * the serialized state of the component.
      */
     initialSerializedSharableState: string | null;
     /**
@@ -114,11 +116,20 @@ export default class ReactComponentPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
-        if (!this.editor || !this.isTriggeringEvent(event)) {
+        if (this.isTriggeringEvent(event)) {
+            this.handleChangeInEditor(event);
+        } else if (event.eventType === PluginEventType.ExtractContent) {
+            const evt = event as ExtractContentEvent;
+            evt.content = removeReactTagsOnExtractContent(evt.content);
+        }
+    }
+
+    private handleChangeInEditor(event: PluginEvent) {
+        if (!this.editor) {
             return;
         }
 
-        // Undos and other major changes to document content fire this type of event.
+        // Undoes and other major changes to document content fire this type of event.
         //
         // Scan for new elements.
         const foundComponentRoots = this.editor.queryElements(
@@ -163,16 +174,14 @@ export default class ReactComponentPlugin implements EditorPlugin {
         unresolvedMountPoints.forEach(({ element, id }) => {
             const oldInstance = this.idToInstances.get(id);
 
-            // if it's already been resolved, then this is a copy/paste of an existing element.
-            // Bind its ID in the DOM and mount a new instance for it.
             if (resolvedIds.has(id) || oldInstance == null) {
+                // if it's already been resolved, then this is a copy/paste of an existing element.
+                // Bind its ID in the DOM and mount a new instance for it.
                 const newInstance = this.createNewComponentInstance(element);
                 element.setAttribute(REACT_COMPONENT_INSTANCE_ID, newInstance.instanceId);
                 this.mountNewInstanceInEditor(newInstance);
-            }
-
-            // If it's an ID that hasn't been resolved yet, this is a move of an existing component
-            else {
+            } else {
+                // If it's an ID that hasn't been resolved yet, this is a move of an existing component
                 unresolvedInstanceIds.delete(oldInstance.instanceId);
                 this.moveMountedComponentToNewPositionInEditor(element, oldInstance);
             }
@@ -181,7 +190,9 @@ export default class ReactComponentPlugin implements EditorPlugin {
         // Remove instances that don't exist anymore
         unresolvedInstanceIds.forEach(instanceId => {
             const instance = this.idToInstances.get(instanceId);
-            if (instance) this.unmountInstance(instance);
+            if (instance) {
+                this.unmountInstance(instance);
+            }
         });
     }
 
