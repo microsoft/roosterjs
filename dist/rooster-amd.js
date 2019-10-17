@@ -10013,7 +10013,7 @@ function textToHtml(text) {
             }
         });
     }
-    text = text.replace(/\s\s/g, ' &nbsp;');
+    text = text.replace(/ {2}/g, ' &nbsp;');
     return text;
 }
 exports.default = textToHtml;

@@ -34,7 +34,7 @@ nodeType,392
 createElement,390
 rawEvent,384
 indexOf,364
-s,358
+s,356
 getTagOfNode,336
 contentDiv,330
 previousSibling,330
@@ -380,12 +380,12 @@ href,52
 numberOfItems,52
 wrap,52
 undo,52
+2,52
 undoSnapshots,52
-LinkInlineElement,51
 allowFunctionKeys,51
 detectPasteOption,51
-2,51
 getComputedStyles,51
+LinkInlineElement,51
 detachMouseEvents,51
 preserveSnapshots,51
 featureMap,50
