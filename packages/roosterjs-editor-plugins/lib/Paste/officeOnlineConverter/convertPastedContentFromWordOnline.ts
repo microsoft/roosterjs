@@ -1,4 +1,6 @@
 import {
+    WORD_ORDERED_LIST_SELECTOR,
+    WORD_UNORDERED_LIST_SELECTOR,
     WORD_ONLINE_IDENTIFYING_SELECTOR,
     LIST_CONTAINER_ELEMENT_CLASS_NAME,
     ORDERED_LIST_TAG_NAME,
@@ -6,6 +8,7 @@ import {
 } from './constants';
 
 import {
+    splitBalancedNodeRange,
     getNextLeafSibling,
     getFirstLeafNode,
     getTagOfNode,
@@ -55,6 +58,7 @@ export function isWordOnlineWithList(node: HTMLElement): boolean {
  * @param doc Document that is being pasted into editor.
  */
 export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
+    sanitizeListItemContainer(doc);
     const listItemBlocks: ListItemBlock[] = getListItemBlocks(doc);
 
     listItemBlocks.forEach((itemBlock) => {
@@ -94,28 +98,32 @@ export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
         let convertedListElement: Element;
         itemBlock.listItemContainers.forEach((listItemContainer) => {
             let listType: 'OL' | 'UL' = getContainerListType(listItemContainer); // list type that is contained by iterator.
-
-            // Initialize processed element with propery listType if this is the first element
-            if (!convertedListElement) {
-                convertedListElement = doc.createElement(listType);
-            }
-
-            // Get all list items(<li>) in the current iterator element.
-            const currentListItems = listItemContainer.querySelectorAll('li');
-            currentListItems.forEach((item) => {
-                // If item is in root level and the type of list changes then
-                // insert the current list into body and then reinitialize the convertedListElement
-                // Word Online is using data-aria-level to determine the the depth of the list item.
-                const itemLevel = parseInt(item.getAttribute('data-aria-level'));
-                // In first level list, there are cases where a consecutive list item divs may have different list type
-                // When that happens we need to insert the processed elements into the document, then change the list type
-                // and keep the processing going.
-                if (getTagOfNode(convertedListElement) != listType && itemLevel == 1) {
-                    insertConvertedListToDoc(convertedListElement, doc.body, itemBlock);
+            if (!listType) {
+                insertConvertedListToDoc(listItemContainer, doc.body, itemBlock);
+                convertedListElement = null;
+            } else {
+                // Initialize processed element with propery listType if this is the first element
+                if (!convertedListElement) {
                     convertedListElement = doc.createElement(listType);
                 }
-                insertListItem(convertedListElement, item, listType, doc);
-            });
+
+                // Get all list items(<li>) in the current iterator element.
+                const currentListItems = listItemContainer.querySelectorAll('li');
+                currentListItems.forEach((item) => {
+                    // If item is in root level and the type of list changes then
+                    // insert the current list into body and then reinitialize the convertedListElement
+                    // Word Online is using data-aria-level to determine the the depth of the list item.
+                    const itemLevel = parseInt(item.getAttribute('data-aria-level'));
+                    // In first level list, there are cases where a consecutive list item divs may have different list type
+                    // When that happens we need to insert the processed elements into the document, then change the list type
+                    // and keep the processing going.
+                    if (getTagOfNode(convertedListElement) != listType && itemLevel == 1) {
+                        insertConvertedListToDoc(convertedListElement, doc.body, itemBlock);
+                        convertedListElement = doc.createElement(listType);
+                    }
+                    insertListItem(convertedListElement, item, listType, doc);
+                });
+            }
         });
 
         insertConvertedListToDoc(convertedListElement, doc.body, itemBlock);
@@ -133,11 +141,27 @@ export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
 }
 
 /**
+ * The node processing is based on the premise of only ol/ul is in ListContainerWrapper class
+ * However the html might be melformed, this function is to split all the other elements out of ListContainerWrapper
+ * @param doc pasted document that contains all the list element.
+ */
+function sanitizeListItemContainer(doc: HTMLDocument) {
+    const listItemContainerListEl = doc.querySelectorAll(`${WORD_ORDERED_LIST_SELECTOR}, ${WORD_UNORDERED_LIST_SELECTOR}`);
+    listItemContainerListEl.forEach((el) => {
+        if (el.parentNode.children.length > 1) {
+            splitBalancedNodeRange(el);
+        }
+    });
+}
+/**
  * Take all the list items in the document, and group the consecutive list times in a list block;
  * @param doc pasted document that contains all the list element.
  */
 function getListItemBlocks(doc: HTMLDocument): ListItemBlock[] {
-    const listElements = doc.getElementsByClassName(LIST_CONTAINER_ELEMENT_CLASS_NAME);
+    const listContainers = Array.from(doc.getElementsByClassName(LIST_CONTAINER_ELEMENT_CLASS_NAME));
+    const listElements = listContainers.filter((list) => {
+        return list.children.length == 1 && (getTagOfNode(list.firstChild) == 'OL' || getTagOfNode(list.firstChild) == 'UL')
+    });
     const result: ListItemBlock[] = [];
     let curListItemBlock: ListItemBlock;
     for (let i = 0; i < listElements.length; i++) {

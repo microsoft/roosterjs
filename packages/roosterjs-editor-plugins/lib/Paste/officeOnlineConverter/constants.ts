@@ -1,6 +1,6 @@
-const WORD_ORDERED_LIST_SELECTOR = 'div.ListContainerWrapper > ul[class^="BulletListStyle"]';
+export const WORD_ORDERED_LIST_SELECTOR = 'div.ListContainerWrapper > ul[class^="BulletListStyle"]';
 
-const WORD_UNORDERED_LIST_SELECTOR = 'div.ListContainerWrapper > ol[class^="NumberListStyle"]';
+export const WORD_UNORDERED_LIST_SELECTOR = 'div.ListContainerWrapper > ol[class^="NumberListStyle"]';
 
 export const WORD_ONLINE_IDENTIFYING_SELECTOR = `${WORD_ORDERED_LIST_SELECTOR},${WORD_UNORDERED_LIST_SELECTOR}`;
 
