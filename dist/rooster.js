@@ -9924,6 +9924,7 @@ exports.default = convertPastedContentFromExcel;
 Object.defineProperty(exports, "__esModule", { value: true });
 var convertPastedContentFromExcel_1 = __webpack_require__(/*! ./excelConverter/convertPastedContentFromExcel */ "./packages/roosterjs-editor-plugins/lib/Paste/excelConverter/convertPastedContentFromExcel.ts");
 var convertPastedContentFromWord_1 = __webpack_require__(/*! ./wordConverter/convertPastedContentFromWord */ "./packages/roosterjs-editor-plugins/lib/Paste/wordConverter/convertPastedContentFromWord.ts");
+var convertPastedContentFromWordOnline_1 = __webpack_require__(/*! ./officeOnlineConverter/convertPastedContentFromWordOnline */ "./packages/roosterjs-editor-plugins/lib/Paste/officeOnlineConverter/convertPastedContentFromWordOnline.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var roosterjs_html_sanitizer_1 = __webpack_require__(/*! roosterjs-html-sanitizer */ "./packages/roosterjs-html-sanitizer/lib/index.ts");
 var WORD_ATTRIBUTE_NAME = 'xmlns:w';
@@ -9942,6 +9943,11 @@ function fragmentHandler(doc, source) {
             // Handle HTML copied from MS Word
             doc.body.innerHTML = html;
             convertPastedContentFromWord_1.default(doc);
+        }
+        else if (convertPastedContentFromWordOnline_1.isWordOnlineWithList(firstNode)) {
+            // call conversion function if the pasted content is from word online and
+            // has list element in the pasted content.
+            convertPastedContentFromWordOnline_1.default(doc);
         }
         else if (firstNode.getAttribute(EXCEL_ATTRIBUTE_NAME) == EXCEL_ATTRIBUTE_VALUE) {
             // Handle HTML copied from MS Excel
@@ -9965,6 +9971,325 @@ function fragmentHandler(doc, source) {
     }
 }
 exports.default = fragmentHandler;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-plugins/lib/Paste/officeOnlineConverter/ListItemBlock.ts":
+/*!********************************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/Paste/officeOnlineConverter/ListItemBlock.ts ***!
+  \********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Initialize an empty ListItemBlock
+ */
+function createListItemBlock(listItem) {
+    if (listItem === void 0) { listItem = null; }
+    return {
+        startElement: listItem,
+        endElement: listItem,
+        insertPositionNode: null,
+        listItemContainers: listItem ? [listItem] : [],
+    };
+}
+exports.createListItemBlock = createListItemBlock;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-plugins/lib/Paste/officeOnlineConverter/constants.ts":
+/*!****************************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/Paste/officeOnlineConverter/constants.ts ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.WORD_ORDERED_LIST_SELECTOR = 'div.ListContainerWrapper > ul[class^="BulletListStyle"]';
+exports.WORD_UNORDERED_LIST_SELECTOR = 'div.ListContainerWrapper > ol[class^="NumberListStyle"]';
+exports.WORD_ONLINE_IDENTIFYING_SELECTOR = exports.WORD_ORDERED_LIST_SELECTOR + "," + exports.WORD_UNORDERED_LIST_SELECTOR;
+exports.LIST_CONTAINER_ELEMENT_CLASS_NAME = "ListContainerWrapper";
+exports.UNORDERED_LIST_TAG_NAME = "UL";
+exports.ORDERED_LIST_TAG_NAME = "OL";
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-plugins/lib/Paste/officeOnlineConverter/convertPastedContentFromWordOnline.ts":
+/*!*****************************************************************************************************************!*\
+  !*** ./packages/roosterjs-editor-plugins/lib/Paste/officeOnlineConverter/convertPastedContentFromWordOnline.ts ***!
+  \*****************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var constants_1 = __webpack_require__(/*! ./constants */ "./packages/roosterjs-editor-plugins/lib/Paste/officeOnlineConverter/constants.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var ListItemBlock_1 = __webpack_require__(/*! ./ListItemBlock */ "./packages/roosterjs-editor-plugins/lib/Paste/officeOnlineConverter/ListItemBlock.ts");
+function isWordOnlineWithList(node) {
+    return !!(node && node.querySelector(constants_1.WORD_ONLINE_IDENTIFYING_SELECTOR));
+}
+exports.isWordOnlineWithList = isWordOnlineWithList;
+// Word Online pasted content DOM structure as of July 12th 2019
+//<html>
+//  <body>
+//      <div class='OutlineGroup'>  ----------> this layer may exist depend on the content user paste
+//          <div class="OutlineElement">  ----------> text content
+//              <p></p>
+//          </div>
+//          <div class="ListItemWrapper">  ----------> list items: for unordered list, all the items on the same level is under the same wrapper
+//              <ul>                                       list items in the same list can be divided into different ListItemWrapper
+//                  <li></li>                              list items in the same list can also be divided into different Outline Group;
+//                  <li></li>
+//              </ul>
+//          </div>
+//      </div>
+//      <div class='OutlineGroup'>
+//          <div class="ListItemWrapper">  ----------> list items: for ordered list, each items has it's own wrapper
+//              <ol>
+//                  <li></li>
+//              </ol>
+//          </div>
+//          <div class="ListItemWrapper">
+//              <ol>
+//                  <li></li>
+//              </ol>
+//          </div>
+//      </div>
+//  </body>
+//</html>
+//
+/**
+ * Convert text copied from word online into text that's workable with rooster editor
+ * @param doc Document that is being pasted into editor.
+ */
+function convertPastedContentFromWordOnline(doc) {
+    sanitizeListItemContainer(doc);
+    var listItemBlocks = getListItemBlocks(doc);
+    listItemBlocks.forEach(function (itemBlock) {
+        // There are cases where consecutive List Elements are seperated into different divs:
+        // <div>
+        //   <div>
+        //      <ol></ol>
+        //   </div>
+        //   <div>
+        //      <ol></ol>
+        //   </div>
+        // </div>
+        // <div>
+        //   <div>
+        //      <ol></ol>
+        //   </div>
+        // </div>
+        // in the above case we want to collapse the two root level div into one and unwrap the list item divs.
+        // after the following flattening the list will become following:
+        //
+        // <div>
+        //    <ol></ol>
+        // </div>
+        // <div>
+        //    <ol></ol>
+        // </div>
+        // <div>
+        //    <ol></ol>
+        // </div>
+        // Then we are start processing.
+        flattenListBlock(doc.body, itemBlock);
+        // Find the node to insertBefore, which is next sibling node of the end of a listItemBlock.
+        itemBlock.insertPositionNode = itemBlock.endElement.nextSibling;
+        var convertedListElement;
+        itemBlock.listItemContainers.forEach(function (listItemContainer) {
+            var listType = getContainerListType(listItemContainer); // list type that is contained by iterator.
+            // Initialize processed element with propery listType if this is the first element
+            if (!convertedListElement) {
+                convertedListElement = doc.createElement(listType);
+            }
+            // Get all list items(<li>) in the current iterator element.
+            var currentListItems = listItemContainer.querySelectorAll('li');
+            currentListItems.forEach(function (item) {
+                // If item is in root level and the type of list changes then
+                // insert the current list into body and then reinitialize the convertedListElement
+                // Word Online is using data-aria-level to determine the the depth of the list item.
+                var itemLevel = parseInt(item.getAttribute('data-aria-level'));
+                // In first level list, there are cases where a consecutive list item divs may have different list type
+                // When that happens we need to insert the processed elements into the document, then change the list type
+                // and keep the processing going.
+                if (roosterjs_editor_dom_1.getTagOfNode(convertedListElement) != listType && itemLevel == 1) {
+                    insertConvertedListToDoc(convertedListElement, doc.body, itemBlock);
+                    convertedListElement = doc.createElement(listType);
+                }
+                insertListItem(convertedListElement, item, listType, doc);
+            });
+        });
+        insertConvertedListToDoc(convertedListElement, doc.body, itemBlock);
+        // Once we finish the process the list items and put them into a list.
+        // After inserting the processed element,
+        // we need to remove all the non processed node from the parent node.
+        var parentContainer = itemBlock.startElement.parentNode;
+        if (parentContainer) {
+            itemBlock.listItemContainers.forEach(function (listItemContainer) {
+                parentContainer.removeChild(listItemContainer);
+            });
+        }
+    });
+}
+exports.default = convertPastedContentFromWordOnline;
+/**
+ * The node processing is based on the premise of only ol/ul is in ListContainerWrapper class
+ * However the html might be melformed, this function is to split all the other elements out of ListContainerWrapper
+ * @param doc pasted document that contains all the list element.
+ */
+function sanitizeListItemContainer(doc) {
+    var listItemContainerListEl = doc.querySelectorAll(constants_1.WORD_ORDERED_LIST_SELECTOR + ", " + constants_1.WORD_UNORDERED_LIST_SELECTOR);
+    listItemContainerListEl.forEach(function (el) {
+        var replaceRegex = new RegExp("\\b" + constants_1.LIST_CONTAINER_ELEMENT_CLASS_NAME + "\\b", 'g');
+        if (el.previousSibling) {
+            var prevParent = roosterjs_editor_dom_1.splitParentNode(el, true);
+            prevParent.className = prevParent.className.replace(replaceRegex, '');
+        }
+        if (el.nextSibling) {
+            var nextParent = roosterjs_editor_dom_1.splitParentNode(el, false);
+            nextParent.className = nextParent.className.replace(replaceRegex, '');
+        }
+    });
+}
+/**
+ * Take all the list items in the document, and group the consecutive list times in a list block;
+ * @param doc pasted document that contains all the list element.
+ */
+function getListItemBlocks(doc) {
+    var listElements = doc.getElementsByClassName(constants_1.LIST_CONTAINER_ELEMENT_CLASS_NAME);
+    var result = [];
+    var curListItemBlock;
+    for (var i = 0; i < listElements.length; i++) {
+        var curItem = listElements[i];
+        if (!curListItemBlock) {
+            curListItemBlock = ListItemBlock_1.createListItemBlock(curItem);
+        }
+        else {
+            var listItemContainers = curListItemBlock.listItemContainers;
+            var lastItemInCurBlock = listItemContainers[listItemContainers.length - 1];
+            if (curItem == lastItemInCurBlock.nextSibling
+                || roosterjs_editor_dom_1.getFirstLeafNode(curItem) == roosterjs_editor_dom_1.getNextLeafSibling(doc.body, lastItemInCurBlock)) {
+                listItemContainers.push(curItem);
+                curListItemBlock.endElement = curItem;
+            }
+            else {
+                curListItemBlock.endElement = lastItemInCurBlock;
+                result.push(curListItemBlock);
+                curListItemBlock = ListItemBlock_1.createListItemBlock(curItem);
+            }
+        }
+    }
+    if (curListItemBlock.listItemContainers.length > 0) {
+        result.push(curListItemBlock);
+    }
+    return result;
+}
+/**
+ * Flatten the list items, so that all the consecutive list items are under the same parent.
+ * @param doc Root element of that contains the element.
+ * @param listItemBlock The list item block needed to be flattened.
+ */
+function flattenListBlock(rootElement, listItemBlock) {
+    var collapsedListItemSections = roosterjs_editor_dom_1.collapseNodes(rootElement, listItemBlock.startElement, listItemBlock.endElement, true);
+    collapsedListItemSections.forEach(function (section) {
+        if (roosterjs_editor_dom_1.getTagOfNode(section.firstChild) == 'DIV') {
+            roosterjs_editor_dom_1.unwrap(section);
+        }
+    });
+}
+/**
+ * Get the list type that the container contains. If there is no list in the container
+ * return null;
+ * @param listItemContainer Container that contains a list
+ */
+function getContainerListType(listItemContainer) {
+    var tag = roosterjs_editor_dom_1.getTagOfNode(listItemContainer.firstChild);
+    return tag == constants_1.UNORDERED_LIST_TAG_NAME || tag == constants_1.ORDERED_LIST_TAG_NAME ? tag : null;
+}
+/**
+ * Insert list item into the correct position of a list
+ * @param listRootElement Root element of the list that is accepting a coming element.
+ * @param itemToInsert List item that needed to be inserted.
+ * @param listType Type of list(ul/ol)
+ */
+function insertListItem(listRootElement, itemToInsert, listType, doc) {
+    if (!listType) {
+        return;
+    }
+    // Get item level from 'data-aria-level' attribute
+    var itemLevel = parseInt(itemToInsert.getAttribute('data-aria-level'));
+    var curListLevel = listRootElement; // Level iterator to find the correct place for the current element.
+    // Word only uses margin to indent and hide list-style(bullet point)
+    // So we need to remove the style from the list item.
+    itemToInsert.style.margin = null; // remove word added margin to the li
+    itemToInsert.style.display = null; // remove display style
+    // if the itemLevel is 1 it means the level iterator is at the correct place.
+    while (itemLevel > 1) {
+        if (!curListLevel.firstChild) {
+            // If the current level is empty, create empty list within the current level
+            // then move the level iterator into the next level.
+            curListLevel.append(doc.createElement(listType));
+            curListLevel = curListLevel.firstElementChild;
+        }
+        else {
+            // If the current level is not empty, the last item in the needs to be a UL or OL
+            // and the level iterator should move to the UL/OL at the last position.
+            var lastChild = curListLevel.lastElementChild;
+            var lastChildTag = roosterjs_editor_dom_1.getTagOfNode(lastChild);
+            if (lastChildTag == constants_1.UNORDERED_LIST_TAG_NAME || lastChildTag == constants_1.ORDERED_LIST_TAG_NAME) {
+                // If the last child is a list(UL/OL), then move the level iterator to last child.
+                curListLevel = lastChild;
+            }
+            else {
+                // If the last child is not a list, then append a new list to the level
+                // and move the level iterator to the new level.
+                curListLevel.append(doc.createElement(listType));
+                curListLevel = curListLevel.lastElementChild;
+            }
+        }
+        itemLevel--;
+    }
+    // Once the level iterator is at the right place, then append the list item in the level.
+    curListLevel.appendChild(itemToInsert);
+}
+/**
+ * Insert the converted list item into the correct place.
+ * @param convertedListElement List element that is converted from list item block
+ * @param rootElement Root element of that contains the converted listItemBlock
+ * @param listItemBlock List item block that was converted.
+ */
+function insertConvertedListToDoc(convertedListElement, rootElement, listItemBlock) {
+    if (!convertedListElement) {
+        return;
+    }
+    var insertPositionNode = listItemBlock.insertPositionNode;
+    if (insertPositionNode) {
+        var parentElement = insertPositionNode.parentElement;
+        if (parentElement) {
+            parentElement.insertBefore(convertedListElement, insertPositionNode);
+        }
+    }
+    else {
+        var parentElement = listItemBlock.startElement.parentElement;
+        if (parentElement) {
+            parentElement.appendChild(convertedListElement);
+        }
+        else {
+            rootElement.append(convertedListElement);
+        }
+    }
+}
 
 
 /***/ }),
