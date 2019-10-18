@@ -32,6 +32,6 @@ export default function textToHtml(text: string): string {
             }
         });
     }
-    text = text.replace(/\s\s/g, ' &nbsp;');
+    text = text.replace(/ {2}/g, ' &nbsp;');
     return text;
 }
