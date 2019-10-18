@@ -162,7 +162,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ul></div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1" style="">A</li></ul><div class="BCX0 SCXW225173058"><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ul></div><ul><li role="listitem" data-aria-level="1" style="">C</li></ul>'
+                    '<ul><li role="listitem" data-aria-level="1" style="">A</li></ul><div class=" BCX0 SCXW225173058"><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ul></div><ul><li role="listitem" data-aria-level="1" style="">C</li></ul>'
                 );
             });
 
@@ -296,7 +296,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1" style="">A</li></ul><div class="BCX0 SCXW225173058"><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div>'
+                    '<ul><li role="listitem" data-aria-level="1" style="">A</li></ul><div class=" BCX0 SCXW225173058"><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div>'
                 );
             });
 
@@ -345,7 +345,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"> <p>paragraph</p> <ol class="NumberListStyle1"> <li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li> </ol> </div></body></html>',
                     true,
-                    '<div class="BCX0 SCXW225173058"> <p>paragraph</p> </div><ol><li role="listitem" data-aria-level="1" style="">C</li></ol><div class="BCX0 SCXW225173058"> </div>'
+                    '<div class=" BCX0 SCXW225173058"> <p>paragraph</p> </div><ol><li role="listitem" data-aria-level="1" style="">C</li></ol><div class=" BCX0 SCXW225173058"> </div>'
                 );
             });
 
@@ -358,7 +358,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"> <ol class="NumberListStyle1"> <li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li> </ol> <p>paragraph</p> </div></body></html>',
                     true,
-                    '<div class="BCX0 SCXW225173058"> </div><ol><li role="listitem" data-aria-level="1" style="">C</li></ol><div class="BCX0 SCXW225173058"> <p>paragraph</p> </div>'
+                    '<div class=" BCX0 SCXW225173058"> </div><ol><li role="listitem" data-aria-level="1" style="">C</li></ol><div class=" BCX0 SCXW225173058"> <p>paragraph</p> </div>'
                 );
             });
         });

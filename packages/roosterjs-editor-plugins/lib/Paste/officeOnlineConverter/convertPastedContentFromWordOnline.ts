@@ -143,13 +143,14 @@ export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
 function sanitizeListItemContainer(doc: HTMLDocument) {
     const listItemContainerListEl = doc.querySelectorAll(`${WORD_ORDERED_LIST_SELECTOR}, ${WORD_UNORDERED_LIST_SELECTOR}`);
     listItemContainerListEl.forEach((el) => {
+        const replaceRegex = new RegExp(`${LIST_CONTAINER_ELEMENT_CLASS_NAME}`, 'g');
         if (el.previousSibling) {
             const prevParent = splitParentNode(el, true) as HTMLElement;
-            prevParent.classList.remove(LIST_CONTAINER_ELEMENT_CLASS_NAME)
+            prevParent.className = prevParent.className.replace(replaceRegex, '');
         }
         if (el.nextSibling) {
             const nextParent = splitParentNode(el, false) as HTMLElement;
-            nextParent.classList.remove(LIST_CONTAINER_ELEMENT_CLASS_NAME)
+            nextParent.className = nextParent.className.replace(replaceRegex, '');
         }
     });
 }
