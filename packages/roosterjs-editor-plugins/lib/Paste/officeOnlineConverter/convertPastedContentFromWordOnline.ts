@@ -143,7 +143,7 @@ export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
 function sanitizeListItemContainer(doc: HTMLDocument) {
     const listItemContainerListEl = doc.querySelectorAll(`${WORD_ORDERED_LIST_SELECTOR}, ${WORD_UNORDERED_LIST_SELECTOR}`);
     listItemContainerListEl.forEach((el) => {
-        const replaceRegex = new RegExp(`${LIST_CONTAINER_ELEMENT_CLASS_NAME}`, 'g');
+        const replaceRegex = new RegExp(`\\b${LIST_CONTAINER_ELEMENT_CLASS_NAME}\\b`, 'g');
         if (el.previousSibling) {
             const prevParent = splitParentNode(el, true) as HTMLElement;
             prevParent.className = prevParent.className.replace(replaceRegex, '');
