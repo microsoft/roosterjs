@@ -8,7 +8,7 @@ import {
 } from './constants';
 
 import {
-    splitBalancedNodeRange,
+    splitParentNode,
     getNextLeafSibling,
     getFirstLeafNode,
     getTagOfNode,
@@ -143,20 +143,23 @@ export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
 function sanitizeListItemContainer(doc: HTMLDocument) {
     const listItemContainerListEl = doc.querySelectorAll(`${WORD_ORDERED_LIST_SELECTOR}, ${WORD_UNORDERED_LIST_SELECTOR}`);
     listItemContainerListEl.forEach((el) => {
-        if (el.parentNode.children.length > 1) {
-            splitBalancedNodeRange(el);
+        if (el.previousSibling) {
+            const prevParent = splitParentNode(el, true) as HTMLElement;
+            prevParent.classList.remove(LIST_CONTAINER_ELEMENT_CLASS_NAME)
+        }
+        if (el.nextSibling) {
+            const nextParent = splitParentNode(el, false) as HTMLElement;
+            nextParent.classList.remove(LIST_CONTAINER_ELEMENT_CLASS_NAME)
         }
     });
 }
+
 /**
  * Take all the list items in the document, and group the consecutive list times in a list block;
  * @param doc pasted document that contains all the list element.
  */
 function getListItemBlocks(doc: HTMLDocument): ListItemBlock[] {
-    const listContainers = Array.from(doc.getElementsByClassName(LIST_CONTAINER_ELEMENT_CLASS_NAME));
-    const listElements = listContainers.filter((list) => {
-        return list.children.length == 1 && (getTagOfNode(list.firstChild) == 'OL' || getTagOfNode(list.firstChild) == 'UL')
-    });
+    const listElements = doc.getElementsByClassName(LIST_CONTAINER_ELEMENT_CLASS_NAME);
     const result: ListItemBlock[] = [];
     let curListItemBlock: ListItemBlock;
     for (let i = 0; i < listElements.length; i++) {
