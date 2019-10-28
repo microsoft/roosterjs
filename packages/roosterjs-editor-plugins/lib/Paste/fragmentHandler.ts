@@ -24,6 +24,8 @@ export default function fragmentHandler(doc: HTMLDocument, source: string) {
             doc.body.innerHTML = html;
             convertPastedContentFromWord(doc);
         } else if (firstNode && firstNode.querySelector(WAC_IDENTIFING_SELECTOR)) {
+            // Once it is known that the document is from WAC
+            // We need to remove the display property and margin from all the list item
             doc.querySelectorAll(WAC_IDENTIFING_SELECTOR).forEach((el: HTMLElement) => {
                 el.style.display = null;
                 el.style.margin = null;
