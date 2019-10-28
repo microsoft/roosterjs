@@ -1,6 +1,7 @@
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import convertPastedContentFromWordOnline, { isWordOnlineWithList } from './officeOnlineConverter/convertPastedContentFromWordOnline';
+import { WAC_IDENTIFING_SELECTOR, LIST_SELECTOR } from './wacConverter/constants';
 import { getTagOfNode } from 'roosterjs-editor-dom';
 import { splitWithFragment } from 'roosterjs-html-sanitizer';
 
@@ -17,15 +18,25 @@ const LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
 export default function fragmentHandler(doc: HTMLDocument, source: string) {
     let [html, before] = splitWithFragment(source);
     let firstNode = doc && doc.body && (doc.querySelector('html') as HTMLElement);
+    console.log(firstNode.querySelector(LIST_SELECTOR))
     if (getTagOfNode(firstNode) == 'HTML') {
         if (firstNode.getAttribute(WORD_ATTRIBUTE_NAME) == WORD_ATTRIBUTE_VALUE) {
             // Handle HTML copied from MS Word
             doc.body.innerHTML = html;
             convertPastedContentFromWord(doc);
-        } else if (isWordOnlineWithList(firstNode)) {
+        } else if (firstNode && firstNode.querySelector(WAC_IDENTIFING_SELECTOR)) {
+            console.log("=========")
+            console.log("asdfasdf")
+            console.log("=========")
+            doc.querySelectorAll('li.OutlineElement').forEach((el: HTMLElement) => {
+                el.style.display = "list-item";
+                el.style.margin = null;
+            });
             // call conversion function if the pasted content is from word online and
             // has list element in the pasted content.
-            convertPastedContentFromWordOnline(doc);
+            if (isWordOnlineWithList(firstNode)) {
+                convertPastedContentFromWordOnline(doc);
+            }
         } else if (firstNode.getAttribute(EXCEL_ATTRIBUTE_NAME) == EXCEL_ATTRIBUTE_VALUE) {
             // Handle HTML copied from MS Excel
             if (html.match(LAST_TD_END_REGEX)) {

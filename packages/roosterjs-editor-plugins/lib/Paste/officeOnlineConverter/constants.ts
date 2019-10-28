@@ -9,3 +9,7 @@ export const LIST_CONTAINER_ELEMENT_CLASS_NAME = "ListContainerWrapper";
 export const UNORDERED_LIST_TAG_NAME = "UL";
 
 export const ORDERED_LIST_TAG_NAME = "OL";
+
+const TEXT_CONTAINER_ELEMENT_CLASS_NAME = "OutlineElement";
+
+export const WAC_IDENTIFING_SELECTOR = `ul[class^="BulletListStyle"]>.${TEXT_CONTAINER_ELEMENT_CLASS_NAME},ol[class^="NumberListStyle"]>.${TEXT_CONTAINER_ELEMENT_CLASS_NAME}`;
