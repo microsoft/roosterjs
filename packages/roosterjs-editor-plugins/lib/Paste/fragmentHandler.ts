@@ -19,14 +19,15 @@ export default function fragmentHandler(doc: HTMLDocument, source: string) {
     let [html, before] = splitWithFragment(source);
     let firstNode = doc && doc.body && (doc.querySelector('html') as HTMLElement);
     if (getTagOfNode(firstNode) == 'HTML') {
+        const wacListElements = firstNode.querySelectorAll(WAC_IDENTIFING_SELECTOR);
         if (firstNode.getAttribute(WORD_ATTRIBUTE_NAME) == WORD_ATTRIBUTE_VALUE) {
             // Handle HTML copied from MS Word
             doc.body.innerHTML = html;
             convertPastedContentFromWord(doc);
-        } else if (firstNode && firstNode.querySelector(WAC_IDENTIFING_SELECTOR)) {
+        } else if (wacListElements[0]) {
             // Once it is known that the document is from WAC
             // We need to remove the display property and margin from all the list item
-            doc.querySelectorAll(WAC_IDENTIFING_SELECTOR).forEach((el: HTMLElement) => {
+            wacListElements.forEach((el: HTMLElement) => {
                 el.style.display = null;
                 el.style.margin = null;
             });
