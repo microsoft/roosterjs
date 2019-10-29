@@ -28,9 +28,9 @@ describe('fragmentHandler', () => {
         describe('fragments only contain list items', () => {
             it('has all list items on the same level', () => {
                 runTest(
-                    '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ul></div></body></html>',
+                    '<html><body> <div class="ListContainerWrapper BCX0 SCXW225173058"> <ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul> </div><div class="ListContainerWrapper BCX0 SCXW225173058"> <ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ul> </div><div class="ListContainerWrapper BCX0 SCXW225173058"> <ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ul> </div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1" style="">A</li><li role="listitem" data-aria-level="1" style="">B</li><li role="listitem" data-aria-level="1" style="">C</li></ul>'
+                    ' <div class=" BCX0 SCXW225173058"> </div><ul><li class="OutlineElement" role="listitem" data-aria-level="1" style="">A</li></ul><div class=" BCX0 SCXW225173058"> </div><div class=" BCX0 SCXW225173058"> </div><ul><li class="OutlineElement" role="listitem" data-aria-level="1" style="">B</li></ul><div class=" BCX0 SCXW225173058"> </div><div class=" BCX0 SCXW225173058"> </div><ul><li class="OutlineElement" role="listitem" data-aria-level="1" style="">C</li></ul><div class=" BCX0 SCXW225173058"> </div>'
                 );
             });
 
@@ -57,7 +57,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper SCXW81557186 BCX0"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 24px;">A</li></ul></div><div class="ListContainerWrapper SCXW81557186 BCX0"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 72px;">B</li></ul></div><div class="ListContainerWrapper SCXW81557186 BCX0"><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 120px;">C</li></ul></div><div class="ListContainerWrapper SCXW81557186 BCX0"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 72px;">D</li></ul></div><div class="ListContainerWrapper SCXW81557186 BCX0"><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 120px;">E</li></ul></div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186" style="">A</li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186" style="">B</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0" style="">C</li></ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0" style="">D</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186" style="">E</li></ul></ul></ul>'
+                    '<ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186" style="">A</li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 72px;">B</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 120px;">C</li></ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 72px;">D</li><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 120px;">E</li></ul></ul></ul>'
                 )
             });
 
@@ -73,7 +73,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="ListContainerWrapper BCX0 SCXW221836524"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 24px;"> A </li></ul></div><div class="ListContainerWrapper BCX0 SCXW221836524"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 72px;"> B </li></ul></div><div class="ListContainerWrapper BCX0 SCXW221836524"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 120px;"> C1 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW221836524"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 120px;"> C2 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW221836524"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 72px;"> D </li></ul></div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW221836524" style=""> A </li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524" style=""> B </li><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524" style=""> C1 </li><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524" style=""> C2 </li></ol><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524" style=""> D </li></ul></ul>'
+                    '<ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW221836524" style=""> A </li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 72px;"> B </li><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 120px;"> C1 </li><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 120px;"> C2 </li></ol><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW221836524" style="margin: 0px 0px 0px 72px;"> D </li></ul></ul>'
                 )
             })
         });
@@ -91,7 +91,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 24px;"> A </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> B </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C1 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C2 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> D </li></ul></div></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div></body></html>',
                     true,
-                    '<div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> A </li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> B </li><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> C1 </li><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> C2 </li></ol><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> D </li></ul></ul></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div>'
+                    '<div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> A </li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> B </li><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C1 </li><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C2 </li></ol><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> D </li></ul></ul></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div>'
                 )
             });
 
@@ -115,7 +115,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 24px;"> A </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> B </li></ul></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C1 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C2 </li></ol></div><div class="ListContainerWrapper BCX0 SCXW32709461"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> D </li></ul></div></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><div class="TableContainer SCXW244795937 BCX0"><table><tbody><tr><td><div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div></div></td></tr><tr><td><div><div class="ListContainerWrapper SCXW244795937 BCX0"><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> A </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> B </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> C </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> D </li></ul></div></div></td></tr></tbody></table></div></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><p><span><span></span></span><span></span></p></div></body></html>',
                     true,
-                    '<div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> A </li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> B </li><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> C1 </li><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> C2 </li></ol><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> D </li></ul></ul></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><div class="TableContainer SCXW244795937 BCX0"><table><tbody><tr><td><div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div></div></td></tr><tr><td><div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style=""> A </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style=""> B </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style=""> C </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style=""> D </li></ul></div></td></tr></tbody></table></div></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><p><span><span></span></span><span></span></p></div>'
+                    '<div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> A </li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> B </li><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C1 </li><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C2 </li></ol><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> D </li></ul></ul></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><div class="TableContainer SCXW244795937 BCX0"><table><tbody><tr><td><div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div></div></td></tr><tr><td><div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> A </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> B </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> C </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> D </li></ul></div></td></tr></tbody></table></div></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><p><span><span></span></span><span></span></p></div>'
                 );
             });
         });
@@ -127,7 +127,7 @@ describe('fragmentHandler', () => {
                 runTest(
                     '<html><body><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 24px;">A</li></ul><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 72px;">B</li></ul><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 120px;">C</li></ul><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 72px;">D</li></ul><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 120px;">E</li></ul></body></html>',
                     true,
-                    '<ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 24px;">A</li></ul><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 72px;">B</li></ul><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 120px;">C</li></ul><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 72px;">D</li></ul><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 120px;">E</li></ul>'
+                    '<ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW81557186" style="">A</li></ul><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 72px;">B</li></ul><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 120px;">C</li></ul><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr SCXW81557186 BCX0" style="margin: 0px 0px 0px 72px;">D</li></ul><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW81557186" style="margin: 0px 0px 0px 120px;">E</li></ul>'
                 );
             });
 
@@ -160,9 +160,9 @@ describe('fragmentHandler', () => {
             // .c
             it('should process html properly, if ListContainerWrapper contains two UL', () => {
                 runTest(
-                    '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ul></div></body></html>',
+                    '<html><body> <div class="ListContainerWrapper BCX0 SCXW225173058"> <ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul> <ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ul> </div><div class="ListContainerWrapper BCX0 SCXW225173058"> <ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ul> </div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1" style="">A</li></ul><div class=" BCX0 SCXW225173058"><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ul></div><ul><li role="listitem" data-aria-level="1" style="">C</li></ul>'
+                    ' <div class=" BCX0 SCXW225173058"> </div><ul><li class="OutlineElement" role="listitem" data-aria-level="1" style="">A</li></ul><div class=" BCX0 SCXW225173058"> </div><div class=" BCX0 SCXW225173058"><ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="">B</li></ul></div><div class=" BCX0 SCXW225173058"> </div><div class=" BCX0 SCXW225173058"> </div><ul><li class="OutlineElement" role="listitem" data-aria-level="1" style="">C</li></ul><div class=" BCX0 SCXW225173058"> </div>'
                 );
             });
 
@@ -179,9 +179,9 @@ describe('fragmentHandler', () => {
             // .test
             it('shuold process html properly, when list items are not in side ul tag', () => {
                 runTest(
-                    '<html><body><div class="ListContainerWrapper"><ul class="BulletListStyle1" role="list"></ul><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></div></body></html>',
+                    '<html><body> <div class="ListContainerWrapper"> <ul class="BulletListStyle1" role="list"></ul> <li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"> <p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"> <p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"> <p>test</p></li></div></body></html>',
                     true,
-                    '<ul></ul><div class=""><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></div>'
+                    ' <div class="ListContainerWrapper"> <ul class="BulletListStyle1" role="list"></ul> <li class="OutlineElement" role="listitem" aria-level="1"> <p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"> <p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"> <p>test</p></li></div>'
                 );
             });
 
@@ -221,9 +221,9 @@ describe('fragmentHandler', () => {
             // 2. text
             it('should process html properly, if there are multiple list item in ol (word online has one list item in each ol for ordered list)', () => {
                 runTest(
-                    '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div></body></html>',
+                    '<html><body> <div class="ListContainerWrapper BCX0 SCXW225173058"> <ol class="NumberListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li><li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol> </div><div class="ListContainerWrapper BCX0 SCXW225173058"> <ol class="NumberListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol> </div></body></html>',
                     true,
-                    '<ol><li role="listitem" data-aria-level="1" style="">A</li><li role="listitem" data-aria-level="1" style="">B</li><li role="listitem" data-aria-level="1" style="">C</li></ol>'
+                    ' <div class=" BCX0 SCXW225173058"> </div><ol><li class="OutlineElement" role="listitem" data-aria-level="1" style="">A</li><li class="OutlineElement" role="listitem" data-aria-level="1" style="">B</li></ol><div class=" BCX0 SCXW225173058"> </div><div class=" BCX0 SCXW225173058"> </div><ol><li class="OutlineElement" role="listitem" data-aria-level="1" style="">C</li></ol><div class=" BCX0 SCXW225173058"> </div>'
                 );
             });
 
@@ -238,9 +238,9 @@ describe('fragmentHandler', () => {
             // 2. text
             it('shuold process html properly, if list item in a ListContainerWrapper are not inside ol ', () => {
                 runTest(
-                    '<html><body><div class="ListContainerWrapper"><ol class="NumberListStyle1" role="list"></ol><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></div></body></html>',
+                    '<html><body> <div class="ListContainerWrapper"> <ol class="NumberListStyle1" role="list"></ol> <li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"> <p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"> <p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1" class="OutlineElement Ltr"> <p>test</p></li></div></body></html>',
                     true,
-                    '<ol></ol><div class=""><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li><li role="listitem" aria-level="1" class="OutlineElement Ltr"><p>test</p></li></div>'
+                    ' <div class="ListContainerWrapper"> <ol class="NumberListStyle1" role="list"></ol> <li class="OutlineElement" role="listitem" aria-level="1"> <p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"> <p>test</p></li><li class="OutlineElement" role="listitem" aria-level="1"> <p>test</p></li></div>'
                 );
             });
         });
@@ -256,9 +256,9 @@ describe('fragmentHandler', () => {
             // 1. text
             it('should process html properly, if ListContainerWrapper contains well formated UL and non formated ol', () => {
                 runTest(
-                    '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol></div></body></html>',
+                    '<html><body> <div class="ListContainerWrapper BCX0 SCXW225173058"> <ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul> </div><div class="ListContainerWrapper BCX0 SCXW225173058"> <ol class="NumberListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol> </div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1" style="">A</li></ul><ol><li role="listitem" data-aria-level="1" style="">B</li></ol>'
+                    ' <div class=" BCX0 SCXW225173058"> </div><ul><li class="OutlineElement" role="listitem" data-aria-level="1" style="">A</li></ul><div class=" BCX0 SCXW225173058"> </div><div class=" BCX0 SCXW225173058"> </div><ol><li class="OutlineElement" role="listitem" data-aria-level="1" style="">B</li></ol><div class=" BCX0 SCXW225173058"> </div>'
                 );
             });
 
@@ -276,9 +276,9 @@ describe('fragmentHandler', () => {
             // 2. text
             it('should process html properly, if ListContainerWrapper contains two OL', () => {
                 runTest(
-                    '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul></div><div class="ListContainerWrapper BCX0 SCXW225173058"><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div></body></html>',
+                    '<html><body> <div class="ListContainerWrapper BCX0 SCXW225173058"> <ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul> </div><div class="ListContainerWrapper BCX0 SCXW225173058"> <ol class="NumberListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol> <ol> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol> </div></body></html>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1" style="">A</li></ul><ol><li role="listitem" data-aria-level="1" style="">B</li><li role="listitem" data-aria-level="1" style="">C</li></ol>'
+                    ' <div class=" BCX0 SCXW225173058"> </div><ul><li class="OutlineElement" role="listitem" data-aria-level="1" style="">A</li></ul><div class=" BCX0 SCXW225173058"> </div><div class=" BCX0 SCXW225173058"> </div><ol><li class="OutlineElement" role="listitem" data-aria-level="1" style="">B</li></ol><div class=" BCX0 SCXW225173058"> <ol> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol> </div>'
                 );
             });
 
@@ -294,9 +294,9 @@ describe('fragmentHandler', () => {
             // . text
             it('should process html properly, if ListContainerWrapper contains two OL and one UL', () => {
                 runTest(
-                    '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div></body></html>',
+                    '<div class="ListContainerWrapper BCX0 SCXW225173058"> <ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul> <ol class="NumberListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol> <ol class="NumberListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div>',
                     true,
-                    '<ul><li role="listitem" data-aria-level="1" style="">A</li></ul><div class=" BCX0 SCXW225173058"><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">B</li></ol><ol><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div>'
+                    '<div class=" BCX0 SCXW225173058"> </div><ul><li class="OutlineElement" role="listitem" data-aria-level="1" style="">A</li></ul><div class=" BCX0 SCXW225173058"> </div><div class=" BCX0 SCXW225173058"><ol class="NumberListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="">B</li></ol></div><div class=" BCX0 SCXW225173058"> </div><div class=" BCX0 SCXW225173058"><ol class="NumberListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="">C</li></ol></div>'
                 );
             });
 
@@ -310,9 +310,9 @@ describe('fragmentHandler', () => {
             // . text
             it('should process html properly, if there are list not in the ListContainerWrapper', () => {
                 runTest(
-                    '<div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>',
+                    '<div class="ListContainerWrapper BCX0 SCXW225173058"> <ol class="NumberListStyle1"> <li class=OutlineElement role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div><ul class="NumberListStyle1"> <li class=OutlineElement role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>',
                     true,
-                    '<ol><li role="listitem" data-aria-level="1" style="">C</li></ol><ul><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>'
+                    '<div class=" BCX0 SCXW225173058"> </div><ol><li class="OutlineElement" role="listitem" data-aria-level="1" style="">C</li></ol><ul class="NumberListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>'
                 );
             });
 
@@ -330,9 +330,9 @@ describe('fragmentHandler', () => {
             // . text
             it('should process html properly, if ListContainerWrapper contains two UL', () => {
                 runTest(
-                    '<div class="ListContainerWrapper BCX0 SCXW225173058"><ol class="NumberListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>',
+                    '<div class="ListContainerWrapper BCX0 SCXW225173058"> <ol class="NumberListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol></div><ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>',
                     true,
-                    '<ol><li role="listitem" data-aria-level="1" style="">C</li></ol><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul><ul class="BulletListStyle1"><li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">A</li></ul>'
+                    '<div class=" BCX0 SCXW225173058"> </div><ol><li class="OutlineElement" role="listitem" data-aria-level="1" style="">C</li></ol><ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="">A</li></ul><ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="">A</li></ul><ul class="BulletListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="">A</li></ul>'
                 );
             });
 
@@ -343,9 +343,9 @@ describe('fragmentHandler', () => {
             // <div>
             it('should retain all text, if ListContainerWrapper contains Elements before li and ul', () => {
                 runTest(
-                    '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"> <p>paragraph</p> <ol class="NumberListStyle1"> <li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li> </ol> </div></body></html>',
+                    '<html><body> <div class="ListContainerWrapper BCX0 SCXW225173058"> <p>paragraph</p><ol class="NumberListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol> </div></body></html>',
                     true,
-                    '<div class=" BCX0 SCXW225173058"> <p>paragraph</p> </div><ol><li role="listitem" data-aria-level="1" style="">C</li></ol><div class=" BCX0 SCXW225173058"> </div>'
+                    ' <div class=" BCX0 SCXW225173058"> <p>paragraph</p></div><ol><li class="OutlineElement" role="listitem" data-aria-level="1" style="">C</li></ol><div class=" BCX0 SCXW225173058"> </div>'
                 );
             });
 
@@ -356,11 +356,23 @@ describe('fragmentHandler', () => {
             // <div>
             it('should retain all text, if ListContainerWrapper contains Elements after li and ul', () => {
                 runTest(
-                    '<html><body><div class="ListContainerWrapper BCX0 SCXW225173058"> <ol class="NumberListStyle1"> <li role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li> </ol> <p>paragraph</p> </div></body></html>',
+                    '<html><body> <div class="ListContainerWrapper BCX0 SCXW225173058"> <ol class="NumberListStyle1"> <li class="OutlineElement" role="listitem" data-aria-level="1" style="margin: 0px 0px 0px 24px;">C</li></ol> <p>paragraph</p></div></body></html>',
                     true,
-                    '<div class=" BCX0 SCXW225173058"> </div><ol><li role="listitem" data-aria-level="1" style="">C</li></ol><div class=" BCX0 SCXW225173058"> <p>paragraph</p> </div>'
+                    ' <div class=" BCX0 SCXW225173058"> </div><ol><li class="OutlineElement" role="listitem" data-aria-level="1" style="">C</li></ol><div class=" BCX0 SCXW225173058"> <p>paragraph</p></div>'
                 );
             });
+        });
+    });
+
+    describe('HTML with fragment from OneNote Online', () => {
+        // html
+        //
+        it('should remove the display and margin styles from the element', () => {
+            runTest(
+                '<html><body> <ul class="BulletListStyle3 BCX0 SCXO236767657" role="list"> <li class="OutlineElement" style="margin: 0px 0px 0px 24px; display: block;"> <p>A</p></li><li class="OutlineElement" style="margin: 0px 0px 0px 24px; display: block;"> <p>B</p></li><li class="OutlineElement" style="margin: 0px 0px 0px 24px; display: block;"> <p>C</p><ol class="NumberListStyle3 BCX0 SCXO236767657" role="list"> <li class="OutlineElement" style="margin: 0px 0px 0px 24px; display: block;"> <p>D</p></li></ol> </li></ul></body></html>',
+                true,
+                ' <ul class="BulletListStyle3 BCX0 SCXO236767657" role="list"> <li class="OutlineElement" style=""> <p>A</p></li><li class="OutlineElement" style=""> <p>B</p></li><li class="OutlineElement" style=""> <p>C</p><ol class="NumberListStyle3 BCX0 SCXO236767657" role="list"> <li class="OutlineElement" style=""> <p>D</p></li></ol> </li></ul>'
+            );
         });
     });
 });
