@@ -9925,6 +9925,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var convertPastedContentFromExcel_1 = __webpack_require__(/*! ./excelConverter/convertPastedContentFromExcel */ "./packages/roosterjs-editor-plugins/lib/Paste/excelConverter/convertPastedContentFromExcel.ts");
 var convertPastedContentFromWord_1 = __webpack_require__(/*! ./wordConverter/convertPastedContentFromWord */ "./packages/roosterjs-editor-plugins/lib/Paste/wordConverter/convertPastedContentFromWord.ts");
 var convertPastedContentFromWordOnline_1 = __webpack_require__(/*! ./officeOnlineConverter/convertPastedContentFromWordOnline */ "./packages/roosterjs-editor-plugins/lib/Paste/officeOnlineConverter/convertPastedContentFromWordOnline.ts");
+var constants_1 = __webpack_require__(/*! ./officeOnlineConverter/constants */ "./packages/roosterjs-editor-plugins/lib/Paste/officeOnlineConverter/constants.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var roosterjs_html_sanitizer_1 = __webpack_require__(/*! roosterjs-html-sanitizer */ "./packages/roosterjs-html-sanitizer/lib/index.ts");
 var WORD_ATTRIBUTE_NAME = 'xmlns:w';
@@ -9939,15 +9940,24 @@ function fragmentHandler(doc, source) {
     var _a = roosterjs_html_sanitizer_1.splitWithFragment(source), html = _a[0], before = _a[1];
     var firstNode = doc && doc.body && doc.querySelector('html');
     if (roosterjs_editor_dom_1.getTagOfNode(firstNode) == 'HTML') {
+        var wacListElements = void 0;
         if (firstNode.getAttribute(WORD_ATTRIBUTE_NAME) == WORD_ATTRIBUTE_VALUE) {
             // Handle HTML copied from MS Word
             doc.body.innerHTML = html;
             convertPastedContentFromWord_1.default(doc);
         }
-        else if (convertPastedContentFromWordOnline_1.isWordOnlineWithList(firstNode)) {
+        else if ((wacListElements = firstNode.querySelectorAll(constants_1.WAC_IDENTIFING_SELECTOR))[0]) {
+            // Once it is known that the document is from WAC
+            // We need to remove the display property and margin from all the list item
+            wacListElements.forEach(function (el) {
+                el.style.display = null;
+                el.style.margin = null;
+            });
             // call conversion function if the pasted content is from word online and
             // has list element in the pasted content.
-            convertPastedContentFromWordOnline_1.default(doc);
+            if (convertPastedContentFromWordOnline_1.isWordOnlineWithList(firstNode)) {
+                convertPastedContentFromWordOnline_1.default(doc);
+            }
         }
         else if (firstNode.getAttribute(EXCEL_ATTRIBUTE_NAME) == EXCEL_ATTRIBUTE_VALUE) {
             // Handle HTML copied from MS Excel
@@ -10018,6 +10028,8 @@ exports.WORD_ONLINE_IDENTIFYING_SELECTOR = exports.WORD_ORDERED_LIST_SELECTOR + 
 exports.LIST_CONTAINER_ELEMENT_CLASS_NAME = "ListContainerWrapper";
 exports.UNORDERED_LIST_TAG_NAME = "UL";
 exports.ORDERED_LIST_TAG_NAME = "OL";
+var TEXT_CONTAINER_ELEMENT_CLASS_NAME = "OutlineElement";
+exports.WAC_IDENTIFING_SELECTOR = "ul[class^=\"BulletListStyle\"]>." + TEXT_CONTAINER_ELEMENT_CLASS_NAME + ",ol[class^=\"NumberListStyle\"]>." + TEXT_CONTAINER_ELEMENT_CLASS_NAME;
 
 
 /***/ }),
@@ -10230,10 +10242,6 @@ function insertListItem(listRootElement, itemToInsert, listType, doc) {
     // Get item level from 'data-aria-level' attribute
     var itemLevel = parseInt(itemToInsert.getAttribute('data-aria-level'));
     var curListLevel = listRootElement; // Level iterator to find the correct place for the current element.
-    // Word only uses margin to indent and hide list-style(bullet point)
-    // So we need to remove the style from the list item.
-    itemToInsert.style.margin = null; // remove word added margin to the li
-    itemToInsert.style.display = null; // remove display style
     // if the itemLevel is 1 it means the level iterator is at the correct place.
     while (itemLevel > 1) {
         if (!curListLevel.firstChild) {
