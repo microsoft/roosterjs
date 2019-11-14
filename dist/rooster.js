@@ -2640,7 +2640,7 @@ exports.default = DOMEventPlugin;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
+var isCtrlOrMetaPressed_1 = __webpack_require__(/*! ../eventApi/isCtrlOrMetaPressed */ "./packages/roosterjs-editor-core/lib/eventApi/isCtrlOrMetaPressed.ts");
 /**
  * Edit Component helps handle Content edit features
  */
@@ -2726,7 +2726,7 @@ var EditPlugin = /** @class */ (function () {
         var ctrlOrMeta = false;
         if (event.eventType == 0 /* KeyDown */) {
             var rawEvent = event.rawEvent;
-            ctrlOrMeta = roosterjs_editor_core_1.isCtrlOrMetaPressed(rawEvent);
+            ctrlOrMeta = isCtrlOrMetaPressed_1.default(rawEvent);
             hasFunctionKey = ctrlOrMeta || rawEvent.altKey;
             features = this.featureMap[rawEvent.which];
         }
@@ -4156,8 +4156,8 @@ exports.isCtrlOrMetaPressed = isCtrlOrMetaPressed_1.default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var isCtrlOrMetaPressed_1 = __webpack_require__(/*! ../eventApi/isCtrlOrMetaPressed */ "./packages/roosterjs-editor-core/lib/eventApi/isCtrlOrMetaPressed.ts");
 var UndoSnapshots_1 = __webpack_require__(/*! ./UndoSnapshots */ "./packages/roosterjs-editor-core/lib/undo/UndoSnapshots.ts");
-var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var KEY_BACKSPACE = 8;
 var KEY_DELETE = 46;
 var KEY_SPACE = 32;
@@ -4308,7 +4308,7 @@ var Undo = /** @class */ (function () {
             if (selectionRange &&
                 (!selectionRange.collapsed ||
                     this.lastKeyPress != evt.which ||
-                    roosterjs_editor_core_1.isCtrlOrMetaPressed(evt))) {
+                    isCtrlOrMetaPressed_1.default(evt))) {
                 this.addUndoSnapshot();
             }
             // Since some content is deleted, always set hasNewContent to true so that we will take undo snapshot next time
