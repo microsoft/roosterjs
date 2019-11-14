@@ -1,8 +1,8 @@
 import Editor from '../editor/Editor';
+import isCtrlOrMetaPressed from '../eventApi/isCtrlOrMetaPressed';
 import UndoService from '../interfaces/UndoService';
 import UndoSnapshots from './UndoSnapshots';
 import UndoSnapshotsService from '../interfaces/UndoSnapshotsService';
-import { isCtrlOrMetaPressed } from 'roosterjs-editor-core';
 import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 const KEY_BACKSPACE = 8;
