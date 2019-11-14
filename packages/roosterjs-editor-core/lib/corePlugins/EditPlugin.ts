@@ -1,7 +1,7 @@
 import Editor from '../editor/Editor';
 import EditorPlugin from '../interfaces/EditorPlugin';
+import isCtrlOrMetaPressed from '../eventApi/isCtrlOrMetaPressed';
 import { GenericContentEditFeature, Keys } from '../interfaces/ContentEditFeature';
-import { isCtrlOrMetaPressed } from 'roosterjs-editor-core';
 import {
     ChangeSource,
     PluginEvent,
