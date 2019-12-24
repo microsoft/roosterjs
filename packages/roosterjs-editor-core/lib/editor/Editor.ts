@@ -23,6 +23,7 @@ import {
     PositionType,
     QueryScope,
     Rect,
+    SelectionPath,
 } from 'roosterjs-editor-types';
 import {
     collapseNodes,
@@ -33,6 +34,7 @@ import {
     fromHtml,
     getBlockElementAtNode,
     getHtmlWithSelectionPath,
+    getSelectionPath,
     getTextContent,
     getInlineElementAtNode,
     getPositionRect,
@@ -446,6 +448,16 @@ export default class Editor {
     }
 
     /**
+     * Get current selection in a serializable format
+     * It does a live pull on the selection, if nothing retrieved, return whatever we have in cache.
+     * @returns current selection path, or null if editor never got focus before
+     */
+    public getSelectionPath(): SelectionPath {
+        const range = this.getSelectionRange();
+        return range && getSelectionPath(this.core.contentDiv, range);
+    }
+
+    /**
      * Check if focus is in editor now
      * @returns true if focus is in editor, otherwise false
      */
@@ -512,8 +524,25 @@ export default class Editor {
         endOffset: number | PositionType
     ): boolean;
 
+    /**
+     * Select content by selection path
+     * @param path A selection path object
+     * @returns True if content is selected, otherwise false
+     */
+    public select(path: SelectionPath): boolean;
+
     public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
-        let range = arg1 instanceof Range ? arg1 : createRange(arg1, arg2, arg3, arg4);
+        let range = !arg1
+            ? null
+            : arg1 instanceof Range
+            ? arg1
+            : arg1.start instanceof Array && arg1.end instanceof Array
+            ? createRange(
+                  this.core.contentDiv,
+                  (<SelectionPath>arg1).start,
+                  (<SelectionPath>arg1).end
+              )
+            : createRange(arg1, arg2, arg3, arg4);
         return this.contains(range) && this.core.api.selectRange(this.core, range);
     }
 
@@ -871,6 +900,14 @@ export default class Editor {
         } else {
             this.core.contentDiv.setAttribute(name, value);
         }
+    }
+
+    /**
+     * get DOM attribute of editor content DIV
+     * @param name Name of the attribute
+     */
+    public getEditorDomAttribute(name: string): string {
+        return this.core.contentDiv.getAttribute(name);
     }
 
     /**
