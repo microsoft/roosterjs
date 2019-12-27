@@ -3387,6 +3387,15 @@ var Editor = /** @class */ (function () {
         return this.core.api.getSelectionRange(this.core, true /*tryGetFromCache*/);
     };
     /**
+     * Get current selection in a serializable format
+     * It does a live pull on the selection, if nothing retrieved, return whatever we have in cache.
+     * @returns current selection path, or null if editor never got focus before
+     */
+    Editor.prototype.getSelectionPath = function () {
+        var range = this.getSelectionRange();
+        return range && roosterjs_editor_dom_1.getSelectionPath(this.core.contentDiv, range);
+    };
+    /**
      * Check if focus is in editor now
      * @returns true if focus is in editor, otherwise false
      */
@@ -3400,7 +3409,13 @@ var Editor = /** @class */ (function () {
         this.core.api.focus(this.core);
     };
     Editor.prototype.select = function (arg1, arg2, arg3, arg4) {
-        var range = arg1 instanceof Range ? arg1 : roosterjs_editor_dom_1.createRange(arg1, arg2, arg3, arg4);
+        var range = !arg1
+            ? null
+            : arg1 instanceof Range
+                ? arg1
+                : arg1.start instanceof Array && arg1.end instanceof Array
+                    ? roosterjs_editor_dom_1.createRange(this.core.contentDiv, arg1.start, arg1.end)
+                    : roosterjs_editor_dom_1.createRange(arg1, arg2, arg3, arg4);
         return this.contains(range) && this.core.api.selectRange(this.core, range);
     };
     /**
@@ -3664,6 +3679,13 @@ var Editor = /** @class */ (function () {
         else {
             this.core.contentDiv.setAttribute(name, value);
         }
+    };
+    /**
+     * get DOM attribute of editor content DIV
+     * @param name Name of the attribute
+     */
+    Editor.prototype.getEditorDomAttribute = function (name) {
+        return this.core.contentDiv.getAttribute(name);
     };
     /**
      * Add a Content Edit feature. This is mostly called from ContentEdit plugin
