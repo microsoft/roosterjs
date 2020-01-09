@@ -11289,7 +11289,6 @@ var Watermark = /** @class */ (function () {
      */
     Watermark.prototype.initialize = function (editor) {
         this.editor = editor;
-        this.showHideWatermark(false /*ignoreCachedState*/);
         this.disposer = this.editor.addDomEventHandler({
             focus: this.handleWatermark,
             blur: this.handleWatermark,
@@ -11309,7 +11308,10 @@ var Watermark = /** @class */ (function () {
      * @param event PluginEvent object
      */
     Watermark.prototype.onPluginEvent = function (event) {
-        if (event.eventType == 6 /* ContentChanged */) {
+        if (event.eventType == 9 /* EditorReady */) {
+            this.showHideWatermark(false /*ignoreCachedState*/);
+        }
+        else if (event.eventType == 6 /* ContentChanged */) {
             // When content is changed from setContent() API, current cached state
             // may not be accurate, so we ignore it
             this.showHideWatermark(event.source == "SetContent" /* SetContent */);
