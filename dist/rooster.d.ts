@@ -3587,6 +3587,13 @@ function getStyleBasedFormatState(editor: Editor): StyleBasedFormatState;
 function insertImage(editor: Editor, imageFile: File): void;
 
     /**
+ * Insert an image to editor at current selection
+ * @param editor The editor instance
+ * @param imageFile The image link.
+ */
+function insertImage(editor: Editor, url: string): void;
+
+    /**
  * Insert table into editor at current selection
  * @param editor The editor instance
  * @param columns Number of columns in table, it also controls the default table cell width:

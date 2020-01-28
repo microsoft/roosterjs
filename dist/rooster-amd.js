@@ -565,25 +565,31 @@ exports.default = getFormatState;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Insert an image to editor at current selection
- * @param editor The editor instance
- * @param imageFile The image file. There are at least 3 ways to obtain the file object:
- * From local file, from clipboard data, from drag-and-drop
- */
 function insertImage(editor, imageFile) {
-    var reader = new FileReader();
-    reader.onload = function (event) {
+    if (imageFile instanceof File) {
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            if (!editor.isDisposed()) {
+                editor.addUndoSnapshot(function () {
+                    var image = editor.getDocument().createElement('img');
+                    image.src = event.target.result;
+                    image.style.maxWidth = '100%';
+                    editor.insertNode(image);
+                }, "Format" /* Format */);
+            }
+        };
+        reader.readAsDataURL(imageFile);
+    }
+    else {
         if (!editor.isDisposed()) {
             editor.addUndoSnapshot(function () {
                 var image = editor.getDocument().createElement('img');
-                image.src = event.target.result;
+                image.src = imageFile;
                 image.style.maxWidth = '100%';
                 editor.insertNode(image);
             }, "Format" /* Format */);
         }
-    };
-    reader.readAsDataURL(imageFile);
+    }
 }
 exports.default = insertImage;
 
