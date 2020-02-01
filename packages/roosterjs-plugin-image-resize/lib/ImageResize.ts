@@ -229,6 +229,27 @@ export default class ImageResize implements EditorPlugin {
 
             img.style.width = newWidth + 'px';
             img.style.height = newHeight + 'px';
+
+            // double check
+            if (this.forcePreserveRatio || e.shiftKey) {
+                let ratio = this.startWidth > 0 && this.startHeight > 0
+                    ? (this.startWidth * 1.0) / this.startHeight
+                    : 0;
+
+                const clientWidth = Math.floor(img.clientWidth)
+                const clientHeight = Math.floor(img.clientHeight)
+                newWidth = Math.floor(newWidth)
+                newHeight = Math.floor(newHeight)
+                if (clientHeight !== newHeight || clientWidth !== newWidth) {
+                    if (clientHeight < newHeight) {
+                        newWidth = clientHeight * ratio
+                    } else {
+                        newHeight = clientWidth / ratio
+                    }
+                    img.style.width = newWidth + 'px';
+                    img.style.height = newHeight + 'px';
+                }
+            }
         }
         this.stopEvent(e);
     };
