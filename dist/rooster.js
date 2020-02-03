@@ -11997,6 +11997,26 @@ var ImageResize = /** @class */ (function () {
                 }
                 img.style.width = newWidth + 'px';
                 img.style.height = newHeight + 'px';
+                // double check
+                if (_this.forcePreserveRatio || e.shiftKey) {
+                    var ratio = _this.startWidth > 0 && _this.startHeight > 0
+                        ? (_this.startWidth * 1.0) / _this.startHeight
+                        : 0;
+                    var clientWidth = Math.floor(img.clientWidth);
+                    var clientHeight = Math.floor(img.clientHeight);
+                    newWidth = Math.floor(newWidth);
+                    newHeight = Math.floor(newHeight);
+                    if (clientHeight !== newHeight || clientWidth !== newWidth) {
+                        if (clientHeight < newHeight) {
+                            newWidth = clientHeight * ratio;
+                        }
+                        else {
+                            newHeight = clientWidth / ratio;
+                        }
+                        img.style.width = newWidth + 'px';
+                        img.style.height = newHeight + 'px';
+                    }
+                }
             }
             _this.stopEvent(e);
         };
