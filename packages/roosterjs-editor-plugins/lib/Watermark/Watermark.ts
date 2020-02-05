@@ -14,6 +14,7 @@ const WATERMARK_REGEX = new RegExp(
     `<span[^>]*id=['"]?${WATERMARK_SPAN_ID}['"]?[^>]*>[^<]*</span>`,
     'ig'
 );
+const SPELLCHECK_ATTR_NAME = 'spellcheck';
 
 /**
  * A watermark plugin to manage watermark string for roosterjs
@@ -22,6 +23,7 @@ export default class Watermark implements EditorPlugin {
     private editor: Editor;
     private isWatermarkShowing: boolean;
     private disposer: () => void;
+    private spellcheckInitialValue: string;
 
     /**
      * Create an instance of Watermark plugin
@@ -51,6 +53,7 @@ export default class Watermark implements EditorPlugin {
             focus: this.handleWatermark,
             blur: this.handleWatermark,
         });
+        this.spellcheckInitialValue = this.editor.getEditorDomAttribute(SPELLCHECK_ATTR_NAME);
     }
 
     /**
@@ -109,6 +112,7 @@ export default class Watermark implements EditorPlugin {
             replaceSelection: false,
             insertOnNewLine: false,
         });
+        this.editor.setEditorDomAttribute(SPELLCHECK_ATTR_NAME, 'false');
         this.isWatermarkShowing = true;
     }
 
@@ -126,6 +130,8 @@ export default class Watermark implements EditorPlugin {
                 parentNode.appendChild(this.editor.getDocument().createElement('BR'));
             }
         });
+
+        this.editor.setEditorDomAttribute(SPELLCHECK_ATTR_NAME, this.spellcheckInitialValue);
         this.isWatermarkShowing = false;
     }
 
