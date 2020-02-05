@@ -73,7 +73,7 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
         }
 
         if (!this.props.button.preserveOnClickAway) {
-            document.addEventListener('click', this.onHideDropDown);
+            this.getDocument().addEventListener('click', this.onHideDropDown);
         }
         this.setState({
             isDropDownShown: true,
@@ -85,7 +85,7 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
             this.props.plugin.getEditor().select(this.range);
         }
 
-        document.removeEventListener('click', this.onHideDropDown);
+        this.getDocument().removeEventListener('click', this.onHideDropDown);
         this.setState({
             isDropDownShown: false,
         });
@@ -118,5 +118,9 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
                 )}
             </div>
         );
+    }
+
+    private getDocument() {
+        return this.props.plugin.getEditor().getDocument();
     }
 }

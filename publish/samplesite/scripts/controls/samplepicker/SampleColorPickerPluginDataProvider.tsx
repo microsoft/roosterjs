@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { PickerDataProvider } from 'roosterjs-plugin-picker';
 import { default as SampleColorPicker, SampleColorPickerProps } from './SampleColorPicker';
+import { Editor } from 'roosterjs-editor-core';
+import { PickerDataProvider } from 'roosterjs-plugin-picker';
 
 type LegalKeys<T> = T extends 'onClick' ? never : T;
 type ComponentState = { [l in LegalKeys<keyof SampleColorPickerProps>]: SampleColorPickerProps[l] };
@@ -45,24 +46,29 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
         cursorY: 0,
     };
     private mountPoint: HTMLElement;
-
-    constructor() {
-        this.mountPoint = document.createElement('section');
-        document.body.appendChild(this.mountPoint);
-    }
+    private editor: Editor;
 
     // Function called when the plugin is intialized to register two callbacks with the data provider and a reference to the Editor.
     // The first is called in order to "commit" a new element to the editor body that isn't handled automatically by the editor plugin.
     // The second sets the isSuggesting value for situations wherethe UX needs to manipulate the suggesting state that's otherwise plugin managed.
-    onInitalize(insertNodeCallback: InsertNodeCallback): void {
+    onInitalize(
+        insertNodeCallback: InsertNodeCallback,
+        setIsSuggestingCallback: (isSuggesting: boolean) => void,
+        editor: Editor
+    ): void {
         this.insertNodeCallback = insertNodeCallback;
+        this.editor = editor;
         this.updateToQuery('', 0);
+
+        const document = this.editor.getDocument();
+        this.mountPoint = document.createElement('section');
+        document.body.appendChild(this.mountPoint);
     }
 
     // Function called when the plugin is disposed for the data provider to do any cleanup.
     onDispose(): void {
         if (this.mountPoint) {
-            document.body.removeChild(this.mountPoint);
+            this.editor.getDocument().body.removeChild(this.mountPoint);
         }
         this.mountPoint = null;
     }
@@ -93,35 +99,15 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
             Math.min(newIndexOfCurrentSelectedColor, colors.length - 1)
         );
 
-        let [cursorX, cursorY] = this.getTextCursorPosition();
+        const rect = this.editor.getCursorRect();
 
         this.componentState = {
             queryString,
             selectedIndex,
             colors,
-            cursorX,
-            cursorY,
+            cursorX: rect ? rect.left : 0,
+            cursorY: rect ? rect.bottom : 0,
         };
-    }
-
-    private getTextCursorPosition(): [number, number] {
-        const sel = window.getSelection();
-        if (sel.rangeCount < 1) {
-            return [this.componentState.cursorX, this.componentState.cursorY];
-        }
-        const range = sel.getRangeAt(0);
-        let container = range.startContainer;
-        while (!(container instanceof Element)) {
-            if (container.parentElement == null) {
-                return [this.componentState.cursorX, this.componentState.cursorY];
-            }
-            container = container.parentElement;
-        }
-        const boundingRect = container.getBoundingClientRect();
-        return [
-            window.pageXOffset + boundingRect.left,
-            window.pageYOffset + boundingRect.top + boundingRect.height,
-        ];
     }
 
     private updateRender() {
@@ -132,7 +118,7 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
     }
 
     private insertColor = (color: string) => {
-        const span = document.createElement('span');
+        const span = this.editor.getDocument().createElement('span');
         span.innerHTML = '⬤';
         span.style.color = color;
         this.insertNodeCallback(span);

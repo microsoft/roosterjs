@@ -28,7 +28,7 @@ const COMMANDS: {
 /**
  * Execute document command to adjust browser default behavior
  */
-export default function adjustBrowserBehavior() {
+export default function adjustBrowserBehavior(document: HTMLDocument) {
     Object.keys(COMMANDS).forEach(command => {
         // Catch any possible exception since this should not block the initialization of editor
         try {

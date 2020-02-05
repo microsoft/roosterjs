@@ -98,7 +98,7 @@ export default class Editor {
         }
 
         // 8. Do proper change for browsers to disable some browser-specified behaviors.
-        adjustBrowserBehavior();
+        adjustBrowserBehavior(this.core.document);
 
         // 9. Let plugins know that we are ready
         this.triggerPluginEvent(PluginEventType.EditorReady, {}, true /*broadcast*/);

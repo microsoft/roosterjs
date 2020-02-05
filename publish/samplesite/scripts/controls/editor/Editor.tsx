@@ -28,6 +28,7 @@ const assign = require('object-assign');
 export interface EditorProps {
     plugins: EditorPlugin[];
     initState: BuildInPluginState;
+    content: string;
     className?: string;
     undo?: UndoService;
 }
@@ -78,6 +79,10 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
         this.setState(pluginState);
     }
 
+    getContent() {
+        return this.editor.getContent();
+    }
+
     private initEditor() {
         let pluginList = this.state.pluginList;
         editorInstanceToggleablePlugins = {
@@ -110,6 +115,7 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
             plugins: plugins,
             defaultFormat: defaultFormat,
             undo: this.props.undo,
+            initialContent: this.props.content,
         };
         this.editor = new RoosterJsEditor(this.contentDiv, options);
     }
