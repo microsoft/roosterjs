@@ -1,3 +1,4 @@
+import { isHTMLTableCellElement, isHTMLTableElement } from 'roosterjs-cross-window';
 import { TableFormat, TableOperation } from 'roosterjs-editor-types';
 
 /**
@@ -51,9 +52,9 @@ export default class VTable {
      * @param node The HTML Table or TD node
      */
     constructor(node: HTMLTableElement | HTMLTableCellElement) {
-        this.table = node instanceof HTMLTableElement ? node : getTableFromTd(node);
+        this.table = isHTMLTableElement(node) ? node : getTableFromTd(node);
         if (this.table) {
-            let currentTd = node instanceof HTMLTableElement ? null : node;
+            let currentTd = isHTMLTableElement(node) ? null : node;
             let trs = <HTMLTableRowElement[]>[].slice.call(this.table.rows);
             this.cells = trs.map(row => []);
             trs.forEach((tr, rowIndex) => {
@@ -424,7 +425,7 @@ function cloneCell(cell: VCell): VCell {
  */
 function cloneNode<T extends Node>(node: T): T {
     let newNode = node ? <T>node.cloneNode(false /*deep*/) : null;
-    if (newNode && newNode instanceof HTMLTableCellElement) {
+    if (isHTMLTableCellElement(newNode)) {
         newNode.removeAttribute('id');
         if (!newNode.firstChild) {
             newNode.appendChild(node.ownerDocument.createElement('br'));

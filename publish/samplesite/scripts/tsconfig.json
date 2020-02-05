@@ -13,6 +13,8 @@
         "paths": {
             "roosterjs": ["packages/roosterjs/lib/index"],
             "roosterjs/lib/*": ["packages/roosterjs/lib/*"],
+            "roosterjs-cross-window": ["packages/roosterjs-cross-window/lib/index"],
+            "roosterjs-cross-window/lib/*": ["packages/roosterjs-cross-window/lib/*"],
             "roosterjs-editor-dom": ["packages/roosterjs-editor-dom/lib/index"],
             "roosterjs-editor-dom/lib/*": ["packages/roosterjs-editor-dom/lib/*"],
             "roosterjs-editor-core": ["packages/roosterjs-editor-core/lib/index"],

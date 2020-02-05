@@ -1,3 +1,4 @@
+import { isNode } from 'roosterjs-cross-window';
 import { NodeType } from 'roosterjs-editor-types';
 
 /**
@@ -36,7 +37,7 @@ export default function contains(
         return true;
     }
 
-    if (!(contained instanceof Node)) {
+    if (!isNode(contained)) {
         contained = contained && contained.commonAncestorContainer;
         treatSameNodeAsContain = true;
     }

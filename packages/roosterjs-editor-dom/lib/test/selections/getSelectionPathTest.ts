@@ -1,30 +1,9 @@
 import getSelectionPath from '../../selection/getSelectionPath';
 import { getRangeFromSelectionPath } from '../../selection/createRange';
 
-// Slim polyfill of Range since it is not defined by jsdom
-// see open issue https://github.com/jsdom/jsdom/issues/317
-class RangeSlimPolyfill {
-    startContainer: Element;
-    endContainer: Element;
-    startOffset: number;
-    endOffset: number;
-    setStart(container: Element, offset: number) {
-        this.startContainer = container;
-        this.startOffset = offset;
-    }
-    setEnd(container: Element, offset: number) {
-        this.endContainer = container;
-        this.endOffset = offset;
-    }
-    get [name]() {
-        throw new Error(`${name} does not exist on Range polyfill`);
-    }
-}
-
 function dom(domString: string): HTMLElement {
     const parsedResult = new DOMParser().parseFromString(domString, 'text/html').body
         .childNodes[0] as HTMLElement;
-    (parsedResult.ownerDocument as any).createRange = () => new RangeSlimPolyfill();
     return parsedResult as HTMLElement;
 }
 

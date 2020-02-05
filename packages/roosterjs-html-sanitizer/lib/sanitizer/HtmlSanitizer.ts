@@ -3,6 +3,7 @@ import HtmlSanitizerOptions from '../types/HtmlSanitizerOptions';
 import htmlToDom from '../utils/htmlToDom';
 import SanitizeHtmlOptions from '../types/SanitizeHtmlOptions';
 import { cloneObject } from '../utils/cloneObject';
+import { isHTMLElement } from 'roosterjs-cross-window';
 import {
     StringMap,
     StyleCallbackMap,
@@ -42,10 +43,9 @@ export default class HtmlSanitizer {
     static sanitizeHtml(html: string, options?: SanitizeHtmlOptions) {
         options = options || {};
         let sanitizer = new HtmlSanitizer(options);
-        let currentStyles =
-            options.currentElementOrStyle instanceof HTMLElement
-                ? getInheritableStyles(options.currentElementOrStyle)
-                : options.currentElementOrStyle;
+        let currentStyles = isHTMLElement(options.currentElementOrStyle)
+            ? getInheritableStyles(options.currentElementOrStyle)
+            : options.currentElementOrStyle;
         return sanitizer.exec(
             html,
             options.convertCssOnly,

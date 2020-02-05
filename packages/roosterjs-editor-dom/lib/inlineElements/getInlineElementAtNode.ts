@@ -4,6 +4,7 @@ import ImageInlineElement from './ImageInlineElement';
 import LinkInlineElement from './LinkInlineElement';
 import NodeInlineElement from './NodeInlineElement';
 import { BlockElement, InlineElement } from 'roosterjs-editor-types';
+import { isNode } from 'roosterjs-cross-window';
 
 /**
  * Get the inline element at a node
@@ -27,7 +28,7 @@ export default function getInlineElementAtNode(
     node: Node
 ): InlineElement {
     // An inline element has to be in a block element, get the block first and then resolve through the factory
-    let parentBlock = parent instanceof Node ? getBlockElementAtNode(parent, node) : parent;
+    let parentBlock = isNode(parent) ? getBlockElementAtNode(parent, node) : parent;
     return node && parentBlock && resolveInlineElement(node, parentBlock);
 }
 

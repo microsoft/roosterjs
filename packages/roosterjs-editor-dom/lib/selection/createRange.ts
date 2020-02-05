@@ -1,5 +1,6 @@
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import Position from './Position';
+import { isNode } from 'roosterjs-cross-window';
 import { NodePosition, NodeType, PositionType, SelectionPath } from 'roosterjs-editor-types';
 
 /**
@@ -64,17 +65,17 @@ export default function createRange(
         // function createRange(startPosition: NodePosition, endPosition?: NodePosition): Range;
         start = arg1;
         end = isNodePosition(arg2) ? arg2 : null;
-    } else if (arg1 instanceof Node) {
-        if (arg2 instanceof Array) {
+    } else if (isNode(arg1)) {
+        if (Array.isArray(arg2)) {
             // function createRange(rootNode: Node, startPath: number[], endPath?: number[]): Range;
             start = getPositionFromPath(arg1, arg2);
-            end = arg3 instanceof Array ? getPositionFromPath(arg1, arg3) : null;
+            end = Array.isArray(arg3) ? getPositionFromPath(arg1, arg3) : null;
         } else if (typeof arg2 == 'number') {
             // function createRange(node: Node, offset: number | PositionType): Range;
             // function createRange(startNode: Node, startOffset: number | PositionType, endNode: Node, endOffset: number | PositionType): Range;
             start = new Position(arg1, arg2);
-            end = arg3 instanceof Node ? new Position(arg3, arg4) : null;
-        } else if (arg2 instanceof Node || !arg2) {
+            end = isNode(arg3) ? new Position(arg3, arg4) : null;
+        } else if (isNode(arg2) || !arg2) {
             // function createRange(startNode: Node, endNode?: Node): Range;
             start = new Position(arg1, PositionType.Before);
             end = new Position(<Node>arg2 || arg1, PositionType.After);

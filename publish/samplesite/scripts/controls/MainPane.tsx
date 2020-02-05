@@ -11,6 +11,10 @@ import { getAllPluginArray, getPlugins, getSidePanePluginArray } from './plugins
 
 const styles = require('./MainPane.scss');
 const PopoutRoot = 'mainPane';
+const POPOUT_HTML = `<!doctype html><html><head><title>RoosterJs Demo Page PopOut</title></head><body><div id=${PopoutRoot}></div></body></html>`;
+const POPOUT_FEATURES = 'menubar=no,statusbar=no,width=1200,height=800';
+const POPOUT_URL = 'about:blank';
+const POPOUT_TARGET = '_blank';
 
 class MainPane extends MainPaneBase {
     private mouseX: number;
@@ -106,14 +110,8 @@ class MainPane extends MainPaneBase {
     }
 
     popout() {
-        const win = window.open(
-            'about:blank',
-            '_blank',
-            'menubar=no,statusbar=no,width=1120,height=800'
-        );
-        win.document.write(
-            `<!doctype html><html><head><title>RoosterJs Demo Page PopOut</title></head><body><div id=${PopoutRoot}></div></body></html>`
-        );
+        const win = window.open(POPOUT_URL, POPOUT_TARGET, POPOUT_FEATURES);
+        win.document.write(POPOUT_HTML);
         win.addEventListener('unload', () => {
             this.content = this.popoutMainPane.current.getContent();
             if (this.popoutRoot) {

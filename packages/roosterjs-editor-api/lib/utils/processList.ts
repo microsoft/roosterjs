@@ -1,5 +1,6 @@
 import { DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
+import { isHTMLElement } from 'roosterjs-cross-window';
 import {
     fromHtml,
     isVoidHtmlElement,
@@ -63,10 +64,10 @@ export default function processList(
     if (newList && clonedNode && newParentNode) {
         // if the clonedNode and the newLIParent share the same tag name
         // we can 1:1 swap them
-        if (clonedNode instanceof HTMLElement) {
+        if (isHTMLElement(clonedNode)) {
             if (
-                newParentNode instanceof HTMLElement &&
-                clonedNode.tagName == newParentNode.tagName
+                isHTMLElement(newParentNode) &&
+                clonedNode.tagName == (<HTMLElement>newParentNode).tagName
             ) {
                 newList.replaceChild(clonedNode, newParentNode);
             }

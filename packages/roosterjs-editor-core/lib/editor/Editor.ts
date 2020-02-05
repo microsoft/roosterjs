@@ -7,6 +7,7 @@ import mapPluginEvents from './mapPluginEvents';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
+import { isRange } from 'roosterjs-cross-window';
 import {
     BlockElement,
     ChangeSource,
@@ -534,9 +535,9 @@ export default class Editor {
     public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
         let range = !arg1
             ? null
-            : arg1 instanceof Range
+            : isRange(arg1)
             ? arg1
-            : arg1.start instanceof Array && arg1.end instanceof Array
+            : Array.isArray(arg1.start) && Array.isArray(arg1.end)
             ? createRange(
                   this.core.contentDiv,
                   (<SelectionPath>arg1).start,

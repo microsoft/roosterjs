@@ -1,3 +1,4 @@
+import { isHTMLOListElement } from 'roosterjs-cross-window';
 import { setIndentation, toggleBullet, toggleNumbering } from 'roosterjs-editor-api';
 import {
     cacheGetContentSearcher,
@@ -165,7 +166,7 @@ export function getSmartOrderedList(
 ): GenericContentEditFeature<ContentChangedEvent> {
     return {
         keys: [Keys.CONTENTCHANGED], // Triggered by ContentChangedEvent
-        shouldHandleEvent: (event, editor) => event.data instanceof HTMLOListElement,
+        shouldHandleEvent: (event, editor) => isHTMLOListElement(event.data),
         handleEvent: (event, editor) => {
             let ol = event.data as HTMLOListElement;
             let parentOl = editor.getElementAtCursor('OL', ol.parentNode) as HTMLOListElement;

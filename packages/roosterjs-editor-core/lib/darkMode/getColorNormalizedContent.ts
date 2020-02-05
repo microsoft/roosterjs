@@ -1,8 +1,10 @@
+import { isDocumentFragment } from 'roosterjs-cross-window';
+
 export default function getColorNormalizedContent(content: string | DocumentFragment): string {
     let el = document.createElement('div');
     // Leverage script execution policy on CEDs to try and prevent XSS
     el.setAttribute('contenteditable', 'true');
-    if (content instanceof DocumentFragment) {
+    if (isDocumentFragment(content)) {
         el.appendChild(content);
     } else {
         el.innerHTML = content;
