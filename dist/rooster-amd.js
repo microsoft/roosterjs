@@ -11262,6 +11262,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var WATERMARK_SPAN_ID = '_rooster_watermarkSpan';
 var WATERMARK_REGEX = new RegExp("<span[^>]*id=['\"]?" + WATERMARK_SPAN_ID + "['\"]?[^>]*>[^<]*</span>", 'ig');
+var SPELLCHECK_ATTR_NAME = 'spellcheck';
 /**
  * A watermark plugin to manage watermark string for roosterjs
  */
@@ -11298,6 +11299,7 @@ var Watermark = /** @class */ (function () {
             focus: this.handleWatermark,
             blur: this.handleWatermark,
         });
+        this.spellcheckInitialValue = this.editor.getEditorDomAttribute(SPELLCHECK_ATTR_NAME);
     };
     /**
      * Dispose this plugin
@@ -11346,6 +11348,7 @@ var Watermark = /** @class */ (function () {
             replaceSelection: false,
             insertOnNewLine: false,
         });
+        this.editor.setEditorDomAttribute(SPELLCHECK_ATTR_NAME, 'false');
         this.isWatermarkShowing = true;
     };
     Watermark.prototype.hideWatermark = function () {
@@ -11360,6 +11363,7 @@ var Watermark = /** @class */ (function () {
                 parentNode.appendChild(_this.editor.getDocument().createElement('BR'));
             }
         });
+        this.editor.setEditorDomAttribute(SPELLCHECK_ATTR_NAME, this.spellcheckInitialValue);
         this.isWatermarkShowing = false;
     };
     Watermark.prototype.removeWartermarkFromHtml = function (event) {
