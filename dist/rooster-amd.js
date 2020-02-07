@@ -86,6 +86,236 @@ define(function() { return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
+/***/ "./packages/roosterjs-cross-window/lib/index.ts":
+/*!******************************************************!*\
+  !*** ./packages/roosterjs-cross-window/lib/index.ts ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var isDocumentFragment_1 = __webpack_require__(/*! ./typeUtils/isDocumentFragment */ "./packages/roosterjs-cross-window/lib/typeUtils/isDocumentFragment.ts");
+exports.isDocumentFragment = isDocumentFragment_1.default;
+var isHTMLElement_1 = __webpack_require__(/*! ./typeUtils/isHTMLElement */ "./packages/roosterjs-cross-window/lib/typeUtils/isHTMLElement.ts");
+exports.isHTMLElement = isHTMLElement_1.default;
+var isHTMLOListElement_1 = __webpack_require__(/*! ./typeUtils/isHTMLOListElement */ "./packages/roosterjs-cross-window/lib/typeUtils/isHTMLOListElement.ts");
+exports.isHTMLOListElement = isHTMLOListElement_1.default;
+var isHTMLTableCellElement_1 = __webpack_require__(/*! ./typeUtils/isHTMLTableCellElement */ "./packages/roosterjs-cross-window/lib/typeUtils/isHTMLTableCellElement.ts");
+exports.isHTMLTableCellElement = isHTMLTableCellElement_1.default;
+var isHTMLTableElement_1 = __webpack_require__(/*! ./typeUtils/isHTMLTableElement */ "./packages/roosterjs-cross-window/lib/typeUtils/isHTMLTableElement.ts");
+exports.isHTMLTableElement = isHTMLTableElement_1.default;
+var isNode_1 = __webpack_require__(/*! ./typeUtils/isNode */ "./packages/roosterjs-cross-window/lib/typeUtils/isNode.ts");
+exports.isNode = isNode_1.default;
+var isRange_1 = __webpack_require__(/*! ./typeUtils/isRange */ "./packages/roosterjs-cross-window/lib/typeUtils/isRange.ts");
+exports.isRange = isRange_1.default;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-cross-window/lib/typeUtils/isDocumentFragment.ts":
+/*!*****************************************************************************!*\
+  !*** ./packages/roosterjs-cross-window/lib/typeUtils/isDocumentFragment.ts ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var safeInstanceOf_1 = __webpack_require__(/*! ./safeInstanceOf */ "./packages/roosterjs-cross-window/lib/typeUtils/safeInstanceOf.ts");
+/**
+ * Check if the given object is DocumentFragment
+ * @param obj The object to check
+ */
+function isDocumentFragment(obj) {
+    return safeInstanceOf_1.default(obj, 'DocumentFragment');
+}
+exports.default = isDocumentFragment;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-cross-window/lib/typeUtils/isHTMLElement.ts":
+/*!************************************************************************!*\
+  !*** ./packages/roosterjs-cross-window/lib/typeUtils/isHTMLElement.ts ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var safeInstanceOf_1 = __webpack_require__(/*! ./safeInstanceOf */ "./packages/roosterjs-cross-window/lib/typeUtils/safeInstanceOf.ts");
+/**
+ * Check if the given object is HTMLElement
+ * @param obj The object to check
+ */
+function isHTMLElement(obj) {
+    return safeInstanceOf_1.default(obj, 'HTMLElement');
+}
+exports.default = isHTMLElement;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-cross-window/lib/typeUtils/isHTMLOListElement.ts":
+/*!*****************************************************************************!*\
+  !*** ./packages/roosterjs-cross-window/lib/typeUtils/isHTMLOListElement.ts ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var safeInstanceOf_1 = __webpack_require__(/*! ./safeInstanceOf */ "./packages/roosterjs-cross-window/lib/typeUtils/safeInstanceOf.ts");
+/**
+ * Check if the given object is HTMLOListElement
+ * @param obj The object to check
+ */
+function isHTMLOListElement(obj) {
+    return safeInstanceOf_1.default(obj, 'HTMLOListElement');
+}
+exports.default = isHTMLOListElement;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-cross-window/lib/typeUtils/isHTMLTableCellElement.ts":
+/*!*********************************************************************************!*\
+  !*** ./packages/roosterjs-cross-window/lib/typeUtils/isHTMLTableCellElement.ts ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var safeInstanceOf_1 = __webpack_require__(/*! ./safeInstanceOf */ "./packages/roosterjs-cross-window/lib/typeUtils/safeInstanceOf.ts");
+/**
+ * Check if the given object is HTMLTableCellElement
+ * @param obj The object to check
+ */
+function isHTMLTableCellElement(obj) {
+    return safeInstanceOf_1.default(obj, 'HTMLTableCellElement');
+}
+exports.default = isHTMLTableCellElement;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-cross-window/lib/typeUtils/isHTMLTableElement.ts":
+/*!*****************************************************************************!*\
+  !*** ./packages/roosterjs-cross-window/lib/typeUtils/isHTMLTableElement.ts ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var safeInstanceOf_1 = __webpack_require__(/*! ./safeInstanceOf */ "./packages/roosterjs-cross-window/lib/typeUtils/safeInstanceOf.ts");
+/**
+ * Check if the given object is HTMLTableElement
+ * @param obj The object to check
+ */
+function isHTMLTableElement(obj) {
+    return safeInstanceOf_1.default(obj, 'HTMLTableElement');
+}
+exports.default = isHTMLTableElement;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-cross-window/lib/typeUtils/isNode.ts":
+/*!*****************************************************************!*\
+  !*** ./packages/roosterjs-cross-window/lib/typeUtils/isNode.ts ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var safeInstanceOf_1 = __webpack_require__(/*! ./safeInstanceOf */ "./packages/roosterjs-cross-window/lib/typeUtils/safeInstanceOf.ts");
+/**
+ * Check if the given object is Node
+ * @param obj The object to check
+ */
+function isNode(obj) {
+    return safeInstanceOf_1.default(obj, 'Node');
+}
+exports.default = isNode;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-cross-window/lib/typeUtils/isRange.ts":
+/*!******************************************************************!*\
+  !*** ./packages/roosterjs-cross-window/lib/typeUtils/isRange.ts ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var safeInstanceOf_1 = __webpack_require__(/*! ./safeInstanceOf */ "./packages/roosterjs-cross-window/lib/typeUtils/safeInstanceOf.ts");
+/**
+ * Check if the given object is Range
+ * @param obj The object to check
+ */
+function isRange(obj) {
+    return safeInstanceOf_1.default(obj, 'Range');
+}
+exports.default = isRange;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-cross-window/lib/typeUtils/safeInstanceOf.ts":
+/*!*************************************************************************!*\
+  !*** ./packages/roosterjs-cross-window/lib/typeUtils/safeInstanceOf.ts ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Try get window from the given node or range
+ * @param source Source node or range
+ */
+function getTargetWindow(source) {
+    var node = source && (source.commonAncestorContainer || source);
+    var document = node &&
+        (node.ownerDocument ||
+            (Object.prototype.toString.apply(node) == '[object HTMLDocument]'
+                ? node
+                : null));
+    // If document exists but document.defaultView doesn't exist, it is a detached object, just use current window instead
+    var targetWindow = document && (document.defaultView || window);
+    return targetWindow;
+}
+exports.getTargetWindow = getTargetWindow;
+/**
+ * Check if the given object is instance of the target type
+ * @param obj Object to check
+ * @param typeName Target type name
+ */
+function safeInstanceOf(obj, typeName) {
+    var targetWindow = getTargetWindow(obj);
+    var targetType = targetWindow && targetWindow[typeName];
+    return targetType && obj instanceof targetType;
+}
+exports.default = safeInstanceOf;
+
+
+/***/ }),
+
 /***/ "./packages/roosterjs-editor-api/lib/format/changeFontSize.ts":
 /*!********************************************************************!*\
   !*** ./packages/roosterjs-editor-api/lib/format/changeFontSize.ts ***!
@@ -566,32 +796,28 @@ exports.default = getFormatState;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 function insertImage(editor, imageFile) {
-    if (imageFile instanceof File) {
+    if (typeof imageFile == 'string') {
+        insertImageWithSrc(editor, imageFile);
+    }
+    else {
         var reader = new FileReader();
         reader.onload = function (event) {
             if (!editor.isDisposed()) {
-                editor.addUndoSnapshot(function () {
-                    var image = editor.getDocument().createElement('img');
-                    image.src = event.target.result;
-                    image.style.maxWidth = '100%';
-                    editor.insertNode(image);
-                }, "Format" /* Format */);
+                insertImageWithSrc(editor, event.target.result);
             }
         };
         reader.readAsDataURL(imageFile);
     }
-    else {
-        if (!editor.isDisposed()) {
-            editor.addUndoSnapshot(function () {
-                var image = editor.getDocument().createElement('img');
-                image.src = imageFile;
-                image.style.maxWidth = '100%';
-                editor.insertNode(image);
-            }, "Format" /* Format */);
-        }
-    }
 }
 exports.default = insertImage;
+function insertImageWithSrc(editor, src) {
+    editor.addUndoSnapshot(function () {
+        var image = editor.getDocument().createElement('img');
+        image.src = src;
+        image.style.maxWidth = '100%';
+        editor.insertNode(image);
+    }, "Format" /* Format */);
+}
 
 
 /***/ }),
@@ -1725,9 +1951,10 @@ function isPendableFormatCommand(command) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
-var TEMP_NODE_HTML = "<img class=\"" + TEMP_NODE_CLASS + "\">";
+var TEMP_NODE_HTML = '<img class="' + TEMP_NODE_CLASS + '">';
 /**
  * Browsers don't handle bullet/numbering list well, especially the formats when switching list statue
  * So we workaround it by always adding format to list element
@@ -1765,11 +1992,12 @@ function processList(editor, command) {
     if (newList && clonedNode && newParentNode) {
         // if the clonedNode and the newLIParent share the same tag name
         // we can 1:1 swap them
-        if ((clonedNode instanceof HTMLElement)) {
-            if (newParentNode instanceof HTMLElement && clonedNode.tagName == newParentNode.tagName) {
+        if (roosterjs_cross_window_1.isHTMLElement(clonedNode)) {
+            if (roosterjs_cross_window_1.isHTMLElement(newParentNode) &&
+                clonedNode.tagName == newParentNode.tagName) {
                 newList.replaceChild(clonedNode, newParentNode);
             }
-            if (relativeSelectionPath && document.body.contains(clonedNode)) {
+            if (relativeSelectionPath && editor.getDocument().body.contains(clonedNode)) {
                 var newRange = roosterjs_editor_dom_1.getRangeFromSelectionPath(clonedNode, relativeSelectionPath);
                 editor.select(newRange);
             }
@@ -2308,6 +2536,7 @@ exports.insertNode = function (core, node, option) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 var hasFocus_1 = __webpack_require__(/*! ./hasFocus */ "./packages/roosterjs-editor-core/lib/coreAPI/hasFocus.ts");
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 /**
  * Change the editor selection to the given range
  * @param core The EditorCore object
@@ -2360,7 +2589,7 @@ exports.selectRange = function (core, range, skipSameRange) {
  * @deprecated Only for compatibility with existing code, don't use ths function, use selectRange instead
  */
 exports.select = function (core, arg1, arg2, arg3, arg4) {
-    var range = arg1 instanceof Range ? arg1 : roosterjs_editor_dom_1.createRange(arg1, arg2, arg3, arg4);
+    var range = roosterjs_cross_window_1.isRange(arg1) ? arg1 : roosterjs_editor_dom_1.createRange(arg1, arg2, arg3, arg4);
     return core.api.selectRange(core, range);
 };
 
@@ -2875,6 +3104,7 @@ exports.default = MouseUpPlugin;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 /**
  * Typing Component helps to ensure typing is always happening under a DOM container
@@ -2969,7 +3199,7 @@ var TypeInContainerPlugin = /** @class */ (function () {
         this.editor.select(position);
     };
     TypeInContainerPlugin.prototype.wasNodeJustCreatedByKeyboardEvent = function (event, formatNode) {
-        return (event.rawEvent.target instanceof Node &&
+        return (roosterjs_cross_window_1.isNode(event.rawEvent.target) &&
             event.rawEvent.target.contains(formatNode) &&
             event.rawEvent.key === formatNode.innerText);
     };
@@ -2990,6 +3220,7 @@ exports.default = TypeInContainerPlugin;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 /**
  * Converter for dark mode that runs all child elements of a node through the content transform function.
  * @param node The node containing HTML elements to convert.
@@ -3000,13 +3231,13 @@ function convertContentToDarkMode(node, onExternalContentTransform, skipRootElem
     // Get a list of all the decendents of a node.
     // querySelectorAll doesn't return a live list when called on an HTMLElement
     // So we use getElementsByTagName instead for HTMLElement types.
-    if (node instanceof HTMLElement) {
+    if (roosterjs_cross_window_1.isHTMLElement(node)) {
         childElements = Array.prototype.slice.call(node.getElementsByTagName('*'));
         if (!skipRootElement) {
             childElements.unshift(node);
         }
     }
-    else if (node instanceof DocumentFragment) {
+    else if (roosterjs_cross_window_1.isDocumentFragment(node)) {
         childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
     }
     return childElements.length > 0
@@ -3038,11 +3269,12 @@ exports.convertContentToDarkMode = convertContentToDarkMode;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 function getColorNormalizedContent(content) {
     var el = document.createElement('div');
     // Leverage script execution policy on CEDs to try and prevent XSS
     el.setAttribute('contenteditable', 'true');
-    if (content instanceof DocumentFragment) {
+    if (roosterjs_cross_window_1.isDocumentFragment(content)) {
         el.appendChild(content);
     }
     else {
@@ -3125,6 +3357,7 @@ var getColorNormalizedContent_1 = __webpack_require__(/*! ../darkMode/getColorNo
 var mapPluginEvents_1 = __webpack_require__(/*! ./mapPluginEvents */ "./packages/roosterjs-editor-core/lib/editor/mapPluginEvents.ts");
 var calculateDefaultFormat_1 = __webpack_require__(/*! ../coreAPI/calculateDefaultFormat */ "./packages/roosterjs-editor-core/lib/coreAPI/calculateDefaultFormat.ts");
 var convertContentToDarkMode_1 = __webpack_require__(/*! ../darkMode/convertContentToDarkMode */ "./packages/roosterjs-editor-core/lib/darkMode/convertContentToDarkMode.ts");
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 /**
  * RoosterJs core editor class
@@ -3163,7 +3396,7 @@ var Editor = /** @class */ (function () {
             this.contenteditableChanged = true;
         }
         // 8. Do proper change for browsers to disable some browser-specified behaviors.
-        adjustBrowserBehavior_1.default();
+        adjustBrowserBehavior_1.default(this.core.document);
         // 9. Let plugins know that we are ready
         this.triggerPluginEvent(9 /* EditorReady */, {}, true /*broadcast*/);
         // 10. Before give editor to user, make sure there is at least one DIV element to accept typing
@@ -3417,9 +3650,9 @@ var Editor = /** @class */ (function () {
     Editor.prototype.select = function (arg1, arg2, arg3, arg4) {
         var range = !arg1
             ? null
-            : arg1 instanceof Range
+            : roosterjs_cross_window_1.isRange(arg1)
                 ? arg1
-                : arg1.start instanceof Array && arg1.end instanceof Array
+                : Array.isArray(arg1.start) && Array.isArray(arg1.end)
                     ? roosterjs_editor_dom_1.createRange(this.core.contentDiv, arg1.start, arg1.end)
                     : roosterjs_editor_dom_1.createRange(arg1, arg2, arg3, arg4);
         return this.contains(range) && this.core.api.selectRange(this.core, range);
@@ -3772,7 +4005,7 @@ var COMMANDS = roosterjs_editor_dom_1.Browser.isFirefox
 /**
  * Execute document command to adjust browser default behavior
  */
-function adjustBrowserBehavior() {
+function adjustBrowserBehavior(document) {
     Object.keys(COMMANDS).forEach(function (command) {
         // Catch any possible exception since this should not block the initialization of editor
         try {
@@ -5257,6 +5490,7 @@ var getInlineElementAtNode_1 = __webpack_require__(/*! ../inlineElements/getInli
 var NodeBlockElement_1 = __webpack_require__(/*! ../blockElements/NodeBlockElement */ "./packages/roosterjs-editor-dom/lib/blockElements/NodeBlockElement.ts");
 var Position_1 = __webpack_require__(/*! ../selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
 var getInlineElementBeforeAfter_1 = __webpack_require__(/*! ../inlineElements/getInlineElementBeforeAfter */ "./packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementBeforeAfter.ts");
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 var getFirstLastInlineElement_1 = __webpack_require__(/*! ../inlineElements/getFirstLastInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElement.ts");
 /**
  * This provides traversing content in a selection start block
@@ -5274,7 +5508,7 @@ var SelectionBlockScoper = /** @class */ (function () {
     function SelectionBlockScoper(rootNode, position, startFrom) {
         this.rootNode = rootNode;
         this.startFrom = startFrom;
-        position = position instanceof Range ? Position_1.default.getStart(position) : position;
+        position = roosterjs_cross_window_1.isRange(position) ? Position_1.default.getStart(position) : position;
         this.position = position.normalize();
         this.block = getBlockElementAtNode_1.default(this.rootNode, this.position.node);
     }
@@ -6009,9 +6243,10 @@ var getTagOfNode_1 = __webpack_require__(/*! ../utils/getTagOfNode */ "./package
 var ImageInlineElement_1 = __webpack_require__(/*! ./ImageInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/ImageInlineElement.ts");
 var LinkInlineElement_1 = __webpack_require__(/*! ./LinkInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/LinkInlineElement.ts");
 var NodeInlineElement_1 = __webpack_require__(/*! ./NodeInlineElement */ "./packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts");
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 function getInlineElementAtNode(parent, node) {
     // An inline element has to be in a block element, get the block first and then resolve through the factory
-    var parentBlock = parent instanceof Node ? getBlockElementAtNode_1.default(parent, node) : parent;
+    var parentBlock = roosterjs_cross_window_1.isNode(parent) ? getBlockElementAtNode_1.default(parent, node) : parent;
     return node && parentBlock && resolveInlineElement(node, parentBlock);
 }
 exports.default = getInlineElementAtNode;
@@ -6264,6 +6499,7 @@ function getEndOffset(node) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var isVoidHtmlElement_1 = __webpack_require__(/*! ../utils/isVoidHtmlElement */ "./packages/roosterjs-editor-dom/lib/utils/isVoidHtmlElement.ts");
 var Position_1 = __webpack_require__(/*! ./Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 function createRange(arg1, arg2, arg3, arg4) {
     var start;
     var end;
@@ -6272,19 +6508,19 @@ function createRange(arg1, arg2, arg3, arg4) {
         start = arg1;
         end = isNodePosition(arg2) ? arg2 : null;
     }
-    else if (arg1 instanceof Node) {
-        if (arg2 instanceof Array) {
+    else if (roosterjs_cross_window_1.isNode(arg1)) {
+        if (Array.isArray(arg2)) {
             // function createRange(rootNode: Node, startPath: number[], endPath?: number[]): Range;
             start = getPositionFromPath(arg1, arg2);
-            end = arg3 instanceof Array ? getPositionFromPath(arg1, arg3) : null;
+            end = Array.isArray(arg3) ? getPositionFromPath(arg1, arg3) : null;
         }
         else if (typeof arg2 == 'number') {
             // function createRange(node: Node, offset: number | PositionType): Range;
             // function createRange(startNode: Node, startOffset: number | PositionType, endNode: Node, endOffset: number | PositionType): Range;
             start = new Position_1.default(arg1, arg2);
-            end = arg3 instanceof Node ? new Position_1.default(arg3, arg4) : null;
+            end = roosterjs_cross_window_1.isNode(arg3) ? new Position_1.default(arg3, arg4) : null;
         }
-        else if (arg2 instanceof Node || !arg2) {
+        else if (roosterjs_cross_window_1.isNode(arg2) || !arg2) {
             // function createRange(startNode: Node, endNode?: Node): Range;
             start = new Position_1.default(arg1, -2 /* Before */);
             end = new Position_1.default(arg2 || arg1, -3 /* After */);
@@ -6415,7 +6651,8 @@ function getPositionRect(position) {
     }
     // 3) if node is text node, try inserting a SPAN and get the rect of SPAN for others
     if (position.node.nodeType == 3 /* Text */) {
-        var span = document.createElement('SPAN');
+        var document_1 = position.node.ownerDocument;
+        var span = document_1.createElement('SPAN');
         span.innerHTML = '\u200b';
         range = createRange_1.default(position);
         range.insertNode(span);
@@ -6790,6 +7027,7 @@ exports.default = moveCurrentSnapsnot;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
@@ -6801,9 +7039,9 @@ var VTable = /** @class */ (function () {
     function VTable(node) {
         var _this = this;
         this.trs = [];
-        this.table = node instanceof HTMLTableElement ? node : getTableFromTd(node);
+        this.table = roosterjs_cross_window_1.isHTMLTableElement(node) ? node : getTableFromTd(node);
         if (this.table) {
-            var currentTd_1 = node instanceof HTMLTableElement ? null : node;
+            var currentTd_1 = roosterjs_cross_window_1.isHTMLTableElement(node) ? null : node;
             var trs = [].slice.call(this.table.rows);
             this.cells = trs.map(function (row) { return []; });
             trs.forEach(function (tr, rowIndex) {
@@ -7144,7 +7382,7 @@ function cloneCell(cell) {
  */
 function cloneNode(node) {
     var newNode = node ? node.cloneNode(false /*deep*/) : null;
-    if (newNode && newNode instanceof HTMLTableCellElement) {
+    if (roosterjs_cross_window_1.isHTMLTableCellElement(newNode)) {
         newNode.removeAttribute('id');
         if (!newNode.firstChild) {
             newNode.appendChild(node.ownerDocument.createElement('br'));
@@ -7641,6 +7879,7 @@ function collapse(root, node, ref, isStart, canSplitParent) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 function contains(container, contained, treatSameNodeAsContain) {
     if (!container || !contained) {
         return false;
@@ -7648,7 +7887,7 @@ function contains(container, contained, treatSameNodeAsContain) {
     if (treatSameNodeAsContain && container == contained) {
         return true;
     }
-    if (!(contained instanceof Node)) {
+    if (!roosterjs_cross_window_1.isNode(contained)) {
         contained = contained && contained.commonAncestorContainer;
         treatSameNodeAsContain = true;
     }
@@ -7857,7 +8096,7 @@ function getComputedStyles(node, styleNames) {
     if (styleNames === void 0) { styleNames = ['font-family', 'font-size', 'color', 'background-color']; }
     var element = findClosestElementAncestor_1.default(node);
     var result = [];
-    styleNames = styleNames instanceof Array ? styleNames : [styleNames];
+    styleNames = Array.isArray(styleNames) ? styleNames : [styleNames];
     if (element) {
         var win = element.ownerDocument.defaultView || window;
         var styles = win.getComputedStyle(element);
@@ -8528,8 +8767,8 @@ exports.default = splitParentNode;
  * @returns The parent node of the given node range if the given nodes are balanced, otherwise null
  */
 function splitBalancedNodeRange(nodes) {
-    var start = nodes instanceof Array ? nodes[0] : nodes;
-    var end = nodes instanceof Array ? nodes[nodes.length - 1] : nodes;
+    var start = Array.isArray(nodes) ? nodes[0] : nodes;
+    var end = Array.isArray(nodes) ? nodes[nodes.length - 1] : nodes;
     var parentNode = start && end && start.parentNode == end.parentNode ? start.parentNode : null;
     if (parentNode) {
         if (isNodeAfter_1.default(start, end)) {
@@ -8619,12 +8858,13 @@ exports.default = unwrap;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var fromHtml_1 = __webpack_require__(/*! ./fromHtml */ "./packages/roosterjs-editor-dom/lib/utils/fromHtml.ts");
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 function wrap(nodes, wrapper) {
-    nodes = !nodes ? [] : nodes instanceof Node ? [nodes] : nodes;
+    nodes = !nodes ? [] : roosterjs_cross_window_1.isNode(nodes) ? [nodes] : nodes;
     if (nodes.length == 0 || !nodes[0]) {
         return null;
     }
-    if (!(wrapper instanceof Element)) {
+    if (!roosterjs_cross_window_1.isHTMLElement(wrapper)) {
         var document_1 = nodes[0].ownerDocument;
         wrapper = wrapper || 'div';
         wrapper = /^\w+$/.test(wrapper)
@@ -8951,6 +9191,7 @@ function cacheGetStructuredElement(event, editor) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 var roosterjs_editor_api_1 = __webpack_require__(/*! roosterjs-editor-api */ "./packages/roosterjs-editor-api/lib/index.ts");
 var roosterjs_editor_core_1 = __webpack_require__(/*! roosterjs-editor-core */ "./packages/roosterjs-editor-core/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
@@ -9084,7 +9325,7 @@ exports.AutoBullet = {
 function getSmartOrderedList(styleList) {
     return {
         keys: [2048 /* CONTENTCHANGED */],
-        shouldHandleEvent: function (event, editor) { return event.data instanceof HTMLOListElement; },
+        shouldHandleEvent: function (event, editor) { return roosterjs_cross_window_1.isHTMLOListElement(event.data); },
         handleEvent: function (event, editor) {
             var ol = event.data;
             var parentOl = editor.getElementAtCursor('OL', ol.parentNode);
@@ -9485,6 +9726,7 @@ var CustomReplacePlugin = /** @class */ (function () {
         var matchingText = searcher.getSubStringBefore(replacement.sourceString.length);
         var matchingRange = searcher.getRangeFromText(matchingText, true /* exactMatch */);
         // parse the html string off the dom and inline the resulting element.
+        var document = this.editor.getDocument();
         var parsingSpan = document.createElement('span');
         parsingSpan.innerHTML = replacement.replacementHTML;
         var nodeToInsert = parsingSpan.childNodes.length == 1 ? parsingSpan.childNodes[0] : parsingSpan;
@@ -11066,6 +11308,7 @@ exports.createWordConverter = createWordConverter;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 var TABLE_RESIZE_HANDLE_KEY = 'TABLE_RESIZE_HANDLE';
 var HANDLE_WIDTH = 6;
 var CONTAINER_HTML = "<div style=\"position: fixed; cursor: col-resize; width: " + HANDLE_WIDTH + "px; border: solid 0 #C6C6C6;\"></div>";
@@ -11161,8 +11404,7 @@ var TableResize = /** @class */ (function () {
     TableResize.prototype.clickIntoCurrentTd = function (event) {
         var mouseEvent = event.rawEvent;
         var target = mouseEvent.target;
-        return (target instanceof Node &&
-            roosterjs_editor_dom_1.contains(this.td, target, true /*treatSameNodeAsContain*/));
+        return roosterjs_cross_window_1.isNode(target) && roosterjs_editor_dom_1.contains(this.td, target, true /*treatSameNodeAsContain*/);
     };
     TableResize.prototype.calcAndShowHandle = function () {
         if (this.td) {
@@ -11454,6 +11696,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var getInheritableStyles_1 = __webpack_require__(/*! ../utils/getInheritableStyles */ "./packages/roosterjs-html-sanitizer/lib/utils/getInheritableStyles.ts");
 var htmlToDom_1 = __webpack_require__(/*! ../utils/htmlToDom */ "./packages/roosterjs-html-sanitizer/lib/utils/htmlToDom.ts");
 var cloneObject_1 = __webpack_require__(/*! ../utils/cloneObject */ "./packages/roosterjs-html-sanitizer/lib/utils/cloneObject.ts");
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 var getAllowedValues_1 = __webpack_require__(/*! ../utils/getAllowedValues */ "./packages/roosterjs-html-sanitizer/lib/utils/getAllowedValues.ts");
 /**
  * HTML sanitizer class provides two featuers:
@@ -11495,7 +11738,7 @@ var HtmlSanitizer = /** @class */ (function () {
     HtmlSanitizer.sanitizeHtml = function (html, options) {
         options = options || {};
         var sanitizer = new HtmlSanitizer(options);
-        var currentStyles = options.currentElementOrStyle instanceof HTMLElement
+        var currentStyles = roosterjs_cross_window_1.isHTMLElement(options.currentElementOrStyle)
             ? getInheritableStyles_1.default(options.currentElementOrStyle)
             : options.currentElementOrStyle;
         return sanitizer.exec(html, options.convertCssOnly, options.preserveFragmentOnly, currentStyles);
