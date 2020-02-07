@@ -452,9 +452,12 @@ function publish() {
         var localVersion = json.version;
         var versionMatch = VersionRegex.exec(localVersion);
         var tagname = (versionMatch && versionMatch[2]) || 'latest';
-        var npmVersion = exec(`npm view ${package}@${tagname} version`)
-            .toString()
-            .trim();
+        var npmVersion = '';
+        try {
+            npmVersion = exec(`npm view ${package}@${tagname} version`)
+                .toString()
+                .trim();
+        } catch (e) {}
 
         if (localVersion != npmVersion) {
             let npmrcName = path.join(distPath, package, '.npmrc');
