@@ -1,10 +1,11 @@
 {
-  "name": "roosterjs-editor-api",
-  "description": "Programming API for roosterjs",
-  "dependencies": {
-    "roosterjs-editor-types": "",
-    "roosterjs-editor-dom": "",
-    "roosterjs-editor-core": ""
-  },
-  "main": "./lib/index.ts"
+    "name": "roosterjs-editor-api",
+    "description": "Programming API for roosterjs",
+    "dependencies": {
+        "roosterjs-cross-window": "",
+        "roosterjs-editor-types": "",
+        "roosterjs-editor-dom": "",
+        "roosterjs-editor-core": ""
+    },
+    "main": "./lib/index.ts"
 }

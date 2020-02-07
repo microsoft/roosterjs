@@ -49,8 +49,8 @@ export default function splitParentNode(node: Node, splitBefore: boolean): Node 
  * @returns The parent node of the given node range if the given nodes are balanced, otherwise null
  */
 export function splitBalancedNodeRange(nodes: Node | Node[]): HTMLElement {
-    let start = nodes instanceof Array ? nodes[0] : nodes;
-    let end = nodes instanceof Array ? nodes[nodes.length - 1] : nodes;
+    let start = Array.isArray(nodes) ? nodes[0] : nodes;
+    let end = Array.isArray(nodes) ? nodes[nodes.length - 1] : nodes;
     let parentNode = start && end && start.parentNode == end.parentNode ? start.parentNode : null;
     if (parentNode) {
         if (isNodeAfter(start, end)) {

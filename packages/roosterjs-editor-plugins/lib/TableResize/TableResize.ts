@@ -1,5 +1,6 @@
 import { contains, fromHtml, isRtl, VTable } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { isNode } from 'roosterjs-cross-window';
 import {
     ContentPosition,
     PluginEvent,
@@ -66,10 +67,7 @@ export default class TableResize implements EditorPlugin {
     private clickIntoCurrentTd(event: PluginMouseEvent) {
         let mouseEvent = event.rawEvent;
         let target = mouseEvent.target;
-        return (
-            target instanceof Node &&
-            contains(this.td, <Node>target, true /*treatSameNodeAsContain*/)
-        );
+        return isNode(target) && contains(this.td, <Node>target, true /*treatSameNodeAsContain*/);
     }
 
     private onMouseOver = (e: MouseEvent) => {

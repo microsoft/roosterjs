@@ -6,6 +6,7 @@ import Position from '../selection/Position';
 import TraversingScoper from './TraversingScoper';
 import { BlockElement, ContentPosition, InlineElement, NodePosition } from 'roosterjs-editor-types';
 import { getInlineElementAfter } from '../inlineElements/getInlineElementBeforeAfter';
+import { isRange } from 'roosterjs-cross-window';
 import {
     getFirstInlineElement,
     getLastInlineElement,
@@ -32,7 +33,7 @@ export default class SelectionBlockScoper implements TraversingScoper {
         position: NodePosition | Range,
         private startFrom: ContentPosition
     ) {
-        position = position instanceof Range ? Position.getStart(position) : position;
+        position = isRange(position) ? Position.getStart(position) : position;
         this.position = position.normalize();
         this.block = getBlockElementAtNode(this.rootNode, this.position.node);
     }

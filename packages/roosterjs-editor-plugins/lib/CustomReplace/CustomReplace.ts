@@ -114,6 +114,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
         const matchingRange = searcher.getRangeFromText(matchingText, true /* exactMatch */);
 
         // parse the html string off the dom and inline the resulting element.
+        const document = this.editor.getDocument();
         const parsingSpan = document.createElement('span');
         parsingSpan.innerHTML = replacement.replacementHTML;
         const nodeToInsert =

@@ -1,7 +1,9 @@
 {
     "name": "roosterjs-html-sanitizer",
     "description": "HTML sanitization utility for roosterjs",
-    "dependencies": {},
+    "dependencies": {
+        "roosterjs-cross-window": ""
+    },
     "main": "./lib/index.ts",
     "version": "1.1.3"
 }

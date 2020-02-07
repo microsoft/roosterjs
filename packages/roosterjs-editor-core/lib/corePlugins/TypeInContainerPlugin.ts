@@ -1,5 +1,6 @@
 import Editor from '../editor/Editor';
 import EditorPlugin from '../interfaces/EditorPlugin';
+import { isNode } from 'roosterjs-cross-window';
 import {
     applyFormat,
     Browser,
@@ -129,7 +130,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
 
     private wasNodeJustCreatedByKeyboardEvent(event: PluginKeyboardEvent, formatNode: HTMLElement) {
         return (
-            event.rawEvent.target instanceof Node &&
+            isNode(event.rawEvent.target) &&
             event.rawEvent.target.contains(formatNode) &&
             event.rawEvent.key === formatNode.innerText
         );

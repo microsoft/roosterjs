@@ -174,6 +174,7 @@ const buttons: { [key: string]: RibbonButtonType } = {
         title: 'Insert inline image',
         image: require('./svg/inlineimage.svg'),
         onClick: editor => {
+            const document = editor.getDocument();
             let fileInput = document.createElement('input') as HTMLInputElement;
             fileInput.type = 'file';
             fileInput.accept = 'image/*';

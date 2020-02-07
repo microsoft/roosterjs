@@ -1,0 +1,7 @@
+{
+    "name": "roosterjs-cross-window",
+    "description": "Cross window utilities for roosterjs",
+    "dependencies": {},
+    "main": "./lib/index.ts",
+    "version": "1.0.0"
+}

@@ -5,6 +5,7 @@ import SidePane from './sidePane/SidePane';
 export interface MainPaneBaseState {
     showSidePane: boolean;
     showRibbon: boolean;
+    isPopoutShown: boolean;
 }
 
 export default abstract class MainPaneBase extends React.Component<{}, MainPaneBaseState> {
@@ -26,4 +27,6 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
     abstract updateFormatState(): void;
 
     abstract setIsRibbonShown(isShown: boolean): void;
+
+    abstract popout(): void;
 }

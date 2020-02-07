@@ -1,6 +1,7 @@
 import EditorCore, { Select, SelectRange } from '../interfaces/EditorCore';
 import { Browser, contains, createRange } from 'roosterjs-editor-dom';
 import { hasFocus } from './hasFocus';
+import { isRange } from 'roosterjs-cross-window';
 
 /**
  * Change the editor selection to the given range
@@ -67,6 +68,6 @@ export const selectRange: SelectRange = (
  * @deprecated Only for compatibility with existing code, don't use ths function, use selectRange instead
  */
 export const select: Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => {
-    let range = arg1 instanceof Range ? arg1 : createRange(arg1, arg2, arg3, arg4);
+    let range = isRange(arg1) ? arg1 : createRange(arg1, arg2, arg3, arg4);
     return core.api.selectRange(core, range);
 };

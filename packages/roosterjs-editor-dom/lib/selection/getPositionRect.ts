@@ -29,6 +29,7 @@ export default function getPositionRect(position: NodePosition): Rect {
 
     // 3) if node is text node, try inserting a SPAN and get the rect of SPAN for others
     if (position.node.nodeType == NodeType.Text) {
+        const document = position.node.ownerDocument;
         let span = document.createElement('SPAN');
         span.innerHTML = '\u200b';
         range = createRange(position);

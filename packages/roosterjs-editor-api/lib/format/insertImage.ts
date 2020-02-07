@@ -17,27 +17,24 @@ export default function insertImage(editor: Editor, imageFile: File): void;
 export default function insertImage(editor: Editor, url: string): void;
 
 export default function insertImage(editor: Editor, imageFile: File | string): void {
-    if (imageFile instanceof File) {
+    if (typeof imageFile == 'string') {
+        insertImageWithSrc(editor, imageFile);
+    } else {
         let reader = new FileReader();
         reader.onload = (event: ProgressEvent) => {
             if (!editor.isDisposed()) {
-                editor.addUndoSnapshot(() => {
-                    let image = editor.getDocument().createElement('img');
-                    image.src = (event.target as FileReader).result as string;
-                    image.style.maxWidth = '100%';
-                    editor.insertNode(image);
-                }, ChangeSource.Format);
+                insertImageWithSrc(editor, (event.target as FileReader).result as string);
             }
         };
         reader.readAsDataURL(imageFile);
-    } else {
-        if (!editor.isDisposed()) {
-            editor.addUndoSnapshot(() => {
-                const image = editor.getDocument().createElement('img')
-                image.src = imageFile
-                image.style.maxWidth = '100%'
-                editor.insertNode(image)
-            }, ChangeSource.Format)
-        }
     }
+}
+
+function insertImageWithSrc(editor: Editor, src: string) {
+    editor.addUndoSnapshot(() => {
+        const image = editor.getDocument().createElement('img');
+        image.src = src;
+        image.style.maxWidth = '100%';
+        editor.insertNode(image);
+    }, ChangeSource.Format);
 }
