@@ -317,6 +317,7 @@ export default class ImageResize implements EditorPlugin {
         div.style.bottom = '0';
         div.style.border = 'solid 1px ' + this.selectionBorderColor;
         div.style.pointerEvents = 'none';
+        this.editor.triggerContentChangedEvent(ChangeSource.ImageResize);
         return resizeDiv;
     }
 
@@ -333,6 +334,7 @@ export default class ImageResize implements EditorPlugin {
                 }
             });
             this.editor.deleteNode(resizeDiv);
+            this.editor.triggerContentChangedEvent(ChangeSource.ImageResize);
         }
     }
 
