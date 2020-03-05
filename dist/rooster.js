@@ -310,7 +310,10 @@ exports.getTargetWindow = getTargetWindow;
 function safeInstanceOf(obj, typeName) {
     var targetWindow = getTargetWindow(obj);
     var targetType = targetWindow && targetWindow[typeName];
-    return targetType && obj instanceof targetType;
+    var mainWindow = window;
+    var mainWindowType = mainWindow && mainWindow[typeName];
+    return ((mainWindowType && obj instanceof mainWindowType) ||
+        (targetType && obj instanceof targetType));
 }
 exports.default = safeInstanceOf;
 
@@ -7888,7 +7891,7 @@ function contains(container, contained, treatSameNodeAsContain) {
     if (treatSameNodeAsContain && container == contained) {
         return true;
     }
-    if (!roosterjs_cross_window_1.isNode(contained)) {
+    if (roosterjs_cross_window_1.isRange(contained)) {
         contained = contained && contained.commonAncestorContainer;
         treatSameNodeAsContain = true;
     }
