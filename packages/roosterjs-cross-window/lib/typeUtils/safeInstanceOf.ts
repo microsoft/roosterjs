@@ -37,5 +37,10 @@ export default function safeInstanceOf<T extends keyof TargetWindow>(
 ): obj is TargetWindow[T] {
     const targetWindow = getTargetWindow(obj);
     const targetType = targetWindow && (targetWindow[typeName] as any);
-    return targetType && obj instanceof targetType;
+    const mainWindow = (window as any) as TargetWindow;
+    const mainWindowType = mainWindow && (mainWindow[typeName] as any);
+    return (
+        (mainWindowType && obj instanceof mainWindowType) ||
+        (targetType && obj instanceof targetType)
+    );
 }
