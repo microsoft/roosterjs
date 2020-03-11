@@ -1,6 +1,6 @@
 import { ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { findClosestElementAncestor } from 'roosterjs-editor-dom';
+import { HtmlSanitizer } from 'roosterjs-html-sanitizer';
 
 /**
  * Toggle header at selection
@@ -31,13 +31,16 @@ export default function toggleHeader(editor: Editor, level: number) {
 
         if (level > 0) {
             let traverser = editor.getSelectionTraverser();
-            let inlineElement = traverser ? traverser.currentInlineElement : null;
-            while (inlineElement) {
-                let element = findClosestElementAncestor(inlineElement.getContainerNode());
-                if (element) {
-                    element.style.fontSize = '';
-                }
-                inlineElement = traverser.getNextInlineElement();
+            let blockElement = traverser ? traverser.currentBlockElement : null;
+            let sanitizer = new HtmlSanitizer({
+                styleCallbacks: {
+                    'font-size': () => false,
+                },
+            });
+            while (blockElement) {
+                let element = blockElement.collapseToSingleElement();
+                sanitizer.sanitize(element);
+                blockElement = traverser.getNextBlockElement();
             }
             editor.getDocument().execCommand(DocumentCommand.FormatBlock, false, `<H${level}>`);
         }

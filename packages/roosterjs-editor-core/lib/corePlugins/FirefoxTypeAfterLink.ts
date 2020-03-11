@@ -1,13 +1,15 @@
 import Editor from '../editor/Editor';
 import EditorPlugin from '../interfaces/EditorPlugin';
+import { Browser, LinkInlineElement, Position } from 'roosterjs-editor-dom';
 import { cacheGetContentSearcher } from '../eventApi/cacheGetContentSearcher';
-import { LinkInlineElement, Position } from 'roosterjs-editor-dom';
 import { PluginEvent, PluginEventType, PositionType } from 'roosterjs-editor-types';
 
 /**
  * FirefoxTypeAfterLink Component helps handle typing event when cursor is right after a link.
- * When typing after a link, Firefox will always put the new charactor inside link.
- * This plugin overrides this behavior to make it consistent with other browsers.
+ * When typing/pasting after a link, browser may put the new charactor inside link.
+ * This plugin overrides this behavior to always insert outside of link.
+ *
+ * TODO: Rename this file in next major release since it is not only applied to Firefox now
  */
 export default class FirefoxTypeAfterLink implements EditorPlugin {
     private editor: Editor;
@@ -29,7 +31,10 @@ export default class FirefoxTypeAfterLink implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.KeyPress) {
+        if (
+            (Browser.isFirefox && event.eventType == PluginEventType.KeyPress) ||
+            event.eventType == PluginEventType.BeforePaste
+        ) {
             let range = this.editor.getSelectionRange();
             if (range && range.collapsed && this.editor.getElementAtCursor('A[href]')) {
                 let searcher = cacheGetContentSearcher(event, this.editor);

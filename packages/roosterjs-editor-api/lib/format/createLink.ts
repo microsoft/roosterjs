@@ -1,5 +1,6 @@
 import { ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
+import { HtmlSanitizer } from 'roosterjs-html-sanitizer';
 import { matchLink } from 'roosterjs-editor-dom';
 
 // Regex matching Uri scheme
@@ -54,7 +55,7 @@ export default function createLink(
     displayText?: string
 ) {
     editor.focus();
-    let url = link ? link.trim() : '';
+    let url = (checkXss(link) || '').trim();
     if (url) {
         let linkData = matchLink(url);
         // matchLink can match most links, but not all, i.e. if you pass link a link as "abc", it won't match
@@ -108,4 +109,14 @@ function updateAnchorDisplayText(anchor: HTMLAnchorElement, displayText: string)
     if (displayText && anchor.textContent != displayText) {
         anchor.textContent = displayText;
     }
+}
+
+function checkXss(link: string): string {
+    const santizer = new HtmlSanitizer();
+    const doc = new DOMParser().parseFromString('<a></a>', 'text/html');
+    const a = doc.body.firstChild as HTMLAnchorElement;
+
+    a.href = link || '';
+    santizer.sanitize(doc.body);
+    return a.href;
 }
