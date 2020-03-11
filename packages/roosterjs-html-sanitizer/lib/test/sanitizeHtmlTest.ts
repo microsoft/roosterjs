@@ -52,6 +52,7 @@ describe('sanitizeHtml', () => {
     it('Html contains event handler', () => {
         runTest('<div onclick=alert("test")>bb</div>aa', '<div>bb</div>aa');
         runTest('aa<a href=javascript:alert("test")>cc</a>bb', 'aa<a>cc</a>bb');
+        runTest('aa<a href="javas\nc\nr\ni\np\nt\n: alert("test")">cc</a>bb', 'aa<a>cc</a>bb');
         runTest('aa<form action=/>cc</form>bb', 'aa<form>cc</form>bb');
     });
     it('Html contains unnecessary CSS', () => {
