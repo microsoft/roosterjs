@@ -605,6 +605,7 @@ exports.default = clearFormat;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var roosterjs_html_sanitizer_1 = __webpack_require__(/*! roosterjs-html-sanitizer */ "./packages/roosterjs-html-sanitizer/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 // Regex matching Uri scheme
 var URI_REGEX = /^[a-zA-Z]+:/i;
@@ -651,7 +652,7 @@ function applyLinkPrefix(url) {
  */
 function createLink(editor, link, altText, displayText) {
     editor.focus();
-    var url = link ? link.trim() : '';
+    var url = (checkXss(link) || '').trim();
     if (url) {
         var linkData = roosterjs_editor_dom_1.matchLink(url);
         // matchLink can match most links, but not all, i.e. if you pass link a link as "abc", it won't match
@@ -704,6 +705,14 @@ function updateAnchorDisplayText(anchor, displayText) {
     if (displayText && anchor.textContent != displayText) {
         anchor.textContent = displayText;
     }
+}
+function checkXss(link) {
+    var santizer = new roosterjs_html_sanitizer_1.HtmlSanitizer();
+    var doc = new DOMParser().parseFromString('<a></a>', 'text/html');
+    var a = doc.body.firstChild;
+    a.href = link || '';
+    santizer.sanitize(doc.body);
+    return a.href;
 }
 
 
@@ -1347,7 +1356,7 @@ function unwrapFunction(node) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var roosterjs_html_sanitizer_1 = __webpack_require__(/*! roosterjs-html-sanitizer */ "./packages/roosterjs-html-sanitizer/lib/index.ts");
 /**
  * Toggle header at selection
  * @param editor The editor instance
@@ -1373,13 +1382,16 @@ function toggleHeader(editor, level) {
         });
         if (level > 0) {
             var traverser = editor.getSelectionTraverser();
-            var inlineElement = traverser ? traverser.currentInlineElement : null;
-            while (inlineElement) {
-                var element = roosterjs_editor_dom_1.findClosestElementAncestor(inlineElement.getContainerNode());
-                if (element) {
-                    element.style.fontSize = '';
-                }
-                inlineElement = traverser.getNextInlineElement();
+            var blockElement = traverser ? traverser.currentBlockElement : null;
+            var sanitizer = new roosterjs_html_sanitizer_1.HtmlSanitizer({
+                styleCallbacks: {
+                    'font-size': function () { return false; },
+                },
+            });
+            while (blockElement) {
+                var element = blockElement.collapseToSingleElement();
+                sanitizer.sanitize(element);
+                blockElement = traverser.getNextBlockElement();
             }
             editor.getDocument().execCommand("formatBlock" /* FormatBlock */, false, "<H" + level + ">");
         }
@@ -2994,12 +3006,14 @@ exports.default = EditPlugin;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var cacheGetContentSearcher_1 = __webpack_require__(/*! ../eventApi/cacheGetContentSearcher */ "./packages/roosterjs-editor-core/lib/eventApi/cacheGetContentSearcher.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
+var cacheGetContentSearcher_1 = __webpack_require__(/*! ../eventApi/cacheGetContentSearcher */ "./packages/roosterjs-editor-core/lib/eventApi/cacheGetContentSearcher.ts");
 /**
  * FirefoxTypeAfterLink Component helps handle typing event when cursor is right after a link.
- * When typing after a link, Firefox will always put the new charactor inside link.
- * This plugin overrides this behavior to make it consistent with other browsers.
+ * When typing/pasting after a link, browser may put the new charactor inside link.
+ * This plugin overrides this behavior to always insert outside of link.
+ *
+ * TODO: Rename this file in next major release since it is not only applied to Firefox now
  */
 var FirefoxTypeAfterLink = /** @class */ (function () {
     function FirefoxTypeAfterLink() {
@@ -3018,7 +3032,8 @@ var FirefoxTypeAfterLink = /** @class */ (function () {
      * @param event PluginEvent object
      */
     FirefoxTypeAfterLink.prototype.onPluginEvent = function (event) {
-        if (event.eventType == 1 /* KeyPress */) {
+        if ((roosterjs_editor_dom_1.Browser.isFirefox && event.eventType == 1 /* KeyPress */) ||
+            event.eventType == 8 /* BeforePaste */) {
             var range = this.editor.getSelectionRange();
             if (range && range.collapsed && this.editor.getElementAtCursor('A[href]')) {
                 var searcher = cacheGetContentSearcher_1.cacheGetContentSearcher(event, this.editor);
@@ -4063,7 +4078,7 @@ function createEditorCore(contentDiv, options) {
         typeInContainer: new TypeInContainerPlugin_1.default(),
         mouseUp: new MouseUpPlugin_1.default(),
         domEvent: new DOMEventPlugin_1.default(options.disableRestoreSelectionOnFocus),
-        firefoxTypeAfterLink: roosterjs_editor_dom_1.Browser.isFirefox && new FirefoxTypeAfterLink_1.default(),
+        firefoxTypeAfterLink: new FirefoxTypeAfterLink_1.default(),
         copyPlugin: !roosterjs_editor_dom_1.Browser.isIE && new CopyPlugin_1.default(),
     };
     var allPlugins = buildPluginList(corePlugins, options.plugins);
