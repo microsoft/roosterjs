@@ -11923,7 +11923,8 @@ var HtmlSanitizer = /** @class */ (function () {
             }
             if (value === null ||
                 value === undefined ||
-                value.toLowerCase().indexOf('script:') >= 0) {
+                value.match(/s\n*c\n*r\n*i\n*p\n*t\n*:/i) // match script: with any NewLine inside. Browser will ignore those NewLine char and still treat it as script prefix
+            ) {
                 element.removeAttribute(name_1);
             }
             else {
