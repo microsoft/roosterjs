@@ -1,5 +1,8 @@
 import TargetWindow from '../types/TargetWindow';
 
+// NOTE: Type TargetWindow is an auto-generated type.
+// Run node ./tools/generateTargetWindow.js to generate it.
+
 /**
  * Try get window from the given node or range
  * @param source Source node or range
