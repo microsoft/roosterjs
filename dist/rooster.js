@@ -111,6 +111,8 @@ var isNode_1 = __webpack_require__(/*! ./typeUtils/isNode */ "./packages/rooster
 exports.isNode = isNode_1.default;
 var isRange_1 = __webpack_require__(/*! ./typeUtils/isRange */ "./packages/roosterjs-cross-window/lib/typeUtils/isRange.ts");
 exports.isRange = isRange_1.default;
+var safeInstanceOf_1 = __webpack_require__(/*! ./typeUtils/safeInstanceOf */ "./packages/roosterjs-cross-window/lib/typeUtils/safeInstanceOf.ts");
+exports.safeInstanceOf = safeInstanceOf_1.default;
 
 
 /***/ }),
@@ -286,6 +288,8 @@ exports.default = isRange;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+// NOTE: Type TargetWindow is an auto-generated type.
+// Run node ./tools/generateTargetWindow.js to generate it.
 /**
  * Try get window from the given node or range
  * @param source Source node or range
