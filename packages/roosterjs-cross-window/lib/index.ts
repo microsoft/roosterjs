@@ -5,3 +5,4 @@ export { default as isHTMLTableCellElement } from './typeUtils/isHTMLTableCellEl
 export { default as isHTMLTableElement } from './typeUtils/isHTMLTableElement';
 export { default as isNode } from './typeUtils/isNode';
 export { default as isRange } from './typeUtils/isRange';
+export { default as safeInstanceOf } from './typeUtils/safeInstanceOf';
