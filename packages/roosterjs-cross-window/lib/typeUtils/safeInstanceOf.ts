@@ -1,12 +1,7 @@
-export interface TargetWindow {
-    Node: Node;
-    HTMLElement: HTMLElement;
-    HTMLOListElement: HTMLOListElement;
-    HTMLTableElement: HTMLTableElement;
-    HTMLTableCellElement: HTMLTableCellElement;
-    Range: Range;
-    DocumentFragment: DocumentFragment;
-}
+import TargetWindow from '../types/TargetWindow';
+
+// NOTE: Type TargetWindow is an auto-generated type.
+// Run node ./tools/generateTargetWindow.js to generate it.
 
 /**
  * Try get window from the given node or range
