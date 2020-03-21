@@ -1,4 +1,5 @@
 import createRange from './createRange';
+import normalizeRect from '../utils/normalizeRect';
 import { NodePosition, NodeType, Rect } from 'roosterjs-editor-types';
 
 /**
@@ -51,18 +52,4 @@ export default function getPositionRect(position: NodePosition): Rect {
     }
 
     return null;
-}
-
-function normalizeRect(clientRect: ClientRect): Rect {
-    // A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p
-    // We validate that and only return a rect when the passed in ClientRect is valid
-    let { left, right, top, bottom } = clientRect || <ClientRect>{};
-    return left + right + top + bottom > 0
-        ? {
-              left: Math.round(left),
-              right: Math.round(right),
-              top: Math.round(top),
-              bottom: Math.round(bottom),
-          }
-        : null;
 }
