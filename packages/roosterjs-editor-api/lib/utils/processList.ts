@@ -12,8 +12,6 @@ import {
 
 const TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
 const TEMP_NODE_HTML = '<img class="' + TEMP_NODE_CLASS + '">';
-// const STYLE_PROTECTOR_CLASS = 'ROOSTERJS_STYLE_PROTECTOR_FOR_LIST';
-// const STYLE_PROTECTOR_HTML = '<span class="' + STYLE_PROTECTOR_CLASS + '">you should not see this.</span>';
 
 type ValidProcessListDocumentCommands =
     | DocumentCommand.Outdent
