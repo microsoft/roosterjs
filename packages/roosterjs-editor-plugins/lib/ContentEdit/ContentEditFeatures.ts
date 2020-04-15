@@ -118,7 +118,7 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         indentWhenTab: true,
         outdentWhenShiftTab: true,
         outdentWhenBackspaceOnEmptyFirstLine: true,
-        outdentWhenEnterOnEmptyLine: Browser.isIE || Browser.isChrome,
+        outdentWhenEnterOnEmptyLine: Browser.isIE,
         mergeInNewLineWhenBackspaceOnFirstChar: false,
         unquoteWhenBackspaceOnEmptyFirstLine: true,
         unquoteWhenEnterOnEmptyLine: true,
