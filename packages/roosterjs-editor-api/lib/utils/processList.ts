@@ -1,17 +1,7 @@
 import { DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { isHTMLElement } from 'roosterjs-cross-window';
-import {
-    fromHtml,
-    isVoidHtmlElement,
-    isBlockElement,
-    Browser,
-    getSelectionPath,
-    getRangeFromSelectionPath,
-} from 'roosterjs-editor-dom';
-
-const TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
-const TEMP_NODE_HTML = '<img class="' + TEMP_NODE_CLASS + '">';
+import { Browser, getSelectionPath, getRangeFromSelectionPath } from 'roosterjs-editor-dom';
 
 type ValidProcessListDocumentCommands =
     | DocumentCommand.Outdent
@@ -29,7 +19,12 @@ export default function processList(
 ): Node {
     let clonedNode: Node;
     let relativeSelectionPath;
-    if (Browser.isChrome && command == DocumentCommand.Outdent) {
+    let clonedCursorNode: Node;
+    let cursorSelectionPath;
+
+    // Chrome has a bug where certain infromation about elements are deleted when outdent or enter on empty line occurs.
+    // We need to clone our current LI node so we can replace the new LI node with it post outdent / enter.
+    if (Browser.isChrome) {
         const parentLINode = editor.getElementAtCursor('LI');
         if (parentLINode) {
             let currentRange = editor.getSelectionRange();
@@ -39,65 +34,61 @@ export default function processList(
                     editor.getElementAtCursor('LI', currentRange.endContainer) == parentLINode)
             ) {
                 relativeSelectionPath = getSelectionPath(parentLINode, currentRange);
-                // Chrome has some bad behavior when outdenting
-                // in order to work around this, we need to take steps to deep clone the current node
-                // after the outdent, we'll replace the new LI with the cloned content.
+                if (parentLINode.textContent === '') {
+                    // If the node is empty, we need to handle this special case.
+                    // Chromium will try to replace all empty spans with font tags
+                    // We should preserve where our cursor is so that in this case, we can keep the span around.
+                    const cursorNode = editor.getElementAtCursor();
+                    clonedCursorNode = cursorNode.cloneNode(true);
+                    cursorSelectionPath = getSelectionPath(cursorNode, currentRange);
+                }
                 clonedNode = parentLINode.cloneNode(true);
             }
         }
-
-        workaroundForChrome(editor);
     }
 
     let existingList = editor.getElementAtCursor('OL,UL');
     editor.getDocument().execCommand(command, false, null);
-    let newParentNode: Node;
-    editor.queryElements('.' + TEMP_NODE_CLASS, node => {
-        newParentNode = node.parentNode;
-        editor.deleteNode(node);
-    });
+    const newParentNode = editor.getElementAtCursor('LI');
     let newList = editor.getElementAtCursor('OL,UL');
     if (newList == existingList) {
         newList = null;
     }
 
-    if (newList && clonedNode && newParentNode) {
-        // if the clonedNode and the newLIParent share the same tag name
-        // we can 1:1 swap them
-        if (isHTMLElement(clonedNode)) {
-            if (
-                isHTMLElement(newParentNode) &&
-                clonedNode.tagName == (<HTMLElement>newParentNode).tagName
-            ) {
-                newList.replaceChild(clonedNode, newParentNode);
+    if (Browser.isChrome) {
+        // This is the normal case for indenting/outdenting within a list
+        if (clonedNode && newList && newParentNode) {
+            // if the clonedNode and the newLIParent share the same tag name
+            // we can 1:1 swap them
+            if (isHTMLElement(clonedNode)) {
+                if (
+                    isHTMLElement(newParentNode) &&
+                    clonedNode.tagName == (<HTMLElement>newParentNode).tagName
+                ) {
+                    newList.replaceChild(clonedNode, newParentNode);
+                }
+                if (relativeSelectionPath && editor.getDocument().body.contains(clonedNode)) {
+                    let newRange = getRangeFromSelectionPath(clonedNode, relativeSelectionPath);
+                    editor.select(newRange);
+                }
             }
-            if (relativeSelectionPath && editor.getDocument().body.contains(clonedNode)) {
-                let newRange = getRangeFromSelectionPath(clonedNode, relativeSelectionPath);
-                editor.select(newRange);
+            // This is the special handling
+        } else if (clonedCursorNode) {
+            // Rooster should never be creating FONT tags on it's own,
+            // and chromium's behavior is consistant with empty nodes outdenting to a non list block element root.
+            const chromeFontTag = editor.getElementAtCursor('FONT');
+            if (chromeFontTag) {
+                chromeFontTag.parentNode.replaceChild(clonedCursorNode, chromeFontTag);
+                if (
+                    cursorSelectionPath &&
+                    isHTMLElement(clonedCursorNode) &&
+                    editor.getDocument().body.contains(clonedCursorNode)
+                ) {
+                    let newRange = getRangeFromSelectionPath(clonedCursorNode, cursorSelectionPath);
+                    editor.select(newRange);
+                }
             }
         }
-        // The alternative case is harder to solve, but we didn't specifically handle this before either.
     }
-
     return newList;
-}
-
-function workaroundForChrome(editor: Editor) {
-    let traverser = editor.getSelectionTraverser();
-    let block = traverser && traverser.currentBlockElement;
-    while (block) {
-        let container = block.getStartNode();
-
-        if (container) {
-            // Add a temp <IMG> tag after all other nodes in the block to avoid Chrome remove existing format when toggle list
-            const tempNode = fromHtml(TEMP_NODE_HTML, editor.getDocument())[0];
-            if (isVoidHtmlElement(container) || !isBlockElement(container)) {
-                container.parentNode.appendChild(tempNode);
-            } else {
-                container.appendChild(tempNode);
-            }
-        }
-
-        block = traverser.getNextBlockElement();
-    }
 }
