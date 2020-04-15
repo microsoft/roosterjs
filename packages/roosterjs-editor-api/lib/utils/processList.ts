@@ -29,7 +29,7 @@ export default function processList(
 ): Node {
     let clonedNode: Node;
     let relativeSelectionPath;
-    if (Browser.isChrome && command != DocumentCommand.Indent) {
+    if (Browser.isChrome && command == DocumentCommand.Outdent) {
         const parentLINode = editor.getElementAtCursor('LI');
         if (parentLINode) {
             let currentRange = editor.getSelectionRange();
