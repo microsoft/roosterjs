@@ -12,6 +12,8 @@ import {
 
 const TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
 const TEMP_NODE_HTML = '<img class="' + TEMP_NODE_CLASS + '">';
+// const STYLE_PROTECTOR_CLASS = 'ROOSTERJS_STYLE_PROTECTOR_FOR_LIST';
+// const STYLE_PROTECTOR_HTML = '<span class="' + STYLE_PROTECTOR_CLASS + '">you should not see this.</span>';
 
 type ValidProcessListDocumentCommands =
     | DocumentCommand.Outdent
@@ -29,7 +31,7 @@ export default function processList(
 ): Node {
     let clonedNode: Node;
     let relativeSelectionPath;
-    if (Browser.isChrome && command == DocumentCommand.Outdent) {
+    if (Browser.isChrome && command != DocumentCommand.Indent) {
         const parentLINode = editor.getElementAtCursor('LI');
         if (parentLINode) {
             let currentRange = editor.getSelectionRange();
@@ -89,12 +91,12 @@ function workaroundForChrome(editor: Editor) {
         let container = block.getStartNode();
 
         if (container) {
-            // Add a temp <IMG> tag before all other nodes in the block to avoid Chrome remove existing format when toggle list
+            // Add a temp <IMG> tag after all other nodes in the block to avoid Chrome remove existing format when toggle list
             const tempNode = fromHtml(TEMP_NODE_HTML, editor.getDocument())[0];
             if (isVoidHtmlElement(container) || !isBlockElement(container)) {
-                container.parentNode.insertBefore(tempNode, container);
+                container.parentNode.appendChild(tempNode);
             } else {
-                container.insertBefore(tempNode, container.firstChild);
+                container.appendChild(tempNode);
             }
         }
 
