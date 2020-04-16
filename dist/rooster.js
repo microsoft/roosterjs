@@ -1971,10 +1971,8 @@ function isPendableFormatCommand(command) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
-var TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
-var TEMP_NODE_HTML = '<img class="' + TEMP_NODE_CLASS + '">';
+var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
 /**
  * Browsers don't handle bullet/numbering list well, especially the formats when switching list statue
  * So we workaround it by always adding format to list element
@@ -1982,69 +1980,73 @@ var TEMP_NODE_HTML = '<img class="' + TEMP_NODE_CLASS + '">';
 function processList(editor, command) {
     var clonedNode;
     var relativeSelectionPath;
-    if (roosterjs_editor_dom_1.Browser.isChrome && command == "outdent" /* Outdent */) {
+    var clonedCursorNode;
+    var cursorSelectionPath;
+    // Chrome has a bug where certain infromation about elements are deleted when outdent or enter on empty line occurs.
+    // We need to clone our current LI node so we can replace the new LI node with it post outdent / enter.
+    if (roosterjs_editor_dom_1.Browser.isChrome) {
         var parentLINode = editor.getElementAtCursor('LI');
         if (parentLINode) {
             var currentRange = editor.getSelectionRange();
-            if (currentRange.collapsed ||
-                (editor.getElementAtCursor('LI', currentRange.startContainer) == parentLINode &&
-                    editor.getElementAtCursor('LI', currentRange.endContainer) == parentLINode)) {
+            if (currentRange &&
+                (currentRange.collapsed ||
+                    (editor.getElementAtCursor('LI', currentRange.startContainer) == parentLINode &&
+                        editor.getElementAtCursor('LI', currentRange.endContainer) == parentLINode))) {
                 relativeSelectionPath = roosterjs_editor_dom_1.getSelectionPath(parentLINode, currentRange);
-                // Chrome has some bad behavior when outdenting
-                // in order to work around this, we need to take steps to deep clone the current node
-                // after the outdent, we'll replace the new LI with the cloned content.
+                if (parentLINode.textContent === '') {
+                    // If the node is empty, we need to handle this special case.
+                    // Chromium will try to replace all empty spans with font tags
+                    // We should preserve where our cursor is so that in this case, we can keep the span around.
+                    var cursorNode = editor.getElementAtCursor();
+                    clonedCursorNode = cursorNode.cloneNode(true);
+                    cursorSelectionPath = roosterjs_editor_dom_1.getSelectionPath(cursorNode, currentRange);
+                }
                 clonedNode = parentLINode.cloneNode(true);
             }
         }
-        workaroundForChrome(editor);
     }
     var existingList = editor.getElementAtCursor('OL,UL');
     editor.getDocument().execCommand(command, false, null);
-    var newParentNode;
-    editor.queryElements('.' + TEMP_NODE_CLASS, function (node) {
-        newParentNode = node.parentNode;
-        editor.deleteNode(node);
-    });
+    var newParentNode = editor.getElementAtCursor('LI');
     var newList = editor.getElementAtCursor('OL,UL');
     if (newList == existingList) {
         newList = null;
     }
-    if (newList && clonedNode && newParentNode) {
-        // if the clonedNode and the newLIParent share the same tag name
-        // we can 1:1 swap them
-        if (roosterjs_cross_window_1.isHTMLElement(clonedNode)) {
-            if (roosterjs_cross_window_1.isHTMLElement(newParentNode) &&
-                clonedNode.tagName == newParentNode.tagName) {
-                newList.replaceChild(clonedNode, newParentNode);
+    if (roosterjs_editor_dom_1.Browser.isChrome) {
+        // This is the normal case for indenting/outdenting within a list
+        if (clonedNode && newList && newParentNode) {
+            // if the clonedNode and the newLIParent share the same tag name
+            // we can 1:1 swap them
+            if (roosterjs_cross_window_1.isHTMLElement(clonedNode)) {
+                if (roosterjs_cross_window_1.isHTMLElement(newParentNode) &&
+                    clonedNode.tagName == newParentNode.tagName) {
+                    newList.replaceChild(clonedNode, newParentNode);
+                }
+                if (relativeSelectionPath && editor.contains(clonedNode)) {
+                    var newRange = roosterjs_editor_dom_1.getRangeFromSelectionPath(clonedNode, relativeSelectionPath);
+                    editor.select(newRange);
+                }
             }
-            if (relativeSelectionPath && editor.getDocument().body.contains(clonedNode)) {
-                var newRange = roosterjs_editor_dom_1.getRangeFromSelectionPath(clonedNode, relativeSelectionPath);
-                editor.select(newRange);
+            // This is the special handling
+        }
+        else if (clonedCursorNode) {
+            // Rooster should never be creating FONT tags on it's own,
+            // and chromium's behavior is consistant with empty nodes outdenting to a non list block element root.
+            var chromeFontTag = editor.getElementAtCursor('FONT');
+            if (chromeFontTag) {
+                chromeFontTag.parentNode.replaceChild(clonedCursorNode, chromeFontTag);
+                if (cursorSelectionPath &&
+                    roosterjs_cross_window_1.isHTMLElement(clonedCursorNode) &&
+                    editor.contains(clonedCursorNode)) {
+                    var newRange = roosterjs_editor_dom_1.getRangeFromSelectionPath(clonedCursorNode, cursorSelectionPath);
+                    editor.select(newRange);
+                }
             }
         }
-        // The alternative case is harder to solve, but we didn't specifically handle this before either.
     }
     return newList;
 }
 exports.default = processList;
-function workaroundForChrome(editor) {
-    var traverser = editor.getSelectionTraverser();
-    var block = traverser && traverser.currentBlockElement;
-    while (block) {
-        var container = block.getStartNode();
-        if (container) {
-            // Add a temp <IMG> tag before all other nodes in the block to avoid Chrome remove existing format when toggle list
-            var tempNode = roosterjs_editor_dom_1.fromHtml(TEMP_NODE_HTML, editor.getDocument())[0];
-            if (roosterjs_editor_dom_1.isVoidHtmlElement(container) || !roosterjs_editor_dom_1.isBlockElement(container)) {
-                container.parentNode.insertBefore(tempNode, container);
-            }
-            else {
-                container.insertBefore(tempNode, container.firstChild);
-            }
-        }
-        block = traverser.getNextBlockElement();
-    }
-}
 
 
 /***/ }),
@@ -9018,7 +9020,7 @@ function getDefaultContentEditFeatures() {
         indentWhenTab: true,
         outdentWhenShiftTab: true,
         outdentWhenBackspaceOnEmptyFirstLine: true,
-        outdentWhenEnterOnEmptyLine: roosterjs_editor_dom_1.Browser.isIE,
+        outdentWhenEnterOnEmptyLine: roosterjs_editor_dom_1.Browser.isIE || roosterjs_editor_dom_1.Browser.isChrome,
         mergeInNewLineWhenBackspaceOnFirstChar: false,
         unquoteWhenBackspaceOnEmptyFirstLine: true,
         unquoteWhenEnterOnEmptyLine: true,
