@@ -1,9 +1,9 @@
+import { Browser, getRangeFromSelectionPath, getSelectionPath } from 'roosterjs-editor-dom';
 import { DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import { isHTMLElement } from 'roosterjs-cross-window';
-import { Browser, getSelectionPath, getRangeFromSelectionPath } from 'roosterjs-editor-dom';
 
-type ValidProcessListDocumentCommands =
+export type ValidProcessListDocumentCommands =
     | DocumentCommand.Outdent
     | DocumentCommand.Indent
     | DocumentCommand.InsertOrderedList
@@ -29,9 +29,10 @@ export default function processList(
         if (parentLINode) {
             let currentRange = editor.getSelectionRange();
             if (
-                currentRange.collapsed ||
-                (editor.getElementAtCursor('LI', currentRange.startContainer) == parentLINode &&
-                    editor.getElementAtCursor('LI', currentRange.endContainer) == parentLINode)
+                currentRange &&
+                (currentRange.collapsed ||
+                    (editor.getElementAtCursor('LI', currentRange.startContainer) == parentLINode &&
+                        editor.getElementAtCursor('LI', currentRange.endContainer) == parentLINode))
             ) {
                 relativeSelectionPath = getSelectionPath(parentLINode, currentRange);
                 if (parentLINode.textContent === '') {
@@ -67,7 +68,7 @@ export default function processList(
                 ) {
                     newList.replaceChild(clonedNode, newParentNode);
                 }
-                if (relativeSelectionPath && editor.getDocument().body.contains(clonedNode)) {
+                if (relativeSelectionPath && editor.contains(clonedNode)) {
                     let newRange = getRangeFromSelectionPath(clonedNode, relativeSelectionPath);
                     editor.select(newRange);
                 }
@@ -82,7 +83,7 @@ export default function processList(
                 if (
                     cursorSelectionPath &&
                     isHTMLElement(clonedCursorNode) &&
-                    editor.getDocument().body.contains(clonedCursorNode)
+                    editor.contains(clonedCursorNode)
                 ) {
                     let newRange = getRangeFromSelectionPath(clonedCursorNode, cursorSelectionPath);
                     editor.select(newRange);
