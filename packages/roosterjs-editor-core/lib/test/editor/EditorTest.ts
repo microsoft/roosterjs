@@ -92,6 +92,19 @@ describe('Editor insertContent()', () => {
         expect(editor.getContent()).toBe('<div id="text">hellotext</div>');
     });
 
+    it('insert begin with multiple nodes', () => {
+        // Act
+        editor.insertContent('hello<br>world', {
+            position: ContentPosition.Begin,
+            updateCursor: true,
+            replaceSelection: true,
+            insertOnNewLine: false,
+        });
+
+        // Assert
+        expect(editor.getContent()).toBe('<div id="text">hello<br>worldtext</div>');
+    });
+
     it('insert end', () => {
         // Act
         editor.insertContent('hello', {
