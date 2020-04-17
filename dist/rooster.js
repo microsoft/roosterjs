@@ -3635,9 +3635,9 @@ var Editor = /** @class */ (function () {
             if (option && option.insertOnNewLine && allNodes.length > 1) {
                 allNodes = [roosterjs_editor_dom_1.wrap(allNodes)];
             }
-            for (var i = 0; i < allNodes.length; i++) {
-                this.insertNode(allNodes[i], option);
-            }
+            var fragment_1 = this.core.document.createDocumentFragment();
+            allNodes.forEach(function (node) { return fragment_1.appendChild(node); });
+            this.insertNode(fragment_1, option);
         }
     };
     //#endregion
