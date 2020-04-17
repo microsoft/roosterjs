@@ -429,9 +429,11 @@ export default class Editor {
             if (option && option.insertOnNewLine && allNodes.length > 1) {
                 allNodes = [wrap(allNodes)];
             }
-            for (let i = 0; i < allNodes.length; i++) {
-                this.insertNode(allNodes[i], option);
-            }
+
+            let fragment = this.core.document.createDocumentFragment();
+            allNodes.forEach(node => fragment.appendChild(node));
+
+            this.insertNode(fragment, option);
         }
     }
 
