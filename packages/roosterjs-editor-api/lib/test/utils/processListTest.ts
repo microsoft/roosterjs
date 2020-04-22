@@ -1,5 +1,5 @@
 import * as TestHelper from '../TestHelper';
-import processList, { ValidProcessListDocumentCommands } from '../../utils/processList';
+import processList from '../../utils/processList';
 import { DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
@@ -16,26 +16,10 @@ describe('processList()', () => {
         TestHelper.removeElement(testID);
     });
 
-    it('calls exec command for any potential document command', () => {
-        const document = editor.getDocument();
-        spyOn(document, 'execCommand');
-        const randomCommand = Math.floor(Math.random() * 4);
-        const commands: ValidProcessListDocumentCommands[] = [
-            DocumentCommand.Indent,
-            DocumentCommand.Outdent,
-            DocumentCommand.InsertOrderedList,
-            DocumentCommand.InsertUnorderedList,
-        ];
-
-        processList(editor, commands[randomCommand]);
-
-        expect(document.execCommand).toHaveBeenCalledWith(commands[randomCommand], false, null);
-    });
-
-    it('moves the span, preserving its attributes after the exec command', () => {
+    it('properly outdents, preserving the span', () => {
         // Arrange
         const originalContent =
-            '<ul><li><span style="font-size: 20pt; font-family: &quot;Courier New&quot;;">​big font</span></li><ul><li id="level 2"><span id="level 2 content" style="font-size: 20pt; font-family: &quot;Courier New&quot;;"><img id="focus helper" /><br></span></li></ul></ul>';
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li><li><span style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"><img id="focus helper" /><br></span></li></ul></div>';
         editor.setContent(originalContent);
         const focusNode = document.getElementById('focus helper');
         TestHelper.setSelection(focusNode, 0);
@@ -46,14 +30,14 @@ describe('processList()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<ul><li><span style="font-size: 20pt; font-family: &quot;Courier New&quot;;">​big font</span></li><li id="level 2"><span id="level 2 content" style="font-size: 20pt; font-family: &quot;Courier New&quot;;"><br></span></li></ul>'
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li></ul><span style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"><br></span></div>'
         );
     });
 
-    it('moves the span out of the list, preserving the span after the exec command', () => {
+    it('properly outdents from the middle, preserving the span.', () => {
         // Arrange
         const originalContent =
-            '<ul><li><span style="font-size: 20pt; font-family: &quot;Courier New&quot;;">​big font</span></li><li id="level 2"><span id="level 2 content" style="font-size: 20pt; font-family: &quot;Courier New&quot;;"><img id="focus helper" /><br></span></li></ul>';
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li><li><span style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"><img id="focus helper" /><br></span></li><li>test</li></ul></div>';
         editor.setContent(originalContent);
         const focusNode = document.getElementById('focus helper');
         TestHelper.setSelection(focusNode, 0);
@@ -64,14 +48,14 @@ describe('processList()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<ul><li><span style="font-size: 20pt; font-family: &quot;Courier New&quot;;">​big font</span></li></ul><span id="level 2 content" style="font-size: 20pt; font-family: &quot;Courier New&quot;;"><br></span>'
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li></ul><span style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"><br></span><ul><li>test</li></ul></div>'
         );
     });
 
-    it('doesnt move the whole LI out when there is no span with formatting content on it.', () => {
+    it('properly outdents when default format is applied', () => {
         // Arrange
         const originalContent =
-            '<div style="font-size: 12pt; font-family: Calibri, Helvetica, sans-serif; background-color: rgb(255, 255, 255)">test</div><div style="font-size: 12pt; font-family: Calibri, Helvetica, sans-serif; background-color: rgb(255, 255, 255)">test</div><div style="font-size: 12pt; font-family: Calibri, Helvetica, sans-serif; background-color: rgb(255, 255, 255)"><br></div><div style="font-size: 12pt; font-family: Calibri, Helvetica, sans-serif; background-color: rgb(255, 255, 255)">test</div><div style="font-size: 12pt; font-family: Calibri, Helvetica, sans-serif; background-color: rgb(255, 255, 255)"><br></div><div style="font-family: &quot;Times New Roman&quot;; font-size: medium; background-color: rgb(255, 255, 255)"><ul style="font-family: Calibri, Helvetica, sans-serif; font-size: 12pt"><li>test</li><li>test</li><li>test</li><li><img id="focus helper" /><br></li></ul></div>';
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li><li>test</li><li><img id="focus helper" /><br></li></ul></div>';
         editor.setContent(originalContent);
         const focusNode = document.getElementById('focus helper');
         TestHelper.setSelection(focusNode, 0);
@@ -82,7 +66,25 @@ describe('processList()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div style="font-size: 12pt; font-family: Calibri, Helvetica, sans-serif; background-color: rgb(255, 255, 255)">test</div><div style="font-size: 12pt; font-family: Calibri, Helvetica, sans-serif; background-color: rgb(255, 255, 255)">test</div><div style="font-size: 12pt; font-family: Calibri, Helvetica, sans-serif; background-color: rgb(255, 255, 255)"><br></div><div style="font-size: 12pt; font-family: Calibri, Helvetica, sans-serif; background-color: rgb(255, 255, 255)">test</div><div style="font-size: 12pt; font-family: Calibri, Helvetica, sans-serif; background-color: rgb(255, 255, 255)"><br></div><div style="background-color: rgb(255, 255, 255);"><ul style="font-family: Calibri, Helvetica, sans-serif; font-size: 12pt;"><li>test</li><li>test</li><li>test</li></ul><font face="Calibri, Helvetica, sans-serif"><br></font></div>'
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li><li>test</li></ul><br></div>'
+        );
+    });
+
+    it('properly outdents from the middle when default format is applied', () => {
+        // Arrange
+        const originalContent =
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li><li><img id="focus helper" /><br></li><li>test</li></ul></div>';
+        editor.setContent(originalContent);
+        const focusNode = document.getElementById('focus helper');
+        TestHelper.setSelection(focusNode, 0);
+        editor.deleteNode(focusNode);
+
+        // Act
+        processList(editor, DocumentCommand.Outdent);
+
+        // Assert
+        expect(editor.getContent()).toBe(
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li></ul><br><ul><li>test</li></ul></div>'
         );
     });
 });
