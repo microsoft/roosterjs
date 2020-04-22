@@ -36,12 +36,17 @@ export default function processList(
             ) {
                 relativeSelectionPath = getSelectionPath(parentLINode, currentRange);
                 if (parentLINode.textContent === '') {
-                    // If the node is empty, we need to handle this special case.
+                    const cursorNode = editor.getElementAtCursor();
+
+                    // If the cursor is inside of a span, we need to preserve that content somehow when the content is empty.
                     // Chromium will try to replace all empty spans with font tags
                     // We should preserve where our cursor is so that in this case, we can keep the span around.
-                    const cursorNode = editor.getElementAtCursor();
-                    clonedCursorNode = cursorNode.cloneNode(true);
-                    cursorSelectionPath = getSelectionPath(cursorNode, currentRange);
+                    // In some cases Chromium will still put a font tag at the document root,
+                    // But unless we have a span to replace it with, we should leave it be for now.
+                    if (cursorNode !== parentLINode) {
+                        clonedCursorNode = cursorNode.cloneNode(true);
+                        cursorSelectionPath = getSelectionPath(cursorNode, currentRange);
+                    }
                 }
                 clonedNode = parentLINode.cloneNode(true);
             }
