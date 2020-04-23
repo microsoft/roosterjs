@@ -30,7 +30,7 @@ describe('processList()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li></ul><span style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"><br></span></div>'
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li></ul><div><span style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"><br></span></div></div>'
         );
     });
 
@@ -48,7 +48,7 @@ describe('processList()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li></ul><span style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"><br></span><ul><li>test</li></ul></div>'
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li></ul><div><span style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"><br></span></div><ul><li>test</li></ul></div>'
         );
     });
 
@@ -66,7 +66,7 @@ describe('processList()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li><li>test</li></ul><br></div>'
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li><li>test</li></ul><div><br></div></div>'
         );
     });
 
@@ -84,7 +84,7 @@ describe('processList()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li></ul><br><ul><li>test</li></ul></div>'
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li></ul><div><br></div><ul><li>test</li></ul></div>'
         );
     });
 });

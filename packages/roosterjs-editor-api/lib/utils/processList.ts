@@ -1,13 +1,12 @@
+import { DocumentCommand } from 'roosterjs-editor-types';
+import { Editor } from 'roosterjs-editor-core';
 import {
     Browser,
     createRange,
     getSelectionPath,
     splitBalancedNodeRange,
-    unwrap,
     wrap,
 } from 'roosterjs-editor-dom';
-import { DocumentCommand, PositionType } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
 
 export type ValidProcessListDocumentCommands =
     | DocumentCommand.Outdent
@@ -25,14 +24,15 @@ export default function processList(
 ): Node {
     let existingList = editor.getElementAtCursor('OL,UL');
     if (Browser.isChrome && command !== DocumentCommand.Indent) {
-        // Chrome has a bug where certain infromation about elements are deleted when outdent or enter on empty line occurs.
+        // Chrome has a bug where certain information about elements are deleted when outdent or enter on empty line occurs.
         // We need to clone our current LI node so we can replace the new LI node with it post outdent / enter.
         const parentLINode = editor.getElementAtCursor('LI');
         // We must first be in an LI node to do something to fix this.
         if (parentLINode) {
             // We also don't want to try to handle the multi select outdent case at this time.
             // These are already pretty stable in Chromium.
-            let currentRange = editor.getSelectionRange();
+            const currentRange = editor.getSelectionRange();
+            const currentSelectionPath = getSelectionPath(parentLINode, currentRange);
             if (
                 currentRange &&
                 (currentRange.collapsed ||
@@ -43,36 +43,39 @@ export default function processList(
                 // In well formed HTML, this should just be the existing list's parent container.
                 const listParent = existingList.parentElement;
                 if (listParent.tagName == 'OL' || listParent.tagName == 'UL') {
-                    const currentSelectionPath = getSelectionPath(parentLINode, currentRange);
-
+                    if (parentLINode.nextElementSibling) {
+                        splitBalancedNodeRange(parentLINode);
+                    }
                     existingList.insertAdjacentElement('afterend', parentLINode);
-
-                    let newRange = createRange(
-                        parentLINode,
-                        currentSelectionPath.start,
-                        currentSelectionPath.end
+                    editor.select(
+                        createRange(
+                            parentLINode,
+                            currentSelectionPath.start,
+                            currentSelectionPath.end
+                        )
                     );
-                    editor.select(newRange);
                 } else {
                     // In this case, we're going out to the parent root.
                     if (parentLINode.nextElementSibling) {
                         splitBalancedNodeRange(parentLINode);
-                        editor.select(parentLINode, PositionType.Begin);
                     }
 
                     const wrappedContents = wrap([].slice.call(parentLINode.childNodes));
-                    const currentSelectionPath = getSelectionPath(wrappedContents, currentRange);
-
-                    existingList.insertAdjacentElement('afterend', wrappedContents);
-                    editor.deleteNode(parentLINode);
-
-                    let newRange = createRange(
+                    const wrappedRange = createRange(
                         wrappedContents,
                         currentSelectionPath.start,
                         currentSelectionPath.end
                     );
+                    const wrappedSelectionPath = getSelectionPath(wrappedContents, wrappedRange);
+
+                    existingList.insertAdjacentElement('afterend', wrappedContents);
+                    editor.deleteNode(parentLINode);
+                    let newRange = createRange(
+                        wrappedContents,
+                        wrappedSelectionPath.start,
+                        wrappedSelectionPath.end
+                    );
                     editor.select(newRange);
-                    unwrap(wrappedContents);
                 }
 
                 if (existingList.childElementCount == 0) {
