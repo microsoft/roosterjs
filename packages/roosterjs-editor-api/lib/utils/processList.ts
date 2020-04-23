@@ -39,47 +39,60 @@ export default function processList(
                     (editor.getElementAtCursor('LI', currentRange.startContainer) == parentLINode &&
                         editor.getElementAtCursor('LI', currentRange.endContainer) == parentLINode))
             ) {
-                // Get the next highest list element.
-                // In well formed HTML, this should just be the existing list's parent container.
-                const listParent = existingList.parentElement;
-                if (listParent.tagName == 'OL' || listParent.tagName == 'UL') {
-                    if (parentLINode.nextElementSibling) {
-                        splitBalancedNodeRange(parentLINode);
-                    }
-                    existingList.insertAdjacentElement('afterend', parentLINode);
-                    editor.select(
-                        createRange(
-                            parentLINode,
+                // Handle the case for toggling between the two list types as a special case.
+                // We'll let the browser handle this for now.
+                if (
+                    (existingList.tagName === 'OL' &&
+                        command === DocumentCommand.InsertUnorderedList) ||
+                    (existingList.tagName === 'UL' && command === DocumentCommand.InsertOrderedList)
+                ) {
+                    editor.getDocument().execCommand(command, false, null);
+                } else {
+                    // Get the next highest list element.
+                    // In well formed HTML, this should just be the existing list's parent container.
+                    const listParent = existingList.parentElement;
+                    if (listParent.tagName == 'OL' || listParent.tagName == 'UL') {
+                        if (parentLINode.nextElementSibling) {
+                            splitBalancedNodeRange(parentLINode);
+                        }
+                        existingList.insertAdjacentElement('afterend', parentLINode);
+                        editor.select(
+                            createRange(
+                                parentLINode,
+                                currentSelectionPath.start,
+                                currentSelectionPath.end
+                            )
+                        );
+                    } else {
+                        // In this case, we're going out to the parent root.
+                        if (parentLINode.nextElementSibling) {
+                            splitBalancedNodeRange(parentLINode);
+                        }
+
+                        const wrappedContents = wrap([].slice.call(parentLINode.childNodes));
+                        const wrappedRange = createRange(
+                            wrappedContents,
                             currentSelectionPath.start,
                             currentSelectionPath.end
-                        )
-                    );
-                } else {
-                    // In this case, we're going out to the parent root.
-                    if (parentLINode.nextElementSibling) {
-                        splitBalancedNodeRange(parentLINode);
+                        );
+                        const wrappedSelectionPath = getSelectionPath(
+                            wrappedContents,
+                            wrappedRange
+                        );
+
+                        existingList.insertAdjacentElement('afterend', wrappedContents);
+                        editor.deleteNode(parentLINode);
+                        let newRange = createRange(
+                            wrappedContents,
+                            wrappedSelectionPath.start,
+                            wrappedSelectionPath.end
+                        );
+                        editor.select(newRange);
                     }
 
-                    const wrappedContents = wrap([].slice.call(parentLINode.childNodes));
-                    const wrappedRange = createRange(
-                        wrappedContents,
-                        currentSelectionPath.start,
-                        currentSelectionPath.end
-                    );
-                    const wrappedSelectionPath = getSelectionPath(wrappedContents, wrappedRange);
-
-                    existingList.insertAdjacentElement('afterend', wrappedContents);
-                    editor.deleteNode(parentLINode);
-                    let newRange = createRange(
-                        wrappedContents,
-                        wrappedSelectionPath.start,
-                        wrappedSelectionPath.end
-                    );
-                    editor.select(newRange);
-                }
-
-                if (existingList.childElementCount == 0) {
-                    editor.deleteNode(existingList);
+                    if (existingList.childElementCount == 0) {
+                        editor.deleteNode(existingList);
+                    }
                 }
             } else {
                 editor.getDocument().execCommand(command, false, null);
