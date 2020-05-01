@@ -93,6 +93,8 @@ function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellEle
     return cacheGetEventData(event, 'TABLECELL_FOR_TABLE_FEATURES', () => {
         let pos = editor.getFocusedPosition();
         let firstTd = pos && editor.getElementAtCursor('TD,TH,LI', pos.node);
-        return getTagOfNode(firstTd) == 'LI' ? null : (firstTd as HTMLTableCellElement);
+        return (
+            firstTd && (getTagOfNode(firstTd) == 'LI' ? null : (firstTd as HTMLTableCellElement))
+        );
     });
 }
