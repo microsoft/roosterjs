@@ -9657,8 +9657,8 @@ exports.UpDownInTable = {
 function cacheGetTableCell(event, editor) {
     return roosterjs_editor_core_1.cacheGetEventData(event, 'TABLECELL_FOR_TABLE_FEATURES', function () {
         var pos = editor.getFocusedPosition();
-        var firstTd = editor.getElementAtCursor('TD,TH,LI', pos.node);
-        return roosterjs_editor_dom_1.getTagOfNode(firstTd) == 'LI' ? null : firstTd;
+        var firstTd = pos && editor.getElementAtCursor('TD,TH,LI', pos.node);
+        return (firstTd && (roosterjs_editor_dom_1.getTagOfNode(firstTd) == 'LI' ? null : firstTd));
     });
 }
 
