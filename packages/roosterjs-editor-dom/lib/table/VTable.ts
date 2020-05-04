@@ -1,5 +1,6 @@
 import { isHTMLTableCellElement, isHTMLTableElement } from 'roosterjs-cross-window';
 import { TableFormat, TableOperation } from 'roosterjs-editor-types';
+import { toArray } from 'roosterjs-editor-dom';
 
 /**
  * Represent a virtual cell of a virtual table
@@ -55,7 +56,7 @@ export default class VTable {
         this.table = isHTMLTableElement(node) ? node : getTableFromTd(node);
         if (this.table) {
             let currentTd = isHTMLTableElement(node) ? null : node;
-            let trs = <HTMLTableRowElement[]>[].slice.call(this.table.rows);
+            let trs = toArray(this.table.rows);
             this.cells = trs.map(row => []);
             trs.forEach((tr, rowIndex) => {
                 this.trs[rowIndex % 2] = tr;
