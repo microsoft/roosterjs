@@ -326,17 +326,19 @@ export default class VTable {
     private getTd(row: number, col: number) {
         if (this.cells) {
             row = Math.min(this.cells.length - 1, row);
-            col = Math.min(this.cells[row].length - 1, col);
-            while (row >= 0 && col >= 0) {
-                let cell = this.getCell(row, col);
-                if (cell.td) {
-                    return cell.td;
-                } else if (cell.spanLeft) {
-                    col--;
-                } else if (cell.spanAbove) {
-                    row--;
-                } else {
-                    break;
+            col = this.cells[row] ? Math.min(this.cells[row].length - 1, col) : col;
+            if (!isNaN(row) && !isNaN(col)) {
+                while (row >= 0 && col >= 0) {
+                    let cell = this.getCell(row, col);
+                    if (cell.td) {
+                        return cell.td;
+                    } else if (cell.spanLeft) {
+                        col--;
+                    } else if (cell.spanAbove) {
+                        row--;
+                    } else {
+                        break;
+                    }
                 }
             }
         }
