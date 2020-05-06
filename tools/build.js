@@ -62,12 +62,12 @@ function collectPackages() {
         { nocase: true }
     );
 
-    var packageNames = packagePaths.map(path =>
+    var packageNames = packagePaths.map((path) =>
         path.replace('packages/', '').replace('/package.json', '')
     );
     var graph = [];
 
-    packagePaths.forEach(path => {
+    packagePaths.forEach((path) => {
         var packageJson = JSON.parse(fs.readFileSync(path).toString());
         var packageName = packageJson.name;
         var depsMap = {};
@@ -80,9 +80,9 @@ function collectPackages() {
             assign(depsMap, packageJson.devDependencies);
         }
 
-        var deps = Object.keys(depsMap).filter(d => packageNames.indexOf(d) >= 0);
+        var deps = Object.keys(depsMap).filter((d) => packageNames.indexOf(d) >= 0);
 
-        deps.forEach(child => {
+        deps.forEach((child) => {
             graph.push([child, packageName]);
         });
 
@@ -91,13 +91,13 @@ function collectPackages() {
         }
     });
 
-    return toposort(graph).filter(n => n);
+    return toposort(graph).filter((n) => n);
 }
 
 async function clean() {
     var rimraf = require('rimraf');
     await new Promise((resolve, reject) => {
-        rimraf(distPath, err => {
+        rimraf(distPath, (err) => {
             if (err) {
                 reject(err);
             } else {
@@ -132,7 +132,7 @@ function checkDependency() {
         }
     }
 
-    packages.forEach(package => {
+    packages.forEach((package) => {
         processFile(path.join(packagesPath, package, 'lib/index'), []);
     });
 }
@@ -140,10 +140,10 @@ function checkDependency() {
 function normalize() {
     var knownCustomizedPackages = {};
 
-    packages.forEach(package => {
+    packages.forEach((package) => {
         var packageJson = readPackageJson(package, true /*readFromSourceFolder*/);
 
-        Object.keys(packageJson.dependencies).forEach(dep => {
+        Object.keys(packageJson.dependencies).forEach((dep) => {
             if (knownCustomizedPackages[dep]) {
                 packageJson.dependencies[dep] = knownCustomizedPackages[dep];
             } else if (packages.indexOf(dep) > -1) {
@@ -196,13 +196,13 @@ function tsc(isAmd) {
     );
 
     if (isAmd) {
-        packages.forEach(package => {
+        packages.forEach((package) => {
             var packagePath = path.join(distPath, package);
             fs.renameSync(`${packagePath}/lib`, `${packagePath}/lib-amd`);
         });
     } else {
-        packages.forEach(package => {
-            var copy = fileName => {
+        packages.forEach((package) => {
+            var copy = (fileName) => {
                 var source = path.join(packagesPath, package, fileName);
                 var target = path.join(distPath, package, fileName);
                 fs.copyFileSync(source, target);
@@ -254,7 +254,7 @@ async function pack(isProduction, isAmd) {
     };
 
     await new Promise((resolve, reject) => {
-        webpack(webpackConfig).run(err => {
+        webpack(webpackConfig).run((err) => {
             if (err) {
                 reject(err);
             } else {
@@ -280,7 +280,7 @@ function countWord(inputFile) {
         map[match] = (map[match] || 0) + 1;
     }
 
-    var array = Object.keys(map).map(key => ({
+    var array = Object.keys(map).map((key) => ({
         key,
         len: key.length * map[key],
     }));
@@ -349,7 +349,7 @@ function copySample() {
     var target = path.join(distPath, 'roosterjs/samplecode');
     var source = path.join(rootPath, 'publish/samplecode');
 
-    ncp.ncp(source, target, error => {
+    ncp.ncp(source, target, (error) => {
         if (error) {
             err(error);
         }
@@ -385,6 +385,7 @@ async function buildDemoSite() {
                     loader: 'url-loader',
                     options: {
                         mimetype: 'image/svg+xml',
+                        esModule: false,
                     },
                 },
                 {
@@ -420,7 +421,7 @@ async function buildDemoSite() {
     };
 
     await new Promise((resolve, reject) => {
-        webpack(webpackConfig).run(err => {
+        webpack(webpackConfig).run((err) => {
             if (err) {
                 reject(err);
             } else {
@@ -447,16 +448,14 @@ function err(message) {
 }
 
 function publish() {
-    packages.forEach(package => {
+    packages.forEach((package) => {
         var json = readPackageJson(package, false /*readFromSourceFolder*/);
         var localVersion = json.version;
         var versionMatch = VersionRegex.exec(localVersion);
         var tagname = (versionMatch && versionMatch[2]) || 'latest';
         var npmVersion = '';
         try {
-            npmVersion = exec(`npm view ${package}@${tagname} version`)
-                .toString()
-                .trim();
+            npmVersion = exec(`npm view ${package}@${tagname} version`).toString().trim();
         } catch (e) {}
 
         if (localVersion != npmVersion) {
@@ -523,18 +522,18 @@ class Runner {
                     });
                 }
 
-                await task.callback().catch(e => {
+                await task.callback().catch((e) => {
                     throw e;
                 });
 
-                await new Promise(resolve => setTimeout(resolve, 100));
+                await new Promise((resolve) => setTimeout(resolve, 100));
             }
 
             bar.tick({
                 message: '',
             });
             console.log('\nBuild completed successfully.');
-        })().catch(e => {
+        })().catch((e) => {
             console.error('\n');
             console.error(e);
             process.exit(1);
@@ -574,12 +573,12 @@ function buildAll(options) {
             callback: () => tsc(false),
             enabled: options.buildcommonjs,
         },
-        ...[false, true].map(isAmd => ({
+        ...[false, true].map((isAmd) => ({
             message: `Packing ${getPackedFileName(false, isAmd)}...`,
             callback: async () => pack(false, isAmd),
             enabled: options.pack,
         })),
-        ...[false, true].map(isAmd => ({
+        ...[false, true].map((isAmd) => ({
             message: `Packing ${getPackedFileName(true, isAmd)}...`,
             callback: async () => pack(true, isAmd),
             enabled: options.packprod || (!isAmd && options.builddemo),
@@ -589,7 +588,7 @@ function buildAll(options) {
             callback: prepareDts,
             enabled: options.dts,
         },
-        ...[false, true].map(isAmd => ({
+        ...[false, true].map((isAmd) => ({
             message: `Generating type definition file for ${isAmd ? 'AMD' : 'CommonJs'}...`,
             callback: () => buildDts(isAmd),
             enabled: options.dts,
@@ -622,7 +621,9 @@ function buildAll(options) {
     ];
 
     var runner = new Runner();
-    tasks.filter(task => task.enabled).forEach(task => runner.addTask(task.callback, task.message));
+    tasks
+        .filter((task) => task.enabled)
+        .forEach((task) => runner.addTask(task.callback, task.message));
     runner.run();
 }
 
