@@ -2035,6 +2035,32 @@ export function getTextContent(rootNode: Node): string;
 export function splitTextNode(textNode: Text, offset: number, returnFirstPart: boolean): Text;
 
 /**
+ * Convert a named node map to an array
+ * @param collection The map to convert
+ */
+export function toArray(collection: NamedNodeMap): Attr[];
+
+/**
+ * Convert a collection to an array
+ * @param collection The collection to convert
+ */
+export function toArray<T extends Node>(collection: NodeListOf<T>): T[];
+
+/**
+ * Convert a collection to an array
+ * @param collection The collection to convert
+ */
+export function toArray<T extends Element>(collection: HTMLCollectionOf<T>): T[];
+
+/**
+ * Convert an array to an array.
+ * This is to satisfy typescript compiler. For some cases the object can be a collection at runtime,
+ * but the declaration is an array. e.g. ClipboardData.types
+ * @param array The array to convert
+ */
+export function toArray<T>(array: readonly T[]): T[];
+
+/**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
 export class VTable {

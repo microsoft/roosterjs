@@ -480,7 +480,7 @@ function clearNodeFormat(node, tagsToUnwrap, tagsToStopUnwrap, attributesToPrese
         return false;
     }
     // 1. Recursively clear format of all its child nodes
-    var allChildrenAreBlock = [].slice.call(node.childNodes)
+    var allChildrenAreBlock = roosterjs_editor_dom_1.toArray(node.childNodes)
         .map(function (n) { return clearNodeFormat(n, tagsToUnwrap, tagsToStopUnwrap, attributesToPreserve); })
         .reduce(function (previousValue, value) { return previousValue && value; }, true);
     if (!canCollapse(tagsToStopUnwrap, node)) {
@@ -501,7 +501,7 @@ function clearNodeFormat(node, tagsToUnwrap, tagsToStopUnwrap, attributesToPrese
     return returnBlockElement;
 }
 function clearAttribute(element, attributesToPreserve) {
-    for (var _i = 0, _a = [].slice.call(element.attributes); _i < _a.length; _i++) {
+    for (var _i = 0, _a = roosterjs_editor_dom_1.toArray(element.attributes); _i < _a.length; _i++) {
         var attr = _a[_i];
         if (attributesToPreserve.indexOf(attr.name.toLowerCase()) < 0 &&
             attr.name.indexOf('data-') != 0) {
@@ -2014,7 +2014,7 @@ function processList(editor, command) {
                         if (parentLINode.nextElementSibling) {
                             roosterjs_editor_dom_1.splitBalancedNodeRange(parentLINode);
                         }
-                        var wrappedContents = roosterjs_editor_dom_1.wrap([].slice.call(parentLINode.childNodes));
+                        var wrappedContents = roosterjs_editor_dom_1.wrap(roosterjs_editor_dom_1.toArray(parentLINode.childNodes));
                         var wrappedRange = roosterjs_editor_dom_1.createRange(wrappedContents, currentSelectionPath.start, currentSelectionPath.end);
                         var wrappedSelectionPath = roosterjs_editor_dom_1.getSelectionPath(wrappedContents, wrappedRange);
                         existingList.insertAdjacentElement('afterend', wrappedContents);
@@ -2101,7 +2101,7 @@ function toggleTagCore(editor, tag, styler, wrapFunction, unwrapFunction) {
                     nodes = [roosterjs_editor_dom_1.wrap(nodes[0])];
                 }
                 else if (tag_1 == 'LI' || tag_1 == 'TD') {
-                    nodes = [].slice.call(nodes[0].childNodes);
+                    nodes = roosterjs_editor_dom_1.toArray(nodes[0].childNodes);
                 }
             }
             else {
@@ -3293,6 +3293,7 @@ exports.convertContentToDarkMode = convertContentToDarkMode;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 function getColorNormalizedContent(content) {
     var el = document.createElement('div');
     // Leverage script execution policy on CEDs to try and prevent XSS
@@ -3304,7 +3305,7 @@ function getColorNormalizedContent(content) {
         el.innerHTML = content;
     }
     var allChildElements = el.getElementsByTagName('*');
-    [].forEach.call(allChildElements, function (element) {
+    roosterjs_editor_dom_1.toArray(allChildElements).forEach(function (element) {
         if (element.dataset) {
             // Reset color styles based on the content of the ogsc/ogsb data element.
             // If those data properties are empty or do not exist, set them anyway to clear the content.
@@ -5807,6 +5808,8 @@ var getTextContent_1 = __webpack_require__(/*! ./utils/getTextContent */ "./pack
 exports.getTextContent = getTextContent_1.default;
 var splitTextNode_1 = __webpack_require__(/*! ./utils/splitTextNode */ "./packages/roosterjs-editor-dom/lib/utils/splitTextNode.ts");
 exports.splitTextNode = splitTextNode_1.default;
+var toArray_1 = __webpack_require__(/*! ./utils/toArray */ "./packages/roosterjs-editor-dom/lib/utils/toArray.ts");
+exports.toArray = toArray_1.default;
 var VTable_1 = __webpack_require__(/*! ./table/VTable */ "./packages/roosterjs-editor-dom/lib/table/VTable.ts");
 exports.VTable = VTable_1.default;
 var Position_1 = __webpack_require__(/*! ./selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
@@ -7051,6 +7054,7 @@ exports.default = moveCurrentSnapsnot;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var roosterjs_cross_window_1 = __webpack_require__(/*! roosterjs-cross-window */ "./packages/roosterjs-cross-window/lib/index.ts");
+var roosterjs_editor_dom_1 = __webpack_require__(/*! roosterjs-editor-dom */ "./packages/roosterjs-editor-dom/lib/index.ts");
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
@@ -7065,7 +7069,7 @@ var VTable = /** @class */ (function () {
         this.table = roosterjs_cross_window_1.isHTMLTableElement(node) ? node : getTableFromTd(node);
         if (this.table) {
             var currentTd_1 = roosterjs_cross_window_1.isHTMLTableElement(node) ? null : node;
-            var trs = [].slice.call(this.table.rows);
+            var trs = roosterjs_editor_dom_1.toArray(this.table.rows);
             this.cells = trs.map(function (row) { return []; });
             trs.forEach(function (tr, rowIndex) {
                 _this.trs[rowIndex % 2] = tr;
@@ -7523,6 +7527,7 @@ var isVoidHtmlElement_1 = __webpack_require__(/*! ./isVoidHtmlElement */ "./pack
 var Position_1 = __webpack_require__(/*! ../selection/Position */ "./packages/roosterjs-editor-dom/lib/selection/Position.ts");
 var queryElements_1 = __webpack_require__(/*! ./queryElements */ "./packages/roosterjs-editor-dom/lib/utils/queryElements.ts");
 var splitTextNode_1 = __webpack_require__(/*! ./splitTextNode */ "./packages/roosterjs-editor-dom/lib/utils/splitTextNode.ts");
+var toArray_1 = __webpack_require__(/*! ./toArray */ "./packages/roosterjs-editor-dom/lib/utils/toArray.ts");
 var unwrap_1 = __webpack_require__(/*! ./unwrap */ "./packages/roosterjs-editor-dom/lib/utils/unwrap.ts");
 var VTable_1 = __webpack_require__(/*! ../table/VTable */ "./packages/roosterjs-editor-dom/lib/table/VTable.ts");
 var wrap_1 = __webpack_require__(/*! ./wrap */ "./packages/roosterjs-editor-dom/lib/utils/wrap.ts");
@@ -7580,7 +7585,7 @@ function handleHyperLink(root, nodeToInsert, position) {
 function handleStructuredNode(root, nodeToInsert, position) {
     var rootNodeToInsert = nodeToInsert;
     if (rootNodeToInsert.nodeType == 11 /* DocumentFragment */) {
-        var rootNodes = [].slice.call(rootNodeToInsert.childNodes).filter(function (n) { return getTagOfNode_1.default(n) != 'BR'; });
+        var rootNodes = toArray_1.default(rootNodeToInsert.childNodes).filter(function (n) { return getTagOfNode_1.default(n) != 'BR'; });
         rootNodeToInsert = rootNodes.length == 1 ? rootNodes[0] : null;
     }
     var tag = getTagOfNode_1.default(rootNodeToInsert);
@@ -7841,6 +7846,7 @@ exports.default = changeElementTag;
 Object.defineProperty(exports, "__esModule", { value: true });
 var contains_1 = __webpack_require__(/*! ./contains */ "./packages/roosterjs-editor-dom/lib/utils/contains.ts");
 var splitParentNode_1 = __webpack_require__(/*! ./splitParentNode */ "./packages/roosterjs-editor-dom/lib/utils/splitParentNode.ts");
+var toArray_1 = __webpack_require__(/*! ./toArray */ "./packages/roosterjs-editor-dom/lib/utils/toArray.ts");
 /**
  * Collapse nodes within the given start and end nodes to their common ascenstor node,
  * split parent nodes if necessary
@@ -7866,7 +7872,7 @@ function collapseNodes(root, start, end, canSplitParent) {
         return [end];
     }
     else if (start.parentNode == end.parentNode) {
-        var nodes = [].slice.call(start.parentNode.childNodes);
+        var nodes = toArray_1.default(start.parentNode.childNodes);
         var startIndex = nodes.indexOf(start);
         var endIndex = nodes.indexOf(end);
         return nodes.slice(startIndex, endIndex + 1);
@@ -7938,6 +7944,7 @@ exports.default = contains;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var toArray_1 = __webpack_require__(/*! ./toArray */ "./packages/roosterjs-editor-dom/lib/utils/toArray.ts");
 var Browser_1 = __webpack_require__(/*! ./Browser */ "./packages/roosterjs-editor-dom/lib/utils/Browser.ts");
 // HTML header to indicate where is the HTML content started from.
 // Sample header:
@@ -7967,7 +7974,7 @@ function extractClipboardEvent(event, callback) {
     var dataTransfer = event.clipboardData ||
         event.target.ownerDocument.defaultView.clipboardData;
     var result = {
-        types: dataTransfer.types ? [].slice.call(dataTransfer.types) : [],
+        types: dataTransfer.types ? toArray_1.default(dataTransfer.types) : [],
         text: dataTransfer.getData('text'),
         image: getImage(dataTransfer),
         html: undefined,
@@ -8081,6 +8088,7 @@ exports.default = findClosestElementAncestor;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var toArray_1 = __webpack_require__(/*! ./toArray */ "./packages/roosterjs-editor-dom/lib/utils/toArray.ts");
 /**
  * Creates an HTML node array from html
  * @param html the html string to create HTML elements from
@@ -8090,7 +8098,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function fromHtml(html, ownerDocument) {
     var element = ownerDocument.createElement('DIV');
     element.innerHTML = html;
-    return [].slice.call(element.childNodes);
+    return toArray_1.default(element.childNodes);
 }
 exports.default = fromHtml;
 
@@ -8649,6 +8657,7 @@ exports.default = matchLink;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var toArray_1 = __webpack_require__(/*! ./toArray */ "./packages/roosterjs-editor-dom/lib/utils/toArray.ts");
 /**
  * Query HTML elements in the container by a selector string
  * @param container Container element to query from
@@ -8663,7 +8672,7 @@ function queryElements(container, selector, forEachCallback, scope, range) {
     if (!container || !selector) {
         return [];
     }
-    var elements = [].slice.call(container.querySelectorAll(selector));
+    var elements = toArray_1.default(container.querySelectorAll(selector));
     if (scope != 0 /* Body */ && range) {
         elements = elements.filter(function (element) {
             return isIntersectWithNodeRange(element, range, scope == 2 /* InSelection */);
@@ -8835,6 +8844,24 @@ function splitTextNode(textNode, offset, returnFirstPart) {
     return newNode;
 }
 exports.default = splitTextNode;
+
+
+/***/ }),
+
+/***/ "./packages/roosterjs-editor-dom/lib/utils/toArray.ts":
+/*!************************************************************!*\
+  !*** ./packages/roosterjs-editor-dom/lib/utils/toArray.ts ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function toArray(collection) {
+    return [].slice.call(collection);
+}
+exports.default = toArray;
 
 
 /***/ }),
@@ -9482,7 +9509,7 @@ function splitQuote(event, editor) {
         var childOfQuote = cacheGetQuoteChild(event, editor);
         var parent;
         if (roosterjs_editor_dom_1.getTagOfNode(childOfQuote) == QUOTE_TAG) {
-            childOfQuote = roosterjs_editor_dom_1.wrap([].slice.call(childOfQuote.childNodes));
+            childOfQuote = roosterjs_editor_dom_1.wrap(roosterjs_editor_dom_1.toArray(childOfQuote.childNodes));
         }
         parent = roosterjs_editor_dom_1.splitBalancedNodeRange(childOfQuote);
         roosterjs_editor_dom_1.unwrap(parent);
@@ -12377,7 +12404,7 @@ var ImageResize = /** @class */ (function () {
             if (roosterjs_editor_dom_1.getTagOfNode(target) == 'IMG') {
                 var parent_1 = target.parentNode;
                 var elements = parent_1
-                    ? [].slice.call(parent_1.querySelectorAll(this.resizableImageSelector))
+                    ? roosterjs_editor_dom_1.toArray(parent_1.querySelectorAll(this.resizableImageSelector))
                     : [];
                 if (elements.indexOf(target) < 0) {
                     return;
