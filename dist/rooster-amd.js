@@ -794,7 +794,7 @@ exports.getStyleBasedFormatState = getStyleBasedFormatState;
  * @returns The format state at cursor
  */
 function getFormatState(editor, event) {
-    return __assign({}, roosterjs_editor_dom_2.getPendableFormatState(editor.getDocument()), getElementBasedFormatState(editor, event), getStyleBasedFormatState(editor), { canUndo: editor.canUndo(), canRedo: editor.canRedo() });
+    return __assign(__assign(__assign(__assign({}, roosterjs_editor_dom_2.getPendableFormatState(editor.getDocument())), getElementBasedFormatState(editor, event)), getStyleBasedFormatState(editor)), { canUndo: editor.canUndo(), canRedo: editor.canRedo() });
 }
 exports.default = getFormatState;
 
@@ -4052,6 +4052,13 @@ exports.default = adjustBrowserBehavior;
 
 "use strict";
 
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var CopyPlugin_1 = __webpack_require__(/*! ../corePlugins/CopyPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/CopyPlugin.ts");
 var DOMEventPlugin_1 = __webpack_require__(/*! ../corePlugins/DOMEventPlugin */ "./packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts");
@@ -4107,11 +4114,11 @@ function createEditorCore(contentDiv, options) {
 }
 exports.default = createEditorCore;
 function buildPluginList(corePlugins, plugins) {
-    return [
+    return __spreadArrays([
         corePlugins.typeInContainer,
         corePlugins.edit,
         corePlugins.mouseUp
-    ].concat((plugins || []), [
+    ], (plugins || []), [
         corePlugins.firefoxTypeAfterLink,
         corePlugins.undo,
         corePlugins.domEvent,

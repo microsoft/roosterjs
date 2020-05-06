@@ -1494,7 +1494,7 @@ class ContentTraverser {
     /**
      * Get current block
      */
-    readonly currentBlockElement: BlockElement;
+    get currentBlockElement(): BlockElement;
     /**
      * Get next block element
      */
@@ -1507,7 +1507,7 @@ class ContentTraverser {
     /**
      * Current inline element getter
      */
-    readonly currentInlineElement: InlineElement;
+    get currentInlineElement(): InlineElement;
     /**
      * Get next inline element
      */
@@ -1703,11 +1703,11 @@ class PartialInlineElement implements InlineElement  {
     /**
      * Get next partial inline element if it is not at the end boundary yet
      */
-    readonly nextInlineElement: PartialInlineElement;
+    get nextInlineElement(): PartialInlineElement;
     /**
      * Get previous partial inline element if it is not at the begin boundary yet
      */
-    readonly previousInlineElement: PartialInlineElement;
+    get previousInlineElement(): PartialInlineElement;
     /**
      * Checks if it contains a position
      */
