@@ -1,4 +1,5 @@
 import { isDocumentFragment } from 'roosterjs-cross-window';
+import { toArray } from 'roosterjs-editor-dom';
 
 export default function getColorNormalizedContent(content: string | DocumentFragment): string {
     let el = document.createElement('div');
@@ -10,7 +11,7 @@ export default function getColorNormalizedContent(content: string | DocumentFrag
         el.innerHTML = content;
     }
     const allChildElements = el.getElementsByTagName('*') as HTMLCollectionOf<HTMLElement>;
-    [].forEach.call(allChildElements, (element: HTMLElement) => {
+    toArray(allChildElements).forEach((element: HTMLElement) => {
         if (element.dataset) {
             // Reset color styles based on the content of the ogsc/ogsb data element.
             // If those data properties are empty or do not exist, set them anyway to clear the content.

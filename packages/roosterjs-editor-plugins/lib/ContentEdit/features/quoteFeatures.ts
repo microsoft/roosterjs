@@ -4,6 +4,7 @@ import {
     getTagOfNode,
     isNodeEmpty,
     splitBalancedNodeRange,
+    toArray,
     unwrap,
     wrap,
 } from 'roosterjs-editor-dom';
@@ -62,7 +63,7 @@ function splitQuote(event: PluginKeyboardEvent, editor: Editor) {
         let childOfQuote = cacheGetQuoteChild(event, editor);
         let parent: Node;
         if (getTagOfNode(childOfQuote) == QUOTE_TAG) {
-            childOfQuote = wrap([].slice.call(childOfQuote.childNodes));
+            childOfQuote = wrap(toArray(childOfQuote.childNodes));
         }
         parent = splitBalancedNodeRange(childOfQuote);
         unwrap(parent);
