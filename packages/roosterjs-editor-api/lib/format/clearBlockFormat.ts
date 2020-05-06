@@ -7,6 +7,7 @@ import {
     unwrap,
     wrap,
     splitBalancedNodeRange,
+    toArray,
 } from 'roosterjs-editor-dom';
 
 export const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
@@ -111,7 +112,7 @@ function clearNodeFormat(
     }
 
     // 1. Recursively clear format of all its child nodes
-    let allChildrenAreBlock = ([].slice.call(node.childNodes) as Node[])
+    let allChildrenAreBlock = toArray(node.childNodes)
         .map(n => clearNodeFormat(n, tagsToUnwrap, tagsToStopUnwrap, attributesToPreserve))
         .reduce((previousValue, value) => previousValue && value, true);
 
@@ -136,7 +137,7 @@ function clearNodeFormat(
 }
 
 function clearAttribute(element: HTMLElement, attributesToPreserve: string[]) {
-    for (let attr of [].slice.call(element.attributes) as Attr[]) {
+    for (let attr of toArray(element.attributes)) {
         if (
             attributesToPreserve.indexOf(attr.name.toLowerCase()) < 0 &&
             attr.name.indexOf('data-') != 0

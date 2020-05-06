@@ -42,6 +42,7 @@ export { getNextLeafSibling, getPreviousLeafSibling } from './utils/getLeafSibli
 export { getFirstLeafNode, getLastLeafNode } from './utils/getLeafNode';
 export { default as getTextContent } from './utils/getTextContent';
 export { default as splitTextNode } from './utils/splitTextNode';
+export { default as toArray } from './utils/toArray';
 
 export { default as VTable, VCell } from './table/VTable';
 

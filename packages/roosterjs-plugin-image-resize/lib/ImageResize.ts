@@ -1,4 +1,4 @@
-import { contains, getTagOfNode } from 'roosterjs-editor-dom';
+import { contains, getTagOfNode, toArray } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     ContentChangedEvent,
@@ -95,9 +95,7 @@ export default class ImageResize implements EditorPlugin {
             if (getTagOfNode(target) == 'IMG') {
                 const parent = target.parentNode as HTMLElement;
                 const elements = parent
-                    ? ([].slice.call(
-                          parent.querySelectorAll(this.resizableImageSelector)
-                      ) as HTMLElement[])
+                    ? toArray(parent.querySelectorAll(this.resizableImageSelector))
                     : [];
                 if (elements.indexOf(target) < 0) {
                     return;
@@ -232,19 +230,20 @@ export default class ImageResize implements EditorPlugin {
 
             // double check
             if (this.forcePreserveRatio || e.shiftKey) {
-                let ratio = this.startWidth > 0 && this.startHeight > 0
-                    ? (this.startWidth * 1.0) / this.startHeight
-                    : 0;
+                let ratio =
+                    this.startWidth > 0 && this.startHeight > 0
+                        ? (this.startWidth * 1.0) / this.startHeight
+                        : 0;
 
-                const clientWidth = Math.floor(img.clientWidth)
-                const clientHeight = Math.floor(img.clientHeight)
-                newWidth = Math.floor(newWidth)
-                newHeight = Math.floor(newHeight)
+                const clientWidth = Math.floor(img.clientWidth);
+                const clientHeight = Math.floor(img.clientHeight);
+                newWidth = Math.floor(newWidth);
+                newHeight = Math.floor(newHeight);
                 if (clientHeight !== newHeight || clientWidth !== newWidth) {
                     if (clientHeight < newHeight) {
-                        newWidth = clientHeight * ratio
+                        newWidth = clientHeight * ratio;
                     } else {
-                        newHeight = clientWidth / ratio
+                        newHeight = clientWidth / ratio;
                     }
                     img.style.width = newWidth + 'px';
                     img.style.height = newHeight + 'px';
