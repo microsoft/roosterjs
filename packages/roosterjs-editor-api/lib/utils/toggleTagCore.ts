@@ -2,12 +2,13 @@ import { ChangeSource, PositionType, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 import {
     Browser,
-    Position,
-    wrap,
-    unwrap,
     fromHtml,
     getTagOfNode,
+    Position,
     splitBalancedNodeRange,
+    toArray,
+    unwrap,
+    wrap,
 } from 'roosterjs-editor-dom';
 
 const ZERO_WIDTH_SPACE = '&#8203;';
@@ -65,7 +66,7 @@ export default function toggleTagCore<T extends keyof HTMLElementTagNameMap>(
                 if (tag == 'BR') {
                     nodes = [wrap(nodes[0])];
                 } else if (tag == 'LI' || tag == 'TD') {
-                    nodes = [].slice.call(nodes[0].childNodes) as Node[];
+                    nodes = toArray(nodes[0].childNodes);
                 }
             } else {
                 while (

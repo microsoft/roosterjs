@@ -1,3 +1,4 @@
+import toArray from './toArray';
 import { DocumentPosition } from 'roosterjs-editor-types';
 import { QueryScope } from 'roosterjs-editor-types';
 
@@ -21,7 +22,7 @@ export default function queryElements(
         return [];
     }
 
-    let elements = [].slice.call(container.querySelectorAll(selector)) as HTMLElement[];
+    let elements = toArray(container.querySelectorAll<HTMLElement>(selector));
 
     if (scope != QueryScope.Body && range) {
         elements = elements.filter(element =>

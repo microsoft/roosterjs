@@ -5,6 +5,7 @@ import {
     createRange,
     getSelectionPath,
     splitBalancedNodeRange,
+    toArray,
     wrap,
 } from 'roosterjs-editor-dom';
 
@@ -69,7 +70,7 @@ export default function processList(
                             splitBalancedNodeRange(parentLINode);
                         }
 
-                        const wrappedContents = wrap([].slice.call(parentLINode.childNodes));
+                        const wrappedContents = wrap(toArray(parentLINode.childNodes));
                         const wrappedRange = createRange(
                             wrappedContents,
                             currentSelectionPath.start,

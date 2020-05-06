@@ -10,6 +10,7 @@ import isVoidHtmlElement from './isVoidHtmlElement';
 import Position from '../selection/Position';
 import queryElements from './queryElements';
 import splitTextNode from './splitTextNode';
+import toArray from './toArray';
 import unwrap from './unwrap';
 import VTable from '../table/VTable';
 import wrap from './wrap';
@@ -108,9 +109,7 @@ function handleStructuredNode(
     let rootNodeToInsert = nodeToInsert;
 
     if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
-        let rootNodes = (<Node[]>[].slice.call(rootNodeToInsert.childNodes)).filter(
-            n => getTagOfNode(n) != 'BR'
-        );
+        let rootNodes = toArray(rootNodeToInsert.childNodes).filter(n => getTagOfNode(n) != 'BR');
         rootNodeToInsert = rootNodes.length == 1 ? rootNodes[0] : null;
     }
 
