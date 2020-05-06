@@ -26,6 +26,7 @@ module.exports = {
                 loader: 'url-loader',
                 options: {
                     mimetype: 'image/svg+xml',
+                    esModule: false,
                 },
             },
             {
