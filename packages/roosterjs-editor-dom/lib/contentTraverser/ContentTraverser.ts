@@ -87,6 +87,11 @@ export default class ContentTraverser {
 
     private getPreviousNextBlockElement(isNext: boolean): BlockElement {
         let current = this.currentBlockElement;
+
+        if (!current) {
+            return null;
+        }
+
         let leaf = getLeafSibling(
             this.scoper.rootNode,
             isNext ? current.getEndNode() : current.getStartNode(),
@@ -140,6 +145,10 @@ export default class ContentTraverser {
     private getPreviousNextInlineElement(isNext: boolean): InlineElement {
         let current = this.currentInlineElement || this.currentInline;
         let newInline: InlineElement;
+
+        if (!current) {
+            return null;
+        }
 
         if (current instanceof EmptyInlineElement) {
             newInline = getInlineElementBeforeAfter(
