@@ -5214,6 +5214,9 @@ var ContentTraverser = /** @class */ (function () {
     };
     ContentTraverser.prototype.getPreviousNextBlockElement = function (isNext) {
         var current = this.currentBlockElement;
+        if (!current) {
+            return null;
+        }
         var leaf = getLeafSibling_1.getLeafSibling(this.scoper.rootNode, isNext ? current.getEndNode() : current.getStartNode(), isNext);
         var newBlock = leaf ? getBlockElementAtNode_1.default(this.scoper.rootNode, leaf) : null;
         // Make sure this is right block:
@@ -5258,6 +5261,9 @@ var ContentTraverser = /** @class */ (function () {
     ContentTraverser.prototype.getPreviousNextInlineElement = function (isNext) {
         var current = this.currentInlineElement || this.currentInline;
         var newInline;
+        if (!current) {
+            return null;
+        }
         if (current instanceof EmptyInlineElement_1.default) {
             newInline = getInlineElementBeforeAfter_1.getInlineElementBeforeAfter(this.scoper.rootNode, current.getStartPosition(), isNext);
             if (newInline && !current.getParentBlock().contains(newInline.getContainerNode())) {
