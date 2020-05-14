@@ -172,7 +172,8 @@ function getListItemBlocks(doc: HTMLDocument): ListItemBlock[] {
             const lastItemInCurBlock = listItemContainers[listItemContainers.length - 1];
             if (
                 curItem == lastItemInCurBlock.nextSibling ||
-                getFirstLeafNode(curItem) == getNextLeafSibling(doc.body, lastItemInCurBlock)
+                getFirstLeafNode(curItem) ==
+                getNextLeafSibling(lastItemInCurBlock.parentNode, lastItemInCurBlock)
             ) {
                 listItemContainers.push(curItem);
                 curListItemBlock.endElement = curItem;
