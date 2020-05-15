@@ -17,9 +17,7 @@ export default function shouldSkipNode(node: Node): boolean {
         return !node.nodeValue || node.textContent == '' || CRLF.test(node.nodeValue);
     } else if (node.nodeType == NodeType.Element) {
         return (
-            (getTagOfNode(node) == 'DIV' &&
-                (node as HTMLElement).getAttribute('style') == null &&
-                !node.firstChild) ||
+            (getTagOfNode(node) == 'DIV' && !node.firstChild) ||
             getComputedStyle(node, 'display') == 'none'
         );
     } else {
