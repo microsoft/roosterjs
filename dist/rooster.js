@@ -8734,6 +8734,7 @@ function checkPosition(position, targets) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var getTagOfNode_1 = __webpack_require__(/*! ./getTagOfNode */ "./packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts");
 var getComputedStyles_1 = __webpack_require__(/*! ./getComputedStyles */ "./packages/roosterjs-editor-dom/lib/utils/getComputedStyles.ts");
 var CRLF = /^[\r\n]+$/gm;
 /**
@@ -8742,13 +8743,15 @@ var CRLF = /^[\r\n]+$/gm;
  * - it is a text node but is empty
  * - it is a text node but contains just CRLF (noisy text node that often comes in-between elements)
  * - has a display:none
+ * - it is just <div></div>
  */
 function shouldSkipNode(node) {
     if (node.nodeType == 3 /* Text */) {
         return !node.nodeValue || node.textContent == '' || CRLF.test(node.nodeValue);
     }
     else if (node.nodeType == 1 /* Element */) {
-        return getComputedStyles_1.getComputedStyle(node, 'display') == 'none';
+        return ((getTagOfNode_1.default(node) == 'DIV' && !node.firstChild) ||
+            getComputedStyles_1.getComputedStyle(node, 'display') == 'none');
     }
     else {
         return true;
