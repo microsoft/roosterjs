@@ -44,6 +44,17 @@ describe('shouldSkipNode, shouldSkipNode()', () => {
         expect(shouldSkip).toBe(true);
     });
 
+    it('Empty DIV node', () => {
+        // Arrange
+        let node = DomTestHelper.createElementFromContent(testID, '<div></div>');
+
+        // Act
+        let shouldSkip = shouldSkipNode(node.firstChild);
+
+        // Assert
+        expect(shouldSkip).toBe(true);
+    });
+
     it('Regular node', () => {
         // Arrange
         let node = document.createTextNode('abc');
