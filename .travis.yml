@@ -26,7 +26,7 @@ deploy:
       keep-history: true
       on:
           branch: master
-      local-dir: ./dist/roosterjs
+      local-dir: ./dist/deploy
     # Auto publish if version is changed
     - provider: script
       script: node tools/build.js publish --token $NPM_TOKEN
