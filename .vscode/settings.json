@@ -13,6 +13,7 @@
         "dist/**": true,
         "stats.json": true
     },
+    "prettier.arrowParens": "avoid",
     "prettier.singleQuote": true,
     "editor.formatOnSave": true,
     "prettier.tabWidth": 4,

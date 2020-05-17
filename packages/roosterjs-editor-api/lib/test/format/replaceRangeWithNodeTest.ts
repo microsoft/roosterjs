@@ -7,11 +7,11 @@ describe('replaceRangeWithNode replaceRangeWithNode()', () => {
     let editor: Editor;
     let nodeID = 'replaceNode';
 
-    beforeEach(function() {
+    beforeEach(function () {
         editor = TestHelper.initEditor(testID);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         editor.dispose();
         TestHelper.removeElement(testID);
         TestHelper.removeElement(nodeID);

@@ -69,9 +69,10 @@ export default class HyperLink implements EditorPlugin {
      */
     public onPluginEvent(event: PluginEvent): void {
         if (event.eventType == PluginEventType.MouseUp) {
-            const anchor = this.editor.getElementAtCursor('A', <Node>(
-                event.rawEvent.srcElement
-            )) as HTMLAnchorElement;
+            const anchor = this.editor.getElementAtCursor(
+                'A',
+                <Node>event.rawEvent.srcElement
+            ) as HTMLAnchorElement;
 
             if (anchor) {
                 if (this.onLinkClick && this.onLinkClick(anchor, event.rawEvent) !== false) {

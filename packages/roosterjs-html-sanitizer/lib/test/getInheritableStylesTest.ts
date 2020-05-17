@@ -82,8 +82,5 @@ describe('getInheritableStyles', () => {
 });
 
 function sort(str: string) {
-    return str
-        .split(' ')
-        .sort()
-        .join(' ');
+    return str.split(' ').sort().join(' ');
 }

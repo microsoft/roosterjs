@@ -522,7 +522,7 @@ describe('PartialInlineElement applyStyle()', () => {
         );
 
         // Act
-        partialInlineElement.applyStyle(function(node: HTMLElement) {
+        partialInlineElement.applyStyle(function (node: HTMLElement) {
             node.style.color = 'red';
         });
 

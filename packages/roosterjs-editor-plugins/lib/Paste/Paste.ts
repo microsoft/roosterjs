@@ -129,7 +129,10 @@ export default class Paste implements EditorPlugin {
 
             for (let node of nodes) {
                 if (mergeCurrentFormat) {
-                    this.applyToElements(node, this.applyFormatting(clipboardData.originalFormat, this.editor.isDarkMode()));
+                    this.applyToElements(
+                        node,
+                        this.applyFormatting(clipboardData.originalFormat, this.editor.isDarkMode())
+                    );
                 }
                 fragment.appendChild(node);
             }
@@ -179,9 +182,11 @@ export default class Paste implements EditorPlugin {
         }, ChangeSource.Paste);
     }
 
-    private applyFormatting = (format: DefaultFormat, isDarkMode: boolean) => (element: HTMLElement) => {
+    private applyFormatting = (format: DefaultFormat, isDarkMode: boolean) => (
+        element: HTMLElement
+    ) => {
         applyFormat(element, format, isDarkMode);
-    }
+    };
 
     private applyToElements(node: Node, elementTransform: (element: HTMLElement) => void) {
         let leaf = getFirstLeafNode(node);
@@ -206,14 +211,14 @@ export default class Paste implements EditorPlugin {
         let format = getFormatState(this.editor);
         return format
             ? {
-                fontFamily: format.fontName,
-                fontSize: format.fontSize,
-                textColor: format.textColor,
-                backgroundColor: format.backgroundColor,
-                bold: format.isBold,
-                italic: format.isItalic,
-                underline: format.isUnderline,
-            }
+                  fontFamily: format.fontName,
+                  fontSize: format.fontSize,
+                  textColor: format.textColor,
+                  backgroundColor: format.backgroundColor,
+                  bold: format.isBold,
+                  italic: format.isItalic,
+                  underline: format.isUnderline,
+              }
             : {};
     }
 
