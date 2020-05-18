@@ -21,19 +21,43 @@ describe('isPositionAtBeginningOf()', () => {
     }
 
     it('Position is null', () => {
-        runTest('', () => null, 0, () => null, false);
+        runTest(
+            '',
+            () => null,
+            0,
+            () => null,
+            false
+        );
     });
 
     it('Target node is null', () => {
-        runTest('<div id=id1></div>', () => $('id1'), 0, () => null, false);
+        runTest(
+            '<div id=id1></div>',
+            () => $('id1'),
+            0,
+            () => null,
+            false
+        );
     });
 
     it('Is first child', () => {
-        runTest('<div id=id1>test</div>', () => $('id1'), 0, () => $('id1'), true);
+        runTest(
+            '<div id=id1>test</div>',
+            () => $('id1'),
+            0,
+            () => $('id1'),
+            true
+        );
     });
 
     it('Has space before position', () => {
-        runTest('<div id=id1> <span></span>test</div>', () => $('id1'), 1, () => $('id1'), false);
+        runTest(
+            '<div id=id1> <span></span>test</div>',
+            () => $('id1'),
+            1,
+            () => $('id1'),
+            false
+        );
         runTest(
             '<div id=id1>&#8203;<span></span>test</div>',
             () => $('id1'),
@@ -51,8 +75,20 @@ describe('isPositionAtBeginningOf()', () => {
     });
 
     it('Inside text', () => {
-        runTest('<div id=id1>test</div>', () => $('id1').firstChild, 0, () => $('id1'), true);
-        runTest('<div id=id1>test</div>', () => $('id1').firstChild, 2, () => $('id1'), false);
+        runTest(
+            '<div id=id1>test</div>',
+            () => $('id1').firstChild,
+            0,
+            () => $('id1'),
+            true
+        );
+        runTest(
+            '<div id=id1>test</div>',
+            () => $('id1').firstChild,
+            2,
+            () => $('id1'),
+            false
+        );
     });
 
     it('Nested node', () => {

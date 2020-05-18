@@ -237,7 +237,7 @@ describe('NodeInlineElement applyStyle()', () => {
         let mockColor = 'red';
 
         // Act
-        element.applyStyle(function(node: HTMLElement) {
+        element.applyStyle(function (node: HTMLElement) {
             node.style.color = mockColor;
         });
 

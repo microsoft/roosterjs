@@ -32,5 +32,5 @@ export function createListItemBlock(listItem: Element = null): ListItemBlock {
         endElement: listItem,
         insertPositionNode: null,
         listItemContainers: listItem ? [listItem] : [],
-    }
+    };
 }

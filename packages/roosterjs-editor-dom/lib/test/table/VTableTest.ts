@@ -40,8 +40,16 @@ describe('VTable.ctor', () => {
             undefined,
             undefined,
             [
-                [[true, false, false], [true, false, false], [true, false, false]],
-                [[true, false, false], [true, false, false], [true, false, false]],
+                [
+                    [true, false, false],
+                    [true, false, false],
+                    [true, false, false],
+                ],
+                [
+                    [true, false, false],
+                    [true, false, false],
+                    [true, false, false],
+                ],
             ]
         );
         runTest(
@@ -50,8 +58,16 @@ describe('VTable.ctor', () => {
             1,
             0,
             [
-                [[true, false, false], [true, false, false], [true, false, false]],
-                [[true, false, false], [true, false, false], [true, false, false]],
+                [
+                    [true, false, false],
+                    [true, false, false],
+                    [true, false, false],
+                ],
+                [
+                    [true, false, false],
+                    [true, false, false],
+                    [true, false, false],
+                ],
             ]
         );
     });
@@ -67,8 +83,14 @@ describe('VTable.ctor', () => {
             1,
             1,
             [
-                [[true, false, false], [false, true, false]],
-                [[true, false, false], [true, false, false]],
+                [
+                    [true, false, false],
+                    [false, true, false],
+                ],
+                [
+                    [true, false, false],
+                    [true, false, false],
+                ],
             ]
         );
     });
@@ -80,8 +102,14 @@ describe('VTable.ctor', () => {
             1,
             0,
             [
-                [[true, false, false], [true, false, false]],
-                [[true, false, false], [false, true, false]],
+                [
+                    [true, false, false],
+                    [true, false, false],
+                ],
+                [
+                    [true, false, false],
+                    [false, true, false],
+                ],
             ]
         );
     });
@@ -93,8 +121,14 @@ describe('VTable.ctor', () => {
             1,
             1,
             [
-                [[true, false, false], [true, false, false]],
-                [[false, false, true], [true, false, false]],
+                [
+                    [true, false, false],
+                    [true, false, false],
+                ],
+                [
+                    [false, false, true],
+                    [true, false, false],
+                ],
             ]
         );
     });
@@ -106,8 +140,14 @@ describe('VTable.ctor', () => {
             0,
             1,
             [
-                [[true, false, false], [true, false, false]],
-                [[true, false, false], [false, false, true]],
+                [
+                    [true, false, false],
+                    [true, false, false],
+                ],
+                [
+                    [true, false, false],
+                    [false, false, true],
+                ],
             ]
         );
     });
@@ -119,9 +159,21 @@ describe('VTable.ctor', () => {
             2,
             2,
             [
-                [[true, false, false], [false, true, false], [true, false, false]],
-                [[false, false, true], [false, true, true], [true, false, false]],
-                [[true, false, false], [true, false, false], [true, false, false]],
+                [
+                    [true, false, false],
+                    [false, true, false],
+                    [true, false, false],
+                ],
+                [
+                    [false, false, true],
+                    [false, true, true],
+                    [true, false, false],
+                ],
+                [
+                    [true, false, false],
+                    [true, false, false],
+                    [true, false, false],
+                ],
             ]
         );
     });
@@ -133,9 +185,21 @@ describe('VTable.ctor', () => {
             1,
             1,
             [
-                [[true, false, false], [true, false, false], [false, true, false]],
-                [[false, false, true], [true, false, false], [true, false, false]],
-                [[true, false, false], [false, true, false], [false, false, true]],
+                [
+                    [true, false, false],
+                    [true, false, false],
+                    [false, true, false],
+                ],
+                [
+                    [false, false, true],
+                    [true, false, false],
+                    [true, false, false],
+                ],
+                [
+                    [true, false, false],
+                    [false, true, false],
+                    [false, false, true],
+                ],
             ]
         );
     });

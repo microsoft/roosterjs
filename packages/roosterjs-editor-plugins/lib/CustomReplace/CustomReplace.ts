@@ -150,7 +150,10 @@ export default class CustomReplacePlugin implements EditorPlugin {
 }
 
 function getLongestReplacementSourceLength(replacements: Replacement[]): number {
-    return Math.max.apply(null, replacements.map(replacement => replacement.sourceString.length));
+    return Math.max.apply(
+        null,
+        replacements.map(replacement => replacement.sourceString.length)
+    );
 }
 
 function getReplacementEndCharacters(replacements: Replacement[]): Set<string> {
