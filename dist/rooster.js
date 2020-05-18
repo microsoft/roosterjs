@@ -457,12 +457,7 @@ function clearBlockFormat(editor, tagsToUnwrap, tagsToStopUnwrap, attributesToPr
             if (group.td) {
                 var styles = group.td.getAttribute('style') || '';
                 var styleArray = styles.split(';');
-                styleArray = styleArray.filter(function (style) {
-                    return style
-                        .trim()
-                        .toLowerCase()
-                        .indexOf('border') == 0;
-                });
+                styleArray = styleArray.filter(function (style) { return style.trim().toLowerCase().indexOf('border') == 0; });
                 styles = styleArray.join(';');
                 if (styles) {
                     group.td.setAttribute('style', styles);
@@ -2765,9 +2760,7 @@ var DOMEventPlugin = /** @class */ (function () {
                 if (_this.cachedPosition && _this.cachedFormatState) {
                     var range = _this.editor.getSelectionRange();
                     if (range.collapsed &&
-                        roosterjs_editor_dom_1.Position.getStart(range)
-                            .normalize()
-                            .equalTo(_this.cachedPosition)) {
+                        roosterjs_editor_dom_1.Position.getStart(range).normalize().equalTo(_this.cachedPosition)) {
                         _this.restorePendingFormatState();
                     }
                     else {
@@ -9921,7 +9914,7 @@ var HyperLink = /** @class */ (function () {
      */
     HyperLink.prototype.onPluginEvent = function (event) {
         if (event.eventType == 5 /* MouseUp */) {
-            var anchor = this.editor.getElementAtCursor('A', (event.rawEvent.srcElement));
+            var anchor = this.editor.getElementAtCursor('A', event.rawEvent.srcElement);
             if (anchor) {
                 if (this.onLinkClick && this.onLinkClick(anchor, event.rawEvent) !== false) {
                     return;
@@ -10363,10 +10356,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WORD_ORDERED_LIST_SELECTOR = 'div.ListContainerWrapper > ul[class^="BulletListStyle"]';
 exports.WORD_UNORDERED_LIST_SELECTOR = 'div.ListContainerWrapper > ol[class^="NumberListStyle"]';
 exports.WORD_ONLINE_IDENTIFYING_SELECTOR = exports.WORD_ORDERED_LIST_SELECTOR + "," + exports.WORD_UNORDERED_LIST_SELECTOR;
-exports.LIST_CONTAINER_ELEMENT_CLASS_NAME = "ListContainerWrapper";
-exports.UNORDERED_LIST_TAG_NAME = "UL";
-exports.ORDERED_LIST_TAG_NAME = "OL";
-var TEXT_CONTAINER_ELEMENT_CLASS_NAME = "OutlineElement";
+exports.LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
+exports.UNORDERED_LIST_TAG_NAME = 'UL';
+exports.ORDERED_LIST_TAG_NAME = 'OL';
+var TEXT_CONTAINER_ELEMENT_CLASS_NAME = 'OutlineElement';
 exports.WAC_IDENTIFING_SELECTOR = "ul[class^=\"BulletListStyle\"]>." + TEXT_CONTAINER_ELEMENT_CLASS_NAME + ",ol[class^=\"NumberListStyle\"]>." + TEXT_CONTAINER_ELEMENT_CLASS_NAME;
 
 
@@ -10528,8 +10521,8 @@ function getListItemBlocks(doc) {
         else {
             var listItemContainers = curListItemBlock.listItemContainers;
             var lastItemInCurBlock = listItemContainers[listItemContainers.length - 1];
-            if (curItem == lastItemInCurBlock.nextSibling
-                || roosterjs_editor_dom_1.getFirstLeafNode(curItem) == roosterjs_editor_dom_1.getNextLeafSibling(doc.body, lastItemInCurBlock)) {
+            if (curItem == lastItemInCurBlock.nextSibling ||
+                roosterjs_editor_dom_1.getFirstLeafNode(curItem) == roosterjs_editor_dom_1.getNextLeafSibling(doc.body, lastItemInCurBlock)) {
                 listItemContainers.push(curItem);
                 curListItemBlock.endElement = curItem;
             }
