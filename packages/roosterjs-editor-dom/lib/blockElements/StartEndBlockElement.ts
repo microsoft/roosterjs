@@ -19,7 +19,7 @@ const STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
  * This start and end must be in same sibling level and have same parent in DOM tree
  */
 export default class StartEndBlockElement implements BlockElement {
-    constructor(private rootNode: Node, private startNode: Node, private endNode: Node) { }
+    constructor(private rootNode: Node, private startNode: Node, private endNode: Node) {}
 
     static getBlockContext(node: Node): HTMLElement {
         while (node && !isBlockElement(node)) {

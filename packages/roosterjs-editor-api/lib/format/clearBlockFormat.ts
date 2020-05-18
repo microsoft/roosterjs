@@ -82,11 +82,7 @@ export default function clearBlockFormat(
                     let styles = group.td.getAttribute('style') || '';
                     let styleArray = styles.split(';');
                     styleArray = styleArray.filter(
-                        style =>
-                            style
-                                .trim()
-                                .toLowerCase()
-                                .indexOf('border') == 0
+                        style => style.trim().toLowerCase().indexOf('border') == 0
                     );
                     styles = styleArray.join(';');
                     if (styles) {

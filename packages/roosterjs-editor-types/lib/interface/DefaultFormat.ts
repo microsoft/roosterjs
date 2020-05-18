@@ -1,6 +1,5 @@
 import ModeIndependentColor from './ModeIndependentColor';
 
-
 /**
  * Default format settings
  */

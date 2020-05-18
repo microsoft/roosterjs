@@ -95,13 +95,10 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
 }
 
 function createCustomData(initValue: { [key: string]: any }): CustomDataMap {
-    return Object.keys(initValue).reduce(
-        (result, key) => {
-            result[key] = {
-                value: initValue[key],
-            };
-            return result;
-        },
-        <CustomDataMap>{}
-    );
+    return Object.keys(initValue).reduce((result, key) => {
+        result[key] = {
+            value: initValue[key],
+        };
+        return result;
+    }, <CustomDataMap>{});
 }

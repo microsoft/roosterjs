@@ -1,6 +1,8 @@
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
-import convertPastedContentFromWordOnline, { isWordOnlineWithList } from './officeOnlineConverter/convertPastedContentFromWordOnline';
+import convertPastedContentFromWordOnline, {
+    isWordOnlineWithList,
+} from './officeOnlineConverter/convertPastedContentFromWordOnline';
 import { WAC_IDENTIFING_SELECTOR } from './officeOnlineConverter/constants';
 import { getTagOfNode } from 'roosterjs-editor-dom';
 import { splitWithFragment } from 'roosterjs-html-sanitizer';
