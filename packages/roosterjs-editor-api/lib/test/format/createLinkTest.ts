@@ -73,4 +73,13 @@ describe('createLink()', () => {
         let link = document.getElementsByTagName('a')[0];
         expect(link.outerHTML).toBe('<a href="http://www.example.com" title="altText">text</a>');
     });
+
+    it('sets the display text in the link', () => {
+        // Act
+        createLink(editor, 'www.example.com', undefined, 'this is my link');
+
+        // Assert
+        let link = document.getElementsByTagName('a')[0];
+        expect(link.outerHTML).toBe('<a href="http://www.example.com">this is my link</a>');
+    });
 });
