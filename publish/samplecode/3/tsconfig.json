@@ -1,8 +1,0 @@
-{
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "baseUrl": "../",
-        "lib": ["es6", "dom"]
-    }
-}

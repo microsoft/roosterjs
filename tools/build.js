@@ -16,6 +16,7 @@ var nodeModulesPath = path.join(rootPath, 'node_modules');
 var typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 var distPath = path.join(rootPath, 'dist');
 var roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
+var deployPath = path.join(distPath, 'deploy');
 
 // Packages
 var packages = collectPackages(packagesPath);
@@ -29,7 +30,6 @@ var token = null;
 var commands = [
     'checkdep', // Check circular dependency among files
     'clean', // Clean target folder
-    'copysample', // Copy sample code to target folder
     'dts', // Generate type definitioin files (.d.ts)
     'tslint', // Run tslint to check code style
     'normalize', // Normalize package.json files
@@ -259,41 +259,10 @@ async function pack(isProduction, isAmd) {
                 reject(err);
             } else {
                 var targetFile = path.join(roosterJsDistPath, filename);
-                if (isProduction && !isAmd) {
-                    countWord(targetFile);
-                    exploreSourceMap(targetFile);
-                }
                 resolve();
             }
         });
     });
-}
-
-function countWord(inputFile) {
-    var outputFile = path.join(roosterJsDistPath, 'wordstat.txt');
-    var file = fs.readFileSync(inputFile).toString();
-    var reg = /[a-zA-Z0-9_]+/g;
-    var match;
-    var map = {};
-
-    while ((match = reg.exec(file))) {
-        map[match] = (map[match] || 0) + 1;
-    }
-
-    var array = Object.keys(map).map((key) => ({
-        key,
-        len: key.length * map[key],
-    }));
-
-    array.sort((a, b) => b.len - a.len);
-    var result = array.reduce((result, item) => result + `${item.key},${item.len}\r\n`, '');
-    fs.writeFileSync(outputFile, result);
-}
-
-function exploreSourceMap(inputFile) {
-    var commandPath = path.join(nodeModulesPath, 'source-map-explorer/dist/cli.js');
-    var targetFile = path.join(roosterJsDistPath, 'sourceMap.html');
-    runNode(`${commandPath} ${inputFile} -m --html > ${targetFile}`, rootPath);
 }
 
 var dtsQueue = [];
@@ -318,7 +287,7 @@ function verifyDts() {
 function buildDoc() {
     let config = {
         tsconfig: path.join(packagesPath, 'tsconfig.json'),
-        out: path.join(roosterJsDistPath, '..', 'docs'),
+        out: path.join(deployPath, 'docs'),
         readme: path.join(rootPath, 'reference.md'),
         name: '"RoosterJs API Reference"',
         mode: 'modules',
@@ -343,25 +312,12 @@ function buildDoc() {
     runNode(cmd, rootPath, 'pipe');
 }
 
-function copySample() {
-    var ncp = require('ncp');
-
-    var target = path.join(distPath, 'roosterjs/samplecode');
-    var source = path.join(rootPath, 'publish/samplecode');
-
-    ncp.ncp(source, target, (error) => {
-        if (error) {
-            err(error);
-        }
-    });
-}
-
 async function buildDemoSite() {
     var sourcePathRoot = path.join(rootPath, 'publish/samplesite');
     var sourcePath = path.join(sourcePathRoot, 'scripts');
     runNode(typescriptPath + ' --noEmit ', sourcePath);
 
-    var distPathRoot = path.join(distPath, 'roosterjs');
+    var distPathRoot = path.join(deployPath);
     var filename = 'demo.js';
     var webpackConfig = {
         entry: path.join(sourcePath, 'index.ts'),
@@ -425,6 +381,14 @@ async function buildDemoSite() {
             if (err) {
                 reject(err);
             } else {
+                fs.copyFileSync(
+                    path.resolve(roosterJsDistPath, 'rooster-min.js'),
+                    path.resolve(distPathRoot, 'rooster-min.js')
+                );
+                fs.copyFileSync(
+                    path.resolve(roosterJsDistPath, 'rooster-min.js.map'),
+                    path.resolve(distPathRoot, 'rooster-min.js.map')
+                );
                 fs.copyFileSync(
                     path.resolve(sourcePathRoot, 'index.html'),
                     path.resolve(distPathRoot, 'index.html')
@@ -597,11 +561,6 @@ function buildAll(options) {
             message: 'Verifying type definition file...',
             callback: verifyDts,
             enabled: options.dts,
-        },
-        {
-            message: 'Copying sample code...',
-            callback: copySample,
-            enabled: options.copysample,
         },
         {
             message: 'Building demo site...',
