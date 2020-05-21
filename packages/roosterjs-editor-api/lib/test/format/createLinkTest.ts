@@ -9,7 +9,10 @@ describe('createLink()', () => {
     let editor: Editor;
 
     beforeEach(() => {
+        // Arrange
         editor = TestHelper.initEditor(testID);
+        editor.setContent(originalContent);
+        TestHelper.selectNode(document.getElementById('text'));
     });
 
     afterEach(() => {
@@ -18,10 +21,6 @@ describe('createLink()', () => {
     });
 
     it('adds <a></a> as link', () => {
-        // Arrange
-        editor.setContent(originalContent);
-        TestHelper.selectNode(document.getElementById('text'));
-
         // Act
         createLink(editor, 'https://www.example.com');
 
@@ -31,10 +30,6 @@ describe('createLink()', () => {
     });
 
     it('appends a http protocol if it is missing', () => {
-        // Arrange
-        editor.setContent(originalContent);
-        TestHelper.selectNode(document.getElementById('text'));
-
         // Act
         createLink(editor, 'www.example.com');
 
@@ -44,10 +39,6 @@ describe('createLink()', () => {
     });
 
     it('appends a mailto: protocol if it is an email address missing', () => {
-        // Arrange
-        editor.setContent(originalContent);
-        TestHelper.selectNode(document.getElementById('text'));
-
         // Act
         createLink(editor, 'LauraJPowers@contoso.com');
 
@@ -57,10 +48,6 @@ describe('createLink()', () => {
     });
 
     it('appends a ftp:// protocol if the link starts with an ftp.', () => {
-        // Arrange
-        editor.setContent(originalContent);
-        TestHelper.selectNode(document.getElementById('text'));
-
         // Act
         createLink(editor, 'ftp.contoso.com');
 
@@ -70,10 +57,6 @@ describe('createLink()', () => {
     });
 
     it('preserves any URI scheme that already exists', () => {
-        // Arrange
-        editor.setContent(originalContent);
-        TestHelper.selectNode(document.getElementById('text'));
-
         // Act
         createLink(editor, 'steam://gaben@valvesoftware.com');
 
@@ -83,10 +66,6 @@ describe('createLink()', () => {
     });
 
     it('adds altText in the link', () => {
-        // Arrange
-        editor.setContent(originalContent);
-        TestHelper.selectNode(document.getElementById('text'));
-
         // Act
         createLink(editor, 'www.example.com', 'altText');
 
