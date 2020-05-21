@@ -36,10 +36,7 @@ export default class TitleBar extends React.Component<TitleBarProps, {}> {
                         Wiki
                     </a>
                     {' | '}
-                    <a
-                        href="https://microsoft.github.io/roosterjs/docs/index.html"
-                        target="_blank"
-                        className={styles.link}>
+                    <a href="docs/index.html" target="_blank" className={styles.link}>
                         API References
                     </a>
                     {' | '}
