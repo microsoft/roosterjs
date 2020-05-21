@@ -118,5 +118,7 @@ function checkXss(link: string): string {
 
     a.href = link || '';
     santizer.sanitize(doc.body);
-    return a.href;
+    // We use getAttribute because some browsers will try to make the href property a valid link.
+    // This has unintended side effects when the link lacks a protocol.
+    return a.getAttribute('href');
 }
