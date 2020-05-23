@@ -19,7 +19,7 @@ const htmlButtons =
     '<button id=buttonUndo>Undo</button>\n' +
     '<button id=buttonRedo>Redo</button>\n';
 const htmlEnd =
-    '<script src="https://microsoft.github.io/roosterjs/dist/rooster.js"></script>\n' +
+    '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n' +
     '</body>\n' +
     '</html>';
 
