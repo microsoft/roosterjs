@@ -27,6 +27,7 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
     private exportForm = React.createRef<HTMLFormElement>();
     private exportData = React.createRef<HTMLInputElement>();
     private showRibbon = React.createRef<HTMLInputElement>();
+    private experiment = React.createRef<HTMLInputElement>();
 
     constructor(props: BuildInPluginProps) {
         super(props);
@@ -37,6 +38,24 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             <div>
                 <div>
                     <button onClick={this.onExport}>Export to CodePen</button>
+                </div>
+
+                <div>
+                    <br />
+                </div>
+
+                <div>
+                    <input
+                        id="useExperimentFeature"
+                        type="checkbox"
+                        checked={this.state.useExperimentFeatures}
+                        onChange={this.onChangeExperiment}
+                        ref={this.experiment}
+                    />
+                    <label htmlFor="useExperimentFeature">Use experiment features</label>
+                </div>
+                <div>
+                    <br />
                 </div>
 
                 <details>
@@ -108,6 +127,7 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             pluginList: { ...this.state.pluginList },
             contentEditFeatures: { ...this.state.contentEditFeatures },
             defaultFormat: { ...this.state.defaultFormat },
+            useExperimentFeatures: this.state.useExperimentFeatures,
         };
 
         if (callback) {
@@ -140,6 +160,13 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             showRibbon,
         });
         MainPaneBase.getInstance().setIsRibbonShown(showRibbon);
+    };
+
+    private onChangeExperiment = () => {
+        let useExperimentFeatures = this.experiment.current.checked;
+        this.resetState(state => {
+            state.useExperimentFeatures = useExperimentFeatures;
+        }, true);
     };
 
     private getHtml() {

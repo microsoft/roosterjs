@@ -8,6 +8,7 @@ export default class EditorCode extends CodeElement {
     private plugins: PluginsCode;
     private defaultFormat: DefaultFormatCode;
     private buttons: ButtonsCode;
+    private useExperimentFeatures: boolean;
 
     constructor(state: BuildInPluginState) {
         super();
@@ -15,6 +16,7 @@ export default class EditorCode extends CodeElement {
         this.plugins = new PluginsCode(state);
         this.defaultFormat = new DefaultFormatCode(state.defaultFormat);
         this.buttons = state.showRibbon ? new ButtonsCode() : null;
+        this.useExperimentFeatures = state.useExperimentFeatures;
     }
 
     getCode() {
@@ -25,6 +27,7 @@ export default class EditorCode extends CodeElement {
         code += 'let options: roosterjs.EditorOptions = {\n';
         code += this.indent('plugins: plugins,\n');
         code += defaultFormat ? this.indent('defaultFormat: defaultFormat,\n') : '';
+        code += this.useExperimentFeatures ? this.indent('enableExperimentFeatures: true,\n') : '';
         code += '};\n';
         code += 'let editor = new roosterjs.Editor(contentDiv, options);\n';
         code += this.buttons ? this.buttons.getCode() : '';
