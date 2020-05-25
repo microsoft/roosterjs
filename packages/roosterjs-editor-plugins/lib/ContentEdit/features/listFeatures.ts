@@ -1,3 +1,4 @@
+import { getTagOfNode, isNodeEmpty, isPositionAtBeginningOf, Position } from 'roosterjs-editor-dom';
 import { isHTMLOListElement } from 'roosterjs-cross-window';
 import { setIndentation, toggleBullet, toggleNumbering } from 'roosterjs-editor-api';
 import {
@@ -13,14 +14,8 @@ import {
     Indentation,
     PluginKeyboardEvent,
     PositionType,
+    NodeType,
 } from 'roosterjs-editor-types';
-import {
-    Browser,
-    Position,
-    getTagOfNode,
-    isNodeEmpty,
-    isPositionAtBeginningOf,
-} from 'roosterjs-editor-dom';
 
 /**
  * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
@@ -135,12 +130,17 @@ export const AutoBullet: ContentEditFeature = {
 
                 if (rangeToDelete) {
                     rangeToDelete.deleteContents();
-                }
-
-                // If not explicitly insert br, Chrome/Safari/IE will operate on the previous line
-                let tempBr = editor.getDocument().createElement('BR');
-                if (Browser.isChrome || Browser.isSafari || Browser.isIE11OrGreater) {
-                    editor.insertNode(tempBr);
+                    const node = rangeToDelete.startContainer;
+                    if (
+                        node?.nodeType == NodeType.Text &&
+                        node.nodeValue == '' &&
+                        !node.previousSibling &&
+                        !node.nextSibling
+                    ) {
+                        const br = editor.getDocument().createElement('BR');
+                        editor.insertNode(br);
+                        editor.select(br, PositionType.Before);
+                    }
                 }
 
                 if (textBeforeCursor.indexOf('1.') == 0) {
@@ -148,8 +148,6 @@ export const AutoBullet: ContentEditFeature = {
                 } else {
                     toggleBullet(editor);
                 }
-
-                editor.deleteNode(tempBr);
             });
         });
     },

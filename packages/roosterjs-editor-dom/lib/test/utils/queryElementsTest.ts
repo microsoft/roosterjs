@@ -107,7 +107,7 @@ describe('queryElements() QueryScope.OnSelection', () => {
             'id1',
             '*',
             root => createRange(root.firstChild.firstChild),
-            ['id2', 'id3', 'id4']
+            ['id2', 'id3']
         );
     });
 
@@ -129,7 +129,7 @@ describe('queryElements() QueryScope.OnSelection', () => {
             'id1',
             'span',
             root => createRange(root.firstChild.firstChild),
-            ['id3', 'id4']
+            ['id3']
         );
     });
 
@@ -176,7 +176,7 @@ describe('queryElements() QueryScope.InSelection', () => {
             'id1',
             '*',
             root => createRange(root.firstChild.firstChild),
-            ['id2', 'id3', 'id4']
+            ['id2', 'id3']
         );
     });
 
@@ -187,7 +187,7 @@ describe('queryElements() QueryScope.InSelection', () => {
             'id1',
             '*',
             root => createRange(root.firstChild.firstChild.firstChild),
-            ['id2', 'id3']
+            ['id3']
         );
     });
 
@@ -198,7 +198,7 @@ describe('queryElements() QueryScope.InSelection', () => {
             'id1',
             'span',
             root => createRange(root.firstChild.firstChild),
-            ['id3', 'id4']
+            ['id3']
         );
     });
 

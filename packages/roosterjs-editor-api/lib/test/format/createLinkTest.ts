@@ -12,6 +12,7 @@ describe('createLink()', () => {
         // Arrange
         editor = TestHelper.initEditor(testID);
         editor.setContent(originalContent);
+        editor.focus();
         TestHelper.selectNode(document.getElementById('text'));
     });
 
