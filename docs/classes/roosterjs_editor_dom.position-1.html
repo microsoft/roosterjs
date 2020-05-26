@@ -126,14 +126,14 @@
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">new <wbr>Position<span class="tsd-signature-symbol">(</span>position<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.nodeposition-1.html" class="tsd-signature-type">NodePosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_dom.position-1.html" class="tsd-signature-type">Position</a></li>
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Position<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span>, offset<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_dom.position-1.html" class="tsd-signature-type">Position</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Position<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span>, offset<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, isFromEndOfRange<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_dom.position-1.html" class="tsd-signature-type">Position</a></li>
 						<li class="tsd-signature tsd-kind-icon">new <wbr>Position<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Node</span>, positionType<span class="tsd-signature-symbol">: </span><a href="../enums/roosterjs_editor_types.positiontype-1.html" class="tsd-signature-type">PositionType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_dom.position-1.html" class="tsd-signature-type">Position</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e35bd4/packages/roosterjs-editor-dom/lib/selection/Position.ts#L12">roosterjs-editor-dom/lib/selection/Position.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f25bd70/packages/roosterjs-editor-dom/lib/selection/Position.ts#L12">roosterjs-editor-dom/lib/selection/Position.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -158,7 +158,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e35bd4/packages/roosterjs-editor-dom/lib/selection/Position.ts#L19">roosterjs-editor-dom/lib/selection/Position.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f25bd70/packages/roosterjs-editor-dom/lib/selection/Position.ts#L19">roosterjs-editor-dom/lib/selection/Position.ts:19</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -184,13 +184,23 @@
 										</div>
 									</div>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> isFromEndOfRange: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Whether this position is created from end of a range. An position
+												created from end of range has different behavior when normalize, it will use the child node
+											before current position if any as a deeper level node and set isAtEnd to true.</p>
+										</div>
+									</div>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_dom.position-1.html" class="tsd-signature-type">Position</a></h4>
 						</li>
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e35bd4/packages/roosterjs-editor-dom/lib/selection/Position.ts#L26">roosterjs-editor-dom/lib/selection/Position.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f25bd70/packages/roosterjs-editor-dom/lib/selection/Position.ts#L29">roosterjs-editor-dom/lib/selection/Position.ts:29</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -231,7 +241,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/roosterjs_editor_types.nodeposition-1.html">NodePosition</a>.<a href="../interfaces/roosterjs_editor_types.nodeposition-1.html#element">element</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e35bd4/packages/roosterjs-editor-dom/lib/selection/Position.ts#L10">roosterjs-editor-dom/lib/selection/Position.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f25bd70/packages/roosterjs-editor-dom/lib/selection/Position.ts#L10">roosterjs-editor-dom/lib/selection/Position.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -242,7 +252,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/roosterjs_editor_types.nodeposition-1.html">NodePosition</a>.<a href="../interfaces/roosterjs_editor_types.nodeposition-1.html#isatend">isAtEnd</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e35bd4/packages/roosterjs-editor-dom/lib/selection/Position.ts#L12">roosterjs-editor-dom/lib/selection/Position.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f25bd70/packages/roosterjs-editor-dom/lib/selection/Position.ts#L12">roosterjs-editor-dom/lib/selection/Position.ts:12</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -253,7 +263,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/roosterjs_editor_types.nodeposition-1.html">NodePosition</a>.<a href="../interfaces/roosterjs_editor_types.nodeposition-1.html#node">node</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e35bd4/packages/roosterjs-editor-dom/lib/selection/Position.ts#L9">roosterjs-editor-dom/lib/selection/Position.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f25bd70/packages/roosterjs-editor-dom/lib/selection/Position.ts#L9">roosterjs-editor-dom/lib/selection/Position.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -264,7 +274,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/roosterjs_editor_types.nodeposition-1.html">NodePosition</a>.<a href="../interfaces/roosterjs_editor_types.nodeposition-1.html#offset">offset</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e35bd4/packages/roosterjs-editor-dom/lib/selection/Position.ts#L11">roosterjs-editor-dom/lib/selection/Position.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f25bd70/packages/roosterjs-editor-dom/lib/selection/Position.ts#L11">roosterjs-editor-dom/lib/selection/Position.ts:11</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -282,7 +292,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.nodeposition-1.html">NodePosition</a>.<a href="../interfaces/roosterjs_editor_types.nodeposition-1.html#equalto">equalTo</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e35bd4/packages/roosterjs-editor-dom/lib/selection/Position.ts#L106">roosterjs-editor-dom/lib/selection/Position.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f25bd70/packages/roosterjs-editor-dom/lib/selection/Position.ts#L117">roosterjs-editor-dom/lib/selection/Position.ts:117</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -314,7 +324,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.nodeposition-1.html">NodePosition</a>.<a href="../interfaces/roosterjs_editor_types.nodeposition-1.html#isafter">isAfter</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e35bd4/packages/roosterjs-editor-dom/lib/selection/Position.ts#L119">roosterjs-editor-dom/lib/selection/Position.ts:119</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f25bd70/packages/roosterjs-editor-dom/lib/selection/Position.ts#L130">roosterjs-editor-dom/lib/selection/Position.ts:130</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -343,7 +353,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.nodeposition-1.html">NodePosition</a>.<a href="../interfaces/roosterjs_editor_types.nodeposition-1.html#move">move</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e35bd4/packages/roosterjs-editor-dom/lib/selection/Position.ts#L129">roosterjs-editor-dom/lib/selection/Position.ts:129</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f25bd70/packages/roosterjs-editor-dom/lib/selection/Position.ts#L140">roosterjs-editor-dom/lib/selection/Position.ts:140</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -375,7 +385,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.nodeposition-1.html">NodePosition</a>.<a href="../interfaces/roosterjs_editor_types.nodeposition-1.html#normalize">normalize</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e35bd4/packages/roosterjs-editor-dom/lib/selection/Position.ts#L75">roosterjs-editor-dom/lib/selection/Position.ts:75</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f25bd70/packages/roosterjs-editor-dom/lib/selection/Position.ts#L82">roosterjs-editor-dom/lib/selection/Position.ts:82</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -398,7 +408,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e35bd4/packages/roosterjs-editor-dom/lib/selection/Position.ts#L145">roosterjs-editor-dom/lib/selection/Position.ts:145</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f25bd70/packages/roosterjs-editor-dom/lib/selection/Position.ts#L156">roosterjs-editor-dom/lib/selection/Position.ts:156</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -429,7 +439,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e35bd4/packages/roosterjs-editor-dom/lib/selection/Position.ts#L137">roosterjs-editor-dom/lib/selection/Position.ts:137</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f25bd70/packages/roosterjs-editor-dom/lib/selection/Position.ts#L148">roosterjs-editor-dom/lib/selection/Position.ts:148</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
