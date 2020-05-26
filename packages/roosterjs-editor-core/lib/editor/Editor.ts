@@ -56,6 +56,7 @@ export default class Editor {
     private core: EditorCore;
     private eventDisposers: (() => void)[];
     private contenteditableChanged: boolean;
+    private enableExperimentFeatures: boolean;
 
     //#region Lifecycle
 
@@ -72,6 +73,7 @@ export default class Editor {
 
         // 2. Store options values to local variables
         this.core = createEditorCore(contentDiv, options);
+        this.enableExperimentFeatures = options.enableExperimentFeatures;
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
@@ -966,6 +968,13 @@ export default class Editor {
      */
     public getDarkModeOptions(): DarkModeOptions {
         return this.core.darkModeOptions;
+    }
+
+    /**
+     * Whether experiment features can be used
+     */
+    public useExperimentFeatures(): boolean {
+        return !!this.enableExperimentFeatures;
     }
 
     //#endregion

@@ -20,6 +20,7 @@ const initialState: BuildInPluginState = {
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
     showRibbon: true,
+    useExperimentFeatures: true,
 };
 
 export default class EditorOptionsPlugin extends SidePanePluginImpl<
