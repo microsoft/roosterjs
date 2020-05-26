@@ -83,4 +83,9 @@ export default interface EditorOptions {
      * By default, the scroll container will be the same with editor content DIV
      */
     scrollContainer?: HTMLElement;
+
+    /**
+     * Whether enable experiment features
+     */
+    enableExperimentFeatures?: boolean;
 }
