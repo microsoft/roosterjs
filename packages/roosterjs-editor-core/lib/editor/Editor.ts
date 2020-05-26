@@ -24,6 +24,8 @@ import {
     PositionType,
     QueryScope,
     Rect,
+    Region,
+    RegionType,
     SelectionPath,
 } from 'roosterjs-editor-types';
 import {
@@ -31,6 +33,7 @@ import {
     contains,
     ContentTraverser,
     createRange,
+    getRegionsFromRange,
     findClosestElementAncestor,
     fromHtml,
     getBlockElementAtNode,
@@ -627,6 +630,14 @@ export default class Editor {
      */
     public isPositionAtBeginning(position: NodePosition): boolean {
         return isPositionAtBeginningOf(position, this.core.contentDiv);
+    }
+
+    /**
+     * Get impacted regions from selection
+     */
+    public getSelectedRegions(type: RegionType = RegionType.Table): Region[] {
+        const range = this.getSelectionRange();
+        return range ? getRegionsFromRange(this.core.contentDiv, range, type) : [];
     }
 
     //#endregion

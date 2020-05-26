@@ -14,6 +14,7 @@ export { Indentation } from './enum/Indentation';
 export { PasteOption } from './enum/PasteOption';
 export { PositionType } from './enum/PositionType';
 export { QueryScope } from './enum/QueryScope';
+export { RegionType } from './enum/RegionType';
 export { TableOperation } from './enum/TableOperation';
 
 // Event
@@ -70,6 +71,7 @@ export { default as LinkData } from './interface/LinkData';
 export { default as ModeIndependentColor } from './interface/ModeIndependentColor';
 export { default as NodePosition } from './interface/NodePosition';
 export { default as Rect } from './interface/Rect';
+export { default as Region } from './interface/Region';
 export { default as SelectionPath } from './interface/SelectionPath';
 export { default as Snapshots } from './interface/Snapshots';
 export { default as TableFormat } from './interface/TableFormat';
