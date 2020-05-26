@@ -120,6 +120,21 @@ describe('getLeafSibling getNextLeafSibling()', () => {
             rootNode.firstChild.lastChild.firstChild
         );
     });
+
+    it('input = <div>node1<span>node2</span><div>node3</div></div>, skipTags=[SPAN], nextLeafSibling = node3', () => {
+        // Arrange
+        let rootNode = DomTestHelper.createElementFromContent(
+            testID,
+            '<div>node1<span>node2</span><div>node3</div></div>'
+        );
+
+        let leafNode = getNextLeafSibling(rootNode.firstChild, rootNode.firstChild.firstChild, [
+            'SPAN',
+        ]);
+
+        // Assert
+        expect(leafNode).toBe(rootNode.firstChild.childNodes[1]);
+    });
 });
 
 describe('getLeafSibling getPreviousLeafSibling()', () => {
@@ -172,5 +187,20 @@ describe('getLeafSibling getPreviousLeafSibling()', () => {
             rootNode.firstChild.lastChild.firstChild,
             rootNode.firstChild.firstChild
         );
+    });
+
+    it('input = <div>node1<span>node2</span><div>node3</div></div>, skipTags=[SPAN], nextLeafSibling = node3', () => {
+        // Arrange
+        let rootNode = DomTestHelper.createElementFromContent(
+            testID,
+            '<div>node1<span>node2</span><div>node3</div></div>'
+        );
+
+        let leafNode = getPreviousLeafSibling(rootNode.firstChild, rootNode.firstChild.lastChild, [
+            'SPAN',
+        ]);
+
+        // Assert
+        expect(leafNode).toBe(rootNode.firstChild.childNodes[1]);
     });
 });
