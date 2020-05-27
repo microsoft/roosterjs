@@ -154,7 +154,11 @@ export default class Position implements NodePosition {
      * @param range The range to get position from
      */
     static getEnd(range: Range) {
-        return new Position(range.endContainer, range.endOffset, true /*isFromEndOfRange*/);
+        // For collapsed range, always return the same value of start container to make sure
+        // end position is not before start position
+        return range.collapsed
+            ? Position.getStart(range)
+            : new Position(range.endContainer, range.endOffset, true /*isFromEndOfRange*/);
     }
 }
 

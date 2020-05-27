@@ -638,6 +638,11 @@ export default class Editor {
      * Get impacted regions from selection
      */
     public getSelectedRegions(type: RegionType = RegionType.Table): Region[] {
+        // Make sure there is a wrpper around cursor first, otherwise there will be no valid region
+        this.core.corePlugins.typeInContainer.ensureTypeInElement(
+            this.getFocusedPosition() || new Position(this.core.contentDiv, PositionType.Begin)
+        );
+
         const range = this.getSelectionRange();
         return range ? getRegionsFromRange(this.core.contentDiv, range, type) : [];
     }
