@@ -1,7 +1,7 @@
 import ContentTraverser from '../contentTraverser/ContentTraverser';
 import createRange from '../selection/createRange';
 import Position from '../selection/Position';
-import { BlockElement, PositionType, Region } from 'roosterjs-editor-types';
+import { BlockElement, Region } from 'roosterjs-editor-types';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../utils/getLeafSibling';
 
 /**
@@ -26,22 +26,29 @@ export default function getSelectedBlockElementsInRegion(region: Region): BlockE
     const endNode = nodeAfter
         ? getPreviousLeafSibling(rootNode, nodeAfter, skipTags)
         : rootNode.lastChild;
-    const regionStart = new Position(startNode, PositionType.Begin).normalize();
-    const regionEnd = new Position(endNode, PositionType.End).normalize();
-    const start = fullSelectionStart.isAfter(regionStart) ? fullSelectionStart : regionStart;
-    const end = fullSelectionEnd.isAfter(regionEnd) ? regionEnd : fullSelectionEnd;
     const blocks: BlockElement[] = [];
 
     if (startNode && endNode) {
-        const range = createRange(start, end);
-        const traverser = ContentTraverser.createSelectionTraverser(rootNode, range, skipTags);
+        const regionRange = createRange(startNode, endNode);
+        const regionStart = Position.getStart(regionRange).normalize();
+        const regionEnd = Position.getEnd(regionRange).normalize();
 
-        for (
-            let block = traverser?.currentBlockElement;
-            !!block;
-            block = traverser.getNextBlockElement()
-        ) {
-            blocks.push(block);
+        if (!fullSelectionStart.isAfter(regionEnd) && !regionStart.isAfter(fullSelectionEnd)) {
+            const start = fullSelectionStart.isAfter(regionStart)
+                ? fullSelectionStart
+                : regionStart;
+            const end = fullSelectionEnd.isAfter(regionEnd) ? regionEnd : fullSelectionEnd;
+
+            const range = createRange(start, end);
+            const traverser = ContentTraverser.createSelectionTraverser(rootNode, range, skipTags);
+
+            for (
+                let block = traverser?.currentBlockElement;
+                !!block;
+                block = traverser.getNextBlockElement()
+            ) {
+                blocks.push(block);
+            }
         }
     }
 
