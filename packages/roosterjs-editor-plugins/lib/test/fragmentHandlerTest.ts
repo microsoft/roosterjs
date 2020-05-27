@@ -118,6 +118,26 @@ describe('fragmentHandler', () => {
                     '<div class="BCX0 SCXW32709461"><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW32709461" style=""> A </li><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> B </li><ol><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C1 </li><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 120px;"> C2 </li></ol><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW32709461" style="margin: 0px 0px 0px 72px;"> D </li></ul></ul></div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><div class="TableContainer SCXW244795937 BCX0"><table><tbody><tr><td><div><div class="OutlineElement Ltr BCX0 SCXW32709461"><p><span><span>asdfasdf</span></span><span></span></p></div></div></td></tr><tr><td><div><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> A </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> B </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> C </li><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> D </li></ul></div></td></tr></tbody></table></div></div><div class="OutlineElement Ltr BCX0 SCXW244795937"><p><span><span></span></span><span></span></p></div>'
                 );
             });
+            // e.g.
+            //text text
+            // .a
+            //   .b
+            //     1.c1
+            //     2.c2
+            //   .d
+            //text text
+            // -------------- --------------
+            //| text text    | text text    |
+            // -------------- --------------
+            //| .a           | .a           |
+            // -------------- --------------
+            it('fragments contains text, list and table that consist of list', () => {
+                runTest(
+                    '<html> <body> <div class="OutlineElement Ltr BCX0 SCXW244795937"> <div class="TableContainer SCXW244795937 BCX0"> <table> <tbody> <tr> <td> <div> <div class="OutlineElement Ltr BCX0 SCXW32709461"> <p><span><span>asdfasdf</span></span><span></span></p> </div> </div> </td> <td> <div> <div class="OutlineElement Ltr BCX0 SCXW32709461"> <p><span><span>asdfasdf222</span></span><span></span></p> </div> </div> </td> </tr> <tr> <td> <div> <div class="ListContainerWrapper SCXW244795937 BCX0"> <ul> <li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> A </li> </ul> </div> </div> </td> <td> <div> <div class="ListContainerWrapper SCXW244795937 BCX0"> <ul> <li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> A </li> </ul> </div> </div> </td> </tr> </tbody> </table> </div> </div> </body></html>',
+                    true,
+                    '  <div class="OutlineElement Ltr BCX0 SCXW244795937"> <div class="TableContainer SCXW244795937 BCX0"> <table> <tbody> <tr> <td> <div> <div class="OutlineElement Ltr BCX0 SCXW32709461"> <p><span><span>asdfasdf</span></span><span></span></p> </div> </div> </td> <td> <div> <div class="OutlineElement Ltr BCX0 SCXW32709461"> <p><span><span>asdfasdf222</span></span><span></span></p> </div> </div> </td> </tr> <tr> <td> <div> <div class="ListContainerWrapper SCXW244795937 BCX0"> <ul> <li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> A </li> </ul> </div> </div> </td> <td> <div> <div class="ListContainerWrapper SCXW244795937 BCX0"> <ul> <li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW244795937" style="margin: 0px 0px 0px 24px;"> A </li> </ul> </div> </div> </td> </tr> </tbody> </table> </div> </div> '
+                );
+            });
         });
 
         // Unhappy cases
