@@ -32,7 +32,7 @@ export default function getSelectedBlockElementsInRegion(region: Region): BlockE
     const end = fullSelectionEnd.isAfter(regionEnd) ? regionEnd : fullSelectionEnd;
     const blocks: BlockElement[] = [];
 
-    if (startNode && endNode && (end.equalTo(start) || end.isAfter(start))) {
+    if (startNode && endNode) {
         const range = createRange(start, end);
         const traverser = ContentTraverser.createSelectionTraverser(rootNode, range, skipTags);
 
