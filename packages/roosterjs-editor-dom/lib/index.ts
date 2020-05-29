@@ -46,6 +46,11 @@ export { default as toArray } from './utils/toArray';
 
 export { default as VTable, VCell } from './table/VTable';
 
+export { default as getRegionsFromRange } from './region/getRegionsFromRange';
+export { default as getSelectedBlockElementsInRegion } from './region/getSelectedBlockElementsInRegion';
+export { default as collapseNodesInRegion } from './region/collapseNodesInRegion';
+export { default as isNodeInRegion } from './region/isNodeInRegion';
+
 export { default as Position } from './selection/Position';
 export { default as createRange, getRangeFromSelectionPath } from './selection/createRange';
 export { default as getPositionRect } from './selection/getPositionRect';
