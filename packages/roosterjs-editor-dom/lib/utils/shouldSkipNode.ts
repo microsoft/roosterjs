@@ -16,10 +16,26 @@ export default function shouldSkipNode(node: Node): boolean {
     if (node.nodeType == NodeType.Text) {
         return !node.nodeValue || node.textContent == '' || CRLF.test(node.nodeValue);
     } else if (node.nodeType == NodeType.Element) {
-        return (
-            (getTagOfNode(node) == 'DIV' && !node.firstChild) ||
-            getComputedStyle(node, 'display') == 'none'
-        );
+        const tag = getTagOfNode(node);
+        if (tag == 'SPAN' || tag == 'DIV') {
+            if (getComputedStyle(node, 'display') == 'none') {
+                return true;
+            }
+
+            // Empty SPAN/DIV or SPAN/DIV with only unmeaningful children is unmeaningful,
+            // because it can render nothing. If we keep them here, there may be unexpected
+            // LI elements added for those unmeaningful nodes.
+            for (let child = node.firstChild; !!child; child = child.nextSibling) {
+                if (!shouldSkipNode(child)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            // There may still be other cases that the node is not meaningful.
+            // We can add those cases here once we hit them.
+            return false;
+        }
     } else {
         return true;
     }
