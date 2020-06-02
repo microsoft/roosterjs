@@ -1,6 +1,6 @@
-import collapseNodesInRegion from '../region/collapseNodesInRegion';
 import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import getSelectedBlockElementsInRegion from '../region/getSelectedBlockElementsInRegion';
+import isNodeInRegion from '../region/isNodeInRegion';
 import shouldSkipNode from '../utils/shouldSkipNode';
 import VList from './VList';
 import { getLeafSibling } from '../utils/getLeafSibling';
@@ -53,8 +53,7 @@ export default function createVListFromRegion(
             tryIncludeSiblingNode(region, nodes, true /*isNext*/);
         }
 
-        nodes = collapseNodesInRegion(region, nodes);
-        nodes = nodes.filter(node => !shouldSkipNode(node));
+        nodes = nodes.filter(node => !shouldSkipNode(node, true /*ignoreSpace*/));
     }
 
     let vList: VList = null;
@@ -79,10 +78,9 @@ export default function createVListFromRegion(
 
 function tryIncludeSiblingNode(region: Region, nodes: Node[], isNext: boolean) {
     let node = nodes[isNext ? nodes.length - 1 : 0];
-    node = getLeafSibling(region.rootNode, node, isNext);
+    node = getLeafSibling(region.rootNode, node, isNext, region.skipTags, true /*ignoreSpace*/);
     node = getRootListNode(region, node);
-
-    if (isListElement(node)) {
+    if (isNodeInRegion(region, node) && isListElement(node)) {
         if (isNext) {
             nodes.push(node);
         } else {

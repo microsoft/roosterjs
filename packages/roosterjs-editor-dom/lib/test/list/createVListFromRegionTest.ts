@@ -416,6 +416,137 @@ describe('createVListFromRegion from selection, with sibling list', () => {
             1
         );
     });
+
+    it('lists are in asymmetric containers', () => {
+        runTest(
+            '<div>' +
+                '<div>line1</div>' +
+                '<div>' +
+                '<ul>' +
+                '<li>line2</li>' +
+                '</ul>' +
+                '</div>' +
+                '</div>' +
+                '<ol>' +
+                '<li>line3</li>' +
+                `<li id="${FocusNode1}">line4</li>` +
+                '</ol>' +
+                '<div>' +
+                '<div>line 5' +
+                '<ol>' +
+                `<li id="${FocusNode2}">line6</li>` +
+                '<li>line7</li>' +
+                '</ol>' +
+                '</div>' +
+                '</div>' +
+                '<ol>' +
+                '<li>line8</li>' +
+                '<ul><li>line9</li></ul>' +
+                '</ol>',
+            [
+                {
+                    listTypes: [ListType.None, ListType.Unordered],
+                    outerHTML: '<li>line2</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li>line3</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: `<li id="${FocusNode1}">line4</li>`,
+                },
+                {
+                    listTypes: [ListType.None],
+                    outerHTML: '<li><div>line 5</div></li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: `<li id="${FocusNode2}">line6</li>`,
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li>line7</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li>line8</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered, ListType.Unordered],
+                    outerHTML: '<li>line9</li>',
+                },
+            ]
+        );
+    });
+
+    it('lists are in asymmetric containers, with spaces in HTML', () => {
+        runTest(
+            '<div>\n' +
+                '    <div>line1</div>\n' +
+                '    <div>\n' +
+                '        <ul>\n' +
+                '            <li>line2</li>\n' +
+                '        </ul>\n' +
+                '    </div>\n' +
+                '</div>\n' +
+                '<ol>\n' +
+                '    <li>line3</li>\n' +
+                `    <li id="${FocusNode1}">line4</li>\n` +
+                '</ol>\n' +
+                '<div>&nbsp;</div>\n' +
+                '<div>\n' +
+                '    <div>line 5\n' +
+                '        <ol>\n' +
+                `            <li id="${FocusNode2}">line6</li>\n` +
+                '            <li>line7</li>\n' +
+                '        </ol>\n' +
+                '    </div>\n' +
+                '</div>\n' +
+                '<ol>\n' +
+                '    <li>line8</li>\n' +
+                '    <ul><li>line9</li></ul>\n' +
+                '</ol>\n',
+            [
+                {
+                    listTypes: [ListType.None, ListType.Unordered],
+                    outerHTML: '<li>line2</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li>line3</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: `<li id="${FocusNode1}">line4</li>`,
+                },
+                {
+                    listTypes: [ListType.None],
+                    outerHTML: '<li><div>&nbsp;</div></li>',
+                },
+                {
+                    listTypes: [ListType.None],
+                    outerHTML: '<li><div>line 5\n        </div></li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: `<li id="${FocusNode2}">line6</li>`,
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li>line7</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li>line8</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered, ListType.Unordered],
+                    outerHTML: '<li>line9</li>',
+                },
+            ]
+        );
+    });
 });
 
 describe('createVListFromRegion from node', () => {

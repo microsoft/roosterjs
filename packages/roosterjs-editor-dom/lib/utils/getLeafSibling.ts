@@ -8,12 +8,14 @@ import shouldSkipNode from './shouldSkipNode';
  * @param startNode current node to get sibling node from
  * @param isNext True to get next leaf sibling node, false to get previous leaf sibling node
  * @param skipTags (Optional) tags that child elements will be skipped
+ * @param ignoreSpace (Optional) Ignore pure space text node when check if the node should be skipped
  */
 export function getLeafSibling(
     rootNode: Node,
     startNode: Node,
     isNext: boolean,
-    skipTags?: string[]
+    skipTags?: string[],
+    ignoreSpace?: boolean
 ): Node {
     let result = null;
     let getSibling = isNext
@@ -44,7 +46,7 @@ export function getLeafSibling(
             }
 
             // Check special nodes (i.e. node that has a display:none etc.) and continue looping if so
-            shouldContinue = curNode && shouldSkipNode(curNode);
+            shouldContinue = curNode && shouldSkipNode(curNode, ignoreSpace);
             if (!shouldContinue) {
                 // Found a good leaf node, assign and exit
                 result = curNode;
