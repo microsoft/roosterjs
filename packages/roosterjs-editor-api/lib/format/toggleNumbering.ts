@@ -1,5 +1,6 @@
+import experimentToggleListType from '../experiment/experimentToggleListType';
 import processList from '../utils/processList';
-import { ChangeSource, DocumentCommand } from 'roosterjs-editor-types';
+import { ChangeSource, DocumentCommand, ListType } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
 
 /**
@@ -11,9 +12,13 @@ import { Editor } from 'roosterjs-editor-core';
  * @param editor The editor instance
  */
 export default function toggleNumbering(editor: Editor) {
-    editor.focus();
-    editor.addUndoSnapshot(
-        () => processList(editor, DocumentCommand.InsertOrderedList),
-        ChangeSource.Format
-    );
+    if (editor.useExperimentFeatures()) {
+        experimentToggleListType(editor, ListType.Ordered);
+    } else {
+        editor.focus();
+        editor.addUndoSnapshot(
+            () => processList(editor, DocumentCommand.InsertOrderedList),
+            ChangeSource.Format
+        );
+    }
 }
