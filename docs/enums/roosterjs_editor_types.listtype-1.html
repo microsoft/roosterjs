@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TableFormat | RoosterJs API Reference</title>
+	<title>ListType | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/roosterjs_editor_types.html">roosterjs-editor-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_types.tableformat-1.html">TableFormat</a>
+					<a href="roosterjs_editor_types.listtype-1.html">ListType</a>
 				</li>
 			</ul>
-			<h1>Interface TableFormat</h1>
+			<h1>Enumeration ListType</h1>
 		</div>
 	</div>
 </header>
@@ -68,109 +68,72 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Table format</p>
+						<p>Type of list (numbering or bullet)</p>
 					</div>
 				</div>
-			</section>
-			<section class="tsd-panel tsd-hierarchy">
-				<h3>Hierarchy</h3>
-				<ul class="tsd-hierarchy">
-					<li>
-						<span class="target">TableFormat</span>
-					</li>
-				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
+							<h3>Enumeration members</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.tableformat-1.html#bgcoloreven" class="tsd-kind-icon">bg<wbr>Color<wbr>Even</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.tableformat-1.html#bgcolorodd" class="tsd-kind-icon">bg<wbr>Color<wbr>Odd</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.tableformat-1.html#bottombordercolor" class="tsd-kind-icon">bottom<wbr>Border<wbr>Color</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.tableformat-1.html#topbordercolor" class="tsd-kind-icon">top<wbr>Border<wbr>Color</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.tableformat-1.html#verticalbordercolor" class="tsd-kind-icon">vertical<wbr>Border<wbr>Color</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="roosterjs_editor_types.listtype-1.html#none" class="tsd-kind-icon">None</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="roosterjs_editor_types.listtype-1.html#ordered" class="tsd-kind-icon">Ordered</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="roosterjs_editor_types.listtype-1.html#unordered" class="tsd-kind-icon">Unordered</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="bgcoloreven" class="tsd-anchor"></a>
-					<h3>bg<wbr>Color<wbr>Even</h3>
-					<div class="tsd-signature tsd-kind-icon">bg<wbr>Color<wbr>Even<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<h2>Enumeration members</h2>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="none" class="tsd-anchor"></a>
+					<h3>None</h3>
+					<div class="tsd-signature tsd-kind-icon">None<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/752e133/packages/roosterjs-editor-types/lib/interface/TableFormat.ts#L8">roosterjs-editor-types/lib/interface/TableFormat.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/752e133/packages/roosterjs-editor-types/lib/enum/ListType.ts#L9">roosterjs-editor-types/lib/enum/ListType.ts:9</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Background color for even rows</p>
+							<p>None list type
+							It means this is not a list</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="bgcolorodd" class="tsd-anchor"></a>
-					<h3>bg<wbr>Color<wbr>Odd</h3>
-					<div class="tsd-signature tsd-kind-icon">bg<wbr>Color<wbr>Odd<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="ordered" class="tsd-anchor"></a>
+					<h3>Ordered</h3>
+					<div class="tsd-signature tsd-kind-icon">Ordered<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 1</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/752e133/packages/roosterjs-editor-types/lib/interface/TableFormat.ts#L13">roosterjs-editor-types/lib/interface/TableFormat.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/752e133/packages/roosterjs-editor-types/lib/enum/ListType.ts#L15">roosterjs-editor-types/lib/enum/ListType.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Background color for odd rows</p>
+							<p>Ordered List type (numbering list)
+							Represented by &quot;OL&quot; tag</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="bottombordercolor" class="tsd-anchor"></a>
-					<h3>bottom<wbr>Border<wbr>Color</h3>
-					<div class="tsd-signature tsd-kind-icon">bottom<wbr>Border<wbr>Color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="unordered" class="tsd-anchor"></a>
+					<h3>Unordered</h3>
+					<div class="tsd-signature tsd-kind-icon">Unordered<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 2</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/752e133/packages/roosterjs-editor-types/lib/interface/TableFormat.ts#L23">roosterjs-editor-types/lib/interface/TableFormat.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/752e133/packages/roosterjs-editor-types/lib/enum/ListType.ts#L21">roosterjs-editor-types/lib/enum/ListType.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Bottom border color for each row</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="topbordercolor" class="tsd-anchor"></a>
-					<h3>top<wbr>Border<wbr>Color</h3>
-					<div class="tsd-signature tsd-kind-icon">top<wbr>Border<wbr>Color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/752e133/packages/roosterjs-editor-types/lib/interface/TableFormat.ts#L18">roosterjs-editor-types/lib/interface/TableFormat.ts:18</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Top border color for each row</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="verticalbordercolor" class="tsd-anchor"></a>
-					<h3>vertical<wbr>Border<wbr>Color</h3>
-					<div class="tsd-signature tsd-kind-icon">vertical<wbr>Border<wbr>Color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/752e133/packages/roosterjs-editor-types/lib/interface/TableFormat.ts#L28">roosterjs-editor-types/lib/interface/TableFormat.ts:28</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Vertical border color for each row</p>
+							<p>Unordered List type (bullet list)
+							Represented by &quot;UL&quot; tag</p>
 						</div>
 					</div>
 				</section>
@@ -218,23 +181,17 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_editor_types.tableformat-1.html" class="tsd-kind-icon">Table<wbr>Format</a>
+					<li class="current tsd-kind-enum tsd-parent-kind-module">
+						<a href="roosterjs_editor_types.listtype-1.html" class="tsd-kind-icon">List<wbr>Type</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.tableformat-1.html#bgcoloreven" class="tsd-kind-icon">bg<wbr>Color<wbr>Even</a>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="roosterjs_editor_types.listtype-1.html#none" class="tsd-kind-icon">None</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.tableformat-1.html#bgcolorodd" class="tsd-kind-icon">bg<wbr>Color<wbr>Odd</a>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="roosterjs_editor_types.listtype-1.html#ordered" class="tsd-kind-icon">Ordered</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.tableformat-1.html#bottombordercolor" class="tsd-kind-icon">bottom<wbr>Border<wbr>Color</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.tableformat-1.html#topbordercolor" class="tsd-kind-icon">top<wbr>Border<wbr>Color</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.tableformat-1.html#verticalbordercolor" class="tsd-kind-icon">vertical<wbr>Border<wbr>Color</a>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="roosterjs_editor_types.listtype-1.html#unordered" class="tsd-kind-icon">Unordered</a>
 							</li>
 						</ul>
 					</li>
@@ -260,7 +217,6 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
