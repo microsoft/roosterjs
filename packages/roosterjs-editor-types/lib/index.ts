@@ -11,6 +11,7 @@ export { ContentPosition } from './enum/ContentPosition';
 export { Direction } from './enum/Direction';
 export { FontSizeChange } from './enum/FontSizeChange';
 export { Indentation } from './enum/Indentation';
+export { ListType } from './enum/ListType';
 export { PasteOption } from './enum/PasteOption';
 export { PositionType } from './enum/PositionType';
 export { QueryScope } from './enum/QueryScope';
