@@ -25,10 +25,14 @@ export default function queryElements(
 
     if (scope != QueryScope.Body && range) {
         let { startContainer, startOffset, endContainer, endOffset } = range;
-        startContainer =
-            startContainer.nodeType == NodeType.Element && startContainer.firstChild
-                ? startContainer.childNodes[startOffset]
-                : startContainer;
+        if (startContainer.nodeType == NodeType.Element && startContainer.firstChild) {
+            const child = startContainer.childNodes[startOffset];
+
+            // range.startOffset can give a value of child.length+1 when selection is after the last child
+            // In that case we will use the last child instead
+            startContainer = child || startContainer.lastChild;
+        }
+
         endContainer =
             endContainer.nodeType == NodeType.Element && endContainer.firstChild && endOffset > 0
                 ? endContainer.childNodes[endOffset - 1]
