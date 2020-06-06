@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Microsoft/roosterjs.svg?branch=master)](https://travis-ci.org/Microsoft/roosterjs)
+[![Build Status](https://api.travis-ci.org/microsoft/roosterjs.svg?branch=master)](https://www.travis-ci.org/microsoft/roosterjs)
 
 # Rooster
 
@@ -206,13 +206,13 @@ var editorDiv = document.getElementById('editorDiv');
 var editor = roosterjs.createEditor(editorDiv);
 editor.setContent('Welcome to <b>RoosterJs</b>!');
 
-document.getElementById('buttonB').addEventListener('click', function() {
+document.getElementById('buttonB').addEventListener('click', function () {
     roosterjs.toggleBold(editor);
 });
-document.getElementById('buttonI').addEventListener('click', function() {
+document.getElementById('buttonI').addEventListener('click', function () {
     roosterjs.toggleItalic(editor);
 });
-document.getElementById('buttonU').addEventListener('click', function() {
+document.getElementById('buttonU').addEventListener('click', function () {
     roosterjs.toggleUnderline(editor);
 });
 ```
