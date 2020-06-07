@@ -66,3 +66,7 @@ export { default as canMoveCurrentSnapshot } from './snapshots/canMoveCurrentSna
 export { default as clearProceedingSnapshots } from './snapshots/clearProceedingSnapshots';
 export { default as moveCurrentSnapsnot } from './snapshots/moveCurrentSnapsnot';
 export { default as createSnapshots } from './snapshots/createSnapshots';
+
+export { default as HtmlSanitizer } from './htmlSanitizer/HtmlSanitizer';
+export { default as htmlToDom, splitWithFragment } from './htmlSanitizer/htmlToDom';
+export { default as getInheritableStyles } from './htmlSanitizer/getInheritableStyles';

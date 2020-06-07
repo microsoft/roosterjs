@@ -76,3 +76,15 @@ export { default as Region } from './interface/Region';
 export { default as SelectionPath } from './interface/SelectionPath';
 export { default as Snapshots } from './interface/Snapshots';
 export { default as TableFormat } from './interface/TableFormat';
+export { default as HtmlSanitizerOptions } from './interface/HtmlSanitizerOptions';
+export { default as SanitizeHtmlOptions } from './interface/SanitizeHtmlOptions';
+
+export {
+    AttributeCallback,
+    AttributeCallbackMap,
+    ElementCallback,
+    StringMap,
+    StyleCallback,
+    StyleCallbackMap,
+    ElementCallbackMap,
+} from './type/htmlSanitizerCallbackTypes';

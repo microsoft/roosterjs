@@ -26,7 +26,7 @@ supporting of RoosterJs 6.x at the end of 2019/2.
 
 ### Packages
 
-Rooster contains 9 packages.
+Rooster contains 8 packages.
 
 1. `roosterjs`:
    A facade of all Rooster code for those who want a quick start. Use the
@@ -52,13 +52,10 @@ Rooster contains 9 packages.
 6. `roosterjs-editor-types`:
    Defines public interfaces and enumerations.
 
-7. `roosterjs-html-sanitizer`
-   A common library to help sanitize HTML.
-
-8. `roosterjs-plugin-image-resize`
+7. `roosterjs-plugin-image-resize`
    A plugin to help do inline image resize within the editor
 
-9. `roosterjs-plugin-picker`
+8. `roosterjs-plugin-picker`
    A plugin to help build picker-like plugins
 
 ### APIs
@@ -202,13 +199,13 @@ var editorDiv = document.getElementById('editorDiv');
 var editor = roosterjs.createEditor(editorDiv);
 editor.setContent('Welcome to <b>RoosterJs</b>!');
 
-document.getElementById('buttonB').addEventListener('click', function() {
+document.getElementById('buttonB').addEventListener('click', function () {
     roosterjs.toggleBold(editor);
 });
-document.getElementById('buttonI').addEventListener('click', function() {
+document.getElementById('buttonI').addEventListener('click', function () {
     roosterjs.toggleItalic(editor);
 });
-document.getElementById('buttonU').addEventListener('click', function() {
+document.getElementById('buttonU').addEventListener('click', function () {
     roosterjs.toggleUnderline(editor);
 });
 ```

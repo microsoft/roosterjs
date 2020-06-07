@@ -28,9 +28,7 @@
             "roosterjs-plugin-image-resize": ["packages/roosterjs-plugin-image-resize/lib/index"],
             "roosterjs-plugin-image-resize/lib/*": ["packages/roosterjs-plugin-image-resize/lib/*"],
             "roosterjs-plugin-picker": ["packages/roosterjs-plugin-picker/lib/index"],
-            "roosterjs-plugin-picker/lib/*": ["packages/roosterjs-plugin-picker/lib/*"],
-            "roosterjs-html-sanitizer": ["packages/roosterjs-html-sanitizer/lib/index"],
-            "roosterjs-html-sanitizer/lib/*": ["packages/roosterjs-html-sanitizer/lib/*"]
+            "roosterjs-plugin-picker/lib/*": ["packages/roosterjs-plugin-picker/lib/*"]
         }
     },
     "include": ["./**/*.ts", "./**/*.tsx"]

@@ -1,3 +1,3 @@
 # roosterjs-html-sanitizer
 
-   HTML sanitization utility for roosterjs.
+This package is deprecated. Plase use roosterjs-editor-dom package directly
