@@ -1,6 +1,6 @@
 import { createWordConverter } from './wordConverter';
 import { createWordConverterArguments } from './WordConverterArguments';
-import { HtmlSanitizer } from 'roosterjs-html-sanitizer';
+import { HtmlSanitizer } from 'roosterjs-editor-dom';
 import { processNodeConvert, processNodesDiscovery } from './converterUtils';
 
 /** Converts all the Word generated list items in the specified node into standard HTML UL and OL tags */

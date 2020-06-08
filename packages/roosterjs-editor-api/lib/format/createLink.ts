@@ -1,7 +1,6 @@
 import { ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { HtmlSanitizer } from 'roosterjs-html-sanitizer';
-import { matchLink } from 'roosterjs-editor-dom';
+import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
 
 // Regex matching Uri scheme
 const URI_REGEX = /^[a-zA-Z]+:/i;

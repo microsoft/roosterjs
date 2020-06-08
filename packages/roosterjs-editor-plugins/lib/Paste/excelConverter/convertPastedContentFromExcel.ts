@@ -1,4 +1,4 @@
-import { HtmlSanitizer } from 'roosterjs-html-sanitizer';
+import { HtmlSanitizer } from 'roosterjs-editor-dom';
 
 /**
  * Convert pasted content from Excel, add borders when source doc doesn't have a border
