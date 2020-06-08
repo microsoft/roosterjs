@@ -1,12 +1,11 @@
 {
-  "name": "roosterjs-editor-plugins",
-  "description": "Plugins for roosterjs",
-  "dependencies": {
-    "roosterjs-editor-types": "",
-    "roosterjs-editor-dom": "",
-    "roosterjs-editor-core": "",
-    "roosterjs-editor-api": "",
-    "roosterjs-html-sanitizer": ""
-  },
-  "main": "./lib/index.ts"
+    "name": "roosterjs-editor-plugins",
+    "description": "Plugins for roosterjs",
+    "dependencies": {
+        "roosterjs-editor-types": "",
+        "roosterjs-editor-dom": "",
+        "roosterjs-editor-core": "",
+        "roosterjs-editor-api": ""
+    },
+    "main": "./lib/index.ts"
 }

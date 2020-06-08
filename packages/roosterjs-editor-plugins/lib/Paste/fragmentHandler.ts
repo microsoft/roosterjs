@@ -1,11 +1,10 @@
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
+import { getTagOfNode, splitWithFragment } from 'roosterjs-editor-dom';
+import { WAC_IDENTIFING_SELECTOR } from './officeOnlineConverter/constants';
 import convertPastedContentFromWordOnline, {
     isWordOnlineWithList,
 } from './officeOnlineConverter/convertPastedContentFromWordOnline';
-import { WAC_IDENTIFING_SELECTOR } from './officeOnlineConverter/constants';
-import { getTagOfNode } from 'roosterjs-editor-dom';
-import { splitWithFragment } from 'roosterjs-html-sanitizer';
 
 const WORD_ATTRIBUTE_NAME = 'xmlns:w';
 const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';

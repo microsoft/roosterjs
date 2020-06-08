@@ -3,8 +3,7 @@
     "description": "Object Model for roosterjs",
     "dependencies": {
         "roosterjs-cross-window": "",
-        "roosterjs-editor-types": "",
-        "roosterjs-html-sanitizer": ""
+        "roosterjs-editor-types": ""
     },
     "main": "./lib/index.ts"
 }

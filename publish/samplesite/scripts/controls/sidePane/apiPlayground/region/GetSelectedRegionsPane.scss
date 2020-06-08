@@ -1,0 +1,11 @@
+@import '../../../theme/theme.scss';
+
+.regionNode {
+    font-weight: bold;
+    background-color: $primaryLighter2;
+}
+
+.hover {
+    background-color: $primaryLighter;
+    border: solid 2px $primaryColor;
+}

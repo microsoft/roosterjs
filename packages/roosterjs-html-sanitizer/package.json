@@ -1,9 +1,10 @@
 {
     "name": "roosterjs-html-sanitizer",
-    "description": "HTML sanitization utility for roosterjs",
+    "description": "This package is deprecated",
     "dependencies": {
-        "roosterjs-cross-window": ""
+        "roosterjs-editor-dom": "",
+        "roosterjs-editor-types": ""
     },
     "main": "./lib/index.ts",
-    "version": "1.2.0"
+    "version": "1.3.0"
 }

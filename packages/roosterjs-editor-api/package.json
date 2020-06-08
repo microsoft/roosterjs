@@ -5,8 +5,7 @@
         "roosterjs-cross-window": "",
         "roosterjs-editor-types": "",
         "roosterjs-editor-dom": "",
-        "roosterjs-editor-core": "",
-        "roosterjs-html-sanitizer": ""
+        "roosterjs-editor-core": ""
     },
     "main": "./lib/index.ts"
 }

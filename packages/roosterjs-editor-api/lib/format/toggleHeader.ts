@@ -1,6 +1,6 @@
 import { ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { HtmlSanitizer } from 'roosterjs-html-sanitizer';
+import { HtmlSanitizer } from 'roosterjs-editor-dom';
 
 /**
  * Toggle header at selection
