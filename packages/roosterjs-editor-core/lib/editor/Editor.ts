@@ -7,7 +7,6 @@ import mapPluginEvents from './mapPluginEvents';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
-import { isRange } from 'roosterjs-cross-window';
 import {
     BlockElement,
     ChangeSource,
@@ -44,6 +43,7 @@ import {
     getPositionRect,
     getTagOfNode,
     isNodeEmpty,
+    isRange,
     Position,
     PositionContentSearcher,
     queryElements,

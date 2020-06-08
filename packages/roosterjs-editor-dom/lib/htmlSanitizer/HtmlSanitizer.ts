@@ -1,7 +1,7 @@
 import getInheritableStyles from './getInheritableStyles';
 import htmlToDom from './htmlToDom';
+import isHTMLElement from '../typeUtils/isHTMLElement';
 import { cloneObject } from './cloneObject';
-import { isHTMLElement } from 'roosterjs-cross-window';
 import {
     HtmlSanitizerOptions,
     SanitizeHtmlOptions,

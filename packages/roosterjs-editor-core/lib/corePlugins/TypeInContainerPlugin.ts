@@ -1,11 +1,11 @@
 import Editor from '../editor/Editor';
 import EditorPlugin from '../interfaces/EditorPlugin';
-import { isNode } from 'roosterjs-cross-window';
 import {
     applyFormat,
     Browser,
     findClosestElementAncestor,
     fromHtml,
+    isNode,
     isNodeEmpty,
     Position,
 } from 'roosterjs-editor-dom';

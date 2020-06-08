@@ -1,11 +1,11 @@
-import isDocumentFragment from '../typeUtils/isDocumentFragment';
-import isHTMLElement from '../typeUtils/isHTMLElement';
-import isHTMLOListElement from '../typeUtils/isHTMLOListElement';
-import isHTMLTableCellElement from '../typeUtils/isHTMLTableCellElement';
-import isHTMLTableElement from '../typeUtils/isHTMLTableElement';
-import isNode from '../typeUtils/isNode';
-import isRange from '../typeUtils/isRange';
-import { getTargetWindow } from '../typeUtils/safeInstanceOf';
+import isDocumentFragment from '../../typeUtils/isDocumentFragment';
+import isHTMLElement from '../../typeUtils/isHTMLElement';
+import isHTMLOListElement from '../../typeUtils/isHTMLOListElement';
+import isHTMLTableCellElement from '../../typeUtils/isHTMLTableCellElement';
+import isHTMLTableElement from '../../typeUtils/isHTMLTableElement';
+import isNode from '../../typeUtils/isNode';
+import isRange from '../../typeUtils/isRange';
+import { getTargetWindow } from '../../typeUtils/safeInstanceOf';
 
 describe('typeUtils', () => {
     let iframe: HTMLIFrameElement;

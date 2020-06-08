@@ -1,4 +1,5 @@
-import { isHTMLTableCellElement, isHTMLTableElement } from 'roosterjs-cross-window';
+import isHTMLTableCellElement from '../typeUtils/isHTMLTableCellElement';
+import isHTMLTableElement from '../typeUtils/isHTMLTableElement';
 import { TableFormat, TableOperation } from 'roosterjs-editor-types';
 import { toArray } from 'roosterjs-editor-dom';
 

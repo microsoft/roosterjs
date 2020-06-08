@@ -39,7 +39,6 @@ export default interface TargetWindow {
     SVGGElement: SVGGElement;
     SVGForeignObjectElement: SVGForeignObjectElement;
     SVGDefsElement: SVGDefsElement;
-    SVGClipPathElement: SVGClipPathElement;
     SVGAElement: SVGAElement;
     SVGGradientElement: SVGGradientElement;
     SVGRadialGradientElement: SVGRadialGradientElement;
@@ -73,6 +72,7 @@ export default interface TargetWindow {
     SVGFEFuncGElement: SVGFEFuncGElement;
     SVGFEFuncBElement: SVGFEFuncBElement;
     SVGFEFuncAElement: SVGFEFuncAElement;
+    SVGClipPathElement: SVGClipPathElement;
     SVGAnimationElement: SVGAnimationElement;
     SVGAnimateTransformElement: SVGAnimateTransformElement;
     SVGAnimateMotionElement: SVGAnimateMotionElement;

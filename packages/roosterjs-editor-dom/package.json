@@ -2,7 +2,6 @@
     "name": "roosterjs-editor-dom",
     "description": "Object Model for roosterjs",
     "dependencies": {
-        "roosterjs-cross-window": "",
         "roosterjs-editor-types": ""
     },
     "main": "./lib/index.ts"
