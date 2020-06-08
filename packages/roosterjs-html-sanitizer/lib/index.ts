@@ -1,15 +1,23 @@
-export { default as HtmlSanitizer } from './sanitizer/HtmlSanitizer';
-export { default as HtmlSanitizerOptions } from './types/HtmlSanitizerOptions';
-export { default as SanitizeHtmlOptions } from './types/SanitizeHtmlOptions';
-export { default as htmlToDom, splitWithFragment } from './utils/htmlToDom';
-export { default as getInheritableStyles } from './utils/getInheritableStyles';
+// This package is deprecated.
+// All exports here are just for backward compatibility.
+// Please use type from their real packages directly
 export {
+    HtmlSanitizer,
+    htmlToDom,
+    splitWithFragment,
+    getInheritableStyles,
+} from 'roosterjs-editor-dom';
+
+export {
+    HtmlSanitizerOptions,
+    SanitizeHtmlOptions,
     AttributeCallback,
     AttributeCallbackMap,
     ElementCallback,
-    Map,
     StringMap,
     StyleCallback,
     StyleCallbackMap,
     ElementCallbackMap,
-} from './types/maps';
+} from 'roosterjs-editor-types';
+
+export type Map<T> = { [name: string]: T };

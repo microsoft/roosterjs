@@ -26,7 +26,7 @@ supporting of RoosterJs 6.x at the end of 2019/2.
 
 ### Packages
 
-Rooster contains 9 packages.
+Rooster contains 8 packages.
 
 1. [roosterjs](https://microsoft.github.io/roosterjs/docs/modules/roosterjs.html):
    A facade of all Rooster code for those who want a quick start. Use the
@@ -52,13 +52,10 @@ Rooster contains 9 packages.
 6. [roosterjs-editor-types](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_types.html):
    Defines public interfaces and enumerations.
 
-7. [roosterjs-html-sanitizer](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_html_sanitizer.html)
-   A common library to help sanitize HTML.
-
-8. [roosterjs-plugin-image-resize](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_plugin_image_resize.html)
+7. [roosterjs-plugin-image-resize](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_plugin_image_resize.html)
    A plugin to help do inline image resize within the editor
 
-9. [roosterjs-plugin-picker](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_plugin_picker.html)
+8. [roosterjs-plugin-picker](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_plugin_picker.html)
    A plugin to help build picker-like plugins
 
 ### APIs
@@ -206,13 +203,13 @@ var editorDiv = document.getElementById('editorDiv');
 var editor = roosterjs.createEditor(editorDiv);
 editor.setContent('Welcome to <b>RoosterJs</b>!');
 
-document.getElementById('buttonB').addEventListener('click', function() {
+document.getElementById('buttonB').addEventListener('click', function () {
     roosterjs.toggleBold(editor);
 });
-document.getElementById('buttonI').addEventListener('click', function() {
+document.getElementById('buttonI').addEventListener('click', function () {
     roosterjs.toggleItalic(editor);
 });
-document.getElementById('buttonU').addEventListener('click', function() {
+document.getElementById('buttonU').addEventListener('click', function () {
     roosterjs.toggleUnderline(editor);
 });
 ```
