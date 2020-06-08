@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Microsoft/roosterjs.svg?branch=master)](https://travis-ci.org/Microsoft/roosterjs)
+[![Build Status](https://api.travis-ci.org/microsoft/roosterjs.svg?branch=master)](https://www.travis-ci.org/microsoft/roosterjs)
 
 # Rooster
 
