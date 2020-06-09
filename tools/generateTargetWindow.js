@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const libDomFilePath = path.join(__dirname, '../node_modules/typescript/lib/lib.dom.d.ts');
-const crossWindowPath = path.join(__dirname, '../packages/roosterjs-cross-window');
-const targetPath = path.join(crossWindowPath, 'lib/types/TargetWindow.ts');
+const crossWindowPath = path.join(__dirname, '../packages/roosterjs-editor-types');
+const targetPath = path.join(crossWindowPath, 'lib/interface/TargetWindow.ts');
 const packageJsonPath = path.join(crossWindowPath, 'package.json');
 
 if (!fs.existsSync(libDomFilePath)) {

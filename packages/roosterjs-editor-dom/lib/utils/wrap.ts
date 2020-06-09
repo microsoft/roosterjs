@@ -1,5 +1,6 @@
 import fromHtml from './fromHtml';
-import { isHTMLElement, isNode } from 'roosterjs-cross-window';
+import isHTMLElement from '../typeUtils/isHTMLElement';
+import isNode from '../typeUtils/isNode';
 
 /**
  * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node

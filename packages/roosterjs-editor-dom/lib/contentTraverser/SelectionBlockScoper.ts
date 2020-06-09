@@ -1,12 +1,12 @@
 import EmptyInlineElement from '../inlineElements/EmptyInlineElement';
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
 import getInlineElementAtNode from '../inlineElements/getInlineElementAtNode';
+import isRange from '../typeUtils/isRange';
 import NodeBlockElement from '../blockElements/NodeBlockElement';
 import Position from '../selection/Position';
 import TraversingScoper from './TraversingScoper';
 import { BlockElement, ContentPosition, InlineElement, NodePosition } from 'roosterjs-editor-types';
 import { getInlineElementAfter } from '../inlineElements/getInlineElementBeforeAfter';
-import { isRange } from 'roosterjs-cross-window';
 import {
     getFirstInlineElement,
     getLastInlineElement,

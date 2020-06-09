@@ -1,6 +1,11 @@
-import { getTagOfNode, isNodeEmpty, isPositionAtBeginningOf, Position } from 'roosterjs-editor-dom';
-import { isHTMLOListElement } from 'roosterjs-cross-window';
 import { setIndentation, toggleBullet, toggleNumbering } from 'roosterjs-editor-api';
+import {
+    getTagOfNode,
+    isHTMLOListElement,
+    isNodeEmpty,
+    isPositionAtBeginningOf,
+    Position,
+} from 'roosterjs-editor-dom';
 import {
     cacheGetContentSearcher,
     cacheGetElementAtCursor,

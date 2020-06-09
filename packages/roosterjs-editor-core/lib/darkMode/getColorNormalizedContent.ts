@@ -1,5 +1,4 @@
-import { isDocumentFragment } from 'roosterjs-cross-window';
-import { toArray } from 'roosterjs-editor-dom';
+import { isDocumentFragment, toArray } from 'roosterjs-editor-dom';
 
 export default function getColorNormalizedContent(content: string | DocumentFragment): string {
     let el = document.createElement('div');

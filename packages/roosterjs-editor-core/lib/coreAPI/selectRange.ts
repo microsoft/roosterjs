@@ -1,7 +1,6 @@
 import EditorCore, { Select, SelectRange } from '../interfaces/EditorCore';
-import { Browser, contains, createRange } from 'roosterjs-editor-dom';
+import { Browser, contains, createRange, isRange } from 'roosterjs-editor-dom';
 import { hasFocus } from './hasFocus';
-import { isRange } from 'roosterjs-cross-window';
 
 /**
  * Change the editor selection to the given range

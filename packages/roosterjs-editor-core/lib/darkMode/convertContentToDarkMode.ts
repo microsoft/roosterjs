@@ -1,4 +1,4 @@
-import { isDocumentFragment, isHTMLElement } from 'roosterjs-cross-window';
+import { isDocumentFragment, isHTMLElement } from 'roosterjs-editor-dom';
 
 /**
  * Converter for dark mode that runs all child elements of a node through the content transform function.

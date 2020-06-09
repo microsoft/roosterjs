@@ -1,9 +1,13 @@
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
-import { createRange, getSelectedBlockElementsInRegion, getTagOfNode } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
-import { isHTMLElement } from 'roosterjs-cross-window';
 import { PositionType, Region } from 'roosterjs-editor-types';
+import {
+    createRange,
+    getSelectedBlockElementsInRegion,
+    getTagOfNode,
+    isHTMLElement,
+} from 'roosterjs-editor-dom';
 
 const styles = require('./GetSelectedRegionsPane.scss');
 

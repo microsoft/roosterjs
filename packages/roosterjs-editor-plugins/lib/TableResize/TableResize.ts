@@ -1,6 +1,5 @@
-import { contains, fromHtml, isRtl, VTable } from 'roosterjs-editor-dom';
+import { contains, fromHtml, isNode, isRtl, VTable } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { isNode } from 'roosterjs-cross-window';
 import {
     ContentPosition,
     PluginEvent,

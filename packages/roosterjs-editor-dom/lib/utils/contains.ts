@@ -1,4 +1,4 @@
-import { isRange } from 'roosterjs-cross-window';
+import isRange from '../typeUtils/isRange';
 import { NodeType } from 'roosterjs-editor-types';
 
 /**
