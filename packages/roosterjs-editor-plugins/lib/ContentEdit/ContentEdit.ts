@@ -16,6 +16,7 @@ import {
     OutdentWhenEnterOnEmptyLine,
     getSmartOrderedList,
 } from './features/listFeatures';
+import { Bold, Italic, Underline, Strikethrough } from './features/markDownFeatures';
 import {
     UnquoteWhenBackOnEmpty1stLine,
     UnquoteWhenEnterOnEmptyLine,
@@ -86,6 +87,10 @@ export default class ContentEdit implements EditorPlugin {
             defaultShortcut: DefaultShortcut,
             noCycleCursorMove: NoCycleCursorMove,
             smartOrderedList: getSmartOrderedList(featureSet.smartOrderedListStyles),
+            bold: Bold,
+            italic: Italic,
+            underline: Underline,
+            strikethrough: Strikethrough,
         };
         let keys = Object.keys(allFeatures) as (keyof ContentEditFeatures)[];
         return keys.filter(key => featureSet[key]).map(key => allFeatures[key]);

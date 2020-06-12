@@ -107,6 +107,14 @@ export default interface ContentEditFeatures {
      * @default ['lower-alpha', 'lower-roman', 'decimal']
      */
     smartOrderedListStyles: string[];
+
+    bold: boolean;
+
+    italic: boolean;
+
+    underline: boolean;
+
+    strikethrough: boolean;
 }
 
 /**
@@ -131,5 +139,9 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         noCycleCursorMove: Browser.isChrome,
         smartOrderedList: false,
         smartOrderedListStyles: ['lower-alpha', 'lower-roman', 'decimal'],
+        bold: true,
+        italic: true,
+        underline: true,
+        strikethrough: true,
     };
 }

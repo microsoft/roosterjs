@@ -12,7 +12,7 @@ import {
     Editor,
     cacheGetEventData,
     cacheGetContentSearcher,
-    clearContentSearcherCache,
+    //clearContentSearcherCache,
     GenericContentEditFeature,
     Keys,
 } from 'roosterjs-editor-core';
@@ -114,7 +114,7 @@ function autoLink(event: PluginEvent, editor: Editor) {
             replaceWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */, searcher);
 
             // The content at cursor has changed. Should also clear the cursor data cache
-            clearContentSearcherCache(event);
+
             return anchor;
         }, ChangeSource.AutoLink);
     });
