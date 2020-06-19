@@ -78,4 +78,9 @@ export const enum PluginEventType {
      * Scroll event triggered by scroll container
      */
     Scroll,
+
+    /**
+     * Operating on an entity. See enum EntityOperation for more details about each operation
+     */
+    EntityOperation,
 }

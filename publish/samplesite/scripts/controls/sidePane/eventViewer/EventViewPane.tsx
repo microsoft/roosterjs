@@ -22,6 +22,7 @@ const EventTypeMap = {
     [PluginEventType.CompositionEnd]: 'CompositionEnd',
     [PluginEventType.ContentChanged]: 'ContentChanged',
     [PluginEventType.EditorReady]: 'EditorReady',
+    [PluginEventType.EntityOperation]: 'EntityOperation',
     [PluginEventType.ExtractContent]: 'ExtractContent',
     [PluginEventType.KeyDown]: 'KeyDown',
     [PluginEventType.KeyPress]: 'KeyPress',
@@ -156,6 +157,17 @@ export default class EventViewPane extends React.Component<
                 const formatState = event.formatState;
                 const keys = Object.keys(formatState) as (keyof PendableFormatState)[];
                 return <span>{keys.map(key => `${key}=${event.formatState[key]}; `)}</span>;
+
+            case PluginEventType.EntityOperation:
+                const {
+                    operation,
+                    entity: { id, type },
+                } = event;
+                return (
+                    <span>
+                        Operation={operation} Type={type}; Id={id}
+                    </span>
+                );
         }
         return null;
     }
