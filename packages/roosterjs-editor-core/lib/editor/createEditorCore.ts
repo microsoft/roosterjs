@@ -4,6 +4,7 @@ import EditorCore, { CoreApiMap, CorePlugins } from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import EditorPlugin from '../interfaces/EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
+import EntityPlugin from '../corePlugins/EntityPlugin';
 import FirefoxTypeAfterLink from '../corePlugins/FirefoxTypeAfterLink';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
@@ -38,6 +39,7 @@ export default function createEditorCore(
         domEvent: new DOMEventPlugin(options.disableRestoreSelectionOnFocus),
         firefoxTypeAfterLink: new FirefoxTypeAfterLink(),
         copyPlugin: !Browser.isIE && new CopyPlugin(),
+        entityPlugin: new EntityPlugin(),
     };
     let allPlugins = buildPluginList(corePlugins, options.plugins);
     let eventHandlerPlugins = allPlugins.filter(
@@ -75,6 +77,7 @@ function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): Edi
         corePlugins.undo,
         corePlugins.domEvent,
         corePlugins.copyPlugin,
+        corePlugins.entityPlugin,
     ].filter(plugin => !!plugin);
 }
 

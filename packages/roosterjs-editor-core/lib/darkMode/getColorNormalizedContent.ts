@@ -1,15 +1,10 @@
-import { isDocumentFragment, toArray } from 'roosterjs-editor-dom';
+import { toArray } from 'roosterjs-editor-dom';
 
-export default function getColorNormalizedContent(content: string | DocumentFragment): string {
-    let el = document.createElement('div');
-    // Leverage script execution policy on CEDs to try and prevent XSS
-    el.setAttribute('contenteditable', 'true');
-    if (isDocumentFragment(content)) {
-        el.appendChild(content);
-    } else {
-        el.innerHTML = content;
-    }
-    const allChildElements = el.getElementsByTagName('*') as HTMLCollectionOf<HTMLElement>;
+/**
+ * @internal
+ */
+export default function getColorNormalizedContent(root: HTMLElement): [string, string] {
+    const allChildElements = root.getElementsByTagName('*') as HTMLCollectionOf<HTMLElement>;
     toArray(allChildElements).forEach((element: HTMLElement) => {
         if (element.dataset) {
             // Reset color styles based on the content of the ogsc/ogsb data element.
@@ -52,8 +47,8 @@ export default function getColorNormalizedContent(content: string | DocumentFrag
             }
         }
     });
-    const newContent = el.innerHTML;
-    return newContent;
+
+    return [root.innerHTML, root.innerText];
 }
 
 function isDataAttributeSettable(newStyle: string) {

@@ -30,9 +30,16 @@ export default interface HtmlSanitizerOptions {
     additionalAllowedTags?: string[];
 
     /**
+     * @deprecated
      * Allowed HTML attributes in addition to default attributes, in lower case
+     * TODO: rename to "additionalAllowedAttributes" in next major release
      */
     additionalAllowAttributes?: string[];
+
+    /**
+     * Allowed CSS Class names
+     */
+    additionalAllowedCssClasses?: string[];
 
     /**
      * CSS style default values in addition to the default value map, style name should be in lower case

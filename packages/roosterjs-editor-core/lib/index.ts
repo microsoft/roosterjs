@@ -31,6 +31,7 @@ export { default as Undo } from './undo/Undo';
 
 // Core Plugins
 export { default as EditPlugin } from './corePlugins/EditPlugin';
+export { default as EntityPlugin } from './corePlugins/EntityPlugin';
 export { default as MouseUpPlugin } from './corePlugins/MouseUpPlugin';
 export { default as DOMEventPlugin } from './corePlugins/DOMEventPlugin';
 export { default as TypeInContainerPlugin } from './corePlugins/TypeInContainerPlugin';
@@ -48,3 +49,9 @@ export { default as cacheGetElementAtCursor } from './eventApi/cacheGetElementAt
 export { default as isModifierKey } from './eventApi/isModifierKey';
 export { default as isCharacterValue } from './eventApi/isCharacterValue';
 export { default as isCtrlOrMetaPressed } from './eventApi/isCtrlOrMetaPressed';
+
+// Entity APIs
+export { default as insertEntity } from './entityApi/insertEntity';
+export { default as getEntityFromElement } from './entityApi/getEntityFromElement';
+export { default as getEntities } from './entityApi/getEntities';
+export { default as getEntityElement } from './entityApi/getEntityElement';

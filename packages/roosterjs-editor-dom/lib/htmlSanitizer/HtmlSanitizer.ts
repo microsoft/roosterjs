@@ -3,6 +3,13 @@ import htmlToDom from './htmlToDom';
 import isHTMLElement from '../typeUtils/isHTMLElement';
 import { cloneObject } from './cloneObject';
 import {
+    getAllowedAttributes,
+    getAllowedTags,
+    getDefaultStyleValues,
+    getStyleCallbacks,
+    getAllowedCssClassesRegex,
+} from './getAllowedValues';
+import {
     HtmlSanitizerOptions,
     SanitizeHtmlOptions,
     StringMap,
@@ -10,12 +17,6 @@ import {
     ElementCallbackMap,
     AttributeCallbackMap,
 } from 'roosterjs-editor-types';
-import {
-    getAllowedAttributes,
-    getAllowedTags,
-    getDefaultStyleValues,
-    getStyleCallbacks,
-} from './getAllowedValues';
 
 /**
  * HTML sanitizer class provides two featuers:
@@ -59,6 +60,7 @@ export default class HtmlSanitizer {
     private attributeCallbacks: AttributeCallbackMap;
     private allowedTags: string[];
     private allowedAttributes: string[];
+    private allowedCssClassesRegex: RegExp;
     private defaultStyleValues: StringMap;
     private additionalGlobalStyleNodes: HTMLStyleElement[];
     private allowPreserveWhiteSpace: boolean;
@@ -74,6 +76,9 @@ export default class HtmlSanitizer {
         this.attributeCallbacks = cloneObject(options.attributeCallbacks);
         this.allowedTags = getAllowedTags(options.additionalAllowedTags);
         this.allowedAttributes = getAllowedAttributes(options.additionalAllowAttributes);
+        this.allowedCssClassesRegex = getAllowedCssClassesRegex(
+            options.additionalAllowedCssClasses
+        );
         this.defaultStyleValues = getDefaultStyleValues(options.additionalDefaultStyleValues);
         this.additionalGlobalStyleNodes = options.additionalGlobalStyleNodes || [];
         this.allowPreserveWhiteSpace = options.allowPreserveWhiteSpace;
@@ -248,22 +253,42 @@ export default class HtmlSanitizer {
             let value = attribute.value;
             let callback = this.attributeCallbacks[name];
 
-            if (callback) {
-                value = callback(value, element, context);
-            } else if (this.allowedAttributes.indexOf(name) < 0) {
-                value = null;
+            let newValue = callback
+                ? callback(value, element, context)
+                : this.allowedAttributes.indexOf(name) >= 0
+                ? value
+                : null;
+
+            if (name == 'class' && this.allowedCssClassesRegex) {
+                newValue = this.processClass(value, newValue);
             }
 
             if (
-                value === null ||
-                value === undefined ||
-                value.match(/s\n*c\n*r\n*i\n*p\n*t\n*:/i) // match script: with any NewLine inside. Browser will ignore those NewLine char and still treat it as script prefix
+                newValue === null ||
+                newValue === undefined ||
+                newValue.match(/s\n*c\n*r\n*i\n*p\n*t\n*:/i) // match script: with any NewLine inside. Browser will ignore those NewLine char and still treat it as script prefix
             ) {
                 element.removeAttribute(name);
             } else {
-                attribute.value = value;
+                attribute.value = newValue;
             }
         }
+    }
+
+    private processClass(originalValue: string, calculatedValue: string): string {
+        const originalClasses = originalValue ? originalValue.split(' ') : [];
+        const calculatedClasses = calculatedValue ? calculatedValue.split(' ') : [];
+
+        originalClasses.forEach(className => {
+            if (
+                this.allowedCssClassesRegex.test(className) &&
+                calculatedClasses.indexOf(className) < 0
+            ) {
+                calculatedClasses.push(className);
+            }
+        });
+
+        return calculatedClasses.length > 0 ? calculatedClasses.join(' ') : null;
     }
 
     private allowElement(element: HTMLElement, tag: string, context: Object): boolean {

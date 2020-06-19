@@ -3,9 +3,11 @@ import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import getColorNormalizedContent from '../darkMode/getColorNormalizedContent';
+import getEntityFromElement from '../entityApi/getEntityFromElement';
 import mapPluginEvents from './mapPluginEvents';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
+import { EntitySelector } from '../entityApi/EntityConstants';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import {
     BlockElement,
@@ -26,6 +28,7 @@ import {
     Region,
     RegionType,
     SelectionPath,
+    EntityOperation,
 } from 'roosterjs-editor-types';
 import {
     collapseNodes,
@@ -352,21 +355,42 @@ export default class Editor {
         triggerExtractContentEvent: boolean = true,
         includeSelectionMarker: boolean = false
     ): string {
-        let content = getHtmlWithSelectionPath(
-            this.core.contentDiv,
-            includeSelectionMarker && this.getSelectionRange()
-        );
+        let content: string;
+        if (triggerExtractContentEvent || this.core.inDarkMode) {
+            const clonedDiv = this.core.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
 
+            if (triggerExtractContentEvent) {
+                queryElements(clonedDiv, EntitySelector, node => {
+                    node.removeAttribute('contentEditable');
+
+                    const entity = getEntityFromElement(node);
+                    if (entity) {
+                        this.triggerEvent({
+                            eventType: PluginEventType.EntityOperation,
+                            operation: EntityOperation.ReplaceTemporaryContent,
+                            entity,
+                        });
+                    }
+                });
+            }
+
+            content = this.core.inDarkMode
+                ? getColorNormalizedContent(clonedDiv)[0]
+                : clonedDiv.innerHTML;
+        } else {
+            content = getHtmlWithSelectionPath(
+                this.core.contentDiv,
+                includeSelectionMarker && this.getSelectionRange()
+            );
+        }
+
+        // TODO: Deprecated ExtractContentEvent once we have entity API ready in next major release
         if (triggerExtractContentEvent) {
             content = this.triggerPluginEvent(
                 PluginEventType.ExtractContent,
                 { content },
                 true /*broadcast*/
             ).content;
-        }
-
-        if (this.core.inDarkMode) {
-            content = getColorNormalizedContent(content);
         }
 
         return content;

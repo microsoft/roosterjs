@@ -19,6 +19,8 @@ const ALLOWED_HTML_ATTRIBUTES = (
     'width,wrap'
 ).split(',');
 
+const ALLOWED_CSS_CLASSES = ['^_Entity$', '^_EId_', '^_EType_', '^_EReadonly_'];
+
 const DEFAULT_STYLE_VALUES: { [name: string]: string } = {
     'background-color': 'transparent',
     'border-bottom-color': 'rgb(0, 0, 0)',
@@ -75,6 +77,11 @@ export function getAllowedAttributes(additionalAttributes: string[]): string[] {
     return unique(ALLOWED_HTML_ATTRIBUTES.concat(additionalAttributes || [])).map(attr =>
         attr.toLocaleLowerCase()
     );
+}
+
+export function getAllowedCssClassesRegex(additionalCssClasses: string[]): RegExp {
+    const patterns = ALLOWED_CSS_CLASSES.concat(additionalCssClasses || []);
+    return patterns.length > 0 ? new RegExp(patterns.join('|')) : null;
 }
 
 /**

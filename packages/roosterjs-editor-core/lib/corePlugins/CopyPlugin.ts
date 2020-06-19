@@ -44,18 +44,15 @@ export default class CopyPlugin implements EditorPlugin {
             if (selectionRange && !selectionRange.collapsed) {
                 const clipboardEvent = event as ClipboardEvent;
                 const copyFragment = this.editor.getSelectionRange().cloneContents();
+                const root = this.editor.getDocument().createElement('DIV');
+                root.appendChild(copyFragment);
 
                 // revert just this selected range to light mode colors
-                const normalizedContent = getColorNormalizedContent(copyFragment);
-                const containerDiv = this.editor.getDocument().createElement('div');
-
-                // Leverage script execution policy on CEDs to try and prevent XSS
-                containerDiv.setAttribute('contenteditable', 'true');
-                containerDiv.innerHTML = normalizedContent;
+                const [normalizedContent, text] = getColorNormalizedContent(root);
 
                 // put it on the clipboard
                 clipboardEvent.clipboardData.setData('text/html', normalizedContent);
-                clipboardEvent.clipboardData.setData('text/plain', containerDiv.innerText);
+                clipboardEvent.clipboardData.setData('text/plain', text);
 
                 // if it's cut, delete the contents
                 if (isCut) {
