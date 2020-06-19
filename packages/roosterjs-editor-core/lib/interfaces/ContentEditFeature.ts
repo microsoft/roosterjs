@@ -25,7 +25,7 @@ export const enum Keys {
     UNDERSCORE = 189,
     PERIOD = 190,
     FORWARDSLASH = 191,
-    SQUIGGLY = 192,
+    TILDE = 192,
     Ctrl = 0x100,
     Meta = 0x200,
     Shift = 0x400,

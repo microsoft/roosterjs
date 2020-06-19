@@ -108,12 +108,28 @@ export default interface ContentEditFeatures {
      */
     smartOrderedListStyles: string[];
 
+    /**
+     * Bolds text when surrounded by asterisks
+     * @default true
+     */
     bold: boolean;
 
+    /**
+     * Makes texts italic when surrounded by underscores
+     * @default true
+     */
     italic: boolean;
 
+    /**
+     * Underlines text when surrounded by plus signs
+     * @default true
+     */
     underline: boolean;
 
+    /**
+     * Strikes through text when surrounded by tildes
+     * @default true
+     */
     strikethrough: boolean;
 }
 

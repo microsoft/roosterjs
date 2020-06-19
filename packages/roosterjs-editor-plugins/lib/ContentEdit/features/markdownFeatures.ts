@@ -1,3 +1,4 @@
+import { ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
 import { PluginKeyboardEvent } from 'roosterjs-editor-types';
 import {
     Browser,
@@ -6,7 +7,6 @@ import {
     toggleUnderline,
     toggleStrikethrough,
 } from 'roosterjs/lib';
-import { Editor, ContentEditFeature, Keys } from 'roosterjs-editor-core';
 
 const findTriggerCharactersAndCheckBetween = (triggerChar: string) => (
     event: PluginKeyboardEvent,
@@ -14,27 +14,18 @@ const findTriggerCharactersAndCheckBetween = (triggerChar: string) => (
 ) => {
     let selObj = window.getSelection();
     let anchorNode = selObj.anchorNode;
-    let genericTriggerCharacterIndex = anchorNode.textContent.lastIndexOf(' ' + triggerChar);
     let alterationRequired = false;
-    let stringAdjust = 2;
-
+    let regExp = new RegExp(/\s+[*_+~][^\s].+[^\s*_+~]$/);
     if (
         anchorNode.textContent.lastIndexOf(triggerChar) == 0 ||
         anchorNode.textContent.lastIndexOf(triggerChar) == 1
     ) {
-        genericTriggerCharacterIndex = anchorNode.textContent.lastIndexOf(triggerChar);
-    } else if (anchorNode.textContent.lastIndexOf(' ' + triggerChar) >= 0) {
-        genericTriggerCharacterIndex = anchorNode.textContent.lastIndexOf(' ' + triggerChar);
+        regExp = /[*_+~][^\s].+[^\s*_+~]$/;
+        console.log(regExp.test(anchorNode.textContent.toString()));
     }
-
-    let firstWhiteSpaceChecker = anchorNode.textContent.charAt(
-        genericTriggerCharacterIndex + stringAdjust
-    );
-    let secondWhiteSpaceChecker = anchorNode.textContent.charAt(anchorNode.textContent.length - 1);
-    if (!(secondWhiteSpaceChecker.trim() || firstWhiteSpaceChecker.trim())) {
+    if (regExp.test(anchorNode.textContent.toString())) {
         alterationRequired = true;
     }
-
     return alterationRequired;
 };
 
@@ -49,6 +40,7 @@ const applyStyle = (triggerChar: string, generatedElement: string) => (
     let stringAdjust = 1;
     let scenario = 'N/A';
     let genericTriggerCharacterIndex;
+    let bugDetect = false;
 
     if (
         anchorNode.textContent.lastIndexOf(triggerChar) == 0 ||
@@ -65,17 +57,23 @@ const applyStyle = (triggerChar: string, generatedElement: string) => (
         stringToBeAltered.setStart(anchorNode, genericTriggerCharacterIndex + stringAdjust);
         stringToBeAltered.setEnd(anchorNode, anchorNode.textContent.length);
 
-        genericTriggerCharacterRange.setStart(anchorNode, genericTriggerCharacterIndex);
-        genericTriggerCharacterRange.setEnd(anchorNode, stringToBeAltered.startOffset);
-        genericTriggerCharacterRange.deleteContents();
+        if (stringToBeAltered.toString() == stringToBeAltered.toString().trim()) {
+            genericTriggerCharacterRange.setStart(anchorNode, genericTriggerCharacterIndex);
+            genericTriggerCharacterRange.setEnd(anchorNode, stringToBeAltered.startOffset);
+            genericTriggerCharacterRange.deleteContents();
+            bugDetect = true;
+        }
     } else if (scenario == 'mid') {
         ++stringAdjust;
         stringToBeAltered.setStart(anchorNode, genericTriggerCharacterIndex + stringAdjust);
         stringToBeAltered.setEnd(anchorNode, anchorNode.textContent.length);
 
-        genericTriggerCharacterRange.setStart(anchorNode, stringToBeAltered.startOffset - 1);
-        genericTriggerCharacterRange.setEnd(anchorNode, stringToBeAltered.startOffset);
-        genericTriggerCharacterRange.deleteContents();
+        if (stringToBeAltered.toString() == stringToBeAltered.toString().trim()) {
+            genericTriggerCharacterRange.setStart(anchorNode, stringToBeAltered.startOffset - 1);
+            genericTriggerCharacterRange.setEnd(anchorNode, stringToBeAltered.startOffset);
+            genericTriggerCharacterRange.deleteContents();
+            bugDetect = true;
+        }
     }
 
     let styleChar = document.createElement(generatedElement);
@@ -85,17 +83,19 @@ const applyStyle = (triggerChar: string, generatedElement: string) => (
         editor.insertNode(styleChar);
     }
 
-    if (generatedElement == 'b') {
-        toggleBold(editor);
-    } else if (generatedElement == 'i') {
-        toggleItalic(editor);
-    } else if (generatedElement == 'u') {
-        toggleUnderline(editor);
-    } else if (generatedElement == 'strike') {
-        toggleStrikethrough(editor);
-    }
+    if (bugDetect) {
+        if (generatedElement == 'b') {
+            toggleBold(editor);
+        } else if (generatedElement == 'i') {
+            toggleItalic(editor);
+        } else if (generatedElement == 'u') {
+            toggleUnderline(editor);
+        } else if (generatedElement == 'strike') {
+            toggleStrikethrough(editor);
+        }
 
-    event.rawEvent.preventDefault();
+        event.rawEvent.preventDefault();
+    }
 };
 
 export const Bold: ContentEditFeature = {
@@ -117,11 +117,7 @@ export const Underline: ContentEditFeature = {
 };
 
 export const Strikethrough: ContentEditFeature = {
-    keys: [Keys.SQUIGGLY],
+    keys: [Keys.TILDE],
     shouldHandleEvent: findTriggerCharactersAndCheckBetween('~'),
     handleEvent: applyStyle('~', 'strike'),
 };
-
-// 6/4/2020 1:16 PM PDT
-// NEW BUG:
-// This doesn't bold properly: djfldj dlkfj ldkjfd dlkfj dlkfjdlf*dlkfjd* dlkjfd *dlkfj*

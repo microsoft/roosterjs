@@ -12,7 +12,6 @@ import {
     Editor,
     cacheGetEventData,
     cacheGetContentSearcher,
-    //clearContentSearcherCache,
     GenericContentEditFeature,
     Keys,
 } from 'roosterjs-editor-core';
