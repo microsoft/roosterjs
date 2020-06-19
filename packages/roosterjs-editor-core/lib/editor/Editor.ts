@@ -352,21 +352,29 @@ export default class Editor {
         triggerExtractContentEvent: boolean = true,
         includeSelectionMarker: boolean = false
     ): string {
-        let content = getHtmlWithSelectionPath(
-            this.core.contentDiv,
-            includeSelectionMarker && this.getSelectionRange()
-        );
+        let content: string;
+        if (triggerExtractContentEvent || this.core.inDarkMode) {
+            const clonedDiv = this.core.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
 
+            // TODO: Trigger entity event when there is entity in ccontent
+
+            content = this.core.inDarkMode
+                ? getColorNormalizedContent(clonedDiv)[0]
+                : clonedDiv.innerHTML;
+        } else {
+            content = getHtmlWithSelectionPath(
+                this.core.contentDiv,
+                includeSelectionMarker && this.getSelectionRange()
+            );
+        }
+
+        // TODO: Deprecated ExtractContentEvent once we have entity API ready in next major release
         if (triggerExtractContentEvent) {
             content = this.triggerPluginEvent(
                 PluginEventType.ExtractContent,
                 { content },
                 true /*broadcast*/
             ).content;
-        }
-
-        if (this.core.inDarkMode) {
-            content = getColorNormalizedContent(content);
         }
 
         return content;

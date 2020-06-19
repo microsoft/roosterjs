@@ -31,6 +31,7 @@ export { default as Undo } from './undo/Undo';
 
 // Core Plugins
 export { default as EditPlugin } from './corePlugins/EditPlugin';
+export { default as EntityPlugin } from './corePlugins/EntityPlugin';
 export { default as MouseUpPlugin } from './corePlugins/MouseUpPlugin';
 export { default as DOMEventPlugin } from './corePlugins/DOMEventPlugin';
 export { default as TypeInContainerPlugin } from './corePlugins/TypeInContainerPlugin';
