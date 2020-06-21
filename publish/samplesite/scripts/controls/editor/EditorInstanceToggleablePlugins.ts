@@ -1,7 +1,13 @@
-import { HyperLink, Paste, ContentEdit, Watermark, TableResize } from 'roosterjs-editor-plugins';
-import { PickerPlugin } from 'roosterjs-plugin-picker';
-import { CustomReplace } from 'roosterjs-editor-plugins';
-import { ImageResize } from 'roosterjs-plugin-image-resize';
+import {
+    ContentEdit,
+    HyperLink,
+    Paste,
+    TableResize,
+    Watermark,
+    CustomReplace,
+    ImageResize,
+    PickerPlugin,
+} from 'roosterjs-editor-plugins';
 
 export type EditorInstanceToggleablePlugins = {
     hyperlink: HyperLink;

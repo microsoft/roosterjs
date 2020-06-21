@@ -1,11 +1,8 @@
 {
     "name": "roosterjs-plugin-picker",
-    "description": "Inline picker plugin for roosterjs",
+    "description": "This package is deprecated",
     "dependencies": {
-        "roosterjs-editor-types": "",
-        "roosterjs-editor-dom": "",
-        "roosterjs-editor-core": "",
-        "roosterjs-editor-api": ""
+        "roosterjs-editor-plugins": ""
     },
     "main": "./lib/index.ts"
 }
