@@ -55,6 +55,7 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                     {this.renderPluginItem('tableResize', 'Table Resize Plugin')}
                     {this.renderPluginItem('pickerPlugin', 'Sample Picker Plugin')}
                     {this.renderPluginItem('customReplace', 'Custom Replace Plugin (autocomplete)')}
+                    {this.renderPluginItem('entityPlugin', 'Entity Plugin')}
                 </tbody>
             </table>
         );
