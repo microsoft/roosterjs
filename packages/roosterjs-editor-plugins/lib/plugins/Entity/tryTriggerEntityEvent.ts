@@ -24,8 +24,7 @@ export default function tryTriggerEntityEvent(
             element.contentEditable = 'false';
         }
 
-        editor.triggerEvent({
-            eventType: PluginEventType.EntityOperation,
+        editor.triggerPluginEvent(PluginEventType.EntityOperation, {
             operation,
             rawEvent,
             entity,
