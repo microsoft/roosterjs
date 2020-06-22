@@ -23,6 +23,7 @@ const EventTypeMap = {
     [PluginEventType.ContentChanged]: 'ContentChanged',
     [PluginEventType.EditorReady]: 'EditorReady',
     [PluginEventType.ExtractContent]: 'ExtractContent',
+    [PluginEventType.ExtractContentWithDom]: 'ExtractContentWithDom',
     [PluginEventType.KeyDown]: 'KeyDown',
     [PluginEventType.KeyPress]: 'KeyPress',
     [PluginEventType.KeyUp]: 'KeyUp',

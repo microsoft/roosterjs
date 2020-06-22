@@ -61,6 +61,8 @@ const DEFAULT_STYLE_VALUES: { [name: string]: string } = {
     float: 'none',
 };
 
+const ALLOWED_CSS_CLASSES: string[] = [];
+
 /**
  * @internal
  */
@@ -75,6 +77,14 @@ export function getAllowedAttributes(additionalAttributes: string[]): string[] {
     return unique(ALLOWED_HTML_ATTRIBUTES.concat(additionalAttributes || [])).map(attr =>
         attr.toLocaleLowerCase()
     );
+}
+
+/**
+ * @internal
+ */
+export function getAllowedCssClassesRegex(additionalCssClasses: string[]): RegExp {
+    const patterns = ALLOWED_CSS_CLASSES.concat(additionalCssClasses || []);
+    return patterns.length > 0 ? new RegExp(patterns.join('|')) : null;
 }
 
 /**

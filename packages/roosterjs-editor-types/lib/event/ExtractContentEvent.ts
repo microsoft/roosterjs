@@ -2,6 +2,7 @@ import BasePluginEvent from './BasePluginEvent';
 import { PluginEventType } from './PluginEventType';
 
 /**
+ * @deprecated Use ExtractContentWithDomEvent instead
  * Represents a custom BasePluginEvent for extracting content
  */
 export default interface ExtractContentEvent
