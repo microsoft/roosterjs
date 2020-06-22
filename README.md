@@ -26,7 +26,7 @@ supporting of RoosterJs 6.x at the end of 2019/2.
 
 ### Packages
 
-Rooster contains 8 packages.
+Rooster contains 6 packages.
 
 1. [roosterjs](https://microsoft.github.io/roosterjs/docs/modules/roosterjs.html):
    A facade of all Rooster code for those who want a quick start. Use the
@@ -51,12 +51,6 @@ Rooster contains 8 packages.
 
 6. [roosterjs-editor-types](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_types.html):
    Defines public interfaces and enumerations.
-
-7. [roosterjs-plugin-image-resize](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_plugin_image_resize.html)
-   A plugin to help do inline image resize within the editor
-
-8. [roosterjs-plugin-picker](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_plugin_picker.html)
-   A plugin to help build picker-like plugins
 
 ### APIs
 

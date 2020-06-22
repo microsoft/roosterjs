@@ -22,11 +22,7 @@
             "roosterjs-editor-plugins": ["packages/roosterjs-editor-plugins/lib/index"],
             "roosterjs-editor-plugins/lib/*": ["packages/roosterjs-editor-plugins/lib/*"],
             "roosterjs-editor-types": ["packages/roosterjs-editor-types/lib/index"],
-            "roosterjs-editor-types/lib/*": ["packages/roosterjs-editor-types/lib/*"],
-            "roosterjs-plugin-image-resize": ["packages/roosterjs-plugin-image-resize/lib/index"],
-            "roosterjs-plugin-image-resize/lib/*": ["packages/roosterjs-plugin-image-resize/lib/*"],
-            "roosterjs-plugin-picker": ["packages/roosterjs-plugin-picker/lib/index"],
-            "roosterjs-plugin-picker/lib/*": ["packages/roosterjs-plugin-picker/lib/*"]
+            "roosterjs-editor-types/lib/*": ["packages/roosterjs-editor-types/lib/*"]
         }
     },
     "include": ["./**/*.ts", "./**/*.tsx"]
