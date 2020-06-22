@@ -9,6 +9,7 @@ export { Alignment } from './enum/Alignment';
 export { ChangeSource } from './enum/ChangeSource';
 export { ContentPosition } from './enum/ContentPosition';
 export { Direction } from './enum/Direction';
+export { EntityOperation } from './enum/EntityOperation';
 export { FontSizeChange } from './enum/FontSizeChange';
 export { Indentation } from './enum/Indentation';
 export { ListType } from './enum/ListType';
@@ -24,6 +25,7 @@ export { default as BeforeDisposeEvent } from './event/BeforeDisposeEvent';
 export { default as BeforePasteEvent } from './event/BeforePasteEvent';
 export { default as ContentChangedEvent } from './event/ContentChangedEvent';
 export { default as EditorReadyEvent } from './event/EditorReadyEvent';
+export { default as EntityOperationEvent } from './event/EntityOperationEvent';
 export { default as ExtractContentEvent } from './event/ExtractContentEvent';
 export { default as ExtractContentWithDomEvent } from './event/ExtractContentWithDomEvent';
 export { default as PendingFormatStateChangedEvent } from './event/PendingFormatStateChangedEvent';
@@ -56,6 +58,7 @@ export { default as ClipboardData } from './interface/ClipboardData';
 export { default as ClipboardItems } from './interface/ClipboardItems';
 export { default as DarkModeOptions } from './interface/DarkModeOptions';
 export { default as DefaultFormat } from './interface/DefaultFormat';
+export { default as Entity } from './interface/Entity';
 export {
     default as FormatState,
     PendableFormatState,
