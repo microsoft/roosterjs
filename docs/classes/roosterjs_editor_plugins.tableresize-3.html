@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>CustomReplacePlugin | RoosterJs API Reference</title>
+	<title>TableResize | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/roosterjs_editor_plugins.html">roosterjs-editor-plugins</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_plugins.customreplaceplugin.html">CustomReplacePlugin</a>
+					<a href="roosterjs_editor_plugins.tableresize-3.html">TableResize</a>
 				</li>
 			</ul>
-			<h1>Class CustomReplacePlugin</h1>
+			<h1>Class TableResize</h1>
 		</div>
 	</div>
 </header>
@@ -68,8 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Wrapper for CustomReplaceContentEditFeature that provides an API for updating the
-						content edit feature</p>
+						<p>TableResize plugin, provides the ability to resize a table by drag-and-drop</p>
 					</div>
 				</div>
 			</section>
@@ -77,7 +76,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">CustomReplacePlugin</span>
+						<span class="target">TableResize</span>
 					</li>
 				</ul>
 			</section>
@@ -92,58 +91,15 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Constructors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_plugins.customreplaceplugin.html#constructor" class="tsd-kind-icon">constructor</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.customreplaceplugin.html#dispose" class="tsd-kind-icon">dispose</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.customreplaceplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.customreplaceplugin.html#initialize" class="tsd-kind-icon">initialize</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.customreplaceplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.customreplaceplugin.html#updatereplacements" class="tsd-kind-icon">update<wbr>Replacements</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.tableresize-3.html#dispose" class="tsd-kind-icon">dispose</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.tableresize-3.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.tableresize-3.html#initialize" class="tsd-kind-icon">initialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.tableresize-3.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
 							</ul>
 						</section>
 					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Custom<wbr>Replace<wbr>Plugin<span class="tsd-signature-symbol">(</span>replacements<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_editor_plugins.replacement-3.html" class="tsd-signature-type">Replacement</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.customreplaceplugin.html" class="tsd-signature-type">CustomReplacePlugin</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/CustomReplace/CustomReplace.ts#L27">roosterjs-editor-plugins/lib/plugins/CustomReplace/CustomReplace.ts:27</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Create instance of CustomReplace plugin</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> replacements: <a href="../interfaces/roosterjs_editor_plugins.replacement-3.html" class="tsd-signature-type">Replacement</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = defaultReplacements</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>Replacement rules. If not passed, a default replacement rule set will be applied</p>
-										</div>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_plugins.customreplaceplugin.html" class="tsd-signature-type">CustomReplacePlugin</a></h4>
-						</li>
-					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -158,7 +114,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/CustomReplace/CustomReplace.ts#L65">roosterjs-editor-plugins/lib/plugins/CustomReplace/CustomReplace.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L44">roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -180,7 +136,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/CustomReplace/CustomReplace.ts#L50">roosterjs-editor-plugins/lib/plugins/CustomReplace/CustomReplace.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L37">roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:37</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -202,12 +158,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/CustomReplace/CustomReplace.ts#L58">roosterjs-editor-plugins/lib/plugins/CustomReplace/CustomReplace.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L29">roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:29</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Initialize this plugin</p>
+									<p>Initialize this plugin. This should only be called from Editor</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -215,7 +171,7 @@
 								<li>
 									<h5>editor: <a href="roosterjs_editor_core.editor-1.html" class="tsd-signature-type">Editor</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>The editor instance</p>
+										<p>Editor instance</p>
 									</div>
 								</li>
 							</ul>
@@ -233,43 +189,20 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/CustomReplace/CustomReplace.ts#L69">roosterjs-editor-plugins/lib/plugins/CustomReplace/CustomReplace.ts:69</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>event: <a href="../modules/roosterjs_editor_types.html#pluginevent-1" class="tsd-signature-type">PluginEvent</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="updatereplacements" class="tsd-anchor"></a>
-					<h3>update<wbr>Replacements</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">update<wbr>Replacements<span class="tsd-signature-symbol">(</span>newReplacements<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_plugins.replacement-3.html" class="tsd-signature-type">Replacement</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/CustomReplace/CustomReplace.ts#L41">roosterjs-editor-plugins/lib/plugins/CustomReplace/CustomReplace.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L54">roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:54</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Set the replacements that this plugin is looking for.</p>
+									<p>Handle events triggered from editor</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>newReplacements: <a href="../interfaces/roosterjs_editor_plugins.replacement-3.html" class="tsd-signature-type">Replacement</a><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>event: <a href="../modules/roosterjs_editor_types.html#pluginevent-1" class="tsd-signature-type">PluginEvent</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>new set of replacements for this plugin</p>
+										<p>PluginEvent object</p>
 									</div>
 								</li>
 							</ul>
@@ -322,25 +255,19 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_editor_plugins.customreplaceplugin.html" class="tsd-kind-icon">Custom<wbr>Replace<wbr>Plugin</a>
+						<a href="roosterjs_editor_plugins.tableresize-3.html" class="tsd-kind-icon">Table<wbr>Resize</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.customreplaceplugin.html#constructor" class="tsd-kind-icon">constructor</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_plugins.tableresize-3.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.customreplaceplugin.html#dispose" class="tsd-kind-icon">dispose</a>
+								<a href="roosterjs_editor_plugins.tableresize-3.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.customreplaceplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
+								<a href="roosterjs_editor_plugins.tableresize-3.html#initialize" class="tsd-kind-icon">initialize</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.customreplaceplugin.html#initialize" class="tsd-kind-icon">initialize</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.customreplaceplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.customreplaceplugin.html#updatereplacements" class="tsd-kind-icon">update<wbr>Replacements</a>
+								<a href="roosterjs_editor_plugins.tableresize-3.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
 							</li>
 						</ul>
 					</li>
@@ -366,7 +293,6 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">

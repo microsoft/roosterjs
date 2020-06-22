@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Paste | RoosterJs API Reference</title>
+	<title>HyperLink | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/roosterjs_editor_plugins.html">roosterjs-editor-plugins</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_plugins.paste-1.html">Paste</a>
+					<a href="roosterjs_editor_plugins.hyperlink-3.html">HyperLink</a>
 				</li>
 			</ul>
-			<h1>Class Paste</h1>
+			<h1>Class HyperLink</h1>
 		</div>
 	</div>
 </header>
@@ -68,7 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Paste plugin, handles onPaste event and paste content into editor</p>
+						<p>An editor plugin that show a tooltip for existing link</p>
 					</div>
 				</div>
 			</section>
@@ -76,7 +76,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Paste</span>
+						<span class="target">HyperLink</span>
 					</li>
 				</ul>
 			</section>
@@ -93,18 +93,17 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-1.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink-3.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-1.html#dispose" class="tsd-kind-icon">dispose</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-1.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-1.html#initialize" class="tsd-kind-icon">initialize</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-1.html#pasteandmergeformat" class="tsd-kind-icon">paste<wbr>And<wbr>Merge<wbr>Format</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-1.html#pasteoriginal" class="tsd-kind-icon">paste<wbr>Original</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-1.html#pastetext" class="tsd-kind-icon">paste<wbr>Text</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink-3.html#dispose" class="tsd-kind-icon">dispose</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink-3.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink-3.html#initialize" class="tsd-kind-icon">initialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="roosterjs_editor_plugins.hyperlink-3.html#onmouse" class="tsd-kind-icon">on<wbr>Mouse</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink-3.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
 							</ul>
 						</section>
 					</div>
@@ -116,40 +115,91 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Paste<span class="tsd-signature-symbol">(</span>preserved<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span>, attributeCallbacks<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_editor_types.html#attributecallbackmap-1" class="tsd-signature-type">AttributeCallbackMap</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.paste-1.html" class="tsd-signature-type">Paste</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Hyper<wbr>Link<span class="tsd-signature-symbol">(</span>getTooltipCallback<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>href<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLAnchorElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span>, target<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, onLinkClick<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>anchor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLAnchorElement</span>, mouseEvent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.hyperlink-3.html" class="tsd-signature-type">HyperLink</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/Paste/Paste.ts#L33">roosterjs-editor-plugins/lib/Paste/Paste.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L10">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Create an instance of Paste</p>
+									<p>Create a new instance of HyperLink class</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> preserved: <span class="tsd-signature-type">any</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> getTooltipCallback: <span class="tsd-signature-symbol">(</span>href<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLAnchorElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = href &#x3D;&gt; href</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>Not used. Preserved parameter only used for compatibility with old code</p>
+											<p>A callback function to get tooltip text for an existing hyperlink.
+											Default value is to return the href itself. If null, there will be no tooltip text.</p>
+										</div>
+									</div>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-signature">
+											<ul class="tsd-signatures tsd-kind-type-literal">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>href<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLAnchorElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>href: <span class="tsd-signature-type">string</span></h5>
+														</li>
+														<li>
+															<h5>a: <span class="tsd-signature-type">HTMLAnchorElement</span></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> target: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>(Optional) Target window name for hyperlink. If null, will use &quot;_blank&quot;</p>
 										</div>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> attributeCallbacks: <a href="../modules/roosterjs_editor_types.html#attributecallbackmap-1" class="tsd-signature-type">AttributeCallbackMap</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> onLinkClick: <span class="tsd-signature-symbol">(</span>anchor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLAnchorElement</span>, mouseEvent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>A set of callbacks to help handle html attribute during sanitization</p>
+											<p>(Optional) Open link callback (return false to use default behavior)</p>
 										</div>
 									</div>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-signature">
+											<ul class="tsd-signatures tsd-kind-type-literal">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>anchor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLAnchorElement</span>, mouseEvent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>anchor: <span class="tsd-signature-type">HTMLAnchorElement</span></h5>
+														</li>
+														<li>
+															<h5>mouseEvent: <span class="tsd-signature-type">MouseEvent</span></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_plugins.paste-1.html" class="tsd-signature-type">Paste</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_plugins.hyperlink-3.html" class="tsd-signature-type">HyperLink</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -166,7 +216,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/Paste/Paste.ts#L65">roosterjs-editor-plugins/lib/Paste/Paste.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L58">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:58</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -188,7 +238,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/Paste/Paste.ts#L49">roosterjs-editor-plugins/lib/Paste/Paste.ts:49</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L28">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:28</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -210,12 +260,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/Paste/Paste.ts#L57">roosterjs-editor-plugins/lib/Paste/Paste.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L36">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:36</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Initialize this plugin. This should only be called from Editor</p>
+									<p>Initialize this plugin</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -223,7 +273,7 @@
 								<li>
 									<h5>editor: <a href="roosterjs_editor_core.editor-1.html" class="tsd-signature-type">Editor</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Editor instance</p>
+										<p>The editor instance</p>
 									</div>
 								</li>
 							</ul>
@@ -231,31 +281,23 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="pasteandmergeformat" class="tsd-anchor"></a>
-					<h3>paste<wbr>And<wbr>Merge<wbr>Format</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">paste<wbr>And<wbr>Merge<wbr>Format<span class="tsd-signature-symbol">(</span>clipboardData<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.clipboarddata-1.html" class="tsd-signature-type">ClipboardData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="onmouse" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> on<wbr>Mouse</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Mouse<span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/Paste/Paste.ts#L105">roosterjs-editor-plugins/lib/Paste/Paste.ts:105</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L43">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:43</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Paste into editor using passed in clipboardData with curent format</p>
-								</div>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>clipboardData: <a href="../interfaces/roosterjs_editor_types.clipboarddata-1.html" class="tsd-signature-type">ClipboardData</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The clipboardData to paste</p>
-									</div>
+									<h5>e: <span class="tsd-signature-type">MouseEvent</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -263,60 +305,29 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="pasteoriginal" class="tsd-anchor"></a>
-					<h3>paste<wbr>Original</h3>
+					<a name="onpluginevent" class="tsd-anchor"></a>
+					<h3>on<wbr>Plugin<wbr>Event</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">paste<wbr>Original<span class="tsd-signature-symbol">(</span>clipboardData<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.clipboarddata-1.html" class="tsd-signature-type">ClipboardData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Plugin<wbr>Event<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_editor_types.html#pluginevent-1" class="tsd-signature-type">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/Paste/Paste.ts#L89">roosterjs-editor-plugins/lib/Paste/Paste.ts:89</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L70">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:70</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Paste into editor using passed in clipboardData with original format</p>
+									<p>Handle events triggered from editor</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>clipboardData: <a href="../interfaces/roosterjs_editor_types.clipboarddata-1.html" class="tsd-signature-type">ClipboardData</a></h5>
+									<h5>event: <a href="../modules/roosterjs_editor_types.html#pluginevent-1" class="tsd-signature-type">PluginEvent</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>The clipboardData to paste</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="pastetext" class="tsd-anchor"></a>
-					<h3>paste<wbr>Text</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">paste<wbr>Text<span class="tsd-signature-symbol">(</span>clipboardData<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.clipboarddata-1.html" class="tsd-signature-type">ClipboardData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/Paste/Paste.ts#L97">roosterjs-editor-plugins/lib/Paste/Paste.ts:97</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Paste plain text into editor using passed in clipboardData</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>clipboardData: <a href="../interfaces/roosterjs_editor_types.clipboarddata-1.html" class="tsd-signature-type">ClipboardData</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The clipboardData to paste</p>
+										<p>PluginEvent object</p>
 									</div>
 								</li>
 							</ul>
@@ -369,28 +380,25 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_editor_plugins.paste-1.html" class="tsd-kind-icon">Paste</a>
+						<a href="roosterjs_editor_plugins.hyperlink-3.html" class="tsd-kind-icon">Hyper<wbr>Link</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.paste-1.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="roosterjs_editor_plugins.hyperlink-3.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.paste-1.html#dispose" class="tsd-kind-icon">dispose</a>
+								<a href="roosterjs_editor_plugins.hyperlink-3.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.paste-1.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
+								<a href="roosterjs_editor_plugins.hyperlink-3.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.paste-1.html#initialize" class="tsd-kind-icon">initialize</a>
+								<a href="roosterjs_editor_plugins.hyperlink-3.html#initialize" class="tsd-kind-icon">initialize</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="roosterjs_editor_plugins.hyperlink-3.html#onmouse" class="tsd-kind-icon">on<wbr>Mouse</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.paste-1.html#pasteandmergeformat" class="tsd-kind-icon">paste<wbr>And<wbr>Merge<wbr>Format</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.paste-1.html#pasteoriginal" class="tsd-kind-icon">paste<wbr>Original</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.paste-1.html#pastetext" class="tsd-kind-icon">paste<wbr>Text</a>
+								<a href="roosterjs_editor_plugins.hyperlink-3.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
 							</li>
 						</ul>
 					</li>
@@ -425,6 +433,9 @@
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
 			</ul>
 		</div>
 	</div>

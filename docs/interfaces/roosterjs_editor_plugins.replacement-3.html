@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ClipboardItems | RoosterJs API Reference</title>
+	<title>Replacement | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/roosterjs_editor_types.html">roosterjs-editor-types</a>
+					<a href="../modules/roosterjs_editor_plugins.html">roosterjs-editor-plugins</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_types.clipboarditems-1.html">ClipboardItems</a>
+					<a href="roosterjs_editor_plugins.replacement-3.html">Replacement</a>
 				</li>
 			</ul>
-			<h1>Interface ClipboardItems</h1>
+			<h1>Interface Replacement</h1>
 		</div>
 	</div>
 </header>
@@ -68,7 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represents items retrieved from clipboard event</p>
+						<p>An interface to define a replacement rule for CustomReplace plugin</p>
 					</div>
 				</div>
 			</section>
@@ -76,7 +76,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ClipboardItems</span>
+						<span class="target">Replacement</span>
 					</li>
 				</ul>
 			</section>
@@ -87,10 +87,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.clipboarditems-1.html#html" class="tsd-kind-icon">html</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.clipboarditems-1.html#image" class="tsd-kind-icon">image</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.clipboarditems-1.html#text" class="tsd-kind-icon">text</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.clipboarditems-1.html#types" class="tsd-kind-icon">types</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_plugins.replacement-3.html#matchsourcecasesensitive" class="tsd-kind-icon">match<wbr>Source<wbr>Case<wbr>Sensitive</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_plugins.replacement-3.html#replacementhtml" class="tsd-kind-icon">replacementHTML</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_plugins.replacement-3.html#sourcestring" class="tsd-kind-icon">source<wbr>String</a></li>
 							</ul>
 						</section>
 					</div>
@@ -99,64 +98,47 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="html" class="tsd-anchor"></a>
-					<h3>html</h3>
-					<div class="tsd-signature tsd-kind-icon">html<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="matchsourcecasesensitive" class="tsd-anchor"></a>
+					<h3>match<wbr>Source<wbr>Case<wbr>Sensitive</h3>
+					<div class="tsd-signature tsd-kind-icon">match<wbr>Source<wbr>Case<wbr>Sensitive<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-types/lib/interface/ClipboardItems.ts#L20">roosterjs-editor-types/lib/interface/ClipboardItems.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/CustomReplace/Replacement.ts#L18">roosterjs-editor-plugins/lib/plugins/CustomReplace/Replacement.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>HTML string from clipboard event.
-								When set to null, it means there&#39;s no HTML from clipboard event.
-							When set to undefined, it means there may be HTML in clipboard event, but fail to retrieve</p>
+							<p>Whether the matching should be case sensitive</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="image" class="tsd-anchor"></a>
-					<h3>image</h3>
-					<div class="tsd-signature tsd-kind-icon">image<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">File</span></div>
+					<a name="replacementhtml" class="tsd-anchor"></a>
+					<h3>replacementHTML</h3>
+					<div class="tsd-signature tsd-kind-icon">replacementHTML<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-types/lib/interface/ClipboardItems.ts#L25">roosterjs-editor-types/lib/interface/ClipboardItems.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/CustomReplace/Replacement.ts#L13">roosterjs-editor-plugins/lib/plugins/CustomReplace/Replacement.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Image file from clipboard event</p>
+							<p>HTML string to replace to</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="text" class="tsd-anchor"></a>
-					<h3>text</h3>
-					<div class="tsd-signature tsd-kind-icon">text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="sourcestring" class="tsd-anchor"></a>
+					<h3>source<wbr>String</h3>
+					<div class="tsd-signature tsd-kind-icon">source<wbr>String<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-types/lib/interface/ClipboardItems.ts#L13">roosterjs-editor-types/lib/interface/ClipboardItems.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/CustomReplace/Replacement.ts#L8">roosterjs-editor-plugins/lib/plugins/CustomReplace/Replacement.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Plain text from clipboard event</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="types" class="tsd-anchor"></a>
-					<h3>types</h3>
-					<div class="tsd-signature tsd-kind-icon">types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-types/lib/interface/ClipboardItems.ts#L8">roosterjs-editor-types/lib/interface/ClipboardItems.ts:8</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Available types from clipboard event</p>
+							<p>Source string to replace from</p>
 						</div>
 					</div>
 				</section>
@@ -183,10 +165,10 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_editor_dom.html">roosterjs-<wbr>editor-<wbr>dom</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/roosterjs_editor_plugins.html">roosterjs-<wbr>editor-<wbr>plugins</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_editor_types.html">roosterjs-<wbr>editor-<wbr>types</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -205,19 +187,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_editor_types.clipboarditems-1.html" class="tsd-kind-icon">Clipboard<wbr>Items</a>
+						<a href="roosterjs_editor_plugins.replacement-3.html" class="tsd-kind-icon">Replacement</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.clipboarditems-1.html#html" class="tsd-kind-icon">html</a>
+								<a href="roosterjs_editor_plugins.replacement-3.html#matchsourcecasesensitive" class="tsd-kind-icon">match<wbr>Source<wbr>Case<wbr>Sensitive</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.clipboarditems-1.html#image" class="tsd-kind-icon">image</a>
+								<a href="roosterjs_editor_plugins.replacement-3.html#replacementhtml" class="tsd-kind-icon">replacementHTML</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.clipboarditems-1.html#text" class="tsd-kind-icon">text</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.clipboarditems-1.html#types" class="tsd-kind-icon">types</a>
+								<a href="roosterjs_editor_plugins.replacement-3.html#sourcestring" class="tsd-kind-icon">source<wbr>String</a>
 							</li>
 						</ul>
 					</li>

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TableResize | RoosterJs API Reference</title>
+	<title>Paste | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/roosterjs_editor_plugins.html">roosterjs-editor-plugins</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_plugins.tableresize-1.html">TableResize</a>
+					<a href="roosterjs_editor_plugins.paste-3.html">Paste</a>
 				</li>
 			</ul>
-			<h1>Class TableResize</h1>
+			<h1>Class Paste</h1>
 		</div>
 	</div>
 </header>
@@ -68,7 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>TableResize plugin, provides the ability to resize a table by drag-and-drop</p>
+						<p>Paste plugin, handles onPaste event and paste content into editor</p>
 					</div>
 				</div>
 			</section>
@@ -76,7 +76,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">TableResize</span>
+						<span class="target">Paste</span>
 					</li>
 				</ul>
 			</section>
@@ -91,15 +91,67 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-3.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.tableresize-1.html#dispose" class="tsd-kind-icon">dispose</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.tableresize-1.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.tableresize-1.html#initialize" class="tsd-kind-icon">initialize</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.tableresize-1.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-3.html#dispose" class="tsd-kind-icon">dispose</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-3.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-3.html#initialize" class="tsd-kind-icon">initialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-3.html#pasteandmergeformat" class="tsd-kind-icon">paste<wbr>And<wbr>Merge<wbr>Format</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-3.html#pasteoriginal" class="tsd-kind-icon">paste<wbr>Original</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.paste-3.html#pastetext" class="tsd-kind-icon">paste<wbr>Text</a></li>
 							</ul>
 						</section>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Paste<span class="tsd-signature-symbol">(</span>preserved<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span>, attributeCallbacks<span class="tsd-signature-symbol">?: </span><a href="../modules/roosterjs_editor_types.html#attributecallbackmap-1" class="tsd-signature-type">AttributeCallbackMap</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.paste-3.html" class="tsd-signature-type">Paste</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts#L33">roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts:33</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create an instance of Paste</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> preserved: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Not used. Preserved parameter only used for compatibility with old code</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> attributeCallbacks: <a href="../modules/roosterjs_editor_types.html#attributecallbackmap-1" class="tsd-signature-type">AttributeCallbackMap</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>A set of callbacks to help handle html attribute during sanitization</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_plugins.paste-3.html" class="tsd-signature-type">Paste</a></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -114,7 +166,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/TableResize/TableResize.ts#L44">roosterjs-editor-plugins/lib/TableResize/TableResize.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts#L65">roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts:65</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -136,7 +188,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/TableResize/TableResize.ts#L37">roosterjs-editor-plugins/lib/TableResize/TableResize.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts#L49">roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts:49</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -158,7 +210,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/TableResize/TableResize.ts#L29">roosterjs-editor-plugins/lib/TableResize/TableResize.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts#L57">roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts:57</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -180,29 +232,91 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="onpluginevent" class="tsd-anchor"></a>
-					<h3>on<wbr>Plugin<wbr>Event</h3>
+					<a name="pasteandmergeformat" class="tsd-anchor"></a>
+					<h3>paste<wbr>And<wbr>Merge<wbr>Format</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Plugin<wbr>Event<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_editor_types.html#pluginevent-1" class="tsd-signature-type">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">paste<wbr>And<wbr>Merge<wbr>Format<span class="tsd-signature-symbol">(</span>clipboardData<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.clipboarddata-1.html" class="tsd-signature-type">ClipboardData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/TableResize/TableResize.ts#L54">roosterjs-editor-plugins/lib/TableResize/TableResize.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts#L105">roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts:105</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Handle events triggered from editor</p>
+									<p>Paste into editor using passed in clipboardData with curent format</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>event: <a href="../modules/roosterjs_editor_types.html#pluginevent-1" class="tsd-signature-type">PluginEvent</a></h5>
+									<h5>clipboardData: <a href="../interfaces/roosterjs_editor_types.clipboarddata-1.html" class="tsd-signature-type">ClipboardData</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>PluginEvent object</p>
+										<p>The clipboardData to paste</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="pasteoriginal" class="tsd-anchor"></a>
+					<h3>paste<wbr>Original</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">paste<wbr>Original<span class="tsd-signature-symbol">(</span>clipboardData<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.clipboarddata-1.html" class="tsd-signature-type">ClipboardData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts#L89">roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts:89</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Paste into editor using passed in clipboardData with original format</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>clipboardData: <a href="../interfaces/roosterjs_editor_types.clipboarddata-1.html" class="tsd-signature-type">ClipboardData</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The clipboardData to paste</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="pastetext" class="tsd-anchor"></a>
+					<h3>paste<wbr>Text</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">paste<wbr>Text<span class="tsd-signature-symbol">(</span>clipboardData<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.clipboarddata-1.html" class="tsd-signature-type">ClipboardData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts#L97">roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts:97</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Paste plain text into editor using passed in clipboardData</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>clipboardData: <a href="../interfaces/roosterjs_editor_types.clipboarddata-1.html" class="tsd-signature-type">ClipboardData</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The clipboardData to paste</p>
 									</div>
 								</li>
 							</ul>
@@ -255,19 +369,28 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_editor_plugins.tableresize-1.html" class="tsd-kind-icon">Table<wbr>Resize</a>
+						<a href="roosterjs_editor_plugins.paste-3.html" class="tsd-kind-icon">Paste</a>
 						<ul>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.tableresize-1.html#dispose" class="tsd-kind-icon">dispose</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="roosterjs_editor_plugins.paste-3.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.tableresize-1.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
+								<a href="roosterjs_editor_plugins.paste-3.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.tableresize-1.html#initialize" class="tsd-kind-icon">initialize</a>
+								<a href="roosterjs_editor_plugins.paste-3.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.tableresize-1.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
+								<a href="roosterjs_editor_plugins.paste-3.html#initialize" class="tsd-kind-icon">initialize</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_plugins.paste-3.html#pasteandmergeformat" class="tsd-kind-icon">paste<wbr>And<wbr>Merge<wbr>Format</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_plugins.paste-3.html#pasteoriginal" class="tsd-kind-icon">paste<wbr>Original</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_plugins.paste-3.html#pastetext" class="tsd-kind-icon">paste<wbr>Text</a>
 							</li>
 						</ul>
 					</li>
@@ -293,6 +416,7 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">

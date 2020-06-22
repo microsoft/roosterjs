@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>HyperLink | RoosterJs API Reference</title>
+	<title>ImageResize | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/roosterjs_editor_plugins.html">roosterjs-editor-plugins</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_plugins.hyperlink-1.html">HyperLink</a>
+					<a href="roosterjs_editor_plugins.imageresize-3.html">ImageResize</a>
 				</li>
 			</ul>
-			<h1>Class HyperLink</h1>
+			<h1>Class ImageResize</h1>
 		</div>
 	</div>
 </header>
@@ -68,7 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>An editor plugin that show a tooltip for existing link</p>
+						<p>ImageResize plugin provides the ability to resize an inline image in editor</p>
 					</div>
 				</div>
 			</section>
@@ -76,7 +76,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">HyperLink</span>
+						<span class="target">ImageResize</span>
 					</li>
 				</ul>
 			</section>
@@ -93,17 +93,18 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink-1.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageresize-3.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink-1.html#dispose" class="tsd-kind-icon">dispose</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink-1.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink-1.html#initialize" class="tsd-kind-icon">initialize</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="roosterjs_editor_plugins.hyperlink-1.html#onmouse" class="tsd-kind-icon">on<wbr>Mouse</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink-1.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageresize-3.html#dispose" class="tsd-kind-icon">dispose</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageresize-3.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageresize-3.html#hideresizehandle" class="tsd-kind-icon">hide<wbr>Resize<wbr>Handle</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageresize-3.html#initialize" class="tsd-kind-icon">initialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageresize-3.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageresize-3.html#showresizehandle" class="tsd-kind-icon">show<wbr>Resize<wbr>Handle</a></li>
 							</ul>
 						</section>
 					</div>
@@ -115,91 +116,65 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Hyper<wbr>Link<span class="tsd-signature-symbol">(</span>getTooltipCallback<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>href<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLAnchorElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span>, target<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, onLinkClick<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>anchor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLAnchorElement</span>, mouseEvent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.hyperlink-1.html" class="tsd-signature-type">HyperLink</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Image<wbr>Resize<span class="tsd-signature-symbol">(</span>minWidth<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, minHeight<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, selectionBorderColor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, forcePreserveRatio<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, resizableImageSelector<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.imageresize-3.html" class="tsd-signature-type">ImageResize</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts#L10">roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts#L36">roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts:36</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Create a new instance of HyperLink class</p>
+									<p>Create a new instance of ImageResize</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> getTooltipCallback: <span class="tsd-signature-symbol">(</span>href<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLAnchorElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = href &#x3D;&gt; href</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> minWidth: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 10</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>A callback function to get tooltip text for an existing hyperlink.
-											Default value is to return the href itself. If null, there will be no tooltip text.</p>
-										</div>
-									</div>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-signature">
-											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>href<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLAnchorElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>href: <span class="tsd-signature-type">string</span></h5>
-														</li>
-														<li>
-															<h5>a: <span class="tsd-signature-type">HTMLAnchorElement</span></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> target: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-											<p>(Optional) Target window name for hyperlink. If null, will use &quot;_blank&quot;</p>
+											<p>Minimum width of image when resize in pixel, default value is 10</p>
 										</div>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> onLinkClick: <span class="tsd-signature-symbol">(</span>anchor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLAnchorElement</span>, mouseEvent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> minHeight: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 10</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>(Optional) Open link callback (return false to use default behavior)</p>
+											<p>Minimum height of image when resize in pixel, default value is 10</p>
 										</div>
 									</div>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-signature">
-											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>anchor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLAnchorElement</span>, mouseEvent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>anchor: <span class="tsd-signature-type">HTMLAnchorElement</span></h5>
-														</li>
-														<li>
-															<h5>mouseEvent: <span class="tsd-signature-type">MouseEvent</span></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> selectionBorderColor: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;#DB626C&quot;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Color of resize border and handles, default value is #DB626C</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> forcePreserveRatio: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Whether always preserve width/height ratio when resize, default value is false</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> resizableImageSelector: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;img&quot;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Selector for picking which image is resizable (e.g. for all images not placeholders), note
+											that the tag must be IMG regardless what the selector is</p>
+										</div>
+									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_plugins.hyperlink-1.html" class="tsd-signature-type">HyperLink</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_plugins.imageresize-3.html" class="tsd-signature-type">ImageResize</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -216,7 +191,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts#L58">roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts#L77">roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts:77</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -238,7 +213,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts#L28">roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts#L58">roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts:58</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -247,6 +222,37 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="hideresizehandle" class="tsd-anchor"></a>
+					<h3>hide<wbr>Resize<wbr>Handle</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">hide<wbr>Resize<wbr>Handle<span class="tsd-signature-symbol">(</span>selectImageAfterUnSelect<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts#L158">roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts:158</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Hide resize handle of current selected image</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> selectImageAfterUnSelect: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional, when set to true, select the image element after hide the resize handle</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -260,12 +266,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts#L36">roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts#L66">roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts:66</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Initialize this plugin</p>
+									<p>Initialize this plugin. This should only be called from Editor</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -273,31 +279,8 @@
 								<li>
 									<h5>editor: <a href="roosterjs_editor_core.editor-1.html" class="tsd-signature-type">Editor</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>The editor instance</p>
+										<p>Editor instance</p>
 									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-					<a name="onmouse" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> on<wbr>Mouse</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Mouse<span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts#L43">roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts:43</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>e: <span class="tsd-signature-type">MouseEvent</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -308,13 +291,13 @@
 					<a name="onpluginevent" class="tsd-anchor"></a>
 					<h3>on<wbr>Plugin<wbr>Event</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Plugin<wbr>Event<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_editor_types.html#pluginevent-1" class="tsd-signature-type">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Plugin<wbr>Event<span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_editor_types.html#pluginevent-1" class="tsd-signature-type">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2506975/packages/roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts#L70">roosterjs-editor-plugins/lib/HyperLink/HyperLink.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts#L90">roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts:90</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -325,9 +308,37 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>event: <a href="../modules/roosterjs_editor_types.html#pluginevent-1" class="tsd-signature-type">PluginEvent</a></h5>
+									<h5>e: <a href="../modules/roosterjs_editor_types.html#pluginevent-1" class="tsd-signature-type">PluginEvent</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="showresizehandle" class="tsd-anchor"></a>
+					<h3>show<wbr>Resize<wbr>Handle</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">show<wbr>Resize<wbr>Handle<span class="tsd-signature-symbol">(</span>img<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLImageElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/589c2ba/packages/roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts#L148">roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts:148</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Select a given IMG element, show the resize handle</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>img: <span class="tsd-signature-type">HTMLImageElement</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>PluginEvent object</p>
+										<p>The IMG element to select</p>
 									</div>
 								</li>
 							</ul>
@@ -380,25 +391,28 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_editor_plugins.hyperlink-1.html" class="tsd-kind-icon">Hyper<wbr>Link</a>
+						<a href="roosterjs_editor_plugins.imageresize-3.html" class="tsd-kind-icon">Image<wbr>Resize</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.hyperlink-1.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="roosterjs_editor_plugins.imageresize-3.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.hyperlink-1.html#dispose" class="tsd-kind-icon">dispose</a>
+								<a href="roosterjs_editor_plugins.imageresize-3.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.hyperlink-1.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
+								<a href="roosterjs_editor_plugins.imageresize-3.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.hyperlink-1.html#initialize" class="tsd-kind-icon">initialize</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-								<a href="roosterjs_editor_plugins.hyperlink-1.html#onmouse" class="tsd-kind-icon">on<wbr>Mouse</a>
+								<a href="roosterjs_editor_plugins.imageresize-3.html#hideresizehandle" class="tsd-kind-icon">hide<wbr>Resize<wbr>Handle</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.hyperlink-1.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
+								<a href="roosterjs_editor_plugins.imageresize-3.html#initialize" class="tsd-kind-icon">initialize</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_plugins.imageresize-3.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_plugins.imageresize-3.html#showresizehandle" class="tsd-kind-icon">show<wbr>Resize<wbr>Handle</a>
 							</li>
 						</ul>
 					</li>
@@ -433,9 +447,6 @@
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
 			</ul>
 		</div>
 	</div>
