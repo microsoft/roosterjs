@@ -61,6 +61,8 @@ const DEFAULT_STYLE_VALUES: { [name: string]: string } = {
     float: 'none',
 };
 
+const ALLOWED_CSS_CLASSES: string[] = [];
+
 /**
  * @internal
  */
