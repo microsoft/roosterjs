@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { default as SampleColorPicker, SampleColorPickerProps } from './SampleColorPicker';
 import { Editor } from 'roosterjs-editor-core';
-import { PickerDataProvider } from 'roosterjs-plugin-picker';
+import { PickerDataProvider } from 'roosterjs-editor-plugins/lib/Picker';
 
 type LegalKeys<T> = T extends 'onClick' ? never : T;
 type ComponentState = { [l in LegalKeys<keyof SampleColorPickerProps>]: SampleColorPickerProps[l] };

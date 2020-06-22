@@ -1,2 +1,4 @@
-export { default as PickerPlugin, EditorPickerPluginInterface } from './PickerPlugin';
-export { PickerPluginOptions, PickerDataProvider } from './PickerDataProvider';
+// This package is deprecated.
+// All exports here are just for backward compatibility.
+// Please use type from their real packages directly
+export * from 'roosterjs-editor-plugins/lib/Picker';
