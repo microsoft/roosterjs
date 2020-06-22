@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ContentEdit | RoosterJs API Reference</title>
+	<title>EntityPlugin | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/roosterjs_editor_plugins.html">roosterjs-editor-plugins</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_plugins.contentedit-3.html">ContentEdit</a>
+					<a href="roosterjs_editor_plugins.entityplugin-3.html">EntityPlugin</a>
 				</li>
 			</ul>
-			<h1>Class ContentEdit</h1>
+			<h1>Class EntityPlugin</h1>
 		</div>
 	</div>
 </header>
@@ -68,18 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>An editor plugin to handle content edit event.
-						The following cases are included:</p>
-						<ol>
-							<li>Auto increase/decrease indentation on Tab, Shift+tab</li>
-							<li>Enter, Backspace on empty list item</li>
-							<li>Enter, Backspace on empty blockquote line</li>
-							<li>Auto bullet/numbering</li>
-							<li>Auto link</li>
-							<li>Tab in table</li>
-							<li>Up/Down in table</li>
-							<li>Manage list style</li>
-						</ol>
+						<p>Entity Plugin helps handle all operations related to an entity and generate entity specified events</p>
 					</div>
 				</div>
 			</section>
@@ -87,7 +76,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ContentEdit</span>
+						<span class="target">EntityPlugin</span>
 					</li>
 				</ul>
 			</section>
@@ -102,51 +91,15 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Constructors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_plugins.contentedit-3.html#constructor" class="tsd-kind-icon">constructor</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.contentedit-3.html#dispose" class="tsd-kind-icon">dispose</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.contentedit-3.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.contentedit-3.html#initialize" class="tsd-kind-icon">initialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.entityplugin-3.html#dispose" class="tsd-kind-icon">dispose</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.entityplugin-3.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.entityplugin-3.html#initialize" class="tsd-kind-icon">initialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.entityplugin-3.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
 							</ul>
 						</section>
 					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Content<wbr>Edit<span class="tsd-signature-symbol">(</span>featureSet<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_editor_plugins.contenteditfeatures-3.html" class="tsd-signature-type">ContentEditFeatures</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.contentedit-3.html" class="tsd-signature-type">ContentEdit</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/ContentEdit.ts#L37">roosterjs-editor-plugins/lib/plugins/ContentEdit/ContentEdit.ts:37</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Create instance of ContentEdit plugin</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> featureSet: <a href="../interfaces/roosterjs_editor_plugins.contenteditfeatures-3.html" class="tsd-signature-type">ContentEditFeatures</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_plugins.contentedit-3.html" class="tsd-signature-type">ContentEdit</a></h4>
-						</li>
-					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -161,14 +114,9 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/ContentEdit.ts#L64">roosterjs-editor-plugins/lib/plugins/ContentEdit/ContentEdit.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-plugins/lib/plugins/Entity/EntityPlugin.ts#L54">roosterjs-editor-plugins/lib/plugins/Entity/EntityPlugin.ts:54</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Dispose this plugin</p>
-								</div>
-							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -183,14 +131,9 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/ContentEdit.ts#L48">roosterjs-editor-plugins/lib/plugins/ContentEdit/ContentEdit.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-plugins/lib/plugins/Entity/EntityPlugin.ts#L32">roosterjs-editor-plugins/lib/plugins/Entity/EntityPlugin.ts:32</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Get a friendly name of  this plugin</p>
-								</div>
-							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
@@ -205,21 +148,36 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/ContentEdit.ts#L56">roosterjs-editor-plugins/lib/plugins/ContentEdit/ContentEdit.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-plugins/lib/plugins/Entity/EntityPlugin.ts#L36">roosterjs-editor-plugins/lib/plugins/Entity/EntityPlugin.ts:36</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Initialize this plugin</p>
-								</div>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>editor: <a href="roosterjs_editor_core.editor-1.html" class="tsd-signature-type">Editor</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The editor instance</p>
-									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="onpluginevent" class="tsd-anchor"></a>
+					<h3>on<wbr>Plugin<wbr>Event</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Plugin<wbr>Event<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_editor_types.html#pluginevent-1" class="tsd-signature-type">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-plugins/lib/plugins/Entity/EntityPlugin.ts#L61">roosterjs-editor-plugins/lib/plugins/Entity/EntityPlugin.ts:61</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>event: <a href="../modules/roosterjs_editor_types.html#pluginevent-1" class="tsd-signature-type">PluginEvent</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -271,19 +229,19 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_editor_plugins.contentedit-3.html" class="tsd-kind-icon">Content<wbr>Edit</a>
+						<a href="roosterjs_editor_plugins.entityplugin-3.html" class="tsd-kind-icon">Entity<wbr>Plugin</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.contentedit-3.html#constructor" class="tsd-kind-icon">constructor</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_plugins.entityplugin-3.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.contentedit-3.html#dispose" class="tsd-kind-icon">dispose</a>
+								<a href="roosterjs_editor_plugins.entityplugin-3.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.contentedit-3.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
+								<a href="roosterjs_editor_plugins.entityplugin-3.html#initialize" class="tsd-kind-icon">initialize</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.contentedit-3.html#initialize" class="tsd-kind-icon">initialize</a>
+								<a href="roosterjs_editor_plugins.entityplugin-3.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
 							</li>
 						</ul>
 					</li>
@@ -309,7 +267,6 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">

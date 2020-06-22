@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BeforePasteEvent | RoosterJs API Reference</title>
+	<title>EntityOperationEvent | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/roosterjs_editor_types.html">roosterjs-editor-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_types.beforepasteevent-1.html">BeforePasteEvent</a>
+					<a href="roosterjs_editor_types.entityoperationevent-1.html">EntityOperationEvent</a>
 				</li>
 			</ul>
-			<h1>Interface BeforePasteEvent</h1>
+			<h1>Interface EntityOperationEvent</h1>
 		</div>
 	</div>
 </header>
@@ -68,7 +68,8 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Provides a chance for plugin to change the content before it is pasted into editor.</p>
+						<p>Provide a chance for plugins to handle entity related events.
+						See enum EntityOperation for more details about each operation</p>
 					</div>
 				</div>
 			</section>
@@ -76,10 +77,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="roosterjs_editor_types.basepluginevent-1.html" class="tsd-signature-type">BasePluginEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="../enums/roosterjs_editor_types.plugineventtype-1.html#beforepaste" class="tsd-signature-type">BeforePaste</a><span class="tsd-signature-symbol">&gt;</span>
+						<a href="roosterjs_editor_types.basepluginevent-1.html" class="tsd-signature-type">BasePluginEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="../enums/roosterjs_editor_types.plugineventtype-1.html#entityoperation" class="tsd-signature-type">EntityOperation</a><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">BeforePasteEvent</span>
+								<span class="target">EntityOperationEvent</span>
 							</li>
 						</ul>
 					</li>
@@ -92,11 +93,11 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.beforepasteevent-1.html#clipboarddata" class="tsd-kind-icon">clipboard<wbr>Data</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.beforepasteevent-1.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.beforepasteevent-1.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.beforepasteevent-1.html#fragment" class="tsd-kind-icon">fragment</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.beforepasteevent-1.html#pasteoption" class="tsd-kind-icon">paste<wbr>Option</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entityoperationevent-1.html#entity" class="tsd-kind-icon">entity</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.entityoperationevent-1.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.entityoperationevent-1.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entityoperationevent-1.html#operation" class="tsd-kind-icon">operation</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entityoperationevent-1.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a></li>
 							</ul>
 						</section>
 					</div>
@@ -105,17 +106,17 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="clipboarddata" class="tsd-anchor"></a>
-					<h3>clipboard<wbr>Data</h3>
-					<div class="tsd-signature tsd-kind-icon">clipboard<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.clipboarddata-1.html" class="tsd-signature-type">ClipboardData</a></div>
+					<a name="entity" class="tsd-anchor"></a>
+					<h3>entity</h3>
+					<div class="tsd-signature tsd-kind-icon">entity<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.entity-1.html" class="tsd-signature-type">Entity</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-types/lib/event/BeforePasteEvent.ts#L13">roosterjs-editor-types/lib/event/BeforePasteEvent.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts#L20">roosterjs-editor-types/lib/event/EntityOperationEvent.ts:20</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>An object contains all related data for pasting</p>
+							<p>The entity that editor is operating on</p>
 						</div>
 					</div>
 				</section>
@@ -148,7 +149,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="eventtype" class="tsd-anchor"></a>
 					<h3>event<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">event<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/roosterjs_editor_types.plugineventtype-1.html#beforepaste" class="tsd-signature-type">BeforePaste</a></div>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/roosterjs_editor_types.plugineventtype-1.html#entityoperation" class="tsd-signature-type">EntityOperation</a></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_editor_types.basepluginevent-1.html">BasePluginEvent</a>.<a href="roosterjs_editor_types.basepluginevent-1.html#eventtype">eventType</a></p>
 						<ul>
@@ -162,32 +163,32 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="fragment" class="tsd-anchor"></a>
-					<h3>fragment</h3>
-					<div class="tsd-signature tsd-kind-icon">fragment<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">DocumentFragment</span></div>
+					<a name="operation" class="tsd-anchor"></a>
+					<h3>operation</h3>
+					<div class="tsd-signature tsd-kind-icon">operation<span class="tsd-signature-symbol">:</span> <a href="../enums/roosterjs_editor_types.entityoperation-1.html" class="tsd-signature-type">EntityOperation</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-types/lib/event/BeforePasteEvent.ts#L18">roosterjs-editor-types/lib/event/BeforePasteEvent.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts#L15">roosterjs-editor-types/lib/event/EntityOperationEvent.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>HTML Document Fragment which will be inserted into content if pasteOption is set to PasteHtml</p>
+							<p>Operation to this entity</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="pasteoption" class="tsd-anchor"></a>
-					<h3>paste<wbr>Option</h3>
-					<div class="tsd-signature tsd-kind-icon">paste<wbr>Option<span class="tsd-signature-symbol">:</span> <a href="../enums/roosterjs_editor_types.pasteoption-1.html" class="tsd-signature-type">PasteOption</a></div>
+					<a name="rawevent" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> raw<wbr>Event</h3>
+					<div class="tsd-signature tsd-kind-icon">raw<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">UIEvent</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-types/lib/event/BeforePasteEvent.ts#L23">roosterjs-editor-types/lib/event/BeforePasteEvent.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4e9ac55/packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts#L25">roosterjs-editor-types/lib/event/EntityOperationEvent.ts:25</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Paste option: html, text or image</p>
+							<p>Optional raw UI event. Need to do null check before use its value</p>
 						</div>
 					</div>
 				</section>
@@ -236,22 +237,22 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_editor_types.beforepasteevent-1.html" class="tsd-kind-icon">Before<wbr>Paste<wbr>Event</a>
+						<a href="roosterjs_editor_types.entityoperationevent-1.html" class="tsd-kind-icon">Entity<wbr>Operation<wbr>Event</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.beforepasteevent-1.html#clipboarddata" class="tsd-kind-icon">clipboard<wbr>Data</a>
+								<a href="roosterjs_editor_types.entityoperationevent-1.html#entity" class="tsd-kind-icon">entity</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_editor_types.beforepasteevent-1.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
+								<a href="roosterjs_editor_types.entityoperationevent-1.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_editor_types.beforepasteevent-1.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
+								<a href="roosterjs_editor_types.entityoperationevent-1.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.beforepasteevent-1.html#fragment" class="tsd-kind-icon">fragment</a>
+								<a href="roosterjs_editor_types.entityoperationevent-1.html#operation" class="tsd-kind-icon">operation</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.beforepasteevent-1.html#pasteoption" class="tsd-kind-icon">paste<wbr>Option</a>
+								<a href="roosterjs_editor_types.entityoperationevent-1.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a>
 							</li>
 						</ul>
 					</li>
