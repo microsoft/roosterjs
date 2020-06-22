@@ -2,7 +2,6 @@ import adjustBrowserBehavior from './adjustBrowserBehavior';
 import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
-import getColorNormalizedContent from '../darkMode/getColorNormalizedContent';
 import mapPluginEvents from './mapPluginEvents';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
@@ -345,28 +344,41 @@ export default class Editor {
      * @param triggerExtractContentEvent Whether trigger ExtractContent event to all plugins
      * before return. Use this parameter to remove any temporary content added by plugins.
      * @param includeSelectionMarker Set to true if need include selection marker inside the content.
-     * When restore this content, editor will set the selection to the position marked by these markers
+     * When restore this content, editor will set the selection to the position marked by these markers.
+     * This parameter will be ignored when triggerExtractContentEvent is set to true
      * @returns HTML string representing current editor content
      */
     public getContent(
         triggerExtractContentEvent: boolean = true,
         includeSelectionMarker: boolean = false
     ): string {
-        let content = getHtmlWithSelectionPath(
-            this.core.contentDiv,
-            includeSelectionMarker && this.getSelectionRange()
-        );
+        let content = '';
+        if (triggerExtractContentEvent || this.core.inDarkMode) {
+            const clonedRoot = this.core.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
 
-        if (triggerExtractContentEvent) {
-            content = this.triggerPluginEvent(
-                PluginEventType.ExtractContent,
-                { content },
+            this.triggerPluginEvent(
+                PluginEventType.ExtractContentWithDom,
+                {
+                    clonedRoot,
+                },
                 true /*broadcast*/
-            ).content;
-        }
+            );
 
-        if (this.core.inDarkMode) {
-            content = getColorNormalizedContent(content);
+            content = clonedRoot.innerHTML;
+
+            // TODO: Deprecated ExtractContentEvent once we have entity API ready in next major release
+            if (triggerExtractContentEvent) {
+                content = this.triggerPluginEvent(
+                    PluginEventType.ExtractContent,
+                    { content },
+                    true /*broadcast*/
+                ).content;
+            }
+        } else {
+            content = getHtmlWithSelectionPath(
+                this.core.contentDiv,
+                includeSelectionMarker && this.getSelectionRange()
+            );
         }
 
         return content;

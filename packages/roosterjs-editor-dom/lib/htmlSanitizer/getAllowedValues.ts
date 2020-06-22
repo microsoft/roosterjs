@@ -80,6 +80,14 @@ export function getAllowedAttributes(additionalAttributes: string[]): string[] {
 /**
  * @internal
  */
+export function getAllowedCssClassesRegex(additionalCssClasses: string[]): RegExp {
+    const patterns = ALLOWED_CSS_CLASSES.concat(additionalCssClasses || []);
+    return patterns.length > 0 ? new RegExp(patterns.join('|')) : null;
+}
+
+/**
+ * @internal
+ */
 export function getDefaultStyleValues(additionalDefaultStyles: StringMap): StringMap {
     let result = cloneObject(DEFAULT_STYLE_VALUES);
     if (additionalDefaultStyles) {
