@@ -33,3 +33,9 @@ export class CustomReplaceCode extends SimplePluginCode {
         super('CustomReplace');
     }
 }
+
+export class EntityPluginCode extends SimplePluginCode {
+    constructor() {
+        super('EntityPlugin');
+    }
+}

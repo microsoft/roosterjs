@@ -7,6 +7,7 @@ import {
     CustomReplace,
     ImageResize,
     PickerPlugin,
+    EntityPlugin,
 } from 'roosterjs-editor-plugins';
 
 export type EditorInstanceToggleablePlugins = {
@@ -18,4 +19,5 @@ export type EditorInstanceToggleablePlugins = {
     tableResize: TableResize;
     customReplace: CustomReplace;
     pickerPlugin: PickerPlugin;
+    entityPlugin: EntityPlugin;
 };

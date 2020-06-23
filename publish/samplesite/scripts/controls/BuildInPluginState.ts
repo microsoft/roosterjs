@@ -13,6 +13,7 @@ export interface BuildInPluginList {
     tableResize: boolean;
     customReplace: boolean;
     pickerPlugin: boolean;
+    entityPlugin: boolean;
 }
 
 export type ContentEditFeatureState = Pick<
