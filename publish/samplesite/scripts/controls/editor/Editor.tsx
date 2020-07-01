@@ -18,6 +18,7 @@ import {
     ContentEditFeatures,
     getDefaultContentEditFeatures,
     CustomReplace as CustomReplacePlugin,
+    EntityPlugin,
     ImageResize,
     PickerPlugin,
 } from 'roosterjs-editor-plugins';
@@ -103,6 +104,7 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
                   })
                 : null,
             customReplace: pluginList.customReplace ? new CustomReplacePlugin() : null,
+            entityPlugin: pluginList.entityPlugin ? new EntityPlugin() : null,
         };
         let plugins = [
             ...Object.keys(editorInstanceToggleablePlugins).map(

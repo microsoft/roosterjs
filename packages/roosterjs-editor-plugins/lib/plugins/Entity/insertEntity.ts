@@ -1,6 +1,8 @@
 import createEntityWrapper from './createEntityWrapper';
+import getEntityElement from './getEntityElement';
 import getEntityFromElement from './getEntityFromElement';
 import { Editor } from 'roosterjs-editor-core';
+import { Position } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ContentPosition,
@@ -33,6 +35,14 @@ export default function insertEntity(
 
     if (position) {
         currentRange = editor.getSelectionRange();
+        const node = position.normalize().node;
+        const existingEntity = getEntityElement(editor, node);
+
+        // Do not insert entity into another entity
+        if (existingEntity) {
+            position = new Position(existingEntity, PositionType.After);
+        }
+
         editor.select(position);
     }
 
