@@ -6,6 +6,9 @@ import { extractClipboardEvent, fromHtml } from 'roosterjs-editor-dom';
 const CONTAINER_HTML =
     '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
 
+/**
+ * Core paste plugin for handling onPaste event and extract the pasted content
+ */
 export default class CorePastePlugin implements EditorPlugin {
     private editor: Editor;
     private disposer: () => void;

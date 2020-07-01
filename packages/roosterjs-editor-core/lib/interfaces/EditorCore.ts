@@ -60,7 +60,7 @@ export interface CorePlugins {
     readonly copyPlugin: CopyPlugin;
 
     /**
-     *
+     * Core paste plugin for handling onPaste event and extract the pasted content
      */
     readonly pastePlugin: CorePastePlugin;
 }
