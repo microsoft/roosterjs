@@ -1,4 +1,5 @@
 import CopyPlugin from '../corePlugins/CopyPlugin';
+import CorePastePlugin from '../corePlugins/CorePastePlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorPlugin from './EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
@@ -9,6 +10,7 @@ import UndoService from './UndoService';
 import { CustomDataMap } from './CustomData';
 import {
     ChangeSource,
+    ClipboardData,
     DefaultFormat,
     DarkModeOptions,
     InsertOption,
@@ -56,6 +58,11 @@ export interface CorePlugins {
      * Copy plguin for handling dark mode copy.
      */
     readonly copyPlugin: CopyPlugin;
+
+    /**
+     *
+     */
+    readonly pastePlugin: CorePastePlugin;
 }
 
 /**
@@ -206,6 +213,21 @@ export type HasFocus = (core: EditorCore) => boolean;
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
 
 /**
+ * Create a DocumentFragment for paste from a ClipboardData
+ * @param core The EditorCore object.
+ * @param clipboardData Clipboard data retrieved from clipboard
+ * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
+ * @param applyCurrentStyle True if apply format of current selection to the pasted content,
+ * false to keep original foramt
+ */
+export type CreatePasteFragment = (
+    core: EditorCore,
+    clipboardData: ClipboardData,
+    pasteAsText: boolean,
+    applyCurrentStyle: boolean
+) => DocumentFragment;
+
+/**
  * @deprecated Use SelectRange instead
  * Select content
  * @param core The EditorCore object
@@ -287,6 +309,16 @@ export interface CoreApiMap {
      * @param option An insert option object to specify how to insert the node
      */
     insertNode: InsertNode;
+
+    /**
+     * Create a DocumentFragment for paste from a ClipboardData
+     * @param core The EditorCore object.
+     * @param clipboardData Clipboard data retrieved from clipboard
+     * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
+     * @param applyCurrentStyle True if apply format of current selection to the pasted content,
+     * false to keep original foramt
+     */
+    createPasteFragment: CreatePasteFragment;
 
     /**
      * @deprecated Use SelectRange instead

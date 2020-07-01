@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getTagOfNode } from 'roosterjs-editor-dom';
+import { getTagOfNode, HtmlSanitizer, safeInstanceOf } from 'roosterjs-editor-dom';
 import { PendableFormatState, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { SidePaneElementProps } from '../SidePaneElement';
 
@@ -92,6 +92,15 @@ export default class EventViewPane extends React.Component<
 
     addEvent(event: PluginEvent) {
         if (this.state.displayCount > 0) {
+            if (event.eventType == PluginEventType.BeforePaste) {
+                const sanitizer = new HtmlSanitizer(event.sanitizingOption);
+                const fragment = event.fragment.cloneNode(true /*deep*/) as DocumentFragment;
+
+                sanitizer.convertGlobalCssToInlineCss(fragment);
+                sanitizer.sanitize(fragment);
+                event.clipboardData.html = this.getHtml(fragment);
+            }
+
             this.events.push({
                 time: new Date(),
                 event: event,
@@ -150,7 +159,10 @@ export default class EventViewPane extends React.Component<
                         {this.renderPasteContent('Sanitized HTML', event.clipboardData.html)}
                         {this.renderPasteContent('Original HTML', event.clipboardData.rawHtml)}
                         {this.renderPasteContent('Image', event.clipboardData.image, img => (
-                            <img ref={ref => this.renderImage(ref, img)} className={styles.img} />
+                            <img
+                                ref={ref => ref && this.renderImage(ref, img)}
+                                className={styles.img}
+                            />
                         ))}
                     </span>
                 );
@@ -208,5 +220,20 @@ export default class EventViewPane extends React.Component<
                 </details>
             )
         );
+    }
+
+    private getHtml(fragment: DocumentFragment) {
+        const stringArray: string[] = [];
+        for (let child = fragment.firstChild; child; child = child.nextSibling) {
+            stringArray.push(
+                safeInstanceOf(child, 'HTMLElement')
+                    ? child.outerHTML
+                    : safeInstanceOf(child, 'Text')
+                    ? child.nodeValue
+                    : ''
+            );
+        }
+
+        return stringArray.join('');
     }
 }

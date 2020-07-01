@@ -3,7 +3,12 @@ import getEntityFromElement from './getEntityFromElement';
 import tryTriggerEntityEvent from './tryTriggerEntityEvent';
 import { Browser, toArray } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin, isCharacterValue, Keys } from 'roosterjs-editor-core';
-import { getAllEntityIds, getEntitySelector, serializeEntityInfo } from './EntityInfo';
+import {
+    getAllEntityIds,
+    getEntitySelector,
+    serializeEntityInfo,
+    ALLOWED_CSS_CLASSES,
+} from './EntityInfo';
 import {
     ContentPosition,
     EntityOperation,
@@ -11,6 +16,7 @@ import {
     PluginEventType,
     QueryScope,
     ChangeSource,
+    HtmlSanitizerOptions,
 } from 'roosterjs-editor-types';
 import {
     ClickOnEntityFeature,
@@ -70,7 +76,7 @@ export default class EntityPlugin implements EditorPlugin {
                 this.handleKeyDownEvent(event.rawEvent);
                 break;
             case PluginEventType.BeforePaste:
-                this.handleBeforePasteEvent(event.fragment);
+                this.handleBeforePasteEvent(event.fragment, event.sanitizingOption);
                 break;
             case PluginEventType.ContentChanged:
                 this.handleContentChangedEvent(event.source == ChangeSource.SetContent);
@@ -142,7 +148,10 @@ export default class EntityPlugin implements EditorPlugin {
         }
     }
 
-    private handleBeforePasteEvent(fragment: DocumentFragment) {
+    private handleBeforePasteEvent(
+        fragment: DocumentFragment,
+        sanitizingOption: HtmlSanitizerOptions
+    ) {
         const range = this.editor.getSelectionRange();
 
         if (!range.collapsed) {
@@ -164,6 +173,10 @@ export default class EntityPlugin implements EditorPlugin {
                     );
                 }
             });
+
+            ALLOWED_CSS_CLASSES.forEach(css =>
+                sanitizingOption.additionalAllowedCssClasses.push(css)
+            );
         }
     }
 

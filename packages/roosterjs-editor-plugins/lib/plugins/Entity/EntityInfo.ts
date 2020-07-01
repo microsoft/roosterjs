@@ -7,6 +7,18 @@ const ENTITY_TYPE_PREFIX = '_EType_';
 const ENTITY_ID_PREFIX = '_EId_';
 const ENTITY_READONLY_PREFIX = '_EReadonly_';
 
+const ENTITY_CSS_REGEX = '^' + ENTITY_INFO_NAME + '$';
+const ENTITY_ID_CSS_REGEX = '^' + ENTITY_ID_PREFIX;
+const ENTITY_TYPE_CSS_REGEX = '^' + ENTITY_TYPE_PREFIX;
+const ENTITY_READONLY_CSS_REGEX = '^' + ENTITY_READONLY_PREFIX;
+
+export const ALLOWED_CSS_CLASSES = [
+    ENTITY_CSS_REGEX,
+    ENTITY_ID_CSS_REGEX,
+    ENTITY_TYPE_CSS_REGEX,
+    ENTITY_READONLY_CSS_REGEX,
+];
+
 /**
  * @internal Serialize entity info into a CSS class list string
  * @param editor The editor which contains the entity

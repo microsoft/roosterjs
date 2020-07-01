@@ -9,6 +9,7 @@ import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import {
     BlockElement,
     ChangeSource,
+    ClipboardData,
     ContentPosition,
     DarkModeOptions,
     DefaultFormat,
@@ -451,6 +452,43 @@ export default class Editor {
             allNodes.forEach(node => fragment.appendChild(node));
 
             this.insertNode(fragment, option);
+        }
+    }
+
+    /**
+     * Paste into editor using a clipboardData object
+     * @param clipboardData Clipboard data retrieved from clipboard
+     * @param pasteAsText Force pasting as plain text. Default value is false
+     * @param applyCurrentStyle True if apply format of current selection to the pasted content,
+     * false to keep original foramt.  Default value is false. When pasteAsText is true, this parameter is ignored
+     */
+    public paste(
+        clipboardData: ClipboardData,
+        pasteAsText?: boolean,
+        applyCurrentFormat?: boolean
+    ) {
+        if (clipboardData) {
+            if (clipboardData.snapshotBeforePaste) {
+                // Restore original content before paste a new one
+                this.setContent(clipboardData.snapshotBeforePaste);
+            } else {
+                clipboardData.snapshotBeforePaste = this.getContent(
+                    false /*triggerExtractContentEvent*/,
+                    true /*includeSelectionMarker*/
+                );
+            }
+
+            const fragment = this.core.api.createPasteFragment(
+                this.core,
+                clipboardData,
+                pasteAsText,
+                applyCurrentFormat
+            );
+
+            this.addUndoSnapshot(() => {
+                this.insertNode(fragment);
+                return clipboardData;
+            }, ChangeSource.Paste);
         }
     }
 

@@ -1,7 +1,6 @@
+import createEntityWrapper from './createEntityWrapper';
 import getEntityFromElement from './getEntityFromElement';
 import { Editor } from 'roosterjs-editor-core';
-import { serializeEntityInfo } from './EntityInfo';
-import { wrap } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ContentPosition,
@@ -28,12 +27,7 @@ export default function insertEntity(
     isReadonly: boolean,
     position?: NodePosition
 ): Entity {
-    const wrapper = wrap(contentNode, isBlock ? 'DIV' : 'SPAN');
-    wrapper.className = serializeEntityInfo(editor, type, isReadonly);
-
-    if (!isBlock) {
-        wrapper.style.display = 'inline-block';
-    }
+    const wrapper = createEntityWrapper(editor, type, contentNode, isBlock, isReadonly);
 
     let currentRange: Range;
 
