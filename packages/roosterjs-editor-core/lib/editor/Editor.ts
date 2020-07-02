@@ -355,6 +355,8 @@ export default class Editor {
         let content = '';
         if (triggerExtractContentEvent || this.core.inDarkMode) {
             const clonedRoot = this.core.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
+            const path = includeSelectionMarker && this.getSelectionPath();
+            const range = path && createRange(clonedRoot, path.start, path.end);
 
             this.triggerPluginEvent(
                 PluginEventType.ExtractContentWithDom,
@@ -364,15 +366,18 @@ export default class Editor {
                 true /*broadcast*/
             );
 
-            content = clonedRoot.innerHTML;
-
             // TODO: Deprecated ExtractContentEvent once we have entity API ready in next major release
             if (triggerExtractContentEvent) {
                 content = this.triggerPluginEvent(
                     PluginEventType.ExtractContent,
-                    { content },
+                    { content: clonedRoot.innerHTML },
                     true /*broadcast*/
                 ).content;
+            } else if (range) {
+                // range is not null, which means we want to include a selection path in the content
+                content = getHtmlWithSelectionPath(clonedRoot, range);
+            } else {
+                content = clonedRoot.innerHTML;
             }
         } else {
             content = getHtmlWithSelectionPath(
