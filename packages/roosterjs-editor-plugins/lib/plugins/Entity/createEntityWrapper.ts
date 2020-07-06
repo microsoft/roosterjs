@@ -20,7 +20,13 @@ export default function createEntityWrapper(
     const wrapper = wrap(contentNode, isBlock ? 'DIV' : 'SPAN');
     wrapper.className = serializeEntityInfo(editor, type, isReadonly);
 
-    if (!isBlock) {
+    // For inline & readonly entity, we need to set display to "inline-block" otherwise
+    // there will be some weird behavior when move cursor around the entity node.
+    // And we should only do this for readonly entity since "inline-block" has some side effect
+    // in IE that there will be a resize border around the inline-block element. We made some
+    // workaround for readonly entity for this issue but for editable entity, keep it as "inline"
+    // will just work fine.
+    if (!isBlock && isReadonly) {
         wrapper.style.display = 'inline-block';
     }
 
