@@ -41,14 +41,36 @@ export function getElementBasedFormatState(
  * @returns A StyleBasedFormatState object
  */
 export function getStyleBasedFormatState(editor: Editor): StyleBasedFormatState {
-    let range = editor.getSelectionRange();
-    let node = range && Position.getStart(range).normalize().node;
-    let styles = node ? getComputedStyles(node) : [];
+    const range = editor.getSelectionRange();
+    const node = range && Position.getStart(range).normalize().node;
+    const styles = node ? getComputedStyles(node) : [];
+    const isDarkMode = editor.isDarkMode();
+    const ogTextColorNode =
+        isDarkMode &&
+        (editor.getElementAtCursor('[data-ogsc]', node) ||
+            editor.getElementAtCursor('[data-ogac]', node));
+    const ogBackgroundColorNode =
+        isDarkMode &&
+        (editor.getElementAtCursor('[data-ogsb]', node) ||
+            editor.getElementAtCursor('[data-ogab]', node));
+
     return {
         fontName: styles[0],
         fontSize: styles[1],
         textColor: styles[2],
         backgroundColor: styles[3],
+        textColors: ogTextColorNode
+            ? {
+                  darkModeColor: styles[2],
+                  lightModeColor: ogTextColorNode.dataset.obsc || ogTextColorNode.dataset.ogac,
+              }
+            : undefined,
+        backgroundColors: ogBackgroundColorNode
+            ? {
+                  darkModeColor: styles[3],
+                  lightModeColor: ogTextColorNode.dataset.obsc || ogTextColorNode.dataset.ogac,
+              }
+            : undefined,
     };
 }
 
