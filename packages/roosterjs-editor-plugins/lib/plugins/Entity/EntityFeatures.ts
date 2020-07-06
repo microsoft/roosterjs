@@ -156,7 +156,7 @@ function cacheGetNeighborEntityElement(
 
                 if (checkForSameLine) {
                     const block = editor.getBlockElementAtNode(pos.node);
-                    if (!block.contains(node)) {
+                    if (!block || !block.contains(node)) {
                         node = null;
                     }
                 }
