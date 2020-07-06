@@ -46,17 +46,19 @@ export function deserialzeEntityInfo(
     let id = '';
     let isReadonly = false;
 
-    entityInfo.split(' ').forEach(name => {
-        if (name == ENTITY_INFO_NAME) {
-            isEntity = true;
-        } else if (name.indexOf(ENTITY_TYPE_PREFIX) == 0) {
-            type = name.substr(ENTITY_TYPE_PREFIX.length);
-        } else if (name.indexOf(ENTITY_ID_PREFIX) == 0) {
-            id = name.substr(ENTITY_ID_PREFIX.length);
-        } else if (name.indexOf(ENTITY_READONLY_PREFIX) == 0) {
-            isReadonly = name.substr(ENTITY_READONLY_PREFIX.length) == '1';
-        }
-    });
+    if (entityInfo) {
+        entityInfo.split(' ').forEach(name => {
+            if (name == ENTITY_INFO_NAME) {
+                isEntity = true;
+            } else if (name.indexOf(ENTITY_TYPE_PREFIX) == 0) {
+                type = name.substr(ENTITY_TYPE_PREFIX.length);
+            } else if (name.indexOf(ENTITY_ID_PREFIX) == 0) {
+                id = name.substr(ENTITY_ID_PREFIX.length);
+            } else if (name.indexOf(ENTITY_READONLY_PREFIX) == 0) {
+                isReadonly = name.substr(ENTITY_READONLY_PREFIX.length) == '1';
+            }
+        });
+    }
 
     return isEntity && type
         ? {

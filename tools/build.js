@@ -144,7 +144,9 @@ function normalize() {
         var packageJson = readPackageJson(package, true /*readFromSourceFolder*/);
 
         Object.keys(packageJson.dependencies).forEach(dep => {
-            if (knownCustomizedPackages[dep]) {
+            if (packageJson.dependencies[dep]) {
+                // No op, keep the specified value
+            } else if (knownCustomizedPackages[dep]) {
                 packageJson.dependencies[dep] = knownCustomizedPackages[dep];
             } else if (packages.indexOf(dep) > -1) {
                 packageJson.dependencies[dep] = mainPackageJson.version;
