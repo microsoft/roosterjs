@@ -1,10 +1,10 @@
 {
     "name": "roosterjs-html-sanitizer",
-    "description": "This package is deprecated",
+    "description": "This package is deprecated, and this is the last version of this package.",
     "dependencies": {
-        "roosterjs-editor-dom": "",
-        "roosterjs-editor-types": ""
+        "roosterjs-editor-dom": "^7.13.2",
+        "roosterjs-editor-types": "^7.13.2"
     },
     "main": "./lib/index.ts",
-    "version": "1.5.0"
+    "version": "1.6.0"
 }
