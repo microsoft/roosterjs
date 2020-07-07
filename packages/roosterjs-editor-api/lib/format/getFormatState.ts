@@ -62,13 +62,13 @@ export function getStyleBasedFormatState(editor: Editor): StyleBasedFormatState 
         textColors: ogTextColorNode
             ? {
                   darkModeColor: styles[2],
-                  lightModeColor: ogTextColorNode.dataset.obsc || ogTextColorNode.dataset.ogac,
+                  lightModeColor: ogTextColorNode.dataset.ogsc || ogTextColorNode.dataset.ogac,
               }
             : undefined,
         backgroundColors: ogBackgroundColorNode
             ? {
                   darkModeColor: styles[3],
-                  lightModeColor: ogTextColorNode.dataset.obsc || ogTextColorNode.dataset.ogac,
+                  lightModeColor: ogTextColorNode.dataset.ogsb || ogTextColorNode.dataset.ogab,
               }
             : undefined,
     };
