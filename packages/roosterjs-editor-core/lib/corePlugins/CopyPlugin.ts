@@ -1,6 +1,5 @@
 import normalizeContentColor from '../darkMode/normalizeContentColor';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 // TODO: Rename to DarkmodePlugin in next major release
 /**
@@ -36,16 +35,6 @@ export default class CopyPlugin implements EditorPlugin {
         this.eventDisposer();
         this.eventDisposer = null;
         this.editor = null;
-    }
-
-    /**
-     * Handle plugin events
-     * @param event The event to handle
-     */
-    public onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.ExtractContentWithDom) {
-            normalizeContentColor(event.clonedRoot);
-        }
     }
 
     private onExtract = (isCut: boolean) => (event: Event) => {

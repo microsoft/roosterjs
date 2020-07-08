@@ -3,6 +3,7 @@ import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import mapPluginEvents from './mapPluginEvents';
+import normalizeContentColor from '../darkMode/normalizeContentColor';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
@@ -353,21 +354,26 @@ export default class Editor {
         includeSelectionMarker: boolean = false
     ): string {
         let content = '';
-        if (triggerExtractContentEvent || this.core.inDarkMode) {
+        const isDarkMode = this.core.inDarkMode;
+        if (triggerExtractContentEvent || isDarkMode) {
             const clonedRoot = this.core.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
             const path = includeSelectionMarker && this.getSelectionPath();
             const range = path && createRange(clonedRoot, path.start, path.end);
 
-            this.triggerPluginEvent(
-                PluginEventType.ExtractContentWithDom,
-                {
-                    clonedRoot,
-                },
-                true /*broadcast*/
-            );
+            if (isDarkMode) {
+                normalizeContentColor(clonedRoot);
+            }
 
-            // TODO: Deprecated ExtractContentEvent once we have entity API ready in next major release
             if (triggerExtractContentEvent) {
+                this.triggerPluginEvent(
+                    PluginEventType.ExtractContentWithDom,
+                    {
+                        clonedRoot,
+                    },
+                    true /*broadcast*/
+                );
+
+                // TODO: Deprecated ExtractContentEvent once we have entity API ready in next major release
                 content = this.triggerPluginEvent(
                     PluginEventType.ExtractContent,
                     { content: clonedRoot.innerHTML },
