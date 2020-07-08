@@ -68,7 +68,8 @@ export function getStyleBasedFormatState(editor: Editor): StyleBasedFormatState 
         backgroundColors: ogBackgroundColorNode
             ? {
                   darkModeColor: styles[3],
-                  lightModeColor: ogTextColorNode.dataset.ogsb || ogTextColorNode.dataset.ogab,
+                  lightModeColor:
+                      ogBackgroundColorNode.dataset.ogsb || ogBackgroundColorNode.dataset.ogab,
               }
             : undefined,
     };
