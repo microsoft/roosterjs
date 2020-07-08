@@ -174,8 +174,9 @@ export default class EntityPlugin implements EditorPlugin {
                 }
             });
 
-            ALLOWED_CSS_CLASSES.forEach(css =>
-                sanitizingOption.additionalAllowedCssClasses.push(css)
+            Array.prototype.push.apply(
+                sanitizingOption.additionalAllowedCssClasses,
+                ALLOWED_CSS_CLASSES
             );
         }
     }
