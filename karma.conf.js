@@ -1,4 +1,4 @@
-module.exports = function(config) {
+module.exports = function (config) {
     config.set({
         basePath: '.',
         plugins: [
@@ -8,7 +8,15 @@ module.exports = function(config) {
             'karma-jasmine',
             'karma-sourcemap-loader',
         ],
-        browsers: ['Chrome'],
+        browsers: ['Chrome_no_sandbox'],
+
+        customLaunchers: {
+            Chrome_no_sandbox: {
+                base: 'Chrome',
+                flags: ['--disable-setuid-sandbox', '--no-sandbox'],
+            },
+        },
+
         files: ['karma.tests.js'],
         frameworks: ['jasmine'],
         preprocessors: {
