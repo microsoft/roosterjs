@@ -61,6 +61,6 @@ export default class NodeBlockElement implements BlockElement {
      * Get the text content of this block element
      */
     public getTextContent(): string {
-        return this.element.textContent;
+        return this.element ? this.element.textContent : '';
     }
 }

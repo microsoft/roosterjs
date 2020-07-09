@@ -1,12 +1,12 @@
 import collapseNodes from '../utils/collapseNodes';
 import contains from '../utils/contains';
+import createRange from '../selection/createRange';
 import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import isNodeAfter from '../utils/isNodeAfter';
 import wrap from '../utils/wrap';
 import { BlockElement } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
-import createRange from '../selection/createRange';
 
 const STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
 
@@ -100,6 +100,7 @@ export default class StartEndBlockElement implements BlockElement {
      * Get the text content of this block element
      */
     public getTextContent(): string {
-        return createRange(this.getStartNode(), this.getEndNode()).toString();
+        const range = createRange(this.getStartNode(), this.getEndNode());
+        return range ? range.toString() : '';
     }
 }

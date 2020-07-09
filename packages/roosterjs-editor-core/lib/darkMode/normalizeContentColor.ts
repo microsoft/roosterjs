@@ -1,13 +1,11 @@
 import { toArray } from 'roosterjs-editor-dom';
 
-const DARKMODE_DATASET_NAMES = ['ogsb', 'ogsc', 'ogab', 'ogac'];
-const SELECTOR = DARKMODE_DATASET_NAMES.map(name => `[data-${name}]`).join(',');
-
 /**
  * @internal
  */
 export default function normalizeContentColor(root: HTMLElement) {
-    toArray(root.querySelectorAll(SELECTOR)).forEach(e => {
+    const allChildElements = root.getElementsByTagName('*');
+    toArray(allChildElements).forEach(e => {
         const element = e as HTMLElement;
         if (element.dataset) {
             // Reset color styles based on the content of the ogsc/ogsb data element.
