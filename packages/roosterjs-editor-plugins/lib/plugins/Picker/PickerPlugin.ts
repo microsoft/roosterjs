@@ -182,13 +182,8 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
             case PluginEventType.KeyDown:
                 this.eventHandledOnKeyDown = false;
-                // On Android Webview below 51, the key for KeyboardEvent is not supported and always returns undefined,
-                // so using the charCode property, which is 0 or 229.
-                const isLowVersionAndroid =
-                    event.rawEvent.key == undefined &&
-                    UNIDENTIFIED_CODE.indexOf(event.rawEvent.charCode) > -1;
-                if (event.rawEvent.key == UNIDENTIFIED_KEY || isLowVersionAndroid) {
-                    // On Android, the key for KeyboardEvent is "Unidentified",
+                if (this.isAndroidKeyboardEvent(event)) {
+                    // On Android, the key for KeyboardEvent is "Unidentified" or undefined,
                     // so handling should be done using the input rather than key down event
                     // Since the key down event happens right before the input event, calculate the input
                     // length here in preparation for onAndroidInputEvent
@@ -302,9 +297,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         // This check will always fail on Android since the KeyboardEvent's key is "Unidentified" or undefined
         // However, we don't need to check for modifier events on mobile, so can ignore this check
         return (
-            event.rawEvent.key == UNIDENTIFIED_KEY ||
-            (event.rawEvent.key == undefined &&
-                UNIDENTIFIED_CODE.indexOf(event.rawEvent.charCode) > -1) ||
+            this.isAndroidKeyboardEvent(event) ||
             isCharacterValue(event.rawEvent) ||
             (this.isSuggesting && !isModifierKey(event.rawEvent))
         );
@@ -557,5 +550,17 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         const searcher = cacheGetContentSearcher(event, this.editor);
         const element = searcher ? searcher.getInlineElementBefore() : null;
         return element ? element.getTextContent() : null;
+    }
+
+    private isAndroidKeyboardEvent(event: PluginKeyboardEvent): boolean {
+        // Check keyboard events on Android for further handling.
+        // On Android Webview later 51, the KeyboardEvent's key is "Unidentified".
+        // On Android Webview below 51, the KeyboardEvent's key is not supported and always returns undefined,
+        // so using the charCode property, which is 0 or 229.
+        return (
+            event.rawEvent.key == UNIDENTIFIED_KEY ||
+            (event.rawEvent.key == undefined &&
+                UNIDENTIFIED_CODE.indexOf(event.rawEvent.charCode) > -1)
+        );
     }
 }
