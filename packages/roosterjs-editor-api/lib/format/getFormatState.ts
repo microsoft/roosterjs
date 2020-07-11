@@ -1,6 +1,6 @@
 import { cacheGetElementAtCursor, Editor } from 'roosterjs-editor-core';
-import { getComputedStyles, getTagOfNode, Position } from 'roosterjs-editor-dom';
 import { getPendableFormatState } from 'roosterjs-editor-dom';
+import { getTagOfNode } from 'roosterjs-editor-dom';
 import {
     ElementBasedFormatState,
     FormatState,
@@ -10,6 +10,7 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
+ * @deprecated Use Editor.getElementBasedFormatState() instead
  * Get element based Format State at cursor
  * @param editor The editor instance
  * @param event (Optional) The plugin event, it stores the event cached data for looking up.
@@ -41,38 +42,7 @@ export function getElementBasedFormatState(
  * @returns A StyleBasedFormatState object
  */
 export function getStyleBasedFormatState(editor: Editor): StyleBasedFormatState {
-    const range = editor.getSelectionRange();
-    const node = range && Position.getStart(range).normalize().node;
-    const styles = node ? getComputedStyles(node) : [];
-    const isDarkMode = editor.isDarkMode();
-    const ogTextColorNode =
-        isDarkMode &&
-        (editor.getElementAtCursor('[data-ogsc]', node) ||
-            editor.getElementAtCursor('[data-ogac]', node));
-    const ogBackgroundColorNode =
-        isDarkMode &&
-        (editor.getElementAtCursor('[data-ogsb]', node) ||
-            editor.getElementAtCursor('[data-ogab]', node));
-
-    return {
-        fontName: styles[0],
-        fontSize: styles[1],
-        textColor: styles[2],
-        backgroundColor: styles[3],
-        textColors: ogTextColorNode
-            ? {
-                  darkModeColor: styles[2],
-                  lightModeColor: ogTextColorNode.dataset.ogsc || ogTextColorNode.dataset.ogac,
-              }
-            : undefined,
-        backgroundColors: ogBackgroundColorNode
-            ? {
-                  darkModeColor: styles[3],
-                  lightModeColor:
-                      ogBackgroundColorNode.dataset.ogsb || ogBackgroundColorNode.dataset.ogab,
-              }
-            : undefined,
-    };
+    return editor.getStyleBasedFormatState();
 }
 
 /**
@@ -89,7 +59,7 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
     return {
         ...getPendableFormatState(editor.getDocument()),
         ...getElementBasedFormatState(editor, event),
-        ...getStyleBasedFormatState(editor),
+        ...editor.getStyleBasedFormatState(),
         canUndo: editor.canUndo(),
         canRedo: editor.canRedo(),
     };

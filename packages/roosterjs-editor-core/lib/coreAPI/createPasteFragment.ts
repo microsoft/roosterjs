@@ -3,7 +3,6 @@ import {
     applyFormat,
     applyTextStyle,
     createDefaultHtmlSanitizerOptions,
-    getComputedStyles,
     getInheritableStyles,
     getPendableFormatState,
     HtmlSanitizer,
@@ -21,6 +20,7 @@ import {
 
 const START_FRAGMENT = '<!--StartFragment-->';
 const END_FRAGMENT = '<!--EndFragment-->';
+const NBSP_HTML = '\u00A0';
 
 export const createPasteFragment: CreatePasteFragment = (
     core: EditorCore,
@@ -53,7 +53,7 @@ export const createPasteFragment: CreatePasteFragment = (
 
     // Step 2: Fill the BeforePasteEvent object, especially the fragment for paste
     if (pasteOption == PasteOption.PasteImage && imageDataUri) {
-        const img = document.createElement('img');
+        const img = core.document.createElement('img');
         img.style.maxWidth = '100%';
         img.src = imageDataUri;
         fragment.appendChild(img);
@@ -72,7 +72,7 @@ export const createPasteFragment: CreatePasteFragment = (
         const startIndex = rawHtml.indexOf(START_FRAGMENT);
         const endIndex = rawHtml.lastIndexOf(END_FRAGMENT);
 
-        if (startIndex >= 0 && endIndex >= 0 && endIndex >= startIndex + START_FRAGMENT.length) {
+        if (startIndex >= 0 && endIndex >= startIndex + START_FRAGMENT.length) {
             event.htmlBefore = rawHtml.substr(0, startIndex);
             event.htmlAfter = rawHtml.substr(endIndex + END_FRAGMENT.length);
             doc.body.innerHTML = clipboardData.html = rawHtml.substring(
@@ -90,13 +90,15 @@ export const createPasteFragment: CreatePasteFragment = (
         }
 
         if (applyCurrentStyle && startPos) {
-            applyTextStyle(fragment, node =>
-                applyFormat(node, getCurrentFormat(core.document, startPos.node))
-            );
+            const format = getCurrentFormat(core, startPos.node);
+            applyTextStyle(fragment, node => applyFormat(node, format));
         }
     } else if (text) {
         text.split('\n').forEach((line, index, lines) => {
-            line = line.replace(/^ /g, '\u00A0').replace(/\r/g, '').replace(/ {2}/g, ' \u00A0');
+            line = line
+                .replace(/^ /g, NBSP_HTML)
+                .replace(/\r/g, '')
+                .replace(/ {2}/g, ' ' + NBSP_HTML);
 
             const node = line == '' ? document.createElement('br') : document.createTextNode(line);
 
@@ -116,15 +118,16 @@ export const createPasteFragment: CreatePasteFragment = (
     return fragment;
 };
 
-function getCurrentFormat(doc: HTMLDocument, node: Node): DefaultFormat {
-    const focusedNode = node;
-    const pendableFormat = getPendableFormatState(doc);
-    const styleBasedForamt = getComputedStyles(focusedNode);
+function getCurrentFormat(core: EditorCore, node: Node): DefaultFormat {
+    const pendableFormat = getPendableFormatState(core.document);
+    const styleBasedForamt = core.api.getStyleBasedFormatState(core, node);
     return {
-        fontFamily: styleBasedForamt[0],
-        fontSize: styleBasedForamt[1],
-        textColor: styleBasedForamt[2],
-        backgroundColor: styleBasedForamt[3],
+        fontFamily: styleBasedForamt.fontName,
+        fontSize: styleBasedForamt.fontSize,
+        textColor: styleBasedForamt.textColor,
+        backgroundColor: styleBasedForamt.backgroundColor,
+        textColors: styleBasedForamt.textColors,
+        backgroundColors: styleBasedForamt.backgroundColors,
         bold: pendableFormat.isBold,
         italic: pendableFormat.isItalic,
         underline: pendableFormat.isUnderline,

@@ -1,4 +1,6 @@
+import tryTriggerEntityEvent from './tryTriggerEntityEvent';
 import { Editor } from 'roosterjs-editor-core';
+import { EntityOperation } from 'roosterjs-editor-types';
 import { serializeEntityInfo } from './EntityInfo';
 import { wrap } from 'roosterjs-editor-dom';
 
@@ -28,6 +30,10 @@ export default function createEntityWrapper(
     // will just work fine.
     if (!isBlock && isReadonly) {
         wrapper.style.display = 'inline-block';
+    }
+
+    if (editor.contains(wrapper)) {
+        tryTriggerEntityEvent(editor, wrapper, EntityOperation.NewEntity);
     }
 
     return wrapper;

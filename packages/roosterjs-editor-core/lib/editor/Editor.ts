@@ -27,6 +27,7 @@ import {
     Region,
     RegionType,
     SelectionPath,
+    StyleBasedFormatState,
 } from 'roosterjs-editor-types';
 import {
     collapseNodes,
@@ -998,6 +999,17 @@ export default class Editor {
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
         this.core.corePlugins.edit.addFeature(feature);
+    }
+
+    /**
+     * Get style based format state from current selection, including font name/size and colors
+     */
+    public getStyleBasedFormatState(node?: Node): StyleBasedFormatState {
+        if (!node) {
+            const range = this.getSelectionRange();
+            node = range && Position.getStart(range).normalize().node;
+        }
+        return this.core.api.getStyleBasedFormatState(this.core, node);
     }
 
     //#endregion

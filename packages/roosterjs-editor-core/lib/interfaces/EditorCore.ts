@@ -17,6 +17,7 @@ import {
     NodePosition,
     PluginEvent,
     PluginEventType,
+    StyleBasedFormatState,
 } from 'roosterjs-editor-types';
 
 /**
@@ -191,6 +192,13 @@ export type GetCustomData = <T>(
 ) => T;
 
 /**
+ * Get style based format state from current selection, including font name/size and colors
+ * @param core The EditorCore objects
+ * @param node The node to get style from
+ */
+export type GetStyleBasedFormatState = (core: EditorCore, node: Node) => StyleBasedFormatState;
+
+/**
  * Get current or cached selection range
  * @param core The EditorCore object
  * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
@@ -287,6 +295,13 @@ export interface CoreApiMap {
      * dispose editor.
      */
     getCustomData: GetCustomData;
+
+    /**
+     * Get style based format state from current selection, including font name/size and colors
+     * @param core The EditorCore objects
+     * @param node The node to get style from
+     */
+    getStyleBasedFormatState: GetStyleBasedFormatState;
 
     /**
      * Get current or cached selection range

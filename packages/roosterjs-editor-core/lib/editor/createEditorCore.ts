@@ -18,6 +18,7 @@ import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
 import { getCustomData } from '../coreAPI/getCustomData';
 import { getSelectionRange } from '../coreAPI/getSelectionRange';
+import { getStyleBasedFormatState } from '../coreAPI/getStyleBasedFormatState';
 import { hasFocus } from '../coreAPI/hasFocus';
 import { insertNode } from '../coreAPI/insertNode';
 import { select, selectRange } from '../coreAPI/selectRange';
@@ -90,6 +91,7 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
         focus: map.focus || focus,
         getCustomData: map.getCustomData || getCustomData,
         getSelectionRange: map.getSelectionRange || getSelectionRange,
+        getStyleBasedFormatState: map.getStyleBasedFormatState || getStyleBasedFormatState,
         hasFocus: map.hasFocus || hasFocus,
         insertNode: map.insertNode || insertNode,
         createPasteFragment: map.createPasteFragment || createPasteFragment,

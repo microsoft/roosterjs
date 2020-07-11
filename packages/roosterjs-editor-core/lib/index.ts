@@ -15,6 +15,7 @@ export {
     Focus,
     GetCustomData,
     GetSelectionRange,
+    GetStyleBasedFormatState,
     HasFocus,
     InsertNode,
     Select,
