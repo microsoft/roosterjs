@@ -260,7 +260,7 @@ export default class HtmlSanitizer {
 
             let newValue = callback
                 ? callback(value, element, context)
-                : this.allowedAttributes.indexOf(name) >= 0
+                : this.allowedAttributes.indexOf(name) >= 0 || name.indexOf('data-') == 0
                 ? value
                 : null;
 
