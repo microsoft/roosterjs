@@ -17,6 +17,9 @@ import {
     unwrap,
 } from 'roosterjs-editor-dom';
 
+/**
+ * @internal
+ */
 export function isWordOnlineWithList(fragment: DocumentFragment): boolean {
     return !!(fragment && fragment.querySelector(WORD_ONLINE_IDENTIFYING_SELECTOR));
 }
@@ -52,6 +55,7 @@ export function isWordOnlineWithList(fragment: DocumentFragment): boolean {
 //
 
 /**
+ * @internal
  * Convert text copied from word online into text that's workable with rooster editor
  * @param fragment Document fragment that is being pasted into editor.
  */

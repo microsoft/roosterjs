@@ -1,10 +1,8 @@
 import EditorCore, { GetStyleBasedFormatState } from '../interfaces/EditorCore';
 import { findClosestElementAncestor, getComputedStyles } from 'roosterjs-editor-dom';
 
-const ORIGINAL_STYLE_COLOR_SELECTOR = '[data-ogsc]';
-const ORIGINAL_STYLE_BACK_COLOR_SELECTOR = '[data-ogsb]';
-const ORIGINAL_ATTRIBUTE_COLOR_SELECTOR = '[data-ogac]';
-const ORIGINAL_ATTRIBUTE_BACK_COLOR_SELECTOR = '[data-ogab]';
+const ORIGINAL_STYLE_COLOR_SELECTOR = '[data-ogsc],[data-ogac]';
+const ORIGINAL_STYLE_BACK_COLOR_SELECTOR = '[data-ogsb],[data-ogab]';
 
 /**
  * Get style based format state from current selection, including font name/size and colors
@@ -20,18 +18,11 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
     }
     const styles = node ? getComputedStyles(node) : [];
     const isDarkMode = core.inDarkMode;
+    const root = core.contentDiv;
     const ogTextColorNode =
-        isDarkMode &&
-        (findClosestElementAncestor(node, core.contentDiv, ORIGINAL_STYLE_COLOR_SELECTOR) ||
-            findClosestElementAncestor(node, core.contentDiv, ORIGINAL_ATTRIBUTE_COLOR_SELECTOR));
+        isDarkMode && findClosestElementAncestor(node, root, ORIGINAL_STYLE_COLOR_SELECTOR);
     const ogBackgroundColorNode =
-        isDarkMode &&
-        (findClosestElementAncestor(node, core.contentDiv, ORIGINAL_STYLE_BACK_COLOR_SELECTOR) ||
-            findClosestElementAncestor(
-                node,
-                core.contentDiv,
-                ORIGINAL_ATTRIBUTE_BACK_COLOR_SELECTOR
-            ));
+        isDarkMode && findClosestElementAncestor(node, root, ORIGINAL_STYLE_BACK_COLOR_SELECTOR);
 
     return {
         fontName: styles[0],

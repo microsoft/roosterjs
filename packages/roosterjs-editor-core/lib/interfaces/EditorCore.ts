@@ -157,6 +157,23 @@ export type AttachDomEvent = (
 ) => () => void;
 
 /**
+ * Create a DocumentFragment for paste from a ClipboardData
+ * @param core The EditorCore object.
+ * @param clipboardData Clipboard data retrieved from clipboard
+ * @param position The position to paste to
+ * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
+ * @param applyCurrentStyle True if apply format of current selection to the pasted content,
+ * false to keep original foramt
+ */
+export type CreatePasteFragment = (
+    core: EditorCore,
+    clipboardData: ClipboardData,
+    position: NodePosition,
+    pasteAsText: boolean,
+    applyCurrentStyle: boolean
+) => DocumentFragment;
+
+/**
  * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
  * Undo snapshot will not be added if this call is nested inside another editWithUndo() call.
  * @param core The EditorCore object
@@ -221,21 +238,6 @@ export type HasFocus = (core: EditorCore) => boolean;
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
 
 /**
- * Create a DocumentFragment for paste from a ClipboardData
- * @param core The EditorCore object.
- * @param clipboardData Clipboard data retrieved from clipboard
- * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
- * @param applyCurrentStyle True if apply format of current selection to the pasted content,
- * false to keep original foramt
- */
-export type CreatePasteFragment = (
-    core: EditorCore,
-    clipboardData: ClipboardData,
-    pasteAsText: boolean,
-    applyCurrentStyle: boolean
-) => DocumentFragment;
-
-/**
  * @deprecated Use SelectRange instead
  * Select content
  * @param core The EditorCore object
@@ -269,6 +271,17 @@ export interface CoreApiMap {
      * @param beforeDispatch Optional callback function to be invoked when the DOM event is triggered before trigger plugin event
      */
     attachDomEvent: AttachDomEvent;
+
+    /**
+     * Create a DocumentFragment for paste from a ClipboardData
+     * @param core The EditorCore object.
+     * @param clipboardData Clipboard data retrieved from clipboard
+     * @param position The position to paste to
+     * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
+     * @param applyCurrentStyle True if apply format of current selection to the pasted content,
+     * false to keep original foramt
+     */
+    createPasteFragment: CreatePasteFragment;
 
     /**
      * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
@@ -324,16 +337,6 @@ export interface CoreApiMap {
      * @param option An insert option object to specify how to insert the node
      */
     insertNode: InsertNode;
-
-    /**
-     * Create a DocumentFragment for paste from a ClipboardData
-     * @param core The EditorCore object.
-     * @param clipboardData Clipboard data retrieved from clipboard
-     * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
-     * @param applyCurrentStyle True if apply format of current selection to the pasted content,
-     * false to keep original foramt
-     */
-    createPasteFragment: CreatePasteFragment;
 
     /**
      * @deprecated Use SelectRange instead

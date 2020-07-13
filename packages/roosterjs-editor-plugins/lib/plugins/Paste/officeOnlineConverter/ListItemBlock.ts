@@ -1,4 +1,5 @@
 /**
+ * @internal
  * Type that holds all the info of a consecutive list item block.
  */
 export default interface ListItemBlock {
@@ -24,6 +25,7 @@ export default interface ListItemBlock {
 }
 
 /**
+ * @internal
  * Initialize an empty ListItemBlock
  */
 export function createListItemBlock(listItem: Element = null): ListItemBlock {

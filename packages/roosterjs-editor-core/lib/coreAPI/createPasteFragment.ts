@@ -6,7 +6,6 @@ import {
     getInheritableStyles,
     getPendableFormatState,
     HtmlSanitizer,
-    Position,
     toArray,
     wrap,
 } from 'roosterjs-editor-dom';
@@ -16,6 +15,7 @@ import {
     PasteOption,
     PluginEventType,
     DefaultFormat,
+    NodePosition,
 } from 'roosterjs-editor-types';
 
 const START_FRAGMENT = '<!--StartFragment-->';
@@ -25,30 +25,14 @@ const NBSP_HTML = '\u00A0';
 export const createPasteFragment: CreatePasteFragment = (
     core: EditorCore,
     clipboardData: ClipboardData,
+    position: NodePosition,
     pasteAsText: boolean,
     applyCurrentStyle: boolean
 ) => {
     // Step 1: Prepare BeforePasteEvent object
-    const range = core.api.getSelectionRange(core, false /*tryGetFromCache*/);
-    const startPos = range && Position.getStart(range);
+    const event = createBeforePasteEvent(core, clipboardData, pasteAsText);
+    const { fragment, pasteOption } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
-    const pasteOption = pasteAsText
-        ? PasteOption.PasteText
-        : clipboardData.text || !clipboardData.image
-        ? PasteOption.PasteHtml
-        : PasteOption.PasteImage;
-    const fragment = core.document.createDocumentFragment();
-    const event: BeforePasteEvent = {
-        eventType: PluginEventType.BeforePaste,
-        clipboardData,
-        pasteOption,
-        fragment,
-        sanitizingOption: createDefaultHtmlSanitizerOptions(),
-        htmlBefore: '',
-        htmlAfter: '',
-        htmlAttributes: {},
-    };
-
     let doc: HTMLDocument;
 
     // Step 2: Fill the BeforePasteEvent object, especially the fragment for paste
@@ -60,8 +44,7 @@ export const createPasteFragment: CreatePasteFragment = (
     } else if (
         pasteOption == PasteOption.PasteHtml &&
         rawHtml &&
-        (doc = new DOMParser().parseFromString(rawHtml, 'text/html')) &&
-        doc.body
+        (doc = new DOMParser().parseFromString(rawHtml, 'text/html'))?.body
     ) {
         const attributes = doc.querySelector('html')?.attributes;
         (attributes ? toArray(attributes) : []).reduce((attrs, attr) => {
@@ -89,8 +72,8 @@ export const createPasteFragment: CreatePasteFragment = (
             fragment.appendChild(doc.body.firstChild);
         }
 
-        if (applyCurrentStyle && startPos) {
-            const format = getCurrentFormat(core, startPos.node);
+        if (applyCurrentStyle && position) {
+            const format = getCurrentFormat(core, position.node);
             applyTextStyle(fragment, node => applyFormat(node, format));
         }
     } else if (text) {
@@ -113,7 +96,7 @@ export const createPasteFragment: CreatePasteFragment = (
     const sanitizer = new HtmlSanitizer(event.sanitizingOption);
 
     sanitizer.convertGlobalCssToInlineCss(fragment);
-    sanitizer.sanitize(fragment, startPos && getInheritableStyles(startPos.element));
+    sanitizer.sanitize(fragment, position && getInheritableStyles(position.element));
 
     return fragment;
 };
@@ -131,5 +114,28 @@ function getCurrentFormat(core: EditorCore, node: Node): DefaultFormat {
         bold: pendableFormat.isBold,
         italic: pendableFormat.isItalic,
         underline: pendableFormat.isUnderline,
+    };
+}
+
+function createBeforePasteEvent(
+    core: EditorCore,
+    clipboardData: ClipboardData,
+    pasteAsText: boolean
+): BeforePasteEvent {
+    const pasteOption = pasteAsText
+        ? PasteOption.PasteText
+        : clipboardData.text || !clipboardData.image
+        ? PasteOption.PasteHtml
+        : PasteOption.PasteImage;
+    const fragment = core.document.createDocumentFragment();
+    return {
+        eventType: PluginEventType.BeforePaste,
+        clipboardData,
+        pasteOption,
+        fragment,
+        sanitizingOption: createDefaultHtmlSanitizerOptions(),
+        htmlBefore: '',
+        htmlAfter: '',
+        htmlAttributes: {},
     };
 }

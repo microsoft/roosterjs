@@ -5,8 +5,10 @@ const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
 const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
 const LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
 const LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
+const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
 
 /**
+ * @internal
  * Convert pasted content from Excel, add borders when source doc doesn't have a border
  * @param doc HTML Document which contains the content from Excel
  */
@@ -42,7 +44,7 @@ export default function convertPastedContentFromExcel(event: BeforePasteEvent) {
 
     chainSanitizerCallback(sanitizingOption.elementCallbacks, 'TD', element => {
         if (element.style.border == 'none') {
-            element.style.border = 'solid 1px #d4d4d4';
+            element.style.border = DEFAULT_BORDER_STYLE;
         }
         return true;
     });

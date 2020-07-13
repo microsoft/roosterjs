@@ -4,7 +4,10 @@ import { createWordConverter } from './wordConverter';
 import { createWordConverterArguments } from './WordConverterArguments';
 import { processNodeConvert, processNodesDiscovery } from './converterUtils';
 
-/** Converts all the Word generated list items in the specified node into standard HTML UL and OL tags */
+/**
+ * @internal
+ * Converts all the Word generated list items in the specified node into standard HTML UL and OL tags
+ */
 export default function convertPastedContentFromWord(event: BeforePasteEvent) {
     const { sanitizingOption, fragment } = event;
 

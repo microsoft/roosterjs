@@ -479,7 +479,10 @@ export default class Editor {
         pasteAsText?: boolean,
         applyCurrentFormat?: boolean
     ) {
-        if (clipboardData) {
+        const range = this.getSelectionRange();
+        const pos = range && Position.getStart(range);
+
+        if (clipboardData && pos) {
             if (clipboardData.snapshotBeforePaste) {
                 // Restore original content before paste a new one
                 this.setContent(clipboardData.snapshotBeforePaste);
@@ -493,6 +496,7 @@ export default class Editor {
             const fragment = this.core.api.createPasteFragment(
                 this.core,
                 clipboardData,
+                pos,
                 pasteAsText,
                 applyCurrentFormat
             );

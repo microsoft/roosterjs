@@ -10,7 +10,6 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
- * @deprecated Use Editor.getElementBasedFormatState() instead
  * Get element based Format State at cursor
  * @param editor The editor instance
  * @param event (Optional) The plugin event, it stores the event cached data for looking up.
@@ -37,6 +36,7 @@ export function getElementBasedFormatState(
 }
 
 /**
+ * @deprecated Use Editor.getStyleBasedFormatState() instead
  * Get style based Format State at cursor
  * @param editor The editor instance
  * @returns A StyleBasedFormatState object
