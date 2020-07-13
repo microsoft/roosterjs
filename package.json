@@ -1,6 +1,6 @@
 {
     "name": "roosterjs",
-    "version": "7.14.0",
+    "version": "7.14.0-vnext.0",
     "description": "Framework-independent javascript editor",
     "repository": {
         "type": "git",
@@ -22,11 +22,7 @@
         "start": "webpack-dev-server",
         "test": "karma start",
         "test:debug": "karma start --no-single-run",
-        "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod builddemo publish",
-        "publish:dark": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod builddemo publishdark",
-        "instrumentation": "cd publish/samplesite/instrumentation-tests && npm run instrumentation",
-        "instrumentation:chrome": "cd publish/samplesite/instrumentation-tests && npm run instrumentation:chrome",
-        "instrumentation:firefox": "cd publish/samplesite/instrumentation-tests && npm run instrumentation:firefox"
+        "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod builddemo publish"
     },
     "devDependencies": {
         "@types/jasmine": "3.5.10",

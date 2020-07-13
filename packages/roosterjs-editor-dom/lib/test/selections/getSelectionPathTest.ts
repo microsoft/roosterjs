@@ -1,5 +1,5 @@
+import createRange from '../../selection/createRange';
 import getSelectionPath from '../../selection/getSelectionPath';
-import { getRangeFromSelectionPath } from '../../selection/createRange';
 
 function dom(domString: string): HTMLElement {
     const parsedResult = new DOMParser().parseFromString(domString, 'text/html').body
@@ -11,7 +11,7 @@ describe('getPositionPath', () => {
     describe('When deserializing a selection onto a new DOM that was previously serialized from an old DOM', () => {
         function testSelectionSeralizationIsSame(element: HTMLElement, initialRange: Range) {
             const paths = getSelectionPath(element, initialRange);
-            const resultingRange = getRangeFromSelectionPath(element, paths);
+            const resultingRange = createRange(element, paths.start, paths.end);
             expect(resultingRange.startContainer).toEqual(initialRange.startContainer);
             expect(resultingRange.startOffset).toEqual(initialRange.startOffset);
             expect(resultingRange.endContainer).toEqual(initialRange.endContainer);
@@ -89,7 +89,7 @@ describe('getPositionPath', () => {
             // Act
             const paths = getSelectionPath(div, initialRange);
             const divCopy = dom(div.outerHTML);
-            const resultingRange = getRangeFromSelectionPath(divCopy, paths);
+            const resultingRange = createRange(divCopy, paths.start, paths.end);
 
             expect(resultingRange.startContainer.textContent).toEqual(
                 'blahblahblah!This is where the selection will be'
@@ -119,7 +119,7 @@ describe('getPositionPath', () => {
             const paths = getSelectionPath(div, initialRange);
             const divCopy = dom(div.outerHTML);
             expect(divCopy.childNodes.length).toBe(3);
-            const resultingRange = getRangeFromSelectionPath(divCopy, paths);
+            const resultingRange = createRange(divCopy, paths.start, paths.end);
 
             // Assert
             expect(resultingRange.startContainer.textContent).toEqual(

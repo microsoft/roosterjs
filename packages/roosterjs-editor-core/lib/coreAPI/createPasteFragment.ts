@@ -58,10 +58,7 @@ export const createPasteFragment: CreatePasteFragment = (
         if (startIndex >= 0 && endIndex >= startIndex + START_FRAGMENT.length) {
             event.htmlBefore = rawHtml.substr(0, startIndex);
             event.htmlAfter = rawHtml.substr(endIndex + END_FRAGMENT.length);
-            doc.body.innerHTML = clipboardData.html = rawHtml.substring(
-                startIndex + START_FRAGMENT.length,
-                endIndex
-            );
+            doc.body.innerHTML = rawHtml.substring(startIndex + START_FRAGMENT.length, endIndex);
         }
 
         const styles = toArray(doc.querySelectorAll('style'));

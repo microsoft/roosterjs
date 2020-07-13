@@ -66,10 +66,6 @@ export default class CorePastePlugin implements EditorPlugin {
             // Will be set later
             snapshotBeforePaste: null,
             imageDataUri: null,
-
-            // TODO: deprecated properties
-            html: null,
-            originalFormat: null,
         };
 
         if (clipboardData.image) {

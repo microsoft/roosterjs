@@ -1,14 +1,8 @@
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
-import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { WAC_IDENTIFING_SELECTOR } from './officeOnlineConverter/constants';
-import {
-    AttributeCallbackMap,
-    ClipboardData,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
 import convertPastedContentFromWordOnline, {
     isWordOnlineWithList,
 } from './officeOnlineConverter/convertPastedContentFromWordOnline';
@@ -25,15 +19,6 @@ const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
  * 3. Content copied from Word Online or Onenote Online
  */
 export default class Paste implements EditorPlugin {
-    private editor: Editor;
-
-    /**
-     * Create an instance of Paste
-     * @param preserved @deprecated Not used. Preserved parameter only used for compatibility with old code
-     * @param attributeCallbacks @deprecated A set of callbacks to help handle html attribute during sanitization
-     */
-    constructor(preserved?: any, private attributeCallbacks?: AttributeCallbackMap) {}
-
     /**
      * Get a friendly name of  this plugin
      */
@@ -45,16 +30,12 @@ export default class Paste implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
-        this.editor = editor;
-    }
+    initialize(editor: Editor) {}
 
     /**
      * Dispose this plugin
      */
-    dispose() {
-        this.editor = null;
-    }
+    dispose() {}
 
     /**
      * Handle events triggered from editor
@@ -62,7 +43,7 @@ export default class Paste implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.BeforePaste) {
-            const { htmlAttributes, fragment, sanitizingOption } = event;
+            const { htmlAttributes, fragment } = event;
             let wacListElements: NodeListOf<Element>;
 
             if (htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE) {
@@ -84,44 +65,6 @@ export default class Paste implements EditorPlugin {
                     convertPastedContentFromWordOnline(fragment);
                 }
             }
-
-            // TODO: Deprecate attributeCallbacks parameter
-            if (this.attributeCallbacks) {
-                Object.keys(this.attributeCallbacks).forEach(name => {
-                    chainSanitizerCallback(
-                        sanitizingOption.attributeCallbacks,
-                        name,
-                        this.attributeCallbacks[name]
-                    );
-                });
-            }
         }
-    }
-
-    /**
-     * @deprecated
-     * Paste into editor using passed in clipboardData with original format
-     * @param clipboardData The clipboardData to paste
-     */
-    public pasteOriginal(clipboardData: ClipboardData) {
-        this.editor.paste(clipboardData);
-    }
-
-    /**
-     * @deprecated
-     * Paste plain text into editor using passed in clipboardData
-     * @param clipboardData The clipboardData to paste
-     */
-    public pasteText(clipboardData: ClipboardData) {
-        this.editor.paste(clipboardData, true /*pasteAsText*/);
-    }
-
-    /**
-     * @deprecated
-     * Paste into editor using passed in clipboardData with curent format
-     * @param clipboardData The clipboardData to paste
-     */
-    public pasteAndMergeFormat(clipboardData: ClipboardData) {
-        this.editor.paste(clipboardData, false /*pasteAsText*/, true /*applyCurrentFormat*/);
     }
 }

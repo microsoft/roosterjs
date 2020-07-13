@@ -98,7 +98,7 @@ export default class EventViewPane extends React.Component<
 
                 sanitizer.convertGlobalCssToInlineCss(fragment);
                 sanitizer.sanitize(fragment);
-                event.clipboardData.html = this.getHtml(fragment);
+                (event.clipboardData as any).html = this.getHtml(fragment);
             }
 
             this.events.push({
@@ -156,7 +156,10 @@ export default class EventViewPane extends React.Component<
                         Types=
                         {event.clipboardData.types.join()}
                         {this.renderPasteContent('Palin text', event.clipboardData.text)}
-                        {this.renderPasteContent('Sanitized HTML', event.clipboardData.html)}
+                        {this.renderPasteContent(
+                            'Sanitized HTML',
+                            (event.clipboardData as any).html
+                        )}
                         {this.renderPasteContent('Original HTML', event.clipboardData.rawHtml)}
                         {this.renderPasteContent('Image', event.clipboardData.image, img => (
                             <img

@@ -792,13 +792,6 @@ export default class Editor {
     }
 
     /**
-     * @deprecated Use triggerPluginEvent instead
-     */
-    public triggerEvent(pluginEvent: PluginEvent, broadcast: boolean = true) {
-        this.core.api.triggerEvent(this.core, pluginEvent, broadcast);
-    }
-
-    /**
      * Trigger a ContentChangedEvent
      * @param source Source of this event, by default is 'SetContent'
      * @param data additional data for this event

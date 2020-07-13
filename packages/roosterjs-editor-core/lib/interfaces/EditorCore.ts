@@ -238,13 +238,6 @@ export type HasFocus = (core: EditorCore) => boolean;
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
 
 /**
- * @deprecated Use SelectRange instead
- * Select content
- * @param core The EditorCore object
- */
-export type Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => boolean;
-
-/**
  * Change the editor selection to the given range
  * @param core The EditorCore object
  * @param range The range to select
@@ -337,13 +330,6 @@ export interface CoreApiMap {
      * @param option An insert option object to specify how to insert the node
      */
     insertNode: InsertNode;
-
-    /**
-     * @deprecated Use SelectRange instead
-     * Select content
-     * @param core The EditorCore object
-     */
-    select: Select;
 
     /**
      * Change the editor selection to the given range

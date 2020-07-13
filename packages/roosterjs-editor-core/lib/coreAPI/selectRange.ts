@@ -1,5 +1,5 @@
-import EditorCore, { Select, SelectRange } from '../interfaces/EditorCore';
-import { Browser, contains, createRange, isRange } from 'roosterjs-editor-dom';
+import EditorCore, { SelectRange } from '../interfaces/EditorCore';
+import { Browser, contains } from 'roosterjs-editor-dom';
 import { hasFocus } from './hasFocus';
 
 /**
@@ -61,12 +61,4 @@ export const selectRange: SelectRange = (
     }
 
     return true;
-};
-
-/**
- * @deprecated Only for compatibility with existing code, don't use ths function, use selectRange instead
- */
-export const select: Select = (core: EditorCore, arg1: any, arg2?: any, arg3?: any, arg4?: any) => {
-    let range = isRange(arg1) ? arg1 : createRange(arg1, arg2, arg3, arg4);
-    return core.api.selectRange(core, range);
 };

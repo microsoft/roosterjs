@@ -21,7 +21,7 @@ import { getSelectionRange } from '../coreAPI/getSelectionRange';
 import { getStyleBasedFormatState } from '../coreAPI/getStyleBasedFormatState';
 import { hasFocus } from '../coreAPI/hasFocus';
 import { insertNode } from '../coreAPI/insertNode';
-import { select, selectRange } from '../coreAPI/selectRange';
+import { selectRange } from '../coreAPI/selectRange';
 import { triggerEvent } from '../coreAPI/triggerEvent';
 
 /**
@@ -95,7 +95,6 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
         hasFocus: map.hasFocus || hasFocus,
         insertNode: map.insertNode || insertNode,
         createPasteFragment: map.createPasteFragment || createPasteFragment,
-        select: map.select || select,
         selectRange: map.selectRange || selectRange,
         triggerEvent: map.triggerEvent || triggerEvent,
     };

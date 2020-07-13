@@ -17,22 +17,22 @@ export default function convertPastedContentFromExcel(event: BeforePasteEvent) {
         fragment,
         sanitizingOption,
         htmlBefore,
-        clipboardData: { html },
+        clipboardData: { rawHtml },
     } = event;
-    let newHtml = event.clipboardData.html;
+    let newHtml = rawHtml;
 
-    if (html.match(LAST_TD_END_REGEX)) {
+    if (rawHtml.match(LAST_TD_END_REGEX)) {
         const trMatch = htmlBefore.match(LAST_TR_REGEX);
         const tr = trMatch ? trMatch[0] : '<TR>';
-        newHtml = tr + html + '</TR>';
+        newHtml = tr + rawHtml + '</TR>';
     }
-    if (html.match(LAST_TR_END_REGEX)) {
+    if (rawHtml.match(LAST_TR_END_REGEX)) {
         let tableMatch = htmlBefore.match(LAST_TABLE_REGEX);
         let table = tableMatch ? tableMatch[0] : '<TABLE>';
-        newHtml = table + html + '</TABLE>';
+        newHtml = table + rawHtml + '</TABLE>';
     }
 
-    if (newHtml != html) {
+    if (newHtml != rawHtml) {
         const doc = new DOMParser().parseFromString(newHtml, 'text/html');
         while (fragment.firstChild) {
             fragment.removeChild(fragment.firstChild);

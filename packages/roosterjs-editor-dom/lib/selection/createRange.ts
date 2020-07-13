@@ -1,7 +1,7 @@
 import isNode from '../typeUtils/isNode';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import Position from './Position';
-import { NodePosition, NodeType, PositionType, SelectionPath } from 'roosterjs-editor-types';
+import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
 
 /**
  * Create a range around the given node(s)
@@ -133,14 +133,4 @@ function getPositionFromPath(node: Node, path: number[]): NodePosition {
     }
 
     return new Position(node, offset);
-}
-
-/**
- * @deprecated Use createRange instead
- * Get range from the given selection path
- * @param rootNode Root node of the selection path
- * @param path The selection path which contains start and end position path
- */
-export function getRangeFromSelectionPath(rootNode: HTMLElement, path: SelectionPath) {
-    return createRange(rootNode, path.start, path.end);
 }

@@ -6,7 +6,6 @@ import {
     FormatState,
     PluginEvent,
     QueryScope,
-    StyleBasedFormatState,
 } from 'roosterjs-editor-types';
 
 /**
@@ -33,16 +32,6 @@ export function getElementBasedFormatState(
         canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],
         isBlockQuote: !!editor.queryElements('blockquote', QueryScope.OnSelection)[0],
     };
-}
-
-/**
- * @deprecated Use Editor.getStyleBasedFormatState() instead
- * Get style based Format State at cursor
- * @param editor The editor instance
- * @returns A StyleBasedFormatState object
- */
-export function getStyleBasedFormatState(editor: Editor): StyleBasedFormatState {
-    return editor.getStyleBasedFormatState();
 }
 
 /**

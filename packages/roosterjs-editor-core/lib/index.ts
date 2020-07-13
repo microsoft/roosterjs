@@ -18,7 +18,6 @@ export {
     GetStyleBasedFormatState,
     HasFocus,
     InsertNode,
-    Select,
     SelectRange,
     TriggerEvent,
 } from './interfaces/EditorCore';

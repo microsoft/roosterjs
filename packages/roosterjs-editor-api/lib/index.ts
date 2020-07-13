@@ -7,11 +7,7 @@ export {
 } from './format/clearBlockFormat';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
-export {
-    default as getFormatState,
-    getElementBasedFormatState,
-    getStyleBasedFormatState,
-} from './format/getFormatState';
+export { default as getFormatState, getElementBasedFormatState } from './format/getFormatState';
 export { default as insertImage } from './format/insertImage';
 export { default as insertTable } from './table/insertTable';
 export { default as editTable } from './table/editTable';
@@ -37,7 +33,3 @@ export { default as toggleSubscript } from './format/toggleSubscript';
 export { default as toggleSuperscript } from './format/toggleSuperscript';
 export { default as toggleUnderline } from './format/toggleUnderline';
 export { default as toggleHeader } from './format/toggleHeader';
-
-// @deprecated the function getPendableFormatState will still be available from
-// roosterjs-editor-dom package, keep export it here just for compatibility
-export { getPendableFormatState } from 'roosterjs-editor-dom';
