@@ -70,6 +70,8 @@ export { default as createSnapshots } from './snapshots/createSnapshots';
 export { default as HtmlSanitizer } from './htmlSanitizer/HtmlSanitizer';
 export { default as htmlToDom, splitWithFragment } from './htmlSanitizer/htmlToDom';
 export { default as getInheritableStyles } from './htmlSanitizer/getInheritableStyles';
+export { default as createDefaultHtmlSanitizerOptions } from './htmlSanitizer/createDefaultHtmlSanitizerOptions';
+export { default as chainSanitizerCallback } from './htmlSanitizer/chainSanitizerCallback';
 
 export { default as isDocumentFragment } from './typeUtils/isDocumentFragment';
 export { default as isHTMLElement } from './typeUtils/isHTMLElement';

@@ -3,7 +3,10 @@ import { NodeType } from 'roosterjs-editor-types';
 /** NodeId attribute */
 const NODE_ID_ATTRIBUTE_NAME = 'NodeId';
 
-/** Custom data for dom elements */
+/**
+ * @internal
+ * Custom data for dom elements
+ */
 export default interface CustomData {
     /** The dict storing custom data, key is element Id, value is dictionary */
     dict: { [key: string]: { [key: string]: number } };
@@ -12,7 +15,10 @@ export default interface CustomData {
     nextNodeId: number;
 }
 
-/** create an empty CustomData */
+/**
+ * @internal
+ * Create an empty CustomData
+ */
 export function createCustomData(): CustomData {
     return {
         dict: {},
@@ -21,6 +27,7 @@ export function createCustomData(): CustomData {
 }
 
 /**
+ * @internal
  * Sets the specified object data
  */
 export function setObject(customData: CustomData, element: Node, key: string, value: any) {
@@ -39,6 +46,7 @@ export function setObject(customData: CustomData, element: Node, key: string, va
 }
 
 /**
+ * @internal
  * Reads the specified object data
  */
 export function getObject(customData: CustomData, element: Node, key: string): any {
@@ -52,7 +60,9 @@ export function getObject(customData: CustomData, element: Node, key: string): a
     return null;
 }
 
-/** Get the unique id for the specified node... */
+/**
+ * Get the unique id for the specified node...
+ */
 function getAndSetNodeId(customData: CustomData, element: HTMLElement): string {
     let id = element.getAttribute(NODE_ID_ATTRIBUTE_NAME);
     if (!id) {
