@@ -7,7 +7,7 @@ import { Entity } from 'roosterjs-editor-types';
  * it will return null
  */
 export default function getEntityFromElement(element: HTMLElement): Entity {
-    const entityInfo = deserialzeEntityInfo(element.className);
+    const entityInfo = deserialzeEntityInfo(element?.className);
 
     return entityInfo
         ? {

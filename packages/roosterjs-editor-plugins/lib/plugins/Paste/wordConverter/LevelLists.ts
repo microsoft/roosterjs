@@ -1,6 +1,9 @@
 import ListMetadata from './ListMetadata';
 
-/** Holds the ids for the lists already seen for a specified level */
+/**
+ * @internal
+ * Holds the ids for the lists already seen for a specified level
+ */
 export default interface LevelLists {
     /**
      * The metadata for the lists seen at  this level
@@ -12,7 +15,10 @@ export default interface LevelLists {
     currentUniqueListId: number;
 }
 
-/** create an empty LevelLists */
+/**
+ * @internal
+ * create an empty LevelLists
+ */
 export function createLevelLists(): LevelLists {
     return {
         listsMetadata: {},

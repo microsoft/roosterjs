@@ -25,11 +25,17 @@ export default interface ClipboardData {
     image: File;
 
     /**
+     * BASE64 encoded data uri of the image if any
+     */
+    imageDataUri: string;
+
+    /**
      * If the copied data contains plain text format, this will be the plain text string. Otherwise it is null.
      */
     text: string;
 
     /**
+     * @deprecated
      * If the copied data contains HTML format, this will be the sanitized html string. Otherwise it is null.
      */
     html: string;

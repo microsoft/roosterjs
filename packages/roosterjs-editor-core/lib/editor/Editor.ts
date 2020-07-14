@@ -3,12 +3,14 @@ import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import mapPluginEvents from './mapPluginEvents';
+import normalizeContentColor from '../darkMode/normalizeContentColor';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import {
     BlockElement,
     ChangeSource,
+    ClipboardData,
     ContentPosition,
     DarkModeOptions,
     DefaultFormat,
@@ -25,6 +27,7 @@ import {
     Region,
     RegionType,
     SelectionPath,
+    StyleBasedFormatState,
 } from 'roosterjs-editor-types';
 import {
     collapseNodes,
@@ -353,21 +356,26 @@ export default class Editor {
         includeSelectionMarker: boolean = false
     ): string {
         let content = '';
-        if (triggerExtractContentEvent || this.core.inDarkMode) {
+        const isDarkMode = this.core.inDarkMode;
+        if (triggerExtractContentEvent || isDarkMode) {
             const clonedRoot = this.core.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
             const path = includeSelectionMarker && this.getSelectionPath();
             const range = path && createRange(clonedRoot, path.start, path.end);
 
-            this.triggerPluginEvent(
-                PluginEventType.ExtractContentWithDom,
-                {
-                    clonedRoot,
-                },
-                true /*broadcast*/
-            );
+            if (isDarkMode) {
+                normalizeContentColor(clonedRoot);
+            }
 
-            // TODO: Deprecated ExtractContentEvent once we have entity API ready in next major release
             if (triggerExtractContentEvent) {
+                this.triggerPluginEvent(
+                    PluginEventType.ExtractContentWithDom,
+                    {
+                        clonedRoot,
+                    },
+                    true /*broadcast*/
+                );
+
+                // TODO: Deprecated ExtractContentEvent once we have entity API ready in next major release
                 content = this.triggerPluginEvent(
                     PluginEventType.ExtractContent,
                     { content: clonedRoot.innerHTML },
@@ -456,6 +464,47 @@ export default class Editor {
             allNodes.forEach(node => fragment.appendChild(node));
 
             this.insertNode(fragment, option);
+        }
+    }
+
+    /**
+     * Paste into editor using a clipboardData object
+     * @param clipboardData Clipboard data retrieved from clipboard
+     * @param pasteAsText Force pasting as plain text. Default value is false
+     * @param applyCurrentStyle True if apply format of current selection to the pasted content,
+     * false to keep original foramt.  Default value is false. When pasteAsText is true, this parameter is ignored
+     */
+    public paste(
+        clipboardData: ClipboardData,
+        pasteAsText?: boolean,
+        applyCurrentFormat?: boolean
+    ) {
+        const range = this.getSelectionRange();
+        const pos = range && Position.getStart(range);
+
+        if (clipboardData && pos) {
+            if (clipboardData.snapshotBeforePaste) {
+                // Restore original content before paste a new one
+                this.setContent(clipboardData.snapshotBeforePaste);
+            } else {
+                clipboardData.snapshotBeforePaste = this.getContent(
+                    false /*triggerExtractContentEvent*/,
+                    true /*includeSelectionMarker*/
+                );
+            }
+
+            const fragment = this.core.api.createPasteFragment(
+                this.core,
+                clipboardData,
+                pos,
+                pasteAsText,
+                applyCurrentFormat
+            );
+
+            this.addUndoSnapshot(() => {
+                this.insertNode(fragment);
+                return clipboardData;
+            }, ChangeSource.Paste);
         }
     }
 
@@ -954,6 +1003,17 @@ export default class Editor {
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
         this.core.corePlugins.edit.addFeature(feature);
+    }
+
+    /**
+     * Get style based format state from current selection, including font name/size and colors
+     */
+    public getStyleBasedFormatState(node?: Node): StyleBasedFormatState {
+        if (!node) {
+            const range = this.getSelectionRange();
+            node = range && Position.getStart(range).normalize().node;
+        }
+        return this.core.api.getStyleBasedFormatState(this.core, node);
     }
 
     //#endregion

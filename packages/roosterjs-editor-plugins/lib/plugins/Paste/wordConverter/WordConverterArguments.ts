@@ -2,7 +2,10 @@ import LevelLists, { createLevelLists } from './LevelLists';
 import ListItemMetadata from './ListItemMetadata';
 import ListMetadata from './ListMetadata';
 
-/** Contains the state of the WordConverter when called back after yielding */
+/**
+ * @internal
+ * Contains the state of the WordConverter when called back after yielding
+ */
 export default interface WordConverterArguments {
     /** The list of element nodes being processed */
     nodes: NodeListOf<HTMLElement>;
@@ -35,7 +38,10 @@ export default interface WordConverterArguments {
     lastProcessedItem: HTMLElement;
 }
 
-/** create an empty WordConverterArguments */
+/**
+ * @internal
+ * create an empty WordConverterArguments
+ */
 export function createWordConverterArguments(
     nodes: NodeListOf<HTMLElement>
 ): WordConverterArguments {

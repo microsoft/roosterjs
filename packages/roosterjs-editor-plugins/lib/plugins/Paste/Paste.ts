@@ -1,47 +1,38 @@
-import buildClipboardData from './buildClipboardData';
-import fragmentHandler from './fragmentHandler';
-import textToHtml from './textToHtml';
+import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
+import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
+import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { getFormatState, insertImage } from 'roosterjs-editor-api';
+import { WAC_IDENTIFING_SELECTOR } from './officeOnlineConverter/constants';
 import {
     AttributeCallbackMap,
-    BeforePasteEvent,
-    ChangeSource,
     ClipboardData,
-    DefaultFormat,
-    NodeType,
-    PasteOption,
+    PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import {
-    applyFormat,
-    fromHtml,
-    getFirstLeafNode,
-    getInheritableStyles,
-    getNextLeafSibling,
-    HtmlSanitizer,
-    htmlToDom,
-    Position,
-} from 'roosterjs-editor-dom';
+import convertPastedContentFromWordOnline, {
+    isWordOnlineWithList,
+} from './officeOnlineConverter/convertPastedContentFromWordOnline';
+
+const WORD_ATTRIBUTE_NAME = 'xmlns:w';
+const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';
+const EXCEL_ATTRIBUTE_NAME = 'xmlns:x';
+const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
 
 /**
- * Paste plugin, handles onPaste event and paste content into editor
+ * Paste plugin, handles BeforePaste event and reformat some special content, including:
+ * 1. Content copied from Word
+ * 2. Content copied from Excel
+ * 3. Content copied from Word Online or Onenote Online
  */
 export default class Paste implements EditorPlugin {
     private editor: Editor;
-    private pasteDisposer: () => void;
-    private sanitizer: HtmlSanitizer;
 
     /**
      * Create an instance of Paste
-     * @param preserved Not used. Preserved parameter only used for compatibility with old code
-     * @param attributeCallbacks A set of callbacks to help handle html attribute during sanitization
+     * @param preserved @deprecated Not used. Preserved parameter only used for compatibility with old code
+     * @param attributeCallbacks @deprecated A set of callbacks to help handle html attribute during sanitization
      */
-    constructor(preserved?: any, attributeCallbacks?: AttributeCallbackMap) {
-        this.sanitizer = new HtmlSanitizer({
-            attributeCallbacks,
-        });
-    }
+    constructor(preserved?: any, private attributeCallbacks?: AttributeCallbackMap) {}
 
     /**
      * Get a friendly name of  this plugin
@@ -54,184 +45,83 @@ export default class Paste implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    public initialize(editor: Editor) {
+    initialize(editor: Editor) {
         this.editor = editor;
-        this.pasteDisposer = editor.addDomEventHandler('paste', this.onPaste);
     }
 
     /**
      * Dispose this plugin
      */
-    public dispose() {
-        this.pasteDisposer();
-        this.pasteDisposer = null;
+    dispose() {
         this.editor = null;
     }
 
-    private onPaste = (event: Event) => {
-        buildClipboardData(<ClipboardEvent>event, this.editor, items => {
-            this.pasteOriginal({
-                snapshotBeforePaste: null,
-                originalFormat: this.getCurrentFormat(),
-                types: items.types,
-                image: items.image,
-                text: items.text,
-                rawHtml: items.html,
-                html: items.html ? this.sanitizeHtml(items.html) : textToHtml(items.text),
-            });
-        });
-    };
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
+    onPluginEvent(event: PluginEvent) {
+        if (event.eventType == PluginEventType.BeforePaste) {
+            const { htmlAttributes, fragment, sanitizingOption } = event;
+            let wacListElements: NodeListOf<Element>;
+
+            if (htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE) {
+                // Handle HTML copied from Word
+                convertPastedContentFromWord(event);
+            } else if (htmlAttributes[EXCEL_ATTRIBUTE_NAME] == EXCEL_ATTRIBUTE_VALUE) {
+                // Handle HTML copied from Excel
+                convertPastedContentFromExcel(event);
+            } else if ((wacListElements = fragment.querySelectorAll(WAC_IDENTIFING_SELECTOR))[0]) {
+                // Once it is known that the document is from WAC
+                // We need to remove the display property and margin from all the list item
+                wacListElements.forEach((el: HTMLElement) => {
+                    el.style.display = null;
+                    el.style.margin = null;
+                });
+                // call conversion function if the pasted content is from word online and
+                // has list element in the pasted content.
+                if (isWordOnlineWithList(fragment)) {
+                    convertPastedContentFromWordOnline(fragment);
+                }
+            }
+
+            // TODO: Deprecate attributeCallbacks parameter
+            if (this.attributeCallbacks) {
+                Object.keys(this.attributeCallbacks).forEach(name => {
+                    chainSanitizerCallback(
+                        sanitizingOption.attributeCallbacks,
+                        name,
+                        this.attributeCallbacks[name]
+                    );
+                });
+            }
+        }
+    }
 
     /**
+     * @deprecated
      * Paste into editor using passed in clipboardData with original format
      * @param clipboardData The clipboardData to paste
      */
     public pasteOriginal(clipboardData: ClipboardData) {
-        this.paste(clipboardData, this.detectPasteOption(clipboardData));
+        this.editor.paste(clipboardData);
     }
 
     /**
+     * @deprecated
      * Paste plain text into editor using passed in clipboardData
      * @param clipboardData The clipboardData to paste
      */
     public pasteText(clipboardData: ClipboardData) {
-        this.paste(clipboardData, PasteOption.PasteText);
+        this.editor.paste(clipboardData, true /*pasteAsText*/);
     }
 
     /**
+     * @deprecated
      * Paste into editor using passed in clipboardData with curent format
      * @param clipboardData The clipboardData to paste
      */
     public pasteAndMergeFormat(clipboardData: ClipboardData) {
-        this.paste(clipboardData, this.detectPasteOption(clipboardData), true /*mergeFormat*/);
-    }
-
-    private detectPasteOption(clipboardData: ClipboardData): PasteOption {
-        return clipboardData.text || !clipboardData.image
-            ? PasteOption.PasteHtml
-            : PasteOption.PasteImage;
-    }
-
-    private paste(
-        clipboardData: ClipboardData,
-        pasteOption: PasteOption,
-        mergeCurrentFormat?: boolean
-    ) {
-        let document = this.editor.getDocument();
-        let fragment = document.createDocumentFragment();
-
-        if (pasteOption == PasteOption.PasteHtml) {
-            let html = clipboardData.html;
-            let nodes = fromHtml(html, document);
-
-            for (let node of nodes) {
-                if (mergeCurrentFormat) {
-                    this.applyToElements(
-                        node,
-                        this.applyFormatting(clipboardData.originalFormat, this.editor.isDarkMode())
-                    );
-                }
-                fragment.appendChild(node);
-            }
-        }
-
-        let event = this.editor.triggerPluginEvent(
-            PluginEventType.BeforePaste,
-            {
-                clipboardData,
-                fragment,
-                pasteOption,
-            },
-            true /*broadcast*/
-        );
-        this.internalPaste(event);
-    }
-
-    private internalPaste(event: BeforePasteEvent) {
-        let { clipboardData, fragment, pasteOption } = event;
-        this.editor.focus();
-        this.editor.addUndoSnapshot(() => {
-            if (clipboardData.snapshotBeforePaste == null) {
-                clipboardData.snapshotBeforePaste = this.editor.getContent(
-                    false /*triggerExtractContentEvent*/,
-                    true /*markSelection*/
-                );
-            } else {
-                this.editor.setContent(clipboardData.snapshotBeforePaste);
-            }
-
-            switch (pasteOption) {
-                case PasteOption.PasteHtml:
-                    this.editor.insertNode(fragment);
-                    break;
-
-                case PasteOption.PasteText:
-                    let html = textToHtml(clipboardData.text);
-                    this.editor.insertContent(html);
-                    break;
-
-                case PasteOption.PasteImage:
-                    insertImage(this.editor, clipboardData.image);
-                    break;
-            }
-
-            return clipboardData;
-        }, ChangeSource.Paste);
-    }
-
-    private applyFormatting = (format: DefaultFormat, isDarkMode: boolean) => (
-        element: HTMLElement
-    ) => {
-        applyFormat(element, format, isDarkMode);
-    };
-
-    private applyToElements(node: Node, elementTransform: (element: HTMLElement) => void) {
-        let leaf = getFirstLeafNode(node);
-        let parents: HTMLElement[] = [];
-        while (leaf) {
-            if (
-                leaf.nodeType == NodeType.Text &&
-                leaf.parentNode &&
-                parents.indexOf(<HTMLElement>leaf.parentNode) < 0
-            ) {
-                parents.push(<HTMLElement>leaf.parentNode);
-            }
-            leaf = getNextLeafSibling(node, leaf);
-        }
-        parents.push(<HTMLElement>node);
-        for (let parent of parents) {
-            elementTransform(parent);
-        }
-    }
-
-    private getCurrentFormat(): DefaultFormat {
-        let format = getFormatState(this.editor);
-        return format
-            ? {
-                  fontFamily: format.fontName,
-                  fontSize: format.fontSize,
-                  textColor: format.textColor,
-                  textColors: format.textColors,
-                  backgroundColor: format.backgroundColor,
-                  backgroundColors: format.backgroundColors,
-                  bold: format.isBold,
-                  italic: format.isItalic,
-                  underline: format.isUnderline,
-              }
-            : {};
-    }
-
-    private sanitizeHtml(html: string): string {
-        let doc = htmlToDom(html, true /*preserveFragmentOnly*/, fragmentHandler);
-        if (doc && doc.body) {
-            this.sanitizer.convertGlobalCssToInlineCss(doc);
-
-            let range = this.editor.getSelectionRange();
-            let element = range && Position.getStart(range).normalize().element;
-            let currentStyles = getInheritableStyles(element);
-            this.sanitizer.sanitize(doc.body, currentStyles);
-            return doc.body.innerHTML;
-        }
-        return '';
+        this.editor.paste(clipboardData, false /*pasteAsText*/, true /*applyCurrentFormat*/);
     }
 }

@@ -1,8 +1,8 @@
+import createEntityWrapper from './createEntityWrapper';
 import getEntityElement from './getEntityElement';
 import getEntityFromElement from './getEntityFromElement';
 import { Editor } from 'roosterjs-editor-core';
-import { Position, wrap } from 'roosterjs-editor-dom';
-import { serializeEntityInfo } from './EntityInfo';
+import { Position } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ContentPosition,
@@ -29,18 +29,7 @@ export default function insertEntity(
     isReadonly: boolean,
     position?: NodePosition
 ): Entity {
-    const wrapper = wrap(contentNode, isBlock ? 'DIV' : 'SPAN');
-    wrapper.className = serializeEntityInfo(editor, type, isReadonly);
-
-    // For inline & readonly entity, we need to set display to "inline-block" otherwise
-    // there will be some weird behavior when move cursor around the entity node.
-    // And we should only do this for readonly entity since "inline-block" has some side effect
-    // in IE that there will be a resize border around the inline-block element. We made some
-    // workaround for readonly entity for this issue but for editable entity, keep it as "inline"
-    // will just work fine.
-    if (!isBlock && isReadonly) {
-        wrapper.style.display = 'inline-block';
-    }
+    const wrapper = createEntityWrapper(editor, type, contentNode, isBlock, isReadonly);
 
     let currentRange: Range;
 

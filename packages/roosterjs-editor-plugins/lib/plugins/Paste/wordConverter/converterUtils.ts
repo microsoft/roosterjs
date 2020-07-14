@@ -20,6 +20,7 @@ const MSO_LIST_STYLE_NAME = 'mso-list';
 const LINE_BREAKS = /[\n|\r]/gi;
 
 /**
+ * @internal
  * Handles the pass 1: Discovery
  * During discovery, we'll parse the metadata out of the elements and store it in the list items dictionary.
  * We'll detect cases where the list items for a particular ordered list are not next to each other. Word does these
@@ -146,6 +147,7 @@ export function processNodesDiscovery(wordConverter: WordConverter): boolean {
 }
 
 /**
+ * @internal
  * Handles the pass 2: Conversion
  * During conversion, we'll go over the elements that belong to a list that we've marked as a list to convert, and we'll perform the
  * conversion needed
