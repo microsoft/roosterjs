@@ -1,3 +1,4 @@
+import ListItemBlock, { createListItemBlock } from './ListItemBlock';
 import {
     WORD_ORDERED_LIST_SELECTOR,
     WORD_UNORDERED_LIST_SELECTOR,
@@ -16,10 +17,11 @@ import {
     unwrap,
 } from 'roosterjs-editor-dom';
 
-import ListItemBlock, { createListItemBlock } from './ListItemBlock';
-
-export function isWordOnlineWithList(node: HTMLElement): boolean {
-    return !!(node && node.querySelector(WORD_ONLINE_IDENTIFYING_SELECTOR));
+/**
+ * @internal
+ */
+export function isWordOnlineWithList(fragment: DocumentFragment): boolean {
+    return !!(fragment && fragment.querySelector(WORD_ONLINE_IDENTIFYING_SELECTOR));
 }
 
 // Word Online pasted content DOM structure as of July 12th 2019
@@ -53,12 +55,13 @@ export function isWordOnlineWithList(node: HTMLElement): boolean {
 //
 
 /**
+ * @internal
  * Convert text copied from word online into text that's workable with rooster editor
- * @param doc Document that is being pasted into editor.
+ * @param fragment Document fragment that is being pasted into editor.
  */
-export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
-    sanitizeListItemContainer(doc);
-    const listItemBlocks: ListItemBlock[] = getListItemBlocks(doc);
+export default function convertPastedContentFromWordOnline(fragment: DocumentFragment) {
+    sanitizeListItemContainer(fragment);
+    const listItemBlocks: ListItemBlock[] = getListItemBlocks(fragment);
 
     listItemBlocks.forEach(itemBlock => {
         // There are cases where consecutive List Elements are seperated into different divs:
@@ -88,12 +91,14 @@ export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
         //    <ol></ol>
         // </div>
         // Then we are start processing.
-        flattenListBlock(doc.body, itemBlock);
+        flattenListBlock(fragment, itemBlock);
 
         // Find the node to insertBefore, which is next sibling node of the end of a listItemBlock.
         itemBlock.insertPositionNode = itemBlock.endElement.nextSibling;
 
         let convertedListElement: Element;
+        const doc = fragment.ownerDocument;
+
         itemBlock.listItemContainers.forEach(listItemContainer => {
             let listType: 'OL' | 'UL' = getContainerListType(listItemContainer); // list type that is contained by iterator.
             // Initialize processed element with propery listType if this is the first element
@@ -112,14 +117,14 @@ export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
                 // When that happens we need to insert the processed elements into the document, then change the list type
                 // and keep the processing going.
                 if (getTagOfNode(convertedListElement) != listType && itemLevel == 1) {
-                    insertConvertedListToDoc(convertedListElement, doc.body, itemBlock);
+                    insertConvertedListToDoc(convertedListElement, fragment, itemBlock);
                     convertedListElement = doc.createElement(listType);
                 }
                 insertListItem(convertedListElement, item, listType, doc);
             });
         });
 
-        insertConvertedListToDoc(convertedListElement, doc.body, itemBlock);
+        insertConvertedListToDoc(convertedListElement, fragment, itemBlock);
 
         // Once we finish the process the list items and put them into a list.
         // After inserting the processed element,
@@ -136,10 +141,10 @@ export default function convertPastedContentFromWordOnline(doc: HTMLDocument) {
 /**
  * The node processing is based on the premise of only ol/ul is in ListContainerWrapper class
  * However the html might be melformed, this function is to split all the other elements out of ListContainerWrapper
- * @param doc pasted document that contains all the list element.
+ * @param fragment pasted document that contains all the list element.
  */
-function sanitizeListItemContainer(doc: HTMLDocument) {
-    const listItemContainerListEl = doc.querySelectorAll(
+function sanitizeListItemContainer(fragment: DocumentFragment) {
+    const listItemContainerListEl = fragment.querySelectorAll(
         `${WORD_ORDERED_LIST_SELECTOR}, ${WORD_UNORDERED_LIST_SELECTOR}`
     );
     listItemContainerListEl.forEach(el => {
@@ -157,10 +162,10 @@ function sanitizeListItemContainer(doc: HTMLDocument) {
 
 /**
  * Take all the list items in the document, and group the consecutive list times in a list block;
- * @param doc pasted document that contains all the list element.
+ * @param fragment pasted document that contains all the list element.
  */
-function getListItemBlocks(doc: HTMLDocument): ListItemBlock[] {
-    const listElements = doc.getElementsByClassName(LIST_CONTAINER_ELEMENT_CLASS_NAME);
+function getListItemBlocks(fragment: DocumentFragment): ListItemBlock[] {
+    const listElements = fragment.querySelectorAll('.' + LIST_CONTAINER_ELEMENT_CLASS_NAME);
     const result: ListItemBlock[] = [];
     let curListItemBlock: ListItemBlock;
     for (let i = 0; i < listElements.length; i++) {
@@ -194,12 +199,12 @@ function getListItemBlocks(doc: HTMLDocument): ListItemBlock[] {
 
 /**
  * Flatten the list items, so that all the consecutive list items are under the same parent.
- * @param doc Root element of that contains the element.
+ * @param fragment Root element of that contains the element.
  * @param listItemBlock The list item block needed to be flattened.
  */
-function flattenListBlock(rootElement: Element, listItemBlock: ListItemBlock) {
+function flattenListBlock(fragment: DocumentFragment, listItemBlock: ListItemBlock) {
     const collapsedListItemSections = collapseNodes(
-        rootElement,
+        fragment,
         listItemBlock.startElement,
         listItemBlock.endElement,
         true
@@ -271,12 +276,12 @@ function insertListItem(
 /**
  * Insert the converted list item into the correct place.
  * @param convertedListElement List element that is converted from list item block
- * @param rootElement Root element of that contains the converted listItemBlock
+ * @param fragment Root element of that contains the converted listItemBlock
  * @param listItemBlock List item block that was converted.
  */
 function insertConvertedListToDoc(
     convertedListElement: Element,
-    rootElement: Element,
+    fragment: DocumentFragment,
     listItemBlock: ListItemBlock
 ) {
     if (!convertedListElement) {
@@ -294,7 +299,7 @@ function insertConvertedListToDoc(
         if (parentElement) {
             parentElement.appendChild(convertedListElement);
         } else {
-            rootElement.append(convertedListElement);
+            fragment.appendChild(convertedListElement);
         }
     }
 }

@@ -1,4 +1,5 @@
 /**
+ * @internal
  * Holds the metadata of a Word list item... Specifically, the parsed values from
  * the "mso-list" style.
  */
