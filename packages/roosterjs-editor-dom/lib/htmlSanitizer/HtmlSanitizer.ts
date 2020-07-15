@@ -16,6 +16,7 @@ import {
     StyleCallbackMap,
     ElementCallbackMap,
     AttributeCallbackMap,
+    NodeType,
 } from 'roosterjs-editor-types';
 
 /**
@@ -117,7 +118,7 @@ export default class HtmlSanitizer {
      * @param currentStyles Current CSS styles. Inheritable styles in the given node which has
      * the same value with current styles will be ignored.
      */
-    sanitize(rootNode: HTMLElement, currentStyles?: StringMap) {
+    sanitize(rootNode: Node, currentStyles?: StringMap) {
         if (!rootNode) {
             return '';
         }
@@ -129,7 +130,7 @@ export default class HtmlSanitizer {
      * Convert global CSS into inline CSS
      * @param rootNode The HTML Document
      */
-    convertGlobalCssToInlineCss(rootNode: HTMLDocument) {
+    convertGlobalCssToInlineCss(rootNode: ParentNode) {
         let styleNodes = toArray(rootNode.querySelectorAll('style'));
         let styleSheets = this.additionalGlobalStyleNodes
             .reverse()
@@ -168,16 +169,18 @@ export default class HtmlSanitizer {
     }
 
     private processNode(node: Node, currentStyle: StringMap, context: Object) {
-        let nodeType = node.nodeType;
-        let isElement = nodeType == Node.ELEMENT_NODE;
-        let isText = nodeType == Node.TEXT_NODE;
+        const nodeType = node.nodeType;
+        const isElement = nodeType == NodeType.Element;
+        const isText = nodeType == NodeType.Text;
+        const isFragment = nodeType == NodeType.DocumentFragment;
+
         let element = <HTMLElement>node;
         let tag = isElement ? element.tagName.toUpperCase() : '';
 
         if (
             (isElement && !this.allowElement(element, tag, context)) ||
             (isText && /^[\r\n]*$/g.test(node.nodeValue) && !currentStyle.insidePRE) ||
-            (!isElement && !isText)
+            (!isElement && !isText && !isFragment)
         ) {
             node.parentNode.removeChild(node);
         } else if (
@@ -186,14 +189,16 @@ export default class HtmlSanitizer {
             currentStyle['white-space'] == 'pre'
         ) {
             node.nodeValue = node.nodeValue.replace(/^ /gm, '\u00A0').replace(/ {2}/g, ' \u00A0');
-        } else if (isElement) {
+        } else if (isElement || isFragment) {
             let thisStyle = cloneObject(currentStyle);
-            this.processAttributes(element, context);
-            this.processCss(element, tag, thisStyle, context);
+            if (isElement) {
+                this.processAttributes(element, context);
+                this.processCss(element, tag, thisStyle, context);
 
-            // Special handling for PRE tag, need to preserve \r\n inside PRE
-            if (tag == 'PRE') {
-                thisStyle.insidePRE = 'true';
+                // Special handling for PRE tag, need to preserve \r\n inside PRE
+                if (tag == 'PRE') {
+                    thisStyle.insidePRE = 'true';
+                }
             }
 
             let child: Node = element.firstChild;
@@ -255,7 +260,7 @@ export default class HtmlSanitizer {
 
             let newValue = callback
                 ? callback(value, element, context)
-                : this.allowedAttributes.indexOf(name) >= 0
+                : this.allowedAttributes.indexOf(name) >= 0 || name.indexOf('data-') == 0
                 ? value
                 : null;
 

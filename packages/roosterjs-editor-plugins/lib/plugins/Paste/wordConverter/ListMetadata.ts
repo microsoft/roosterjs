@@ -1,4 +1,7 @@
-/** Holds the metadata of a particular list */
+/**
+ * @internal
+ * Holds the metadata of a particular list
+ */
 export default interface ListMetadata {
     /** Holds the unique list id for this list */
     uniqueListId: number;

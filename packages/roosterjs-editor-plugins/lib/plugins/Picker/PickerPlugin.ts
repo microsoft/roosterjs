@@ -37,6 +37,8 @@ const DELETE_CONTENT_BACKWARDS_INPUT_TYPE = 'deleteContentBackwards';
 
 // Unidentified key, the code for Android keyboard events.
 const UNIDENTIFIED_KEY = 'Unidentified';
+// the char code for Android keyboard events on Webview below 51.
+const UNIDENTIFIED_CODE = [0, 229];
 
 /**
  * Interface for PickerPlugin
@@ -70,7 +72,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     private currentInputLength: number;
     private newInputLength: number;
 
-    constructor(public readonly dataProvider: T, private pickerOptions: PickerPluginOptions) {}
+    constructor(public readonly dataProvider: T, private pickerOptions: PickerPluginOptions) { }
 
     /**
      * Get a friendly name
@@ -180,8 +182,8 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
             case PluginEventType.KeyDown:
                 this.eventHandledOnKeyDown = false;
-                if (event.rawEvent.key == UNIDENTIFIED_KEY) {
-                    // On Android, the key for KeyboardEvent is "Unidentified",
+                if (this.isAndroidKeyboardEvent(event)) {
+                    // On Android, the key for KeyboardEvent is "Unidentified" or undefined,
                     // so handling should be done using the input rather than key down event
                     // Since the key down event happens right before the input event, calculate the input
                     // length here in preparation for onAndroidInputEvent
@@ -292,10 +294,10 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
     private shouldHandleKeyUpEvent(event: PluginKeyboardEvent) {
         // onKeyUpDomEvent should only be called when a key that produces a character value is pressed
-        // This check will always fail on Android since the KeyboardEvent's key is "Unidentified"
+        // This check will always fail on Android since the KeyboardEvent's key is "Unidentified" or undefined
         // However, we don't need to check for modifier events on mobile, so can ignore this check
         return (
-            event.rawEvent.key == UNIDENTIFIED_KEY ||
+            this.isAndroidKeyboardEvent(event) ||
             isCharacterValue(event.rawEvent) ||
             (this.isSuggesting && !isModifierKey(event.rawEvent))
         );
@@ -406,9 +408,9 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
                     ? keyboardEvent.key == LEFT_ARROW_CHARCODE ||
-                      keyboardEvent.key == RIGHT_ARROW_CHARCODE
+                    keyboardEvent.key == RIGHT_ARROW_CHARCODE
                     : keyboardEvent.key == UP_ARROW_CHARCODE ||
-                      keyboardEvent.key == DOWN_ARROW_CHARCODE)
+                    keyboardEvent.key == DOWN_ARROW_CHARCODE)
             ) {
                 this.dataProvider.shiftHighlight(
                     this.pickerOptions.isHorizontal
@@ -548,5 +550,17 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         const searcher = cacheGetContentSearcher(event, this.editor);
         const element = searcher ? searcher.getInlineElementBefore() : null;
         return element ? element.getTextContent() : null;
+    }
+
+    private isAndroidKeyboardEvent(event: PluginKeyboardEvent): boolean {
+        // Check keyboard events on Android for further handling.
+        // On Android Webview later 51, the KeyboardEvent's key is "Unidentified".
+        // On Android Webview below 51, the KeyboardEvent's key is not supported and always returns undefined,
+        // so using the charCode property, which is 0 or 229.
+        return (
+            event.rawEvent.key == UNIDENTIFIED_KEY ||
+            (event.rawEvent.key == undefined &&
+                UNIDENTIFIED_CODE.indexOf(event.rawEvent.charCode) > -1)
+        );
     }
 }
