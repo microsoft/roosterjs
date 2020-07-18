@@ -207,8 +207,19 @@ export default class VList {
      * @param type Type of this list item, can be ListType.None
      */
     appendItem(node: Node, type: ListType) {
-        node = getTagOfNode(node) == 'LI' ? node : wrap(node, 'li');
-        this.items.push(type == ListType.None ? new VListItem(node) : new VListItem(node, type));
+        let nodeToAppend: Node;
+        if (getTagOfNode(node) != 'LI') {
+            nodeToAppend = document.createElement('LI');
+            while (node.childNodes.length) {
+                nodeToAppend.appendChild(node.firstChild);
+            }
+        } else {
+            nodeToAppend = node;
+        }
+
+        this.items.push(
+            type == ListType.None ? new VListItem(nodeToAppend) : new VListItem(nodeToAppend, type)
+        );
     }
 
     /**
