@@ -12,7 +12,6 @@ import {
 import {
     BeforePasteEvent,
     ClipboardData,
-    PasteOption,
     PluginEventType,
     DefaultFormat,
     NodePosition,
@@ -30,22 +29,24 @@ export const createPasteFragment: CreatePasteFragment = (
     applyCurrentStyle: boolean
 ) => {
     // Step 1: Prepare BeforePasteEvent object
-    const event = createBeforePasteEvent(core, clipboardData, pasteAsText);
-    const { fragment, pasteOption } = event;
+    const event = createBeforePasteEvent(core, clipboardData);
+    const { fragment } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
     let doc: HTMLDocument;
 
     // Step 2: Fill the BeforePasteEvent object, especially the fragment for paste
-    if (pasteOption == PasteOption.PasteImage && imageDataUri) {
+    if (!pasteAsText && !text && imageDataUri) {
+        // Paste image
         const img = core.document.createElement('img');
         img.style.maxWidth = '100%';
         img.src = imageDataUri;
         fragment.appendChild(img);
     } else if (
-        pasteOption == PasteOption.PasteHtml &&
+        !pasteAsText &&
         rawHtml &&
         (doc = new DOMParser().parseFromString(rawHtml, 'text/html'))?.body
     ) {
+        // Paste HTML
         const attributes = doc.querySelector('html')?.attributes;
         (attributes ? toArray(attributes) : []).reduce((attrs, attr) => {
             attrs[attr.name] = attr.value;
@@ -74,6 +75,7 @@ export const createPasteFragment: CreatePasteFragment = (
             applyTextStyle(fragment, node => applyFormat(node, format));
         }
     } else if (text) {
+        // Paste text
         text.split('\n').forEach((line, index, lines) => {
             line = line
                 .replace(/^ /g, NBSP_HTML)
@@ -114,22 +116,11 @@ function getCurrentFormat(core: EditorCore, node: Node): DefaultFormat {
     };
 }
 
-function createBeforePasteEvent(
-    core: EditorCore,
-    clipboardData: ClipboardData,
-    pasteAsText: boolean
-): BeforePasteEvent {
-    const pasteOption = pasteAsText
-        ? PasteOption.PasteText
-        : clipboardData.text || !clipboardData.image
-        ? PasteOption.PasteHtml
-        : PasteOption.PasteImage;
-    const fragment = core.document.createDocumentFragment();
+function createBeforePasteEvent(core: EditorCore, clipboardData: ClipboardData): BeforePasteEvent {
     return {
         eventType: PluginEventType.BeforePaste,
         clipboardData,
-        pasteOption,
-        fragment,
+        fragment: core.document.createDocumentFragment(),
         sanitizingOption: createDefaultHtmlSanitizerOptions(),
         htmlBefore: '',
         htmlAfter: '',

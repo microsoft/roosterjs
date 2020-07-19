@@ -13,7 +13,6 @@ export { EntityOperation } from './enum/EntityOperation';
 export { FontSizeChange } from './enum/FontSizeChange';
 export { Indentation } from './enum/Indentation';
 export { ListType } from './enum/ListType';
-export { PasteOption } from './enum/PasteOption';
 export { PositionType } from './enum/PositionType';
 export { QueryScope } from './enum/QueryScope';
 export { RegionType } from './enum/RegionType';

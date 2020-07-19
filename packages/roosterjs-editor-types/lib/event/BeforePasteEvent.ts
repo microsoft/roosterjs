@@ -1,7 +1,6 @@
 import BasePluginEvent from './BasePluginEvent';
 import ClipboardData from '../interface/ClipboardData';
 import HtmlSanitizerOptions from '../interface/HtmlSanitizerOptions';
-import { PasteOption } from '../enum/PasteOption';
 import { PluginEventType } from './PluginEventType';
 
 /**
@@ -14,14 +13,9 @@ export default interface BeforePasteEvent extends BasePluginEvent<PluginEventTyp
     clipboardData: ClipboardData;
 
     /**
-     * HTML Document Fragment which will be inserted into content if pasteOption is set to PasteHtml
+     * HTML Document Fragment which will be inserted into content
      */
     fragment: DocumentFragment;
-
-    /**
-     * Paste option: html, text or image
-     */
-    pasteOption: PasteOption;
 
     /**
      * Html sanitizing options. This will be used for sanitizing the html content before paste
