@@ -1,7 +1,10 @@
+import getLastClipboardData from './getLastClipboardData';
+import MainPaneBase from '../MainPaneBase';
 import renderInsertLinkDialog from './renderInsertLinkDialog';
 import renderTableOptions from './renderTableOptions';
 import RibbonButtonType from './RibbonButtonType';
 import { Alignment, Direction, Indentation } from 'roosterjs-editor-types';
+import { Browser } from 'roosterjs-editor-dom';
 import {
     setBackgroundColor,
     setFontName,
@@ -254,6 +257,58 @@ const buttons: { [key: string]: RibbonButtonType } = {
         dropDownItems: {
             selection: 'Remove formatting of selected text',
             block: 'Remove formatting of selected paragraphs',
+        },
+    },
+    paste: {
+        title: 'Paste Again',
+        onClick: (editor, key) => {
+            editor.focus();
+            const data = getLastClipboardData(editor).data;
+
+            if (data) {
+                switch (key) {
+                    case 'original':
+                        editor.paste(data);
+                        break;
+                    case 'text':
+                        editor.paste(data, true);
+                        break;
+                    case 'merge':
+                        editor.paste(data, false, true);
+                        break;
+                }
+            } else {
+                alert('No clipboard data found');
+            }
+        },
+        isDisabled: editor => !getLastClipboardData(editor).data,
+        dropDownItems: {
+            original: 'Paste Original',
+            text: 'Paste Text',
+            merge: 'Paste and Merge Format',
+        },
+    },
+    export: {
+        title: 'Export',
+        onClick: editor => {
+            let w = window.open();
+            w.document.write(editor.getContent());
+        },
+    },
+    clear: {
+        title: 'Clear',
+        onClick: editor => {
+            editor.addUndoSnapshot(() => {
+                editor.setContent('');
+            });
+        },
+    },
+    popout: {
+        title: 'Popout',
+        isDisabled: editor =>
+            !(Browser.isChrome || Browser.isFirefox) || editor.getDocument().defaultView != window,
+        onClick: () => {
+            MainPaneBase.getInstance().popout();
         },
     },
 };

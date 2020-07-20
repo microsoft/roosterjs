@@ -4,15 +4,3 @@
     height: 38px;
     white-space: nowrap;
 }
-
-.textButton {
-    height: 32px;
-    vertical-align: top;
-    background-color: transparent;
-    border-width: 0;
-    border-radius: 3px;
-    cursor: pointer;
-    &:hover {
-        background-color: $primaryLighter2;
-    }
-}

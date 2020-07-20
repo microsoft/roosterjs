@@ -1,6 +1,7 @@
+import getLastClipboardData from './getLastClipboardData';
 import Ribbon from './Ribbon';
+import { ChangeSource, ClipboardData, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 export default class RibbonPlugin implements EditorPlugin {
     editor: Editor;
@@ -27,13 +28,25 @@ export default class RibbonPlugin implements EditorPlugin {
     };
 
     onPluginEvent(event: PluginEvent) {
-        if (
-            this.ribbon &&
-            (event.eventType == PluginEventType.KeyUp ||
-                event.eventType == PluginEventType.MouseUp ||
-                event.eventType == PluginEventType.ContentChanged)
-        ) {
-            this.ribbon.forceUpdate();
+        if (this.ribbon) {
+            if (
+                event.eventType == PluginEventType.KeyDown ||
+                event.eventType == PluginEventType.MouseUp
+            ) {
+                const wrapper = getLastClipboardData(this.editor);
+                wrapper.data = null;
+                this.ribbon.forceUpdate();
+            } else if (event.eventType == PluginEventType.ContentChanged) {
+                const wrapper = getLastClipboardData(this.editor);
+                if (event.source == ChangeSource.Paste) {
+                    wrapper.data = event.data as ClipboardData;
+                } else {
+                    wrapper.data = null;
+                }
+                this.ribbon.forceUpdate();
+            } else if (event.eventType == PluginEventType.EditorReady) {
+                this.ribbon.forceUpdate();
+            }
         }
     }
 }
