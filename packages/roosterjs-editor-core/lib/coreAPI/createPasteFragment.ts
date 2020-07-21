@@ -31,7 +31,7 @@ export const createPasteFragment: CreatePasteFragment = (
 ) => {
     // Step 1: Prepare BeforePasteEvent object
     const event = createBeforePasteEvent(core, clipboardData, pasteAsText);
-    const { fragment, pasteOption } = event;
+    const { fragment, pasteOption, sanitizingOption } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
     let doc: HTMLDocument;
 
@@ -64,10 +64,12 @@ export const createPasteFragment: CreatePasteFragment = (
             );
         }
 
-        const styles = toArray(doc.querySelectorAll('style'));
+        const styles = doc.querySelectorAll('style');
+        for (let i = 0; i < styles.length; i++) {
+            doc.head.appendChild(styles[i]);
+            sanitizingOption.additionalGlobalStyleNodes.push(styles[i]);
+        }
 
-        // Append all styles nodes, included those under <HEAD> tag so that we can convert them to inline CSS
-        styles.forEach(style => fragment.appendChild(style));
         while (doc.body.firstChild) {
             fragment.appendChild(doc.body.firstChild);
         }
