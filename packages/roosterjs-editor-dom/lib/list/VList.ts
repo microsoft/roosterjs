@@ -210,7 +210,8 @@ export default class VList {
         let nodeToAppend: Node;
         if (getTagOfNode(node) != 'LI') {
             nodeToAppend = document.createElement('LI');
-            while (node.childNodes.length) {
+
+            while (node.hasChildNodes()) {
                 nodeToAppend.appendChild(node.firstChild);
             }
         } else {
