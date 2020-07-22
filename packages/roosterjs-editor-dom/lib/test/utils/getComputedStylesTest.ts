@@ -29,9 +29,9 @@ describe('getComputedStyle()', () => {
 });
 
 describe('getComputedStyles()', () => {
-    let defaultResult = ['"times new roman"', '12pt', 'rgb(0, 0, 0)', 'rgba(0, 0, 0, 0)'];
+    let defaultResult = ['arial', '12pt', 'rgb(0, 0, 0)', 'rgba(0, 0, 0, 0)'];
 
-    let result2 = ['"times new roman"', '16pt', 'rgb(0, 0, 0)', 'rgba(0, 0, 0, 0)'];
+    let result2 = ['arial', '16pt', 'rgb(0, 0, 0)', 'rgba(0, 0, 0, 0)'];
 
     it('getComputedStyles() case 0', () => {
         runTest(0, '', 'id0', undefined, []);
@@ -112,7 +112,7 @@ describe('getComputedStyles()', () => {
         expectResult: string[]
     ) {
         let div = document.createElement('div');
-        div.style.fontFamily = 'times new roman';
+        div.style.fontFamily = 'arial';
         document.body.appendChild(div);
         div.innerHTML = input;
         let element = document.getElementById(id);

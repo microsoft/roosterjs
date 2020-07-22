@@ -191,7 +191,8 @@ export default class VListItem {
             const newList = doc.createElement(listType == ListType.Ordered ? 'ol' : 'ul');
 
             if (listType == ListType.Ordered) {
-                newList.style.listStyle = orderListStyles[(nextLevel - 1) % orderListStyles.length];
+                newList.style.listStyleType =
+                    orderListStyles[(nextLevel - 1) % orderListStyles.length];
             }
 
             listStack[listStack.length - 1].appendChild(newList);

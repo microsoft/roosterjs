@@ -348,7 +348,7 @@ describe('VListItem.writeBack', () => {
         runTest(
             ['div'],
             [ListType.Ordered, ListType.Ordered],
-            '<ol><ol style="list-style: lower-alpha;"><li><div></div></li></ol></ol>'
+            '<ol><ol style="list-style-type: lower-alpha;"><li><div></div></li></ol></ol>'
         );
     });
 
@@ -356,7 +356,7 @@ describe('VListItem.writeBack', () => {
         runTest(
             ['div'],
             [ListType.Ordered, ListType.Ordered, ListType.Ordered, ListType.Ordered],
-            '<ol><ol style="list-style: lower-alpha;"><ol style="list-style: lower-roman;"><ol><li><div></div></li></ol></ol></ol></ol>'
+            '<ol><ol style="list-style-type: lower-alpha;"><ol style="list-style-type: lower-roman;"><ol><li><div></div></li></ol></ol></ol></ol>'
         );
     });
 
@@ -388,7 +388,7 @@ describe('VListItem.writeBack', () => {
         runTest(
             ['div', 'ol', 'ul'],
             [ListType.Unordered, ListType.Ordered],
-            '<ol><ul></ul></ol><ul><ol style="list-style: lower-alpha;"><li><div></div></li></ol></ul>'
+            '<ol><ul></ul></ol><ul><ol style="list-style-type: lower-alpha;"><li><div></div></li></ol></ul>'
         );
     });
 
