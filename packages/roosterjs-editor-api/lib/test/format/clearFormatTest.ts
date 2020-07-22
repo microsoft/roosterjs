@@ -28,7 +28,7 @@ describe('clearFormat()', () => {
         expect(document.execCommand).toHaveBeenCalledWith('removeFormat', false, null);
     });
 
-    xit('removes the existing formats', () => {
+    it('removes the existing formats', () => {
         // Arrange
         editor.setContent(originalContent);
         TestHelper.selectNode(document.getElementById('text'));
@@ -38,7 +38,7 @@ describe('clearFormat()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div id="text" style=""><span style="font-family: &quot;times new roman&quot;; font-size: 12pt; color: black;">text</span></div>'
+            '<div id="text" style=""><span style="font-family: arial; font-size: 12pt; color: black;">text</span></div>'
         );
     });
 });
