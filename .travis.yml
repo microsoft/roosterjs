@@ -1,12 +1,12 @@
 language: node_js
 sudo: required
 addons:
-    chrome: stable
+    firefox: latest
 node_js:
     - 10
 before_install:
     - yarn
-    - cd publish/samplesite/instrumentation-tests && yarn && cd ../../..
+    # - cd publish/samplesite/instrumentation-tests && yarn && cd ../../..
 install:
     - npm run build:ci
 script:
