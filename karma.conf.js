@@ -9,7 +9,7 @@ module.exports = function (config) {
             'karma-sourcemap-loader',
         ],
         browsers: ['Firefox'],
-        files: ['karma.tests.js'],
+        files: [{ pattern: config.grep ? config.grep : 'karma.tests.js', type: 'module' }],
         frameworks: ['jasmine'],
         preprocessors: {
             'karma.tests.js': ['webpack', 'sourcemap'],
