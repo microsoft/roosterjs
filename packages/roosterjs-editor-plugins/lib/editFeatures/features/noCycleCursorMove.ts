@@ -1,7 +1,7 @@
+import { Browser, isRtl, Position } from 'roosterjs-editor-dom';
 import { ContentEditFeature, Keys } from 'roosterjs-editor-core';
-import { isRtl, Position } from 'roosterjs-editor-dom';
 
-export const NoCycleCursorMove: ContentEditFeature = {
+const NoCycleCursorMove: ContentEditFeature = {
     keys: [Keys.LEFT, Keys.RIGHT],
     allowFunctionKeys: true,
     shouldHandleEvent: (event, editor, ctrlOrMeta) => {
@@ -26,4 +26,23 @@ export const NoCycleCursorMove: ContentEditFeature = {
     handleEvent: event => {
         event.rawEvent.preventDefault();
     },
+    defaultDisabled: !Browser.isChrome,
+};
+
+export default interface NoCycleCursorMoveFeatureSettings {
+    /**
+     * Chrome may make the cursor move the then end of document if press Ctrl+Left at the beginning of document
+     * Let's disable this behaivor
+     * @default true
+     */
+    noCycleCursorMove?: boolean;
+}
+
+/**
+ * @internal
+ */
+export const NoCycleCursorMoveFeatures: {
+    [key in keyof NoCycleCursorMoveFeatureSettings]: ContentEditFeature;
+} = {
+    noCycleCursorMove: NoCycleCursorMove,
 };

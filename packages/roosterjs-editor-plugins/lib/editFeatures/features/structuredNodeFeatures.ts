@@ -23,7 +23,7 @@ const CHILD_SELECTOR = Object.keys(CHILD_PARENT_TAG_MAP).join(',');
  * a structured element (bullet/numbering list, blockquote, table) if the element is at beginning of
  * document
  */
-export const InsertLineBeforeStructuredNodeFeature: ContentEditFeature = {
+const InsertLineBeforeStructuredNodeFeature: ContentEditFeature = {
     keys: [Keys.ENTER],
     shouldHandleEvent: cacheGetStructuredElement,
     handleEvent: (event, editor) => {
@@ -38,6 +38,7 @@ export const InsertLineBeforeStructuredNodeFeature: ContentEditFeature = {
         });
         event.rawEvent.preventDefault();
     },
+    defaultDisabled: true,
 };
 
 function cacheGetStructuredElement(event: PluginKeyboardEvent, editor: Editor) {
@@ -60,3 +61,21 @@ function cacheGetStructuredElement(event: PluginKeyboardEvent, editor: Editor) {
         return null;
     });
 }
+
+export default interface StructuredNodeFeatureSettings {
+    /**
+     * When press Enter at the beginning of first structured element (table, list) and there isn't line before the position
+     * we create a new line before so that user got a chance to enter content before the table or list
+     * @default false
+     */
+    insertLineBeforeStructuredNodeFeature?: boolean;
+}
+
+/**
+ * @internal
+ */
+export const StructuredNodeFeatures: {
+    [key in keyof StructuredNodeFeatureSettings]: ContentEditFeature;
+} = {
+    insertLineBeforeStructuredNodeFeature: InsertLineBeforeStructuredNodeFeature,
+};

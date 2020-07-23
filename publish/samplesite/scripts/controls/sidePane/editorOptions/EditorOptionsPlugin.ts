@@ -1,14 +1,13 @@
 import BuildInPluginState, { BuildInPluginProps, UrlPlaceholder } from '../../BuildInPluginState';
+import getDefaultContentEditFeatureSettings from './getDefaultContentEditFeatureSettings';
 import OptionsPane from './OptionsPane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
-import { getDefaultContentEditFeatures } from 'roosterjs-editor-plugins';
 import { SidePaneElementProps } from '../SidePaneElement';
 
 const initialState: BuildInPluginState = {
     pluginList: {
         hyperlink: true,
         paste: true,
-        contentEdit: true,
         watermark: false,
         imageResize: true,
         tableResize: true,
@@ -16,7 +15,7 @@ const initialState: BuildInPluginState = {
         pickerPlugin: true,
         entityPlugin: true,
     },
-    contentEditFeatures: getDefaultContentEditFeatures(),
+    contentEditFeatures: getDefaultContentEditFeatureSettings(),
     defaultFormat: {},
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',

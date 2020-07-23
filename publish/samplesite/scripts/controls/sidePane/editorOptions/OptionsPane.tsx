@@ -1,6 +1,7 @@
 import * as React from 'react';
 import BuildInPluginState, { BuildInPluginProps } from '../../BuildInPluginState';
 import Code from './Code';
+import ContentEditFeatures from './ContentEditFeatures';
 import DefaultFormatPane from './DefaultFormat';
 import EditorCode from './codes/EditorCode';
 import MainPaneBase from '../../MainPaneBase';
@@ -54,6 +55,7 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
                     />
                     <label htmlFor="useExperimentFeature">Use experiment features</label>
                 </div>
+
                 <div>
                     <br />
                 </div>
@@ -64,7 +66,15 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
                     </summary>
                     <Plugins state={this.state} resetState={this.resetState} />
                 </details>
-
+                <details>
+                    <summary>
+                        <b>Content edit features:</b>
+                    </summary>
+                    <ContentEditFeatures
+                        state={this.state.contentEditFeatures}
+                        resetState={this.resetState}
+                    />
+                </details>
                 <details>
                     <summary>
                         <b>Default Format:</b>

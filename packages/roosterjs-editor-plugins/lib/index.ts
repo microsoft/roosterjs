@@ -1,4 +1,5 @@
-export * from './ContentEdit';
+export * from './EditFeatures';
+
 export * from './CustomReplace';
 export * from './HyperLink';
 export * from './ImageResize';

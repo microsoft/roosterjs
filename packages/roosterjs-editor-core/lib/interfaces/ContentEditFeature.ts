@@ -39,6 +39,7 @@ export interface GenericContentEditFeature<TEvent extends PluginEvent> {
     shouldHandleEvent: (event: TEvent, editor: Editor, ctrlOrMeta: boolean) => any;
     handleEvent: (event: TEvent, editor: Editor) => ChangeSource | void;
     allowFunctionKeys?: boolean;
+    defaultDisabled?: boolean;
 }
 
 /**

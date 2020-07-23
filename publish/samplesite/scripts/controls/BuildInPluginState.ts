@@ -1,4 +1,4 @@
-import { ContentEditFeatures } from 'roosterjs-editor-plugins';
+import { ContentEditFeatureSettings } from 'roosterjs-editor-plugins/lib/EditFeatures';
 import { DefaultFormat } from 'roosterjs-editor-types';
 import { SidePaneElementProps } from './sidePane/SidePaneElement';
 
@@ -7,7 +7,6 @@ export const UrlPlaceholder = '$url$';
 export interface BuildInPluginList {
     hyperlink: boolean;
     paste: boolean;
-    contentEdit: boolean;
     watermark: boolean;
     imageResize: boolean;
     tableResize: boolean;
@@ -16,14 +15,9 @@ export interface BuildInPluginList {
     entityPlugin: boolean;
 }
 
-export type ContentEditFeatureState = Pick<
-    ContentEditFeatures,
-    Exclude<keyof ContentEditFeatures, 'smartOrderedListStyles'>
->;
-
 export default interface BuildInPluginState {
     pluginList: BuildInPluginList;
-    contentEditFeatures: ContentEditFeatureState;
+    contentEditFeatures: ContentEditFeatureSettings;
     defaultFormat: DefaultFormat;
     linkTitle: string;
     watermarkText: string;

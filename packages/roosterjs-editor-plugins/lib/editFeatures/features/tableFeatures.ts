@@ -1,11 +1,18 @@
 import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
-import { contains, getTagOfNode, isVoidHtmlElement, Position, VTable } from 'roosterjs-editor-dom';
 import { NodeType, PluginEvent, PositionType } from 'roosterjs-editor-types';
+import {
+    Browser,
+    contains,
+    getTagOfNode,
+    isVoidHtmlElement,
+    Position,
+    VTable,
+} from 'roosterjs-editor-dom';
 
 /**
  * TabInTable edit feature, provides the ability to jump between cells when user press TAB in table
  */
-export const TabInTable: ContentEditFeature = {
+const TabInTable: ContentEditFeature = {
     keys: [Keys.TAB],
     shouldHandleEvent: cacheGetTableCell,
     handleEvent: (event, editor) => {
@@ -41,7 +48,7 @@ export const TabInTable: ContentEditFeature = {
  * UpDownInTable edit feature, provides the ability to jump to cell above/below when user press UP/DOWN
  * in table
  */
-export const UpDownInTable: ContentEditFeature = {
+const UpDownInTable: ContentEditFeature = {
     keys: [Keys.UP, Keys.DOWN],
     shouldHandleEvent: cacheGetTableCell,
     handleEvent: (event, editor) => {
@@ -87,6 +94,7 @@ export const UpDownInTable: ContentEditFeature = {
             }
         });
     },
+    defaultDisabled: !Browser.isChrome && !Browser.isSafari,
 };
 
 function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellElement {
@@ -98,3 +106,27 @@ function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellEle
         );
     });
 }
+
+export default interface TableFeatureSettings {
+    /**
+     * When press TAB or SHIFT+TAB key in table cell, jump to next/previous table cell
+     * @default true
+     */
+    tabInTable?: boolean;
+
+    /**
+     * When press Up or Down in table cell, jump to the table cell above/below
+     * @default true for Chrome and safari, false for other browsers since they arleady have correct behavior
+     */
+    upDownInTable?: boolean;
+}
+
+/**
+ * @internal
+ */
+export const TableFeatures: {
+    [key in keyof TableFeatureSettings]: ContentEditFeature;
+} = {
+    tabInTable: TabInTable,
+    upDownInTable: UpDownInTable,
+};

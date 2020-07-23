@@ -16,7 +16,7 @@ const STRUCTURED_TAGS = [QUOTE_TAG, 'LI', 'TD', 'TH'].join(',');
  * UnquoteWhenBackOnEmpty1stLine edit feature, provides the ability to Unquote current line when
  * user press BACKSPACE on first and empty line of a BLOCKQUOTE
  */
-export const UnquoteWhenBackOnEmpty1stLine: ContentEditFeature = {
+const UnquoteWhenBackOnEmpty1stLine: ContentEditFeature = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
         let childOfQuote = cacheGetQuoteChild(event, editor);
@@ -29,7 +29,7 @@ export const UnquoteWhenBackOnEmpty1stLine: ContentEditFeature = {
  * UnquoteWhenEnterOnEmptyLine edit feature, provides the ability to Unquote current line when
  * user press ENTER on an empty line of a BLOCKQUOTE
  */
-export const UnquoteWhenEnterOnEmptyLine: ContentEditFeature = {
+const UnquoteWhenEnterOnEmptyLine: ContentEditFeature = {
     keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {
         let childOfQuote = cacheGetQuoteChild(event, editor);
@@ -71,3 +71,27 @@ function splitQuote(event: PluginKeyboardEvent, editor: Editor) {
     });
     event.rawEvent.preventDefault();
 }
+
+export default interface QuoteFeatureSettings {
+    /**
+     * When press BAckspace on empty line which is the first line of a blockquote, unquote current line
+     * @default true
+     */
+    unquoteWhenBackspaceOnEmptyFirstLine?: boolean;
+
+    /**
+     * When press Enter on empty line in a blockquote, unquote current line
+     * @default true
+     */
+    unquoteWhenEnterOnEmptyLine?: boolean;
+}
+
+/**
+ * @internal
+ */
+export const QuoteFeatures: {
+    [key in keyof QuoteFeatureSettings]: ContentEditFeature;
+} = {
+    unquoteWhenBackspaceOnEmptyFirstLine: UnquoteWhenBackOnEmpty1stLine,
+    unquoteWhenEnterOnEmptyLine: UnquoteWhenEnterOnEmptyLine,
+};

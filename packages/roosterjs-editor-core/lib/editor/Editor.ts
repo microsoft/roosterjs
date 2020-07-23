@@ -93,8 +93,8 @@ export default class Editor {
         this.eventDisposers = mapPluginEvents(this.core);
 
         // 6. Add additional content edit features to the editor if specified
-        if (options.additionalEditFeatures) {
-            options.additionalEditFeatures.forEach(feature => this.addContentEditFeature(feature));
+        if (options.editFeatures) {
+            options.editFeatures.forEach(feature => this.addContentEditFeature(feature));
         }
 
         // 7. Make the container editable and set its selection styles
@@ -991,7 +991,7 @@ export default class Editor {
     }
 
     /**
-     * Add a Content Edit feature. This is mostly called from ContentEdit plugin
+     * Add a Content Edit feature.
      * @param feature The feature to add
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {

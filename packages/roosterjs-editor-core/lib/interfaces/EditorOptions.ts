@@ -56,7 +56,7 @@ export default interface EditorOptions {
     /**
      * Additional content edit features
      */
-    additionalEditFeatures?: GenericContentEditFeature<PluginEvent>[];
+    editFeatures?: GenericContentEditFeature<PluginEvent>[];
 
     /**
      * If the editor is currently in dark mode

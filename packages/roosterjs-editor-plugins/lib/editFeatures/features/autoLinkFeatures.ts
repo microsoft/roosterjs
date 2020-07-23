@@ -13,8 +13,8 @@ import {
     cacheGetEventData,
     cacheGetContentSearcher,
     clearContentSearcherCache,
-    GenericContentEditFeature,
     Keys,
+    ContentEditFeature,
 } from 'roosterjs-editor-core';
 
 /**
@@ -25,26 +25,29 @@ const TRAILING_PUNCTUATION_REGEX = /[.+=\s:;"',>]+$/i;
 const MINIMUM_LENGTH = 5;
 
 /**
+ * @internal
  * AutoLink edit feature, provides the ability to automatically convert text user typed or pasted
  * in hyperlink format into a real hyperlink
  */
-export const AutoLink: GenericContentEditFeature<PluginEvent> = {
+export const AutoLink: ContentEditFeature = {
     keys: [Keys.ENTER, Keys.SPACE, Keys.CONTENTCHANGED],
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
 };
 
 /**
+ * @internal
  * UnlinkWhenBackspaceAfterLink edit feature, provides the ability to convert a hyperlink back into text
  * if user presses BACKSPACE right after a hyperlink
  */
-export const UnlinkWhenBackspaceAfterLink: GenericContentEditFeature<PluginKeyboardEvent> = {
+export const UnlinkWhenBackspaceAfterLink: ContentEditFeature = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: hasLinkBeforeCursor,
     handleEvent: (event, editor) => {
         event.rawEvent.preventDefault();
         removeLink(editor);
     },
+    defaultDisabled: true,
 };
 
 function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
@@ -119,3 +122,27 @@ function autoLink(event: PluginEvent, editor: Editor) {
         }, ChangeSource.AutoLink);
     });
 }
+
+export default interface AutoLinkFeatureSettings {
+    /**
+     * When press Space or Enter after a hyperlink-like string, convert the string to a hyperlink
+     * @default true
+     */
+    autoLink?: boolean;
+
+    /**
+     * Unlink when backspace right after a hyperlink
+     * @default false
+     */
+    unlinkWhenBackspaceAfterLink?: boolean;
+}
+
+/**
+ * @internal
+ */
+export const AutoLinkFeatures: {
+    [key in keyof AutoLinkFeatureSettings]: ContentEditFeature;
+} = {
+    autoLink: AutoLink,
+    unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink,
+};

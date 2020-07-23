@@ -1,7 +1,16 @@
 import * as React from 'react';
 import BuildInPluginState, { UrlPlaceholder } from '../BuildInPluginState';
 import SampleColorPickerPluginDataProvider from '../samplepicker/SampleColorPickerPluginDataProvider';
+import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins/lib/CustomReplace';
 import { EditorInstanceToggleablePlugins } from './EditorInstanceToggleablePlugins';
+import { EntityPlugin } from 'roosterjs-editor-plugins/lib/Entity';
+import { getContentEditFeatures } from 'roosterjs-editor-plugins/lib/EditFeatures';
+import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
+import { ImageResize } from 'roosterjs-editor-plugins/lib/ImageResize';
+import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
+import { PickerPlugin } from 'roosterjs-editor-plugins/lib/Picker';
+import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
+import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
 import {
     Editor as RoosterJsEditor,
     EditorOptions,
@@ -9,22 +18,7 @@ import {
     UndoService,
 } from 'roosterjs-editor-core';
 
-import {
-    HyperLink,
-    Paste,
-    ContentEdit,
-    Watermark,
-    TableResize,
-    ContentEditFeatures,
-    getDefaultContentEditFeatures,
-    CustomReplace as CustomReplacePlugin,
-    EntityPlugin,
-    ImageResize,
-    PickerPlugin,
-} from 'roosterjs-editor-plugins';
-
 const styles = require('./Editor.scss');
-const assign = require('object-assign');
 
 export interface EditorProps {
     plugins: EditorPlugin[];
@@ -89,9 +83,6 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
         editorInstanceToggleablePlugins = {
             hyperlink: pluginList.hyperlink ? new HyperLink(this.getLinkCallback()) : null,
             paste: pluginList.paste ? new Paste() : null,
-            contentEdit: pluginList.contentEdit
-                ? new ContentEdit(this.getContentEditOptions())
-                : null,
             watermark: pluginList.watermark ? new Watermark(this.state.watermarkText) : null,
             imageResize: pluginList.imageResize ? new ImageResize() : null,
             tableResize: pluginList.tableResize ? new TableResize() : null,
@@ -112,12 +103,14 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
             ),
             ...this.props.plugins,
         ];
+        let features = getContentEditFeatures(this.state.contentEditFeatures);
         let defaultFormat = { ...this.state.defaultFormat };
         let options: EditorOptions = {
             plugins: plugins,
             defaultFormat: defaultFormat,
             undo: this.props.undo,
             initialContent: this.props.content,
+            editFeatures: features,
             enableExperimentFeatures: this.state.useExperimentFeatures,
         };
         this.editor = new RoosterJsEditor(this.contentDiv, options);
@@ -148,10 +141,10 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
         return linkCallback;
     }
 
-    private getContentEditOptions(): ContentEditFeatures {
-        let defaultFeatures = getDefaultContentEditFeatures();
-        return assign(defaultFeatures, this.state.contentEditFeatures);
-    }
+    // private getContentEditOptions(): ContentEditFeatures {
+    //     let defaultFeatures = getDefaultContentEditFeatures();
+    //     return assign(defaultFeatures, this.state.contentEditFeatures);
+    // }
 }
 
 // expose the active editor the global window for integration tests

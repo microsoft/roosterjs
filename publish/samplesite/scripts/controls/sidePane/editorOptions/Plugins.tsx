@@ -1,12 +1,9 @@
 import * as React from 'react';
-import BuildInPluginState, {
-    BuildInPluginList,
-    ContentEditFeatureState,
-    UrlPlaceholder,
-} from '../../BuildInPluginState';
+import BuildInPluginState, { BuildInPluginList, UrlPlaceholder } from '../../BuildInPluginState';
+import { ContentEditFeatureSettings } from 'roosterjs-editor-plugins/lib/EditFeatures';
 
 type PluginItemId = keyof BuildInPluginList;
-type ContentEditItemId = keyof ContentEditFeatureState;
+type ContentEditItemId = keyof ContentEditFeatureSettings;
 
 const styles = require('./OptionsPane.scss');
 
@@ -35,11 +32,6 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                         )
                     )}
                     {this.renderPluginItem('paste', 'Paste Plugin')}
-                    {this.renderPluginItem(
-                        'contentEdit',
-                        'ContentEdit Plugin',
-                        this.renderContentEditFeatures()
-                    )}
                     {this.renderPluginItem(
                         'watermark',
                         'Watermark Plugin',
@@ -72,20 +64,6 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
             text,
             moreOptions,
             this.onPluginClick
-        );
-    }
-
-    private renderContentEditItem(
-        id: ContentEditItemId,
-        text: string,
-        moreOptions?: JSX.Element
-    ): JSX.Element {
-        return this.renderItem(
-            id,
-            this.props.state.contentEditFeatures[id],
-            text,
-            moreOptions,
-            this.onContentEditClick
         );
     }
 
@@ -140,62 +118,10 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
         );
     }
 
-    private renderContentEditFeatures(): JSX.Element {
-        return (
-            <table>
-                <tbody>
-                    {this.renderContentEditItem('autoLink', 'Auto link')}
-                    {this.renderContentEditItem('indentWhenTab', 'Indent When Tab')}
-                    {this.renderContentEditItem('outdentWhenShiftTab', 'Outdent When Shift+Tab')}
-                    {this.renderContentEditItem(
-                        'outdentWhenBackspaceOnEmptyFirstLine',
-                        'Outdent When Backspace On Empty FirstLine'
-                    )}
-                    {this.renderContentEditItem(
-                        'outdentWhenEnterOnEmptyLine',
-                        'Outdent When Enter On Empty Line'
-                    )}
-                    {this.renderContentEditItem(
-                        'mergeInNewLineWhenBackspaceOnFirstChar',
-                        'Merge In New Line When Backspace On FirstChar In List'
-                    )}
-                    {this.renderContentEditItem(
-                        'unquoteWhenBackspaceOnEmptyFirstLine',
-                        'Unquote When Backspace On Empty First Line'
-                    )}
-                    {this.renderContentEditItem(
-                        'unquoteWhenEnterOnEmptyLine',
-                        'Unquote When Enter On Empty Line'
-                    )}
-                    {this.renderContentEditItem('autoBullet', 'Auto Bullet / Numbering')}
-                    {this.renderContentEditItem('tabInTable', 'Tab To Jump Cell In Table')}
-                    {this.renderContentEditItem('upDownInTable', 'Up / Down To Jump Cell In Table')}
-                    {this.renderContentEditItem(
-                        'insertLineBeforeStructuredNodeFeature',
-                        "Enter to create new line before table/list which doesn't have line before"
-                    )}
-                    {this.renderContentEditItem(
-                        'unlinkWhenBackspaceAfterLink',
-                        'Auto unlink when backspace right after a hyperlink'
-                    )}
-                    {this.renderContentEditItem('defaultShortcut', 'Default Shortcuts')}
-                    {this.renderContentEditItem('smartOrderedList', 'Smart Ordered List Style')}
-                </tbody>
-            </table>
-        );
-    }
-
     private onPluginClick = (id: PluginItemId) => {
         this.props.resetState(state => {
             let checkbox = document.getElementById(id) as HTMLInputElement;
             state.pluginList[id] = checkbox.checked;
-        }, true);
-    };
-
-    private onContentEditClick = (id: ContentEditItemId) => {
-        this.props.resetState(state => {
-            let checkbox = document.getElementById(id) as HTMLInputElement;
-            state.contentEditFeatures[id] = checkbox.checked;
         }, true);
     };
 }

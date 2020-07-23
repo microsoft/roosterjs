@@ -56,7 +56,7 @@ const commands: ShortcutCommand[] = [
  * Ctrl/Meta+Shift+>: increase font size
  * Ctrl/Meta+Shift+<: decrease font size
  */
-export const DefaultShortcut: ContentEditFeature = {
+const DefaultShortcut: ContentEditFeature = {
     allowFunctionKeys: true,
     keys: [Keys.B, Keys.I, Keys.U, Keys.Y, Keys.Z, Keys.COMMA, Keys.PERIOD, Keys.FORWARDSLASH],
     shouldHandleEvent: cacheGetCommand,
@@ -85,3 +85,20 @@ function cacheGetCommand(event: PluginKeyboardEvent) {
         return key && commands.filter(cmd => (Browser.isMac ? cmd.macKey : cmd.winKey) == key)[0];
     });
 }
+
+export default interface ShortcutFeatureSettings {
+    /**
+     * Respond to default common keyboard short, i.e. Ctrl+B, Ctrl+I, Ctrl+U, Ctrl+Z, Ctrl+Y
+     * @default true
+     */
+    defaultShortcut?: boolean;
+}
+
+/**
+ * @internal
+ */
+export const ShortcutFeatures: {
+    [key in keyof ShortcutFeatureSettings]: ContentEditFeature;
+} = {
+    defaultShortcut: DefaultShortcut,
+};
