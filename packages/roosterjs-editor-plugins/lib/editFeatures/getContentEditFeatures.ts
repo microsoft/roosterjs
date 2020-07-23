@@ -5,7 +5,7 @@ import { ListFeatures } from './features/listFeatures';
 import { NoCycleCursorMoveFeatures } from './features/noCycleCursorMove';
 import { PluginEvent } from 'roosterjs-editor-types';
 import { QuoteFeatures } from './features/quoteFeatures';
-import { ShortcutFeatures } from './features/ShortcutFeatures';
+import { ShortcutFeatures } from './features/shortcutFeatures';
 import { StructuredNodeFeatures } from './features/structuredNodeFeatures';
 import { TableFeatures } from './features/tableFeatures';
 
