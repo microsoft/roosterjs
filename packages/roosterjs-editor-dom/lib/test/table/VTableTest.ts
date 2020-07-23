@@ -219,7 +219,8 @@ describe('VTable.applyFormat', () => {
         let vTable = new VTable(node);
         vTable.applyFormat(format);
         vTable.writeBack();
-        expect(div.innerHTML).toBe(expectedHtml, 'HTML');
+        const expectedDiv = document.createElement('div');
+        expect(div.isEqualNode(expectedDiv));
         document.body.removeChild(div);
     }
 

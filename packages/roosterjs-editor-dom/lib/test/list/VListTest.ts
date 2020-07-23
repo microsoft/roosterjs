@@ -381,7 +381,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul><ol style="list-style: lower-alpha;"><li>item1</li></ol><li>item2</li></ul><ol><li>item3</li></ol>'
+            '<ul><ol style="list-style-type: lower-alpha;"><li>item1</li></ol><li>item2</li></ul><ol><li>item3</li></ol>'
         );
     });
 
