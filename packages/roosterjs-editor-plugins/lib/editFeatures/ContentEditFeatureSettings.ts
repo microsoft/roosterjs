@@ -2,7 +2,7 @@ import AutoLinkFeatureSettings from './features/autoLinkFeatures';
 import ListFeatureSettings from './features/listFeatures';
 import NoCycleCursorMoveFeatureSettings from './features/noCycleCursorMove';
 import QuoteFeatureSettings from './features/quoteFeatures';
-import ShortcutFeatureSettings from './features/ShortcutFeatures';
+import ShortcutFeatureSettings from './features/shortcutFeatures';
 import StructuredNodeFeatureSettings from './features/structuredNodeFeatures';
 import TableFeatureSettings from './features/tableFeatures';
 
