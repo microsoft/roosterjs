@@ -14,7 +14,7 @@
             "request": "launch",
             "name": "Test current file",
             "program": "${workspaceFolder}/node_modules/karma/bin/karma",
-            "args": ["start", "--grep", "${file}"],
+            "args": ["start", "--components", "${fileBasenameNoExtension}"],
             "console": "integratedTerminal"
         },
         {
