@@ -37,7 +37,7 @@ describe('getInheritableStyles', () => {
     it('Element', () => {
         let node = document.createElement('SPAN');
         document.body.appendChild(node);
-        node.style.fontFamily = '"Times New Roman"';
+        node.style.fontFamily = 'arial';
         let styles = getInheritableStyles(node);
         document.body.removeChild(node);
 
@@ -48,33 +48,35 @@ describe('getInheritableStyles', () => {
             cursor: 'auto',
             direction: 'ltr',
             ['empty-cells']: 'show',
-            ['font-family']: '"Times New Roman"',
+            ['font-family']: 'arial',
             ['font-size']: '16px',
             ['font-style']: 'normal',
             ['font-variant']: 'normal',
             ['font-weight']: '400',
-            font: 'normal normal 400 normal 16px / normal "Times New Roman"',
             ['letter-spacing']: 'normal',
             ['line-height']: 'normal',
             ['list-style-image']: 'none',
             ['list-style-position']: 'outside',
             ['list-style-type']: 'disc',
-            ['list-style']: 'disc outside none',
-            orphans: '2',
-            quotes: '',
             ['text-align']: 'start',
             ['text-indent']: '0px',
             ['text-transform']: 'none',
             visibility: 'visible',
             ['white-space']: 'normal',
-            widows: '2',
             ['word-spacing']: '0px',
+
+            // These styles can have variable values among browsers and versions, so we ignore them
+            font: undefined,
+            orphans: undefined,
+            widows: undefined,
+            ['list-style']: undefined,
+            quotes: undefined,
         };
         Object.keys(styles).forEach(key => {
             const value = styles[key];
+            const expectedValue = expectedResult[key];
 
-            // The "font" style can be changed in different versions of Chrome, so skip compare it
-            if (key != 'font') {
+            if (expectedValue !== undefined) {
                 expect(sort(value)).toEqual(sort(expectedResult[key]), key);
             }
         });
