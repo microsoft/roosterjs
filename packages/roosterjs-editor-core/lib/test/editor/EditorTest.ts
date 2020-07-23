@@ -537,16 +537,4 @@ describe('Editor getCustomData()', () => {
         editor.dispose();
         expect(objCount).toBe(0);
     });
-
-    it('Get predefined custom data', () => {
-        let data = {
-            test: 'result',
-        };
-        editor = TestHelper.initEditor(testID, null, null, {
-            [CustomDataKey]: data,
-        });
-
-        let result = editor.getCustomData(CustomDataKey);
-        expect(result).toBe(data);
-    });
 });

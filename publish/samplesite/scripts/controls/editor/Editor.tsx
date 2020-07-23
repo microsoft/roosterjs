@@ -140,11 +140,6 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
 
         return linkCallback;
     }
-
-    // private getContentEditOptions(): ContentEditFeatures {
-    //     let defaultFeatures = getDefaultContentEditFeatures();
-    //     return assign(defaultFeatures, this.state.contentEditFeatures);
-    // }
 }
 
 // expose the active editor the global window for integration tests

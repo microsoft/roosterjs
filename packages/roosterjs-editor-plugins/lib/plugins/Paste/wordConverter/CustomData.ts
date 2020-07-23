@@ -7,7 +7,7 @@ const NODE_ID_ATTRIBUTE_NAME = 'NodeId';
  * @internal
  * Custom data for dom elements
  */
-export default interface CustomData {
+export default interface WordCustomData {
     /** The dict storing custom data, key is element Id, value is dictionary */
     dict: { [key: string]: { [key: string]: number } };
 
@@ -19,7 +19,7 @@ export default interface CustomData {
  * @internal
  * Create an empty CustomData
  */
-export function createCustomData(): CustomData {
+export function createCustomData(): WordCustomData {
     return {
         dict: {},
         nextNodeId: 1,
@@ -30,17 +30,17 @@ export function createCustomData(): CustomData {
  * @internal
  * Sets the specified object data
  */
-export function setObject(customData: CustomData, element: Node, key: string, value: any) {
+export function setObject(wordCustomData: WordCustomData, element: Node, key: string, value: any) {
     // Get the id for the element
     if (element.nodeType == NodeType.Element) {
-        let id = getAndSetNodeId(customData, element as HTMLElement);
+        let id = getAndSetNodeId(wordCustomData, element as HTMLElement);
         if (id != '') {
             // Get the values for the element
-            if (!customData.dict[id]) {
+            if (!wordCustomData.dict[id]) {
                 // First time dictionary creation
-                customData.dict[id] = {};
+                wordCustomData.dict[id] = {};
             }
-            customData.dict[id][key] = value;
+            wordCustomData.dict[id][key] = value;
         }
     }
 }
@@ -49,11 +49,11 @@ export function setObject(customData: CustomData, element: Node, key: string, va
  * @internal
  * Reads the specified object data
  */
-export function getObject(customData: CustomData, element: Node, key: string): any {
+export function getObject(wordCustomData: WordCustomData, element: Node, key: string): any {
     if (element.nodeType == NodeType.Element) {
-        let id = getAndSetNodeId(customData, element as HTMLElement);
+        let id = getAndSetNodeId(wordCustomData, element as HTMLElement);
         if (id != '') {
-            return customData.dict[id] && customData.dict[id][key];
+            return wordCustomData.dict[id] && wordCustomData.dict[id][key];
         }
     }
 
@@ -63,11 +63,11 @@ export function getObject(customData: CustomData, element: Node, key: string): a
 /**
  * Get the unique id for the specified node...
  */
-function getAndSetNodeId(customData: CustomData, element: HTMLElement): string {
+function getAndSetNodeId(wordCustomData: WordCustomData, element: HTMLElement): string {
     let id = element.getAttribute(NODE_ID_ATTRIBUTE_NAME);
     if (!id) {
-        id = customData.nextNodeId.toString();
-        customData.nextNodeId++;
+        id = wordCustomData.nextNodeId.toString();
+        wordCustomData.nextNodeId++;
         element.setAttribute(NODE_ID_ATTRIBUTE_NAME, id);
     }
     return id;

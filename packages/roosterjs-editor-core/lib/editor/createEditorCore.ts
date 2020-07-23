@@ -13,7 +13,6 @@ import { attachDomEvent } from '../coreAPI/attachDomEvent';
 import { Browser } from 'roosterjs-editor-dom';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { createPasteFragment } from '../coreAPI/createPasteFragment';
-import { CustomDataMap } from '../interfaces/CustomData';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
 import { getCustomData } from '../coreAPI/getCustomData';
@@ -38,7 +37,7 @@ export default function createEditorCore(
         edit: new EditPlugin(),
         typeInContainer: new TypeInContainerPlugin(),
         mouseUp: new MouseUpPlugin(),
-        domEvent: new DOMEventPlugin(options.disableRestoreSelectionOnFocus),
+        domEvent: new DOMEventPlugin(),
         firefoxTypeAfterLink: new FirefoxTypeAfterLink(),
         copyPlugin: !Browser.isIE && new CopyPlugin(),
         pastePlugin: new CorePastePlugin(),
@@ -58,7 +57,7 @@ export default function createEditorCore(
         ),
         corePlugins,
         currentUndoSnapshot: null,
-        customData: createCustomData(options.customData || {}),
+        customData: {},
         cachedSelectionRange: null,
         plugins: allPlugins,
         eventHandlerPlugins: eventHandlerPlugins,
@@ -98,13 +97,4 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
         selectRange: map.selectRange || selectRange,
         triggerEvent: map.triggerEvent || triggerEvent,
     };
-}
-
-function createCustomData(initValue: { [key: string]: any }): CustomDataMap {
-    return Object.keys(initValue).reduce((result, key) => {
-        result[key] = {
-            value: initValue[key],
-        };
-        return result;
-    }, <CustomDataMap>{});
 }

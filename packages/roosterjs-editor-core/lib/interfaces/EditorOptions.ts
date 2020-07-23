@@ -36,25 +36,13 @@ export default interface EditorOptions {
     initialContent?: string;
 
     /**
-     * Whether auto restore previous selection when focus to editor
-     * Default value is false
-     */
-    disableRestoreSelectionOnFocus?: boolean;
-
-    /**
-     * Whether skip setting contenteditable attribute to content DIV
-     * Default value is false
-     */
-    omitContentEditableAttributeChanges?: boolean;
-
-    /**
      * A function map to override default core API implementation
      * Default value is null
      */
     coreApiOverride?: Partial<CoreApiMap>;
 
     /**
-     * Additional content edit features
+     * Content edit features
      */
     editFeatures?: GenericContentEditFeature<PluginEvent>[];
 
@@ -67,16 +55,6 @@ export default interface EditorOptions {
      * Dark mode options for default format and paste handler
      */
     darkModeOptions?: DarkModeOptions;
-
-    /**
-     * Initial custom data.
-     * Use this option to set custom data before any plugin is initialized,
-     * so that plugins can access the custom data safely.
-     * The value of this map is the value of each custom data. No disposer function to specify here.
-     * Because when set custom data via this way, it means the custom data value is created before editor,
-     * so editor shouldn't control the lifecycle of these objects, and caller need to manage its lifecycle.
-     */
-    customData?: { [key: string]: any };
 
     /**
      * The scroll container to get scroll event from.

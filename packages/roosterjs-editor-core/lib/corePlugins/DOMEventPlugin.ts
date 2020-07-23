@@ -30,8 +30,6 @@ export default class DOMEventPlugin implements EditorPlugin {
     private cachedPosition: NodePosition;
     private cachedFormatState: PendableFormatState;
 
-    constructor(private disableRestoreSelectionOnFocus: boolean) {}
-
     getName() {
         return 'DOMEvent';
     }
@@ -132,21 +130,7 @@ export default class DOMEventPlugin implements EditorPlugin {
     };
 
     private onFocus = () => {
-        if (this.disableRestoreSelectionOnFocus) {
-            if (this.cachedPosition && this.cachedFormatState) {
-                let range = this.editor.getSelectionRange();
-                if (
-                    range.collapsed &&
-                    Position.getStart(range).normalize().equalTo(this.cachedPosition)
-                ) {
-                    this.restorePendingFormatState();
-                } else {
-                    this.clear();
-                }
-            }
-        } else {
-            this.editor.restoreSavedRange();
-        }
+        this.editor.restoreSavedRange();
     };
 
     private onBlur = () => {

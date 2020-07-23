@@ -211,7 +211,7 @@ function getOrCreateListForNode(
     // Here use the unique list ID to detect if we have the right list...
     // it is possible to have 2 different lists next to each other with different formats, so
     // we want to detect this an create separate lists for those cases
-    let listId = getObject(wordConverter.customData, list, UNIQUE_LIST_ID_CUSTOM_DATA);
+    let listId = getObject(wordConverter.wordCustomData, list, UNIQUE_LIST_ID_CUSTOM_DATA);
 
     // If we have a list with and ID, but the ID is different than the ID for this list item, this
     // is a completely new list, so we'll append a new list for that
@@ -222,7 +222,12 @@ function getOrCreateListForNode(
     }
 
     // Set the list id into the custom data
-    setObject(wordConverter.customData, list, UNIQUE_LIST_ID_CUSTOM_DATA, metadata.uniqueListId);
+    setObject(
+        wordConverter.wordCustomData,
+        list,
+        UNIQUE_LIST_ID_CUSTOM_DATA,
+        metadata.uniqueListId
+    );
 
     // This call will convert the list if needed to the right type of list required. This can happen
     // on the cases where the first list item for this list is located after a deeper list. for that
@@ -244,10 +249,10 @@ function convertListIfNeeded(
         // We have the wrong list type.. convert it, set the id again and tranfer all the childs
         let newList = list.ownerDocument.createElement(listMetadata.tagName);
         setObject(
-            wordConverter.customData,
+            wordConverter.wordCustomData,
             newList,
             UNIQUE_LIST_ID_CUSTOM_DATA,
-            getObject(wordConverter.customData, list, UNIQUE_LIST_ID_CUSTOM_DATA)
+            getObject(wordConverter.wordCustomData, list, UNIQUE_LIST_ID_CUSTOM_DATA)
         );
         while (list.firstChild) {
             newList.appendChild(list.firstChild);

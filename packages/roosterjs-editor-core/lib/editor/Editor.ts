@@ -98,7 +98,7 @@ export default class Editor {
         }
 
         // 7. Make the container editable and set its selection styles
-        if (!options.omitContentEditableAttributeChanges && !contentDiv.isContentEditable) {
+        if (!contentDiv.hasAttribute('contenteditable')) {
             contentDiv.setAttribute('contenteditable', 'true');
             let styles = contentDiv.style;
             styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
