@@ -30,7 +30,7 @@ export const createPasteFragment: CreatePasteFragment = (
 ) => {
     // Step 1: Prepare BeforePasteEvent object
     const event = createBeforePasteEvent(core, clipboardData);
-    const { fragment } = event;
+    const { fragment, sanitizingOption } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
     let doc: HTMLDocument;
 
@@ -52,6 +52,17 @@ export const createPasteFragment: CreatePasteFragment = (
             attrs[attr.name] = attr.value;
             return attrs;
         }, event.htmlAttributes);
+        toArray(doc.querySelectorAll('meta')).reduce((attrs, meta) => {
+            attrs[meta.name] = meta.content;
+            return attrs;
+        }, event.htmlAttributes);
+
+        // Move all STYLE nodes into header, and save them into sanitizing options.
+        // Because if we directly move them into a fragment, all sheets under STYLE will be lost.
+        processStyles(doc, style => {
+            doc.head.appendChild(style);
+            sanitizingOption.additionalGlobalStyleNodes.push(style);
+        });
 
         const startIndex = rawHtml.indexOf(START_FRAGMENT);
         const endIndex = rawHtml.lastIndexOf(END_FRAGMENT);
@@ -60,12 +71,14 @@ export const createPasteFragment: CreatePasteFragment = (
             event.htmlBefore = rawHtml.substr(0, startIndex);
             event.htmlAfter = rawHtml.substr(endIndex + END_FRAGMENT.length);
             doc.body.innerHTML = rawHtml.substring(startIndex + START_FRAGMENT.length, endIndex);
+
+            // Remove style nodes just added by setting innerHTML of body since we already have all
+            // style nodes in header.
+            // Here we use doc.body instead of doc because we only want to remove STYLE nodes under BODY
+            // and the nodes under HEAD are still used when convert global CSS to inline
+            processStyles(doc.body, style => style.parentNode?.removeChild(style));
         }
 
-        const styles = toArray(doc.querySelectorAll('style'));
-
-        // Append all styles nodes, included those under <HEAD> tag so that we can convert them to inline CSS
-        styles.forEach(style => fragment.appendChild(style));
         while (doc.body.firstChild) {
             fragment.appendChild(doc.body.firstChild);
         }
@@ -126,4 +139,11 @@ function createBeforePasteEvent(core: EditorCore, clipboardData: ClipboardData):
         htmlAfter: '',
         htmlAttributes: {},
     };
+}
+
+function processStyles(node: ParentNode, callback: (style: HTMLStyleElement) => void) {
+    const styles = node.querySelectorAll('style');
+    for (let i = 0; i < styles.length; i++) {
+        callback(styles[i]);
+    }
 }

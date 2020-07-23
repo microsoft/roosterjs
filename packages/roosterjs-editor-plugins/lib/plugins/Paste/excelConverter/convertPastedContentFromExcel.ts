@@ -43,7 +43,7 @@ export default function convertPastedContentFromExcel(event: BeforePasteEvent) {
     }
 
     chainSanitizerCallback(sanitizingOption.elementCallbacks, 'TD', element => {
-        if (element.style.border == 'none') {
+        if (element.style.borderStyle == 'none') {
             element.style.border = DEFAULT_BORDER_STYLE;
         }
         return true;

@@ -11,6 +11,8 @@ const WORD_ATTRIBUTE_NAME = 'xmlns:w';
 const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';
 const EXCEL_ATTRIBUTE_NAME = 'xmlns:x';
 const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
+const EXCEL_ONLINE_ATTRIBUTE_NAME = 'ProgId';
+const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
@@ -49,7 +51,10 @@ export default class Paste implements EditorPlugin {
             if (htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE) {
                 // Handle HTML copied from Word
                 convertPastedContentFromWord(event);
-            } else if (htmlAttributes[EXCEL_ATTRIBUTE_NAME] == EXCEL_ATTRIBUTE_VALUE) {
+            } else if (
+                htmlAttributes[EXCEL_ATTRIBUTE_NAME] == EXCEL_ATTRIBUTE_VALUE ||
+                htmlAttributes[EXCEL_ONLINE_ATTRIBUTE_NAME] == EXCEL_ONLINE_ATTRIBUTE_VALUE
+            ) {
                 // Handle HTML copied from Excel
                 convertPastedContentFromExcel(event);
             } else if ((wacListElements = fragment.querySelectorAll(WAC_IDENTIFING_SELECTOR))[0]) {

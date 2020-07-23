@@ -1,14 +1,14 @@
-module.exports = function(config) {
+module.exports = function (config) {
     config.set({
         basePath: '.',
         plugins: [
             'karma-webpack',
-            'karma-chrome-launcher',
+            'karma-firefox-launcher',
             'karma-phantomjs-launcher',
             'karma-jasmine',
             'karma-sourcemap-loader',
         ],
-        browsers: ['Chrome'],
+        browsers: ['Firefox'],
         files: ['karma.tests.js'],
         frameworks: ['jasmine'],
         preprocessors: {
