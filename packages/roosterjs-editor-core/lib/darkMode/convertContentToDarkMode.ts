@@ -1,4 +1,4 @@
-import { isDocumentFragment, isHTMLElement } from 'roosterjs-editor-dom';
+import { safeInstanceOf } from 'roosterjs-editor-dom';
 
 /**
  * Converter for dark mode that runs all child elements of a node through the content transform function.
@@ -15,12 +15,12 @@ export function convertContentToDarkMode(
     // Get a list of all the decendents of a node.
     // querySelectorAll doesn't return a live list when called on an HTMLElement
     // So we use getElementsByTagName instead for HTMLElement types.
-    if (isHTMLElement(node)) {
+    if (safeInstanceOf(node, 'HTMLElement')) {
         childElements = Array.prototype.slice.call(node.getElementsByTagName('*'));
         if (!skipRootElement) {
             childElements.unshift(node);
         }
-    } else if (isDocumentFragment(node)) {
+    } else if (safeInstanceOf(node, 'DocumentFragment')) {
         childElements = Array.prototype.slice.call(node.querySelectorAll('*'));
     }
 

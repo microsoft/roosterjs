@@ -45,7 +45,7 @@ import {
     getPositionRect,
     getTagOfNode,
     isNodeEmpty,
-    isRange,
+    safeInstanceOf,
     Position,
     PositionContentSearcher,
     queryElements,
@@ -608,7 +608,7 @@ export default class Editor {
     public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
         let range = !arg1
             ? null
-            : isRange(arg1)
+            : safeInstanceOf(arg1, 'Range')
             ? arg1
             : Array.isArray(arg1.start) && Array.isArray(arg1.end)
             ? createRange(

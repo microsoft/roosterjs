@@ -6,7 +6,7 @@ import {
     createRange,
     getSelectedBlockElementsInRegion,
     getTagOfNode,
-    isHTMLElement,
+    safeInstanceOf,
 } from 'roosterjs-editor-dom';
 
 const styles = require('./GetSelectedRegionsPane.scss');
@@ -93,13 +93,13 @@ function Region({ region, editor, index }: { region: Region; editor: Editor; ind
 
 function NodeName({ node }: { node: Node }) {
     const mouseOver = React.useCallback(() => {
-        if (isHTMLElement(node)) {
+        if (safeInstanceOf(node, 'HTMLElement')) {
             node.className += ' ' + styles.hover;
         }
     }, [node]);
 
     const mouseOut = React.useCallback(() => {
-        if (isHTMLElement(node)) {
+        if (safeInstanceOf(node, 'HTMLElement')) {
             let classNames = node.className.split(' ');
             classNames = classNames.filter(name => name != styles.hover);
             node.className = classNames.join(' ').trim();
@@ -107,7 +107,7 @@ function NodeName({ node }: { node: Node }) {
     }, [node]);
 
     return node ? (
-        isHTMLElement(node) ? (
+        safeInstanceOf(node, 'HTMLElement') ? (
             <span onMouseOver={mouseOver} onMouseOut={mouseOut} className={styles.regionNode}>
                 {getTagOfNode(node)}#{node.id}
             </span>

@@ -1,6 +1,6 @@
 import getInheritableStyles from './getInheritableStyles';
 import htmlToDom from './htmlToDom';
-import isHTMLElement from '../typeUtils/isHTMLElement';
+import safeInstanceOf from '../typeUtils/safeInstanceOf';
 import { cloneObject } from './cloneObject';
 import {
     getAllowedTags,
@@ -45,7 +45,7 @@ export default class HtmlSanitizer {
     static sanitizeHtml(html: string, options?: SanitizeHtmlOptions) {
         options = options || {};
         let sanitizer = new HtmlSanitizer(options);
-        let currentStyles = isHTMLElement(options.currentElementOrStyle)
+        let currentStyles = safeInstanceOf(options.currentElementOrStyle, 'HTMLElement')
             ? getInheritableStyles(options.currentElementOrStyle)
             : options.currentElementOrStyle;
         return sanitizer.exec(

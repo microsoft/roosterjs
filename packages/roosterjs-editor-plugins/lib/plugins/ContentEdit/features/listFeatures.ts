@@ -1,7 +1,7 @@
 import { setIndentation, toggleBullet, toggleNumbering } from 'roosterjs-editor-api';
 import {
     getTagOfNode,
-    isHTMLOListElement,
+    safeInstanceOf,
     isNodeEmpty,
     isPositionAtBeginningOf,
     Position,
@@ -169,7 +169,7 @@ export function getSmartOrderedList(
 ): GenericContentEditFeature<ContentChangedEvent> {
     return {
         keys: [Keys.CONTENTCHANGED], // Triggered by ContentChangedEvent
-        shouldHandleEvent: (event, editor) => isHTMLOListElement(event.data),
+        shouldHandleEvent: event => safeInstanceOf(event.data, 'HTMLOListElement'),
         handleEvent: (event, editor) => {
             let ol = event.data as HTMLOListElement;
             let parentOl = editor.getElementAtCursor('OL', ol.parentNode) as HTMLOListElement;

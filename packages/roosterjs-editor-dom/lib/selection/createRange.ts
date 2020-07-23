@@ -1,6 +1,6 @@
-import isNode from '../typeUtils/isNode';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import Position from './Position';
+import safeInstanceOf from '../typeUtils/safeInstanceOf';
 import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
 
 /**
@@ -65,7 +65,7 @@ export default function createRange(
         // function createRange(startPosition: NodePosition, endPosition?: NodePosition): Range;
         start = arg1;
         end = isNodePosition(arg2) ? arg2 : null;
-    } else if (isNode(arg1)) {
+    } else if (safeInstanceOf(arg1, 'Node')) {
         if (Array.isArray(arg2)) {
             // function createRange(rootNode: Node, startPath: number[], endPath?: number[]): Range;
             start = getPositionFromPath(arg1, arg2);
@@ -74,8 +74,8 @@ export default function createRange(
             // function createRange(node: Node, offset: number | PositionType): Range;
             // function createRange(startNode: Node, startOffset: number | PositionType, endNode: Node, endOffset: number | PositionType): Range;
             start = new Position(arg1, arg2);
-            end = isNode(arg3) ? new Position(arg3, arg4) : null;
-        } else if (isNode(arg2) || !arg2) {
+            end = safeInstanceOf(arg3, 'Node') ? new Position(arg3, arg4) : null;
+        } else if (safeInstanceOf(arg2, 'Node') || !arg2) {
             // function createRange(startNode: Node, endNode?: Node): Range;
             start = new Position(arg1, PositionType.Before);
             end = new Position(<Node>arg2 || arg1, PositionType.After);

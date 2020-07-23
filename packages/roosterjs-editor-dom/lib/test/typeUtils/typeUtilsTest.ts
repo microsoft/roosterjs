@@ -1,11 +1,4 @@
-import isDocumentFragment from '../../typeUtils/isDocumentFragment';
-import isHTMLElement from '../../typeUtils/isHTMLElement';
-import isHTMLOListElement from '../../typeUtils/isHTMLOListElement';
-import isHTMLTableCellElement from '../../typeUtils/isHTMLTableCellElement';
-import isHTMLTableElement from '../../typeUtils/isHTMLTableElement';
-import isNode from '../../typeUtils/isNode';
-import isRange from '../../typeUtils/isRange';
-import { getTargetWindow } from '../../typeUtils/safeInstanceOf';
+import safeInstanceOf, { getTargetWindow } from '../../typeUtils/safeInstanceOf';
 
 describe('typeUtils', () => {
     let iframe: HTMLIFrameElement;
@@ -53,35 +46,35 @@ describe('typeUtils', () => {
         expect(remoteWindow).toBe(<any>iframeDocument.defaultView, 'remoteNode => getTargetWindow');
     });
 
-    it('isNode', () => {
+    it('Node', () => {
         const localNode = document.createTextNode('test 1');
         const remoteNode = iframeDocument.createTextNode('test 2');
         const localRange = document.createRange();
         const remoteRange = iframeDocument.createRange();
         const detachNode = getDetachedNode('test');
 
-        expect(isNode(localNode)).toBeTruthy('local node => isNode');
-        expect(isNode(remoteNode)).toBeTruthy('remote node => isNode');
-        expect(isNode(localRange)).toBeFalsy('local range => isNode');
-        expect(isNode(remoteRange)).toBeFalsy('remote range => isNode');
-        expect(isNode(detachNode)).toBeTruthy('detached node => isNode');
-        expect(isNode({})).toBeFalsy('object => isNode');
+        expect(safeInstanceOf(localNode, 'Node')).toBeTruthy('local node => Node');
+        expect(safeInstanceOf(remoteNode, 'Node')).toBeTruthy('remote node => Node');
+        expect(safeInstanceOf(localRange, 'Node')).toBeFalsy('local range => Node');
+        expect(safeInstanceOf(remoteRange, 'Node')).toBeFalsy('remote range => Node');
+        expect(safeInstanceOf(detachNode, 'Node')).toBeTruthy('detached node => Node');
+        expect(safeInstanceOf({}, 'Node')).toBeFalsy('object => Node');
     });
 
-    it('isRange', () => {
+    it('Range', () => {
         const localNode = document.createTextNode('test 1');
         const remoteNode = iframeDocument.createTextNode('test 2');
         const localRange = document.createRange();
         const remoteRange = iframeDocument.createRange();
 
-        expect(isRange(localNode)).toBeFalsy('local node => isRange');
-        expect(isRange(remoteNode)).toBeFalsy('remote node => isRange');
-        expect(isRange(localRange)).toBeTruthy('local range => isRange');
-        expect(isRange(remoteRange)).toBeTruthy('remote range => isRange');
-        expect(isRange({})).toBeFalsy('object => isRange');
+        expect(safeInstanceOf(localNode, 'Range')).toBeFalsy('local node => Range');
+        expect(safeInstanceOf(remoteNode, 'Range')).toBeFalsy('remote node => Range');
+        expect(safeInstanceOf(localRange, 'Range')).toBeTruthy('local range => Range');
+        expect(safeInstanceOf(remoteRange, 'Range')).toBeTruthy('remote range => Range');
+        expect(safeInstanceOf({}, 'Range')).toBeFalsy('object => Range');
     });
 
-    it('isHTMLElement', () => {
+    it('HTMLElement', () => {
         const localNode = document.createTextNode('test 1');
         const remoteNode = iframeDocument.createTextNode('test 2');
         const localElement = document.createElement('DIV');
@@ -89,33 +82,43 @@ describe('typeUtils', () => {
         const detachNode = getDetachedNode('test');
         const detachElement = getDetachedNode('<div>test</div>');
 
-        expect(isHTMLElement(localNode)).toBeFalsy('local node => isHTMLElement');
-        expect(isHTMLElement(remoteNode)).toBeFalsy('remote node => isHTMLElement');
-        expect(isHTMLElement(localElement)).toBeTruthy('local element => isHTMLElement');
-        expect(isHTMLElement(remoteElement)).toBeTruthy('remote element => isHTMLElement');
-        expect(isHTMLElement(detachNode)).toBeFalsy('detached node => isHTMLElement');
-        expect(isHTMLElement(detachElement)).toBeTruthy('detached element => isHTMLElement');
-        expect(isHTMLElement({})).toBeFalsy('object => isHTMLElement');
+        expect(safeInstanceOf(localNode, 'HTMLElement')).toBeFalsy('local node => HTMLElement');
+        expect(safeInstanceOf(remoteNode, 'HTMLElement')).toBeFalsy('remote node => HTMLElement');
+        expect(safeInstanceOf(localElement, 'HTMLElement')).toBeTruthy(
+            'local element => HTMLElement'
+        );
+        expect(safeInstanceOf(remoteElement, 'HTMLElement')).toBeTruthy(
+            'remote element => HTMLElement'
+        );
+        expect(safeInstanceOf(detachNode, 'HTMLElement')).toBeFalsy('detached node => HTMLElement');
+        expect(safeInstanceOf(detachElement, 'HTMLElement')).toBeTruthy(
+            'detached element => HTMLElement'
+        );
+        expect(safeInstanceOf({}, 'HTMLElement')).toBeFalsy('object => HTMLElement');
     });
 
-    it('isDocumentFragment', () => {
+    it('DocumentFragment', () => {
         const localNode = document.createTextNode('test 1');
         const remoteNode = iframeDocument.createTextNode('test 2');
         const localFragment = document.createDocumentFragment();
         const remoteFragment = iframeDocument.createDocumentFragment();
 
-        expect(isDocumentFragment(localNode)).toBeFalsy('local node => isDocumentFragment');
-        expect(isDocumentFragment(remoteNode)).toBeFalsy('remote node => isDocumentFragment');
-        expect(isDocumentFragment(localFragment)).toBeTruthy(
-            'local fragment => isDocumentFragment'
+        expect(safeInstanceOf(localNode, 'DocumentFragment')).toBeFalsy(
+            'local node => DocumentFragment'
         );
-        expect(isDocumentFragment(remoteFragment)).toBeTruthy(
-            'remote fragment => isDocumentFragment'
+        expect(safeInstanceOf(remoteNode, 'DocumentFragment')).toBeFalsy(
+            'remote node => DocumentFragment'
         );
-        expect(isDocumentFragment({})).toBeFalsy('object => isDocumentFragment');
+        expect(safeInstanceOf(localFragment, 'DocumentFragment')).toBeTruthy(
+            'local fragment => DocumentFragment'
+        );
+        expect(safeInstanceOf(remoteFragment, 'DocumentFragment')).toBeTruthy(
+            'remote fragment => DocumentFragment'
+        );
+        expect(safeInstanceOf({}, 'DocumentFragment')).toBeFalsy('object => DocumentFragment');
     });
 
-    it('isHTMLOListElement', () => {
+    it('HTMLOListElement', () => {
         const localNode = document.createTextNode('test 1');
         const remoteNode = iframeDocument.createTextNode('test 2');
         const localElement = document.createElement('OL');
@@ -123,20 +126,28 @@ describe('typeUtils', () => {
         const detachNode = getDetachedNode('test');
         const detachElement = getDetachedNode('<OL></OL>');
 
-        expect(isHTMLOListElement(localNode)).toBeFalsy('local node => isHTMLOListElement');
-        expect(isHTMLOListElement(remoteNode)).toBeFalsy('remote node => isHTMLOListElement');
-        expect(isHTMLOListElement(localElement)).toBeTruthy('local element => isHTMLOListElement');
-        expect(isHTMLOListElement(remoteElement)).toBeTruthy(
-            'remote element => isHTMLOListElement'
+        expect(safeInstanceOf(localNode, 'HTMLOListElement')).toBeFalsy(
+            'local node => HTMLOListElement'
         );
-        expect(isHTMLOListElement(detachNode)).toBeFalsy('detached node => isHTMLOListElement');
-        expect(isHTMLOListElement(detachElement)).toBeTruthy(
-            'detached element => isHTMLOListElement'
+        expect(safeInstanceOf(remoteNode, 'HTMLOListElement')).toBeFalsy(
+            'remote node => HTMLOListElement'
         );
-        expect(isHTMLOListElement({})).toBeFalsy('object => isHTMLOListElement');
+        expect(safeInstanceOf(localElement, 'HTMLOListElement')).toBeTruthy(
+            'local element => HTMLOListElement'
+        );
+        expect(safeInstanceOf(remoteElement, 'HTMLOListElement')).toBeTruthy(
+            'remote element => HTMLOListElement'
+        );
+        expect(safeInstanceOf(detachNode, 'HTMLOListElement')).toBeFalsy(
+            'detached node => HTMLOListElement'
+        );
+        expect(safeInstanceOf(detachElement, 'HTMLOListElement')).toBeTruthy(
+            'detached element => HTMLOListElement'
+        );
+        expect(safeInstanceOf({}, 'HTMLOListElement')).toBeFalsy('object => HTMLOListElement');
     });
 
-    it('isHTMLTableCellElement', () => {
+    it('HTMLTableCellElement', () => {
         const localNode = document.createTextNode('test 1');
         const remoteNode = iframeDocument.createTextNode('test 2');
         const localElement = document.createElement('TD');
@@ -147,26 +158,30 @@ describe('typeUtils', () => {
                 .firstChild
         )).rows[0].cells[0];
 
-        expect(isHTMLTableCellElement(localNode)).toBeFalsy('local node => isHTMLTableCellElement');
-        expect(isHTMLTableCellElement(remoteNode)).toBeFalsy(
-            'remote node => isHTMLTableCellElement'
+        expect(safeInstanceOf(localNode, 'HTMLTableCellElement')).toBeFalsy(
+            'local node => HTMLTableCellElement'
         );
-        expect(isHTMLTableCellElement(localElement)).toBeTruthy(
-            'local element => isHTMLTableCellElement'
+        expect(safeInstanceOf(remoteNode, 'HTMLTableCellElement')).toBeFalsy(
+            'remote node => HTMLTableCellElement'
         );
-        expect(isHTMLTableCellElement(remoteElement)).toBeTruthy(
-            'remote element => isHTMLTableCellElement'
+        expect(safeInstanceOf(localElement, 'HTMLTableCellElement')).toBeTruthy(
+            'local element => HTMLTableCellElement'
         );
-        expect(isHTMLTableCellElement(detachNode)).toBeFalsy(
-            'detached node => isHTMLTableCellElement'
+        expect(safeInstanceOf(remoteElement, 'HTMLTableCellElement')).toBeTruthy(
+            'remote element => HTMLTableCellElement'
         );
-        expect(isHTMLTableCellElement(detachElement)).toBeTruthy(
-            'detached element => isHTMLTableCellElement'
+        expect(safeInstanceOf(detachNode, 'HTMLTableCellElement')).toBeFalsy(
+            'detached node => HTMLTableCellElement'
         );
-        expect(isHTMLTableCellElement({})).toBeFalsy('object => isHTMLTableCellElement');
+        expect(safeInstanceOf(detachElement, 'HTMLTableCellElement')).toBeTruthy(
+            'detached element => HTMLTableCellElement'
+        );
+        expect(safeInstanceOf({}, 'HTMLTableCellElement')).toBeFalsy(
+            'object => HTMLTableCellElement'
+        );
     });
 
-    it('isHTMLTableElement', () => {
+    it('HTMLTableElement', () => {
         const localNode = document.createTextNode('test 1');
         const remoteNode = iframeDocument.createTextNode('test 2');
         const localElement = document.createElement('TABLE');
@@ -174,17 +189,25 @@ describe('typeUtils', () => {
         const detachNode = getDetachedNode('test');
         const detachElement = getDetachedNode('<TABLE></TABLE>');
 
-        expect(isHTMLTableElement(localNode)).toBeFalsy('local node => isHTMLTableElement');
-        expect(isHTMLTableElement(remoteNode)).toBeFalsy('remote node => isHTMLTableElement');
-        expect(isHTMLTableElement(localElement)).toBeTruthy('local element => isHTMLTableElement');
-        expect(isHTMLTableElement(remoteElement)).toBeTruthy(
-            'remote element => isHTMLTableElement'
+        expect(safeInstanceOf(localNode, 'HTMLTableElement')).toBeFalsy(
+            'local node => HTMLTableElement'
         );
-        expect(isHTMLTableElement(detachNode)).toBeFalsy('detached node => isHTMLTableElement');
-        expect(isHTMLTableElement(detachElement)).toBeTruthy(
-            'detached element => isHTMLTableElement'
+        expect(safeInstanceOf(remoteNode, 'HTMLTableElement')).toBeFalsy(
+            'remote node => HTMLTableElement'
         );
-        expect(isHTMLTableElement({})).toBeFalsy('object => isHTMLTableElement');
+        expect(safeInstanceOf(localElement, 'HTMLTableElement')).toBeTruthy(
+            'local element => HTMLTableElement'
+        );
+        expect(safeInstanceOf(remoteElement, 'HTMLTableElement')).toBeTruthy(
+            'remote element => HTMLTableElement'
+        );
+        expect(safeInstanceOf(detachNode, 'HTMLTableElement')).toBeFalsy(
+            'detached node => HTMLTableElement'
+        );
+        expect(safeInstanceOf(detachElement, 'HTMLTableElement')).toBeTruthy(
+            'detached element => HTMLTableElement'
+        );
+        expect(safeInstanceOf({}, 'HTMLTableElement')).toBeFalsy('object => HTMLTableElement');
     });
 });
 

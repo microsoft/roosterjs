@@ -5,7 +5,7 @@ import {
     Browser,
     findClosestElementAncestor,
     fromHtml,
-    isNode,
+    safeInstanceOf,
     isNodeEmpty,
     Position,
 } from 'roosterjs-editor-dom';
@@ -130,7 +130,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
 
     private wasNodeJustCreatedByKeyboardEvent(event: PluginKeyboardEvent, formatNode: HTMLElement) {
         return (
-            isNode(event.rawEvent.target) &&
+            safeInstanceOf(event.rawEvent.target, 'Node') &&
             event.rawEvent.target.contains(formatNode) &&
             event.rawEvent.key === formatNode.innerText
         );

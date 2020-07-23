@@ -27,7 +27,7 @@ export function getTargetWindow(source: Node | Range): TargetWindow {
  * @param typeName Target type name
  */
 export default function safeInstanceOf<T extends keyof TargetWindow>(
-    obj: Node | Range,
+    obj: any,
     typeName: T
 ): obj is TargetWindow[T] {
     const targetWindow = getTargetWindow(obj);
