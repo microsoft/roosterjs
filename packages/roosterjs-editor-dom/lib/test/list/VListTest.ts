@@ -989,7 +989,7 @@ describe('VList.appendItem', () => {
         runTest('<div>test</div>', ListType.None, [
             {
                 listTypes: [ListType.None],
-                outerHTML: '<li><div>test</div></li>',
+                outerHTML: '<li>test</li>',
             },
         ]);
     });
@@ -998,7 +998,7 @@ describe('VList.appendItem', () => {
         runTest('<div>test</div>', ListType.Ordered, [
             {
                 listTypes: [ListType.None, ListType.Ordered],
-                outerHTML: '<li><div>test</div></li>',
+                outerHTML: '<li>test</li>',
             },
         ]);
     });
@@ -1007,7 +1007,7 @@ describe('VList.appendItem', () => {
         runTest('<div>test</div>', ListType.Unordered, [
             {
                 listTypes: [ListType.None, ListType.Unordered],
-                outerHTML: '<li><div>test</div></li>',
+                outerHTML: '<li>test</li>',
             },
         ]);
     });
