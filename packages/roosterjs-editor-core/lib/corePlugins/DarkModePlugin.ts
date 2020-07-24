@@ -19,7 +19,7 @@ export default class DarkModePlugin implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    public initialize(editor: Editor) {
+    initialize(editor: Editor) {
         this.editor = editor;
         this.eventDisposer = editor.addDomEventHandler({
             copy: this.onExtract(false),
@@ -30,7 +30,7 @@ export default class DarkModePlugin implements EditorPlugin {
     /**
      * Dispose this plugin
      */
-    public dispose() {
+    dispose() {
         this.eventDisposer();
         this.eventDisposer = null;
         this.editor = null;

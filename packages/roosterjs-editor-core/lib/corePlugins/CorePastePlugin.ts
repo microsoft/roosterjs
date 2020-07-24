@@ -58,10 +58,7 @@ export default class CorePastePlugin implements EditorPlugin {
 
     private paste(items: ClipboardItems) {
         const clipboardData: ClipboardData = {
-            types: items.types,
-            image: items.image,
-            text: items.text,
-            rawHtml: items.html,
+            ...items,
 
             // Will be set later
             snapshotBeforePaste: null,
