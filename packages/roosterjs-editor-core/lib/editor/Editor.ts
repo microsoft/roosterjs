@@ -105,11 +105,13 @@ export default class Editor {
         adjustBrowserBehavior(this.core.document);
 
         // 8. Let plugins know that we are ready
-        this.triggerPluginEvent(PluginEventType.EditorReady, {}, true /*broadcast*/);
-
-        // 9. Before give editor to user, make sure there is at least one DIV element to accept typing
-        this.core.corePlugins.typeInContainer.ensureTypeInElement(
-            this.getFocusedPosition() || new Position(contentDiv, PositionType.Begin)
+        this.triggerPluginEvent(
+            PluginEventType.EditorReady,
+            {
+                startPosition:
+                    this.getFocusedPosition() || new Position(contentDiv, PositionType.Begin),
+            },
+            true /*broadcast*/
         );
     }
 
@@ -700,11 +702,6 @@ export default class Editor {
      * Get impacted regions from selection
      */
     public getSelectedRegions(type: RegionType = RegionType.Table): Region[] {
-        // Make sure there is a wrpper around cursor first, otherwise there will be no valid region
-        this.core.corePlugins.typeInContainer.ensureTypeInElement(
-            this.getFocusedPosition() || new Position(this.core.contentDiv, PositionType.Begin)
-        );
-
         const range = this.getSelectionRange();
         return range ? getRegionsFromRange(this.core.contentDiv, range, type) : [];
     }

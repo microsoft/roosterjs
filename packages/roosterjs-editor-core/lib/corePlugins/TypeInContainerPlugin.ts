@@ -43,6 +43,11 @@ export default class TypeInContainerPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.KeyPress) {
             this.onKeyPress(event);
+        } else if (event.eventType == PluginEventType.EditorReady) {
+            // Run in async to make sure other plugins finished to handle this event
+            this.editor.runAsync(() => {
+                this.ensureTypeInElement(event.startPosition);
+            });
         }
     }
 
@@ -52,7 +57,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
      * @param event (optional) The keyboard event that we are ensuring is typing in an element.
      * @returns A new position to select
      */
-    ensureTypeInElement(position: NodePosition, event?: PluginKeyboardEvent): NodePosition {
+    private ensureTypeInElement(position: NodePosition, event?: PluginKeyboardEvent): NodePosition {
         let result = position.normalize();
         let block = this.editor.getBlockElementAtNode(result.node);
         let formatNode: HTMLElement;

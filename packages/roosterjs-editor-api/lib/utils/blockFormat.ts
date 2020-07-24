@@ -1,5 +1,6 @@
 import { ChangeSource, NodePosition, Region } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
+import { ensureRegionContent } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -12,7 +13,10 @@ export default function blockFormat(
     editor.focus();
     editor.addUndoSnapshot((start, end) => {
         const regions = editor.getSelectedRegions();
-        regions.forEach(region => callback(region, start, end));
+        regions.forEach(region => {
+            ensureRegionContent(region);
+            callback(region, start, end);
+        });
         editor.select(start, end);
     }, ChangeSource.Format);
 }
