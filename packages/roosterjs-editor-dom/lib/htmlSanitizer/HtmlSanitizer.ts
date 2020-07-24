@@ -76,7 +76,7 @@ export default class HtmlSanitizer {
         this.styleCallbacks = getStyleCallbacks(options.styleCallbacks);
         this.attributeCallbacks = cloneObject(options.attributeCallbacks);
         this.allowedTags = getAllowedTags(options.additionalAllowedTags);
-        this.allowedAttributes = getAllowedAttributes(options.additionalAllowAttributes);
+        this.allowedAttributes = getAllowedAttributes(options.additionalAllowedAttributes);
         this.allowedCssClassesRegex = getAllowedCssClassesRegex(
             options.additionalAllowedCssClasses
         );

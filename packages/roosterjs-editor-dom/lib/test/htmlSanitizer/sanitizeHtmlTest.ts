@@ -193,13 +193,13 @@ describe('sanitizeHtml with styleCallback', () => {
     });
 });
 
-describe('sanitizeHtml with additionalAllowedTags, additionalAllowAttributes', () => {
+describe('sanitizeHtml with additionalAllowedTags, additionalAllowedAttributes', () => {
     let sanitizer: HtmlSanitizer;
 
     beforeAll(() => {
         sanitizer = new HtmlSanitizer({
             additionalAllowedTags: ['TEST1', 'OBJECT'],
-            additionalAllowAttributes: ['prop1', 'onclick'],
+            additionalAllowedAttributes: ['prop1', 'onclick'],
         });
     });
 

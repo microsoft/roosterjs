@@ -31,9 +31,8 @@ export default interface HtmlSanitizerOptions {
 
     /**
      * Allowed HTML attributes in addition to default attributes, in lower case
-     * TODO: rename to "additionalAllowedAttributes" in next major release
      */
-    additionalAllowAttributes?: string[];
+    additionalAllowedAttributes?: string[];
 
     /**
      * Allowed CSS Class names

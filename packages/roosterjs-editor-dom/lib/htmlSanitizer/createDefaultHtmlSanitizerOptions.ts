@@ -9,7 +9,7 @@ export default function createDefaultHtmlSanitizerOptions(): Required<HtmlSaniti
         attributeCallbacks: {},
         styleCallbacks: {},
         additionalAllowedTags: [],
-        additionalAllowAttributes: [],
+        additionalAllowedAttributes: [],
         additionalAllowedCssClasses: [],
         additionalDefaultStyleValues: {},
         additionalGlobalStyleNodes: [],
