@@ -1,10 +1,10 @@
-import CopyPlugin from '../corePlugins/CopyPlugin';
 import CorePastePlugin from '../corePlugins/CorePastePlugin';
+import DarkModePlugin from '../corePlugins/DarkModePlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorPlugin from './EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
-import FirefoxTypeAfterLink from '../corePlugins/FirefoxTypeAfterLink';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
+import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoService from './UndoService';
 import { CustomDataMap } from './CustomData';
@@ -51,14 +51,14 @@ export interface CorePlugins {
     readonly domEvent: DOMEventPlugin;
 
     /**
-     * FirefoxTypeAfterLink plugin helps workaround a Firefox bug to allow type outside a hyperlink
+     * TypeAfterLinkPlugin plugin helps workaround a Firefox bug to allow type outside a hyperlink
      */
-    readonly firefoxTypeAfterLink: FirefoxTypeAfterLink;
+    readonly typeAfterLink: TypeAfterLinkPlugin;
 
     /**
-     * Copy plguin for handling dark mode copy.
+     * Dark mode plguin for handling dark mode copy.
      */
-    readonly copyPlugin: CopyPlugin;
+    readonly darkMode: DarkModePlugin;
 
     /**
      * Core paste plugin for handling onPaste event and extract the pasted content

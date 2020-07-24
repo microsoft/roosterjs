@@ -1,12 +1,12 @@
-import CopyPlugin from '../corePlugins/CopyPlugin';
 import CorePastePlugin from '../corePlugins/CorePastePlugin';
+import DarkModePlugin from '../corePlugins/DarkModePlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorCore, { CoreApiMap, CorePlugins } from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import EditorPlugin from '../interfaces/EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
-import FirefoxTypeAfterLink from '../corePlugins/FirefoxTypeAfterLink';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
+import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import Undo from '../undo/Undo';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
@@ -38,8 +38,8 @@ export default function createEditorCore(
         typeInContainer: new TypeInContainerPlugin(),
         mouseUp: new MouseUpPlugin(),
         domEvent: new DOMEventPlugin(),
-        firefoxTypeAfterLink: new FirefoxTypeAfterLink(),
-        copyPlugin: !Browser.isIE && new CopyPlugin(),
+        typeAfterLink: new TypeAfterLinkPlugin(),
+        darkMode: !Browser.isIE && new DarkModePlugin(),
         pastePlugin: new CorePastePlugin(),
     };
     let allPlugins = buildPluginList(corePlugins, options.plugins);
@@ -74,10 +74,10 @@ function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): Edi
         corePlugins.edit,
         corePlugins.mouseUp,
         ...(plugins || []),
-        corePlugins.firefoxTypeAfterLink,
+        corePlugins.typeAfterLink,
         corePlugins.undo,
         corePlugins.domEvent,
-        corePlugins.copyPlugin,
+        corePlugins.darkMode,
         corePlugins.pastePlugin,
     ].filter(plugin => !!plugin);
 }
