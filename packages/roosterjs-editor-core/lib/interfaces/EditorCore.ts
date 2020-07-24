@@ -151,6 +151,11 @@ export default interface EditorCore {
     cachedSelectionRange: Range;
 
     /**
+     * if editor is in IME input sequence
+     */
+    isInImeWrapper: Wrapper<boolean>;
+
+    /**
      * If the editor is in dark mode.
      */
     inDarkMode: boolean;

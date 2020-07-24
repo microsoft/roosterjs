@@ -37,6 +37,7 @@ export default function createEditorCore(
     options: EditorOptions
 ): EditorCore {
     const autoCompleteSnapshotWrapper: Wrapper<string> = { value: null };
+    const isInImeWrapper: Wrapper<boolean> = { value: false };
     const editFeatureMap: ContentEditFeatureMap = {};
     let corePlugins: CorePlugins = {
         undo: options.undo || new Undo(),
@@ -44,7 +45,7 @@ export default function createEditorCore(
         autoComplete: new AutoCompletePlugin(autoCompleteSnapshotWrapper),
         typeInContainer: new TypeInContainerPlugin(),
         mouseUp: new MouseUpPlugin(),
-        domEvent: new DOMEventPlugin(),
+        domEvent: new DOMEventPlugin(isInImeWrapper),
         typeAfterLink: new TypeAfterLinkPlugin(),
         darkMode: !Browser.isIE && new DarkModePlugin(),
         pastePlugin: new CorePastePlugin(),
@@ -76,6 +77,7 @@ export default function createEditorCore(
         eventHandlerPlugins: eventHandlerPlugins,
         api: createCoreApiMap(options.coreApiOverride),
         defaultApi: createCoreApiMap(),
+        isInImeWrapper,
         inDarkMode: options.inDarkMode,
         darkModeOptions: options.darkModeOptions,
     };

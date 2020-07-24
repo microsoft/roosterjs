@@ -13,6 +13,7 @@ import {
     NodePosition,
     PendableFormatState,
     PluginEvent,
+    Wrapper,
 } from 'roosterjs-editor-types';
 
 /**
@@ -25,10 +26,11 @@ import {
  */
 export default class DOMEventPlugin implements EditorPlugin {
     private editor: Editor;
-    private inIme = false;
     private disposer: () => void;
     private cachedPosition: NodePosition;
     private cachedFormatState: PendableFormatState;
+
+    constructor(private readonly isInImeWrapper: Wrapper<boolean>) {}
 
     getName() {
         return 'DOMEvent';
@@ -39,9 +41,9 @@ export default class DOMEventPlugin implements EditorPlugin {
 
         this.disposer = editor.addDomEventHandler({
             // 1. IME state management
-            compositionstart: () => (this.inIme = true),
+            compositionstart: () => (this.isInImeWrapper.value = true),
             compositionend: (rawEvent: CompositionEvent) => {
-                this.inIme = false;
+                this.isInImeWrapper.value = false;
                 editor.triggerPluginEvent(PluginEventType.CompositionEnd, {
                     rawEvent,
                 });
@@ -110,14 +112,6 @@ export default class DOMEventPlugin implements EditorPlugin {
             });
             this.cachedPosition = this.getCurrentPosition();
         }
-    }
-
-    /**
-     * Check if editor is in IME input sequence
-     * @returns True if editor is in IME input sequence, otherwise false
-     */
-    public isInIME() {
-        return this.inIme;
     }
 
     private onNativeEvent = (e: UIEvent) => {
