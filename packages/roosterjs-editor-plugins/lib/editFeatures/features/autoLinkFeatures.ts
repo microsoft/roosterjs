@@ -113,13 +113,23 @@ function autoLink(event: PluginEvent, editor: Editor) {
     anchor.href = linkData.normalizedUrl;
 
     editor.runAsync(() => {
-        editor.performAutoComplete(() => {
-            replaceWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */, searcher);
+        editor.addUndoSnapshot(
+            () => {
+                replaceWithNode(
+                    editor,
+                    linkData.originalUrl,
+                    anchor,
+                    false /* exactMatch */,
+                    searcher
+                );
 
-            // The content at cursor has changed. Should also clear the cursor data cache
-            clearContentSearcherCache(event);
-            return anchor;
-        }, ChangeSource.AutoLink);
+                // The content at cursor has changed. Should also clear the cursor data cache
+                clearContentSearcherCache(event);
+                return anchor;
+            },
+            ChangeSource.AutoLink,
+            true /*canUndoByBackspace*/
+        );
     });
 }
 

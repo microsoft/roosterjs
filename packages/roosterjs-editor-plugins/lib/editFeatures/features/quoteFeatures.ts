@@ -36,7 +36,12 @@ const UnquoteWhenEnterOnEmptyLine: ContentEditFeature = {
         let shift = event.rawEvent.shiftKey;
         return !shift && childOfQuote && isNodeEmpty(childOfQuote);
     },
-    handleEvent: (event, editor) => editor.performAutoComplete(() => splitQuote(event, editor)),
+    handleEvent: (event, editor) =>
+        editor.addUndoSnapshot(
+            () => splitQuote(event, editor),
+            null /*changeSource*/,
+            true /*canUndoByBackspace*/
+        ),
 };
 
 function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: Editor): Node {

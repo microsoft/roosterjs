@@ -82,6 +82,7 @@ export { default as TableFormat } from './interface/TableFormat';
 export { default as HtmlSanitizerOptions } from './interface/HtmlSanitizerOptions';
 export { default as SanitizeHtmlOptions } from './interface/SanitizeHtmlOptions';
 export { default as TargetWindow } from './interface/TargetWindow';
+export { default as Wrapper } from './interface/Wrapper';
 
 export {
     AttributeCallback,

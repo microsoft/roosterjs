@@ -1,3 +1,5 @@
+import addContentEditFeatures from './addContentEditFeatures';
+import AutoCompletePlugin from '../corePlugins/AutoCompletePlugin';
 import CorePastePlugin from '../corePlugins/CorePastePlugin';
 import DarkModePlugin from '../corePlugins/DarkModePlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
@@ -12,6 +14,7 @@ import Undo from '../undo/Undo';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
 import { Browser } from 'roosterjs-editor-dom';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
+import { ContentEditFeatureMap } from '../interfaces/ContentEditFeature';
 import { createPasteFragment } from '../coreAPI/createPasteFragment';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
@@ -22,6 +25,7 @@ import { hasFocus } from '../coreAPI/hasFocus';
 import { insertNode } from '../coreAPI/insertNode';
 import { selectRange } from '../coreAPI/selectRange';
 import { triggerEvent } from '../coreAPI/triggerEvent';
+import { Wrapper } from 'roosterjs-editor-types';
 
 /**
  * Create core object for editor
@@ -32,9 +36,12 @@ export default function createEditorCore(
     contentDiv: HTMLDivElement,
     options: EditorOptions
 ): EditorCore {
+    const autoCompleteSnapshotWrapper: Wrapper<string> = { value: null };
+    const editFeatureMap: ContentEditFeatureMap = {};
     let corePlugins: CorePlugins = {
         undo: options.undo || new Undo(),
-        edit: new EditPlugin(),
+        edit: new EditPlugin(editFeatureMap),
+        autoComplete: new AutoCompletePlugin(autoCompleteSnapshotWrapper),
         typeInContainer: new TypeInContainerPlugin(),
         mouseUp: new MouseUpPlugin(),
         domEvent: new DOMEventPlugin(),
@@ -42,10 +49,14 @@ export default function createEditorCore(
         darkMode: !Browser.isIE && new DarkModePlugin(),
         pastePlugin: new CorePastePlugin(),
     };
+
     let allPlugins = buildPluginList(corePlugins, options.plugins);
     let eventHandlerPlugins = allPlugins.filter(
         plugin => plugin.onPluginEvent || plugin.willHandleEventExclusively
     );
+
+    addContentEditFeatures(editFeatureMap, options.editFeatures);
+
     return {
         contentDiv,
         scrollContainer: options.scrollContainer || contentDiv,
@@ -57,6 +68,8 @@ export default function createEditorCore(
         ),
         corePlugins,
         currentUndoSnapshot: null,
+        autoCompleteSnapshotWrapper,
+        editFeatureMap,
         customData: {},
         cachedSelectionRange: null,
         plugins: allPlugins,
@@ -72,6 +85,7 @@ function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): Edi
     return [
         corePlugins.typeInContainer,
         corePlugins.edit,
+        corePlugins.autoComplete,
         corePlugins.mouseUp,
         ...(plugins || []),
         corePlugins.typeAfterLink,

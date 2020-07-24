@@ -91,7 +91,11 @@ const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
         return !event.rawEvent.shiftKey && li && isNodeEmpty(li);
     },
     handleEvent: (event, editor) => {
-        editor.performAutoComplete(() => toggleListAndPreventDefault(event, editor));
+        editor.addUndoSnapshot(
+            () => toggleListAndPreventDefault(event, editor),
+            null /*changeSource*/,
+            true /*canUndoByBackspace*/
+        );
     },
     defaultDisabled: !Browser.isIE && !Browser.isChrome,
 };
@@ -120,35 +124,39 @@ const AutoBullet: ContentEditFeature = {
     },
     handleEvent: (event, editor) => {
         editor.runAsync(() => {
-            editor.performAutoComplete(() => {
-                let searcher = editor.getContentSearcherOfCursor();
-                let textBeforeCursor = searcher.getSubStringBefore(3);
-                let rangeToDelete = searcher.getRangeFromText(
-                    textBeforeCursor,
-                    true /*exactMatch*/
-                );
+            editor.addUndoSnapshot(
+                () => {
+                    let searcher = editor.getContentSearcherOfCursor();
+                    let textBeforeCursor = searcher.getSubStringBefore(3);
+                    let rangeToDelete = searcher.getRangeFromText(
+                        textBeforeCursor,
+                        true /*exactMatch*/
+                    );
 
-                if (rangeToDelete) {
-                    rangeToDelete.deleteContents();
-                    const node = rangeToDelete.startContainer;
-                    if (
-                        node?.nodeType == NodeType.Text &&
-                        node.nodeValue == '' &&
-                        !node.previousSibling &&
-                        !node.nextSibling
-                    ) {
-                        const br = editor.getDocument().createElement('BR');
-                        editor.insertNode(br);
-                        editor.select(br, PositionType.Before);
+                    if (rangeToDelete) {
+                        rangeToDelete.deleteContents();
+                        const node = rangeToDelete.startContainer;
+                        if (
+                            node?.nodeType == NodeType.Text &&
+                            node.nodeValue == '' &&
+                            !node.previousSibling &&
+                            !node.nextSibling
+                        ) {
+                            const br = editor.getDocument().createElement('BR');
+                            editor.insertNode(br);
+                            editor.select(br, PositionType.Before);
+                        }
                     }
-                }
 
-                if (textBeforeCursor.indexOf('1.') == 0) {
-                    toggleNumbering(editor);
-                } else {
-                    toggleBullet(editor);
-                }
-            });
+                    if (textBeforeCursor.indexOf('1.') == 0) {
+                        toggleNumbering(editor);
+                    } else {
+                        toggleBullet(editor);
+                    }
+                },
+                null /*changeSource*/,
+                true /*canUndoByBackspace*/
+            );
         });
     },
 };

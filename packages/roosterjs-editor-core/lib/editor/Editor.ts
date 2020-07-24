@@ -1,3 +1,4 @@
+import addContentEditFeatures from './addContentEditFeatures';
 import adjustBrowserBehavior from './adjustBrowserBehavior';
 import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
@@ -92,12 +93,7 @@ export default class Editor {
         // 5. Create event handler to bind DOM events
         this.eventDisposers = mapPluginEvents(this.core);
 
-        // 6. Add additional content edit features to the editor if specified
-        if (options.editFeatures) {
-            options.editFeatures.forEach(feature => this.addContentEditFeature(feature));
-        }
-
-        // 7. Make the container editable and set its selection styles
+        // 6. Make the container editable and set its selection styles
         if (!contentDiv.hasAttribute('contenteditable')) {
             contentDiv.setAttribute('contenteditable', 'true');
             let styles = contentDiv.style;
@@ -105,13 +101,13 @@ export default class Editor {
             this.contenteditableChanged = true;
         }
 
-        // 8. Do proper change for browsers to disable some browser-specified behaviors.
+        // 7. Do proper change for browsers to disable some browser-specified behaviors.
         adjustBrowserBehavior(this.core.document);
 
-        // 9. Let plugins know that we are ready
+        // 8. Let plugins know that we are ready
         this.triggerPluginEvent(PluginEventType.EditorReady, {}, true /*broadcast*/);
 
-        // 10. Before give editor to user, make sure there is at least one DIV element to accept typing
+        // 9. Before give editor to user, make sure there is at least one DIV element to accept typing
         this.core.corePlugins.typeInContainer.ensureTypeInElement(
             this.getFocusedPosition() || new Position(contentDiv, PositionType.Begin)
         );
@@ -834,22 +830,14 @@ export default class Editor {
      * the data field in ContentChangedEvent if changeSource is not null.
      * @param changeSource The change source to use when fire ContentChangedEvent. When the value is not null,
      * a ContentChangedEvent will be fired with change source equal to this value
+     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
      */
     public addUndoSnapshot(
         callback?: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
-        changeSource?: ChangeSource | string
+        changeSource?: ChangeSource | string,
+        canUndoByBackspace?: boolean
     ) {
-        this.core.api.editWithUndo(this.core, callback, changeSource);
-    }
-
-    /**
-     * Perform an auto complete action in the callback, save a snapsnot of content before the action,
-     * and trigger ContentChangedEvent with the change source if specified
-     * @param callback The auto complete callback, return value will be used as data field of ContentChangedEvent
-     * @param changeSource Chagne source of ContentChangedEvent. If not passed, no ContentChangedEvent will be  triggered
-     */
-    public performAutoComplete(callback: () => any, changeSource?: ChangeSource | string) {
-        this.core.corePlugins.edit.performAutoComplete(callback, changeSource);
+        this.core.api.editWithUndo(this.core, callback, changeSource, canUndoByBackspace);
     }
 
     /**
@@ -995,7 +983,7 @@ export default class Editor {
      * @param feature The feature to add
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
-        this.core.corePlugins.edit.addFeature(feature);
+        addContentEditFeatures(this.core.editFeatureMap, [feature]);
     }
 
     /**

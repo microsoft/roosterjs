@@ -1,6 +1,6 @@
 import ContentEditFeatureSettings from './ContentEditFeatureSettings';
 import { AutoLinkFeatures } from './features/autoLinkFeatures';
-import { GenericContentEditFeature } from 'roosterjs-editor-core';
+import { ContentEditFeatureArray, GenericContentEditFeature } from 'roosterjs-editor-core';
 import { ListFeatures } from './features/listFeatures';
 import { NoCycleCursorMoveFeatures } from './features/noCycleCursorMove';
 import { PluginEvent } from 'roosterjs-editor-types';
@@ -35,9 +35,9 @@ export function getAllContentEditFeatures(): AllContentEditFeatures {
  */
 export default function getContentEditFeatures(
     settingsOverride?: ContentEditFeatureSettings,
-    additionalFeatures?: GenericContentEditFeature<PluginEvent>[]
-): GenericContentEditFeature<PluginEvent>[] {
-    const features: GenericContentEditFeature<PluginEvent>[] = [];
+    additionalFeatures?: ContentEditFeatureArray
+): ContentEditFeatureArray {
+    const features: ContentEditFeatureArray = [];
 
     Object.keys(allFeatures).forEach((key: keyof typeof allFeatures) => {
         const feature = allFeatures[key];

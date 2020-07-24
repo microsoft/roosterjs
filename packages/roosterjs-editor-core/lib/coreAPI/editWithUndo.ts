@@ -13,11 +13,13 @@ import {
  * @param core The EditorCore object
  * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
  * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
+ * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
  */
 export const editWithUndo: EditWithUndo = (
     core: EditorCore,
     callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
-    changeSource: ChangeSource | string
+    changeSource: ChangeSource | string,
+    canUndoByBackspace: boolean
 ) => {
     let isNested = core.currentUndoSnapshot !== null;
     let data: any;
@@ -25,6 +27,8 @@ export const editWithUndo: EditWithUndo = (
     if (!isNested) {
         core.currentUndoSnapshot = core.corePlugins.undo.addUndoSnapshot();
     }
+
+    const autoCompleteSnapshot = canUndoByBackspace && core.currentUndoSnapshot;
 
     try {
         if (callback) {
@@ -52,5 +56,10 @@ export const editWithUndo: EditWithUndo = (
             data: data,
         };
         core.api.triggerEvent(core, event, true /*broadcast*/);
+    }
+
+    if (canUndoByBackspace) {
+        // Need to set this snapshot after ContentChangedEvent is fired to avoid it is cleared by event handler in AutoCompletePlugin
+        core.autoCompleteSnapshotWrapper.value = autoCompleteSnapshot;
     }
 };

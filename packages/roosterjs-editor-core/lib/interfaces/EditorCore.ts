@@ -1,3 +1,4 @@
+import AutoCompletePlugin from '../corePlugins/AutoCompletePlugin';
 import CorePastePlugin from '../corePlugins/CorePastePlugin';
 import DarkModePlugin from '../corePlugins/DarkModePlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
@@ -7,6 +8,7 @@ import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoService from './UndoService';
+import { ContentEditFeatureMap } from './ContentEditFeature';
 import { CustomDataMap } from './CustomData';
 import {
     ChangeSource,
@@ -18,6 +20,7 @@ import {
     PluginEvent,
     PluginEventType,
     StyleBasedFormatState,
+    Wrapper,
 } from 'roosterjs-editor-types';
 
 /**
@@ -29,6 +32,11 @@ export interface CorePlugins {
      * Edit plugin handles ContentEditFeatures
      */
     readonly edit: EditPlugin;
+
+    /**
+     * Auto complete plugin handles the undo operation for an auto complete action
+     */
+    readonly autoComplete: AutoCompletePlugin;
 
     /**
      * Undo plugin provides the ability to undo/redo
@@ -127,6 +135,17 @@ export default interface EditorCore {
     currentUndoSnapshot: string;
 
     /**
+     * The undo snapshot taken before an auto complete action happens, and will be used
+     * when user want to undo last auto complete result.
+     */
+    readonly autoCompleteSnapshotWrapper: Wrapper<string>;
+
+    /**
+     * Content edit features
+     */
+    readonly editFeatureMap: ContentEditFeatureMap;
+
+    /**
      * Cached selection range of this editor
      */
     cachedSelectionRange: Range;
@@ -179,11 +198,13 @@ export type CreatePasteFragment = (
  * @param core The EditorCore object
  * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
  * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
+ * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
  */
 export type EditWithUndo = (
     core: EditorCore,
     callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
-    changeSource: ChangeSource | string
+    changeSource: ChangeSource | string,
+    canUndoByBacksapce: boolean
 ) => void;
 
 /**
@@ -282,6 +303,7 @@ export interface CoreApiMap {
      * @param core The EditorCore object
      * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
      * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
+     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
      */
     editWithUndo: EditWithUndo;
 

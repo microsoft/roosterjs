@@ -2,6 +2,8 @@
 export {
     ContentEditFeature,
     GenericContentEditFeature,
+    ContentEditFeatureArray,
+    ContentEditFeatureMap,
     Keys,
 } from './interfaces/ContentEditFeature';
 export { default as CustomData, CustomDataMap } from './interfaces/CustomData';
@@ -31,6 +33,7 @@ export { default as Editor } from './editor/Editor';
 export { default as Undo } from './undo/Undo';
 
 // Core Plugins
+export { default as AutoCompletePlugin } from './corePlugins/AutoCompletePlugin';
 export { default as EditPlugin } from './corePlugins/EditPlugin';
 export { default as MouseUpPlugin } from './corePlugins/MouseUpPlugin';
 export { default as DOMEventPlugin } from './corePlugins/DOMEventPlugin';

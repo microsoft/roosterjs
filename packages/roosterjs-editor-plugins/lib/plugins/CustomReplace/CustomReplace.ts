@@ -102,11 +102,15 @@ export default class CustomReplacePlugin implements EditorPlugin {
             parsingSpan.childNodes.length == 1 ? parsingSpan.childNodes[0] : parsingSpan;
 
         // Switch the node for the selection range
-        this.editor.performAutoComplete(() => {
-            matchingRange.deleteContents();
-            matchingRange.insertNode(nodeToInsert);
-            this.editor.select(nodeToInsert, PositionType.End);
-        });
+        this.editor.addUndoSnapshot(
+            () => {
+                matchingRange.deleteContents();
+                matchingRange.insertNode(nodeToInsert);
+                this.editor.select(nodeToInsert, PositionType.End);
+            },
+            null /*changeSource*/,
+            true /*canUndoByBackspace*/
+        );
     }
 
     private getMatchingReplacement(stringToSearch: string): Replacement | null {

@@ -46,3 +46,13 @@ export interface GenericContentEditFeature<TEvent extends PluginEvent> {
  * ContentEditFeature interface that handles keyboard event
  */
 export type ContentEditFeature = GenericContentEditFeature<PluginKeyboardEvent>;
+
+/**
+ * An array of content edit features
+ */
+export type ContentEditFeatureArray = GenericContentEditFeature<PluginEvent>[];
+
+/**
+ * ContentEditFeature map, used by Editor Core and Edit plugin
+ */
+export type ContentEditFeatureMap = { [key: number]: ContentEditFeatureArray };
