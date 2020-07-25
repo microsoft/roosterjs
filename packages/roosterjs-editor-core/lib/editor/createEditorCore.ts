@@ -65,9 +65,6 @@ export default function createEditorCore(
     };
 
     let allPlugins = buildPluginList(corePlugins, options.plugins);
-    let eventHandlerPlugins = allPlugins.filter(
-        plugin => plugin.onPluginEvent || plugin.willHandleEventExclusively
-    );
 
     addContentEditFeatures(pluginState.edit.value, options.editFeatures);
 
@@ -86,7 +83,6 @@ export default function createEditorCore(
         customData: {},
         cachedSelectionRange: null,
         plugins: allPlugins,
-        eventHandlerPlugins: eventHandlerPlugins,
         api: createCoreApiMap(options.coreApiOverride),
         defaultApi: createCoreApiMap(),
         inDarkMode: options.inDarkMode,

@@ -13,11 +13,8 @@ export const triggerEvent: TriggerEvent = (
     pluginEvent: PluginEvent,
     broadcast: boolean
 ) => {
-    if (
-        broadcast ||
-        !core.eventHandlerPlugins.some(plugin => handledExclusively(pluginEvent, plugin))
-    ) {
-        core.eventHandlerPlugins.forEach(plugin => {
+    if (broadcast || !core.plugins.some(plugin => handledExclusively(pluginEvent, plugin))) {
+        core.plugins.forEach(plugin => {
             if (plugin.onPluginEvent) {
                 plugin.onPluginEvent(pluginEvent);
             }
@@ -26,11 +23,7 @@ export const triggerEvent: TriggerEvent = (
 };
 
 function handledExclusively(event: PluginEvent, plugin: EditorPlugin): boolean {
-    if (
-        plugin.onPluginEvent &&
-        plugin.willHandleEventExclusively &&
-        plugin.willHandleEventExclusively(event)
-    ) {
+    if (plugin.onPluginEvent && plugin.willHandleEventExclusively?.(event)) {
         plugin.onPluginEvent(event);
         return true;
     }

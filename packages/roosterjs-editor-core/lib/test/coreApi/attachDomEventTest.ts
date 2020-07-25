@@ -23,7 +23,7 @@ describe('attachDomEvent', () => {
         div = document.createElement('div');
         document.body.appendChild(div);
         core = createEditorCore(div, {});
-        (<any>core).eventHandlerPlugins = [];
+        (<any>core).plugins = [];
     });
 
     afterEach(() => {
@@ -56,7 +56,6 @@ describe('attachDomEvent', () => {
     it('Check event dispatched to plugin', () => {
         let mockPlugin = new MockPlugin();
         core.plugins.push(mockPlugin);
-        core.eventHandlerPlugins.push(mockPlugin);
         expect(mockPlugin.lastEvent).toBeNull();
 
         let disposer = attachDomEvent(core, 'keydown', PluginEventType.KeyDown);
@@ -74,7 +73,6 @@ describe('attachDomEvent', () => {
     it('Check event not dispatched to plugin after dispose', () => {
         let mockPlugin = new MockPlugin();
         core.plugins.push(mockPlugin);
-        core.eventHandlerPlugins.push(mockPlugin);
         expect(mockPlugin.lastEvent).toBeNull();
 
         let disposer = attachDomEvent(core, 'keydown', PluginEventType.KeyDown);

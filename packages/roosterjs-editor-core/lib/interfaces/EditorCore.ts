@@ -40,11 +40,6 @@ export default interface EditorCore extends CorePluginState {
     readonly plugins: EditorPlugin[];
 
     /**
-     * Plugins which will handle event via onPluginEvent() and/or willHandleEventExclusively()
-     */
-    readonly eventHandlerPlugins: EditorPlugin[];
-
-    /**
      * Default format of this editor
      */
     defaultFormat: DefaultFormat;
