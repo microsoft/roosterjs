@@ -73,15 +73,21 @@ export const selectRange: SelectRange = (
  * Restore cached pending format state (if exist) to current selection
  */
 function restorePendingFormatState(core: EditorCore) {
-    if (core.pendableFormatStateWrapper.value) {
-        let formatState = getPendableFormatState(core.document);
+    const {
+        document,
+        domEvent: { value },
+        api: { getSelectionRange },
+    } = core;
+
+    if (value.pendableFormatState) {
+        let formatState = getPendableFormatState(document);
         (<PendableFormatNames[]>Object.keys(PendableFormatCommandMap)).forEach(key => {
-            if (core.pendableFormatStateWrapper.value[key] != formatState[key]) {
-                core.document.execCommand(PendableFormatCommandMap[key], false, null);
+            if (value.pendableFormatState[key] != formatState[key]) {
+                document.execCommand(PendableFormatCommandMap[key], false, null);
             }
         });
 
-        const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-        core.pendableFormatPositionWrapper.value = range && Position.getStart(range);
+        const range = getSelectionRange(core, true /*tryGetFromCache*/);
+        value.pendableFormatPosition = range && Position.getStart(range);
     }
 }

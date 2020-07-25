@@ -1,13 +1,13 @@
 import Editor from '../editor/Editor';
-import EditorPlugin from '../interfaces/EditorPlugin';
+import PluginWithState from '../interfaces/PluginWithState';
 import { Keys } from '../interfaces/ContentEditFeature';
 import { PluginEvent, PluginEventType, PluginKeyboardEvent, Wrapper } from 'roosterjs-editor-types';
 
 /**
  * Auto complete Component helps handle the undo operation for an auto complete action
  */
-export default class AutoCompletePlugin implements EditorPlugin {
-    constructor(private readonly snapshotWrapper: Wrapper<string>) {}
+export default class AutoCompletePlugin implements PluginWithState<string> {
+    constructor(public readonly state: Wrapper<string>) {}
 
     getName() {
         return 'AutoComplete';
@@ -16,10 +16,10 @@ export default class AutoCompletePlugin implements EditorPlugin {
     initialize(editor: Editor) {
         editor.addContentEditFeature({
             keys: [Keys.BACKSPACE],
-            shouldHandleEvent: () => this.snapshotWrapper.value !== null,
+            shouldHandleEvent: () => this.state.value !== null,
             handleEvent: (event: PluginKeyboardEvent, editor: Editor) => {
                 event.rawEvent.preventDefault();
-                editor.setContent(this.snapshotWrapper.value);
+                editor.setContent(this.state.value);
             },
         });
     }
@@ -35,7 +35,7 @@ export default class AutoCompletePlugin implements EditorPlugin {
             case PluginEventType.ContentChanged:
             case PluginEventType.MouseDown:
             case PluginEventType.KeyDown:
-                this.snapshotWrapper.value = null;
+                this.state.value = null;
                 break;
         }
     }

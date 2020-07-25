@@ -1,9 +1,11 @@
 import addContentEditFeatures from './addContentEditFeatures';
 import AutoCompletePlugin from '../corePlugins/AutoCompletePlugin';
 import CorePastePlugin from '../corePlugins/CorePastePlugin';
+import CorePlugins from '../interfaces/CorePlugins';
+import CorePluginState from '../interfaces/CorePluginState';
 import DarkModePlugin from '../corePlugins/DarkModePlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
-import EditorCore, { CoreApiMap, CorePlugins } from '../interfaces/EditorCore';
+import EditorCore, { CoreApiMap } from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import EditorPlugin from '../interfaces/EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
@@ -14,7 +16,6 @@ import Undo from '../undo/Undo';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
 import { Browser } from 'roosterjs-editor-dom';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
-import { ContentEditFeatureMap } from '../interfaces/ContentEditFeature';
 import { createPasteFragment } from '../coreAPI/createPasteFragment';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
@@ -23,7 +24,6 @@ import { getSelectionRange } from '../coreAPI/getSelectionRange';
 import { getStyleBasedFormatState } from '../coreAPI/getStyleBasedFormatState';
 import { hasFocus } from '../coreAPI/hasFocus';
 import { insertNode } from '../coreAPI/insertNode';
-import { NodePosition, PendableFormatState, Wrapper } from 'roosterjs-editor-types';
 import { selectRange } from '../coreAPI/selectRange';
 import { triggerEvent } from '../coreAPI/triggerEvent';
 
@@ -36,22 +36,29 @@ export default function createEditorCore(
     contentDiv: HTMLDivElement,
     options: EditorOptions
 ): EditorCore {
-    const autoCompleteSnapshotWrapper: Wrapper<string> = { value: null };
-    const isInImeWrapper: Wrapper<boolean> = { value: false };
-    const pendableFormatStateWrapper: Wrapper<PendableFormatState> = { value: null };
-    const pendableFormatPositionWrapper: Wrapper<NodePosition> = { value: null };
-    const editFeatureMap: ContentEditFeatureMap = {};
-    let corePlugins: CorePlugins = {
+    const pluginState: CorePluginState = {
+        autoComplete: {
+            value: null,
+        },
+        domEvent: {
+            value: {
+                isInIME: false,
+                pendableFormatPosition: null,
+                pendableFormatState: null,
+            },
+        },
+        edit: {
+            value: {},
+        },
+    };
+
+    const corePlugins: CorePlugins = {
         undo: options.undo || new Undo(),
-        edit: new EditPlugin(editFeatureMap),
-        autoComplete: new AutoCompletePlugin(autoCompleteSnapshotWrapper),
+        edit: new EditPlugin(pluginState.edit),
+        autoComplete: new AutoCompletePlugin(pluginState.autoComplete),
         typeInContainer: new TypeInContainerPlugin(),
         mouseUp: new MouseUpPlugin(),
-        domEvent: new DOMEventPlugin(
-            isInImeWrapper,
-            pendableFormatStateWrapper,
-            pendableFormatPositionWrapper
-        ),
+        domEvent: new DOMEventPlugin(pluginState.domEvent),
         typeAfterLink: new TypeAfterLinkPlugin(),
         darkMode: !Browser.isIE && new DarkModePlugin(),
         pastePlugin: new CorePastePlugin(),
@@ -62,9 +69,10 @@ export default function createEditorCore(
         plugin => plugin.onPluginEvent || plugin.willHandleEventExclusively
     );
 
-    addContentEditFeatures(editFeatureMap, options.editFeatures);
+    addContentEditFeatures(pluginState.edit.value, options.editFeatures);
 
     return {
+        ...pluginState,
         contentDiv,
         scrollContainer: options.scrollContainer || contentDiv,
         document: contentDiv.ownerDocument,
@@ -75,17 +83,12 @@ export default function createEditorCore(
         ),
         corePlugins,
         currentUndoSnapshot: null,
-        autoCompleteSnapshotWrapper,
-        editFeatureMap,
         customData: {},
         cachedSelectionRange: null,
         plugins: allPlugins,
         eventHandlerPlugins: eventHandlerPlugins,
         api: createCoreApiMap(options.coreApiOverride),
         defaultApi: createCoreApiMap(),
-        isInImeWrapper,
-        pendableFormatStateWrapper,
-        pendableFormatPositionWrapper,
         inDarkMode: options.inDarkMode,
         darkModeOptions: options.darkModeOptions,
     };

@@ -887,7 +887,7 @@ export default class Editor {
      * @returns True if editor is in IME input sequence, otherwise false
      */
     public isInIME(): boolean {
-        return this.core.isInImeWrapper.value;
+        return this.core.domEvent.value.isInIME;
     }
 
     /**
@@ -980,7 +980,7 @@ export default class Editor {
      * @param feature The feature to add
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
-        addContentEditFeatures(this.core.editFeatureMap, [feature]);
+        addContentEditFeatures(this.core.edit.value, [feature]);
     }
 
     /**

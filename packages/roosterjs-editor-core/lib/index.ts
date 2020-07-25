@@ -10,7 +10,6 @@ export { default as CustomData, CustomDataMap } from './interfaces/CustomData';
 export {
     default as EditorCore,
     AttachDomEvent,
-    CorePlugins,
     CoreApiMap,
     CreatePasteFragment,
     EditWithUndo,
@@ -23,8 +22,17 @@ export {
     SelectRange,
     TriggerEvent,
 } from './interfaces/EditorCore';
+export {
+    default as CorePluginState,
+    KeyOfStatePlugin,
+    PluginState,
+    StatePluginKeys,
+    TypeOfStatePlugin,
+} from './interfaces/CorePluginState';
+export { default as CorePlugins, PluginKey } from './interfaces/CorePlugins';
 export { default as EditorOptions } from './interfaces/EditorOptions';
 export { default as EditorPlugin } from './interfaces/EditorPlugin';
+export { default as PluginWithState } from './interfaces/PluginWithState';
 export { default as UndoService } from './interfaces/UndoService';
 export { default as UndoSnapshotsService } from './interfaces/UndoSnapshotsService';
 

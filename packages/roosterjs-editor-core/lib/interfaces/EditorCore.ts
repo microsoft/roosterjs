@@ -1,14 +1,6 @@
-import AutoCompletePlugin from '../corePlugins/AutoCompletePlugin';
-import CorePastePlugin from '../corePlugins/CorePastePlugin';
-import DarkModePlugin from '../corePlugins/DarkModePlugin';
-import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
+import CorePlugins from './CorePlugins';
+import CorePluginState from './CorePluginState';
 import EditorPlugin from './EditorPlugin';
-import EditPlugin from '../corePlugins/EditPlugin';
-import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
-import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
-import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
-import UndoService from './UndoService';
-import { ContentEditFeatureMap } from './ContentEditFeature';
 import { CustomDataMap } from './CustomData';
 import {
     ChangeSource,
@@ -20,65 +12,12 @@ import {
     PluginEvent,
     PluginEventType,
     StyleBasedFormatState,
-    Wrapper,
-    PendableFormatState,
 } from 'roosterjs-editor-types';
-
-/**
- * An interface for editor core plugins.
- * These plugins are built-in and most of them are not able to be replaced
- */
-export interface CorePlugins {
-    /**
-     * Edit plugin handles ContentEditFeatures
-     */
-    readonly edit: EditPlugin;
-
-    /**
-     * Auto complete plugin handles the undo operation for an auto complete action
-     */
-    readonly autoComplete: AutoCompletePlugin;
-
-    /**
-     * Undo plugin provides the ability to undo/redo
-     */
-    readonly undo: UndoService;
-
-    /**
-     * TypeInContainer plugin makes sure user is always type under a container element under editor DIV
-     */
-    readonly typeInContainer: TypeInContainerPlugin;
-
-    /**
-     * MouseUp plugin helps generate MouseUp event even mouse is out of editor area
-     */
-    readonly mouseUp: MouseUpPlugin;
-
-    /**
-     * DomEvent plugin helps handle additional DOM events such as IME composition, cut, drop.
-     */
-    readonly domEvent: DOMEventPlugin;
-
-    /**
-     * TypeAfterLinkPlugin plugin helps workaround a Firefox bug to allow type outside a hyperlink
-     */
-    readonly typeAfterLink: TypeAfterLinkPlugin;
-
-    /**
-     * Dark mode plguin for handling dark mode copy.
-     */
-    readonly darkMode: DarkModePlugin;
-
-    /**
-     * Core paste plugin for handling onPaste event and extract the pasted content
-     */
-    readonly pastePlugin: CorePastePlugin;
-}
 
 /**
  * Represents the core data structure of an editor
  */
-export default interface EditorCore {
+export default interface EditorCore extends CorePluginState {
     /**
      * HTML Document object of this editor
      */
@@ -136,35 +75,9 @@ export default interface EditorCore {
     currentUndoSnapshot: string;
 
     /**
-     * The undo snapshot taken before an auto complete action happens, and will be used
-     * when user want to undo last auto complete result.
-     */
-    readonly autoCompleteSnapshotWrapper: Wrapper<string>;
-
-    /**
-     * Content edit features
-     */
-    readonly editFeatureMap: ContentEditFeatureMap;
-
-    /**
      * Cached selection range of this editor
      */
     cachedSelectionRange: Range;
-
-    /**
-     * if editor is in IME input sequence
-     */
-    isInImeWrapper: Wrapper<boolean>;
-
-    /**
-     * Cached pendable format state, can be used for restore format state when refocus to editor
-     */
-    pendableFormatStateWrapper: Wrapper<PendableFormatState>;
-
-    /**
-     * Cached pendable format position, can be used for restore format state when refocus to editor
-     */
-    pendableFormatPositionWrapper: Wrapper<NodePosition>;
 
     /**
      * If the editor is in dark mode.

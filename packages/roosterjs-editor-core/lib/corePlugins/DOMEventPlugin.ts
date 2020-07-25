@@ -1,5 +1,5 @@
 import Editor from '../editor/Editor';
-import EditorPlugin from '../interfaces/EditorPlugin';
+import PluginWithState from '../interfaces/PluginWithState';
 import { Browser, Position } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -18,14 +18,22 @@ import {
  * 4. Pending format state management
  * 5. Scroll container and scroll event management
  */
-export default class DOMEventPlugin implements EditorPlugin {
+export default class DOMEventPlugin
+    implements
+        PluginWithState<{
+            isInIME: boolean;
+            pendableFormatState: PendableFormatState;
+            pendableFormatPosition: NodePosition;
+        }> {
     private editor: Editor;
     private disposer: () => void;
 
     constructor(
-        private readonly isInImeWrapper: Wrapper<boolean>,
-        private readonly pendableFormatStateWrapper: Wrapper<PendableFormatState>,
-        private readonly pendableFormatPositionWrapper: Wrapper<NodePosition>
+        public readonly state: Wrapper<{
+            isInIME: boolean;
+            pendableFormatState: PendableFormatState;
+            pendableFormatPosition: NodePosition;
+        }>
     ) {}
 
     getName() {
@@ -37,9 +45,9 @@ export default class DOMEventPlugin implements EditorPlugin {
 
         this.disposer = editor.addDomEventHandler({
             // 1. IME state management
-            compositionstart: () => (this.isInImeWrapper.value = true),
+            compositionstart: () => (this.state.value.isInIME = true),
             compositionend: (rawEvent: CompositionEvent) => {
-                this.isInImeWrapper.value = false;
+                this.state.value.isInIME = false;
                 editor.triggerPluginEvent(PluginEventType.CompositionEnd, {
                     rawEvent,
                 });
@@ -74,8 +82,8 @@ export default class DOMEventPlugin implements EditorPlugin {
         switch (event.eventType) {
             case PluginEventType.PendingFormatStateChanged:
                 // Got PendingFormatStateChagned event, cache current position and pending format
-                this.pendableFormatPositionWrapper.value = this.getCurrentPosition();
-                this.pendableFormatStateWrapper.value = event.formatState;
+                this.state.value.pendableFormatPosition = this.getCurrentPosition();
+                this.state.value.pendableFormatState = event.formatState;
                 break;
             case PluginEventType.KeyDown:
             case PluginEventType.MouseDown:
@@ -84,8 +92,8 @@ export default class DOMEventPlugin implements EditorPlugin {
                 // check if current position is still the same with the cached one (if exist),
                 // and clear cached format if position is changed since it is out-of-date now
                 if (
-                    this.pendableFormatPositionWrapper.value &&
-                    !this.pendableFormatPositionWrapper.value.equalTo(this.getCurrentPosition())
+                    this.state.value.pendableFormatPosition &&
+                    !this.state.value.pendableFormatPosition.equalTo(this.getCurrentPosition())
                 ) {
                     this.clear();
                 }
@@ -118,8 +126,8 @@ export default class DOMEventPlugin implements EditorPlugin {
     };
 
     private clear() {
-        this.pendableFormatPositionWrapper.value = null;
-        this.pendableFormatStateWrapper.value = null;
+        this.state.value.pendableFormatPosition = null;
+        this.state.value.pendableFormatState = null;
     }
 
     private getCurrentPosition() {

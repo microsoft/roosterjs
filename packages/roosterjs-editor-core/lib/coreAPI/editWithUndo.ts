@@ -60,6 +60,6 @@ export const editWithUndo: EditWithUndo = (
 
     if (canUndoByBackspace) {
         // Need to set this snapshot after ContentChangedEvent is fired to avoid it is cleared by event handler in AutoCompletePlugin
-        core.autoCompleteSnapshotWrapper.value = autoCompleteSnapshot;
+        core.autoComplete.value = autoCompleteSnapshot;
     }
 };

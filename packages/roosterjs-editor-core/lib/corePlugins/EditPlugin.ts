@@ -1,7 +1,7 @@
 import Editor from '../editor/Editor';
-import EditorPlugin from '../interfaces/EditorPlugin';
 import isCtrlOrMetaPressed from '../eventApi/isCtrlOrMetaPressed';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import PluginWithState from '../interfaces/PluginWithState';
+import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 import {
     ContentEditFeatureArray,
     Keys,
@@ -11,10 +11,10 @@ import {
 /**
  * Edit Component helps handle Content edit features
  */
-export default class EditPlugin implements EditorPlugin {
+export default class EditPlugin implements PluginWithState<ContentEditFeatureMap> {
     private editor: Editor;
 
-    constructor(private readonly featureMap: ContentEditFeatureMap) {}
+    constructor(public readonly state: Wrapper<ContentEditFeatureMap>) {}
 
     getName() {
         return 'Edit';
@@ -41,9 +41,9 @@ export default class EditPlugin implements EditorPlugin {
             let rawEvent = event.rawEvent;
             ctrlOrMeta = isCtrlOrMetaPressed(rawEvent);
             hasFunctionKey = ctrlOrMeta || rawEvent.altKey;
-            features = this.featureMap[rawEvent.which];
+            features = this.state.value[rawEvent.which];
         } else if (event.eventType == PluginEventType.ContentChanged) {
-            features = this.featureMap[Keys.CONTENTCHANGED];
+            features = this.state.value[Keys.CONTENTCHANGED];
         }
 
         const currentFeature =
