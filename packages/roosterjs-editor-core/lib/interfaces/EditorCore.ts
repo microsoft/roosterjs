@@ -21,6 +21,7 @@ import {
     PluginEventType,
     StyleBasedFormatState,
     Wrapper,
+    PendableFormatState,
 } from 'roosterjs-editor-types';
 
 /**
@@ -154,6 +155,16 @@ export default interface EditorCore {
      * if editor is in IME input sequence
      */
     isInImeWrapper: Wrapper<boolean>;
+
+    /**
+     * Cached pendable format state, can be used for restore format state when refocus to editor
+     */
+    pendableFormatStateWrapper: Wrapper<PendableFormatState>;
+
+    /**
+     * Cached pendable format position, can be used for restore format state when refocus to editor
+     */
+    pendableFormatPositionWrapper: Wrapper<NodePosition>;
 
     /**
      * If the editor is in dark mode.

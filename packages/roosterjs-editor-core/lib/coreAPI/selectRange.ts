@@ -1,7 +1,13 @@
 import EditorCore, { SelectRange } from '../interfaces/EditorCore';
-import { Browser, contains } from 'roosterjs-editor-dom';
 import { hasFocus } from './hasFocus';
-
+import {
+    Browser,
+    contains,
+    getPendableFormatState,
+    Position,
+    PendableFormatNames,
+    PendableFormatCommandMap,
+} from 'roosterjs-editor-dom';
 /**
  * Change the editor selection to the given range
  * @param core The EditorCore object
@@ -57,8 +63,25 @@ export const selectRange: SelectRange = (
     if (range.collapsed) {
         // If selected, and current selection is collapsed,
         // need to restore pending format state if exists.
-        core.corePlugins.domEvent.restorePendingFormatState();
+        restorePendingFormatState(core);
     }
 
     return true;
 };
+
+/**
+ * Restore cached pending format state (if exist) to current selection
+ */
+function restorePendingFormatState(core: EditorCore) {
+    if (core.pendableFormatStateWrapper.value) {
+        let formatState = getPendableFormatState(core.document);
+        (<PendableFormatNames[]>Object.keys(PendableFormatCommandMap)).forEach(key => {
+            if (core.pendableFormatStateWrapper.value[key] != formatState[key]) {
+                core.document.execCommand(PendableFormatCommandMap[key], false, null);
+            }
+        });
+
+        const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
+        core.pendableFormatPositionWrapper.value = range && Position.getStart(range);
+    }
+}

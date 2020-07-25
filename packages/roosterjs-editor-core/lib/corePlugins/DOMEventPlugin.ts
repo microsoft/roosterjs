@@ -1,12 +1,6 @@
 import Editor from '../editor/Editor';
 import EditorPlugin from '../interfaces/EditorPlugin';
-import {
-    Browser,
-    getPendableFormatState,
-    Position,
-    PendableFormatNames,
-    PendableFormatCommandMap,
-} from 'roosterjs-editor-dom';
+import { Browser, Position } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     PluginEventType,
@@ -27,10 +21,12 @@ import {
 export default class DOMEventPlugin implements EditorPlugin {
     private editor: Editor;
     private disposer: () => void;
-    private cachedPosition: NodePosition;
-    private cachedFormatState: PendableFormatState;
 
-    constructor(private readonly isInImeWrapper: Wrapper<boolean>) {}
+    constructor(
+        private readonly isInImeWrapper: Wrapper<boolean>,
+        private readonly pendableFormatStateWrapper: Wrapper<PendableFormatState>,
+        private readonly pendableFormatPositionWrapper: Wrapper<NodePosition>
+    ) {}
 
     getName() {
         return 'DOMEvent';
@@ -78,8 +74,8 @@ export default class DOMEventPlugin implements EditorPlugin {
         switch (event.eventType) {
             case PluginEventType.PendingFormatStateChanged:
                 // Got PendingFormatStateChagned event, cache current position and pending format
-                this.cachedPosition = this.getCurrentPosition();
-                this.cachedFormatState = event.formatState;
+                this.pendableFormatPositionWrapper.value = this.getCurrentPosition();
+                this.pendableFormatStateWrapper.value = event.formatState;
                 break;
             case PluginEventType.KeyDown:
             case PluginEventType.MouseDown:
@@ -88,29 +84,12 @@ export default class DOMEventPlugin implements EditorPlugin {
                 // check if current position is still the same with the cached one (if exist),
                 // and clear cached format if position is changed since it is out-of-date now
                 if (
-                    this.cachedPosition &&
-                    !this.cachedPosition.equalTo(this.getCurrentPosition())
+                    this.pendableFormatPositionWrapper.value &&
+                    !this.pendableFormatPositionWrapper.value.equalTo(this.getCurrentPosition())
                 ) {
                     this.clear();
                 }
                 break;
-        }
-    }
-
-    /**
-     * Restore cached pending format state (if exist) to current selection
-     */
-    public restorePendingFormatState() {
-        if (this.cachedFormatState) {
-            let formatState = getPendableFormatState(this.editor.getDocument());
-            (<PendableFormatNames[]>Object.keys(PendableFormatCommandMap)).forEach(key => {
-                if (this.cachedFormatState[key] != formatState[key]) {
-                    this.editor
-                        .getDocument()
-                        .execCommand(PendableFormatCommandMap[key], false, null);
-                }
-            });
-            this.cachedPosition = this.getCurrentPosition();
         }
     }
 
@@ -139,8 +118,8 @@ export default class DOMEventPlugin implements EditorPlugin {
     };
 
     private clear() {
-        this.cachedPosition = null;
-        this.cachedFormatState = null;
+        this.pendableFormatPositionWrapper.value = null;
+        this.pendableFormatStateWrapper.value = null;
     }
 
     private getCurrentPosition() {

@@ -23,9 +23,9 @@ import { getSelectionRange } from '../coreAPI/getSelectionRange';
 import { getStyleBasedFormatState } from '../coreAPI/getStyleBasedFormatState';
 import { hasFocus } from '../coreAPI/hasFocus';
 import { insertNode } from '../coreAPI/insertNode';
+import { NodePosition, PendableFormatState, Wrapper } from 'roosterjs-editor-types';
 import { selectRange } from '../coreAPI/selectRange';
 import { triggerEvent } from '../coreAPI/triggerEvent';
-import { Wrapper } from 'roosterjs-editor-types';
 
 /**
  * Create core object for editor
@@ -38,6 +38,8 @@ export default function createEditorCore(
 ): EditorCore {
     const autoCompleteSnapshotWrapper: Wrapper<string> = { value: null };
     const isInImeWrapper: Wrapper<boolean> = { value: false };
+    const pendableFormatStateWrapper: Wrapper<PendableFormatState> = { value: null };
+    const pendableFormatPositionWrapper: Wrapper<NodePosition> = { value: null };
     const editFeatureMap: ContentEditFeatureMap = {};
     let corePlugins: CorePlugins = {
         undo: options.undo || new Undo(),
@@ -45,7 +47,11 @@ export default function createEditorCore(
         autoComplete: new AutoCompletePlugin(autoCompleteSnapshotWrapper),
         typeInContainer: new TypeInContainerPlugin(),
         mouseUp: new MouseUpPlugin(),
-        domEvent: new DOMEventPlugin(isInImeWrapper),
+        domEvent: new DOMEventPlugin(
+            isInImeWrapper,
+            pendableFormatStateWrapper,
+            pendableFormatPositionWrapper
+        ),
         typeAfterLink: new TypeAfterLinkPlugin(),
         darkMode: !Browser.isIE && new DarkModePlugin(),
         pastePlugin: new CorePastePlugin(),
@@ -78,6 +84,8 @@ export default function createEditorCore(
         api: createCoreApiMap(options.coreApiOverride),
         defaultApi: createCoreApiMap(),
         isInImeWrapper,
+        pendableFormatStateWrapper,
+        pendableFormatPositionWrapper,
         inDarkMode: options.inDarkMode,
         darkModeOptions: options.darkModeOptions,
     };
