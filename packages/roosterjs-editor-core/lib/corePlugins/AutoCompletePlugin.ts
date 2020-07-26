@@ -1,12 +1,14 @@
 import Editor from '../editor/Editor';
 import PluginWithState from '../interfaces/PluginWithState';
 import { Keys } from '../interfaces/ContentEditFeature';
-import { PluginEvent, PluginEventType, PluginKeyboardEvent, Wrapper } from 'roosterjs-editor-types';
+import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 
 /**
  * Auto complete Component helps handle the undo operation for an auto complete action
  */
 export default class AutoCompletePlugin implements PluginWithState<string> {
+    private editor: Editor;
+
     constructor(public readonly state: Wrapper<string>) {}
 
     getName() {
@@ -14,17 +16,20 @@ export default class AutoCompletePlugin implements PluginWithState<string> {
     }
 
     initialize(editor: Editor) {
-        editor.addContentEditFeature({
-            keys: [Keys.BACKSPACE],
-            shouldHandleEvent: () => this.state.value !== null,
-            handleEvent: (event: PluginKeyboardEvent, editor: Editor) => {
-                event.rawEvent.preventDefault();
-                editor.setContent(this.state.value);
-            },
-        });
+        this.editor = editor;
     }
 
-    dispose() {}
+    dispose() {
+        this.editor = null;
+    }
+
+    willHandleEventExclusively(event: PluginEvent) {
+        return (
+            event.eventType == PluginEventType.KeyDown &&
+            event.rawEvent.which == Keys.BACKSPACE &&
+            !!this.state.value
+        );
+    }
 
     /**
      * Handle events triggered from editor
@@ -34,8 +39,15 @@ export default class AutoCompletePlugin implements PluginWithState<string> {
         switch (event.eventType) {
             case PluginEventType.ContentChanged:
             case PluginEventType.MouseDown:
-            case PluginEventType.KeyDown:
                 this.state.value = null;
+                break;
+            case PluginEventType.KeyDown:
+                if (event.rawEvent.which != Keys.BACKSPACE) {
+                    this.state.value = null;
+                } else if (this.state.value !== null) {
+                    event.rawEvent.preventDefault();
+                    this.editor.setContent(this.state.value);
+                }
                 break;
         }
     }

@@ -1,4 +1,3 @@
-import addContentEditFeatures from './addContentEditFeatures';
 import AutoCompletePlugin from '../corePlugins/AutoCompletePlugin';
 import CorePastePlugin from '../corePlugins/CorePastePlugin';
 import CorePlugins from '../interfaces/CorePlugins';
@@ -54,7 +53,7 @@ export default function createEditorCore(
 
     const corePlugins: CorePlugins = {
         undo: options.undo || new Undo(),
-        edit: new EditPlugin(pluginState.edit),
+        edit: new EditPlugin(pluginState.edit, options.editFeatures),
         autoComplete: new AutoCompletePlugin(pluginState.autoComplete),
         typeInContainer: new TypeInContainerPlugin(),
         mouseUp: new MouseUpPlugin(),
@@ -65,8 +64,6 @@ export default function createEditorCore(
     };
 
     let allPlugins = buildPluginList(corePlugins, options.plugins);
-
-    addContentEditFeatures(pluginState.edit.value, options.editFeatures);
 
     return {
         ...pluginState,

@@ -1,7 +1,11 @@
 import blockFormat from '../utils/blockFormat';
 import { BlockElement, Indentation, Region } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { getSelectedBlockElementsInRegion } from 'roosterjs-editor-dom';
+import {
+    fromHtml,
+    getSelectedBlockElementsInRegion,
+    getBlockElementAtNode,
+} from 'roosterjs-editor-dom';
 import {
     collapseNodesInRegion,
     createVListFromRegion,
@@ -25,6 +29,12 @@ export default function experimentSetIndentation(editor: Editor, indentation: In
     blockFormat(editor, (region, start, end) => {
         const blocks = getSelectedBlockElementsInRegion(region);
         const blockGroups: BlockElement[][] = [[]];
+
+        if (blocks.length == 0 && !region.rootNode.firstChild) {
+            const newNode = fromHtml('<div><br></div>', region.rootNode.ownerDocument)[0];
+            region.rootNode.appendChild(newNode);
+            blocks.push(getBlockElementAtNode(region.rootNode, newNode));
+        }
 
         for (let i = 0; i < blocks.length; i++) {
             const startNode = blocks[i].getStartNode();

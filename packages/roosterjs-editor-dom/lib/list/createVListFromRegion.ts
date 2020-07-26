@@ -1,11 +1,14 @@
 import findClosestElementAncestor from '../utils/findClosestElementAncestor';
+import fromHtml from '../utils/fromHtml';
 import getSelectedBlockElementsInRegion from '../region/getSelectedBlockElementsInRegion';
 import isNodeInRegion from '../region/isNodeInRegion';
+import Position from '../selection/Position';
 import shouldSkipNode from '../utils/shouldSkipNode';
 import VList from './VList';
 import { getLeafSibling } from '../utils/getLeafSibling';
 import { isListElement } from './getListTypeFromNode';
 import { ListType, Region } from 'roosterjs-editor-types';
+import { PositionType } from 'roosterjs-editor-types';
 
 type ListElement = HTMLOListElement | HTMLUListElement;
 const ListSelector = 'ol,ul';
@@ -44,9 +47,22 @@ export default function createVListFromRegion(
                     nodes.push(list);
                 }
             } else {
-                nodes.push(block.collapseToSingleElement());
+                const blockNode = block.collapseToSingleElement();
+                if (shouldSkipNode(blockNode, true /*ignoreSpace*/)) {
+                    blockNode.parentNode?.removeChild(blockNode);
+                } else {
+                    nodes.push(blockNode);
+                }
             }
         });
+
+        if (nodes.length == 0 && !region.rootNode.firstChild) {
+            const newNode = fromHtml('<div><br></div>', region.rootNode.ownerDocument)[0];
+            region.rootNode.appendChild(newNode);
+            nodes.push(newNode);
+            region.fullSelectionStart = new Position(newNode, PositionType.Begin);
+            region.fullSelectionEnd = new Position(newNode, PositionType.End);
+        }
 
         if (includeSiblingLists) {
             tryIncludeSiblingNode(region, nodes, false /*isNext*/);
