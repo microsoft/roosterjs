@@ -11,9 +11,6 @@ describe('hasFocus', () => {
         div.contentEditable = 'true';
         document.body.appendChild(div);
         core = createEditorCore(div, {});
-        (<any>core).plugins = core.plugins.filter(
-            plugin => plugin != core.corePlugins.undo && plugin != core.corePlugins.edit
-        );
     });
 
     afterEach(() => {
