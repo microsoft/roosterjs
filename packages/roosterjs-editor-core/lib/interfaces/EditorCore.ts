@@ -1,7 +1,6 @@
-import CorePlugins from './CorePlugins';
-import CorePluginState from './CorePluginState';
 import EditorPlugin from './EditorPlugin';
 import { CustomDataMap } from './CustomData';
+import { PluginKey, PluginState } from './CorePlugins';
 import {
     ChangeSource,
     ClipboardData,
@@ -17,7 +16,7 @@ import {
 /**
  * Represents the core data structure of an editor
  */
-export default interface EditorCore extends CorePluginState {
+export default interface EditorCore extends PluginState<PluginKey> {
     /**
      * HTML Document object of this editor
      */
@@ -45,11 +44,6 @@ export default interface EditorCore extends CorePluginState {
     defaultFormat: DefaultFormat;
 
     /**
-     * Core plugin of this editor
-     */
-    readonly corePlugins: CorePlugins;
-
-    /**
      * Custom data of this editor
      */
     readonly customData: CustomDataMap;
@@ -58,11 +52,6 @@ export default interface EditorCore extends CorePluginState {
      * Core API map of this editor
      */
     readonly api: CoreApiMap;
-
-    /**
-     * Core API map of this editor with default values (not overridable)
-     */
-    readonly defaultApi: CoreApiMap;
 
     /**
      * The undo snapshot taken by addUndoSnapshot() before callback function is invoked.
@@ -138,6 +127,22 @@ export type EditWithUndo = (
 export type Focus = (core: EditorCore) => void;
 
 /**
+ * Get current editor content as HTML string
+ * @param core The EditorCore object
+ * @param triggerExtractContentEvent Whether trigger ExtractContent event to all plugins
+ * before return. Use this parameter to remove any temporary content added by plugins.
+ * @param includeSelectionMarker Set to true if need include selection marker inside the content.
+ * When restore this content, editor will set the selection to the position marked by these markers.
+ * This parameter will be ignored when triggerExtractContentEvent is set to true
+ * @returns HTML string representing current editor content
+ */
+export type GetContent = (
+    core: EditorCore,
+    triggerExtractContentEvent: boolean,
+    includeSelectionMarker: boolean
+) => string;
+
+/**
  * Get custom data related with this editor
  * @param core The EditorCore object
  * @param key Key of the custom data
@@ -193,6 +198,19 @@ export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) =>
 export type SelectRange = (core: EditorCore, range: Range, skipSameRange?: boolean) => boolean;
 
 /**
+ * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
+ * if triggerContentChangedEvent is set to true
+ * @param core The EditorCore object
+ * @param content HTML content to set in
+ * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
+ */
+export type SetContent = (
+    core: EditorCore,
+    content: string,
+    triggerContentChangedEvent: boolean
+) => void;
+
+/**
  * Trigger a plugin event
  * @param core The EditorCore object
  * @param pluginEvent The event object to trigger
@@ -236,6 +254,18 @@ export interface CoreApiMap {
      * @param core The EditorCore object
      */
     focus: Focus;
+
+    /**
+     * Get current editor content as HTML string
+     * @param core The EditorCore object
+     * @param triggerExtractContentEvent Whether trigger ExtractContent event to all plugins
+     * before return. Use this parameter to remove any temporary content added by plugins.
+     * @param includeSelectionMarker Set to true if need include selection marker inside the content.
+     * When restore this content, editor will set the selection to the position marked by these markers.
+     * This parameter will be ignored when triggerExtractContentEvent is set to true
+     * @returns HTML string representing current editor content
+     */
+    getContent: GetContent;
 
     /**
      * Get custom data related with this editor
@@ -286,6 +316,15 @@ export interface CoreApiMap {
      * This parameter is always treat as true in Edge to avoid some weird runtime exception.
      */
     selectRange: SelectRange;
+
+    /**
+     * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
+     * if triggerContentChangedEvent is set to true
+     * @param core The EditorCore object
+     * @param content HTML content to set in
+     * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
+     */
+    setContent: SetContent;
 
     /**
      * Trigger a plugin event

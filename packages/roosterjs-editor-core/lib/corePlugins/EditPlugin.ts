@@ -1,4 +1,3 @@
-import addContentEditFeatures from '../editor/addContentEditFeatures';
 import Editor from '../editor/Editor';
 import isCtrlOrMetaPressed from '../eventApi/isCtrlOrMetaPressed';
 import PluginWithState from '../interfaces/PluginWithState';
@@ -15,10 +14,7 @@ import {
 export default class EditPlugin implements PluginWithState<ContentEditFeatureMap> {
     private editor: Editor;
 
-    constructor(
-        public readonly state: Wrapper<ContentEditFeatureMap>,
-        private featuresToAdd: ContentEditFeatureArray
-    ) {}
+    constructor(public readonly state: Wrapper<ContentEditFeatureMap>) {}
 
     getName() {
         return 'Edit';
@@ -26,7 +22,6 @@ export default class EditPlugin implements PluginWithState<ContentEditFeatureMap
 
     initialize(editor: Editor) {
         this.editor = editor;
-        addContentEditFeatures(this.state.value, this.featuresToAdd);
     }
 
     dispose() {

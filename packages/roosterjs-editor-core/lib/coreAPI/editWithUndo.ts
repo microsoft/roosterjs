@@ -1,3 +1,4 @@
+import addUndoSnapshot from '../undoApi/addUndoSnapshot';
 import EditorCore, { EditWithUndo } from '../interfaces/EditorCore';
 import { Position } from 'roosterjs-editor-dom';
 import {
@@ -25,7 +26,7 @@ export const editWithUndo: EditWithUndo = (
     let data: any;
 
     if (!isNested) {
-        core.currentUndoSnapshot = core.corePlugins.undo.addUndoSnapshot();
+        core.currentUndoSnapshot = addUndoSnapshot(core.undo.value);
     }
 
     const autoCompleteSnapshot = canUndoByBackspace && core.currentUndoSnapshot;
@@ -40,7 +41,7 @@ export const editWithUndo: EditWithUndo = (
             );
 
             if (!isNested) {
-                core.corePlugins.undo.addUndoSnapshot();
+                addUndoSnapshot(core.undo.value);
             }
         }
     } finally {

@@ -1,3 +1,6 @@
+import addUndoSnapshot from '../undoApi/addUndoSnapshot';
+import canRedo from '../undoApi/canRedo';
+import canUndo from '../undoApi/canUndo';
 import Editor from '../editor/Editor';
 import isCtrlOrMetaPressed from '../eventApi/isCtrlOrMetaPressed';
 import PluginWithState from '../interfaces/PluginWithState';
@@ -11,16 +14,20 @@ const KEY_ENTER = 13;
 const KEY_PAGEUP = 33;
 const KEY_DOWN = 40;
 
+export interface UndoPluginState {
+    snapshotsService: UndoSnapshotsService;
+    isRestoring: boolean;
+    hasNewContent: boolean;
+    getContent: () => string;
+    setContent: (content: string) => void;
+}
+
 /**
  * Provides snapshot based undo service for Editor
  */
-export default class UndoPlugin implements PluginWithState<UndoSnapshotsService> {
+export default class UndoPlugin implements PluginWithState<UndoPluginState> {
     private editor: Editor;
-    private isRestoring: boolean;
-    private hasNewContent: boolean;
     private lastKeyPress: number;
-
-    protected undoSnapshots: UndoSnapshotsService;
 
     /**
      * Create an instance of Undo
@@ -28,7 +35,7 @@ export default class UndoPlugin implements PluginWithState<UndoSnapshotsService>
      * this object to be reused when editor is disposed and created again
      * @param maxBufferSize The max buffer size for snapshots. Default value is 10MB
      */
-    constructor(public readonly state: Wrapper<UndoSnapshotsService>) {}
+    constructor(public readonly state: Wrapper<UndoPluginState>) {}
 
     /**
      * Get a friendly name of  this plugin
@@ -64,10 +71,10 @@ export default class UndoPlugin implements PluginWithState<UndoSnapshotsService>
 
         switch (event.eventType) {
             case PluginEventType.EditorReady:
-                if (!this.canUndo() && !this.canRedo()) {
+                if (!canUndo(this.state.value) && !canRedo(this.state.value)) {
                     // Only add initial snapshot when there is no existing snapshot
                     // Otherwise preserved undo/redo state may be ruined
-                    this.addUndoSnapshot();
+                    addUndoSnapshot(this.state.value);
                 }
                 break;
             case PluginEventType.KeyDown:
@@ -78,71 +85,13 @@ export default class UndoPlugin implements PluginWithState<UndoSnapshotsService>
                 break;
             case PluginEventType.CompositionEnd:
                 this.clearRedoForInput();
-                this.addUndoSnapshot();
+                addUndoSnapshot(this.state.value);
                 break;
             case PluginEventType.ContentChanged:
-                if (!this.isRestoring) {
+                if (!this.state.value.isRestoring) {
                     this.clearRedoForInput();
                 }
                 break;
-        }
-    }
-
-    /**
-     * Restore an undo snapshot to editor
-     */
-    public undo(): void {
-        if (this.hasNewContent) {
-            this.addUndoSnapshot();
-        }
-
-        this.restoreSnapshot(-1 /*previousSnapshot*/);
-    }
-
-    /**
-     * Restore a redo snapshot to editor
-     */
-    public redo(): void {
-        this.restoreSnapshot(1 /*nextSnapshot*/);
-    }
-
-    /**
-     * Whether there is a snapshot for undo
-     */
-    public canUndo(): boolean {
-        return this.hasNewContent || this.state.value.canMove(-1 /*previousSnapshot*/);
-    }
-
-    /**
-     * Whether there is a snapshot for redo
-     */
-    public canRedo(): boolean {
-        return this.state.value.canMove(1 /*nextSnapshot*/);
-    }
-
-    /**
-     * Add an undo snapshot
-     */
-    public addUndoSnapshot(): string {
-        let snapshot = this.editor.getContent(
-            false /*triggerExtractContentEvent*/,
-            true /* includeSelectionMarker */
-        );
-        this.state.value.addSnapshot(snapshot);
-        this.hasNewContent = false;
-        return snapshot;
-    }
-
-    private restoreSnapshot(delta: number) {
-        let snapshot = this.state.value.move(delta);
-
-        if (snapshot != null) {
-            try {
-                this.isRestoring = true;
-                this.editor.setContent(snapshot);
-            } finally {
-                this.isRestoring = false;
-            }
         }
     }
 
@@ -162,16 +111,16 @@ export default class UndoPlugin implements PluginWithState<UndoSnapshotsService>
                     this.lastKeyPress != evt.which ||
                     isCtrlOrMetaPressed(evt))
             ) {
-                this.addUndoSnapshot();
+                addUndoSnapshot(this.state.value);
             }
 
             // Since some content is deleted, always set hasNewContent to true so that we will take undo snapshot next time
-            this.hasNewContent = true;
+            this.state.value.hasNewContent = true;
             this.lastKeyPress = evt.which;
         } else if (evt.which >= KEY_PAGEUP && evt.which <= KEY_DOWN) {
             // PageUp, PageDown, Home, End, Left, Right, Up, Down
-            if (this.hasNewContent) {
-                this.addUndoSnapshot();
+            if (this.state.value.hasNewContent) {
+                addUndoSnapshot(this.state.value);
             }
             this.lastKeyPress = 0;
         }
@@ -190,11 +139,11 @@ export default class UndoPlugin implements PluginWithState<UndoSnapshotsService>
             (evt.which == KEY_SPACE && this.lastKeyPress != KEY_SPACE) ||
             evt.which == KEY_ENTER
         ) {
-            this.addUndoSnapshot();
+            addUndoSnapshot(this.state.value);
             if (evt.which == KEY_ENTER) {
                 // Treat ENTER as new content so if there is no input after ENTER and undo,
                 // we restore the snapshot before ENTER
-                this.hasNewContent = true;
+                this.state.value.hasNewContent = true;
             }
         } else {
             this.clearRedoForInput();
@@ -204,8 +153,8 @@ export default class UndoPlugin implements PluginWithState<UndoSnapshotsService>
     }
 
     private clearRedoForInput() {
-        this.state.value.clearRedo();
+        this.state.value.snapshotsService.clearRedo();
         this.lastKeyPress = 0;
-        this.hasNewContent = true;
+        this.state.value.hasNewContent = true;
     }
 }

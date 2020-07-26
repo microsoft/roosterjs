@@ -1,4 +1,5 @@
 import normalizeContentColor from '../darkMode/normalizeContentColor';
+import { Browser } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 
 /**
@@ -21,18 +22,22 @@ export default class DarkModePlugin implements EditorPlugin {
      */
     initialize(editor: Editor) {
         this.editor = editor;
-        this.eventDisposer = editor.addDomEventHandler({
-            copy: this.onExtract(false),
-            cut: this.onExtract(true),
-        });
+        this.eventDisposer =
+            !Browser.isIE &&
+            editor.addDomEventHandler({
+                copy: this.onExtract(false),
+                cut: this.onExtract(true),
+            });
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        this.eventDisposer();
-        this.eventDisposer = null;
+        if (this.eventDisposer) {
+            this.eventDisposer();
+            this.eventDisposer = null;
+        }
         this.editor = null;
     }
 

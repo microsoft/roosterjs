@@ -16,4 +16,6 @@ export default function addContentEditFeatures(
             featureMap[key] = array;
         });
     });
+
+    return featureMap;
 }

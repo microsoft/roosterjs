@@ -14,22 +14,24 @@ export {
     CreatePasteFragment,
     EditWithUndo,
     Focus,
+    GetContent,
     GetCustomData,
     GetSelectionRange,
     GetStyleBasedFormatState,
     HasFocus,
     InsertNode,
     SelectRange,
+    SetContent,
     TriggerEvent,
 } from './interfaces/EditorCore';
 export {
-    default as CorePluginState,
+    default as CorePlugins,
+    PluginKey,
     KeyOfStatePlugin,
     PluginState,
     StatePluginKeys,
     TypeOfStatePlugin,
-} from './interfaces/CorePluginState';
-export { default as CorePlugins, PluginKey } from './interfaces/CorePlugins';
+} from './interfaces/CorePlugins';
 export { default as EditorOptions } from './interfaces/EditorOptions';
 export { default as EditorPlugin } from './interfaces/EditorPlugin';
 export { default as PluginWithState } from './interfaces/PluginWithState';
@@ -47,7 +49,7 @@ export { default as TypeInContainerPlugin } from './corePlugins/TypeInContainerP
 export { default as TypeAfterLinkPlugin } from './corePlugins/TypeAfterLinkPlugin';
 export { default as DarkModePlugin } from './corePlugins/DarkModePlugin';
 export { default as CorePastePlugin } from './corePlugins/CorePastePlugin';
-export { default as UndoPlugin } from './corePlugins/UndoPlugin';
+export { default as UndoPlugin, UndoPluginState } from './corePlugins/UndoPlugin';
 
 // Event APIs
 export { default as cacheGetEventData } from './eventApi/cacheGetEventData';

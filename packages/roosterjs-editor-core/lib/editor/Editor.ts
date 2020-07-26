@@ -1,10 +1,13 @@
 import addContentEditFeatures from './addContentEditFeatures';
+import addUndoSnapshot from '../undoApi/addUndoSnapshot';
 import adjustBrowserBehavior from './adjustBrowserBehavior';
+import canRedo from '../undoApi/canRedo';
+import canUndo from '../undoApi/canUndo';
 import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import mapPluginEvents from './mapPluginEvents';
-import normalizeContentColor from '../darkMode/normalizeContentColor';
+import restoreSnapshot from '../undoApi/restoreSnapshot';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
@@ -39,7 +42,6 @@ import {
     findClosestElementAncestor,
     fromHtml,
     getBlockElementAtNode,
-    getHtmlWithSelectionPath,
     getSelectionPath,
     getTextContent,
     getInlineElementAtNode,
@@ -50,7 +52,6 @@ import {
     Position,
     PositionContentSearcher,
     queryElements,
-    setHtmlWithSelectionPath,
     wrap,
     isPositionAtBeginningOf,
 } from 'roosterjs-editor-dom';
@@ -353,46 +354,11 @@ export default class Editor {
         triggerExtractContentEvent: boolean = true,
         includeSelectionMarker: boolean = false
     ): string {
-        let content = '';
-        const isDarkMode = this.core.inDarkMode;
-        if (triggerExtractContentEvent || isDarkMode) {
-            const clonedRoot = this.core.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
-            const path = includeSelectionMarker && this.getSelectionPath();
-            const range = path && createRange(clonedRoot, path.start, path.end);
-
-            if (isDarkMode) {
-                normalizeContentColor(clonedRoot);
-            }
-
-            if (triggerExtractContentEvent) {
-                this.triggerPluginEvent(
-                    PluginEventType.ExtractContentWithDom,
-                    {
-                        clonedRoot,
-                    },
-                    true /*broadcast*/
-                );
-
-                // TODO: Deprecated ExtractContentEvent once we have entity API ready in next major release
-                content = this.triggerPluginEvent(
-                    PluginEventType.ExtractContent,
-                    { content: clonedRoot.innerHTML },
-                    true /*broadcast*/
-                ).content;
-            } else if (range) {
-                // range is not null, which means we want to include a selection path in the content
-                content = getHtmlWithSelectionPath(clonedRoot, range);
-            } else {
-                content = clonedRoot.innerHTML;
-            }
-        } else {
-            content = getHtmlWithSelectionPath(
-                this.core.contentDiv,
-                includeSelectionMarker && this.getSelectionRange()
-            );
-        }
-
-        return content;
+        return this.core.api.getContent(
+            this.core,
+            triggerExtractContentEvent,
+            includeSelectionMarker
+        );
     }
 
     /**
@@ -409,33 +375,7 @@ export default class Editor {
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     public setContent(content: string, triggerContentChangedEvent: boolean = true) {
-        let contentDiv = this.core.contentDiv;
-        let contentChanged = false;
-        if (contentDiv.innerHTML != content) {
-            let range = setHtmlWithSelectionPath(contentDiv, content);
-            this.select(range);
-            contentChanged = true;
-        }
-
-        // Convert content even if it hasn't changed.
-        if (this.core.inDarkMode) {
-            const darkModeOptions = this.getDarkModeOptions();
-            const convertFunction = convertContentToDarkMode(
-                contentDiv,
-                darkModeOptions && darkModeOptions.onExternalContentTransform
-                    ? darkModeOptions.onExternalContentTransform
-                    : undefined,
-                true /* skipRootElement */
-            );
-            if (convertFunction) {
-                convertFunction();
-                contentChanged = true;
-            }
-        }
-
-        if (triggerContentChangedEvent && contentChanged) {
-            this.triggerContentChangedEvent();
-        }
+        this.core.api.setContent(this.core, content, triggerContentChangedEvent);
     }
 
     /**
@@ -808,7 +748,11 @@ export default class Editor {
      */
     public undo() {
         this.focus();
-        this.core.corePlugins.undo.undo();
+        if (this.core.undo.value.hasNewContent) {
+            addUndoSnapshot(this.core.undo.value);
+        }
+
+        restoreSnapshot(this.core.undo.value, -1 /*previousSnapshot*/);
     }
 
     /**
@@ -816,7 +760,7 @@ export default class Editor {
      */
     public redo() {
         this.focus();
-        this.core.corePlugins.undo.redo();
+        restoreSnapshot(this.core.undo.value, 1 /*nextSnapshot*/);
     }
 
     /**
@@ -841,14 +785,14 @@ export default class Editor {
      * Whether there is an available undo snapshot
      */
     public canUndo(): boolean {
-        return this.core.corePlugins.undo.canUndo();
+        return canUndo(this.core.undo.value);
     }
 
     /**
      * Whether there is an available redo snapshot
      */
     public canRedo(): boolean {
-        return this.core.corePlugins.undo.canRedo();
+        return canRedo(this.core.undo.value);
     }
 
     //#endregion

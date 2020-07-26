@@ -1,6 +1,7 @@
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 
 /**
+ * @internal
  * Converter for dark mode that runs all child elements of a node through the content transform function.
  * @param node The node containing HTML elements to convert.
  * @param skipRootElement Optional parameter to skip the root element of the Node passed in, if applicable.

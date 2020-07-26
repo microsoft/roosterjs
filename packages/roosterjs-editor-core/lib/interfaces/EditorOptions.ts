@@ -2,6 +2,7 @@ import EditorPlugin from './EditorPlugin';
 import UndoSnapshotsService from './UndoSnapshotsService';
 import { ContentEditFeatureArray } from './ContentEditFeature';
 import { CoreApiMap } from './EditorCore';
+import { CorePlugins } from '..';
 import { DarkModeOptions, DefaultFormat } from 'roosterjs-editor-types';
 
 /**
@@ -39,6 +40,12 @@ export default interface EditorOptions {
      * Default value is null
      */
     coreApiOverride?: Partial<CoreApiMap>;
+
+    /**
+     * A plugin map to override default core Plugin implementation
+     * Default value is null
+     */
+    corePluginOverride?: Partial<CorePlugins>;
 
     /**
      * Content edit features

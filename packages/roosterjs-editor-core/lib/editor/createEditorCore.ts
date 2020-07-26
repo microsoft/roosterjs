@@ -1,7 +1,7 @@
+import addContentEditFeatures from './addContentEditFeatures';
 import AutoCompletePlugin from '../corePlugins/AutoCompletePlugin';
 import CorePastePlugin from '../corePlugins/CorePastePlugin';
-import CorePlugins from '../interfaces/CorePlugins';
-import CorePluginState from '../interfaces/CorePluginState';
+import CorePlugins, { PluginKey, PluginState } from '../interfaces/CorePlugins';
 import DarkModePlugin from '../corePlugins/DarkModePlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorCore, { CoreApiMap } from '../interfaces/EditorCore';
@@ -14,17 +14,18 @@ import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoPlugin from '../corePlugins/UndoPlugin';
 import UndoSnapshotsService from '../interfaces/UndoSnapshotsService';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
-import { Browser } from 'roosterjs-editor-dom';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { createPasteFragment } from '../coreAPI/createPasteFragment';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
+import { getContent } from '../coreAPI/getContent';
 import { getCustomData } from '../coreAPI/getCustomData';
 import { getSelectionRange } from '../coreAPI/getSelectionRange';
 import { getStyleBasedFormatState } from '../coreAPI/getStyleBasedFormatState';
 import { hasFocus } from '../coreAPI/hasFocus';
 import { insertNode } from '../coreAPI/insertNode';
 import { selectRange } from '../coreAPI/selectRange';
+import { setContent } from '../coreAPI/setContent';
 import { triggerEvent } from '../coreAPI/triggerEvent';
 import {
     addSnapshot,
@@ -43,7 +44,9 @@ export default function createEditorCore(
     contentDiv: HTMLDivElement,
     options: EditorOptions
 ): EditorCore {
-    const pluginState: CorePluginState = {
+    let core: EditorCore;
+    const api = createCoreApiMap(options.coreApiOverride);
+    const pluginState: PluginState<PluginKey> = {
         autoComplete: {
             value: null,
         },
@@ -55,28 +58,28 @@ export default function createEditorCore(
             },
         },
         edit: {
-            value: {},
+            value: addContentEditFeatures({}, options.editFeatures),
         },
         undo: {
-            value: options.undoSnapshotService || createUndoSnapshots(),
+            value: {
+                snapshotsService: options.undoSnapshotService || createUndoSnapshots(),
+                isRestoring: false,
+                hasNewContent: false,
+                getContent: () =>
+                    api.getContent(
+                        core,
+                        false /*triggerExtractContentEvent*/,
+                        true /* includeSelectionMarker */
+                    ),
+                setContent: (content: string) =>
+                    api.setContent(core, content, true /*triggerContentChangedEvent*/),
+            },
         },
     };
+    const corePlugins = createCorePlugins(pluginState, options.corePluginOverride);
+    const allPlugins = buildPluginList(corePlugins, options.plugins);
 
-    const corePlugins: CorePlugins = {
-        undo: new UndoPlugin(pluginState.undo),
-        edit: new EditPlugin(pluginState.edit, options.editFeatures),
-        autoComplete: new AutoCompletePlugin(pluginState.autoComplete),
-        typeInContainer: new TypeInContainerPlugin(),
-        mouseUp: new MouseUpPlugin(),
-        domEvent: new DOMEventPlugin(pluginState.domEvent),
-        typeAfterLink: new TypeAfterLinkPlugin(),
-        darkMode: !Browser.isIE && new DarkModePlugin(),
-        pastePlugin: new CorePastePlugin(),
-    };
-
-    let allPlugins = buildPluginList(corePlugins, options.plugins);
-
-    return {
+    core = {
         ...pluginState,
         contentDiv,
         scrollContainer: options.scrollContainer || contentDiv,
@@ -86,16 +89,16 @@ export default function createEditorCore(
             options.defaultFormat,
             options.inDarkMode
         ),
-        corePlugins,
         currentUndoSnapshot: null,
         customData: {},
         cachedSelectionRange: null,
         plugins: allPlugins,
-        api: createCoreApiMap(options.coreApiOverride),
-        defaultApi: createCoreApiMap(),
+        api,
         inDarkMode: options.inDarkMode,
         darkModeOptions: options.darkModeOptions,
     };
+
+    return core;
 }
 
 function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): EditorPlugin[] {
@@ -109,7 +112,7 @@ function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): Edi
         corePlugins.undo,
         corePlugins.domEvent,
         corePlugins.darkMode,
-        corePlugins.pastePlugin,
+        corePlugins.paste,
     ].filter(plugin => !!plugin);
 }
 
@@ -119,6 +122,7 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
         attachDomEvent: map.attachDomEvent || attachDomEvent,
         editWithUndo: map.editWithUndo || editWithUndo,
         focus: map.focus || focus,
+        getContent: map.getContent || getContent,
         getCustomData: map.getCustomData || getCustomData,
         getSelectionRange: map.getSelectionRange || getSelectionRange,
         getStyleBasedFormatState: map.getStyleBasedFormatState || getStyleBasedFormatState,
@@ -126,7 +130,26 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
         insertNode: map.insertNode || insertNode,
         createPasteFragment: map.createPasteFragment || createPasteFragment,
         selectRange: map.selectRange || selectRange,
+        setContent: map.setContent || setContent,
         triggerEvent: map.triggerEvent || triggerEvent,
+    };
+}
+
+function createCorePlugins(
+    pluginState: PluginState<PluginKey>,
+    map: Partial<CorePlugins>
+): CorePlugins {
+    map = map || {};
+    return {
+        typeInContainer: map.typeInContainer || new TypeInContainerPlugin(),
+        edit: map.edit || new EditPlugin(pluginState.edit),
+        autoComplete: map.autoComplete || new AutoCompletePlugin(pluginState.autoComplete),
+        mouseUp: map.mouseUp || new MouseUpPlugin(),
+        typeAfterLink: map.typeAfterLink || new TypeAfterLinkPlugin(),
+        undo: map.undo || new UndoPlugin(pluginState.undo),
+        domEvent: map.domEvent || new DOMEventPlugin(pluginState.domEvent),
+        darkMode: map.darkMode || new DarkModePlugin(),
+        paste: map.paste || new CorePastePlugin(),
     };
 }
 
