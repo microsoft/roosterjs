@@ -1,5 +1,5 @@
 import EditorPlugin from './EditorPlugin';
-import UndoService from './UndoService';
+import UndoSnapshotsService from './UndoSnapshotsService';
 import { ContentEditFeatureArray } from './ContentEditFeature';
 import { CoreApiMap } from './EditorCore';
 import { DarkModeOptions, DefaultFormat } from 'roosterjs-editor-types';
@@ -24,10 +24,9 @@ export default interface EditorOptions {
     defaultFormat?: DefaultFormat;
 
     /**
-     * Undo service object. Use this parameter to customize the undo service.
-     * Default value is a new instance of Undo object
+     * Undo snapshot service. Use this parameter to customize the undo snapshot service.
      */
-    undo?: UndoService;
+    undoSnapshotService?: UndoSnapshotsService;
 
     /**
      * Initial HTML content

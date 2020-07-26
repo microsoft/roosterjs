@@ -1,18 +1,16 @@
 import Editor from '../editor/Editor';
 import EditorOptions from '../interfaces/EditorOptions';
 import EditorPlugin from '../interfaces/EditorPlugin';
-import UndoService from '../interfaces/UndoService';
 
 export * from 'roosterjs-editor-dom/lib/test/DomTestHelper';
 
-export function initEditor(id: string, plugins?: EditorPlugin[], undo?: UndoService) {
+export function initEditor(id: string, plugins?: EditorPlugin[]) {
     let node = document.createElement('div');
     node.id = id;
     document.body.insertBefore(node, document.body.childNodes[0]);
 
     let options: EditorOptions = {
         plugins,
-        undo,
         defaultFormat: {
             fontFamily: 'Calibri,Arial,Helvetica,sans-serif',
             fontSize: '11pt',

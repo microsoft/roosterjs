@@ -33,12 +33,10 @@ export { default as CorePlugins, PluginKey } from './interfaces/CorePlugins';
 export { default as EditorOptions } from './interfaces/EditorOptions';
 export { default as EditorPlugin } from './interfaces/EditorPlugin';
 export { default as PluginWithState } from './interfaces/PluginWithState';
-export { default as UndoService } from './interfaces/UndoService';
 export { default as UndoSnapshotsService } from './interfaces/UndoSnapshotsService';
 
 // Classes
 export { default as Editor } from './editor/Editor';
-export { default as Undo } from './undo/Undo';
 
 // Core Plugins
 export { default as AutoCompletePlugin } from './corePlugins/AutoCompletePlugin';
@@ -49,6 +47,7 @@ export { default as TypeInContainerPlugin } from './corePlugins/TypeInContainerP
 export { default as TypeAfterLinkPlugin } from './corePlugins/TypeAfterLinkPlugin';
 export { default as DarkModePlugin } from './corePlugins/DarkModePlugin';
 export { default as CorePastePlugin } from './corePlugins/CorePastePlugin';
+export { default as UndoPlugin } from './corePlugins/UndoPlugin';
 
 // Event APIs
 export { default as cacheGetEventData } from './eventApi/cacheGetEventData';

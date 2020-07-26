@@ -6,7 +6,7 @@ import EditPlugin from '../corePlugins/EditPlugin';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
-import UndoService from './UndoService';
+import UndoPlugin from '../corePlugins/UndoPlugin';
 
 /**
  * An interface for editor core plugins.
@@ -26,7 +26,7 @@ export default interface CorePlugins {
     /**
      * Undo plugin provides the ability to undo/redo
      */
-    readonly undo: UndoService;
+    readonly undo: UndoPlugin;
 
     /**
      * TypeInContainer plugin makes sure user is always type under a container element under editor DIV

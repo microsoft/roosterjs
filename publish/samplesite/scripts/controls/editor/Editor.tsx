@@ -15,7 +15,7 @@ import {
     Editor as RoosterJsEditor,
     EditorOptions,
     EditorPlugin,
-    UndoService,
+    UndoSnapshotsService,
 } from 'roosterjs-editor-core';
 
 const styles = require('./Editor.scss');
@@ -24,11 +24,10 @@ export interface EditorProps {
     plugins: EditorPlugin[];
     initState: BuildInPluginState;
     content: string;
+    snapshotService: UndoSnapshotsService;
     className?: string;
-    undo?: UndoService;
 }
 
-let editorInstance: RoosterJsEditor | null = null;
 let editorInstanceToggleablePlugins: EditorInstanceToggleablePlugins | null = null;
 
 export default class Editor extends React.Component<EditorProps, BuildInPluginState> {
@@ -58,15 +57,9 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
 
     componentDidMount() {
         this.initEditor();
-        if (editorInstance == null) {
-            editorInstance = this.editor;
-        }
     }
 
     componentWillUnmount() {
-        if (editorInstance == this.editor) {
-            editorInstance = null;
-        }
         this.disposeEditor();
     }
 
@@ -108,10 +101,10 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
         let options: EditorOptions = {
             plugins: plugins,
             defaultFormat: defaultFormat,
-            undo: this.props.undo,
             initialContent: this.props.content,
             editFeatures: features,
             enableExperimentFeatures: this.state.useExperimentFeatures,
+            undoSnapshotService: this.props.snapshotService,
         };
         this.editor = new RoosterJsEditor(this.contentDiv, options);
     }
@@ -141,13 +134,3 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
         return linkCallback;
     }
 }
-
-// expose the active editor the global window for integration tests
-Object.defineProperty(window, 'globalRoosterEditor', {
-    get: () => editorInstance,
-});
-
-// expose to the global window for integration tests
-Object.defineProperty(window, 'globalRoosterEditorNamedPlugins', {
-    get: () => editorInstanceToggleablePlugins,
-});

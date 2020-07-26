@@ -40,6 +40,7 @@ export function getAllPluginArray(includeSidePanePlugins: boolean): EditorPlugin
         includeSidePanePlugins && allPlugins.editorOptions,
         includeSidePanePlugins && allPlugins.eventView,
         includeSidePanePlugins && allPlugins.api,
+        includeSidePanePlugins && allPlugins.snapshot,
     ];
 }
 

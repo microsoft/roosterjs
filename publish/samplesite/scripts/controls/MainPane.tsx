@@ -60,8 +60,8 @@ class MainPane extends MainPaneBase {
                                 className={styles.editor}
                                 ref={this.editor}
                                 initState={plugins.editorOptions.getBuildInPluginState()}
-                                undo={plugins.snapshot}
                                 content={this.content}
+                                snapshotService={plugins.snapshot.getSnapshotService()}
                             />
 
                             {this.state.showSidePane ? (

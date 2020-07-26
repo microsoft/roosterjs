@@ -1,9 +1,9 @@
-import { Editor, EditorPlugin, UndoService } from 'roosterjs-editor-core';
+import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { NodeType } from 'roosterjs-editor-types';
 
 export * from 'roosterjs-editor-dom/lib/test/DomTestHelper';
 
-export function initEditor(id: string, plugins?: EditorPlugin[], undo?: UndoService) {
+export function initEditor(id: string, plugins?: EditorPlugin[]) {
     let node = document.createElement('div');
     node.id = id;
     document.body.insertBefore(node, document.body.childNodes[0]);
@@ -11,7 +11,6 @@ export function initEditor(id: string, plugins?: EditorPlugin[], undo?: UndoServ
     let editor = new Editor(node as HTMLDivElement, {
         plugins: plugins || [],
         defaultFormat: { textColor: 'black', fontFamily: 'arial' },
-        undo: undo,
     });
 
     return editor;

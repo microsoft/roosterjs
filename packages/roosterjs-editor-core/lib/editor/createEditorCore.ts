@@ -11,7 +11,8 @@ import EditPlugin from '../corePlugins/EditPlugin';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
-import Undo from '../undo/Undo';
+import UndoPlugin from '../corePlugins/UndoPlugin';
+import UndoSnapshotsService from '../interfaces/UndoSnapshotsService';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
 import { Browser } from 'roosterjs-editor-dom';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
@@ -25,6 +26,13 @@ import { hasFocus } from '../coreAPI/hasFocus';
 import { insertNode } from '../coreAPI/insertNode';
 import { selectRange } from '../coreAPI/selectRange';
 import { triggerEvent } from '../coreAPI/triggerEvent';
+import {
+    addSnapshot,
+    canMoveCurrentSnapshot,
+    moveCurrentSnapsnot,
+    clearProceedingSnapshots,
+    createSnapshots,
+} from 'roosterjs-editor-dom';
 
 /**
  * Create core object for editor
@@ -49,10 +57,13 @@ export default function createEditorCore(
         edit: {
             value: {},
         },
+        undo: {
+            value: options.undoSnapshotService || createUndoSnapshots(),
+        },
     };
 
     const corePlugins: CorePlugins = {
-        undo: options.undo || new Undo(),
+        undo: new UndoPlugin(pluginState.undo),
         edit: new EditPlugin(pluginState.edit, options.editFeatures),
         autoComplete: new AutoCompletePlugin(pluginState.autoComplete),
         typeInContainer: new TypeInContainerPlugin(),
@@ -116,5 +127,16 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
         createPasteFragment: map.createPasteFragment || createPasteFragment,
         selectRange: map.selectRange || selectRange,
         triggerEvent: map.triggerEvent || triggerEvent,
+    };
+}
+
+function createUndoSnapshots(): UndoSnapshotsService {
+    const snapshots = createSnapshots();
+
+    return {
+        canMove: (delta: number): boolean => canMoveCurrentSnapshot(snapshots, delta),
+        move: (delta: number): string => moveCurrentSnapsnot(snapshots, delta),
+        addSnapshot: (snapshot: string) => addSnapshot(snapshots, snapshot),
+        clearRedo: () => clearProceedingSnapshots(snapshots),
     };
 }

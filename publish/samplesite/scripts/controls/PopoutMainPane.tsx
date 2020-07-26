@@ -28,9 +28,9 @@ export default class PopoutMainPane extends React.Component<PopoutMainPaneProps,
                         plugins={getAllPluginArray(true /*showSidePane*/)}
                         className={styles.editor}
                         initState={plugins.editorOptions.getBuildInPluginState()}
-                        undo={plugins.snapshot}
                         content={this.props.content}
                         ref={this.editor}
+                        snapshotService={plugins.snapshot.getSnapshotService()}
                     />
                 </div>
             </div>
