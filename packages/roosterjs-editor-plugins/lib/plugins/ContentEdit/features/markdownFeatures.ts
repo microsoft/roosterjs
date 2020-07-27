@@ -1,51 +1,26 @@
+import { ChangeSource, NodePosition, PluginKeyboardEvent } from 'roosterjs-editor-types';
 import { ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
 import { createRange } from 'roosterjs-editor-dom';
-import { NodePosition, PluginKeyboardEvent } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
-/**
- * Markdown bold feature. Bolds text with markdown shortcuts.
- */
-export const MarkdownBold: ContentEditFeature = {
-    keys: [Keys.EIGHT_ASTIRISK],
-    shouldHandleEvent: (event, editor) =>
-        event.rawEvent.shiftKey && !!getRangeForMarkdownOperation(event, editor, '*'),
-    handleEvent: (event, editor) => {
-        event.rawEvent.preventDefault();
-        handleMarkdownEvent(event, editor, '*', boldElementBuilder);
-    },
-};
-
-export const MarkdownItalic: ContentEditFeature = {
-    keys: [Keys.DASH_UNDERSCORE],
-    shouldHandleEvent: (event, editor) =>
-        event.rawEvent.shiftKey && !!getRangeForMarkdownOperation(event, editor, '_'),
-    handleEvent: (event, editor) => {
-        event.rawEvent.preventDefault();
-        handleMarkdownEvent(event, editor, '_', italicElementBuilder);
-    },
-};
-
-export const MarkdownStrikethru: ContentEditFeature = {
-    keys: [Keys.GRAVE_TILDE],
-    shouldHandleEvent: (event, editor) =>
-        event.rawEvent.shiftKey && !!getRangeForMarkdownOperation(event, editor, '~'),
-    handleEvent: (event, editor) => {
-        event.rawEvent.preventDefault();
-        handleMarkdownEvent(event, editor, '~', strikethruElementBuilder);
-    },
-};
-
-export const MarkdownInlineCode: ContentEditFeature = {
-    keys: [Keys.GRAVE_TILDE],
-    shouldHandleEvent: (event, editor) =>
-        !event.rawEvent.shiftKey && !!getRangeForMarkdownOperation(event, editor, '`'),
-    handleEvent: (event, editor) => {
-        event.rawEvent.preventDefault();
-        handleMarkdownEvent(event, editor, '`', codeInlineElementBuilder);
-    },
-};
+function generateBasicMarkdownFeature(
+    key: Keys,
+    triggerCharacter: string,
+    elementTag: string,
+    useShiftKey: boolean
+): ContentEditFeature {
+    return {
+        keys: [key],
+        shouldHandleEvent: (event, editor) =>
+            event.rawEvent.shiftKey === useShiftKey &&
+            !!getRangeForMarkdownOperation(event, editor, triggerCharacter),
+        handleEvent: (event, editor) => {
+            event.rawEvent.preventDefault();
+            handleMarkdownEvent(event, editor, triggerCharacter, elementTag);
+        },
+    };
+}
 
 function getRangeForMarkdownOperation(
     event: PluginKeyboardEvent,
@@ -90,34 +65,63 @@ function handleMarkdownEvent(
     event: PluginKeyboardEvent,
     editor: Editor,
     triggerCharacter: string,
-    elementBuilder: (editor: Editor) => HTMLElement
+    elementTag: string
 ) {
-    const range = getRangeForMarkdownOperation(event, editor, triggerCharacter);
-    if (!!range) {
-        const elementToWrap = elementBuilder(editor);
-        elementToWrap.appendChild(range.extractContents());
-        elementToWrap.innerText = elementToWrap.innerText.slice(1, elementToWrap.innerText.length);
-        const nonPrintedSpaceTextNode = editor.getDocument().createTextNode(ZERO_WIDTH_SPACE);
-        range.insertNode(nonPrintedSpaceTextNode);
-        range.insertNode(elementToWrap);
-        range.setEndAfter(nonPrintedSpaceTextNode);
-        range.collapse(false);
-        editor.select(range);
-    }
+    editor.performAutoComplete(() => {
+        const range = getRangeForMarkdownOperation(event, editor, triggerCharacter);
+        if (!!range) {
+            const elementToWrap = editor.getDocument().createElement(elementTag);
+            elementToWrap.appendChild(range.extractContents());
+            elementToWrap.innerText = elementToWrap.innerText.slice(
+                1,
+                elementToWrap.innerText.length
+            );
+            const nonPrintedSpaceTextNode = editor.getDocument().createTextNode(ZERO_WIDTH_SPACE);
+            range.insertNode(nonPrintedSpaceTextNode);
+            range.insertNode(elementToWrap);
+            range.setEndAfter(nonPrintedSpaceTextNode);
+            range.collapse(false);
+            editor.select(range);
+        }
+    }, ChangeSource.Format);
 }
 
-function boldElementBuilder(editor: Editor): HTMLElement {
-    return editor.getDocument().createElement('b');
-}
+/**
+ * Markdown bold feature. Bolds text with markdown shortcuts.
+ */
+export const MarkdownBold: ContentEditFeature = generateBasicMarkdownFeature(
+    Keys.EIGHT_ASTIRISK,
+    '*',
+    'b',
+    true
+);
 
-function italicElementBuilder(editor: Editor): HTMLElement {
-    return editor.getDocument().createElement('i');
-}
+/**
+ * Markdown italics feature. Italicises text with markdown shortcuts.
+ */
+export const MarkdownItalic: ContentEditFeature = generateBasicMarkdownFeature(
+    Keys.DASH_UNDERSCORE,
+    '_',
+    'i',
+    true
+);
 
-function strikethruElementBuilder(editor: Editor): HTMLElement {
-    return editor.getDocument().createElement('s');
-}
+/**
+ * Markdown strikethru feature. Strikethrus text with markdown shortcuts.
+ */
+export const MarkdownStrikethru: ContentEditFeature = generateBasicMarkdownFeature(
+    Keys.GRAVE_TILDE,
+    '~',
+    's',
+    true
+);
 
-function codeInlineElementBuilder(editor: Editor): HTMLElement {
-    return editor.getDocument().createElement('code');
-}
+/**
+ * Markdown inline code feature. Marks specific text as inline code with markdown shortcuts.
+ */
+export const MarkdownInlineCode: ContentEditFeature = generateBasicMarkdownFeature(
+    Keys.GRAVE_TILDE,
+    '`',
+    'code',
+    false
+);
