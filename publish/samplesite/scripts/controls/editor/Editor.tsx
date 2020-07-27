@@ -3,7 +3,6 @@ import BuildInPluginState, { UrlPlaceholder } from '../BuildInPluginState';
 import SampleColorPickerPluginDataProvider from '../samplepicker/SampleColorPickerPluginDataProvider';
 import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins/lib/CustomReplace';
 import { EditorInstanceToggleablePlugins } from './EditorInstanceToggleablePlugins';
-import { EntityPlugin } from 'roosterjs-editor-plugins/lib/Entity';
 import { getContentEditFeatures } from 'roosterjs-editor-plugins/lib/EditFeatures';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { ImageResize } from 'roosterjs-editor-plugins/lib/ImageResize';
@@ -88,7 +87,6 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
                   })
                 : null,
             customReplace: pluginList.customReplace ? new CustomReplacePlugin() : null,
-            entityPlugin: pluginList.entityPlugin ? new EntityPlugin() : null,
         };
         let plugins = [
             ...Object.keys(editorInstanceToggleablePlugins).map(

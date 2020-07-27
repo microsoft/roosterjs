@@ -9,6 +9,7 @@ export { Alignment } from './enum/Alignment';
 export { ChangeSource } from './enum/ChangeSource';
 export { ContentPosition } from './enum/ContentPosition';
 export { Direction } from './enum/Direction';
+export { EntityClasses } from './enum/EntityClasses';
 export { EntityOperation } from './enum/EntityOperation';
 export { FontSizeChange } from './enum/FontSizeChange';
 export { Indentation } from './enum/Indentation';

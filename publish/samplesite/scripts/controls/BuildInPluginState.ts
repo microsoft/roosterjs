@@ -12,7 +12,6 @@ export interface BuildInPluginList {
     tableResize: boolean;
     customReplace: boolean;
     pickerPlugin: boolean;
-    entityPlugin: boolean;
 }
 
 export default interface BuildInPluginState {

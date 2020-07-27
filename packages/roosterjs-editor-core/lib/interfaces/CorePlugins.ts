@@ -3,6 +3,7 @@ import CorePastePlugin from '../corePlugins/CorePastePlugin';
 import DarkModePlugin from '../corePlugins/DarkModePlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
+import EntityPlugin from '../corePlugins/EntityPlugin';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import PluginWithState from './PluginWithState';
 import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
@@ -59,6 +60,11 @@ export default interface CorePlugins {
      * Core paste plugin for handling onPaste event and extract the pasted content
      */
     readonly paste: CorePastePlugin;
+
+    /**
+     * Entity Plugin handles all operations related to an entity and generate entity specified events
+     */
+    readonly entity: EntityPlugin;
 }
 
 export type PluginKey = keyof CorePlugins;

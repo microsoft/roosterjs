@@ -1,5 +1,4 @@
 import { CustomReplace } from 'roosterjs-editor-plugins/lib/CustomReplace';
-import { EntityPlugin } from 'roosterjs-editor-plugins/lib/Entity';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { ImageResize } from 'roosterjs-editor-plugins/lib/ImageResize';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
@@ -15,5 +14,4 @@ export type EditorInstanceToggleablePlugins = {
     tableResize: TableResize;
     customReplace: CustomReplace;
     pickerPlugin: PickerPlugin;
-    entityPlugin: EntityPlugin;
 };

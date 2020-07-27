@@ -1,13 +1,11 @@
-import getEntityElement from './getEntityElement';
-import getEntityFromElement from './getEntityFromElement';
-import { Browser, toArray } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin, isCharacterValue, Keys } from 'roosterjs-editor-core';
 import {
-    getAllEntityIds,
+    Browser,
+    createEntityWrapper,
+    getEntityFromElement,
     getEntitySelector,
-    serializeEntityInfo,
-    ALLOWED_CSS_CLASSES,
-} from './EntityInfo';
+    toArray,
+} from 'roosterjs-editor-dom';
 import {
     ContentPosition,
     EntityOperation,
@@ -16,7 +14,23 @@ import {
     QueryScope,
     ChangeSource,
     HtmlSanitizerOptions,
+    Entity,
+    EntityClasses,
 } from 'roosterjs-editor-types';
+
+const ENTITY_ID_REGEX = /_\d{1,8}$/;
+
+const ENTITY_CSS_REGEX = '^' + EntityClasses.ENTITY_INFO_NAME + '$';
+const ENTITY_ID_CSS_REGEX = '^' + EntityClasses.ENTITY_ID_PREFIX;
+const ENTITY_TYPE_CSS_REGEX = '^' + EntityClasses.ENTITY_TYPE_PREFIX;
+const ENTITY_READONLY_CSS_REGEX = '^' + EntityClasses.ENTITY_READONLY_PREFIX;
+
+export const ALLOWED_CSS_CLASSES = [
+    ENTITY_CSS_REGEX,
+    ENTITY_ID_CSS_REGEX,
+    ENTITY_TYPE_CSS_REGEX,
+    ENTITY_READONLY_CSS_REGEX,
+];
 
 /**
  * Entity Plugin helps handle all operations related to an entity and generate entity specified events
@@ -25,7 +39,7 @@ export default class EntityPlugin implements EditorPlugin {
     private editor: Editor;
     private disposer: () => void;
     private clickingPoint: { pageX: number; pageY: number };
-    private knownEntityElements: Node[];
+    private knownEntityElements: HTMLElement[];
 
     getName() {
         return 'Entity';
@@ -75,8 +89,8 @@ export default class EntityPlugin implements EditorPlugin {
     }
 
     private handleContextMenuEvent = (event: UIEvent) => {
-        const target = event.target as Node;
-        const entityElement = getEntityElement(this.editor, target);
+        const node = event.target as Node;
+        const entityElement = node && this.editor.getElementAtCursor(getEntitySelector(), node);
 
         if (entityElement) {
             event.preventDefault();
@@ -93,7 +107,8 @@ export default class EntityPlugin implements EditorPlugin {
 
     private handleMouseDownEvent(event: MouseEvent) {
         const { target, pageX, pageY } = event;
-        const entityElement = getEntityElement(this.editor, target as Node);
+        const node = target as Node;
+        const entityElement = node && this.editor.getElementAtCursor(getEntitySelector(), node);
         if (entityElement && !entityElement.isContentEditable) {
             event.preventDefault();
             this.clickingPoint = { pageX, pageY };
@@ -102,13 +117,15 @@ export default class EntityPlugin implements EditorPlugin {
 
     private handleMouseUpEvent(event: MouseEvent) {
         const { target, pageX, pageY } = event;
+        const node = target as Node;
         let entityElement: HTMLElement;
 
         if (
             this.clickingPoint &&
             this.clickingPoint.pageX == pageX &&
             this.clickingPoint.pageY == pageY &&
-            !!(entityElement = getEntityElement(this.editor, target as Node))
+            node &&
+            !!(entityElement = this.editor.getElementAtCursor(getEntitySelector(), node))
         ) {
             event.preventDefault();
             this.triggerEvent(entityElement, EntityOperation.Click, event);
@@ -142,39 +159,27 @@ export default class EntityPlugin implements EditorPlugin {
             this.checkRemoveEntityForRange(null /*rawEvent*/);
         }
 
-        const entityElements = toArray<HTMLElement>(fragment.querySelectorAll(getEntitySelector()));
-        if (entityElements.length > 0) {
-            const knownIds = getAllEntityIds(this.editor);
-            entityElements.forEach(element => {
-                const entity = getEntityFromElement(element);
-                if (entity) {
-                    element.className = serializeEntityInfo(
-                        this.editor,
-                        entity.type,
-                        entity.isReadonly,
-                        entity.id,
-                        knownIds
-                    );
-                }
-            });
-
-            Array.prototype.push.apply(
-                sanitizingOption.additionalAllowedCssClasses,
-                ALLOWED_CSS_CLASSES
-            );
-        }
+        Array.prototype.push.apply(
+            sanitizingOption.additionalAllowedCssClasses,
+            ALLOWED_CSS_CLASSES
+        );
     }
 
     private handleContentChangedEvent(resetAll: boolean) {
         this.knownEntityElements = resetAll
             ? []
             : this.knownEntityElements.filter(node => this.editor.contains(node));
+        const allId = this.knownEntityElements
+            .map(e => getEntityFromElement(e)?.id)
+            .filter(x => !!x);
 
         this.editor.queryElements(getEntitySelector(), element => {
             if (this.knownEntityElements.indexOf(element) < 0) {
                 this.knownEntityElements.push(element);
 
-                this.triggerEvent(element, EntityOperation.NewEntity);
+                const entity = getEntityFromElement(element);
+
+                this.hydrateEntity(entity, allId);
             }
         });
     }
@@ -216,14 +221,37 @@ export default class EntityPlugin implements EditorPlugin {
         }
     }
 
+    private hydrateEntity(entity: Entity, knownIds: string[]) {
+        const { id, type, isReadonly, contentNode } = entity;
+        const match = ENTITY_ID_REGEX.exec(id);
+        const baseId = (match ? id.substr(0, id.length - match[0].length) : id) || type;
+        let newId = '';
+
+        for (let num = (match && parseInt(match[1])) || 0; ; num++) {
+            newId = num > 0 ? `${baseId}_${num}` : baseId;
+
+            if (knownIds.indexOf(newId) < 0) {
+                knownIds.push(newId);
+                break;
+            }
+        }
+
+        if (newId != entity.id) {
+            entity.id = newId;
+            createEntityWrapper(contentNode, type, isReadonly, newId);
+        }
+
+        if (isReadonly) {
+            contentNode.contentEditable = 'false';
+        }
+
+        this.triggerEvent(contentNode, EntityOperation.NewEntity);
+    }
+
     private triggerEvent(element: HTMLElement, operation: EntityOperation, rawEvent?: UIEvent) {
         const entity = element && getEntityFromElement(element);
 
         if (entity) {
-            if (operation == EntityOperation.NewEntity && entity.isReadonly) {
-                element.contentEditable = 'false';
-            }
-
             this.editor.triggerPluginEvent(PluginEventType.EntityOperation, {
                 operation,
                 rawEvent,

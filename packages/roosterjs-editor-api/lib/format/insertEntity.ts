@@ -1,6 +1,4 @@
-import createEntityWrapper from './createEntityWrapper';
-import getEntityElement from './getEntityElement';
-import getEntityFromElement from './getEntityFromElement';
+import { createEntityWrapper, getEntityFromElement, getEntitySelector } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 import { Position } from 'roosterjs-editor-dom';
 import {
@@ -29,14 +27,14 @@ export default function insertEntity(
     isReadonly: boolean,
     position?: NodePosition
 ): Entity {
-    const wrapper = createEntityWrapper(editor, type, contentNode, isBlock, isReadonly);
+    const wrapper = createEntityWrapper(isBlock, type, isReadonly, contentNode);
 
     let currentRange: Range;
 
     if (position) {
         currentRange = editor.getSelectionRange();
         const node = position.normalize().node;
-        const existingEntity = getEntityElement(editor, node);
+        const existingEntity = node && editor.getElementAtCursor(getEntitySelector(), node);
 
         // Do not insert entity into another entity
         if (existingEntity) {

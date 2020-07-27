@@ -1,6 +1,5 @@
 import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
-import { getEntityElement, getEntityFromElement } from '../../Entity';
-import { Position } from 'roosterjs-editor-dom';
+import { getEntityFromElement, getEntitySelector, Position } from 'roosterjs-editor-dom';
 import {
     EntityOperation,
     PluginKeyboardEvent,
@@ -40,11 +39,12 @@ function cacheGetReadonlyEntityElement(
     operation?: EntityOperation
 ) {
     const element = cacheGetEventData(event, 'READONLY_ENTITY_ELEMENT', () => {
-        const entityElement = getEntityElement(editor, event.rawEvent.target as Node);
+        const node = event.rawEvent.target as Node;
+        const entityElement = node && editor.getElementAtCursor(getEntitySelector(), node);
         return entityElement && !entityElement.isContentEditable ? entityElement : null;
     });
 
-    if (element && operation != undefined) {
+    if (element && operation !== undefined) {
         editor.triggerPluginEvent(PluginEventType.EntityOperation, {
             operation,
             rawEvent: event.rawEvent,
@@ -169,7 +169,7 @@ function cacheGetNeighborEntityElement(
                     }
                 }
 
-                entityNode = getEntityElement(editor, node);
+                entityNode = node && editor.getElementAtCursor(getEntitySelector(), node);
             }
 
             return entityNode;

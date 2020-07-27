@@ -1,8 +1,8 @@
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
 import { Entity } from 'roosterjs-editor-types';
-import { fromHtml, wrap } from 'roosterjs-editor-dom';
-import { getEntities, insertEntity } from 'roosterjs-editor-plugins/lib/Entity';
+import { fromHtml, getEntityFromElement, getEntitySelector, wrap } from 'roosterjs-editor-dom';
+import { insertEntity } from 'roosterjs-editor-api';
 
 const styles = require('./InsertEntityPane.scss');
 
@@ -77,8 +77,12 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
     };
 
     private onGetEntities = () => {
+        const selector = getEntitySelector();
+        const nodes = this.props.getEditor().queryElements(selector);
+        const allEntities = nodes.map(node => getEntityFromElement(node));
+
         this.setState({
-            entities: getEntities(this.props.getEditor()),
+            entities: allEntities.filter(e => !!e),
         });
     };
 }

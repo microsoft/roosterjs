@@ -8,6 +8,7 @@ export {
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
 export { default as getFormatState, getElementBasedFormatState } from './format/getFormatState';
+export { default as insertEntity } from './format/insertEntity';
 export { default as insertImage } from './format/insertImage';
 export { default as insertTable } from './table/insertTable';
 export { default as editTable } from './table/editTable';

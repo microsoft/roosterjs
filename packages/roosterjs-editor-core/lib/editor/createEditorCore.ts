@@ -8,6 +8,7 @@ import EditorCore, { CoreApiMap } from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import EditorPlugin from '../interfaces/EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
+import EntityPlugin from '../corePlugins/EntityPlugin';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
@@ -113,6 +114,7 @@ function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): Edi
         corePlugins.domEvent,
         corePlugins.darkMode,
         corePlugins.paste,
+        corePlugins.entity,
     ].filter(plugin => !!plugin);
 }
 
@@ -150,6 +152,7 @@ function createCorePlugins(
         domEvent: map.domEvent || new DOMEventPlugin(pluginState.domEvent),
         darkMode: map.darkMode || new DarkModePlugin(),
         paste: map.paste || new CorePastePlugin(),
+        entity: map.entity || new EntityPlugin(),
     };
 }
 
