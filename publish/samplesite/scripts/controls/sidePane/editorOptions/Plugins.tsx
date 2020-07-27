@@ -180,6 +180,10 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                     )}
                     {this.renderContentEditItem('defaultShortcut', 'Default Shortcuts')}
                     {this.renderContentEditItem('smartOrderedList', 'Smart Ordered List Style')}
+                    {this.renderContentEditItem('markdownBold', 'Markdown style Bolding')}
+                    {this.renderContentEditItem('markdownItalic', 'Markdown style Bolding')}
+                    {this.renderContentEditItem('markdownStrikethru', 'Markdown style Bolding')}
+                    {this.renderContentEditItem('markdownInlineCode', 'Markdown style Bolding')}
                 </tbody>
             </table>
         );
