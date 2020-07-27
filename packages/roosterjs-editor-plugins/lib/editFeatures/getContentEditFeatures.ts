@@ -1,6 +1,7 @@
 import ContentEditFeatureSettings from './ContentEditFeatureSettings';
 import { AutoLinkFeatures } from './features/autoLinkFeatures';
 import { ContentEditFeatureArray, GenericContentEditFeature } from 'roosterjs-editor-core';
+import { EntityFeatures } from './features/entityFeatures';
 import { ListFeatures } from './features/listFeatures';
 import { NoCycleCursorMoveFeatures } from './features/noCycleCursorMove';
 import { PluginEvent } from 'roosterjs-editor-types';
@@ -17,6 +18,7 @@ const allFeatures = {
     ...ShortcutFeatures,
     ...StructuredNodeFeatures,
     ...TableFeatures,
+    ...EntityFeatures,
 };
 
 export type AllContentEditFeatures = {

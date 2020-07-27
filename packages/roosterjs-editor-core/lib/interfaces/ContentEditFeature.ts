@@ -40,6 +40,7 @@ export interface GenericContentEditFeature<TEvent extends PluginEvent> {
     handleEvent: (event: TEvent, editor: Editor) => ChangeSource | void;
     allowFunctionKeys?: boolean;
     defaultDisabled?: boolean;
+    description?: string;
 }
 
 /**

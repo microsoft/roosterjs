@@ -26,6 +26,7 @@ const IndentWhenTab: ContentEditFeature = {
         setIndentation(editor, Indentation.Increase);
         event.rawEvent.preventDefault();
     },
+    description: 'Indent list when Tab',
 };
 
 /**
@@ -39,6 +40,7 @@ const OutdentWhenShiftTab: ContentEditFeature = {
         setIndentation(editor, Indentation.Decrease);
         event.rawEvent.preventDefault();
     },
+    description: 'Outdent list when Shift + Tab',
 };
 
 /**
@@ -65,6 +67,7 @@ const MergeInNewLine: ContentEditFeature = {
         }
     },
     defaultDisabled: true,
+    description: 'Merge in new line when Backspace on first char in list',
 };
 
 /**
@@ -78,6 +81,7 @@ const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
         return li && isNodeEmpty(li) && !li.previousSibling;
     },
     handleEvent: toggleListAndPreventDefault,
+    description: 'Outdent list when Backspace on empty first Line',
 };
 
 /**
@@ -98,6 +102,7 @@ const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
         );
     },
     defaultDisabled: !Browser.isIE && !Browser.isChrome,
+    description: 'Outdent list when Enter on empty line',
 };
 
 /**
@@ -159,6 +164,7 @@ const AutoBullet: ContentEditFeature = {
             );
         });
     },
+    description: 'Auto Bullet / Numbering',
 };
 
 function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: Editor) {

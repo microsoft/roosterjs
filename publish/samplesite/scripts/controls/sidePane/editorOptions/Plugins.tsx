@@ -1,9 +1,7 @@
 import * as React from 'react';
 import BuildInPluginState, { BuildInPluginList, UrlPlaceholder } from '../../BuildInPluginState';
-import { ContentEditFeatureSettings } from 'roosterjs-editor-plugins/lib/EditFeatures';
 
 type PluginItemId = keyof BuildInPluginList;
-type ContentEditItemId = keyof ContentEditFeatureSettings;
 
 const styles = require('./OptionsPane.scss');
 
@@ -58,22 +56,8 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
         text: string,
         moreOptions?: JSX.Element
     ): JSX.Element {
-        return this.renderItem(
-            id,
-            this.props.state.pluginList[id],
-            text,
-            moreOptions,
-            this.onPluginClick
-        );
-    }
+        const checked = this.props.state.pluginList[id];
 
-    private renderItem<T extends PluginItemId | ContentEditItemId>(
-        id: T,
-        checked: boolean,
-        text: string,
-        moreOptions: JSX.Element,
-        onChange: (id: T) => void
-    ): JSX.Element {
         return (
             <tr>
                 <td className={styles.checkboxColumn}>
@@ -81,7 +65,7 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                         type="checkbox"
                         id={id}
                         checked={checked}
-                        onChange={() => onChange(id)}
+                        onChange={() => this.onPluginClick(id)}
                     />
                 </td>
                 <td>

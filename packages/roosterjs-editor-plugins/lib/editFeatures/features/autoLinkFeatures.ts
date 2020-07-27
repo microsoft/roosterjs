@@ -25,22 +25,21 @@ const TRAILING_PUNCTUATION_REGEX = /[.+=\s:;"',>]+$/i;
 const MINIMUM_LENGTH = 5;
 
 /**
- * @internal
  * AutoLink edit feature, provides the ability to automatically convert text user typed or pasted
  * in hyperlink format into a real hyperlink
  */
-export const AutoLink: ContentEditFeature = {
+const AutoLink: ContentEditFeature = {
     keys: [Keys.ENTER, Keys.SPACE, Keys.CONTENTCHANGED],
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
+    description: 'Auto link',
 };
 
 /**
- * @internal
  * UnlinkWhenBackspaceAfterLink edit feature, provides the ability to convert a hyperlink back into text
  * if user presses BACKSPACE right after a hyperlink
  */
-export const UnlinkWhenBackspaceAfterLink: ContentEditFeature = {
+const UnlinkWhenBackspaceAfterLink: ContentEditFeature = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: hasLinkBeforeCursor,
     handleEvent: (event, editor) => {
@@ -48,6 +47,7 @@ export const UnlinkWhenBackspaceAfterLink: ContentEditFeature = {
         removeLink(editor);
     },
     defaultDisabled: true,
+    description: 'Auto unlink when backspace right after a hyperlink',
 };
 
 function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {

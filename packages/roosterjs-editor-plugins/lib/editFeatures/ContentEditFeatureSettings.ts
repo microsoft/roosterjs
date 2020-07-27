@@ -1,4 +1,5 @@
 import AutoLinkFeatureSettings from './features/autoLinkFeatures';
+import EntityFeatureSettings from './features/entityFeatures';
 import ListFeatureSettings from './features/listFeatures';
 import NoCycleCursorMoveFeatureSettings from './features/noCycleCursorMove';
 import QuoteFeatureSettings from './features/quoteFeatures';
@@ -16,4 +17,5 @@ export default interface ContentEditFeatureSettings
         QuoteFeatureSettings,
         ShortcutFeatureSettings,
         StructuredNodeFeatureSettings,
-        TableFeatureSettings {}
+        TableFeatureSettings,
+        EntityFeatureSettings {}

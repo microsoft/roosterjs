@@ -1,6 +1,5 @@
 import getEntityElement from './getEntityElement';
 import getEntityFromElement from './getEntityFromElement';
-import tryTriggerEntityEvent from './tryTriggerEntityEvent';
 import { Browser, toArray } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin, isCharacterValue, Keys } from 'roosterjs-editor-core';
 import {
@@ -18,13 +17,6 @@ import {
     ChangeSource,
     HtmlSanitizerOptions,
 } from 'roosterjs-editor-types';
-import {
-    ClickOnEntityFeature,
-    EscapeFromEntityFeature,
-    EnterBeforeReadonlyEntityFeature,
-    BackspaceAfterEntityFeature,
-    DeleteBeforeEntityFeature,
-} from './EntityFeatures';
 
 /**
  * Entity Plugin helps handle all operations related to an entity and generate entity specified events
@@ -47,14 +39,6 @@ export default class EntityPlugin implements EditorPlugin {
         });
 
         this.knownEntityElements = [];
-
-        [
-            ClickOnEntityFeature,
-            EscapeFromEntityFeature,
-            EnterBeforeReadonlyEntityFeature,
-            BackspaceAfterEntityFeature,
-            DeleteBeforeEntityFeature,
-        ].forEach(feature => this.editor.addContentEditFeature(feature));
     }
 
     dispose() {
@@ -96,7 +80,7 @@ export default class EntityPlugin implements EditorPlugin {
 
         if (entityElement) {
             event.preventDefault();
-            tryTriggerEntityEvent(this.editor, entityElement, EntityOperation.ContextMenu, event);
+            this.triggerEvent(entityElement, EntityOperation.ContextMenu, event);
         }
     };
 
@@ -127,7 +111,7 @@ export default class EntityPlugin implements EditorPlugin {
             !!(entityElement = getEntityElement(this.editor, target as Node))
         ) {
             event.preventDefault();
-            tryTriggerEntityEvent(this.editor, entityElement, EntityOperation.Click, event);
+            this.triggerEvent(entityElement, EntityOperation.Click, event);
 
             workaroundSelectionIssueForIE(this.editor);
         }
@@ -190,7 +174,7 @@ export default class EntityPlugin implements EditorPlugin {
             if (this.knownEntityElements.indexOf(element) < 0) {
                 this.knownEntityElements.push(element);
 
-                tryTriggerEntityEvent(this.editor, element, EntityOperation.NewEntity);
+                this.triggerEvent(element, EntityOperation.NewEntity);
             }
         });
     }
@@ -199,11 +183,7 @@ export default class EntityPlugin implements EditorPlugin {
         toArray(root.querySelectorAll(getEntitySelector())).forEach(element => {
             element.removeAttribute('contentEditable');
 
-            tryTriggerEntityEvent(
-                this.editor,
-                element as HTMLElement,
-                EntityOperation.ReplaceTemporaryContent
-            );
+            this.triggerEvent(element as HTMLElement, EntityOperation.ReplaceTemporaryContent);
         });
     }
 
@@ -214,7 +194,7 @@ export default class EntityPlugin implements EditorPlugin {
             if (element.isContentEditable) {
                 editableEntityElements.push(element);
             } else {
-                tryTriggerEntityEvent(this.editor, element, EntityOperation.Overwrite, event);
+                this.triggerEvent(element, EntityOperation.Overwrite, event);
             }
         });
 
@@ -227,12 +207,27 @@ export default class EntityPlugin implements EditorPlugin {
             );
             editableEntityElements.forEach(element => {
                 const isFullyCovered = inSelectionEntityElements.indexOf(element) >= 0;
-                tryTriggerEntityEvent(
-                    this.editor,
+                this.triggerEvent(
                     element,
                     isFullyCovered ? EntityOperation.Overwrite : EntityOperation.PartialOverwrite,
                     event
                 );
+            });
+        }
+    }
+
+    private triggerEvent(element: HTMLElement, operation: EntityOperation, rawEvent?: UIEvent) {
+        const entity = element && getEntityFromElement(element);
+
+        if (entity) {
+            if (operation == EntityOperation.NewEntity && entity.isReadonly) {
+                element.contentEditable = 'false';
+            }
+
+            this.editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+                operation,
+                rawEvent,
+                entity,
             });
         }
     }

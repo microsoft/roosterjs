@@ -68,6 +68,7 @@ const DefaultShortcut: ContentEditFeature = {
             event.rawEvent.stopPropagation();
         }
     },
+    description: 'Default Shortcuts',
 };
 
 function cacheGetCommand(event: PluginKeyboardEvent) {

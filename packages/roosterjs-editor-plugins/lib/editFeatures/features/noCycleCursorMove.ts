@@ -27,6 +27,7 @@ const NoCycleCursorMove: ContentEditFeature = {
         event.rawEvent.preventDefault();
     },
     defaultDisabled: !Browser.isChrome,
+    description: 'Avoid moving cycle moving cursor when Ctrl+Left/Right',
 };
 
 export default interface NoCycleCursorMoveFeatureSettings {
