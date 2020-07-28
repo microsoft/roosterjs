@@ -192,13 +192,13 @@ export default interface EntityFeatureSettings {
      * A content edit feature to trigger EntityOperation event with operation "Click" when user
      * clicks on a readonly entity.
      */
-    clickOnEntity: boolean;
+    clickOnEntity?: boolean;
 
     /**
      * A content edit feature to trigger EntityOperation event with operation "Escape" when user
      * presses ESC on a readonly entity.
      */
-    escapeFromEntity: boolean;
+    escapeFromEntity?: boolean;
 
     /**
      * A content edit feature to split current line into two lines at the cursor when user presses
@@ -206,19 +206,19 @@ export default interface EntityFeatureSettings {
      * Browser's default behavior will insert an extra BR tag before the entity which causes an extra
      * empty line. So we override the default behavior here.
      */
-    enterBeforeReadonlyEntity: boolean;
+    enterBeforeReadonlyEntity?: boolean;
 
     /**
      * A content edit feature to trigger EntityOperation event with operation "RemoveFromEnd" when user
      * press BACKSPACE right after an entity
      */
-    backspaceAfterEntity: boolean;
+    backspaceAfterEntity?: boolean;
 
     /**
      * A content edit feature to trigger EntityOperation event with operation "RemoveFromStart" when user
      * press DELETE right after an entity
      */
-    deleteBeforeEntity: boolean;
+    deleteBeforeEntity?: boolean;
 }
 
 /**
