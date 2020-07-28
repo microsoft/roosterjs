@@ -108,12 +108,28 @@ export default interface ContentEditFeatures {
      */
     smartOrderedListStyles: string[];
 
+    /**
+     * When typing text surrounded by '*', the symbols will be removed and the text will be bolded.
+     * @default true
+     */
     markdownBold: boolean;
 
+    /**
+     * When typing text surrounded by '_', the symbols will be removed and the text will be italicized.
+     * @default true
+     */
     markdownItalic: boolean;
 
+    /**
+     * When typing text surrounded by '~', the symbols will be removed and the text will be striked through.
+     * @default true
+     */
     markdownStrikethru: boolean;
 
+    /**
+     * When typing text surrounded by '`', the symbols will be removed and the text will be wrapped in a code tag.
+     * @default true
+     */
     markdownInlineCode: boolean;
 }
 

@@ -181,9 +181,12 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                     {this.renderContentEditItem('defaultShortcut', 'Default Shortcuts')}
                     {this.renderContentEditItem('smartOrderedList', 'Smart Ordered List Style')}
                     {this.renderContentEditItem('markdownBold', 'Markdown style Bolding')}
-                    {this.renderContentEditItem('markdownItalic', 'Markdown style Bolding')}
-                    {this.renderContentEditItem('markdownStrikethru', 'Markdown style Bolding')}
-                    {this.renderContentEditItem('markdownInlineCode', 'Markdown style Bolding')}
+                    {this.renderContentEditItem('markdownItalic', 'Markdown style Italics')}
+                    {this.renderContentEditItem(
+                        'markdownStrikethru',
+                        'Markdown style Strikethrough'
+                    )}
+                    {this.renderContentEditItem('markdownInlineCode', 'Markdown style Code blocks')}
                 </tbody>
             </table>
         );
