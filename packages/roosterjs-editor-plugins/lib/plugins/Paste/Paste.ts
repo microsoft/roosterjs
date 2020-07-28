@@ -19,6 +19,7 @@ const EXCEL_ATTRIBUTE_NAME = 'xmlns:x';
 const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
 const EXCEL_ONLINE_ATTRIBUTE_NAME = 'ProgId';
 const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
+const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
@@ -88,6 +89,8 @@ export default class Paste implements EditorPlugin {
                 if (isWordOnlineWithList(fragment)) {
                     convertPastedContentFromWordOnline(fragment);
                 }
+            } else if (fragment.querySelector(GOOGLE_SHEET_NODE_NAME)) {
+                sanitizingOption.additionalAllowedTags.push(GOOGLE_SHEET_NODE_NAME);
             }
 
             // TODO: Deprecate attributeCallbacks parameter
