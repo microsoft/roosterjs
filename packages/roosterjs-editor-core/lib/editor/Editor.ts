@@ -343,7 +343,7 @@ export default class Editor {
 
     /**
      * Get current editor content as HTML string
-     * @param triggerExtractContentEvent Whether trigger ExtractContent event to all plugins
+     * @param triggerExtractContentEvent Whether trigger ExtractContentWithDom event to all plugins
      * before return. Use this parameter to remove any temporary content added by plugins.
      * @param includeSelectionMarker Set to true if need include selection marker inside the content.
      * When restore this content, editor will set the selection to the position marked by these markers.

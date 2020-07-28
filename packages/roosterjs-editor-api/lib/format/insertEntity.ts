@@ -25,7 +25,7 @@ export default function insertEntity(
     contentNode: Node,
     isBlock: boolean,
     isReadonly: boolean,
-    position?: NodePosition
+    position?: NodePosition | ContentPosition.Begin | ContentPosition.End | ContentPosition.DomEnd
 ): Entity {
     const wrapper = wrap(contentNode, isBlock ? 'DIV' : 'SPAN');
 
@@ -43,8 +43,15 @@ export default function insertEntity(
 
     if (!editor.contains(wrapper)) {
         let currentRange: Range;
+        let contentPosition:
+            | ContentPosition.Begin
+            | ContentPosition.End
+            | ContentPosition.DomEnd
+            | ContentPosition.SelectionStart;
 
-        if (position) {
+        if (typeof position == 'number') {
+            contentPosition = position;
+        } else if (position) {
             currentRange = editor.getSelectionRange();
             const node = position.normalize().node;
             const existingEntity = node && editor.getElementAtCursor(getEntitySelector(), node);
@@ -55,19 +62,22 @@ export default function insertEntity(
             }
 
             editor.select(position);
+            contentPosition = ContentPosition.SelectionStart;
         }
 
         editor.insertNode(wrapper, {
             updateCursor: false,
             insertOnNewLine: isBlock,
             replaceSelection: true,
-            position: ContentPosition.SelectionStart,
+            position: contentPosition,
         });
 
-        if (currentRange) {
-            editor.select(currentRange);
-        } else if (!isBlock) {
-            editor.select(wrapper, PositionType.After);
+        if (contentPosition == ContentPosition.SelectionStart) {
+            if (currentRange) {
+                editor.select(currentRange);
+            } else if (!isBlock) {
+                editor.select(wrapper, PositionType.After);
+            }
         }
     }
 

@@ -129,7 +129,7 @@ export type Focus = (core: EditorCore) => void;
 /**
  * Get current editor content as HTML string
  * @param core The EditorCore object
- * @param triggerExtractContentEvent Whether trigger ExtractContent event to all plugins
+ * @param triggerExtractContentEvent Whether trigger ExtractContentWithDom event to all plugins
  * before return. Use this parameter to remove any temporary content added by plugins.
  * @param includeSelectionMarker Set to true if need include selection marker inside the content.
  * When restore this content, editor will set the selection to the position marked by these markers.
@@ -258,7 +258,7 @@ export interface CoreApiMap {
     /**
      * Get current editor content as HTML string
      * @param core The EditorCore object
-     * @param triggerExtractContentEvent Whether trigger ExtractContent event to all plugins
+     * @param triggerExtractContentEvent Whether trigger ExtractContentWithDom event to all plugins
      * before return. Use this parameter to remove any temporary content added by plugins.
      * @param includeSelectionMarker Set to true if need include selection marker inside the content.
      * When restore this content, editor will set the selection to the position marked by these markers.
