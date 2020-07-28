@@ -2,6 +2,7 @@ import convertPastedContentFromExcel from './excelConverter/convertPastedContent
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { toArray } from 'roosterjs-editor-dom';
 import { WAC_IDENTIFING_SELECTOR } from './officeOnlineConverter/constants';
 import convertPastedContentFromWordOnline, {
     isWordOnlineWithList,
@@ -46,7 +47,7 @@ export default class Paste implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.BeforePaste) {
             const { htmlAttributes, fragment } = event;
-            let wacListElements: NodeListOf<Element>;
+            let wacListElements: Node[];
 
             if (htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE) {
                 // Handle HTML copied from Word
@@ -57,7 +58,10 @@ export default class Paste implements EditorPlugin {
             ) {
                 // Handle HTML copied from Excel
                 convertPastedContentFromExcel(event);
-            } else if ((wacListElements = fragment.querySelectorAll(WAC_IDENTIFING_SELECTOR))[0]) {
+            } else if (
+                (wacListElements = toArray(fragment.querySelectorAll(WAC_IDENTIFING_SELECTOR))) &&
+                wacListElements.length > 0
+            ) {
                 // Once it is known that the document is from WAC
                 // We need to remove the display property and margin from all the list item
                 wacListElements.forEach((el: HTMLElement) => {

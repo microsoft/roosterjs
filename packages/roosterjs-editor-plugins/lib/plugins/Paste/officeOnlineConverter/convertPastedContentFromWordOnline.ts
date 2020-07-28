@@ -15,6 +15,7 @@ import {
     getTagOfNode,
     collapseNodes,
     unwrap,
+    toArray,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -107,7 +108,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
             }
 
             // Get all list items(<li>) in the current iterator element.
-            const currentListItems = listItemContainer.querySelectorAll('li');
+            const currentListItems = toArray(listItemContainer.querySelectorAll('li'));
             currentListItems.forEach(item => {
                 // If item is in root level and the type of list changes then
                 // insert the current list into body and then reinitialize the convertedListElement
@@ -144,8 +145,8 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
  * @param fragment pasted document that contains all the list element.
  */
 function sanitizeListItemContainer(fragment: DocumentFragment) {
-    const listItemContainerListEl = fragment.querySelectorAll(
-        `${WORD_ORDERED_LIST_SELECTOR}, ${WORD_UNORDERED_LIST_SELECTOR}`
+    const listItemContainerListEl = toArray(
+        fragment.querySelectorAll(`${WORD_ORDERED_LIST_SELECTOR}, ${WORD_UNORDERED_LIST_SELECTOR}`)
     );
     listItemContainerListEl.forEach(el => {
         const replaceRegex = new RegExp(`\\b${LIST_CONTAINER_ELEMENT_CLASS_NAME}\\b`, 'g');
