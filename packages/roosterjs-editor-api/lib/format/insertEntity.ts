@@ -1,6 +1,6 @@
-import { createEntityWrapper, getEntityFromElement, getEntitySelector } from 'roosterjs-editor-dom';
+import { commitEntity, Position } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
-import { Position } from 'roosterjs-editor-dom';
+import { getEntityFromElement, getEntitySelector, wrap } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ContentPosition,
@@ -27,41 +27,55 @@ export default function insertEntity(
     isReadonly: boolean,
     position?: NodePosition
 ): Entity {
-    const wrapper = createEntityWrapper(isBlock, type, isReadonly, contentNode);
+    const wrapper = wrap(contentNode, isBlock ? 'DIV' : 'SPAN');
 
-    let currentRange: Range;
-
-    if (position) {
-        currentRange = editor.getSelectionRange();
-        const node = position.normalize().node;
-        const existingEntity = node && editor.getElementAtCursor(getEntitySelector(), node);
-
-        // Do not insert entity into another entity
-        if (existingEntity) {
-            position = new Position(existingEntity, PositionType.After);
-        }
-
-        editor.select(position);
+    // For inline & readonly entity, we need to set display to "inline-block" otherwise
+    // there will be some weird behavior when move cursor around the entity node.
+    // And we should only do this for readonly entity since "inline-block" has some side effect
+    // in IE that there will be a resize border around the inline-block element. We made some
+    // workaround for readonly entity for this issue but for editable entity, keep it as "inline"
+    // will just work fine.
+    if (!isBlock && isReadonly) {
+        wrapper.style.display = 'inline-block';
     }
 
-    editor.insertNode(wrapper, {
-        updateCursor: false,
-        insertOnNewLine: isBlock,
-        replaceSelection: true,
-        position: ContentPosition.SelectionStart,
-    });
+    commitEntity(wrapper, type, isReadonly);
+
+    if (!editor.contains(wrapper)) {
+        let currentRange: Range;
+
+        if (position) {
+            currentRange = editor.getSelectionRange();
+            const node = position.normalize().node;
+            const existingEntity = node && editor.getElementAtCursor(getEntitySelector(), node);
+
+            // Do not insert entity into another entity
+            if (existingEntity) {
+                position = new Position(existingEntity, PositionType.After);
+            }
+
+            editor.select(position);
+        }
+
+        editor.insertNode(wrapper, {
+            updateCursor: false,
+            insertOnNewLine: isBlock,
+            replaceSelection: true,
+            position: ContentPosition.SelectionStart,
+        });
+
+        if (currentRange) {
+            editor.select(currentRange);
+        } else if (!isBlock) {
+            editor.select(wrapper, PositionType.After);
+        }
+    }
 
     if (isBlock) {
         // Insert an extra empty line for block entity to make sure
         // user can still put cursor below the entity.
         const br = editor.getDocument().createElement('BR');
         wrapper.parentNode.insertBefore(br, wrapper.nextSibling);
-    }
-
-    if (currentRange) {
-        editor.select(currentRange);
-    } else if (!isBlock) {
-        editor.select(wrapper, PositionType.After);
     }
 
     const entity = getEntityFromElement(wrapper);

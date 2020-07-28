@@ -1,7 +1,7 @@
 import { Editor, EditorPlugin, isCharacterValue, Keys } from 'roosterjs-editor-core';
 import {
     Browser,
-    createEntityWrapper,
+    commitEntity,
     getEntityFromElement,
     getEntitySelector,
     toArray,
@@ -222,9 +222,11 @@ export default class EntityPlugin implements EditorPlugin {
     }
 
     private hydrateEntity(entity: Entity, knownIds: string[]) {
-        const { id, type, isReadonly, contentNode } = entity;
+        const { id, type, wrapper, isReadonly } = entity;
         const match = ENTITY_ID_REGEX.exec(id);
         const baseId = (match ? id.substr(0, id.length - match[0].length) : id) || type;
+
+        // Make sure entity id is unique
         let newId = '';
 
         for (let num = (match && parseInt(match[1])) || 0; ; num++) {
@@ -237,15 +239,10 @@ export default class EntityPlugin implements EditorPlugin {
         }
 
         if (newId != entity.id) {
-            entity.id = newId;
-            createEntityWrapper(contentNode, type, isReadonly, newId);
+            commitEntity(wrapper, type, isReadonly, newId);
         }
 
-        if (isReadonly) {
-            contentNode.contentEditable = 'false';
-        }
-
-        this.triggerEvent(contentNode, EntityOperation.NewEntity);
+        this.triggerEvent(wrapper, EntityOperation.NewEntity);
     }
 
     private triggerEvent(element: HTMLElement, operation: EntityOperation, rawEvent?: UIEvent) {

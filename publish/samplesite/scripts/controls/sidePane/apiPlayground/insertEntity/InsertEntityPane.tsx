@@ -90,12 +90,12 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
 function EntityButton({ entity }: { entity: Entity }) {
     let background = '';
     const onMouseOver = React.useCallback(() => {
-        background = entity.contentNode.style.backgroundColor;
-        entity.contentNode.style.backgroundColor = 'blue';
+        background = entity.wrapper.style.backgroundColor;
+        entity.wrapper.style.backgroundColor = 'blue';
     }, [entity]);
 
     const onMouseOut = React.useCallback(() => {
-        entity.contentNode.style.backgroundColor = background;
+        entity.wrapper.style.backgroundColor = background;
     }, [entity]);
 
     return (

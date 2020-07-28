@@ -5,13 +5,13 @@ import { Entity, EntityClasses } from 'roosterjs-editor-types';
  * @param element The entity root element. If this element is not an entity root element,
  * it will return null
  */
-export default function getEntityFromElement(contentNode: HTMLElement): Entity {
+export default function getEntityFromElement(element: HTMLElement): Entity {
     let isEntity = false;
     let type: string;
     let id = '';
     let isReadonly = false;
 
-    contentNode?.className?.split(' ').forEach(name => {
+    element?.className?.split(' ').forEach(name => {
         if (name == EntityClasses.ENTITY_INFO_NAME) {
             isEntity = true;
         } else if (name.indexOf(EntityClasses.ENTITY_TYPE_PREFIX) == 0) {
@@ -25,7 +25,7 @@ export default function getEntityFromElement(contentNode: HTMLElement): Entity {
 
     return isEntity
         ? {
-              contentNode,
+              wrapper: element,
               id,
               type,
               isReadonly,

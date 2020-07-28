@@ -75,6 +75,6 @@ export { default as chainSanitizerCallback } from './htmlSanitizer/chainSanitize
 
 export { default as safeInstanceOf } from './typeUtils/safeInstanceOf';
 
-export { default as createEntityWrapper } from './entity/createEntityWrapper';
+export { default as commitEntity } from './entity/commitEntity';
 export { default as getEntityFromElement } from './entity/getEntityFromElement';
 export { default as getEntitySelector } from './entity/getEntitySelector';
