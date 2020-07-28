@@ -250,7 +250,7 @@ function insertListItem(
         if (!curListLevel.firstChild) {
             // If the current level is empty, create empty list within the current level
             // then move the level iterator into the next level.
-            curListLevel.append(doc.createElement(listType));
+            curListLevel.appendChild(doc.createElement(listType));
             curListLevel = curListLevel.firstElementChild;
         } else {
             // If the current level is not empty, the last item in the needs to be a UL or OL
@@ -263,7 +263,7 @@ function insertListItem(
             } else {
                 // If the last child is not a list, then append a new list to the level
                 // and move the level iterator to the new level.
-                curListLevel.append(doc.createElement(listType));
+                curListLevel.appendChild(doc.createElement(listType));
                 curListLevel = curListLevel.lastElementChild;
             }
         }

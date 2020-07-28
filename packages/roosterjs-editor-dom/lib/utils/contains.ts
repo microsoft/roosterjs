@@ -51,5 +51,24 @@ export default function contains(
         return !!treatSameNodeAsContain && container == contained;
     }
 
-    return !!(treatSameNodeAsContain || container != contained) && container.contains(contained);
+    return (
+        !!(treatSameNodeAsContain || container != contained) &&
+        internalContains(container, contained)
+    );
+}
+
+function internalContains(container: Node, contained: Node): boolean {
+    if (container.contains) {
+        return container.contains(contained);
+    } else {
+        while (contained) {
+            if (contained == container) {
+                return true;
+            }
+
+            contained = contained.parentNode;
+        }
+
+        return false;
+    }
 }
