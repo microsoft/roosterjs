@@ -27,7 +27,7 @@ function generateBasicMarkdownFeature(
             event.rawEvent.shiftKey === useShiftKey &&
             !!cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter),
         handleEvent: (event, editor) => {
-            // runAsync is here to allow the event to complete.
+            // runAsync is here to allow the event to complete so autocomplete will present the trigger character.
             editor.runAsync(() => {
                 handleMarkdownEvent(event, editor, triggerCharacter, elementTag);
             });
