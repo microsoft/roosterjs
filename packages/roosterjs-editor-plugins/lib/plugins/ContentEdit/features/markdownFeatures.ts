@@ -1,6 +1,17 @@
-import { ChangeSource, NodePosition, PluginKeyboardEvent } from 'roosterjs-editor-types';
-import { ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
 import { createRange } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    NodePosition,
+    PluginKeyboardEvent,
+    PositionType,
+} from 'roosterjs-editor-types';
+import {
+    cacheGetContentSearcher,
+    cacheGetEventData,
+    ContentEditFeature,
+    Editor,
+    Keys,
+} from 'roosterjs-editor-core';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
@@ -14,51 +25,63 @@ function generateBasicMarkdownFeature(
         keys: [key],
         shouldHandleEvent: (event, editor) =>
             event.rawEvent.shiftKey === useShiftKey &&
-            !!getRangeForMarkdownOperation(event, editor, triggerCharacter),
+            !!cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter),
         handleEvent: (event, editor) => {
-            event.rawEvent.preventDefault();
-            handleMarkdownEvent(event, editor, triggerCharacter, elementTag);
+            // runAsync is here to allow the event to complete.
+            editor.runAsync(() => {
+                handleMarkdownEvent(event, editor, triggerCharacter, elementTag);
+            });
         },
     };
 }
 
-function getRangeForMarkdownOperation(
+function cacheGetRangeForMarkdownOperation(
     event: PluginKeyboardEvent,
     editor: Editor,
     triggerCharacter: string
 ): Range {
-    const searcher = editor.getContentSearcherOfCursor();
+    return cacheGetEventData(event, 'MARKDOWN_RANGE', () => {
+        const searcher = cacheGetContentSearcher(event, editor);
 
-    let startPosition: NodePosition;
-    let endPosition: NodePosition;
-    searcher.forEachTextInlineElement(textInlineElement => {
-        if (endPosition && startPosition) {
-            return true;
-        }
-        const inlineTextContent = textInlineElement.getTextContent();
-        if (inlineTextContent[inlineTextContent.length - 1].trim().length == 0) {
-            return false;
-        }
-        endPosition = textInlineElement.getStartPosition().move(inlineTextContent.length);
-        if (inlineTextContent[0] == triggerCharacter) {
-            startPosition = textInlineElement.getStartPosition();
-        } else {
-            let contentIndex = inlineTextContent.length - 1;
-            for (; contentIndex > 0; contentIndex--) {
-                if (startPosition) {
-                    return true;
-                }
-                if (
-                    inlineTextContent[contentIndex] == triggerCharacter &&
-                    inlineTextContent[contentIndex - 1].trim().length == 0
-                ) {
-                    startPosition = textInlineElement.getStartPosition().move(contentIndex);
-                    return true;
+        let startPosition: NodePosition;
+        let endPosition: NodePosition;
+        searcher.forEachTextInlineElement(textInlineElement => {
+            if (endPosition && startPosition) {
+                return true;
+            }
+            const inlineTextContent = textInlineElement.getTextContent();
+
+            // special case for immediately preceeding character being whitespace
+            if (inlineTextContent[inlineTextContent.length - 1].trim().length == 0) {
+                return false;
+            }
+
+            // special case for consecutive trigger characters
+            if (inlineTextContent[inlineTextContent.length - 1] === triggerCharacter) {
+                return false;
+            }
+
+            endPosition = textInlineElement.getStartPosition().move(inlineTextContent.length);
+            if (inlineTextContent[0] == triggerCharacter) {
+                startPosition = textInlineElement.getStartPosition();
+            } else {
+                let contentIndex = inlineTextContent.length - 1;
+                for (; contentIndex > 0; contentIndex--) {
+                    if (startPosition) {
+                        return true;
+                    }
+                    if (
+                        inlineTextContent[contentIndex] == triggerCharacter &&
+                        inlineTextContent[contentIndex - 1].trim().length == 0
+                    ) {
+                        startPosition = textInlineElement.getStartPosition().move(contentIndex);
+                        return true;
+                    }
                 }
             }
-        }
+        });
+        return !!startPosition && !!endPosition && createRange(startPosition, endPosition);
     });
-    return !!startPosition && !!endPosition && createRange(startPosition, endPosition);
 }
 
 function handleMarkdownEvent(
@@ -68,20 +91,20 @@ function handleMarkdownEvent(
     elementTag: string
 ) {
     editor.performAutoComplete(() => {
-        const range = getRangeForMarkdownOperation(event, editor, triggerCharacter);
+        const range = cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter);
         if (!!range) {
+            // modify the range here to include the new * character
+            range.setEnd(range.endContainer, range.endOffset + 1);
             const elementToWrap = editor.getDocument().createElement(elementTag);
             elementToWrap.appendChild(range.extractContents());
             elementToWrap.innerText = elementToWrap.innerText.slice(
                 1,
-                elementToWrap.innerText.length
+                elementToWrap.innerText.length - 1
             );
             const nonPrintedSpaceTextNode = editor.getDocument().createTextNode(ZERO_WIDTH_SPACE);
             range.insertNode(nonPrintedSpaceTextNode);
             range.insertNode(elementToWrap);
-            range.setEndAfter(nonPrintedSpaceTextNode);
-            range.collapse(false);
-            editor.select(range);
+            editor.select(nonPrintedSpaceTextNode, PositionType.End);
         }
     }, ChangeSource.Format);
 }
