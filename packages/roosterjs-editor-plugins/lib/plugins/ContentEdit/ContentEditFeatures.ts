@@ -107,6 +107,30 @@ export default interface ContentEditFeatures {
      * @default ['lower-alpha', 'lower-roman', 'decimal']
      */
     smartOrderedListStyles: string[];
+
+    /**
+     * When typing text surrounded by '*', the symbols will be removed and the text will be bolded.
+     * @default true
+     */
+    markdownBold: boolean;
+
+    /**
+     * When typing text surrounded by '_', the symbols will be removed and the text will be italicized.
+     * @default true
+     */
+    markdownItalic: boolean;
+
+    /**
+     * When typing text surrounded by '~', the symbols will be removed and the text will be striked through.
+     * @default true
+     */
+    markdownStrikethru: boolean;
+
+    /**
+     * When typing text surrounded by '`', the symbols will be removed and the text will be wrapped in a code tag.
+     * @default true
+     */
+    markdownInlineCode: boolean;
 }
 
 /**
@@ -131,5 +155,9 @@ export function getDefaultContentEditFeatures(): ContentEditFeatures {
         noCycleCursorMove: Browser.isChrome,
         smartOrderedList: false,
         smartOrderedListStyles: ['lower-alpha', 'lower-roman', 'decimal'],
+        markdownBold: true,
+        markdownItalic: true,
+        markdownStrikethru: true,
+        markdownInlineCode: true,
     };
 }
