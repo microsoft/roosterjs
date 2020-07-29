@@ -238,9 +238,7 @@ export default class EntityPlugin implements EditorPlugin {
             }
         }
 
-        if (newId != entity.id) {
-            commitEntity(wrapper, type, isReadonly, newId);
-        }
+        commitEntity(wrapper, type, isReadonly, newId);
 
         this.triggerEvent(wrapper, EntityOperation.NewEntity);
     }
