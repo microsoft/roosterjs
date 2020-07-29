@@ -61,7 +61,9 @@ function cacheGetRangeForMarkdownOperation(
                 return false;
             }
 
-            endPosition = textInlineElement.getStartPosition().move(inlineTextContent.length);
+            if (!endPosition) {
+                endPosition = textInlineElement.getStartPosition().move(inlineTextContent.length);
+            }
             if (inlineTextContent[0] == triggerCharacter) {
                 startPosition = textInlineElement.getStartPosition();
             } else {
@@ -93,14 +95,18 @@ function handleMarkdownEvent(
     editor.performAutoComplete(() => {
         const range = cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter);
         if (!!range) {
-            // modify the range here to include the new * character
+            // get the text content range
+            const textContentRange = range.cloneRange();
+            textContentRange.setStart(
+                textContentRange.startContainer,
+                textContentRange.startOffset + 1
+            );
+
+            // set the removal range to include the typed last character.
             range.setEnd(range.endContainer, range.endOffset + 1);
             const elementToWrap = editor.getDocument().createElement(elementTag);
-            elementToWrap.appendChild(range.extractContents());
-            elementToWrap.innerText = elementToWrap.innerText.slice(
-                1,
-                elementToWrap.innerText.length - 1
-            );
+            elementToWrap.appendChild(textContentRange.extractContents());
+            range.deleteContents();
             const nonPrintedSpaceTextNode = editor.getDocument().createTextNode(ZERO_WIDTH_SPACE);
             range.insertNode(nonPrintedSpaceTextNode);
             range.insertNode(elementToWrap);
