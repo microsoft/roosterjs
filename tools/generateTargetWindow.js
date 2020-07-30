@@ -14,6 +14,7 @@ const source = fs.readFileSync(libDomFilePath).toString();
 const search = ['Node', 'Range'];
 
 let result = '/**\n';
+result += ' * @internal\n';
 result +=
     ' * Define DOM types of window, used by safeInstanceOf() to check if a given object is of the specified type of its own window\n';
 result += ' *\n';
