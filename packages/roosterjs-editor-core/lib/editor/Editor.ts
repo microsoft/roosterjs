@@ -423,10 +423,7 @@ export default class Editor {
 
         if (clipboardData.snapshotBeforePaste) {
             // Restore original content before paste a new one
-            this.setContent(
-                clipboardData.snapshotBeforePaste,
-                false /*triggerContentChangedEvent*/
-            );
+            this.setContent(clipboardData.snapshotBeforePaste);
         } else {
             clipboardData.snapshotBeforePaste = this.getContent(
                 false /*triggerExtractContentEvent*/,
