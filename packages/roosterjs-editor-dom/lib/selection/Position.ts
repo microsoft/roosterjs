@@ -88,7 +88,7 @@ export default class Position implements NodePosition {
         let newOffset: number | PositionType.Begin | PositionType.End = this.isAtEnd
             ? PositionType.End
             : this.offset;
-        while (node.nodeType == NodeType.Element) {
+        while (node.nodeType == NodeType.Element || node.nodeType == NodeType.DocumentFragment) {
             const nextNode = this.isFromEndOfRange
                 ? newOffset == PositionType.End
                     ? node.lastChild

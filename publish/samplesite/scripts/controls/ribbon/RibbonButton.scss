@@ -15,6 +15,18 @@
     }
 }
 
+.textButton {
+    height: 32px;
+    vertical-align: top;
+    background-color: transparent;
+    border-width: 0;
+    border-radius: 3px;
+    cursor: pointer;
+    &:hover {
+        background-color: $primaryLighter2;
+    }
+}
+
 .dropDownButton {
     position: relative;
     width: 32px;

@@ -20,7 +20,6 @@ export default class PopoutMainPane extends React.Component<PopoutMainPaneProps,
                 <Ribbon
                     plugin={plugins.ribbon}
                     className={styles.noGrow}
-                    isPopout={true}
                     ref={plugins.ribbon.refCallback}
                 />
                 <div className={styles.body}>

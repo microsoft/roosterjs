@@ -31,7 +31,8 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
     render() {
         let button = this.props.button;
         let editor = this.props.plugin.getEditor();
-        let className = styles.button;
+        let isImageButton = !!button.image;
+        let className = isImageButton ? styles.button : styles.textButton;
 
         if (
             editor &&
@@ -44,9 +45,14 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
         return (
             <span className={styles.dropDownButton}>
                 <button
+                    disabled={!!button.isDisabled && button.isDisabled(editor)}
                     onClick={button.dropDownItems ? this.onShowDropDown : () => this.onExecute()}
                     className={className}>
-                    <img src={button.image} width={32} height={32} title={button.title} />
+                    {isImageButton ? (
+                        <img src={button.image} width={32} height={32} title={button.title} />
+                    ) : (
+                        button.title
+                    )}
                 </button>
                 {button.dropDownItems &&
                     this.state.isDropDownShown &&

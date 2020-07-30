@@ -10,9 +10,10 @@ export type DropDownRenderer = (
 
 export default interface RibbonButtonType {
     title: string;
-    image: string;
+    image?: string;
     onClick: (editor: Editor, value: string) => void;
     checked?: (format: FormatState, editor: Editor) => boolean;
+    isDisabled?: (editor: Editor) => boolean;
     dropDownItems?: { [key: string]: string };
     dropDownRenderer?: DropDownRenderer;
     preserveOnClickAway?: boolean;

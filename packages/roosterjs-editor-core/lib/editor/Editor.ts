@@ -417,33 +417,37 @@ export default class Editor {
         pasteAsText?: boolean,
         applyCurrentFormat?: boolean
     ) {
+        if (!clipboardData) {
+            return;
+        }
+
+        if (clipboardData.snapshotBeforePaste) {
+            // Restore original content before paste a new one
+            this.setContent(
+                clipboardData.snapshotBeforePaste,
+                false /*triggerContentChangedEvent*/
+            );
+        } else {
+            clipboardData.snapshotBeforePaste = this.getContent(
+                false /*triggerExtractContentEvent*/,
+                true /*includeSelectionMarker*/
+            );
+        }
+
         const range = this.getSelectionRange();
         const pos = range && Position.getStart(range);
+        const fragment = this.core.api.createPasteFragment(
+            this.core,
+            clipboardData,
+            pos,
+            pasteAsText,
+            applyCurrentFormat
+        );
 
-        if (clipboardData && pos) {
-            if (clipboardData.snapshotBeforePaste) {
-                // Restore original content before paste a new one
-                this.setContent(clipboardData.snapshotBeforePaste);
-            } else {
-                clipboardData.snapshotBeforePaste = this.getContent(
-                    false /*triggerExtractContentEvent*/,
-                    true /*includeSelectionMarker*/
-                );
-            }
-
-            const fragment = this.core.api.createPasteFragment(
-                this.core,
-                clipboardData,
-                pos,
-                pasteAsText,
-                applyCurrentFormat
-            );
-
-            this.addUndoSnapshot(() => {
-                this.insertNode(fragment);
-                return clipboardData;
-            }, ChangeSource.Paste);
-        }
+        this.addUndoSnapshot(() => {
+            this.insertNode(fragment);
+            return clipboardData;
+        }, ChangeSource.Paste);
     }
 
     //#endregion
