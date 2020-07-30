@@ -12,3 +12,4 @@ export { default as ShortcutFeatureSettings } from './features/shortcutFeatures'
 export { default as StructuredNodeFeatureSettings } from './features/structuredNodeFeatures';
 export { default as TableFeatureSettings } from './features/tableFeatures';
 export { default as EntityFeatureSettings } from './features/entityFeatures';
+export { default as MarkdownFeatureSettings } from './features/MarkdownFeatures';

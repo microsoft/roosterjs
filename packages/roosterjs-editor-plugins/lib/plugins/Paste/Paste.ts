@@ -14,6 +14,7 @@ const EXCEL_ATTRIBUTE_NAME = 'xmlns:x';
 const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
 const EXCEL_ONLINE_ATTRIBUTE_NAME = 'ProgId';
 const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
+const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
@@ -46,7 +47,7 @@ export default class Paste implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.BeforePaste) {
-            const { htmlAttributes, fragment } = event;
+            const { htmlAttributes, fragment, sanitizingOption } = event;
             let wacListElements: Node[];
 
             if (htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE) {
@@ -73,6 +74,8 @@ export default class Paste implements EditorPlugin {
                 if (isWordOnlineWithList(fragment)) {
                     convertPastedContentFromWordOnline(fragment);
                 }
+            } else if (fragment.querySelector(GOOGLE_SHEET_NODE_NAME)) {
+                sanitizingOption.additionalAllowedTags.push(GOOGLE_SHEET_NODE_NAME);
             }
         }
     }
