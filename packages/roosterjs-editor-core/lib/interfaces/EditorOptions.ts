@@ -72,4 +72,12 @@ export default interface EditorOptions {
      * Whether enable experiment features
      */
     enableExperimentFeatures?: boolean;
+
+    /**
+     * By default, we will stop propagation of a printable keyboard event
+     * (a keyboard event which is caused by printable char input).
+     * Set this option to true to override this behavior in case you still need the event
+     * to be handled by ancestor nodes of editor.
+     */
+    allowKeyboardEventPropagation?: boolean;
 }

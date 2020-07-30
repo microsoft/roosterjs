@@ -28,15 +28,17 @@ export default interface EditorCore extends PluginState<PluginKey> {
     readonly contentDiv: HTMLDivElement;
 
     /**
-     * The scroll container of editor, it can be the same with contentDiv,
-     * or some level of its scrollable parent.
-     */
-    readonly scrollContainer: HTMLElement;
-
-    /**
      * An array of editor plugins.
      */
     readonly plugins: EditorPlugin[];
+
+    /**
+     * By default, we will stop propagation of a printable keyboard event
+     * (a keyboard event which is caused by printable char input).
+     * Set this option to true to override this behavior in case you still need the event
+     * to be handled by ancestor nodes of editor.
+     */
+    readonly allowKeyboardEventPropagation: boolean;
 
     /**
      * Default format of this editor

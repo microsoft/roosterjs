@@ -16,7 +16,6 @@ import {
  * 2. Selection management
  * 3. Cut and Drop management
  * 4. Pending format state management
- * 5. Scroll container and scroll event management
  */
 export default class DOMEventPlugin
     implements
@@ -61,13 +60,9 @@ export default class DOMEventPlugin
             focus: this.onFocus,
             [Browser.isIEOrEdge ? 'beforedeactivate' : 'blur']: this.onBlur,
         });
-
-        this.editor.getScrollContainer().addEventListener('scroll', this.onScroll);
     }
 
     dispose() {
-        this.editor.getScrollContainer().removeEventListener('scroll', this.onScroll);
-
         this.disposer();
         this.disposer = null;
         this.editor = null;
@@ -116,13 +111,6 @@ export default class DOMEventPlugin
 
     private onBlur = () => {
         this.editor.saveSelectionRange();
-    };
-
-    private onScroll = (e: UIEvent) => {
-        this.editor.triggerPluginEvent(PluginEventType.Scroll, {
-            rawEvent: e,
-            scrollContainer: this.editor.getScrollContainer(),
-        });
     };
 
     private clear() {

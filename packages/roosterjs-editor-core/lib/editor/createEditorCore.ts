@@ -10,6 +10,7 @@ import EditorPlugin from '../interfaces/EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
 import EntityPlugin from '../corePlugins/EntityPlugin';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
+import ScrollEventPlugin from '../corePlugins/ScrollEventPlugin';
 import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoPlugin from '../corePlugins/UndoPlugin';
@@ -61,6 +62,9 @@ export default function createEditorCore(
         edit: {
             value: addContentEditFeatures({}, options.editFeatures),
         },
+        scrollEvent: {
+            value: options.scrollContainer || contentDiv,
+        },
         undo: {
             value: {
                 snapshotsService: options.undoSnapshotService || createUndoSnapshots(),
@@ -83,7 +87,6 @@ export default function createEditorCore(
     core = {
         ...pluginState,
         contentDiv,
-        scrollContainer: options.scrollContainer || contentDiv,
         document: contentDiv.ownerDocument,
         defaultFormat: calculateDefaultFormat(
             contentDiv,
@@ -97,6 +100,7 @@ export default function createEditorCore(
         api,
         inDarkMode: options.inDarkMode,
         darkModeOptions: options.darkModeOptions,
+        allowKeyboardEventPropagation: options.allowKeyboardEventPropagation,
     };
 
     return core;
@@ -112,6 +116,7 @@ function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): Edi
         corePlugins.typeAfterLink,
         corePlugins.undo,
         corePlugins.domEvent,
+        corePlugins.scrollEvent,
         corePlugins.darkMode,
         corePlugins.paste,
         corePlugins.entity,
@@ -150,6 +155,7 @@ function createCorePlugins(
         typeAfterLink: map.typeAfterLink || new TypeAfterLinkPlugin(),
         undo: map.undo || new UndoPlugin(pluginState.undo),
         domEvent: map.domEvent || new DOMEventPlugin(pluginState.domEvent),
+        scrollEvent: map.scrollEvent || new ScrollEventPlugin(pluginState.scrollEvent),
         darkMode: map.darkMode || new DarkModePlugin(),
         paste: map.paste || new CorePastePlugin(),
         entity: map.entity || new EntityPlugin(),

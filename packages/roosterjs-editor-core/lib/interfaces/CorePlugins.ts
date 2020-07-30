@@ -6,6 +6,7 @@ import EditPlugin from '../corePlugins/EditPlugin';
 import EntityPlugin from '../corePlugins/EntityPlugin';
 import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
 import PluginWithState from './PluginWithState';
+import ScrollEventPlugin from '../corePlugins/ScrollEventPlugin';
 import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoPlugin from '../corePlugins/UndoPlugin';
@@ -45,6 +46,11 @@ export default interface CorePlugins {
      * DomEvent plugin helps handle additional DOM events such as IME composition, cut, drop.
      */
     readonly domEvent: DOMEventPlugin;
+
+    /**
+     * ScrollEventPlugin handles customized onScroll event of scroll container of editor
+     */
+    readonly scrollEvent: ScrollEventPlugin;
 
     /**
      * TypeAfterLinkPlugin plugin helps workaround a Firefox bug to allow type outside a hyperlink

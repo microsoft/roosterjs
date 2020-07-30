@@ -21,8 +21,9 @@ export const attachDomEvent: AttachDomEvent = (
         // event.key is longer than 1 for num pad input. But here we just want to improve performance as much as possible.
         // So if we missed some case here it is still acceptable.
         if (
-            (isKeyboardEvent(event) && isCharacterValue(event)) ||
-            pluginEventType == PluginEventType.Input
+            !core.allowKeyboardEventPropagation &&
+            ((isKeyboardEvent(event) && isCharacterValue(event)) ||
+                pluginEventType == PluginEventType.Input)
         ) {
             event.stopPropagation();
         }
