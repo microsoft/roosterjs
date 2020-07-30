@@ -16,10 +16,10 @@ export const setContent: SetContent = (
     }
 
     // Convert content even if it hasn't changed.
-    if (core.inDarkMode) {
+    if (core.darkMode.value.isDarkMode) {
         const convertFunction = convertContentToDarkMode(
             core.contentDiv,
-            core.darkModeOptions?.onExternalContentTransform,
+            core.darkMode.value.onExternalContentTransform,
             true /* skipRootElement */
         );
         if (convertFunction) {

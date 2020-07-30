@@ -9,8 +9,6 @@ import EditorOptions from '../interfaces/EditorOptions';
 import EditorPlugin from '../interfaces/EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
 import EntityPlugin from '../corePlugins/EntityPlugin';
-import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
-import ScrollEventPlugin from '../corePlugins/ScrollEventPlugin';
 import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoPlugin from '../corePlugins/UndoPlugin';
@@ -52,18 +50,22 @@ export default function createEditorCore(
         autoComplete: {
             value: null,
         },
+        darkMode: {
+            value: {
+                isDarkMode: options.inDarkMode,
+                onExternalContentTransform: options.onExternalContentTransform,
+            },
+        },
         domEvent: {
             value: {
                 isInIME: false,
                 pendableFormatPosition: null,
                 pendableFormatState: null,
+                scrollContainer: options.scrollContainer || contentDiv,
             },
         },
         edit: {
             value: addContentEditFeatures({}, options.editFeatures),
-        },
-        scrollEvent: {
-            value: options.scrollContainer || contentDiv,
         },
         undo: {
             value: {
@@ -98,8 +100,6 @@ export default function createEditorCore(
         cachedSelectionRange: null,
         plugins: allPlugins,
         api,
-        inDarkMode: options.inDarkMode,
-        darkModeOptions: options.darkModeOptions,
         allowKeyboardEventPropagation: options.allowKeyboardEventPropagation,
     };
 
@@ -111,12 +111,10 @@ function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): Edi
         corePlugins.typeInContainer,
         corePlugins.edit,
         corePlugins.autoComplete,
-        corePlugins.mouseUp,
         ...(plugins || []),
         corePlugins.typeAfterLink,
         corePlugins.undo,
         corePlugins.domEvent,
-        corePlugins.scrollEvent,
         corePlugins.darkMode,
         corePlugins.paste,
         corePlugins.entity,
@@ -151,12 +149,10 @@ function createCorePlugins(
         typeInContainer: map.typeInContainer || new TypeInContainerPlugin(),
         edit: map.edit || new EditPlugin(pluginState.edit),
         autoComplete: map.autoComplete || new AutoCompletePlugin(pluginState.autoComplete),
-        mouseUp: map.mouseUp || new MouseUpPlugin(),
         typeAfterLink: map.typeAfterLink || new TypeAfterLinkPlugin(),
         undo: map.undo || new UndoPlugin(pluginState.undo),
         domEvent: map.domEvent || new DOMEventPlugin(pluginState.domEvent),
-        scrollEvent: map.scrollEvent || new ScrollEventPlugin(pluginState.scrollEvent),
-        darkMode: map.darkMode || new DarkModePlugin(),
+        darkMode: map.darkMode || new DarkModePlugin(pluginState.darkMode),
         paste: map.paste || new CorePastePlugin(),
         entity: map.entity || new EntityPlugin(),
     };

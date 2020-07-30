@@ -5,7 +5,6 @@ import {
     ChangeSource,
     ClipboardData,
     DefaultFormat,
-    DarkModeOptions,
     InsertOption,
     NodePosition,
     PluginEvent,
@@ -64,16 +63,6 @@ export default interface EditorCore extends PluginState<PluginKey> {
      * Cached selection range of this editor
      */
     cachedSelectionRange: Range;
-
-    /**
-     * If the editor is in dark mode.
-     */
-    inDarkMode: boolean;
-
-    /***
-     * The dark mode options, if set.
-     */
-    darkModeOptions?: DarkModeOptions;
 }
 
 /**

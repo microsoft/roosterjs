@@ -10,30 +10,30 @@ import {
     Wrapper,
 } from 'roosterjs-editor-types';
 
+export interface DOMEventPluginState {
+    isInIME: boolean;
+    pendableFormatState: PendableFormatState;
+    pendableFormatPosition: NodePosition;
+    scrollContainer: HTMLElement;
+}
+
 /**
  * DOMEventPlugin handles customized DOM events, including:
- * 1. IME state management
- * 2. Selection management
- * 3. Cut and Drop management
- * 4. Pending format state management
+ * 1. Keyboard event
+ * 2. Mouse event
+ * 3. IME state
+ * 4. Cut and Drop event
+ * 5. Focus and blur event
+ * 6. Input event
+ * 7. Scroll event
+ * 8. Pending format state
  */
-export default class DOMEventPlugin
-    implements
-        PluginWithState<{
-            isInIME: boolean;
-            pendableFormatState: PendableFormatState;
-            pendableFormatPosition: NodePosition;
-        }> {
+export default class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private editor: Editor;
     private disposer: () => void;
+    private mouseUpEventListerAdded: boolean;
 
-    constructor(
-        public readonly state: Wrapper<{
-            isInIME: boolean;
-            pendableFormatState: PendableFormatState;
-            pendableFormatPosition: NodePosition;
-        }>
-    ) {}
+    constructor(public readonly state: Wrapper<DOMEventPluginState>) {}
 
     getName() {
         return 'DOMEvent';
@@ -43,7 +43,15 @@ export default class DOMEventPlugin
         this.editor = editor;
 
         this.disposer = editor.addDomEventHandler({
-            // 1. IME state management
+            // 1. Keyboard event
+            keypress: PluginEventType.KeyPress,
+            keydown: PluginEventType.KeyDown,
+            keyup: PluginEventType.KeyUp,
+
+            // 2. Mouse event
+            mousedown: PluginEventType.MouseDown,
+
+            // 3. IME state management
             compositionstart: () => (this.state.value.isInIME = true),
             compositionend: (rawEvent: CompositionEvent) => {
                 this.state.value.isInIME = false;
@@ -52,17 +60,25 @@ export default class DOMEventPlugin
                 });
             },
 
-            // 2. Cut and drop management
+            // 4. Cut and drop management
             drop: this.onNativeEvent,
             cut: this.onNativeEvent,
 
-            // 3. Selection mangement
+            // 5. Focus mangement
             focus: this.onFocus,
             [Browser.isIEOrEdge ? 'beforedeactivate' : 'blur']: this.onBlur,
+
+            // 6. Input event
+            [Browser.isIE ? 'textinput' : 'input']: PluginEventType.Input,
         });
+
+        // 7. Scroll event
+        this.state.value.scrollContainer.addEventListener('scroll', this.onScroll);
     }
 
     dispose() {
+        this.state.value.scrollContainer.removeEventListener('scroll', this.onScroll);
+        this.removeMouseUpEventListener();
         this.disposer();
         this.disposer = null;
         this.editor = null;
@@ -75,6 +91,16 @@ export default class DOMEventPlugin
      */
     onPluginEvent(event: PluginEvent) {
         switch (event.eventType) {
+            // 2. Mouse event
+            case PluginEventType.MouseDown:
+                if (!this.mouseUpEventListerAdded) {
+                    this.editor
+                        .getDocument()
+                        .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
+                    this.mouseUpEventListerAdded = true;
+                }
+                break;
+            // 8. Pending format state management
             case PluginEventType.PendingFormatStateChanged:
                 // Got PendingFormatStateChagned event, cache current position and pending format
                 this.state.value.pendableFormatPosition = this.getCurrentPosition();
@@ -122,4 +148,27 @@ export default class DOMEventPlugin
         let range = this.editor.getSelectionRange();
         return range && Position.getStart(range).normalize();
     }
+
+    private removeMouseUpEventListener() {
+        if (this.mouseUpEventListerAdded) {
+            this.mouseUpEventListerAdded = false;
+            this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
+        }
+    }
+
+    private onMouseUp = (rawEvent: MouseEvent) => {
+        if (this.editor) {
+            this.removeMouseUpEventListener();
+            this.editor.triggerPluginEvent(PluginEventType.MouseUp, {
+                rawEvent,
+            });
+        }
+    };
+
+    private onScroll = (e: UIEvent) => {
+        this.editor.triggerPluginEvent(PluginEventType.Scroll, {
+            rawEvent: e,
+            scrollContainer: this.state.value.scrollContainer,
+        });
+    };
 }

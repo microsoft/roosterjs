@@ -6,7 +6,6 @@ import canUndo from '../undoApi/canUndo';
 import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
-import mapPluginEvents from './mapPluginEvents';
 import restoreSnapshot from '../undoApi/restoreSnapshot';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
@@ -16,7 +15,6 @@ import {
     ChangeSource,
     ClipboardData,
     ContentPosition,
-    DarkModeOptions,
     DefaultFormat,
     InlineElement,
     InsertOption,
@@ -61,7 +59,6 @@ import {
  */
 export default class Editor {
     private core: EditorCore;
-    private eventDisposers: (() => void)[];
     private contenteditableChanged: boolean;
     private enableExperimentFeatures: boolean;
 
@@ -91,10 +88,7 @@ export default class Editor {
             false /*triggerContentChangedEvent*/
         );
 
-        // 5. Create event handler to bind DOM events
-        this.eventDisposers = mapPluginEvents(this.core);
-
-        // 6. Make the container editable and set its selection styles
+        // 5. Make the container editable and set its selection styles
         if (!contentDiv.hasAttribute('contenteditable')) {
             contentDiv.setAttribute('contenteditable', 'true');
             let styles = contentDiv.style;
@@ -102,10 +96,10 @@ export default class Editor {
             this.contenteditableChanged = true;
         }
 
-        // 7. Do proper change for browsers to disable some browser-specified behaviors.
+        // 6. Do proper change for browsers to disable some browser-specified behaviors.
         adjustBrowserBehavior(this.core.document);
 
-        // 8. Let plugins know that we are ready
+        // 7. Let plugins know that we are ready
         this.triggerPluginEvent(
             PluginEventType.EditorReady,
             {
@@ -123,8 +117,6 @@ export default class Editor {
         this.triggerPluginEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
 
         this.core.plugins.forEach(plugin => plugin.dispose());
-        this.eventDisposers.forEach(disposer => disposer());
-        this.eventDisposers = null;
 
         for (let key of Object.keys(this.core.customData)) {
             let data = this.core.customData[key];
@@ -168,14 +160,8 @@ export default class Editor {
     public insertNode(node: Node, option?: InsertOption): boolean {
         // DocumentFragment type nodes become empty after they're inserted.
         // Therefore, we get the list of nodes to transform prior to their insertion.
-        const darkModeOptions = this.getDarkModeOptions();
         const darkModeTransform = this.isDarkMode()
-            ? convertContentToDarkMode(
-                  node,
-                  darkModeOptions && darkModeOptions.onExternalContentTransform
-                      ? darkModeOptions.onExternalContentTransform
-                      : undefined
-              )
+            ? convertContentToDarkMode(node, this.core.darkMode.value.onExternalContentTransform)
             : null;
 
         const result = node ? this.core.api.insertNode(this.core, node, option) : false;
@@ -658,7 +644,10 @@ export default class Editor {
      * @param handler Handler callback
      * @returns A dispose function. Call the function to dispose this event handler
      */
-    public addDomEventHandler(eventName: string, handler: (event: UIEvent) => void): () => void;
+    public addDomEventHandler(
+        eventName: string,
+        handler: PluginEventType | ((event: UIEvent) => void)
+    ): () => void;
 
     /**
      * Add a bunch of custom DOM event handler to handle events not handled by roosterjs.
@@ -667,39 +656,39 @@ export default class Editor {
      * @returns A dispose function. Call the function to dispose all event handlers added by this function
      */
     public addDomEventHandler(handlerMap: {
-        [eventName: string]: (event: UIEvent) => void;
+        [eventName: string]: PluginEventType | ((event: UIEvent) => void);
     }): () => void;
 
     public addDomEventHandler(
         nameOrMap:
             | string
             | {
-                  [eventName: string]: (event: UIEvent) => void;
+                  [eventName: string]: PluginEventType | ((event: UIEvent) => void);
               },
-        handler?: (event: UIEvent) => void
+        handler?: PluginEventType | ((event: UIEvent) => void)
     ): () => void {
-        if (nameOrMap instanceof Object) {
-            let handlers = Object.keys(nameOrMap)
-                .map(
-                    eventName =>
-                        nameOrMap[eventName] &&
-                        this.core.api.attachDomEvent(
-                            this.core,
-                            eventName,
-                            null /*pluginEventType*/,
-                            nameOrMap[eventName]
-                        )
-                )
-                .filter(x => x);
-            return () => handlers.forEach(handler => handler());
-        } else {
-            return this.core.api.attachDomEvent(
-                this.core,
-                nameOrMap,
-                null /*pluginEventType*/,
-                handler
-            );
-        }
+        const eventsToMap =
+            nameOrMap instanceof Object
+                ? nameOrMap
+                : {
+                      nameOrMap: handler,
+                  };
+
+        let handlers = Object.keys(eventsToMap)
+            .map(eventName => {
+                const value = eventsToMap[eventName];
+                return (
+                    value &&
+                    this.core.api.attachDomEvent(
+                        this.core,
+                        eventName,
+                        typeof value === 'number' ? value : null,
+                        typeof value === 'number' ? null : value
+                    )
+                );
+            })
+            .filter(x => x);
+        return () => handlers.forEach(handler => handler());
     }
 
     /**
@@ -806,13 +795,6 @@ export default class Editor {
      */
     public getDocument(): Document {
         return this.core.document;
-    }
-
-    /**
-     * Get the scroll container of the editor
-     */
-    public getScrollContainer(): HTMLElement {
-        return this.core.scrollEvent.value;
     }
 
     /**
@@ -957,11 +939,11 @@ export default class Editor {
             true /* getSelectionMarker */
         );
 
-        this.core.inDarkMode = nextDarkMode;
+        this.core.darkMode.value.isDarkMode = nextDarkMode;
         this.core.defaultFormat = calculateDefaultFormat(
             this.core.contentDiv,
             this.core.defaultFormat,
-            this.core.inDarkMode
+            nextDarkMode
         );
 
         this.setContent(currentContent);
@@ -975,15 +957,7 @@ export default class Editor {
      * @returns True if the editor is in dark mode, otherwise false
      */
     public isDarkMode(): boolean {
-        return this.core.inDarkMode;
-    }
-
-    /**
-     * Returns the dark mode options set on the editor
-     * @returns A DarkModeOptions object
-     */
-    public getDarkModeOptions(): DarkModeOptions {
-        return this.core.darkModeOptions;
+        return this.core.darkMode.value.isDarkMode;
     }
 
     /**

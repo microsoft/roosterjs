@@ -3,7 +3,7 @@ import UndoSnapshotsService from './UndoSnapshotsService';
 import { ContentEditFeatureArray } from './ContentEditFeature';
 import { CoreApiMap } from './EditorCore';
 import { CorePlugins } from '..';
-import { DarkModeOptions, DefaultFormat } from 'roosterjs-editor-types';
+import { DefaultFormat } from 'roosterjs-editor-types';
 
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class
@@ -58,9 +58,13 @@ export default interface EditorOptions {
     inDarkMode?: boolean;
 
     /**
-     * Dark mode options for default format and paste handler
+     * RoosterJS provides an experemental "external content handler" that transforms text
+     * This is used when content is pasted or inserted via a method we can hook into.
+     * This transform is currently "lossy" and will eliminate color information.
+     * If you want change this behavior, you may define a different function here.
+     * It takes in the impacted HTMLElement
      */
-    darkModeOptions?: DarkModeOptions;
+    onExternalContentTransform?: (htmlIn: HTMLElement) => void;
 
     /**
      * The scroll container to get scroll event from.

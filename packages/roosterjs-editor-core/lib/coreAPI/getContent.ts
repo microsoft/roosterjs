@@ -9,7 +9,8 @@ export const getContent: GetContent = (
     includeSelectionMarker: boolean
 ): string => {
     let content = '';
-    if (triggerExtractContentEvent || core.inDarkMode) {
+    const isDarkMode = core.darkMode.value.isDarkMode;
+    if (triggerExtractContentEvent || isDarkMode) {
         const clonedRoot = core.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
         const originalRange = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
         const path =
@@ -18,7 +19,7 @@ export const getContent: GetContent = (
             getSelectionPath(core.contentDiv, originalRange);
         const range = path && createRange(clonedRoot, path.start, path.end);
 
-        if (core.inDarkMode) {
+        if (isDarkMode) {
             normalizeContentColor(clonedRoot);
         }
 
