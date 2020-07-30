@@ -798,6 +798,13 @@ export default class Editor {
     }
 
     /**
+     * Get the scroll container of the editor
+     */
+    public getScrollContainer(): HTMLElement {
+        return this.core.domEvent.value.scrollContainer;
+    }
+
+    /**
      * Get custom data related to this editor
      * @param key Key of the custom data
      * @param getter Getter function. If custom data for the given key doesn't exist,
