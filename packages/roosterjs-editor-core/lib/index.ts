@@ -44,7 +44,7 @@ export { default as Editor } from './editor/Editor';
 export { default as AutoCompletePlugin } from './corePlugins/AutoCompletePlugin';
 export { default as EditPlugin } from './corePlugins/EditPlugin';
 export { default as EntityPlugin } from './corePlugins/EntityPlugin';
-export { default as DOMEventPlugin } from './corePlugins/DOMEventPlugin';
+export { default as DOMEventPlugin, DOMEventPluginState } from './corePlugins/DOMEventPlugin';
 export { default as TypeInContainerPlugin } from './corePlugins/TypeInContainerPlugin';
 export { default as TypeAfterLinkPlugin } from './corePlugins/TypeAfterLinkPlugin';
 export { default as DarkModePlugin, DarkModePluginState } from './corePlugins/DarkModePlugin';

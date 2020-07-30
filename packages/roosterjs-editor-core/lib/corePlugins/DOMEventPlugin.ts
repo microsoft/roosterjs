@@ -91,16 +91,6 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
      */
     onPluginEvent(event: PluginEvent) {
         switch (event.eventType) {
-            // 2. Mouse event
-            case PluginEventType.MouseDown:
-                if (!this.mouseUpEventListerAdded) {
-                    this.editor
-                        .getDocument()
-                        .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
-                    this.mouseUpEventListerAdded = true;
-                }
-                break;
-            // 8. Pending format state management
             case PluginEventType.PendingFormatStateChanged:
                 // Got PendingFormatStateChagned event, cache current position and pending format
                 this.state.value.pendableFormatPosition = this.getCurrentPosition();
@@ -109,6 +99,15 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             case PluginEventType.KeyDown:
             case PluginEventType.MouseDown:
             case PluginEventType.ContentChanged:
+                // 2. Mouse event
+                if (event.eventType == PluginEventType.MouseDown && !this.mouseUpEventListerAdded) {
+                    this.editor
+                        .getDocument()
+                        .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
+                    this.mouseUpEventListerAdded = true;
+                }
+
+                // 8. Pending format state management
                 // If content or position is changed (by keyboard, mouse, or code),
                 // check if current position is still the same with the cached one (if exist),
                 // and clear cached format if position is changed since it is out-of-date now
