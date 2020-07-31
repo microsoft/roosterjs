@@ -10,5 +10,5 @@ export { default as StructuredNodeFeatureSettings } from './features/structuredN
 export { default as AutoLinkFeatureSettings } from './features/autoLinkFeatures';
 export { default as ShortcutFeatureSettings } from './features/shortcutFeatures';
 export { default as CursorFeatureSettings } from './features/cursorFeatures';
-export { default as MarkdownFeatureSettings } from './features/MarkdownFeatures';
+export { default as MarkdownFeatureSettings } from './features/markdownFeatures';
 export { default as EntityFeatureSettings } from './features/entityFeatures';
