@@ -1,16 +1,23 @@
 import EditorCore, { GetContent } from '../interfaces/EditorCore';
 import normalizeContentColor from '../darkMode/normalizeContentColor';
-import { createRange, getHtmlWithSelectionPath, getSelectionPath } from 'roosterjs-editor-dom';
-import { PluginEventType } from 'roosterjs-editor-types';
+import { GetContentMode, PluginEventType } from 'roosterjs-editor-types';
+import {
+    createRange,
+    getHtmlWithSelectionPath,
+    getSelectionPath,
+    getTextContent,
+} from 'roosterjs-editor-dom';
 
-export const getContent: GetContent = (
-    core: EditorCore,
-    triggerExtractContentEvent: boolean,
-    includeSelectionMarker: boolean
-): string => {
+export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): string => {
     let content = '';
     const isDarkMode = core.darkMode.value.isDarkMode;
-    if (triggerExtractContentEvent || isDarkMode) {
+    const triggerExtractContentEvent = mode == GetContentMode.CleanHTML;
+    const includeSelectionMarker = mode == GetContentMode.RawHTMLWithSelection;
+    const getText = mode == GetContentMode.PlainText;
+
+    if (getText) {
+        content = getTextContent(core.contentDiv);
+    } else if (triggerExtractContentEvent || isDarkMode) {
         const clonedRoot = core.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
         const originalRange = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
         const path =

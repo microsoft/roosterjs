@@ -1,4 +1,5 @@
-import { ContentEditFeatureArray, ContentEditFeatureMap } from '../interfaces/ContentEditFeature';
+import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
+import { PluginEvent } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -6,8 +7,8 @@ import { ContentEditFeatureArray, ContentEditFeatureMap } from '../interfaces/Co
  * @param feature The feature to add
  */
 export default function addContentEditFeatures(
-    featureMap: ContentEditFeatureMap,
-    features: ContentEditFeatureArray
+    featureMap: Record<number, GenericContentEditFeature<PluginEvent>[]>,
+    features: GenericContentEditFeature<PluginEvent>[]
 ) {
     (features || []).forEach(feature => {
         feature?.keys.forEach(key => {

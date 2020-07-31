@@ -12,6 +12,7 @@ export { Direction } from './enum/Direction';
 export { EntityClasses } from './enum/EntityClasses';
 export { EntityOperation } from './enum/EntityOperation';
 export { FontSizeChange } from './enum/FontSizeChange';
+export { GetContentMode } from './enum/GetContentMode';
 export { Indentation } from './enum/Indentation';
 export { ListType } from './enum/ListType';
 export { PositionType } from './enum/PositionType';

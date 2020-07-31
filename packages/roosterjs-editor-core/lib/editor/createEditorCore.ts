@@ -19,6 +19,7 @@ import { createPasteFragment } from '../coreAPI/createPasteFragment';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
 import { getContent } from '../coreAPI/getContent';
+import { GetContentMode } from 'roosterjs-editor-types';
 import { getCustomData } from '../coreAPI/getCustomData';
 import { getSelectionRange } from '../coreAPI/getSelectionRange';
 import { getStyleBasedFormatState } from '../coreAPI/getStyleBasedFormatState';
@@ -34,6 +35,10 @@ import {
     clearProceedingSnapshots,
     createSnapshots,
 } from 'roosterjs-editor-dom';
+
+// Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
+// to keep size under limit. This is kept at 10MB
+const MAXSIZELIMIT = 1e7;
 
 /**
  * Create core object for editor
@@ -72,12 +77,7 @@ export default function createEditorCore(
                 snapshotsService: options.undoSnapshotService || createUndoSnapshots(),
                 isRestoring: false,
                 hasNewContent: false,
-                getContent: () =>
-                    api.getContent(
-                        core,
-                        false /*triggerExtractContentEvent*/,
-                        true /* includeSelectionMarker */
-                    ),
+                getContent: () => api.getContent(core, GetContentMode.RawHTMLWithSelection),
                 setContent: (content: string) =>
                     api.setContent(core, content, true /*triggerContentChangedEvent*/),
             },
@@ -159,7 +159,7 @@ function createCorePlugins(
 }
 
 function createUndoSnapshots(): UndoSnapshotsService {
-    const snapshots = createSnapshots();
+    const snapshots = createSnapshots(MAXSIZELIMIT);
 
     return {
         canMove: (delta: number): boolean => canMoveCurrentSnapshot(snapshots, delta),

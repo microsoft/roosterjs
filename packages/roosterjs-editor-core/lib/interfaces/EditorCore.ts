@@ -10,6 +10,7 @@ import {
     PluginEvent,
     PluginEventType,
     StyleBasedFormatState,
+    GetContentMode,
 } from 'roosterjs-editor-types';
 
 /**
@@ -120,18 +121,10 @@ export type Focus = (core: EditorCore) => void;
 /**
  * Get current editor content as HTML string
  * @param core The EditorCore object
- * @param triggerExtractContentEvent Whether trigger ExtractContentWithDom event to all plugins
- * before return. Use this parameter to remove any temporary content added by plugins.
- * @param includeSelectionMarker Set to true if need include selection marker inside the content.
- * When restore this content, editor will set the selection to the position marked by these markers.
- * This parameter will be ignored when triggerExtractContentEvent is set to true
+ * @param mode specify what kind of HTML content to retrieve
  * @returns HTML string representing current editor content
  */
-export type GetContent = (
-    core: EditorCore,
-    triggerExtractContentEvent: boolean,
-    includeSelectionMarker: boolean
-) => string;
+export type GetContent = (core: EditorCore, mode: GetContentMode) => string;
 
 /**
  * Get custom data related with this editor
@@ -249,11 +242,7 @@ export interface CoreApiMap {
     /**
      * Get current editor content as HTML string
      * @param core The EditorCore object
-     * @param triggerExtractContentEvent Whether trigger ExtractContentWithDom event to all plugins
-     * before return. Use this parameter to remove any temporary content added by plugins.
-     * @param includeSelectionMarker Set to true if need include selection marker inside the content.
-     * When restore this content, editor will set the selection to the position marked by these markers.
-     * This parameter will be ignored when triggerExtractContentEvent is set to true
+     * @param mode specify what kind of HTML content to retrieve
      * @returns HTML string representing current editor content
      */
     getContent: GetContent;

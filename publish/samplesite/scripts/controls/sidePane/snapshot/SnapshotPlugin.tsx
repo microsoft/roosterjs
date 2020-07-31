@@ -4,13 +4,13 @@ import SnapshotPane from './SnapshotPane';
 import UndoSnapshots from './UndoSnapshots';
 import { createSnapshots } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { GetContentMode, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 export default class SnapshotPlugin implements SidePanePlugin {
     private editorInstance: Editor;
     private component: SnapshotPane;
     private snapshotService: UndoSnapshots;
-    private static snapshots = createSnapshots();
+    private static snapshots = createSnapshots(1e7);
 
     constructor() {
         this.snapshotService = new UndoSnapshots(SnapshotPlugin.snapshots, this.updateSnapshots);
@@ -62,7 +62,7 @@ export default class SnapshotPlugin implements SidePanePlugin {
     }
 
     private onTakeSnapshot = () => {
-        return this.editorInstance.getContent(false, true);
+        return this.editorInstance.getContent(GetContentMode.RawHTMLWithSelection);
     };
 
     private onMove = (step: number) => {

@@ -2,8 +2,6 @@
 export {
     ContentEditFeature,
     GenericContentEditFeature,
-    ContentEditFeatureArray,
-    ContentEditFeatureMap,
     Keys,
 } from './interfaces/ContentEditFeature';
 export { default as CustomData, CustomDataMap } from './interfaces/CustomData';

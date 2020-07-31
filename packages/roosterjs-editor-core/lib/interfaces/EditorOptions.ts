@@ -1,9 +1,9 @@
 import EditorPlugin from './EditorPlugin';
 import UndoSnapshotsService from './UndoSnapshotsService';
-import { ContentEditFeatureArray } from './ContentEditFeature';
 import { CoreApiMap } from './EditorCore';
 import { CorePlugins } from '..';
-import { DefaultFormat } from 'roosterjs-editor-types';
+import { DefaultFormat, PluginEvent } from 'roosterjs-editor-types';
+import { GenericContentEditFeature } from './ContentEditFeature';
 
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class
@@ -50,7 +50,7 @@ export default interface EditorOptions {
     /**
      * Content edit features
      */
-    editFeatures?: ContentEditFeatureArray;
+    editFeatures?: GenericContentEditFeature<PluginEvent>[];
 
     /**
      * If the editor is currently in dark mode

@@ -16,6 +16,7 @@ import {
     ClipboardData,
     ContentPosition,
     DefaultFormat,
+    GetContentMode,
     InlineElement,
     InsertOption,
     NodePosition,
@@ -41,7 +42,6 @@ import {
     fromHtml,
     getBlockElementAtNode,
     getSelectionPath,
-    getTextContent,
     getInlineElementAtNode,
     getPositionRect,
     getTagOfNode,
@@ -329,30 +329,11 @@ export default class Editor {
 
     /**
      * Get current editor content as HTML string
-     * @param triggerExtractContentEvent Whether trigger ExtractContentWithDom event to all plugins
-     * before return. Use this parameter to remove any temporary content added by plugins.
-     * @param includeSelectionMarker Set to true if need include selection marker inside the content.
-     * When restore this content, editor will set the selection to the position marked by these markers.
-     * This parameter will be ignored when triggerExtractContentEvent is set to true
+     * @param mode specify what kind of HTML content to retrieve
      * @returns HTML string representing current editor content
      */
-    public getContent(
-        triggerExtractContentEvent: boolean = true,
-        includeSelectionMarker: boolean = false
-    ): string {
-        return this.core.api.getContent(
-            this.core,
-            triggerExtractContentEvent,
-            includeSelectionMarker
-        );
-    }
-
-    /**
-     * Get plain text content inside editor
-     * @returns The text content inside editor
-     */
-    public getTextContent(): string {
-        return getTextContent(this.core.contentDiv);
+    public getContent(mode: GetContentMode = GetContentMode.CleanHTML): string {
+        return this.core.api.getContent(this.core, mode);
     }
 
     /**
@@ -412,8 +393,7 @@ export default class Editor {
             this.setContent(clipboardData.snapshotBeforePaste);
         } else {
             clipboardData.snapshotBeforePaste = this.getContent(
-                false /*triggerExtractContentEvent*/,
-                true /*includeSelectionMarker*/
+                GetContentMode.RawHTMLWithSelection
             );
         }
 
@@ -655,16 +635,12 @@ export default class Editor {
      * @param handlerMap A event name => event handler map
      * @returns A dispose function. Call the function to dispose all event handlers added by this function
      */
-    public addDomEventHandler(handlerMap: {
-        [eventName: string]: PluginEventType | ((event: UIEvent) => void);
-    }): () => void;
+    public addDomEventHandler(
+        handlerMap: Record<string, PluginEventType | ((event: UIEvent) => void)>
+    ): () => void;
 
     public addDomEventHandler(
-        nameOrMap:
-            | string
-            | {
-                  [eventName: string]: PluginEventType | ((event: UIEvent) => void);
-              },
+        nameOrMap: string | Record<string, PluginEventType | ((event: UIEvent) => void)>,
         handler?: PluginEventType | ((event: UIEvent) => void)
     ): () => void {
         const eventsToMap =
@@ -941,10 +917,7 @@ export default class Editor {
             return;
         }
 
-        const currentContent = this.getContent(
-            undefined /* triggerContentChangedEvent */,
-            true /* getSelectionMarker */
-        );
+        const currentContent = this.getContent(GetContentMode.CleanHTML);
 
         this.core.darkMode.value.isDarkMode = nextDarkMode;
         this.core.defaultFormat = calculateDefaultFormat(

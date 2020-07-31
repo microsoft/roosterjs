@@ -4,6 +4,7 @@ import { TargetWindow } from 'roosterjs-editor-types';
 // Run node ./tools/generateTargetWindow.js to generate it.
 
 /**
+ * @internal Export for test only
  * Try get window from the given node or range
  * @param source Source node or range
  */

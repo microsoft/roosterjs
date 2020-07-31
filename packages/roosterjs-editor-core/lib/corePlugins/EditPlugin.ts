@@ -1,20 +1,19 @@
 import Editor from '../editor/Editor';
 import isCtrlOrMetaPressed from '../eventApi/isCtrlOrMetaPressed';
 import PluginWithState from '../interfaces/PluginWithState';
+import { GenericContentEditFeature, Keys } from '../interfaces/ContentEditFeature';
 import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
-import {
-    ContentEditFeatureArray,
-    Keys,
-    ContentEditFeatureMap,
-} from '../interfaces/ContentEditFeature';
 
 /**
  * Edit Component helps handle Content edit features
  */
-export default class EditPlugin implements PluginWithState<ContentEditFeatureMap> {
+export default class EditPlugin
+    implements PluginWithState<Record<number, GenericContentEditFeature<PluginEvent>[]>> {
     private editor: Editor;
 
-    constructor(public readonly state: Wrapper<ContentEditFeatureMap>) {}
+    constructor(
+        public readonly state: Wrapper<Record<number, GenericContentEditFeature<PluginEvent>[]>>
+    ) {}
 
     getName() {
         return 'Edit';
@@ -34,7 +33,7 @@ export default class EditPlugin implements PluginWithState<ContentEditFeatureMap
      */
     onPluginEvent(event: PluginEvent) {
         let hasFunctionKey = false;
-        let features: ContentEditFeatureArray;
+        let features: GenericContentEditFeature<PluginEvent>[];
         let ctrlOrMeta = false;
 
         if (event.eventType == PluginEventType.KeyDown) {
