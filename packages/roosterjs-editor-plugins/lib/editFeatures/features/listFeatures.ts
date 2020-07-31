@@ -188,54 +188,55 @@ function cacheGetListElement(event: PluginKeyboardEvent, editor: Editor) {
     return listElement ? [listElement, li] : null;
 }
 
+/**
+ * Settings for list features
+ */
 export default interface ListFeatureSettings {
+    /**
+     * When press space after an asterik or number in an empty line, toggle bullet/numbering
+     * @default true
+     */
+    autoBullet: boolean;
+
     /**
      * When press Tab in a list, indent current list item
      * @default true
      */
-    indentWhenTab?: boolean;
+    indentWhenTab: boolean;
 
     /**
      * When press Shift+Tab in a list, outdent current list item
      * @default true
      */
-    outdentWhenShiftTab?: boolean;
-
-    /**
-     * When press Backspace on first char in a list, make current item a new line of previous list item
-     * @default false
-     */
-    mergeInNewLineWhenBackspaceOnFirstChar?: boolean;
+    outdentWhenShiftTab: boolean;
 
     /**
      * When press BaskSpace on empty line which is the first item of a list, outdent current list item
      * @default true
      */
-    outdentWhenBackspaceOnEmptyFirstLine?: boolean;
+    outdentWhenBackspaceOnEmptyFirstLine: boolean;
 
     /**
      * When press Enter on empty line in a list, outdent current list item
      * @default true for IE, false for other browsers since they have already had the behavior
      */
-    outdentWhenEnterOnEmptyLine?: boolean;
+    outdentWhenEnterOnEmptyLine: boolean;
 
     /**
-     * When press space after an asterik or number in an empty line, toggle bullet/numbering
-     * @default true
+     * When press Backspace on first char in a list, make current item a new line of previous list item
+     * @default false
      */
-    autoBullet?: boolean;
+    mergeInNewLineWhenBackspaceOnFirstChar: boolean;
 }
 
 /**
  * @internal
  */
-export const ListFeatures: {
-    [key in keyof ListFeatureSettings]: ContentEditFeature;
-} = {
+export const ListFeatures: Record<keyof ListFeatureSettings, ContentEditFeature> = {
+    autoBullet: AutoBullet,
     indentWhenTab: IndentWhenTab,
     outdentWhenShiftTab: OutdentWhenShiftTab,
-    mergeInNewLineWhenBackspaceOnFirstChar: MergeInNewLine,
     outdentWhenBackspaceOnEmptyFirstLine: OutdentWhenBackOn1stEmptyLine,
     outdentWhenEnterOnEmptyLine: OutdentWhenEnterOnEmptyLine,
-    autoBullet: AutoBullet,
+    mergeInNewLineWhenBackspaceOnFirstChar: MergeInNewLine,
 };

@@ -10,10 +10,28 @@ import {
     Wrapper,
 } from 'roosterjs-editor-types';
 
+/**
+ * The state object for DOMEventPlugin
+ */
 export interface DOMEventPluginState {
+    /**
+     * Whether editor is in IME input sequence
+     */
     isInIME: boolean;
+
+    /**
+     * Current pending format state
+     */
     pendableFormatState: PendableFormatState;
+
+    /**
+     * The position of last pendable format state changing
+     */
     pendableFormatPosition: NodePosition;
+
+    /**
+     * Scroll container of editor
+     */
     scrollContainer: HTMLElement;
 }
 
@@ -33,12 +51,23 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     private disposer: () => void;
     private mouseUpEventListerAdded: boolean;
 
+    /**
+     * Construct a new instancoe of DOMEventPlugin
+     * @param state The wrapper of the state object
+     */
     constructor(public readonly state: Wrapper<DOMEventPluginState>) {}
 
+    /**
+     * Get a friendly name of  this plugin
+     */
     getName() {
         return 'DOMEvent';
     }
 
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     initialize(editor: Editor) {
         this.editor = editor;
 
@@ -76,6 +105,9 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         this.state.value.scrollContainer.addEventListener('scroll', this.onScroll);
     }
 
+    /**
+     * Dispose this plugin
+     */
     dispose() {
         this.state.value.scrollContainer.removeEventListener('scroll', this.onScroll);
         this.removeMouseUpEventListener();

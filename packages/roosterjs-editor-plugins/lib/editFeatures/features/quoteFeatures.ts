@@ -79,26 +79,27 @@ function splitQuote(event: PluginKeyboardEvent, editor: Editor) {
     event.rawEvent.preventDefault();
 }
 
+/**
+ * Settings for quote features
+ */
 export default interface QuoteFeatureSettings {
     /**
      * When press BAckspace on empty line which is the first line of a blockquote, unquote current line
      * @default true
      */
-    unquoteWhenBackspaceOnEmptyFirstLine?: boolean;
+    unquoteWhenBackspaceOnEmptyFirstLine: boolean;
 
     /**
      * When press Enter on empty line in a blockquote, unquote current line
      * @default true
      */
-    unquoteWhenEnterOnEmptyLine?: boolean;
+    unquoteWhenEnterOnEmptyLine: boolean;
 }
 
 /**
  * @internal
  */
-export const QuoteFeatures: {
-    [key in keyof QuoteFeatureSettings]: ContentEditFeature;
-} = {
+export const QuoteFeatures: Record<keyof QuoteFeatureSettings, ContentEditFeature> = {
     unquoteWhenBackspaceOnEmptyFirstLine: UnquoteWhenBackOnEmpty1stLine,
     unquoteWhenEnterOnEmptyLine: UnquoteWhenEnterOnEmptyLine,
 };

@@ -87,19 +87,20 @@ function cacheGetCommand(event: PluginKeyboardEvent) {
     });
 }
 
+/**
+ * Settings for shortcut features
+ */
 export default interface ShortcutFeatureSettings {
     /**
      * Respond to default common keyboard short, i.e. Ctrl+B, Ctrl+I, Ctrl+U, Ctrl+Z, Ctrl+Y
      * @default true
      */
-    defaultShortcut?: boolean;
+    defaultShortcut: boolean;
 }
 
 /**
  * @internal
  */
-export const ShortcutFeatures: {
-    [key in keyof ShortcutFeatureSettings]: ContentEditFeature;
-} = {
+export const ShortcutFeatures: Record<keyof ShortcutFeatureSettings, ContentEditFeature> = {
     defaultShortcut: DefaultShortcut,
 };

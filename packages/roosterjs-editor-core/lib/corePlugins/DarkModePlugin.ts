@@ -4,8 +4,18 @@ import PluginWithState from '../interfaces/PluginWithState';
 import { Browser } from 'roosterjs-editor-dom';
 import { Wrapper } from 'roosterjs-editor-types';
 
+/**
+ * The state object for DarkModePlugin
+ */
 export interface DarkModePluginState {
+    /**
+     * Whether editor is in dark mode
+     */
     isDarkMode: boolean;
+
+    /**
+     * External content transform function to help do color transform for existing content
+     */
     onExternalContentTransform: (htmlIn: HTMLElement) => void;
 }
 
@@ -16,6 +26,10 @@ export default class DarkModePlugin implements PluginWithState<DarkModePluginSta
     private editor: Editor;
     private eventDisposer: () => void;
 
+    /**
+     * Construct a new instancoe of DarkModePlugin
+     * @param state The wrapper of the state object
+     */
     constructor(public readonly state: Wrapper<DarkModePluginState>) {}
 
     /**

@@ -30,20 +30,21 @@ const NoCycleCursorMove: ContentEditFeature = {
     description: 'Avoid moving cycle moving cursor when Ctrl+Left/Right',
 };
 
-export default interface NoCycleCursorMoveFeatureSettings {
+/**
+ * Settings for cursor features
+ */
+export default interface CursorFeatureSettings {
     /**
      * Chrome may make the cursor move the then end of document if press Ctrl+Left at the beginning of document
      * Let's disable this behaivor
      * @default true
      */
-    noCycleCursorMove?: boolean;
+    noCycleCursorMove: boolean;
 }
 
 /**
  * @internal
  */
-export const NoCycleCursorMoveFeatures: {
-    [key in keyof NoCycleCursorMoveFeatureSettings]: ContentEditFeature;
-} = {
+export const CursorFeatures: Record<keyof CursorFeatureSettings, ContentEditFeature> = {
     noCycleCursorMove: NoCycleCursorMove,
 };

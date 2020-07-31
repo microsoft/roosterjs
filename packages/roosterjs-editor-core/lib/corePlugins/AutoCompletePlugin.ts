@@ -9,20 +9,38 @@ import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 export default class AutoCompletePlugin implements PluginWithState<string> {
     private editor: Editor;
 
+    /**
+     * Construct a new instancoe of AutoCompletePlugin
+     * @param state The wrapper of the state object
+     */
     constructor(public readonly state: Wrapper<string>) {}
 
+    /**
+     * Get a friendly name of  this plugin
+     */
     getName() {
         return 'AutoComplete';
     }
 
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     initialize(editor: Editor) {
         this.editor = editor;
     }
 
+    /**
+     * Dispose this plugin
+     */
     dispose() {
         this.editor = null;
     }
 
+    /**
+     * Check if the plugin should handle the given event exclusively.
+     * @param event The event to check
+     */
     willHandleEventExclusively(event: PluginEvent) {
         return (
             event.eventType == PluginEventType.KeyDown &&

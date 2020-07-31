@@ -41,10 +41,17 @@ export default class EntityPlugin implements EditorPlugin {
     private clickingPoint: { pageX: number; pageY: number };
     private knownEntityElements: HTMLElement[];
 
+    /**
+     * Get a friendly name of  this plugin
+     */
     getName() {
         return 'Entity';
     }
 
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     initialize(editor: Editor) {
         this.editor = editor;
         this.disposer = this.editor.addDomEventHandler({
@@ -55,6 +62,9 @@ export default class EntityPlugin implements EditorPlugin {
         this.knownEntityElements = [];
     }
 
+    /**
+     * Dispose this plugin
+     */
     dispose() {
         this.disposer();
         this.disposer = null;
@@ -62,6 +72,10 @@ export default class EntityPlugin implements EditorPlugin {
         this.knownEntityElements = null;
     }
 
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
     onPluginEvent(event: PluginEvent) {
         switch (event.eventType) {
             case PluginEventType.MouseDown:

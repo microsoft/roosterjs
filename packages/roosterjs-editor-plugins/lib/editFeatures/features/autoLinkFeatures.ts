@@ -133,26 +133,27 @@ function autoLink(event: PluginEvent, editor: Editor) {
     });
 }
 
+/**
+ * Settings for auto link features
+ */
 export default interface AutoLinkFeatureSettings {
     /**
      * When press Space or Enter after a hyperlink-like string, convert the string to a hyperlink
      * @default true
      */
-    autoLink?: boolean;
+    autoLink: boolean;
 
     /**
      * Unlink when backspace right after a hyperlink
      * @default false
      */
-    unlinkWhenBackspaceAfterLink?: boolean;
+    unlinkWhenBackspaceAfterLink: boolean;
 }
 
 /**
  * @internal
  */
-export const AutoLinkFeatures: {
-    [key in keyof AutoLinkFeatureSettings]: ContentEditFeature;
-} = {
+export const AutoLinkFeatures: Record<keyof AutoLinkFeatureSettings, ContentEditFeature> = {
     autoLink: AutoLink,
     unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink,
 };

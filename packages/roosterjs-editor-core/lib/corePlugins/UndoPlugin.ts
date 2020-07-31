@@ -14,11 +14,33 @@ const KEY_ENTER = 13;
 const KEY_PAGEUP = 33;
 const KEY_DOWN = 40;
 
+/**
+ * The state object for UndoPlugin
+ */
 export interface UndoPluginState {
+    /**
+     * Snapshot service for undo, it helps handle snapshot add, remove and retrive
+     */
     snapshotsService: UndoSnapshotsService;
+
+    /**
+     * Whether restoring of undo snapshot is in proguress.
+     */
     isRestoring: boolean;
+
+    /**
+     * Whether there is new content change after last undo snapshot is taken
+     */
     hasNewContent: boolean;
+
+    /**
+     * A function to get current content from editor
+     */
     getContent: () => string;
+
+    /**
+     * A function to set content to editor
+     */
     setContent: (content: string) => void;
 }
 
@@ -30,10 +52,8 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
     private lastKeyPress: number;
 
     /**
-     * Create an instance of Undo
-     * @param preserveSnapshots True to preserve the snapshots after dispose, this allows
-     * this object to be reused when editor is disposed and created again
-     * @param maxBufferSize The max buffer size for snapshots. Default value is 10MB
+     * Construct a new instancoe of UndoPlugin
+     * @param state The wrapper of the state object
      */
     constructor(public readonly state: Wrapper<UndoPluginState>) {}
 

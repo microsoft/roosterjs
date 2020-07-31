@@ -171,51 +171,41 @@ const MarkdownInlineCode: ContentEditFeature = generateBasicMarkdownFeature(
     'Markdown style Code blocks'
 );
 
+/**
+ * Settings for mark down features
+ */
 export default interface MarkdownFeatureSettings {
     /**
-     * Markdown bold feature. Bolds text with markdown shortcuts.
+     * When typing text surrounded by '*', the symbols will be removed and the text will be bolded.
+     * @default true
      */
-    markdownBold?: boolean;
+    markdownBold: boolean;
 
     /**
-     * Markdown italics feature. Italicises text with markdown shortcuts.
+     * When typing text surrounded by '_', the symbols will be removed and the text will be italicized.
+     * @default true
      */
-    markdownItalic?: boolean;
+    markdownItalic: boolean;
 
     /**
-     * Markdown strikethru feature. Strikethrus text with markdown shortcuts.
+     * When typing text surrounded by '~', the symbols will be removed and the text will be striked through.
+     * @default true
      */
-    markdownStrikethru?: boolean;
+    markdownStrikethru: boolean;
 
     /**
-     * Markdown inline code feature. Marks specific text as inline code with markdown shortcuts.
+     * When typing text surrounded by '`', the symbols will be removed and the text will be wrapped in a code tag.
+     * @default true
      */
-    markdownInlineCode?: boolean;
+    markdownInlineCode: boolean;
 }
 
 /**
  * @internal
  */
-export const MarkdownFeatures: {
-    [key in keyof MarkdownFeatureSettings]: ContentEditFeature;
-} = {
-    /**
-     * Markdown bold feature. Bolds text with markdown shortcuts.
-     */
+export const MarkdownFeatures: Record<keyof MarkdownFeatureSettings, ContentEditFeature> = {
     markdownBold: MarkdownBold,
-
-    /**
-     * Markdown italics feature. Italicises text with markdown shortcuts.
-     */
     markdownItalic: MarkdownItalic,
-
-    /**
-     * Markdown strikethru feature. Strikethrus text with markdown shortcuts.
-     */
     markdownStrikethru: MarkdownStrikethru,
-
-    /**
-     * Markdown inline code feature. Marks specific text as inline code with markdown shortcuts.
-     */
     markdownInlineCode: MarkdownInlineCode,
 };

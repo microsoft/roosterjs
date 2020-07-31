@@ -109,26 +109,27 @@ function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellEle
     });
 }
 
+/**
+ * Settings for table features
+ */
 export default interface TableFeatureSettings {
     /**
      * When press TAB or SHIFT+TAB key in table cell, jump to next/previous table cell
      * @default true
      */
-    tabInTable?: boolean;
+    tabInTable: boolean;
 
     /**
      * When press Up or Down in table cell, jump to the table cell above/below
      * @default true for Chrome and safari, false for other browsers since they arleady have correct behavior
      */
-    upDownInTable?: boolean;
+    upDownInTable: boolean;
 }
 
 /**
  * @internal
  */
-export const TableFeatures: {
-    [key in keyof TableFeatureSettings]: ContentEditFeature;
-} = {
+export const TableFeatures: Record<keyof TableFeatureSettings, ContentEditFeature> = {
     tabInTable: TabInTable,
     upDownInTable: UpDownInTable,
 };

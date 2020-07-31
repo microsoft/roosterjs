@@ -13,15 +13,25 @@ export default class CorePastePlugin implements EditorPlugin {
     private editor: Editor;
     private disposer: () => void;
 
+    /**
+     * Get a friendly name of  this plugin
+     */
     getName() {
         return 'CorePaste';
     }
 
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     initialize(editor: Editor) {
         this.editor = editor;
         this.disposer = this.editor.addDomEventHandler('paste', this.onPaste);
     }
 
+    /**
+     * Dispose this plugin
+     */
     dispose() {
         this.disposer();
         this.disposer = null;

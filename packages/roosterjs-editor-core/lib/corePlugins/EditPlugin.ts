@@ -11,18 +11,32 @@ export default class EditPlugin
     implements PluginWithState<Record<number, GenericContentEditFeature<PluginEvent>[]>> {
     private editor: Editor;
 
+    /**
+     * Construct a new instancoe of EditPlugin
+     * @param state The wrapper of the state object
+     */
     constructor(
         public readonly state: Wrapper<Record<number, GenericContentEditFeature<PluginEvent>[]>>
     ) {}
 
+    /**
+     * Get a friendly name of  this plugin
+     */
     getName() {
         return 'Edit';
     }
 
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     initialize(editor: Editor) {
         this.editor = editor;
     }
 
+    /**
+     * Dispose this plugin
+     */
     dispose() {
         this.editor = null;
     }
