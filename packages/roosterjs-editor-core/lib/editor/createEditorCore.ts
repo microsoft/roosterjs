@@ -14,7 +14,6 @@ import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoPlugin from '../corePlugins/UndoPlugin';
 import UndoSnapshotsService from '../interfaces/UndoSnapshotsService';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
-import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { createPasteFragment } from '../coreAPI/createPasteFragment';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
@@ -28,6 +27,7 @@ import { insertNode } from '../coreAPI/insertNode';
 import { selectRange } from '../coreAPI/selectRange';
 import { setContent } from '../coreAPI/setContent';
 import { triggerEvent } from '../coreAPI/triggerEvent';
+import { updateDefaultFormat } from '../coreAPI/updateDefaultFormat';
 import {
     addSnapshot,
     canMoveCurrentSnapshot,
@@ -67,6 +67,7 @@ export default function createEditorCore(
                 pendableFormatPosition: null,
                 pendableFormatState: null,
                 scrollContainer: options.scrollContainer || contentDiv,
+                selectionRange: null,
             },
         },
         edit: {
@@ -84,21 +85,15 @@ export default function createEditorCore(
         },
     };
     const corePlugins = createCorePlugins(pluginState, options.corePluginOverride);
-    const allPlugins = buildPluginList(corePlugins, options.plugins);
+    const plugins = buildPluginList(corePlugins, options.plugins);
 
     core = {
         ...pluginState,
         contentDiv,
-        document: contentDiv.ownerDocument,
-        defaultFormat: calculateDefaultFormat(
-            contentDiv,
-            options.defaultFormat,
-            options.inDarkMode
-        ),
+        defaultFormat: options.defaultFormat,
         currentUndoSnapshot: null,
         customData: {},
-        cachedSelectionRange: null,
-        plugins: allPlugins,
+        plugins,
         api,
         allowKeyboardEventPropagation: options.allowKeyboardEventPropagation,
     };
@@ -125,6 +120,7 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
     map = map || {};
     return {
         attachDomEvent: map.attachDomEvent || attachDomEvent,
+        updateDefaultFormat: map.updateDefaultFormat || updateDefaultFormat,
         editWithUndo: map.editWithUndo || editWithUndo,
         focus: map.focus || focus,
         getContent: map.getContent || getContent,

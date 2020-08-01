@@ -26,7 +26,7 @@ export const selectRange: SelectRange = (
 
     if (
         !contains(core.contentDiv, range) ||
-        !(selection = core.document.defaultView.getSelection())
+        !(selection = core.contentDiv.ownerDocument.defaultView.getSelection())
     ) {
         return false;
     }
@@ -57,7 +57,7 @@ export const selectRange: SelectRange = (
     }
 
     if (!hasFocus(core)) {
-        core.cachedSelectionRange = range;
+        core.domEvent.value.selectionRange = range;
     }
 
     if (range.collapsed) {
@@ -74,12 +74,13 @@ export const selectRange: SelectRange = (
  */
 function restorePendingFormatState(core: EditorCore) {
     const {
-        document,
+        contentDiv,
         domEvent: { value },
         api: { getSelectionRange },
     } = core;
 
     if (value.pendableFormatState) {
+        const document = contentDiv.ownerDocument;
         let formatState = getPendableFormatState(document);
         (<PendableFormatNames[]>Object.keys(PendableFormatCommandMap)).forEach(key => {
             if (value.pendableFormatState[key] != formatState[key]) {

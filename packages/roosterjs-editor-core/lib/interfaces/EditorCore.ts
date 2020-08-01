@@ -18,11 +18,6 @@ import {
  */
 export default interface EditorCore extends PluginState<PluginKey> {
     /**
-     * HTML Document object of this editor
-     */
-    readonly document: Document;
-
-    /**
      * The content DIV element of this editor
      */
     readonly contentDiv: HTMLDivElement;
@@ -59,11 +54,6 @@ export default interface EditorCore extends PluginState<PluginKey> {
      * The undo snapshot taken by addUndoSnapshot() before callback function is invoked.
      */
     currentUndoSnapshot: string;
-
-    /**
-     * Cached selection range of this editor
-     */
-    cachedSelectionRange: Range;
 }
 
 /**
@@ -79,6 +69,12 @@ export type AttachDomEvent = (
     pluginEventType?: PluginEventType,
     beforeDispatch?: (event: UIEvent) => void
 ) => () => void;
+
+/**
+ * Calculate default format of the given editoreditor
+ * @param core The editor core object
+ */
+export type UpdateDefaultFormat = (core: EditorCore) => void;
 
 /**
  * Create a DocumentFragment for paste from a ClipboardData
@@ -211,6 +207,12 @@ export interface CoreApiMap {
      * @param beforeDispatch Optional callback function to be invoked when the DOM event is triggered before trigger plugin event
      */
     attachDomEvent: AttachDomEvent;
+
+    /**
+     * Calculate default format of the given editoreditor
+     * @param core The editor core object
+     */
+    updateDefaultFormat: UpdateDefaultFormat;
 
     /**
      * Create a DocumentFragment for paste from a ClipboardData

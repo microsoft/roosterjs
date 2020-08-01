@@ -7,7 +7,6 @@ import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
 import restoreSnapshot from '../undoApi/restoreSnapshot';
-import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import {
@@ -77,6 +76,7 @@ export default class Editor {
 
         // 2. Store options values to local variables
         this.core = createEditorCore(contentDiv, options);
+        this.core.api.updateDefaultFormat(this.core);
         this.enableExperimentFeatures = options.enableExperimentFeatures;
 
         // 3. Initialize plugins
@@ -97,7 +97,7 @@ export default class Editor {
         }
 
         // 6. Do proper change for browsers to disable some browser-specified behaviors.
-        adjustBrowserBehavior(this.core.document);
+        adjustBrowserBehavior(this.getDocument());
 
         // 7. Let plugins know that we are ready
         this.triggerPluginEvent(
@@ -356,7 +356,8 @@ export default class Editor {
      */
     public insertContent(content: string, option?: InsertOption) {
         if (content) {
-            let allNodes = fromHtml(content, this.core.document);
+            const doc = this.getDocument();
+            let allNodes = fromHtml(content, doc);
 
             // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with
             // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
@@ -365,7 +366,7 @@ export default class Editor {
                 allNodes = [wrap(allNodes)];
             }
 
-            let fragment = this.core.document.createDocumentFragment();
+            let fragment = doc.createDocumentFragment();
             allNodes.forEach(node => fragment.appendChild(node));
 
             this.insertNode(fragment, option);
@@ -420,10 +421,12 @@ export default class Editor {
     /**
      * Get current selection range from Editor.
      * It does a live pull on the selection, if nothing retrieved, return whatever we have in cache.
+     * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now.
+     * Default value is true
      * @returns current selection range, or null if editor never got focus before
      */
-    public getSelectionRange(): Range {
-        return this.core.api.getSelectionRange(this.core, true /*tryGetFromCache*/);
+    public getSelectionRange(tryGetFromCache: boolean = true): Range {
+        return this.core.api.getSelectionRange(this.core, tryGetFromCache);
     }
 
     /**
@@ -530,25 +533,7 @@ export default class Editor {
      * @return current selection object
      */
     public getSelection(): Selection {
-        return this.core.document.defaultView.getSelection();
-    }
-
-    /**
-     * Save the current selection in editor so that when focus again, the selection can be restored
-     */
-    public saveSelectionRange() {
-        this.core.cachedSelectionRange = this.core.api.getSelectionRange(
-            this.core,
-            false /*tryGetFromCache*/
-        );
-    }
-
-    /**
-     * Restore the saved selection range and clear it
-     */
-    public restoreSavedRange() {
-        this.select(this.core.cachedSelectionRange);
-        this.core.cachedSelectionRange = null;
+        return this.getDocument().defaultView.getSelection();
     }
 
     /**
@@ -770,7 +755,7 @@ export default class Editor {
      * @returns The HTML document which contains this editor
      */
     public getDocument(): Document {
-        return this.core.document;
+        return this.core.contentDiv.ownerDocument;
     }
 
     /**
@@ -920,11 +905,7 @@ export default class Editor {
         const currentContent = this.getContent(GetContentMode.CleanHTML);
 
         this.core.darkMode.value.isDarkMode = nextDarkMode;
-        this.core.defaultFormat = calculateDefaultFormat(
-            this.core.contentDiv,
-            this.core.defaultFormat,
-            nextDarkMode
-        );
+        this.core.api.updateDefaultFormat(this.core);
 
         this.setContent(currentContent);
         this.triggerPluginEvent(PluginEventType.DarkModeChanged, {

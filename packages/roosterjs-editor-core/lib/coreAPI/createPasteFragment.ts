@@ -32,12 +32,14 @@ export const createPasteFragment: CreatePasteFragment = (
     const event = createBeforePasteEvent(core, clipboardData);
     const { fragment, sanitizingOption } = event;
     const { html, text, imageDataUri } = clipboardData;
+    const document = core.contentDiv.ownerDocument;
     let doc: HTMLDocument;
 
     // Step 2: Fill the BeforePasteEvent object, especially the fragment for paste
     if (!pasteAsText && !text && imageDataUri) {
         // Paste image
-        const img = core.document.createElement('img');
+
+        const img = document.createElement('img');
         img.style.maxWidth = '100%';
         img.src = imageDataUri;
         fragment.appendChild(img);
@@ -114,7 +116,7 @@ export const createPasteFragment: CreatePasteFragment = (
 };
 
 function getCurrentFormat(core: EditorCore, node: Node): DefaultFormat {
-    const pendableFormat = getPendableFormatState(core.document);
+    const pendableFormat = getPendableFormatState(core.contentDiv.ownerDocument);
     const styleBasedForamt = core.api.getStyleBasedFormatState(core, node);
     return {
         fontFamily: styleBasedForamt.fontName,
@@ -133,7 +135,7 @@ function createBeforePasteEvent(core: EditorCore, clipboardData: ClipboardData):
     return {
         eventType: PluginEventType.BeforePaste,
         clipboardData,
-        fragment: core.document.createDocumentFragment(),
+        fragment: core.contentDiv.ownerDocument.createDocumentFragment(),
         sanitizingOption: createDefaultHtmlSanitizerOptions(),
         htmlBefore: '',
         htmlAfter: '',

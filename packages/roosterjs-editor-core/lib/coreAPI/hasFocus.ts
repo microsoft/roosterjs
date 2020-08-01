@@ -7,7 +7,7 @@ import { contains } from 'roosterjs-editor-dom';
  * @returns True if the editor has focus, otherwise false
  */
 export const hasFocus: HasFocus = (core: EditorCore) => {
-    let activeElement = core.document.activeElement;
+    let activeElement = core.contentDiv.ownerDocument.activeElement;
     return (
         activeElement && contains(core.contentDiv, activeElement, true /*treatSameNodeAsContain*/)
     );

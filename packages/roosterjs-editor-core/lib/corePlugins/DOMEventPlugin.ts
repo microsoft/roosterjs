@@ -33,6 +33,11 @@ export interface DOMEventPluginState {
      * Scroll container of editor
      */
     scrollContainer: HTMLElement;
+
+    /**
+     * Cached selection range
+     */
+    selectionRange: Range;
 }
 
 /**
@@ -163,11 +168,12 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     };
 
     private onFocus = () => {
-        this.editor.restoreSavedRange();
+        this.editor.select(this.state.value.selectionRange);
+        this.state.value.selectionRange = null;
     };
 
     private onBlur = () => {
-        this.editor.saveSelectionRange();
+        this.state.value.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
     };
 
     private clear() {
