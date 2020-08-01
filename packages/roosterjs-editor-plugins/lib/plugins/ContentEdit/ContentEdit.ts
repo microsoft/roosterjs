@@ -6,6 +6,12 @@ import { InsertLineBeforeStructuredNodeFeature } from './features/insertLineBefo
 import { NoCycleCursorMove } from './features/noCycleCursorMove';
 import { PluginEvent } from 'roosterjs-editor-types';
 import { TabInTable, UpDownInTable } from './features/tableFeatures';
+import {
+    MarkdownBold,
+    MarkdownItalic,
+    MarkdownStrikethru,
+    MarkdownInlineCode,
+} from './features/markdownFeatures';
 
 import {
     AutoBullet,
@@ -86,6 +92,10 @@ export default class ContentEdit implements EditorPlugin {
             defaultShortcut: DefaultShortcut,
             noCycleCursorMove: NoCycleCursorMove,
             smartOrderedList: getSmartOrderedList(featureSet.smartOrderedListStyles),
+            markdownBold: MarkdownBold,
+            markdownItalic: MarkdownItalic,
+            markdownStrikethru: MarkdownStrikethru,
+            markdownInlineCode: MarkdownInlineCode,
         };
         let keys = Object.keys(allFeatures) as (keyof ContentEditFeatures)[];
         return keys.filter(key => featureSet[key]).map(key => allFeatures[key]);
