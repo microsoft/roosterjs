@@ -59,7 +59,7 @@ const UpDownInTable: ContentEditFeature = {
         let step = isUp ? -1 : 1;
         let targetTd: HTMLTableCellElement = null;
         let hasShiftKey = event.rawEvent.shiftKey;
-        let { anchorNode, anchorOffset } = editor.getSelection();
+        let { anchorNode, anchorOffset } = editor.getDocument().defaultView.getSelection();
 
         for (let row = vtable.row; row >= 0 && row < vtable.cells.length; row += step) {
             let cell = vtable.getCell(row, vtable.col);
@@ -86,9 +86,13 @@ const UpDownInTable: ContentEditFeature = {
                                   newPos.isAtEnd ? PositionType.After : PositionType.Before
                               )
                             : newPos;
-                    editor
-                        .getSelection()
-                        .setBaseAndExtent(anchorNode, anchorOffset, newPos.node, newPos.offset);
+                    const selection = editor.getDocument().defaultView.getSelection();
+                    selection.setBaseAndExtent(
+                        anchorNode,
+                        anchorOffset,
+                        newPos.node,
+                        newPos.offset
+                    );
                 } else {
                     editor.select(newPos);
                 }

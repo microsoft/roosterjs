@@ -529,18 +529,10 @@ export default class Editor {
     }
 
     /**
-     * Get current selection
-     * @return current selection object
-     */
-    public getSelection(): Selection {
-        return this.getDocument().defaultView.getSelection();
-    }
-
-    /**
      * Get current focused position. Return null if editor doesn't have focus at this time.
      */
     public getFocusedPosition(): NodePosition {
-        let sel = this.getSelection();
+        let sel = this.getDocument().defaultView.getSelection();
         if (this.contains(sel && sel.focusNode)) {
             return new Position(sel.focusNode, sel.focusOffset);
         }
