@@ -247,6 +247,31 @@ To build the sample site code yourself, follow these instructions:
 
 3. Navigate to the sample editor at http://localhost:3000/
 
+## Debugging
+
+There are two options for debugging:
+1. Debugging from VSCode
+   * Ensure the sample editor is running
+   * Set the breakpoints within VSCode
+   * Select "Debug app in Chrome" from the VSCode debugging configuration dropdown
+   <img src="/assets/readme-images/debug-in-VSCode.png" width="411" height="278"><br>
+   * Run the scenario that needs to be debugged
+
+2. Debugging directly from the development tools within the web browser
+   * The directions for how to do this are specific to each web browser. By opening the developer tools for the web browser that Rooster is running on, you will be able to set breakpoints in the code and debug accordingly.
+
+## Running tests
+
+There are two ways that tests can be run:
+1. Run all tests or a single test from VSCode<br>
+   * (Skip if running all tests) Ensure the file that you want to test is selected (ie: toggleBold.ts or toggleBoldTest.ts)
+   * Select "Test all files" or "Test current file" from the VSCode debugging configuration dropdown
+   <img src="/assets/readme-images/test-in-VSCode.png" width="402" height="268">
+2. Run all tests from command line
+    ```
+    yarn test
+    ```
+
 ## More documentation
 
 We are still working on more documentation in [roosterjs wiki](https://github.com/Microsoft/roosterjs/wiki) and [API reference](https://microsoft.github.io/roosterjs/docs/index.html).
