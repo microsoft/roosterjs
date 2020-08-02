@@ -9,6 +9,7 @@ import EditorOptions from '../interfaces/EditorOptions';
 import EditorPlugin from '../interfaces/EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
 import EntityPlugin from '../corePlugins/EntityPlugin';
+import LifecyclePlugin from '../corePlugins/LifecyclePlugin';
 import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoPlugin from '../corePlugins/UndoPlugin';
@@ -18,8 +19,7 @@ import { createPasteFragment } from '../coreAPI/createPasteFragment';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
 import { getContent } from '../coreAPI/getContent';
-import { GetContentMode } from 'roosterjs-editor-types';
-import { getCustomData } from '../coreAPI/getCustomData';
+import { GetContentMode, PositionType } from 'roosterjs-editor-types';
 import { getSelectionRange } from '../coreAPI/getSelectionRange';
 import { getStyleBasedFormatState } from '../coreAPI/getStyleBasedFormatState';
 import { hasFocus } from '../coreAPI/hasFocus';
@@ -27,13 +27,14 @@ import { insertNode } from '../coreAPI/insertNode';
 import { selectRange } from '../coreAPI/selectRange';
 import { setContent } from '../coreAPI/setContent';
 import { triggerEvent } from '../coreAPI/triggerEvent';
-import { updateDefaultFormat } from '../coreAPI/updateDefaultFormat';
 import {
     addSnapshot,
     canMoveCurrentSnapshot,
     moveCurrentSnapsnot,
     clearProceedingSnapshots,
     createSnapshots,
+    Position,
+    getComputedStyles,
 } from 'roosterjs-editor-dom';
 
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
@@ -68,6 +69,7 @@ export default function createEditorCore(
                 pendableFormatState: null,
                 scrollContainer: options.scrollContainer || contentDiv,
                 selectionRange: null,
+                stopPrintableKeyboardEventPropagation: !options.allowKeyboardEventPropagation,
             },
         },
         edit: {
@@ -83,6 +85,16 @@ export default function createEditorCore(
                     api.setContent(core, content, true /*triggerContentChangedEvent*/),
             },
         },
+        lifecycle: {
+            value: {
+                initialContent: options.initialContent || contentDiv.innerHTML || '',
+                customData: {},
+                style: contentDiv.style,
+                calculatedDefaultFormat: getComputedStyles(contentDiv),
+                startPosition: new Position(contentDiv, PositionType.Begin),
+                defaultFormat: options.defaultFormat,
+            },
+        },
     };
     const corePlugins = createCorePlugins(pluginState, options.corePluginOverride);
     const plugins = buildPluginList(corePlugins, options.plugins);
@@ -90,12 +102,9 @@ export default function createEditorCore(
     core = {
         ...pluginState,
         contentDiv,
-        defaultFormat: options.defaultFormat,
         currentUndoSnapshot: null,
-        customData: {},
         plugins,
         api,
-        allowKeyboardEventPropagation: options.allowKeyboardEventPropagation,
     };
 
     return core;
@@ -113,6 +122,7 @@ function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): Edi
         corePlugins.darkMode,
         corePlugins.paste,
         corePlugins.entity,
+        corePlugins.lifecycle,
     ].filter(plugin => !!plugin);
 }
 
@@ -120,11 +130,9 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
     map = map || {};
     return {
         attachDomEvent: map.attachDomEvent || attachDomEvent,
-        updateDefaultFormat: map.updateDefaultFormat || updateDefaultFormat,
         editWithUndo: map.editWithUndo || editWithUndo,
         focus: map.focus || focus,
         getContent: map.getContent || getContent,
-        getCustomData: map.getCustomData || getCustomData,
         getSelectionRange: map.getSelectionRange || getSelectionRange,
         getStyleBasedFormatState: map.getStyleBasedFormatState || getStyleBasedFormatState,
         hasFocus: map.hasFocus || hasFocus,
@@ -151,6 +159,7 @@ function createCorePlugins(
         darkMode: map.darkMode || new DarkModePlugin(pluginState.darkMode),
         paste: map.paste || new CorePastePlugin(),
         entity: map.entity || new EntityPlugin(),
+        lifecycle: map.lifecycle || new LifecyclePlugin(pluginState.lifecycle),
     };
 }
 

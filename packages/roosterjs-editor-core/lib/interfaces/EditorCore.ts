@@ -1,10 +1,8 @@
 import EditorPlugin from './EditorPlugin';
-import { CustomDataMap } from './CustomData';
 import { PluginKey, PluginState } from './CorePlugins';
 import {
     ChangeSource,
     ClipboardData,
-    DefaultFormat,
     InsertOption,
     NodePosition,
     PluginEvent,
@@ -26,24 +24,6 @@ export default interface EditorCore extends PluginState<PluginKey> {
      * An array of editor plugins.
      */
     readonly plugins: EditorPlugin[];
-
-    /**
-     * By default, we will stop propagation of a printable keyboard event
-     * (a keyboard event which is caused by printable char input).
-     * Set this option to true to override this behavior in case you still need the event
-     * to be handled by ancestor nodes of editor.
-     */
-    readonly allowKeyboardEventPropagation: boolean;
-
-    /**
-     * Default format of this editor
-     */
-    defaultFormat: DefaultFormat;
-
-    /**
-     * Custom data of this editor
-     */
-    readonly customData: CustomDataMap;
 
     /**
      * Core API map of this editor
@@ -209,12 +189,6 @@ export interface CoreApiMap {
     attachDomEvent: AttachDomEvent;
 
     /**
-     * Calculate default format of the given editoreditor
-     * @param core The editor core object
-     */
-    updateDefaultFormat: UpdateDefaultFormat;
-
-    /**
      * Create a DocumentFragment for paste from a ClipboardData
      * @param core The EditorCore object.
      * @param clipboardData Clipboard data retrieved from clipboard
@@ -248,17 +222,6 @@ export interface CoreApiMap {
      * @returns HTML string representing current editor content
      */
     getContent: GetContent;
-
-    /**
-     * Get custom data related with this editor
-     * @param core The EditorCore object
-     * @param key Key of the custom data
-     * @param getter Getter function. If custom data for the given key doesn't exist,
-     * call this function to get one and store it.
-     * @param disposer An optional disposer function to dispose this custom data when
-     * dispose editor.
-     */
-    getCustomData: GetCustomData;
 
     /**
      * Get style based format state from current selection, including font name/size and colors

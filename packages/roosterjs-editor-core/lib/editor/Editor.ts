@@ -1,6 +1,5 @@
 import addContentEditFeatures from './addContentEditFeatures';
 import addUndoSnapshot from '../undoApi/addUndoSnapshot';
-import adjustBrowserBehavior from './adjustBrowserBehavior';
 import canRedo from '../undoApi/canRedo';
 import canUndo from '../undoApi/canUndo';
 import createEditorCore from './createEditorCore';
@@ -15,6 +14,7 @@ import {
     ClipboardData,
     ContentPosition,
     DefaultFormat,
+    DOMEventHandler,
     GetContentMode,
     InlineElement,
     InsertOption,
@@ -25,7 +25,6 @@ import {
     PluginEventType,
     PositionType,
     QueryScope,
-    Rect,
     Region,
     RegionType,
     SelectionPath,
@@ -42,7 +41,6 @@ import {
     getBlockElementAtNode,
     getSelectionPath,
     getInlineElementAtNode,
-    getPositionRect,
     getTagOfNode,
     isNodeEmpty,
     safeInstanceOf,
@@ -58,7 +56,6 @@ import {
  */
 export default class Editor {
     private core: EditorCore;
-    private contenteditableChanged: boolean;
     private enableExperimentFeatures: boolean;
 
     //#region Lifecycle
@@ -76,62 +73,17 @@ export default class Editor {
 
         // 2. Store options values to local variables
         this.core = createEditorCore(contentDiv, options);
-        this.core.api.updateDefaultFormat(this.core);
         this.enableExperimentFeatures = options.enableExperimentFeatures;
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
-
-        // 4. Ensure initial content and its format
-        this.setContent(
-            options.initialContent || contentDiv.innerHTML || '',
-            false /*triggerContentChangedEvent*/
-        );
-
-        // 5. Make the container editable and set its selection styles
-        if (!contentDiv.hasAttribute('contenteditable')) {
-            contentDiv.setAttribute('contenteditable', 'true');
-            let styles = contentDiv.style;
-            styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = 'text';
-            this.contenteditableChanged = true;
-        }
-
-        // 6. Do proper change for browsers to disable some browser-specified behaviors.
-        adjustBrowserBehavior(this.getDocument());
-
-        // 7. Let plugins know that we are ready
-        this.triggerPluginEvent(
-            PluginEventType.EditorReady,
-            {
-                startPosition:
-                    this.getFocusedPosition() || new Position(contentDiv, PositionType.Begin),
-            },
-            true /*broadcast*/
-        );
     }
 
     /**
      * Dispose this editor, dispose all plugins and custom data
      */
     public dispose(): void {
-        this.triggerPluginEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
-
-        this.core.plugins.forEach(plugin => plugin.dispose());
-
-        for (let key of Object.keys(this.core.customData)) {
-            let data = this.core.customData[key];
-            if (data && data.disposer) {
-                data.disposer(data.value);
-            }
-            delete this.core.customData[key];
-        }
-
-        if (this.contenteditableChanged) {
-            let styles = this.core.contentDiv.style;
-            styles.userSelect = styles.msUserSelect = styles.webkitUserSelect = '';
-            this.core.contentDiv.removeAttribute('contenteditable');
-        }
-
+        this.core.plugins.reverse().forEach(plugin => plugin.dispose());
         this.core = null;
     }
 
@@ -546,15 +498,6 @@ export default class Editor {
     }
 
     /**
-     * Get a rect representing the location of the cursor.
-     * @returns a Rect object representing cursor location
-     */
-    public getCursorRect(): Rect {
-        let position = this.getFocusedPosition();
-        return position && getPositionRect(position);
-    }
-
-    /**
      * Get an HTML element from current cursor position.
      * When expectedTags is not specified, return value is the current node (if it is HTML element)
      * or its parent node (if current node is a Text node).
@@ -601,10 +544,7 @@ export default class Editor {
      * @param handler Handler callback
      * @returns A dispose function. Call the function to dispose this event handler
      */
-    public addDomEventHandler(
-        eventName: string,
-        handler: PluginEventType | ((event: UIEvent) => void)
-    ): () => void;
+    public addDomEventHandler(eventName: string, handler: DOMEventHandler): () => void;
 
     /**
      * Add a bunch of custom DOM event handler to handle events not handled by roosterjs.
@@ -612,14 +552,13 @@ export default class Editor {
      * @param handlerMap A event name => event handler map
      * @returns A dispose function. Call the function to dispose all event handlers added by this function
      */
-    public addDomEventHandler(
-        handlerMap: Record<string, PluginEventType | ((event: UIEvent) => void)>
-    ): () => void;
+    public addDomEventHandler(handlerMap: Record<string, DOMEventHandler>): () => void;
 
     public addDomEventHandler(
-        nameOrMap: string | Record<string, PluginEventType | ((event: UIEvent) => void)>,
-        handler?: PluginEventType | ((event: UIEvent) => void)
+        nameOrMap: string | Record<string, DOMEventHandler>,
+        handler?: DOMEventHandler
     ): () => void {
+        const attachDomEvent = this.core.api.attachDomEvent;
         const eventsToMap =
             nameOrMap instanceof Object
                 ? nameOrMap
@@ -630,15 +569,16 @@ export default class Editor {
         let handlers = Object.keys(eventsToMap)
             .map(eventName => {
                 const value = eventsToMap[eventName];
-                return (
-                    value &&
-                    this.core.api.attachDomEvent(
-                        this.core,
-                        eventName,
-                        typeof value === 'number' ? value : null,
-                        typeof value === 'number' ? null : value
-                    )
-                );
+
+                if (typeof value === 'number') {
+                    return attachDomEvent(this.core, eventName, value, null);
+                } else if (typeof value === 'function') {
+                    return attachDomEvent(this.core, eventName, null, value);
+                } else if (typeof value === 'object') {
+                    return attachDomEvent(this.core, eventName, value.eventType, value.handler);
+                } else {
+                    return null;
+                }
             })
             .filter(x => x);
         return () => handlers.forEach(handler => handler());
@@ -766,7 +706,12 @@ export default class Editor {
      * dispose editor.
      */
     public getCustomData<T>(key: string, getter?: () => T, disposer?: (value: T) => void): T {
-        return this.core.api.getCustomData(this.core, key, getter, disposer);
+        return (this.core.lifecycle.value.customData[key] = this.core.lifecycle.value.customData[
+            key
+        ] || {
+            value: getter ? getter() : undefined,
+            disposer,
+        }).value as T;
     }
 
     /**
@@ -782,7 +727,7 @@ export default class Editor {
      * @returns Default format object of this editor
      */
     public getDefaultFormat(): DefaultFormat {
-        return this.core.defaultFormat;
+        return this.core.lifecycle.value.defaultFormat;
     }
 
     /**
@@ -846,7 +791,7 @@ export default class Editor {
      * @param name Name of the attribute
      * @param value Value of the attribute
      */
-    public setEditorDomAttribute(name: string, value: string) {
+    public setEditorDomAttribute(name: string, value: string | null) {
         if (value === null) {
             this.core.contentDiv.removeAttribute(name);
         } else {
@@ -897,8 +842,6 @@ export default class Editor {
         const currentContent = this.getContent(GetContentMode.CleanHTML);
 
         this.core.darkMode.value.isDarkMode = nextDarkMode;
-        this.core.api.updateDefaultFormat(this.core);
-
         this.setContent(currentContent);
         this.triggerPluginEvent(PluginEventType.DarkModeChanged, {
             changedToDarkMode: nextDarkMode,

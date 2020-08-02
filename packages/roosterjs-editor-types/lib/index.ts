@@ -93,3 +93,8 @@ export {
     StyleCallbackMap,
     ElementCallbackMap,
 } from './type/htmlSanitizerCallbackTypes';
+export {
+    DOMEventHandlerFunction,
+    DOMEventHandlerObject,
+    DOMEventHandler,
+} from './type/domEventHandler';

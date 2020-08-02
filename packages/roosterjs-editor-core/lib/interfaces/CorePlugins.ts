@@ -4,6 +4,7 @@ import DarkModePlugin from '../corePlugins/DarkModePlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
 import EntityPlugin from '../corePlugins/EntityPlugin';
+import LifecyclePlugin from '../corePlugins/LifecyclePlugin';
 import PluginWithState from './PluginWithState';
 import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
@@ -59,6 +60,11 @@ export default interface CorePlugins {
      * Entity Plugin handles all operations related to an entity and generate entity specified events
      */
     readonly entity: EntityPlugin;
+
+    /**
+     * Lifecycle plugin handles editor initialization and disposing
+     */
+    readonly lifecycle: LifecyclePlugin;
 }
 
 export type PluginKey = keyof CorePlugins;

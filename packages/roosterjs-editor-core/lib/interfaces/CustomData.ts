@@ -13,8 +13,3 @@ export default interface CustomData {
      */
     disposer?: (value: any) => void;
 }
-
-/**
- * Define the type of a map from key to custom data
- */
-export type CustomDataMap = { [key: string]: CustomData };

@@ -1,4 +1,5 @@
 import Editor from '../editor/Editor';
+import isCharacterValue from '../eventApi/isCharacterValue';
 import PluginWithState from '../interfaces/PluginWithState';
 import { Browser, Position } from 'roosterjs-editor-dom';
 import {
@@ -8,6 +9,7 @@ import {
     PendableFormatState,
     PluginEvent,
     Wrapper,
+    DOMEventHandler,
 } from 'roosterjs-editor-types';
 
 /**
@@ -38,6 +40,11 @@ export interface DOMEventPluginState {
      * Cached selection range
      */
     selectionRange: Range;
+
+    /**
+     * stop propagation of a printable keyboard event
+     */
+    stopPrintableKeyboardEventPropagation: boolean;
 }
 
 /**
@@ -78,9 +85,9 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
         this.disposer = editor.addDomEventHandler({
             // 1. Keyboard event
-            keypress: PluginEventType.KeyPress,
-            keydown: PluginEventType.KeyDown,
-            keyup: PluginEventType.KeyUp,
+            keypress: this.getEventHandler(PluginEventType.KeyPress),
+            keydown: this.getEventHandler(PluginEventType.KeyDown),
+            keyup: this.getEventHandler(PluginEventType.KeyUp),
 
             // 2. Mouse event
             mousedown: PluginEventType.MouseDown,
@@ -103,7 +110,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             [Browser.isIEOrEdge ? 'beforedeactivate' : 'blur']: this.onBlur,
 
             // 6. Input event
-            [Browser.isIE ? 'textinput' : 'input']: PluginEventType.Input,
+            [Browser.isIE ? 'textinput' : 'input']: this.getEventHandler(PluginEventType.Input),
         });
 
         // 7. Scroll event
@@ -207,5 +214,25 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             rawEvent: e,
             scrollContainer: this.state.value.scrollContainer,
         });
+    };
+
+    private getEventHandler(eventType: PluginEventType): DOMEventHandler {
+        return this.state.value.stopPrintableKeyboardEventPropagation
+            ? {
+                  eventType,
+                  handler:
+                      eventType == PluginEventType.Input ? this.onInputEvent : this.onKeybaordEvent,
+              }
+            : eventType;
+    }
+
+    private onKeybaordEvent = (event: KeyboardEvent) => {
+        if (isCharacterValue(event)) {
+            event.stopPropagation();
+        }
+    };
+
+    private onInputEvent = (event: InputEvent) => {
+        event.stopPropagation();
     };
 }

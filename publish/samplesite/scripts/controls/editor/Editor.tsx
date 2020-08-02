@@ -103,6 +103,7 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
             editFeatures: features,
             enableExperimentFeatures: this.state.useExperimentFeatures,
             undoSnapshotService: this.props.snapshotService,
+            inDarkMode: true,
         };
         this.editor = new RoosterJsEditor(this.contentDiv, options);
     }

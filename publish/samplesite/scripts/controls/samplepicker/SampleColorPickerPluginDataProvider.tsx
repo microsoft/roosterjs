@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { default as SampleColorPicker, SampleColorPickerProps } from './SampleColorPicker';
 import { Editor } from 'roosterjs-editor-core';
+import { getPositionRect } from 'roosterjs-editor-dom';
 import { PickerDataProvider } from 'roosterjs-editor-plugins/lib/Picker';
 
 type LegalKeys<T> = T extends 'onClick' ? never : T;
@@ -99,7 +100,8 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
             Math.min(newIndexOfCurrentSelectedColor, colors.length - 1)
         );
 
-        const rect = this.editor.getCursorRect();
+        const position = this.editor.getFocusedPosition();
+        const rect = getPositionRect(position);
 
         this.componentState = {
             queryString,

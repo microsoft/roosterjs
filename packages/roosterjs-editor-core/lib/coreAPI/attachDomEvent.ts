@@ -1,5 +1,4 @@
 import EditorCore, { AttachDomEvent } from '../interfaces/EditorCore';
-import isCharacterValue from '../eventApi/isCharacterValue';
 import { PluginDomEvent, PluginEventType } from 'roosterjs-editor-types';
 
 /**
@@ -16,18 +15,6 @@ export const attachDomEvent: AttachDomEvent = (
     beforeDispatch?: (event: UIEvent) => void
 ) => {
     let onEvent = (event: UIEvent) => {
-        // Stop propagation of a printable keyboard event (a keyboard event which is caused by printable char input).
-        // This detection is not 100% accurate. event.key is not fully supported by all browsers, and in some browsers (e.g. IE),
-        // event.key is longer than 1 for num pad input. But here we just want to improve performance as much as possible.
-        // So if we missed some case here it is still acceptable.
-        if (
-            !core.allowKeyboardEventPropagation &&
-            ((isKeyboardEvent(event) && isCharacterValue(event)) ||
-                pluginEventType == PluginEventType.Input)
-        ) {
-            event.stopPropagation();
-        }
-
         if (beforeDispatch) {
             beforeDispatch(event);
         }
@@ -47,7 +34,3 @@ export const attachDomEvent: AttachDomEvent = (
         core.contentDiv.removeEventListener(eventName, onEvent);
     };
 };
-
-function isKeyboardEvent(e: UIEvent): e is KeyboardEvent {
-    return e.type == 'keydown' || e.type == 'keypress' || e.type == 'keyup';
-}
