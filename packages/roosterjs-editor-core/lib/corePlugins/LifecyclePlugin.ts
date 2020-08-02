@@ -104,6 +104,8 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     initialize(editor: Editor) {
         this.editor = editor;
 
+        this.updateDefaultFormat();
+
         // Ensure initial content and its format
         this.editor.setContent(
             this.state.value.initialContent,
