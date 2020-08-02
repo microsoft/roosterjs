@@ -21,7 +21,6 @@ export {
     SelectRange,
     SetContent,
     TriggerEvent,
-    UpdateDefaultFormat,
 } from './interfaces/EditorCore';
 export {
     default as CorePlugins,

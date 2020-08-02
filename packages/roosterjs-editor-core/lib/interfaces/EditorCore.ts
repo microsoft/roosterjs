@@ -51,12 +51,6 @@ export type AttachDomEvent = (
 ) => () => void;
 
 /**
- * Calculate default format of the given editoreditor
- * @param core The editor core object
- */
-export type UpdateDefaultFormat = (core: EditorCore) => void;
-
-/**
  * Create a DocumentFragment for paste from a ClipboardData
  * @param core The EditorCore object.
  * @param clipboardData Clipboard data retrieved from clipboard
