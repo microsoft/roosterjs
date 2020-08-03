@@ -791,7 +791,7 @@ export default class Editor {
      * @param name Name of the attribute
      * @param value Value of the attribute
      */
-    public setEditorDomAttribute(name: string, value: string | null) {
+    public setEditorDomAttribute(name: string, value: string) {
         if (value === null) {
             this.core.contentDiv.removeAttribute(name);
         } else {

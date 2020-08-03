@@ -5,37 +5,37 @@ export const enum PluginEventType {
     /**
      * HTML KeyDown event
      */
-    KeyDown = 1,
+    KeyDown,
 
     /**
      * HTML KeyPress event
      */
-    KeyPress = 2,
+    KeyPress,
 
     /**
      * HTML KeyUp event
      */
-    KeyUp = 3,
+    KeyUp,
 
     /**
      * HTML CompositionEnd event
      */
-    CompositionEnd = 4,
+    CompositionEnd,
 
     /**
      * HTML MouseDown event
      */
-    MouseDown = 5,
+    MouseDown,
 
     /**
      * HTML MouseUp event
      */
-    MouseUp = 6,
+    MouseUp,
 
     /**
      * Content changed event
      */
-    ContentChanged = 7,
+    ContentChanged,
 
     /**
      * Extract Content with a DOM tree event
@@ -43,45 +43,45 @@ export const enum PluginEventType {
      * Plugin can handle this event to remove the UI only markups to return clean HTML
      * by operating on a cloned DOM tree
      */
-    ExtractContentWithDom = 8,
+    ExtractContentWithDom,
 
     /**
      * Before Paste event, provide a chance to change paste content
      */
-    BeforePaste = 9,
+    BeforePaste,
 
     /**
      * Let plugin know editor is ready now
      */
-    EditorReady = 10,
+    EditorReady,
 
     /**
      * Let plugin know editor is about to dispose
      */
-    BeforeDispose = 11,
+    BeforeDispose,
 
     /**
      * HTML Input / TextInput event
      */
-    Input = 12,
+    Input,
 
     /**
      * Pending format state (bold, italic, underline, ... with collapsed selection) is changed
      */
-    PendingFormatStateChanged = 13,
+    PendingFormatStateChanged,
 
     /**
      * Dark mode state is changed
      */
-    DarkModeChanged = 14,
+    DarkModeChanged,
 
     /**
      * Scroll event triggered by scroll container
      */
-    Scroll = 15,
+    Scroll,
 
     /**
      * Operating on an entity. See enum EntityOperation for more details about each operation
      */
-    EntityOperation = 16,
+    EntityOperation,
 }
