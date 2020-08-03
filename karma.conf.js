@@ -1,3 +1,6 @@
+const argv = require('minimist')(process.argv.slice(2));
+const components = argv.components !== true && argv.components;
+
 module.exports = function (config) {
     config.set({
         basePath: '.',
@@ -8,6 +11,10 @@ module.exports = function (config) {
             'karma-jasmine',
             'karma-sourcemap-loader',
         ],
+        client: {
+            components: components,
+            clearContext: false,
+        },
         browsers: ['Firefox'],
         files: ['karma.tests.js'],
         frameworks: ['jasmine'],
