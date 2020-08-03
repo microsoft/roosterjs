@@ -209,8 +209,9 @@ export default class VList {
      */
     appendItem(node: Node, type: ListType) {
         let newListNode = node;
+        const nodeTag = getTagOfNode(node);
 
-        if (getTagOfNode(node) != 'LI') {
+        if (nodeTag != 'LI' && nodeTag != 'TABLE') {
             newListNode = changeElementTag(<HTMLElement>node, 'LI');
         }
 
