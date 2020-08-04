@@ -213,6 +213,8 @@ export default class VList {
 
         if (nodeTag != 'LI' && nodeTag != 'TABLE') {
             newListNode = changeElementTag(<HTMLElement>node, 'LI');
+        } else if (nodeTag == 'TABLE') {
+            newListNode = wrap(node, 'li');
         }
 
         this.items.push(
