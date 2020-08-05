@@ -11,7 +11,8 @@ describe('getPositionRect()', () => {
         expectTop: number,
         expectBottom: number
     ) {
-        let div = document.createElement('div');
+        const tolerant = 2;
+        const div = document.createElement('div');
         document.body.appendChild(div);
         div.style.position = 'absolute';
         div.style.left = '10px';
@@ -24,14 +25,14 @@ describe('getPositionRect()', () => {
         let rect = getPositionRect(position);
         if (rect) {
             let { left, right, top, bottom } = rect;
-            expect(left).toBeGreaterThanOrEqual(expectLeft - 1, 'left');
-            expect(right).toBeGreaterThanOrEqual(expectRight - 1, 'right');
-            expect(top).toBeGreaterThanOrEqual(expectTop - 1, 'top');
-            expect(bottom).toBeGreaterThanOrEqual(expectBottom - 1, 'bottom');
-            expect(left).toBeLessThanOrEqual(expectLeft + 1, 'left');
-            expect(right).toBeLessThanOrEqual(expectRight + 1, 'right');
-            expect(top).toBeLessThanOrEqual(expectTop + 1, 'top');
-            expect(bottom).toBeLessThanOrEqual(expectBottom + 1, 'bottom');
+            expect(left).toBeGreaterThanOrEqual(expectLeft - tolerant, 'left');
+            expect(right).toBeGreaterThanOrEqual(expectRight - tolerant, 'right');
+            expect(top).toBeGreaterThanOrEqual(expectTop - tolerant, 'top');
+            expect(bottom).toBeGreaterThanOrEqual(expectBottom - tolerant, 'bottom');
+            expect(left).toBeLessThanOrEqual(expectLeft + tolerant, 'left');
+            expect(right).toBeLessThanOrEqual(expectRight + tolerant, 'right');
+            expect(top).toBeLessThanOrEqual(expectTop + tolerant, 'top');
+            expect(bottom).toBeLessThanOrEqual(expectBottom + tolerant, 'bottom');
         } else {
             expect(expectLeft + expectRight + expectTop + expectBottom).toBe(0, 'Rect');
         }
