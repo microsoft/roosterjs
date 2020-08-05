@@ -1,11 +1,20 @@
 import addUndoSnapshot from '../undoApi/addUndoSnapshot';
 import canRedo from '../undoApi/canRedo';
 import canUndo from '../undoApi/canUndo';
+import createWrapper from './utils/createWrapper';
 import Editor from '../editor/Editor';
+import EditorOptions from '../interfaces/EditorOptions';
 import isCtrlOrMetaPressed from '../eventApi/isCtrlOrMetaPressed';
 import PluginWithState from '../interfaces/PluginWithState';
 import UndoSnapshotsService from '../interfaces/UndoSnapshotsService';
-import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import { GetContentMode, PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import {
+    addSnapshot,
+    canMoveCurrentSnapshot,
+    moveCurrentSnapsnot,
+    clearProceedingSnapshots,
+    createSnapshots,
+} from 'roosterjs-editor-dom';
 
 const KEY_BACKSPACE = 8;
 const KEY_DELETE = 46;
@@ -42,7 +51,18 @@ export interface UndoPluginState {
      * A function to set content to editor
      */
     setContent: (content: string) => void;
+
+    /**
+     * The outer undo snapshot taken by addUndoSnapshot() before callback function is invoked.
+     * If addUndoSnapshot() is called nested in another one, this will be the snapshot taken from the outer one
+     * and used for checking if it is a nested call
+     */
+    outerUndoSnapshot: string;
 }
+
+// Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
+// to keep size under limit. This is kept at 10MB
+const MAXSIZELIMIT = 1e7;
 
 /**
  * Provides snapshot based undo service for Editor
@@ -50,12 +70,23 @@ export interface UndoPluginState {
 export default class UndoPlugin implements PluginWithState<UndoPluginState> {
     private editor: Editor;
     private lastKeyPress: number;
+    private state: Wrapper<UndoPluginState>;
 
     /**
-     * Construct a new instancoe of UndoPlugin
-     * @param state The wrapper of the state object
+     * Construct a new instance of UndoPlugin
+     * @param options The wrapper of the state object
      */
-    constructor(public readonly state: Wrapper<UndoPluginState>) {}
+    constructor(options: EditorOptions) {
+        this.state = createWrapper({
+            snapshotsService: options.undoSnapshotService || createUndoSnapshots(),
+            isRestoring: false,
+            hasNewContent: false,
+            outerUndoSnapshot: null,
+            getContent: () => this.editor?.getContent(GetContentMode.RawHTMLWithSelection),
+            setContent: (content: string) =>
+                this.editor?.setContent(content, true /*triggerContentChangedEvent*/),
+        });
+    }
 
     /**
      * Get a friendly name of  this plugin
@@ -80,12 +111,19 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
     }
 
     /**
+     * Get plugin state object
+     */
+    getState() {
+        return this.state;
+    }
+
+    /**
      * Handle events triggered from editor
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent): void {
         // if editor is in IME, don't do anything
-        if (this.editor.isInIME()) {
+        if (this.editor?.isInIME()) {
             return;
         }
 
@@ -177,4 +215,15 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
         this.lastKeyPress = 0;
         this.state.value.hasNewContent = true;
     }
+}
+
+function createUndoSnapshots(): UndoSnapshotsService {
+    const snapshots = createSnapshots(MAXSIZELIMIT);
+
+    return {
+        canMove: (delta: number): boolean => canMoveCurrentSnapshot(snapshots, delta),
+        move: (delta: number): string => moveCurrentSnapsnot(snapshots, delta),
+        addSnapshot: (snapshot: string) => addSnapshot(snapshots, snapshot),
+        clearRedo: () => clearProceedingSnapshots(snapshots),
+    };
 }

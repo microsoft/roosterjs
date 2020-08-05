@@ -1,3 +1,4 @@
+import createWrapper from './utils/createWrapper';
 import Editor from '../editor/Editor';
 import PluginWithState from '../interfaces/PluginWithState';
 import { Keys } from '../interfaces/ContentEditFeature';
@@ -8,12 +9,7 @@ import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
  */
 export default class AutoCompletePlugin implements PluginWithState<string> {
     private editor: Editor;
-
-    /**
-     * Construct a new instancoe of AutoCompletePlugin
-     * @param state The wrapper of the state object
-     */
-    constructor(public readonly state: Wrapper<string>) {}
+    private state: Wrapper<string> = createWrapper(null);
 
     /**
      * Get a friendly name of  this plugin
@@ -35,6 +31,13 @@ export default class AutoCompletePlugin implements PluginWithState<string> {
      */
     dispose() {
         this.editor = null;
+    }
+
+    /**
+     * Get plugin state object
+     */
+    getState() {
+        return this.state;
     }
 
     /**

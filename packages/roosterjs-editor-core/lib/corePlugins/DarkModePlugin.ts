@@ -1,4 +1,6 @@
+import createWrapper from './utils/createWrapper';
 import Editor from '../editor/Editor';
+import EditorOptions from '../interfaces/EditorOptions';
 import normalizeContentColor from '../darkMode/normalizeContentColor';
 import PluginWithState from '../interfaces/PluginWithState';
 import { Browser } from 'roosterjs-editor-dom';
@@ -25,12 +27,18 @@ export interface DarkModePluginState {
 export default class DarkModePlugin implements PluginWithState<DarkModePluginState> {
     private editor: Editor;
     private eventDisposer: () => void;
+    private state: Wrapper<DarkModePluginState>;
 
     /**
-     * Construct a new instancoe of DarkModePlugin
-     * @param state The wrapper of the state object
+     * Construct a new instance of DarkModePlugin
+     * @param options The editor options
      */
-    constructor(public readonly state: Wrapper<DarkModePluginState>) {}
+    constructor(options: EditorOptions) {
+        this.state = createWrapper({
+            isDarkMode: options.inDarkMode,
+            onExternalContentTransform: options.onExternalContentTransform,
+        });
+    }
 
     /**
      * Get a friendly name of  this plugin
@@ -64,9 +72,16 @@ export default class DarkModePlugin implements PluginWithState<DarkModePluginSta
         this.editor = null;
     }
 
+    /**
+     * Get plugin state object
+     */
+    getState() {
+        return this.state;
+    }
+
     private onExtract = (isCut: boolean) => (event: Event) => {
         // if it's dark mode...
-        if (this.editor && this.editor.isDarkMode()) {
+        if (this.editor && this.state.value.isDarkMode) {
             // get whatever the current selection range is
             const selectionRange = this.editor.getSelectionRange();
             if (selectionRange && !selectionRange.collapsed) {

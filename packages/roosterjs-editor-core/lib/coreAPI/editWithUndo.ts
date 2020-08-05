@@ -22,14 +22,14 @@ export const editWithUndo: EditWithUndo = (
     changeSource: ChangeSource | string,
     canUndoByBackspace: boolean
 ) => {
-    let isNested = core.currentUndoSnapshot !== null;
+    let isNested = core.undo.value.outerUndoSnapshot !== null;
     let data: any;
 
     if (!isNested) {
-        core.currentUndoSnapshot = addUndoSnapshot(core.undo.value);
+        core.undo.value.outerUndoSnapshot = addUndoSnapshot(core.undo.value);
     }
 
-    const autoCompleteSnapshot = canUndoByBackspace && core.currentUndoSnapshot;
+    const autoCompleteSnapshot = canUndoByBackspace && core.undo.value.outerUndoSnapshot;
 
     try {
         if (callback) {
@@ -37,7 +37,7 @@ export const editWithUndo: EditWithUndo = (
             data = callback(
                 range && Position.getStart(range).normalize(),
                 range && Position.getEnd(range).normalize(),
-                core.currentUndoSnapshot
+                core.undo.value.outerUndoSnapshot
             );
 
             if (!isNested) {
@@ -46,7 +46,7 @@ export const editWithUndo: EditWithUndo = (
         }
     } finally {
         if (!isNested) {
-            core.currentUndoSnapshot = null;
+            core.undo.value.outerUndoSnapshot = null;
         }
     }
 

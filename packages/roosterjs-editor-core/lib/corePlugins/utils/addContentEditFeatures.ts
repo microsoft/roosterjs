@@ -1,4 +1,4 @@
-import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
+import { GenericContentEditFeature } from '../../interfaces/ContentEditFeature';
 import { PluginEvent } from 'roosterjs-editor-types';
 
 /**

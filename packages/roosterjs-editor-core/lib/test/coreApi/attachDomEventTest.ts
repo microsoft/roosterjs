@@ -1,89 +1,130 @@
 import createEditorCore from '../../editor/createEditorCore';
-import EditorCore from '../../interfaces/EditorCore';
-import EditorPlugin from '../../interfaces/EditorPlugin';
 import { attachDomEvent } from '../../coreAPI/attachDomEvent';
-import { PluginEvent, PluginEventType, PluginKeyboardEvent } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
 
-class MockPlugin implements EditorPlugin {
-    lastEvent: PluginEvent = null;
-    getName() {
-        return 'Mock';
-    }
-    initialize() {}
-    dispose() {}
-    onPluginEvent(e: PluginEvent) {
-        this.lastEvent = e;
-    }
-}
+const DOM_EVENT_NAME = 'keydown';
 
 describe('attachDomEvent', () => {
     let div: HTMLDivElement;
-    let core: EditorCore;
     beforeEach(() => {
         div = document.createElement('div');
         document.body.appendChild(div);
-        core = createEditorCore(div, {});
-        (<any>core).plugins = [];
     });
 
     afterEach(() => {
         document.body.removeChild(div);
-        core = null;
         div = null;
     });
 
+    it('null input', () => {
+        const core = createEditorCore(div, {});
+        const disposer = attachDomEvent(core, null);
+        expect(disposer).not.toBeNull();
+    });
+
+    it('empty input', () => {
+        const core = createEditorCore(div, {});
+        const disposer = attachDomEvent(core, {});
+        expect(typeof disposer).toBe('function');
+    });
+
     it('Check return value to be a function', () => {
-        let disposer = attachDomEvent(core, 'click');
+        const core = createEditorCore(div, {});
+        const disposer = attachDomEvent(core, {
+            [DOM_EVENT_NAME]: { pluginEventType: null, beforeDispatch: null },
+        });
         expect(typeof disposer).toBe('function');
 
         disposer();
     });
 
     it('Check event is fired', () => {
-        let called = false;
-        let disposer = attachDomEvent(core, 'keydown', null, () => {
-            called = true;
-        });
+        const callback = jasmine.createSpy();
+        const core = createEditorCore(div, {});
 
-        let event = document.createEvent('KeyboardEvent');
-        event.initEvent('keydown');
+        const disposer = attachDomEvent(core, { [DOM_EVENT_NAME]: callback });
+        const event = document.createEvent('KeyboardEvent');
+        event.initEvent(DOM_EVENT_NAME);
         div.dispatchEvent(event);
 
-        expect(called).toBe(true);
+        expect(callback).toHaveBeenCalledWith(event);
         disposer();
     });
 
-    it('Check event dispatched to plugin', () => {
-        let mockPlugin = new MockPlugin();
-        core.plugins.push(mockPlugin);
-        expect(mockPlugin.lastEvent).toBeNull();
-
-        let disposer = attachDomEvent(core, 'keydown', PluginEventType.KeyDown);
-
-        let event = document.createEvent('KeyboardEvent');
-        event.initEvent('keydown');
+    it('Check event dispatched via triggerEvent', () => {
+        const triggerEventSpy = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent: triggerEventSpy,
+            },
+        });
+        const disposer = attachDomEvent(core, { [DOM_EVENT_NAME]: PluginEventType.KeyDown });
+        const event = document.createEvent('KeyboardEvent');
+        event.initEvent(DOM_EVENT_NAME);
         div.dispatchEvent(event);
 
-        expect(mockPlugin.lastEvent).not.toBeNull();
-        expect(mockPlugin.lastEvent.eventType).toBe(PluginEventType.KeyDown);
-        expect((<PluginKeyboardEvent>mockPlugin.lastEvent).rawEvent).toBe(event);
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: PluginEventType.KeyDown,
+                rawEvent: event,
+            },
+            false
+        );
+        disposer();
+    });
+
+    it('Check event dispatched via triggerEvent and callback', () => {
+        const triggerEventSpy = jasmine.createSpy();
+        const callback = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent: triggerEventSpy,
+            },
+        });
+        const disposer = attachDomEvent(core, {
+            [DOM_EVENT_NAME]: {
+                pluginEventType: PluginEventType.KeyDown,
+                beforeDispatch: callback,
+            },
+        });
+        const event = document.createEvent('KeyboardEvent');
+        event.initEvent(DOM_EVENT_NAME);
+        div.dispatchEvent(event);
+
+        expect(callback).toHaveBeenCalledWith(event);
+        expect(triggerEventSpy).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: PluginEventType.KeyDown,
+                rawEvent: event,
+            },
+            false
+        );
         disposer();
     });
 
     it('Check event not dispatched to plugin after dispose', () => {
-        let mockPlugin = new MockPlugin();
-        core.plugins.push(mockPlugin);
-        expect(mockPlugin.lastEvent).toBeNull();
-
-        let disposer = attachDomEvent(core, 'keydown', PluginEventType.KeyDown);
-
-        let event = document.createEvent('KeyboardEvent');
-        event.initEvent('keydown');
-
+        const triggerEventSpy = jasmine.createSpy();
+        const callback = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent: triggerEventSpy,
+            },
+        });
+        const disposer = attachDomEvent(core, {
+            [DOM_EVENT_NAME]: {
+                pluginEventType: PluginEventType.KeyDown,
+                beforeDispatch: callback,
+            },
+        });
         disposer();
 
+        const event = document.createEvent('KeyboardEvent');
+        event.initEvent(DOM_EVENT_NAME);
         div.dispatchEvent(event);
 
-        expect(mockPlugin.lastEvent).toBeNull();
+        expect(callback).not.toHaveBeenCalled();
+        expect(triggerEventSpy).not.toHaveBeenCalled();
     });
 });

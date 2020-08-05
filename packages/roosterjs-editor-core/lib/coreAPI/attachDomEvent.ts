@@ -1,5 +1,5 @@
 import EditorCore, { AttachDomEvent } from '../interfaces/EditorCore';
-import { PluginDomEvent, PluginEventType } from 'roosterjs-editor-types';
+import { DOMEventHandler, DOMEventHandlerObject, PluginDomEvent } from 'roosterjs-editor-types';
 
 /**
  * Attach a DOM event to the editor content DIV
@@ -10,27 +10,45 @@ import { PluginDomEvent, PluginEventType } from 'roosterjs-editor-types';
  */
 export const attachDomEvent: AttachDomEvent = (
     core: EditorCore,
-    eventName: string,
-    pluginEventType?: PluginEventType,
-    beforeDispatch?: (event: UIEvent) => void
+    eventMap: Record<string, DOMEventHandler>
 ) => {
-    let onEvent = (event: UIEvent) => {
-        if (beforeDispatch) {
-            beforeDispatch(event);
-        }
-        if (pluginEventType != null) {
-            core.api.triggerEvent(
-                core,
-                <PluginDomEvent>{
-                    eventType: pluginEventType,
-                    rawEvent: event,
-                },
-                false /*broadcast*/
-            );
-        }
-    };
-    core.contentDiv.addEventListener(eventName, onEvent);
-    return () => {
-        core.contentDiv.removeEventListener(eventName, onEvent);
-    };
+    const disposers = Object.keys(eventMap || {}).map(eventName => {
+        const { pluginEventType, beforeDispatch } = extractHandler(eventMap[eventName]);
+        let onEvent = (event: UIEvent) => {
+            if (beforeDispatch) {
+                beforeDispatch(event);
+            }
+            if (pluginEventType != null) {
+                core.api.triggerEvent(
+                    core,
+                    <PluginDomEvent>{
+                        eventType: pluginEventType,
+                        rawEvent: event,
+                    },
+                    false /*broadcast*/
+                );
+            }
+        };
+        core.contentDiv.addEventListener(eventName, onEvent);
+        return () => {
+            core.contentDiv.removeEventListener(eventName, onEvent);
+        };
+    });
+    return () => disposers.forEach(disposers => disposers());
 };
+
+function extractHandler(handlerObj: DOMEventHandler): DOMEventHandlerObject {
+    let result: DOMEventHandlerObject = {
+        pluginEventType: null,
+        beforeDispatch: null,
+    };
+
+    if (typeof handlerObj === 'number') {
+        result.pluginEventType = handlerObj;
+    } else if (typeof handlerObj === 'function') {
+        result.beforeDispatch = handlerObj;
+    } else if (typeof handlerObj === 'object') {
+        result = handlerObj;
+    }
+    return result;
+}

@@ -3,10 +3,10 @@ import { PluginKey, PluginState } from './CorePlugins';
 import {
     ChangeSource,
     ClipboardData,
+    DOMEventHandler,
     InsertOption,
     NodePosition,
     PluginEvent,
-    PluginEventType,
     StyleBasedFormatState,
     GetContentMode,
 } from 'roosterjs-editor-types';
@@ -29,25 +29,16 @@ export default interface EditorCore extends PluginState<PluginKey> {
      * Core API map of this editor
      */
     readonly api: CoreApiMap;
-
-    /**
-     * The undo snapshot taken by addUndoSnapshot() before callback function is invoked.
-     */
-    currentUndoSnapshot: string;
 }
 
 /**
  * Attach a DOM event to the editor content DIV
  * @param core The EditorCore object
- * @param eventName The DOM event name
- * @param pluginEventType Optional event type. When specified, editor will trigger a plugin event with this name when the DOM event is triggered
- * @param beforeDispatch Optional callback function to be invoked when the DOM event is triggered before trigger plugin event
+ * @param eventMap A map from event name to its handler
  */
 export type AttachDomEvent = (
     core: EditorCore,
-    eventName: string,
-    pluginEventType?: PluginEventType,
-    beforeDispatch?: (event: UIEvent) => void
+    eventMap: Record<string, DOMEventHandler>
 ) => () => void;
 
 /**

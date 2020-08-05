@@ -83,7 +83,7 @@ function restorePendingFormatState(core: EditorCore) {
         const document = contentDiv.ownerDocument;
         let formatState = getPendableFormatState(document);
         (<PendableFormatNames[]>Object.keys(PendableFormatCommandMap)).forEach(key => {
-            if (value.pendableFormatState[key] != formatState[key]) {
+            if (!!value.pendableFormatState[key] != formatState[key]) {
                 document.execCommand(PendableFormatCommandMap[key], false, null);
             }
         });

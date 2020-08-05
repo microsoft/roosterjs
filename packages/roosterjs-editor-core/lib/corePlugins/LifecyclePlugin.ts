@@ -1,12 +1,15 @@
+import createWrapper from './utils/createWrapper';
 import CustomData from '../interfaces/CustomData';
 import Editor from '../editor/Editor';
+import EditorOptions from '../interfaces/EditorOptions';
 import PluginWithState from '../interfaces/PluginWithState';
-import { Browser } from 'roosterjs-editor-dom';
+import { Browser, getComputedStyles, Position } from 'roosterjs-editor-dom';
 import {
     DefaultFormat,
     DocumentCommand,
     NodePosition,
     PluginEventType,
+    PositionType,
     Wrapper,
     PluginEvent,
 } from 'roosterjs-editor-types';
@@ -16,29 +19,9 @@ import {
  */
 export interface LifecyclePluginState {
     /**
-     * initial content of editor content div
-     */
-    initialContent: string;
-
-    /**
      * Custom data of this editor
      */
     customData: Record<string, CustomData>;
-
-    /**
-     * Style object of editor content DIV
-     */
-    style: CSSStyleDeclaration;
-
-    /**
-     * Calcuated default format of content DIV
-     */
-    calculatedDefaultFormat: string[];
-
-    /**
-     * Start position of editor content DIV
-     */
-    startPosition: NodePosition;
 
     /**
      * Default format of this editor
@@ -87,8 +70,27 @@ const DARK_MODE_DEFAULT_FORMAT = {
 export default class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
     private editor: Editor;
     private contenteditableChanged: boolean;
+    private state: Wrapper<LifecyclePluginState>;
+    private style: CSSStyleDeclaration;
+    private initialContent: string;
+    private calculatedDefaultFormat: string[];
+    private startPosition: NodePosition;
 
-    constructor(public readonly state: Wrapper<LifecyclePluginState>) {}
+    /**
+     * Construct a new instance of LifecyclePlugin
+     * @param options The editor options
+     * @param contentDiv The editor content DIV
+     */
+    constructor(options: EditorOptions, contentDiv: HTMLDivElement) {
+        this.style = contentDiv.style;
+        this.initialContent = options.initialContent || contentDiv.innerHTML || '';
+        this.calculatedDefaultFormat = getComputedStyles(contentDiv);
+        this.startPosition = new Position(contentDiv, PositionType.Begin);
+        this.state = createWrapper({
+            customData: {},
+            defaultFormat: options.defaultFormat,
+        });
+    }
 
     /**
      * Get a friendly name of  this plugin
@@ -107,17 +109,13 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         this.updateDefaultFormat();
 
         // Ensure initial content and its format
-        this.editor.setContent(
-            this.state.value.initialContent,
-            false /*triggerContentChangedEvent*/
-        );
+        this.editor.setContent(this.initialContent, false /*triggerContentChangedEvent*/);
 
         // Make the container editable and set its selection styles
         if (this.editor.getEditorDomAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME) === null) {
             this.editor.setEditorDomAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME, 'true');
-
-            const style = this.state.value.style;
-            style.userSelect = style.msUserSelect = style.webkitUserSelect = 'text';
+            this.style.userSelect = (<any>this.style).msUserSelect = this.style.webkitUserSelect =
+                'text';
             this.contenteditableChanged = true;
         }
 
@@ -128,7 +126,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         this.editor.triggerPluginEvent(
             PluginEventType.EditorReady,
             {
-                startPosition: this.editor.getFocusedPosition() || this.state.value.startPosition,
+                startPosition: this.editor.getFocusedPosition() || this.startPosition,
             },
             true /*broadcast*/
         );
@@ -151,12 +149,19 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         });
 
         if (this.contenteditableChanged) {
-            const style = this.state.value.style;
-            style.userSelect = style.msUserSelect = style.webkitUserSelect = '';
+            this.style.userSelect = (<any>this.style).msUserSelect = this.style.webkitUserSelect =
+                '';
             this.editor.setEditorDomAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME, null);
         }
 
         this.editor = null;
+    }
+
+    /**
+     * Get plugin state object
+     */
+    getState() {
+        return this.state;
     }
 
     /**
@@ -206,7 +211,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             italic,
             underline,
         } = baseFormat;
-        const originalStyle = this.state.value.calculatedDefaultFormat;
+        const originalStyle = this.calculatedDefaultFormat;
         this.state.value.defaultFormat = {
             fontFamily: fontFamily || originalStyle[0],
             fontSize: fontSize || originalStyle[1],

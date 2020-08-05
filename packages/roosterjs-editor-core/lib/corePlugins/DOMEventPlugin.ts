@@ -1,4 +1,6 @@
+import createWrapper from './utils/createWrapper';
 import Editor from '../editor/Editor';
+import EditorOptions from '../interfaces/EditorOptions';
 import isCharacterValue from '../eventApi/isCharacterValue';
 import PluginWithState from '../interfaces/PluginWithState';
 import { Browser, Position } from 'roosterjs-editor-dom';
@@ -62,12 +64,23 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     private editor: Editor;
     private disposer: () => void;
     private mouseUpEventListerAdded: boolean;
+    private state: Wrapper<DOMEventPluginState>;
 
     /**
-     * Construct a new instancoe of DOMEventPlugin
-     * @param state The wrapper of the state object
+     * Construct a new instance of DOMEventPlugin
+     * @param options The editor options
+     * @param contentDiv The editor content DIV
      */
-    constructor(public readonly state: Wrapper<DOMEventPluginState>) {}
+    constructor(options: EditorOptions, contentDiv: HTMLDivElement) {
+        this.state = createWrapper({
+            isInIME: false,
+            pendableFormatPosition: null,
+            pendableFormatState: null,
+            scrollContainer: options.scrollContainer || contentDiv,
+            selectionRange: null,
+            stopPrintableKeyboardEventPropagation: !options.allowKeyboardEventPropagation,
+        });
+    }
 
     /**
      * Get a friendly name of  this plugin
@@ -127,6 +140,13 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         this.disposer = null;
         this.editor = null;
         this.clear();
+    }
+
+    /**
+     * Get plugin state object
+     */
+    getState() {
+        return this.state;
     }
 
     /**
@@ -219,8 +239,8 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     private getEventHandler(eventType: PluginEventType): DOMEventHandler {
         return this.state.value.stopPrintableKeyboardEventPropagation
             ? {
-                  eventType,
-                  handler:
+                  pluginEventType: eventType,
+                  beforeDispatch:
                       eventType == PluginEventType.Input ? this.onInputEvent : this.onKeybaordEvent,
               }
             : eventType;

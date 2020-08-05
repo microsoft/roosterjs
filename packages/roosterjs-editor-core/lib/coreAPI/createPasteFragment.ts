@@ -28,6 +28,10 @@ export const createPasteFragment: CreatePasteFragment = (
     pasteAsText: boolean,
     applyCurrentStyle: boolean
 ) => {
+    if (!clipboardData) {
+        return null;
+    }
+
     // Step 1: Prepare BeforePasteEvent object
     const event = createBeforePasteEvent(core, clipboardData);
     const { fragment, sanitizingOption } = event;
@@ -144,8 +148,5 @@ function createBeforePasteEvent(core: EditorCore, clipboardData: ClipboardData):
 }
 
 function processStyles(node: ParentNode, callback: (style: HTMLStyleElement) => void) {
-    const styles = node.querySelectorAll('style');
-    for (let i = 0; i < styles.length; i++) {
-        callback(styles[i]);
-    }
+    toArray(node.querySelectorAll('style')).forEach(callback);
 }

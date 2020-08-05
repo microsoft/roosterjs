@@ -1,4 +1,7 @@
+import addContentEditFeatures from './utils/addContentEditFeatures';
+import createWrapper from './utils/createWrapper';
 import Editor from '../editor/Editor';
+import EditorOptions from '../interfaces/EditorOptions';
 import isCtrlOrMetaPressed from '../eventApi/isCtrlOrMetaPressed';
 import PluginWithState from '../interfaces/PluginWithState';
 import { GenericContentEditFeature, Keys } from '../interfaces/ContentEditFeature';
@@ -10,14 +13,15 @@ import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 export default class EditPlugin
     implements PluginWithState<Record<number, GenericContentEditFeature<PluginEvent>[]>> {
     private editor: Editor;
+    private state: Wrapper<Record<number, GenericContentEditFeature<PluginEvent>[]>>;
 
     /**
-     * Construct a new instancoe of EditPlugin
-     * @param state The wrapper of the state object
+     * Construct a new instance of EditPlugin
+     * @param options The editor options
      */
-    constructor(
-        public readonly state: Wrapper<Record<number, GenericContentEditFeature<PluginEvent>[]>>
-    ) {}
+    constructor(options: EditorOptions) {
+        this.state = createWrapper(addContentEditFeatures({}, options.editFeatures));
+    }
 
     /**
      * Get a friendly name of  this plugin
@@ -39,6 +43,13 @@ export default class EditPlugin
      */
     dispose() {
         this.editor = null;
+    }
+
+    /**
+     * Get plugin state object
+     */
+    getState() {
+        return this.state;
     }
 
     /**

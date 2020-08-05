@@ -1,7 +1,6 @@
-import addContentEditFeatures from './addContentEditFeatures';
 import AutoCompletePlugin from '../corePlugins/AutoCompletePlugin';
 import CorePastePlugin from '../corePlugins/CorePastePlugin';
-import CorePlugins, { PluginKey, PluginState } from '../interfaces/CorePlugins';
+import CorePlugins from '../interfaces/CorePlugins';
 import DarkModePlugin from '../corePlugins/DarkModePlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorCore, { CoreApiMap } from '../interfaces/EditorCore';
@@ -13,13 +12,11 @@ import LifecyclePlugin from '../corePlugins/LifecyclePlugin';
 import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
 import UndoPlugin from '../corePlugins/UndoPlugin';
-import UndoSnapshotsService from '../interfaces/UndoSnapshotsService';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
 import { createPasteFragment } from '../coreAPI/createPasteFragment';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
 import { getContent } from '../coreAPI/getContent';
-import { GetContentMode, PositionType } from 'roosterjs-editor-types';
 import { getSelectionRange } from '../coreAPI/getSelectionRange';
 import { getStyleBasedFormatState } from '../coreAPI/getStyleBasedFormatState';
 import { hasFocus } from '../coreAPI/hasFocus';
@@ -27,20 +24,8 @@ import { insertNode } from '../coreAPI/insertNode';
 import { selectRange } from '../coreAPI/selectRange';
 import { setContent } from '../coreAPI/setContent';
 import { triggerEvent } from '../coreAPI/triggerEvent';
-import {
-    addSnapshot,
-    canMoveCurrentSnapshot,
-    moveCurrentSnapsnot,
-    clearProceedingSnapshots,
-    createSnapshots,
-    Position,
-    getComputedStyles,
-} from 'roosterjs-editor-dom';
 
-// Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
-// to keep size under limit. This is kept at 10MB
-const MAXSIZELIMIT = 1e7;
-
+const PLACEHOLDER_PLUGIN_NAME = '_placeholder';
 /**
  * Create core object for editor
  * @param contentDiv The DIV element used for editor
@@ -50,80 +35,28 @@ export default function createEditorCore(
     contentDiv: HTMLDivElement,
     options: EditorOptions
 ): EditorCore {
-    let core: EditorCore;
+    const corePlugins = createCorePlugins(contentDiv, options);
     const api = createCoreApiMap(options.coreApiOverride);
-    const pluginState: PluginState<PluginKey> = {
-        autoComplete: {
-            value: null,
-        },
-        darkMode: {
-            value: {
-                isDarkMode: options.inDarkMode,
-                onExternalContentTransform: options.onExternalContentTransform,
-            },
-        },
-        domEvent: {
-            value: {
-                isInIME: false,
-                pendableFormatPosition: null,
-                pendableFormatState: null,
-                scrollContainer: options.scrollContainer || contentDiv,
-                selectionRange: null,
-                stopPrintableKeyboardEventPropagation: !options.allowKeyboardEventPropagation,
-            },
-        },
-        edit: {
-            value: addContentEditFeatures({}, options.editFeatures),
-        },
-        undo: {
-            value: {
-                snapshotsService: options.undoSnapshotService || createUndoSnapshots(),
-                isRestoring: false,
-                hasNewContent: false,
-                getContent: () => api.getContent(core, GetContentMode.RawHTMLWithSelection),
-                setContent: (content: string) =>
-                    api.setContent(core, content, true /*triggerContentChangedEvent*/),
-            },
-        },
-        lifecycle: {
-            value: {
-                initialContent: options.initialContent || contentDiv.innerHTML || '',
-                customData: {},
-                style: contentDiv.style,
-                calculatedDefaultFormat: getComputedStyles(contentDiv),
-                startPosition: new Position(contentDiv, PositionType.Begin),
-                defaultFormat: options.defaultFormat,
-            },
-        },
-    };
-    const corePlugins = createCorePlugins(pluginState, options.corePluginOverride);
-    const plugins = buildPluginList(corePlugins, options.plugins);
+    const plugins: EditorPlugin[] = [];
+    Object.keys(corePlugins).forEach((name: typeof PLACEHOLDER_PLUGIN_NAME | keyof CorePlugins) => {
+        if (name == PLACEHOLDER_PLUGIN_NAME) {
+            Array.prototype.push.apply(plugins, options.plugins);
+        } else {
+            plugins.push(corePlugins[name]);
+        }
+    });
 
-    core = {
-        ...pluginState,
+    return {
         contentDiv,
-        currentUndoSnapshot: null,
-        plugins,
         api,
+        plugins: plugins.filter(x => !!x),
+        autoComplete: corePlugins.autoComplete.getState(),
+        darkMode: corePlugins.darkMode.getState(),
+        domEvent: corePlugins.domEvent.getState(),
+        edit: corePlugins.edit.getState(),
+        lifecycle: corePlugins.lifecycle.getState(),
+        undo: corePlugins.undo.getState(),
     };
-
-    return core;
-}
-
-function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): EditorPlugin[] {
-    return [
-        corePlugins.typeInContainer,
-        corePlugins.edit,
-        corePlugins.autoComplete,
-        ...(plugins || []),
-        corePlugins.typeAfterLink,
-        corePlugins.undo,
-        corePlugins.domEvent,
-        corePlugins.darkMode,
-        corePlugins.paste,
-        corePlugins.entity,
-        corePlugins.lifecycle,
-    ].filter(plugin => !!plugin);
 }
 
 function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
@@ -145,31 +78,23 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
 }
 
 function createCorePlugins(
-    pluginState: PluginState<PluginKey>,
-    map: Partial<CorePlugins>
-): CorePlugins {
-    map = map || {};
+    contentDiv: HTMLDivElement,
+    options: EditorOptions
+): CorePlugins & { [PLACEHOLDER_PLUGIN_NAME]: null } {
+    const map = options.corePluginOverride || {};
+    // The order matters, some plugin needs to be put before/after others to make sure event
+    // can be handled in right order
     return {
         typeInContainer: map.typeInContainer || new TypeInContainerPlugin(),
-        edit: map.edit || new EditPlugin(pluginState.edit),
-        autoComplete: map.autoComplete || new AutoCompletePlugin(pluginState.autoComplete),
+        edit: map.edit || new EditPlugin(options),
+        autoComplete: map.autoComplete || new AutoCompletePlugin(),
+        _placeholder: null,
         typeAfterLink: map.typeAfterLink || new TypeAfterLinkPlugin(),
-        undo: map.undo || new UndoPlugin(pluginState.undo),
-        domEvent: map.domEvent || new DOMEventPlugin(pluginState.domEvent),
-        darkMode: map.darkMode || new DarkModePlugin(pluginState.darkMode),
+        undo: map.undo || new UndoPlugin(options),
+        domEvent: map.domEvent || new DOMEventPlugin(options, contentDiv),
+        darkMode: map.darkMode || new DarkModePlugin(options),
         paste: map.paste || new CorePastePlugin(),
         entity: map.entity || new EntityPlugin(),
-        lifecycle: map.lifecycle || new LifecyclePlugin(pluginState.lifecycle),
-    };
-}
-
-function createUndoSnapshots(): UndoSnapshotsService {
-    const snapshots = createSnapshots(MAXSIZELIMIT);
-
-    return {
-        canMove: (delta: number): boolean => canMoveCurrentSnapshot(snapshots, delta),
-        move: (delta: number): string => moveCurrentSnapsnot(snapshots, delta),
-        addSnapshot: (snapshot: string) => addSnapshot(snapshots, snapshot),
-        clearRedo: () => clearProceedingSnapshots(snapshots),
+        lifecycle: map.lifecycle || new LifecyclePlugin(options, contentDiv),
     };
 }

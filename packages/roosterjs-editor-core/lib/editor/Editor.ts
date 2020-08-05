@@ -1,4 +1,4 @@
-import addContentEditFeatures from './addContentEditFeatures';
+import addContentEditFeatures from '../corePlugins/utils/addContentEditFeatures';
 import addUndoSnapshot from '../undoApi/addUndoSnapshot';
 import canRedo from '../undoApi/canRedo';
 import canUndo from '../undoApi/canUndo';
@@ -558,30 +558,8 @@ export default class Editor {
         nameOrMap: string | Record<string, DOMEventHandler>,
         handler?: DOMEventHandler
     ): () => void {
-        const attachDomEvent = this.core.api.attachDomEvent;
-        const eventsToMap =
-            nameOrMap instanceof Object
-                ? nameOrMap
-                : {
-                      nameOrMap: handler,
-                  };
-
-        let handlers = Object.keys(eventsToMap)
-            .map(eventName => {
-                const value = eventsToMap[eventName];
-
-                if (typeof value === 'number') {
-                    return attachDomEvent(this.core, eventName, value, null);
-                } else if (typeof value === 'function') {
-                    return attachDomEvent(this.core, eventName, null, value);
-                } else if (typeof value === 'object') {
-                    return attachDomEvent(this.core, eventName, value.eventType, value.handler);
-                } else {
-                    return null;
-                }
-            })
-            .filter(x => x);
-        return () => handlers.forEach(handler => handler());
+        const eventsToMap = typeof nameOrMap == 'string' ? { nameOrMap: handler } : nameOrMap;
+        return this.core.api.attachDomEvent(this.core, eventsToMap);
     }
 
     /**
