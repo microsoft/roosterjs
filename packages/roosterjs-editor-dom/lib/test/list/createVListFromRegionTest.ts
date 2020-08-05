@@ -61,7 +61,7 @@ describe('createVListFromRegion from selection, no sibling list', () => {
         runTest(`<div id="${FocusNode}"><br></div>`, [
             {
                 listTypes: [ListType.None],
-                outerHTML: `<li><div id="${FocusNode}"><br></div></li>`,
+                outerHTML: `<li id="${FocusNode}"><br></li>`,
             },
         ]);
     });
@@ -99,7 +99,7 @@ describe('createVListFromRegion from selection, no sibling list', () => {
                 },
                 {
                     listTypes: [ListType.None],
-                    outerHTML: `<li><div id="${FocusNode2}">line3</div></li>`,
+                    outerHTML: `<li id="${FocusNode2}">line3</li>`,
                 },
             ]
         );
@@ -112,7 +112,7 @@ describe('createVListFromRegion from selection, no sibling list', () => {
             [
                 {
                     listTypes: [ListType.None],
-                    outerHTML: `<li><div id="${FocusNode1}">line2</div></li>`,
+                    outerHTML: `<li id="${FocusNode1}">line2</li>`,
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered],
@@ -134,7 +134,7 @@ describe('createVListFromRegion from selection, no sibling list', () => {
                 },
                 {
                     listTypes: [ListType.None],
-                    outerHTML: '<li><div>line3</div></li>',
+                    outerHTML: '<li>line3</li>',
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered],
@@ -150,15 +150,15 @@ describe('createVListFromRegion from selection, no sibling list', () => {
             [
                 {
                     listTypes: [ListType.None],
-                    outerHTML: `<li><div id="${FocusNode1}">line2<br></div></li>`,
+                    outerHTML: `<li id="${FocusNode1}">line2<br></li>`,
                 },
                 {
                     listTypes: [ListType.None],
-                    outerHTML: '<li><div><span>line3<br></span></div></li>',
+                    outerHTML: '<li><span>line3<br></span></li>',
                 },
                 {
                     listTypes: [ListType.None],
-                    outerHTML: `<li><div><span><span id="${FocusNode2}">line4</span></span></div></li>`,
+                    outerHTML: `<li><span><span id="${FocusNode2}">line4</span></span></li>`,
                 },
             ]
         );
@@ -170,15 +170,15 @@ describe('createVListFromRegion from selection, no sibling list', () => {
             [
                 {
                     listTypes: [ListType.None],
-                    outerHTML: `<li><div id="${FocusNode1}">line2<br></div></li>`,
+                    outerHTML: `<li id="${FocusNode1}">line2<br></li>`,
                 },
                 {
                     listTypes: [ListType.None],
-                    outerHTML: '<li><div>  \n  <span>line3<br></span></div></li>',
+                    outerHTML: '<li>  \n  <span>line3<br></span></li>',
                 },
                 {
                     listTypes: [ListType.None],
-                    outerHTML: `<li><div><span>\n<span id="${FocusNode2}">line4</span></span></div></li>`,
+                    outerHTML: `<li><span>\n<span id="${FocusNode2}">line4</span></span></li>`,
                 },
             ]
         );
@@ -458,7 +458,7 @@ describe('createVListFromRegion from selection, with sibling list', () => {
                 },
                 {
                     listTypes: [ListType.None],
-                    outerHTML: '<li><div>line 5</div></li>',
+                    outerHTML: '<li>line 5</li>',
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered],
@@ -522,11 +522,11 @@ describe('createVListFromRegion from selection, with sibling list', () => {
                 },
                 {
                     listTypes: [ListType.None],
-                    outerHTML: '<li><div>&nbsp;</div></li>',
+                    outerHTML: '<li>&nbsp;</li>',
                 },
                 {
                     listTypes: [ListType.None],
-                    outerHTML: '<li><div>line 5\n        </div></li>',
+                    outerHTML: '<li>line 5\n        </li>',
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered],

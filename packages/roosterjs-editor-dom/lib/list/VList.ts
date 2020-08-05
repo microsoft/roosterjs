@@ -1,3 +1,4 @@
+import changeElementTag from '../utils/changeElementTag';
 import getListTypeFromNode, { isListElement } from './getListTypeFromNode';
 import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
@@ -207,8 +208,18 @@ export default class VList {
      * @param type Type of this list item, can be ListType.None
      */
     appendItem(node: Node, type: ListType) {
-        node = getTagOfNode(node) == 'LI' ? node : wrap(node, 'li');
-        this.items.push(type == ListType.None ? new VListItem(node) : new VListItem(node, type));
+        let newListNode = node;
+        const nodeTag = getTagOfNode(node);
+
+        if (nodeTag != 'LI' && nodeTag != 'TABLE') {
+            newListNode = changeElementTag(<HTMLElement>node, 'LI');
+        } else if (nodeTag == 'TABLE') {
+            newListNode = wrap(node, 'li');
+        }
+
+        this.items.push(
+            type == ListType.None ? new VListItem(newListNode) : new VListItem(newListNode, type)
+        );
     }
 
     /**
