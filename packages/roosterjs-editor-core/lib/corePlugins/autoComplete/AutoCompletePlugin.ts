@@ -1,7 +1,7 @@
-import createWrapper from './utils/createWrapper';
-import Editor from '../editor/Editor';
-import PluginWithState from '../interfaces/PluginWithState';
-import { Keys } from '../interfaces/ContentEditFeature';
+import createWrapper from '../utils/createWrapper';
+import Editor from '../../editor/Editor';
+import PluginWithState from '../../interfaces/PluginWithState';
+import { Keys } from '../../interfaces/ContentEditFeature';
 import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 
 /**

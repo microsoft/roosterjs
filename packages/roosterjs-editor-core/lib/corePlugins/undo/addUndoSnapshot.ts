@@ -1,4 +1,4 @@
-import { UndoPluginState } from '../corePlugins/UndoPlugin';
+import UndoPluginState from './UndoPluginState';
 
 export default function addUndoSnapshot(state: UndoPluginState) {
     let snapshot = state.getContent();

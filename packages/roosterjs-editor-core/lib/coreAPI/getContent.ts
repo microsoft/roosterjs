@@ -1,5 +1,5 @@
 import EditorCore, { GetContent } from '../interfaces/EditorCore';
-import normalizeContentColor from '../darkMode/normalizeContentColor';
+import normalizeContentColor from '../corePlugins/darkMode/normalizeContentColor';
 import { GetContentMode, PluginEventType } from 'roosterjs-editor-types';
 import {
     createRange,

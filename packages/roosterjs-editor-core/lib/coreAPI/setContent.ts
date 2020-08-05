@@ -1,6 +1,6 @@
 import EditorCore, { SetContent } from '../interfaces/EditorCore';
 import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
-import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
+import { convertContentToDarkMode } from '../corePlugins/darkMode/convertContentToDarkMode';
 import { setHtmlWithSelectionPath } from 'roosterjs-editor-dom';
 
 export const setContent: SetContent = (

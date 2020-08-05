@@ -1,4 +1,4 @@
-import { UndoPluginState } from '../corePlugins/UndoPlugin';
+import UndoPluginState from './UndoPluginState';
 
 /**
  * @internal

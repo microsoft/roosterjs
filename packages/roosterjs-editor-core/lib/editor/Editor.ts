@@ -1,12 +1,12 @@
-import addContentEditFeatures from '../corePlugins/utils/addContentEditFeatures';
-import addUndoSnapshot from '../undoApi/addUndoSnapshot';
-import canRedo from '../undoApi/canRedo';
-import canUndo from '../undoApi/canUndo';
+import addContentEditFeatures from '../corePlugins/edit/addContentEditFeatures';
+import addUndoSnapshot from '../corePlugins/undo/addUndoSnapshot';
+import canRedo from '../corePlugins/undo/canRedo';
+import canUndo from '../corePlugins/undo/canUndo';
 import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
-import restoreSnapshot from '../undoApi/restoreSnapshot';
-import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
+import restoreSnapshot from '../corePlugins/undo/restoreSnapshot';
+import { convertContentToDarkMode } from '../corePlugins/darkMode/convertContentToDarkMode';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import {
     BlockElement,

@@ -1,8 +1,8 @@
-import createWrapper from './utils/createWrapper';
-import Editor from '../editor/Editor';
-import EditorOptions from '../interfaces/EditorOptions';
-import normalizeContentColor from '../darkMode/normalizeContentColor';
-import PluginWithState from '../interfaces/PluginWithState';
+import createWrapper from '../utils/createWrapper';
+import Editor from '../../editor/Editor';
+import EditorOptions from '../../interfaces/EditorOptions';
+import normalizeContentColor from './normalizeContentColor';
+import PluginWithState from '../../interfaces/PluginWithState';
 import { Browser } from 'roosterjs-editor-dom';
 import { Wrapper } from 'roosterjs-editor-types';
 

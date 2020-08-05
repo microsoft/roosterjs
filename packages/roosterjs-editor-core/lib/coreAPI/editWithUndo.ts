@@ -1,4 +1,4 @@
-import addUndoSnapshot from '../undoApi/addUndoSnapshot';
+import addUndoSnapshot from '../corePlugins/undo/addUndoSnapshot';
 import EditorCore, { EditWithUndo } from '../interfaces/EditorCore';
 import { Position } from 'roosterjs-editor-dom';
 import {

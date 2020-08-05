@@ -39,16 +39,26 @@ export { default as UndoSnapshotsService } from './interfaces/UndoSnapshotsServi
 export { default as Editor } from './editor/Editor';
 
 // Core Plugins
-export { default as AutoCompletePlugin } from './corePlugins/AutoCompletePlugin';
-export { default as EditPlugin } from './corePlugins/EditPlugin';
-export { default as EntityPlugin } from './corePlugins/EntityPlugin';
-export { default as DOMEventPlugin, DOMEventPluginState } from './corePlugins/DOMEventPlugin';
-export { default as LifecyclePlugin, LifecyclePluginState } from './corePlugins/LifecyclePlugin';
-export { default as TypeInContainerPlugin } from './corePlugins/TypeInContainerPlugin';
-export { default as TypeAfterLinkPlugin } from './corePlugins/TypeAfterLinkPlugin';
-export { default as DarkModePlugin, DarkModePluginState } from './corePlugins/DarkModePlugin';
-export { default as CorePastePlugin } from './corePlugins/CorePastePlugin';
-export { default as UndoPlugin, UndoPluginState } from './corePlugins/UndoPlugin';
+export { default as AutoCompletePlugin } from './corePlugins/autoComplete/AutoCompletePlugin';
+export { default as EditPlugin } from './corePlugins/edit/EditPlugin';
+export { default as EntityPlugin } from './corePlugins/entity/EntityPlugin';
+export {
+    default as DOMEventPlugin,
+    DOMEventPluginState,
+} from './corePlugins/domEvent/DOMEventPlugin';
+export {
+    default as LifecyclePlugin,
+    LifecyclePluginState,
+} from './corePlugins/lifecycle/LifecyclePlugin';
+export { default as TypeInContainerPlugin } from './corePlugins/typeInContainer/TypeInContainerPlugin';
+export { default as TypeAfterLinkPlugin } from './corePlugins/typeAfterLink/TypeAfterLinkPlugin';
+export {
+    default as DarkModePlugin,
+    DarkModePluginState,
+} from './corePlugins/darkMode/DarkModePlugin';
+export { default as CorePastePlugin } from './corePlugins/corePaste/CorePastePlugin';
+export { default as UndoPlugin } from './corePlugins/undo/UndoPlugin';
+export { default as UndoPluginState } from './corePlugins/undo/UndoPluginState';
 
 // Event APIs
 export { default as cacheGetEventData } from './eventApi/cacheGetEventData';

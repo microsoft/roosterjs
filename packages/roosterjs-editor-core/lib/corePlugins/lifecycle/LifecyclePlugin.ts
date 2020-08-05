@@ -1,8 +1,8 @@
-import createWrapper from './utils/createWrapper';
-import CustomData from '../interfaces/CustomData';
-import Editor from '../editor/Editor';
-import EditorOptions from '../interfaces/EditorOptions';
-import PluginWithState from '../interfaces/PluginWithState';
+import createWrapper from '../utils/createWrapper';
+import CustomData from '../../interfaces/CustomData';
+import Editor from '../../editor/Editor';
+import EditorOptions from '../../interfaces/EditorOptions';
+import PluginWithState from '../../interfaces/PluginWithState';
 import { Browser, getComputedStyles, Position } from 'roosterjs-editor-dom';
 import {
     DefaultFormat,

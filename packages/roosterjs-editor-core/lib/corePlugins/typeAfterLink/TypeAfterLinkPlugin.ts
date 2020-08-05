@@ -1,7 +1,7 @@
-import Editor from '../editor/Editor';
-import EditorPlugin from '../interfaces/EditorPlugin';
+import Editor from '../../editor/Editor';
+import EditorPlugin from '../../interfaces/EditorPlugin';
 import { Browser, LinkInlineElement, Position } from 'roosterjs-editor-dom';
-import { cacheGetContentSearcher } from '../eventApi/cacheGetContentSearcher';
+import { cacheGetContentSearcher } from '../../eventApi/cacheGetContentSearcher';
 import { PluginEvent, PluginEventType, PositionType } from 'roosterjs-editor-types';
 
 /**

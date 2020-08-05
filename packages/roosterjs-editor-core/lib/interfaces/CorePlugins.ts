@@ -1,14 +1,14 @@
-import AutoCompletePlugin from '../corePlugins/AutoCompletePlugin';
-import CorePastePlugin from '../corePlugins/CorePastePlugin';
-import DarkModePlugin from '../corePlugins/DarkModePlugin';
-import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
-import EditPlugin from '../corePlugins/EditPlugin';
-import EntityPlugin from '../corePlugins/EntityPlugin';
-import LifecyclePlugin from '../corePlugins/LifecyclePlugin';
+import AutoCompletePlugin from '../corePlugins/autoComplete/AutoCompletePlugin';
+import CorePastePlugin from '../corePlugins/corePaste/CorePastePlugin';
+import DarkModePlugin from '../corePlugins/darkMode/DarkModePlugin';
+import DOMEventPlugin from '../corePlugins/domEvent/DOMEventPlugin';
+import EditPlugin from '../corePlugins/edit/EditPlugin';
+import EntityPlugin from '../corePlugins/entity/EntityPlugin';
+import LifecyclePlugin from '../corePlugins/lifecycle/LifecyclePlugin';
 import PluginWithState from './PluginWithState';
-import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
-import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
-import UndoPlugin from '../corePlugins/UndoPlugin';
+import TypeAfterLinkPlugin from '../corePlugins/typeAfterLink/TypeAfterLinkPlugin';
+import TypeInContainerPlugin from '../corePlugins/typeInContainer/TypeInContainerPlugin';
+import UndoPlugin from '../corePlugins/undo/UndoPlugin';
 import { Wrapper } from 'roosterjs-editor-types';
 
 /**

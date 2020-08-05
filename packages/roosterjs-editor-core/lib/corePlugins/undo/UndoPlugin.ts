@@ -1,12 +1,13 @@
-import addUndoSnapshot from '../undoApi/addUndoSnapshot';
-import canRedo from '../undoApi/canRedo';
-import canUndo from '../undoApi/canUndo';
-import createWrapper from './utils/createWrapper';
-import Editor from '../editor/Editor';
-import EditorOptions from '../interfaces/EditorOptions';
-import isCtrlOrMetaPressed from '../eventApi/isCtrlOrMetaPressed';
-import PluginWithState from '../interfaces/PluginWithState';
-import UndoSnapshotsService from '../interfaces/UndoSnapshotsService';
+import addUndoSnapshot from './addUndoSnapshot';
+import canRedo from './canRedo';
+import canUndo from './canUndo';
+import createWrapper from '../utils/createWrapper';
+import Editor from '../../editor/Editor';
+import EditorOptions from '../../interfaces/EditorOptions';
+import isCtrlOrMetaPressed from '../../eventApi/isCtrlOrMetaPressed';
+import PluginWithState from '../../interfaces/PluginWithState';
+import UndoPluginState from './UndoPluginState';
+import UndoSnapshotsService from '../../interfaces/UndoSnapshotsService';
 import { GetContentMode, PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 import {
     addSnapshot,
@@ -22,43 +23,6 @@ const KEY_SPACE = 32;
 const KEY_ENTER = 13;
 const KEY_PAGEUP = 33;
 const KEY_DOWN = 40;
-
-/**
- * The state object for UndoPlugin
- */
-export interface UndoPluginState {
-    /**
-     * Snapshot service for undo, it helps handle snapshot add, remove and retrive
-     */
-    snapshotsService: UndoSnapshotsService;
-
-    /**
-     * Whether restoring of undo snapshot is in proguress.
-     */
-    isRestoring: boolean;
-
-    /**
-     * Whether there is new content change after last undo snapshot is taken
-     */
-    hasNewContent: boolean;
-
-    /**
-     * A function to get current content from editor
-     */
-    getContent: () => string;
-
-    /**
-     * A function to set content to editor
-     */
-    setContent: (content: string) => void;
-
-    /**
-     * The outer undo snapshot taken by addUndoSnapshot() before callback function is invoked.
-     * If addUndoSnapshot() is called nested in another one, this will be the snapshot taken from the outer one
-     * and used for checking if it is a nested call
-     */
-    outerUndoSnapshot: string;
-}
 
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
 // to keep size under limit. This is kept at 10MB
