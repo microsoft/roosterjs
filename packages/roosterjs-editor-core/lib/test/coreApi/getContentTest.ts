@@ -1,4 +1,4 @@
-import * as normalizeContentColor from '../../darkMode/normalizeContentColor';
+import * as normalizeContentColor from '../../corePlugins/darkMode/normalizeContentColor';
 import createEditorCore from '../../editor/createEditorCore';
 import EditorCore from '../../interfaces/EditorCore';
 import { getContent } from '../../coreAPI/getContent';

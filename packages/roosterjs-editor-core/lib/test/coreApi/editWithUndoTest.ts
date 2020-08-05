@@ -1,10 +1,10 @@
-import * as addUndoSnapshot from '../../undoApi/addUndoSnapshot';
+import * as addUndoSnapshot from '../../corePlugins/undo/addUndoSnapshot';
 import createEditorCore from '../../editor/createEditorCore';
+import UndoPluginState from '../../corePlugins/undo/UndoPluginState';
 import UndoSnapshotsService from '../../interfaces/UndoSnapshotsService';
 import { editWithUndo } from '../../coreAPI/editWithUndo';
 import { PluginEventType } from 'roosterjs-editor-types';
 import { Position } from 'roosterjs-editor-dom';
-import { UndoPluginState } from '../../corePlugins/UndoPlugin';
 
 describe('editWithUndo', () => {
     let div: HTMLDivElement;
