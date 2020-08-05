@@ -1,6 +1,6 @@
 import getInheritableStyles from './getInheritableStyles';
 import htmlToDom from './htmlToDom';
-import safeInstanceOf from '../typeUtils/safeInstanceOf';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import { cloneObject } from './cloneObject';
 import {
     getAllowedTags,

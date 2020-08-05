@@ -1,6 +1,6 @@
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import Position from './Position';
-import safeInstanceOf from '../typeUtils/safeInstanceOf';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
 
 /**

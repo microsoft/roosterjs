@@ -1,4 +1,4 @@
-import createEditorCore from '../../editor/createEditorCore';
+import createEditorCore from './createMockEditorCore';
 import { getStyleBasedFormatState } from '../../coreAPI/getStyleBasedFormatState';
 
 describe('getStyleBasedFormatState', () => {

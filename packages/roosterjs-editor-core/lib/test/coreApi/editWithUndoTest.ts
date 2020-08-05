@@ -1,5 +1,5 @@
 import * as addUndoSnapshot from '../../corePlugins/undo/addUndoSnapshot';
-import createEditorCore from '../../editor/createEditorCore';
+import createEditorCore from './createMockEditorCore';
 import UndoPluginState from '../../corePlugins/undo/UndoPluginState';
 import UndoSnapshotsService from '../../interfaces/UndoSnapshotsService';
 import { editWithUndo } from '../../coreAPI/editWithUndo';

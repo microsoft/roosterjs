@@ -43,6 +43,7 @@ export { getFirstLeafNode, getLastLeafNode } from './utils/getLeafNode';
 export { default as getTextContent } from './utils/getTextContent';
 export { default as splitTextNode } from './utils/splitTextNode';
 export { default as toArray } from './utils/toArray';
+export { default as safeInstanceOf } from './utils/safeInstanceOf';
 
 export { default as VTable, VCell } from './table/VTable';
 export { default as VList } from './list/VList';
@@ -72,8 +73,6 @@ export { default as htmlToDom, splitWithFragment } from './htmlSanitizer/htmlToD
 export { default as getInheritableStyles } from './htmlSanitizer/getInheritableStyles';
 export { default as createDefaultHtmlSanitizerOptions } from './htmlSanitizer/createDefaultHtmlSanitizerOptions';
 export { default as chainSanitizerCallback } from './htmlSanitizer/chainSanitizerCallback';
-
-export { default as safeInstanceOf } from './typeUtils/safeInstanceOf';
 
 export { default as commitEntity } from './entity/commitEntity';
 export { default as getEntityFromElement } from './entity/getEntityFromElement';

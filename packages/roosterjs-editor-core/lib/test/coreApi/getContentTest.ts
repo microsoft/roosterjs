@@ -1,5 +1,5 @@
 import * as normalizeContentColor from '../../corePlugins/darkMode/normalizeContentColor';
-import createEditorCore from '../../editor/createEditorCore';
+import createEditorCore from './createMockEditorCore';
 import EditorCore from '../../interfaces/EditorCore';
 import { getContent } from '../../coreAPI/getContent';
 import { GetContentMode, PluginEvent, PluginEventType } from 'roosterjs-editor-types';

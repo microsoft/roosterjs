@@ -1,4 +1,4 @@
-import createEditorCore from '../../editor/createEditorCore';
+import createEditorCore from './createMockEditorCore';
 import { getSelectionRange } from '../../coreAPI/getSelectionRange';
 import { selectNode } from '../TestHelper';
 

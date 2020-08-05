@@ -1,6 +1,6 @@
-import safeInstanceOf, { getTargetWindow } from '../../typeUtils/safeInstanceOf';
+import safeInstanceOf, { getTargetWindow } from '../../utils/safeInstanceOf';
 
-describe('typeUtils', () => {
+describe('safeInstanceOf', () => {
     let iframe: HTMLIFrameElement;
     let iframeDocument: Document;
 

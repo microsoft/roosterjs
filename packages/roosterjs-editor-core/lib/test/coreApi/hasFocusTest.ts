@@ -1,4 +1,4 @@
-import createEditorCore from '../../editor/createEditorCore';
+import createEditorCore from './createMockEditorCore';
 import EditorCore from '../../interfaces/EditorCore';
 import { createRange } from 'roosterjs-editor-dom';
 import { hasFocus } from '../../coreAPI/hasFocus';

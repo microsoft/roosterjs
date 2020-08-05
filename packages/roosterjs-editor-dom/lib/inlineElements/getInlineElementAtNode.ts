@@ -3,7 +3,7 @@ import getTagOfNode from '../utils/getTagOfNode';
 import ImageInlineElement from './ImageInlineElement';
 import LinkInlineElement from './LinkInlineElement';
 import NodeInlineElement from './NodeInlineElement';
-import safeInstanceOf from '../typeUtils/safeInstanceOf';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import { BlockElement, InlineElement } from 'roosterjs-editor-types';
 
 /**

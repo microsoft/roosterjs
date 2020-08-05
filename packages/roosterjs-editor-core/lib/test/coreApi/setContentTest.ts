@@ -1,4 +1,4 @@
-import createEditorCore from '../../editor/createEditorCore';
+import createEditorCore from './createMockEditorCore';
 import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { setContent } from '../../coreAPI/setContent';
 

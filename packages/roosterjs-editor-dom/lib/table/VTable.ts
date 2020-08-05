@@ -1,4 +1,4 @@
-import safeInstanceOf from '../typeUtils/safeInstanceOf';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import { TableFormat, TableOperation } from 'roosterjs-editor-types';
 import { toArray } from 'roosterjs-editor-dom';
 

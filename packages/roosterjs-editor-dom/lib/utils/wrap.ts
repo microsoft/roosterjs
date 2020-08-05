@@ -1,5 +1,5 @@
 import fromHtml from './fromHtml';
-import safeInstanceOf from '../typeUtils/safeInstanceOf';
+import safeInstanceOf from '../utils/safeInstanceOf';
 
 /**
  * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
