@@ -17,5 +17,6 @@ export default function createMockEditorCore(
         edit: core.edit,
         lifecycle: core.lifecycle,
         undo: core.undo,
+        pendingFormatState: core.pendingFormatState,
     };
 }

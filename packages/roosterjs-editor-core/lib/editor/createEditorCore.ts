@@ -9,6 +9,8 @@ import EditorPlugin from '../interfaces/EditorPlugin';
 import EditPlugin from '../corePlugins/edit/EditPlugin';
 import EntityPlugin from '../corePlugins/entity/EntityPlugin';
 import LifecyclePlugin from '../corePlugins/lifecycle/LifecyclePlugin';
+import MouseUpPlugin from '../corePlugins/mouseUp/MouseUpPlugin';
+import PendingFormatStatePlugin from '../corePlugins/pendingFormatState/PendingFormatStatePlugin';
 import TypeAfterLinkPlugin from '../corePlugins/typeAfterLink/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/typeInContainer/TypeInContainerPlugin';
 import UndoPlugin from '../corePlugins/undo/UndoPlugin';
@@ -53,6 +55,7 @@ export default function createEditorCore(
         autoComplete: corePlugins.autoComplete.getState(),
         darkMode: corePlugins.darkMode.getState(),
         domEvent: corePlugins.domEvent.getState(),
+        pendingFormatState: corePlugins.pendingFormatState.getState(),
         edit: corePlugins.edit.getState(),
         lifecycle: corePlugins.lifecycle.getState(),
         undo: corePlugins.undo.getState(),
@@ -92,6 +95,8 @@ function createCorePlugins(
         typeAfterLink: map.typeAfterLink || new TypeAfterLinkPlugin(),
         undo: map.undo || new UndoPlugin(options),
         domEvent: map.domEvent || new DOMEventPlugin(options, contentDiv),
+        pendingFormatState: map.pendingFormatState || new PendingFormatStatePlugin(),
+        mouseUp: map.mouseUp || new MouseUpPlugin(),
         darkMode: map.darkMode || new DarkModePlugin(options),
         paste: map.paste || new CorePastePlugin(),
         entity: map.entity || new EntityPlugin(),

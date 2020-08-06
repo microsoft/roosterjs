@@ -86,7 +86,7 @@ export default class DarkModePlugin implements PluginWithState<DarkModePluginSta
             const selectionRange = this.editor.getSelectionRange();
             if (selectionRange && !selectionRange.collapsed) {
                 const clipboardEvent = event as ClipboardEvent;
-                const copyFragment = this.editor.getSelectionRange().cloneContents();
+                const copyFragment = selectionRange.cloneContents();
 
                 const containerDiv = this.editor.getDocument().createElement('div');
 
@@ -103,7 +103,7 @@ export default class DarkModePlugin implements PluginWithState<DarkModePluginSta
 
                 // if it's cut, delete the contents
                 if (isCut) {
-                    this.editor.getSelectionRange().deleteContents();
+                    selectionRange.deleteContents();
                 }
 
                 event.preventDefault();

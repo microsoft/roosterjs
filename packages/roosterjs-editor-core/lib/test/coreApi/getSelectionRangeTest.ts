@@ -44,8 +44,6 @@ describe('getSelectionRange', () => {
         core.domEvent.value = {
             selectionRange: cachedRange,
             isInIME: false,
-            pendableFormatState: null,
-            pendableFormatPosition: null,
             scrollContainer: null,
             stopPrintableKeyboardEventPropagation: false,
         };

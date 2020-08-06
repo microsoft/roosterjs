@@ -3,16 +3,8 @@ import Editor from '../../editor/Editor';
 import EditorOptions from '../../interfaces/EditorOptions';
 import isCharacterValue from '../../eventApi/isCharacterValue';
 import PluginWithState from '../../interfaces/PluginWithState';
-import { Browser, Position } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
-    PluginEventType,
-    NodePosition,
-    PendableFormatState,
-    PluginEvent,
-    Wrapper,
-    DOMEventHandler,
-} from 'roosterjs-editor-types';
+import { Browser } from 'roosterjs-editor-dom';
+import { ChangeSource, DOMEventHandler, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 
 /**
  * The state object for DOMEventPlugin
@@ -22,16 +14,6 @@ export interface DOMEventPluginState {
      * Whether editor is in IME input sequence
      */
     isInIME: boolean;
-
-    /**
-     * Current pending format state
-     */
-    pendableFormatState: PendableFormatState;
-
-    /**
-     * The position of last pendable format state changing
-     */
-    pendableFormatPosition: NodePosition;
 
     /**
      * Scroll container of editor
@@ -58,12 +40,10 @@ export interface DOMEventPluginState {
  * 5. Focus and blur event
  * 6. Input event
  * 7. Scroll event
- * 8. Pending format state
  */
 export default class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private editor: Editor;
     private disposer: () => void;
-    private mouseUpEventListerAdded: boolean;
     private state: Wrapper<DOMEventPluginState>;
 
     /**
@@ -74,8 +54,6 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     constructor(options: EditorOptions, contentDiv: HTMLDivElement) {
         this.state = createWrapper({
             isInIME: false,
-            pendableFormatPosition: null,
-            pendableFormatState: null,
             scrollContainer: options.scrollContainer || contentDiv,
             selectionRange: null,
             stopPrintableKeyboardEventPropagation: !options.allowKeyboardEventPropagation,
@@ -135,11 +113,9 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
      */
     dispose() {
         this.state.value.scrollContainer.removeEventListener('scroll', this.onScroll);
-        this.removeMouseUpEventListener();
         this.disposer();
         this.disposer = null;
         this.editor = null;
-        this.clear();
     }
 
     /**
@@ -147,42 +123,6 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
      */
     getState() {
         return this.state;
-    }
-
-    /**
-     * Handle events triggered from editor
-     * @param event PluginEvent object
-     */
-    onPluginEvent(event: PluginEvent) {
-        switch (event.eventType) {
-            case PluginEventType.PendingFormatStateChanged:
-                // Got PendingFormatStateChagned event, cache current position and pending format
-                this.state.value.pendableFormatPosition = this.getCurrentPosition();
-                this.state.value.pendableFormatState = event.formatState;
-                break;
-            case PluginEventType.KeyDown:
-            case PluginEventType.MouseDown:
-            case PluginEventType.ContentChanged:
-                // 2. Mouse event
-                if (event.eventType == PluginEventType.MouseDown && !this.mouseUpEventListerAdded) {
-                    this.editor
-                        .getDocument()
-                        .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
-                    this.mouseUpEventListerAdded = true;
-                }
-
-                // 8. Pending format state management
-                // If content or position is changed (by keyboard, mouse, or code),
-                // check if current position is still the same with the cached one (if exist),
-                // and clear cached format if position is changed since it is out-of-date now
-                if (
-                    this.state.value.pendableFormatPosition &&
-                    !this.state.value.pendableFormatPosition.equalTo(this.getCurrentPosition())
-                ) {
-                    this.clear();
-                }
-                break;
-        }
     }
 
     private onNativeEvent = (e: UIEvent) => {
@@ -201,32 +141,6 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
     private onBlur = () => {
         this.state.value.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
-    };
-
-    private clear() {
-        this.state.value.pendableFormatPosition = null;
-        this.state.value.pendableFormatState = null;
-    }
-
-    private getCurrentPosition() {
-        let range = this.editor.getSelectionRange();
-        return range && Position.getStart(range).normalize();
-    }
-
-    private removeMouseUpEventListener() {
-        if (this.mouseUpEventListerAdded) {
-            this.mouseUpEventListerAdded = false;
-            this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
-        }
-    }
-
-    private onMouseUp = (rawEvent: MouseEvent) => {
-        if (this.editor) {
-            this.removeMouseUpEventListener();
-            this.editor.triggerPluginEvent(PluginEventType.MouseUp, {
-                rawEvent,
-            });
-        }
     };
 
     private onScroll = (e: UIEvent) => {

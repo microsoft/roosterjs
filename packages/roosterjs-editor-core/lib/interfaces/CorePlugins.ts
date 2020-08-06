@@ -5,6 +5,8 @@ import DOMEventPlugin from '../corePlugins/domEvent/DOMEventPlugin';
 import EditPlugin from '../corePlugins/edit/EditPlugin';
 import EntityPlugin from '../corePlugins/entity/EntityPlugin';
 import LifecyclePlugin from '../corePlugins/lifecycle/LifecyclePlugin';
+import MouseUpPlugin from '../corePlugins/mouseUp/MouseUpPlugin';
+import PendingFormatStatePlugin from '../corePlugins/pendingFormatState/PendingFormatStatePlugin';
 import PluginWithState from './PluginWithState';
 import TypeAfterLinkPlugin from '../corePlugins/typeAfterLink/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/typeInContainer/TypeInContainerPlugin';
@@ -40,6 +42,17 @@ export default interface CorePlugins {
      * DomEvent plugin helps handle additional DOM events such as IME composition, cut, drop.
      */
     readonly domEvent: DOMEventPlugin;
+
+    /**
+     * PendingFormatStatePlugin handles pending format state management
+     */
+    readonly pendingFormatState: PendingFormatStatePlugin;
+
+    /**
+     * MouseUpPlugin help trigger MouseUp event even when mouse up happens outside editor
+     * as long as the mouse was pressed within Editor before
+     */
+    readonly mouseUp: MouseUpPlugin;
 
     /**
      * TypeAfterLinkPlugin plugin helps workaround a Firefox bug to allow type outside a hyperlink

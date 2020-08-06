@@ -75,7 +75,7 @@ export const selectRange: SelectRange = (
 function restorePendingFormatState(core: EditorCore) {
     const {
         contentDiv,
-        domEvent: { value },
+        pendingFormatState: { value },
         api: { getSelectionRange },
     } = core;
 

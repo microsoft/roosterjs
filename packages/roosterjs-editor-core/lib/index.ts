@@ -59,6 +59,11 @@ export {
 export { default as CorePastePlugin } from './corePlugins/corePaste/CorePastePlugin';
 export { default as UndoPlugin } from './corePlugins/undo/UndoPlugin';
 export { default as UndoPluginState } from './corePlugins/undo/UndoPluginState';
+export { default as MouseUpPlugin } from './corePlugins/mouseUp/MouseUpPlugin';
+export {
+    default as PendingFormatStatePlugin,
+    PendingFormatStatePluginState,
+} from './corePlugins/pendingFormatState/PendingFormatStatePlugin';
 
 // Event APIs
 export { default as cacheGetEventData } from './eventApi/cacheGetEventData';

@@ -89,8 +89,8 @@ describe('selectRange', () => {
         range.selectNode(span);
         range.collapse(true);
 
-        core.domEvent.value.pendableFormatPosition = new Position(div, 0);
-        core.domEvent.value.pendableFormatState = {
+        core.pendingFormatState.value.pendableFormatPosition = new Position(div, 0);
+        core.pendingFormatState.value.pendableFormatState = {
             isBold: true,
         };
 

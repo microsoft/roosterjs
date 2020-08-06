@@ -19,8 +19,6 @@ describe('focus', () => {
         core.domEvent.value = {
             selectionRange: document.createRange(),
             isInIME: false,
-            pendableFormatPosition: null,
-            pendableFormatState: null,
             scrollContainer: null,
             stopPrintableKeyboardEventPropagation: false,
         };
