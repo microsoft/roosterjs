@@ -36,9 +36,9 @@ const VERTICAL_INSERTER_HTML =
     '<div style="position: fixed; width: 12px; height: 12px; font-size: 16px; line-height: 10px; vertical-align: middle; cursor: pointer; border: solid 1px #000; border-radius: 5px"><div style="position: absolute; left: 8px; top: 12px; width: 0; border-left: solid 2px #000;"></div>+</div>';
 
 const HORITONZAL_RESIZER_HTML =
-    '<div style="position: fixed; border-top: 1px #ccc; border-bottom: 1px #ccc; border-left: 0px; border-right: 0px; box-sizing: border-box; cursor: n-resize; user-select: none"></div>';
+    '<div style="position: fixed; border-top: 1px #ccc; border-bottom: 1px #ccc; border-left: 0px; border-right: 0px; box-sizing: border-box; cursor: row-resize; user-select: none"></div>';
 const VERTICAL_RESIZER_HTML =
-    '<div style="position: fixed; border-left: 1px #ccc; border-right: 1px #ccc; border-top: 0px; border-bottom: 0px; box-sizing: border-box; cursor: w-resize; user-select: none"></div>';
+    '<div style="position: fixed; border-left: 1px #ccc; border-right: 1px #ccc; border-top: 0px; border-bottom: 0px; box-sizing: border-box; cursor: col-resize; user-select: none"></div>';
 
 const enum ResizeState {
     None,
