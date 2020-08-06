@@ -228,15 +228,15 @@ export default class TableResize implements EditorPlugin {
         )[0] as HTMLDivElement;
 
         if (this.insertingState == ResizeState.Horizontal) {
-            inserter.style.left = rect.left - 12 + 'px';
-            inserter.style.top = rect.bottom - 8 + 'px';
-            (inserter.firstChild as HTMLElement).style.width =
-                tableRect.right - tableRect.left + 'px';
+            inserter.style.left = `${rect.left - 12}px`;
+            inserter.style.top = `${rect.bottom - 8}px`;
+            (inserter.firstChild as HTMLElement).style.width = `${tableRect.right -
+                tableRect.left}px`;
         } else {
-            inserter.style.left = rect.right - 8 + 'px';
-            inserter.style.top = rect.top - 12 + 'px';
-            (inserter.firstChild as HTMLElement).style.height =
-                tableRect.bottom - tableRect.top + 'px';
+            inserter.style.left = `${rect.right - 8}px`;
+            inserter.style.top = `${rect.top - 12}px`;
+            (inserter.firstChild as HTMLElement).style.height = `${tableRect.bottom -
+                tableRect.top}px`;
         }
 
         inserter.addEventListener('click', this.insertTd);
@@ -331,10 +331,10 @@ export default class TableResize implements EditorPlugin {
             horizontal ? HORITONZAL_RESIZER_HTML : VERTICAL_RESIZER_HTML,
             this.editor.getDocument()
         )[0] as HTMLDivElement;
-        div.style.top = top + 'px';
-        div.style.left = left + 'px';
-        div.style.width = width + 'px';
-        div.style.height = height + 'px';
+        div.style.top = `${top}px`;
+        div.style.left = `${left}px`;
+        div.style.width = `${width}px`;
+        div.style.height = `${height}px`;
 
         div.addEventListener(
             'mousedown',
@@ -377,11 +377,11 @@ export default class TableResize implements EditorPlugin {
         if (this.resizingState == ResizeState.Horizontal) {
             const delta = e.pageY - this.resizerStartPos;
             const newPos = rect.bottom + delta - CELL_RESIZER_WIDTH + 1;
-            this.horizontalResizer.style.top = newPos + 'px';
+            this.horizontalResizer.style.top = `${newPos}px`;
         } else {
             const delta = e.pageX - this.resizerStartPos;
             const newPos = rect.right + delta - CELL_RESIZER_WIDTH + 1;
-            this.verticalResizer.style.left = newPos + 'px';
+            this.verticalResizer.style.left = `${newPos}px`;
         }
     };
 
@@ -404,7 +404,7 @@ export default class TableResize implements EditorPlugin {
                 vtable.forEachCellOfCurrentRow(cell => {
                     if (cell.td) {
                         cell.td.style.height =
-                            cell.td == this.currentTd ? newPos - rect.top + 'px' : null;
+                            cell.td == this.currentTd ? `${newPos - rect.top}px` : null;
                     }
                 });
             } else {
@@ -413,7 +413,7 @@ export default class TableResize implements EditorPlugin {
                 vtable.forEachCellOfCurrentColumn(cell => {
                     if (cell.td) {
                         cell.td.style.width =
-                            cell.td == this.currentTd ? newPos - rect.left + 'px' : null;
+                            cell.td == this.currentTd ? `${newPos - rect.left}px` : null;
                     }
                 });
             }
@@ -427,8 +427,8 @@ export default class TableResize implements EditorPlugin {
 
     private createMoveHandle(rect: Rect) {
         const div = fromHtml(MOVE_HANDLE_HTML, this.editor.getDocument())[0] as HTMLDivElement;
-        div.style.left = rect.left - TABLE_MOVER_WIDTH + 'px';
-        div.style.top = rect.top - TABLE_MOVER_WIDTH + 'px';
+        div.style.left = `${rect.left - TABLE_MOVER_WIDTH}px`;
+        div.style.top = `${rect.top - TABLE_MOVER_WIDTH}px`;
         return div;
     }
 
