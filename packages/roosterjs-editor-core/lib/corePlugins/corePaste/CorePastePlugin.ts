@@ -1,7 +1,7 @@
 import Editor from '../../editor/Editor';
 import EditorPlugin from '../../interfaces/EditorPlugin';
 import { ClipboardData, ClipboardItems, ContentPosition } from 'roosterjs-editor-types';
-import { extractClipboardEvent, fromHtml } from 'roosterjs-editor-dom';
+import { extractClipboardEvent, fromHtml, readFile } from 'roosterjs-editor-dom';
 
 const CONTAINER_HTML =
     '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
@@ -76,16 +76,10 @@ export default class CorePastePlugin implements EditorPlugin {
         };
 
         if (clipboardData.image) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                clipboardData.imageDataUri = reader.result as string;
+            readFile(clipboardData.image, dataUrl => {
+                clipboardData.imageDataUri = dataUrl;
                 this.editor.paste(clipboardData);
-            };
-            reader.onerror = () => {
-                clipboardData.image = null;
-                this.editor.paste(clipboardData);
-            };
-            reader.readAsDataURL(clipboardData.image);
+            });
         } else {
             this.editor.paste(clipboardData);
         }

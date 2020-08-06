@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getTagOfNode, HtmlSanitizer, safeInstanceOf } from 'roosterjs-editor-dom';
+import { getTagOfNode, HtmlSanitizer, readFile, safeInstanceOf } from 'roosterjs-editor-dom';
 import { PendableFormatState, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { SidePaneElementProps } from '../SidePaneElement';
 
@@ -195,11 +195,7 @@ export default class EventViewPane extends React.Component<
     };
 
     private renderImage = (img: HTMLImageElement, imageFile: File) => {
-        let reader = new FileReader();
-        reader.onload = (e: ProgressEvent) =>
-            (img.src = (event.target as FileReader).result as string);
-
-        reader.readAsDataURL(imageFile);
+        readFile(imageFile, dataUrl => (img.src = dataUrl));
     };
 
     private onDisplayCountChanged = () => {

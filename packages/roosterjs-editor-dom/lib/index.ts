@@ -44,6 +44,7 @@ export { default as getTextContent } from './utils/getTextContent';
 export { default as splitTextNode } from './utils/splitTextNode';
 export { default as toArray } from './utils/toArray';
 export { default as safeInstanceOf } from './utils/safeInstanceOf';
+export { default as readFile } from './utils/readFile';
 
 export { default as VTable, VCell } from './table/VTable';
 export { default as VList } from './list/VList';

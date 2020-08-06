@@ -1,5 +1,6 @@
 import { ChangeSource } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
+import { readFile } from 'roosterjs-editor-dom';
 
 /**
  * Insert an image to editor at current selection
@@ -20,13 +21,11 @@ export default function insertImage(editor: Editor, imageFile: File | string): v
     if (typeof imageFile == 'string') {
         insertImageWithSrc(editor, imageFile);
     } else {
-        let reader = new FileReader();
-        reader.onload = (event: ProgressEvent) => {
-            if (!editor.isDisposed()) {
-                insertImageWithSrc(editor, (event.target as FileReader).result as string);
+        readFile(imageFile, dataUrl => {
+            if (dataUrl && !editor.isDisposed()) {
+                insertImageWithSrc(editor, dataUrl);
             }
-        };
-        reader.readAsDataURL(imageFile);
+        });
     }
 }
 
