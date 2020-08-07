@@ -18,5 +18,6 @@ export default function createMockEditorCore(
         lifecycle: core.lifecycle,
         undo: core.undo,
         pendingFormatState: core.pendingFormatState,
+        entity: core.entity,
     };
 }

@@ -1,4 +1,6 @@
-import { Editor, EditorPlugin, isCharacterValue, Keys } from 'roosterjs-editor-core';
+import createWrapper from '../utils/createWrapper';
+import PluginWithState from '../../interfaces/PluginWithState';
+import { Editor, isCharacterValue, Keys } from 'roosterjs-editor-core';
 import {
     Browser,
     commitEntity,
@@ -16,6 +18,7 @@ import {
     HtmlSanitizerOptions,
     Entity,
     EntityClasses,
+    Wrapper,
 } from 'roosterjs-editor-types';
 
 const ENTITY_ID_REGEX = /_\d{1,8}$/;
@@ -24,22 +27,35 @@ const ENTITY_CSS_REGEX = '^' + EntityClasses.ENTITY_INFO_NAME + '$';
 const ENTITY_ID_CSS_REGEX = '^' + EntityClasses.ENTITY_ID_PREFIX;
 const ENTITY_TYPE_CSS_REGEX = '^' + EntityClasses.ENTITY_TYPE_PREFIX;
 const ENTITY_READONLY_CSS_REGEX = '^' + EntityClasses.ENTITY_READONLY_PREFIX;
-
-export const ALLOWED_CSS_CLASSES = [
+const ALLOWED_CSS_CLASSES = [
     ENTITY_CSS_REGEX,
     ENTITY_ID_CSS_REGEX,
     ENTITY_TYPE_CSS_REGEX,
     ENTITY_READONLY_CSS_REGEX,
 ];
 
+export interface EntityPluginState {
+    clickingPoint: { pageX: number; pageY: number };
+    knownEntityElements: HTMLElement[];
+}
+
 /**
  * Entity Plugin helps handle all operations related to an entity and generate entity specified events
  */
-export default class EntityPlugin implements EditorPlugin {
+export default class EntityPlugin implements PluginWithState<EntityPluginState> {
     private editor: Editor;
     private disposer: () => void;
-    private clickingPoint: { pageX: number; pageY: number };
-    private knownEntityElements: HTMLElement[];
+    private state: Wrapper<EntityPluginState>;
+
+    /**
+     * Construct a new instance of EntityPlugin
+     */
+    constructor() {
+        this.state = createWrapper({
+            clickingPoint: null,
+            knownEntityElements: [],
+        });
+    }
 
     /**
      * Get a friendly name of  this plugin
@@ -58,8 +74,6 @@ export default class EntityPlugin implements EditorPlugin {
             contextmenu: this.handleContextMenuEvent,
             cut: this.handleCutEvent,
         });
-
-        this.knownEntityElements = [];
     }
 
     /**
@@ -69,7 +83,15 @@ export default class EntityPlugin implements EditorPlugin {
         this.disposer();
         this.disposer = null;
         this.editor = null;
-        this.knownEntityElements = null;
+        this.state.value.knownEntityElements = [];
+        this.state.value.clickingPoint = null;
+    }
+
+    /**
+     * Get plugin state object
+     */
+    getState() {
+        return this.state;
     }
 
     /**
@@ -125,7 +147,7 @@ export default class EntityPlugin implements EditorPlugin {
         const entityElement = node && this.editor.getElementAtCursor(getEntitySelector(), node);
         if (entityElement && !entityElement.isContentEditable) {
             event.preventDefault();
-            this.clickingPoint = { pageX, pageY };
+            this.state.value.clickingPoint = { pageX, pageY };
         }
     }
 
@@ -135,9 +157,9 @@ export default class EntityPlugin implements EditorPlugin {
         let entityElement: HTMLElement;
 
         if (
-            this.clickingPoint &&
-            this.clickingPoint.pageX == pageX &&
-            this.clickingPoint.pageY == pageY &&
+            this.state.value.clickingPoint &&
+            this.state.value.clickingPoint.pageX == pageX &&
+            this.state.value.clickingPoint.pageY == pageY &&
             node &&
             !!(entityElement = this.editor.getElementAtCursor(getEntitySelector(), node))
         ) {
@@ -147,7 +169,7 @@ export default class EntityPlugin implements EditorPlugin {
             workaroundSelectionIssueForIE(this.editor);
         }
 
-        this.clickingPoint = null;
+        this.state.value.clickingPoint = null;
     }
 
     private handleKeyDownEvent(event: KeyboardEvent) {
@@ -180,16 +202,16 @@ export default class EntityPlugin implements EditorPlugin {
     }
 
     private handleContentChangedEvent(resetAll: boolean) {
-        this.knownEntityElements = resetAll
+        this.state.value.knownEntityElements = resetAll
             ? []
-            : this.knownEntityElements.filter(node => this.editor.contains(node));
-        const allId = this.knownEntityElements
+            : this.state.value.knownEntityElements.filter(node => this.editor.contains(node));
+        const allId = this.state.value.knownEntityElements
             .map(e => getEntityFromElement(e)?.id)
             .filter(x => !!x);
 
         this.editor.queryElements(getEntitySelector(), element => {
-            if (this.knownEntityElements.indexOf(element) < 0) {
-                this.knownEntityElements.push(element);
+            if (this.state.value.knownEntityElements.indexOf(element) < 0) {
+                this.state.value.knownEntityElements.push(element);
 
                 const entity = getEntityFromElement(element);
 
