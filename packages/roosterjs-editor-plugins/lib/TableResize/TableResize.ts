@@ -236,7 +236,7 @@ export default class TableResize implements EditorPlugin {
         } else {
             inserter.style.left = `${rect.right - 8}px`;
             inserter.style.top = `${rect.top -
-                (INSERTER_SIDE_LENGTH + 2 * INSERTER_BORDER_SIZE)}px`;
+                (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)}px`;
             (inserter.firstChild as HTMLElement).style.height = `${tableRect.bottom -
                 tableRect.top}px`;
         }
