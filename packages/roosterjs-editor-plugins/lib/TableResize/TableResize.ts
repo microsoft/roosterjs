@@ -11,6 +11,7 @@ import {
     // TableOperation,
     // PositionType,
 } from 'roosterjs-editor-types';
+
 // import { contains, fromHtml, isRtl, VTable } from 'roosterjs-editor-dom';
 // import { isNode } from 'roosterjs-cross-window';
 // import {
@@ -30,8 +31,10 @@ const CELL_RESIZER_WIDTH = 4;
 const INSERTER_COLOR = '#4A4A4A';
 const MOVE_HANDLE_HTML = `<div style="width: 16px; height: 16px; border: solid 1px #ccc; color: ${INSERTER_COLOR}; border-radius: 2px; line-height: 18px; text-align: center; font-family: Arial; font-weight: bold; font-size: 18px; cursor: all-scroll; background-color: white; position: fixed">+</div>`;
 
-const HORIZONTAL_INSERTER_HTML = `<div style="position: fixed; width: 12px; height: 12px; font-size: 16px; color: ${INSERTER_COLOR}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid 1px ${INSERTER_COLOR}; border-radius: 50%; background-color: white"><div style="position: absolute; left: 12px; top: 8px; height: 3px; border-top: 1px solid ${INSERTER_COLOR}; border-bottom: 1px solid ${INSERTER_COLOR}; border-right: 1px solid ${INSERTER_COLOR}; border-left: 0px; box-sizing: border-box; background-color: white;"></div>+</div>`;
-const VERTICAL_INSERTER_HTML = `<div style="position: fixed; width: 12px; height: 12px; font-size: 16px; color: ${INSERTER_COLOR}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid 1px ${INSERTER_COLOR}; border-radius: 50%; background-color: white"><div style="position: absolute; left: 8px; top: 12px; width: 3px; border-left: 1px solid ${INSERTER_COLOR}; border-right: 1px solid ${INSERTER_COLOR}; border-bottom: 1px solid ${INSERTER_COLOR}; border-top: 0px; box-sizing: border-box; background-color: white;"></div>+</div>`;
+const INSERTER_SIDE_LENGTH = 12;
+const INSERTER_BORDER_SIZE = 1;
+const HORIZONTAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${INSERTER_COLOR}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${INSERTER_COLOR}; border-radius: 50%; background-color: white"><div style="position: absolute; left: 12px; top: 5px; height: 3px; border-top: 1px solid ${INSERTER_COLOR}; border-bottom: 1px solid ${INSERTER_COLOR}; border-right: 1px solid ${INSERTER_COLOR}; border-left: 0px; box-sizing: border-box; background-color: white;"></div>+</div>`;
+const VERTICAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${INSERTER_COLOR}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${INSERTER_COLOR}; border-radius: 50%; background-color: white"><div style="position: absolute; left: 5px; top: 12px; width: 3px; border-left: 1px solid ${INSERTER_COLOR}; border-right: 1px solid ${INSERTER_COLOR}; border-bottom: 1px solid ${INSERTER_COLOR}; border-top: 0px; box-sizing: border-box; background-color: white;"></div>+</div>`;
 
 const HORITONZAL_RESIZER_HTML =
     '<div style="position: fixed; border-top: 1px #ccc; border-bottom: 1px #ccc; border-left: 0px; border-right: 0px; box-sizing: border-box; cursor: row-resize; user-select: none"></div>';
@@ -225,13 +228,15 @@ export default class TableResize implements EditorPlugin {
         )[0] as HTMLDivElement;
 
         if (this.insertingState == ResizeState.Horizontal) {
-            inserter.style.left = `${rect.left - 12}px`;
+            inserter.style.left = `${rect.left -
+                (INSERTER_SIDE_LENGTH + 2 * INSERTER_BORDER_SIZE)}px`;
             inserter.style.top = `${rect.bottom - 8}px`;
             (inserter.firstChild as HTMLElement).style.width = `${tableRect.right -
                 tableRect.left}px`;
         } else {
             inserter.style.left = `${rect.right - 8}px`;
-            inserter.style.top = `${rect.top - 12}px`;
+            inserter.style.top = `${rect.top -
+                (INSERTER_SIDE_LENGTH + 2 * INSERTER_BORDER_SIZE)}px`;
             (inserter.firstChild as HTMLElement).style.height = `${tableRect.bottom -
                 tableRect.top}px`;
         }
