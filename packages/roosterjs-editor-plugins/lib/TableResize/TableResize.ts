@@ -201,7 +201,7 @@ export default class TableResize implements EditorPlugin {
 
         if (this.insertingState == ResizeState.Horizontal) {
             inserter.style.left = `${rect.left -
-                (INSERTER_SIDE_LENGTH + 2 * INSERTER_BORDER_SIZE)}px`;
+                (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)}px`;
             inserter.style.top = `${rect.bottom - 8}px`;
             (inserter.firstChild as HTMLElement).style.width = `${tableRect.right -
                 tableRect.left}px`;
