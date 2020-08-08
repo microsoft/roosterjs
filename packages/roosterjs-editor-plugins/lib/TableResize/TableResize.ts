@@ -15,7 +15,7 @@ const INSERTER_SIDE_LENGTH = 12;
 const INSERTER_BORDER_SIZE = 1;
 
 const CELL_RESIZER_WIDTH = 4;
-const HORITONZAL_RESIZER_HTML =
+const HORIZONTAL_RESIZER_HTML =
     '<div style="position: fixed; border-top: 1px #ccc; border-bottom: 1px #ccc; border-left: 0px; border-right: 0px; box-sizing: border-box; cursor: row-resize; user-select: none"></div>';
 const VERTICAL_RESIZER_HTML =
     '<div style="position: fixed; border-left: 1px #ccc; border-right: 1px #ccc; border-top: 0px; border-bottom: 0px; box-sizing: border-box; cursor: col-resize; user-select: none"></div>';
@@ -297,7 +297,7 @@ export default class TableResize implements EditorPlugin {
         height: number
     ) {
         const div = fromHtml(
-            horizontal ? HORITONZAL_RESIZER_HTML : VERTICAL_RESIZER_HTML,
+            horizontal ? HORIZONTAL_RESIZER_HTML : VERTICAL_RESIZER_HTML,
             this.editor.getDocument()
         )[0] as HTMLDivElement;
         div.style.top = `${top}px`;
