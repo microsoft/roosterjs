@@ -11,11 +11,8 @@ import {
 
 const TABLE_MOVER_WIDTH = 20;
 const INSERTER_COLOR = '#4A4A4A';
-
 const INSERTER_SIDE_LENGTH = 12;
 const INSERTER_BORDER_SIZE = 1;
-const HORIZONTAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${INSERTER_COLOR}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${INSERTER_COLOR}; border-radius: 50%; background-color: white"><div style="position: absolute; left: 12px; top: 5px; height: 3px; border-top: 1px solid ${INSERTER_COLOR}; border-bottom: 1px solid ${INSERTER_COLOR}; border-right: 1px solid ${INSERTER_COLOR}; border-left: 0px; box-sizing: border-box; background-color: white;"></div>+</div>`;
-const VERTICAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${INSERTER_COLOR}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${INSERTER_COLOR}; border-radius: 50%; background-color: white"><div style="position: absolute; left: 5px; top: 12px; width: 3px; border-left: 1px solid ${INSERTER_COLOR}; border-right: 1px solid ${INSERTER_COLOR}; border-bottom: 1px solid ${INSERTER_COLOR}; border-top: 0px; box-sizing: border-box; background-color: white;"></div>+</div>`;
 
 const CELL_RESIZER_WIDTH = 4;
 const HORITONZAL_RESIZER_HTML =
@@ -192,6 +189,11 @@ export default class TableResize implements EditorPlugin {
 
     private createInserter(tableRect: Rect) {
         const rect = normalizeRect(this.currentInsertTd.getBoundingClientRect());
+        const editorBackgroundColor = this.editor.getDefaultFormat().backgroundColor;
+        const inserterBackgroundColor = editorBackgroundColor || 'white';
+        const HORIZONTAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${INSERTER_COLOR}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${INSERTER_COLOR}; border-radius: 50%; background-color: ${inserterBackgroundColor}"><div style="position: absolute; left: 12px; top: 5px; height: 3px; border-top: 1px solid ${INSERTER_COLOR}; border-bottom: 1px solid ${INSERTER_COLOR}; border-right: 1px solid ${INSERTER_COLOR}; border-left: 0px; box-sizing: border-box; background-color: ${inserterBackgroundColor};"></div>+</div>`;
+        const VERTICAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${INSERTER_COLOR}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${INSERTER_COLOR}; border-radius: 50%; background-color: ${inserterBackgroundColor}"><div style="position: absolute; left: 5px; top: 12px; width: 3px; border-left: 1px solid ${INSERTER_COLOR}; border-right: 1px solid ${INSERTER_COLOR}; border-bottom: 1px solid ${INSERTER_COLOR}; border-top: 0px; box-sizing: border-box; background-color: ${inserterBackgroundColor};"></div>+</div>`;
+
         const inserter = fromHtml(
             this.insertingState == ResizeState.Horizontal
                 ? HORIZONTAL_INSERTER_HTML
