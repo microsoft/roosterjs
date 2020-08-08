@@ -41,7 +41,7 @@ export { default as Editor } from './editor/Editor';
 // Core Plugins
 export { default as AutoCompletePlugin } from './corePlugins/autoComplete/AutoCompletePlugin';
 export { default as EditPlugin } from './corePlugins/edit/EditPlugin';
-export { default as EntityPlugin } from './corePlugins/entity/EntityPlugin';
+export { default as EntityPlugin, EntityPluginState } from './corePlugins/entity/EntityPlugin';
 export {
     default as DOMEventPlugin,
     DOMEventPluginState,
