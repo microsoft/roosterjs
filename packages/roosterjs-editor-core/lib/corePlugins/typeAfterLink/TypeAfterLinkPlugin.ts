@@ -1,16 +1,33 @@
+import createWrapper from '../utils/createWrapper';
 import Editor from '../../editor/Editor';
-import EditorPlugin from '../../interfaces/EditorPlugin';
+import PluginWithState from '../../interfaces/PluginWithState';
 import { Browser, LinkInlineElement, Position } from 'roosterjs-editor-dom';
 import { cacheGetContentSearcher } from '../../eventApi/cacheGetContentSearcher';
-import { PluginEvent, PluginEventType, PositionType } from 'roosterjs-editor-types';
+import {
+    BrowserInfo,
+    PluginEvent,
+    PluginEventType,
+    PositionType,
+    Wrapper,
+} from 'roosterjs-editor-types';
 
 /**
  * TypeAfterLinkPlugin Component helps handle typing event when cursor is right after a link.
  * When typing/pasting after a link, browser may put the new charactor inside link.
  * This plugin overrides this behavior to always insert outside of link.
  */
-export default class TypeAfterLinkPlugin implements EditorPlugin {
+export default class TypeAfterLinkPlugin implements PluginWithState<BrowserInfo> {
     private editor: Editor;
+    private state: Wrapper<BrowserInfo>;
+
+    /**
+     * Construct a new instance of PendingFormatStatePlugin
+     * @param options The editor options
+     * @param contentDiv The editor content DIV
+     */
+    constructor() {
+        this.state = createWrapper(Browser);
+    }
 
     /**
      * Get a friendly name of  this plugin
@@ -35,12 +52,19 @@ export default class TypeAfterLinkPlugin implements EditorPlugin {
     }
 
     /**
+     * Get the state object of this plugin
+     */
+    getState() {
+        return this.state;
+    }
+
+    /**
      * Handle events triggered from editor
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
         if (
-            (Browser.isFirefox && event.eventType == PluginEventType.KeyPress) ||
+            (this.state.value.isFirefox && event.eventType == PluginEventType.KeyPress) ||
             event.eventType == PluginEventType.BeforePaste
         ) {
             let range = this.editor.getSelectionRange();

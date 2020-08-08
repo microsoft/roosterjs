@@ -1,17 +1,14 @@
-import AutoCompletePlugin from '../corePlugins/autoComplete/AutoCompletePlugin';
-import CorePastePlugin from '../corePlugins/corePaste/CorePastePlugin';
-import DarkModePlugin from '../corePlugins/darkMode/DarkModePlugin';
-import DOMEventPlugin from '../corePlugins/domEvent/DOMEventPlugin';
-import EditPlugin from '../corePlugins/edit/EditPlugin';
-import EntityPlugin from '../corePlugins/entity/EntityPlugin';
-import LifecyclePlugin from '../corePlugins/lifecycle/LifecyclePlugin';
-import MouseUpPlugin from '../corePlugins/mouseUp/MouseUpPlugin';
-import PendingFormatStatePlugin from '../corePlugins/pendingFormatState/PendingFormatStatePlugin';
+import EditorPlugin from './EditorPlugin';
 import PluginWithState from './PluginWithState';
-import TypeAfterLinkPlugin from '../corePlugins/typeAfterLink/TypeAfterLinkPlugin';
-import TypeInContainerPlugin from '../corePlugins/typeInContainer/TypeInContainerPlugin';
-import UndoPlugin from '../corePlugins/undo/UndoPlugin';
-import { Wrapper } from 'roosterjs-editor-types';
+import UndoPluginState from '../corePlugins/undo/UndoPluginState';
+import { BrowserInfo, Wrapper } from 'roosterjs-editor-types';
+import { DarkModePluginState } from '../corePlugins/darkMode/DarkModePlugin';
+import { DOMEventPluginState } from '../corePlugins/domEvent/DOMEventPlugin';
+import { EntityPluginState } from '../corePlugins/entity/EntityPlugin';
+import { GenericContentEditFeature } from './ContentEditFeature';
+import { LifecyclePluginState } from '../corePlugins/lifecycle/LifecyclePlugin';
+import { PendingFormatStatePluginState } from '../corePlugins/pendingFormatState/PendingFormatStatePlugin';
+import { PluginEvent } from 'roosterjs-editor-types';
 
 /**
  * An interface for editor core plugins.
@@ -21,63 +18,63 @@ export default interface CorePlugins {
     /**
      * Edit plugin handles ContentEditFeatures
      */
-    readonly edit: EditPlugin;
+    readonly edit: PluginWithState<Record<number, GenericContentEditFeature<PluginEvent>[]>>;
 
     /**
      * Auto complete plugin handles the undo operation for an auto complete action
      */
-    readonly autoComplete: AutoCompletePlugin;
+    readonly autoComplete: PluginWithState<string>;
 
     /**
      * Undo plugin provides the ability to undo/redo
      */
-    readonly undo: UndoPlugin;
+    readonly undo: PluginWithState<UndoPluginState>;
 
     /**
      * TypeInContainer plugin makes sure user is always type under a container element under editor DIV
      */
-    readonly typeInContainer: TypeInContainerPlugin;
+    readonly typeInContainer: EditorPlugin;
 
     /**
      * DomEvent plugin helps handle additional DOM events such as IME composition, cut, drop.
      */
-    readonly domEvent: DOMEventPlugin;
+    readonly domEvent: PluginWithState<DOMEventPluginState>;
 
     /**
      * PendingFormatStatePlugin handles pending format state management
      */
-    readonly pendingFormatState: PendingFormatStatePlugin;
+    readonly pendingFormatState: PluginWithState<PendingFormatStatePluginState>;
 
     /**
      * MouseUpPlugin help trigger MouseUp event even when mouse up happens outside editor
      * as long as the mouse was pressed within Editor before
      */
-    readonly mouseUp: MouseUpPlugin;
+    readonly mouseUp: EditorPlugin;
 
     /**
      * TypeAfterLinkPlugin plugin helps workaround a Firefox bug to allow type outside a hyperlink
      */
-    readonly typeAfterLink: TypeAfterLinkPlugin;
+    readonly typeAfterLink: PluginWithState<BrowserInfo>;
 
     /**
      * Dark mode plguin for handling dark mode copy.
      */
-    readonly darkMode: DarkModePlugin;
+    readonly darkMode: PluginWithState<DarkModePluginState>;
 
     /**
      * Core paste plugin for handling onPaste event and extract the pasted content
      */
-    readonly paste: CorePastePlugin;
+    readonly paste: EditorPlugin;
 
     /**
      * Entity Plugin handles all operations related to an entity and generate entity specified events
      */
-    readonly entity: EntityPlugin;
+    readonly entity: PluginWithState<EntityPluginState>;
 
     /**
      * Lifecycle plugin handles editor initialization and disposing
      */
-    readonly lifecycle: LifecyclePlugin;
+    readonly lifecycle: PluginWithState<LifecyclePluginState>;
 }
 
 export type PluginKey = keyof CorePlugins;

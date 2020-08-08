@@ -60,6 +60,7 @@ export default function createEditorCore(
         lifecycle: corePlugins.lifecycle.getState(),
         undo: corePlugins.undo.getState(),
         entity: corePlugins.entity.getState(),
+        typeAfterLink: corePlugins.typeAfterLink.getState(),
     };
 }
 

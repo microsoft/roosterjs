@@ -124,7 +124,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
 
         if (range.collapsed) {
             this.tryNormalizeTyping(event, range);
-        } else if (!range.collapsed) {
+        } else {
             this.editor.runAsync(() => {
                 this.tryNormalizeTyping(event);
             });

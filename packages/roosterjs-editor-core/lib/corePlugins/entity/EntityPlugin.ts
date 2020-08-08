@@ -34,8 +34,18 @@ const ALLOWED_CSS_CLASSES = [
     ENTITY_READONLY_CSS_REGEX,
 ];
 
+/**
+ * The state object for EntityPlugin
+ */
 export interface EntityPluginState {
+    /**
+     * Last clicking point when mouse down event happens
+     */
     clickingPoint: { pageX: number; pageY: number };
+
+    /**
+     * All known entity elements
+     */
     knownEntityElements: HTMLElement[];
 }
 
