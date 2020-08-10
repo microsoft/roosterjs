@@ -17,9 +17,9 @@ const INSERTER_BORDER_SIZE = 1;
 
 const CELL_RESIZER_WIDTH = 4;
 const HORIZONTAL_RESIZER_HTML =
-    '<div style="position: fixed; border-top: 1px #ccc; border-bottom: 1px #ccc; border-left: 0px; border-right: 0px; box-sizing: border-box; cursor: row-resize; user-select: none"></div>';
+    '<div style="position: fixed; cursor: row-resize; user-select: none"></div>';
 const VERTICAL_RESIZER_HTML =
-    '<div style="position: fixed; border-left: 1px #ccc; border-right: 1px #ccc; border-top: 0px; border-bottom: 0px; box-sizing: border-box; cursor: col-resize; user-select: none"></div>';
+    '<div style="position: fixed; cursor: col-resize; user-select: none"></div>';
 
 const enum ResizeState {
     None,
@@ -326,15 +326,9 @@ export default class TableResize implements EditorPlugin {
         const doc = this.editor.getDocument();
         doc.addEventListener('mousemove', this.throttledResizeTable, true);
         doc.addEventListener('mouseup', this.endResizeTable, true);
-
-        const resizer =
-            this.resizingState == ResizeState.Horizontal
-                ? this.horizontalResizer
-                : this.verticalResizer;
-        resizer.style.borderStyle = 'solid';
     }
 
-    private throttledResizeTable = (e: MouseEvent) => throttle(this.resizeTable, 200)(e);
+    private throttledResizeTable = (e: MouseEvent) => throttle(this.resizeTable, 300)(e);
 
     private resizeTable = (e: MouseEvent) => {
         if (this.currentTd) {
