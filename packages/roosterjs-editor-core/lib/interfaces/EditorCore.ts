@@ -66,13 +66,13 @@ export type CreatePasteFragment = (
 
 /**
  * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
- * Undo snapshot will not be added if this call is nested inside another editWithUndo() call.
+ * Undo snapshot will not be added if this call is nested inside another addUndoSnapshot() call.
  * @param core The EditorCore object
  * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
  * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
  */
-export type EditWithUndo = (
+export type AddUndoSnapshot = (
     core: EditorCore,
     callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
     changeSource: ChangeSource | string,
@@ -139,6 +139,13 @@ export type HasFocus = (core: EditorCore) => boolean;
 export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
 
 /**
+ * Restore an undo snapshot into editor
+ * @param core The editor core object
+ * @param step Steps to move, can be 0, positive or negative
+ */
+export type RestoreUndoSnapshot = (core: EditorCore, step: number) => void;
+
+/**
  * Change the editor selection to the given range
  * @param core The EditorCore object
  * @param range The range to select
@@ -198,13 +205,13 @@ export interface CoreApiMap {
 
     /**
      * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
-     * Undo snapshot will not be added if this call is nested inside another editWithUndo() call.
+     * Undo snapshot will not be added if this call is nested inside another addUndoSnapshot() call.
      * @param core The EditorCore object
      * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
      * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
      * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
      */
-    editWithUndo: EditWithUndo;
+    addUndoSnapshot: AddUndoSnapshot;
 
     /**
      * Focus to editor. If there is a cached selection range, use it as current selection
@@ -248,6 +255,13 @@ export interface CoreApiMap {
      * @param option An insert option object to specify how to insert the node
      */
     insertNode: InsertNode;
+
+    /**
+     * Restore an undo snapshot into editor
+     * @param core The editor core object
+     * @param step Steps to move, can be 0, positive or negative
+     */
+    restoreUndoSnapshot: RestoreUndoSnapshot;
 
     /**
      * Change the editor selection to the given range

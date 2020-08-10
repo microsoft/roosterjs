@@ -7,11 +7,11 @@ export {
 export { default as CustomData } from './interfaces/CustomData';
 export {
     default as EditorCore,
+    AddUndoSnapshot,
     AttachDomEvent,
     CalcDefaultFormat,
     CoreApiMap,
     CreatePasteFragment,
-    EditWithUndo,
     Focus,
     GetContent,
     GetCustomData,
@@ -19,6 +19,7 @@ export {
     GetStyleBasedFormatState,
     HasFocus,
     InsertNode,
+    RestoreUndoSnapshot,
     SelectRange,
     SetContent,
     TriggerEvent,
@@ -58,8 +59,7 @@ export {
     DarkModePluginState,
 } from './corePlugins/darkMode/DarkModePlugin';
 export { default as CorePastePlugin } from './corePlugins/corePaste/CorePastePlugin';
-export { default as UndoPlugin } from './corePlugins/undo/UndoPlugin';
-export { default as UndoPluginState } from './corePlugins/undo/UndoPluginState';
+export { default as UndoPlugin, UndoPluginState } from './corePlugins/undo/UndoPlugin';
 export { default as MouseUpPlugin } from './corePlugins/mouseUp/MouseUpPlugin';
 export {
     default as PendingFormatStatePlugin,

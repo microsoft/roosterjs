@@ -1,12 +1,10 @@
-import * as addUndoSnapshot from '../../lib/corePlugins/undo/addUndoSnapshot';
 import createEditorCore from './createMockEditorCore';
-import UndoPluginState from '../../lib/corePlugins/undo/UndoPluginState';
 import UndoSnapshotsService from '../../lib/interfaces/UndoSnapshotsService';
-import { editWithUndo } from '../../lib/coreAPI/editWithUndo';
+import { addUndoSnapshot } from '../../lib/coreAPI/addUndoSnapshot';
 import { PluginEventType } from 'roosterjs-editor-types';
 import { Position } from 'roosterjs-editor-dom';
 
-describe('editWithUndo', () => {
+describe('addUndoSnapshot', () => {
     let div: HTMLDivElement;
     beforeEach(() => {
         div = document.createElement('div');
@@ -20,16 +18,17 @@ describe('editWithUndo', () => {
 
     it('null input', () => {
         const core = createEditorCore(div, {});
-        spyOn(addUndoSnapshot, 'default');
-        editWithUndo(core, null, null, false);
-        expect(addUndoSnapshot.default).toHaveBeenCalledWith(core.undo.value);
+        spyOn(core.undo.value.snapshotsService, 'addSnapshot');
+        div.innerHTML = 'test';
+        addUndoSnapshot(core, null, null, false);
+        expect(core.undo.value.snapshotsService.addSnapshot).toHaveBeenCalledWith('test');
     });
 
     it('null input, verify snapshot is added', () => {
         const core = createEditorCore(div, {});
         core.undo.value.snapshotsService = createUndoSnapshotService(jasmine.createSpy());
-        core.undo.value.getContent = jasmine.createSpy().and.returnValue('test1');
-        editWithUndo(core, null, null, false);
+        core.api.getContent = jasmine.createSpy().and.returnValue('test1');
+        addUndoSnapshot(core, null, null, false);
         expect(core.undo.value.snapshotsService.addSnapshot).toHaveBeenCalledWith('test1');
     });
 
@@ -38,20 +37,24 @@ describe('editWithUndo', () => {
         const core = createEditorCore(div, {
             coreApiOverride: {
                 getSelectionRange: () => range,
+                getContent: () => 'result 1',
             },
         });
-        core.undo.value = createUndoPluginState(
-            createUndoSnapshotService(jasmine.createSpy()),
-            jasmine.createSpy().and.returnValue('result 1')
-        );
-        editWithUndo(
+        core.undo.value = {
+            snapshotsService: createUndoSnapshotService(jasmine.createSpy()),
+            isRestoring: false,
+            hasNewContent: false,
+            outerUndoSnapshot: null,
+        };
+
+        addUndoSnapshot(
             core,
             (pos1, pos2, snapshot) => {
                 expect(pos1.equalTo(Position.getStart(range).normalize())).toBeTruthy();
                 expect(pos2.equalTo(Position.getEnd(range).normalize())).toBeTruthy();
                 expect(snapshot).toBe('result 1');
                 expect(core.undo.value.outerUndoSnapshot).toBe('result 1');
-                core.undo.value.getContent = jasmine.createSpy().and.returnValue('result 2');
+                core.api.getContent = jasmine.createSpy().and.returnValue('result 2');
             },
             null,
             false
@@ -78,12 +81,12 @@ describe('editWithUndo', () => {
                 triggerEvent,
             },
         });
-        spyOn(addUndoSnapshot, 'default');
+        // spyOn(addUndoSnapshot, 'default');
         const data = {
             value: 1,
         };
 
-        editWithUndo(core, () => data, 'change source', false);
+        addUndoSnapshot(core, () => data, 'change source', false);
         expect(triggerEvent).toHaveBeenCalledWith(
             core,
             {
@@ -95,7 +98,7 @@ describe('editWithUndo', () => {
         );
     });
 
-    it('nest call editWithUndo', () => {
+    it('nest call addUndoSnapshot', () => {
         const triggerEvent = jasmine.createSpy();
         const core = createEditorCore(div, {
             coreApiOverride: {
@@ -103,21 +106,21 @@ describe('editWithUndo', () => {
                 triggerEvent,
             },
         });
-        spyOn(addUndoSnapshot, 'default').and.callThrough();
+        const addSnapshot = jasmine.createSpy('addSnapshot');
 
-        core.undo.value.getContent = () => 'test';
-        core.undo.value.snapshotsService = createUndoSnapshotService(() => {});
+        core.api.getContent = () => 'test';
+        core.undo.value.snapshotsService = createUndoSnapshotService(addSnapshot);
 
         expect(core.undo.value.outerUndoSnapshot).toBeNull();
-        editWithUndo(
+        addUndoSnapshot(
             core,
             (pos1, pos2, snapshot) => {
                 expect(snapshot).toBe('test');
                 expect(core.undo.value.outerUndoSnapshot).toBe('test');
 
-                core.undo.value.getContent = () => 'test2';
+                core.api.getContent = () => 'test2';
 
-                editWithUndo(
+                addUndoSnapshot(
                     core,
                     (pos1, pos2, snapshot) => {
                         expect(snapshot).toBe('test');
@@ -131,7 +134,7 @@ describe('editWithUndo', () => {
             false
         );
 
-        expect(addUndoSnapshot.default).toHaveBeenCalledTimes(2);
+        expect(addSnapshot).toHaveBeenCalledTimes(2);
         expect(core.undo.value.outerUndoSnapshot).toBeNull();
     });
 
@@ -140,14 +143,14 @@ describe('editWithUndo', () => {
         const core = createEditorCore(div, {
             coreApiOverride: {
                 getSelectionRange: () => document.createRange(),
+                getContent: () => 'test',
                 triggerEvent,
             },
         });
-        spyOn(addUndoSnapshot, 'default').and.returnValue('test');
 
         expect(core.undo.value.outerUndoSnapshot).toBeNull();
         try {
-            editWithUndo(
+            addUndoSnapshot(
                 core,
                 () => {
                     expect(core.undo.value.outerUndoSnapshot).toBe('test');
@@ -168,10 +171,11 @@ describe('editWithUndo', () => {
                 triggerEvent,
             },
         });
-        spyOn(addUndoSnapshot, 'default').and.returnValue('test');
+
+        spyOn(core.api, 'getContent').and.returnValue('test');
 
         expect(core.autoComplete.value).toBeNull();
-        editWithUndo(core, () => {}, null, true);
+        addUndoSnapshot(core, () => {}, null, true);
         expect(core.autoComplete.value).toBe('test');
     });
 });
@@ -182,19 +186,5 @@ function createUndoSnapshotService(addSnapshot: any): UndoSnapshotsService {
         move: null,
         addSnapshot,
         clearRedo: null,
-    };
-}
-
-function createUndoPluginState(
-    snapshotsService: UndoSnapshotsService,
-    getContent: () => string
-): UndoPluginState {
-    return {
-        snapshotsService,
-        isRestoring: false,
-        hasNewContent: false,
-        getContent,
-        setContent: null,
-        outerUndoSnapshot: null,
     };
 }

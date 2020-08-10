@@ -1,12 +1,10 @@
-import addUndoSnapshot from './addUndoSnapshot';
 import createWrapper from '../utils/createWrapper';
 import Editor from '../../editor/Editor';
 import EditorOptions from '../../interfaces/EditorOptions';
 import isCtrlOrMetaPressed from '../../eventApi/isCtrlOrMetaPressed';
 import PluginWithState from '../../interfaces/PluginWithState';
-import UndoPluginState from './UndoPluginState';
 import UndoSnapshotsService from '../../interfaces/UndoSnapshotsService';
-import { GetContentMode, PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 import {
     addSnapshot,
     canMoveCurrentSnapshot,
@@ -27,6 +25,33 @@ const KEY_DOWN = 40;
 const MAXSIZELIMIT = 1e7;
 
 /**
+ * The state object for UndoPlugin
+ */
+export interface UndoPluginState {
+    /**
+     * Snapshot service for undo, it helps handle snapshot add, remove and retrive
+     */
+    snapshotsService: UndoSnapshotsService;
+
+    /**
+     * Whether restoring of undo snapshot is in proguress.
+     */
+    isRestoring: boolean;
+
+    /**
+     * Whether there is new content change after last undo snapshot is taken
+     */
+    hasNewContent: boolean;
+
+    /**
+     * The outer undo snapshot taken by addUndoSnapshot() before callback function is invoked.
+     * If addUndoSnapshot() is called nested in another one, this will be the snapshot taken from the outer one
+     * and used for checking if it is a nested call
+     */
+    outerUndoSnapshot: string;
+}
+
+/**
  * Provides snapshot based undo service for Editor
  */
 export default class UndoPlugin implements PluginWithState<UndoPluginState> {
@@ -44,9 +69,6 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
             isRestoring: false,
             hasNewContent: false,
             outerUndoSnapshot: null,
-            getContent: () => this.editor?.getContent(GetContentMode.RawHTMLWithSelection),
-            setContent: (content: string) =>
-                this.editor?.setContent(content, true /*triggerContentChangedEvent*/),
         });
     }
 
@@ -94,7 +116,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
                 if (!this.editor.canUndo() && !this.editor.canRedo()) {
                     // Only add initial snapshot when there is no existing snapshot
                     // Otherwise preserved undo/redo state may be ruined
-                    addUndoSnapshot(this.state.value);
+                    this.editor.addUndoSnapshot();
                 }
                 break;
             case PluginEventType.KeyDown:
@@ -105,7 +127,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
                 break;
             case PluginEventType.CompositionEnd:
                 this.clearRedoForInput();
-                addUndoSnapshot(this.state.value);
+                this.editor.addUndoSnapshot();
                 break;
             case PluginEventType.ContentChanged:
                 if (!this.state.value.isRestoring) {
@@ -131,7 +153,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
                     this.lastKeyPress != evt.which ||
                     isCtrlOrMetaPressed(evt))
             ) {
-                addUndoSnapshot(this.state.value);
+                this.editor.addUndoSnapshot();
             }
 
             // Since some content is deleted, always set hasNewContent to true so that we will take undo snapshot next time
@@ -140,7 +162,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
         } else if (evt.which >= KEY_PAGEUP && evt.which <= KEY_DOWN) {
             // PageUp, PageDown, Home, End, Left, Right, Up, Down
             if (this.state.value.hasNewContent) {
-                addUndoSnapshot(this.state.value);
+                this.editor.addUndoSnapshot();
             }
             this.lastKeyPress = 0;
         }
@@ -159,7 +181,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
             (evt.which == KEY_SPACE && this.lastKeyPress != KEY_SPACE) ||
             evt.which == KEY_ENTER
         ) {
-            addUndoSnapshot(this.state.value);
+            this.editor.addUndoSnapshot();
             if (evt.which == KEY_ENTER) {
                 // Treat ENTER as new content so if there is no input after ENTER and undo,
                 // we restore the snapshot before ENTER

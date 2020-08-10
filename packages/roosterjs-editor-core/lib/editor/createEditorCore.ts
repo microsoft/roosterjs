@@ -14,16 +14,17 @@ import PendingFormatStatePlugin from '../corePlugins/pendingFormatState/PendingF
 import TypeAfterLinkPlugin from '../corePlugins/typeAfterLink/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/typeInContainer/TypeInContainerPlugin';
 import UndoPlugin from '../corePlugins/undo/UndoPlugin';
+import { addUndoSnapshot } from '../coreAPI/addUndoSnapshot';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
 import { calcDefaultFormat } from '../coreAPI/calcDefaultFormat';
 import { createPasteFragment } from '../coreAPI/createPasteFragment';
-import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
 import { getContent } from '../coreAPI/getContent';
 import { getSelectionRange } from '../coreAPI/getSelectionRange';
 import { getStyleBasedFormatState } from '../coreAPI/getStyleBasedFormatState';
 import { hasFocus } from '../coreAPI/hasFocus';
 import { insertNode } from '../coreAPI/insertNode';
+import { restoreUndoSnapshot } from '../coreAPI/restoreUndoSnapshot';
 import { selectRange } from '../coreAPI/selectRange';
 import { setContent } from '../coreAPI/setContent';
 import { triggerEvent } from '../coreAPI/triggerEvent';
@@ -70,7 +71,7 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
     return {
         attachDomEvent: map.attachDomEvent || attachDomEvent,
         calcDefaultFormat: map.calcDefaultFormat || calcDefaultFormat,
-        editWithUndo: map.editWithUndo || editWithUndo,
+        addUndoSnapshot: map.addUndoSnapshot || addUndoSnapshot,
         focus: map.focus || focus,
         getContent: map.getContent || getContent,
         getSelectionRange: map.getSelectionRange || getSelectionRange,
@@ -78,6 +79,7 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
         hasFocus: map.hasFocus || hasFocus,
         insertNode: map.insertNode || insertNode,
         createPasteFragment: map.createPasteFragment || createPasteFragment,
+        restoreUndoSnapshot: map.restoreUndoSnapshot || restoreUndoSnapshot,
         selectRange: map.selectRange || selectRange,
         setContent: map.setContent || setContent,
         triggerEvent: map.triggerEvent || triggerEvent,

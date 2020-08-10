@@ -1,9 +1,7 @@
 import addContentEditFeatures from '../corePlugins/edit/addContentEditFeatures';
-import addUndoSnapshot from '../corePlugins/undo/addUndoSnapshot';
 import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
-import restoreSnapshot from '../corePlugins/undo/restoreSnapshot';
 import { convertContentToDarkMode } from '../corePlugins/darkMode/convertContentToDarkMode';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
 import {
@@ -607,11 +605,7 @@ export default class Editor {
      */
     public undo() {
         this.focus();
-        if (this.core.undo.value.hasNewContent) {
-            addUndoSnapshot(this.core.undo.value);
-        }
-
-        restoreSnapshot(this.core.undo.value, -1 /*previousSnapshot*/);
+        this.core.api.restoreUndoSnapshot(this.core, -1 /*step*/);
     }
 
     /**
@@ -619,7 +613,7 @@ export default class Editor {
      */
     public redo() {
         this.focus();
-        restoreSnapshot(this.core.undo.value, 1 /*nextSnapshot*/);
+        this.core.api.restoreUndoSnapshot(this.core, 1 /*step*/);
     }
 
     /**
@@ -637,7 +631,7 @@ export default class Editor {
         changeSource?: ChangeSource | string,
         canUndoByBackspace?: boolean
     ) {
-        this.core.api.editWithUndo(this.core, callback, changeSource, canUndoByBackspace);
+        this.core.api.addUndoSnapshot(this.core, callback, changeSource, canUndoByBackspace);
     }
 
     /**

@@ -1,7 +1,5 @@
-import * as addUndoSnapshot from '../../lib/corePlugins/undo/addUndoSnapshot';
 import Editor from '../../lib/editor/Editor';
-import UndoPlugin from '../../lib/corePlugins/undo/UndoPlugin';
-import UndoPluginState from '../../lib/corePlugins/undo/UndoPluginState';
+import UndoPlugin, { UndoPluginState } from '../../lib/corePlugins/undo/UndoPlugin';
 import { Keys } from 'roosterjs/lib';
 import { PluginEventType, Wrapper } from 'roosterjs-editor-types';
 
@@ -9,17 +7,19 @@ describe('UndoPlugin', () => {
     let plugin: UndoPlugin;
     let state: Wrapper<UndoPluginState>;
     let editor: Editor;
-    let isInIME = jasmine.createSpy('isInIME').and.returnValue(false);
+    let isInIME: jasmine.Spy;
+    let addUndoSnapshot: jasmine.Spy;
 
     beforeEach(() => {
         plugin = new UndoPlugin({});
         state = plugin.getState();
         isInIME = jasmine.createSpy('isInIME');
+        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
         editor = <Editor>(<any>{
             isInIME,
+            addUndoSnapshot,
         });
         plugin.initialize(editor);
-        spyOn(addUndoSnapshot, 'default');
     });
 
     afterEach(() => {
@@ -34,8 +34,6 @@ describe('UndoPlugin', () => {
         expect(state.value.hasNewContent).toBeFalse();
         expect(state.value.isRestoring).toBeFalse();
         expect(state.value.outerUndoSnapshot).toBeNull();
-        expect(state.value.getContent).toBeDefined();
-        expect(state.value.setContent).toBeDefined();
         expect(state.value.snapshotsService).toBeDefined();
     });
 
@@ -53,7 +51,7 @@ describe('UndoPlugin', () => {
         expect(isInIME).toHaveBeenCalled();
         expect(canUndo).toHaveBeenCalled();
         expect(canRedo).toHaveBeenCalled();
-        expect(addUndoSnapshot.default).toHaveBeenCalledWith(state.value);
+        expect(addUndoSnapshot).toHaveBeenCalled();
     });
 
     it('editor ready event where can undo', () => {
@@ -70,7 +68,7 @@ describe('UndoPlugin', () => {
         expect(isInIME).toHaveBeenCalled();
         expect(canUndo).toHaveBeenCalled();
         expect(canRedo).not.toHaveBeenCalled();
-        expect(addUndoSnapshot.default).not.toHaveBeenCalledWith(state.value);
+        expect(addUndoSnapshot).not.toHaveBeenCalledWith(state.value);
     });
 
     it('editor ready event where can redo', () => {
@@ -87,7 +85,7 @@ describe('UndoPlugin', () => {
         expect(isInIME).toHaveBeenCalled();
         expect(canUndo).toHaveBeenCalled();
         expect(canRedo).toHaveBeenCalled();
-        expect(addUndoSnapshot.default).not.toHaveBeenCalledWith(state.value);
+        expect(addUndoSnapshot).not.toHaveBeenCalledWith(state.value);
     });
 
     it('key down event with BACKSPACE, add undo snapshot once', () => {
@@ -103,11 +101,10 @@ describe('UndoPlugin', () => {
             },
         });
 
-        expect(addUndoSnapshot.default).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot.default).toHaveBeenCalledWith(state.value);
+        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
 
         // Backspace again, no need to add undo snapshot now
-        (<jasmine.Spy>addUndoSnapshot.default).calls.reset();
+        (<jasmine.Spy>addUndoSnapshot).calls.reset();
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
             rawEvent: <any>{
@@ -115,10 +112,10 @@ describe('UndoPlugin', () => {
             },
         });
 
-        expect(addUndoSnapshot.default).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
 
         // Backspace again, with ctrl key pressed, addUndoSnapshot
-        (<jasmine.Spy>addUndoSnapshot.default).calls.reset();
+        (<jasmine.Spy>addUndoSnapshot).calls.reset();
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
             rawEvent: <any>{
@@ -127,10 +124,10 @@ describe('UndoPlugin', () => {
             },
         });
 
-        expect(addUndoSnapshot.default).toHaveBeenCalled();
+        expect(addUndoSnapshot).toHaveBeenCalled();
 
         // Backspace again, with expanded range, addUndoSnapshot
-        (<jasmine.Spy>addUndoSnapshot.default).calls.reset();
+        (<jasmine.Spy>addUndoSnapshot).calls.reset();
         editor.getSelectionRange = () => {
             return <any>{
                 collapsed: false,
@@ -143,7 +140,7 @@ describe('UndoPlugin', () => {
             },
         });
 
-        expect(addUndoSnapshot.default).toHaveBeenCalled();
+        expect(addUndoSnapshot).toHaveBeenCalled();
     });
 
     it('key down event with DELETE, add undo snapshot once', () => {
@@ -159,11 +156,10 @@ describe('UndoPlugin', () => {
             },
         });
 
-        expect(addUndoSnapshot.default).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot.default).toHaveBeenCalledWith(state.value);
+        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
 
         // DELETE again, no need to add undo snapshot now
-        (<jasmine.Spy>addUndoSnapshot.default).calls.reset();
+        (<jasmine.Spy>addUndoSnapshot).calls.reset();
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
             rawEvent: <any>{
@@ -171,10 +167,10 @@ describe('UndoPlugin', () => {
             },
         });
 
-        expect(addUndoSnapshot.default).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
 
         // DELETE again, with ctrl key pressed, addUndoSnapshot
-        (<jasmine.Spy>addUndoSnapshot.default).calls.reset();
+        (<jasmine.Spy>addUndoSnapshot).calls.reset();
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
             rawEvent: <any>{
@@ -183,10 +179,10 @@ describe('UndoPlugin', () => {
             },
         });
 
-        expect(addUndoSnapshot.default).toHaveBeenCalled();
+        expect(addUndoSnapshot).toHaveBeenCalled();
 
         // DELETE again, with expanded range, addUndoSnapshot
-        (<jasmine.Spy>addUndoSnapshot.default).calls.reset();
+        (<jasmine.Spy>addUndoSnapshot).calls.reset();
         editor.getSelectionRange = () => {
             return <any>{
                 collapsed: false,
@@ -199,7 +195,7 @@ describe('UndoPlugin', () => {
             },
         });
 
-        expect(addUndoSnapshot.default).toHaveBeenCalled();
+        expect(addUndoSnapshot).toHaveBeenCalled();
     });
 
     it('key down event with DELETE then BACKSPACE, add undo snapshot twice', () => {
@@ -221,7 +217,7 @@ describe('UndoPlugin', () => {
             },
         });
 
-        expect(addUndoSnapshot.default).toHaveBeenCalledTimes(2);
+        expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
     });
 
     it('key down event with cursor moving and has new content, add undo snapshot each time', () => {
@@ -243,7 +239,7 @@ describe('UndoPlugin', () => {
             });
         }
 
-        expect(addUndoSnapshot.default).toHaveBeenCalledTimes(KEY_DOWN - KEY_PAGEUP + 1);
+        expect(addUndoSnapshot).toHaveBeenCalledTimes(KEY_DOWN - KEY_PAGEUP + 1);
     });
 
     it('key down event with cursor moving and but no new content, no undo snapshot each time', () => {
@@ -265,7 +261,7 @@ describe('UndoPlugin', () => {
             });
         }
 
-        expect(addUndoSnapshot.default).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
     });
 
     it('delete, page up,  delete, no new content, add undo snapshot twice', () => {
@@ -287,7 +283,7 @@ describe('UndoPlugin', () => {
             });
         });
 
-        expect(addUndoSnapshot.default).toHaveBeenCalledTimes(2);
+        expect(addUndoSnapshot).toHaveBeenCalledTimes(2);
     });
 
     it('key press event with expanded range', () => {
@@ -305,7 +301,7 @@ describe('UndoPlugin', () => {
             },
         });
 
-        expect(addUndoSnapshot.default).toHaveBeenCalledWith(state.value);
+        expect(addUndoSnapshot).toHaveBeenCalled();
     });
 
     it('key press event with collapsed range', () => {
@@ -325,7 +321,7 @@ describe('UndoPlugin', () => {
             },
         });
 
-        expect(addUndoSnapshot.default).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
         expect(state.value.hasNewContent).toBeTrue();
         expect(clearRedo).toHaveBeenCalled();
     });
@@ -345,18 +341,18 @@ describe('UndoPlugin', () => {
             },
         });
 
-        expect(addUndoSnapshot.default).toHaveBeenCalledWith(state.value);
+        expect(addUndoSnapshot).toHaveBeenCalled();
         expect(state.value.hasNewContent).toBeFalse();
 
         // Press SPACE again, no undo snapshot added
-        (<jasmine.Spy>addUndoSnapshot.default).calls.reset();
+        (<jasmine.Spy>addUndoSnapshot).calls.reset();
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyPress,
             rawEvent: <any>{
                 which: Keys.SPACE,
             },
         });
-        expect(addUndoSnapshot.default).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
     });
 
     it('key press event with ENTER key in collapsed range', () => {
@@ -374,18 +370,18 @@ describe('UndoPlugin', () => {
             },
         });
 
-        expect(addUndoSnapshot.default).toHaveBeenCalledWith(state.value);
+        expect(addUndoSnapshot).toHaveBeenCalled();
         expect(state.value.hasNewContent).toBeTrue();
 
         // Press ENTER again, add one more snapshot
-        (<jasmine.Spy>addUndoSnapshot.default).calls.reset();
+        (<jasmine.Spy>addUndoSnapshot).calls.reset();
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyPress,
             rawEvent: <any>{
                 which: Keys.SPACE,
             },
         });
-        expect(addUndoSnapshot.default).toHaveBeenCalledWith(state.value);
+        expect(addUndoSnapshot).toHaveBeenCalled();
     });
 
     it('CompositionEnd event', () => {
@@ -393,7 +389,7 @@ describe('UndoPlugin', () => {
             eventType: PluginEventType.CompositionEnd,
             rawEvent: <any>{},
         });
-        expect(addUndoSnapshot.default).toHaveBeenCalledWith(state.value);
+        expect(addUndoSnapshot).toHaveBeenCalled();
     });
 
     it('ContentChanged event', () => {
@@ -404,7 +400,7 @@ describe('UndoPlugin', () => {
             eventType: PluginEventType.ContentChanged,
             source: '',
         });
-        expect(addUndoSnapshot.default).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
         expect(state.value.hasNewContent).toBeTrue();
         expect(clearRedo).toHaveBeenCalled();
     });
