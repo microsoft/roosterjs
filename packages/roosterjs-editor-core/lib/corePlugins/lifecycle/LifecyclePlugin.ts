@@ -3,7 +3,7 @@ import CustomData from '../../interfaces/CustomData';
 import Editor from '../../editor/Editor';
 import EditorOptions from '../../interfaces/EditorOptions';
 import PluginWithState from '../../interfaces/PluginWithState';
-import { Browser, getComputedStyles, Position } from 'roosterjs-editor-dom';
+import { Browser, Position } from 'roosterjs-editor-dom';
 import {
     DefaultFormat,
     DocumentCommand,
@@ -11,7 +11,6 @@ import {
     PluginEventType,
     PositionType,
     Wrapper,
-    PluginEvent,
 } from 'roosterjs-editor-types';
 
 /**
@@ -53,28 +52,17 @@ const COMMANDS: {
           [DocumentCommand.AutoUrlDetect]: false,
       }
     : {};
-const DARK_MODE_DEFAULT_FORMAT = {
-    backgroundColors: {
-        darkModeColor: 'rgb(51,51,51)',
-        lightModeColor: 'rgb(255,255,255)',
-    },
-    textColors: {
-        darkModeColor: 'rgb(255,255,255)',
-        lightModeColor: 'rgb(0,0,0)',
-    },
-};
 
 /**
  * Lifecycle plugin handles editor initialization and disposing
  */
 export default class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
     private editor: Editor;
-    private contenteditableChanged: boolean;
     private state: Wrapper<LifecyclePluginState>;
-    private style: CSSStyleDeclaration;
     private initialContent: string;
-    private calculatedDefaultFormat: string[];
     private startPosition: NodePosition;
+    private initializer: () => void;
+    private disposer: () => void;
 
     /**
      * Construct a new instance of LifecyclePlugin
@@ -82,13 +70,24 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
      * @param contentDiv The editor content DIV
      */
     constructor(options: EditorOptions, contentDiv: HTMLDivElement) {
-        this.style = contentDiv.style;
         this.initialContent = options.initialContent || contentDiv.innerHTML || '';
-        this.calculatedDefaultFormat = getComputedStyles(contentDiv);
         this.startPosition = new Position(contentDiv, PositionType.Begin);
+
+        // Make the container editable and set its selection styles
+        if (contentDiv.getAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME) === null) {
+            this.initializer = () => {
+                contentDiv.contentEditable = 'true';
+                this.setSelectStyle(contentDiv, 'text');
+            };
+            this.disposer = () => {
+                this.setSelectStyle(contentDiv, '');
+                contentDiv.removeAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME);
+            };
+        }
+
         this.state = createWrapper({
             customData: {},
-            defaultFormat: options.defaultFormat,
+            defaultFormat: options.defaultFormat || null,
         });
     }
 
@@ -106,18 +105,14 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     initialize(editor: Editor) {
         this.editor = editor;
 
-        this.updateDefaultFormat();
+        // Calculate default format
+        this.editor.calcDefaultFormat();
 
         // Ensure initial content and its format
         this.editor.setContent(this.initialContent, false /*triggerContentChangedEvent*/);
 
-        // Make the container editable and set its selection styles
-        if (this.editor.getEditorDomAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME) === null) {
-            this.editor.setEditorDomAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME, 'true');
-            this.style.userSelect = (<any>this.style).msUserSelect = this.style.webkitUserSelect =
-                'text';
-            this.contenteditableChanged = true;
-        }
+        // Set content DIV to be editable
+        this.initializer?.();
 
         // Do proper change for browsers to disable some browser-specified behaviors.
         this.adjustBrowserBehavior();
@@ -148,10 +143,10 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             delete this.state.value.customData[key];
         });
 
-        if (this.contenteditableChanged) {
-            this.style.userSelect = (<any>this.style).msUserSelect = this.style.webkitUserSelect =
-                '';
-            this.editor.setEditorDomAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME, null);
+        if (this.disposer) {
+            this.disposer();
+            this.disposer = null;
+            this.initializer = null;
         }
 
         this.editor = null;
@@ -164,16 +159,6 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         return this.state;
     }
 
-    /**
-     * Handle events triggered from editor
-     * @param event PluginEvent object
-     */
-    onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.DarkModeChanged) {
-            this.updateDefaultFormat();
-        }
-    }
-
     private adjustBrowserBehavior() {
         Object.keys(COMMANDS).forEach(command => {
             // Catch any possible exception since this should not block the initialization of editor
@@ -183,57 +168,9 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         });
     }
 
-    private updateDefaultFormat() {
-        const isDarkMode = this.editor.isDarkMode();
-        let baseFormat = this.state.value.defaultFormat;
-        if (baseFormat && Object.keys(baseFormat).length === 0) {
-            return;
-        }
-
-        if (isDarkMode && baseFormat) {
-            if (!baseFormat.backgroundColors) {
-                baseFormat.backgroundColors = DARK_MODE_DEFAULT_FORMAT.backgroundColors;
-            }
-            if (!baseFormat.textColors) {
-                baseFormat.textColors = DARK_MODE_DEFAULT_FORMAT.textColors;
-            }
-        }
-
-        baseFormat = baseFormat || <DefaultFormat>{};
-        const {
-            fontFamily,
-            fontSize,
-            textColor,
-            textColors,
-            backgroundColor,
-            backgroundColors,
-            bold,
-            italic,
-            underline,
-        } = baseFormat;
-        const originalStyle = this.calculatedDefaultFormat;
-        this.state.value.defaultFormat = {
-            fontFamily: fontFamily || originalStyle[0],
-            fontSize: fontSize || originalStyle[1],
-            get textColor() {
-                return textColors
-                    ? isDarkMode
-                        ? textColors.darkModeColor
-                        : textColors.lightModeColor
-                    : textColor || originalStyle[2];
-            },
-            textColors: textColors,
-            get backgroundColor() {
-                return backgroundColors
-                    ? isDarkMode
-                        ? backgroundColors.darkModeColor
-                        : backgroundColors.lightModeColor
-                    : backgroundColor || '';
-            },
-            backgroundColors: backgroundColors,
-            bold: bold,
-            italic: italic,
-            underline: underline,
-        };
+    private setSelectStyle(node: HTMLElement, value: string) {
+        node.style.userSelect = value;
+        node.style.msUserSelect = value;
+        node.style.webkitUserSelect = value;
     }
 }

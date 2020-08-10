@@ -1,6 +1,4 @@
 import addUndoSnapshot from './addUndoSnapshot';
-import canRedo from './canRedo';
-import canUndo from './canUndo';
 import createWrapper from '../utils/createWrapper';
 import Editor from '../../editor/Editor';
 import EditorOptions from '../../interfaces/EditorOptions';
@@ -63,14 +61,14 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    public initialize(editor: Editor): void {
+    initialize(editor: Editor): void {
         this.editor = editor;
     }
 
     /**
      * Dispose this plugin
      */
-    public dispose() {
+    dispose() {
         this.editor = null;
     }
 
@@ -85,15 +83,15 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
      * Handle events triggered from editor
      * @param event PluginEvent object
      */
-    public onPluginEvent(event: PluginEvent): void {
+    onPluginEvent(event: PluginEvent): void {
         // if editor is in IME, don't do anything
-        if (this.editor?.isInIME()) {
+        if (!this.editor || this.editor.isInIME()) {
             return;
         }
 
         switch (event.eventType) {
             case PluginEventType.EditorReady:
-                if (!canUndo(this.state.value) && !canRedo(this.state.value)) {
+                if (!this.editor.canUndo() && !this.editor.canRedo()) {
                     // Only add initial snapshot when there is no existing snapshot
                     // Otherwise preserved undo/redo state may be ruined
                     addUndoSnapshot(this.state.value);

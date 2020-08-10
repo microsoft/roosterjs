@@ -15,6 +15,7 @@ import TypeAfterLinkPlugin from '../corePlugins/typeAfterLink/TypeAfterLinkPlugi
 import TypeInContainerPlugin from '../corePlugins/typeInContainer/TypeInContainerPlugin';
 import UndoPlugin from '../corePlugins/undo/UndoPlugin';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
+import { calcDefaultFormat } from '../coreAPI/calcDefaultFormat';
 import { createPasteFragment } from '../coreAPI/createPasteFragment';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
@@ -68,6 +69,7 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
     map = map || {};
     return {
         attachDomEvent: map.attachDomEvent || attachDomEvent,
+        calcDefaultFormat: map.calcDefaultFormat || calcDefaultFormat,
         editWithUndo: map.editWithUndo || editWithUndo,
         focus: map.focus || focus,
         getContent: map.getContent || getContent,

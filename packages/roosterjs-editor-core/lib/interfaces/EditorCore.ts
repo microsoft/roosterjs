@@ -42,6 +42,12 @@ export type AttachDomEvent = (
 ) => () => void;
 
 /**
+ * Calculate default format of editor
+ * @param core The EditorCore object
+ */
+export type CalcDefaultFormat = (core: EditorCore) => void;
+
+/**
  * Create a DocumentFragment for paste from a ClipboardData
  * @param core The EditorCore object.
  * @param clipboardData Clipboard data retrieved from clipboard
@@ -172,6 +178,12 @@ export interface CoreApiMap {
      * @param beforeDispatch Optional callback function to be invoked when the DOM event is triggered before trigger plugin event
      */
     attachDomEvent: AttachDomEvent;
+
+    /**
+     * Calculate default format of editor
+     * @param core The EditorCore object
+     */
+    calcDefaultFormat: CalcDefaultFormat;
 
     /**
      * Create a DocumentFragment for paste from a ClipboardData

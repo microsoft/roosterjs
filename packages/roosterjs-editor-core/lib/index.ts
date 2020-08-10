@@ -8,6 +8,7 @@ export { default as CustomData } from './interfaces/CustomData';
 export {
     default as EditorCore,
     AttachDomEvent,
+    CalcDefaultFormat,
     CoreApiMap,
     CreatePasteFragment,
     EditWithUndo,

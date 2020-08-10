@@ -1,7 +1,5 @@
 import addContentEditFeatures from '../corePlugins/edit/addContentEditFeatures';
 import addUndoSnapshot from '../corePlugins/undo/addUndoSnapshot';
-import canRedo from '../corePlugins/undo/canRedo';
-import canUndo from '../corePlugins/undo/canUndo';
 import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
@@ -646,14 +644,17 @@ export default class Editor {
      * Whether there is an available undo snapshot
      */
     public canUndo(): boolean {
-        return canUndo(this.core.undo.value);
+        return (
+            this.core.undo.value.hasNewContent ||
+            this.core.undo.value.snapshotsService.canMove(-1 /*previousSnapshot*/)
+        );
     }
 
     /**
      * Whether there is an available redo snapshot
      */
     public canRedo(): boolean {
-        return canRedo(this.core.undo.value);
+        return this.core.undo.value.snapshotsService.canMove(1 /*nextSnapshot*/);
     }
 
     //#endregion
@@ -821,6 +822,8 @@ export default class Editor {
 
         this.core.darkMode.value.isDarkMode = nextDarkMode;
         this.setContent(currentContent);
+        this.calcDefaultFormat();
+
         this.triggerPluginEvent(PluginEventType.DarkModeChanged, {
             changedToDarkMode: nextDarkMode,
         });
@@ -832,6 +835,13 @@ export default class Editor {
      */
     public isDarkMode(): boolean {
         return this.core.darkMode.value.isDarkMode;
+    }
+
+    /**
+     * Calculate default format of this editor
+     */
+    public calcDefaultFormat(): void {
+        this.core.api.calcDefaultFormat(this.core);
     }
 
     /**
