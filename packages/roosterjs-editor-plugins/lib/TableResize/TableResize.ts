@@ -8,6 +8,7 @@ import {
     TableOperation,
     ContentPosition,
 } from 'roosterjs-editor-types';
+const throttle = require('lodash').throttle;
 
 const TABLE_MOVER_WIDTH = 20;
 const INSERTER_COLOR = '#4A4A4A';
@@ -38,8 +39,6 @@ export default class TableResize implements EditorPlugin {
     private currentTd: HTMLTableCellElement;
     private horizontalResizer: HTMLDivElement;
     private verticalResizer: HTMLDivElement;
-
-    private resizerStartPos: number = null;
     private resizingState: ResizeState = ResizeState.None;
 
     private currentInsertTd: HTMLTableCellElement;
@@ -324,9 +323,8 @@ export default class TableResize implements EditorPlugin {
     };
 
     private startResizeTable(e: MouseEvent) {
-        this.resizerStartPos = this.resizingState == ResizeState.Horizontal ? e.pageY : e.pageX;
         const doc = this.editor.getDocument();
-        doc.addEventListener('mousemove', this.resizeTable, true);
+        doc.addEventListener('mousemove', this.throttledResizeTable, true);
         doc.addEventListener('mouseup', this.endResizeTable, true);
 
         const resizer =
@@ -336,31 +334,13 @@ export default class TableResize implements EditorPlugin {
         resizer.style.borderStyle = 'solid';
     }
 
+    private throttledResizeTable = (e: MouseEvent) => throttle(this.resizeTable, 200)(e);
+
     private resizeTable = (e: MouseEvent) => {
-        const rect = normalizeRect(this.currentTd.getBoundingClientRect());
-        if (this.resizingState == ResizeState.Horizontal) {
-            const delta = e.pageY - this.resizerStartPos;
-            const newPos = rect.bottom + delta - CELL_RESIZER_WIDTH + 1;
-            this.horizontalResizer.style.top = `${newPos}px`;
-        } else {
-            const delta = e.pageX - this.resizerStartPos;
-            const newPos = rect.right + delta - CELL_RESIZER_WIDTH + 1;
-            this.verticalResizer.style.left = `${newPos}px`;
-        }
-    };
+        if (this.currentTd) {
+            const rect = normalizeRect(this.currentTd.getBoundingClientRect());
+            const newPos = this.resizingState == ResizeState.Horizontal ? e.pageY : e.pageX;
 
-    private endResizeTable = (e: MouseEvent) => {
-        const doc = this.editor.getDocument();
-        doc.removeEventListener('mousemove', this.resizeTable, true);
-        doc.removeEventListener('mouseup', this.endResizeTable, true);
-
-        const rect = normalizeRect(this.currentTd.getBoundingClientRect());
-        const newPos =
-            (this.resizingState == ResizeState.Horizontal
-                ? rect.bottom + e.pageY
-                : rect.right + e.pageX) - this.resizerStartPos;
-
-        this.editor.addUndoSnapshot((start, end) => {
             let vtable = new VTable(this.currentTd);
 
             if (this.resizingState == ResizeState.Horizontal) {
@@ -382,6 +362,16 @@ export default class TableResize implements EditorPlugin {
                 });
             }
             vtable.writeBack();
+        }
+    };
+
+    private endResizeTable = (e: MouseEvent) => {
+        const doc = this.editor.getDocument();
+        doc.removeEventListener('mousemove', this.throttledResizeTable, true);
+        doc.removeEventListener('mouseup', this.endResizeTable, true);
+
+        this.editor.addUndoSnapshot((start, end) => {
+            this.resizeTable(e);
             this.editor.select(start, end);
         }, ChangeSource.Format);
 
