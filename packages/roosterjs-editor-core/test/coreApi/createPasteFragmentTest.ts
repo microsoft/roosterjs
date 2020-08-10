@@ -1,7 +1,7 @@
 import * as dom from 'roosterjs-editor-dom';
 import createEditorCore from './createMockEditorCore';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
-import { createPasteFragment } from '../../lib/coreAPI/createPasteFragment';
+import { createPasteFragment } from '../../lib/coreApi/createPasteFragment';
 
 describe('createPasteFragment', () => {
     let div: HTMLDivElement;

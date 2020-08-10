@@ -1,7 +1,7 @@
 import createEditorCore from './createMockEditorCore';
 import EditorCore from '../../lib/interfaces/EditorCore';
 import { createRange } from 'roosterjs-editor-dom';
-import { hasFocus } from '../../lib/coreAPI/hasFocus';
+import { hasFocus } from '../../lib/coreApi/hasFocus';
 
 describe('hasFocus', () => {
     let div: HTMLDivElement;

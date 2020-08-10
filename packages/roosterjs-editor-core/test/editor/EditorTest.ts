@@ -1,4 +1,4 @@
-import * as getSelectionRange from '../../lib/coreAPI/getSelectionRange';
+import * as getSelectionRange from '../../lib/coreApi/getSelectionRange';
 import * as TestHelper from '../TestHelper';
 import Editor from '../../lib/editor/Editor';
 import { ContentPosition } from 'roosterjs-editor-types';

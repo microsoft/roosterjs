@@ -1,5 +1,5 @@
 import createEditorCore from './createMockEditorCore';
-import { calcDefaultFormat } from '../../lib/coreAPI/calcDefaultFormat';
+import { calcDefaultFormat } from '../../lib/coreApi/calcDefaultFormat';
 
 describe('calcDefaultFormat', () => {
     let div: HTMLDivElement;

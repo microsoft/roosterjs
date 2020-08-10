@@ -1,5 +1,5 @@
 import createEditorCore from './createMockEditorCore';
-import { getSelectionRange } from '../../lib/coreAPI/getSelectionRange';
+import { getSelectionRange } from '../../lib/coreApi/getSelectionRange';
 import { selectNode } from '../TestHelper';
 
 describe('getSelectionRange', () => {

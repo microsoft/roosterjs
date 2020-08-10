@@ -1,5 +1,5 @@
 import createEditorCore from './createMockEditorCore';
-import { getStyleBasedFormatState } from '../../lib/coreAPI/getStyleBasedFormatState';
+import { getStyleBasedFormatState } from '../../lib/coreApi/getStyleBasedFormatState';
 
 describe('getStyleBasedFormatState', () => {
     let div: HTMLDivElement;

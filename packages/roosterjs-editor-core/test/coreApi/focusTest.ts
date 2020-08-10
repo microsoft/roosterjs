@@ -1,5 +1,5 @@
 import createEditorCore from './createMockEditorCore';
-import { focus } from '../../lib/coreAPI/focus';
+import { focus } from '../../lib/coreApi/focus';
 
 describe('focus', () => {
     let div: HTMLDivElement;

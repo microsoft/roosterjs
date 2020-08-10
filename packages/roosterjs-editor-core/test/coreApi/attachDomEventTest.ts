@@ -1,5 +1,5 @@
 import createEditorCore from './createMockEditorCore';
-import { attachDomEvent } from '../../lib/coreAPI/attachDomEvent';
+import { attachDomEvent } from '../../lib/coreApi/attachDomEvent';
 import { PluginEventType } from 'roosterjs-editor-types';
 
 const DOM_EVENT_NAME = 'keydown';

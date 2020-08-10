@@ -14,20 +14,20 @@ import PendingFormatStatePlugin from '../corePlugins/pendingFormatState/PendingF
 import TypeAfterLinkPlugin from '../corePlugins/typeAfterLink/TypeAfterLinkPlugin';
 import TypeInContainerPlugin from '../corePlugins/typeInContainer/TypeInContainerPlugin';
 import UndoPlugin from '../corePlugins/undo/UndoPlugin';
-import { addUndoSnapshot } from '../coreAPI/addUndoSnapshot';
-import { attachDomEvent } from '../coreAPI/attachDomEvent';
-import { calcDefaultFormat } from '../coreAPI/calcDefaultFormat';
-import { createPasteFragment } from '../coreAPI/createPasteFragment';
-import { focus } from '../coreAPI/focus';
-import { getContent } from '../coreAPI/getContent';
-import { getSelectionRange } from '../coreAPI/getSelectionRange';
-import { getStyleBasedFormatState } from '../coreAPI/getStyleBasedFormatState';
-import { hasFocus } from '../coreAPI/hasFocus';
-import { insertNode } from '../coreAPI/insertNode';
-import { restoreUndoSnapshot } from '../coreAPI/restoreUndoSnapshot';
-import { selectRange } from '../coreAPI/selectRange';
-import { setContent } from '../coreAPI/setContent';
-import { triggerEvent } from '../coreAPI/triggerEvent';
+import { addUndoSnapshot } from '../coreApi/addUndoSnapshot';
+import { attachDomEvent } from '../coreApi/attachDomEvent';
+import { calcDefaultFormat } from '../coreApi/calcDefaultFormat';
+import { createPasteFragment } from '../coreApi/createPasteFragment';
+import { focus } from '../coreApi/focus';
+import { getContent } from '../coreApi/getContent';
+import { getSelectionRange } from '../coreApi/getSelectionRange';
+import { getStyleBasedFormatState } from '../coreApi/getStyleBasedFormatState';
+import { hasFocus } from '../coreApi/hasFocus';
+import { insertNode } from '../coreApi/insertNode';
+import { restoreUndoSnapshot } from '../coreApi/restoreUndoSnapshot';
+import { selectRange } from '../coreApi/selectRange';
+import { setContent } from '../coreApi/setContent';
+import { triggerEvent } from '../coreApi/triggerEvent';
 
 const PLACEHOLDER_PLUGIN_NAME = '_placeholder';
 /**

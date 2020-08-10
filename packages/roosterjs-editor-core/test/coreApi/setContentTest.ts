@@ -1,6 +1,6 @@
 import createEditorCore from './createMockEditorCore';
 import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
-import { setContent } from '../../lib/coreAPI/setContent';
+import { setContent } from '../../lib/coreApi/setContent';
 
 describe('setContent', () => {
     let div: HTMLDivElement;
