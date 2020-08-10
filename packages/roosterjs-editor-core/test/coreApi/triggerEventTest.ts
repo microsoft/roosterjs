@@ -1,7 +1,7 @@
 import createEditorCore from './createMockEditorCore';
 import { EditorPlugin } from 'roosterjs/lib';
 import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { triggerEvent } from '../../lib/coreAPI/triggerEvent';
+import { triggerEvent } from '../../lib/coreApi/triggerEvent';
 
 describe('triggerEvent', () => {
     let div: HTMLDivElement;
