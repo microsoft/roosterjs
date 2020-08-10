@@ -556,7 +556,7 @@ export default class Editor {
         nameOrMap: string | Record<string, DOMEventHandler>,
         handler?: DOMEventHandler
     ): () => void {
-        const eventsToMap = typeof nameOrMap == 'string' ? { nameOrMap: handler } : nameOrMap;
+        const eventsToMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler } : nameOrMap;
         return this.core.api.attachDomEvent(this.core, eventsToMap);
     }
 

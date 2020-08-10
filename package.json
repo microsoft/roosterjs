@@ -1,6 +1,6 @@
 {
     "name": "roosterjs",
-    "version": "7.15.0-vnext.3",
+    "version": "7.15.0-vnext.4",
     "description": "Framework-independent javascript editor",
     "repository": {
         "type": "git",
