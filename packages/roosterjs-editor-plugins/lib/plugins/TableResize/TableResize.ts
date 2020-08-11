@@ -10,7 +10,6 @@ import {
 } from 'roosterjs-editor-types';
 const throttle = require('lodash').throttle;
 
-const TABLE_MOVER_WIDTH = 20;
 const INSERTER_COLOR = '#4A4A4A';
 const INSERTER_SIDE_LENGTH = 12;
 const INSERTER_BORDER_SIZE = 1;
@@ -112,9 +111,9 @@ export default class TableResize implements EditorPlugin {
             for (; i >= 0; i--) {
                 const { table, rect } = this.tableRectMap[i];
                 if (
-                    e.pageX >= rect.left - TABLE_MOVER_WIDTH &&
+                    e.pageX >= rect.left - INSERTER_SIDE_LENGTH &&
                     e.pageX <= rect.right &&
-                    e.pageY >= rect.top - TABLE_MOVER_WIDTH &&
+                    e.pageY >= rect.top - INSERTER_SIDE_LENGTH &&
                     e.pageY <= rect.bottom
                 ) {
                     this.setCurrentTable(table, rect);
