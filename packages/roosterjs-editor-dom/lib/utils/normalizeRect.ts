@@ -6,10 +6,12 @@ import { Rect } from 'roosterjs-editor-types';
  */
 export default function normalizeRect(clientRect: ClientRect): Rect {
     let { left, right, top, bottom } = clientRect || <ClientRect>{};
-    return {
-        left: Math.round(left),
-        right: Math.round(right),
-        top: Math.round(top),
-        bottom: Math.round(bottom),
-    };
+    return left + right + top + bottom > 0
+        ? {
+              left: Math.round(left),
+              right: Math.round(right),
+              top: Math.round(top),
+              bottom: Math.round(bottom),
+          }
+        : null;
 }
