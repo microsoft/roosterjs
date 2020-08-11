@@ -328,7 +328,7 @@ export default class TableResize implements EditorPlugin {
         doc.addEventListener('mouseup', this.endResizeTable, true);
     }
 
-    private throttledResizeTable = (e: MouseEvent) => throttle(this.resizeTable, 300)(e);
+    private throttledResizeTable = (e: MouseEvent) => throttle(this.resizeTable, 500)(e);
 
     private resizeTable = (e: MouseEvent) => {
         if (this.currentTd) {

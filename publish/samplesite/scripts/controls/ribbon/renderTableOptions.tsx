@@ -189,7 +189,7 @@ class TableOptions extends React.Component<TableOptionsProps, {}> {
 
         let cols = parseInt(this.cols.current.value);
         let rows = parseInt(this.rows.current.value);
-        if (cols > 0 && cols <= 10 && rows > 0 && rows <= 10) {
+        if (cols > 0 && cols <= 99 && rows > 0 && rows <= 99) {
             insertTable(this.props.editor, cols, rows);
         }
     };
