@@ -1,3 +1,4 @@
+import toArray from './toArray';
 import { Browser } from './Browser';
 import { ClipboardItems } from 'roosterjs-editor-types';
 
@@ -38,7 +39,7 @@ export default function extractClipboardEvent(
         event.clipboardData ||
         (<WindowForIE>(<Node>event.target).ownerDocument.defaultView).clipboardData;
     let result: ClipboardItems = {
-        types: dataTransfer.types ? [].slice.call(dataTransfer.types) : [],
+        types: dataTransfer.types ? toArray(dataTransfer.types) : [],
         text: dataTransfer.getData('text'),
         image: getImage(dataTransfer),
         html: undefined,

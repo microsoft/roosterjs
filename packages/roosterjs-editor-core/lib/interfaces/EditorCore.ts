@@ -1,4 +1,5 @@
 import CopyPlugin from '../corePlugins/CopyPlugin';
+import CorePastePlugin from '../corePlugins/CorePastePlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorPlugin from './EditorPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
@@ -9,12 +10,14 @@ import UndoService from './UndoService';
 import { CustomDataMap } from './CustomData';
 import {
     ChangeSource,
+    ClipboardData,
     DefaultFormat,
     DarkModeOptions,
     InsertOption,
     NodePosition,
     PluginEvent,
     PluginEventType,
+    StyleBasedFormatState,
 } from 'roosterjs-editor-types';
 
 /**
@@ -56,6 +59,11 @@ export interface CorePlugins {
      * Copy plguin for handling dark mode copy.
      */
     readonly copyPlugin: CopyPlugin;
+
+    /**
+     * Core paste plugin for handling onPaste event and extract the pasted content
+     */
+    readonly pastePlugin: CorePastePlugin;
 }
 
 /**
@@ -149,6 +157,23 @@ export type AttachDomEvent = (
 ) => () => void;
 
 /**
+ * Create a DocumentFragment for paste from a ClipboardData
+ * @param core The EditorCore object.
+ * @param clipboardData Clipboard data retrieved from clipboard
+ * @param position The position to paste to
+ * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
+ * @param applyCurrentStyle True if apply format of current selection to the pasted content,
+ * false to keep original foramt
+ */
+export type CreatePasteFragment = (
+    core: EditorCore,
+    clipboardData: ClipboardData,
+    position: NodePosition,
+    pasteAsText: boolean,
+    applyCurrentStyle: boolean
+) => DocumentFragment;
+
+/**
  * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
  * Undo snapshot will not be added if this call is nested inside another editWithUndo() call.
  * @param core The EditorCore object
@@ -182,6 +207,13 @@ export type GetCustomData = <T>(
     getter: () => T,
     disposer?: (value: T) => void
 ) => T;
+
+/**
+ * Get style based format state from current selection, including font name/size and colors
+ * @param core The EditorCore objects
+ * @param node The node to get style from
+ */
+export type GetStyleBasedFormatState = (core: EditorCore, node: Node) => StyleBasedFormatState;
 
 /**
  * Get current or cached selection range
@@ -241,6 +273,17 @@ export interface CoreApiMap {
     attachDomEvent: AttachDomEvent;
 
     /**
+     * Create a DocumentFragment for paste from a ClipboardData
+     * @param core The EditorCore object.
+     * @param clipboardData Clipboard data retrieved from clipboard
+     * @param position The position to paste to
+     * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
+     * @param applyCurrentStyle True if apply format of current selection to the pasted content,
+     * false to keep original foramt
+     */
+    createPasteFragment: CreatePasteFragment;
+
+    /**
      * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
      * Undo snapshot will not be added if this call is nested inside another editWithUndo() call.
      * @param core The EditorCore object
@@ -265,6 +308,13 @@ export interface CoreApiMap {
      * dispose editor.
      */
     getCustomData: GetCustomData;
+
+    /**
+     * Get style based format state from current selection, including font name/size and colors
+     * @param core The EditorCore objects
+     * @param node The node to get style from
+     */
+    getStyleBasedFormatState: GetStyleBasedFormatState;
 
     /**
      * Get current or cached selection range

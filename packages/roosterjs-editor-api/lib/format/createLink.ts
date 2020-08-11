@@ -1,7 +1,6 @@
 import { ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { HtmlSanitizer } from 'roosterjs-html-sanitizer';
-import { matchLink } from 'roosterjs-editor-dom';
+import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
 
 // Regex matching Uri scheme
 const URI_REGEX = /^[a-zA-Z]+:/i;
@@ -118,5 +117,7 @@ function checkXss(link: string): string {
 
     a.href = link || '';
     santizer.sanitize(doc.body);
-    return a.href;
+    // We use getAttribute because some browsers will try to make the href property a valid link.
+    // This has unintended side effects when the link lacks a protocol.
+    return a.getAttribute('href');
 }

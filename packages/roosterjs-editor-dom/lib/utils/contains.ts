@@ -1,4 +1,4 @@
-import { isRange } from 'roosterjs-cross-window';
+import isRange from '../typeUtils/isRange';
 import { NodeType } from 'roosterjs-editor-types';
 
 /**
@@ -47,7 +47,7 @@ export default function contains(
         treatSameNodeAsContain = true;
     }
 
-    if (container.nodeType != NodeType.Element) {
+    if (container.nodeType != NodeType.Element && container.nodeType != NodeType.DocumentFragment) {
         return !!treatSameNodeAsContain && container == contained;
     }
 

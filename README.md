@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Microsoft/roosterjs.svg?branch=master)](https://travis-ci.org/Microsoft/roosterjs)
+[![Build Status](https://api.travis-ci.org/microsoft/roosterjs.svg?branch=master)](https://www.travis-ci.org/microsoft/roosterjs)
 
 # Rooster
 
@@ -26,7 +26,7 @@ supporting of RoosterJs 6.x at the end of 2019/2.
 
 ### Packages
 
-Rooster contains 9 packages.
+Rooster contains 6 packages.
 
 1. [roosterjs](https://microsoft.github.io/roosterjs/docs/modules/roosterjs.html):
    A facade of all Rooster code for those who want a quick start. Use the
@@ -51,15 +51,6 @@ Rooster contains 9 packages.
 
 6. [roosterjs-editor-types](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_types.html):
    Defines public interfaces and enumerations.
-
-7. [roosterjs-html-sanitizer](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_html_sanitizer.html)
-   A common library to help sanitize HTML.
-
-8. [roosterjs-plugin-image-resize](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_plugin_image_resize.html)
-   A plugin to help do inline image resize within the editor
-
-9. [roosterjs-plugin-picker](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_plugin_picker.html)
-   A plugin to help build picker-like plugins
 
 ### APIs
 
@@ -206,13 +197,13 @@ var editorDiv = document.getElementById('editorDiv');
 var editor = roosterjs.createEditor(editorDiv);
 editor.setContent('Welcome to <b>RoosterJs</b>!');
 
-document.getElementById('buttonB').addEventListener('click', function() {
+document.getElementById('buttonB').addEventListener('click', function () {
     roosterjs.toggleBold(editor);
 });
-document.getElementById('buttonI').addEventListener('click', function() {
+document.getElementById('buttonI').addEventListener('click', function () {
     roosterjs.toggleItalic(editor);
 });
-document.getElementById('buttonU').addEventListener('click', function() {
+document.getElementById('buttonU').addEventListener('click', function () {
     roosterjs.toggleUnderline(editor);
 });
 ```
@@ -255,6 +246,31 @@ To build the sample site code yourself, follow these instructions:
     ```
 
 3. Navigate to the sample editor at http://localhost:3000/
+
+## Debugging
+
+There are two options for debugging:
+1. Debugging from VSCode
+   * Ensure the sample editor is running
+   * Set the breakpoints within VSCode
+   * Select "Debug app in Chrome" from the VSCode debugging configuration dropdown
+   <img src="/assets/readme-images/debug-in-VSCode.png" width="411" height="278"><br>
+   * Run the scenario that needs to be debugged
+
+2. Debugging directly from the development tools within the web browser
+   * The directions for how to do this are specific to each web browser. By opening the developer tools for the web browser that Rooster is running on, you will be able to set breakpoints in the code and debug accordingly.
+
+## Running tests
+
+There are two ways that tests can be run:
+1. Run all tests or a single test from VSCode<br>
+   * (Skip if running all tests) Ensure the file that you want to test is selected (ie: toggleBold.ts or toggleBoldTest.ts)
+   * Select "Test all files" or "Test current file" from the VSCode debugging configuration dropdown
+   <img src="/assets/readme-images/test-in-VSCode.png" width="402" height="268">
+2. Run all tests from command line
+    ```
+    yarn test
+    ```
 
 ## More documentation
 

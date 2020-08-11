@@ -1,15 +1,12 @@
 {
-  "name": "roosterjs",
-  "description": "A simple facade for all roosterjs code",
-  "dependencies": {
-    "roosterjs-editor-types": "",
-    "roosterjs-editor-dom": "",
-    "roosterjs-editor-core": "",
-    "roosterjs-editor-api": "",
-    "roosterjs-editor-plugins": "",
-    "roosterjs-plugin-image-resize": "",
-    "roosterjs-plugin-picker": "",
-    "roosterjs-html-sanitizer": ""
-  },
-  "main": "./lib/index.ts"
+    "name": "roosterjs",
+    "description": "A simple facade for all roosterjs code",
+    "dependencies": {
+        "roosterjs-editor-types": "",
+        "roosterjs-editor-dom": "",
+        "roosterjs-editor-core": "",
+        "roosterjs-editor-api": "",
+        "roosterjs-editor-plugins": ""
+    },
+    "main": "./lib/index.ts"
 }

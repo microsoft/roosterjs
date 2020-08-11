@@ -55,6 +55,7 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                     {this.renderPluginItem('tableResize', 'Table Resize Plugin')}
                     {this.renderPluginItem('pickerPlugin', 'Sample Picker Plugin')}
                     {this.renderPluginItem('customReplace', 'Custom Replace Plugin (autocomplete)')}
+                    {this.renderPluginItem('entityPlugin', 'Entity Plugin')}
                 </tbody>
             </table>
         );
@@ -179,6 +180,13 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                     )}
                     {this.renderContentEditItem('defaultShortcut', 'Default Shortcuts')}
                     {this.renderContentEditItem('smartOrderedList', 'Smart Ordered List Style')}
+                    {this.renderContentEditItem('markdownBold', 'Markdown style Bolding')}
+                    {this.renderContentEditItem('markdownItalic', 'Markdown style Italics')}
+                    {this.renderContentEditItem(
+                        'markdownStrikethru',
+                        'Markdown style Strikethrough'
+                    )}
+                    {this.renderContentEditItem('markdownInlineCode', 'Markdown style Code blocks')}
                 </tbody>
             </table>
         );

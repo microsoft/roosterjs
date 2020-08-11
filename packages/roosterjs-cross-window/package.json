@@ -1,7 +1,10 @@
 {
     "name": "roosterjs-cross-window",
-    "description": "Cross window utilities for roosterjs",
-    "dependencies": {},
+    "description": "This package is deprecated, and this is the last version of this package.",
+    "dependencies": {
+        "roosterjs-editor-types": "^7.13.2",
+        "roosterjs-editor-dom": "^7.13.2"
+    },
     "main": "./lib/index.ts",
-    "version": "1.1.0"
+    "version": "1.6.0"
 }

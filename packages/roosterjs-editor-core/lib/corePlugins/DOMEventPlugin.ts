@@ -137,9 +137,7 @@ export default class DOMEventPlugin implements EditorPlugin {
                 let range = this.editor.getSelectionRange();
                 if (
                     range.collapsed &&
-                    Position.getStart(range)
-                        .normalize()
-                        .equalTo(this.cachedPosition)
+                    Position.getStart(range).normalize().equalTo(this.cachedPosition)
                 ) {
                     this.restorePendingFormatState();
                 } else {

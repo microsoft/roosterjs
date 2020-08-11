@@ -1,19 +1,15 @@
 import { DocumentCommand } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { isHTMLElement } from 'roosterjs-cross-window';
 import {
-    fromHtml,
-    isVoidHtmlElement,
-    isBlockElement,
     Browser,
+    createRange,
     getSelectionPath,
-    getRangeFromSelectionPath,
+    splitBalancedNodeRange,
+    toArray,
+    wrap,
 } from 'roosterjs-editor-dom';
 
-const TEMP_NODE_CLASS = 'ROOSTERJS_TEMP_NODE_FOR_LIST';
-const TEMP_NODE_HTML = '<img class="' + TEMP_NODE_CLASS + '">';
-
-type ValidProcessListDocumentCommands =
+export type ValidProcessListDocumentCommands =
     | DocumentCommand.Outdent
     | DocumentCommand.Indent
     | DocumentCommand.InsertOrderedList
@@ -27,77 +23,90 @@ export default function processList(
     editor: Editor,
     command: ValidProcessListDocumentCommands
 ): Node {
-    let clonedNode: Node;
-    let relativeSelectionPath;
-    if (Browser.isChrome && command == DocumentCommand.Outdent) {
-        const parentLINode = editor.getElementAtCursor('LI');
-        if (parentLINode) {
-            let currentRange = editor.getSelectionRange();
-            if (
-                currentRange.collapsed ||
-                (editor.getElementAtCursor('LI', currentRange.startContainer) == parentLINode &&
-                    editor.getElementAtCursor('LI', currentRange.endContainer) == parentLINode)
-            ) {
-                relativeSelectionPath = getSelectionPath(parentLINode, currentRange);
-                // Chrome has some bad behavior when outdenting
-                // in order to work around this, we need to take steps to deep clone the current node
-                // after the outdent, we'll replace the new LI with the cloned content.
-                clonedNode = parentLINode.cloneNode(true);
-            }
-        }
-
-        workaroundForChrome(editor);
-    }
-
     let existingList = editor.getElementAtCursor('OL,UL');
-    editor.getDocument().execCommand(command, false, null);
-    let newParentNode: Node;
-    editor.queryElements('.' + TEMP_NODE_CLASS, node => {
-        newParentNode = node.parentNode;
-        editor.deleteNode(node);
-    });
+    if (Browser.isChrome && command !== DocumentCommand.Indent) {
+        // Chrome has a bug where certain information about elements are deleted when outdent or enter on empty line occurs.
+        // We need to clone our current LI node so we can replace the new LI node with it post outdent / enter.
+        const parentLINode = editor.getElementAtCursor('LI');
+        // We must first be in an LI node to do something to fix this.
+        if (parentLINode) {
+            // We also don't want to try to handle the multi select outdent case at this time.
+            // These are already pretty stable in Chromium.
+            const currentRange = editor.getSelectionRange();
+            const currentSelectionPath = getSelectionPath(parentLINode, currentRange);
+            if (
+                currentRange &&
+                (currentRange.collapsed ||
+                    (editor.getElementAtCursor('LI', currentRange.startContainer) == parentLINode &&
+                        editor.getElementAtCursor('LI', currentRange.endContainer) == parentLINode))
+            ) {
+                // Handle the case for toggling between the two list types as a special case.
+                // We'll let the browser handle this for now.
+                if (
+                    (existingList.tagName === 'OL' &&
+                        command === DocumentCommand.InsertUnorderedList) ||
+                    (existingList.tagName === 'UL' && command === DocumentCommand.InsertOrderedList)
+                ) {
+                    editor.getDocument().execCommand(command, false, null);
+                } else {
+                    // Get the next highest list element.
+                    // In well formed HTML, this should just be the existing list's parent container.
+                    const listParent = existingList.parentElement;
+                    if (listParent.tagName == 'OL' || listParent.tagName == 'UL') {
+                        if (parentLINode.nextElementSibling) {
+                            splitBalancedNodeRange(parentLINode);
+                        }
+                        existingList.insertAdjacentElement('afterend', parentLINode);
+                        editor.select(
+                            createRange(
+                                parentLINode,
+                                currentSelectionPath.start,
+                                currentSelectionPath.end
+                            )
+                        );
+                    } else {
+                        // In this case, we're going out to the parent root.
+                        if (parentLINode.nextElementSibling) {
+                            splitBalancedNodeRange(parentLINode);
+                        }
+
+                        const wrappedContents = wrap(toArray(parentLINode.childNodes));
+                        const wrappedRange = createRange(
+                            wrappedContents,
+                            currentSelectionPath.start,
+                            currentSelectionPath.end
+                        );
+                        const wrappedSelectionPath = getSelectionPath(
+                            wrappedContents,
+                            wrappedRange
+                        );
+
+                        existingList.insertAdjacentElement('afterend', wrappedContents);
+                        editor.deleteNode(parentLINode);
+                        let newRange = createRange(
+                            wrappedContents,
+                            wrappedSelectionPath.start,
+                            wrappedSelectionPath.end
+                        );
+                        editor.select(newRange);
+                    }
+
+                    if (existingList.childElementCount == 0) {
+                        editor.deleteNode(existingList);
+                    }
+                }
+            } else {
+                editor.getDocument().execCommand(command, false, null);
+            }
+        } else {
+            editor.getDocument().execCommand(command, false, null);
+        }
+    } else {
+        editor.getDocument().execCommand(command, false, null);
+    }
     let newList = editor.getElementAtCursor('OL,UL');
     if (newList == existingList) {
         newList = null;
     }
-
-    if (newList && clonedNode && newParentNode) {
-        // if the clonedNode and the newLIParent share the same tag name
-        // we can 1:1 swap them
-        if (isHTMLElement(clonedNode)) {
-            if (
-                isHTMLElement(newParentNode) &&
-                clonedNode.tagName == (<HTMLElement>newParentNode).tagName
-            ) {
-                newList.replaceChild(clonedNode, newParentNode);
-            }
-            if (relativeSelectionPath && editor.getDocument().body.contains(clonedNode)) {
-                let newRange = getRangeFromSelectionPath(clonedNode, relativeSelectionPath);
-                editor.select(newRange);
-            }
-        }
-        // The alternative case is harder to solve, but we didn't specifically handle this before either.
-    }
-
     return newList;
-}
-
-function workaroundForChrome(editor: Editor) {
-    let traverser = editor.getSelectionTraverser();
-    let block = traverser && traverser.currentBlockElement;
-    while (block) {
-        let container = block.getStartNode();
-
-        if (container) {
-            // Add a temp <IMG> tag before all other nodes in the block to avoid Chrome remove existing format when toggle list
-            const tempNode = fromHtml(TEMP_NODE_HTML, editor.getDocument())[0];
-            if (isVoidHtmlElement(container) || !isBlockElement(container)) {
-                container.parentNode.insertBefore(tempNode, container);
-            } else {
-                container.insertBefore(tempNode, container.firstChild);
-            }
-        }
-
-        block = traverser.getNextBlockElement();
-    }
 }

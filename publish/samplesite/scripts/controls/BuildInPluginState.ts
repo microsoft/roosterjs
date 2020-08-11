@@ -13,6 +13,7 @@ export interface BuildInPluginList {
     tableResize: boolean;
     customReplace: boolean;
     pickerPlugin: boolean;
+    entityPlugin: boolean;
 }
 
 export type ContentEditFeatureState = Pick<
@@ -27,6 +28,7 @@ export default interface BuildInPluginState {
     linkTitle: string;
     watermarkText: string;
     showRibbon: boolean;
+    useExperimentFeatures: boolean;
 }
 
 export interface BuildInPluginProps extends BuildInPluginState, SidePaneElementProps {}

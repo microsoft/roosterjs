@@ -9,11 +9,14 @@ export { Alignment } from './enum/Alignment';
 export { ChangeSource } from './enum/ChangeSource';
 export { ContentPosition } from './enum/ContentPosition';
 export { Direction } from './enum/Direction';
+export { EntityOperation } from './enum/EntityOperation';
 export { FontSizeChange } from './enum/FontSizeChange';
 export { Indentation } from './enum/Indentation';
+export { ListType } from './enum/ListType';
 export { PasteOption } from './enum/PasteOption';
 export { PositionType } from './enum/PositionType';
 export { QueryScope } from './enum/QueryScope';
+export { RegionType } from './enum/RegionType';
 export { TableOperation } from './enum/TableOperation';
 
 // Event
@@ -22,7 +25,9 @@ export { default as BeforeDisposeEvent } from './event/BeforeDisposeEvent';
 export { default as BeforePasteEvent } from './event/BeforePasteEvent';
 export { default as ContentChangedEvent } from './event/ContentChangedEvent';
 export { default as EditorReadyEvent } from './event/EditorReadyEvent';
+export { default as EntityOperationEvent } from './event/EntityOperationEvent';
 export { default as ExtractContentEvent } from './event/ExtractContentEvent';
+export { default as ExtractContentWithDomEvent } from './event/ExtractContentWithDomEvent';
 export { default as PendingFormatStateChangedEvent } from './event/PendingFormatStateChangedEvent';
 export {
     PluginDomEvent,
@@ -53,6 +58,7 @@ export { default as ClipboardData } from './interface/ClipboardData';
 export { default as ClipboardItems } from './interface/ClipboardItems';
 export { default as DarkModeOptions } from './interface/DarkModeOptions';
 export { default as DefaultFormat } from './interface/DefaultFormat';
+export { default as Entity } from './interface/Entity';
 export {
     default as FormatState,
     PendableFormatState,
@@ -70,6 +76,20 @@ export { default as LinkData } from './interface/LinkData';
 export { default as ModeIndependentColor } from './interface/ModeIndependentColor';
 export { default as NodePosition } from './interface/NodePosition';
 export { default as Rect } from './interface/Rect';
+export { default as Region } from './interface/Region';
 export { default as SelectionPath } from './interface/SelectionPath';
 export { default as Snapshots } from './interface/Snapshots';
 export { default as TableFormat } from './interface/TableFormat';
+export { default as HtmlSanitizerOptions } from './interface/HtmlSanitizerOptions';
+export { default as SanitizeHtmlOptions } from './interface/SanitizeHtmlOptions';
+export { default as TargetWindow } from './interface/TargetWindow';
+
+export {
+    AttributeCallback,
+    AttributeCallbackMap,
+    ElementCallback,
+    StringMap,
+    StyleCallback,
+    StyleCallbackMap,
+    ElementCallbackMap,
+} from './type/htmlSanitizerCallbackTypes';

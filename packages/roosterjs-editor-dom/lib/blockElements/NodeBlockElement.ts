@@ -7,7 +7,7 @@ import { BlockElement } from 'roosterjs-editor-types';
  * In most cases, it corresponds to an HTML block level element, i.e. P, DIV, LI, TD etc.
  */
 export default class NodeBlockElement implements BlockElement {
-    constructor(private element: HTMLElement) { }
+    constructor(private element: HTMLElement) {}
 
     /**
      * Collapse this element to a single DOM element.
@@ -61,6 +61,6 @@ export default class NodeBlockElement implements BlockElement {
      * Get the text content of this block element
      */
     public getTextContent(): string {
-        return this.element.textContent;
+        return this.element ? this.element.textContent : '';
     }
 }

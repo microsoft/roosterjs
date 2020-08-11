@@ -2,8 +2,6 @@ import * as React from 'react';
 import BuildInPluginState, { UrlPlaceholder } from '../BuildInPluginState';
 import SampleColorPickerPluginDataProvider from '../samplepicker/SampleColorPickerPluginDataProvider';
 import { EditorInstanceToggleablePlugins } from './EditorInstanceToggleablePlugins';
-import { ImageResize } from 'roosterjs-plugin-image-resize';
-import { PickerPlugin } from 'roosterjs-plugin-picker';
 import {
     Editor as RoosterJsEditor,
     EditorOptions,
@@ -20,6 +18,9 @@ import {
     ContentEditFeatures,
     getDefaultContentEditFeatures,
     CustomReplace as CustomReplacePlugin,
+    EntityPlugin,
+    ImageResize,
+    PickerPlugin,
 } from 'roosterjs-editor-plugins';
 
 const styles = require('./Editor.scss');
@@ -103,6 +104,7 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
                   })
                 : null,
             customReplace: pluginList.customReplace ? new CustomReplacePlugin() : null,
+            entityPlugin: pluginList.entityPlugin ? new EntityPlugin() : null,
         };
         let plugins = [
             ...Object.keys(editorInstanceToggleablePlugins).map(
@@ -116,6 +118,7 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
             defaultFormat: defaultFormat,
             undo: this.props.undo,
             initialContent: this.props.content,
+            enableExperimentFeatures: this.state.useExperimentFeatures,
         };
         this.editor = new RoosterJsEditor(this.contentDiv, options);
     }

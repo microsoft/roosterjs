@@ -1,11 +1,9 @@
 {
-  "name": "roosterjs-plugin-image-resize",
-  "description": "ImageResize plugin for roosterjs",
-  "dependencies": {
-    "roosterjs-editor-types": "",
-    "roosterjs-editor-dom": "",
-    "roosterjs-editor-core": "",
-    "roosterjs-editor-api": ""
-  },
-  "main": "./lib/index.ts"
+    "name": "roosterjs-plugin-image-resize",
+    "description": "This package is deprecated, and this is the last version of this package.",
+    "dependencies": {
+        "roosterjs-editor-plugins": "^7.13.2"
+    },
+    "main": "./lib/index.ts",
+    "version": "7.13.2"
 }

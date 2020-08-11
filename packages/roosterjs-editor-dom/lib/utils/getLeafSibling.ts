@@ -1,4 +1,5 @@
 import contains from './contains';
+import getTagOfNode from './getTagOfNode';
 import shouldSkipNode from './shouldSkipNode';
 
 /**
@@ -6,8 +7,16 @@ import shouldSkipNode from './shouldSkipNode';
  * @param rootNode Root node to scope the leaf sibling node
  * @param startNode current node to get sibling node from
  * @param isNext True to get next leaf sibling node, false to get previous leaf sibling node
+ * @param skipTags (Optional) tags that child elements will be skipped
+ * @param ignoreSpace (Optional) Ignore pure space text node when check if the node should be skipped
  */
-export function getLeafSibling(rootNode: Node, startNode: Node, isNext: boolean): Node {
+export function getLeafSibling(
+    rootNode: Node,
+    startNode: Node,
+    isNext: boolean,
+    skipTags?: string[],
+    ignoreSpace?: boolean
+): Node {
     let result = null;
     let getSibling = isNext
         ? (node: Node) => node.nextSibling
@@ -28,12 +37,16 @@ export function getLeafSibling(rootNode: Node, startNode: Node, isNext: boolean)
             }
 
             // Now traverse down to get first/last child
-            while (curNode && getChild(curNode)) {
+            while (
+                curNode &&
+                (!skipTags || skipTags.indexOf(getTagOfNode(curNode)) < 0) &&
+                getChild(curNode)
+            ) {
                 curNode = getChild(curNode);
             }
 
             // Check special nodes (i.e. node that has a display:none etc.) and continue looping if so
-            shouldContinue = curNode && shouldSkipNode(curNode);
+            shouldContinue = curNode && shouldSkipNode(curNode, ignoreSpace);
             if (!shouldContinue) {
                 // Found a good leaf node, assign and exit
                 result = curNode;
@@ -49,16 +62,18 @@ export function getLeafSibling(rootNode: Node, startNode: Node, isNext: boolean)
  * This walks forwards DOM tree to get next meaningful node
  * @param rootNode Root node to scope the leaf sibling node
  * @param startNode current node to get sibling node from
+ * @param skipTags (Optional) tags that child elements will be skipped
  */
-export function getNextLeafSibling(rootNode: Node, startNode: Node): Node {
-    return getLeafSibling(rootNode, startNode, true /*isNext*/);
+export function getNextLeafSibling(rootNode: Node, startNode: Node, skipTags?: string[]): Node {
+    return getLeafSibling(rootNode, startNode, true /*isNext*/, skipTags);
 }
 
 /**
  * This walks backwards DOM tree to get next meaningful node
  * @param rootNode Root node to scope the leaf sibling node
  * @param startNode current node to get sibling node from
+ * @param skipTags (Optional) tags that child elements will be skipped
  */
-export function getPreviousLeafSibling(rootNode: Node, startNode: Node): Node {
-    return getLeafSibling(rootNode, startNode, false /*isNext*/);
+export function getPreviousLeafSibling(rootNode: Node, startNode: Node, skipTags?: string[]): Node {
+    return getLeafSibling(rootNode, startNode, false /*isNext*/, skipTags);
 }

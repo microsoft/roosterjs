@@ -1,5 +1,7 @@
-import { isHTMLTableCellElement, isHTMLTableElement } from 'roosterjs-cross-window';
+import isHTMLTableCellElement from '../typeUtils/isHTMLTableCellElement';
+import isHTMLTableElement from '../typeUtils/isHTMLTableElement';
 import { TableFormat, TableOperation } from 'roosterjs-editor-types';
+import { toArray } from 'roosterjs-editor-dom';
 
 /**
  * Represent a virtual cell of a virtual table
@@ -55,7 +57,7 @@ export default class VTable {
         this.table = isHTMLTableElement(node) ? node : getTableFromTd(node);
         if (this.table) {
             let currentTd = isHTMLTableElement(node) ? null : node;
-            let trs = <HTMLTableRowElement[]>[].slice.call(this.table.rows);
+            let trs = toArray(this.table.rows);
             this.cells = trs.map(row => []);
             trs.forEach((tr, rowIndex) => {
                 this.trs[rowIndex % 2] = tr;
@@ -326,17 +328,19 @@ export default class VTable {
     private getTd(row: number, col: number) {
         if (this.cells) {
             row = Math.min(this.cells.length - 1, row);
-            col = Math.min(this.cells[row].length - 1, col);
-            while (row >= 0 && col >= 0) {
-                let cell = this.getCell(row, col);
-                if (cell.td) {
-                    return cell.td;
-                } else if (cell.spanLeft) {
-                    col--;
-                } else if (cell.spanAbove) {
-                    row--;
-                } else {
-                    break;
+            col = this.cells[row] ? Math.min(this.cells[row].length - 1, col) : col;
+            if (!isNaN(row) && !isNaN(col)) {
+                while (row >= 0 && col >= 0) {
+                    let cell = this.getCell(row, col);
+                    if (cell.td) {
+                        return cell.td;
+                    } else if (cell.spanLeft) {
+                        col--;
+                    } else if (cell.spanAbove) {
+                        row--;
+                    } else {
+                        break;
+                    }
                 }
             }
         }

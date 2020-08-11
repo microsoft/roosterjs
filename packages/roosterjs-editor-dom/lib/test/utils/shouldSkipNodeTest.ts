@@ -44,6 +44,17 @@ describe('shouldSkipNode, shouldSkipNode()', () => {
         expect(shouldSkip).toBe(true);
     });
 
+    it('Empty DIV node', () => {
+        // Arrange
+        let node = DomTestHelper.createElementFromContent(testID, '<div></div>');
+
+        // Act
+        let shouldSkip = shouldSkipNode(node.firstChild);
+
+        // Assert
+        expect(shouldSkip).toBe(true);
+    });
+
     it('Regular node', () => {
         // Arrange
         let node = document.createTextNode('abc');
@@ -53,5 +64,29 @@ describe('shouldSkipNode, shouldSkipNode()', () => {
 
         // Assert
         expect(shouldSkip).toBe(false);
+    });
+
+    it('Node contains empty DIV/SPAN only', () => {
+        // Arrange
+        const node = document.createElement('div');
+        node.innerHTML = '<span><div></div><div></div></span>';
+
+        // Act
+        const shouldSkip = shouldSkipNode(node);
+
+        // Assert
+        expect(shouldSkip).toBe(true);
+    });
+
+    it('Node contains space only, set trim to true', () => {
+        // Arrange
+        const node = document.createElement('div');
+        node.innerHTML = '  <div>  </div>  ';
+
+        // Act
+        const shouldSkip = shouldSkipNode(node, true /*ignoreSpace*/);
+
+        // Assert
+        expect(shouldSkip).toBe(true);
     });
 });

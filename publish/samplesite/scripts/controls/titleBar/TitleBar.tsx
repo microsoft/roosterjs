@@ -18,7 +18,9 @@ export default class TitleBar extends React.Component<TitleBarProps, {}> {
                 <div className={styles.title}>
                     <span className={styles.titleText}>RoosterJs Demo Site</span>
                 </div>
-                <div className={styles.version}>{(window as WindowHack).roosterJsVer || ''}</div>
+                <div className={styles.version}>
+                    {((window as any) as WindowHack).roosterJsVer || ''}
+                </div>
                 <div className={styles.links}>
                     <a
                         href="https://github.com/microsoft/roosterjs"
@@ -34,16 +36,13 @@ export default class TitleBar extends React.Component<TitleBarProps, {}> {
                         Wiki
                     </a>
                     {' | '}
-                    <a
-                        href="https://microsoft.github.io/roosterjs/docs/index.html"
-                        target="_blank"
-                        className={styles.link}>
+                    <a href="docs/index.html" target="_blank" className={styles.link}>
                         API References
                     </a>
                     {' | '}
-                    <a href="https://travis-ci.org/Microsoft/roosterjs" target="_blank">
+                    <a href="https://www.travis-ci.org/microsoft/roosterjs" target="_blank">
                         <img
-                            src="https://travis-ci.org/Microsoft/roosterjs.svg?branch=master"
+                            src="https://api.travis-ci.org/microsoft/roosterjs.svg?branch=master"
                             alt="Build Status"
                         />
                     </a>{' '}

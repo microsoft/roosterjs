@@ -22,8 +22,11 @@ export default class Position implements NodePosition {
      * Create a Position from node and an offset number
      * @param node The node of this position
      * @param offset Offset of this position
+     * @param isFromEndOfRange Whether this position is created from end of a range. An position
+     * created from end of range has different behavior when normalize, it will use the child node
+     * before current position if any as a deeper level node and set isAtEnd to true.
      */
-    constructor(node: Node, offset: number);
+    constructor(node: Node, offset: number, isFromEndOfRange?: boolean);
 
     /**
      * Create a Position from node and a type of position
@@ -32,7 +35,11 @@ export default class Position implements NodePosition {
      */
     constructor(node: Node, positionType: PositionType);
 
-    constructor(nodeOrPosition: Node | NodePosition, offsetOrPosType?: number) {
+    constructor(
+        nodeOrPosition: Node | NodePosition,
+        offsetOrPosType?: number,
+        private readonly isFromEndOfRange?: boolean
+    ) {
         if ((<NodePosition>nodeOrPosition).node) {
             this.node = (<NodePosition>nodeOrPosition).node;
             offsetOrPosType = (<NodePosition>nodeOrPosition).offset;
@@ -82,21 +89,25 @@ export default class Position implements NodePosition {
             ? PositionType.End
             : this.offset;
         while (node.nodeType == NodeType.Element) {
-            const nextNode =
-                newOffset == PositionType.Begin
-                    ? node.firstChild
-                    : newOffset == PositionType.End
+            const nextNode = this.isFromEndOfRange
+                ? newOffset == PositionType.End
                     ? node.lastChild
-                    : node.childNodes[<number>newOffset];
+                    : node.childNodes[<number>newOffset - 1]
+                : newOffset == PositionType.Begin
+                ? node.firstChild
+                : newOffset == PositionType.End
+                ? node.lastChild
+                : node.childNodes[<number>newOffset];
 
             if (nextNode) {
                 node = nextNode;
-                newOffset = this.isAtEnd ? PositionType.End : PositionType.Begin;
+                newOffset =
+                    this.isAtEnd || this.isFromEndOfRange ? PositionType.End : PositionType.Begin;
             } else {
                 break;
             }
         }
-        return new Position(node, newOffset);
+        return new Position(node, newOffset, this.isFromEndOfRange);
     }
 
     /**
@@ -143,7 +154,11 @@ export default class Position implements NodePosition {
      * @param range The range to get position from
      */
     static getEnd(range: Range) {
-        return new Position(range.endContainer, range.endOffset);
+        // For collapsed range, always return the same value of start container to make sure
+        // end position is not before start position
+        return range.collapsed
+            ? Position.getStart(range)
+            : new Position(range.endContainer, range.endOffset, true /*isFromEndOfRange*/);
     }
 }
 

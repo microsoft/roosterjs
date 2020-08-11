@@ -1,5 +1,6 @@
 import contains from './contains';
 import splitParentNode from './splitParentNode';
+import toArray from './toArray';
 
 /**
  * Collapse nodes within the given start and end nodes to their common ascenstor node,
@@ -31,7 +32,7 @@ export default function collapseNodes(
     } else if (contains(end, start)) {
         return [end];
     } else if (start.parentNode == end.parentNode) {
-        let nodes = [].slice.call(start.parentNode.childNodes) as Node[];
+        let nodes: Node[] = toArray(start.parentNode.childNodes);
         let startIndex = nodes.indexOf(start);
         let endIndex = nodes.indexOf(end);
         return nodes.slice(startIndex, endIndex + 1);

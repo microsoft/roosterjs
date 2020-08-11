@@ -1,3 +1,5 @@
+import ModeIndependentColor from './ModeIndependentColor';
+
 /**
  * Format states that can have pending state.
  *
@@ -92,9 +94,19 @@ export interface StyleBasedFormatState {
     backgroundColor?: string;
 
     /**
+     * Mode independent background color for dark mode
+     */
+    backgroundColors?: ModeIndependentColor;
+
+    /**
      * Text color
      */
     textColor?: string;
+
+    /**
+     * Mode independent background color for dark mode
+     */
+    textColors?: ModeIndependentColor;
 }
 
 /**

@@ -1,4 +1,5 @@
 import CopyPlugin from '../corePlugins/CopyPlugin';
+import CorePastePlugin from '../corePlugins/CorePastePlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditorCore, { CoreApiMap, CorePlugins } from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
@@ -11,11 +12,13 @@ import Undo from '../undo/Undo';
 import { attachDomEvent } from '../coreAPI/attachDomEvent';
 import { Browser } from 'roosterjs-editor-dom';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
+import { createPasteFragment } from '../coreAPI/createPasteFragment';
 import { CustomDataMap } from '../interfaces/CustomData';
 import { editWithUndo } from '../coreAPI/editWithUndo';
 import { focus } from '../coreAPI/focus';
 import { getCustomData } from '../coreAPI/getCustomData';
 import { getSelectionRange } from '../coreAPI/getSelectionRange';
+import { getStyleBasedFormatState } from '../coreAPI/getStyleBasedFormatState';
 import { hasFocus } from '../coreAPI/hasFocus';
 import { insertNode } from '../coreAPI/insertNode';
 import { select, selectRange } from '../coreAPI/selectRange';
@@ -38,6 +41,7 @@ export default function createEditorCore(
         domEvent: new DOMEventPlugin(options.disableRestoreSelectionOnFocus),
         firefoxTypeAfterLink: new FirefoxTypeAfterLink(),
         copyPlugin: !Browser.isIE && new CopyPlugin(),
+        pastePlugin: new CorePastePlugin(),
     };
     let allPlugins = buildPluginList(corePlugins, options.plugins);
     let eventHandlerPlugins = allPlugins.filter(
@@ -75,6 +79,7 @@ function buildPluginList(corePlugins: CorePlugins, plugins: EditorPlugin[]): Edi
         corePlugins.undo,
         corePlugins.domEvent,
         corePlugins.copyPlugin,
+        corePlugins.pastePlugin,
     ].filter(plugin => !!plugin);
 }
 
@@ -86,8 +91,10 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
         focus: map.focus || focus,
         getCustomData: map.getCustomData || getCustomData,
         getSelectionRange: map.getSelectionRange || getSelectionRange,
+        getStyleBasedFormatState: map.getStyleBasedFormatState || getStyleBasedFormatState,
         hasFocus: map.hasFocus || hasFocus,
         insertNode: map.insertNode || insertNode,
+        createPasteFragment: map.createPasteFragment || createPasteFragment,
         select: map.select || select,
         selectRange: map.selectRange || selectRange,
         triggerEvent: map.triggerEvent || triggerEvent,
@@ -95,13 +102,10 @@ function createCoreApiMap(map?: Partial<CoreApiMap>): CoreApiMap {
 }
 
 function createCustomData(initValue: { [key: string]: any }): CustomDataMap {
-    return Object.keys(initValue).reduce(
-        (result, key) => {
-            result[key] = {
-                value: initValue[key],
-            };
-            return result;
-        },
-        <CustomDataMap>{}
-    );
+    return Object.keys(initValue).reduce((result, key) => {
+        result[key] = {
+            value: initValue[key],
+        };
+        return result;
+    }, <CustomDataMap>{});
 }

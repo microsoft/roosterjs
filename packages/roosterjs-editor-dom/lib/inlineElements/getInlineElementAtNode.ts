@@ -1,10 +1,10 @@
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
 import getTagOfNode from '../utils/getTagOfNode';
 import ImageInlineElement from './ImageInlineElement';
+import isNode from '../typeUtils/isNode';
 import LinkInlineElement from './LinkInlineElement';
 import NodeInlineElement from './NodeInlineElement';
 import { BlockElement, InlineElement } from 'roosterjs-editor-types';
-import { isNode } from 'roosterjs-cross-window';
 
 /**
  * Get the inline element at a node

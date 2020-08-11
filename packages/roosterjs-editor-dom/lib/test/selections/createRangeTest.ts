@@ -27,7 +27,11 @@ describe('createRange() with nodes', () => {
     }
 
     it('Null', () => {
-        runTest('', () => [null, null], () => null);
+        runTest(
+            '',
+            () => [null, null],
+            () => null
+        );
     });
 
     it('Collapsed', () => {

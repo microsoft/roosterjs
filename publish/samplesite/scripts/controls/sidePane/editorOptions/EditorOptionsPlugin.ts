@@ -14,12 +14,14 @@ const initialState: BuildInPluginState = {
         tableResize: true,
         customReplace: true,
         pickerPlugin: true,
+        entityPlugin: true,
     },
     contentEditFeatures: getDefaultContentEditFeatures(),
     defaultFormat: {},
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
     showRibbon: true,
+    useExperimentFeatures: true,
 };
 
 export default class EditorOptionsPlugin extends SidePanePluginImpl<

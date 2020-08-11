@@ -1,7 +1,9 @@
 import * as React from 'react';
 import ApiPaneProps, { ApiPlaygroundComponent } from './ApiPaneProps';
 import BlockElementsPane from './blockElements/BlockElementsPane';
+import GetSelectedRegionsPane from './region/GetSelectedRegionsPane';
 import InsertContentPane from './insertContent/InsertContentPane';
+import InsertEntityPane from './insertEntity/InsertEntityPane';
 import MatchLinkPane from './matchLink/MatchLinkPane';
 import SanitizerPane from './sanitizer/SanitizerPane';
 
@@ -33,6 +35,14 @@ const apiEntries: { [key: string]: ApiEntry } = {
     insertContent: {
         name: 'Insert Content',
         component: InsertContentPane,
+    },
+    region: {
+        name: 'Get Selected Regions',
+        component: GetSelectedRegionsPane,
+    },
+    entity: {
+        name: 'Insert Entity',
+        component: InsertEntityPane,
     },
     more: {
         name: 'Coming soon...',

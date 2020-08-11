@@ -1,3 +1,5 @@
+import toArray from './toArray';
+
 /**
  * Creates an HTML node array from html
  * @param html the html string to create HTML elements from
@@ -8,5 +10,5 @@ export default function fromHtml(html: string, ownerDocument: HTMLDocument): Nod
     let element = ownerDocument.createElement('DIV');
     element.innerHTML = html;
 
-    return [].slice.call(element.childNodes);
+    return toArray(element.childNodes);
 }

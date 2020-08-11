@@ -92,6 +92,19 @@ describe('Editor insertContent()', () => {
         expect(editor.getContent()).toBe('<div id="text">hellotext</div>');
     });
 
+    it('insert begin with multiple nodes', () => {
+        // Act
+        editor.insertContent('hello<br>world', {
+            position: ContentPosition.Begin,
+            updateCursor: true,
+            replaceSelection: true,
+            insertOnNewLine: false,
+        });
+
+        // Assert
+        expect(editor.getContent()).toBe('<div id="text">hello<br>worldtext</div>');
+    });
+
     it('insert end', () => {
         // Act
         editor.insertContent('hello', {
@@ -105,7 +118,7 @@ describe('Editor insertContent()', () => {
         expect(editor.getContent()).toBe('<div id="text">texthello</div>');
     });
 
-    xit('insert selection, replace selection', () => {
+    it('insert selection, replace selection', () => {
         // Arrange
         TestHelper.selectNode(document.getElementById('text'));
 
@@ -121,7 +134,7 @@ describe('Editor insertContent()', () => {
         expect(editor.getContent()).toBe('hello');
     });
 
-    xit('insert selection, not replace selection', () => {
+    it('insert selection, not replace selection', () => {
         // Arrange
         TestHelper.selectNode(document.getElementById('text'));
 
@@ -224,7 +237,7 @@ describe('Editor insertNode()', () => {
         expect(editor.getContent()).toBe('<div id="text">text<div id="testNode">abc</div></div>');
     });
 
-    xit('insert selection, replace selection', () => {
+    it('insert selection, replace selection', () => {
         // Arrange
         TestHelper.selectNode(document.getElementById('text'));
 
@@ -240,7 +253,7 @@ describe('Editor insertNode()', () => {
         expect(editor.getContent()).toBe('<div id="testNode">abc</div>');
     });
 
-    xit('insert selection, not replace selection', () => {
+    it('insert selection, not replace selection', () => {
         // Arrange
         TestHelper.selectNode(document.getElementById('text'));
 

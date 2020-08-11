@@ -1,5 +1,5 @@
-import { DocumentPosition } from 'roosterjs-editor-types';
-import { QueryScope } from 'roosterjs-editor-types';
+import toArray from './toArray';
+import { DocumentPosition, NodeType, QueryScope } from 'roosterjs-editor-types';
 
 /**
  * Query HTML elements in the container by a selector string
@@ -21,11 +21,30 @@ export default function queryElements(
         return [];
     }
 
-    let elements = [].slice.call(container.querySelectorAll(selector)) as HTMLElement[];
+    let elements = toArray(container.querySelectorAll<HTMLElement>(selector));
 
     if (scope != QueryScope.Body && range) {
+        let { startContainer, startOffset, endContainer, endOffset } = range;
+        if (startContainer.nodeType == NodeType.Element && startContainer.firstChild) {
+            const child = startContainer.childNodes[startOffset];
+
+            // range.startOffset can give a value of child.length+1 when selection is after the last child
+            // In that case we will use the last child instead
+            startContainer = child || startContainer.lastChild;
+        }
+
+        endContainer =
+            endContainer.nodeType == NodeType.Element && endContainer.firstChild && endOffset > 0
+                ? endContainer.childNodes[endOffset - 1]
+                : endContainer;
+
         elements = elements.filter(element =>
-            isIntersectWithNodeRange(element, range, scope == QueryScope.InSelection)
+            isIntersectWithNodeRange(
+                element,
+                startContainer,
+                endContainer,
+                scope == QueryScope.InSelection
+            )
         );
     }
 
@@ -37,11 +56,12 @@ export default function queryElements(
 
 function isIntersectWithNodeRange(
     node: Node,
-    range: Range,
+    startNode: Node,
+    endNode: Node,
     nodeContainedByRangeOnly: boolean
 ): boolean {
-    let startPosition = node.compareDocumentPosition(range.startContainer);
-    let endPosition = node.compareDocumentPosition(range.endContainer);
+    let startPosition = node.compareDocumentPosition(startNode);
+    let endPosition = node.compareDocumentPosition(endNode);
     let targetPositions = [DocumentPosition.Same, DocumentPosition.Contains];
 
     if (!nodeContainedByRangeOnly) {

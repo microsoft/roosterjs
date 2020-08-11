@@ -1,6 +1,6 @@
+import isNode from '../typeUtils/isNode';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import Position from './Position';
-import { isNode } from 'roosterjs-cross-window';
 import { NodePosition, NodeType, PositionType, SelectionPath } from 'roosterjs-editor-types';
 
 /**

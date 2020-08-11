@@ -23,15 +23,21 @@ export default class ContentTraverser {
     /**
      * Create a content traverser for the whole body of given root node
      * @param scoper Traversing scoper object to help scope the traversing
+     * @param skipTags (Optional) tags that child elements will be skipped
      */
-    private constructor(private scoper: TraversingScoper) {}
+    private constructor(private scoper: TraversingScoper, private skipTags?: string[]) {}
 
     /**
      * Create a content traverser for the whole body of given root node
      * @param rootNode The root node to traverse in
      * @param startNode The node to start from. If not passed, it will start from the beginning of the body
+     * @param skipTags (Optional) tags that child elements will be skipped
      */
-    public static createBodyTraverser(rootNode: Node, startNode?: Node): ContentTraverser {
+    public static createBodyTraverser(
+        rootNode: Node,
+        startNode?: Node,
+        skipTags?: string[]
+    ): ContentTraverser {
         return new ContentTraverser(new BodyScoper(rootNode, startNode));
     }
 
@@ -39,9 +45,14 @@ export default class ContentTraverser {
      * Create a content traverser for the given selection
      * @param rootNode The root node to traverse in
      * @param range The selection range to scope the traversing
+     * @param skipTags (Optional) tags that child elements will be skipped
      */
-    public static createSelectionTraverser(rootNode: Node, range: Range): ContentTraverser {
-        return new ContentTraverser(new SelectionScoper(rootNode, range));
+    public static createSelectionTraverser(
+        rootNode: Node,
+        range: Range,
+        skipTags?: string[]
+    ): ContentTraverser {
+        return new ContentTraverser(new SelectionScoper(rootNode, range), skipTags);
     }
 
     /**
@@ -50,11 +61,13 @@ export default class ContentTraverser {
      * @param position A position inside a block, traversing will be scoped within this block.
      * If passing a range, the start position of this range will be used
      * @param startFrom Start position of traversing. The value can be Begin, End, SelectionStart
+     * @param skipTags (Optional) tags that child elements will be skipped
      */
     public static createBlockTraverser(
         rootNode: Node,
         position: NodePosition | Range,
-        start: ContentPosition = ContentPosition.SelectionStart
+        start: ContentPosition = ContentPosition.SelectionStart,
+        skipTags?: string[]
     ): ContentTraverser {
         return new ContentTraverser(new SelectionBlockScoper(rootNode, position, start));
     }
@@ -87,10 +100,16 @@ export default class ContentTraverser {
 
     private getPreviousNextBlockElement(isNext: boolean): BlockElement {
         let current = this.currentBlockElement;
+
+        if (!current) {
+            return null;
+        }
+
         let leaf = getLeafSibling(
             this.scoper.rootNode,
             isNext ? current.getEndNode() : current.getStartNode(),
-            isNext
+            isNext,
+            this.skipTags
         );
         let newBlock = leaf ? getBlockElementAtNode(this.scoper.rootNode, leaf) : null;
 
@@ -140,6 +159,10 @@ export default class ContentTraverser {
     private getPreviousNextInlineElement(isNext: boolean): InlineElement {
         let current = this.currentInlineElement || this.currentInline;
         let newInline: InlineElement;
+
+        if (!current) {
+            return null;
+        }
 
         if (current instanceof EmptyInlineElement) {
             newInline = getInlineElementBeforeAfter(

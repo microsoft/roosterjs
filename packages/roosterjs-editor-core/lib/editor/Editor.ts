@@ -2,15 +2,15 @@ import adjustBrowserBehavior from './adjustBrowserBehavior';
 import createEditorCore from './createEditorCore';
 import EditorCore from '../interfaces/EditorCore';
 import EditorOptions from '../interfaces/EditorOptions';
-import getColorNormalizedContent from '../darkMode/getColorNormalizedContent';
 import mapPluginEvents from './mapPluginEvents';
+import normalizeContentColor from '../darkMode/normalizeContentColor';
 import { calculateDefaultFormat } from '../coreAPI/calculateDefaultFormat';
 import { convertContentToDarkMode } from '../darkMode/convertContentToDarkMode';
 import { GenericContentEditFeature } from '../interfaces/ContentEditFeature';
-import { isRange } from 'roosterjs-cross-window';
 import {
     BlockElement,
     ChangeSource,
+    ClipboardData,
     ContentPosition,
     DarkModeOptions,
     DefaultFormat,
@@ -24,13 +24,17 @@ import {
     PositionType,
     QueryScope,
     Rect,
+    Region,
+    RegionType,
     SelectionPath,
+    StyleBasedFormatState,
 } from 'roosterjs-editor-types';
 import {
     collapseNodes,
     contains,
     ContentTraverser,
     createRange,
+    getRegionsFromRange,
     findClosestElementAncestor,
     fromHtml,
     getBlockElementAtNode,
@@ -41,6 +45,7 @@ import {
     getPositionRect,
     getTagOfNode,
     isNodeEmpty,
+    isRange,
     Position,
     PositionContentSearcher,
     queryElements,
@@ -56,6 +61,7 @@ export default class Editor {
     private core: EditorCore;
     private eventDisposers: (() => void)[];
     private contenteditableChanged: boolean;
+    private enableExperimentFeatures: boolean;
 
     //#region Lifecycle
 
@@ -72,6 +78,7 @@ export default class Editor {
 
         // 2. Store options values to local variables
         this.core = createEditorCore(contentDiv, options);
+        this.enableExperimentFeatures = options.enableExperimentFeatures;
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
@@ -340,28 +347,51 @@ export default class Editor {
      * @param triggerExtractContentEvent Whether trigger ExtractContent event to all plugins
      * before return. Use this parameter to remove any temporary content added by plugins.
      * @param includeSelectionMarker Set to true if need include selection marker inside the content.
-     * When restore this content, editor will set the selection to the position marked by these markers
+     * When restore this content, editor will set the selection to the position marked by these markers.
+     * This parameter will be ignored when triggerExtractContentEvent is set to true
      * @returns HTML string representing current editor content
      */
     public getContent(
         triggerExtractContentEvent: boolean = true,
         includeSelectionMarker: boolean = false
     ): string {
-        let content = getHtmlWithSelectionPath(
-            this.core.contentDiv,
-            includeSelectionMarker && this.getSelectionRange()
-        );
+        let content = '';
+        const isDarkMode = this.core.inDarkMode;
+        if (triggerExtractContentEvent || isDarkMode) {
+            const clonedRoot = this.core.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
+            const path = includeSelectionMarker && this.getSelectionPath();
+            const range = path && createRange(clonedRoot, path.start, path.end);
 
-        if (triggerExtractContentEvent) {
-            content = this.triggerPluginEvent(
-                PluginEventType.ExtractContent,
-                { content },
-                true /*broadcast*/
-            ).content;
-        }
+            if (isDarkMode) {
+                normalizeContentColor(clonedRoot);
+            }
 
-        if (this.core.inDarkMode) {
-            content = getColorNormalizedContent(content);
+            if (triggerExtractContentEvent) {
+                this.triggerPluginEvent(
+                    PluginEventType.ExtractContentWithDom,
+                    {
+                        clonedRoot,
+                    },
+                    true /*broadcast*/
+                );
+
+                // TODO: Deprecated ExtractContentEvent once we have entity API ready in next major release
+                content = this.triggerPluginEvent(
+                    PluginEventType.ExtractContent,
+                    { content: clonedRoot.innerHTML },
+                    true /*broadcast*/
+                ).content;
+            } else if (range) {
+                // range is not null, which means we want to include a selection path in the content
+                content = getHtmlWithSelectionPath(clonedRoot, range);
+            } else {
+                content = clonedRoot.innerHTML;
+            }
+        } else {
+            content = getHtmlWithSelectionPath(
+                this.core.contentDiv,
+                includeSelectionMarker && this.getSelectionRange()
+            );
         }
 
         return content;
@@ -429,9 +459,52 @@ export default class Editor {
             if (option && option.insertOnNewLine && allNodes.length > 1) {
                 allNodes = [wrap(allNodes)];
             }
-            for (let i = 0; i < allNodes.length; i++) {
-                this.insertNode(allNodes[i], option);
+
+            let fragment = this.core.document.createDocumentFragment();
+            allNodes.forEach(node => fragment.appendChild(node));
+
+            this.insertNode(fragment, option);
+        }
+    }
+
+    /**
+     * Paste into editor using a clipboardData object
+     * @param clipboardData Clipboard data retrieved from clipboard
+     * @param pasteAsText Force pasting as plain text. Default value is false
+     * @param applyCurrentStyle True if apply format of current selection to the pasted content,
+     * false to keep original foramt.  Default value is false. When pasteAsText is true, this parameter is ignored
+     */
+    public paste(
+        clipboardData: ClipboardData,
+        pasteAsText?: boolean,
+        applyCurrentFormat?: boolean
+    ) {
+        const range = this.getSelectionRange();
+        const pos = range && Position.getStart(range);
+
+        if (clipboardData && pos) {
+            if (clipboardData.snapshotBeforePaste) {
+                // Restore original content before paste a new one
+                this.setContent(clipboardData.snapshotBeforePaste);
+            } else {
+                clipboardData.snapshotBeforePaste = this.getContent(
+                    false /*triggerExtractContentEvent*/,
+                    true /*includeSelectionMarker*/
+                );
             }
+
+            const fragment = this.core.api.createPasteFragment(
+                this.core,
+                clipboardData,
+                pos,
+                pasteAsText,
+                applyCurrentFormat
+            );
+
+            this.addUndoSnapshot(() => {
+                this.insertNode(fragment);
+                return clipboardData;
+            }, ChangeSource.Paste);
         }
     }
 
@@ -625,6 +698,19 @@ export default class Editor {
      */
     public isPositionAtBeginning(position: NodePosition): boolean {
         return isPositionAtBeginningOf(position, this.core.contentDiv);
+    }
+
+    /**
+     * Get impacted regions from selection
+     */
+    public getSelectedRegions(type: RegionType = RegionType.Table): Region[] {
+        // Make sure there is a wrpper around cursor first, otherwise there will be no valid region
+        this.core.corePlugins.typeInContainer.ensureTypeInElement(
+            this.getFocusedPosition() || new Position(this.core.contentDiv, PositionType.Begin)
+        );
+
+        const range = this.getSelectionRange();
+        return range ? getRegionsFromRange(this.core.contentDiv, range, type) : [];
     }
 
     //#endregion
@@ -919,6 +1005,17 @@ export default class Editor {
         this.core.corePlugins.edit.addFeature(feature);
     }
 
+    /**
+     * Get style based format state from current selection, including font name/size and colors
+     */
+    public getStyleBasedFormatState(node?: Node): StyleBasedFormatState {
+        if (!node) {
+            const range = this.getSelectionRange();
+            node = range && Position.getStart(range).normalize().node;
+        }
+        return this.core.api.getStyleBasedFormatState(this.core, node);
+    }
+
     //#endregion
 
     //#region Dark mode APIs
@@ -964,6 +1061,13 @@ export default class Editor {
      */
     public getDarkModeOptions(): DarkModeOptions {
         return this.core.darkModeOptions;
+    }
+
+    /**
+     * Whether experiment features can be used
+     */
+    public useExperimentFeatures(): boolean {
+        return !!this.enableExperimentFeatures;
     }
 
     //#endregion

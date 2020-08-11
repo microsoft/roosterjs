@@ -1,6 +1,6 @@
 import { cacheGetElementAtCursor, Editor } from 'roosterjs-editor-core';
-import { getComputedStyles, getTagOfNode, Position } from 'roosterjs-editor-dom';
 import { getPendableFormatState } from 'roosterjs-editor-dom';
+import { getTagOfNode } from 'roosterjs-editor-dom';
 import {
     ElementBasedFormatState,
     FormatState,
@@ -36,20 +36,13 @@ export function getElementBasedFormatState(
 }
 
 /**
+ * @deprecated Use Editor.getStyleBasedFormatState() instead
  * Get style based Format State at cursor
  * @param editor The editor instance
  * @returns A StyleBasedFormatState object
  */
 export function getStyleBasedFormatState(editor: Editor): StyleBasedFormatState {
-    let range = editor.getSelectionRange();
-    let node = range && Position.getStart(range).normalize().node;
-    let styles = node ? getComputedStyles(node) : [];
-    return {
-        fontName: styles[0],
-        fontSize: styles[1],
-        textColor: styles[2],
-        backgroundColor: styles[3],
-    };
+    return editor.getStyleBasedFormatState();
 }
 
 /**
@@ -66,7 +59,7 @@ export default function getFormatState(editor: Editor, event?: PluginEvent): For
     return {
         ...getPendableFormatState(editor.getDocument()),
         ...getElementBasedFormatState(editor, event),
-        ...getStyleBasedFormatState(editor),
+        ...editor.getStyleBasedFormatState(),
         canUndo: editor.canUndo(),
         canRedo: editor.canRedo(),
     };
