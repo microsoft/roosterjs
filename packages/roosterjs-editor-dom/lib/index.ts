@@ -50,9 +50,7 @@ export { default as VList } from './list/VList';
 export { default as createVListFromRegion } from './list/createVListFromRegion';
 
 export { default as getRegionsFromRange } from './region/getRegionsFromRange';
-export {
-    default as getSelectedBlockElementsInRegion,
-} from './region/getSelectedBlockElementsInRegion';
+export { default as getSelectedBlockElementsInRegion } from './region/getSelectedBlockElementsInRegion';
 export { default as collapseNodesInRegion } from './region/collapseNodesInRegion';
 export { default as isNodeInRegion } from './region/isNodeInRegion';
 
@@ -73,9 +71,7 @@ export { default as createSnapshots } from './snapshots/createSnapshots';
 export { default as HtmlSanitizer } from './htmlSanitizer/HtmlSanitizer';
 export { default as htmlToDom, splitWithFragment } from './htmlSanitizer/htmlToDom';
 export { default as getInheritableStyles } from './htmlSanitizer/getInheritableStyles';
-export {
-    default as createDefaultHtmlSanitizerOptions,
-} from './htmlSanitizer/createDefaultHtmlSanitizerOptions';
+export { default as createDefaultHtmlSanitizerOptions } from './htmlSanitizer/createDefaultHtmlSanitizerOptions';
 export { default as chainSanitizerCallback } from './htmlSanitizer/chainSanitizerCallback';
 
 export { default as isDocumentFragment } from './typeUtils/isDocumentFragment';

@@ -5,7 +5,8 @@ import { Rect } from 'roosterjs-editor-types';
  * We validate that and only return a rect when the passed in ClientRect is valid
  */
 export default function normalizeRect(clientRect: ClientRect): Rect {
-    let { left, right, top, bottom } = clientRect || <ClientRect>{};
+    let { left, right, top, bottom } =
+        clientRect || <ClientRect>{ left: 0, right: 0, top: 0, bottom: 0 };
     return left + right + top + bottom > 0
         ? {
               left: Math.round(left),
