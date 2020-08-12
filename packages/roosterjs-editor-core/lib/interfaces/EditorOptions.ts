@@ -1,7 +1,7 @@
+import CorePlugins from './CorePlugins';
 import EditorPlugin from './EditorPlugin';
 import UndoSnapshotsService from './UndoSnapshotsService';
 import { CoreApiMap } from './EditorCore';
-import { CorePlugins } from '..';
 import { DefaultFormat, PluginEvent } from 'roosterjs-editor-types';
 import { GenericContentEditFeature } from './ContentEditFeature';
 

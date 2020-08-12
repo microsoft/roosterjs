@@ -1,7 +1,7 @@
 import * as dom from 'roosterjs-editor-dom';
 import Editor from '../../lib/editor/Editor';
 import EntityPlugin, { EntityPluginState } from '../../lib/corePlugins/entity/EntityPlugin';
-import { Keys } from 'roosterjs/lib';
+import { Keys } from '../../lib/interfaces/ContentEditFeature';
 import {
     EntityClasses,
     EntityOperation,

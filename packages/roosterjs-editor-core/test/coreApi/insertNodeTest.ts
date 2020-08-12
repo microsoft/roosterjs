@@ -1,6 +1,6 @@
 import * as dom from 'roosterjs-editor-dom';
 import createEditorCore from './createMockEditorCore';
-import { ContentPosition } from 'roosterjs/lib';
+import { ContentPosition } from 'roosterjs-editor-types';
 import { getSelectionRange } from '../../lib/coreApi/getSelectionRange';
 import { insertNode } from '../../lib/coreApi/insertNode';
 import { selectNode } from '../TestHelper';
