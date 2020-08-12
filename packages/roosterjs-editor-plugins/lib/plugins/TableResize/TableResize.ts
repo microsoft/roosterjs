@@ -38,7 +38,6 @@ export default class TableResize implements EditorPlugin {
     private horizontalResizer: HTMLDivElement;
     private verticalResizer: HTMLDivElement;
     private resizingState: ResizeState = ResizeState.None;
-    private resizeTableAnimationFrameID: number;
 
     private currentInsertTd: HTMLTableCellElement;
     private insertingState: ResizeState = ResizeState.None;
@@ -72,6 +71,10 @@ export default class TableResize implements EditorPlugin {
         this.editor = null;
     }
 
+    /**
+    * Handle events triggered from editor
+    * @param event PluginEvent object
+    */
     onPluginEvent(e: PluginEvent) {
         switch (e.eventType) {
             case PluginEventType.Input:
@@ -328,7 +331,7 @@ export default class TableResize implements EditorPlugin {
     }
 
     private frameAnimateResizeTable = (e: MouseEvent) => {
-        this.resizeTableAnimationFrameID = requestAnimationFrame(() => this.resizeTable(e));
+        this.editor.runAsync(() => this.resizeTable(e));
     };
 
     private resizeTable = (e: MouseEvent) => {
@@ -364,7 +367,6 @@ export default class TableResize implements EditorPlugin {
         const doc = this.editor.getDocument();
         doc.removeEventListener('mousemove', this.frameAnimateResizeTable, true);
         doc.removeEventListener('mouseup', this.endResizeTable, true);
-        cancelAnimationFrame(this.resizeTableAnimationFrameID);
 
         this.editor.addUndoSnapshot((start, end) => {
             this.frameAnimateResizeTable(e);
