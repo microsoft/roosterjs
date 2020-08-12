@@ -8,7 +8,6 @@ import {
     TableOperation,
     ContentPosition,
 } from 'roosterjs-editor-types';
-const throttle = require('lodash').throttle;
 
 const INSERTER_COLOR = '#4A4A4A';
 const INSERTER_SIDE_LENGTH = 12;
@@ -39,6 +38,7 @@ export default class TableResize implements EditorPlugin {
     private horizontalResizer: HTMLDivElement;
     private verticalResizer: HTMLDivElement;
     private resizingState: ResizeState = ResizeState.None;
+    private resizeTableAnimationFrameID: number;
 
     private currentInsertTd: HTMLTableCellElement;
     private insertingState: ResizeState = ResizeState.None;
@@ -323,11 +323,13 @@ export default class TableResize implements EditorPlugin {
 
     private startResizeTable(e: MouseEvent) {
         const doc = this.editor.getDocument();
-        doc.addEventListener('mousemove', this.throttledResizeTable, true);
+        doc.addEventListener('mousemove', this.frameAnimateResizeTable, true);
         doc.addEventListener('mouseup', this.endResizeTable, true);
     }
 
-    private throttledResizeTable = (e: MouseEvent) => throttle(this.resizeTable, 500)(e);
+    private frameAnimateResizeTable = (e: MouseEvent) => {
+        this.resizeTableAnimationFrameID = requestAnimationFrame(() => this.resizeTable(e));
+    };
 
     private resizeTable = (e: MouseEvent) => {
         if (this.currentTd) {
@@ -360,11 +362,12 @@ export default class TableResize implements EditorPlugin {
 
     private endResizeTable = (e: MouseEvent) => {
         const doc = this.editor.getDocument();
-        doc.removeEventListener('mousemove', this.throttledResizeTable, true);
+        doc.removeEventListener('mousemove', this.frameAnimateResizeTable, true);
         doc.removeEventListener('mouseup', this.endResizeTable, true);
+        cancelAnimationFrame(this.resizeTableAnimationFrameID);
 
         this.editor.addUndoSnapshot((start, end) => {
-            this.resizeTable(e);
+            this.frameAnimateResizeTable(e);
             this.editor.select(start, end);
         }, ChangeSource.Format);
 
