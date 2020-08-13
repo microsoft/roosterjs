@@ -1,6 +1,7 @@
 import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
 import { contains, getTagOfNode, isVoidHtmlElement, Position, VTable } from 'roosterjs-editor-dom';
-import { NodeType, PluginEvent, PositionType } from 'roosterjs-editor-types';
+import { NodeType, PluginEvent, PositionType, TableOperation } from 'roosterjs-editor-types';
+import { editTable } from 'roosterjs-editor-api';
 
 /**
  * TabInTable edit feature, provides the ability to jump between cells when user press TAB in table
@@ -21,8 +22,11 @@ export const TabInTable: ContentEditFeature = {
         ) {
             if (col < 0 || col >= vtable.cells[row].length) {
                 row += step;
-                if (row < 0 || row >= vtable.cells.length) {
-                    editor.select(vtable.table, shift ? PositionType.Before : PositionType.After);
+                if (row < 0) {
+                    editor.select(vtable.table, PositionType.Before);
+                    break;
+                } else if (row >= vtable.cells.length) {
+                    editTable(editor, TableOperation.InsertBelow);
                     break;
                 }
                 col = shift ? vtable.cells[row].length - 1 : 0;
