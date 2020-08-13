@@ -1,6 +1,6 @@
 import toArray from './toArray';
 import { Browser } from './Browser';
-import { ClipboardItems } from 'roosterjs-editor-types';
+import { ClipboardData } from 'roosterjs-editor-types';
 
 // HTML header to indicate where is the HTML content started from.
 // Sample header:
@@ -33,12 +33,12 @@ interface WindowForIE extends Window {
  */
 export default function extractClipboardEvent(
     event: ClipboardEvent,
-    callback: (items: ClipboardItems) => void
+    callback: (items: ClipboardData) => void
 ) {
     let dataTransfer =
         event.clipboardData ||
         (<WindowForIE>(<Node>event.target).ownerDocument.defaultView).clipboardData;
-    let result: ClipboardItems = {
+    let result: ClipboardData = {
         types: dataTransfer.types ? toArray(dataTransfer.types) : [],
         text: dataTransfer.getData('text'),
         image: getImage(dataTransfer),

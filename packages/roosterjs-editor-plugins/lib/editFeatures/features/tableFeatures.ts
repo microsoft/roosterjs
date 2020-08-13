@@ -42,7 +42,6 @@ const TabInTable: ContentEditFeature = {
         }
         event.rawEvent.preventDefault();
     },
-    description: 'Tab to jump cell in table',
 };
 
 /**
@@ -100,7 +99,6 @@ const UpDownInTable: ContentEditFeature = {
         });
     },
     defaultDisabled: !Browser.isChrome && !Browser.isSafari,
-    description: 'Up / Down to jump cell in table',
 };
 
 function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellElement {

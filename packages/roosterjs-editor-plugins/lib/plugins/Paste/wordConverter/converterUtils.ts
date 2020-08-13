@@ -3,7 +3,7 @@ import ListMetadata from './ListMetadata';
 import WordConverter from './wordConverter';
 import WordConverterArguments from './WordConverterArguments';
 import { createLevelLists } from './LevelLists';
-import { getObject, setObject } from './CustomData';
+import { getObject, setObject } from './WordCustomData';
 import { getTagOfNode } from 'roosterjs-editor-dom';
 import { NodeType } from 'roosterjs-editor-types';
 

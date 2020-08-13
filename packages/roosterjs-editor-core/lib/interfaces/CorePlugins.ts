@@ -77,22 +77,42 @@ export default interface CorePlugins {
     readonly lifecycle: PluginWithState<LifecyclePluginState>;
 }
 
+/**
+ * @internal
+ */
 export type PluginKey = keyof CorePlugins;
 
+/**
+ * @internal
+ */
 export type KeyOfStatePlugin<Key extends PluginKey> = CorePlugins[Key] extends PluginWithState<
     infer U
 >
     ? Key
     : never;
 
+/**
+ * @internal
+ */
 export type TypeOfStatePlugin<Key extends PluginKey> = CorePlugins[Key] extends PluginWithState<
     infer U
 >
     ? Wrapper<U>
     : never;
 
+/**
+ * @internal
+ */
 export type StatePluginKeys<Key extends PluginKey> = { [P in Key]: KeyOfStatePlugin<P> }[Key];
 
-export type PluginState<Key extends PluginKey> = {
+/**
+ * @internal
+ */
+export type GenericPluginState<Key extends PluginKey> = {
     [P in StatePluginKeys<Key>]: TypeOfStatePlugin<P>;
 };
+
+/**
+ * Auto-calculated State object type for plugin with states
+ */
+export type PluginState = GenericPluginState<PluginKey>;

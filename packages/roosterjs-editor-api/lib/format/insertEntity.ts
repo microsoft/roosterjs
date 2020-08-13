@@ -63,6 +63,9 @@ export default function insertEntity(
 
             editor.select(position);
             contentPosition = ContentPosition.SelectionStart;
+        } else {
+            editor.focus();
+            contentPosition = ContentPosition.SelectionStart;
         }
 
         editor.insertNode(wrapper, {

@@ -19,8 +19,7 @@ function generateBasicMarkdownFeature(
     key: Keys,
     triggerCharacter: string,
     elementTag: string,
-    useShiftKey: boolean,
-    description: string
+    useShiftKey: boolean
 ): ContentEditFeature {
     return {
         keys: [key],
@@ -33,7 +32,6 @@ function generateBasicMarkdownFeature(
                 handleMarkdownEvent(event, editor, triggerCharacter, elementTag);
             });
         },
-        description,
     };
 }
 
@@ -134,8 +132,7 @@ const MarkdownBold: ContentEditFeature = generateBasicMarkdownFeature(
     Keys.EIGHT_ASTIRISK,
     '*',
     'b',
-    true,
-    'Markdown style Bolding'
+    true
 );
 
 /**
@@ -145,8 +142,7 @@ const MarkdownItalic: ContentEditFeature = generateBasicMarkdownFeature(
     Keys.DASH_UNDERSCORE,
     '_',
     'i',
-    true,
-    'Markdown style Italics'
+    true
 );
 
 /**
@@ -156,8 +152,7 @@ const MarkdownStrikethru: ContentEditFeature = generateBasicMarkdownFeature(
     Keys.GRAVE_TILDE,
     '~',
     's',
-    true,
-    'Markdown style Strikethrough'
+    true
 );
 
 /**
@@ -167,8 +162,7 @@ const MarkdownInlineCode: ContentEditFeature = generateBasicMarkdownFeature(
     Keys.GRAVE_TILDE,
     '`',
     'code',
-    false,
-    'Markdown style Code blocks'
+    false
 );
 
 /**

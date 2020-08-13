@@ -28,6 +28,7 @@ export {
     default as CorePlugins,
     PluginKey,
     KeyOfStatePlugin,
+    GenericPluginState,
     PluginState,
     StatePluginKeys,
     TypeOfStatePlugin,

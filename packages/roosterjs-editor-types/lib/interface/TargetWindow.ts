@@ -1,5 +1,4 @@
 /**
- * @internal
  * Define DOM types of window, used by safeInstanceOf() to check if a given object is of the specified type of its own window
  *
  * !!!Note: This file is generated from /tools/generateTargetWindow.js. Do NOT modify this file directly!!!

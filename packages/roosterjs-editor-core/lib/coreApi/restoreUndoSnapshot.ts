@@ -15,7 +15,7 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
         );
     }
 
-    let snapshot = core.undo.value.snapshotsService.move(step);
+    const snapshot = core.undo.value.snapshotsService.move(step);
 
     if (snapshot != null) {
         try {

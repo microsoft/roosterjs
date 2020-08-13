@@ -17,7 +17,6 @@ const ClickOnEntityFeature: ContentEditFeature = {
     handleEvent: (event, editor) => {
         cacheGetReadonlyEntityElement(event, editor, EntityOperation.Click);
     },
-    description: 'Fire an event when click on a readonly entity',
 };
 
 /**
@@ -30,7 +29,6 @@ const EscapeFromEntityFeature: ContentEditFeature = {
     handleEvent: (event, editor) => {
         cacheGetReadonlyEntityElement(event, editor, EntityOperation.Escape);
     },
-    description: 'Fire an event when Escape from a readonly entity',
 };
 
 function cacheGetReadonlyEntityElement(
@@ -87,7 +85,6 @@ const EnterBeforeReadonlyEntityFeature: ContentEditFeature = {
             editor.select(newContainer.nextSibling, PositionType.Begin);
         }
     },
-    description: 'Start a new line when Enter before an event',
 };
 
 /**
@@ -107,7 +104,6 @@ const BackspaceAfterEntityFeature: ContentEditFeature = {
             EntityOperation.RemoveFromEnd
         );
     },
-    description: 'Fire an event when Backspace after an entity',
 };
 
 /**
@@ -127,7 +123,6 @@ const DeleteBeforeEntityFeature: ContentEditFeature = {
             EntityOperation.RemoveFromStart
         );
     },
-    description: 'Fire an event when Delete before an event',
 };
 
 function cacheGetNeighborEntityElement(

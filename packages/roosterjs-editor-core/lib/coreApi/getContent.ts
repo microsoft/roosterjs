@@ -13,9 +13,8 @@ export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): 
     const isDarkMode = core.darkMode.value.isDarkMode;
     const triggerExtractContentEvent = mode == GetContentMode.CleanHTML;
     const includeSelectionMarker = mode == GetContentMode.RawHTMLWithSelection;
-    const getText = mode == GetContentMode.PlainText;
 
-    if (getText) {
+    if (mode == GetContentMode.PlainText) {
         content = getTextContent(core.contentDiv);
     } else if (triggerExtractContentEvent || isDarkMode) {
         const clonedRoot = core.contentDiv.cloneNode(true /*deep*/) as HTMLElement;

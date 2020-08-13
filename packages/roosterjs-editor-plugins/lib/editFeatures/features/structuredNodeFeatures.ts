@@ -39,7 +39,6 @@ const InsertLineBeforeStructuredNodeFeature: ContentEditFeature = {
         event.rawEvent.preventDefault();
     },
     defaultDisabled: true,
-    description: 'Enter to create new line before table/list at beginning of editor content',
 };
 
 function cacheGetStructuredElement(event: PluginKeyboardEvent, editor: Editor) {

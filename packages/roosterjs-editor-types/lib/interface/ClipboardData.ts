@@ -1,16 +1,36 @@
-import ClipboardItems from './ClipboardItems';
-
 /**
  * An object contains all related data for pasting
  */
-export default interface ClipboardData extends ClipboardItems {
+export default interface ClipboardData {
+    /**
+     * Available types from clipboard event
+     */
+    types: string[];
+
+    /**
+     * Plain text from clipboard event
+     */
+    text: string;
+
+    /**
+     * HTML string from clipboard event.
+     * When set to null, it means there's no HTML from clipboard event.
+     * When set to undefined, it means there may be HTML in clipboard event, but fail to retrieve
+     */
+    html: string;
+
+    /**
+     * Image file from clipboard event
+     */
+    image: File;
+
     /**
      * An editor content snapshot before pasting happens. This is used for changing paste format
      */
-    snapshotBeforePaste: string;
+    snapshotBeforePaste?: string;
 
     /**
      * BASE64 encoded data uri of the image if any
      */
-    imageDataUri: string;
+    imageDataUri?: string;
 }

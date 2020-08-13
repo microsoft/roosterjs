@@ -42,7 +42,6 @@ export const createPasteFragment: CreatePasteFragment = (
     // Step 2: Fill the BeforePasteEvent object, especially the fragment for paste
     if (!pasteAsText && !text && imageDataUri) {
         // Paste image
-
         const img = document.createElement('img');
         img.style.maxWidth = '100%';
         img.src = imageDataUri;

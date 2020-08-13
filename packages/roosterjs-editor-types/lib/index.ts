@@ -55,7 +55,6 @@ export { default as DarkModeChangedEvent } from './event/DarkModeChangedEvent';
 // Interface
 export { default as BlockElement } from './interface/BlockElement';
 export { default as ClipboardData } from './interface/ClipboardData';
-export { default as ClipboardItems } from './interface/ClipboardItems';
 export { default as DefaultFormat } from './interface/DefaultFormat';
 export { default as Entity } from './interface/Entity';
 export {

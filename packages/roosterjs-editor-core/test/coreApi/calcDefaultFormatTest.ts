@@ -124,6 +124,19 @@ describe('calcDefaultFormat', () => {
 
         core.darkMode.value.isDarkMode = true;
         calcDefaultFormat(core);
-        expect(core.lifecycle.value.defaultFormat).toEqual({});
+        expect(core.lifecycle.value.defaultFormat).toEqual({
+            fontFamily: 'arial',
+            fontSize: '14pt',
+            textColor: 'rgb(255,255,255)',
+            textColors: { darkModeColor: 'rgb(255,255,255)', lightModeColor: 'rgb(0,0,0)' },
+            backgroundColor: 'rgb(51,51,51)',
+            backgroundColors: {
+                darkModeColor: 'rgb(51,51,51)',
+                lightModeColor: 'rgb(255,255,255)',
+            },
+            bold: undefined,
+            italic: undefined,
+            underline: undefined,
+        });
     });
 });

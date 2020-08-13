@@ -23,7 +23,6 @@ const UnquoteWhenBackOnEmpty1stLine: ContentEditFeature = {
         return childOfQuote && isNodeEmpty(childOfQuote) && !childOfQuote.previousSibling;
     },
     handleEvent: splitQuote,
-    description: 'Unquote when Backspace on empty first line',
 };
 
 /**
@@ -43,7 +42,6 @@ const UnquoteWhenEnterOnEmptyLine: ContentEditFeature = {
             null /*changeSource*/,
             true /*canUndoByBackspace*/
         ),
-    description: 'Unquote when Enter on empty line',
 };
 
 function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: Editor): Node {

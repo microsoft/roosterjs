@@ -18,20 +18,20 @@ const DARK_MODE_DEFAULT_FORMAT = {
  * @param core The EditorCore object
  */
 export const calcDefaultFormat: CalcDefaultFormat = (core: EditorCore) => {
-    let currentValue = core.lifecycle.value.defaultFormat;
-    const isDarkMode = core.darkMode.value.isDarkMode;
+    let baseFormat = core.lifecycle.value.defaultFormat;
+    const inDarkMode = core.darkMode.value.isDarkMode;
 
-    if (currentValue && Object.keys(currentValue).length === 0) {
-        return;
+    if (inDarkMode && baseFormat) {
+        if (!baseFormat.backgroundColors) {
+            baseFormat.backgroundColors = DARK_MODE_DEFAULT_FORMAT.backgroundColors;
+        }
+        if (!baseFormat.textColors) {
+            baseFormat.textColors = DARK_MODE_DEFAULT_FORMAT.textColors;
+        }
     }
 
-    if (isDarkMode && currentValue) {
-        if (!currentValue.backgroundColors) {
-            currentValue.backgroundColors = DARK_MODE_DEFAULT_FORMAT.backgroundColors;
-        }
-        if (!currentValue.textColors) {
-            currentValue.textColors = DARK_MODE_DEFAULT_FORMAT.textColors;
-        }
+    if (baseFormat && Object.keys(baseFormat).length === 0) {
+        return;
     }
 
     const {
@@ -44,22 +44,22 @@ export const calcDefaultFormat: CalcDefaultFormat = (core: EditorCore) => {
         bold,
         italic,
         underline,
-    } = currentValue || <DefaultFormat>{};
-    const originalStyle = getComputedStyles(core.contentDiv);
+    } = baseFormat || <DefaultFormat>{};
+    const currentStyles = getComputedStyles(core.contentDiv);
     core.lifecycle.value.defaultFormat = {
-        fontFamily: fontFamily || originalStyle[0],
-        fontSize: fontSize || originalStyle[1],
+        fontFamily: fontFamily || currentStyles[0],
+        fontSize: fontSize || currentStyles[1],
         get textColor() {
             return textColors
-                ? isDarkMode
+                ? inDarkMode
                     ? textColors.darkModeColor
                     : textColors.lightModeColor
-                : textColor || originalStyle[2];
+                : textColor || currentStyles[2];
         },
         textColors: textColors,
         get backgroundColor() {
             return backgroundColors
-                ? isDarkMode
+                ? inDarkMode
                     ? backgroundColors.darkModeColor
                     : backgroundColors.lightModeColor
                 : backgroundColor || '';

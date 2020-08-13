@@ -22,14 +22,20 @@ export const addUndoSnapshot: AddUndoSnapshot = (
     changeSource: ChangeSource | string,
     canUndoByBackspace: boolean
 ) => {
-    let isNested = core.undo.value.outerUndoSnapshot !== null;
+    const undoState = core.undo.value;
+    let isNested = undoState.outerUndoSnapshot !== null;
     let data: any;
 
     if (!isNested) {
-        core.undo.value.outerUndoSnapshot = addSnapshot(core);
+        undoState.outerUndoSnapshot = core.api.getContent(
+            core,
+            GetContentMode.RawHTMLWithSelection
+        );
+        undoState.snapshotsService.addSnapshot(undoState.outerUndoSnapshot);
+        undoState.hasNewContent = false;
     }
 
-    const autoCompleteSnapshot = canUndoByBackspace && core.undo.value.outerUndoSnapshot;
+    const autoCompleteSnapshot = canUndoByBackspace && undoState.outerUndoSnapshot;
 
     try {
         if (callback) {
@@ -37,16 +43,19 @@ export const addUndoSnapshot: AddUndoSnapshot = (
             data = callback(
                 range && Position.getStart(range).normalize(),
                 range && Position.getEnd(range).normalize(),
-                core.undo.value.outerUndoSnapshot
+                undoState.outerUndoSnapshot
             );
 
             if (!isNested) {
-                addSnapshot(core);
+                undoState.snapshotsService.addSnapshot(
+                    core.api.getContent(core, GetContentMode.RawHTMLWithSelection)
+                );
+                undoState.hasNewContent = false;
             }
         }
     } finally {
         if (!isNested) {
-            core.undo.value.outerUndoSnapshot = null;
+            undoState.outerUndoSnapshot = null;
         }
     }
 
@@ -64,10 +73,3 @@ export const addUndoSnapshot: AddUndoSnapshot = (
         core.autoComplete.value = autoCompleteSnapshot;
     }
 };
-
-function addSnapshot(core: EditorCore) {
-    let snapshot = core.api.getContent(core, GetContentMode.RawHTMLWithSelection);
-    core.undo.value.snapshotsService.addSnapshot(snapshot);
-    core.undo.value.hasNewContent = false;
-    return snapshot;
-}

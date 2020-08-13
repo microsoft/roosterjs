@@ -1,5 +1,5 @@
 import WordConverterArguments from './WordConverterArguments';
-import WordCustomData, { createCustomData } from './CustomData';
+import WordCustomData, { createCustomData } from './WordCustomData';
 
 /**
  * @internal

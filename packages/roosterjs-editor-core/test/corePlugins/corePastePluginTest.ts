@@ -1,7 +1,7 @@
 import * as dom from 'roosterjs-editor-dom';
 import CorePastePlugin from '../../lib/corePlugins/corePaste/CorePastePlugin';
 import Editor from '../../lib/editor/Editor';
-import { ClipboardItems } from 'roosterjs-editor-types';
+import { ClipboardData } from 'roosterjs-editor-types';
 
 describe('CorePastePlugin', () => {
     let plugin: CorePastePlugin;
@@ -58,7 +58,7 @@ describe('CorePastePlugin', () => {
     });
 
     it('trigger paste event for html', () => {
-        const items: ClipboardItems = {
+        const items: ClipboardData = {
             html: '',
             text: '',
             image: null,
@@ -69,16 +69,12 @@ describe('CorePastePlugin', () => {
         });
 
         handler(<any>{});
-        expect(paste).toHaveBeenCalledWith({
-            ...items,
-            snapshotBeforePaste: null,
-            imageDataUri: null,
-        });
+        expect(paste).toHaveBeenCalledWith(items);
         expect(tempNode).toBeNull();
     });
 
     it('trigger paste event for image', () => {
-        const items: ClipboardItems = {
+        const items: ClipboardData = {
             html: '',
             text: '',
             image: <any>{},
@@ -94,14 +90,13 @@ describe('CorePastePlugin', () => {
         handler(<any>{});
         expect(paste).toHaveBeenCalledWith({
             ...items,
-            snapshotBeforePaste: null,
             imageDataUri: 'dataurl',
         });
         expect(tempNode).toBeNull();
     });
 
     it('trigger paste, simulate IE behavioar', () => {
-        const items: ClipboardItems = {
+        const items: ClipboardData = {
             html: undefined,
             text: '',
             image: <any>{},
@@ -118,7 +113,6 @@ describe('CorePastePlugin', () => {
         expect(paste).toHaveBeenCalledWith({
             ...items,
             html: 'test html',
-            snapshotBeforePaste: null,
             imageDataUri: 'dataurl',
         });
         expect(tempNode).not.toBeNull();

@@ -32,7 +32,6 @@ const AutoLink: ContentEditFeature = {
     keys: [Keys.ENTER, Keys.SPACE, Keys.CONTENTCHANGED],
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
-    description: 'Auto link',
 };
 
 /**
@@ -47,7 +46,6 @@ const UnlinkWhenBackspaceAfterLink: ContentEditFeature = {
         removeLink(editor);
     },
     defaultDisabled: true,
-    description: 'Auto unlink when backspace right after a hyperlink',
 };
 
 function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {

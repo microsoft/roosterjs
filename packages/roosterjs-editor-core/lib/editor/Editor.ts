@@ -815,9 +815,8 @@ export default class Editor {
         const currentContent = this.getContent(GetContentMode.CleanHTML);
 
         this.core.darkMode.value.isDarkMode = nextDarkMode;
-        this.setContent(currentContent);
         this.calcDefaultFormat();
-
+        this.setContent(currentContent);
         this.triggerPluginEvent(PluginEventType.DarkModeChanged, {
             changedToDarkMode: nextDarkMode,
         });

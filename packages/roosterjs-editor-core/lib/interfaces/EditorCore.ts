@@ -1,5 +1,5 @@
 import EditorPlugin from './EditorPlugin';
-import { PluginKey, PluginState } from './CorePlugins';
+import { PluginState } from './CorePlugins';
 import {
     ChangeSource,
     ClipboardData,
@@ -14,7 +14,7 @@ import {
 /**
  * Represents the core data structure of an editor
  */
-export default interface EditorCore extends PluginState<PluginKey> {
+export default interface EditorCore extends PluginState {
     /**
      * The content DIV element of this editor
      */

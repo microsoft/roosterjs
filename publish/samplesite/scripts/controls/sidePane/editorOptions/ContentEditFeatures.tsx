@@ -8,6 +8,34 @@ import {
 type ContentEditItemId = keyof ContentEditFeatureSettings;
 
 const styles = require('./OptionsPane.scss');
+const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string> = {
+    autoBullet: 'Auto Bullet / Numbering',
+    indentWhenTab: 'Indent list when Tab',
+    outdentWhenShiftTab: 'Outdent list when Shift + Tab',
+    outdentWhenBackspaceOnEmptyFirstLine: 'Outdent list when Backspace on empty first Line',
+    outdentWhenEnterOnEmptyLine: 'Outdent list when Enter on empty line',
+    mergeInNewLineWhenBackspaceOnFirstChar:
+        'Merge in new line when Backspace on first char in list',
+    unquoteWhenBackspaceOnEmptyFirstLine: 'Unquote when Backspace on empty first line',
+    unquoteWhenEnterOnEmptyLine: 'Unquote when Enter on empty line',
+    tabInTable: 'Tab to jump cell in table',
+    upDownInTable: 'Up / Down to jump cell in table',
+    insertLineBeforeStructuredNodeFeature:
+        'Enter to create new line before table/list at beginning of editor content',
+    autoLink: 'Auto link',
+    unlinkWhenBackspaceAfterLink: 'Auto unlink when backspace right after a hyperlink',
+    defaultShortcut: 'Default Shortcuts',
+    noCycleCursorMove: 'Avoid moving cycle moving cursor when Ctrl+Left/Right',
+    clickOnEntity: 'Fire an event when click on a readonly entity',
+    escapeFromEntity: 'Fire an event when Escape from a readonly entity',
+    enterBeforeReadonlyEntity: 'Start a new line when Enter before an event',
+    backspaceAfterEntity: 'Fire an event when Backspace after an entity',
+    deleteBeforeEntity: 'Fire an event when Delete before an event',
+    markdownBold: 'Markdown style Bolding',
+    markdownItalic: 'Markdown style Italics',
+    markdownStrikethru: 'Markdown style Strikethrough',
+    markdownInlineCode: 'Markdown style Code blocks',
+};
 
 export interface ContentEditFeaturessProps {
     state: ContentEditFeatureSettings;
@@ -21,7 +49,7 @@ export default class ContentEditFeatures extends React.Component<ContentEditFeat
             <table>
                 <tbody>
                     {Object.keys(features).map((key: ContentEditItemId) =>
-                        this.renderContentEditItem(key, features[key].description)
+                        this.renderContentEditItem(key, EditFeatureDescriptionMap[key])
                     )}
                 </tbody>
             </table>

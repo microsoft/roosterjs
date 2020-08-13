@@ -1,6 +1,6 @@
 import Editor from '../../editor/Editor';
 import EditorPlugin from '../../interfaces/EditorPlugin';
-import { ClipboardData, ClipboardItems, ContentPosition } from 'roosterjs-editor-types';
+import { ClipboardData, ContentPosition } from 'roosterjs-editor-types';
 import { extractClipboardEvent, fromHtml, readFile } from 'roosterjs-editor-dom';
 
 const CONTAINER_HTML =
@@ -66,15 +66,7 @@ export default class CorePastePlugin implements EditorPlugin {
         });
     };
 
-    private paste(items: ClipboardItems) {
-        const clipboardData: ClipboardData = {
-            ...items,
-
-            // Will be set later
-            snapshotBeforePaste: null,
-            imageDataUri: null,
-        };
-
+    private paste(clipboardData: ClipboardData) {
         if (clipboardData.image) {
             readFile(clipboardData.image, dataUrl => {
                 clipboardData.imageDataUri = dataUrl;
