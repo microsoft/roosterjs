@@ -25,6 +25,7 @@ import {
     toggleHeader,
     toggleCodeBlock,
     insertImage,
+    rotateImage,
 } from 'roosterjs-editor-api';
 
 const buttons: { [key: string]: RibbonButtonType } = {
@@ -188,6 +189,14 @@ const buttons: { [key: string]: RibbonButtonType } = {
             document.body.appendChild(fileInput);
             fileInput.click();
             document.body.removeChild(fileInput);
+        },
+    },
+    rotateImage: {
+        title: 'Rotate selected image',
+        image: require('./svg/inlineimage.svg'),
+        onClick: editor => {
+            const image = editor.getDocument().getElementsByTagName('img')[0] as HTMLImageElement;
+            rotateImage(editor, image, 45);
         },
     },
     superscript: {
