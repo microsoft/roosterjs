@@ -71,10 +71,20 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                     // For insert on new line, or refNode is text or void html element (HR, BR etc.)
                     // which cannot have children, i.e. <div>hello<br>world</div>. 'hello', 'world' are the
                     // first and last node. Insert before 'hello' or after 'world', but still inside DIV
-                    insertedNode = refNode.parentNode.insertBefore(
-                        node,
-                        isBegin ? refNode : refNode.nextSibling
-                    );
+                    if (node instanceof DocumentFragment) {
+                        // if the node to be inserted is DocumentFragment, use its childNodes as insertedNode
+                        // because insertBefore() returns an empty DocumentFragment
+                        insertedNode = Array.prototype.slice.call(node.childNodes);
+                        refNode.parentNode.insertBefore(
+                            node,
+                            isBegin ? refNode : refNode.nextSibling
+                        );
+                    } else {
+                        insertedNode = refNode.parentNode.insertBefore(
+                            node,
+                            isBegin ? refNode : refNode.nextSibling
+                        );
+                    }
                 } else {
                     // if the refNode can have child, use appendChild (which is like to insert as first/last child)
                     // i.e. <div>hello</div>, the content will be inserted before/after hello
