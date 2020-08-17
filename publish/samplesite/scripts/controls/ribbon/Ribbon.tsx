@@ -1,10 +1,11 @@
 import * as React from 'react';
+import blockFormat from 'roosterjs-editor-api/lib/utils/blockFormat';
 import MainPaneBase from '../MainPaneBase';
 import RibbonButton from './RibbonButton';
 import ribbonButtons from './ribbonButtons';
 import RibbonPlugin from './RibbonPlugin';
-import { Browser } from 'roosterjs-editor-dom';
-import { getFormatState } from 'roosterjs-editor-api';
+import { Browser, getSelectedBlockElementsInRegion } from 'roosterjs-editor-dom';
+import { getFormatState, rotateImage } from 'roosterjs-editor-api';
 
 let styles = require('./Ribbon.scss');
 
@@ -30,6 +31,9 @@ export default class Ribbon extends React.Component<RibbonProps, {}> {
                         onClicked={this.onButtonClicked}
                     />
                 ))}
+                <button onClick={this.onRotateImage} className={styles.textButton}>
+                    RotateImage
+                </button>
                 <button onClick={this.onSave} className={styles.textButton}>
                     Export
                 </button>
@@ -45,6 +49,24 @@ export default class Ribbon extends React.Component<RibbonProps, {}> {
             </div>
         );
     }
+
+    private onRotateImage = () => {
+        const editor = this.props.plugin.getEditor();
+        blockFormat(editor, (region) => {
+            const blocks = getSelectedBlockElementsInRegion(region);
+            blocks.forEach(block => {
+                const blockElement = block.collapseToSingleElement();
+                for (let j = 0; j < blockElement.children.length; j++) {
+                    {
+                        const child = blockElement.children[j];
+                        if (child.tagName == "IMG") {
+                            rotateImage(editor, child as HTMLImageElement, 90);
+                        }
+                    }
+                }
+            });
+        });
+    };
 
     private onSave = () => {
         let editor = this.props.plugin.getEditor();

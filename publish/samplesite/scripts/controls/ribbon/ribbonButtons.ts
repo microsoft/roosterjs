@@ -1,9 +1,7 @@
-import blockFormat from 'roosterjs-editor-api/lib/utils/blockFormat';
 import renderInsertLinkDialog from './renderInsertLinkDialog';
 import renderTableOptions from './renderTableOptions';
 import RibbonButtonType from './RibbonButtonType';
 import { Alignment, Direction, Indentation } from 'roosterjs-editor-types';
-import { getSelectedBlockElementsInRegion } from 'roosterjs-editor-dom';
 import {
     setBackgroundColor,
     setFontName,
@@ -27,7 +25,6 @@ import {
     toggleHeader,
     toggleCodeBlock,
     insertImage,
-    rotateImage,
 } from 'roosterjs-editor-api';
 
 const buttons: { [key: string]: RibbonButtonType } = {
@@ -192,26 +189,6 @@ const buttons: { [key: string]: RibbonButtonType } = {
             fileInput.click();
             document.body.removeChild(fileInput);
         },
-    },
-    rotateImage: {
-        title: 'Rotate image(s)',
-        image: require('./svg/inlineimage.svg'),
-        onClick: editor => {
-            blockFormat(editor, (region) => {
-                const blocks = getSelectedBlockElementsInRegion(region);
-                blocks.forEach(block => {
-                    const blockElement = block.collapseToSingleElement();
-                    for (let j = 0; j < blockElement.children.length; j++) {
-                        {
-                            const child = blockElement.children[j];
-                            if (child.tagName == "IMG") {
-                                rotateImage(editor, child as HTMLImageElement, 90);
-                            }
-                        }
-                    }
-                });
-            });
-        }
     },
     superscript: {
         title: 'Superscript',
