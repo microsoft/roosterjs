@@ -16,7 +16,7 @@ export default function editTable(editor: Editor, operation: TableOperation) {
             vtable.writeBack();
             editor.focus();
 
-            let cellToSelect = CalculateCellToSelect(operation, vtable.row, vtable.col);
+            let cellToSelect = calculateCellToSelect(operation, vtable.row, vtable.col);
             editor.select(
                 vtable.getCell(cellToSelect.newRow, cellToSelect.newCol).td,
                 PositionType.Begin
@@ -25,7 +25,7 @@ export default function editTable(editor: Editor, operation: TableOperation) {
     }
 }
 
-function CalculateCellToSelect(operation: TableOperation, currentRow: number, currentCol: number) {
+function calculateCellToSelect(operation: TableOperation, currentRow: number, currentCol: number) {
     let newRow = currentRow;
     let newCol = currentCol;
     switch (operation) {
