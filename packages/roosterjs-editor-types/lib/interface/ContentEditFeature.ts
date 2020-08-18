@@ -1,5 +1,7 @@
 import IEditor from './IEditor';
-import { ChangeSource, PluginEvent, PluginKeyboardEvent } from 'roosterjs-editor-types';
+import { ChangeSource } from '../enum/ChangeSource';
+import { PluginEvent } from '../event/PluginEvent';
+import { PluginKeyboardEvent } from '../event/PluginDomEvent';
 
 /**
  * Generic ContentEditFeature interface
