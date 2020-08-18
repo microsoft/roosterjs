@@ -18,6 +18,7 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
         return (
             <table>
                 <tbody>
+                    {this.renderPluginItem('contentEdit', 'Content Edit')}
                     {this.renderPluginItem(
                         'hyperlink',
                         'Hyperlink Plugin',

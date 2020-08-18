@@ -1,5 +1,6 @@
 import { removeLink, replaceWithNode } from 'roosterjs-editor-api';
 import {
+    AutoLinkFeatureSettings,
     ChangeSource,
     ContentEditFeature,
     IEditor,
@@ -129,23 +130,6 @@ function autoLink(event: PluginEvent, editor: IEditor) {
             true /*canUndoByBackspace*/
         );
     });
-}
-
-/**
- * Settings for auto link features
- */
-export default interface AutoLinkFeatureSettings {
-    /**
-     * When press Space or Enter after a hyperlink-like string, convert the string to a hyperlink
-     * @default true
-     */
-    autoLink: boolean;
-
-    /**
-     * Unlink when backspace right after a hyperlink
-     * @default false
-     */
-    unlinkWhenBackspaceAfterLink: boolean;
 }
 
 /**

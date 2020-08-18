@@ -1,7 +1,6 @@
 import BuildInPluginState from '../../../BuildInPluginState';
 import ButtonsCode from './ButtonsCode';
 import CodeElement from './CodeElement';
-import ContentEditFeaturesCode from './ContentEditFeaturesCode';
 import DefaultFormatCode from './DefaultFormatCode';
 import PluginsCode from './PluginsCode';
 
@@ -9,7 +8,6 @@ export default class EditorCode extends CodeElement {
     private plugins: PluginsCode;
     private defaultFormat: DefaultFormatCode;
     private buttons: ButtonsCode;
-    private contentEditFeatures: ContentEditFeaturesCode;
     private useExperimentFeatures: boolean;
 
     constructor(state: BuildInPluginState) {
@@ -17,7 +15,6 @@ export default class EditorCode extends CodeElement {
 
         this.plugins = new PluginsCode(state);
         this.defaultFormat = new DefaultFormatCode(state.defaultFormat);
-        this.contentEditFeatures = new ContentEditFeaturesCode(state.contentEditFeatures);
         this.buttons = state.showRibbon ? new ButtonsCode() : null;
         this.useExperimentFeatures = state.useExperimentFeatures;
     }
@@ -28,7 +25,6 @@ export default class EditorCode extends CodeElement {
         code += `let plugins = ${this.plugins.getCode()};\n`;
         code += defaultFormat ? `let defaultFormat: DefaultFormat = ${defaultFormat};\n` : '';
         code += 'let options: roosterjs.EditorOptions = {\n';
-        code += this.indent(`editFeatures: ${this.contentEditFeatures.getCode()},\n`);
         code += this.indent('plugins: plugins,\n');
         code += defaultFormat ? this.indent('defaultFormat: defaultFormat,\n') : '';
         code += this.useExperimentFeatures ? this.indent('enableExperimentFeatures: true,\n') : '';

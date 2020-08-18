@@ -3,8 +3,7 @@
     "description": "Programming API for roosterjs",
     "dependencies": {
         "roosterjs-editor-types": "",
-        "roosterjs-editor-dom": "",
-        "roosterjs-editor-core": ""
+        "roosterjs-editor-dom": ""
     },
     "main": "./lib/index.ts"
 }

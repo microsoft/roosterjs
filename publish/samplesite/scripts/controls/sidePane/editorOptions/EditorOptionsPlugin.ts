@@ -6,6 +6,7 @@ import { SidePaneElementProps } from '../SidePaneElement';
 
 const initialState: BuildInPluginState = {
     pluginList: {
+        contentEdit: true,
         hyperlink: true,
         paste: true,
         watermark: false,

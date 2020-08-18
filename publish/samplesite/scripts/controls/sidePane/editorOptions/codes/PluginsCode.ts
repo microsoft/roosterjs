@@ -1,5 +1,6 @@
 import BuildInPluginState from '../../../BuildInPluginState';
 import CodeElement from './CodeElement';
+import ContentEditCode from './ContentEditCode';
 import HyperLinkCode from './HyperLinkCode';
 import PickerPluginCode from './PickerPluginCode';
 import WatermarkCode from './WatermarkCode';
@@ -13,6 +14,7 @@ export default class PluginsCode extends CodeElement {
 
         let pluginList = state.pluginList;
         this.plugins = [
+            pluginList.contentEdit && new ContentEditCode(state.contentEditFeatures),
             pluginList.hyperlink && new HyperLinkCode(state.linkTitle),
             pluginList.paste && new PasteCode(),
             pluginList.watermark && new WatermarkCode(this.state.watermarkText),

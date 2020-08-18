@@ -4,6 +4,7 @@ import {
     Keys,
     PluginKeyboardEvent,
     PositionType,
+    QuoteFeatureSettings,
 } from 'roosterjs-editor-types';
 import {
     cacheGetEventData,
@@ -81,23 +82,6 @@ function splitQuote(event: PluginKeyboardEvent, editor: IEditor) {
         editor.select(childOfQuote, PositionType.Begin);
     });
     event.rawEvent.preventDefault();
-}
-
-/**
- * Settings for quote features
- */
-export default interface QuoteFeatureSettings {
-    /**
-     * When press BAckspace on empty line which is the first line of a blockquote, unquote current line
-     * @default true
-     */
-    unquoteWhenBackspaceOnEmptyFirstLine: boolean;
-
-    /**
-     * When press Enter on empty line in a blockquote, unquote current line
-     * @default true
-     */
-    unquoteWhenEnterOnEmptyLine: boolean;
 }
 
 /**

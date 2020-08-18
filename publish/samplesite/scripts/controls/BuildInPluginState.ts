@@ -1,10 +1,10 @@
-import { ContentEditFeatureSettings } from 'roosterjs-editor-plugins/lib/EditFeatures';
-import { DefaultFormat } from 'roosterjs-editor-types';
+import { ContentEditFeatureSettings, DefaultFormat } from 'roosterjs-editor-types';
 import { SidePaneElementProps } from './sidePane/SidePaneElement';
 
 export const UrlPlaceholder = '$url$';
 
 export interface BuildInPluginList {
+    contentEdit: boolean;
     hyperlink: boolean;
     paste: boolean;
     watermark: boolean;

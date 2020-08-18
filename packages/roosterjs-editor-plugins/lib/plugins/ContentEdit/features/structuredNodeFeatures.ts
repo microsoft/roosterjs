@@ -4,6 +4,7 @@ import {
     Keys,
     PluginKeyboardEvent,
     PositionType,
+    StructuredNodeFeatureSettings,
 } from 'roosterjs-editor-types';
 import {
     Browser,
@@ -66,18 +67,6 @@ function cacheGetStructuredElement(event: PluginKeyboardEvent, editor: IEditor) 
 
         return null;
     });
-}
-
-/**
- * Settings for structured node features
- */
-export default interface StructuredNodeFeatureSettings {
-    /**
-     * When press Enter at the beginning of first structured element (table, list) and there isn't line before the position
-     * we create a new line before so that user got a chance to enter content before the table or list
-     * @default false
-     */
-    insertLineBeforeStructuredNodeFeature: boolean;
 }
 
 /**

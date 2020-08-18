@@ -5,6 +5,7 @@ import {
     NodeType,
     PluginEvent,
     PositionType,
+    TableFeatureSettings,
 } from 'roosterjs-editor-types';
 import {
     Browser,
@@ -116,23 +117,6 @@ function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellEl
             firstTd && (getTagOfNode(firstTd) == 'LI' ? null : (firstTd as HTMLTableCellElement))
         );
     });
-}
-
-/**
- * Settings for table features
- */
-export default interface TableFeatureSettings {
-    /**
-     * When press TAB or SHIFT+TAB key in table cell, jump to next/previous table cell
-     * @default true
-     */
-    tabInTable: boolean;
-
-    /**
-     * When press Up or Down in table cell, jump to the table cell above/below
-     * @default true for Chrome and safari, false for other browsers since they arleady have correct behavior
-     */
-    upDownInTable: boolean;
 }
 
 /**

@@ -1,9 +1,7 @@
 import * as React from 'react';
 import BuildInPluginState from '../../BuildInPluginState';
-import {
-    ContentEditFeatureSettings,
-    getAllContentEditFeatures,
-} from 'roosterjs-editor-plugins/lib/EditFeatures';
+import { ContentEditFeatureSettings } from 'roosterjs-editor-types';
+import { getAllFeatures } from 'roosterjs-editor-plugins/lib/ContentEdit';
 
 type ContentEditItemId = keyof ContentEditFeatureSettings;
 
@@ -44,7 +42,7 @@ export interface ContentEditFeaturessProps {
 
 export default class ContentEditFeatures extends React.Component<ContentEditFeaturessProps, {}> {
     render() {
-        const features = getAllContentEditFeatures();
+        const features = getAllFeatures();
         return (
             <table>
                 <tbody>

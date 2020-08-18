@@ -6,6 +6,7 @@ import {
     Keys,
     PluginEventType,
     PluginKeyboardEvent,
+    ShortcutFeatureSettings,
 } from 'roosterjs-editor-types';
 import {
     changeFontSize,
@@ -90,17 +91,6 @@ function cacheGetCommand(event: PluginKeyboardEvent) {
                 : 0;
         return key && commands.filter(cmd => (Browser.isMac ? cmd.macKey : cmd.winKey) == key)[0];
     });
-}
-
-/**
- * Settings for shortcut features
- */
-export default interface ShortcutFeatureSettings {
-    /**
-     * Respond to default common keyboard short, i.e. Ctrl+B, Ctrl+I, Ctrl+U, Ctrl+Z, Ctrl+Y
-     * @default true
-     */
-    defaultShortcut: boolean;
 }
 
 /**

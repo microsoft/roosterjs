@@ -119,6 +119,18 @@ export {
     TriggerEvent,
 } from './interface/EditorCore';
 export { default as EditorOptions } from './interface/EditorOptions';
+export {
+    default as ContentEditFeatureSettings,
+    AutoLinkFeatureSettings,
+    CursorFeatureSettings,
+    EntityFeatureSettings,
+    ListFeatureSettings,
+    MarkdownFeatureSettings,
+    QuoteFeatureSettings,
+    ShortcutFeatureSettings,
+    StructuredNodeFeatureSettings,
+    TableFeatureSettings,
+} from './interface/ContentEditFeatureSettings';
 export { default as UndoSnapshotsService } from './interface/UndoSnapshotsService';
 
 // Core Plugin State

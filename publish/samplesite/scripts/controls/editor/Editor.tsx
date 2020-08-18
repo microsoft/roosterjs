@@ -1,11 +1,11 @@
 import * as React from 'react';
 import BuildInPluginState, { UrlPlaceholder } from '../BuildInPluginState';
 import SampleColorPickerPluginDataProvider from '../samplepicker/SampleColorPickerPluginDataProvider';
+import { ContentEdit } from 'roosterjs-editor-plugins/lib/ContentEdit';
 import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins/lib/CustomReplace';
 import { Editor as RoosterJsEditor } from 'roosterjs-editor-core';
 import { EditorInstanceToggleablePlugins } from './EditorInstanceToggleablePlugins';
 import { EditorOptions, EditorPlugin, UndoSnapshotsService } from 'roosterjs-editor-types';
-import { getContentEditFeatures } from 'roosterjs-editor-plugins/lib/EditFeatures';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { ImageResize } from 'roosterjs-editor-plugins/lib/ImageResize';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
@@ -69,6 +69,9 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
     private initEditor() {
         let pluginList = this.state.pluginList;
         editorInstanceToggleablePlugins = {
+            contentEdit: pluginList.contentEdit
+                ? new ContentEdit(this.state.contentEditFeatures)
+                : null,
             hyperlink: pluginList.hyperlink ? new HyperLink(this.getLinkCallback()) : null,
             paste: pluginList.paste ? new Paste() : null,
             watermark: pluginList.watermark ? new Watermark(this.state.watermarkText) : null,
@@ -90,13 +93,11 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
             ),
             ...this.props.plugins,
         ];
-        let features = getContentEditFeatures(this.state.contentEditFeatures);
         let defaultFormat = { ...this.state.defaultFormat };
         let options: EditorOptions = {
             plugins: plugins,
             defaultFormat: defaultFormat,
             initialContent: this.props.content,
-            editFeatures: features,
             enableExperimentFeatures: this.state.useExperimentFeatures,
             undoSnapshotService: this.props.snapshotService,
         };

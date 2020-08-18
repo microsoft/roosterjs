@@ -1,6 +1,6 @@
 import CodeElement from './CodeElement';
 import getDefaultContentEditFeatureSettings from '../getDefaultContentEditFeatureSettings';
-import { ContentEditFeatureSettings } from 'roosterjs-editor-plugins/lib/EditFeatures';
+import { ContentEditFeatureSettings } from 'roosterjs-editor-types';
 
 export default class ContentEditFeaturesCode extends CodeElement {
     constructor(private state: ContentEditFeatureSettings) {
@@ -18,8 +18,6 @@ export default class ContentEditFeaturesCode extends CodeElement {
                     : `${key}: ${checked ? 'true' : 'false'},\n`;
             })
             .filter(line => !!line);
-        return features.length > 0
-            ? 'roosterjs.getDefaultContentEditFeatures({\n' + this.indent(features.join('')) + '})'
-            : 'roosterjs.getDefaultContentEditFeatures()';
+        return features.length > 0 ? '{\n' + this.indent(features.join('')) + '}' : '';
     }
 }
