@@ -15,6 +15,8 @@ import {
     wrap,
     adjustNodeInsertPosition,
     createRange,
+    safeInstanceOf,
+    toArray,
 } from 'roosterjs-editor-dom';
 
 function getInitialRange(
@@ -60,7 +62,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
         case ContentPosition.End: {
             let isBegin = option.position == ContentPosition.Begin;
             let block = getFirstLastBlockElement(contentDiv, isBegin);
-            let insertedNode: Node;
+            let insertedNode: Node | Node[];
             if (block) {
                 let refNode = isBegin ? block.getStartNode() : block.getEndNode();
                 if (
@@ -71,10 +73,10 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                     // For insert on new line, or refNode is text or void html element (HR, BR etc.)
                     // which cannot have children, i.e. <div>hello<br>world</div>. 'hello', 'world' are the
                     // first and last node. Insert before 'hello' or after 'world', but still inside DIV
-                    if (node instanceof DocumentFragment) {
+                    if (safeInstanceOf(node, 'DocumentFragment')) {
                         // if the node to be inserted is DocumentFragment, use its childNodes as insertedNode
                         // because insertBefore() returns an empty DocumentFragment
-                        insertedNode = Array.prototype.slice.call(node.childNodes);
+                        insertedNode = toArray(node.childNodes);
                         refNode.parentNode.insertBefore(
                             node,
                             isBegin ? refNode : refNode.nextSibling
@@ -97,8 +99,13 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
 
             // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
             // add a DIV wrapping
-            if (insertedNode && option.insertOnNewLine && !isBlockElement(insertedNode)) {
-                wrap(insertedNode);
+            if (insertedNode && option.insertOnNewLine) {
+                // When insert on new line, all the nodes to be inserted have been wrapped with a DIV in insertContent(),
+                // so just check the first node of insertedNode.
+                let wrappedNode = Array.isArray(insertedNode) ? insertedNode[0] : insertedNode;
+                if (!isBlockElement(wrappedNode)) {
+                    wrap(wrappedNode);
+                }
             }
 
             break;
