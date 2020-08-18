@@ -6110,6 +6110,11 @@ typedoc-default-themes@^0.10.1:
   dependencies:
     lunr "^2.3.8"
 
+typedoc-plugin-exclude-references@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-exclude-references/-/typedoc-plugin-exclude-references-1.0.0.tgz#d4367e5f432d88077d0da51717e213b86e6539f0"
+  integrity sha512-1BqEOHxnLfBqImhVTqp74nWJ+cbI9uCBm43qFNkqypZ4ae6BSZv1I7N6dToinbl1u6YGUQHeHI/1lBkU0AGSIw==
+
 typedoc-plugin-external-module-map@1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/typedoc-plugin-external-module-map/-/typedoc-plugin-external-module-map-1.2.1.tgz#32669a6b81e57962d2dae80d7a6ef8f5d0be65dd"
