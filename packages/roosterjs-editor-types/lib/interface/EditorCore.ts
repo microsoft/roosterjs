@@ -2,7 +2,7 @@ import ClipboardData from './ClipboardData';
 import EditorPlugin from './EditorPlugin';
 import NodePosition from './NodePosition';
 import { ChangeSource } from '../enum/ChangeSource';
-import { DOMEventHandler } from '../type/DOMEventHandler';
+import { DOMEventHandler } from '../type/domEventHandler';
 import { GetContentMode } from '../enum/GetContentMode';
 import { InsertOption } from './InsertOption';
 import { PluginEvent } from '../event/PluginEvent';
