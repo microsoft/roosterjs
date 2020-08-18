@@ -1,9 +1,9 @@
-import EditorPlugin from './EditorPlugin';
 import { PluginState } from './CorePlugins';
 import {
     ChangeSource,
     ClipboardData,
     DOMEventHandler,
+    EditorPlugin,
     InsertOption,
     NodePosition,
     PluginEvent,

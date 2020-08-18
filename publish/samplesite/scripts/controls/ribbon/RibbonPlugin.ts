@@ -1,9 +1,9 @@
 import getLastClipboardData from './getLastClipboardData';
 import Ribbon from './Ribbon';
-import { EditorPlugin } from 'roosterjs-editor-core';
 import {
     ChangeSource,
     ClipboardData,
+    EditorPlugin,
     IEditor,
     PluginEvent,
     PluginEventType,

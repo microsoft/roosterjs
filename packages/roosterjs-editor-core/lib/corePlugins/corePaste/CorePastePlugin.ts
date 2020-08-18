@@ -1,5 +1,4 @@
-import EditorPlugin from '../../interfaces/EditorPlugin';
-import { ClipboardData, ContentPosition, IEditor } from 'roosterjs-editor-types';
+import { ClipboardData, ContentPosition, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { extractClipboardEvent, fromHtml, readFile } from 'roosterjs-editor-dom';
 
 const CONTAINER_HTML =

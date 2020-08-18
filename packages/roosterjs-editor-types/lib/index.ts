@@ -87,6 +87,7 @@ export { default as TargetWindow } from './interface/TargetWindow';
 export { default as Wrapper } from './interface/Wrapper';
 export { default as IEditor } from './interface/IEditor';
 export { ContentEditFeature, GenericContentEditFeature } from './interface/ContentEditFeature';
+export { default as EditorPlugin } from './interface/EditorPlugin';
 
 export {
     AttributeCallback,

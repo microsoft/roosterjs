@@ -5,7 +5,7 @@ import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
 import RibbonPlugin from './ribbon/RibbonPlugin';
 import SidePanePlugin from './SidePanePlugin';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
-import { EditorPlugin } from 'roosterjs-editor-core';
+import { EditorPlugin } from 'roosterjs-editor-types';
 
 export default interface Plugins {
     ribbon: RibbonPlugin;

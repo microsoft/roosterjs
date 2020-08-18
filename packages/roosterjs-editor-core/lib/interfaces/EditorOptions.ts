@@ -1,8 +1,12 @@
 import CorePlugins from './CorePlugins';
-import EditorPlugin from './EditorPlugin';
 import UndoSnapshotsService from './UndoSnapshotsService';
 import { CoreApiMap } from './EditorCore';
-import { DefaultFormat, GenericContentEditFeature, PluginEvent } from 'roosterjs-editor-types';
+import {
+    DefaultFormat,
+    EditorPlugin,
+    GenericContentEditFeature,
+    PluginEvent,
+} from 'roosterjs-editor-types';
 
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class

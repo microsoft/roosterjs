@@ -1,6 +1,6 @@
 import { Browser } from 'roosterjs-editor-dom';
-import { EditorPlugin, isCtrlOrMetaPressed } from 'roosterjs-editor-core';
-import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { isCtrlOrMetaPressed } from 'roosterjs-editor-core';
 
 /**
  * An editor plugin that show a tooltip for existing link

@@ -1,6 +1,6 @@
-import { EditorPlugin } from 'roosterjs-editor-core';
 import { fromHtml, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import {
+    EditorPlugin,
     IEditor,
     PluginEvent,
     PluginEventType,

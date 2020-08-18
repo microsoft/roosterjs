@@ -3,6 +3,7 @@ import BuildInPluginState, { UrlPlaceholder } from '../BuildInPluginState';
 import SampleColorPickerPluginDataProvider from '../samplepicker/SampleColorPickerPluginDataProvider';
 import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins/lib/CustomReplace';
 import { EditorInstanceToggleablePlugins } from './EditorInstanceToggleablePlugins';
+import { EditorPlugin } from 'roosterjs-editor-types';
 import { getContentEditFeatures } from 'roosterjs-editor-plugins/lib/EditFeatures';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { ImageResize } from 'roosterjs-editor-plugins/lib/ImageResize';
@@ -13,7 +14,6 @@ import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
 import {
     Editor as RoosterJsEditor,
     EditorOptions,
-    EditorPlugin,
     UndoSnapshotsService,
 } from 'roosterjs-editor-core';
 

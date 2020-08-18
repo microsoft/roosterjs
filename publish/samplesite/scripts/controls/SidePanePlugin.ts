@@ -1,4 +1,4 @@
-import { EditorPlugin } from 'roosterjs-editor-core';
+import { EditorPlugin } from 'roosterjs-editor-types';
 
 export default interface SidePanePlugin extends EditorPlugin {
     getTitle: () => string;

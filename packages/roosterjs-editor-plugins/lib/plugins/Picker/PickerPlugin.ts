@@ -3,6 +3,7 @@ import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import {
     ChangeSource,
+    EditorPlugin,
     IEditor,
     NodePosition,
     PluginDomEvent,
@@ -12,12 +13,7 @@ import {
     PluginKeyboardEvent,
     PositionType,
 } from 'roosterjs-editor-types';
-import {
-    cacheGetContentSearcher,
-    EditorPlugin,
-    isCharacterValue,
-    isModifierKey,
-} from 'roosterjs-editor-core';
+import { cacheGetContentSearcher, isCharacterValue, isModifierKey } from 'roosterjs-editor-core';
 
 // Character codes.
 // IE11 uses different character codes. which are noted below.

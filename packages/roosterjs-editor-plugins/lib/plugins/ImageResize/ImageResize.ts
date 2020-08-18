@@ -1,8 +1,8 @@
 import { contains, fromHtml, getEntitySelector, getTagOfNode, toArray } from 'roosterjs-editor-dom';
-import { EditorPlugin } from 'roosterjs-editor-core';
 import { insertEntity } from 'roosterjs-editor-api';
 import {
     ChangeSource,
+    EditorPlugin,
     IEditor,
     PluginEvent,
     PluginEventType,

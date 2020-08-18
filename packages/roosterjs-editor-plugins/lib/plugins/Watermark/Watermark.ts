@@ -1,8 +1,8 @@
 import { applyFormat, getEntitySelector, getTagOfNode } from 'roosterjs-editor-dom';
-import { EditorPlugin } from 'roosterjs-editor-core';
 import { insertEntity } from 'roosterjs-editor-api';
 import {
     DefaultFormat,
+    EditorPlugin,
     Entity,
     EntityOperation,
     IEditor,

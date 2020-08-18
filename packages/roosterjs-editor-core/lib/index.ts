@@ -29,7 +29,6 @@ export {
     TypeOfStatePlugin,
 } from './interfaces/CorePlugins';
 export { default as EditorOptions } from './interfaces/EditorOptions';
-export { default as EditorPlugin } from './interfaces/EditorPlugin';
 export { default as PluginWithState } from './interfaces/PluginWithState';
 export { default as UndoSnapshotsService } from './interfaces/UndoSnapshotsService';
 

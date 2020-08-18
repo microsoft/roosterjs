@@ -1,7 +1,6 @@
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
-import { EditorPlugin } from 'roosterjs-editor-core';
-import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { toArray } from 'roosterjs-editor-dom';
 import { WAC_IDENTIFING_SELECTOR } from './officeOnlineConverter/constants';
 import convertPastedContentFromWordOnline, {

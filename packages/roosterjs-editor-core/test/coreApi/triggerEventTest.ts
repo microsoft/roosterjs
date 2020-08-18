@@ -1,6 +1,5 @@
 import createEditorCore from './createMockEditorCore';
-import EditorPlugin from '../../lib/interfaces/EditorPlugin';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { triggerEvent } from '../../lib/coreApi/triggerEvent';
 
 describe('triggerEvent', () => {

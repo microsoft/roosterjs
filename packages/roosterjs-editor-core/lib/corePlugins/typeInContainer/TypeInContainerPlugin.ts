@@ -1,4 +1,3 @@
-import EditorPlugin from '../../interfaces/EditorPlugin';
 import {
     applyFormat,
     Browser,
@@ -10,6 +9,7 @@ import {
 } from 'roosterjs-editor-dom';
 import {
     ContentPosition,
+    EditorPlugin,
     IEditor,
     NodePosition,
     PluginEvent,

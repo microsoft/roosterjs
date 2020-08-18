@@ -1,8 +1,8 @@
-import { Editor, EditorOptions, EditorPlugin } from 'roosterjs-editor-core';
+import { EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { getContentEditFeatures } from 'roosterjs-editor-plugins/lib/EditFeatures';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
-import { IEditor } from 'roosterjs-editor-types';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
+import { Editor, EditorOptions } from 'roosterjs-editor-core';
 
 /**
  * Create an editor instance with most common options

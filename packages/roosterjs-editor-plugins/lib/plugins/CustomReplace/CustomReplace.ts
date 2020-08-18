@@ -1,6 +1,12 @@
 import Replacement from './Replacement';
-import { cacheGetContentSearcher, EditorPlugin } from 'roosterjs-editor-core';
-import { IEditor, PluginEvent, PluginEventType, PositionType } from 'roosterjs-editor-types';
+import { cacheGetContentSearcher } from 'roosterjs-editor-core';
+import {
+    EditorPlugin,
+    IEditor,
+    PluginEvent,
+    PluginEventType,
+    PositionType,
+} from 'roosterjs-editor-types';
 
 const makeReplacement = (
     sourceString: string,

@@ -1,17 +1,17 @@
-import EditorPlugin from './EditorPlugin';
 import PluginWithState from './PluginWithState';
-import {
-    BrowserInfo,
-    GenericContentEditFeature,
-    PluginEvent,
-    Wrapper,
-} from 'roosterjs-editor-types';
 import { DarkModePluginState } from '../corePlugins/darkMode/DarkModePlugin';
 import { DOMEventPluginState } from '../corePlugins/domEvent/DOMEventPlugin';
 import { EntityPluginState } from '../corePlugins/entity/EntityPlugin';
 import { LifecyclePluginState } from '../corePlugins/lifecycle/LifecyclePlugin';
 import { PendingFormatStatePluginState } from '../corePlugins/pendingFormatState/PendingFormatStatePlugin';
 import { UndoPluginState } from '../corePlugins/undo/UndoPlugin';
+import {
+    BrowserInfo,
+    EditorPlugin,
+    GenericContentEditFeature,
+    PluginEvent,
+    Wrapper,
+} from 'roosterjs-editor-types';
 
 /**
  * An interface for editor core plugins.

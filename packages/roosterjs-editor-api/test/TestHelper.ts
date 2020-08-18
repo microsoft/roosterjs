@@ -1,5 +1,5 @@
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { NodeType } from 'roosterjs-editor-types';
+import { Editor } from 'roosterjs-editor-core';
+import { EditorPlugin, NodeType } from 'roosterjs-editor-types';
 
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
