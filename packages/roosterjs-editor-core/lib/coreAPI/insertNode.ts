@@ -100,11 +100,16 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
             // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
             // add a DIV wrapping
             if (insertedNode && option.insertOnNewLine) {
-                // When insert on new line, all the nodes to be inserted have been wrapped with a DIV in insertContent(),
-                // so just check the first node of insertedNode.
-                let wrappedNode = Array.isArray(insertedNode) ? insertedNode[0] : insertedNode;
-                if (!isBlockElement(wrappedNode)) {
-                    wrap(wrappedNode);
+                let start = Array.isArray(insertedNode) ? insertedNode[0] : insertedNode;
+                let end = Array.isArray(insertedNode)
+                    ? insertedNode[insertNode.length - 1]
+                    : insertedNode;
+                if (start && !isBlockElement(start)) {
+                    wrap(start);
+                }
+                // Check the last node if there're more than 1 node in list
+                if (insertNode.length > 1 && end && !isBlockElement(end)) {
+                    wrap(end);
                 }
             }
 
