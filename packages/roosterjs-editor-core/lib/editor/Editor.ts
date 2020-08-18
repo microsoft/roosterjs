@@ -12,8 +12,10 @@ import {
     DefaultFormat,
     DOMEventHandler,
     GetContentMode,
+    IContentTraverser,
     InlineElement,
     InsertOption,
+    IPositionContentSearcher,
     NodePosition,
     PluginEvent,
     PluginEventData,
@@ -707,14 +709,14 @@ export default class Editor {
      * Get a content traverser for the whole editor
      * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
-    public getBodyTraverser(startNode?: Node): ContentTraverser {
+    public getBodyTraverser(startNode?: Node): IContentTraverser {
         return ContentTraverser.createBodyTraverser(this.core.contentDiv, startNode);
     }
 
     /**
      * Get a content traverser for current selection
      */
-    public getSelectionTraverser(): ContentTraverser {
+    public getSelectionTraverser(): IContentTraverser {
         let range = this.getSelectionRange();
         return (
             range &&
@@ -731,7 +733,7 @@ export default class Editor {
      */
     public getBlockTraverser(
         startFrom: ContentPosition = ContentPosition.SelectionStart
-    ): ContentTraverser {
+    ): IContentTraverser {
         let range = this.getSelectionRange();
         return (
             range && ContentTraverser.createBlockTraverser(this.core.contentDiv, range, startFrom)
@@ -741,7 +743,7 @@ export default class Editor {
     /**
      * Get a text traverser of current selection
      */
-    public getContentSearcherOfCursor(): PositionContentSearcher {
+    public getContentSearcherOfCursor(): IPositionContentSearcher {
         let range = this.getSelectionRange();
         return range && new PositionContentSearcher(this.core.contentDiv, Position.getStart(range));
     }

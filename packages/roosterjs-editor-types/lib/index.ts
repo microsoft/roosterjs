@@ -63,6 +63,7 @@ export {
     ElementBasedFormatState,
     StyleBasedFormatState,
 } from './interface/FormatState';
+export { default as IContentTraverser } from './interface/IContentTraverser';
 export { default as InlineElement } from './interface/InlineElement';
 export {
     InsertOption,
@@ -70,6 +71,7 @@ export {
     InsertOptionBasic,
     InsertOptionRange,
 } from './interface/InsertOption';
+export { default as IPositionContentSearcher } from './interface/IPositionContentSearcher';
 export { default as LinkData } from './interface/LinkData';
 export { default as ModeIndependentColor } from './interface/ModeIndependentColor';
 export { default as NodePosition } from './interface/NodePosition';

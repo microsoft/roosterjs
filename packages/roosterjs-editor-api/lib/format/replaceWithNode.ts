@@ -1,6 +1,5 @@
-import { ContentPosition } from 'roosterjs-editor-types';
+import { ContentPosition, IPositionContentSearcher } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { PositionContentSearcher } from 'roosterjs-editor-dom';
 
 /**
  * Replace text before current selection with a node, current selection will be kept if possible
@@ -16,7 +15,7 @@ export default function replaceWithNode(
     text: string,
     node: Node,
     exactMatch: boolean,
-    searcher?: PositionContentSearcher
+    searcher?: IPositionContentSearcher
 ): boolean;
 
 /**
@@ -39,7 +38,7 @@ export default function replaceWithNode(
     textOrRange: string | Range,
     node: Node,
     exactMatch: boolean,
-    searcher?: PositionContentSearcher
+    searcher?: IPositionContentSearcher
 ): boolean {
     // Make sure the text and node is valid
     if (!textOrRange || !node) {

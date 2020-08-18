@@ -2,7 +2,12 @@ import * as DomTestHelper from '../DomTestHelper';
 import ContentTraverser from '../../lib/contentTraverser/ContentTraverser';
 import createRange from '../../lib/selection/createRange';
 import Position from '../../lib/selection/Position';
-import { BlockElement, ContentPosition, PositionType } from 'roosterjs-editor-types';
+import {
+    BlockElement,
+    ContentPosition,
+    IContentTraverser,
+    PositionType,
+} from 'roosterjs-editor-types';
 
 let testID = 'ContentTraverser';
 
@@ -11,7 +16,7 @@ describe('ContentTraverser currentBlockElement()', () => {
         DomTestHelper.removeElement(testID);
     });
 
-    function runTest(contentTraverser: ContentTraverser, testBlockElement: BlockElement) {
+    function runTest(contentTraverser: IContentTraverser, testBlockElement: BlockElement) {
         // Act
         let currentBlockElement = contentTraverser.currentBlockElement;
 
@@ -177,7 +182,7 @@ describe('ContentTraverser currentInlineElement()', () => {
     });
 
     function runTest(
-        contentTraverser: ContentTraverser,
+        contentTraverser: IContentTraverser,
         startOffset: number,
         endOffset: number,
         node: Node
@@ -278,7 +283,7 @@ describe('ContentTraverser getNextInlineElement()', () => {
     });
 
     function runTest(
-        contentTraverser: ContentTraverser,
+        contentTraverser: IContentTraverser,
         startOffset: number,
         endOffset: number,
         node: Node
@@ -402,7 +407,7 @@ describe('ContentTraverser getPreviousInlineElement()', () => {
     });
 
     function runTest(
-        contentTraverser: ContentTraverser,
+        contentTraverser: IContentTraverser,
         startOffset: number,
         endOffset: number,
         node: Node

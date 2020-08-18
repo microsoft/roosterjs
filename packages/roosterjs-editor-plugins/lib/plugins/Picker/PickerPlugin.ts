@@ -267,10 +267,10 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private getRangeUntilAt(event: PluginKeyboardEvent): Range {
-        let PositionContentSearcher = cacheGetContentSearcher(event, this.editor);
+        let positionContentSearcher = cacheGetContentSearcher(event, this.editor);
         let startPos: NodePosition;
         let endPos: NodePosition;
-        PositionContentSearcher.forEachTextInlineElement(textInline => {
+        positionContentSearcher.forEachTextInlineElement(textInline => {
             let hasMatched = false;
             let nodeContent = textInline.getTextContent();
             let nodeIndex = nodeContent ? nodeContent.length : -1;

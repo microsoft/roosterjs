@@ -1,8 +1,7 @@
 import cacheGetEventData from './cacheGetEventData';
 import clearEventDataCache from './clearEventDataCache';
 import Editor from '../editor/Editor';
-import { PluginEvent } from 'roosterjs-editor-types';
-import { PositionContentSearcher } from 'roosterjs-editor-dom';
+import { IPositionContentSearcher, PluginEvent } from 'roosterjs-editor-types';
 
 const CONTENTSEARCHER_KEY = 'CONTENTSEARCHER';
 
@@ -16,7 +15,7 @@ const CONTENTSEARCHER_KEY = 'CONTENTSEARCHER';
 export function cacheGetContentSearcher(
     event: PluginEvent,
     editor: Editor
-): PositionContentSearcher {
+): IPositionContentSearcher {
     return cacheGetEventData(event, CONTENTSEARCHER_KEY, () => editor.getContentSearcherOfCursor());
 }
 
