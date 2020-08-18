@@ -305,7 +305,10 @@ function buildDoc() {
         'external-modulemap': '".*\\/(roosterjs[a-zA-Z0-9\\-]*)\\/lib\\/"',
     };
 
-    let cmd = path.join(nodeModulesPath, 'typedoc/bin/typedoc');
+    let cmd = path.join(
+        nodeModulesPath,
+        'typedoc/bin/typedoc --plugin typedoc-plugin-exclude-references --plugin typedoc-plugin-external-module-map'
+    );
     for (let key of Object.keys(config)) {
         let value = config[key];
         cmd += ` --${key} ${value}`;
