@@ -101,14 +101,15 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
             // add a DIV wrapping
             if (insertedNode && option.insertOnNewLine) {
                 let start = Array.isArray(insertedNode) ? insertedNode[0] : insertedNode;
-                let end = Array.isArray(insertedNode)
-                    ? insertedNode[insertNode.length - 1]
-                    : insertedNode;
+                // Check the last node if there're more than 1 node in list
+                let end =
+                    Array.isArray(insertedNode) && insertedNode.length > 1
+                        ? insertedNode[insertedNode.length - 1]
+                        : null;
                 if (start && !isBlockElement(start)) {
                     wrap(start);
                 }
-                // Check the last node if there're more than 1 node in list
-                if (insertNode.length > 1 && end && !isBlockElement(end)) {
+                if (end && !isBlockElement(end)) {
                     wrap(end);
                 }
             }
