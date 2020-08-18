@@ -61,6 +61,7 @@ export default class Ribbon extends React.Component<RibbonProps, {}> {
                         const child = blockElement.children[j];
                         if (child.tagName == "IMG") {
                             rotateImage(editor, child as HTMLImageElement, 90);
+                            break; // Only rotate the first image
                         }
                     }
                 }
