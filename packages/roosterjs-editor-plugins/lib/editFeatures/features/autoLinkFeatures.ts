@@ -1,4 +1,3 @@
-import { LinkInlineElement, matchLink } from 'roosterjs-editor-dom';
 import { removeLink, replaceWithNode } from 'roosterjs-editor-api';
 import {
     ChangeSource,
@@ -13,9 +12,10 @@ import {
 } from 'roosterjs-editor-types';
 import {
     cacheGetEventData,
-    cacheGetContentSearcher,
-    clearContentSearcherCache,
-} from 'roosterjs-editor-core';
+    clearEventDataCache,
+    LinkInlineElement,
+    matchLink,
+} from 'roosterjs-editor-dom';
 
 /**
  * When user type, they may end a link with a puncatuation, i.e. www.bing.com;
@@ -61,7 +61,7 @@ function cacheGetLinkData(event: PluginEvent, editor: IEditor): LinkData {
                   event.source == ChangeSource.Paste &&
                   (event.data as ClipboardData);
               let link = matchLink((clipboardData.text || '').trim());
-              let searcher = cacheGetContentSearcher(event, editor);
+              let searcher = editor.getContentSearcherOfCursor(event);
 
               // In case the matched link is already inside a <A> tag, we do a range search.
               // getRangeFromText will return null if the given text is already in a LinkInlineElement
@@ -95,7 +95,7 @@ function cacheGetLinkData(event: PluginEvent, editor: IEditor): LinkData {
 }
 
 function hasLinkBeforeCursor(event: PluginKeyboardEvent, editor: IEditor): boolean {
-    let contentSearcher = cacheGetContentSearcher(event, editor);
+    let contentSearcher = editor.getContentSearcherOfCursor(event);
     let inline = contentSearcher.getInlineElementBefore();
     return inline instanceof LinkInlineElement;
 }
@@ -122,7 +122,7 @@ function autoLink(event: PluginEvent, editor: IEditor) {
                 );
 
                 // The content at cursor has changed. Should also clear the cursor data cache
-                clearContentSearcherCache(event);
+                clearEventDataCache(event);
                 return anchor;
             },
             ChangeSource.AutoLink,

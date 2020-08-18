@@ -1,10 +1,10 @@
 import createWrapper from '../utils/createWrapper';
-import { isCharacterValue } from 'roosterjs-editor-core';
 import {
     Browser,
     commitEntity,
     getEntityFromElement,
     getEntitySelector,
+    isCharacterValue,
     toArray,
 } from 'roosterjs-editor-dom';
 import {

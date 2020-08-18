@@ -1,6 +1,12 @@
-import { Browser, createRange, PartialInlineElement } from 'roosterjs-editor-dom';
 import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
+import {
+    Browser,
+    createRange,
+    isCharacterValue,
+    isModifierKey,
+    PartialInlineElement,
+} from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     EditorPlugin,
@@ -13,7 +19,6 @@ import {
     PluginKeyboardEvent,
     PositionType,
 } from 'roosterjs-editor-types';
-import { cacheGetContentSearcher, isCharacterValue, isModifierKey } from 'roosterjs-editor-core';
 
 // Character codes.
 // IE11 uses different character codes. which are noted below.
@@ -249,7 +254,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private getWordBeforeCursor(event: PluginKeyboardEvent): string {
-        let searcher = cacheGetContentSearcher(event, this.editor);
+        let searcher = this.editor.getContentSearcherOfCursor(event);
         return searcher ? searcher.getWordBefore() : null;
     }
 
@@ -263,7 +268,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private getRangeUntilAt(event: PluginKeyboardEvent): Range {
-        let positionContentSearcher = cacheGetContentSearcher(event, this.editor);
+        let positionContentSearcher = this.editor.getContentSearcherOfCursor(event);
         let startPos: NodePosition;
         let endPos: NodePosition;
         positionContentSearcher.forEachTextInlineElement(textInline => {
@@ -345,7 +350,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     this.setLastKnownRange(this.editor.getSelectionRange());
                     if (this.dataProvider.setCursorPoint) {
                         // Determine the bounding rectangle for the @mention
-                        let searcher = cacheGetContentSearcher(event, this.editor);
+                        let searcher = this.editor.getContentSearcherOfCursor(event);
                         let rangeNode = this.editor.getDocument().createRange();
                         let nodeBeforeCursor = searcher.getInlineElementBefore().getContainerNode();
                         let rangeStartSuccessfullySet = this.setRangeStart(
@@ -435,7 +440,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     this.cancelDefaultKeyDownEvent(event);
                 }
             } else if (keyboardEvent.key == DELETE_CHARCODE) {
-                let searcher = cacheGetContentSearcher(event, this.editor);
+                let searcher = this.editor.getContentSearcherOfCursor(event);
                 let nodeAfterCursor = searcher.getInlineElementAfter()
                     ? searcher.getInlineElementAfter().getContainerNode()
                     : null;
@@ -469,7 +474,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private tryRemoveNode(event: PluginDomEvent): boolean {
-        const searcher = cacheGetContentSearcher(event, this.editor);
+        const searcher = this.editor.getContentSearcherOfCursor(event);
         const inlineElementBefore = searcher.getInlineElementBefore();
         const nodeBeforeCursor = inlineElementBefore
             ? inlineElementBefore.getContainerNode()
@@ -543,7 +548,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private getInlineElementBeforeCursor(event: PluginEvent): string {
-        const searcher = cacheGetContentSearcher(event, this.editor);
+        const searcher = this.editor.getContentSearcherOfCursor(event);
         const element = searcher ? searcher.getInlineElementBefore() : null;
         return element ? element.getTextContent() : null;
     }

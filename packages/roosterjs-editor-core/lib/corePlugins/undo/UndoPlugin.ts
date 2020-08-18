@@ -1,5 +1,4 @@
 import createWrapper from '../utils/createWrapper';
-import isCtrlOrMetaPressed from '../../eventApi/isCtrlOrMetaPressed';
 import {
     EditorOptions,
     IEditor,
@@ -13,9 +12,10 @@ import {
 import {
     addSnapshot,
     canMoveCurrentSnapshot,
-    moveCurrentSnapsnot,
     clearProceedingSnapshots,
     createSnapshots,
+    isCtrlOrMetaPressed,
+    moveCurrentSnapsnot,
 } from 'roosterjs-editor-dom';
 
 const KEY_BACKSPACE = 8;

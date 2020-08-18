@@ -1,5 +1,9 @@
-import { cacheGetEventData } from 'roosterjs-editor-core';
-import { getEntityFromElement, getEntitySelector, Position } from 'roosterjs-editor-dom';
+import {
+    cacheGetEventData,
+    getEntityFromElement,
+    getEntitySelector,
+    Position,
+} from 'roosterjs-editor-dom';
 import {
     ContentEditFeature,
     EntityOperation,

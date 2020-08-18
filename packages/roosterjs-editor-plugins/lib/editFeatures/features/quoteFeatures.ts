@@ -1,4 +1,3 @@
-import { cacheGetEventData } from 'roosterjs-editor-core';
 import {
     ContentEditFeature,
     IEditor,
@@ -7,6 +6,7 @@ import {
     PositionType,
 } from 'roosterjs-editor-types';
 import {
+    cacheGetEventData,
     getTagOfNode,
     isNodeEmpty,
     splitBalancedNodeRange,

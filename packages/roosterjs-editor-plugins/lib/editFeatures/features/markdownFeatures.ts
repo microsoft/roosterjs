@@ -1,5 +1,4 @@
-import { cacheGetContentSearcher, cacheGetEventData } from 'roosterjs-editor-core';
-import { createRange } from 'roosterjs-editor-dom';
+import { cacheGetEventData, createRange } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ContentEditFeature,
@@ -38,7 +37,7 @@ function cacheGetRangeForMarkdownOperation(
     triggerCharacter: string
 ): Range {
     return cacheGetEventData(event, 'MARKDOWN_RANGE', () => {
-        const searcher = cacheGetContentSearcher(event, editor);
+        const searcher = editor.getContentSearcherOfCursor(event);
 
         let startPosition: NodePosition;
         let endPosition: NodePosition;

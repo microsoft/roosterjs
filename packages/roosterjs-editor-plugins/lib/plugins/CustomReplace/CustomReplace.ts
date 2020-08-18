@@ -1,5 +1,4 @@
 import Replacement from './Replacement';
-import { cacheGetContentSearcher } from 'roosterjs-editor-core';
 import {
     EditorPlugin,
     IEditor,
@@ -87,7 +86,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
         if (range == null) {
             return;
         }
-        const searcher = cacheGetContentSearcher(event, this.editor);
+        const searcher = this.editor.getContentSearcherOfCursor(event);
         const stringToSearch = searcher.getSubStringBefore(this.longestReplacementLength);
 
         const replacement = this.getMatchingReplacement(stringToSearch);

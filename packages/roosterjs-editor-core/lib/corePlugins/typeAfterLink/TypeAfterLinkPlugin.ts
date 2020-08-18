@@ -1,6 +1,5 @@
 import createWrapper from '../utils/createWrapper';
 import { Browser, LinkInlineElement, Position } from 'roosterjs-editor-dom';
-import { cacheGetContentSearcher } from '../../eventApi/cacheGetContentSearcher';
 import {
     BrowserInfo,
     IEditor,
@@ -69,7 +68,7 @@ export default class TypeAfterLinkPlugin implements PluginWithState<BrowserInfo>
         ) {
             let range = this.editor.getSelectionRange();
             if (range && range.collapsed && this.editor.getElementAtCursor('A[href]')) {
-                let searcher = cacheGetContentSearcher(event, this.editor);
+                let searcher = this.editor.getContentSearcherOfCursor(event);
                 let inlineElement = searcher.getInlineElementBefore();
                 if (inlineElement instanceof LinkInlineElement) {
                     this.editor.select(

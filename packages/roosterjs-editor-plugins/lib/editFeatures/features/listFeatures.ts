@@ -1,4 +1,3 @@
-import { cacheGetContentSearcher, cacheGetElementAtCursor } from 'roosterjs-editor-core';
 import { setIndentation, toggleBullet, toggleNumbering } from 'roosterjs-editor-api';
 import {
     ContentEditFeature,
@@ -50,12 +49,12 @@ const OutdentWhenShiftTab: ContentEditFeature = {
 const MergeInNewLine: ContentEditFeature = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
-        let li = cacheGetElementAtCursor(editor, event, 'LI');
+        let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
         let range = editor.getSelectionRange();
         return li && range && isPositionAtBeginningOf(Position.getStart(range), li);
     },
     handleEvent: (event, editor) => {
-        let li = cacheGetElementAtCursor(editor, event, 'LI');
+        let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
         if (li.previousSibling) {
             editor.runAsync(() => {
                 let br = editor.getDocument().createElement('BR');
@@ -76,7 +75,7 @@ const MergeInNewLine: ContentEditFeature = {
 const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
-        let li = cacheGetElementAtCursor(editor, event, 'LI');
+        let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
         return li && isNodeEmpty(li) && !li.previousSibling;
     },
     handleEvent: toggleListAndPreventDefault,
@@ -89,7 +88,7 @@ const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
 const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
     keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {
-        let li = cacheGetElementAtCursor(editor, event, 'LI');
+        let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
         return !event.rawEvent.shiftKey && li && isNodeEmpty(li);
     },
     handleEvent: (event, editor) => {
@@ -111,7 +110,7 @@ const AutoBullet: ContentEditFeature = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
         if (!cacheGetListElement(event, editor)) {
-            let searcher = cacheGetContentSearcher(event, editor);
+            let searcher = editor.getContentSearcherOfCursor(event);
             let textBeforeCursor = searcher.getSubStringBefore(3);
 
             // Auto list is triggered if:
@@ -179,7 +178,7 @@ function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: IEditor
 }
 
 function cacheGetListElement(event: PluginKeyboardEvent, editor: IEditor) {
-    let li = cacheGetElementAtCursor(editor, event, 'LI,TABLE');
+    let li = editor.getElementAtCursor('LI,TABLE', null /*startFrom*/, event);
     let listElement = li && getTagOfNode(li) == 'LI' && editor.getElementAtCursor('UL,OL', li);
     return listElement ? [listElement, li] : null;
 }

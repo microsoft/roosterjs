@@ -1,4 +1,3 @@
-import { cacheGetElementAtCursor } from 'roosterjs-editor-core';
 import { getPendableFormatState, getTagOfNode } from 'roosterjs-editor-dom';
 import {
     ElementBasedFormatState,
@@ -20,8 +19,10 @@ export function getElementBasedFormatState(
     editor: IEditor,
     event?: PluginEvent
 ): ElementBasedFormatState {
-    let listTag = getTagOfNode(cacheGetElementAtCursor(editor, event, 'OL,UL'));
-    let headerTag = getTagOfNode(cacheGetElementAtCursor(editor, event, 'H1,H2,H3,H4,H5,H6'));
+    let listTag = getTagOfNode(editor.getElementAtCursor('OL,UL', null /*startFrom*/, event));
+    let headerTag = getTagOfNode(
+        editor.getElementAtCursor('H1,H2,H3,H4,H5,H6', null /*startFrom*/, event)
+    );
 
     return {
         isBullet: listTag == 'UL',

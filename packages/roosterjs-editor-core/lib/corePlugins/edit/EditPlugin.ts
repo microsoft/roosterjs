@@ -1,6 +1,6 @@
 import addContentEditFeatures from './addContentEditFeatures';
 import createWrapper from '../utils/createWrapper';
-import isCtrlOrMetaPressed from '../../eventApi/isCtrlOrMetaPressed';
+import { isCtrlOrMetaPressed } from 'roosterjs-editor-dom';
 import {
     EditorOptions,
     GenericContentEditFeature,

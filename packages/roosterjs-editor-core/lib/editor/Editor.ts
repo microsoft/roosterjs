@@ -29,6 +29,7 @@ import {
     StyleBasedFormatState,
 } from 'roosterjs-editor-types';
 import {
+    cacheGetEventData,
     collapseNodes,
     contains,
     ContentTraverser,
@@ -383,13 +384,23 @@ export default class Editor implements IEditor {
      * If no element found within editor by the given tag, return null.
      * @param selector Optional, an HTML selector to find HTML element with.
      * @param startFrom Start search from this node. If not specified, start from current focused position
+     * @param event Optional, if specified, editor will try to get cached result from the event object first.
+     * If it is not cached before, query from DOM and cache the result into the event object
      */
-    public getElementAtCursor(selector?: string, startFrom?: Node): HTMLElement {
-        if (!startFrom) {
-            let position = this.getFocusedPosition();
-            startFrom = position && position.node;
-        }
-        return startFrom && findClosestElementAncestor(startFrom, this.core.contentDiv, selector);
+    public getElementAtCursor(
+        selector?: string,
+        startFrom?: Node,
+        event?: PluginEvent
+    ): HTMLElement {
+        return cacheGetEventData(event, 'GET_ELEMENT_AT_CURSOR_' + selector, () => {
+            if (!startFrom) {
+                let position = this.getFocusedPosition();
+                startFrom = position && position.node;
+            }
+            return (
+                startFrom && findClosestElementAncestor(startFrom, this.core.contentDiv, selector)
+            );
+        });
     }
 
     /**
@@ -604,10 +615,16 @@ export default class Editor implements IEditor {
 
     /**
      * Get a text traverser of current selection
+     * @param event Optional, if specified, editor will try to get cached result from the event object first.
+     * If it is not cached before, query from DOM and cache the result into the event object
      */
-    public getContentSearcherOfCursor(): IPositionContentSearcher {
-        let range = this.getSelectionRange();
-        return range && new PositionContentSearcher(this.core.contentDiv, Position.getStart(range));
+    public getContentSearcherOfCursor(event?: PluginEvent): IPositionContentSearcher {
+        return cacheGetEventData(event, 'CONTENTSEARCHER', () => {
+            let range = this.getSelectionRange();
+            return (
+                range && new PositionContentSearcher(this.core.contentDiv, Position.getStart(range))
+            );
+        });
     }
 
     /**

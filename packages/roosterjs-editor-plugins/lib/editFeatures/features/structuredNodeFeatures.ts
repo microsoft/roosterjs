@@ -1,4 +1,3 @@
-import { cacheGetEventData } from 'roosterjs-editor-core';
 import {
     ContentEditFeature,
     IEditor,
@@ -8,6 +7,7 @@ import {
 } from 'roosterjs-editor-types';
 import {
     Browser,
+    cacheGetEventData,
     fromHtml,
     isPositionAtBeginningOf,
     Position,

@@ -1,6 +1,5 @@
 import createWrapper from '../utils/createWrapper';
-import isCharacterValue from '../../eventApi/isCharacterValue';
-import { Browser } from 'roosterjs-editor-dom';
+import { Browser, isCharacterValue } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     DOMEventHandler,
