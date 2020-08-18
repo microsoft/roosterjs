@@ -1,14 +1,12 @@
 import createWrapper from '../utils/createWrapper';
-import Editor from '../../editor/Editor';
 import PluginWithState from '../../interfaces/PluginWithState';
-import { Keys } from '../../interfaces/ContentEditFeature';
-import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import { IEditor, Keys, PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 
 /**
  * Auto complete Component helps handle the undo operation for an auto complete action
  */
 export default class AutoCompletePlugin implements PluginWithState<string> {
-    private editor: Editor;
+    private editor: IEditor;
     private state: Wrapper<string> = createWrapper(null);
 
     /**
@@ -22,7 +20,7 @@ export default class AutoCompletePlugin implements PluginWithState<string> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 

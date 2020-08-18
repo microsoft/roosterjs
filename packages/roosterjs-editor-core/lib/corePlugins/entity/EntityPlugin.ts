@@ -1,6 +1,6 @@
 import createWrapper from '../utils/createWrapper';
 import PluginWithState from '../../interfaces/PluginWithState';
-import { Editor, isCharacterValue, Keys } from 'roosterjs-editor-core';
+import { isCharacterValue } from 'roosterjs-editor-core';
 import {
     Browser,
     commitEntity,
@@ -9,15 +9,17 @@ import {
     toArray,
 } from 'roosterjs-editor-dom';
 import {
+    ChangeSource,
     ContentPosition,
+    Entity,
+    EntityClasses,
     EntityOperation,
+    HtmlSanitizerOptions,
+    IEditor,
+    Keys,
     PluginEvent,
     PluginEventType,
     QueryScope,
-    ChangeSource,
-    HtmlSanitizerOptions,
-    Entity,
-    EntityClasses,
     Wrapper,
 } from 'roosterjs-editor-types';
 
@@ -53,7 +55,7 @@ export interface EntityPluginState {
  * Entity Plugin helps handle all operations related to an entity and generate entity specified events
  */
 export default class EntityPlugin implements PluginWithState<EntityPluginState> {
-    private editor: Editor;
+    private editor: IEditor;
     private disposer: () => void;
     private state: Wrapper<EntityPluginState>;
 
@@ -78,7 +80,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = this.editor.addDomEventHandler({
             contextmenu: this.handleContextMenuEvent,
@@ -307,7 +309,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
  * This is a workaround to remove it by temporarily move focus out of editor
  */
 const workaroundSelectionIssueForIE = Browser.isIE
-    ? (editor: Editor) => {
+    ? (editor: IEditor) => {
           editor.runAsync(() => {
               const workaroundButton = editor.getCustomData('ENTITY_IE_FOCUS_BUTTON', () => {
                   const button = editor.getDocument().createElement('button');

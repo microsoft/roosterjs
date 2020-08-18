@@ -1,12 +1,12 @@
 import * as TestHelper from '../TestHelper';
 import createLink from '../../lib/format/createLink';
-import { Editor } from 'roosterjs-editor-core';
+import { IEditor } from 'roosterjs-editor-types';
 
 describe('createLink()', () => {
     let testID = 'createLink';
     let originalContent =
         '<div id="text" style="font-size: 12pt; font-family: Calibri, Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">text</div>';
-    let editor: Editor;
+    let editor: IEditor;
 
     beforeEach(() => {
         // Arrange

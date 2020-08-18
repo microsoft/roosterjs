@@ -1,11 +1,10 @@
 import * as TestHelper from '../TestHelper';
 import setIndentation from '../../lib/format/setIndentation';
-import { Editor } from 'roosterjs-editor-core';
-import { Indentation } from 'roosterjs-editor-types';
+import { IEditor, Indentation } from 'roosterjs-editor-types';
 
 describe('setIndentation()', () => {
     let testID = 'setIndentation';
-    let editor: Editor;
+    let editor: IEditor;
 
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);

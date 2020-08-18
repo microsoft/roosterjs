@@ -1,12 +1,12 @@
 import * as TestHelper from '../TestHelper';
 import setImageAltText from '../../lib/format/setImageAltText';
-import { Editor } from 'roosterjs-editor-core';
+import { IEditor } from 'roosterjs-editor-types';
 
 describe('setImageAltText()', () => {
     let testID = 'setImageAltText';
     let originalContent =
         '<div id="text" style="font-size: 12pt; font-family: Calibri, Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);"><img src="" originalsrc="cid:4de1094a-3ef8-4a9e-b5a0-caa6d4324eab" size="18361" contenttype="image/gif" id="img789350"></div>';
-    let editor: Editor;
+    let editor: IEditor;
 
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);

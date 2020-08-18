@@ -9,11 +9,11 @@ import toggleNumbering from '../../lib/format/toggleNumbering';
 import toggleStrikethrough from '../../lib/format/toggleStrikethrough';
 import toggleSubscript from '../../lib/format/toggleSubscript';
 import toggleSuperscript from '../../lib/format/toggleSuperscript';
-import { Editor } from 'roosterjs-editor-core';
+import { IEditor } from 'roosterjs-editor-types';
 
 describe('FormatUtils', () => {
     let testID = 'toggle';
-    let editor: Editor;
+    let editor: IEditor;
 
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);

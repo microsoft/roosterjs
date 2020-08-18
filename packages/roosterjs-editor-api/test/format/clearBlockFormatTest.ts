@@ -1,10 +1,10 @@
 import * as TestHelper from '../TestHelper';
 import clearBlockFormat from '../../lib/format/clearBlockFormat';
-import { Editor } from 'roosterjs-editor-core';
+import { IEditor } from 'roosterjs-editor-types';
 
 describe('clearBlockFormat()', () => {
     let testID = 'clearFormat';
-    let editor: Editor;
+    let editor: IEditor;
 
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);

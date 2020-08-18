@@ -85,7 +85,7 @@ class HelloRooster implements EditorPlugin {
         return 'HelloRooster';
     }
 
-    initialize(editor: Editor) {}
+    initialize(editor: IEditor) {}
 
     dispose() {}
 

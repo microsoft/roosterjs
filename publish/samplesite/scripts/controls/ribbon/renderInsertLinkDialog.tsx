@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { createLink } from 'roosterjs-editor-api';
-import { Editor } from 'roosterjs-editor-core';
+import { IEditor } from 'roosterjs-editor-types';
 
 const styles = require('./InsertLink.scss');
 
 interface InsertLinkProps {
-    editor: Editor;
+    editor: IEditor;
     onDismiss: () => void;
     url: string;
     displayText: string;
@@ -57,7 +57,7 @@ class InsertLink extends React.Component<InsertLinkProps, {}> {
     };
 }
 
-export default function renderInsertLinkDialog(editor: Editor, onDismiss: () => void) {
+export default function renderInsertLinkDialog(editor: IEditor, onDismiss: () => void) {
     let a = editor.getElementAtCursor('a[href]') as HTMLAnchorElement;
     return (
         <InsertLink

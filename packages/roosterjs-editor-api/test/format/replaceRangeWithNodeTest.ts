@@ -1,10 +1,10 @@
 import * as TestHelper from '../TestHelper';
 import replaceRangeWithNode from '../../lib/format/replaceWithNode';
-import { Editor } from 'roosterjs-editor-core';
+import { IEditor } from 'roosterjs-editor-types';
 
 describe('replaceRangeWithNode replaceRangeWithNode()', () => {
     let testID = 'replaceRangeWithNode';
-    let editor: Editor;
+    let editor: IEditor;
     let nodeID = 'replaceNode';
 
     beforeEach(function () {

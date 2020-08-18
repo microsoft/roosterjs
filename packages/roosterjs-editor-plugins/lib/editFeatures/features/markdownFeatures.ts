@@ -1,17 +1,14 @@
+import { cacheGetContentSearcher, cacheGetEventData } from 'roosterjs-editor-core';
 import { createRange } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
+    ContentEditFeature,
+    IEditor,
+    Keys,
     NodePosition,
     PluginKeyboardEvent,
     PositionType,
 } from 'roosterjs-editor-types';
-import {
-    cacheGetContentSearcher,
-    cacheGetEventData,
-    ContentEditFeature,
-    Editor,
-    Keys,
-} from 'roosterjs-editor-core';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
@@ -37,7 +34,7 @@ function generateBasicMarkdownFeature(
 
 function cacheGetRangeForMarkdownOperation(
     event: PluginKeyboardEvent,
-    editor: Editor,
+    editor: IEditor,
     triggerCharacter: string
 ): Range {
     return cacheGetEventData(event, 'MARKDOWN_RANGE', () => {
@@ -88,7 +85,7 @@ function cacheGetRangeForMarkdownOperation(
 
 function handleMarkdownEvent(
     event: PluginKeyboardEvent,
-    editor: Editor,
+    editor: IEditor,
     triggerCharacter: string,
     elementTag: string
 ) {

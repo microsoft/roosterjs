@@ -1,6 +1,5 @@
 import collapseSelectedBlocks from '../utils/collapseSelectedBlocks';
-import { ChangeSource, NodeType } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { ChangeSource, IEditor, NodeType } from 'roosterjs-editor-types';
 import {
     getTagOfNode,
     isBlockElement,
@@ -24,7 +23,7 @@ export const ATTRIBUTES_TO_PRESERVE = ['href'];
  * @param tagsToStopUnwrap Optional. A string array contains HTML tags in upper case which we will stop unwrap if these tags are hit
  */
 export default function clearBlockFormat(
-    editor: Editor,
+    editor: IEditor,
     tagsToUnwrap: string[] = TAGS_TO_UNWRAP,
     tagsToStopUnwrap: string[] = TAGS_TO_STOP_UNWRAP,
     attributesToPreserve: string[] = ATTRIBUTES_TO_PRESERVE

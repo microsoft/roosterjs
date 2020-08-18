@@ -1,7 +1,5 @@
 import AutoCompletePlugin from '../../lib/corePlugins/autoComplete/AutoCompletePlugin';
-import Editor from '../../lib/editor/Editor';
-import { Keys } from '../../lib/interfaces/ContentEditFeature';
-import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import { IEditor, Keys, PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 
 describe('AutoCompletePlugin', () => {
     let plugin: AutoCompletePlugin;
@@ -12,7 +10,7 @@ describe('AutoCompletePlugin', () => {
         plugin = new AutoCompletePlugin();
         setContent = jasmine.createSpy('setContent');
         state = plugin.getState();
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             setContent,
         }));
     });

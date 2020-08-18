@@ -1,7 +1,6 @@
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
-import { Editor } from 'roosterjs-editor-core';
-import { PositionType, Region } from 'roosterjs-editor-types';
+import { IEditor, PositionType, Region } from 'roosterjs-editor-types';
 import {
     createRange,
     getSelectedBlockElementsInRegion,
@@ -54,7 +53,7 @@ export default class GetSelectedRegionsPane extends React.Component<
     };
 }
 
-function Region({ region, editor, index }: { region: Region; editor: Editor; index: number }) {
+function Region({ region, editor, index }: { region: Region; editor: IEditor; index: number }) {
     const selectRegion = React.useCallback(() => {
         const blocks = getSelectedBlockElementsInRegion(region);
         if (blocks.length > 0) {

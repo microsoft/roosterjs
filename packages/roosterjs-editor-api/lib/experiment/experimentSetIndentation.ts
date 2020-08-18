@@ -1,6 +1,5 @@
 import blockFormat from '../utils/blockFormat';
-import { BlockElement, Indentation, Region } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { BlockElement, IEditor, Indentation, Region } from 'roosterjs-editor-types';
 import {
     fromHtml,
     getSelectedBlockElementsInRegion,
@@ -23,7 +22,7 @@ const BlockWrapper = '<blockquote style="margin-top:0;margin-bottom:0"></blockqu
 /**
  * @internal
  */
-export default function experimentSetIndentation(editor: Editor, indentation: Indentation) {
+export default function experimentSetIndentation(editor: IEditor, indentation: Indentation) {
     const handler = indentation == Indentation.Increase ? indent : outdent;
 
     blockFormat(editor, (region, start, end) => {

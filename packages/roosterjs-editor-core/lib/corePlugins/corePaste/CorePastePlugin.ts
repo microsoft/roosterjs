@@ -1,6 +1,5 @@
-import Editor from '../../editor/Editor';
 import EditorPlugin from '../../interfaces/EditorPlugin';
-import { ClipboardData, ContentPosition } from 'roosterjs-editor-types';
+import { ClipboardData, ContentPosition, IEditor } from 'roosterjs-editor-types';
 import { extractClipboardEvent, fromHtml, readFile } from 'roosterjs-editor-dom';
 
 const CONTAINER_HTML =
@@ -10,7 +9,7 @@ const CONTAINER_HTML =
  * Core paste plugin for handling onPaste event and extract the pasted content
  */
 export default class CorePastePlugin implements EditorPlugin {
-    private editor: Editor;
+    private editor: IEditor;
     private disposer: () => void;
 
     /**
@@ -24,7 +23,7 @@ export default class CorePastePlugin implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = this.editor.addDomEventHandler('paste', this.onPaste);
     }

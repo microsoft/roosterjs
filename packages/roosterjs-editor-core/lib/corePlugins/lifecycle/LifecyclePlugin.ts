@@ -1,12 +1,12 @@
 import createWrapper from '../utils/createWrapper';
 import CustomData from '../../interfaces/CustomData';
-import Editor from '../../editor/Editor';
 import EditorOptions from '../../interfaces/EditorOptions';
 import PluginWithState from '../../interfaces/PluginWithState';
 import { Browser, Position } from 'roosterjs-editor-dom';
 import {
     DefaultFormat,
     DocumentCommand,
+    IEditor,
     NodePosition,
     PluginEventType,
     PositionType,
@@ -57,7 +57,7 @@ const COMMANDS: {
  * Lifecycle plugin handles editor initialization and disposing
  */
 export default class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
-    private editor: Editor;
+    private editor: IEditor;
     private state: Wrapper<LifecyclePluginState>;
     private initialContent: string;
     private startPosition: NodePosition;
@@ -102,7 +102,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
 
         // Calculate default format

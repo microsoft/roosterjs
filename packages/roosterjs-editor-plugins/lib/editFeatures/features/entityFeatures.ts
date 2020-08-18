@@ -1,7 +1,10 @@
-import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
+import { cacheGetEventData } from 'roosterjs-editor-core';
 import { getEntityFromElement, getEntitySelector, Position } from 'roosterjs-editor-dom';
 import {
+    ContentEditFeature,
     EntityOperation,
+    IEditor,
+    Keys,
     PluginKeyboardEvent,
     PositionType,
     PluginEventType,
@@ -33,7 +36,7 @@ const EscapeFromEntityFeature: ContentEditFeature = {
 
 function cacheGetReadonlyEntityElement(
     event: PluginKeyboardEvent,
-    editor: Editor,
+    editor: IEditor,
     operation?: EntityOperation
 ) {
     const element = cacheGetEventData(event, 'READONLY_ENTITY_ELEMENT', () => {
@@ -127,7 +130,7 @@ const DeleteBeforeEntityFeature: ContentEditFeature = {
 
 function cacheGetNeighborEntityElement(
     event: PluginKeyboardEvent,
-    editor: Editor,
+    editor: IEditor,
     isNext: boolean,
     collapseOnly: boolean,
     operation?: EntityOperation

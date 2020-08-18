@@ -1,7 +1,6 @@
 import * as isCharacterValue from '../../lib/eventApi/isCharacterValue';
 import DOMEventPlugin, { DOMEventPluginState } from '../../lib/corePlugins/domEvent/DOMEventPlugin';
-import Editor from '../../lib/editor/Editor';
-import { ChangeSource, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import { ChangeSource, IEditor, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 
 describe('DOMEventPlugin', () => {
     it('init and dispose', () => {
@@ -17,7 +16,7 @@ describe('DOMEventPlugin', () => {
             .createSpy('addDomEventHandler')
             .and.returnValue(disposer);
         const state = plugin.getState();
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             addDomEventHandler,
         }));
 
@@ -63,7 +62,7 @@ describe('DOMEventPlugin', () => {
         const addDomEventHandler = jasmine
             .createSpy('addDomEventHandler')
             .and.returnValue(jasmine.createSpy('disposer'));
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             addDomEventHandler,
         }));
 
@@ -108,7 +107,7 @@ describe('DOMEventPlugin verify event handlers while allow keyboard event propag
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
         select = jasmine.createSpy('select');
         getSelectionRange = jasmine.createSpy().and.returnValue(getSelectionRangeResult);
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             addDomEventHandler: (map: Record<string, any>) => {
                 eventMap = map;
                 return jasmine.createSpy('disposer');
@@ -205,7 +204,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
 
         plugin = new DOMEventPlugin({}, div);
         state = plugin.getState();
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             addDomEventHandler: (map: Record<string, any>) => {
                 eventMap = map;
                 return jasmine.createSpy('disposer');

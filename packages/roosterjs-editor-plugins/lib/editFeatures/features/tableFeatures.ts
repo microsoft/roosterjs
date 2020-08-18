@@ -1,5 +1,12 @@
-import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
-import { NodeType, PluginEvent, PositionType } from 'roosterjs-editor-types';
+import { cacheGetEventData } from 'roosterjs-editor-core';
+import {
+    ContentEditFeature,
+    IEditor,
+    Keys,
+    NodeType,
+    PluginEvent,
+    PositionType,
+} from 'roosterjs-editor-types';
 import {
     Browser,
     contains,
@@ -101,7 +108,7 @@ const UpDownInTable: ContentEditFeature = {
     defaultDisabled: !Browser.isChrome && !Browser.isSafari,
 };
 
-function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellElement {
+function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellElement {
     return cacheGetEventData(event, 'TABLECELL_FOR_TABLE_FEATURES', () => {
         let pos = editor.getFocusedPosition();
         let firstTd = pos && editor.getElementAtCursor('TD,TH,LI', pos.node);

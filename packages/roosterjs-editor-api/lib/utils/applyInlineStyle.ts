@@ -1,6 +1,5 @@
 import { applyTextStyle, getTagOfNode } from 'roosterjs-editor-dom';
-import { ChangeSource, NodeType, PositionType } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { ChangeSource, IEditor, NodeType, PositionType } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
@@ -10,7 +9,7 @@ const ZERO_WIDTH_SPACE = '\u200B';
  * @param callback The callback function to apply style
  */
 export default function applyInlineStyle(
-    editor: Editor,
+    editor: IEditor,
     callback: (element: HTMLElement, isInnerNode?: boolean) => any
 ) {
     editor.focus();

@@ -1,10 +1,9 @@
 import createWrapper from '../utils/createWrapper';
-import Editor from '../../editor/Editor';
 import EditorOptions from '../../interfaces/EditorOptions';
 import isCtrlOrMetaPressed from '../../eventApi/isCtrlOrMetaPressed';
 import PluginWithState from '../../interfaces/PluginWithState';
 import UndoSnapshotsService from '../../interfaces/UndoSnapshotsService';
-import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import { IEditor, PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 import {
     addSnapshot,
     canMoveCurrentSnapshot,
@@ -55,7 +54,7 @@ export interface UndoPluginState {
  * Provides snapshot based undo service for Editor
  */
 export default class UndoPlugin implements PluginWithState<UndoPluginState> {
-    private editor: Editor;
+    private editor: IEditor;
     private lastKeyPress: number;
     private state: Wrapper<UndoPluginState>;
 
@@ -83,7 +82,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor): void {
+    initialize(editor: IEditor): void {
         this.editor = editor;
     }
 

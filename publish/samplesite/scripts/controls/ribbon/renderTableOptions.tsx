@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Editor } from 'roosterjs-editor-core';
 import { editTable, formatTable, insertTable } from 'roosterjs-editor-api';
-import { TableFormat, TableOperation } from 'roosterjs-editor-types';
+import { IEditor, TableFormat, TableOperation } from 'roosterjs-editor-types';
 
 const styles = require('./TableOptions.scss');
 
@@ -15,7 +14,7 @@ const TABLE_FORMAT = {
 };
 
 interface TableOptionsProps {
-    editor: Editor;
+    editor: IEditor;
     onDismiss: () => void;
 }
 
@@ -225,6 +224,6 @@ function createTableFormat(
     };
 }
 
-export default function renderTableOptions(editor: Editor, onDismiss: () => void) {
+export default function renderTableOptions(editor: IEditor, onDismiss: () => void) {
     return <TableOptions editor={editor} onDismiss={onDismiss} />;
 }

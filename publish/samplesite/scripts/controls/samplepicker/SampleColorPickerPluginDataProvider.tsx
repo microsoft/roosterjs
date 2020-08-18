@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { default as SampleColorPicker, SampleColorPickerProps } from './SampleColorPicker';
-import { Editor } from 'roosterjs-editor-core';
 import { getPositionRect } from 'roosterjs-editor-dom';
+import { IEditor } from 'roosterjs-editor-types';
 import { PickerDataProvider } from 'roosterjs-editor-plugins/lib/Picker';
 
 type LegalKeys<T> = T extends 'onClick' ? never : T;
@@ -47,7 +47,7 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
         cursorY: 0,
     };
     private mountPoint: HTMLElement;
-    private editor: Editor;
+    private editor: IEditor;
 
     // Function called when the plugin is intialized to register two callbacks with the data provider and a reference to the Editor.
     // The first is called in order to "commit" a new element to the editor body that isn't handled automatically by the editor plugin.
@@ -55,7 +55,7 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
     onInitalize(
         insertNodeCallback: InsertNodeCallback,
         setIsSuggestingCallback: (isSuggesting: boolean) => void,
-        editor: Editor
+        editor: IEditor
     ): void {
         this.insertNodeCallback = insertNodeCallback;
         this.editor = editor;

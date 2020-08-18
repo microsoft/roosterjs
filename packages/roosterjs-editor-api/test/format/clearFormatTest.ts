@@ -1,12 +1,12 @@
 import * as TestHelper from '../TestHelper';
 import clearFormat from '../../lib/format/clearFormat';
-import { Editor } from 'roosterjs-editor-core';
+import { IEditor } from 'roosterjs-editor-types';
 
 describe('clearFormat()', () => {
     let testID = 'clearFormat';
     let originalContent =
         '<div id="text" style="font-size: 12pt; font-family: Calibri, Arial, Helvetica, sans-serif; color: rgb(0, 0, 0);">text</div>';
-    let editor: Editor;
+    let editor: IEditor;
 
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);

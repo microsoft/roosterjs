@@ -1,5 +1,4 @@
-import Editor from '../../lib/editor/Editor';
-import { PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import { IEditor, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 import PendingFormatStatePlugin, {
     PendingFormatStatePluginState,
 } from '../../lib/corePlugins/pendingFormatState/PendingFormatStatePlugin';
@@ -11,7 +10,7 @@ describe('PendingFormatStatePlugin', () => {
     beforeEach(() => {
         plugin = new PendingFormatStatePlugin();
         state = plugin.getState();
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             getSelectionRange: () => document.createRange(),
         }));
     });

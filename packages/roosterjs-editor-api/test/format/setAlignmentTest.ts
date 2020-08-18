@@ -1,11 +1,10 @@
 import * as TestHelper from '../TestHelper';
 import setAlignment from '../../lib/format/setAlignment';
-import { Alignment } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { Alignment, IEditor } from 'roosterjs-editor-types';
 
 describe('setAlignment()', () => {
     let testID = 'setAlignment';
-    let editor: Editor;
+    let editor: IEditor;
 
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);

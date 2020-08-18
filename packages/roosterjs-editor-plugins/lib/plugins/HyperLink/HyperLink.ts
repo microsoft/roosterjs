@@ -1,12 +1,12 @@
 import { Browser } from 'roosterjs-editor-dom';
-import { Editor, EditorPlugin, isCtrlOrMetaPressed } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin, isCtrlOrMetaPressed } from 'roosterjs-editor-core';
+import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 /**
  * An editor plugin that show a tooltip for existing link
  */
 export default class HyperLink implements EditorPlugin {
-    private editor: Editor;
+    private editor: IEditor;
     private disposer: () => void;
 
     /**
@@ -33,7 +33,7 @@ export default class HyperLink implements EditorPlugin {
      * Initialize this plugin
      * @param editor The editor instance
      */
-    public initialize(editor: Editor): void {
+    public initialize(editor: IEditor): void {
         this.editor = editor;
         this.disposer =
             this.getTooltipCallback &&

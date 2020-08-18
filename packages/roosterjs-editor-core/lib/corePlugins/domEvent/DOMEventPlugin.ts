@@ -1,10 +1,15 @@
 import createWrapper from '../utils/createWrapper';
-import Editor from '../../editor/Editor';
 import EditorOptions from '../../interfaces/EditorOptions';
 import isCharacterValue from '../../eventApi/isCharacterValue';
 import PluginWithState from '../../interfaces/PluginWithState';
 import { Browser } from 'roosterjs-editor-dom';
-import { ChangeSource, DOMEventHandler, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    DOMEventHandler,
+    IEditor,
+    PluginEventType,
+    Wrapper,
+} from 'roosterjs-editor-types';
 
 /**
  * The state object for DOMEventPlugin
@@ -42,7 +47,7 @@ export interface DOMEventPluginState {
  * 7. Scroll event
  */
 export default class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
-    private editor: Editor;
+    private editor: IEditor;
     private disposer: () => void;
     private state: Wrapper<DOMEventPluginState>;
 
@@ -71,7 +76,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
 
         this.disposer = editor.addDomEventHandler({

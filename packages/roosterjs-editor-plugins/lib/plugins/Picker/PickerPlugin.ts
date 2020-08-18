@@ -3,6 +3,7 @@ import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import {
     ChangeSource,
+    IEditor,
     NodePosition,
     PluginDomEvent,
     PluginEvent,
@@ -13,7 +14,6 @@ import {
 } from 'roosterjs-editor-types';
 import {
     cacheGetContentSearcher,
-    Editor,
     EditorPlugin,
     isCharacterValue,
     isModifierKey,
@@ -61,7 +61,7 @@ export interface EditorPickerPluginInterface<T extends PickerDataProvider = Pick
  */
 export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvider>
     implements EditorPickerPluginInterface<T> {
-    private editor: Editor;
+    private editor: IEditor;
     private eventHandledOnKeyDown: boolean;
     private blockSuggestions: boolean;
     private isSuggesting: boolean;
@@ -85,7 +85,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    public initialize(editor: Editor) {
+    public initialize(editor: IEditor) {
         this.editor = editor;
         this.dataProvider.onInitalize(
             (htmlNode: Node) => {

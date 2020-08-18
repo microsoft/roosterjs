@@ -1,5 +1,14 @@
-import { Indentation, NodeType, PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
+import { cacheGetContentSearcher, cacheGetElementAtCursor } from 'roosterjs-editor-core';
 import { setIndentation, toggleBullet, toggleNumbering } from 'roosterjs-editor-api';
+import {
+    ContentEditFeature,
+    IEditor,
+    Indentation,
+    Keys,
+    NodeType,
+    PluginKeyboardEvent,
+    PositionType,
+} from 'roosterjs-editor-types';
 import {
     Browser,
     getTagOfNode,
@@ -7,13 +16,6 @@ import {
     isPositionAtBeginningOf,
     Position,
 } from 'roosterjs-editor-dom';
-import {
-    cacheGetContentSearcher,
-    cacheGetElementAtCursor,
-    Editor,
-    ContentEditFeature,
-    Keys,
-} from 'roosterjs-editor-core';
 
 /**
  * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
@@ -161,7 +163,7 @@ const AutoBullet: ContentEditFeature = {
     },
 };
 
-function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: Editor) {
+function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: IEditor) {
     let listInfo = cacheGetListElement(event, editor);
     if (listInfo) {
         let listElement = listInfo[0];
@@ -176,7 +178,7 @@ function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: Editor)
     }
 }
 
-function cacheGetListElement(event: PluginKeyboardEvent, editor: Editor) {
+function cacheGetListElement(event: PluginKeyboardEvent, editor: IEditor) {
     let li = cacheGetElementAtCursor(editor, event, 'LI,TABLE');
     let listElement = li && getTagOfNode(li) == 'LI' && editor.getElementAtCursor('UL,OL', li);
     return listElement ? [listElement, li] : null;

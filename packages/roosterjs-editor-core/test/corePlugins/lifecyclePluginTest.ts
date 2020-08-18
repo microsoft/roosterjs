@@ -1,6 +1,5 @@
-import Editor from '../../lib/editor/Editor';
 import LifecyclePlugin from '../../lib/corePlugins/lifecycle/LifecyclePlugin';
-import { PluginEventType } from 'roosterjs-editor-types';
+import { IEditor, PluginEventType } from 'roosterjs-editor-types';
 
 describe('LifecyclePlugin', () => {
     it('init', () => {
@@ -10,7 +9,7 @@ describe('LifecyclePlugin', () => {
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         const state = plugin.getState();
 
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             calcDefaultFormat,
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
@@ -50,7 +49,7 @@ describe('LifecyclePlugin', () => {
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         const state = plugin.getState();
 
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             calcDefaultFormat,
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
@@ -84,7 +83,7 @@ describe('LifecyclePlugin', () => {
         const calcDefaultFormat = jasmine.createSpy('calcDefaultFormat');
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             calcDefaultFormat,
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
@@ -109,7 +108,7 @@ describe('LifecyclePlugin', () => {
         const calcDefaultFormat = jasmine.createSpy('calcDefaultFormat');
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             calcDefaultFormat,
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),

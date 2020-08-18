@@ -1,18 +1,23 @@
 import addContentEditFeatures from './addContentEditFeatures';
 import createWrapper from '../utils/createWrapper';
-import Editor from '../../editor/Editor';
 import EditorOptions from '../../interfaces/EditorOptions';
 import isCtrlOrMetaPressed from '../../eventApi/isCtrlOrMetaPressed';
 import PluginWithState from '../../interfaces/PluginWithState';
-import { GenericContentEditFeature, Keys } from '../../interfaces/ContentEditFeature';
-import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import {
+    GenericContentEditFeature,
+    IEditor,
+    Keys,
+    PluginEvent,
+    PluginEventType,
+    Wrapper,
+} from 'roosterjs-editor-types';
 
 /**
  * Edit Component helps handle Content edit features
  */
 export default class EditPlugin
     implements PluginWithState<Record<number, GenericContentEditFeature<PluginEvent>[]>> {
-    private editor: Editor;
+    private editor: IEditor;
     private state: Wrapper<Record<number, GenericContentEditFeature<PluginEvent>[]>>;
 
     /**
@@ -34,7 +39,7 @@ export default class EditPlugin
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 

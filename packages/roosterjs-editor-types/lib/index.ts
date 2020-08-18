@@ -2,6 +2,7 @@
 export { default as BrowserInfo } from './browser/BrowserInfo';
 export { DocumentCommand } from './browser/DocumentCommand';
 export { DocumentPosition } from './browser/DocumentPosition';
+export { Keys } from './browser/Keys';
 export { NodeType } from './browser/NodeType';
 
 // Enum
@@ -84,6 +85,8 @@ export { default as HtmlSanitizerOptions } from './interface/HtmlSanitizerOption
 export { default as SanitizeHtmlOptions } from './interface/SanitizeHtmlOptions';
 export { default as TargetWindow } from './interface/TargetWindow';
 export { default as Wrapper } from './interface/Wrapper';
+export { default as IEditor } from './interface/IEditor';
+export { ContentEditFeature, GenericContentEditFeature } from './interface/ContentEditFeature';
 
 export {
     AttributeCallback,

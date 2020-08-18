@@ -1,12 +1,12 @@
 import * as TestHelper from '../TestHelper';
 import toggleUnderline from '../../lib/format/toggleUnderline';
-import { Editor } from 'roosterjs-editor-core';
+import { IEditor } from 'roosterjs-editor-types';
 
 describe('toggleUnderline()', () => {
     let testID = 'toggleUnderline';
     let originalContent =
         '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);">text</div>';
-    let editor: Editor;
+    let editor: IEditor;
 
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);

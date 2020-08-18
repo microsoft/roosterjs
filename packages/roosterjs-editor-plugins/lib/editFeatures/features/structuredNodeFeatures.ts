@@ -1,5 +1,11 @@
-import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
-import { PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
+import { cacheGetEventData } from 'roosterjs-editor-core';
+import {
+    ContentEditFeature,
+    IEditor,
+    Keys,
+    PluginKeyboardEvent,
+    PositionType,
+} from 'roosterjs-editor-types';
 import {
     Browser,
     fromHtml,
@@ -41,7 +47,7 @@ const InsertLineBeforeStructuredNodeFeature: ContentEditFeature = {
     defaultDisabled: true,
 };
 
-function cacheGetStructuredElement(event: PluginKeyboardEvent, editor: Editor) {
+function cacheGetStructuredElement(event: PluginKeyboardEvent, editor: IEditor) {
     return cacheGetEventData(event, 'FIRST_STRUCTURE', () => {
         // Provide a chance to keep browser default behavior by pressing SHIFT
         let element = event.rawEvent.shiftKey ? null : editor.getElementAtCursor(CHILD_SELECTOR);

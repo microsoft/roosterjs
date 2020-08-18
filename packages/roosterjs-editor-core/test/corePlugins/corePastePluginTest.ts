@@ -1,7 +1,6 @@
 import * as dom from 'roosterjs-editor-dom';
 import CorePastePlugin from '../../lib/corePlugins/corePaste/CorePastePlugin';
-import Editor from '../../lib/editor/Editor';
-import { ClipboardData } from 'roosterjs-editor-types';
+import { ClipboardData, IEditor } from 'roosterjs-editor-types';
 
 describe('CorePastePlugin', () => {
     let plugin: CorePastePlugin;
@@ -24,7 +23,7 @@ describe('CorePastePlugin', () => {
         spyOn(addDomEventHandler, 'default').and.callThrough();
         paste = jasmine.createSpy('paste');
 
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             addDomEventHandler: addDomEventHandler.default,
             paste,
             getSelectionRange: (): Range => null,

@@ -1,6 +1,7 @@
 import { Editor, EditorOptions, EditorPlugin } from 'roosterjs-editor-core';
 import { getContentEditFeatures } from 'roosterjs-editor-plugins/lib/EditFeatures';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
+import { IEditor } from 'roosterjs-editor-types';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 
 /**
@@ -15,7 +16,7 @@ export default function createEditor(
     contentDiv: HTMLDivElement,
     additionalPlugins?: EditorPlugin[],
     initialContent?: string
-): Editor {
+): IEditor {
     let plugins: EditorPlugin[] = [new HyperLink(), new Paste()];
 
     if (additionalPlugins) {

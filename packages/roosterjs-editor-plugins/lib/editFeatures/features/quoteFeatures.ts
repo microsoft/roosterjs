@@ -1,5 +1,11 @@
-import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
-import { PluginKeyboardEvent, PositionType } from 'roosterjs-editor-types';
+import { cacheGetEventData } from 'roosterjs-editor-core';
+import {
+    ContentEditFeature,
+    IEditor,
+    Keys,
+    PluginKeyboardEvent,
+    PositionType,
+} from 'roosterjs-editor-types';
 import {
     getTagOfNode,
     isNodeEmpty,
@@ -44,7 +50,7 @@ const UnquoteWhenEnterOnEmptyLine: ContentEditFeature = {
         ),
 };
 
-function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: Editor): Node {
+function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: IEditor): Node {
     return cacheGetEventData(event, 'QUOTE_CHILD', () => {
         let quote = editor.getElementAtCursor(STRUCTURED_TAGS);
         if (quote && getTagOfNode(quote) == QUOTE_TAG) {
@@ -63,7 +69,7 @@ function cacheGetQuoteChild(event: PluginKeyboardEvent, editor: Editor): Node {
     });
 }
 
-function splitQuote(event: PluginKeyboardEvent, editor: Editor) {
+function splitQuote(event: PluginKeyboardEvent, editor: IEditor) {
     editor.addUndoSnapshot(() => {
         let childOfQuote = cacheGetQuoteChild(event, editor);
         let parent: Node;

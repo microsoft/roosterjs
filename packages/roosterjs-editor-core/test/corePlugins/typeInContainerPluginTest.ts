@@ -1,11 +1,10 @@
 import * as dom from 'roosterjs-editor-dom';
-import Editor from '../../lib/editor/Editor';
 import TypeInContainerPlugin from '../../lib/corePlugins/typeInContainer/TypeInContainerPlugin';
-import { PluginEventType } from 'roosterjs-editor-types';
+import { IEditor, PluginEventType } from 'roosterjs-editor-types';
 
 describe('TypeInContainerPlugin', () => {
     let plugin: TypeInContainerPlugin;
-    let editor: Editor;
+    let editor: IEditor;
     let runAsync: jasmine.Spy;
     let select: jasmine.Spy;
     let defaultFormat: any = {
@@ -15,7 +14,7 @@ describe('TypeInContainerPlugin', () => {
     beforeEach(() => {
         runAsync = jasmine.createSpy('runAsync').and.callFake((callback: () => any) => callback());
         select = jasmine.createSpy('select');
-        editor = <Editor>(<any>{
+        editor = <IEditor>(<any>{
             runAsync,
             select,
             isDarkMode: () => false,

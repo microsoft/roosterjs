@@ -2,6 +2,9 @@ import { LinkInlineElement, matchLink } from 'roosterjs-editor-dom';
 import { removeLink, replaceWithNode } from 'roosterjs-editor-api';
 import {
     ChangeSource,
+    ContentEditFeature,
+    IEditor,
+    Keys,
     LinkData,
     PluginEvent,
     PluginEventType,
@@ -9,12 +12,9 @@ import {
     ClipboardData,
 } from 'roosterjs-editor-types';
 import {
-    Editor,
     cacheGetEventData,
     cacheGetContentSearcher,
     clearContentSearcherCache,
-    Keys,
-    ContentEditFeature,
 } from 'roosterjs-editor-core';
 
 /**
@@ -48,7 +48,7 @@ const UnlinkWhenBackspaceAfterLink: ContentEditFeature = {
     defaultDisabled: true,
 };
 
-function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
+function cacheGetLinkData(event: PluginEvent, editor: IEditor): LinkData {
     return event.eventType == PluginEventType.KeyDown ||
         (event.eventType == PluginEventType.ContentChanged && event.source == ChangeSource.Paste)
         ? cacheGetEventData(event, 'LINK_DATA', () => {
@@ -94,13 +94,13 @@ function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
         : null;
 }
 
-function hasLinkBeforeCursor(event: PluginKeyboardEvent, editor: Editor): boolean {
+function hasLinkBeforeCursor(event: PluginKeyboardEvent, editor: IEditor): boolean {
     let contentSearcher = cacheGetContentSearcher(event, editor);
     let inline = contentSearcher.getInlineElementBefore();
     return inline instanceof LinkInlineElement;
 }
 
-function autoLink(event: PluginEvent, editor: Editor) {
+function autoLink(event: PluginEvent, editor: IEditor) {
     let anchor = editor.getDocument().createElement('a');
     let linkData = cacheGetLinkData(event, editor);
 

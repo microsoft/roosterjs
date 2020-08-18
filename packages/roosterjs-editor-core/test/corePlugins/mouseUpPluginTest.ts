@@ -1,6 +1,5 @@
-import Editor from '../../lib/editor/Editor';
 import MouseUpPlugin from '../../lib/corePlugins/mouseUp/MouseUpPlugin';
-import { PluginEventType } from 'roosterjs-editor-types';
+import { IEditor, PluginEventType } from 'roosterjs-editor-types';
 
 describe('MouseUpPlugin', () => {
     let plugin: MouseUpPlugin;
@@ -16,7 +15,7 @@ describe('MouseUpPlugin', () => {
         removeEventListener = jasmine.createSpy('.removeEventListener');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         plugin = new MouseUpPlugin();
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             getDocument: () => ({
                 addEventListener,
                 removeEventListener,

@@ -1,11 +1,10 @@
 import * as TestHelper from '../TestHelper';
 import processList from '../../lib/utils/processList';
-import { DocumentCommand, PositionType } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { DocumentCommand, IEditor, PositionType } from 'roosterjs-editor-types';
 
 describe('processList()', () => {
     const testID = 'processList';
-    let editor: Editor;
+    let editor: IEditor;
 
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);

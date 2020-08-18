@@ -1,5 +1,5 @@
 import toggleTagCore from '../utils/toggleTagCore';
-import { Editor } from 'roosterjs-editor-core';
+import { IEditor } from 'roosterjs-editor-types';
 
 const BLOCKQUOTE_TAG = 'blockquote';
 const DEFAULT_STYLER = (element: HTMLElement): void => {
@@ -15,6 +15,6 @@ const DEFAULT_STYLER = (element: HTMLElement): void => {
  * @param editor The editor instance
  * @param styler (Optional) The custom styler for setting the style for the blockquote element
  */
-export default function toggleBlockQuote(editor: Editor, styler?: (element: HTMLElement) => void) {
+export default function toggleBlockQuote(editor: IEditor, styler?: (element: HTMLElement) => void) {
     toggleTagCore(editor, BLOCKQUOTE_TAG, styler || DEFAULT_STYLER);
 }

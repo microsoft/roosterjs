@@ -1,12 +1,12 @@
 import createWrapper from '../utils/createWrapper';
-import Editor from '../../editor/Editor';
 import PluginWithState from '../../interfaces/PluginWithState';
 import { Position } from 'roosterjs-editor-dom';
 import {
-    PluginEventType,
+    IEditor,
     NodePosition,
     PendableFormatState,
     PluginEvent,
+    PluginEventType,
     Wrapper,
 } from 'roosterjs-editor-types';
 
@@ -30,7 +30,7 @@ export interface PendingFormatStatePluginState {
  */
 export default class PendingFormatStatePlugin
     implements PluginWithState<PendingFormatStatePluginState> {
-    private editor: Editor;
+    private editor: IEditor;
     private state: Wrapper<PendingFormatStatePluginState>;
 
     /**
@@ -56,7 +56,7 @@ export default class PendingFormatStatePlugin
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 

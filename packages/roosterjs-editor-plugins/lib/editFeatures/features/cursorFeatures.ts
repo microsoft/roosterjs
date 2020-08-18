@@ -1,5 +1,5 @@
 import { Browser, isRtl, Position } from 'roosterjs-editor-dom';
-import { ContentEditFeature, Keys } from 'roosterjs-editor-core';
+import { ContentEditFeature, Keys } from 'roosterjs-editor-types';
 
 const NoCycleCursorMove: ContentEditFeature = {
     keys: [Keys.LEFT, Keys.RIGHT],

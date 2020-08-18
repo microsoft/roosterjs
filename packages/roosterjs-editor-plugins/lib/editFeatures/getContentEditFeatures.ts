@@ -2,7 +2,7 @@ import ContentEditFeatureSettings from './ContentEditFeatureSettings';
 import { AutoLinkFeatures } from './features/autoLinkFeatures';
 import { CursorFeatures } from './features/cursorFeatures';
 import { EntityFeatures } from './features/entityFeatures';
-import { GenericContentEditFeature } from 'roosterjs-editor-core';
+import { GenericContentEditFeature } from 'roosterjs-editor-types';
 import { ListFeatures } from './features/listFeatures';
 import { MarkdownFeatures } from './features/markdownFeatures';
 import { PluginEvent } from 'roosterjs-editor-types';

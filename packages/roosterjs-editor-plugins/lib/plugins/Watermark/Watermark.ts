@@ -1,10 +1,11 @@
 import { applyFormat, getEntitySelector, getTagOfNode } from 'roosterjs-editor-dom';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { EditorPlugin } from 'roosterjs-editor-core';
 import { insertEntity } from 'roosterjs-editor-api';
 import {
     DefaultFormat,
     Entity,
     EntityOperation,
+    IEditor,
     PluginEvent,
     PluginEventType,
     ContentPosition,
@@ -16,7 +17,7 @@ const ENTITY_TYPE = 'WATERMARK_WRAPPER';
  * A watermark plugin to manage watermark string for roosterjs
  */
 export default class Watermark implements EditorPlugin {
-    private editor: Editor;
+    private editor: IEditor;
     private disposer: () => void;
 
     /**
@@ -41,7 +42,7 @@ export default class Watermark implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = this.editor.addDomEventHandler({
             focus: this.showHideWatermark,

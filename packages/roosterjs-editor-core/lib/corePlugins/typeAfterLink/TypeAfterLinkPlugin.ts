@@ -1,10 +1,10 @@
 import createWrapper from '../utils/createWrapper';
-import Editor from '../../editor/Editor';
 import PluginWithState from '../../interfaces/PluginWithState';
 import { Browser, LinkInlineElement, Position } from 'roosterjs-editor-dom';
 import { cacheGetContentSearcher } from '../../eventApi/cacheGetContentSearcher';
 import {
     BrowserInfo,
+    IEditor,
     PluginEvent,
     PluginEventType,
     PositionType,
@@ -17,7 +17,7 @@ import {
  * This plugin overrides this behavior to always insert outside of link.
  */
 export default class TypeAfterLinkPlugin implements PluginWithState<BrowserInfo> {
-    private editor: Editor;
+    private editor: IEditor;
     private state: Wrapper<BrowserInfo>;
 
     /**
@@ -40,7 +40,7 @@ export default class TypeAfterLinkPlugin implements PluginWithState<BrowserInfo>
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 

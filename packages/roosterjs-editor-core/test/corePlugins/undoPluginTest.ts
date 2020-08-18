@@ -1,12 +1,10 @@
-import Editor from '../../lib/editor/Editor';
 import UndoPlugin, { UndoPluginState } from '../../lib/corePlugins/undo/UndoPlugin';
-import { Keys } from '../../lib/interfaces/ContentEditFeature';
-import { PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import { IEditor, Keys, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 
 describe('UndoPlugin', () => {
     let plugin: UndoPlugin;
     let state: Wrapper<UndoPluginState>;
-    let editor: Editor;
+    let editor: IEditor;
     let isInIME: jasmine.Spy;
     let addUndoSnapshot: jasmine.Spy;
 
@@ -15,7 +13,7 @@ describe('UndoPlugin', () => {
         state = plugin.getState();
         isInIME = jasmine.createSpy('isInIME');
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
-        editor = <Editor>(<any>{
+        editor = <IEditor>(<any>{
             isInIME,
             addUndoSnapshot,
         });
@@ -420,7 +418,7 @@ describe('UndoPlugin', () => {
             },
         });
 
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             getSelectionRange: () => ({
                 collapsed: true,
             }),

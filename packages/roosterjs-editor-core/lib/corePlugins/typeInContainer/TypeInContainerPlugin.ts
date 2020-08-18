@@ -1,4 +1,3 @@
-import Editor from '../../editor/Editor';
 import EditorPlugin from '../../interfaces/EditorPlugin';
 import {
     applyFormat,
@@ -11,18 +10,19 @@ import {
 } from 'roosterjs-editor-dom';
 import {
     ContentPosition,
+    IEditor,
     NodePosition,
-    PluginKeyboardEvent,
-    PositionType,
     PluginEvent,
     PluginEventType,
+    PluginKeyboardEvent,
+    PositionType,
 } from 'roosterjs-editor-types';
 
 /**
  * Typing Component helps to ensure typing is always happening under a DOM container
  */
 export default class TypeInContainerPlugin implements EditorPlugin {
-    private editor: Editor;
+    private editor: IEditor;
 
     /**
      * Get a friendly name of  this plugin
@@ -35,7 +35,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 

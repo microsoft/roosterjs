@@ -1,4 +1,4 @@
-import { Editor } from 'roosterjs-editor-core';
+import { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Options for PickerPlugin
@@ -59,7 +59,7 @@ export interface PickerDataProvider {
     onInitalize: (
         insertNodeCallback: (nodeToInsert: HTMLElement) => void,
         setIsSuggestingCallback: (isSuggesting: boolean) => void,
-        editor?: Editor
+        editor?: IEditor
     ) => void;
 
     /**

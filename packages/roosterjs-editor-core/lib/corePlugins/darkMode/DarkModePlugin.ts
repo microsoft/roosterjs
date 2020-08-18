@@ -1,10 +1,9 @@
 import createWrapper from '../utils/createWrapper';
-import Editor from '../../editor/Editor';
 import EditorOptions from '../../interfaces/EditorOptions';
 import normalizeContentColor from './normalizeContentColor';
 import PluginWithState from '../../interfaces/PluginWithState';
 import { Browser } from 'roosterjs-editor-dom';
-import { Wrapper } from 'roosterjs-editor-types';
+import { IEditor, Wrapper } from 'roosterjs-editor-types';
 
 /**
  * The state object for DarkModePlugin
@@ -25,7 +24,7 @@ export interface DarkModePluginState {
  * Copy plugin, hijacks copy events to normalize the content to the clipboard.
  */
 export default class DarkModePlugin implements PluginWithState<DarkModePluginState> {
-    private editor: Editor;
+    private editor: IEditor;
     private eventDisposer: () => void;
     private state: Wrapper<DarkModePluginState>;
 
@@ -51,7 +50,7 @@ export default class DarkModePlugin implements PluginWithState<DarkModePluginSta
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
         this.eventDisposer =
             !Browser.isIE &&

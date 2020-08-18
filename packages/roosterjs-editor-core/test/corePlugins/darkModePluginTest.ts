@@ -1,13 +1,13 @@
 import * as normalizeContentColor from '../../lib/corePlugins/darkMode/normalizeContentColor';
 import DarkModePlugin from '../../lib/corePlugins/darkMode/DarkModePlugin';
-import Editor from '../../lib/editor/Editor';
+import { IEditor } from 'roosterjs-editor-types';
 
 describe('DarkModePlugin', () => {
     it('init and dispose', () => {
         const plugin = new DarkModePlugin({});
         const addDomEventHandler = jasmine.createSpy('addDomEventHandler');
         const state = plugin.getState();
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             addDomEventHandler,
         }));
 
@@ -21,7 +21,7 @@ describe('DarkModePlugin', () => {
         const plugin = new DarkModePlugin({ inDarkMode: true });
         const addDomEventHandler = jasmine.createSpy('addDomEventHandler');
         const state = plugin.getState();
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             addDomEventHandler,
         }));
 
@@ -34,7 +34,7 @@ describe('DarkModePlugin', () => {
     it('event handler should be added', () => {
         const plugin = new DarkModePlugin({});
         let eventMap: Record<string, (event: Event) => void>;
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             addDomEventHandler: (map: Record<string, (event: Event) => void>) => {
                 eventMap = map;
             },
@@ -51,7 +51,7 @@ describe('DarkModePlugin', () => {
         spyOn(normalizeContentColor, 'default');
         const plugin = new DarkModePlugin({});
         let eventMap: Record<string, (event: Event) => void>;
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             addDomEventHandler: (map: Record<string, (event: Event) => void>) => {
                 eventMap = map;
             },
@@ -74,7 +74,7 @@ describe('DarkModePlugin', () => {
         let eventMap: Record<string, (event: Event) => void>;
 
         const deleteContents = jasmine.createSpy('deleteContents');
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             addDomEventHandler: (map: Record<string, (event: Event) => void>) => {
                 eventMap = map;
             },
@@ -118,7 +118,7 @@ describe('DarkModePlugin', () => {
         let eventMap: Record<string, (event: Event) => void>;
 
         const deleteContents = jasmine.createSpy('deleteContents');
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             addDomEventHandler: (map: Record<string, (event: Event) => void>) => {
                 eventMap = map;
             },

@@ -1,14 +1,14 @@
 import * as dom from 'roosterjs-editor-dom';
-import Editor from '../../lib/editor/Editor';
 import EntityPlugin, { EntityPluginState } from '../../lib/corePlugins/entity/EntityPlugin';
-import { Keys } from '../../lib/interfaces/ContentEditFeature';
 import {
+    ChangeSource,
     EntityClasses,
     EntityOperation,
+    IEditor,
+    Keys,
     PluginEventType,
     QueryScope,
     Wrapper,
-    ChangeSource,
 } from 'roosterjs-editor-types';
 
 describe('EntityPlugin', () => {
@@ -16,13 +16,13 @@ describe('EntityPlugin', () => {
     let eventMap: Record<string, (event: UIEvent) => void>;
     let triggerPluginEvent: jasmine.Spy;
     let state: Wrapper<EntityPluginState>;
-    let editor: Editor;
+    let editor: IEditor;
 
     beforeEach(() => {
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         plugin = new EntityPlugin();
         state = plugin.getState();
-        editor = <Editor>(<any>{
+        editor = <IEditor>(<any>{
             addDomEventHandler: (map: Record<string, (event: UIEvent) => void>) => {
                 eventMap = map;
                 return () => {};

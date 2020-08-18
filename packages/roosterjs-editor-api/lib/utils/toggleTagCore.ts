@@ -1,5 +1,4 @@
-import { ChangeSource, PositionType, QueryScope } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { ChangeSource, IEditor, PositionType, QueryScope } from 'roosterjs-editor-types';
 import {
     Browser,
     fromHtml,
@@ -25,7 +24,7 @@ const DEFAULT_STYLER = (_: HTMLElement) => {};
  * @param unwrapFunction (Optional) The unwrap function
  */
 export default function toggleTagCore<T extends keyof HTMLElementTagNameMap>(
-    editor: Editor,
+    editor: IEditor,
     tag: T,
     styler?: (element: HTMLElement) => void,
     wrapFunction: (nodes: Node[]) => HTMLElement = nodes => wrap(nodes, tag),

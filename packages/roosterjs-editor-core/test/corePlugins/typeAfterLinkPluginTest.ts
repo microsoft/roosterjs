@@ -1,6 +1,5 @@
-import Editor from '../../lib/editor/Editor';
 import TypeAfterLinkPlugin from '../../lib/corePlugins/typeAfterLink/TypeAfterLinkPlugin';
-import { BrowserInfo, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import { BrowserInfo, IEditor, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 import { LinkInlineElement, NodeInlineElement } from 'roosterjs-editor-dom';
 
 describe('TypeAfterLinkPlugin', () => {
@@ -20,7 +19,7 @@ describe('TypeAfterLinkPlugin', () => {
         const a = document.createElement('a');
         div.appendChild(a);
 
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             getSelectionRange: () => {
                 return {
                     collapsed: true,
@@ -98,7 +97,7 @@ describe('TypeAfterLinkPlugin not after link', () => {
         const span = document.createElement('span');
         div.appendChild(span);
 
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             getSelectionRange: () => {
                 return {
                     collapsed: true,
@@ -169,7 +168,7 @@ describe('TypeAfterLinkPlugin for expanded range', () => {
         const a = document.createElement('a');
         div.appendChild(a);
 
-        plugin.initialize(<Editor>(<any>{
+        plugin.initialize(<IEditor>(<any>{
             getSelectionRange: () => {
                 return {
                     collapsed: false,

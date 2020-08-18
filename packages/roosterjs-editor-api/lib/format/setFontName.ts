@@ -1,5 +1,5 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
-import { Editor } from 'roosterjs-editor-core';
+import { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Set font name at selection
@@ -7,7 +7,7 @@ import { Editor } from 'roosterjs-editor-core';
  * @param fontName The fontName string, should be a valid CSS font-family style.
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
  */
-export default function setFontName(editor: Editor, fontName: string) {
+export default function setFontName(editor: IEditor, fontName: string) {
     fontName = fontName.trim();
     // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
     // (http://www.w3schools.com/tags/tag_font.asp). Use applyInlineStyle which gives flexibility on applying inline style

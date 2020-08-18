@@ -1,17 +1,23 @@
 import getLastClipboardData from './getLastClipboardData';
 import Ribbon from './Ribbon';
-import { ChangeSource, ClipboardData, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { EditorPlugin } from 'roosterjs-editor-core';
+import {
+    ChangeSource,
+    ClipboardData,
+    IEditor,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 
 export default class RibbonPlugin implements EditorPlugin {
-    editor: Editor;
+    editor: IEditor;
     ribbon: Ribbon;
 
     getName() {
         return 'Ribbon';
     }
 
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 

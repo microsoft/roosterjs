@@ -1,12 +1,12 @@
 import * as TestHelper from '../TestHelper';
 import removeLink from '../../lib/format/removeLink';
-import { Editor } from 'roosterjs-editor-core';
+import { IEditor } from 'roosterjs-editor-types';
 
 describe('removeLink()', () => {
     let testID = 'removeLink';
     let originalContent =
         '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><a href="#">link</a></div>';
-    let editor: Editor;
+    let editor: IEditor;
 
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);

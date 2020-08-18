@@ -1,11 +1,10 @@
-import { ClipboardData } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { ClipboardData, IEditor } from 'roosterjs-editor-types';
 
 export interface ClipboardDataWrapper {
     data: ClipboardData;
 }
 
-export default function getLastClipboardData(editor: Editor): ClipboardDataWrapper {
+export default function getLastClipboardData(editor: IEditor): ClipboardDataWrapper {
     return editor.getCustomData('LAST_CLIPBOARD_DATA', () => ({
         data: null,
     }));

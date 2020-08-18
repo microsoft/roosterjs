@@ -1,9 +1,9 @@
-import { cacheGetElementAtCursor, Editor } from 'roosterjs-editor-core';
-import { getPendableFormatState } from 'roosterjs-editor-dom';
-import { getTagOfNode } from 'roosterjs-editor-dom';
+import { cacheGetElementAtCursor } from 'roosterjs-editor-core';
+import { getPendableFormatState, getTagOfNode } from 'roosterjs-editor-dom';
 import {
     ElementBasedFormatState,
     FormatState,
+    IEditor,
     PluginEvent,
     QueryScope,
 } from 'roosterjs-editor-types';
@@ -17,7 +17,7 @@ import {
  * @returns An ElementBasedFormatState object
  */
 export function getElementBasedFormatState(
-    editor: Editor,
+    editor: IEditor,
     event?: PluginEvent
 ): ElementBasedFormatState {
     let listTag = getTagOfNode(cacheGetElementAtCursor(editor, event, 'OL,UL'));
@@ -44,7 +44,7 @@ export function getElementBasedFormatState(
  * it will query the node within selection to get the info
  * @returns The format state at cursor
  */
-export default function getFormatState(editor: Editor, event?: PluginEvent): FormatState {
+export default function getFormatState(editor: IEditor, event?: PluginEvent): FormatState {
     return {
         ...getPendableFormatState(editor.getDocument()),
         ...getElementBasedFormatState(editor, event),

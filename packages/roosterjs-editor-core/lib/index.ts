@@ -1,9 +1,4 @@
 // Interfaces
-export {
-    ContentEditFeature,
-    GenericContentEditFeature,
-    Keys,
-} from './interfaces/ContentEditFeature';
 export { default as CustomData } from './interfaces/CustomData';
 export {
     default as EditorCore,

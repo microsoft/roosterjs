@@ -1,10 +1,15 @@
-import { commitEntity, Position } from 'roosterjs-editor-dom';
-import { Editor } from 'roosterjs-editor-core';
-import { getEntityFromElement, getEntitySelector, wrap } from 'roosterjs-editor-dom';
+import {
+    commitEntity,
+    getEntityFromElement,
+    getEntitySelector,
+    Position,
+    wrap,
+} from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ContentPosition,
     Entity,
+    IEditor,
     NodePosition,
     PositionType,
 } from 'roosterjs-editor-types';
@@ -20,7 +25,7 @@ import {
  * If isBlock is true, entity will be insert below this position
  */
 export default function insertEntity(
-    editor: Editor,
+    editor: IEditor,
     type: string,
     contentNode: Node,
     isBlock: boolean,

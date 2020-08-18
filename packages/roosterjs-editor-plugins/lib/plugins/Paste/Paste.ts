@@ -1,7 +1,7 @@
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin } from 'roosterjs-editor-core';
+import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { toArray } from 'roosterjs-editor-dom';
 import { WAC_IDENTIFING_SELECTOR } from './officeOnlineConverter/constants';
 import convertPastedContentFromWordOnline, {
@@ -34,7 +34,7 @@ export default class Paste implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {}
+    initialize(editor: IEditor) {}
 
     /**
      * Dispose this plugin

@@ -1,8 +1,13 @@
 import addContentEditFeatures from '../../lib/corePlugins/edit/addContentEditFeatures';
-import Editor from '../../lib/editor/Editor';
 import EditPlugin from '../../lib/corePlugins/edit/EditPlugin';
-import { GenericContentEditFeature, Keys } from '../../lib/interfaces/ContentEditFeature';
-import { PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import {
+    GenericContentEditFeature,
+    IEditor,
+    Keys,
+    PluginEvent,
+    PluginEventType,
+    Wrapper,
+} from 'roosterjs-editor-types';
 
 describe('EditPlugin', () => {
     let plugin: EditPlugin;
@@ -19,7 +24,7 @@ describe('EditPlugin', () => {
             ],
         });
         state = plugin.getState();
-        plugin.initialize(<Editor>(<any>{}));
+        plugin.initialize(<IEditor>(<any>{}));
     });
 
     afterEach(() => {
