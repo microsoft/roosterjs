@@ -56,6 +56,7 @@ export { default as DarkModeChangedEvent } from './event/DarkModeChangedEvent';
 // Interface
 export { default as BlockElement } from './interface/BlockElement';
 export { default as ClipboardData } from './interface/ClipboardData';
+export { default as CustomData } from './interface/CustomData';
 export { default as DefaultFormat } from './interface/DefaultFormat';
 export { default as Entity } from './interface/Entity';
 export {
@@ -88,7 +89,47 @@ export { default as Wrapper } from './interface/Wrapper';
 export { default as IEditor } from './interface/IEditor';
 export { ContentEditFeature, GenericContentEditFeature } from './interface/ContentEditFeature';
 export { default as EditorPlugin } from './interface/EditorPlugin';
+export { default as PluginWithState } from './interface/PluginWithState';
+export {
+    default as CorePlugins,
+    PluginKey,
+    KeyOfStatePlugin,
+    GenericPluginState,
+    PluginState,
+    StatePluginKeys,
+    TypeOfStatePlugin,
+} from './interface/CorePlugins';
+export {
+    default as EditorCore,
+    AddUndoSnapshot,
+    AttachDomEvent,
+    CalcDefaultFormat,
+    CoreApiMap,
+    CreatePasteFragment,
+    Focus,
+    GetContent,
+    GetCustomData,
+    GetSelectionRange,
+    GetStyleBasedFormatState,
+    HasFocus,
+    InsertNode,
+    RestoreUndoSnapshot,
+    SelectRange,
+    SetContent,
+    TriggerEvent,
+} from './interface/EditorCore';
+export { default as EditorOptions } from './interface/EditorOptions';
+export { default as UndoSnapshotsService } from './interface/UndoSnapshotsService';
 
+// Core Plugin State
+export { default as DarkModePluginState } from './corePluginState/DarkModePluginState';
+export { default as DOMEventPluginState } from './corePluginState/DOMEventPluginState';
+export { default as EntityPluginState } from './corePluginState/EntityPluginState';
+export { default as LifecyclePluginState } from './corePluginState/LifecyclePluginState';
+export { default as PendingFormatStatePluginState } from './corePluginState/PendingFormatStatePluginState';
+export { default as UndoPluginState } from './corePluginState/UndoPluginState';
+
+// Other type
 export {
     AttributeCallback,
     AttributeCallbackMap,

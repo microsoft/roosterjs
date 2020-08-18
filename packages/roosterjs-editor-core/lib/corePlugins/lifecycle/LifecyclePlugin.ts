@@ -1,32 +1,16 @@
 import createWrapper from '../utils/createWrapper';
-import CustomData from '../../interfaces/CustomData';
-import EditorOptions from '../../interfaces/EditorOptions';
-import PluginWithState from '../../interfaces/PluginWithState';
 import { Browser, Position } from 'roosterjs-editor-dom';
 import {
-    DefaultFormat,
     DocumentCommand,
+    EditorOptions,
     IEditor,
+    LifecyclePluginState,
     NodePosition,
     PluginEventType,
+    PluginWithState,
     PositionType,
     Wrapper,
 } from 'roosterjs-editor-types';
-
-/**
- * The state object for LifecyclePlugin
- */
-export interface LifecyclePluginState {
-    /**
-     * Custom data of this editor
-     */
-    customData: Record<string, CustomData>;
-
-    /**
-     * Default format of this editor
-     */
-    defaultFormat: DefaultFormat;
-}
 
 const CONTENT_EDITABLE_ATTRIBUTE_NAME = 'contenteditable';
 const COMMANDS: {

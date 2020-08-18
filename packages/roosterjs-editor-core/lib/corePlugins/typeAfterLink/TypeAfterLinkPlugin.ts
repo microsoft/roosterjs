@@ -1,5 +1,4 @@
 import createWrapper from '../utils/createWrapper';
-import PluginWithState from '../../interfaces/PluginWithState';
 import { Browser, LinkInlineElement, Position } from 'roosterjs-editor-dom';
 import { cacheGetContentSearcher } from '../../eventApi/cacheGetContentSearcher';
 import {
@@ -7,6 +6,7 @@ import {
     IEditor,
     PluginEvent,
     PluginEventType,
+    PluginWithState,
     PositionType,
     Wrapper,
 } from 'roosterjs-editor-types';

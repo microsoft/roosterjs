@@ -1,5 +1,5 @@
-import EditorCore, { HasFocus } from '../interfaces/EditorCore';
 import { contains } from 'roosterjs-editor-dom';
+import { EditorCore, HasFocus } from 'roosterjs-editor-types';
 
 /**
  * Check if the editor has focus now

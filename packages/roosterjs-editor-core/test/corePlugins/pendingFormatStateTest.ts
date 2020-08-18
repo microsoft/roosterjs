@@ -1,7 +1,10 @@
-import { IEditor, PluginEventType, Wrapper } from 'roosterjs-editor-types';
-import PendingFormatStatePlugin, {
+import PendingFormatStatePlugin from '../../lib/corePlugins/pendingFormatState/PendingFormatStatePlugin';
+import {
+    IEditor,
     PendingFormatStatePluginState,
-} from '../../lib/corePlugins/pendingFormatState/PendingFormatStatePlugin';
+    PluginEventType,
+    Wrapper,
+} from 'roosterjs-editor-types';
 
 describe('PendingFormatStatePlugin', () => {
     let plugin: PendingFormatStatePlugin;

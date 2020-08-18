@@ -17,7 +17,7 @@ export default interface WordCustomData {
 
 /**
  * @internal
- * Create an empty CustomData
+ * Create an empty WordCustomData
  */
 export function createCustomData(): WordCustomData {
     return {

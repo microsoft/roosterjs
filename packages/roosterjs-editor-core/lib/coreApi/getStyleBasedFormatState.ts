@@ -1,4 +1,4 @@
-import EditorCore, { GetStyleBasedFormatState } from '../interfaces/EditorCore';
+import { EditorCore, GetStyleBasedFormatState } from 'roosterjs-editor-types';
 import { findClosestElementAncestor, getComputedStyles } from 'roosterjs-editor-dom';
 
 const ORIGINAL_STYLE_COLOR_SELECTOR = '[data-ogsc],[data-ogac]';

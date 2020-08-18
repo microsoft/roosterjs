@@ -3,13 +3,7 @@ import canMoveCurrentSnapshot from '../../lib/snapshots/canMoveCurrentSnapshot';
 import clearProceedingSnapshots from '../../lib/snapshots/clearProceedingSnapshots';
 import createSnapshots from '../../lib/snapshots/createSnapshots';
 import moveCurrentSnapsnot from '../../lib/snapshots/moveCurrentSnapsnot';
-
-interface UndoSnapshotsService {
-    canMove(step: number): boolean;
-    move(step: number): string;
-    addSnapshot(snapshot: string): void;
-    clearRedo(): void;
-}
+import { UndoSnapshotsService } from 'roosterjs-editor-types';
 
 describe('SnapshotsManager', () => {
     let snapshots: UndoSnapshotsService;

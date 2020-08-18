@@ -1,9 +1,10 @@
 import * as dom from 'roosterjs-editor-dom';
-import EntityPlugin, { EntityPluginState } from '../../lib/corePlugins/entity/EntityPlugin';
+import EntityPlugin from '../../lib/corePlugins/entity/EntityPlugin';
 import {
     ChangeSource,
     EntityClasses,
     EntityOperation,
+    EntityPluginState,
     IEditor,
     Keys,
     PluginEventType,

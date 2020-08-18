@@ -1,6 +1,5 @@
 import createEditorCore from '../../lib/editor/createEditorCore';
-import EditorCore from '../../lib/interfaces/EditorCore';
-import EditorOptions from '../../lib/interfaces/EditorOptions';
+import { EditorCore, EditorOptions } from 'roosterjs-editor-types';
 
 export default function createMockEditorCore(
     contentDiv: HTMLDivElement,

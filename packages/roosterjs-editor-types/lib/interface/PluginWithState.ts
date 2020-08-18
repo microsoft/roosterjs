@@ -1,4 +1,5 @@
-import { EditorPlugin, Wrapper } from 'roosterjs-editor-types';
+import EditorPlugin from './EditorPlugin';
+import Wrapper from './Wrapper';
 
 /**
  * An editor plugin which have a state object stored on editor core

@@ -1,5 +1,4 @@
-import { Snapshots } from 'roosterjs-editor-types';
-import { UndoSnapshotsService } from 'roosterjs-editor-core';
+import { Snapshots, UndoSnapshotsService } from 'roosterjs-editor-types';
 import {
     addSnapshot,
     canMoveCurrentSnapshot,

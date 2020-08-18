@@ -1,6 +1,7 @@
-import EditorCore, { InsertNode } from '../interfaces/EditorCore';
 import {
     ContentPosition,
+    EditorCore,
+    InsertNode,
     InsertOption,
     NodeType,
     PositionType,

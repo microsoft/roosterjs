@@ -1,5 +1,10 @@
-import EditorCore, { AttachDomEvent } from '../interfaces/EditorCore';
-import { DOMEventHandler, DOMEventHandlerObject, PluginDomEvent } from 'roosterjs-editor-types';
+import {
+    AttachDomEvent,
+    DOMEventHandler,
+    DOMEventHandlerObject,
+    EditorCore,
+    PluginDomEvent,
+} from 'roosterjs-editor-types';
 
 /**
  * Attach a DOM event to the editor content DIV

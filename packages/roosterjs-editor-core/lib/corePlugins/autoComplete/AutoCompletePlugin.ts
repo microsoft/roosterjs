@@ -1,6 +1,12 @@
 import createWrapper from '../utils/createWrapper';
-import PluginWithState from '../../interfaces/PluginWithState';
-import { IEditor, Keys, PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import {
+    IEditor,
+    Keys,
+    PluginEvent,
+    PluginEventType,
+    PluginWithState,
+    Wrapper,
+} from 'roosterjs-editor-types';
 
 /**
  * Auto complete Component helps handle the undo operation for an auto complete action

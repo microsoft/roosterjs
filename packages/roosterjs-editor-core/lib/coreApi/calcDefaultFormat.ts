@@ -1,5 +1,4 @@
-import EditorCore, { CalcDefaultFormat } from '../interfaces/EditorCore';
-import { DefaultFormat } from 'roosterjs-editor-types';
+import { CalcDefaultFormat, DefaultFormat, EditorCore } from 'roosterjs-editor-types';
 import { getComputedStyles } from 'roosterjs-editor-dom';
 
 const DARK_MODE_DEFAULT_FORMAT = {

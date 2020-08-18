@@ -1,9 +1,15 @@
 import createWrapper from '../utils/createWrapper';
-import EditorOptions from '../../interfaces/EditorOptions';
 import isCtrlOrMetaPressed from '../../eventApi/isCtrlOrMetaPressed';
-import PluginWithState from '../../interfaces/PluginWithState';
-import UndoSnapshotsService from '../../interfaces/UndoSnapshotsService';
-import { IEditor, PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import {
+    EditorOptions,
+    IEditor,
+    PluginEvent,
+    PluginEventType,
+    PluginWithState,
+    UndoPluginState,
+    UndoSnapshotsService,
+    Wrapper,
+} from 'roosterjs-editor-types';
 import {
     addSnapshot,
     canMoveCurrentSnapshot,
@@ -22,33 +28,6 @@ const KEY_DOWN = 40;
 // Max stack size that cannot be exceeded. When exceeded, old undo history will be dropped
 // to keep size under limit. This is kept at 10MB
 const MAXSIZELIMIT = 1e7;
-
-/**
- * The state object for UndoPlugin
- */
-export interface UndoPluginState {
-    /**
-     * Snapshot service for undo, it helps handle snapshot add, remove and retrive
-     */
-    snapshotsService: UndoSnapshotsService;
-
-    /**
-     * Whether restoring of undo snapshot is in proguress.
-     */
-    isRestoring: boolean;
-
-    /**
-     * Whether there is new content change after last undo snapshot is taken
-     */
-    hasNewContent: boolean;
-
-    /**
-     * The outer undo snapshot taken by addUndoSnapshot() before callback function is invoked.
-     * If addUndoSnapshot() is called nested in another one, this will be the snapshot taken from the outer one
-     * and used for checking if it is a nested call
-     */
-    outerUndoSnapshot: string;
-}
 
 /**
  * Provides snapshot based undo service for Editor

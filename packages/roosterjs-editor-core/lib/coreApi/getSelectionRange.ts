@@ -1,5 +1,5 @@
-import EditorCore, { GetSelectionRange } from '../interfaces/EditorCore';
 import { contains } from 'roosterjs-editor-dom';
+import { EditorCore, GetSelectionRange } from 'roosterjs-editor-types';
 
 /**
  * Get current or cached selection range

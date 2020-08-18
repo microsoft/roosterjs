@@ -1,29 +1,13 @@
 import createWrapper from '../utils/createWrapper';
-import PluginWithState from '../../interfaces/PluginWithState';
 import { Position } from 'roosterjs-editor-dom';
 import {
     IEditor,
-    NodePosition,
-    PendableFormatState,
+    PendingFormatStatePluginState,
     PluginEvent,
     PluginEventType,
+    PluginWithState,
     Wrapper,
 } from 'roosterjs-editor-types';
-
-/**
- * The state object for PendingFormatStatePlugin
- */
-export interface PendingFormatStatePluginState {
-    /**
-     * Current pending format state
-     */
-    pendableFormatState: PendableFormatState;
-
-    /**
-     * The position of last pendable format state changing
-     */
-    pendableFormatPosition: NodePosition;
-}
 
 /**
  * PendingFormatStatePlugin handles pending format state management

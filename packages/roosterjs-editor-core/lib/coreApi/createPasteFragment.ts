@@ -1,4 +1,3 @@
-import EditorCore, { CreatePasteFragment } from '../interfaces/EditorCore';
 import {
     applyFormat,
     applyTextStyle,
@@ -12,6 +11,8 @@ import {
 import {
     BeforePasteEvent,
     ClipboardData,
+    CreatePasteFragment,
+    EditorCore,
     PluginEventType,
     DefaultFormat,
     NodePosition,

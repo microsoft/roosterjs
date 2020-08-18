@@ -1,40 +1,16 @@
 import createWrapper from '../utils/createWrapper';
-import EditorOptions from '../../interfaces/EditorOptions';
 import isCharacterValue from '../../eventApi/isCharacterValue';
-import PluginWithState from '../../interfaces/PluginWithState';
 import { Browser } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     DOMEventHandler,
+    DOMEventPluginState,
+    EditorOptions,
     IEditor,
     PluginEventType,
+    PluginWithState,
     Wrapper,
 } from 'roosterjs-editor-types';
-
-/**
- * The state object for DOMEventPlugin
- */
-export interface DOMEventPluginState {
-    /**
-     * Whether editor is in IME input sequence
-     */
-    isInIME: boolean;
-
-    /**
-     * Scroll container of editor
-     */
-    scrollContainer: HTMLElement;
-
-    /**
-     * Cached selection range
-     */
-    selectionRange: Range;
-
-    /**
-     * stop propagation of a printable keyboard event
-     */
-    stopPrintableKeyboardEventPropagation: boolean;
-}
 
 /**
  * DOMEventPlugin handles customized DOM events, including:

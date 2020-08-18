@@ -1,4 +1,4 @@
-import EditorCore, { SelectRange } from '../interfaces/EditorCore';
+import { EditorCore, SelectRange } from 'roosterjs-editor-types';
 import { hasFocus } from './hasFocus';
 import {
     Browser,

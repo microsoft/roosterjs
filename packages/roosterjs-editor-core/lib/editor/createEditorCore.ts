@@ -1,10 +1,7 @@
 import AutoCompletePlugin from '../corePlugins/autoComplete/AutoCompletePlugin';
 import CorePastePlugin from '../corePlugins/corePaste/CorePastePlugin';
-import CorePlugins from '../interfaces/CorePlugins';
 import DarkModePlugin from '../corePlugins/darkMode/DarkModePlugin';
 import DOMEventPlugin from '../corePlugins/domEvent/DOMEventPlugin';
-import EditorCore, { CoreApiMap } from '../interfaces/EditorCore';
-import EditorOptions from '../interfaces/EditorOptions';
 import EditPlugin from '../corePlugins/edit/EditPlugin';
 import EntityPlugin from '../corePlugins/entity/EntityPlugin';
 import LifecyclePlugin from '../corePlugins/lifecycle/LifecyclePlugin';
@@ -17,7 +14,6 @@ import { addUndoSnapshot } from '../coreApi/addUndoSnapshot';
 import { attachDomEvent } from '../coreApi/attachDomEvent';
 import { calcDefaultFormat } from '../coreApi/calcDefaultFormat';
 import { createPasteFragment } from '../coreApi/createPasteFragment';
-import { EditorPlugin } from 'roosterjs-editor-types';
 import { focus } from '../coreApi/focus';
 import { getContent } from '../coreApi/getContent';
 import { getSelectionRange } from '../coreApi/getSelectionRange';
@@ -28,6 +24,13 @@ import { restoreUndoSnapshot } from '../coreApi/restoreUndoSnapshot';
 import { selectRange } from '../coreApi/selectRange';
 import { setContent } from '../coreApi/setContent';
 import { triggerEvent } from '../coreApi/triggerEvent';
+import {
+    CoreApiMap,
+    CorePlugins,
+    EditorCore,
+    EditorOptions,
+    EditorPlugin,
+} from 'roosterjs-editor-types';
 
 const PLACEHOLDER_PLUGIN_NAME = '_placeholder';
 /**

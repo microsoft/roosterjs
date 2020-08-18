@@ -1,14 +1,14 @@
 import addContentEditFeatures from './addContentEditFeatures';
 import createWrapper from '../utils/createWrapper';
-import EditorOptions from '../../interfaces/EditorOptions';
 import isCtrlOrMetaPressed from '../../eventApi/isCtrlOrMetaPressed';
-import PluginWithState from '../../interfaces/PluginWithState';
 import {
+    EditorOptions,
     GenericContentEditFeature,
     IEditor,
     Keys,
     PluginEvent,
     PluginEventType,
+    PluginWithState,
     Wrapper,
 } from 'roosterjs-editor-types';
 

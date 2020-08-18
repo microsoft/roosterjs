@@ -1,5 +1,4 @@
 import createWrapper from '../utils/createWrapper';
-import PluginWithState from '../../interfaces/PluginWithState';
 import { isCharacterValue } from 'roosterjs-editor-core';
 import {
     Browser,
@@ -14,11 +13,13 @@ import {
     Entity,
     EntityClasses,
     EntityOperation,
+    EntityPluginState,
     HtmlSanitizerOptions,
     IEditor,
     Keys,
     PluginEvent,
     PluginEventType,
+    PluginWithState,
     QueryScope,
     Wrapper,
 } from 'roosterjs-editor-types';
@@ -35,21 +36,6 @@ const ALLOWED_CSS_CLASSES = [
     ENTITY_TYPE_CSS_REGEX,
     ENTITY_READONLY_CSS_REGEX,
 ];
-
-/**
- * The state object for EntityPlugin
- */
-export interface EntityPluginState {
-    /**
-     * Last clicking point when mouse down event happens
-     */
-    clickingPoint: { pageX: number; pageY: number };
-
-    /**
-     * All known entity elements
-     */
-    knownEntityElements: HTMLElement[];
-}
 
 /**
  * Entity Plugin helps handle all operations related to an entity and generate entity specified events

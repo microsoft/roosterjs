@@ -1,6 +1,12 @@
 import * as isCharacterValue from '../../lib/eventApi/isCharacterValue';
-import DOMEventPlugin, { DOMEventPluginState } from '../../lib/corePlugins/domEvent/DOMEventPlugin';
-import { ChangeSource, IEditor, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import DOMEventPlugin from '../../lib/corePlugins/domEvent/DOMEventPlugin';
+import {
+    ChangeSource,
+    DOMEventPluginState,
+    IEditor,
+    PluginEventType,
+    Wrapper,
+} from 'roosterjs-editor-types';
 
 describe('DOMEventPlugin', () => {
     it('init and dispose', () => {

@@ -1,6 +1,5 @@
 import Editor from '../lib/editor/Editor';
-import EditorOptions from '../lib/interfaces/EditorOptions';
-import { EditorPlugin } from 'roosterjs-editor-types';
+import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 

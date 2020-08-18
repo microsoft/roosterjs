@@ -1,7 +1,5 @@
 import addContentEditFeatures from '../corePlugins/edit/addContentEditFeatures';
 import createEditorCore from './createEditorCore';
-import EditorCore from '../interfaces/EditorCore';
-import EditorOptions from '../interfaces/EditorOptions';
 import { convertContentToDarkMode } from '../corePlugins/darkMode/convertContentToDarkMode';
 import {
     BlockElement,
@@ -10,6 +8,8 @@ import {
     ContentPosition,
     DefaultFormat,
     DOMEventHandler,
+    EditorCore,
+    EditorOptions,
     GenericContentEditFeature,
     GetContentMode,
     IContentTraverser,

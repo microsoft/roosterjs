@@ -1,4 +1,4 @@
-import EditorCore, { RestoreUndoSnapshot } from '../interfaces/EditorCore';
+import { EditorCore, RestoreUndoSnapshot } from 'roosterjs-editor-types';
 
 /**
  * Restore an undo snapshot into editor

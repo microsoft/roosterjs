@@ -1,5 +1,4 @@
-import EditorCore, { TriggerEvent } from '../interfaces/EditorCore';
-import { EditorPlugin, PluginEvent } from 'roosterjs-editor-types';
+import { EditorCore, EditorPlugin, PluginEvent, TriggerEvent } from 'roosterjs-editor-types';
 
 /**
  * Trigger a plugin event

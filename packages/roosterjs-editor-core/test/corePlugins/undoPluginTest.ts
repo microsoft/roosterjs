@@ -1,5 +1,5 @@
-import UndoPlugin, { UndoPluginState } from '../../lib/corePlugins/undo/UndoPlugin';
-import { IEditor, Keys, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import UndoPlugin from '../../lib/corePlugins/undo/UndoPlugin';
+import { IEditor, Keys, PluginEventType, UndoPluginState, Wrapper } from 'roosterjs-editor-types';
 
 describe('UndoPlugin', () => {
     let plugin: UndoPlugin;

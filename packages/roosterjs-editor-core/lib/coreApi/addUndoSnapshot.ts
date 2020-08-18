@@ -1,8 +1,9 @@
-import EditorCore, { AddUndoSnapshot } from '../interfaces/EditorCore';
 import { Position } from 'roosterjs-editor-dom';
 import {
+    AddUndoSnapshot,
     ChangeSource,
     ContentChangedEvent,
+    EditorCore,
     NodePosition,
     PluginEventType,
     GetContentMode,
