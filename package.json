@@ -50,6 +50,7 @@
         "tslint-eslint-rules": "5.4.0",
         "tslint-microsoft-contrib": "6.2.0",
         "typedoc": "0.17.6",
+        "typedoc-plugin-exclude-references": "1.0.0",
         "typedoc-plugin-external-module-map": "1.2.1",
         "typescript": "3.8.3",
         "webpack": "4.43.0",
