@@ -1,4 +1,3 @@
-import addContentEditFeatures from '../../lib/corePlugins/edit/addContentEditFeatures';
 import EditPlugin from '../../lib/corePlugins/edit/EditPlugin';
 import {
     GenericContentEditFeature,
@@ -30,13 +29,13 @@ describe('EditPlugin', () => {
     it('no features handler event because key does not match', () => {
         const shouldHandleEvent = jasmine.createSpy('shouldHandleEvent').and.returnValue(false);
         const handleEvent = jasmine.createSpy('handleEvent');
-        addContentEditFeatures(state.value, [
+        state.value[Keys.ENTER] = [
             {
                 keys: [Keys.ENTER],
                 shouldHandleEvent,
                 handleEvent,
             },
-        ]);
+        ];
 
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
@@ -52,13 +51,13 @@ describe('EditPlugin', () => {
     it('no features handler event because it should not', () => {
         const shouldHandleEvent = jasmine.createSpy('shouldHandleEvent').and.returnValue(false);
         const handleEvent = jasmine.createSpy('handleEvent');
-        addContentEditFeatures(state.value, [
+        state.value[Keys.ENTER] = [
             {
                 keys: [Keys.ENTER],
                 shouldHandleEvent,
                 handleEvent,
             },
-        ]);
+        ];
 
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
@@ -74,13 +73,13 @@ describe('EditPlugin', () => {
     it('one feature handlers event', () => {
         const shouldHandleEvent = jasmine.createSpy('shouldHandleEvent').and.returnValue(true);
         const handleEvent = jasmine.createSpy('handleEvent');
-        addContentEditFeatures(state.value, [
+        state.value[Keys.ENTER] = [
             {
                 keys: [Keys.ENTER],
                 shouldHandleEvent,
                 handleEvent,
             },
-        ]);
+        ];
 
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
@@ -100,12 +99,14 @@ describe('EditPlugin', () => {
         const handleEvent2 = jasmine.createSpy('handleEvent2');
         const shouldHandleEvent3 = jasmine.createSpy('shouldHandleEvent3').and.returnValue(true);
         const handleEvent3 = jasmine.createSpy('handleEvent3');
-        addContentEditFeatures(state.value, [
+        state.value[Keys.DELETE] = [
             {
                 keys: [Keys.DELETE],
                 shouldHandleEvent: shouldHandleEvent1,
                 handleEvent: handleEvent1,
             },
+        ];
+        state.value[Keys.ENTER] = [
             {
                 keys: [Keys.ENTER],
                 shouldHandleEvent: shouldHandleEvent2,
@@ -116,7 +117,7 @@ describe('EditPlugin', () => {
                 shouldHandleEvent: shouldHandleEvent3,
                 handleEvent: handleEvent3,
             },
-        ]);
+        ];
 
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
@@ -140,12 +141,14 @@ describe('EditPlugin', () => {
         const handleEvent2 = jasmine.createSpy('handleEvent2');
         const shouldHandleEvent3 = jasmine.createSpy('shouldHandleEvent3').and.returnValue(true);
         const handleEvent3 = jasmine.createSpy('handleEvent3');
-        addContentEditFeatures(state.value, [
+        state.value[Keys.DELETE] = [
             {
                 keys: [Keys.DELETE],
                 shouldHandleEvent: shouldHandleEvent1,
                 handleEvent: handleEvent1,
             },
+        ];
+        state.value[Keys.ENTER] = [
             {
                 keys: [Keys.ENTER],
                 shouldHandleEvent: shouldHandleEvent2,
@@ -156,7 +159,7 @@ describe('EditPlugin', () => {
                 shouldHandleEvent: shouldHandleEvent3,
                 handleEvent: handleEvent3,
             },
-        ]);
+        ];
 
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
@@ -178,7 +181,7 @@ describe('EditPlugin', () => {
         const handleEvent1 = jasmine.createSpy('handleEvent1');
         const shouldHandleEvent2 = jasmine.createSpy('shouldHandleEvent2').and.returnValue(true);
         const handleEvent2 = jasmine.createSpy('handleEvent2');
-        addContentEditFeatures(state.value, [
+        state.value[Keys.ENTER] = [
             {
                 keys: [Keys.ENTER],
                 shouldHandleEvent: shouldHandleEvent1,
@@ -190,7 +193,7 @@ describe('EditPlugin', () => {
                 handleEvent: handleEvent2,
                 allowFunctionKeys: true,
             },
-        ]);
+        ];
 
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
@@ -209,13 +212,13 @@ describe('EditPlugin', () => {
     it('multiple keys', () => {
         const shouldHandleEvent1 = jasmine.createSpy('shouldHandleEvent1').and.returnValue(true);
         const handleEvent1 = jasmine.createSpy('handleEvent1');
-        addContentEditFeatures(state.value, [
-            {
-                keys: [Keys.ENTER, Keys.SPACE],
-                shouldHandleEvent: shouldHandleEvent1,
-                handleEvent: handleEvent1,
-            },
-        ]);
+        const feature = {
+            keys: [Keys.ENTER, Keys.SPACE],
+            shouldHandleEvent: shouldHandleEvent1,
+            handleEvent: handleEvent1,
+        };
+        state.value[Keys.ENTER] = [feature];
+        state.value[Keys.SPACE] = [feature];
 
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
@@ -231,13 +234,15 @@ describe('EditPlugin', () => {
     it('content changed event feature', () => {
         const shouldHandleEvent1 = jasmine.createSpy('shouldHandleEvent1').and.returnValue(true);
         const handleEvent1 = jasmine.createSpy('handleEvent1');
-        addContentEditFeatures(state.value, [
-            {
-                keys: [Keys.ENTER, Keys.SPACE, Keys.CONTENTCHANGED],
-                shouldHandleEvent: shouldHandleEvent1,
-                handleEvent: handleEvent1,
-            },
-        ]);
+        const feature = {
+            keys: [Keys.ENTER, Keys.SPACE, Keys.CONTENTCHANGED],
+            shouldHandleEvent: shouldHandleEvent1,
+            handleEvent: handleEvent1,
+        };
+
+        state.value[Keys.ENTER] = [feature];
+        state.value[Keys.SPACE] = [feature];
+        state.value[Keys.CONTENTCHANGED] = [feature];
 
         plugin.onPluginEvent({
             eventType: PluginEventType.ContentChanged,

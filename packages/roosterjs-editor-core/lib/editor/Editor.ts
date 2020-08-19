@@ -1,4 +1,3 @@
-import addContentEditFeatures from '../corePlugins/edit/addContentEditFeatures';
 import createEditorCore from './createEditorCore';
 import { convertContentToDarkMode } from '../corePlugins/darkMode/convertContentToDarkMode';
 import {
@@ -666,7 +665,11 @@ export default class Editor implements IEditor {
      * @param feature The feature to add
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
-        addContentEditFeatures(this.core.edit.value, [feature]);
+        feature?.keys.forEach(key => {
+            let array = this.core.edit.value[key] || [];
+            array.push(feature);
+            this.core.edit.value[key] = array;
+        });
     }
 
     /**
