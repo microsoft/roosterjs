@@ -1,5 +1,5 @@
-import Replacement from './Replacement';
 import {
+    CustomReplacement,
     EditorPlugin,
     IEditor,
     PluginEvent,
@@ -11,9 +11,9 @@ const makeReplacement = (
     sourceString: string,
     replacementHTML: string,
     matchSourceCaseSensitive: boolean
-): Replacement => ({ sourceString, replacementHTML, matchSourceCaseSensitive });
+): CustomReplacement => ({ sourceString, replacementHTML, matchSourceCaseSensitive });
 
-const defaultReplacements: Replacement[] = [
+const defaultReplacements: CustomReplacement[] = [
     makeReplacement(':)', '🙂', true),
     makeReplacement(';)', '😉', true),
     makeReplacement(':O', '😲', true),
@@ -28,14 +28,14 @@ const defaultReplacements: Replacement[] = [
 export default class CustomReplacePlugin implements EditorPlugin {
     private longestReplacementLength: number;
     private editor: IEditor;
-    private replacements: Replacement[];
+    private replacements: CustomReplacement[];
     private replacementEndCharacters: Set<string>;
 
     /**
      * Create instance of CustomReplace plugin
      * @param replacements Replacement rules. If not passed, a default replacement rule set will be applied
      */
-    constructor(replacements: Replacement[] = defaultReplacements) {
+    constructor(replacements: CustomReplacement[] = defaultReplacements) {
         this.updateReplacements(replacements);
     }
 
@@ -43,7 +43,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
      * Set the replacements that this plugin is looking for.
      * @param newReplacements new set of replacements for this plugin
      */
-    updateReplacements(newReplacements: Replacement[]) {
+    updateReplacements(newReplacements: CustomReplacement[]) {
         this.replacements = newReplacements;
         this.longestReplacementLength = getLongestReplacementSourceLength(this.replacements);
         this.replacementEndCharacters = getReplacementEndCharacters(this.replacements);
@@ -71,6 +71,10 @@ export default class CustomReplacePlugin implements EditorPlugin {
         this.editor = null;
     }
 
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
     public onPluginEvent(event: PluginEvent) {
         if (this.editor.isInIME() || event.eventType != PluginEventType.Input) {
             return;
@@ -118,7 +122,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
         );
     }
 
-    private getMatchingReplacement(stringToSearch: string): Replacement | null {
+    private getMatchingReplacement(stringToSearch: string): CustomReplacement | null {
         if (stringToSearch.length == 0) {
             return null;
         }
@@ -139,14 +143,14 @@ export default class CustomReplacePlugin implements EditorPlugin {
     }
 }
 
-function getLongestReplacementSourceLength(replacements: Replacement[]): number {
+function getLongestReplacementSourceLength(replacements: CustomReplacement[]): number {
     return Math.max.apply(
         null,
         replacements.map(replacement => replacement.sourceString.length)
     );
 }
 
-function getReplacementEndCharacters(replacements: Replacement[]): Set<string> {
+function getReplacementEndCharacters(replacements: CustomReplacement[]): Set<string> {
     const endChars = new Set<string>();
     for (let replacement of replacements) {
         const sourceString = replacement.sourceString;

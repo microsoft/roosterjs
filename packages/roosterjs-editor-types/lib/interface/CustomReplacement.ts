@@ -1,7 +1,7 @@
 /**
  * An interface to define a replacement rule for CustomReplace plugin
  */
-export default interface Replacement {
+export default interface CustomReplacement {
     /**
      * Source string to replace from
      */
