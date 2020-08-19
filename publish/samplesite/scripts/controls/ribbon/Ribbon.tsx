@@ -5,7 +5,7 @@ import RibbonButton from './RibbonButton';
 import ribbonButtons from './ribbonButtons';
 import RibbonPlugin from './RibbonPlugin';
 import { Browser, getSelectedBlockElementsInRegion } from 'roosterjs-editor-dom';
-import { getFormatState, rotateImage } from 'roosterjs-editor-api';
+import { getFormatState, rotateElement } from 'roosterjs-editor-api';
 
 let styles = require('./Ribbon.scss');
 
@@ -60,7 +60,7 @@ export default class Ribbon extends React.Component<RibbonProps, {}> {
                     {
                         const child = blockElement.children[j];
                         if (child.tagName == "IMG") {
-                            rotateImage(editor, child as HTMLImageElement, 90);
+                            rotateElement(editor, child as HTMLImageElement, 45);
                             break; // Only rotate the first image
                         }
                     }

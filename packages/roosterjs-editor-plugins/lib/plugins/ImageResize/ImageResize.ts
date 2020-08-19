@@ -50,7 +50,7 @@ export default class ImageResize implements EditorPlugin {
         private selectionBorderColor: string = '#DB626C',
         private forcePreserveRatio: boolean = false,
         private resizableImageSelector: string = 'img'
-    ) {}
+    ) { }
 
     /**
      * Get a friendly name of  this plugin
@@ -160,10 +160,12 @@ export default class ImageResize implements EditorPlugin {
         let parent = this.resizeDiv && this.resizeDiv.parentNode;
         if (parent) {
             if (img) {
+                // Reset the transform of the image before the container is removed, so the rotation isn't reset
+                img.style.transform = this.resizeDiv.style.transform;
                 img.removeAttribute('contentEditable');
                 let referenceNode =
                     this.resizeDiv.previousSibling &&
-                    this.resizeDiv.previousSibling.nodeType == NodeType.Comment
+                        this.resizeDiv.previousSibling.nodeType == NodeType.Comment
                         ? this.resizeDiv.previousSibling
                         : this.resizeDiv;
                 parent.insertBefore(img, referenceNode);
@@ -307,6 +309,7 @@ export default class ImageResize implements EditorPlugin {
             }
             div.addEventListener('mousedown', this.startResize);
         });
+
         let div = document.createElement('DIV');
         resizeDiv.appendChild(div);
         div.style.position = 'absolute';
@@ -316,6 +319,14 @@ export default class ImageResize implements EditorPlugin {
         div.style.bottom = '0';
         div.style.border = 'solid 1px ' + this.selectionBorderColor;
         div.style.pointerEvents = 'none';
+
+        // If the resizeDiv's image has a transform, apply it to the container
+        const selectedImage = this.getSelectedImage(resizeDiv);
+        if (selectedImage && selectedImage.style && selectedImage.style.transform) {
+            resizeDiv.style.transform = selectedImage.style.transform;
+            selectedImage.style.transform = '';
+        }
+
         return resizeDiv;
     }
 
@@ -331,6 +342,7 @@ export default class ImageResize implements EditorPlugin {
                     this.editor.deleteNode(comment);
                 }
             });
+
             this.editor.deleteNode(resizeDiv);
         }
     }
@@ -365,8 +377,9 @@ export default class ImageResize implements EditorPlugin {
         });
     }
 
-    private getSelectedImage(): HTMLElement {
-        return this.resizeDiv ? <HTMLElement>this.resizeDiv.getElementsByTagName('IMG')[0] : null;
+    private getSelectedImage(div?: HTMLElement): HTMLElement {
+        const divWithImage = div || this.resizeDiv;
+        return divWithImage ? <HTMLElement>divWithImage.getElementsByTagName('IMG')[0] : null;
     }
 
     private isNorth(direction: string): boolean {

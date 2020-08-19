@@ -1,11 +1,10 @@
 import * as TestHelper from '../TestHelper';
 import { Editor } from 'roosterjs-editor-core';
-import { rotateImage } from 'roosterjs/lib';
+import { rotateElement } from 'roosterjs/lib';
 
-describe('rotateImage()', () => {
-    let testID = 'rotateImage';
+describe('rotateElement()', () => {
+    let testID = 'rotateElement';
     let editor: Editor;
-    const imageId = 'imageId';
 
     beforeEach(() => {
         editor = TestHelper.initEditor(testID);
@@ -17,14 +16,15 @@ describe('rotateImage()', () => {
         TestHelper.removeElement(testID);
     });
 
-    it('sets the rotation to 90 degrees', () => {
+    it('sets the rotation to 90 degrees of the element', () => {
         // Arrange
+        const imageId = 'imageId';
         const imageContent = `<img id="${imageId}"/></img>`;
         editor.setContent(imageContent);
         const image = document.getElementById(imageId) as HTMLImageElement;
 
         // Act
-        rotateImage(editor, image, 90);
+        rotateElement(editor, image, 90);
 
         // Assert
         expect(editor.addUndoSnapshot).toHaveBeenCalled();
@@ -33,14 +33,14 @@ describe('rotateImage()', () => {
         );
     });
 
-    it('skips setting the rotation if the image does not exist', () => {
+    it('skips setting the rotation if the element does not exist', () => {
         // Arrange
         const blankEditorContent = '<div></div>';
         editor.setContent(blankEditorContent);
-        const image = document.getElementById(imageId) as HTMLImageElement;
+        const element = document.getElementById('non-existentID') as HTMLImageElement;
 
         // Act
-        rotateImage(editor, image, 90);
+        rotateElement(editor, element, 90);
 
         // Assert
         expect(editor.addUndoSnapshot).not.toHaveBeenCalled();
