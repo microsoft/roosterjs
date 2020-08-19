@@ -40,6 +40,10 @@ export default class TitleBar extends React.Component<TitleBarProps, {}> {
                         API References
                     </a>
                     {' | '}
+                    <a href="coverage/index.html" target="_blank" className={styles.link}>
+                        Test Coverage
+                    </a>
+                    {' | '}
                     <a href="https://www.travis-ci.org/microsoft/roosterjs" target="_blank">
                         <img
                             src="https://api.travis-ci.org/microsoft/roosterjs.svg?branch=master"

@@ -80,7 +80,7 @@ module.exports = function (config) {
         settings.reporters = ['coverage-istanbul'];
         settings.coverageIstanbulReporter = {
             reports: ['html', 'lcovonly', 'text-summary'],
-            dir: './dist/coverage',
+            dir: './dist/deploy/coverage',
         };
     }
 
