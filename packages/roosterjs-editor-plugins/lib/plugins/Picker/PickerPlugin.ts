@@ -1,4 +1,3 @@
-import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import {
     Browser,
@@ -12,6 +11,8 @@ import {
     EditorPlugin,
     IEditor,
     NodePosition,
+    PickerDataProvider,
+    PickerPluginOptions,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
@@ -42,14 +43,6 @@ const UNIDENTIFIED_KEY = 'Unidentified';
 const UNIDENTIFIED_CODE = [0, 229];
 
 /**
- * Interface for PickerPlugin
- */
-export interface EditorPickerPluginInterface<T extends PickerDataProvider = PickerDataProvider>
-    extends EditorPlugin {
-    dataProvider: T;
-}
-
-/**
  * PickerPlugin represents a plugin of editor which can handle picker related behaviors, including
  * - Show picker when special trigger key is pressed
  * - Hide picker
@@ -61,7 +54,7 @@ export interface EditorPickerPluginInterface<T extends PickerDataProvider = Pick
  * https://github.com/microsoft/roosterjs/tree/master/publish/samplesite/scripts/controls/samplepicker
  */
 export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvider>
-    implements EditorPickerPluginInterface<T> {
+    implements EditorPlugin {
     private editor: IEditor;
     private eventHandledOnKeyDown: boolean;
     private blockSuggestions: boolean;

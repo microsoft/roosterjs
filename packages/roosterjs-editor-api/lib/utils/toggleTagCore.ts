@@ -15,6 +15,7 @@ const UNWRAPPABLE_NODES = 'LI,THEAD,TBODY,TR,TD,TH'.split(',');
 const DEFAULT_STYLER = (_: HTMLElement) => {};
 
 /**
+ * @internal
  * Toggle a tag at selection, if selection already contains elements of such tag,
  * the elements will be untagge and other elements will take no affect
  * @param editor The editor instance

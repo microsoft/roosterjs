@@ -5,6 +5,7 @@ import { getLeafSibling } from '../utils/getLeafSibling';
 import { InlineElement, NodePosition, NodeType } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Get inline element before a position
  * This is mostly used when we want to get the inline element before selection/cursor
  * There is a possible that the cursor is in middle of an inline element (i.e. mid of a text node)
@@ -18,6 +19,7 @@ export function getInlineElementBefore(root: Node, position: NodePosition): Inli
 }
 
 /**
+ * @internal
  * Get inline element after a position
  * This is mostly used when we want to get the inline element after selection/cursor
  * There is a possible that the cursor is in middle of an inline element (i.e. mid of a text node)
@@ -30,6 +32,9 @@ export function getInlineElementAfter(root: Node, position: NodePosition): Inlin
     return getInlineElementBeforeAfter(root, position, true /*isAfter*/);
 }
 
+/**
+ * @internal
+ */
 export function getInlineElementBeforeAfter(root: Node, position: NodePosition, isAfter: boolean) {
     if (!root || !position || !position.node) {
         return null;

@@ -8,6 +8,9 @@ import {
     wrap,
 } from 'roosterjs-editor-dom';
 
+/**
+ * @internal
+ */
 export type ValidProcessListDocumentCommands =
     | DocumentCommand.Outdent
     | DocumentCommand.Indent
@@ -15,6 +18,7 @@ export type ValidProcessListDocumentCommands =
     | DocumentCommand.InsertUnorderedList;
 
 /**
+ * @internal
  * Browsers don't handle bullet/numbering list well, especially the formats when switching list statue
  * So we workaround it by always adding format to list element
  */

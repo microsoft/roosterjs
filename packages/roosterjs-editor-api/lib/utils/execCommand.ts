@@ -8,6 +8,7 @@ import {
 let pendableFormatCommands: string[] = null;
 
 /**
+ * @internal
  * Execute a document command
  * @param editor The editor instance
  * @param command The command to execute

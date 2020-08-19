@@ -1,26 +1,6 @@
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
-import { TableFormat, TableOperation } from 'roosterjs-editor-types';
-
-/**
- * Represent a virtual cell of a virtual table
- */
-export interface VCell {
-    /**
-     * The table cell object. The value will be null if this is an expanded virtual cell
-     */
-    td?: HTMLTableCellElement;
-
-    /**
-     * Whether this cell is spanned from left
-     */
-    spanLeft?: boolean;
-
-    /**
-     * Whether this cell is spanned from above
-     */
-    spanAbove?: boolean;
-}
+import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells

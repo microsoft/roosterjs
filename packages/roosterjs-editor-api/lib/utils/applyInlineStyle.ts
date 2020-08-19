@@ -4,6 +4,7 @@ import { ChangeSource, IEditor, NodeType, PositionType } from 'roosterjs-editor-
 const ZERO_WIDTH_SPACE = '\u200B';
 
 /**
+ * @internal
  * Apply inline style to current selection
  * @param editor The editor instance
  * @param callback The callback function to apply style

@@ -1,7 +1,5 @@
-export { default as NodeBlockElement } from './blockElements/NodeBlockElement';
 export { default as getBlockElementAtNode } from './blockElements/getBlockElementAtNode';
 export { default as getFirstLastBlockElement } from './blockElements/getFirstLastBlockElement';
-export { default as StartEndBlockElement } from './blockElements/StartEndBlockElement';
 
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
 export { default as PositionContentSearcher } from './contentTraverser/PositionContentSearcher';
@@ -48,7 +46,7 @@ export { default as toArray } from './utils/toArray';
 export { default as safeInstanceOf } from './utils/safeInstanceOf';
 export { default as readFile } from './utils/readFile';
 
-export { default as VTable, VCell } from './table/VTable';
+export { default as VTable } from './table/VTable';
 export { default as VList } from './list/VList';
 export { default as createVListFromRegion } from './list/createVListFromRegion';
 

@@ -3,6 +3,7 @@ import isNodeAfter from '../utils/isNodeAfter';
 import { BlockElement } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * This presents a content block that can be reprented by a single html block type element.
  * In most cases, it corresponds to an HTML block level element, i.e. P, DIV, LI, TD etc.
  */

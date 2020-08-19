@@ -133,6 +133,9 @@ export {
 } from './interface/ContentEditFeatureSettings';
 export { default as CustomReplacement } from './interface/CustomReplacement';
 export { default as UndoSnapshotsService } from './interface/UndoSnapshotsService';
+export { default as PickerDataProvider } from './interface/PickerDataProvider';
+export { default as PickerPluginOptions } from './interface/PickerPluginOptions';
+export { default as VCell } from './interface/VCell';
 
 // Core Plugin State
 export { default as DarkModePluginState } from './corePluginState/DarkModePluginState';

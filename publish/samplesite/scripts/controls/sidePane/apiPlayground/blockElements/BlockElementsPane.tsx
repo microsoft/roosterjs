@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
 import { BlockElement, PluginEvent, PluginEventType, PositionType } from 'roosterjs-editor-types';
-import { createRange, NodeBlockElement } from 'roosterjs-editor-dom';
+import { createRange, isBlockElement } from 'roosterjs-editor-dom';
 
 const styles = require('./BlockElementsPane.scss');
 
@@ -38,7 +38,7 @@ export default class BlockElementsPane extends React.Component<
                         key={index}
                         className={styles.block}
                         onMouseOver={() => this.onMouseOver(block)}>
-                        {block instanceof NodeBlockElement ? (
+                        {isNodeBlockElement(block) ? (
                             this.renderBlock(block)
                         ) : (
                             <i onDoubleClick={() => this.collapse(block)}>
@@ -77,7 +77,7 @@ export default class BlockElementsPane extends React.Component<
     }
 
     private renderBlock(block: BlockElement): JSX.Element {
-        let isNodeBlock = block instanceof NodeBlockElement;
+        let isNodeBlock = isNodeBlockElement(block);
         return (
             <div
                 onDoubleClick={!isNodeBlock && (() => this.collapse(block))}
@@ -122,4 +122,8 @@ function getTextContent(block: BlockElement): string {
     return block.getStartNode() == block.getEndNode()
         ? block.getStartNode().textContent
         : createRange(block.getStartNode(), block.getEndNode()).toString();
+}
+
+function isNodeBlockElement(block: BlockElement): boolean {
+    return block.getStartNode() == block.getEndNode() && isBlockElement(block.getStartNode());
 }
