@@ -1,17 +1,15 @@
 import TypeAfterLinkPlugin from '../../lib/corePlugins/typeAfterLink/TypeAfterLinkPlugin';
-import { BrowserInfo, IEditor, PluginEventType, Wrapper } from 'roosterjs-editor-types';
+import { IEditor, PluginEventType } from 'roosterjs-editor-types';
 import { LinkInlineElement, NodeInlineElement } from 'roosterjs-editor-dom';
 
 describe('TypeAfterLinkPlugin', () => {
     let plugin: TypeAfterLinkPlugin;
-    let state: Wrapper<BrowserInfo>;
     let div: HTMLElement;
     let select: jasmine.Spy;
     let getElementAtCursor: jasmine.Spy;
 
     beforeEach(() => {
         plugin = new TypeAfterLinkPlugin();
-        state = plugin.getState();
         div = document.createElement('div');
         document.body.appendChild(div);
         select = jasmine.createSpy('select');
@@ -39,15 +37,10 @@ describe('TypeAfterLinkPlugin', () => {
 
     afterEach(() => {
         plugin.dispose();
-        state = null;
         div.parentNode.removeChild(div);
     });
 
     it('type after link', () => {
-        state.value = {
-            isFirefox: true,
-        };
-
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyPress,
             rawEvent: null,
@@ -82,14 +75,12 @@ describe('TypeAfterLinkPlugin', () => {
 
 describe('TypeAfterLinkPlugin not after link', () => {
     let plugin: TypeAfterLinkPlugin;
-    let state: Wrapper<BrowserInfo>;
     let div: HTMLElement;
     let select: jasmine.Spy;
     let getElementAtCursor: jasmine.Spy;
 
     beforeEach(() => {
         plugin = new TypeAfterLinkPlugin();
-        state = plugin.getState();
         div = document.createElement('div');
         document.body.appendChild(div);
         select = jasmine.createSpy('select');
@@ -117,15 +108,10 @@ describe('TypeAfterLinkPlugin not after link', () => {
 
     afterEach(() => {
         plugin.dispose();
-        state = null;
         div.parentNode.removeChild(div);
     });
 
     it('type after link', () => {
-        state.value = {
-            isFirefox: true,
-        };
-
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyPress,
             rawEvent: null,
@@ -153,14 +139,12 @@ describe('TypeAfterLinkPlugin not after link', () => {
 
 describe('TypeAfterLinkPlugin for expanded range', () => {
     let plugin: TypeAfterLinkPlugin;
-    let state: Wrapper<BrowserInfo>;
     let div: HTMLElement;
     let select: jasmine.Spy;
     let getElementAtCursor: jasmine.Spy;
 
     beforeEach(() => {
         plugin = new TypeAfterLinkPlugin();
-        state = plugin.getState();
         div = document.createElement('div');
         document.body.appendChild(div);
         select = jasmine.createSpy('select');
@@ -188,15 +172,10 @@ describe('TypeAfterLinkPlugin for expanded range', () => {
 
     afterEach(() => {
         plugin.dispose();
-        state = null;
         div.parentNode.removeChild(div);
     });
 
     it('type after link', () => {
-        state.value = {
-            isFirefox: true,
-        };
-
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyPress,
             rawEvent: null,

@@ -1,12 +1,10 @@
-import { Browser, createWrapper, LinkInlineElement, Position } from 'roosterjs-editor-dom';
+import { Browser, LinkInlineElement, Position } from 'roosterjs-editor-dom';
 import {
-    BrowserInfo,
+    EditorPlugin,
     IEditor,
     PluginEvent,
     PluginEventType,
-    PluginWithState,
     PositionType,
-    Wrapper,
 } from 'roosterjs-editor-types';
 
 /**
@@ -15,18 +13,8 @@ import {
  * When typing/pasting after a link, browser may put the new charactor inside link.
  * This plugin overrides this behavior to always insert outside of link.
  */
-export default class TypeAfterLinkPlugin implements PluginWithState<BrowserInfo> {
+export default class TypeAfterLinkPlugin implements EditorPlugin {
     private editor: IEditor;
-    private state: Wrapper<BrowserInfo>;
-
-    /**
-     * Construct a new instance of PendingFormatStatePlugin
-     * @param options The editor options
-     * @param contentDiv The editor content DIV
-     */
-    constructor() {
-        this.state = createWrapper(Browser);
-    }
 
     /**
      * Get a friendly name of  this plugin
@@ -51,19 +39,12 @@ export default class TypeAfterLinkPlugin implements PluginWithState<BrowserInfo>
     }
 
     /**
-     * Get the state object of this plugin
-     */
-    getState() {
-        return this.state;
-    }
-
-    /**
      * Handle events triggered from editor
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
         if (
-            (this.state.value.isFirefox && event.eventType == PluginEventType.KeyPress) ||
+            (Browser.isFirefox && event.eventType == PluginEventType.KeyPress) ||
             event.eventType == PluginEventType.BeforePaste
         ) {
             let range = this.editor.getSelectionRange();
