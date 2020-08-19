@@ -1,7 +1,7 @@
-import createWrapper from '../utils/createWrapper';
 import {
     Browser,
     commitEntity,
+    createWrapper,
     getEntityFromElement,
     getEntitySelector,
     isCharacterValue,
@@ -38,6 +38,7 @@ const ALLOWED_CSS_CLASSES = [
 ];
 
 /**
+ * @internal
  * Entity Plugin helps handle all operations related to an entity and generate entity specified events
  */
 export default class EntityPlugin implements PluginWithState<EntityPluginState> {

@@ -1,6 +1,7 @@
 import { EditorCore, EditorPlugin, PluginEvent, TriggerEvent } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Trigger a plugin event
  * @param core The EditorCore object
  * @param pluginEvent The event object to trigger

@@ -5,6 +5,7 @@ const ORIGINAL_STYLE_COLOR_SELECTOR = '[data-ogsc],[data-ogac]';
 const ORIGINAL_STYLE_BACK_COLOR_SELECTOR = '[data-ogsb],[data-ogab]';
 
 /**
+ * @internal
  * Get style based format state from current selection, including font name/size and colors
  * @param core The EditorCore objects
  * @param node The node to get style from

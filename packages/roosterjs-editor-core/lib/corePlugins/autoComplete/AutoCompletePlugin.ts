@@ -1,4 +1,4 @@
-import createWrapper from '../utils/createWrapper';
+import { createWrapper } from 'roosterjs-editor-dom';
 import {
     IEditor,
     Keys,
@@ -9,6 +9,7 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Auto complete Component helps handle the undo operation for an auto complete action
  */
 export default class AutoCompletePlugin implements PluginWithState<string> {

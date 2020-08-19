@@ -1,6 +1,6 @@
 import safeInstanceOf from '../utils/safeInstanceOf';
+import toArray from '../utils/toArray';
 import { TableFormat, TableOperation } from 'roosterjs-editor-types';
-import { toArray } from 'roosterjs-editor-dom';
 
 /**
  * Represent a virtual cell of a virtual table

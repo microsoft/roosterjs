@@ -117,13 +117,11 @@ export default interface FormatState
         ElementBasedFormatState,
         StyleBasedFormatState {
     /**
-     * @deprecated Use editor.canUndo() instead
      * Whether the content can be undone
      */
     canUndo?: boolean;
 
     /**
-     * @deprecated Use editor.canRedo() instead
      * Whether the content ca nbe redone
      */
     canRedo?: boolean;

@@ -14,15 +14,7 @@ describe('EditPlugin', () => {
     let state: Wrapper<Record<number, GenericContentEditFeature<PluginEvent>[]>>;
 
     beforeEach(() => {
-        plugin = new EditPlugin({
-            editFeatures: [
-                {
-                    keys: [],
-                    shouldHandleEvent: () => false,
-                    handleEvent: () => {},
-                },
-            ],
-        });
+        plugin = new EditPlugin();
         state = plugin.getState();
         plugin.initialize(<IEditor>(<any>{}));
     });

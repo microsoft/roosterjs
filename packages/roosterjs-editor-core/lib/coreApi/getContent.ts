@@ -7,6 +7,13 @@ import {
     getTextContent,
 } from 'roosterjs-editor-dom';
 
+/**
+ * @internal
+ * Get current editor content as HTML string
+ * @param core The EditorCore object
+ * @param mode specify what kind of HTML content to retrieve
+ * @returns HTML string representing current editor content
+ */
 export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): string => {
     let content = '';
     const isDarkMode = core.darkMode.value.isDarkMode;

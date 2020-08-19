@@ -19,6 +19,7 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Typing Component helps to ensure typing is always happening under a DOM container
  */
 export default class TypeInContainerPlugin implements EditorPlugin {

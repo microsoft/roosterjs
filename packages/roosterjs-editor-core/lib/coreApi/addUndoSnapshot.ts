@@ -10,6 +10,7 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
  * Undo snapshot will not be added if this call is nested inside another addUndoSnapshot() call.
  * @param core The EditorCore object

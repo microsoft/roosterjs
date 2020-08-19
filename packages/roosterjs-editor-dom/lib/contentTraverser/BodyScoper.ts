@@ -7,6 +7,7 @@ import { getFirstBlockElement } from '../blockElements/getFirstLastBlockElement'
 import { getFirstInlineElement } from '../inlineElements/getFirstLastInlineElement';
 
 /**
+ * @internal
  * provides scoper for traversing the entire editor body starting from the beginning
  */
 export default class BodyScoper implements TraversingScoper {

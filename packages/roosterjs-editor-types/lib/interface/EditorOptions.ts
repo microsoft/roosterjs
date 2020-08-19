@@ -3,8 +3,6 @@ import DefaultFormat from './DefaultFormat';
 import EditorPlugin from './EditorPlugin';
 import UndoSnapshotsService from './UndoSnapshotsService';
 import { CoreApiMap } from './EditorCore';
-import { GenericContentEditFeature } from './ContentEditFeature';
-import { PluginEvent } from '../event/PluginEvent';
 
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class
@@ -47,11 +45,6 @@ export default interface EditorOptions {
      * Default value is null
      */
     corePluginOverride?: Partial<CorePlugins>;
-
-    /**
-     * Content edit features
-     */
-    editFeatures?: GenericContentEditFeature<PluginEvent>[];
 
     /**
      * If the editor is currently in dark mode

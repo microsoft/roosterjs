@@ -7,6 +7,7 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Attach a DOM event to the editor content DIV
  * @param core The EditorCore object
  * @param eventName The DOM event name

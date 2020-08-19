@@ -1,5 +1,4 @@
-import createWrapper from '../utils/createWrapper';
-import { Browser, isCharacterValue } from 'roosterjs-editor-dom';
+import { Browser, createWrapper, isCharacterValue } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     DOMEventHandler,
@@ -12,6 +11,7 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * DOMEventPlugin handles customized DOM events, including:
  * 1. Keyboard event
  * 2. Mouse event

@@ -13,6 +13,7 @@ import {
 } from '../inlineElements/getFirstLastInlineElement';
 
 /**
+ * @internal
  * This provides traversing content in a selection start block
  * This is commonly used for those cursor context sensitive plugin,
  * they want to know text being typed at cursor

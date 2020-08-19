@@ -1,7 +1,7 @@
 import createEditorCore from './createMockEditorCore';
 import { addUndoSnapshot } from '../../lib/coreApi/addUndoSnapshot';
-import { Position } from 'roosterjs-editor-dom';
 import { PluginEventType, UndoSnapshotsService } from 'roosterjs-editor-types';
+import { Position } from 'roosterjs-editor-dom';
 
 describe('addUndoSnapshot', () => {
     let div: HTMLDivElement;

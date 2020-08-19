@@ -1,14 +1,12 @@
 import blockFormat from '../utils/blockFormat';
 import { BlockElement, IEditor, Indentation, Region } from 'roosterjs-editor-types';
 import {
-    fromHtml,
-    getSelectedBlockElementsInRegion,
-    getBlockElementAtNode,
-} from 'roosterjs-editor-dom';
-import {
     collapseNodesInRegion,
     createVListFromRegion,
     findClosestElementAncestor,
+    fromHtml,
+    getBlockElementAtNode,
+    getSelectedBlockElementsInRegion,
     getTagOfNode,
     isNodeInRegion,
     splitBalancedNodeRange,

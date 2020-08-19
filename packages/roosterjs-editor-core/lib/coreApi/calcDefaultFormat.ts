@@ -13,6 +13,7 @@ const DARK_MODE_DEFAULT_FORMAT = {
 };
 
 /**
+ * @internal
  * Calculate default format of editor
  * @param core The EditorCore object
  */

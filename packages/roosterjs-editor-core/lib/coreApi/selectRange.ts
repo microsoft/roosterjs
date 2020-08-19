@@ -8,7 +8,9 @@ import {
     PendableFormatNames,
     PendableFormatCommandMap,
 } from 'roosterjs-editor-dom';
+
 /**
+ * @internal
  * Change the editor selection to the given range
  * @param core The EditorCore object
  * @param range The range to select

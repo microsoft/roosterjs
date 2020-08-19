@@ -1,4 +1,4 @@
-import { Browser } from 'roosterjs-editor-dom';
+import { Browser } from '../utils/Browser';
 
 /**
  * Check if Ctrl key (Windows) or Meta key (Mac) is pressed for the given Event

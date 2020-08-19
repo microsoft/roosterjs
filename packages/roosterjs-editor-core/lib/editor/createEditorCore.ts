@@ -33,7 +33,9 @@ import {
 } from 'roosterjs-editor-types';
 
 const PLACEHOLDER_PLUGIN_NAME = '_placeholder';
+
 /**
+ * @internal
  * Create core object for editor
  * @param contentDiv The DIV element used for editor
  * @param options Options to create an editor
@@ -98,7 +100,7 @@ function createCorePlugins(
     // can be handled in right order
     return {
         typeInContainer: map.typeInContainer || new TypeInContainerPlugin(),
-        edit: map.edit || new EditPlugin(options),
+        edit: map.edit || new EditPlugin(),
         autoComplete: map.autoComplete || new AutoCompletePlugin(),
         _placeholder: null,
         typeAfterLink: map.typeAfterLink || new TypeAfterLinkPlugin(),

@@ -6,6 +6,7 @@ import { BlockElement, InlineElement, NodePosition } from 'roosterjs-editor-type
 import { getInlineElementAfter } from '../inlineElements/getInlineElementBeforeAfter';
 
 /**
+ * @internal
  * This is selection scoper that provide a start inline as the start of the selection
  * and checks if a block falls in the selection (isBlockInScope)
  * last trimInlineElement to trim any inline element to return a partial that falls in the selection

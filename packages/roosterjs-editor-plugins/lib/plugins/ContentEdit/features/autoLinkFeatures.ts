@@ -2,6 +2,7 @@ import { removeLink, replaceWithNode } from 'roosterjs-editor-api';
 import {
     AutoLinkFeatureSettings,
     ChangeSource,
+    ClipboardData,
     ContentEditFeature,
     IEditor,
     Keys,
@@ -9,7 +10,6 @@ import {
     PluginEvent,
     PluginEventType,
     PluginKeyboardEvent,
-    ClipboardData,
 } from 'roosterjs-editor-types';
 import {
     cacheGetEventData,

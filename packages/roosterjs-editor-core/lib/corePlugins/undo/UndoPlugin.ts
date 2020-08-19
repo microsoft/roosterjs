@@ -1,4 +1,3 @@
-import createWrapper from '../utils/createWrapper';
 import {
     EditorOptions,
     IEditor,
@@ -14,6 +13,7 @@ import {
     canMoveCurrentSnapshot,
     clearProceedingSnapshots,
     createSnapshots,
+    createWrapper,
     isCtrlOrMetaPressed,
     moveCurrentSnapsnot,
 } from 'roosterjs-editor-dom';
@@ -30,6 +30,7 @@ const KEY_DOWN = 40;
 const MAXSIZELIMIT = 1e7;
 
 /**
+ * @internal
  * Provides snapshot based undo service for Editor
  */
 export default class UndoPlugin implements PluginWithState<UndoPluginState> {

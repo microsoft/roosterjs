@@ -22,6 +22,16 @@ const START_FRAGMENT = '<!--StartFragment-->';
 const END_FRAGMENT = '<!--EndFragment-->';
 const NBSP_HTML = '\u00A0';
 
+/**
+ * @internal
+ * Create a DocumentFragment for paste from a ClipboardData
+ * @param core The EditorCore object.
+ * @param clipboardData Clipboard data retrieved from clipboard
+ * @param position The position to paste to
+ * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
+ * @param applyCurrentStyle True if apply format of current selection to the pasted content,
+ * false to keep original foramt
+ */
 export const createPasteFragment: CreatePasteFragment = (
     core: EditorCore,
     clipboardData: ClipboardData,

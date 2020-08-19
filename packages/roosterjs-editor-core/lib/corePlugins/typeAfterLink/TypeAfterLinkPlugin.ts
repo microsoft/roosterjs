@@ -1,5 +1,4 @@
-import createWrapper from '../utils/createWrapper';
-import { Browser, LinkInlineElement, Position } from 'roosterjs-editor-dom';
+import { Browser, createWrapper, LinkInlineElement, Position } from 'roosterjs-editor-dom';
 import {
     BrowserInfo,
     IEditor,
@@ -11,6 +10,7 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * TypeAfterLinkPlugin Component helps handle typing event when cursor is right after a link.
  * When typing/pasting after a link, browser may put the new charactor inside link.
  * This plugin overrides this behavior to always insert outside of link.

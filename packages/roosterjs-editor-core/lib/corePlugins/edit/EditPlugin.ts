@@ -1,8 +1,5 @@
-import addContentEditFeatures from './addContentEditFeatures';
-import createWrapper from '../utils/createWrapper';
-import { isCtrlOrMetaPressed } from 'roosterjs-editor-dom';
+import { createWrapper, isCtrlOrMetaPressed } from 'roosterjs-editor-dom';
 import {
-    EditorOptions,
     GenericContentEditFeature,
     IEditor,
     Keys,
@@ -13,6 +10,7 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Edit Component helps handle Content edit features
  */
 export default class EditPlugin
@@ -24,8 +22,8 @@ export default class EditPlugin
      * Construct a new instance of EditPlugin
      * @param options The editor options
      */
-    constructor(options: EditorOptions) {
-        this.state = createWrapper(addContentEditFeatures({}, options.editFeatures));
+    constructor() {
+        this.state = createWrapper({});
     }
 
     /**

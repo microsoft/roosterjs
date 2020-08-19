@@ -1,5 +1,4 @@
-import createWrapper from '../utils/createWrapper';
-import { Position } from 'roosterjs-editor-dom';
+import { createWrapper, Position } from 'roosterjs-editor-dom';
 import {
     IEditor,
     PendingFormatStatePluginState,
@@ -10,6 +9,7 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * PendingFormatStatePlugin handles pending format state management
  */
 export default class PendingFormatStatePlugin

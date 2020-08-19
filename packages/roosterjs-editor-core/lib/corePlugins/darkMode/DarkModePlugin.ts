@@ -1,6 +1,5 @@
-import createWrapper from '../utils/createWrapper';
 import normalizeContentColor from './normalizeContentColor';
-import { Browser } from 'roosterjs-editor-dom';
+import { Browser, createWrapper } from 'roosterjs-editor-dom';
 import {
     DarkModePluginState,
     EditorOptions,
@@ -10,6 +9,7 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Copy plugin, hijacks copy events to normalize the content to the clipboard.
  */
 export default class DarkModePlugin implements PluginWithState<DarkModePluginState> {

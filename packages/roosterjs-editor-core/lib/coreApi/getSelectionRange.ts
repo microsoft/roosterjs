@@ -2,6 +2,7 @@ import { contains } from 'roosterjs-editor-dom';
 import { EditorCore, GetSelectionRange } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Get current or cached selection range
  * @param core The EditorCore object
  * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now

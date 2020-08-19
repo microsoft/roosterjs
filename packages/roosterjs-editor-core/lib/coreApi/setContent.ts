@@ -2,6 +2,14 @@ import { ChangeSource, EditorCore, PluginEventType, SetContent } from 'roosterjs
 import { convertContentToDarkMode } from '../corePlugins/darkMode/convertContentToDarkMode';
 import { setHtmlWithSelectionPath } from 'roosterjs-editor-dom';
 
+/**
+ * @internal
+ * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
+ * if triggerContentChangedEvent is set to true
+ * @param core The EditorCore object
+ * @param content HTML content to set in
+ * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
+ */
 export const setContent: SetContent = (
     core: EditorCore,
     content: string,

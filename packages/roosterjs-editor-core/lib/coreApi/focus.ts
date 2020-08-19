@@ -2,6 +2,7 @@ import { createRange, getFirstLeafNode } from 'roosterjs-editor-dom';
 import { EditorCore, Focus, PositionType } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Focus to editor. If there is a cached selection range, use it as current selection
  * @param core The EditorCore object
  */

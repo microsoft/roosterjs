@@ -1,5 +1,4 @@
-import createWrapper from '../utils/createWrapper';
-import { Browser, Position } from 'roosterjs-editor-dom';
+import { Browser, createWrapper, Position } from 'roosterjs-editor-dom';
 import {
     DocumentCommand,
     EditorOptions,
@@ -38,6 +37,7 @@ const COMMANDS: {
     : {};
 
 /**
+ * @internal
  * Lifecycle plugin handles editor initialization and disposing
  */
 export default class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
