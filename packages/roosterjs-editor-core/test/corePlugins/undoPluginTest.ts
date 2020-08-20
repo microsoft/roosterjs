@@ -36,10 +36,11 @@ describe('UndoPlugin', () => {
     });
 
     it('editor ready event', () => {
-        let canUndo = jasmine.createSpy('canUndo').and.returnValue(false);
-        let canRedo = jasmine.createSpy('canRedo').and.returnValue(false);
-        editor.canUndo = canUndo;
-        editor.canRedo = canRedo;
+        let getUndoState = jasmine.createSpy('getUndoState').and.returnValue({
+            canUndo: false,
+            canRedo: false,
+        });
+        editor.getUndoState = getUndoState;
 
         plugin.onPluginEvent({
             eventType: PluginEventType.EditorReady,
@@ -47,16 +48,16 @@ describe('UndoPlugin', () => {
         });
 
         expect(isInIME).toHaveBeenCalled();
-        expect(canUndo).toHaveBeenCalled();
-        expect(canRedo).toHaveBeenCalled();
+        expect(getUndoState).toHaveBeenCalled();
         expect(addUndoSnapshot).toHaveBeenCalled();
     });
 
     it('editor ready event where can undo', () => {
-        let canUndo = jasmine.createSpy('canUndo').and.returnValue(true);
-        let canRedo = jasmine.createSpy('canRedo').and.returnValue(false);
-        editor.canUndo = canUndo;
-        editor.canRedo = canRedo;
+        let getUndoState = jasmine.createSpy('getUndoState').and.returnValue({
+            canUndo: true,
+            canRedo: false,
+        });
+        editor.getUndoState = getUndoState;
 
         plugin.onPluginEvent({
             eventType: PluginEventType.EditorReady,
@@ -64,16 +65,16 @@ describe('UndoPlugin', () => {
         });
 
         expect(isInIME).toHaveBeenCalled();
-        expect(canUndo).toHaveBeenCalled();
-        expect(canRedo).not.toHaveBeenCalled();
+        expect(getUndoState).toHaveBeenCalled();
         expect(addUndoSnapshot).not.toHaveBeenCalledWith(state.value);
     });
 
     it('editor ready event where can redo', () => {
-        let canUndo = jasmine.createSpy('canUndo').and.returnValue(false);
-        let canRedo = jasmine.createSpy('canRedo').and.returnValue(true);
-        editor.canUndo = canUndo;
-        editor.canRedo = canRedo;
+        let getUndoState = jasmine.createSpy('getUndoState').and.returnValue({
+            canUndo: false,
+            canRedo: true,
+        });
+        editor.getUndoState = getUndoState;
 
         plugin.onPluginEvent({
             eventType: PluginEventType.EditorReady,
@@ -81,8 +82,7 @@ describe('UndoPlugin', () => {
         });
 
         expect(isInIME).toHaveBeenCalled();
-        expect(canUndo).toHaveBeenCalled();
-        expect(canRedo).toHaveBeenCalled();
+        expect(getUndoState).toHaveBeenCalled();
         expect(addUndoSnapshot).not.toHaveBeenCalledWith(state.value);
     });
 

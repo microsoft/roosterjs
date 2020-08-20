@@ -50,7 +50,6 @@ export default function getFormatState(editor: IEditor, event?: PluginEvent): Fo
         ...getPendableFormatState(editor.getDocument()),
         ...getElementBasedFormatState(editor, event),
         ...editor.getStyleBasedFormatState(),
-        canUndo: editor.canUndo(),
-        canRedo: editor.canRedo(),
+        ...editor.getUndoState(),
     };
 }

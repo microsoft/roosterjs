@@ -64,6 +64,7 @@ export {
     PendableFormatState,
     ElementBasedFormatState,
     StyleBasedFormatState,
+    EditorUndoState,
 } from './interface/FormatState';
 export { default as IContentTraverser } from './interface/IContentTraverser';
 export { default as InlineElement } from './interface/InlineElement';

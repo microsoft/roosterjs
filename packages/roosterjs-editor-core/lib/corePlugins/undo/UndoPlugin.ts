@@ -92,7 +92,8 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
 
         switch (event.eventType) {
             case PluginEventType.EditorReady:
-                if (!this.editor.canUndo() && !this.editor.canRedo()) {
+                const undoState = this.editor.getUndoState();
+                if (!undoState.canUndo && !undoState.canRedo) {
                     // Only add initial snapshot when there is no existing snapshot
                     // Otherwise preserved undo/redo state may be ruined
                     this.editor.addUndoSnapshot();

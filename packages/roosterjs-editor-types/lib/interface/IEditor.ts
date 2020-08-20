@@ -10,6 +10,7 @@ import SelectionPath from './SelectionPath';
 import { ChangeSource } from '../enum/ChangeSource';
 import { ContentPosition } from '../enum/ContentPosition';
 import { DOMEventHandler } from '../type/domEventHandler';
+import { EditorUndoState, StyleBasedFormatState } from './FormatState';
 import { GenericContentEditFeature } from './ContentEditFeature';
 import { GetContentMode } from '../enum/GetContentMode';
 import { InsertOption } from './InsertOption';
@@ -19,7 +20,6 @@ import { PluginEventType } from '../event/PluginEventType';
 import { PositionType } from '../enum/PositionType';
 import { QueryScope } from '../enum/QueryScope';
 import { RegionType } from '../enum/RegionType';
-import { StyleBasedFormatState } from './FormatState';
 
 /**
  * Interface of roosterjs editor object
@@ -395,14 +395,9 @@ export default interface IEditor {
     ): void;
 
     /**
-     * Whether there is an available undo snapshot
+     * Whether there is an available undo/redo snapshot
      */
-    canUndo(): boolean;
-
-    /**
-     * Whether there is an available redo snapshot
-     */
-    canRedo(): boolean;
+    getUndoState(): EditorUndoState;
 
     //#endregion
 

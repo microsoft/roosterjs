@@ -9,6 +9,7 @@ import {
     DOMEventHandler,
     EditorCore,
     EditorOptions,
+    EditorUndoState,
     GenericContentEditFeature,
     GetContentMode,
     IContentTraverser,
@@ -391,6 +392,8 @@ export default class Editor implements IEditor {
         startFrom?: Node,
         event?: PluginEvent
     ): HTMLElement {
+        event = startFrom ? null : event; // Only use cache when startFrom is not specified, for different start position can have different result
+
         return cacheGetEventData(event, 'GET_ELEMENT_AT_CURSOR_' + selector, () => {
             if (!startFrom) {
                 let position = this.getFocusedPosition();
@@ -509,20 +512,14 @@ export default class Editor implements IEditor {
     }
 
     /**
-     * Whether there is an available undo snapshot
+     * Whether there is an available undo/redo snapshot
      */
-    public canUndo(): boolean {
-        return (
-            this.core.undo.value.hasNewContent ||
-            this.core.undo.value.snapshotsService.canMove(-1 /*previousSnapshot*/)
-        );
-    }
-
-    /**
-     * Whether there is an available redo snapshot
-     */
-    public canRedo(): boolean {
-        return this.core.undo.value.snapshotsService.canMove(1 /*nextSnapshot*/);
+    getUndoState(): EditorUndoState {
+        const { hasNewContent, snapshotsService } = this.core.undo.value;
+        return {
+            canUndo: hasNewContent || snapshotsService.canMove(-1 /*previousSnapshot*/),
+            canRedo: snapshotsService.canMove(1 /*nextSnapshot*/),
+        };
     }
 
     //#endregion
