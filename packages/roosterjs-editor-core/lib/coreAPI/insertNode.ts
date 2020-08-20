@@ -15,6 +15,8 @@ import {
     wrap,
     adjustNodeInsertPosition,
     createRange,
+    safeInstanceOf,
+    toArray,
 } from 'roosterjs-editor-dom';
 
 function getInitialRange(
@@ -60,7 +62,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
         case ContentPosition.End: {
             let isBegin = option.position == ContentPosition.Begin;
             let block = getFirstLastBlockElement(contentDiv, isBegin);
-            let insertedNode: Node;
+            let insertedNode: Node | Node[];
             if (block) {
                 let refNode = isBegin ? block.getStartNode() : block.getEndNode();
                 if (
@@ -71,10 +73,20 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                     // For insert on new line, or refNode is text or void html element (HR, BR etc.)
                     // which cannot have children, i.e. <div>hello<br>world</div>. 'hello', 'world' are the
                     // first and last node. Insert before 'hello' or after 'world', but still inside DIV
-                    insertedNode = refNode.parentNode.insertBefore(
-                        node,
-                        isBegin ? refNode : refNode.nextSibling
-                    );
+                    if (safeInstanceOf(node, 'DocumentFragment')) {
+                        // if the node to be inserted is DocumentFragment, use its childNodes as insertedNode
+                        // because insertBefore() returns an empty DocumentFragment
+                        insertedNode = toArray(node.childNodes);
+                        refNode.parentNode.insertBefore(
+                            node,
+                            isBegin ? refNode : refNode.nextSibling
+                        );
+                    } else {
+                        insertedNode = refNode.parentNode.insertBefore(
+                            node,
+                            isBegin ? refNode : refNode.nextSibling
+                        );
+                    }
                 } else {
                     // if the refNode can have child, use appendChild (which is like to insert as first/last child)
                     // i.e. <div>hello</div>, the content will be inserted before/after hello
@@ -87,8 +99,11 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
 
             // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
             // add a DIV wrapping
-            if (insertedNode && option.insertOnNewLine && !isBlockElement(insertedNode)) {
-                wrap(insertedNode);
+            if (insertedNode && option.insertOnNewLine) {
+                const nodes = Array.isArray(insertedNode) ? insertedNode : [insertedNode];
+                if (!isBlockElement(nodes[0]) || !isBlockElement(nodes[nodes.length - 1])) {
+                    wrap(nodes);
+                }
             }
 
             break;
