@@ -6,6 +6,7 @@ import ribbonButtons from './ribbonButtons';
 import RibbonPlugin from './RibbonPlugin';
 import { Browser, getSelectedBlockElementsInRegion } from 'roosterjs-editor-dom';
 import { getFormatState, rotateElement } from 'roosterjs-editor-api';
+import { QueryScope } from 'roosterjs-editor-types';
 
 let styles = require('./Ribbon.scss');
 
@@ -52,21 +53,10 @@ export default class Ribbon extends React.Component<RibbonProps, {}> {
 
     private onRotateImage = () => {
         const editor = this.props.plugin.getEditor();
-        blockFormat(editor, (region) => {
-            const blocks = getSelectedBlockElementsInRegion(region);
-            blocks.forEach(block => {
-                const blockElement = block.collapseToSingleElement();
-                for (let j = 0; j < blockElement.children.length; j++) {
-                    {
-                        const child = blockElement.children[j];
-                        if (child.tagName == "IMG") {
-                            rotateElement(editor, child as HTMLImageElement, 45);
-                            break; // Only rotate the first image
-                        }
-                    }
-                }
-            });
-        });
+        const images = editor.queryElements('img', QueryScope.InSelection);
+        if (images.length > 0) {
+            rotateElement(editor, images[0] as HTMLImageElement, 45);
+        }
     };
 
     private onSave = () => {
