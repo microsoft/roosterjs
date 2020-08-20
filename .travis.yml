@@ -31,4 +31,6 @@ deploy:
       script: node tools/build.js publish --token $NPM_TOKEN
       skip-cleanup: true
       on:
-          branch: master
+          branch:
+              - master
+              - vnext
