@@ -13,27 +13,22 @@ const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
  * @param doc HTML Document which contains the content from Excel
  */
 export default function convertPastedContentFromExcel(event: BeforePasteEvent) {
-    const {
-        fragment,
-        sanitizingOption,
-        htmlBefore,
-        clipboardData: { html },
-    } = event;
-    let newHtml = html;
+    const { fragment, sanitizingOption, htmlBefore } = event;
+    let html = event.clipboardData.html;
 
     if (html.match(LAST_TD_END_REGEX)) {
         const trMatch = htmlBefore.match(LAST_TR_REGEX);
         const tr = trMatch ? trMatch[0] : '<TR>';
-        newHtml = tr + html + '</TR>';
+        html = tr + html + '</TR>';
     }
     if (html.match(LAST_TR_END_REGEX)) {
         let tableMatch = htmlBefore.match(LAST_TABLE_REGEX);
         let table = tableMatch ? tableMatch[0] : '<TABLE>';
-        newHtml = table + html + '</TABLE>';
+        html = table + html + '</TABLE>';
     }
 
-    if (newHtml != html) {
-        const doc = new DOMParser().parseFromString(newHtml, 'text/html');
+    if (html != event.clipboardData.html) {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
         while (fragment.firstChild) {
             fragment.removeChild(fragment.firstChild);
         }

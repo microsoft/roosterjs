@@ -17,12 +17,17 @@ export default interface ClipboardData {
      * When set to null, it means there's no HTML from clipboard event.
      * When set to undefined, it means there may be HTML in clipboard event, but fail to retrieve
      */
-    html: string;
+    rawHtml: string;
 
     /**
      * Image file from clipboard event
      */
     image: File;
+
+    /**
+     * Html extracted from raw html string and remove content before and after fragment tag
+     */
+    html?: string;
 
     /**
      * An editor content snapshot before pasting happens. This is used for changing paste format

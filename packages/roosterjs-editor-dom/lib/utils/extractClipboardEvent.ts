@@ -42,7 +42,7 @@ export default function extractClipboardEvent(
         types: dataTransfer.types ? toArray(dataTransfer.types) : [],
         text: dataTransfer.getData('text'),
         image: getImage(dataTransfer),
-        html: undefined,
+        rawHtml: undefined,
     };
 
     if (event.clipboardData && event.clipboardData.items) {
@@ -52,7 +52,7 @@ export default function extractClipboardEvent(
             let item = items[i];
             if (item.type && item.type.indexOf('text/html') == 0) {
                 item.getAsString(html => {
-                    result.html = Browser.isEdge ? workaroundForEdge(html) : html;
+                    result.rawHtml = Browser.isEdge ? workaroundForEdge(html) : html;
                     callback(result);
                 });
                 return;
@@ -60,7 +60,7 @@ export default function extractClipboardEvent(
         }
 
         // No HTML content found, set html to null
-        result.html = null;
+        result.rawHtml = null;
     }
 
     callback(result);

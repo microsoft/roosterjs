@@ -46,7 +46,7 @@ export const createPasteFragment: CreatePasteFragment = (
     // Step 1: Prepare BeforePasteEvent object
     const event = createBeforePasteEvent(core, clipboardData);
     const { fragment, sanitizingOption } = event;
-    const { html, text, imageDataUri } = clipboardData;
+    const { rawHtml, text, imageDataUri } = clipboardData;
     const document = core.contentDiv.ownerDocument;
     let doc: HTMLDocument;
 
@@ -59,8 +59,8 @@ export const createPasteFragment: CreatePasteFragment = (
         fragment.appendChild(img);
     } else if (
         !pasteAsText &&
-        html &&
-        (doc = new DOMParser().parseFromString(html, 'text/html'))?.body
+        rawHtml &&
+        (doc = new DOMParser().parseFromString(rawHtml, 'text/html'))?.body
     ) {
         // Paste HTML
         const attributes = doc.querySelector('html')?.attributes;
@@ -80,13 +80,16 @@ export const createPasteFragment: CreatePasteFragment = (
             sanitizingOption.additionalGlobalStyleNodes.push(style);
         });
 
-        const startIndex = html.indexOf(START_FRAGMENT);
-        const endIndex = html.lastIndexOf(END_FRAGMENT);
+        const startIndex = rawHtml.indexOf(START_FRAGMENT);
+        const endIndex = rawHtml.lastIndexOf(END_FRAGMENT);
 
         if (startIndex >= 0 && endIndex >= startIndex + START_FRAGMENT.length) {
-            event.htmlBefore = html.substr(0, startIndex);
-            event.htmlAfter = html.substr(endIndex + END_FRAGMENT.length);
-            doc.body.innerHTML = html.substring(startIndex + START_FRAGMENT.length, endIndex);
+            event.htmlBefore = rawHtml.substr(0, startIndex);
+            event.htmlAfter = rawHtml.substr(endIndex + END_FRAGMENT.length);
+            doc.body.innerHTML = clipboardData.html = rawHtml.substring(
+                startIndex + START_FRAGMENT.length,
+                endIndex
+            );
 
             // Remove style nodes just added by setting innerHTML of body since we already have all
             // style nodes in header.

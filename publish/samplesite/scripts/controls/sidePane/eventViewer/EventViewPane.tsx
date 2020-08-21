@@ -159,7 +159,7 @@ export default class EventViewPane extends React.Component<
                             'Sanitized HTML',
                             (event.clipboardData as any).html
                         )}
-                        {this.renderPasteContent('Original HTML', event.clipboardData.html)}
+                        {this.renderPasteContent('Original HTML', event.clipboardData.rawHtml)}
                         {this.renderPasteContent('Image', event.clipboardData.image, img => (
                             <img
                                 ref={ref => ref && this.renderImage(ref, img)}

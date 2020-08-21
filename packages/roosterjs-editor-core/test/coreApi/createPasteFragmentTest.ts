@@ -31,7 +31,7 @@ describe('createPasteFragment', () => {
         const clipboardData: ClipboardData = {
             types: [],
             text: 'This is a test',
-            html: null,
+            rawHtml: null,
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: null,
@@ -51,7 +51,7 @@ describe('createPasteFragment', () => {
         const clipboardData: ClipboardData = {
             types: [],
             text: 'This is a test\nthis is line 2\nthis is line 3',
-            html: null,
+            rawHtml: null,
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: null,
@@ -71,7 +71,7 @@ describe('createPasteFragment', () => {
         const clipboardData: ClipboardData = {
             types: [],
             text: 'This is a test\nthis is line 2\nthis is line 3',
-            html: null,
+            rawHtml: null,
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: null,
@@ -91,7 +91,7 @@ describe('createPasteFragment', () => {
         const clipboardData: ClipboardData = {
             types: [],
             text: '',
-            html: null,
+            rawHtml: null,
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: 'test',
@@ -111,7 +111,7 @@ describe('createPasteFragment', () => {
         const clipboardData: ClipboardData = {
             types: [],
             text: 'test',
-            html: null,
+            rawHtml: null,
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: 'test',
@@ -131,7 +131,7 @@ describe('createPasteFragment', () => {
         const clipboardData: ClipboardData = {
             types: [],
             text: '',
-            html: null,
+            rawHtml: null,
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: 'test',
@@ -151,7 +151,7 @@ describe('createPasteFragment', () => {
         const clipboardData: ClipboardData = {
             types: [],
             text: 'test text',
-            html: '<div>test html</div>',
+            rawHtml: '<div>test html</div>',
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: 'test',
@@ -171,7 +171,7 @@ describe('createPasteFragment', () => {
         const clipboardData: ClipboardData = {
             types: [],
             text: 'test text',
-            html: '<div>test html</div>',
+            rawHtml: '<div>test html</div>',
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: 'test',
@@ -194,7 +194,7 @@ describe('createPasteFragment', () => {
         const clipboardData: ClipboardData = {
             types: [],
             text: '',
-            html:
+            rawHtml:
                 '<html attrname1="attrValue1" attrname2="attrValue2"><body><meta name="metaName1" content="metaContent1"><div>test<meta name="metaName2" content="metaContent2"></div></body></html>',
             image: null,
             snapshotBeforePaste: null,
@@ -237,7 +237,7 @@ describe('createPasteFragment', () => {
         const clipboardData: ClipboardData = {
             types: [],
             text: '',
-            html:
+            rawHtml:
                 '<html><head><style>.class1{}</style></head><body><style>.class2{}</style><div>test</div></body></html>',
             image: null,
             snapshotBeforePaste: null,

@@ -39,7 +39,7 @@ export default class CorePastePlugin implements EditorPlugin {
 
     private onPaste = (event: Event) => {
         extractClipboardEvent(event as ClipboardEvent, items => {
-            if (items.html === undefined) {
+            if (items.rawHtml === undefined) {
                 // Can't get pasted HTML directly, need to use a temp DIV to retrieve pasted content.
                 // This is mostly for IE
                 const originalSelectionRange = this.editor.getSelectionRange();
@@ -54,7 +54,7 @@ export default class CorePastePlugin implements EditorPlugin {
                 this.editor.runAsync(() => {
                     // restore original selection range in editor
                     this.editor.select(originalSelectionRange);
-                    items.html = tempDiv.innerHTML;
+                    items.rawHtml = tempDiv.innerHTML;
                     tempDiv.style.display = 'none';
                     tempDiv.innerHTML = '';
                     this.paste(items);
