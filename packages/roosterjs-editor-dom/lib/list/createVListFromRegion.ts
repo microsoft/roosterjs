@@ -2,7 +2,9 @@ import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import getSelectedBlockElementsInRegion from '../region/getSelectedBlockElementsInRegion';
 import isNodeInRegion from '../region/isNodeInRegion';
 import shouldSkipNode from '../utils/shouldSkipNode';
+import toArray from '../utils/toArray';
 import VList from './VList';
+import wrap from '../utils/wrap';
 import { getLeafSibling } from '../utils/getLeafSibling';
 import { isListElement } from './getListTypeFromNode';
 import { ListType, Region } from 'roosterjs-editor-types';
@@ -109,13 +111,18 @@ function getRootListNode(region: Region, node: Node): ListElement {
 }
 
 function createVListFromItemNode(node: Node): VList {
+    // Wrap all child nodes under a single one, and put the new list under original root node
+    // so that the list can carry over styles under the root node.
+    const childNodes = toArray(node.childNodes);
+    const nodeForItem = childNodes.length == 1 ? childNodes[0] : wrap(childNodes, 'SPAN');
+
     // Create a temporary OL root element for this list.
     const listNode = node.ownerDocument.createElement('ol'); // Either OL or UL is ok here
-    node.parentNode?.insertBefore(listNode, node);
+    node.appendChild(listNode);
 
     // Create the VList and append items
     const vList = new VList(listNode);
-    vList.appendItem(node, ListType.None);
+    vList.appendItem(nodeForItem, ListType.None);
 
     return vList;
 }

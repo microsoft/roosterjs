@@ -61,7 +61,7 @@ describe('createVListFromRegion from selection, no sibling list', () => {
         runTest(`<div id="${FocusNode}"><br></div>`, [
             {
                 listTypes: [ListType.None],
-                outerHTML: `<li id="${FocusNode}"><br></li>`,
+                outerHTML: '<li><br></li>',
             },
         ]);
     });
@@ -112,7 +112,7 @@ describe('createVListFromRegion from selection, no sibling list', () => {
             [
                 {
                     listTypes: [ListType.None],
-                    outerHTML: `<li id="${FocusNode1}">line2</li>`,
+                    outerHTML: '<li>line2</li>',
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered],
@@ -150,7 +150,7 @@ describe('createVListFromRegion from selection, no sibling list', () => {
             [
                 {
                     listTypes: [ListType.None],
-                    outerHTML: `<li id="${FocusNode1}">line2<br></li>`,
+                    outerHTML: '<li><span>line2<br></span></li>',
                 },
                 {
                     listTypes: [ListType.None],
@@ -170,7 +170,7 @@ describe('createVListFromRegion from selection, no sibling list', () => {
             [
                 {
                     listTypes: [ListType.None],
-                    outerHTML: `<li id="${FocusNode1}">line2<br></li>`,
+                    outerHTML: '<li><span>line2<br></span></li>',
                 },
                 {
                     listTypes: [ListType.None],

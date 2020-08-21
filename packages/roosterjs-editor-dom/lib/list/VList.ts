@@ -208,18 +208,16 @@ export default class VList {
      * @param type Type of this list item, can be ListType.None
      */
     appendItem(node: Node, type: ListType) {
-        let newListNode = node;
         const nodeTag = getTagOfNode(node);
 
-        if (nodeTag != 'LI' && nodeTag != 'TABLE') {
-            newListNode = changeElementTag(<HTMLElement>node, 'LI');
-        } else if (nodeTag == 'TABLE') {
-            newListNode = wrap(node, 'li');
+        // Change DIV tag to SPAN. Otherwise we can create new list item by Enter key in Safari
+        if (nodeTag == 'DIV') {
+            node = changeElementTag(<HTMLElement>node, 'LI');
+        } else if (nodeTag != 'LI') {
+            node = wrap(node, 'LI');
         }
 
-        this.items.push(
-            type == ListType.None ? new VListItem(newListNode) : new VListItem(newListNode, type)
-        );
+        this.items.push(type == ListType.None ? new VListItem(node) : new VListItem(node, type));
     }
 
     /**
