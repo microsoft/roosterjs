@@ -1,7 +1,7 @@
 import createEditorCore from './createMockEditorCore';
-import { calcDefaultFormat } from '../../lib/coreApi/calcDefaultFormat';
+import { getDefaultFormat } from '../../lib/coreApi/getDefaultFormat';
 
-describe('calcDefaultFormat', () => {
+describe('getDefaultFormat', () => {
     let div: HTMLDivElement;
     beforeEach(() => {
         div = document.createElement('div');
@@ -16,9 +16,15 @@ describe('calcDefaultFormat', () => {
         div = null;
     });
 
+    it('not force recalculate', () => {
+        const core = createEditorCore(div, {});
+        getDefaultFormat(core, false);
+        expect(core.lifecycle.value.defaultFormat).toBeNull();
+    });
+
     it('no default format, light mode', () => {
         const core = createEditorCore(div, {});
-        calcDefaultFormat(core);
+        getDefaultFormat(core, true);
         expect(core.lifecycle.value.defaultFormat).toEqual({
             fontFamily: 'arial',
             fontSize: '14pt',
@@ -38,7 +44,7 @@ describe('calcDefaultFormat', () => {
         });
 
         // First time it initials the default format
-        calcDefaultFormat(core);
+        getDefaultFormat(core, true);
         expect(core.lifecycle.value.defaultFormat).toEqual({
             fontFamily: 'arial',
             fontSize: '14pt',
@@ -52,7 +58,7 @@ describe('calcDefaultFormat', () => {
         });
 
         // Second time it calculate default format for dark mode
-        calcDefaultFormat(core);
+        getDefaultFormat(core, true);
         expect(core.lifecycle.value.defaultFormat).toEqual({
             fontFamily: 'arial',
             fontSize: '14pt',
@@ -78,7 +84,7 @@ describe('calcDefaultFormat', () => {
             bold: true,
             fontFamily: 'arial',
         };
-        calcDefaultFormat(core);
+        getDefaultFormat(core, true);
         expect(core.lifecycle.value.defaultFormat).toEqual({
             fontFamily: 'arial',
             fontSize: '14pt',
@@ -99,7 +105,7 @@ describe('calcDefaultFormat', () => {
             fontFamily: 'arial',
         };
         core.darkMode.value.isDarkMode = true;
-        calcDefaultFormat(core);
+        getDefaultFormat(core, true);
         expect(core.lifecycle.value.defaultFormat).toEqual({
             fontFamily: 'arial',
             fontSize: '14pt',
@@ -119,11 +125,11 @@ describe('calcDefaultFormat', () => {
     it('has empty default format', () => {
         const core = createEditorCore(div, {});
         core.lifecycle.value.defaultFormat = {};
-        calcDefaultFormat(core);
+        getDefaultFormat(core, true);
         expect(core.lifecycle.value.defaultFormat).toEqual({});
 
         core.darkMode.value.isDarkMode = true;
-        calcDefaultFormat(core);
+        getDefaultFormat(core, true);
         expect(core.lifecycle.value.defaultFormat).toEqual({
             fontFamily: 'arial',
             fontSize: '14pt',

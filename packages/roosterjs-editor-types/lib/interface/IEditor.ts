@@ -432,9 +432,11 @@ export default interface IEditor {
 
     /**
      * Get default format of this editor
+     * @param forceRecalculate If true, recalcuate default format then return. Otherwise return current value directly
+     * This is used when default format is changed, e.g. when dark mode state is changed. Default value is false
      * @returns Default format object of this editor
      */
-    getDefaultFormat(): DefaultFormat;
+    getDefaultFormat(forceRecalculate?: boolean): DefaultFormat;
 
     /**
      * Get a content traverser for the whole editor
@@ -505,11 +507,6 @@ export default interface IEditor {
      * @returns True if the editor is in dark mode, otherwise false
      */
     isDarkMode(): boolean;
-
-    /**
-     * Calculate default format of this editor
-     */
-    calcDefaultFormat(): void;
 
     /**
      * Whether experiment features can be used

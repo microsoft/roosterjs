@@ -2,6 +2,7 @@ import ClipboardData from './ClipboardData';
 import EditorPlugin from './EditorPlugin';
 import NodePosition from './NodePosition';
 import { ChangeSource } from '../enum/ChangeSource';
+import { DefaultFormat } from '..';
 import { DOMEventHandler } from '../type/domEventHandler';
 import { GetContentMode } from '../enum/GetContentMode';
 import { InsertOption } from './InsertOption';
@@ -40,10 +41,12 @@ export type AttachDomEvent = (
 ) => () => void;
 
 /**
- * Calculate default format of editor
+ * Get or recalculate default format of editor
  * @param core The EditorCore object
+ * @param forceRecalculate If true, recalcuate default format then return. Otherwise return current value directly
+ * This is used when default format is changed, e.g. when dark mode state is changed
  */
-export type CalcDefaultFormat = (core: EditorCore) => void;
+export type GetDefaultFormat = (core: EditorCore, forceRecalculate: boolean) => DefaultFormat;
 
 /**
  * Create a DocumentFragment for paste from a ClipboardData
@@ -185,10 +188,12 @@ export interface CoreApiMap {
     attachDomEvent: AttachDomEvent;
 
     /**
-     * Calculate default format of editor
+     * Get or recalculate default format of editor
      * @param core The EditorCore object
+     * @param forceRecalculate If true, recalcuate default format then return. Otherwise return current value directly
+     * This is used when default format is changed, e.g. when dark mode state is changed
      */
-    calcDefaultFormat: CalcDefaultFormat;
+    getDefaultFormat: GetDefaultFormat;
 
     /**
      * Create a DocumentFragment for paste from a ClipboardData

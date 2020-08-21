@@ -5,12 +5,12 @@ describe('LifecyclePlugin', () => {
     it('init', () => {
         const div = document.createElement('div');
         const plugin = new LifecyclePlugin({}, div);
-        const calcDefaultFormat = jasmine.createSpy('calcDefaultFormat');
+        const getDefaultFormat = jasmine.createSpy('getDefaultFormat');
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         const state = plugin.getState();
 
         plugin.initialize(<IEditor>(<any>{
-            calcDefaultFormat,
+            getDefaultFormat,
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
@@ -21,7 +21,7 @@ describe('LifecyclePlugin', () => {
             defaultFormat: null,
         });
 
-        expect(calcDefaultFormat).toHaveBeenCalled();
+        expect(getDefaultFormat).toHaveBeenCalled();
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('text');
         expect(div.innerHTML).toBe('');
@@ -45,12 +45,12 @@ describe('LifecyclePlugin', () => {
             },
             div
         );
-        const calcDefaultFormat = jasmine.createSpy('calcDefaultFormat');
+        const getDefaultFormat = jasmine.createSpy('getDefaultFormat');
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         const state = plugin.getState();
 
         plugin.initialize(<IEditor>(<any>{
-            calcDefaultFormat,
+            getDefaultFormat,
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
@@ -63,7 +63,7 @@ describe('LifecyclePlugin', () => {
             },
         });
 
-        expect(calcDefaultFormat).toHaveBeenCalled();
+        expect(getDefaultFormat).toHaveBeenCalled();
         expect(div.isContentEditable).toBeTrue();
         expect(div.style.userSelect).toBe('text');
         expect(div.innerHTML).toBe('test');
@@ -80,11 +80,11 @@ describe('LifecyclePlugin', () => {
         const div = document.createElement('div');
         div.contentEditable = 'true';
         const plugin = new LifecyclePlugin({}, div);
-        const calcDefaultFormat = jasmine.createSpy('calcDefaultFormat');
+        const getDefaultFormat = jasmine.createSpy('getDefaultFormat');
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
         plugin.initialize(<IEditor>(<any>{
-            calcDefaultFormat,
+            getDefaultFormat,
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
@@ -105,11 +105,11 @@ describe('LifecyclePlugin', () => {
         const div = document.createElement('div');
         div.contentEditable = 'false';
         const plugin = new LifecyclePlugin({}, div);
-        const calcDefaultFormat = jasmine.createSpy('calcDefaultFormat');
+        const getDefaultFormat = jasmine.createSpy('getDefaultFormat');
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
         plugin.initialize(<IEditor>(<any>{
-            calcDefaultFormat,
+            getDefaultFormat,
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,

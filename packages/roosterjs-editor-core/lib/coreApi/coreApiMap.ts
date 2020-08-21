@@ -1,10 +1,10 @@
 import { addUndoSnapshot } from './addUndoSnapshot';
 import { attachDomEvent } from './attachDomEvent';
-import { calcDefaultFormat } from './calcDefaultFormat';
 import { CoreApiMap } from 'roosterjs-editor-types';
 import { createPasteFragment } from './createPasteFragment';
 import { focus } from './focus';
 import { getContent } from './getContent';
+import { getDefaultFormat } from './getDefaultFormat';
 import { getSelectionRange } from './getSelectionRange';
 import { getStyleBasedFormatState } from './getStyleBasedFormatState';
 import { hasFocus } from './hasFocus';
@@ -19,7 +19,7 @@ import { triggerEvent } from './triggerEvent';
  */
 export const coreApiMap: CoreApiMap = {
     attachDomEvent,
-    calcDefaultFormat,
+    getDefaultFormat,
     addUndoSnapshot,
     focus,
     getContent,

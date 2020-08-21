@@ -90,7 +90,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         this.editor = editor;
 
         // Calculate default format
-        this.editor.calcDefaultFormat();
+        this.editor.getDefaultFormat(true /*forceRecalculate*/);
 
         // Ensure initial content and its format
         this.editor.setContent(this.initialContent, false /*triggerContentChangedEvent*/);
