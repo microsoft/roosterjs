@@ -1,10 +1,9 @@
 import * as React from 'react';
-import blockFormat from 'roosterjs-editor-api/lib/utils/blockFormat';
 import MainPaneBase from '../MainPaneBase';
 import RibbonButton from './RibbonButton';
 import ribbonButtons from './ribbonButtons';
 import RibbonPlugin from './RibbonPlugin';
-import { Browser, getSelectedBlockElementsInRegion } from 'roosterjs-editor-dom';
+import { Browser } from 'roosterjs-editor-dom';
 import { getFormatState, rotateElement } from 'roosterjs-editor-api';
 import { QueryScope } from 'roosterjs-editor-types';
 
