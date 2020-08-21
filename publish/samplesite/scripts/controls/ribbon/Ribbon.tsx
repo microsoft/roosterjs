@@ -4,7 +4,8 @@ import RibbonButton from './RibbonButton';
 import ribbonButtons from './ribbonButtons';
 import RibbonPlugin from './RibbonPlugin';
 import { Browser } from 'roosterjs-editor-dom';
-import { getFormatState } from 'roosterjs-editor-api';
+import { getFormatState, rotateElement } from 'roosterjs-editor-api';
+import { QueryScope } from 'roosterjs-editor-types';
 
 let styles = require('./Ribbon.scss');
 
@@ -30,6 +31,9 @@ export default class Ribbon extends React.Component<RibbonProps, {}> {
                         onClicked={this.onButtonClicked}
                     />
                 ))}
+                <button onClick={this.onRotateImage} className={styles.textButton}>
+                    RotateImage
+                </button>
                 <button onClick={this.onSave} className={styles.textButton}>
                     Export
                 </button>
@@ -45,6 +49,14 @@ export default class Ribbon extends React.Component<RibbonProps, {}> {
             </div>
         );
     }
+
+    private onRotateImage = () => {
+        const editor = this.props.plugin.getEditor();
+        const images = editor.queryElements('img', QueryScope.InSelection);
+        if (images.length > 0) {
+            rotateElement(editor, images[0] as HTMLImageElement, 45);
+        }
+    };
 
     private onSave = () => {
         let editor = this.props.plugin.getEditor();

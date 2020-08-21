@@ -18,6 +18,7 @@ export { default as editTable } from './table/editTable';
 export { default as formatTable } from './table/formatTable';
 export { default as removeLink } from './format/removeLink';
 export { default as replaceWithNode } from './format/replaceWithNode';
+export { default as rotateElement } from './format/rotateElement';
 export { default as setAlignment } from './format/setAlignment';
 export { default as setBackgroundColor } from './format/setBackgroundColor';
 export { default as setTextColor } from './format/setTextColor';
