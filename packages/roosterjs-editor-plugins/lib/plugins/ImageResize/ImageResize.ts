@@ -153,7 +153,9 @@ export default class ImageResize implements EditorPlugin {
      */
     hideResizeHandle(selectImageAfterUnSelect?: boolean) {
         if (this.resizeDiv) {
+            const transform = this.resizeDiv.style.transform;
             const img = this.removeResizeDiv(this.resizeDiv);
+            img.style.transform = transform;
 
             if (selectImageAfterUnSelect) {
                 this.editor.select(img);
@@ -288,6 +290,14 @@ export default class ImageResize implements EditorPlugin {
             wrapper.appendChild(div);
             div.addEventListener('mousedown', this.startResize);
         });
+
+        // If the resizeDiv's image has a transform, apply it to the container
+        const selectedImage = this.getSelectedImage(wrapper);
+        if (selectedImage && selectedImage.style && selectedImage.style.transform) {
+            wrapper.style.transform = selectedImage.style.transform;
+            selectedImage.style.transform = '';
+        }
+
         return wrapper;
     }
 
@@ -308,8 +318,9 @@ export default class ImageResize implements EditorPlugin {
         this.hideResizeHandle();
     };
 
-    private getSelectedImage(): HTMLElement {
-        return this.resizeDiv ? <HTMLElement>this.resizeDiv.getElementsByTagName('IMG')[0] : null;
+    private getSelectedImage(div?: HTMLElement): HTMLElement {
+        const divWithImage = div || this.resizeDiv;
+        return divWithImage ? <HTMLElement>divWithImage.getElementsByTagName('IMG')[0] : null;
     }
 
     private isNorth(direction: string): boolean {

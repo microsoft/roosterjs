@@ -3,9 +3,10 @@ import MainPaneBase from '../MainPaneBase';
 import renderInsertLinkDialog from './renderInsertLinkDialog';
 import renderTableOptions from './renderTableOptions';
 import RibbonButtonType from './RibbonButtonType';
-import { Alignment, Direction, Indentation } from 'roosterjs-editor-types';
+import { Alignment, Direction, Indentation, QueryScope } from 'roosterjs-editor-types';
 import { Browser } from 'roosterjs-editor-dom';
 import {
+    rotateElement,
     setBackgroundColor,
     setFontName,
     setFontSize,
@@ -286,6 +287,15 @@ const buttons: { [key: string]: RibbonButtonType } = {
             original: 'Paste Original',
             text: 'Paste Text',
             merge: 'Paste and Merge Format',
+        },
+    },
+    rotateImage: {
+        title: 'RotateImage',
+        onClick: editor => {
+            const images = editor.queryElements('img', QueryScope.InSelection);
+            if (images.length > 0) {
+                rotateElement(editor, images[0] as HTMLImageElement, 45);
+            }
         },
     },
     export: {
