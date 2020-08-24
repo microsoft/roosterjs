@@ -318,7 +318,7 @@ function buildDoc() {
 }
 
 async function buildDemoSite() {
-    var sourcePathRoot = path.join(rootPath, 'publish/samplesite');
+    var sourcePathRoot = path.join(rootPath, 'demo');
     var sourcePath = path.join(sourcePathRoot, 'scripts');
     runNode(typescriptPath + ' --noEmit ', sourcePath);
 

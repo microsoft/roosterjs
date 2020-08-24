@@ -51,7 +51,7 @@ const UNIDENTIFIED_CODE = [0, 229];
  *
  * PickerPlugin doesn't provide any UI, it just wraps related DOM events and invoke callback functions.
  * To show a picker UI, you need to build your own UI component. Please reference to
- * https://github.com/microsoft/roosterjs/tree/master/publish/samplesite/scripts/controls/samplepicker
+ * https://github.com/microsoft/roosterjs/tree/master/demo/scripts/controls/samplepicker
  */
 export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvider>
     implements EditorPlugin {
