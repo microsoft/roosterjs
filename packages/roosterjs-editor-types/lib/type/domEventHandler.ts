@@ -3,7 +3,7 @@ import { PluginEventType } from '../event/PluginEventType';
 /**
  * Handler function type of DOM event
  */
-export type DOMEventHandlerFunction = (event: UIEvent) => void;
+export type DOMEventHandlerFunction = (event: Event) => void;
 
 /**
  * DOM event handler object with mapped plugin event type and handler function

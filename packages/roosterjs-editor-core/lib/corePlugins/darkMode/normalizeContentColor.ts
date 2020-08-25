@@ -1,11 +1,13 @@
 import { toArray } from 'roosterjs-editor-dom';
 
+const COLOR_DATA_SET_NAMES = ['ogsc', 'ogsb', 'ogac', 'ogab'];
+
 /**
  * @internal
  */
 export default function normalizeContentColor(root: HTMLElement) {
-    const allChildElements = root.getElementsByTagName('*');
-    toArray(allChildElements).forEach(e => {
+    const allChildElements = toArray(root.getElementsByTagName('*'));
+    allChildElements.forEach(e => {
         const element = e as HTMLElement;
         if (element.dataset) {
             // Reset color styles based on the content of the ogsc/ogsb data element.
@@ -31,21 +33,9 @@ export default function normalizeContentColor(root: HTMLElement) {
             }
 
             // Clean up any remaining data attributes.
-            if (element.dataset.ogsc) {
-                delete element.dataset.ogsc;
-            }
-
-            if (element.dataset.ogsb) {
-                delete element.dataset.ogsb;
-            }
-
-            if (element.dataset.ogac) {
-                delete element.dataset.ogac;
-            }
-
-            if (element.dataset.ogab) {
-                delete element.dataset.ogab;
-            }
+            COLOR_DATA_SET_NAMES.forEach(name => {
+                delete element.dataset[name];
+            });
         }
     });
 }
