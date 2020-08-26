@@ -1,9 +1,9 @@
 import * as dom from 'roosterjs-editor-dom';
-import CorePastePlugin from '../../lib/corePlugins/corePaste/CorePastePlugin';
+import CopyPastePlugin from '../../lib/corePlugins/copyPaste/CopyPastePlugin';
 import { ClipboardData, IEditor } from 'roosterjs-editor-types';
 
-describe('CorePastePlugin', () => {
-    let plugin: CorePastePlugin;
+describe('CopyPastePlugin', () => {
+    let plugin: CopyPastePlugin;
     let handler: (event: Event) => void;
     let paste: jasmine.Spy;
     let tempNode: HTMLElement = null;
@@ -19,7 +19,7 @@ describe('CorePastePlugin', () => {
 
     beforeEach(() => {
         handler = null;
-        plugin = new CorePastePlugin();
+        plugin = new CopyPastePlugin();
         spyOn(addDomEventHandler, 'default').and.callThrough();
         paste = jasmine.createSpy('paste');
 

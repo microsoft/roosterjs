@@ -62,9 +62,9 @@ export default interface CorePlugins {
     readonly darkMode: PluginWithState<DarkModePluginState>;
 
     /**
-     * Core paste plugin for handling onPaste event and extract the pasted content
+     * Copy and paste plugin for handling onCopy and onPaste event
      */
-    readonly paste: EditorPlugin;
+    readonly copyPaste: EditorPlugin;
 
     /**
      * Entity Plugin handles all operations related to an entity and generate entity specified events

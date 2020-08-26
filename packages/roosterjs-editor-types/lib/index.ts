@@ -22,6 +22,7 @@ export { RegionType } from './enum/RegionType';
 export { TableOperation } from './enum/TableOperation';
 
 // Event
+export { default as BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
 export { default as BasePluginEvent } from './event/BasePluginEvent';
 export { default as BeforeDisposeEvent } from './event/BeforeDisposeEvent';
 export { default as BeforePasteEvent } from './event/BeforePasteEvent';

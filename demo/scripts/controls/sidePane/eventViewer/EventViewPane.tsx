@@ -33,6 +33,7 @@ const EventTypeMap = {
     [PluginEventType.PendingFormatStateChanged]: 'PendingFormatStateChanged',
     [PluginEventType.DarkModeChanged]: 'DarkModeChanged',
     [PluginEventType.Scroll]: 'Scroll',
+    [PluginEventType.BeforeCutCopy]: 'BeforeCutCopy',
 };
 
 export default class EventViewPane extends React.Component<
@@ -183,8 +184,14 @@ export default class EventViewPane extends React.Component<
                         Operation={operation} Type={type}; Id={id}
                     </span>
                 );
+
+            case PluginEventType.BeforeCutCopy:
+                const { isCut } = event;
+                return <span>isCut={isCut ? 'true' : 'false'}</span>;
+
+            default:
+                return null;
         }
-        return null;
     }
 
     private clear = () => {

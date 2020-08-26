@@ -6,9 +6,9 @@ const CONTAINER_HTML =
 
 /**
  * @internal
- * Core paste plugin for handling onPaste event and extract the pasted content
+ * Copy and paste plugin for handling onCopy and onPaste event
  */
-export default class CorePastePlugin implements EditorPlugin {
+export default class CopyPastePlugin implements EditorPlugin {
     private editor: IEditor;
     private disposer: () => void;
 
@@ -16,7 +16,7 @@ export default class CorePastePlugin implements EditorPlugin {
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'CorePaste';
+        return 'CopyPaste';
     }
 
     /**

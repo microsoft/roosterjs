@@ -1,5 +1,5 @@
 import AutoCompletePlugin from '../corePlugins/autoComplete/AutoCompletePlugin';
-import CorePastePlugin from '../corePlugins/corePaste/CorePastePlugin';
+import CopyPastePlugin from '../corePlugins/copyPaste/CopyPastePlugin';
 import DarkModePlugin from '../corePlugins/darkMode/DarkModePlugin';
 import DOMEventPlugin from '../corePlugins/domEvent/DOMEventPlugin';
 import EditPlugin from '../corePlugins/edit/EditPlugin';
@@ -71,7 +71,7 @@ function createCorePlugins(
         pendingFormatState: map.pendingFormatState || new PendingFormatStatePlugin(),
         mouseUp: map.mouseUp || new MouseUpPlugin(),
         darkMode: map.darkMode || new DarkModePlugin(options),
-        paste: map.paste || new CorePastePlugin(),
+        copyPaste: map.copyPaste || new CopyPastePlugin(),
         entity: map.entity || new EntityPlugin(),
         lifecycle: map.lifecycle || new LifecyclePlugin(options, contentDiv),
     };

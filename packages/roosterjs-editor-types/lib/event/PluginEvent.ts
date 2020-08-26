@@ -1,3 +1,4 @@
+import BeforeCutCopyEvent from './BeforeCutCopyEvent';
 import BeforeDisposeEvent from './BeforeDisposeEvent';
 import BeforePasteEvent from './BeforePasteEvent';
 import ContentChangedEvent from './ContentChangedEvent';
@@ -12,6 +13,7 @@ import { PluginDomEvent } from './PluginDomEvent';
  * Editor plugin event interface
  */
 export type PluginEvent =
+    | BeforeCutCopyEvent
     | BeforePasteEvent
     | ContentChangedEvent
     | EntityOperationEvent

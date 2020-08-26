@@ -10,7 +10,7 @@ import {
 
 /**
  * @internal
- * Copy plugin, hijacks copy events to normalize the content to the clipboard.
+ * Dark mode plugin, handles dark mode related color transform events
  */
 export default class DarkModePlugin implements PluginWithState<DarkModePluginState> {
     private editor: IEditor;
@@ -32,7 +32,7 @@ export default class DarkModePlugin implements PluginWithState<DarkModePluginSta
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'Copy';
+        return 'DarkMode';
     }
 
     /**
