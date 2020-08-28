@@ -1,5 +1,5 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
-import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
+import { DarkModeDatasetNames, IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
 
 /**
  * Set background color at current selection
@@ -23,7 +23,8 @@ export default function setBackgroundColor(editor: IEditor, color: string | Mode
         applyInlineStyle(editor, (element, isInnerNode) => {
             element.style.backgroundColor = isInnerNode ? '' : appliedColor;
             if (darkMode) {
-                element.dataset.ogsb = color.lightModeColor;
+                element.dataset[DarkModeDatasetNames.OriginalStyleBackgroundColor] =
+                    color.lightModeColor;
             }
         });
     }

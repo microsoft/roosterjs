@@ -1,8 +1,8 @@
-import { EditorCore, GetStyleBasedFormatState } from 'roosterjs-editor-types';
+import { DarkModeDatasetNames, EditorCore, GetStyleBasedFormatState } from 'roosterjs-editor-types';
 import { findClosestElementAncestor, getComputedStyles } from 'roosterjs-editor-dom';
 
-const ORIGINAL_STYLE_COLOR_SELECTOR = '[data-ogsc],[data-ogac]';
-const ORIGINAL_STYLE_BACK_COLOR_SELECTOR = '[data-ogsb],[data-ogab]';
+const ORIGINAL_STYLE_COLOR_SELECTOR = `[data-${DarkModeDatasetNames.OriginalStyleColor}],[data-${DarkModeDatasetNames.OriginalAttributeColor}]`;
+const ORIGINAL_STYLE_BACK_COLOR_SELECTOR = `[data-${DarkModeDatasetNames.OriginalStyleBackgroundColor}],[data-${DarkModeDatasetNames.OriginalAttributeBackgroundColor}]`;
 
 /**
  * @internal
@@ -33,14 +33,21 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
         textColors: ogTextColorNode
             ? {
                   darkModeColor: styles[2],
-                  lightModeColor: ogTextColorNode.dataset.ogsc || ogTextColorNode.dataset.ogac,
+                  lightModeColor:
+                      ogTextColorNode.dataset[DarkModeDatasetNames.OriginalStyleColor] ||
+                      ogTextColorNode.dataset[DarkModeDatasetNames.OriginalAttributeColor],
               }
             : undefined,
         backgroundColors: ogBackgroundColorNode
             ? {
                   darkModeColor: styles[3],
                   lightModeColor:
-                      ogBackgroundColorNode.dataset.ogsb || ogBackgroundColorNode.dataset.ogab,
+                      ogBackgroundColorNode.dataset[
+                          DarkModeDatasetNames.OriginalStyleBackgroundColor
+                      ] ||
+                      ogBackgroundColorNode.dataset[
+                          DarkModeDatasetNames.OriginalAttributeBackgroundColor
+                      ],
               }
             : undefined,
     };

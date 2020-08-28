@@ -1,5 +1,5 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
-import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
+import { DarkModeDatasetNames, IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
 
 /**
  * Set text color at selection
@@ -23,7 +23,7 @@ export default function setTextColor(editor: IEditor, color: string | ModeIndepe
         applyInlineStyle(editor, (element, isInnerNode) => {
             element.style.color = isInnerNode ? '' : appliedColor;
             if (darkMode) {
-                element.dataset.ogsc = color.lightModeColor;
+                element.dataset[DarkModeDatasetNames.OriginalStyleColor] = color.lightModeColor;
             }
         });
     }

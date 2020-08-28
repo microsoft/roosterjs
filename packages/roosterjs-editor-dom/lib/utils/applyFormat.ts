@@ -1,4 +1,4 @@
-import { DefaultFormat } from 'roosterjs-editor-types';
+import { DarkModeDatasetNames, DefaultFormat } from 'roosterjs-editor-types';
 
 /**
  * Apply format to an HTML element
@@ -32,13 +32,15 @@ export default function applyFormat(
         }
         if (textColor || textColors) {
             if (textColors && isDarkMode) {
-                element.dataset.ogsc = textColors.lightModeColor;
+                element.dataset[DarkModeDatasetNames.OriginalStyleColor] =
+                    textColors.lightModeColor;
             }
             elementStyle.color = textColor;
         }
         if (backgroundColor || backgroundColors) {
             if (backgroundColors && isDarkMode) {
-                element.dataset.ogsb = backgroundColors.lightModeColor;
+                element.dataset[DarkModeDatasetNames.OriginalStyleBackgroundColor] =
+                    backgroundColors.lightModeColor;
             }
             elementStyle.backgroundColor = backgroundColor;
         }

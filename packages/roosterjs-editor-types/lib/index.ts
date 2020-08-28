@@ -9,6 +9,7 @@ export { NodeType } from './browser/NodeType';
 export { Alignment } from './enum/Alignment';
 export { ChangeSource } from './enum/ChangeSource';
 export { ContentPosition } from './enum/ContentPosition';
+export { DarkModeDatasetNames } from './enum/DarkModeDatasetNames';
 export { Direction } from './enum/Direction';
 export { EntityClasses } from './enum/EntityClasses';
 export { EntityOperation } from './enum/EntityOperation';
