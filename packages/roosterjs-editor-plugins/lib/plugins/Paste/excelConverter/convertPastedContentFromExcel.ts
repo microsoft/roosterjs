@@ -27,7 +27,7 @@ export default function convertPastedContentFromExcel(event: BeforePasteEvent) {
         html = table + html + '</TABLE>';
     }
 
-    if (html != event.clipboardData.html) {
+    if (event.clipboardData.html != html) {
         const doc = new DOMParser().parseFromString(html, 'text/html');
         while (fragment.firstChild) {
             fragment.removeChild(fragment.firstChild);
