@@ -8,6 +8,7 @@ export { NodeType } from './browser/NodeType';
 // Enum
 export { Alignment } from './enum/Alignment';
 export { ChangeSource } from './enum/ChangeSource';
+export { ColorTransformDirection } from './enum/ColorTransformDirection';
 export { ContentPosition } from './enum/ContentPosition';
 export { DarkModeDatasetNames } from './enum/DarkModeDatasetNames';
 export { Direction } from './enum/Direction';
@@ -118,6 +119,7 @@ export {
     RestoreUndoSnapshot,
     SelectRange,
     SetContent,
+    TransformColor,
     TriggerEvent,
 } from './interface/EditorCore';
 export { default as EditorOptions } from './interface/EditorOptions';

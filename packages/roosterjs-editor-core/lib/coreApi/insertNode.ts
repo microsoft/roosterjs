@@ -1,11 +1,12 @@
 import {
+    BlockElement,
     ContentPosition,
+    ColorTransformDirection,
     EditorCore,
     InsertNode,
     InsertOption,
     NodeType,
     PositionType,
-    BlockElement,
 } from 'roosterjs-editor-types';
 import {
     Position,
@@ -57,6 +58,17 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
 
     if (option.updateCursor) {
         core.api.focus(core);
+    }
+
+    let elementsToTransformColor: HTMLElement[];
+
+    if (core.darkMode.value.isDarkMode && option.position != ContentPosition.Outside) {
+        if (safeInstanceOf(node, 'HTMLElement')) {
+            elementsToTransformColor = toArray(node.getElementsByTagName('*')) as HTMLElement[];
+            elementsToTransformColor.unshift(node);
+        } else if (safeInstanceOf(node, 'DocumentFragment')) {
+            elementsToTransformColor = toArray(node.querySelectorAll('*')) as HTMLElement[];
+        }
     }
 
     switch (option.position) {
@@ -158,6 +170,14 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
         case ContentPosition.Outside:
             core.contentDiv.parentNode.insertBefore(node, contentDiv.nextSibling);
             break;
+    }
+
+    if (elementsToTransformColor?.length > 0) {
+        core.api.transformColor(
+            core,
+            elementsToTransformColor,
+            ColorTransformDirection.LightToDark
+        );
     }
 
     return true;

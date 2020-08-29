@@ -1,11 +1,11 @@
-import normalizeContentColor from './normalizeContentColor';
-import { Browser, createWrapper } from 'roosterjs-editor-dom';
+import { Browser, createWrapper, setHtmlWithSelectionPath } from 'roosterjs-editor-dom';
 import {
     DarkModePluginState,
     EditorOptions,
     IEditor,
     PluginWithState,
     Wrapper,
+    GetContentMode,
 } from 'roosterjs-editor-types';
 
 /**
@@ -74,16 +74,16 @@ export default class DarkModePlugin implements PluginWithState<DarkModePluginSta
             const selectionRange = this.editor.getSelectionRange();
             if (selectionRange && !selectionRange.collapsed) {
                 const clipboardEvent = event as ClipboardEvent;
-                const copyFragment = selectionRange.cloneContents();
-
                 const containerDiv = this.editor.getDocument().createElement('div');
 
                 // Leverage script execution policy on CEDs to try and prevent XSS
                 containerDiv.contentEditable = 'true';
-                containerDiv.appendChild(copyFragment);
+                const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
+                const range = setHtmlWithSelectionPath(containerDiv, html);
+                const copyFragment = range.cloneContents();
 
-                // revert just this selected range to light mode colors
-                normalizeContentColor(containerDiv);
+                containerDiv.innerHTML = '';
+                containerDiv.appendChild(copyFragment);
 
                 // put it on the clipboard
                 clipboardEvent.clipboardData.setData('text/html', containerDiv.innerHTML);

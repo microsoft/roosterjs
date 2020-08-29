@@ -1,6 +1,11 @@
-import { ChangeSource, EditorCore, PluginEventType, SetContent } from 'roosterjs-editor-types';
-import { convertContentToDarkMode } from '../corePlugins/darkMode/convertContentToDarkMode';
-import { setHtmlWithSelectionPath } from 'roosterjs-editor-dom';
+import { setHtmlWithSelectionPath, toArray } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    ColorTransformDirection,
+    EditorCore,
+    PluginEventType,
+    SetContent,
+} from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -24,15 +29,12 @@ export const setContent: SetContent = (
 
     // Convert content even if it hasn't changed.
     if (core.darkMode.value.isDarkMode) {
-        const convertFunction = convertContentToDarkMode(
-            core.contentDiv,
-            core.darkMode.value.onExternalContentTransform,
-            true /* skipRootElement */
+        core.api.transformColor(
+            core,
+            toArray(core.contentDiv.getElementsByTagName('*')) as HTMLElement[],
+            ColorTransformDirection.LightToDark
         );
-        if (convertFunction) {
-            convertFunction();
-            contentChanged = true;
-        }
+        contentChanged = true;
     }
 
     if (triggerContentChangedEvent && contentChanged) {

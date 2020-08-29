@@ -1,5 +1,4 @@
 import createEditorCore from './createEditorCore';
-import { convertContentToDarkMode } from '../corePlugins/darkMode/convertContentToDarkMode';
 import {
     BlockElement,
     ChangeSource,
@@ -109,18 +108,7 @@ export default class Editor implements IEditor {
      * @returns true if node is inserted. Otherwise false
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
-        // DocumentFragment type nodes become empty after they're inserted.
-        // Therefore, we get the list of nodes to transform prior to their insertion.
-        const darkModeTransform = this.isDarkMode()
-            ? convertContentToDarkMode(node, this.core.darkMode.value.onExternalContentTransform)
-            : null;
-
-        const result = node ? this.core.api.insertNode(this.core, node, option) : false;
-
-        if (result && darkModeTransform) {
-            darkModeTransform();
-        }
-        return result;
+        return node ? this.core.api.insertNode(this.core, node, option) : false;
     }
 
     /**

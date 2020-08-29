@@ -12,6 +12,7 @@ import { insertNode } from './insertNode';
 import { restoreUndoSnapshot } from './restoreUndoSnapshot';
 import { selectRange } from './selectRange';
 import { setContent } from './setContent';
+import { transformColor } from './transformColor';
 import { triggerEvent } from './triggerEvent';
 
 /**
@@ -31,5 +32,6 @@ export const coreApiMap: CoreApiMap = {
     restoreUndoSnapshot,
     selectRange,
     setContent,
+    transformColor,
     triggerEvent,
 };

@@ -1,10 +1,16 @@
-import normalizeContentColor from '../corePlugins/darkMode/normalizeContentColor';
-import { EditorCore, GetContent, GetContentMode, PluginEventType } from 'roosterjs-editor-types';
+import {
+    ColorTransformDirection,
+    EditorCore,
+    GetContent,
+    GetContentMode,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 import {
     createRange,
     getHtmlWithSelectionPath,
     getSelectionPath,
     getTextContent,
+    toArray,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -32,7 +38,11 @@ export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): 
         const range = path && createRange(clonedRoot, path.start, path.end);
 
         if (isDarkMode) {
-            normalizeContentColor(clonedRoot);
+            core.api.transformColor(
+                core,
+                toArray(clonedRoot.getElementsByTagName('*')) as HTMLElement[],
+                ColorTransformDirection.DarkToLight
+            );
         }
 
         if (triggerExtractContentEvent) {

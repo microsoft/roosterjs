@@ -2,6 +2,7 @@ import ClipboardData from './ClipboardData';
 import EditorPlugin from './EditorPlugin';
 import NodePosition from './NodePosition';
 import { ChangeSource } from '../enum/ChangeSource';
+import { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import { DefaultFormat } from '..';
 import { DOMEventHandler } from '../type/domEventHandler';
 import { GetContentMode } from '../enum/GetContentMode';
@@ -170,6 +171,18 @@ export type SetContent = (
 ) => void;
 
 /**
+ * Transform color of elements between light mode and dark mode
+ * @param core The EditorCore object
+ * @param elements The HTML elements to transform
+ * @param direction To specify the transform direction, light to dark, or dark to light
+ */
+export type TransformColor = (
+    core: EditorCore,
+    elements: HTMLElement[],
+    direction: ColorTransformDirection
+) => void;
+
+/**
  * Trigger a plugin event
  * @param core The EditorCore object
  * @param pluginEvent The event object to trigger
@@ -284,6 +297,14 @@ export interface CoreApiMap {
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     setContent: SetContent;
+
+    /**
+     * Transform color of elements between light mode and dark mode
+     * @param core The EditorCore object
+     * @param elements The HTML elements to transform
+     * @param direction To specify the transform direction, light to dark, or dark to light
+     */
+    transformColor: TransformColor;
 
     /**
      * Trigger a plugin event

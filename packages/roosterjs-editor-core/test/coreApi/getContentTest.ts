@@ -1,4 +1,3 @@
-import * as normalizeContentColor from '../../lib/corePlugins/darkMode/normalizeContentColor';
 import createEditorCore from './createMockEditorCore';
 import { EditorCore, GetContentMode, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { getContent } from '../../lib/coreApi/getContent';
@@ -81,20 +80,15 @@ describe('getContent', () => {
     });
 
     it('getContent from dark mode', () => {
-        const triggerEvent = jasmine.createSpy('triggerEvent');
         const core = createEditorCore(div, {
             coreApiOverride: {
                 getSelectionRange: () => document.createRange(),
-                triggerEvent,
             },
             inDarkMode: true,
         });
 
-        spyOn(normalizeContentColor, 'default');
         div.innerHTML = '<div>test1</div>';
         const html = getContent(core, GetContentMode.RawHTMLOnly);
         expect(html).toBe('<div>test1</div>');
-        expect(triggerEvent).not.toHaveBeenCalled();
-        expect(normalizeContentColor.default).toHaveBeenCalled();
     });
 });
