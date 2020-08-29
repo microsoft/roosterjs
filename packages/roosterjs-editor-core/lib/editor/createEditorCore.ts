@@ -1,6 +1,5 @@
 import AutoCompletePlugin from '../corePlugins/autoComplete/AutoCompletePlugin';
 import CopyPastePlugin from '../corePlugins/copyPaste/CopyPastePlugin';
-import DarkModePlugin from '../corePlugins/darkMode/DarkModePlugin';
 import DOMEventPlugin from '../corePlugins/domEvent/DOMEventPlugin';
 import EditPlugin from '../corePlugins/edit/EditPlugin';
 import EntityPlugin from '../corePlugins/entity/EntityPlugin';
@@ -43,7 +42,6 @@ export default function createEditorCore(
         },
         plugins: plugins.filter(x => !!x),
         autoComplete: corePlugins.autoComplete.getState(),
-        darkMode: corePlugins.darkMode.getState(),
         domEvent: corePlugins.domEvent.getState(),
         pendingFormatState: corePlugins.pendingFormatState.getState(),
         edit: corePlugins.edit.getState(),
@@ -70,7 +68,6 @@ function createCorePlugins(
         domEvent: map.domEvent || new DOMEventPlugin(options, contentDiv),
         pendingFormatState: map.pendingFormatState || new PendingFormatStatePlugin(),
         mouseUp: map.mouseUp || new MouseUpPlugin(),
-        darkMode: map.darkMode || new DarkModePlugin(options),
         copyPaste: map.copyPaste || new CopyPastePlugin(),
         entity: map.entity || new EntityPlugin(),
         lifecycle: map.lifecycle || new LifecyclePlugin(options, contentDiv),

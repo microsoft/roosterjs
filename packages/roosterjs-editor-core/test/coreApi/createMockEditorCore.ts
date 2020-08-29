@@ -11,7 +11,6 @@ export default function createMockEditorCore(
         api: core.api,
         plugins: options.plugins || [],
         autoComplete: core.autoComplete,
-        darkMode: core.darkMode,
         domEvent: core.domEvent,
         edit: core.edit,
         lifecycle: core.lifecycle,

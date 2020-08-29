@@ -22,7 +22,7 @@ const DARK_MODE_DEFAULT_FORMAT = {
 export const getDefaultFormat: GetDefaultFormat = (core: EditorCore, forceRecalculate: boolean) => {
     if (forceRecalculate) {
         let baseFormat = core.lifecycle.value.defaultFormat;
-        const inDarkMode = core.darkMode.value.isDarkMode;
+        const inDarkMode = core.lifecycle.value.isDarkMode;
 
         if (inDarkMode && baseFormat) {
             if (!baseFormat.backgroundColors) {

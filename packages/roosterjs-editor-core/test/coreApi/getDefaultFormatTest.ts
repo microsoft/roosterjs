@@ -104,7 +104,7 @@ describe('getDefaultFormat', () => {
             bold: true,
             fontFamily: 'arial',
         };
-        core.darkMode.value.isDarkMode = true;
+        core.lifecycle.value.isDarkMode = true;
         getDefaultFormat(core, true);
         expect(core.lifecycle.value.defaultFormat).toEqual({
             fontFamily: 'arial',
@@ -128,7 +128,7 @@ describe('getDefaultFormat', () => {
         getDefaultFormat(core, true);
         expect(core.lifecycle.value.defaultFormat).toEqual({});
 
-        core.darkMode.value.isDarkMode = true;
+        core.lifecycle.value.isDarkMode = true;
         getDefaultFormat(core, true);
         expect(core.lifecycle.value.defaultFormat).toEqual({
             fontFamily: 'arial',

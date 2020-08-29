@@ -1,4 +1,3 @@
-import DarkModePluginState from '../corePluginState/DarkModePluginState';
 import DOMEventPluginState from '../corePluginState/DOMEventPluginState';
 import EditorPlugin from './EditorPlugin';
 import EntityPluginState from '../corePluginState/EntityPluginState';
@@ -55,11 +54,6 @@ export default interface CorePlugins {
      * TypeAfterLinkPlugin plugin helps workaround a Firefox bug to allow type outside a hyperlink
      */
     readonly typeAfterLink: EditorPlugin;
-
-    /**
-     * Dark mode plguin for handling dark mode copy.
-     */
-    readonly darkMode: PluginWithState<DarkModePluginState>;
 
     /**
      * Copy and paste plugin for handling onCopy and onPaste event

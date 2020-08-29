@@ -62,8 +62,8 @@ export const transformColor: TransformColor = (
                 delete element.dataset[name];
             });
         } else if (element) {
-            if (core.darkMode.value.onExternalContentTransform) {
-                core.darkMode.value.onExternalContentTransform(element);
+            if (core.lifecycle.value.onExternalContentTransform) {
+                core.lifecycle.value.onExternalContentTransform(element);
             } else {
                 element.style.color = null;
                 element.style.backgroundColor = null;

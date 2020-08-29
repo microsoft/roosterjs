@@ -22,7 +22,7 @@ import {
  */
 export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): string => {
     let content = '';
-    const isDarkMode = core.darkMode.value.isDarkMode;
+    const isDarkMode = core.lifecycle.value.isDarkMode;
     const triggerExtractContentEvent = mode == GetContentMode.CleanHTML;
     const includeSelectionMarker = mode == GetContentMode.RawHTMLWithSelection;
 

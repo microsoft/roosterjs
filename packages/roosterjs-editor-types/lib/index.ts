@@ -142,7 +142,6 @@ export { default as PickerPluginOptions } from './interface/PickerPluginOptions'
 export { default as VCell } from './interface/VCell';
 
 // Core Plugin State
-export { default as DarkModePluginState } from './corePluginState/DarkModePluginState';
 export { default as DOMEventPluginState } from './corePluginState/DOMEventPluginState';
 export { default as EntityPluginState } from './corePluginState/EntityPluginState';
 export { default as LifecyclePluginState } from './corePluginState/LifecyclePluginState';

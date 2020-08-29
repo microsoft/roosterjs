@@ -19,6 +19,8 @@ describe('LifecyclePlugin', () => {
         expect(state.value).toEqual({
             customData: {},
             defaultFormat: null,
+            isDarkMode: false,
+            onExternalContentTransform: undefined,
         });
 
         expect(getDefaultFormat).toHaveBeenCalled();
@@ -61,6 +63,8 @@ describe('LifecyclePlugin', () => {
             defaultFormat: {
                 fontFamily: 'arial',
             },
+            isDarkMode: false,
+            onExternalContentTransform: undefined,
         });
 
         expect(getDefaultFormat).toHaveBeenCalled();

@@ -14,4 +14,14 @@ export default interface LifecyclePluginState {
      * Default format of this editor
      */
     defaultFormat: DefaultFormat;
+
+    /**
+     * Whether editor is in dark mode
+     */
+    isDarkMode: boolean;
+
+    /**
+     * External content transform function to help do color transform for existing content
+     */
+    onExternalContentTransform: (htmlIn: HTMLElement) => void;
 }

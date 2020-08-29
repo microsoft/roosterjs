@@ -72,6 +72,8 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         this.state = createWrapper({
             customData: {},
             defaultFormat: options.defaultFormat || null,
+            isDarkMode: !!options.inDarkMode,
+            onExternalContentTransform: options.onExternalContentTransform,
         });
     }
 

@@ -28,7 +28,7 @@ export const setContent: SetContent = (
     }
 
     // Convert content even if it hasn't changed.
-    if (core.darkMode.value.isDarkMode) {
+    if (core.lifecycle.value.isDarkMode) {
         core.api.transformColor(
             core,
             toArray(core.contentDiv.getElementsByTagName('*')) as HTMLElement[],

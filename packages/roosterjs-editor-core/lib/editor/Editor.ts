@@ -685,7 +685,7 @@ export default class Editor implements IEditor {
 
         const currentContent = this.getContent(GetContentMode.CleanHTML);
 
-        this.core.darkMode.value.isDarkMode = nextDarkMode;
+        this.core.lifecycle.value.isDarkMode = nextDarkMode;
         this.getDefaultFormat(true /*forceRecalculate*/);
         this.setContent(currentContent);
         this.triggerContentChangedEvent(
@@ -698,7 +698,7 @@ export default class Editor implements IEditor {
      * @returns True if the editor is in dark mode, otherwise false
      */
     public isDarkMode(): boolean {
-        return this.core.darkMode.value.isDarkMode;
+        return this.core.lifecycle.value.isDarkMode;
     }
 
     /**
