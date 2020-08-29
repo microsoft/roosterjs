@@ -1,5 +1,25 @@
-import { ClipboardData, ContentPosition, EditorPlugin, IEditor } from 'roosterjs-editor-types';
-import { extractClipboardEvent, fromHtml, readFile } from 'roosterjs-editor-dom';
+import {
+    extractClipboardEvent,
+    fromHtml,
+    readFile,
+    setHtmlWithSelectionPath,
+    addRangeToSelection,
+    getSelectionRangeInRegion,
+    splitTextNode,
+    collapseNodesInRegion,
+    safeInstanceOf,
+    Position,
+} from 'roosterjs-editor-dom';
+import {
+    ClipboardData,
+    ContentPosition,
+    EditorPlugin,
+    GetContentMode,
+    IEditor,
+    PluginEventType,
+    ChangeSource,
+    PositionType,
+} from 'roosterjs-editor-types';
 
 const CONTAINER_HTML =
     '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
@@ -25,7 +45,11 @@ export default class CopyPastePlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.disposer = this.editor.addDomEventHandler('paste', this.onPaste);
+        this.disposer = this.editor.addDomEventHandler({
+            paste: this.onPaste,
+            copy: e => this.onCutCopy(e, false /*isCut*/),
+            cut: e => this.onCutCopy(e, true /*isCut*/),
+        });
     }
 
     /**
@@ -37,26 +61,49 @@ export default class CopyPastePlugin implements EditorPlugin {
         this.editor = null;
     }
 
+    private onCutCopy(event: Event, isCut: boolean) {
+        const originalRange = this.editor.getSelectionRange();
+        if (originalRange && !originalRange.collapsed) {
+            const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
+            const tempDiv = this.getTempDiv(true /*forceInLightMode*/);
+            const newRange = setHtmlWithSelectionPath(tempDiv, html);
+
+            if (newRange) {
+                addRangeToSelection(newRange);
+            }
+
+            this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
+                clonedRoot: tempDiv,
+                range: newRange,
+                rawEvent: event as ClipboardEvent,
+                isCut,
+            });
+
+            this.editor.runAsync(() => {
+                this.cleanUpAndRestoreSelection(tempDiv, originalRange);
+
+                if (isCut) {
+                    this.editor.addUndoSnapshot(() => {
+                        const position = this.deleteSelectedContents();
+                        this.editor.focus();
+                        this.editor.select(position);
+                    }, ChangeSource.Cut);
+                }
+            });
+        }
+    }
+
     private onPaste = (event: Event) => {
         extractClipboardEvent(event as ClipboardEvent, items => {
             if (items.rawHtml === undefined) {
                 // Can't get pasted HTML directly, need to use a temp DIV to retrieve pasted content.
                 // This is mostly for IE
                 const originalSelectionRange = this.editor.getSelectionRange();
-                const tempDiv = this.editor.getCustomData(
-                    'PasteDiv',
-                    this.createTempDivForIE,
-                    pasteDiv => pasteDiv.parentNode.removeChild(pasteDiv)
-                );
-                tempDiv.style.display = '';
-                tempDiv.focus();
+                const tempDiv = this.getTempDiv();
 
                 this.editor.runAsync(() => {
-                    // restore original selection range in editor
-                    this.editor.select(originalSelectionRange);
                     items.rawHtml = tempDiv.innerHTML;
-                    tempDiv.style.display = 'none';
-                    tempDiv.innerHTML = '';
+                    this.cleanUpAndRestoreSelection(tempDiv, originalSelectionRange);
                     this.paste(items);
                 });
             } else {
@@ -76,11 +123,88 @@ export default class CopyPastePlugin implements EditorPlugin {
         }
     }
 
-    private createTempDivForIE = () => {
-        const pasteDiv = fromHtml(CONTAINER_HTML, this.editor.getDocument())[0] as HTMLElement;
-        this.editor.insertNode(pasteDiv, {
-            position: ContentPosition.Outside,
+    private getTempDiv(forceInLightMode?: boolean) {
+        const div = this.editor.getCustomData(
+            'CopyPasteTempDiv',
+            () => {
+                const tempDiv = fromHtml(
+                    CONTAINER_HTML,
+                    this.editor.getDocument()
+                )[0] as HTMLDivElement;
+                this.editor.insertNode(tempDiv, {
+                    position: ContentPosition.Outside,
+                });
+
+                return tempDiv;
+            },
+            tempDiv => tempDiv.parentNode?.removeChild(tempDiv)
+        );
+
+        if (forceInLightMode) {
+            div.style.backgroundColor = 'white';
+            div.style.color = 'black';
+        }
+
+        div.style.display = '';
+        div.focus();
+
+        return div;
+    }
+
+    private cleanUpAndRestoreSelection(tempDiv: HTMLDivElement, range: Range) {
+        this.editor.select(range);
+        tempDiv.style.backgroundColor = '';
+        tempDiv.style.color = '';
+        tempDiv.style.display = 'none';
+        tempDiv.innerHTML = '';
+    }
+
+    private deleteSelectedContents() {
+        let result: Position = null;
+        const nodesToDelete: Node[] = [];
+
+        this.editor.getSelectedRegions().forEach(region => {
+            const rangeInRegion = getSelectionRangeInRegion(region);
+            if (rangeInRegion) {
+                let { startContainer, endContainer, startOffset, endOffset } = rangeInRegion;
+
+                const isSameNode = startContainer == endContainer;
+                if (safeInstanceOf(endContainer, 'Text')) {
+                    endContainer = splitTextNode(endContainer, endOffset, true /*returnFirstPart*/);
+
+                    if (isSameNode) {
+                        startContainer = endContainer;
+                    }
+                }
+
+                if (safeInstanceOf(startContainer, 'Text')) {
+                    startContainer = splitTextNode(
+                        startContainer,
+                        startOffset,
+                        false /*returnFirstPart*/
+                    );
+                    if (isSameNode) {
+                        endContainer = startContainer;
+                    }
+                }
+
+                const newNodes = collapseNodesInRegion(region, [startContainer, endContainer]);
+
+                for (let node = newNodes[0]; node; node = node.nextSibling) {
+                    if (!result) {
+                        result = new Position(newNodes[0], PositionType.Before);
+                    }
+
+                    nodesToDelete.push(node);
+
+                    if (node == newNodes[newNodes.length - 1]) {
+                        break;
+                    }
+                }
+            }
         });
-        return pasteDiv;
-    };
+
+        nodesToDelete.forEach(node => node.parentNode?.removeChild(node));
+        return result;
+    }
 }

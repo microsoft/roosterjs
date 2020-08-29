@@ -141,7 +141,6 @@ describe('DOMEventPlugin verify event handlers while allow keyboard event propag
         expect(eventMap.compositionstart).toBeDefined();
         expect(eventMap.compositionend).toBeDefined();
         expect(eventMap.drop).toBeDefined();
-        expect(eventMap.cut).toBeDefined();
         expect(eventMap.focus).toBeDefined();
         expect(eventMap.blur).toBeDefined();
     });
@@ -167,15 +166,6 @@ describe('DOMEventPlugin verify event handlers while allow keyboard event propag
 
         expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot.calls.argsFor(0)[1]).toBe(ChangeSource.Drop);
-    });
-
-    it('verify cut event', () => {
-        eventMap.cut(<Event>{
-            type: 'cut',
-        });
-
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot.calls.argsFor(0)[1]).toBe(ChangeSource.Cut);
     });
 
     it('verify focus event', () => {

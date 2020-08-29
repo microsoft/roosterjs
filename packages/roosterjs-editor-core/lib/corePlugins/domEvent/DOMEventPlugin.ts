@@ -16,7 +16,7 @@ import {
  * 1. Keyboard event
  * 2. Mouse event
  * 3. IME state
- * 4. Cut and Drop event
+ * 4. Drop event
  * 5. Focus and blur event
  * 6. Input event
  * 7. Scroll event
@@ -72,9 +72,8 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
                 });
             },
 
-            // 4. Cut and drop management
-            drop: this.onNativeEvent,
-            cut: this.onNativeEvent,
+            // 4. Drop event
+            drop: this.onDrop,
 
             // 5. Focus mangement
             focus: this.onFocus,
@@ -105,12 +104,9 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         return this.state;
     }
 
-    private onNativeEvent = (e: UIEvent) => {
+    private onDrop = (e: UIEvent) => {
         this.editor.runAsync(() => {
-            this.editor.addUndoSnapshot(
-                () => {},
-                e.type == 'cut' ? ChangeSource.Cut : ChangeSource.Drop
-            );
+            this.editor.addUndoSnapshot(() => {}, ChangeSource.Drop);
         });
     };
 
