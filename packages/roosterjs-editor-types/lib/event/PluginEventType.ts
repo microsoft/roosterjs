@@ -76,17 +76,12 @@ export const enum PluginEventType {
     PendingFormatStateChanged = 13,
 
     /**
-     * Dark mode state is changed
-     */
-    DarkModeChanged = 14,
-
-    /**
      * Scroll event triggered by scroll container
      */
-    Scroll = 15,
+    Scroll = 14,
 
     /**
      * Operating on an entity. See enum EntityOperation for more details about each operation
      */
-    EntityOperation = 16,
+    EntityOperation = 15,
 }

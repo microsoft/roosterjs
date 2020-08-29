@@ -700,9 +700,9 @@ export default class Editor implements IEditor {
         this.core.darkMode.value.isDarkMode = nextDarkMode;
         this.getDefaultFormat(true /*forceRecalculate*/);
         this.setContent(currentContent);
-        this.triggerPluginEvent(PluginEventType.DarkModeChanged, {
-            changedToDarkMode: nextDarkMode,
-        });
+        this.triggerContentChangedEvent(
+            nextDarkMode ? ChangeSource.SwitchToDarkMode : ChangeSource.SwitchToLightMode
+        );
     }
 
     /**

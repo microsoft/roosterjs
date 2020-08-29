@@ -2,7 +2,6 @@ import BeforeCutCopyEvent from './BeforeCutCopyEvent';
 import BeforeDisposeEvent from './BeforeDisposeEvent';
 import BeforePasteEvent from './BeforePasteEvent';
 import ContentChangedEvent from './ContentChangedEvent';
-import DarkModeChangedEvent from './DarkModeChangedEvent';
 import EditorReadyEvent from './EditorReadyEvent';
 import EntityOperationEvent from './EntityOperationEvent';
 import ExtractContentWithDomEvent from './ExtractContentWithDomEvent';
@@ -21,5 +20,4 @@ export type PluginEvent =
     | PluginDomEvent
     | EditorReadyEvent
     | BeforeDisposeEvent
-    | PendingFormatStateChangedEvent
-    | DarkModeChangedEvent;
+    | PendingFormatStateChangedEvent;
