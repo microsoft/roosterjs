@@ -1,12 +1,12 @@
 import { EditorCore, SelectRange } from 'roosterjs-editor-types';
 import { hasFocus } from './hasFocus';
 import {
-    Browser,
     contains,
     getPendableFormatState,
     Position,
     PendableFormatNames,
     PendableFormatCommandMap,
+    addRangeToSelection,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -23,52 +23,23 @@ export const selectRange: SelectRange = (
     range: Range,
     skipSameRange?: boolean
 ) => {
-    let selection: Selection;
-    let needAddRange = true;
+    if (contains(core.contentDiv, range)) {
+        addRangeToSelection(range, skipSameRange);
 
-    if (
-        !contains(core.contentDiv, range) ||
-        !(selection = core.contentDiv.ownerDocument.defaultView.getSelection())
-    ) {
+        if (!hasFocus(core)) {
+            core.domEvent.value.selectionRange = range;
+        }
+
+        if (range.collapsed) {
+            // If selected, and current selection is collapsed,
+            // need to restore pending format state if exists.
+            restorePendingFormatState(core);
+        }
+
+        return true;
+    } else {
         return false;
     }
-
-    if (selection.rangeCount > 0) {
-        // Workaround IE exception 800a025e
-        try {
-            let currentRange: Range;
-            // Do not remove/add range if current selection is the same with target range
-            // Without this check, execCommand() may fail in Edge since we changed the selection
-            if (
-                (skipSameRange || Browser.isEdge) &&
-                (currentRange = selection.rangeCount == 1 ? selection.getRangeAt(0) : null) &&
-                currentRange.startContainer == range.startContainer &&
-                currentRange.startOffset == range.startOffset &&
-                currentRange.endContainer == range.endContainer &&
-                currentRange.endOffset == range.endOffset
-            ) {
-                needAddRange = false;
-            } else {
-                selection.removeAllRanges();
-            }
-        } catch (e) {}
-    }
-
-    if (needAddRange) {
-        selection.addRange(range);
-    }
-
-    if (!hasFocus(core)) {
-        core.domEvent.value.selectionRange = range;
-    }
-
-    if (range.collapsed) {
-        // If selected, and current selection is collapsed,
-        // need to restore pending format state if exists.
-        restorePendingFormatState(core);
-    }
-
-    return true;
 };
 
 /**
