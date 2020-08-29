@@ -29,7 +29,7 @@ class TableOptions extends React.Component<TableOptionsProps, {}> {
 
     render() {
         return (
-            <div>
+            <div className={styles.editTable}>
                 <div className={styles.close}>
                     <button onClick={this.props.onDismiss}>X</button>
                 </div>
