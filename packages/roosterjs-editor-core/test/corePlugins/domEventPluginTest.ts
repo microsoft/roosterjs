@@ -1,5 +1,5 @@
 import * as dom from 'roosterjs-editor-dom';
-import DOMEventPlugin from '../../lib/corePlugins/domEvent/DOMEventPlugin';
+import DOMEventPlugin from '../../lib/corePlugins/DOMEventPlugin';
 import {
     ChangeSource,
     DOMEventPluginState,

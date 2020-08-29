@@ -1,4 +1,4 @@
-import MouseUpPlugin from '../../lib/corePlugins/mouseUp/MouseUpPlugin';
+import MouseUpPlugin from '../../lib/corePlugins/MouseUpPlugin';
 import { IEditor, PluginEventType } from 'roosterjs-editor-types';
 
 describe('MouseUpPlugin', () => {

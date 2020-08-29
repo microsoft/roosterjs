@@ -1,14 +1,14 @@
-import AutoCompletePlugin from '../corePlugins/autoComplete/AutoCompletePlugin';
-import CopyPastePlugin from '../corePlugins/copyPaste/CopyPastePlugin';
-import DOMEventPlugin from '../corePlugins/domEvent/DOMEventPlugin';
-import EditPlugin from '../corePlugins/edit/EditPlugin';
-import EntityPlugin from '../corePlugins/entity/EntityPlugin';
-import LifecyclePlugin from '../corePlugins/lifecycle/LifecyclePlugin';
-import MouseUpPlugin from '../corePlugins/mouseUp/MouseUpPlugin';
-import PendingFormatStatePlugin from '../corePlugins/pendingFormatState/PendingFormatStatePlugin';
-import TypeAfterLinkPlugin from '../corePlugins/typeAfterLink/TypeAfterLinkPlugin';
-import TypeInContainerPlugin from '../corePlugins/typeInContainer/TypeInContainerPlugin';
-import UndoPlugin from '../corePlugins/undo/UndoPlugin';
+import AutoCompletePlugin from '../corePlugins/AutoCompletePlugin';
+import CopyPastePlugin from '../corePlugins/CopyPastePlugin';
+import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
+import EditPlugin from '../corePlugins/EditPlugin';
+import EntityPlugin from '../corePlugins/EntityPlugin';
+import LifecyclePlugin from '../corePlugins/LifecyclePlugin';
+import MouseUpPlugin from '../corePlugins/MouseUpPlugin';
+import PendingFormatStatePlugin from '../corePlugins/PendingFormatStatePlugin';
+import TypeAfterLinkPlugin from '../corePlugins/TypeAfterLinkPlugin';
+import TypeInContainerPlugin from '../corePlugins/TypeInContainerPlugin';
+import UndoPlugin from '../corePlugins/UndoPlugin';
 import { coreApiMap } from '../coreApi/coreApiMap';
 import { CorePlugins, EditorCore, EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 

@@ -1,4 +1,4 @@
-import AutoCompletePlugin from '../../lib/corePlugins/autoComplete/AutoCompletePlugin';
+import AutoCompletePlugin from '../../lib/corePlugins/AutoCompletePlugin';
 import { IEditor, Keys, PluginEvent, PluginEventType, Wrapper } from 'roosterjs-editor-types';
 
 describe('AutoCompletePlugin', () => {

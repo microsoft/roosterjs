@@ -1,4 +1,4 @@
-import TypeAfterLinkPlugin from '../../lib/corePlugins/typeAfterLink/TypeAfterLinkPlugin';
+import TypeAfterLinkPlugin from '../../lib/corePlugins/TypeAfterLinkPlugin';
 import { IEditor, PluginEventType } from 'roosterjs-editor-types';
 import { LinkInlineElement, NodeInlineElement } from 'roosterjs-editor-dom';
 

@@ -1,5 +1,5 @@
 import * as dom from 'roosterjs-editor-dom';
-import EntityPlugin from '../../lib/corePlugins/entity/EntityPlugin';
+import EntityPlugin from '../../lib/corePlugins/EntityPlugin';
 import {
     ChangeSource,
     EntityClasses,

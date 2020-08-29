@@ -1,4 +1,4 @@
-import UndoPlugin from '../../lib/corePlugins/undo/UndoPlugin';
+import UndoPlugin from '../../lib/corePlugins/UndoPlugin';
 import { IEditor, Keys, PluginEventType, UndoPluginState, Wrapper } from 'roosterjs-editor-types';
 
 describe('UndoPlugin', () => {

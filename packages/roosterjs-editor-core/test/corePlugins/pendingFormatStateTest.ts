@@ -1,4 +1,4 @@
-import PendingFormatStatePlugin from '../../lib/corePlugins/pendingFormatState/PendingFormatStatePlugin';
+import PendingFormatStatePlugin from '../../lib/corePlugins/PendingFormatStatePlugin';
 import {
     IEditor,
     PendingFormatStatePluginState,

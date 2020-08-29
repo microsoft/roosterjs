@@ -1,5 +1,5 @@
 import * as dom from 'roosterjs-editor-dom';
-import CopyPastePlugin from '../../lib/corePlugins/copyPaste/CopyPastePlugin';
+import CopyPastePlugin from '../../lib/corePlugins/CopyPastePlugin';
 import {
     ClipboardData,
     DOMEventHandlerFunction,

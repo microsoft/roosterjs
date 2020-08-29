@@ -1,4 +1,4 @@
-import LifecyclePlugin from '../../lib/corePlugins/lifecycle/LifecyclePlugin';
+import LifecyclePlugin from '../../lib/corePlugins/LifecyclePlugin';
 import { ChangeSource, IEditor, NodePosition, PluginEventType } from 'roosterjs-editor-types';
 
 describe('LifecyclePlugin', () => {

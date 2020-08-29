@@ -1,5 +1,5 @@
 import * as dom from 'roosterjs-editor-dom';
-import TypeInContainerPlugin from '../../lib/corePlugins/typeInContainer/TypeInContainerPlugin';
+import TypeInContainerPlugin from '../../lib/corePlugins/TypeInContainerPlugin';
 import { IEditor, PluginEventType } from 'roosterjs-editor-types';
 
 describe('TypeInContainerPlugin', () => {

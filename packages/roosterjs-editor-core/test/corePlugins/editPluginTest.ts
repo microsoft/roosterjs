@@ -1,4 +1,4 @@
-import EditPlugin from '../../lib/corePlugins/edit/EditPlugin';
+import EditPlugin from '../../lib/corePlugins/EditPlugin';
 import {
     GenericContentEditFeature,
     IEditor,
