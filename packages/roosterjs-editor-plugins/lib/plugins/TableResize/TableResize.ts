@@ -247,7 +247,7 @@ export default class TableResize implements EditorPlugin {
     private setCurrentTable(table: HTMLTableElement, rect?: Rect) {
         if (this.currentTable != table) {
             this.setCurrentTd(null);
-            this.setCurrentInsertTd(null);
+            this.setCurrentInsertTd(ResizeState.None);
             this.currentTable = table;
         }
     }
