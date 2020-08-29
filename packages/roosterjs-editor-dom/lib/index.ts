@@ -54,6 +54,7 @@ export { default as getRegionsFromRange } from './region/getRegionsFromRange';
 export { default as getSelectedBlockElementsInRegion } from './region/getSelectedBlockElementsInRegion';
 export { default as collapseNodesInRegion } from './region/collapseNodesInRegion';
 export { default as isNodeInRegion } from './region/isNodeInRegion';
+export { default as getSelectionRangeInRegion } from './region/getSelectionRangeInRegion';
 
 export { default as Position } from './selection/Position';
 export { default as createRange } from './selection/createRange';
