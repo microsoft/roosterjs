@@ -111,7 +111,6 @@ export {
     Focus,
     GetContent,
     GetCustomData,
-    GetDefaultFormat,
     GetSelectionRange,
     GetStyleBasedFormatState,
     HasFocus,

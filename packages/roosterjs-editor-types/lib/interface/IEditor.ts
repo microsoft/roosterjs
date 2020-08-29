@@ -432,11 +432,9 @@ export default interface IEditor {
 
     /**
      * Get default format of this editor
-     * @param forceRecalculate If true, recalcuate default format then return. Otherwise return current value directly
-     * This is used when default format is changed, e.g. when dark mode state is changed. Default value is false
      * @returns Default format object of this editor
      */
-    getDefaultFormat(forceRecalculate?: boolean): DefaultFormat;
+    getDefaultFormat(): DefaultFormat;
 
     /**
      * Get a content traverser for the whole editor

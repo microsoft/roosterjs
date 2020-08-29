@@ -1,5 +1,6 @@
-import { Browser, createWrapper, Position } from 'roosterjs-editor-dom';
+import { Browser, createWrapper, getComputedStyles, Position } from 'roosterjs-editor-dom';
 import {
+    DefaultFormat,
     DocumentCommand,
     EditorOptions,
     IEditor,
@@ -9,6 +10,8 @@ import {
     PluginWithState,
     PositionType,
     Wrapper,
+    PluginEvent,
+    ChangeSource,
 } from 'roosterjs-editor-types';
 
 const CONTENT_EDITABLE_ATTRIBUTE_NAME = 'contenteditable';
@@ -36,6 +39,17 @@ const COMMANDS: {
       }
     : {};
 
+const DARK_MODE_DEFAULT_FORMAT = {
+    backgroundColors: {
+        darkModeColor: 'rgb(51,51,51)',
+        lightModeColor: 'rgb(255,255,255)',
+    },
+    textColors: {
+        darkModeColor: 'rgb(255,255,255)',
+        lightModeColor: 'rgb(0,0,0)',
+    },
+};
+
 /**
  * @internal
  * Lifecycle plugin handles editor initialization and disposing
@@ -45,6 +59,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     private state: Wrapper<LifecyclePluginState>;
     private initialContent: string;
     private startPosition: NodePosition;
+    private contentDivFormat: string[];
     private initializer: () => void;
     private disposer: () => void;
 
@@ -56,6 +71,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     constructor(options: EditorOptions, contentDiv: HTMLDivElement) {
         this.initialContent = options.initialContent || contentDiv.innerHTML || '';
         this.startPosition = new Position(contentDiv, PositionType.Begin);
+        this.contentDivFormat = getComputedStyles(contentDiv);
 
         // Make the container editable and set its selection styles
         if (contentDiv.getAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME) === null) {
@@ -92,7 +108,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         this.editor = editor;
 
         // Calculate default format
-        this.editor.getDefaultFormat(true /*forceRecalculate*/);
+        this.recalculateDefaultFormat();
 
         // Ensure initial content and its format
         this.editor.setContent(this.initialContent, false /*triggerContentChangedEvent*/);
@@ -145,6 +161,21 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         return this.state;
     }
 
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
+    onPluginEvent(event: PluginEvent) {
+        if (
+            event.eventType == PluginEventType.ContentChanged &&
+            (event.source == ChangeSource.SwitchToDarkMode ||
+                event.source == ChangeSource.SwitchToLightMode)
+        ) {
+            this.state.value.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
+            this.recalculateDefaultFormat();
+        }
+    }
+
     private adjustBrowserBehavior() {
         Object.keys(COMMANDS).forEach(command => {
             // Catch any possible exception since this should not block the initialization of editor
@@ -158,5 +189,59 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         node.style.userSelect = value;
         node.style.msUserSelect = value;
         node.style.webkitUserSelect = value;
+    }
+
+    private recalculateDefaultFormat() {
+        const { defaultFormat: baseFormat, isDarkMode } = this.state.value;
+
+        if (isDarkMode && baseFormat) {
+            if (!baseFormat.backgroundColors) {
+                baseFormat.backgroundColors = DARK_MODE_DEFAULT_FORMAT.backgroundColors;
+            }
+            if (!baseFormat.textColors) {
+                baseFormat.textColors = DARK_MODE_DEFAULT_FORMAT.textColors;
+            }
+        }
+
+        if (baseFormat && Object.keys(baseFormat).length === 0) {
+            return;
+        }
+
+        const {
+            fontFamily,
+            fontSize,
+            textColor,
+            textColors,
+            backgroundColor,
+            backgroundColors,
+            bold,
+            italic,
+            underline,
+        } = baseFormat || <DefaultFormat>{};
+        const defaultFormat = this.contentDivFormat;
+
+        this.state.value.defaultFormat = {
+            fontFamily: fontFamily || defaultFormat[0],
+            fontSize: fontSize || defaultFormat[1],
+            get textColor() {
+                return textColors
+                    ? isDarkMode
+                        ? textColors.darkModeColor
+                        : textColors.lightModeColor
+                    : textColor || defaultFormat[2];
+            },
+            textColors: textColors,
+            get backgroundColor() {
+                return backgroundColors
+                    ? isDarkMode
+                        ? backgroundColors.darkModeColor
+                        : backgroundColors.lightModeColor
+                    : backgroundColor || '';
+            },
+            backgroundColors: backgroundColors,
+            bold: bold,
+            italic: italic,
+            underline: underline,
+        };
     }
 }

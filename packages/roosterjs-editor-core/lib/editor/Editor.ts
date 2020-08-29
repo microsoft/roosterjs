@@ -556,12 +556,10 @@ export default class Editor implements IEditor {
 
     /**
      * Get default format of this editor
-     * @param forceRecalculate If true, recalcuate default format then return. Otherwise return current value directly
-     * This is used when default format is changed, e.g. when dark mode state is changed. Default value is false
      * @returns Default format object of this editor
      */
-    public getDefaultFormat(forceRecalculate?: boolean): DefaultFormat {
-        return this.core.api.getDefaultFormat(this.core, forceRecalculate);
+    public getDefaultFormat(): DefaultFormat {
+        return this.core.lifecycle.value.defaultFormat;
     }
 
     /**
@@ -685,12 +683,10 @@ export default class Editor implements IEditor {
 
         const currentContent = this.getContent(GetContentMode.CleanHTML);
 
-        this.core.lifecycle.value.isDarkMode = nextDarkMode;
-        this.getDefaultFormat(true /*forceRecalculate*/);
-        this.setContent(currentContent);
         this.triggerContentChangedEvent(
             nextDarkMode ? ChangeSource.SwitchToDarkMode : ChangeSource.SwitchToLightMode
         );
+        this.setContent(currentContent);
     }
 
     /**
