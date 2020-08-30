@@ -67,7 +67,7 @@ export type CreatePasteFragment = (
  */
 export type AddUndoSnapshot = (
     core: EditorCore,
-    callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
+    callback: (start: NodePosition, end: NodePosition) => any,
     changeSource: ChangeSource | string,
     canUndoByBacksapce: boolean
 ) => void;

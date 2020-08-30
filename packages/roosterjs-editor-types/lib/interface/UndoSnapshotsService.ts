@@ -20,10 +20,15 @@ export default interface UndoSnapshotsService {
      * Add a new undo snapshot
      * @param snapshot The snapshot to add
      */
-    addSnapshot(snapshot: string): void;
+    addSnapshot(snapshot: string, isAutoCompleteSnapshot: boolean): void;
 
     /**
      * Clear all undo snapshots after the current one
      */
     clearRedo(): void;
+
+    /**
+     * Whether there is a snapshot added before auto complete and it can be undone now
+     */
+    canUndoAutoComplete(): boolean;
 }

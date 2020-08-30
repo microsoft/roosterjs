@@ -17,6 +17,7 @@ describe('moveCurrentSnapsnot', () => {
             }, 0),
             snapshots: snapshotArray,
             maxSize: 100,
+            autoCompleteIndex: -1,
         };
 
         let result = moveCurrentSnapsnot(snapshots, step);

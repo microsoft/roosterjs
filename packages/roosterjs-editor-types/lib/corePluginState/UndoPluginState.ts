@@ -1,3 +1,4 @@
+import NodePosition from '../interface/NodePosition';
 import UndoSnapshotsService from '../interface/UndoSnapshotsService';
 
 /**
@@ -20,9 +21,12 @@ export default interface UndoPluginState {
     hasNewContent: boolean;
 
     /**
-     * The outer undo snapshot taken by addUndoSnapshot() before callback function is invoked.
-     * If addUndoSnapshot() is called nested in another one, this will be the snapshot taken from the outer one
-     * and used for checking if it is a nested call
+     * If addUndoSnapshot() is called nested in another one, this will be true
      */
-    outerUndoSnapshot: string;
+    isNested: boolean;
+
+    /**
+     * Position after last auto complate. Undo autoComplete only works if the current position matches this one
+     */
+    autoCompletePosition: NodePosition;
 }

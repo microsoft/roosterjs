@@ -16,6 +16,7 @@ describe('clearProceedingSnapshots', () => {
             }, 0),
             snapshots: snapshotArray,
             maxSize: 100,
+            autoCompleteIndex: -1,
         };
 
         clearProceedingSnapshots(snapshots);

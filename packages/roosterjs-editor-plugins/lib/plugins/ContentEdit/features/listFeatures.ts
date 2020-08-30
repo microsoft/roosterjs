@@ -141,7 +141,6 @@ const AutoBullet: ContentEditFeature = {
                         if (
                             node?.nodeType == NodeType.Text &&
                             node.nodeValue == '' &&
-                            !node.previousSibling &&
                             !node.nextSibling
                         ) {
                             const br = editor.getDocument().createElement('BR');

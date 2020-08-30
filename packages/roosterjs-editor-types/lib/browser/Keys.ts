@@ -8,6 +8,7 @@ export const enum Keys {
     ENTER = 13,
     ESCAPE = 27,
     SPACE = 32,
+    PAGEUP = 33,
     LEFT = 37,
     UP = 38,
     RIGHT = 39,

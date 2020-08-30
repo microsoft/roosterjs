@@ -20,7 +20,7 @@ describe('addUndoSnapshot', () => {
         spyOn(core.undo.value.snapshotsService, 'addSnapshot');
         div.innerHTML = 'test';
         addUndoSnapshot(core, null, null, false);
-        expect(core.undo.value.snapshotsService.addSnapshot).toHaveBeenCalledWith('test');
+        expect(core.undo.value.snapshotsService.addSnapshot).toHaveBeenCalledWith('test', false);
     });
 
     it('null input, verify snapshot is added', () => {
@@ -28,7 +28,7 @@ describe('addUndoSnapshot', () => {
         core.undo.value.snapshotsService = createUndoSnapshotService(jasmine.createSpy());
         core.api.getContent = jasmine.createSpy().and.returnValue('test1');
         addUndoSnapshot(core, null, null, false);
-        expect(core.undo.value.snapshotsService.addSnapshot).toHaveBeenCalledWith('test1');
+        expect(core.undo.value.snapshotsService.addSnapshot).toHaveBeenCalledWith('test1', false);
     });
 
     it('undo with callback', () => {
@@ -43,16 +43,16 @@ describe('addUndoSnapshot', () => {
             snapshotsService: createUndoSnapshotService(jasmine.createSpy()),
             isRestoring: false,
             hasNewContent: false,
-            outerUndoSnapshot: null,
+            isNested: false,
+            autoCompletePosition: null,
         };
 
         addUndoSnapshot(
             core,
-            (pos1, pos2, snapshot) => {
+            (pos1, pos2) => {
                 expect(pos1.equalTo(Position.getStart(range).normalize())).toBeTruthy();
                 expect(pos2.equalTo(Position.getEnd(range).normalize())).toBeTruthy();
-                expect(snapshot).toBe('result 1');
-                expect(core.undo.value.outerUndoSnapshot).toBe('result 1');
+                expect(core.undo.value.isNested).toBeTruthy();
                 core.api.getContent = jasmine.createSpy().and.returnValue('result 2');
             },
             null,
@@ -69,7 +69,7 @@ describe('addUndoSnapshot', () => {
 
         expect(snapshot1).toBe('result 1');
         expect(snapshot2).toBe('result 2');
-        expect(core.undo.value.outerUndoSnapshot).toBeNull();
+        expect(core.undo.value.isNested).toBeFalsy();
     });
 
     it('undo with callback and change source', () => {
@@ -110,20 +110,18 @@ describe('addUndoSnapshot', () => {
         core.api.getContent = () => 'test';
         core.undo.value.snapshotsService = createUndoSnapshotService(addSnapshot);
 
-        expect(core.undo.value.outerUndoSnapshot).toBeNull();
+        expect(core.undo.value.isNested).toBeFalsy();
         addUndoSnapshot(
             core,
-            (pos1, pos2, snapshot) => {
-                expect(snapshot).toBe('test');
-                expect(core.undo.value.outerUndoSnapshot).toBe('test');
+            () => {
+                expect(core.undo.value.isNested).toBeTruthy();
 
                 core.api.getContent = () => 'test2';
 
                 addUndoSnapshot(
                     core,
-                    (pos1, pos2, snapshot) => {
-                        expect(snapshot).toBe('test');
-                        expect(core.undo.value.outerUndoSnapshot).toBe('test');
+                    () => {
+                        expect(core.undo.value.isNested).toBeTruthy();
                     },
                     null,
                     false
@@ -134,10 +132,10 @@ describe('addUndoSnapshot', () => {
         );
 
         expect(addSnapshot).toHaveBeenCalledTimes(2);
-        expect(core.undo.value.outerUndoSnapshot).toBeNull();
+        expect(core.undo.value.isNested).toBeFalsy();
     });
 
-    it('throw from callback, outerUndoSnapshot should also be reset', () => {
+    it('throw from callback, isNested should also be reset', () => {
         const triggerEvent = jasmine.createSpy();
         const core = createEditorCore(div, {
             coreApiOverride: {
@@ -147,19 +145,19 @@ describe('addUndoSnapshot', () => {
             },
         });
 
-        expect(core.undo.value.outerUndoSnapshot).toBeNull();
+        expect(core.undo.value.isNested).toBeFalsy();
         try {
             addUndoSnapshot(
                 core,
                 () => {
-                    expect(core.undo.value.outerUndoSnapshot).toBe('test');
+                    expect(core.undo.value.isNested).toBeTruthy();
                     throw new Error();
                 },
                 null,
                 true
             );
         } catch {}
-        expect(core.undo.value.outerUndoSnapshot).toBe(null);
+        expect(core.undo.value.isNested).toBeFalsy(null);
     });
 
     it('auto complete mode', () => {
@@ -171,11 +169,19 @@ describe('addUndoSnapshot', () => {
             },
         });
 
-        spyOn(core.api, 'getContent').and.returnValue('test');
+        let content = 'test 1';
+        spyOn(core.api, 'getContent').and.callFake(() => content);
 
-        expect(core.autoComplete.value).toBeNull();
-        addUndoSnapshot(core, () => {}, null, true);
-        expect(core.autoComplete.value).toBe('test');
+        expect(core.undo.value.snapshotsService.canUndoAutoComplete()).toBeFalsy();
+        addUndoSnapshot(
+            core,
+            () => {
+                content = 'test 2';
+            },
+            null,
+            true
+        );
+        expect(core.undo.value.snapshotsService.canUndoAutoComplete()).toBeTruthy();
     });
 });
 
@@ -185,5 +191,6 @@ function createUndoSnapshotService(addSnapshot: any): UndoSnapshotsService {
         move: null,
         addSnapshot,
         clearRedo: null,
+        canUndoAutoComplete: null,
     };
 }

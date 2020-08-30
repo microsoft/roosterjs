@@ -18,6 +18,11 @@ export default interface Snapshots {
     currentIndex: number;
 
     /**
+     * Index of snapshot added before an auto complete action
+     */
+    autoCompleteIndex: number;
+
+    /**
      * Max size of all snapshots
      */
     readonly maxSize: number;

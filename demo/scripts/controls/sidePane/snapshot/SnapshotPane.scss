@@ -37,5 +37,9 @@
         &.current {
             font-weight: bold;
         }
+
+        &.autoComplete {
+            background-color: #ff0;
+        }
     }
 }

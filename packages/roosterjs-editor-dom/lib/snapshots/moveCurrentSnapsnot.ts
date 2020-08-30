@@ -10,6 +10,7 @@ import { Snapshots } from 'roosterjs-editor-types';
 export default function moveCurrentSnapsnot(snapshots: Snapshots, step: number): string {
     if (canMoveCurrentSnapshot(snapshots, step)) {
         snapshots.currentIndex += step;
+        snapshots.autoCompleteIndex = -1;
         return snapshots.snapshots[snapshots.currentIndex];
     } else {
         return null;

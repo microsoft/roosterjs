@@ -20,11 +20,6 @@ export default interface CorePlugins {
     readonly edit: PluginWithState<Record<number, GenericContentEditFeature<PluginEvent>[]>>;
 
     /**
-     * Auto complete plugin handles the undo operation for an auto complete action
-     */
-    readonly autoComplete: PluginWithState<string>;
-
-    /**
      * Undo plugin provides the ability to undo/redo
      */
     readonly undo: PluginWithState<UndoPluginState>;

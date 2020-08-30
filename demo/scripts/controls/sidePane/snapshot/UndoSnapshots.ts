@@ -4,6 +4,7 @@ import {
     canMoveCurrentSnapshot,
     moveCurrentSnapsnot,
     clearProceedingSnapshots,
+    canUndoAutoComplete,
 } from 'roosterjs-editor-dom';
 
 export default class UndoSnapshots implements UndoSnapshotsService {
@@ -19,8 +20,8 @@ export default class UndoSnapshots implements UndoSnapshotsService {
         return result;
     }
 
-    public addSnapshot(snapshot: string) {
-        addSnapshot(this.snapshots, snapshot);
+    public addSnapshot(snapshot: string, isAutoCompleteSnapshot: boolean) {
+        addSnapshot(this.snapshots, snapshot, isAutoCompleteSnapshot);
         this.onChange();
     }
 
@@ -35,5 +36,13 @@ export default class UndoSnapshots implements UndoSnapshotsService {
 
     public getCurrentIndex() {
         return this.snapshots.currentIndex;
+    }
+
+    public getAutoCompleteIndex() {
+        return this.snapshots.autoCompleteIndex;
+    }
+
+    public canUndoAutoComplete() {
+        return canUndoAutoComplete(this.snapshots);
     }
 }

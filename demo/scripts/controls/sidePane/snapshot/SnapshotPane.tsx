@@ -11,6 +11,7 @@ export interface SnapshotPaneProps {
 export interface SnapshotPaneState {
     snapshots: string[];
     currentIndex: number;
+    autoCompleteIndex: number;
 }
 
 export default class SnapshotPane extends React.Component<SnapshotPaneProps, SnapshotPaneState> {
@@ -22,6 +23,7 @@ export default class SnapshotPane extends React.Component<SnapshotPaneProps, Sna
         this.state = {
             snapshots: [],
             currentIndex: -1,
+            autoCompleteIndex: -1,
         };
     }
 
@@ -48,10 +50,11 @@ export default class SnapshotPane extends React.Component<SnapshotPaneProps, Sna
         );
     }
 
-    updateSnapshots(snapshots: string[], currentIndex: number) {
+    updateSnapshots(snapshots: string[], currentIndex: number, autoCompleteIndex: number) {
         this.setState({
             snapshots,
             currentIndex,
+            autoCompleteIndex,
         });
     }
 
@@ -64,9 +67,16 @@ export default class SnapshotPane extends React.Component<SnapshotPaneProps, Sna
     };
 
     private renderItem = (snapshot: string, index: number) => {
+        let className = '';
+        if (index == this.state.currentIndex) {
+            className += ' ' + styles.current;
+        }
+        if (index == this.state.autoCompleteIndex) {
+            className += ' ' + styles.autoComplete;
+        }
         return (
             <pre
-                className={index == this.state.currentIndex ? styles.current : ''}
+                className={className}
                 key={index}
                 onClick={() => this.setSnapshot(snapshot)}
                 onDoubleClick={() => this.props.onMove(index - this.state.currentIndex)}>

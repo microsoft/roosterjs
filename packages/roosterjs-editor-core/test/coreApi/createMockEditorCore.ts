@@ -10,7 +10,6 @@ export default function createMockEditorCore(
         contentDiv,
         api: core.api,
         plugins: options.plugins || [],
-        autoComplete: core.autoComplete,
         domEvent: core.domEvent,
         edit: core.edit,
         lifecycle: core.lifecycle,

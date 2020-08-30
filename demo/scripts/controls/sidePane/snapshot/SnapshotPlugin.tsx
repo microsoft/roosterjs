@@ -81,7 +81,8 @@ export default class SnapshotPlugin implements SidePanePlugin {
 
         this.component.updateSnapshots(
             this.snapshotService.getSnapshots(),
-            this.snapshotService.getCurrentIndex()
+            this.snapshotService.getCurrentIndex(),
+            this.snapshotService.getAutoCompleteIndex()
         );
     };
 }

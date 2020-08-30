@@ -20,6 +20,7 @@ describe('canMoveCurrentSnapshot', () => {
             }, 0),
             snapshots: snapshotArray,
             maxSize: 100,
+            autoCompleteIndex: -1,
         };
 
         expect(canMoveCurrentSnapshot(snapshots, 1)).toBe(result1, 'Move with 1');

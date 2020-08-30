@@ -20,44 +20,42 @@ import {
  */
 export const addUndoSnapshot: AddUndoSnapshot = (
     core: EditorCore,
-    callback: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
+    callback: (start: NodePosition, end: NodePosition) => any,
     changeSource: ChangeSource | string,
     canUndoByBackspace: boolean
 ) => {
     const undoState = core.undo.value;
-    let isNested = undoState.outerUndoSnapshot !== null;
+    let isNested = undoState.isNested;
     let data: any;
 
     if (!isNested) {
-        undoState.outerUndoSnapshot = core.api.getContent(
-            core,
-            GetContentMode.RawHTMLWithSelection
+        undoState.isNested = true;
+        undoState.snapshotsService.addSnapshot(
+            core.api.getContent(core, GetContentMode.RawHTMLWithSelection),
+            canUndoByBackspace
         );
-        undoState.snapshotsService.addSnapshot(undoState.outerUndoSnapshot);
         undoState.hasNewContent = false;
     }
-
-    const autoCompleteSnapshot = canUndoByBackspace && undoState.outerUndoSnapshot;
 
     try {
         if (callback) {
             let range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
             data = callback(
                 range && Position.getStart(range).normalize(),
-                range && Position.getEnd(range).normalize(),
-                undoState.outerUndoSnapshot
+                range && Position.getEnd(range).normalize()
             );
 
             if (!isNested) {
                 undoState.snapshotsService.addSnapshot(
-                    core.api.getContent(core, GetContentMode.RawHTMLWithSelection)
+                    core.api.getContent(core, GetContentMode.RawHTMLWithSelection),
+                    false /*isAutoCompleteSnapshot*/
                 );
                 undoState.hasNewContent = false;
             }
         }
     } finally {
         if (!isNested) {
-            undoState.outerUndoSnapshot = null;
+            undoState.isNested = false;
         }
     }
 
@@ -71,7 +69,11 @@ export const addUndoSnapshot: AddUndoSnapshot = (
     }
 
     if (canUndoByBackspace) {
-        // Need to set this snapshot after ContentChangedEvent is fired to avoid it is cleared by event handler in AutoCompletePlugin
-        core.autoComplete.value = autoCompleteSnapshot;
+        const range = core.api.getSelectionRange(core, false /*tryGetFromCache*/);
+
+        if (range) {
+            core.undo.value.hasNewContent = false;
+            core.undo.value.autoCompletePosition = Position.getStart(range);
+        }
     }
 };

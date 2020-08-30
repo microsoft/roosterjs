@@ -21,7 +21,7 @@ describe('addSnapshot', () => {
         runTest(
             100,
             snapshots => {
-                addSnapshot(snapshots, 'test');
+                addSnapshot(snapshots, 'test', false);
             },
             0,
             4,
@@ -33,8 +33,8 @@ describe('addSnapshot', () => {
         runTest(
             100,
             snapshots => {
-                addSnapshot(snapshots, 'test1');
-                addSnapshot(snapshots, 'test2');
+                addSnapshot(snapshots, 'test1', false);
+                addSnapshot(snapshots, 'test2', false);
             },
             1,
             10,
@@ -46,7 +46,7 @@ describe('addSnapshot', () => {
         runTest(
             5,
             snapshots => {
-                addSnapshot(snapshots, 'test01');
+                addSnapshot(snapshots, 'test01', false);
             },
             -1,
             0,
@@ -58,8 +58,8 @@ describe('addSnapshot', () => {
         runTest(
             5,
             snapshots => {
-                addSnapshot(snapshots, 'test');
-                addSnapshot(snapshots, 'test2');
+                addSnapshot(snapshots, 'test', false);
+                addSnapshot(snapshots, 'test2', false);
             },
             0,
             5,
@@ -71,10 +71,10 @@ describe('addSnapshot', () => {
         runTest(
             100,
             snapshots => {
-                addSnapshot(snapshots, 'test1');
-                addSnapshot(snapshots, 'test2');
+                addSnapshot(snapshots, 'test1', false);
+                addSnapshot(snapshots, 'test2', false);
                 snapshots.currentIndex = 0;
-                addSnapshot(snapshots, 'test03');
+                addSnapshot(snapshots, 'test03', false);
             },
             1,
             11,
@@ -86,8 +86,8 @@ describe('addSnapshot', () => {
         runTest(
             100,
             snapshots => {
-                addSnapshot(snapshots, 'test1');
-                addSnapshot(snapshots, 'test1');
+                addSnapshot(snapshots, 'test1', false);
+                addSnapshot(snapshots, 'test1', false);
             },
             0,
             5,

@@ -1,4 +1,3 @@
-import AutoCompletePlugin from '../corePlugins/AutoCompletePlugin';
 import CopyPastePlugin from '../corePlugins/CopyPastePlugin';
 import DOMEventPlugin from '../corePlugins/DOMEventPlugin';
 import EditPlugin from '../corePlugins/EditPlugin';
@@ -41,7 +40,6 @@ export default function createEditorCore(
             ...(options.coreApiOverride || {}),
         },
         plugins: plugins.filter(x => !!x),
-        autoComplete: corePlugins.autoComplete.getState(),
         domEvent: corePlugins.domEvent.getState(),
         pendingFormatState: corePlugins.pendingFormatState.getState(),
         edit: corePlugins.edit.getState(),
@@ -61,7 +59,6 @@ function createCorePlugins(
     return {
         typeInContainer: map.typeInContainer || new TypeInContainerPlugin(),
         edit: map.edit || new EditPlugin(),
-        autoComplete: map.autoComplete || new AutoCompletePlugin(),
         _placeholder: null,
         typeAfterLink: map.typeAfterLink || new TypeAfterLinkPlugin(),
         undo: map.undo || new UndoPlugin(options),

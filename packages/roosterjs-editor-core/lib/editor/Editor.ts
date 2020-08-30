@@ -492,7 +492,7 @@ export default class Editor implements IEditor {
      * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
      */
     public addUndoSnapshot(
-        callback?: (start: NodePosition, end: NodePosition, snapshotBeforeCallback: string) => any,
+        callback?: (start: NodePosition, end: NodePosition) => any,
         changeSource?: ChangeSource | string,
         canUndoByBackspace?: boolean
     ) {
