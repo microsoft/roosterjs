@@ -304,6 +304,10 @@ Currently we have very few external dependencies. Before adding any new dependen
    If the dependency provides a lot of functionalities but we actually only need a small piece of them,
    we may need to consider other solutions, such as find another smaller one, or do it ourselves.
 
+4. What's the license of the dependency?
+   A dependency package under MIT license is good to be used for RoosterJs. For other licenses, we need
+   to review and see if we can take it as a dependency.
+
 If you still feel a new dependency is required after checking these 3 questions, we can review it and
 finally decide whether we should add the new dependency.
 
