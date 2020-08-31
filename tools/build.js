@@ -209,8 +209,8 @@ function tsc(isAmd) {
                 var target = path.join(distPath, package, fileName);
                 fs.copyFileSync(source, target);
             };
-            copy('readme.md');
-            copy('license');
+            copy('README.md');
+            copy('LICENSE');
         });
     }
 }
