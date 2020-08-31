@@ -1,4 +1,4 @@
-import { Browser, isRtl, Position } from 'roosterjs-editor-dom';
+import { Browser, getComputedStyle, Position } from 'roosterjs-editor-dom';
 import { ContentEditFeature, CursorFeatureSettings, Keys } from 'roosterjs-editor-types';
 
 const NoCycleCursorMove: ContentEditFeature = {
@@ -18,7 +18,7 @@ const NoCycleCursorMove: ContentEditFeature = {
             return false;
         }
 
-        let rtl = isRtl(position.element);
+        let rtl = getComputedStyle(position.element, 'direction') == 'rtl';
         let rawEvent = event.rawEvent;
 
         return (!rtl && rawEvent.which == Keys.LEFT) || (rtl && rawEvent.which == Keys.RIGHT);
