@@ -250,27 +250,69 @@ To build the sample site code yourself, follow these instructions:
 ## Debugging
 
 There are two options for debugging:
+
 1. Debugging from VSCode
-   * Ensure the sample editor is running
-   * Set the breakpoints within VSCode
-   * Select "Debug app in Chrome" from the VSCode debugging configuration dropdown
-   <img src="/assets/readme-images/debug-in-VSCode.png" width="411" height="278"><br>
-   * Run the scenario that needs to be debugged
+
+    - Ensure the sample editor is running
+    - Set the breakpoints within VSCode
+    - Select "Debug app in Chrome" from the VSCode debugging configuration dropdown
+      <img src="/assets/readme-images/debug-in-VSCode.png" width="411" height="278"><br>
+    - Run the scenario that needs to be debugged
 
 2. Debugging directly from the development tools within the web browser
-   * The directions for how to do this are specific to each web browser. By opening the developer tools for the web browser that Rooster is running on, you will be able to set breakpoints in the code and debug accordingly.
+    - The directions for how to do this are specific to each web browser. By opening the developer
+      tools for the web browser that Rooster is running on, you will be able to set breakpoints in
+      the code and debug accordingly.
 
 ## Running tests
 
 There are two ways that tests can be run:
+
 1. Run all tests or a single test from VSCode<br>
-   * (Skip if running all tests) Ensure the file that you want to test is selected (ie: toggleBold.ts or toggleBoldTest.ts)
-   * Select "Test all files" or "Test current file" from the VSCode debugging configuration dropdown
-   <img src="/assets/readme-images/test-in-VSCode.png" width="402" height="268">
+    - (Skip if running all tests) Ensure the file that you want to test is selected (ie: toggleBold.ts
+      or toggleBoldTest.ts)
+    - Select "Test all files" or "Test current file" from the VSCode debugging configuration dropdown
+      <img src="/assets/readme-images/test-in-VSCode.png" width="402" height="268">
 2. Run all tests from command line
     ```
     yarn test
     ```
+
+## Dependencies
+
+As a NodeJs package, RoosterJs has dependencies for runtime (specified in package.json under each sub
+packages in "dependencies" section) and dependencies for build time (specified in package.json under
+root path in "devDependencies" section).
+
+For runtime dependencies, there are two parts:
+
+-   Internal dependencies (a RoosterJs package depends on other RoosterJs packages)
+-   External dependencies (RoosterJs depends on other NPM packages)
+
+Currently we have very few external dependencies. Before adding any new dependency, we need to check:
+
+1. What's the value of the new dependency and the code using the dependency bring into roosterjs?
+   If we add a new dependency and create our new API to just call into the dependency, that new API
+   doesn't actually bring too much value, and people who uses roosterjs in their project can do this
+   themselves in their code, and we should not add such dependency to people who don't really need it.
+
+2. What's the dependency tree of the dependency?
+   If we introduce a new dependency which has a deep dependency tree, we need to be careful since it
+   means we are actually adding a lot of new dependencies and our code size may be increased a lot.
+
+3. How much functionalities do we need from the dependency?
+   If the dependency provides a lot of functionalities but we actually only need a small piece of them,
+   we may need to consider other solutions, such as find another smaller one, or do it ourselves.
+
+4. What's the license of the dependency?
+   A dependency package under MIT license is good to be used for RoosterJs. For other licenses, we need
+   to review and see if we can take it as a dependency.
+
+If you still feel a new dependency is required after checking these 3 questions, we can review it and
+finally decide whether we should add the new dependency.
+
+For build time dependencies, it is more flexable to add new dependencies since it won't increase runtime
+code size or dependencies.
 
 ## More documentation
 
