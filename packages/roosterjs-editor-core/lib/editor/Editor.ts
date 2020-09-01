@@ -209,9 +209,23 @@ export default class Editor {
      * @returns true if node is replaced. Otherwise false
      */
     public replaceNode(existingNode: Node, toNode: Node): boolean {
+        // Transform the new node to replace to
+        const darkModeOptions = this.getDarkModeOptions();
+        const darkModeTransform = this.isDarkMode()
+            ? convertContentToDarkMode(
+                toNode,
+                darkModeOptions && darkModeOptions.onExternalContentTransform
+                    ? darkModeOptions.onExternalContentTransform
+                    : undefined
+            )
+            : null;
+
         // Only replace the node when it falls within editor
         if (existingNode && toNode && this.contains(existingNode)) {
             existingNode.parentNode.replaceChild(toNode, existingNode);
+            if (darkModeTransform) {
+                darkModeTransform()
+            }
             return true;
         }
 
