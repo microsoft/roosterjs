@@ -205,12 +205,12 @@ function tsc(isAmd) {
     } else {
         packages.forEach(package => {
             var copy = fileName => {
-                var source = path.join(packagesPath, package, fileName);
+                var source = path.join(rootPath, fileName);
                 var target = path.join(distPath, package, fileName);
                 fs.copyFileSync(source, target);
             };
-            glob.sync('@(README|readme)*.*').forEach(copy);
-            glob.sync('@(license|LICENSE)*').forEach(copy);
+            copy('README.md');
+            copy('LICENSE');
         });
     }
 }
