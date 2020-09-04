@@ -7,7 +7,7 @@
     "@types/jest": "^23.3.13",
     "@types/puppeteer": "^1.11.2",
     "jest": "^23.6.0",
-    "puppeteer": "^1.11.0",
+    "puppeteer": "^1.13.0",
     "puppeteer-firefox": "^0.4.2",
     "ts-jest": "^23.10.5"
   },
