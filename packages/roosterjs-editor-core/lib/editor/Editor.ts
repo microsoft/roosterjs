@@ -206,13 +206,13 @@ export default class Editor {
      * Replace a node in editor content with another node
      * @param existingNode The existing node to be replaced
      * @param new node to replace to
-     * @param darkMode (optional) Whether to transform new node to dark mode. Default is false
+     * @param transformColorForDarkMode (optional) Whether to transform new node to dark mode. Default is false
      * @returns true if node is replaced. Otherwise false
      */
-    public replaceNode(existingNode: Node, toNode: Node, darkMode?: boolean): boolean {
+    public replaceNode(existingNode: Node, toNode: Node, transformColorForDarkMode?: boolean): boolean {
         // Transform the new node to replace to
         let darkModeTransform = null;
-        if (darkMode) {
+        if (transformColorForDarkMode) {
             const darkModeOptions = this.getDarkModeOptions();
             darkModeTransform = this.isDarkMode()
                 ? convertContentToDarkMode(
