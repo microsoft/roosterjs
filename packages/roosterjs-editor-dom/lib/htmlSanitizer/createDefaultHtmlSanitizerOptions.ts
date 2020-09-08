@@ -13,6 +13,6 @@ export default function createDefaultHtmlSanitizerOptions(): Required<HtmlSaniti
         additionalAllowedCssClasses: [],
         additionalDefaultStyleValues: {},
         additionalGlobalStyleNodes: [],
-        allowPreserveWhiteSpace: false,
+        additionalPredefinedCssForElement: {},
     };
 }

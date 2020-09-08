@@ -40,6 +40,11 @@ export type AttributeCallbackMap = Record<string, AttributeCallback>;
 export type StyleCallbackMap = Record<string, StyleCallback>;
 
 /**
+ * A map of predefined CSS styles for elements
+ */
+export type PredefinedCssMap = Record<string, StringMap>;
+
+/**
  * A map of atttribute callbacks. Tag name should be in lower case
  */
 export type StringMap = Record<string, string>;

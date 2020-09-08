@@ -156,6 +156,7 @@ export {
     StyleCallback,
     StyleCallbackMap,
     ElementCallbackMap,
+    PredefinedCssMap,
 } from './type/htmlSanitizerCallbackTypes';
 export {
     DOMEventHandlerFunction,

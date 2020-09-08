@@ -3,6 +3,7 @@ import {
     AttributeCallbackMap,
     StringMap,
     StyleCallbackMap,
+    PredefinedCssMap,
 } from '../type/htmlSanitizerCallbackTypes';
 
 /**
@@ -50,7 +51,7 @@ export default interface HtmlSanitizerOptions {
     additionalGlobalStyleNodes?: HTMLStyleElement[];
 
     /**
-     * Whether allow CSS white-space in result
+     * Additional predefined CSS for element
      */
-    allowPreserveWhiteSpace?: boolean;
+    additionalPredefinedCssForElement?: PredefinedCssMap;
 }

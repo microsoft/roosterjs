@@ -1,6 +1,8 @@
 import getInheritableStyles from './getInheritableStyles';
+import getTagOfNode from '../utils/getTagOfNode';
 import htmlToDom from './htmlToDom';
 import safeInstanceOf from '../utils/safeInstanceOf';
+import toArray from '../utils/toArray';
 import { cloneObject } from './cloneObject';
 import {
     getAllowedTags,
@@ -8,6 +10,7 @@ import {
     getDefaultStyleValues,
     getStyleCallbacks,
     getAllowedCssClassesRegex,
+    getPredefinedCssForElement,
 } from './getAllowedValues';
 import {
     HtmlSanitizerOptions,
@@ -17,6 +20,7 @@ import {
     ElementCallbackMap,
     AttributeCallbackMap,
     NodeType,
+    PredefinedCssMap,
 } from 'roosterjs-editor-types';
 
 /**
@@ -63,8 +67,8 @@ export default class HtmlSanitizer {
     private allowedAttributes: string[];
     private allowedCssClassesRegex: RegExp;
     private defaultStyleValues: StringMap;
+    private predefinedCssForElement: PredefinedCssMap;
     private additionalGlobalStyleNodes: HTMLStyleElement[];
-    private allowPreserveWhiteSpace: boolean;
 
     /**
      * Construct a new instance of HtmlSanitizer
@@ -81,8 +85,10 @@ export default class HtmlSanitizer {
             options.additionalAllowedCssClasses
         );
         this.defaultStyleValues = getDefaultStyleValues(options.additionalDefaultStyleValues);
+        this.predefinedCssForElement = getPredefinedCssForElement(
+            options.additionalPredefinedCssForElement
+        );
         this.additionalGlobalStyleNodes = options.additionalGlobalStyleNodes || [];
-        this.allowPreserveWhiteSpace = options.allowPreserveWhiteSpace;
     }
 
     /**
@@ -175,30 +181,20 @@ export default class HtmlSanitizer {
         const isFragment = nodeType == NodeType.DocumentFragment;
 
         let element = <HTMLElement>node;
-        let tag = isElement ? element.tagName.toUpperCase() : '';
 
-        if (
-            (isElement && !this.allowElement(element, tag, context)) ||
-            (isText && /^[\r\n]*$/g.test(node.nodeValue) && !currentStyle.insidePRE) ||
-            (!isElement && !isText && !isFragment)
-        ) {
+        if (!this.shouldKeepNode(node, currentStyle, context)) {
             node.parentNode.removeChild(node);
         } else if (
             isText &&
-            !this.allowPreserveWhiteSpace &&
-            currentStyle['white-space'] == 'pre'
+            (currentStyle['white-space'] == 'pre' || currentStyle['white-space'] == 'pre-wrap')
         ) {
             node.nodeValue = node.nodeValue.replace(/^ /gm, '\u00A0').replace(/ {2}/g, ' \u00A0');
         } else if (isElement || isFragment) {
             let thisStyle = cloneObject(currentStyle);
             if (isElement) {
                 this.processAttributes(element, context);
-                this.processCss(element, tag, thisStyle, context);
-
-                // Special handling for PRE tag, need to preserve \r\n inside PRE
-                if (tag == 'PRE') {
-                    thisStyle.insidePRE = 'true';
-                }
+                this.preprocessCss(element, thisStyle);
+                this.processCss(element, thisStyle, context);
             }
 
             let child: Node = element.firstChild;
@@ -210,7 +206,17 @@ export default class HtmlSanitizer {
         }
     }
 
-    private processCss(element: HTMLElement, tag: string, thisStyle: StringMap, context: Object) {
+    private preprocessCss(element: HTMLElement, thisStyle: StringMap) {
+        const tag = getTagOfNode(element);
+        const predefinedStyles = this.predefinedCssForElement[tag];
+        if (predefinedStyles) {
+            Object.keys(predefinedStyles).forEach(name => {
+                thisStyle[name] = predefinedStyles[name];
+            });
+        }
+    }
+
+    private processCss(element: HTMLElement, thisStyle: StringMap, context: Object) {
         let styleNode = element.getAttributeNode('style');
         if (!styleNode) {
             return;
@@ -239,7 +245,7 @@ export default class HtmlSanitizer {
             if (keep && isInheritable) {
                 thisStyle[name] = value;
             }
-            return keep && (this.allowPreserveWhiteSpace || name != 'white-space');
+            return keep;
         });
 
         if (source.length != result.length) {
@@ -296,14 +302,26 @@ export default class HtmlSanitizer {
         return calculatedClasses.length > 0 ? calculatedClasses.join(' ') : null;
     }
 
-    private allowElement(element: HTMLElement, tag: string, context: Object): boolean {
-        let callback = this.elementCallbacks[tag];
-        return callback
-            ? callback(element, context)
-            : this.allowedTags.indexOf(tag) >= 0 || tag.indexOf(':') > 0;
+    private shouldKeepNode(node: Node, currentStyle: StringMap, context: Object) {
+        switch (node.nodeType) {
+            case NodeType.Element:
+                const tag = getTagOfNode(node);
+                const callback = this.elementCallbacks[tag];
+                return callback
+                    ? callback(node as HTMLElement, context)
+                    : this.allowedTags.indexOf(tag) >= 0 || tag.indexOf(':') > 0;
+            case NodeType.Text:
+                const whiteSpace = currentStyle['white-space'];
+                return (
+                    whiteSpace == 'pre' ||
+                    whiteSpace == 'pre-line' ||
+                    whiteSpace == 'pre-wrap' ||
+                    !/^[\r\n]*$/g.test(node.nodeValue)
+                );
+            case NodeType.DocumentFragment:
+                return true;
+            default:
+                return false;
+        }
     }
-}
-
-function toArray<T extends Node>(list: NodeListOf<T>): T[] {
-    return [].slice.call(list) as T[];
 }

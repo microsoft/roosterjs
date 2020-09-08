@@ -297,36 +297,71 @@ describe('sanitizeHtml with additionalGlobalStyleNodes', () => {
     });
 });
 
-describe('sanitizeHtml with allowPreserveWhiteSpace', () => {
-    function runTest(allowPreserveWhiteSpace: boolean, source: string, exp: string) {
-        let sanitizer: HtmlSanitizer = new HtmlSanitizer({
-            allowPreserveWhiteSpace,
-        });
+describe('sanitizeHtml with white-space style', () => {
+    function runTest(source: string, exp: string) {
+        let sanitizer: HtmlSanitizer = new HtmlSanitizer();
         let result = sanitizer.exec(source, false, false, { color: '' });
         expect(result).toBe(exp);
     }
 
-    it('allowPreserveWhiteSpace', () => {
+    it('handle normal', () => {
         runTest(
-            true,
-            '<div style="white-space: pre">   test   </div>',
-            '<div style="white-space: pre">   test   </div>'
+            '<div>  line  \n  1  ' +
+                '<div style="white-space: normal">  line  \n  2  </div>' +
+                '  line \n 3  </div>',
+            '<div>  line  \n  1  <div style="white-space: normal">  line  \n  2  </div>  line \n 3  </div>'
         );
     });
 
-    it("don't allowPreserveWhiteSpace", () => {
+    it('handle nowrap', () => {
         runTest(
-            false,
-            '<div style="white-space: pre">   test   </div>',
-            '<div>&nbsp; &nbsp;test &nbsp; </div>'
+            '<div>  line  \n  1  ' +
+                '<div style="white-space: nowrap">  line  \n  2  </div>' +
+                '  line \n 3  </div>',
+            '<div>  line  \n  1  <div style="white-space: nowrap">  line  \n  2  </div>  line \n 3  </div>'
         );
     });
 
-    it('new line in PRE tag', () => {
+    it('handle pre', () => {
         runTest(
-            true,
-            '<pre><span>line1</span>\n<span>line2</span></pre>',
-            '<pre><span>line1</span>\n<span>line2</span></pre>'
+            '<div>  line  \n  1  ' +
+                '<div style="white-space: pre">  line  \n  2  </div>' +
+                '  line \n 3  </div>',
+            '<div>  line  \n  1  <div style="white-space: pre">&nbsp; line &nbsp;\n&nbsp; 2 &nbsp;</div>  line \n 3  </div>'
+        );
+    });
+
+    it('handle pre-line', () => {
+        runTest(
+            '<div>  line  \n  1  ' +
+                '<div style="white-space: pre-line">  line  \n  2  </div>' +
+                '  line \n 3  </div>',
+            '<div>  line  \n  1  <div style="white-space: pre-line">  line  \n  2  </div>  line \n 3  </div>'
+        );
+    });
+
+    it('handle pre-wrap', () => {
+        runTest(
+            '<div>  line  \n  1  ' +
+                '<div style="white-space: pre-wrap">  line  \n  2  </div>' +
+                '  line \n 3  </div>',
+            '<div>  line  \n  1  <div style="white-space: pre-wrap">&nbsp; line &nbsp;\n&nbsp; 2 &nbsp;</div>  line \n 3  </div>'
+        );
+    });
+
+    it('handle PRE tag', () => {
+        runTest(
+            '<div>  line  \n  1  ' + '<pre>  line  \n  2  </pre>' + '  line \n 3  </div>',
+            '<div>  line  \n  1  <pre>&nbsp; line &nbsp;\n&nbsp; 2 &nbsp;</pre>  line \n 3  </div>'
+        );
+    });
+
+    it('handle PRE tag with style', () => {
+        runTest(
+            '<div>  line  \n  1  ' +
+                '<pre style="white-space: normal">  line  \n  2  </pre>' +
+                '  line \n 3  </div>',
+            '<div>  line  \n  1  <pre style="white-space: normal">  line  \n  2  </pre>  line \n 3  </div>'
         );
     });
 });
