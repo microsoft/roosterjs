@@ -75,6 +75,9 @@ export default class Editor implements IEditor {
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
+
+        // 4. Ensure user will type in a container node, not the editor content DIV
+        this.ensureTypeInContainer();
     }
 
     /**
@@ -666,6 +669,14 @@ export default class Editor implements IEditor {
             node = range && Position.getStart(range).normalize().node;
         }
         return this.core.api.getStyleBasedFormatState(this.core, node);
+    }
+
+    /**
+     * Ensure user will type into a container element rather than into the editor content DIV directly
+     * @param keyboardEvent Optional keyboard event object
+     */
+    public ensureTypeInContainer(keyboardEvent?: KeyboardEvent) {
+        this.core.api.ensureTypeInContainer(this.core, keyboardEvent);
     }
 
     //#endregion

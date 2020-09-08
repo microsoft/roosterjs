@@ -2,6 +2,7 @@ import { addUndoSnapshot } from './addUndoSnapshot';
 import { attachDomEvent } from './attachDomEvent';
 import { CoreApiMap } from 'roosterjs-editor-types';
 import { createPasteFragment } from './createPasteFragment';
+import { ensureTypeInContainer } from './ensureTypeInContainer';
 import { focus } from './focus';
 import { getContent } from './getContent';
 import { getSelectionRange } from './getSelectionRange';
@@ -20,6 +21,7 @@ import { triggerEvent } from './triggerEvent';
 export const coreApiMap: CoreApiMap = {
     attachDomEvent,
     addUndoSnapshot,
+    ensureTypeInContainer,
     focus,
     getContent,
     getSelectionRange,

@@ -31,6 +31,21 @@ export default interface EditorCore extends PluginState {
 }
 
 /**
+ * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
+ * Undo snapshot will not be added if this call is nested inside another addUndoSnapshot() call.
+ * @param core The EditorCore object
+ * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
+ * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
+ * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
+ */
+export type AddUndoSnapshot = (
+    core: EditorCore,
+    callback: (start: NodePosition, end: NodePosition) => any,
+    changeSource: ChangeSource | string,
+    canUndoByBacksapce: boolean
+) => void;
+
+/**
  * Attach a DOM event to the editor content DIV
  * @param core The EditorCore object
  * @param eventMap A map from event name to its handler
@@ -58,19 +73,14 @@ export type CreatePasteFragment = (
 ) => DocumentFragment;
 
 /**
- * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
- * Undo snapshot will not be added if this call is nested inside another addUndoSnapshot() call.
- * @param core The EditorCore object
- * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
- * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
- * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
+ * Ensure user will type into a container element rather than into the editor content DIV directly
+ * @param core The EditorCore object.
+ * @param keyboardEvent Optional keyboard event object
  */
-export type AddUndoSnapshot = (
+export type EnsureTypeInContainer = (
     core: EditorCore,
-    callback: (start: NodePosition, end: NodePosition) => any,
-    changeSource: ChangeSource | string,
-    canUndoByBacksapce: boolean
-) => void;
+    keyboardEvent?: KeyboardEvent
+) => NodePosition;
 
 /**
  * Focus to editor. If there is a cached selection range, use it as current selection
@@ -87,20 +97,12 @@ export type Focus = (core: EditorCore) => void;
 export type GetContent = (core: EditorCore, mode: GetContentMode) => string;
 
 /**
- * Get custom data related with this editor
+ * Get current or cached selection range
  * @param core The EditorCore object
- * @param key Key of the custom data
- * @param getter Getter function. If custom data for the given key doesn't exist,
- * call this function to get one and store it if it is specified. Otherwise return undefined
- * @param disposer An optional disposer function to dispose this custom data when
- * dispose editor.
+ * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
+ * @returns A Range object of the selection range
  */
-export type GetCustomData = <T>(
-    core: EditorCore,
-    key: string,
-    getter: () => T,
-    disposer?: (value: T) => void
-) => T;
+export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => Range;
 
 /**
  * Get style based format state from current selection, including font name/size and colors
@@ -108,14 +110,6 @@ export type GetCustomData = <T>(
  * @param node The node to get style from
  */
 export type GetStyleBasedFormatState = (core: EditorCore, node: Node) => StyleBasedFormatState;
-
-/**
- * Get current or cached selection range
- * @param core The EditorCore object
- * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
- * @returns A Range object of the selection range
- */
-export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => Range;
 
 /**
  * Check if the editor has focus now
@@ -183,6 +177,16 @@ export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcas
 
 export interface CoreApiMap {
     /**
+     * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
+     * Undo snapshot will not be added if this call is nested inside another addUndoSnapshot() call.
+     * @param core The EditorCore object
+     * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
+     * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
+     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
+     */
+    addUndoSnapshot: AddUndoSnapshot;
+
+    /**
      * Attach a DOM event to the editor content DIV
      * @param core The EditorCore object
      * @param eventName The DOM event name
@@ -203,14 +207,11 @@ export interface CoreApiMap {
     createPasteFragment: CreatePasteFragment;
 
     /**
-     * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.
-     * Undo snapshot will not be added if this call is nested inside another addUndoSnapshot() call.
-     * @param core The EditorCore object
-     * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
-     * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
-     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
+     * Ensure user will type into a container element rather than into the editor content DIV directly
+     * @param core The EditorCore object.
+     * @param keyboardEvent Optional keyboard event object
      */
-    addUndoSnapshot: AddUndoSnapshot;
+    ensureTypeInContainer: EnsureTypeInContainer;
 
     /**
      * Focus to editor. If there is a cached selection range, use it as current selection
@@ -227,19 +228,19 @@ export interface CoreApiMap {
     getContent: GetContent;
 
     /**
-     * Get style based format state from current selection, including font name/size and colors
-     * @param core The EditorCore objects
-     * @param node The node to get style from
-     */
-    getStyleBasedFormatState: GetStyleBasedFormatState;
-
-    /**
      * Get current or cached selection range
      * @param core The EditorCore object
      * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
      * @returns A Range object of the selection range
      */
     getSelectionRange: GetSelectionRange;
+
+    /**
+     * Get style based format state from current selection, including font name/size and colors
+     * @param core The EditorCore objects
+     * @param node The node to get style from
+     */
+    getStyleBasedFormatState: GetStyleBasedFormatState;
 
     /**
      * Check if the editor has focus now

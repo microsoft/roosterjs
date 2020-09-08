@@ -490,6 +490,12 @@ export default interface IEditor {
      */
     getStyleBasedFormatState(node?: Node): StyleBasedFormatState;
 
+    /**
+     * Ensure user will type into a container element rather than into the editor content DIV directly
+     * @param keyboardEvent Optional keyboard event object
+     */
+    ensureTypeInContainer(keyboardEvent?: KeyboardEvent): void;
+
     //#endregion
 
     //#region Dark mode APIs
