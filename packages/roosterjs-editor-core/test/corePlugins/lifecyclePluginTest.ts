@@ -14,14 +14,14 @@ describe('LifecyclePlugin', () => {
             getFocusedPosition: () => <any>null,
         }));
 
-        expect(state.value.defaultFormat.textColor).toBe('');
-        expect(state.value.defaultFormat.backgroundColor).toBe('');
+        expect(state.defaultFormat.textColor).toBe('');
+        expect(state.defaultFormat.backgroundColor).toBe('');
 
         // Reset these getters, we can ignore them since we have already verified them
-        delete state.value.defaultFormat.textColor;
-        delete state.value.defaultFormat.backgroundColor;
+        delete state.defaultFormat.textColor;
+        delete state.defaultFormat.backgroundColor;
 
-        expect(state.value).toEqual({
+        expect(state).toEqual({
             customData: {},
             defaultFormat: {
                 fontFamily: '',
@@ -68,7 +68,7 @@ describe('LifecyclePlugin', () => {
             getFocusedPosition: () => <any>null,
         }));
 
-        expect(state.value).toEqual({
+        expect(state).toEqual({
             customData: {},
             defaultFormat: {
                 fontFamily: 'arial',
@@ -163,7 +163,7 @@ describe('recalculateDefaultFormat', () => {
 
     it('get default format', () => {
         plugin = new LifecyclePlugin({}, div);
-        expect(plugin.getState().value.defaultFormat).toBeNull();
+        expect(plugin.getState().defaultFormat).toBeNull();
     });
 
     it('no default format, light mode', () => {
@@ -174,7 +174,7 @@ describe('recalculateDefaultFormat', () => {
             getFocusedPosition: () => <NodePosition>null,
         }));
 
-        expect(plugin.getState().value.defaultFormat).toEqual({
+        expect(plugin.getState().defaultFormat).toEqual({
             fontFamily: 'arial',
             fontSize: '14pt',
             textColor: 'rgb(0, 0, 0)',
@@ -196,7 +196,7 @@ describe('recalculateDefaultFormat', () => {
         }));
 
         // First time it initials the default format
-        expect(plugin.getState().value.defaultFormat).toEqual({
+        expect(plugin.getState().defaultFormat).toEqual({
             fontFamily: 'arial',
             fontSize: '14pt',
             textColor: 'rgb(0, 0, 0)',
@@ -213,8 +213,8 @@ describe('recalculateDefaultFormat', () => {
             eventType: PluginEventType.ContentChanged,
             source: ChangeSource.SwitchToDarkMode,
         });
-        expect(plugin.getState().value.isDarkMode).toBeTrue();
-        expect(plugin.getState().value.defaultFormat).toEqual({
+        expect(plugin.getState().isDarkMode).toBeTrue();
+        expect(plugin.getState().defaultFormat).toEqual({
             fontFamily: 'arial',
             fontSize: '14pt',
             textColor: 'rgb(255,255,255)',
@@ -249,7 +249,7 @@ describe('recalculateDefaultFormat', () => {
             getFocusedPosition: () => <NodePosition>null,
         }));
 
-        expect(plugin.getState().value.defaultFormat).toEqual({
+        expect(plugin.getState().defaultFormat).toEqual({
             fontFamily: 'arial',
             fontSize: '14pt',
             textColor: 'rgb(0, 0, 0)',
@@ -279,7 +279,7 @@ describe('recalculateDefaultFormat', () => {
             getFocusedPosition: () => <NodePosition>null,
         }));
 
-        expect(plugin.getState().value.defaultFormat).toEqual({
+        expect(plugin.getState().defaultFormat).toEqual({
             fontFamily: 'arial',
             fontSize: '14pt',
             textColor: 'rgb(255,255,255)',
@@ -308,15 +308,15 @@ describe('recalculateDefaultFormat', () => {
             getFocusedPosition: () => <NodePosition>null,
         }));
 
-        expect(plugin.getState().value.defaultFormat).toEqual({});
+        expect(plugin.getState().defaultFormat).toEqual({});
 
         plugin.onPluginEvent({
             eventType: PluginEventType.ContentChanged,
             source: ChangeSource.SwitchToDarkMode,
         });
 
-        expect(plugin.getState().value.isDarkMode).toBeTrue();
-        expect(plugin.getState().value.defaultFormat).toEqual({
+        expect(plugin.getState().isDarkMode).toBeTrue();
+        expect(plugin.getState().defaultFormat).toEqual({
             fontFamily: 'arial',
             fontSize: '14pt',
             textColor: 'rgb(255,255,255)',

@@ -1,11 +1,10 @@
-import { createWrapper, Position } from 'roosterjs-editor-dom';
+import { Position } from 'roosterjs-editor-dom';
 import {
     IEditor,
     PendingFormatStatePluginState,
     PluginEvent,
     PluginEventType,
     PluginWithState,
-    Wrapper,
 } from 'roosterjs-editor-types';
 
 /**
@@ -15,7 +14,7 @@ import {
 export default class PendingFormatStatePlugin
     implements PluginWithState<PendingFormatStatePluginState> {
     private editor: IEditor;
-    private state: Wrapper<PendingFormatStatePluginState>;
+    private state: PendingFormatStatePluginState;
 
     /**
      * Construct a new instance of PendingFormatStatePlugin
@@ -23,10 +22,10 @@ export default class PendingFormatStatePlugin
      * @param contentDiv The editor content DIV
      */
     constructor() {
-        this.state = createWrapper({
+        this.state = {
             pendableFormatPosition: null,
             pendableFormatState: null,
-        });
+        };
     }
 
     /**
@@ -67,8 +66,8 @@ export default class PendingFormatStatePlugin
         switch (event.eventType) {
             case PluginEventType.PendingFormatStateChanged:
                 // Got PendingFormatStateChagned event, cache current position and pending format
-                this.state.value.pendableFormatPosition = this.getCurrentPosition();
-                this.state.value.pendableFormatState = event.formatState;
+                this.state.pendableFormatPosition = this.getCurrentPosition();
+                this.state.pendableFormatState = event.formatState;
                 break;
             case PluginEventType.KeyDown:
             case PluginEventType.MouseDown:
@@ -77,8 +76,8 @@ export default class PendingFormatStatePlugin
                 // check if current position is still the same with the cached one (if exist),
                 // and clear cached format if position is changed since it is out-of-date now
                 if (
-                    this.state.value.pendableFormatPosition &&
-                    !this.state.value.pendableFormatPosition.equalTo(this.getCurrentPosition())
+                    this.state.pendableFormatPosition &&
+                    !this.state.pendableFormatPosition.equalTo(this.getCurrentPosition())
                 ) {
                     this.clear();
                 }
@@ -87,8 +86,8 @@ export default class PendingFormatStatePlugin
     }
 
     private clear() {
-        this.state.value.pendableFormatPosition = null;
-        this.state.value.pendableFormatState = null;
+        this.state.pendableFormatPosition = null;
+        this.state.pendableFormatState = null;
     }
 
     private getCurrentPosition() {

@@ -88,7 +88,6 @@ export { default as TableFormat } from './interface/TableFormat';
 export { default as HtmlSanitizerOptions } from './interface/HtmlSanitizerOptions';
 export { default as SanitizeHtmlOptions } from './interface/SanitizeHtmlOptions';
 export { default as TargetWindow } from './interface/TargetWindow';
-export { default as Wrapper } from './interface/Wrapper';
 export { default as IEditor } from './interface/IEditor';
 export { ContentEditFeature, GenericContentEditFeature } from './interface/ContentEditFeature';
 export { default as EditorPlugin } from './interface/EditorPlugin';
@@ -142,6 +141,7 @@ export { default as VCell } from './interface/VCell';
 
 // Core Plugin State
 export { default as DOMEventPluginState } from './corePluginState/DOMEventPluginState';
+export { default as EditPluginState } from './corePluginState/EditPluginState';
 export { default as EntityPluginState } from './corePluginState/EntityPluginState';
 export { default as LifecyclePluginState } from './corePluginState/LifecyclePluginState';
 export { default as PendingFormatStatePluginState } from './corePluginState/PendingFormatStatePluginState';

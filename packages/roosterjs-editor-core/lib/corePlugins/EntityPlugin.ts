@@ -1,7 +1,6 @@
 import {
     Browser,
     commitEntity,
-    createWrapper,
     getEntityFromElement,
     getEntitySelector,
     isCharacterValue,
@@ -21,7 +20,6 @@ import {
     PluginEventType,
     PluginWithState,
     QueryScope,
-    Wrapper,
 } from 'roosterjs-editor-types';
 
 const ENTITY_ID_REGEX = /_\d{1,8}$/;
@@ -44,16 +42,16 @@ const ALLOWED_CSS_CLASSES = [
 export default class EntityPlugin implements PluginWithState<EntityPluginState> {
     private editor: IEditor;
     private disposer: () => void;
-    private state: Wrapper<EntityPluginState>;
+    private state: EntityPluginState;
 
     /**
      * Construct a new instance of EntityPlugin
      */
     constructor() {
-        this.state = createWrapper({
+        this.state = {
             clickingPoint: null,
             knownEntityElements: [],
-        });
+        };
     }
 
     /**
@@ -82,8 +80,8 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         this.disposer();
         this.disposer = null;
         this.editor = null;
-        this.state.value.knownEntityElements = [];
-        this.state.value.clickingPoint = null;
+        this.state.knownEntityElements = [];
+        this.state.clickingPoint = null;
     }
 
     /**
@@ -146,7 +144,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         const entityElement = node && this.editor.getElementAtCursor(getEntitySelector(), node);
         if (entityElement && !entityElement.isContentEditable) {
             event.preventDefault();
-            this.state.value.clickingPoint = { pageX, pageY };
+            this.state.clickingPoint = { pageX, pageY };
         }
     }
 
@@ -156,9 +154,9 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         let entityElement: HTMLElement;
 
         if (
-            this.state.value.clickingPoint &&
-            this.state.value.clickingPoint.pageX == pageX &&
-            this.state.value.clickingPoint.pageY == pageY &&
+            this.state.clickingPoint &&
+            this.state.clickingPoint.pageX == pageX &&
+            this.state.clickingPoint.pageY == pageY &&
             node &&
             !!(entityElement = this.editor.getElementAtCursor(getEntitySelector(), node))
         ) {
@@ -168,7 +166,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             workaroundSelectionIssueForIE(this.editor);
         }
 
-        this.state.value.clickingPoint = null;
+        this.state.clickingPoint = null;
     }
 
     private handleKeyDownEvent(event: KeyboardEvent) {
@@ -201,16 +199,16 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     }
 
     private handleContentChangedEvent(resetAll: boolean) {
-        this.state.value.knownEntityElements = resetAll
+        this.state.knownEntityElements = resetAll
             ? []
-            : this.state.value.knownEntityElements.filter(node => this.editor.contains(node));
-        const allId = this.state.value.knownEntityElements
+            : this.state.knownEntityElements.filter(node => this.editor.contains(node));
+        const allId = this.state.knownEntityElements
             .map(e => getEntityFromElement(e)?.id)
             .filter(x => !!x);
 
         this.editor.queryElements(getEntitySelector(), element => {
-            if (this.state.value.knownEntityElements.indexOf(element) < 0) {
-                this.state.value.knownEntityElements.push(element);
+            if (this.state.knownEntityElements.indexOf(element) < 0) {
+                this.state.knownEntityElements.push(element);
 
                 const entity = getEntityFromElement(element);
 

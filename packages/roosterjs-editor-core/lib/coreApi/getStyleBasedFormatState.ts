@@ -18,7 +18,7 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
         return {};
     }
     const styles = node ? getComputedStyles(node) : [];
-    const isDarkMode = core.lifecycle.value.isDarkMode;
+    const isDarkMode = core.lifecycle.isDarkMode;
     const root = core.contentDiv;
     const ogTextColorNode =
         isDarkMode && findClosestElementAncestor(node, root, ORIGINAL_STYLE_COLOR_SELECTOR);

@@ -16,7 +16,7 @@ describe('focus', () => {
 
     it('focus', () => {
         const core = createEditorCore(div, {});
-        core.domEvent.value = {
+        core.domEvent = {
             selectionRange: document.createRange(),
             isInIME: false,
             scrollContainer: null,
@@ -25,7 +25,7 @@ describe('focus', () => {
 
         focus(core);
 
-        expect(core.domEvent.value.selectionRange).toBeNull();
+        expect(core.domEvent.selectionRange).toBeNull();
         expect(document.activeElement).toBe(div);
     });
 });

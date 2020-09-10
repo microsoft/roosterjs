@@ -1,14 +1,9 @@
 import PendingFormatStatePlugin from '../../lib/corePlugins/PendingFormatStatePlugin';
-import {
-    IEditor,
-    PendingFormatStatePluginState,
-    PluginEventType,
-    Wrapper,
-} from 'roosterjs-editor-types';
+import { IEditor, PendingFormatStatePluginState, PluginEventType } from 'roosterjs-editor-types';
 
 describe('PendingFormatStatePlugin', () => {
     let plugin: PendingFormatStatePlugin;
-    let state: Wrapper<PendingFormatStatePluginState>;
+    let state: PendingFormatStatePluginState;
 
     beforeEach(() => {
         plugin = new PendingFormatStatePlugin();
@@ -23,23 +18,23 @@ describe('PendingFormatStatePlugin', () => {
     });
 
     it('init and dispose', () => {
-        expect(state.value).toEqual({
+        expect(state).toEqual({
             pendableFormatPosition: null,
             pendableFormatState: null,
         });
     });
 
     it('clean up when keydown and position changed', () => {
-        state.value.pendableFormatPosition = <any>{
+        state.pendableFormatPosition = <any>{
             equalTo: () => false,
         };
-        state.value.pendableFormatState = <any>{};
+        state.pendableFormatState = <any>{};
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
             rawEvent: null,
         });
-        expect(state.value.pendableFormatPosition).toBeNull();
-        expect(state.value.pendableFormatState).toBeNull();
+        expect(state.pendableFormatPosition).toBeNull();
+        expect(state.pendableFormatState).toBeNull();
     });
 
     it('do not clean up when key down and position not changed', () => {
@@ -47,28 +42,28 @@ describe('PendingFormatStatePlugin', () => {
             equalTo: () => true,
         };
         const formatState = <any>{};
-        state.value.pendableFormatPosition = position;
-        state.value.pendableFormatState = formatState;
+        state.pendableFormatPosition = position;
+        state.pendableFormatState = formatState;
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
             rawEvent: null,
         });
 
-        expect(state.value.pendableFormatPosition).toBe(position);
-        expect(state.value.pendableFormatState).toBe(formatState);
+        expect(state.pendableFormatPosition).toBe(position);
+        expect(state.pendableFormatState).toBe(formatState);
     });
 
     it('clean up when mouse down and position changed', () => {
-        state.value.pendableFormatPosition = <any>{
+        state.pendableFormatPosition = <any>{
             equalTo: () => false,
         };
-        state.value.pendableFormatState = <any>{};
+        state.pendableFormatState = <any>{};
         plugin.onPluginEvent({
             eventType: PluginEventType.MouseDown,
             rawEvent: null,
         });
-        expect(state.value.pendableFormatPosition).toBeNull();
-        expect(state.value.pendableFormatState).toBeNull();
+        expect(state.pendableFormatPosition).toBeNull();
+        expect(state.pendableFormatState).toBeNull();
     });
 
     it('do not clean up when mouse down and position not changed', () => {
@@ -76,28 +71,28 @@ describe('PendingFormatStatePlugin', () => {
             equalTo: () => true,
         };
         const formatState = <any>{};
-        state.value.pendableFormatPosition = position;
-        state.value.pendableFormatState = formatState;
+        state.pendableFormatPosition = position;
+        state.pendableFormatState = formatState;
         plugin.onPluginEvent({
             eventType: PluginEventType.MouseDown,
             rawEvent: null,
         });
 
-        expect(state.value.pendableFormatPosition).toBe(position);
-        expect(state.value.pendableFormatState).toBe(formatState);
+        expect(state.pendableFormatPosition).toBe(position);
+        expect(state.pendableFormatState).toBe(formatState);
     });
 
     it('clean up when content change and position changed', () => {
-        state.value.pendableFormatPosition = <any>{
+        state.pendableFormatPosition = <any>{
             equalTo: () => false,
         };
-        state.value.pendableFormatState = <any>{};
+        state.pendableFormatState = <any>{};
         plugin.onPluginEvent({
             eventType: PluginEventType.ContentChanged,
             source: null,
         });
-        expect(state.value.pendableFormatPosition).toBeNull();
-        expect(state.value.pendableFormatState).toBeNull();
+        expect(state.pendableFormatPosition).toBeNull();
+        expect(state.pendableFormatState).toBeNull();
     });
 
     it('do not clean up when content change and position not changed', () => {
@@ -105,20 +100,20 @@ describe('PendingFormatStatePlugin', () => {
             equalTo: () => true,
         };
         const formatState = <any>{};
-        state.value.pendableFormatPosition = position;
-        state.value.pendableFormatState = formatState;
+        state.pendableFormatPosition = position;
+        state.pendableFormatState = formatState;
         plugin.onPluginEvent({
             eventType: PluginEventType.ContentChanged,
             source: null,
         });
 
-        expect(state.value.pendableFormatPosition).toBe(position);
-        expect(state.value.pendableFormatState).toBe(formatState);
+        expect(state.pendableFormatPosition).toBe(position);
+        expect(state.pendableFormatState).toBe(formatState);
     });
 
     it('cache format state and position when PendingFormatStateChanged', () => {
-        expect(state.value.pendableFormatPosition).toBeNull();
-        expect(state.value.pendableFormatState).toBeNull();
+        expect(state.pendableFormatPosition).toBeNull();
+        expect(state.pendableFormatState).toBeNull();
         const formatState = <any>{};
 
         plugin.onPluginEvent({
@@ -126,7 +121,7 @@ describe('PendingFormatStatePlugin', () => {
             formatState,
         });
 
-        expect(state.value.pendableFormatPosition).not.toBeNull();
-        expect(state.value.pendableFormatState).toBe(formatState);
+        expect(state.pendableFormatPosition).not.toBeNull();
+        expect(state.pendableFormatState).toBe(formatState);
     });
 });

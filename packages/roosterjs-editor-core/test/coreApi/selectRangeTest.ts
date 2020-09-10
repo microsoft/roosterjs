@@ -52,7 +52,7 @@ describe('selectRange', () => {
         expect(result.startOffset).toBe(0);
         expect(result.endOffset).toBe(1);
 
-        expect(core.domEvent.value.selectionRange).toBe(result);
+        expect(core.domEvent.selectionRange).toBe(result);
     });
 
     it('select single node after focus', () => {
@@ -76,7 +76,7 @@ describe('selectRange', () => {
         expect(result.startOffset).toBe(0);
         expect(result.endOffset).toBe(1);
 
-        expect(core.domEvent.value.selectionRange).toBe(null);
+        expect(core.domEvent.selectionRange).toBe(null);
     });
 
     it('select collapsed range', () => {
@@ -89,8 +89,8 @@ describe('selectRange', () => {
         range.selectNode(span);
         range.collapse(true);
 
-        core.pendingFormatState.value.pendableFormatPosition = new Position(div, 0);
-        core.pendingFormatState.value.pendableFormatState = {
+        core.pendingFormatState.pendableFormatPosition = new Position(div, 0);
+        core.pendingFormatState.pendableFormatState = {
             isBold: true,
         };
 

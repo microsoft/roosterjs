@@ -7,7 +7,7 @@ import { EditorCore, RestoreUndoSnapshot } from 'roosterjs-editor-types';
  * @param step Steps to move, can be 0, positive or negative
  */
 export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step: number) => {
-    if (core.undo.value.hasNewContent && step < 0) {
+    if (core.undo.hasNewContent && step < 0) {
         core.api.addUndoSnapshot(
             core,
             null /*callback*/,
@@ -16,14 +16,14 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
         );
     }
 
-    const snapshot = core.undo.value.snapshotsService.move(step);
+    const snapshot = core.undo.snapshotsService.move(step);
 
     if (snapshot != null) {
         try {
-            core.undo.value.isRestoring = true;
+            core.undo.isRestoring = true;
             core.api.setContent(core, snapshot, true /*triggerContentChangedEvent*/);
         } finally {
-            core.undo.value.isRestoring = false;
+            core.undo.isRestoring = false;
         }
     }
 };

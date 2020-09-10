@@ -1,16 +1,9 @@
 import EditPlugin from '../../lib/corePlugins/EditPlugin';
-import {
-    GenericContentEditFeature,
-    IEditor,
-    Keys,
-    PluginEvent,
-    PluginEventType,
-    Wrapper,
-} from 'roosterjs-editor-types';
+import { EditPluginState, IEditor, Keys, PluginEventType } from 'roosterjs-editor-types';
 
 describe('EditPlugin', () => {
     let plugin: EditPlugin;
-    let state: Wrapper<Record<number, GenericContentEditFeature<PluginEvent>[]>>;
+    let state: EditPluginState;
 
     beforeEach(() => {
         plugin = new EditPlugin();
@@ -23,13 +16,13 @@ describe('EditPlugin', () => {
     });
 
     it('init and dispose', () => {
-        expect(Object.keys(state.value).length).toBe(0);
+        expect(Object.keys(state.features).length).toBe(0);
     });
 
     it('no features handler event because key does not match', () => {
         const shouldHandleEvent = jasmine.createSpy('shouldHandleEvent').and.returnValue(false);
         const handleEvent = jasmine.createSpy('handleEvent');
-        state.value[Keys.ENTER] = [
+        state.features[Keys.ENTER] = [
             {
                 keys: [Keys.ENTER],
                 shouldHandleEvent,
@@ -51,7 +44,7 @@ describe('EditPlugin', () => {
     it('no features handler event because it should not', () => {
         const shouldHandleEvent = jasmine.createSpy('shouldHandleEvent').and.returnValue(false);
         const handleEvent = jasmine.createSpy('handleEvent');
-        state.value[Keys.ENTER] = [
+        state.features[Keys.ENTER] = [
             {
                 keys: [Keys.ENTER],
                 shouldHandleEvent,
@@ -73,7 +66,7 @@ describe('EditPlugin', () => {
     it('one feature handlers event', () => {
         const shouldHandleEvent = jasmine.createSpy('shouldHandleEvent').and.returnValue(true);
         const handleEvent = jasmine.createSpy('handleEvent');
-        state.value[Keys.ENTER] = [
+        state.features[Keys.ENTER] = [
             {
                 keys: [Keys.ENTER],
                 shouldHandleEvent,
@@ -99,14 +92,14 @@ describe('EditPlugin', () => {
         const handleEvent2 = jasmine.createSpy('handleEvent2');
         const shouldHandleEvent3 = jasmine.createSpy('shouldHandleEvent3').and.returnValue(true);
         const handleEvent3 = jasmine.createSpy('handleEvent3');
-        state.value[Keys.DELETE] = [
+        state.features[Keys.DELETE] = [
             {
                 keys: [Keys.DELETE],
                 shouldHandleEvent: shouldHandleEvent1,
                 handleEvent: handleEvent1,
             },
         ];
-        state.value[Keys.ENTER] = [
+        state.features[Keys.ENTER] = [
             {
                 keys: [Keys.ENTER],
                 shouldHandleEvent: shouldHandleEvent2,
@@ -141,14 +134,14 @@ describe('EditPlugin', () => {
         const handleEvent2 = jasmine.createSpy('handleEvent2');
         const shouldHandleEvent3 = jasmine.createSpy('shouldHandleEvent3').and.returnValue(true);
         const handleEvent3 = jasmine.createSpy('handleEvent3');
-        state.value[Keys.DELETE] = [
+        state.features[Keys.DELETE] = [
             {
                 keys: [Keys.DELETE],
                 shouldHandleEvent: shouldHandleEvent1,
                 handleEvent: handleEvent1,
             },
         ];
-        state.value[Keys.ENTER] = [
+        state.features[Keys.ENTER] = [
             {
                 keys: [Keys.ENTER],
                 shouldHandleEvent: shouldHandleEvent2,
@@ -181,7 +174,7 @@ describe('EditPlugin', () => {
         const handleEvent1 = jasmine.createSpy('handleEvent1');
         const shouldHandleEvent2 = jasmine.createSpy('shouldHandleEvent2').and.returnValue(true);
         const handleEvent2 = jasmine.createSpy('handleEvent2');
-        state.value[Keys.ENTER] = [
+        state.features[Keys.ENTER] = [
             {
                 keys: [Keys.ENTER],
                 shouldHandleEvent: shouldHandleEvent1,
@@ -217,8 +210,8 @@ describe('EditPlugin', () => {
             shouldHandleEvent: shouldHandleEvent1,
             handleEvent: handleEvent1,
         };
-        state.value[Keys.ENTER] = [feature];
-        state.value[Keys.SPACE] = [feature];
+        state.features[Keys.ENTER] = [feature];
+        state.features[Keys.SPACE] = [feature];
 
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
@@ -240,9 +233,9 @@ describe('EditPlugin', () => {
             handleEvent: handleEvent1,
         };
 
-        state.value[Keys.ENTER] = [feature];
-        state.value[Keys.SPACE] = [feature];
-        state.value[Keys.CONTENTCHANGED] = [feature];
+        state.features[Keys.ENTER] = [feature];
+        state.features[Keys.SPACE] = [feature];
+        state.features[Keys.CONTENTCHANGED] = [feature];
 
         plugin.onPluginEvent({
             eventType: PluginEventType.ContentChanged,

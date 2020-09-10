@@ -1,4 +1,4 @@
-import { Browser, createWrapper, isCharacterValue } from 'roosterjs-editor-dom';
+import { Browser, isCharacterValue } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     DOMEventHandler,
@@ -7,7 +7,6 @@ import {
     IEditor,
     PluginEventType,
     PluginWithState,
-    Wrapper,
 } from 'roosterjs-editor-types';
 
 /**
@@ -24,7 +23,7 @@ import {
 export default class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private editor: IEditor;
     private disposer: () => void;
-    private state: Wrapper<DOMEventPluginState>;
+    private state: DOMEventPluginState;
 
     /**
      * Construct a new instance of DOMEventPlugin
@@ -32,12 +31,12 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
      * @param contentDiv The editor content DIV
      */
     constructor(options: EditorOptions, contentDiv: HTMLDivElement) {
-        this.state = createWrapper({
+        this.state = {
             isInIME: false,
             scrollContainer: options.scrollContainer || contentDiv,
             selectionRange: null,
             stopPrintableKeyboardEventPropagation: !options.allowKeyboardEventPropagation,
-        });
+        };
     }
 
     /**
@@ -64,9 +63,9 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             mousedown: PluginEventType.MouseDown,
 
             // 3. IME state management
-            compositionstart: () => (this.state.value.isInIME = true),
+            compositionstart: () => (this.state.isInIME = true),
             compositionend: (rawEvent: CompositionEvent) => {
-                this.state.value.isInIME = false;
+                this.state.isInIME = false;
                 editor.triggerPluginEvent(PluginEventType.CompositionEnd, {
                     rawEvent,
                 });
@@ -84,14 +83,14 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         });
 
         // 7. Scroll event
-        this.state.value.scrollContainer.addEventListener('scroll', this.onScroll);
+        this.state.scrollContainer.addEventListener('scroll', this.onScroll);
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        this.state.value.scrollContainer.removeEventListener('scroll', this.onScroll);
+        this.state.scrollContainer.removeEventListener('scroll', this.onScroll);
         this.disposer();
         this.disposer = null;
         this.editor = null;
@@ -111,23 +110,23 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     };
 
     private onFocus = () => {
-        this.editor.select(this.state.value.selectionRange);
-        this.state.value.selectionRange = null;
+        this.editor.select(this.state.selectionRange);
+        this.state.selectionRange = null;
     };
 
     private onBlur = () => {
-        this.state.value.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
+        this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
     };
 
     private onScroll = (e: UIEvent) => {
         this.editor.triggerPluginEvent(PluginEventType.Scroll, {
             rawEvent: e,
-            scrollContainer: this.state.value.scrollContainer,
+            scrollContainer: this.state.scrollContainer,
         });
     };
 
     private getEventHandler(eventType: PluginEventType): DOMEventHandler {
-        return this.state.value.stopPrintableKeyboardEventPropagation
+        return this.state.stopPrintableKeyboardEventPropagation
             ? {
                   pluginEventType: eventType,
                   beforeDispatch:

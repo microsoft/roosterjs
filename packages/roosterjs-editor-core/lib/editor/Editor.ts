@@ -506,7 +506,7 @@ export default class Editor implements IEditor {
      * Whether there is an available undo/redo snapshot
      */
     getUndoState(): EditorUndoState {
-        const { hasNewContent, snapshotsService } = this.core.undo.value;
+        const { hasNewContent, snapshotsService } = this.core.undo;
         return {
             canUndo: hasNewContent || snapshotsService.canMove(-1 /*previousSnapshot*/),
             canRedo: snapshotsService.canMove(1 /*nextSnapshot*/),
@@ -529,7 +529,7 @@ export default class Editor implements IEditor {
      * Get the scroll container of the editor
      */
     public getScrollContainer(): HTMLElement {
-        return this.core.domEvent.value.scrollContainer;
+        return this.core.domEvent.scrollContainer;
     }
 
     /**
@@ -541,9 +541,7 @@ export default class Editor implements IEditor {
      * dispose editor.
      */
     public getCustomData<T>(key: string, getter?: () => T, disposer?: (value: T) => void): T {
-        return (this.core.lifecycle.value.customData[key] = this.core.lifecycle.value.customData[
-            key
-        ] || {
+        return (this.core.lifecycle.customData[key] = this.core.lifecycle.customData[key] || {
             value: getter ? getter() : undefined,
             disposer,
         }).value as T;
@@ -554,7 +552,7 @@ export default class Editor implements IEditor {
      * @returns True if editor is in IME input sequence, otherwise false
      */
     public isInIME(): boolean {
-        return this.core.domEvent.value.isInIME;
+        return this.core.domEvent.isInIME;
     }
 
     /**
@@ -562,7 +560,7 @@ export default class Editor implements IEditor {
      * @returns Default format object of this editor
      */
     public getDefaultFormat(): DefaultFormat {
-        return this.core.lifecycle.value.defaultFormat;
+        return this.core.lifecycle.defaultFormat;
     }
 
     /**
@@ -654,9 +652,9 @@ export default class Editor implements IEditor {
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
         feature?.keys.forEach(key => {
-            let array = this.core.edit.value[key] || [];
+            let array = this.core.edit.features[key] || [];
             array.push(feature);
-            this.core.edit.value[key] = array;
+            this.core.edit.features[key] = array;
         });
     }
 
@@ -705,7 +703,7 @@ export default class Editor implements IEditor {
      * @returns True if the editor is in dark mode, otherwise false
      */
     public isDarkMode(): boolean {
-        return this.core.lifecycle.value.isDarkMode;
+        return this.core.lifecycle.isDarkMode;
     }
 
     /**

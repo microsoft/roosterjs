@@ -1,4 +1,4 @@
-import { Browser, createWrapper, getComputedStyles, Position } from 'roosterjs-editor-dom';
+import { Browser, getComputedStyles, Position } from 'roosterjs-editor-dom';
 import {
     DefaultFormat,
     DocumentCommand,
@@ -9,7 +9,6 @@ import {
     PluginEventType,
     PluginWithState,
     PositionType,
-    Wrapper,
     PluginEvent,
     ChangeSource,
 } from 'roosterjs-editor-types';
@@ -56,7 +55,7 @@ const DARK_MODE_DEFAULT_FORMAT = {
  */
 export default class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
     private editor: IEditor;
-    private state: Wrapper<LifecyclePluginState>;
+    private state: LifecyclePluginState;
     private initialContent: string;
     private startPosition: NodePosition;
     private contentDivFormat: string[];
@@ -85,12 +84,12 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             };
         }
 
-        this.state = createWrapper({
+        this.state = {
             customData: {},
             defaultFormat: options.defaultFormat || null,
             isDarkMode: !!options.inDarkMode,
             onExternalContentTransform: options.onExternalContentTransform,
-        });
+        };
     }
 
     /**
@@ -135,14 +134,14 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     dispose() {
         this.editor.triggerPluginEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
 
-        Object.keys(this.state.value.customData).forEach(key => {
-            const data = this.state.value.customData[key];
+        Object.keys(this.state.customData).forEach(key => {
+            const data = this.state.customData[key];
 
             if (data && data.disposer) {
                 data.disposer(data.value);
             }
 
-            delete this.state.value.customData[key];
+            delete this.state.customData[key];
         });
 
         if (this.disposer) {
@@ -171,7 +170,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             (event.source == ChangeSource.SwitchToDarkMode ||
                 event.source == ChangeSource.SwitchToLightMode)
         ) {
-            this.state.value.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
+            this.state.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
             this.recalculateDefaultFormat();
         }
     }
@@ -192,7 +191,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     }
 
     private recalculateDefaultFormat() {
-        const { defaultFormat: baseFormat, isDarkMode } = this.state.value;
+        const { defaultFormat: baseFormat, isDarkMode } = this.state;
 
         if (isDarkMode && baseFormat) {
             if (!baseFormat.backgroundColors) {
@@ -220,7 +219,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         } = baseFormat || <DefaultFormat>{};
         const defaultFormat = this.contentDivFormat;
 
-        this.state.value.defaultFormat = {
+        this.state.defaultFormat = {
             fontFamily: fontFamily || defaultFormat[0],
             fontSize: fontSize || defaultFormat[1],
             get textColor() {

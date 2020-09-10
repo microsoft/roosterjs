@@ -5,7 +5,6 @@ import {
     DOMEventPluginState,
     IEditor,
     PluginEventType,
-    Wrapper,
 } from 'roosterjs-editor-types';
 
 describe('DOMEventPlugin', () => {
@@ -29,7 +28,7 @@ describe('DOMEventPlugin', () => {
         expect(addEventListener).toHaveBeenCalledTimes(1);
         expect(addEventListener.calls.argsFor(0)[0]).toBe('scroll');
 
-        expect(state.value).toEqual({
+        expect(state).toEqual({
             isInIME: false,
             scrollContainer: div,
             selectionRange: null,
@@ -76,7 +75,7 @@ describe('DOMEventPlugin', () => {
         expect(addEventListener2).toHaveBeenCalledTimes(1);
         expect(addEventListener2.calls.argsFor(0)[0]).toBe('scroll');
 
-        expect(state.value).toEqual({
+        expect(state).toEqual({
             isInIME: false,
             scrollContainer: divScrollContainer,
             selectionRange: null,
@@ -92,7 +91,7 @@ describe('DOMEventPlugin', () => {
 describe('DOMEventPlugin verify event handlers while allow keyboard event propagation', () => {
     let eventMap: Record<string, (event: Event) => void>;
     let plugin: DOMEventPlugin;
-    let state: Wrapper<DOMEventPluginState>;
+    let state: DOMEventPluginState;
     let triggerPluginEvent: jasmine.Spy;
     let addUndoSnapshot: jasmine.Spy;
     let select: jasmine.Spy;
@@ -146,14 +145,14 @@ describe('DOMEventPlugin verify event handlers while allow keyboard event propag
     });
 
     it('verify composition event', () => {
-        expect(state.value.isInIME).toBeFalsy();
+        expect(state.isInIME).toBeFalsy();
 
         eventMap.compositionstart(<Event>{});
-        expect(state.value.isInIME).toBeTruthy();
+        expect(state.isInIME).toBeTruthy();
 
         const event = <Event>{};
         eventMap.compositionend(event);
-        expect(state.value.isInIME).toBeFalsy();
+        expect(state.isInIME).toBeFalsy();
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.CompositionEnd, {
             rawEvent: event,
         });
@@ -170,27 +169,27 @@ describe('DOMEventPlugin verify event handlers while allow keyboard event propag
 
     it('verify focus event', () => {
         const range = document.createRange();
-        state.value.selectionRange = range;
+        state.selectionRange = range;
         eventMap.focus(<Event>{});
 
         expect(select).toHaveBeenCalledTimes(1);
         expect(select.calls.argsFor(0)[0]).toBe(range);
-        expect(state.value.selectionRange).toBeNull();
+        expect(state.selectionRange).toBeNull();
     });
 
     it('verify blur event', () => {
-        expect(state.value.selectionRange).toBeNull();
+        expect(state.selectionRange).toBeNull();
         eventMap.blur(<Event>{});
 
         expect(getSelectionRange).toHaveBeenCalledWith(false);
-        expect(state.value.selectionRange).toBe(getSelectionRangeResult);
+        expect(state.selectionRange).toBe(getSelectionRangeResult);
     });
 });
 
 describe('DOMEventPlugin verify event handlers while disallow keyboard event propagation', () => {
     let eventMap: Record<string, any>;
     let plugin: DOMEventPlugin;
-    let state: Wrapper<DOMEventPluginState>;
+    let state: DOMEventPluginState;
 
     beforeEach(() => {
         const div = <any>{
@@ -214,7 +213,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
     });
 
     it('check events are mapped', () => {
-        expect(state.value.stopPrintableKeyboardEventPropagation).toBeTruthy();
+        expect(state.stopPrintableKeyboardEventPropagation).toBeTruthy();
         expect(eventMap).toBeDefined();
         expect(eventMap.keypress.pluginEventType).toBe(PluginEventType.KeyPress);
         expect(eventMap.keydown.pluginEventType).toBe(PluginEventType.KeyDown);

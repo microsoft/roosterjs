@@ -66,7 +66,7 @@ describe('setContent', () => {
         setContent(core, '<div>test</div><!--{"start":[0,0,1],"end":[0,0,3]}-->', false);
         expect(div.innerHTML).toBe('<div>test</div>');
 
-        const range = core.domEvent.value.selectionRange;
+        const range = core.domEvent.selectionRange;
         const textNode = div.firstChild.firstChild;
         expect(range.startContainer).toBe(textNode);
         expect(range.endContainer).toBe(textNode);

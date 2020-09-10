@@ -9,14 +9,13 @@ import {
     Keys,
     PluginEventType,
     QueryScope,
-    Wrapper,
 } from 'roosterjs-editor-types';
 
 describe('EntityPlugin', () => {
     let plugin: EntityPlugin;
     let eventMap: Record<string, (event: UIEvent) => void>;
     let triggerPluginEvent: jasmine.Spy;
-    let state: Wrapper<EntityPluginState>;
+    let state: EntityPluginState;
     let editor: IEditor;
 
     beforeEach(() => {
@@ -45,7 +44,7 @@ describe('EntityPlugin', () => {
         expect(eventMap).toBeDefined();
         expect(eventMap.contextmenu).toBeDefined();
         expect(eventMap.cut).toBeDefined();
-        expect(state.value).toEqual({
+        expect(state).toEqual({
             clickingPoint: null,
             knownEntityElements: [],
         });
@@ -155,14 +154,14 @@ describe('EntityPlugin', () => {
             preventDefault,
         };
 
-        expect(state.value.clickingPoint).toBeNull();
+        expect(state.clickingPoint).toBeNull();
         plugin.onPluginEvent({
             eventType: PluginEventType.MouseDown,
             rawEvent,
         });
         editor.getElementAtCursor = () => target;
         expect(preventDefault).toHaveBeenCalled();
-        expect(state.value.clickingPoint).toEqual({
+        expect(state.clickingPoint).toEqual({
             pageX: 1,
             pageY: 2,
         });
@@ -179,7 +178,7 @@ describe('EntityPlugin', () => {
             rawEvent,
             entity: <any>target,
         });
-        expect(state.value.clickingPoint).toBeNull();
+        expect(state.clickingPoint).toBeNull();
     });
 
     it('mouse down/up event into different point', () => {
@@ -188,7 +187,7 @@ describe('EntityPlugin', () => {
         };
         const preventDefault = jasmine.createSpy();
 
-        expect(state.value.clickingPoint).toBeNull();
+        expect(state.clickingPoint).toBeNull();
 
         plugin.onPluginEvent({
             eventType: PluginEventType.MouseDown,
@@ -202,7 +201,7 @@ describe('EntityPlugin', () => {
 
         editor.getElementAtCursor = () => target;
         expect(preventDefault).toHaveBeenCalled();
-        expect(state.value.clickingPoint).toEqual({
+        expect(state.clickingPoint).toEqual({
             pageX: 1,
             pageY: 2,
         });
@@ -220,7 +219,7 @@ describe('EntityPlugin', () => {
         });
 
         expect(triggerPluginEvent).not.toHaveBeenCalled();
-        expect(state.value.clickingPoint).toBeNull();
+        expect(state.clickingPoint).toBeNull();
     });
 
     it('key down event for a range', () => {
@@ -357,7 +356,7 @@ describe('EntityPlugin', () => {
         });
 
         function verify(inStateNodes: HTMLElement[], commitedNodes: HTMLElement[]) {
-            expect(state.value.knownEntityElements).toEqual(inStateNodes);
+            expect(state.knownEntityElements).toEqual(inStateNodes);
             expect(dom.commitEntity).toHaveBeenCalledTimes(commitedNodes.length);
             commitedNodes.forEach(node => {
                 expect(dom.commitEntity).toHaveBeenCalledWith(node, entityType, false, node.id);
@@ -375,7 +374,7 @@ describe('EntityPlugin', () => {
         }
 
         it('content changed event, no existing known nodes', () => {
-            state.value.knownEntityElements = [];
+            state.knownEntityElements = [];
             containedNodes = [node1];
 
             plugin.onPluginEvent({
@@ -387,7 +386,7 @@ describe('EntityPlugin', () => {
         });
 
         it('content changed event, has existing known nodes', () => {
-            state.value.knownEntityElements = [node1, node2];
+            state.knownEntityElements = [node1, node2];
             containedNodes = [node2, node3];
 
             plugin.onPluginEvent({
@@ -399,7 +398,7 @@ describe('EntityPlugin', () => {
         });
 
         it('content changed event, reset known nodes', () => {
-            state.value.knownEntityElements = [node1, node2];
+            state.knownEntityElements = [node1, node2];
             containedNodes = [node2, node3];
 
             editor.queryElements = <any>((selector: string, callback: (e: HTMLElement) => void) => {
@@ -416,7 +415,7 @@ describe('EntityPlugin', () => {
         });
 
         it('editor ready event', () => {
-            state.value.knownEntityElements = [node1, node2];
+            state.knownEntityElements = [node1, node2];
             containedNodes = [node2, node3];
 
             plugin.onPluginEvent({
@@ -429,7 +428,7 @@ describe('EntityPlugin', () => {
 
         it('handle id duplication', () => {
             node3.id = node2.id;
-            state.value.knownEntityElements = [node1, node2];
+            state.knownEntityElements = [node1, node2];
             containedNodes = [node2, node3];
 
             plugin.onPluginEvent({

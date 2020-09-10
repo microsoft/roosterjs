@@ -27,7 +27,7 @@ export const selectRange: SelectRange = (
         addRangeToSelection(range, skipSameRange);
 
         if (!hasFocus(core)) {
-            core.domEvent.value.selectionRange = range;
+            core.domEvent.selectionRange = range;
         }
 
         if (range.collapsed) {
@@ -48,20 +48,20 @@ export const selectRange: SelectRange = (
 function restorePendingFormatState(core: EditorCore) {
     const {
         contentDiv,
-        pendingFormatState: { value },
+        pendingFormatState,
         api: { getSelectionRange },
     } = core;
 
-    if (value.pendableFormatState) {
+    if (pendingFormatState.pendableFormatState) {
         const document = contentDiv.ownerDocument;
         let formatState = getPendableFormatState(document);
         (<PendableFormatNames[]>Object.keys(PendableFormatCommandMap)).forEach(key => {
-            if (!!value.pendableFormatState[key] != formatState[key]) {
+            if (!!pendingFormatState.pendableFormatState[key] != formatState[key]) {
                 document.execCommand(PendableFormatCommandMap[key], false, null);
             }
         });
 
         const range = getSelectionRange(core, true /*tryGetFromCache*/);
-        value.pendableFormatPosition = range && Position.getStart(range);
+        pendingFormatState.pendableFormatPosition = range && Position.getStart(range);
     }
 }

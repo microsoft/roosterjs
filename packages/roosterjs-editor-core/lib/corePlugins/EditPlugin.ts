@@ -1,29 +1,30 @@
-import { createWrapper, isCtrlOrMetaPressed } from 'roosterjs-editor-dom';
+import { isCtrlOrMetaPressed } from 'roosterjs-editor-dom';
 import {
+    EditPluginState,
     GenericContentEditFeature,
     IEditor,
     Keys,
     PluginEvent,
     PluginEventType,
     PluginWithState,
-    Wrapper,
 } from 'roosterjs-editor-types';
 
 /**
  * @internal
  * Edit Component helps handle Content edit features
  */
-export default class EditPlugin
-    implements PluginWithState<Record<number, GenericContentEditFeature<PluginEvent>[]>> {
+export default class EditPlugin implements PluginWithState<EditPluginState> {
     private editor: IEditor;
-    private state: Wrapper<Record<number, GenericContentEditFeature<PluginEvent>[]>>;
+    private state: EditPluginState;
 
     /**
      * Construct a new instance of EditPlugin
      * @param options The editor options
      */
     constructor() {
-        this.state = createWrapper({});
+        this.state = {
+            features: {},
+        };
     }
 
     /**
@@ -68,9 +69,9 @@ export default class EditPlugin
             let rawEvent = event.rawEvent;
             ctrlOrMeta = isCtrlOrMetaPressed(rawEvent);
             hasFunctionKey = ctrlOrMeta || rawEvent.altKey;
-            features = this.state.value[rawEvent.which];
+            features = this.state.features[rawEvent.which];
         } else if (event.eventType == PluginEventType.ContentChanged) {
-            features = this.state.value[Keys.CONTENTCHANGED];
+            features = this.state.features[Keys.CONTENTCHANGED];
         }
 
         for (let i = 0; i < features?.length; i++) {

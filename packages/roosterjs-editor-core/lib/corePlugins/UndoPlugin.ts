@@ -7,14 +7,12 @@ import {
     PluginWithState,
     UndoPluginState,
     UndoSnapshotsService,
-    Wrapper,
 } from 'roosterjs-editor-types';
 import {
     addSnapshot,
     canMoveCurrentSnapshot,
     clearProceedingSnapshots,
     createSnapshots,
-    createWrapper,
     isCtrlOrMetaPressed,
     moveCurrentSnapsnot,
     canUndoAutoComplete,
@@ -31,20 +29,20 @@ const MAXSIZELIMIT = 1e7;
 export default class UndoPlugin implements PluginWithState<UndoPluginState> {
     private editor: IEditor;
     private lastKeyPress: number;
-    private state: Wrapper<UndoPluginState>;
+    private state: UndoPluginState;
 
     /**
      * Construct a new instance of UndoPlugin
      * @param options The wrapper of the state object
      */
     constructor(options: EditorOptions) {
-        this.state = createWrapper({
+        this.state = {
             snapshotsService: options.undoSnapshotService || createUndoSnapshots(),
             isRestoring: false,
             hasNewContent: false,
             isNested: false,
             autoCompletePosition: null,
-        });
+        };
     }
 
     /**
@@ -118,7 +116,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
                 this.addUndoSnapshot();
                 break;
             case PluginEventType.ContentChanged:
-                if (!this.state.value.isRestoring) {
+                if (!this.state.isRestoring) {
                     this.clearRedoForInput();
                 }
                 break;
@@ -132,7 +130,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
             if (evt.which == Keys.BACKSPACE && this.canUndoAutoComplete()) {
                 evt.preventDefault();
                 this.editor.undo();
-                this.state.value.autoCompletePosition = null;
+                this.state.autoCompletePosition = null;
                 this.lastKeyPress = evt.which;
             } else {
                 let selectionRange = this.editor.getSelectionRange();
@@ -151,12 +149,12 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
                 }
 
                 // Since some content is deleted, always set hasNewContent to true so that we will take undo snapshot next time
-                this.state.value.hasNewContent = true;
+                this.state.hasNewContent = true;
                 this.lastKeyPress = evt.which;
             }
         } else if (evt.which >= Keys.PAGEUP && evt.which <= Keys.DOWN) {
             // PageUp, PageDown, Home, End, Left, Right, Up, Down
-            if (this.state.value.hasNewContent) {
+            if (this.state.hasNewContent) {
                 this.addUndoSnapshot();
             }
             this.lastKeyPress = 0;
@@ -180,7 +178,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
             if (evt.which == Keys.ENTER) {
                 // Treat ENTER as new content so if there is no input after ENTER and undo,
                 // we restore the snapshot before ENTER
-                this.state.value.hasNewContent = true;
+                this.state.hasNewContent = true;
             }
         } else {
             this.clearRedoForInput();
@@ -190,21 +188,21 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
     }
 
     private clearRedoForInput() {
-        this.state.value.snapshotsService.clearRedo();
+        this.state.snapshotsService.clearRedo();
         this.lastKeyPress = 0;
-        this.state.value.hasNewContent = true;
+        this.state.hasNewContent = true;
     }
 
     private canUndoAutoComplete() {
         return (
-            this.state.value.snapshotsService.canUndoAutoComplete() &&
-            this.state.value.autoCompletePosition?.equalTo(this.editor.getFocusedPosition())
+            this.state.snapshotsService.canUndoAutoComplete() &&
+            this.state.autoCompletePosition?.equalTo(this.editor.getFocusedPosition())
         );
     }
 
     private addUndoSnapshot() {
         this.editor.addUndoSnapshot();
-        this.state.value.autoCompletePosition = null;
+        this.state.autoCompletePosition = null;
     }
 }
 

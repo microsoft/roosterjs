@@ -41,7 +41,7 @@ describe('getSelectionRange', () => {
     it('use cache, focus is not in editor', () => {
         const core = createEditorCore(div, {});
         const cachedRange = document.createRange();
-        core.domEvent.value = {
+        core.domEvent = {
             selectionRange: cachedRange,
             isInIME: false,
             scrollContainer: null,

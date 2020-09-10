@@ -62,7 +62,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
 
     let elementsToTransformColor: HTMLElement[];
 
-    if (core.lifecycle.value.isDarkMode && option.position != ContentPosition.Outside) {
+    if (core.lifecycle.isDarkMode && option.position != ContentPosition.Outside) {
         if (safeInstanceOf(node, 'HTMLElement')) {
             elementsToTransformColor = toArray(node.getElementsByTagName('*')) as HTMLElement[];
             elementsToTransformColor.unshift(node);

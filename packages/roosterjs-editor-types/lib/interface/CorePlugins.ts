@@ -1,13 +1,11 @@
 import DOMEventPluginState from '../corePluginState/DOMEventPluginState';
 import EditorPlugin from './EditorPlugin';
+import EditPluginState from '../corePluginState/EditPluginState';
 import EntityPluginState from '../corePluginState/EntityPluginState';
 import LifecyclePluginState from '../corePluginState/LifecyclePluginState';
 import PendingFormatStatePluginState from '../corePluginState/PendingFormatStatePluginState';
 import PluginWithState from './PluginWithState';
 import UndoPluginState from '../corePluginState/UndoPluginState';
-import Wrapper from './Wrapper';
-import { GenericContentEditFeature } from './ContentEditFeature';
-import { PluginEvent } from '../event/PluginEvent';
 
 /**
  * An interface for editor core plugins.
@@ -17,7 +15,7 @@ export default interface CorePlugins {
     /**
      * Edit plugin handles ContentEditFeatures
      */
-    readonly edit: PluginWithState<Record<number, GenericContentEditFeature<PluginEvent>[]>>;
+    readonly edit: PluginWithState<EditPluginState>;
 
     /**
      * Undo plugin provides the ability to undo/redo
@@ -86,7 +84,7 @@ export type KeyOfStatePlugin<Key extends PluginKey> = CorePlugins[Key] extends P
 export type TypeOfStatePlugin<Key extends PluginKey> = CorePlugins[Key] extends PluginWithState<
     infer U
 >
-    ? Wrapper<U>
+    ? U
     : never;
 
 /**

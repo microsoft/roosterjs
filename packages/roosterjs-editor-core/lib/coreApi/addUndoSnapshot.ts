@@ -24,7 +24,7 @@ export const addUndoSnapshot: AddUndoSnapshot = (
     changeSource: ChangeSource | string,
     canUndoByBackspace: boolean
 ) => {
-    const undoState = core.undo.value;
+    const undoState = core.undo;
     let isNested = undoState.isNested;
     let data: any;
 
@@ -72,8 +72,8 @@ export const addUndoSnapshot: AddUndoSnapshot = (
         const range = core.api.getSelectionRange(core, false /*tryGetFromCache*/);
 
         if (range) {
-            core.undo.value.hasNewContent = false;
-            core.undo.value.autoCompletePosition = Position.getStart(range);
+            core.undo.hasNewContent = false;
+            core.undo.autoCompletePosition = Position.getStart(range);
         }
     }
 };
