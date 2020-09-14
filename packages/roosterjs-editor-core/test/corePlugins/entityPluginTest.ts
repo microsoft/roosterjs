@@ -43,7 +43,6 @@ describe('EntityPlugin', () => {
     it('init', () => {
         expect(eventMap).toBeDefined();
         expect(eventMap.contextmenu).toBeDefined();
-        expect(eventMap.cut).toBeDefined();
         expect(state).toEqual({
             clickingPoint: null,
             knownEntityElements: [],
@@ -133,14 +132,6 @@ describe('EntityPlugin', () => {
             rawEvent,
         });
     }
-
-    it('cut event', () => {
-        const target = {};
-        const preventDefault = jasmine.createSpy('preventDefault');
-        const rawEvent = <UIEvent>(<any>{ target, preventDefault });
-
-        verifyRemoveEntities(rawEvent, () => eventMap.cut(rawEvent));
-    });
 
     it('mouse down/up event into same point', () => {
         const target = <any>{
