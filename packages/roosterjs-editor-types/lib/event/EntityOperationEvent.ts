@@ -20,7 +20,7 @@ export default interface EntityOperationEvent
     entity: Entity;
 
     /**
-     * Optional raw UI event. Need to do null check before use its value
+     * Optional raw event. Need to do null check before use its value
      */
-    rawEvent?: UIEvent;
+    rawEvent?: Event;
 }

@@ -69,7 +69,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         this.editor = editor;
         this.disposer = this.editor.addDomEventHandler({
             contextmenu: this.handleContextMenuEvent,
-            cut: this.handleCutEvent,
         });
     }
 
@@ -106,6 +105,11 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             case PluginEventType.KeyDown:
                 this.handleKeyDownEvent(event.rawEvent);
                 break;
+            case PluginEventType.BeforeCutCopy:
+                if (event.isCut) {
+                    this.handleCutEvent(event.rawEvent);
+                }
+                break;
             case PluginEventType.BeforePaste:
                 this.handleBeforePasteEvent(event.fragment, event.sanitizingOption);
                 break;
@@ -131,7 +135,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         }
     };
 
-    private handleCutEvent = (event: UIEvent) => {
+    private handleCutEvent = (event: ClipboardEvent) => {
         const range = this.editor.getSelectionRange();
         if (!range.collapsed) {
             this.checkRemoveEntityForRange(event);
@@ -225,7 +229,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         });
     }
 
-    private checkRemoveEntityForRange(event: UIEvent) {
+    private checkRemoveEntityForRange(event: Event) {
         const editableEntityElements: HTMLElement[] = [];
         const selector = getEntitySelector();
         this.editor.queryElements(selector, QueryScope.OnSelection, element => {
@@ -276,7 +280,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         this.triggerEvent(wrapper, EntityOperation.NewEntity);
     }
 
-    private triggerEvent(element: HTMLElement, operation: EntityOperation, rawEvent?: UIEvent) {
+    private triggerEvent(element: HTMLElement, operation: EntityOperation, rawEvent?: Event) {
         const entity = element && getEntityFromElement(element);
 
         if (entity) {

@@ -301,7 +301,7 @@ export default class ImageResize implements EditorPlugin {
         return wrapper;
     }
 
-    private stopEvent = (e: UIEvent) => {
+    private stopEvent = (e: Event) => {
         e.stopPropagation();
         e.preventDefault();
     };
