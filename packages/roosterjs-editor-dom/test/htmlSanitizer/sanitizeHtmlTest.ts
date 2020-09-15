@@ -366,19 +366,43 @@ describe('sanitizeHtml with white-space style', () => {
     });
 });
 
-describe('sanitizeHtml with unknown/disabled tags, keep unknown tags', () => {
+describe('sanitizeHtml with unknown/disabled tags and set unknownTagReplacement to *, keep unknown tags', () => {
     function runTest(source: string, exp: string) {
         let sanitizer: HtmlSanitizer = new HtmlSanitizer({
-            unknownTagReplacement: '',
+            unknownTagReplacement: '*',
         });
         let result = sanitizer.exec(source, false, false, { color: '' });
         expect(result).toBe(exp);
     }
 
-    it('Unknown tags, convert to SPAN', () => {
+    it('Unknown tags, keep as it is', () => {
         runTest(
             '<div>line 1<aaa style="color:red">line2<br>line3</aaa>line4</div>',
             '<div>line 1<aaa style="color:red">line2<br>line3</aaa>line4</div>'
+        );
+    });
+
+    it('Disabled tags, should remove', () => {
+        runTest(
+            '<div>line 1<object style="color:red">line2<br>line3</object>line4</div>',
+            '<div>line 1line4</div>'
+        );
+    });
+});
+
+describe('sanitizeHtml with unknown/disabled tags and set unknownTagReplacement to invalid string, remove unknown tags', () => {
+    function runTest(source: string, exp: string) {
+        let sanitizer: HtmlSanitizer = new HtmlSanitizer({
+            unknownTagReplacement: '!invalid!',
+        });
+        let result = sanitizer.exec(source, false, false, { color: '' });
+        expect(result).toBe(exp);
+    }
+
+    it('Unknown tags, keep as it is', () => {
+        runTest(
+            '<div>line 1<aaa style="color:red">line2<br>line3</aaa>line4</div>',
+            '<div>line 1line4</div>'
         );
     });
 

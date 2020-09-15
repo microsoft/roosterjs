@@ -198,9 +198,12 @@ export default class HtmlSanitizer {
                 shouldKeep = true;
             } else if (this.disallowedTags.indexOf(tag) >= 0) {
                 shouldKeep = false;
-            } else if (this.unknownTagReplacement === '') {
+            } else if (this.unknownTagReplacement === '*') {
                 shouldKeep = true;
-            } else if (this.unknownTagReplacement) {
+            } else if (
+                this.unknownTagReplacement &&
+                /^[a-zA-Z][\w]*$/.test(this.unknownTagReplacement)
+            ) {
                 node = changeElementTag(node as HTMLElement, this.unknownTagReplacement);
                 shouldKeep = true;
             } else {
