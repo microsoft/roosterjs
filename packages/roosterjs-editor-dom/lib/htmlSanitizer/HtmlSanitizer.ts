@@ -1,3 +1,4 @@
+import changeElementTag from '../utils/changeElementTag';
 import getInheritableStyles from './getInheritableStyles';
 import getTagOfNode from '../utils/getTagOfNode';
 import htmlToDom from './htmlToDom';
@@ -5,12 +6,13 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
 import { cloneObject } from './cloneObject';
 import {
-    getAllowedTags,
     getAllowedAttributes,
-    getDefaultStyleValues,
-    getStyleCallbacks,
     getAllowedCssClassesRegex,
+    getAllowedTags,
+    getDefaultStyleValues,
+    getDisallowedTags,
     getPredefinedCssForElement,
+    getStyleCallbacks,
 } from './getAllowedValues';
 import {
     HtmlSanitizerOptions,
@@ -64,11 +66,13 @@ export default class HtmlSanitizer {
     private styleCallbacks: StyleCallbackMap;
     private attributeCallbacks: AttributeCallbackMap;
     private allowedTags: string[];
+    private disallowedTags: string[];
     private allowedAttributes: string[];
     private allowedCssClassesRegex: RegExp;
     private defaultStyleValues: StringMap;
     private predefinedCssForElement: PredefinedCssMap;
     private additionalGlobalStyleNodes: HTMLStyleElement[];
+    private unknownTagReplacement: string;
 
     /**
      * Construct a new instance of HtmlSanitizer
@@ -80,6 +84,7 @@ export default class HtmlSanitizer {
         this.styleCallbacks = getStyleCallbacks(options.styleCallbacks);
         this.attributeCallbacks = cloneObject(options.attributeCallbacks);
         this.allowedTags = getAllowedTags(options.additionalAllowedTags);
+        this.disallowedTags = getDisallowedTags();
         this.allowedAttributes = getAllowedAttributes(options.additionalAllowedAttributes);
         this.allowedCssClassesRegex = getAllowedCssClassesRegex(
             options.additionalAllowedCssClasses
@@ -89,6 +94,7 @@ export default class HtmlSanitizer {
             options.additionalPredefinedCssForElement
         );
         this.additionalGlobalStyleNodes = options.additionalGlobalStyleNodes || [];
+        this.unknownTagReplacement = options.unknownTagReplacement;
     }
 
     /**
@@ -181,8 +187,42 @@ export default class HtmlSanitizer {
         const isFragment = nodeType == NodeType.DocumentFragment;
 
         let element = <HTMLElement>node;
+        let shouldKeep: boolean;
 
-        if (!this.shouldKeepNode(node, currentStyle, context)) {
+        if (isElement) {
+            const tag = getTagOfNode(node);
+            const callback = this.elementCallbacks[tag];
+            if (callback) {
+                shouldKeep = callback(node as HTMLElement, context);
+            } else if (this.allowedTags.indexOf(tag) >= 0 || tag.indexOf(':') > 0) {
+                shouldKeep = true;
+            } else if (this.disallowedTags.indexOf(tag) >= 0) {
+                shouldKeep = false;
+            } else if (this.unknownTagReplacement === '*') {
+                shouldKeep = true;
+            } else if (
+                this.unknownTagReplacement &&
+                /^[a-zA-Z][\w]*$/.test(this.unknownTagReplacement)
+            ) {
+                node = changeElementTag(node as HTMLElement, this.unknownTagReplacement);
+                shouldKeep = true;
+            } else {
+                shouldKeep = false;
+            }
+        } else if (isText) {
+            const whiteSpace = currentStyle['white-space'];
+            shouldKeep =
+                whiteSpace == 'pre' ||
+                whiteSpace == 'pre-line' ||
+                whiteSpace == 'pre-wrap' ||
+                !/^[\r\n]*$/g.test(node.nodeValue);
+        } else if (isFragment) {
+            shouldKeep = true;
+        } else {
+            shouldKeep = false;
+        }
+
+        if (!shouldKeep) {
             node.parentNode.removeChild(node);
         } else if (
             isText &&
@@ -300,28 +340,5 @@ export default class HtmlSanitizer {
         });
 
         return calculatedClasses.length > 0 ? calculatedClasses.join(' ') : null;
-    }
-
-    private shouldKeepNode(node: Node, currentStyle: StringMap, context: Object) {
-        switch (node.nodeType) {
-            case NodeType.Element:
-                const tag = getTagOfNode(node);
-                const callback = this.elementCallbacks[tag];
-                return callback
-                    ? callback(node as HTMLElement, context)
-                    : this.allowedTags.indexOf(tag) >= 0 || tag.indexOf(':') > 0;
-            case NodeType.Text:
-                const whiteSpace = currentStyle['white-space'];
-                return (
-                    whiteSpace == 'pre' ||
-                    whiteSpace == 'pre-line' ||
-                    whiteSpace == 'pre-wrap' ||
-                    !/^[\r\n]*$/g.test(node.nodeValue)
-                );
-            case NodeType.DocumentFragment:
-                return true;
-            default:
-                return false;
-        }
     }
 }

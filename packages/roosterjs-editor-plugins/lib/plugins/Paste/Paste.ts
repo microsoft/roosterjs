@@ -23,6 +23,12 @@ const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
  */
 export default class Paste implements EditorPlugin {
     /**
+     * Construct a new instance of Paste class
+     * @param unknownTagReplacement Replace solution of unknown tags, default behavior is to replace with SPAN
+     */
+    constructor(private unknownTagReplacement: string = 'SPAN') {}
+
+    /**
      * Get a friendly name of  this plugin
      */
     getName() {
@@ -76,6 +82,9 @@ export default class Paste implements EditorPlugin {
             } else if (fragment.querySelector(GOOGLE_SHEET_NODE_NAME)) {
                 sanitizingOption.additionalAllowedTags.push(GOOGLE_SHEET_NODE_NAME);
             }
+
+            // Replace unknown tags with SPAN
+            sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
         }
     }
 }

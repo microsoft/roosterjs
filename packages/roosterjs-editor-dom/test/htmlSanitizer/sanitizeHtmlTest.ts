@@ -365,3 +365,122 @@ describe('sanitizeHtml with white-space style', () => {
         );
     });
 });
+
+describe('sanitizeHtml with unknown/disabled tags and set unknownTagReplacement to *, keep unknown tags', () => {
+    function runTest(source: string, exp: string) {
+        let sanitizer: HtmlSanitizer = new HtmlSanitizer({
+            unknownTagReplacement: '*',
+        });
+        let result = sanitizer.exec(source, false, false, { color: '' });
+        expect(result).toBe(exp);
+    }
+
+    it('Unknown tags, keep as it is', () => {
+        runTest(
+            '<div>line 1<aaa style="color:red">line2<br>line3</aaa>line4</div>',
+            '<div>line 1<aaa style="color:red">line2<br>line3</aaa>line4</div>'
+        );
+    });
+
+    it('Disabled tags, should remove', () => {
+        runTest(
+            '<div>line 1<object style="color:red">line2<br>line3</object>line4</div>',
+            '<div>line 1line4</div>'
+        );
+    });
+});
+
+describe('sanitizeHtml with unknown/disabled tags and set unknownTagReplacement to invalid string, remove unknown tags', () => {
+    function runTest(source: string, exp: string) {
+        let sanitizer: HtmlSanitizer = new HtmlSanitizer({
+            unknownTagReplacement: '!invalid!',
+        });
+        let result = sanitizer.exec(source, false, false, { color: '' });
+        expect(result).toBe(exp);
+    }
+
+    it('Unknown tags, keep as it is', () => {
+        runTest(
+            '<div>line 1<aaa style="color:red">line2<br>line3</aaa>line4</div>',
+            '<div>line 1line4</div>'
+        );
+    });
+
+    it('Disabled tags, should remove', () => {
+        runTest(
+            '<div>line 1<object style="color:red">line2<br>line3</object>line4</div>',
+            '<div>line 1line4</div>'
+        );
+    });
+});
+
+describe('sanitizeHtml with unknown/disabled tags, replace with SPAN', () => {
+    function runTest(source: string, exp: string) {
+        let sanitizer: HtmlSanitizer = new HtmlSanitizer({
+            unknownTagReplacement: 'SPAN',
+        });
+        let result = sanitizer.exec(source, false, false, { color: '' });
+        expect(result).toBe(exp);
+    }
+
+    it('Unknown tags, convert to SPAN', () => {
+        runTest(
+            '<div>line 1<aaa style="color:red">line2<br>line3</aaa>line4</div>',
+            '<div>line 1<span style="color:red">line2<br>line3</span>line4</div>'
+        );
+    });
+
+    it('Disabled tags, should remove', () => {
+        runTest(
+            '<div>line 1<object style="color:red">line2<br>line3</object>line4</div>',
+            '<div>line 1line4</div>'
+        );
+    });
+
+    it('Make sure all allowed tags are really allowed', () => {
+        const allowTags = 'H1,H2,H3,H4,H5,H6,FORM,P,ABBR,ADDRESS,B,BDI,BDO,BLOCKQUOTE,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,XMP,TEXTAREA,BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,MAP,CANVAS,FIGCAPTION,FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'
+            .toLowerCase()
+            .split(',');
+
+        allowTags.forEach(tag => {
+            const html = `text before<${tag}>test text</${tag}>text after`;
+            runTest(html, html);
+        });
+    });
+
+    it('Make sure all allowed void tags are really allowed', () => {
+        const allowTags = 'BR,HR,WBR,INPUT,IMG,AREA'.toLowerCase().split(',');
+
+        allowTags.forEach(tag => {
+            const html = `text before<${tag}>text after`;
+            runTest(html, html);
+        });
+    });
+
+    it('Make sure all allowed table tags are really allowed', () => {
+        const html =
+            '<table><caption>test table</caption><colgroup><col><col></colgroup><thead><tr><th>head1</th><th>head2</th></tr></thead><tbody><tr><td>body1</td><td>body2</td></tr><tr><td>body3</td><td>body4</td></tr></tbody><tfoot><tr><td>foot1</td><td>foot2</td></tr></tfoot></table>';
+
+        runTest(html, html);
+    });
+
+    it('Make sure disallowed tags are really removed', () => {
+        const disallowedTags = 'applet,audio,iframe,noscript,object,script,slot,style,title,video'.split(
+            ','
+        );
+        disallowedTags.forEach(tag => {
+            const html = `text before<${tag}>test text</${tag}>text after`;
+            runTest(html, 'text beforetext after');
+        });
+    });
+
+    it('Make sure disallowed void tags are really removed', () => {
+        const disallowedTags = 'base,basefont,embed,frame,frameset,link,meta,param,source,track'.split(
+            ','
+        );
+        disallowedTags.forEach(tag => {
+            const html = `text before<${tag}>text after`;
+            runTest(html, 'text beforetext after');
+        });
+    });
+});

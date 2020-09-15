@@ -1,14 +1,134 @@
 import { cloneObject } from './cloneObject';
 import { PredefinedCssMap, StringMap, StyleCallbackMap } from 'roosterjs-editor-types';
 
-const ALLOWED_HTML_TAGS = (
-    'BODY,H1,H2,H3,H4,H5,H6,FORM,P,BR,NOBR,HR,ACRONYM,ABBR,ADDRESS,B,' +
-    'BDI,BDO,BIG,BLOCKQUOTE,CENTER,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,' +
-    'Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,WBR,XMP,INPUT,TEXTAREA,' +
-    'BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,IMG,MAP,AREA,CANVAS,FIGCAPTION,' +
-    'FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,TABLE,CAPTION,TH,TR,TD,THEAD,TBODY,' +
-    'TFOOT,COL,COLGROUP,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'
-).split(',');
+const ALLOWED_HTML_TAG_MAP = {
+    // Allowed tags
+    a: true,
+    abbr: true,
+    address: true,
+    area: true,
+    article: true,
+    aside: true,
+    b: true,
+    bdi: true,
+    bdo: true,
+    blockquote: true,
+    body: true,
+    br: true,
+    button: true,
+    canvas: true,
+    caption: true,
+    center: true,
+    cite: true,
+    code: true,
+    col: true,
+    colgroup: true,
+    data: true,
+    datalist: true,
+    dd: true,
+    del: true,
+    details: true,
+    dfn: true,
+    dialog: true,
+    dir: true,
+    div: true,
+    dl: true,
+    dt: true,
+    em: true,
+    fieldset: true,
+    figcaption: true,
+    figure: true,
+    font: true,
+    footer: true,
+    form: true,
+    h1: true,
+    h2: true,
+    h3: true,
+    h4: true,
+    h5: true,
+    h6: true,
+    head: true,
+    header: true,
+    hgroup: true,
+    hr: true,
+    html: true,
+    i: true,
+    img: true,
+    input: true,
+    ins: true,
+    kbd: true,
+    label: true,
+    legend: true,
+    li: true,
+    main: true,
+    map: true,
+    mark: true,
+    menu: true,
+    menuitem: true,
+    meter: true,
+    nav: true,
+    ol: true,
+    optgroup: true,
+    option: true,
+    output: true,
+    p: true,
+    picture: true,
+    pre: true,
+    progress: true,
+    q: true,
+    rp: true,
+    rt: true,
+    ruby: true,
+    s: true,
+    samp: true,
+    section: true,
+    select: true,
+    small: true,
+    span: true,
+    strike: true,
+    strong: true,
+    sub: true,
+    summary: true,
+    sup: true,
+    table: true,
+    tbody: true,
+    td: true,
+    template: true,
+    textarea: true,
+    tfoot: true,
+    th: true,
+    thead: true,
+    time: true,
+    tr: true,
+    tt: true,
+    u: true,
+    ul: true,
+    var: true,
+    wbr: true,
+    xmp: true,
+
+    // Disallowed tags
+    applet: false,
+    audio: false,
+    base: false,
+    basefont: false,
+    embed: false,
+    frame: false,
+    frameset: false,
+    iframe: false,
+    link: false,
+    meta: false,
+    noscript: false,
+    object: false,
+    param: false,
+    script: false,
+    slot: false,
+    source: false,
+    style: false,
+    title: false,
+    track: false,
+    video: false,
+};
 
 const ALLOWED_HTML_ATTRIBUTES = (
     'accept,align,alt,checked,cite,color,cols,colspan,contextmenu,' +
@@ -74,7 +194,19 @@ const PREDEFINED_CSS_FOR_ELEMENT: PredefinedCssMap = {
  * @internal
  */
 export function getAllowedTags(additionalTags: string[]): string[] {
-    return unique(ALLOWED_HTML_TAGS.concat(additionalTags || [])).map(tag => tag.toUpperCase());
+    return Object.keys(ALLOWED_HTML_TAG_MAP)
+        .filter((name: keyof typeof ALLOWED_HTML_TAG_MAP) => ALLOWED_HTML_TAG_MAP[name])
+        .concat(additionalTags || [])
+        .map(name => name.toUpperCase());
+}
+
+/**
+ * @internal
+ */
+export function getDisallowedTags(): string[] {
+    return Object.keys(ALLOWED_HTML_TAG_MAP)
+        .filter((name: keyof typeof ALLOWED_HTML_TAG_MAP) => !ALLOWED_HTML_TAG_MAP[name])
+        .map(name => name.toUpperCase());
 }
 
 /**
