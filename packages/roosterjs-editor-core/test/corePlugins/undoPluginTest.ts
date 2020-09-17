@@ -45,7 +45,6 @@ describe('UndoPlugin', () => {
 
         plugin.onPluginEvent({
             eventType: PluginEventType.EditorReady,
-            startPosition: null,
         });
 
         expect(isInIME).toHaveBeenCalled();
@@ -62,7 +61,6 @@ describe('UndoPlugin', () => {
 
         plugin.onPluginEvent({
             eventType: PluginEventType.EditorReady,
-            startPosition: null,
         });
 
         expect(isInIME).toHaveBeenCalled();
@@ -79,7 +77,6 @@ describe('UndoPlugin', () => {
 
         plugin.onPluginEvent({
             eventType: PluginEventType.EditorReady,
-            startPosition: null,
         });
 
         expect(isInIME).toHaveBeenCalled();

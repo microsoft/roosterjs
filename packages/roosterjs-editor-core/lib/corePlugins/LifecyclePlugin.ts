@@ -1,14 +1,12 @@
-import { Browser, getComputedStyles, Position } from 'roosterjs-editor-dom';
+import { Browser, getComputedStyles } from 'roosterjs-editor-dom';
 import {
     DefaultFormat,
     DocumentCommand,
     EditorOptions,
     IEditor,
     LifecyclePluginState,
-    NodePosition,
     PluginEventType,
     PluginWithState,
-    PositionType,
     PluginEvent,
     ChangeSource,
 } from 'roosterjs-editor-types';
@@ -57,7 +55,6 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     private editor: IEditor;
     private state: LifecyclePluginState;
     private initialContent: string;
-    private startPosition: NodePosition;
     private contentDivFormat: string[];
     private initializer: () => void;
     private disposer: () => void;
@@ -69,7 +66,6 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
      */
     constructor(options: EditorOptions, contentDiv: HTMLDivElement) {
         this.initialContent = options.initialContent || contentDiv.innerHTML || '';
-        this.startPosition = new Position(contentDiv, PositionType.Begin);
         this.contentDivFormat = getComputedStyles(contentDiv);
 
         // Make the container editable and set its selection styles
@@ -119,13 +115,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         this.adjustBrowserBehavior();
 
         // Let other plugins know that we are ready
-        this.editor.triggerPluginEvent(
-            PluginEventType.EditorReady,
-            {
-                startPosition: this.editor.getFocusedPosition() || this.startPosition,
-            },
-            true /*broadcast*/
-        );
+        this.editor.triggerPluginEvent(PluginEventType.EditorReady, {}, true /*broadcast*/);
     }
 
     /**

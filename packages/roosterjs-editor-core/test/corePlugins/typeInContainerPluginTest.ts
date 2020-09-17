@@ -226,7 +226,6 @@ describe('TypeInContainerPlugin', () => {
 
         plugin.onPluginEvent({
             eventType: PluginEventType.EditorReady,
-            startPosition: position,
         });
 
         expect(insertNode).toHaveBeenCalled();

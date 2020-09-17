@@ -75,12 +75,14 @@ export type CreatePasteFragment = (
 /**
  * Ensure user will type into a container element rather than into the editor content DIV directly
  * @param core The EditorCore object.
+ * @param position The position that user is about to type to
  * @param keyboardEvent Optional keyboard event object
  */
 export type EnsureTypeInContainer = (
     core: EditorCore,
+    position: NodePosition,
     keyboardEvent?: KeyboardEvent
-) => NodePosition;
+) => void;
 
 /**
  * Focus to editor. If there is a cached selection range, use it as current selection
@@ -209,6 +211,7 @@ export interface CoreApiMap {
     /**
      * Ensure user will type into a container element rather than into the editor content DIV directly
      * @param core The EditorCore object.
+     * @param position The position that user is about to type to
      * @param keyboardEvent Optional keyboard event object
      */
     ensureTypeInContainer: EnsureTypeInContainer;

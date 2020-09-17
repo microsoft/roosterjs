@@ -39,7 +39,6 @@ describe('createEditor', () => {
         expect(dispose).not.toHaveBeenCalled();
         expect(onPluginEvent).toHaveBeenCalledWith({
             eventType: roosterjs.PluginEventType.EditorReady,
-            startPosition: new roosterjs.Position(div, 0),
         });
 
         editor.dispose();
@@ -54,7 +53,7 @@ describe('createEditor', () => {
         const initContent = '<b>this is a test</b>';
         const editor = roosterjs.createEditor(div, [], initContent);
         expect(editor).not.toBeNull();
-        expect(div.innerHTML).toBe(initContent);
+        expect(div.innerHTML).toBe('<div><b>this is a test</b></div>');
 
         editor.dispose();
     });

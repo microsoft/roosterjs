@@ -21,6 +21,7 @@ import {
     PluginEventData,
     PluginEventFromType,
     PluginEventType,
+    PositionType,
     QueryScope,
     Region,
     RegionType,
@@ -77,7 +78,9 @@ export default class Editor implements IEditor {
         this.core.plugins.forEach(plugin => plugin.initialize(this));
 
         // 4. Ensure user will type in a container node, not the editor content DIV
-        this.ensureTypeInContainer();
+        this.ensureTypeInContainer(
+            new Position(this.core.contentDiv, PositionType.Begin).normalize()
+        );
     }
 
     /**
@@ -671,10 +674,11 @@ export default class Editor implements IEditor {
 
     /**
      * Ensure user will type into a container element rather than into the editor content DIV directly
+     * @param position The position that user is about to type to
      * @param keyboardEvent Optional keyboard event object
      */
-    public ensureTypeInContainer(keyboardEvent?: KeyboardEvent) {
-        this.core.api.ensureTypeInContainer(this.core, keyboardEvent);
+    public ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent) {
+        this.core.api.ensureTypeInContainer(this.core, position, keyboardEvent);
     }
 
     //#endregion

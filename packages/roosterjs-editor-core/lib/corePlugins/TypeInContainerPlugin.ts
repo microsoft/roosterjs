@@ -1,5 +1,5 @@
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { findClosestElementAncestor } from 'roosterjs-editor-dom';
+import { findClosestElementAncestor, Position } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -50,10 +50,13 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             }
 
             if (range.collapsed) {
-                this.editor.ensureTypeInContainer(event.rawEvent);
+                this.editor.ensureTypeInContainer(Position.getStart(range), event.rawEvent);
             } else {
                 this.editor.runAsync(() => {
-                    this.editor.ensureTypeInContainer(event.rawEvent);
+                    this.editor.ensureTypeInContainer(
+                        this.editor.getFocusedPosition(),
+                        event.rawEvent
+                    );
                 });
             }
         }

@@ -411,7 +411,6 @@ describe('EntityPlugin', () => {
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.EditorReady,
-                startPosition: null,
             });
 
             verify([node2, node3], [node2, node3]);
@@ -424,7 +423,6 @@ describe('EntityPlugin', () => {
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.EditorReady,
-                startPosition: null,
             });
 
             verify([node2, node3], [node2, node3]);

@@ -2,6 +2,7 @@ import {
     ContentPosition,
     EditorCore,
     EnsureTypeInContainer,
+    NodePosition,
     PositionType,
 } from 'roosterjs-editor-types';
 import {
@@ -21,16 +22,10 @@ import {
  */
 export const ensureTypeInContainer: EnsureTypeInContainer = (
     core: EditorCore,
+    position: NodePosition,
     keyboardEvent?: KeyboardEvent
 ) => {
-    const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-
-    if (!range) {
-        return null;
-    }
-
-    let result = Position.getStart(range).normalize();
-    const block = getBlockElementAtNode(core.contentDiv, result.node);
+    const block = getBlockElementAtNode(core.contentDiv, position.node);
     let formatNode: HTMLElement;
 
     if (block) {
@@ -59,7 +54,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
         });
 
         // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
-        result = new Position(formatNode.firstChild, PositionType.Begin);
+        position = new Position(formatNode.firstChild, PositionType.Begin);
     }
 
     if (formatNode) {
@@ -68,7 +63,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
 
     // If this is triggered by a keyboard event, let's select the new position
     if (keyboardEvent) {
-        core.api.selectRange(core, createRange(result));
+        core.api.selectRange(core, createRange(position));
     }
 };
 

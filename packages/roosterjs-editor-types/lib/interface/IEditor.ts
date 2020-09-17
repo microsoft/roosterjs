@@ -492,9 +492,10 @@ export default interface IEditor {
 
     /**
      * Ensure user will type into a container element rather than into the editor content DIV directly
+     * @param position The position that user is about to type to
      * @param keyboardEvent Optional keyboard event object
      */
-    ensureTypeInContainer(keyboardEvent?: KeyboardEvent): void;
+    ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent): void;
 
     //#endregion
 
