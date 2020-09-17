@@ -1,140 +1,89 @@
-import collapseSelectedBlocks from '../utils/collapseSelectedBlocks';
-import { ChangeSource, IEditor, NodeType } from 'roosterjs-editor-types';
+import blockFormat from '../utils/blockFormat';
+import { IEditor } from 'roosterjs-editor-types';
 import {
+    collapseNodesInRegion,
+    getSelectedBlockElementsInRegion,
     getTagOfNode,
     isBlockElement,
-    unwrap,
-    wrap,
+    isNodeInRegion,
+    isVoidHtmlElement,
+    safeInstanceOf,
     splitBalancedNodeRange,
     toArray,
+    unwrap,
+    wrap,
 } from 'roosterjs-editor-dom';
 
-export const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
+const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
     ','
 );
-export const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
-export const ATTRIBUTES_TO_PRESERVE = ['href'];
+const ATTRIBUTES_TO_PRESERVE = ['href', 'src'];
+const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
 
 /**
  * Clear all formats of selected blocks.
  * When selection is collapsed, only clear format of current block.
  * @param editor The editor instance
- * @param tagsToUnwrap Optional. A string array contains HTML tags in upper case which we will unwrap when clear format
- * @param tagsToStopUnwrap Optional. A string array contains HTML tags in upper case which we will stop unwrap if these tags are hit
  */
-export default function clearBlockFormat(
-    editor: IEditor,
-    tagsToUnwrap: string[] = TAGS_TO_UNWRAP,
-    tagsToStopUnwrap: string[] = TAGS_TO_STOP_UNWRAP,
-    attributesToPreserve: string[] = ATTRIBUTES_TO_PRESERVE
-) {
-    editor.focus();
-    editor.addUndoSnapshot((start, end) => {
-        let groups: {
-            first?: HTMLElement;
-            last?: HTMLElement;
-            td?: HTMLElement;
-        }[] = [{}];
-        let stopUnwrapSelector = tagsToStopUnwrap.join(',');
+export default function clearBlockFormat(editor: IEditor) {
+    blockFormat(editor, region => {
+        const blocks = getSelectedBlockElementsInRegion(region);
+        let nodes = collapseNodesInRegion(region, blocks);
 
-        // 1. Collapse the selected blocks and get first and last element
-        collapseSelectedBlocks(editor, element => {
-            let group = groups[groups.length - 1];
-            let td = editor.getElementAtCursor(stopUnwrapSelector, element);
-            if (td != group.td && group.first) {
-                groups.push((group = {}));
+        if (editor.contains(region.rootNode)) {
+            // If there are styles on table cell, wrap all its children and move down all non-border styles.
+            // So that we can preserve styles for unselected blocks as well as border styles for table
+            const nonborderStyles = removeNonBorderStyles(region.rootNode);
+            if (nonborderStyles) {
+                const wrapper = wrap(toArray(region.rootNode.childNodes));
+                wrapper.setAttribute('style', nonborderStyles);
             }
+        }
 
-            group.td = td;
-            group.first = group.first || element;
-            group.last = element;
-        });
+        while (nodes.length > 0 && isNodeInRegion(region, nodes[0].parentNode)) {
+            nodes = [splitBalancedNodeRange(nodes)];
+        }
 
-        groups
-            .filter(group => group.first)
-            .forEach(group => {
-                // 2. Collapse with first and last element to make them under same parent
-                let nodes = editor.collapseNodes(group.first, group.last, true /*canSplitParent*/);
-
-                // 3. Continue collapse until we can't collapse any more (hit root node, or a table)
-                if (canCollapse(tagsToStopUnwrap, nodes[0])) {
-                    while (
-                        editor.contains(nodes[0].parentNode) &&
-                        canCollapse(tagsToStopUnwrap, nodes[0].parentNode as HTMLElement)
-                    ) {
-                        nodes = [splitBalancedNodeRange(nodes)];
-                    }
-                }
-
-                // 4. Clear formats of the nodes
-                nodes.forEach(node =>
-                    clearNodeFormat(
-                        node as HTMLElement,
-                        tagsToUnwrap,
-                        tagsToStopUnwrap,
-                        attributesToPreserve
-                    )
-                );
-
-                // 5. Clear CSS of container TD if exist
-                if (group.td) {
-                    let styles = group.td.getAttribute('style') || '';
-                    let styleArray = styles.split(';');
-                    styleArray = styleArray.filter(
-                        style => style.trim().toLowerCase().indexOf('border') == 0
-                    );
-                    styles = styleArray.join(';');
-                    if (styles) {
-                        group.td.setAttribute('style', styles);
-                    } else {
-                        group.td.removeAttribute('style');
-                    }
-                }
-            });
-
-        editor.select(start, end);
-    }, ChangeSource.Format);
+        nodes.forEach(clearNodeFormat);
+    });
 }
 
-function clearNodeFormat(
-    node: Node,
-    tagsToUnwrap: string[],
-    tagsToStopUnwrap: string[],
-    attributesToPreserve: string[]
-): boolean {
-    if (node.nodeType != NodeType.Element || getTagOfNode(node) == 'BR') {
-        return false;
-    }
-
+function clearNodeFormat(node: Node): boolean {
     // 1. Recursively clear format of all its child nodes
-    let allChildrenAreBlock = toArray(node.childNodes)
-        .map(n => clearNodeFormat(n, tagsToUnwrap, tagsToStopUnwrap, attributesToPreserve))
-        .reduce((previousValue, value) => previousValue && value, true);
-
-    if (!canCollapse(tagsToStopUnwrap, node)) {
-        return false;
-    }
-
+    const areBlockElements = toArray(node.childNodes).map(clearNodeFormat);
+    let areAllChildrenBlock = areBlockElements.every(b => b);
     let returnBlockElement = isBlockElement(node);
 
-    // 2. If we should unwrap this tag, put it into an array and unwrap it later
-    if (tagsToUnwrap.indexOf(getTagOfNode(node)) >= 0 || allChildrenAreBlock) {
-        if (returnBlockElement && !allChildrenAreBlock) {
-            wrap(node);
+    // 2. Unwrap the tag if necessary
+    const tag = getTagOfNode(node);
+    if (tag) {
+        if (
+            TAGS_TO_UNWRAP.indexOf(tag) >= 0 ||
+            (areAllChildrenBlock &&
+                !isVoidHtmlElement(node) &&
+                TAGS_TO_STOP_UNWRAP.indexOf(tag) < 0)
+        ) {
+            if (returnBlockElement && !areAllChildrenBlock) {
+                wrap(node);
+            }
+            unwrap(node);
+        } else {
+            // 3. Otherwise, remove all attributes
+            clearAttribute(node as HTMLElement);
         }
-        unwrap(node);
-    } else {
-        // 3. Otherwise, remove all attributes
-        clearAttribute(node as HTMLElement, attributesToPreserve);
     }
 
     return returnBlockElement;
 }
 
-function clearAttribute(element: HTMLElement, attributesToPreserve: string[]) {
+function clearAttribute(element: HTMLElement) {
+    const isTableCell = safeInstanceOf(element, 'HTMLTableCellElement');
+
     for (let attr of toArray(element.attributes)) {
-        if (
-            attributesToPreserve.indexOf(attr.name.toLowerCase()) < 0 &&
+        if (isTableCell && attr.name == 'style') {
+            removeNonBorderStyles(element);
+        } else if (
+            ATTRIBUTES_TO_PRESERVE.indexOf(attr.name.toLowerCase()) < 0 &&
             attr.name.indexOf('data-') != 0
         ) {
             element.removeAttribute(attr.name);
@@ -142,6 +91,23 @@ function clearAttribute(element: HTMLElement, attributesToPreserve: string[]) {
     }
 }
 
-function canCollapse(tagsToStopUnwrap: string[], node: Node) {
-    return tagsToStopUnwrap.indexOf(getTagOfNode(node)) < 0;
+function removeNonBorderStyles(element: HTMLElement): string {
+    let borders: string[] = [];
+    let nonborders: string[] = [];
+    const style = element.getAttribute('style') || '';
+
+    style
+        .split(';')
+        .forEach(pair => (pair.trim().indexOf('border') >= 0 ? borders : nonborders).push(pair));
+
+    if (nonborders.length > 0) {
+        if (borders.length > 0) {
+            element.setAttribute('style', borders.join(';'));
+        } else {
+            element.removeAttribute('style');
+        }
+        return nonborders.join(';');
+    } else {
+        return '';
+    }
 }

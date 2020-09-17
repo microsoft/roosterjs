@@ -6,12 +6,15 @@ import { ChangeSource, IEditor, NodePosition, Region } from 'roosterjs-editor-ty
  */
 export default function blockFormat(
     editor: IEditor,
-    callback: (region: Region, start: NodePosition, end: NodePosition) => void
+    callback: (region: Region, start: NodePosition, end: NodePosition) => void,
+    beforeRunCallback?: () => boolean
 ) {
     editor.focus();
     editor.addUndoSnapshot((start, end) => {
-        const regions = editor.getSelectedRegions();
-        regions.forEach(region => callback(region, start, end));
+        if (!beforeRunCallback || beforeRunCallback()) {
+            const regions = editor.getSelectedRegions();
+            regions.forEach(region => callback(region, start, end));
+        }
         editor.select(start, end);
     }, ChangeSource.Format);
 }

@@ -49,12 +49,7 @@ export default function createVListFromRegion(
                     nodes.push(list);
                 }
             } else {
-                const blockNode = block.collapseToSingleElement();
-                if (shouldSkipNode(blockNode, true /*ignoreSpace*/)) {
-                    blockNode.parentNode?.removeChild(blockNode);
-                } else {
-                    nodes.push(blockNode);
-                }
+                nodes.push(block.collapseToSingleElement());
             }
         });
 

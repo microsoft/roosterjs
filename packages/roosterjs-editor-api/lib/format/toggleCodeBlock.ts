@@ -1,10 +1,10 @@
-import toggleTagCore from '../utils/toggleTagCore';
-import { getTagOfNode, unwrap, wrap } from 'roosterjs-editor-dom';
-import { IEditor } from 'roosterjs-editor-types';
+import blockWrap from '../utils/blockWrap';
+import { IEditor, QueryScope } from 'roosterjs-editor-types';
+import { unwrap, wrap } from 'roosterjs-editor-dom';
 
 const PRE_TAG = 'pre';
 const CODE_TAG = 'code';
-const CODE_NODE_TAG = 'CODE';
+const SELECTOR = `${PRE_TAG}>${CODE_TAG}`;
 
 /**
  * Toggle code block at selection, if selection already contains any code blocked elements,
@@ -16,23 +16,20 @@ export default function toggleCodeBlock(
     editor: IEditor,
     styler?: (element: HTMLElement) => void
 ): void {
-    toggleTagCore(editor, PRE_TAG, styler, wrapFunction, unwrapFunction);
-}
-
-function wrapFunction(nodes: Node[]): HTMLElement {
-    let codeBlock = wrap(nodes, CODE_TAG);
-    return wrap(codeBlock, PRE_TAG);
-}
-
-function unwrapFunction(node: HTMLElement): Node {
-    if (!node) {
-        return null;
-    }
-
-    let firstChild = node.childNodes[0];
-    if (node.childNodes.length == 1 && getTagOfNode(firstChild) == CODE_NODE_TAG) {
-        unwrap(firstChild);
-    }
-
-    return unwrap(node);
+    blockWrap(
+        editor,
+        nodes => {
+            const code = wrap(nodes, CODE_TAG);
+            const pre = wrap(code, PRE_TAG);
+            styler?.(pre);
+        },
+        () =>
+            editor.queryElements(SELECTOR, QueryScope.OnSelection, code => {
+                if (!code.previousSibling && !code.nextSibling) {
+                    const parent = code.parentNode;
+                    unwrap(code);
+                    unwrap(parent);
+                }
+            }).length == 0
+    );
 }

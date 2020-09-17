@@ -4,8 +4,6 @@ import {
     collapseNodesInRegion,
     createVListFromRegion,
     findClosestElementAncestor,
-    fromHtml,
-    getBlockElementAtNode,
     getSelectedBlockElementsInRegion,
     getTagOfNode,
     isNodeInRegion,
@@ -24,14 +22,8 @@ export default function experimentSetIndentation(editor: IEditor, indentation: I
     const handler = indentation == Indentation.Increase ? indent : outdent;
 
     blockFormat(editor, (region, start, end) => {
-        const blocks = getSelectedBlockElementsInRegion(region);
+        const blocks = getSelectedBlockElementsInRegion(region, true /*createBlockIfEmpty*/);
         const blockGroups: BlockElement[][] = [[]];
-
-        if (blocks.length == 0 && !region.rootNode.firstChild) {
-            const newNode = fromHtml('<div><br></div>', region.rootNode.ownerDocument)[0];
-            region.rootNode.appendChild(newNode);
-            blocks.push(getBlockElementAtNode(region.rootNode, newNode));
-        }
 
         for (let i = 0; i < blocks.length; i++) {
             const startNode = blocks[i].getStartNode();
@@ -54,12 +46,8 @@ export default function experimentSetIndentation(editor: IEditor, indentation: I
 }
 
 function indent(region: Region, blocks: BlockElement[]) {
-    if (blocks.length > 0) {
-        const startNode = blocks[0].getStartNode();
-        const endNode = blocks[blocks.length - 1].getEndNode();
-        const nodes = collapseNodesInRegion(region, [startNode, endNode]);
-        wrap(nodes, BlockWrapper);
-    }
+    const nodes = collapseNodesInRegion(region, blocks);
+    wrap(nodes, BlockWrapper);
 }
 
 function outdent(region: Region, blocks: BlockElement[]) {

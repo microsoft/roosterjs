@@ -3,7 +3,7 @@ import clearBlockFormat from '../../lib/format/clearBlockFormat';
 import { IEditor } from 'roosterjs-editor-types';
 
 describe('clearBlockFormat()', () => {
-    let testID = 'clearFormat';
+    let testID = 'clearBlockFormat';
     let editor: IEditor;
 
     beforeEach(() => {
@@ -24,6 +24,10 @@ describe('clearBlockFormat()', () => {
 
     it('Empty', () => {
         runTest('', '');
+    });
+
+    it('Empty DIV', () => {
+        runTest('<div></div><!--{"start":[0],"end":[0]}-->', '');
     });
 
     it('Empty line', () => {
@@ -62,7 +66,7 @@ describe('clearBlockFormat()', () => {
     it('Multi lines', () => {
         runTest(
             '<div>This</div><div>is<br>a</div><div>test</div><!--{"start":[0,0,0],"end":[2,0,4]}-->',
-            '<div>This</div><div>is<br></div><div>a</div><div>test</div>'
+            '<div>This</div><div>is<br>a</div><div>test</div>'
         );
     });
 
@@ -82,7 +86,7 @@ describe('clearBlockFormat()', () => {
 
     it('List in table - select partial', () => {
         runTest(
-            '<div><table><tr><td>This</td><td>is<br><ul><li>a</li><ul><li>test</li></ul></ul></td></tr></table><br></div><!--{"start":[0,0,0,1,2,1,0,0,2],"end":[0,0,0,1,2,1,0,0,2]}-->',
+            '<div><table><tbody><tr><td>This</td><td>is<br><ul><li>a</li><ul><li>test</li></ul></ul></td></tr></tbody></table><br></div><!--{"start":[0,0,0,0,1,2,1,0,0,2],"end":[0,0,0,0,1,2,1,0,0,2]}-->',
             '<div><table><tbody><tr><td>This</td><td>is<br><ul><li>a</li></ul><div>test</div></td></tr></tbody></table><br></div>'
         );
     });
@@ -90,14 +94,28 @@ describe('clearBlockFormat()', () => {
     it('List in table - select cross cell', () => {
         runTest(
             '<div><table><tbody><tr><td>This</td><td>is<br><ul><li>a</li><ul><li>test</li></ul></ul></td></tr></tbody></table><br></div><!--{"start":[0,0,0,0,0,0,2],"end":[0,0,0,0,1,2,0,0,1]}-->',
-            '<div><table><tbody><tr><td>This</td><td><div>is<br></div><div>a</div><ul><ul><li>test</li></ul></ul></td></tr></tbody></table><br></div>'
+            '<div><table><tbody><tr><td>This</td><td>is<br><div>a</div><ul><ul><li>test</li></ul></ul></td></tr></tbody></table><br></div>'
         );
     });
 
     it('Table has styles', () => {
         runTest(
             '<div><table><tr><td style="width: 120px;border-width: 1px;border-style: solid;border-color: rgb(171, 171, 171);font-size: 30px;">This is a test</td></tr></table><br></div><!--{"start":[0,0,0,0,0,14],"end":[0,0,0,0,0,14]}-->',
-            '<div><table><tbody><tr><td style="border-width: 1px;border-style: solid;border-color: rgb(171, 171, 171)">This is a test</td></tr></tbody></table><br></div>'
+            '<div><table><tbody><tr><td style="border-width: 1px;border-style: solid;border-color: rgb(171, 171, 171)"><div>This is a test</div></td></tr></tbody></table><br></div>'
+        );
+    });
+
+    it('Keep <BR>', () => {
+        runTest(
+            '<div>aaa<br>bbb<br>ccc</div><!--{"start":[0,0,0],"end":[0,4,3]}-->',
+            '<div>aaa<br>bbb<br>ccc</div>'
+        );
+    });
+
+    it('Keep <IMG>', () => {
+        runTest(
+            'test<img src="test" width="100%">test<!--{"start":[0,0],"end":[2,4]}-->',
+            'test<img src="test">test'
         );
     });
 });
