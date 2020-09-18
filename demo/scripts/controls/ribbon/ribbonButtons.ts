@@ -310,7 +310,7 @@ const buttons: { [key: string]: RibbonButtonType } = {
     cropImage: {
         title: 'CropImage',
         onClick: editor => {
-            toggleImageCrop(editor);
+            startCropImage(editor);
         },
     },
     export: {

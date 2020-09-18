@@ -6,7 +6,7 @@ import EditorReadyEvent from './EditorReadyEvent';
 import EntityOperationEvent from './EntityOperationEvent';
 import ExtractContentWithDomEvent from './ExtractContentWithDomEvent';
 import PendingFormatStateChangedEvent from './PendingFormatStateChangedEvent';
-import StartCropEvent from '.';
+import StartCropEvent from './StartCropEvent';
 import { PluginDomEvent } from './PluginDomEvent';
 
 /**

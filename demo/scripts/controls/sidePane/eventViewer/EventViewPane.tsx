@@ -33,6 +33,7 @@ const EventTypeMap = {
     [PluginEventType.PendingFormatStateChanged]: 'PendingFormatStateChanged',
     [PluginEventType.Scroll]: 'Scroll',
     [PluginEventType.BeforeCutCopy]: 'BeforeCutCopy',
+    [PluginEventType.StartCrop]: 'StartCrop',
 };
 
 export default class EventViewPane extends React.Component<

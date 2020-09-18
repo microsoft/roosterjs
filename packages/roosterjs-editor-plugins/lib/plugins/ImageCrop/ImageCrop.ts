@@ -30,7 +30,7 @@ export default class ImageResize implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(e: PluginEvent) {
-        if (e.eventType == PluginEventType.BeforeCrop) {
+        if (e.eventType == PluginEventType.StartCrop) {
             let text = e.test;
             this.editor.insertContent(text);
         }
