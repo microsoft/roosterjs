@@ -22,6 +22,12 @@ export class ImageResizeCode extends SimplePluginCode {
     }
 }
 
+export class ImageCropCode extends SimplePluginCode {
+    constructor() {
+        super('ImageCrop');
+    }
+}
+
 export class TableResizeCode extends SimplePluginCode {
     constructor() {
         super('TableResize');

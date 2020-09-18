@@ -24,6 +24,11 @@ export const enum ChangeSource {
     ImageResize = 'ImageResize',
 
     /**
+     * Content changed by image crop
+     */
+    ImageCrop = 'ImageCrop',
+
+    /**
      * Content changed by paste
      */
     Paste = 'Paste',

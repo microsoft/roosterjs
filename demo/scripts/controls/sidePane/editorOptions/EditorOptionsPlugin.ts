@@ -11,6 +11,7 @@ const initialState: BuildInPluginState = {
         paste: true,
         watermark: false,
         imageResize: true,
+        imageCrop: true,
         tableResize: true,
         customReplace: true,
         pickerPlugin: true,

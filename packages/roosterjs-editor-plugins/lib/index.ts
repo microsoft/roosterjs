@@ -1,6 +1,7 @@
 export * from './ContentEdit';
 export * from './CustomReplace';
 export * from './HyperLink';
+export * from './ImageCrop';
 export * from './ImageResize';
 export * from './Paste';
 export * from './Picker';

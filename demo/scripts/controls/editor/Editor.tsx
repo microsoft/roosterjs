@@ -8,6 +8,7 @@ import { EditorInstanceToggleablePlugins } from './EditorInstanceToggleablePlugi
 import { EditorOptions, EditorPlugin, UndoSnapshotsService } from 'roosterjs-editor-types';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { ImageResize } from 'roosterjs-editor-plugins/lib/ImageResize';
+import { ImageCrop } from 'roosterjs-editor-plugins/lib/ImageCrop';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { PickerPlugin } from 'roosterjs-editor-plugins/lib/Picker';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
@@ -76,6 +77,7 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
             paste: pluginList.paste ? new Paste() : null,
             watermark: pluginList.watermark ? new Watermark(this.state.watermarkText) : null,
             imageResize: pluginList.imageResize ? new ImageResize() : null,
+            imageCrop: pluginList.imageCrop ? new ImageCrop() : null,
             tableResize: pluginList.tableResize ? new TableResize() : null,
             pickerPlugin: pluginList.pickerPlugin
                 ? new PickerPlugin(new SampleColorPickerPluginDataProvider(), {
