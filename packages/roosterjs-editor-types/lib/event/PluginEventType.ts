@@ -84,4 +84,9 @@ export const enum PluginEventType {
      * Operating on an entity. See enum EntityOperation for more details about each operation
      */
     EntityOperation = 15,
+
+    /**
+     * Start image cropping
+     */
+    StartCrop = 16, //other way??
 }

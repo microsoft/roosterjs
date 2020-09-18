@@ -6,6 +6,7 @@ import EditorReadyEvent from './EditorReadyEvent';
 import EntityOperationEvent from './EntityOperationEvent';
 import ExtractContentWithDomEvent from './ExtractContentWithDomEvent';
 import PendingFormatStateChangedEvent from './PendingFormatStateChangedEvent';
+import StartCropEvent from '.';
 import { PluginDomEvent } from './PluginDomEvent';
 
 /**
@@ -20,4 +21,5 @@ export type PluginEvent =
     | PluginDomEvent
     | EditorReadyEvent
     | BeforeDisposeEvent
-    | PendingFormatStateChangedEvent;
+    | PendingFormatStateChangedEvent
+    | StartCropEvent;

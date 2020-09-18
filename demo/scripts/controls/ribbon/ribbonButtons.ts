@@ -29,6 +29,7 @@ import {
     toggleHeader,
     toggleCodeBlock,
     insertImage,
+    startCropImage,
 } from 'roosterjs-editor-api';
 
 const buttons: { [key: string]: RibbonButtonType } = {
@@ -304,6 +305,12 @@ const buttons: { [key: string]: RibbonButtonType } = {
             225: '225 degree',
             270: '270 degree',
             315: '315 degree',
+        },
+    },
+    cropImage: {
+        title: 'CropImage',
+        onClick: editor => {
+            toggleImageCrop(editor);
         },
     },
     export: {
