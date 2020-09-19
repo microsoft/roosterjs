@@ -158,14 +158,18 @@ export type SetContent = (
 ) => void;
 
 /**
- * Transform color of elements between light mode and dark mode
+ * Edit and transform color of elements between light mode and dark mode
  * @param core The EditorCore object
- * @param elements The HTML elements to transform
+ * @param rootNode The root HTML node to transform
+ * @param includeSelf True to transform the root node as well, otherwise false
+ * @param callback The callback function to invoke before do color transformation
  * @param direction To specify the transform direction, light to dark, or dark to light
  */
 export type TransformColor = (
     core: EditorCore,
-    elements: HTMLElement[],
+    rootNode: Node,
+    includeSelf: boolean,
+    callback: () => void,
     direction: ColorTransformDirection
 ) => void;
 
@@ -286,9 +290,11 @@ export interface CoreApiMap {
     setContent: SetContent;
 
     /**
-     * Transform color of elements between light mode and dark mode
+     * Edit and transform color of elements between light mode and dark mode
      * @param core The EditorCore object
-     * @param elements The HTML elements to transform
+     * @param rootNode The root HTML element to transform
+     * @param includeSelf True to transform the root node as well, otherwise false
+     * @param callback The callback function to invoke before do color transformation
      * @param direction To specify the transform direction, light to dark, or dark to light
      */
     transformColor: TransformColor;

@@ -60,125 +60,120 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
         core.api.focus(core);
     }
 
-    let elementsToTransformColor: HTMLElement[];
-
-    if (core.lifecycle.isDarkMode && option.position != ContentPosition.Outside) {
-        if (safeInstanceOf(node, 'HTMLElement')) {
-            elementsToTransformColor = toArray(node.getElementsByTagName('*')) as HTMLElement[];
-            elementsToTransformColor.unshift(node);
-        } else if (safeInstanceOf(node, 'DocumentFragment')) {
-            elementsToTransformColor = toArray(node.querySelectorAll('*')) as HTMLElement[];
-        }
+    if (option.position == ContentPosition.Outside) {
+        contentDiv.parentNode.insertBefore(node, contentDiv.nextSibling);
+        return true;
     }
 
-    switch (option.position) {
-        case ContentPosition.Begin:
-        case ContentPosition.End: {
-            let isBegin = option.position == ContentPosition.Begin;
-            let block = getFirstLastBlockElement(contentDiv, isBegin);
-            let insertedNode: Node | Node[];
-            if (block) {
-                let refNode = isBegin ? block.getStartNode() : block.getEndNode();
-                if (
-                    option.insertOnNewLine ||
-                    refNode.nodeType == NodeType.Text ||
-                    isVoidHtmlElement(refNode)
-                ) {
-                    // For insert on new line, or refNode is text or void html element (HR, BR etc.)
-                    // which cannot have children, i.e. <div>hello<br>world</div>. 'hello', 'world' are the
-                    // first and last node. Insert before 'hello' or after 'world', but still inside DIV
-                    if (safeInstanceOf(node, 'DocumentFragment')) {
-                        // if the node to be inserted is DocumentFragment, use its childNodes as insertedNode
-                        // because insertBefore() returns an empty DocumentFragment
-                        insertedNode = toArray(node.childNodes);
-                        refNode.parentNode.insertBefore(
-                            node,
-                            isBegin ? refNode : refNode.nextSibling
-                        );
+    core.api.transformColor(
+        core,
+        node,
+        true /*includeSelf*/,
+        () => {
+            switch (option.position) {
+                case ContentPosition.Begin:
+                case ContentPosition.End: {
+                    let isBegin = option.position == ContentPosition.Begin;
+                    let block = getFirstLastBlockElement(contentDiv, isBegin);
+                    let insertedNode: Node | Node[];
+                    if (block) {
+                        let refNode = isBegin ? block.getStartNode() : block.getEndNode();
+                        if (
+                            option.insertOnNewLine ||
+                            refNode.nodeType == NodeType.Text ||
+                            isVoidHtmlElement(refNode)
+                        ) {
+                            // For insert on new line, or refNode is text or void html element (HR, BR etc.)
+                            // which cannot have children, i.e. <div>hello<br>world</div>. 'hello', 'world' are the
+                            // first and last node. Insert before 'hello' or after 'world', but still inside DIV
+                            if (safeInstanceOf(node, 'DocumentFragment')) {
+                                // if the node to be inserted is DocumentFragment, use its childNodes as insertedNode
+                                // because insertBefore() returns an empty DocumentFragment
+                                insertedNode = toArray(node.childNodes);
+                                refNode.parentNode.insertBefore(
+                                    node,
+                                    isBegin ? refNode : refNode.nextSibling
+                                );
+                            } else {
+                                insertedNode = refNode.parentNode.insertBefore(
+                                    node,
+                                    isBegin ? refNode : refNode.nextSibling
+                                );
+                            }
+                        } else {
+                            // if the refNode can have child, use appendChild (which is like to insert as first/last child)
+                            // i.e. <div>hello</div>, the content will be inserted before/after hello
+                            insertedNode = refNode.insertBefore(
+                                node,
+                                isBegin ? refNode.firstChild : null
+                            );
+                        }
                     } else {
-                        insertedNode = refNode.parentNode.insertBefore(
-                            node,
-                            isBegin ? refNode : refNode.nextSibling
+                        // No first block, this can happen when editor is empty. Use appendChild to insert the content in contentDiv
+                        insertedNode = contentDiv.appendChild(node);
+                    }
+
+                    // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
+                    // add a DIV wrapping
+                    if (insertedNode && option.insertOnNewLine) {
+                        const nodes = Array.isArray(insertedNode) ? insertedNode : [insertedNode];
+                        if (!isBlockElement(nodes[0]) || !isBlockElement(nodes[nodes.length - 1])) {
+                            wrap(nodes);
+                        }
+                    }
+
+                    break;
+                }
+                case ContentPosition.DomEnd:
+                    // Use appendChild to insert the node at the end of the content div.
+                    let insertedNode = contentDiv.appendChild(node);
+                    // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
+                    // add a DIV wrapping
+                    if (insertedNode && option.insertOnNewLine && !isBlockElement(insertedNode)) {
+                        wrap(insertedNode);
+                    }
+                    break;
+                case ContentPosition.Range:
+                case ContentPosition.SelectionStart:
+                    let { range, rangeToRestore } = getInitialRange(core, option);
+
+                    if (!range) {
+                        return;
+                    }
+
+                    // if to replace the selection and the selection is not collapsed, remove the the content at selection first
+                    if (option.replaceSelection && !range.collapsed) {
+                        range.deleteContents();
+                    }
+
+                    let pos = Position.getStart(range);
+                    let blockElement: BlockElement;
+
+                    if (
+                        option.insertOnNewLine &&
+                        (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
+                    ) {
+                        pos = new Position(blockElement.getEndNode(), PositionType.After);
+                    } else {
+                        pos = adjustNodeInsertPosition(contentDiv, node, pos);
+                    }
+
+                    let nodeForCursor =
+                        node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
+                    range = createRange(pos);
+                    range.insertNode(node);
+                    if (option.updateCursor && nodeForCursor) {
+                        rangeToRestore = createRange(
+                            new Position(nodeForCursor, PositionType.After).normalize()
                         );
                     }
-                } else {
-                    // if the refNode can have child, use appendChild (which is like to insert as first/last child)
-                    // i.e. <div>hello</div>, the content will be inserted before/after hello
-                    insertedNode = refNode.insertBefore(node, isBegin ? refNode.firstChild : null);
-                }
-            } else {
-                // No first block, this can happen when editor is empty. Use appendChild to insert the content in contentDiv
-                insertedNode = contentDiv.appendChild(node);
+                    core.api.selectRange(core, rangeToRestore);
+
+                    break;
             }
-
-            // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
-            // add a DIV wrapping
-            if (insertedNode && option.insertOnNewLine) {
-                const nodes = Array.isArray(insertedNode) ? insertedNode : [insertedNode];
-                if (!isBlockElement(nodes[0]) || !isBlockElement(nodes[nodes.length - 1])) {
-                    wrap(nodes);
-                }
-            }
-
-            break;
-        }
-        case ContentPosition.DomEnd:
-            // Use appendChild to insert the node at the end of the content div.
-            let insertedNode = contentDiv.appendChild(node);
-            // Final check to see if the inserted node is a block. If not block and the ask is to insert on new line,
-            // add a DIV wrapping
-            if (insertedNode && option.insertOnNewLine && !isBlockElement(insertedNode)) {
-                wrap(insertedNode);
-            }
-            break;
-        case ContentPosition.Range:
-        case ContentPosition.SelectionStart:
-            let { range, rangeToRestore } = getInitialRange(core, option);
-
-            if (!range) {
-                return;
-            }
-
-            // if to replace the selection and the selection is not collapsed, remove the the content at selection first
-            if (option.replaceSelection && !range.collapsed) {
-                range.deleteContents();
-            }
-
-            let pos = Position.getStart(range);
-            let blockElement: BlockElement;
-
-            if (
-                option.insertOnNewLine &&
-                (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
-            ) {
-                pos = new Position(blockElement.getEndNode(), PositionType.After);
-            } else {
-                pos = adjustNodeInsertPosition(contentDiv, node, pos);
-            }
-
-            let nodeForCursor = node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
-            range = createRange(pos);
-            range.insertNode(node);
-            if (option.updateCursor && nodeForCursor) {
-                rangeToRestore = createRange(
-                    new Position(nodeForCursor, PositionType.After).normalize()
-                );
-            }
-            core.api.selectRange(core, rangeToRestore);
-
-            break;
-        case ContentPosition.Outside:
-            core.contentDiv.parentNode.insertBefore(node, contentDiv.nextSibling);
-            break;
-    }
-
-    if (elementsToTransformColor?.length > 0) {
-        core.api.transformColor(
-            core,
-            elementsToTransformColor,
-            ColorTransformDirection.LightToDark
-        );
-    }
+        },
+        ColorTransformDirection.LightToDark
+    );
 
     return true;
 };

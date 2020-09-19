@@ -1,3 +1,4 @@
+import { safeInstanceOf, toArray } from 'roosterjs-editor-dom';
 import {
     ColorTransformDirection,
     DarkModeDatasetNames,
@@ -31,18 +32,25 @@ const ATTR_DATASET_MAP = {
 };
 
 /**
- * @internal
- * Transform color of elements between light mode and dark mode
+ * Edit and transform color of elements between light mode and dark mode
  * @param core The EditorCore object
- * @param elements The HTML elements to transform
+ * @param rootNode The root HTML elements to transform
+ * @param includeSelf True to transform the root node as well, otherwise false
+ * @param callback The callback function to invoke before do color transformation
  * @param direction To specify the transform direction, light to dark, or dark to light
  */
 export const transformColor: TransformColor = (
     core: EditorCore,
-    elements: HTMLElement[],
+    rootNode: Node,
+    includeSelf: boolean,
+    callback: () => void,
     direction: ColorTransformDirection
 ) => {
-    elements?.forEach(element => {
+    let elementsToTransform = core.lifecycle.isDarkMode ? getAll(rootNode, includeSelf) : [];
+
+    callback?.();
+
+    elementsToTransform.forEach(element => {
         if (direction == ColorTransformDirection.DarkToLight && element?.dataset) {
             // Reset color styles based on the content of the ogsc/ogsb data element.
             // If those data properties are empty or do not exist, set them anyway to clear the content.
@@ -74,4 +82,21 @@ export const transformColor: TransformColor = (
 
 function getValueOrDefault(value: string, defualtValue: string | null) {
     return value && value != 'undefined' && value != 'null' ? value : defualtValue;
+}
+
+function getAll(rootNode: Node, includeSelf: boolean): HTMLElement[] {
+    const result: HTMLElement[] = [];
+
+    if (safeInstanceOf(rootNode, 'HTMLElement')) {
+        if (includeSelf) {
+            result.push(rootNode);
+        }
+        const allChildren = rootNode.getElementsByTagName('*');
+        Array.prototype.push.apply(result, toArray(allChildren));
+    } else if (safeInstanceOf(rootNode, 'DocumentFragment')) {
+        const allChildren = rootNode.querySelectorAll('*');
+        Array.prototype.push.apply(result, toArray(allChildren));
+    }
+
+    return result;
 }

@@ -2,7 +2,6 @@ import BlockElement from './BlockElement';
 import ClipboardData from './ClipboardData';
 import DefaultFormat from './DefaultFormat';
 import IContentTraverser from './IContentTraverser';
-import InlineElement from './InlineElement';
 import IPositionContentSearcher from './IPositionContentSearcher';
 import NodePosition from './NodePosition';
 import Region from './Region';
@@ -60,17 +59,11 @@ export default interface IEditor {
     /**
      * Replace a node in editor content with another node
      * @param existingNode The existing node to be replaced
-     * @param new node to replace to
+     * @param toNode node to replace to
+     * @param transformColorForDarkMode (optional) Whether to transform new node to dark mode. Default is false
      * @returns true if node is replaced. Otherwise false
      */
-    replaceNode(existingNode: Node, toNode: Node): boolean;
-
-    /**
-     * Get InlineElement at given node
-     * @param node The node to create InlineElement
-     * @returns The InlineElement result
-     */
-    getInlineElementAtNode(node: Node): InlineElement;
+    replaceNode(existingNode: Node, toNode: Node, transformColorForDarkMode?: boolean): boolean;
 
     /**
      * Get BlockElement at given node

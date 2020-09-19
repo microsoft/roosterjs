@@ -3,6 +3,7 @@ import {
     BlockElement,
     ChangeSource,
     ClipboardData,
+    ColorTransformDirection,
     ContentPosition,
     DefaultFormat,
     DOMEventHandler,
@@ -13,7 +14,6 @@ import {
     GetContentMode,
     IContentTraverser,
     IEditor,
-    InlineElement,
     InsertOption,
     IPositionContentSearcher,
     NodePosition,
@@ -39,7 +39,6 @@ import {
     fromHtml,
     getBlockElementAtNode,
     getSelectionPath,
-    getInlineElementAtNode,
     getTagOfNode,
     isNodeEmpty,
     safeInstanceOf,
@@ -135,26 +134,29 @@ export default class Editor implements IEditor {
     /**
      * Replace a node in editor content with another node
      * @param existingNode The existing node to be replaced
-     * @param new node to replace to
+     * @param toNode node to replace to
+     * @param transformColorForDarkMode (optional) Whether to transform new node to dark mode. Default is false
      * @returns true if node is replaced. Otherwise false
      */
-    public replaceNode(existingNode: Node, toNode: Node): boolean {
+    public replaceNode(
+        existingNode: Node,
+        toNode: Node,
+        transformColorForDarkMode?: boolean
+    ): boolean {
         // Only replace the node when it falls within editor
-        if (existingNode && toNode && this.contains(existingNode)) {
-            existingNode.parentNode.replaceChild(toNode, existingNode);
+        if (this.contains(existingNode) && toNode) {
+            this.core.api.transformColor(
+                this.core,
+                transformColorForDarkMode ? toNode : null,
+                true /*includeSelf*/,
+                () => existingNode.parentNode.replaceChild(toNode, existingNode),
+                ColorTransformDirection.LightToDark
+            );
+
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * Get InlineElement at given node
-     * @param node The node to create InlineElement
-     * @returns The InlineElement result
-     */
-    public getInlineElementAtNode(node: Node): InlineElement {
-        return getInlineElementAtNode(this.core.contentDiv, node);
     }
 
     /**
