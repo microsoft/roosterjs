@@ -41,7 +41,16 @@ export default function collapseNodes(
     }
 }
 
-function collapse(
+/**
+ * Collapse a node by traversing its parent nodes until we get the common ancestor node of node and ref node
+ * @param root Root node, traversing will be limited under this scope
+ * @param node The node to collapse
+ * @param ref Ref node. The result will be the nearest common ancestor node of the given node and this ref node
+ * @param isStart Whether the given node is start of the sequence of nodes to collapse
+ * @param canSplitParent Whether splitting parent node is allowed
+ * @returns The common ancestor node of the given node ref node
+ */
+export function collapse(
     root: Node,
     node: Node,
     ref: Node,
