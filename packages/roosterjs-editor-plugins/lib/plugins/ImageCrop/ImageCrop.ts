@@ -66,8 +66,7 @@ export default class ImageCrop implements EditorPlugin {
         private minHeight: number = 10,
         private cropHandlesColor: string = '#DB626C',
         private cropOverlayColor: string = 'rgba(0,0,0,.5)'
-    ) //private croppableImageSelector: string = 'img'
-    {}
+    ) {}
 
     /**
      * Get a friendly name of  this plugin
