@@ -1,5 +1,5 @@
 import blockFormat from '../utils/blockFormat';
-import { BlockElement, IEditor, Indentation, Region } from 'roosterjs-editor-types';
+import { BlockElement, IEditor, Indentation, RegionBase } from 'roosterjs-editor-types';
 import {
     collapseNodesInRegion,
     createVListFromRegion,
@@ -45,12 +45,12 @@ export default function experimentSetIndentation(editor: IEditor, indentation: I
     });
 }
 
-function indent(region: Region, blocks: BlockElement[]) {
+function indent(region: RegionBase, blocks: BlockElement[]) {
     const nodes = collapseNodesInRegion(region, blocks);
     wrap(nodes, BlockWrapper);
 }
 
-function outdent(region: Region, blocks: BlockElement[]) {
+function outdent(region: RegionBase, blocks: BlockElement[]) {
     blocks.forEach(blockElement => {
         let node = blockElement.collapseToSingleElement();
         const quote = findClosestElementAncestor(node, region.rootNode, 'blockquote');

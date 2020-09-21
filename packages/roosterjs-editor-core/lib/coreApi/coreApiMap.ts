@@ -21,6 +21,7 @@ import { triggerEvent } from './triggerEvent';
 export const coreApiMap: CoreApiMap = {
     attachDomEvent,
     addUndoSnapshot,
+    createPasteFragment,
     ensureTypeInContainer,
     focus,
     getContent,
@@ -28,7 +29,6 @@ export const coreApiMap: CoreApiMap = {
     getStyleBasedFormatState,
     hasFocus,
     insertNode,
-    createPasteFragment,
     restoreUndoSnapshot,
     selectRange,
     setContent,

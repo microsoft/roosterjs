@@ -3,7 +3,7 @@ import canMoveCurrentSnapshot from '../../lib/snapshots/canMoveCurrentSnapshot';
 import clearProceedingSnapshots from '../../lib/snapshots/clearProceedingSnapshots';
 import createSnapshots from '../../lib/snapshots/createSnapshots';
 import moveCurrentSnapsnot from '../../lib/snapshots/moveCurrentSnapsnot';
-import { canUndoAutoComplete } from 'roosterjs/lib';
+import { canUndoAutoComplete } from 'roosterjs-editor-dom';
 import { UndoSnapshotsService } from 'roosterjs-editor-types';
 
 describe('SnapshotsManager', () => {

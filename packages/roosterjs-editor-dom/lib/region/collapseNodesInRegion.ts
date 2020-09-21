@@ -1,7 +1,7 @@
 import collapseNode from '../utils/collapseNodes';
 import isNodeInRegion from './isNodeInRegion';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import { BlockElement, Region } from 'roosterjs-editor-types';
+import { BlockElement, RegionBase } from 'roosterjs-editor-types';
 
 /**
  * Collapse nodes within this region to their common ascenstor node under this region
@@ -11,7 +11,7 @@ import { BlockElement, Region } from 'roosterjs-editor-types';
  * All nodes not contained by the given region will be ignored.
  */
 export default function collapseNodesInRegion(
-    region: Region,
+    region: RegionBase,
     nodesOrBlockElements: Node[] | BlockElement[]
 ): Node[] {
     if (!nodesOrBlockElements || nodesOrBlockElements.length == 0) {
