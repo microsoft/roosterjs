@@ -220,6 +220,13 @@ describe('CopyPastePlugin copy', () => {
             },
         ];
 
+        editor.deleteSelectedContent = () => {
+            let html = contentDiv.innerHTML;
+            html = html.substr(0, 3) + html.substr(10);
+            contentDiv.innerHTML = html;
+            return null;
+        };
+
         const event = <Event>{};
         handler.cut(event);
 
@@ -247,6 +254,13 @@ describe('CopyPastePlugin copy', () => {
                 fullSelectionEnd: new dom.Position(contentDiv.childNodes[1].childNodes[0], 2),
             },
         ];
+
+        editor.deleteSelectedContent = () => {
+            let html = contentDiv.innerHTML;
+            html = html.substr(0, 46) + '</div></li></ol><div>' + html.substr(85);
+            contentDiv.innerHTML = html;
+            return null;
+        };
 
         const event = <Event>{};
         handler.cut(event);
