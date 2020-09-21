@@ -57,9 +57,6 @@ export default class ImageCrop implements EditorPlugin {
      * @param minWidth Minimum width of image when crop in pixel, default value is 10
      * @param minHeight Minimum height of image when crop in pixel, default value is 10
      * @param cropHandlesColor Color of crop handles, default value is #DB626C
-     * @param forcePreserveRatio Whether always preserve width/height ratio when crop, default value is false
-     * //@param croppableImageSelector Selector for picking which image is resizable (e.g. for all images not placeholders), note
-     * that the tag must be IMG regardless what the selector is
      */
     constructor(
         private minWidth: number = 10,

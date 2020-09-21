@@ -286,7 +286,6 @@ export default class ImageResize implements EditorPlugin {
                 )
                 .join('') +
             `<div style="position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${this.selectionBorderColor};pointer-events:none;"></div>`;
-
         fromHtml(html, this.editor.getDocument()).forEach(div => {
             wrapper.appendChild(div);
             div.addEventListener('mousedown', this.startResize);
