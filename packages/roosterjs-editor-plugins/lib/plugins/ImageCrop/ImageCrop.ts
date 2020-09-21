@@ -100,7 +100,6 @@ export default class ImageCrop implements EditorPlugin {
      */
     onPluginEvent(e: PluginEvent) {
         if (e.eventType == PluginEventType.StartCrop) {
-            //should event be a feault one with data??
             const images = this.editor.queryElements('img', QueryScope.InSelection);
             const selectedImage = images[0] as HTMLImageElement;
 
@@ -158,20 +157,20 @@ export default class ImageCrop implements EditorPlugin {
         let scaleWidth = selectedImage.width / selectedImage.naturalWidth;
         let scaleHeight = selectedImage.height / selectedImage.naturalHeight;
 
-        selectedImage.src = croppedImage.originalSource;
+        selectedImage.src = croppedImage?.originalSource;
 
-        selectedImage.style.width = Math.floor(croppedImage.width * scaleWidth) + 'px';
-        selectedImage.style.height = Math.floor(croppedImage.height * scaleHeight) + 'px';
-        selectedImage.width = Math.floor(croppedImage.width * scaleWidth);
-        selectedImage.height = Math.floor(croppedImage.height * scaleHeight);
+        selectedImage.style.width = Math.floor(croppedImage?.width * scaleWidth) + 'px';
+        selectedImage.style.height = Math.floor(croppedImage?.height * scaleHeight) + 'px';
+        selectedImage.width = Math.floor(croppedImage?.width * scaleWidth);
+        selectedImage.height = Math.floor(croppedImage?.height * scaleHeight);
 
-        this.hiddenTop = Math.floor(croppedImage.hiddenTop * scaleHeight);
-        this.hiddenRight = Math.floor(croppedImage.hiddenRight * scaleWidth);
-        this.hiddenBottom = Math.floor(croppedImage.hiddenBottom * scaleHeight);
-        this.hiddenLeft = Math.floor(croppedImage.hiddenLeft * scaleWidth);
+        this.hiddenTop = Math.floor(croppedImage?.hiddenTop * scaleHeight);
+        this.hiddenRight = Math.floor(croppedImage?.hiddenRight * scaleWidth);
+        this.hiddenBottom = Math.floor(croppedImage?.hiddenBottom * scaleHeight);
+        this.hiddenLeft = Math.floor(croppedImage?.hiddenLeft * scaleWidth);
 
-        this.startWidth = Math.floor(croppedImage.width * scaleWidth);
-        this.startHeight = Math.floor(croppedImage.height * scaleHeight);
+        this.startWidth = Math.floor(croppedImage?.width * scaleWidth);
+        this.startHeight = Math.floor(croppedImage?.height * scaleHeight);
     }
 
     /**
