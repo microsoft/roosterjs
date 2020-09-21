@@ -17,6 +17,7 @@ import {
 } from 'roosterjs-editor-dom';
 
 /**
+ * @internal
  * When typing goes directly under content div, many things can go wrong
  * We fix it by wrapping it with a div and reposition cursor within the div
  */

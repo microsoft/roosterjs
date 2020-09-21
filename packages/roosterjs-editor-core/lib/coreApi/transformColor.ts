@@ -32,6 +32,7 @@ const ATTR_DATASET_MAP = {
 };
 
 /**
+ * @internal
  * Edit and transform color of elements between light mode and dark mode
  * @param core The EditorCore object
  * @param rootNode The root HTML elements to transform
