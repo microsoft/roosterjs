@@ -1,4 +1,4 @@
-import { fromHtml } from 'roosterjs-editor-dom';
+import { fromHtml, getEntitySelector } from 'roosterjs-editor-dom';
 import { insertEntity } from 'roosterjs-editor-api';
 import {
     ChangeSource,
@@ -7,8 +7,8 @@ import {
     PluginEvent,
     PluginEventType,
     PositionType,
-    //EntityOperation,
-    //Entity,
+    EntityOperation,
+    Entity,
     QueryScope,
 } from 'roosterjs-editor-types';
 
@@ -45,10 +45,10 @@ export default class ImageCrop implements EditorPlugin {
     private hiddenRight = 0;
     private hiddenTop = 0;
     private hiddenBottom = 0;
-    private divBorderLeft: HTMLElement; //make not props but reach through... id?
-    private divBorderTop: HTMLElement;
-    private divBorderRight: HTMLElement;
-    private divBorderBottom: HTMLElement;
+    private divOverlayLeft: HTMLElement;
+    private divOverlayTop: HTMLElement;
+    private divOverlayRight: HTMLElement;
+    private divOverlayBottom: HTMLElement;
     private mapCroppedImages: Map<string, CroppedImage>;
     private disposer: () => void;
 
@@ -64,8 +64,10 @@ export default class ImageCrop implements EditorPlugin {
     constructor(
         private minWidth: number = 10,
         private minHeight: number = 10,
-        private cropHandlesColor: string = '#DB626C' //private croppableImageSelector: string = 'img'
-    ) {}
+        private cropHandlesColor: string = '#DB626C',
+        private cropOverlayColor: string = 'rgba(0,0,0,.5)'
+    ) //private croppableImageSelector: string = 'img'
+    {}
 
     /**
      * Get a friendly name of  this plugin
@@ -107,7 +109,6 @@ export default class ImageCrop implements EditorPlugin {
             const selectedImage = images[0] as HTMLImageElement;
 
             if (selectedImage) {
-                // repopulate from map if cropped
                 if (this.mapCroppedImages?.has(selectedImage.src)) {
                     this.retrieveCroppedImage(selectedImage);
                 } else {
@@ -138,65 +139,48 @@ export default class ImageCrop implements EditorPlugin {
             ) {
                 this.hideCropHandle(true /*selectImage*/);
             }
-            // NEED THIS BELOW??
+        } else if (
+            e.eventType == PluginEventType.ContentChanged &&
+            e.source != ChangeSource.ImageCrop &&
+            (e.source != ChangeSource.InsertEntity || (<Entity>e.data)?.type != ENTITY_TYPE)
+        ) {
+            this.editor.queryElements(getEntitySelector(ENTITY_TYPE), this.removeCropDiv);
+            this.cropDiv = null;
+        } else if (e.eventType == PluginEventType.EntityOperation && e.entity.type == ENTITY_TYPE) {
+            if (e.operation == EntityOperation.ReplaceTemporaryContent) {
+                this.removeCropDiv(e.entity.wrapper);
+            } else if (e.operation == EntityOperation.Click) {
+                this.stopEvent(e.rawEvent);
+            }
         }
-        // else if (
-        //     e.eventType == PluginEventType.ContentChanged &&
-        //     e.source != ChangeSource.ImageCrop &&
-        //     (e.source != ChangeSource.InsertEntity || (<Entity>e.data)?.type != ENTITY_TYPE)
-        // ) {
-        //     this.editor.queryElements(getEntitySelector(ENTITY_TYPE), this.removeCropDiv);
-        //     this.cropDiv = null;
-        // } else if (e.eventType == PluginEventType.EntityOperation && e.entity.type == ENTITY_TYPE) {
-        //     if (e.operation == EntityOperation.ReplaceTemporaryContent) {
-        //         this.removeCropDiv(e.entity.wrapper);
-        //     } else if (e.operation == EntityOperation.Click) {
-        //         this.stopEvent(e.rawEvent);
-        //     }
-        //}
     }
 
     retrieveCroppedImage(selectedImage: HTMLImageElement) {
-        let croppedImage = this.mapCroppedImages.get(selectedImage.src); //or should I make THIS the this object?
+        let croppedImage = this.mapCroppedImages.get(selectedImage.src);
 
-        // Calculate scale if image is resized
+        // Calculate scale in case image has been resized after previous crop
         let scaleWidth = selectedImage.width / selectedImage.naturalWidth;
         let scaleHeight = selectedImage.height / selectedImage.naturalHeight;
 
         selectedImage.src = croppedImage.originalSource;
-        // MAYBE create new image instead of adjust??
-        // selectedImage.style.width = croppedImage.width + 'px';
-        // selectedImage.style.height = croppedImage.height + 'px';
-        // selectedImage.width = croppedImage.width;
-        // selectedImage.height = croppedImage.height;
 
-        selectedImage.style.width = croppedImage.width * scaleWidth + 'px';
-        selectedImage.style.height = croppedImage.height * scaleHeight + 'px';
-        selectedImage.width = croppedImage.width * scaleWidth;
-        selectedImage.height = croppedImage.height * scaleHeight;
+        selectedImage.style.width = Math.floor(croppedImage.width * scaleWidth) + 'px';
+        selectedImage.style.height = Math.floor(croppedImage.height * scaleHeight) + 'px';
+        selectedImage.width = Math.floor(croppedImage.width * scaleWidth);
+        selectedImage.height = Math.floor(croppedImage.height * scaleHeight);
 
-        //selectedImage.onload = () => {
-        // console.log(
-        //     '#2 - Cropped image original source is: ' +
-        //         croppedImage.originalSource.substr(0, 200)
-        // );
+        this.hiddenTop = Math.floor(croppedImage.hiddenTop * scaleHeight);
+        this.hiddenRight = Math.floor(croppedImage.hiddenRight * scaleWidth);
+        this.hiddenBottom = Math.floor(croppedImage.hiddenBottom * scaleHeight);
+        this.hiddenLeft = Math.floor(croppedImage.hiddenLeft * scaleWidth);
 
-        this.hiddenTop = croppedImage.hiddenTop * scaleHeight;
-        this.hiddenRight = croppedImage.hiddenRight * scaleWidth;
-        this.hiddenBottom = croppedImage.hiddenBottom * scaleHeight;
-        this.hiddenLeft = croppedImage.hiddenLeft * scaleWidth;
-
-        //this.startWidth = selectedImage.clientWidth;
-        this.startWidth = croppedImage.width;
-
-        //this.startHeight = selectedImage.clientHeight;
-        this.startHeight = croppedImage.height;
-        //}
+        this.startWidth = Math.floor(croppedImage.width * scaleWidth);
+        this.startHeight = Math.floor(croppedImage.height * scaleHeight);
     }
 
     /**
-     * Select a given IMG element, show the resize handle
-     * @param img The IMG element to select
+     * Show the crop handle for an image
+     * @param img The IMG element to crop
      */
     showCropHandle(img: HTMLImageElement) {
         this.cropDiv = this.createCropDiv(img);
@@ -206,8 +190,8 @@ export default class ImageCrop implements EditorPlugin {
     }
 
     /**
-     * Hide resize handle of current selected image
-     * @param selectImageAfterUnSelect Optional, when set to true, select the image element after hide the resize handle
+     * Hide crop handle of current selected image
+     * @param selectImageAfterUnSelect Optional, when set to true, select the image element after hide the crop handle
      */
     hideCropHandle(selectImageAfterUnSelect?: boolean) {
         if (this.cropDiv) {
@@ -227,95 +211,79 @@ export default class ImageCrop implements EditorPlugin {
     }
 
     private startAdjustCrop = (e: MouseEvent) => {
-        let img = this.getSelectedImage();
-        if (this.editor && img) {
-            this.startPageX = e.pageX;
-            this.startPageY = e.pageY;
-            //this.startWidth = img.clientWidth;
-            //this.startHeight = img.clientHeight;
-            this.editor.addUndoSnapshot();
+        this.startPageX = e.pageX;
+        this.startPageY = e.pageY;
 
-            let document = this.editor.getDocument();
-            document.addEventListener('mousemove', this.doAdjustCrop, true /*useCapture*/);
-            document.addEventListener('mouseup', this.finishAdjustCrop, true /*useCapture*/);
-            this.direction = (<HTMLElement>(e.srcElement || e.target)).style.cursor;
-        }
+        let document = this.editor.getDocument();
+        document.addEventListener('mousemove', this.doAdjustCrop, true /*useCapture*/);
+        document.addEventListener('mouseup', this.finishAdjustCrop, true /*useCapture*/);
+        this.direction = (<HTMLElement>(e.srcElement || e.target)).style.cursor;
 
         this.stopEvent(e);
     };
 
     private doAdjustCrop = (e: MouseEvent) => {
-        //let img = this.getSelectedImage();
-        let img = <HTMLImageElement>this.getSelectedImage();
+        let widthChange = this.startPageX - e.pageX;
+        let heightChange = this.startPageY - e.pageY;
 
-        if (this.editor && img) {
-            let widthChange = this.startPageX - e.pageX; //do absolute to be same as Resize
-            let heightChange = this.startPageY - e.pageY;
+        if (this.direction == 'se-resize') {
+            this.hiddenRight = Math.min(
+                this.hiddenRight + widthChange,
+                this.startWidth - this.hiddenLeft - this.minWidth
+            );
 
-            if (this.direction == 'se-resize') {
-                this.hiddenRight = Math.min(
-                    this.hiddenRight + widthChange,
-                    this.startWidth - this.hiddenLeft - this.minWidth
-                );
+            this.hiddenBottom = Math.min(
+                this.hiddenBottom + heightChange,
+                this.startHeight - this.hiddenTop - this.minHeight
+            );
+        } else if (this.direction == 'ne-resize') {
+            this.hiddenRight = Math.min(
+                this.hiddenRight + widthChange,
+                this.startWidth - this.hiddenLeft - this.minWidth
+            );
 
-                this.hiddenBottom = Math.min(
-                    this.hiddenBottom + heightChange,
-                    this.startHeight - this.hiddenTop - this.minHeight
-                );
-            } else if (this.direction == 'ne-resize') {
-                this.hiddenRight = Math.min(
-                    this.hiddenRight + widthChange,
-                    this.startWidth - this.hiddenLeft - this.minWidth
-                );
+            this.hiddenTop = Math.min(
+                this.hiddenTop - heightChange,
+                this.startHeight - this.hiddenBottom - this.minHeight
+            );
+        } else if (this.direction == 'nw-resize') {
+            this.hiddenLeft = Math.min(
+                this.hiddenLeft - widthChange,
+                this.startWidth - this.hiddenRight - this.minWidth
+            );
 
-                this.hiddenTop = Math.min(
-                    this.hiddenTop - heightChange,
-                    this.startHeight - this.hiddenBottom - this.minHeight
-                );
-            } else if (this.direction == 'nw-resize') {
-                this.hiddenLeft = Math.min(
-                    this.hiddenLeft - widthChange,
-                    this.startWidth - this.hiddenRight - this.minWidth
-                );
+            this.hiddenTop = Math.min(
+                this.hiddenTop - heightChange,
+                this.startHeight - this.hiddenBottom - this.minHeight
+            );
+        } else if (this.direction == 'sw-resize') {
+            this.hiddenLeft = Math.min(
+                this.hiddenLeft - widthChange,
+                this.startWidth - this.hiddenRight - this.minWidth
+            );
 
-                this.hiddenTop = Math.min(
-                    this.hiddenTop - heightChange,
-                    this.startHeight - this.hiddenBottom - this.minHeight
-                );
-            } else if (this.direction == 'sw-resize') {
-                this.hiddenLeft = Math.min(
-                    this.hiddenLeft - widthChange,
-                    this.startWidth - this.hiddenRight - this.minWidth
-                );
-
-                this.hiddenBottom = Math.min(
-                    this.hiddenBottom + heightChange,
-                    this.startHeight - this.hiddenTop - this.minHeight
-                );
-            }
-
-            this.startPageX = e.pageX;
-            this.startPageY = e.pageY;
-
-            this.setOverlaySize();
-            this.positionCropHandles();
+            this.hiddenBottom = Math.min(
+                this.hiddenBottom + heightChange,
+                this.startHeight - this.hiddenTop - this.minHeight
+            );
         }
+
+        this.startPageX = e.pageX;
+        this.startPageY = e.pageY;
+
+        this.setOverlaySize();
+        this.positionCropHandles();
+
         this.stopEvent(e);
     };
 
     private finishAdjustCrop = (e: MouseEvent) => {
-        var img = this.getSelectedImage() as HTMLImageElement;
-        if (this.editor && img) {
+        if (this.editor) {
             let document = this.editor.getDocument();
             document.removeEventListener('mousemove', this.doAdjustCrop, true /*useCapture*/);
             document.removeEventListener('mouseup', this.finishAdjustCrop, true /*useCapture*/);
-
-            this.cropDiv.style.width = ''; //??
-            this.cropDiv.style.height = '';
         }
-        this.direction = null; //need?
-        this.editor.addUndoSnapshot();
-        this.editor.triggerContentChangedEvent(ChangeSource.ImageResize);
+        this.direction = null;
         this.stopEvent(e);
     };
 
@@ -352,7 +320,7 @@ export default class ImageCrop implements EditorPlugin {
             .join('');
 
         fromHtml(html, this.editor.getDocument()).forEach(div => {
-            wrapper.appendChild(div); //wonder if grandchild nodes get appended right?
+            wrapper?.appendChild(div);
             div.addEventListener('mousedown', this.startAdjustCrop);
         });
 
@@ -363,7 +331,7 @@ export default class ImageCrop implements EditorPlugin {
             selectedImage.style.transform = '';
         }
 
-        this.createCropOverlay(); //BC crop div doesnt exist YET
+        this.createCropOverlay();
         this.setOverlaySize();
 
         return wrapper;
@@ -391,51 +359,52 @@ export default class ImageCrop implements EditorPlugin {
     }
 
     private createCropOverlay() {
-        this.divBorderLeft = document.createElement('DIV');
-        this.cropDiv?.appendChild(this.divBorderLeft);
-        this.divBorderLeft.style.position = 'absolute';
-        this.divBorderLeft.style.top = '0';
-        this.divBorderLeft.style.left = '0';
-        this.divBorderLeft.style.background = 'rgba(0,0,0,.5)'; // no hardcode, param
+        this.divOverlayLeft = document.createElement('DIV');
+        this.cropDiv?.appendChild(this.divOverlayLeft);
+        this.divOverlayLeft.style.position = 'absolute';
+        this.divOverlayLeft.style.top = '0';
+        this.divOverlayLeft.style.left = '0';
+        this.divOverlayLeft.style.background = this.cropOverlayColor;
 
-        this.divBorderTop = document.createElement('DIV');
-        this.cropDiv?.appendChild(this.divBorderTop);
-        this.divBorderTop.style.position = 'absolute';
-        this.divBorderTop.style.top = '0';
-        this.divBorderTop.style.background = 'rgba(0,0,0,.5)';
+        this.divOverlayTop = document.createElement('DIV');
+        this.cropDiv?.appendChild(this.divOverlayTop);
+        this.divOverlayTop.style.position = 'absolute';
+        this.divOverlayTop.style.top = '0';
+        this.divOverlayTop.style.background = this.cropOverlayColor;
 
-        this.divBorderRight = document.createElement('DIV');
-        this.cropDiv?.appendChild(this.divBorderRight);
-        this.divBorderRight.style.position = 'absolute';
-        this.divBorderRight.style.top = '0';
-        this.divBorderRight.style.right = '0';
-        this.divBorderRight.style.background = 'rgba(0,0,0,.5)';
+        this.divOverlayRight = document.createElement('DIV');
+        this.cropDiv?.appendChild(this.divOverlayRight);
+        this.divOverlayRight.style.position = 'absolute';
+        this.divOverlayRight.style.top = '0';
+        this.divOverlayRight.style.right = '0';
+        this.divOverlayRight.style.background = this.cropOverlayColor;
 
-        this.divBorderBottom = document.createElement('DIV');
-        this.cropDiv?.appendChild(this.divBorderBottom);
-        this.divBorderBottom.style.position = 'absolute';
-        this.divBorderBottom.style.bottom = '0';
-        this.divBorderBottom.style.background = 'rgba(0,0,0,.5)';
+        this.divOverlayBottom = document.createElement('DIV');
+        this.cropDiv?.appendChild(this.divOverlayBottom);
+        this.divOverlayBottom.style.position = 'absolute';
+        this.divOverlayBottom.style.bottom = '0';
+        this.divOverlayBottom.style.background = this.cropOverlayColor;
     }
 
     private setOverlaySize() {
-        this.divBorderTop.style.left = this.hiddenLeft + 'px';
-        this.divBorderBottom.style.left = this.hiddenLeft + 'px';
+        this.divOverlayTop.style.left = this.hiddenLeft + 'px';
+        this.divOverlayBottom.style.left = this.hiddenLeft + 'px';
 
-        this.divBorderLeft.style.width = this.hiddenLeft + 'px';
-        //NEED TO KNOW WHAT THIS WAS FROM LAST TIME. So set up and keep as private prop and edit.
-        this.divBorderLeft.style.height = this.startHeight + 'px';
+        this.divOverlayLeft.style.width = this.hiddenLeft + 'px';
+        this.divOverlayLeft.style.height = this.startHeight + 'px';
 
-        this.divBorderTop.style.width = `${this.startWidth - this.hiddenLeft - this.hiddenRight}px`;
-        this.divBorderTop.style.height = this.hiddenTop + 'px';
-
-        this.divBorderRight.style.width = this.hiddenRight + 'px';
-        this.divBorderRight.style.height = this.startHeight + 'px';
-
-        this.divBorderBottom.style.width = `${
+        this.divOverlayTop.style.width = `${
             this.startWidth - this.hiddenLeft - this.hiddenRight
         }px`;
-        this.divBorderBottom.style.height = this.hiddenBottom + 'px';
+        this.divOverlayTop.style.height = this.hiddenTop + 'px';
+
+        this.divOverlayRight.style.width = this.hiddenRight + 'px';
+        this.divOverlayRight.style.height = this.startHeight + 'px';
+
+        this.divOverlayBottom.style.width = `${
+            this.startWidth - this.hiddenLeft - this.hiddenRight
+        }px`;
+        this.divOverlayBottom.style.height = this.hiddenBottom + 'px';
     }
 
     private removeCropDiv = (cropDiv: HTMLElement): HTMLImageElement => {
@@ -447,45 +416,34 @@ export default class ImageCrop implements EditorPlugin {
     };
 
     private actuallyCrop() {
-        let img = this.getSelectedImage() as HTMLImageElement; //let vs var??
+        let img = this.getSelectedImage() as HTMLImageElement;
 
-        // BEING HERE CROP USING CANVAS
         let canvas = document.createElement('canvas');
         canvas.id = 'canvasDiv';
-        //let cropWidth = this.startWidth - this.hiddenLeft - this.hiddenRight; // Math floor???
         let unscaledCropWidth =
             (this.startWidth - this.hiddenLeft - this.hiddenRight) /
-            (this.startWidth / img.naturalWidth); // startWidth comes from Style
-        //let cropHeight = this.startHeight - this.hiddenTop - this.hiddenBottom;
+            (this.startWidth / img.naturalWidth);
         let unscaledCropHeight =
             (this.startHeight - this.hiddenTop - this.hiddenBottom) /
             (this.startHeight / img.naturalHeight);
 
-        // Calculate cropWidth is resized
-        // cropW * resizedW / originalW
-        //let resizedCropWidth = (unscaledCropWidth * img.width) / img.naturalWidth;
         let resizedCropWidth = this.startWidth - this.hiddenLeft - this.hiddenRight;
-        //let resizedCropHeight = (unscaledCropHeight * img.height) / img.naturalHeight;
         let resizedCropHeight = this.startHeight - this.hiddenTop - this.hiddenBottom;
 
-        //canvas.setAttribute('width', this.startWidth.toString());
         canvas.setAttribute('width', resizedCropWidth.toString());
-        //canvas.setAttribute('height', this.startHeight.toString()); //maybe it doesn't matter what canvas size is?? its seems to do..
-        canvas.setAttribute('height', resizedCropHeight.toString()); //maybe it doesn't matter what canvas size is?? its seems to do..
+        canvas.setAttribute('height', resizedCropHeight.toString());
 
-        //let parent = img.parentNode.parentNode;
-        //parent.appendChild(canvas);
         let context = canvas.getContext('2d');
 
         context.drawImage(
             img,
-            this.hiddenLeft / (this.startWidth / img.naturalWidth), //need to unscale
+            this.hiddenLeft / (this.startWidth / img.naturalWidth),
             this.hiddenTop / (this.startHeight / img.naturalHeight),
-            unscaledCropWidth, //unscaled size here
+            unscaledCropWidth,
             unscaledCropHeight,
             0,
             0,
-            resizedCropWidth, //scaled size here
+            resizedCropWidth,
             resizedCropHeight
         );
 
@@ -499,26 +457,22 @@ export default class ImageCrop implements EditorPlugin {
             hiddenBottom: this.hiddenBottom,
             hiddenLeft: this.hiddenLeft,
             width: img.width,
-            //width: img.naturalWidth,
             height: img.height,
-            //height: img.naturalHeight
         });
 
-        img.src = canvas.toDataURL(); //instead of replacing image, set the source to be the canvas
+        img.src = canvas.toDataURL();
         img.style.width = resizedCropWidth + 'px';
         img.style.height = resizedCropHeight + 'px';
         img.width = resizedCropWidth;
         img.height = resizedCropHeight;
 
-        //this resets for next crop too
         this.hiddenLeft = 0;
         this.hiddenRight = 0;
         this.hiddenTop = 0;
         this.hiddenBottom = 0;
 
-        //img.style.maxWidth = ''; //NEED TO SET THIS FOR MARGIN TO WORK ??
-
-        // ***END HERE IS IT IS CSS CROP
+        this.editor.addUndoSnapshot();
+        this.editor.triggerContentChangedEvent(ChangeSource.ImageCrop);
     }
 
     private onDragStart = (e: DragEvent) => {

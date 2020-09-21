@@ -88,5 +88,5 @@ export const enum PluginEventType {
     /**
      * Start image cropping
      */
-    StartCrop = 16, //other way??
+    StartCrop = 16,
 }
