@@ -101,7 +101,7 @@ describe('clearBlockFormat()', () => {
     it('Table has styles', () => {
         runTest(
             '<div><table><tr><td style="width: 120px;border-width: 1px;border-style: solid;border-color: rgb(171, 171, 171);font-size: 30px;">This is a test</td></tr></table><br></div><!--{"start":[0,0,0,0,0,14],"end":[0,0,0,0,0,14]}-->',
-            '<div><table><tbody><tr><td style="border-width: 1px;border-style: solid;border-color: rgb(171, 171, 171)"><div>This is a test</div></td></tr></tbody></table><br></div>'
+            '<div><table><tbody><tr><td style="border-width:1px;border-style:solid;border-color:rgb(171, 171, 171)"><div>This is a test</div></td></tr></tbody></table><br></div>'
         );
     });
 

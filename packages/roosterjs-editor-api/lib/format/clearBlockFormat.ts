@@ -3,11 +3,13 @@ import { IEditor } from 'roosterjs-editor-types';
 import {
     collapseNodesInRegion,
     getSelectedBlockElementsInRegion,
+    getStyles,
     getTagOfNode,
     isBlockElement,
     isNodeInRegion,
     isVoidHtmlElement,
     safeInstanceOf,
+    setStyles,
     splitBalancedNodeRange,
     toArray,
     unwrap,
@@ -34,9 +36,9 @@ export default function clearBlockFormat(editor: IEditor) {
             // If there are styles on table cell, wrap all its children and move down all non-border styles.
             // So that we can preserve styles for unselected blocks as well as border styles for table
             const nonborderStyles = removeNonBorderStyles(region.rootNode);
-            if (nonborderStyles) {
+            if (Object.keys(nonborderStyles).length > 0) {
                 const wrapper = wrap(toArray(region.rootNode.childNodes));
-                wrapper.setAttribute('style', nonborderStyles);
+                setStyles(wrapper, nonborderStyles);
             }
         }
 
@@ -91,23 +93,18 @@ function clearAttribute(element: HTMLElement) {
     }
 }
 
-function removeNonBorderStyles(element: HTMLElement): string {
-    let borders: string[] = [];
-    let nonborders: string[] = [];
-    const style = element.getAttribute('style') || '';
+function removeNonBorderStyles(element: HTMLElement): Record<string, string> {
+    const styles = getStyles(element);
+    const result: Record<string, string> = {};
 
-    style
-        .split(';')
-        .forEach(pair => (pair.trim().indexOf('border') >= 0 ? borders : nonborders).push(pair));
-
-    if (nonborders.length > 0) {
-        if (borders.length > 0) {
-            element.setAttribute('style', borders.join(';'));
-        } else {
-            element.removeAttribute('style');
+    Object.keys(styles).forEach(name => {
+        if (name.indexOf('border') < 0) {
+            result[name] = styles[name];
+            delete styles[name];
         }
-        return nonborders.join(';');
-    } else {
-        return '';
-    }
+    });
+
+    setStyles(element, styles);
+
+    return result;
 }

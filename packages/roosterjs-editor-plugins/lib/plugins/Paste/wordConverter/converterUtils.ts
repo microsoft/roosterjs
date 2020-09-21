@@ -4,7 +4,7 @@ import WordConverter from './wordConverter';
 import WordConverterArguments from './WordConverterArguments';
 import { createLevelLists } from './LevelLists';
 import { getObject, setObject } from './WordCustomData';
-import { getTagOfNode } from 'roosterjs-editor-dom';
+import { getStyles, getTagOfNode } from 'roosterjs-editor-dom';
 import { NodeType } from 'roosterjs-editor-types';
 
 /** Word list metadata style name */
@@ -522,23 +522,7 @@ function getStyleValue(node: HTMLElement, styleName: string): string {
     // Most browsers will not provide the information for those unstandard values throug the node.style
     // property, so the only reliable way to read them is to get the attribute directly and do
     // the required parsing..
-    let textStyle = node.getAttribute('style');
-    if (textStyle && textStyle.length > 0 && textStyle.indexOf(styleName) >= 0) {
-        // Split all the CSS name: value pairs
-        let inStyles = textStyle.split(';');
-        for (let i = 0; i < inStyles.length; i++) {
-            // Split the name and value
-            let nvpair = inStyles[i].split(':');
-            if (nvpair.length == 2 && nvpair[0].trim() == styleName) {
-                return nvpair[1].trim();
-            }
-        }
-    }
-
-    // As a backup mechanism, we'll still try to get the value from the style object
-    // Dictionary styles = (Dictionary)(object)node.Style;
-    // return (string)styles[styleName];
-    return null;
+    return getStyles(node)[styleName] || null;
 }
 
 /** Checks if the node is an empty text node that can be ignored */

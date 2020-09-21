@@ -1,8 +1,10 @@
 import changeElementTag from '../utils/changeElementTag';
 import getInheritableStyles from './getInheritableStyles';
+import getStyles from '../style/getStyles';
 import getTagOfNode from '../utils/getTagOfNode';
 import htmlToDom from './htmlToDom';
 import safeInstanceOf from '../utils/safeInstanceOf';
+import setStyles from '../style/setStyles';
 import toArray from '../utils/toArray';
 import { cloneObject } from './cloneObject';
 import {
@@ -257,21 +259,9 @@ export default class HtmlSanitizer {
     }
 
     private processCss(element: HTMLElement, thisStyle: StringMap, context: Object) {
-        let styleNode = element.getAttributeNode('style');
-        if (!styleNode) {
-            return;
-        }
-
-        let source = styleNode.value.split(';');
-        let result = source.filter(style => {
-            let pair: string[];
-
-            if (!style || style.trim() == '' || (pair = style.split(':')).length != 2) {
-                return false;
-            }
-
-            let name = pair[0].trim().toLowerCase();
-            let value = pair[1].trim().toLowerCase();
+        const styles = getStyles(element);
+        Object.keys(styles).forEach(name => {
+            const value = styles[name];
             let callback = this.styleCallbacks[name];
             let isInheritable = thisStyle[name] != undefined;
             let keep =
@@ -285,16 +275,13 @@ export default class HtmlSanitizer {
             if (keep && isInheritable) {
                 thisStyle[name] = value;
             }
-            return keep;
+
+            if (!keep) {
+                delete styles[name];
+            }
         });
 
-        if (source.length != result.length) {
-            if (result.length > 0) {
-                element.setAttribute('style', result.map(s => s.trim()).join('; '));
-            } else {
-                element.removeAttribute('style');
-            }
-        }
+        setStyles(element, styles);
     }
 
     private processAttributes(element: HTMLElement, context: Object) {

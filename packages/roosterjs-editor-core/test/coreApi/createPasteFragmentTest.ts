@@ -98,7 +98,7 @@ describe('createPasteFragment', () => {
         };
         const fragment = createPasteFragment(core, clipboardData, null, false, false);
         const html = getHTML(fragment);
-        expect(html).toBe('<img style="max-width: 100%" src="test">');
+        expect(html).toBe('<img style="max-width:100%" src="test">');
     });
 
     it('image input, text output', () => {

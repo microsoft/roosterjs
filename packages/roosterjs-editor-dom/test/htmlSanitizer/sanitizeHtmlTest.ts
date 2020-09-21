@@ -37,11 +37,11 @@ describe('sanitizeHtml', () => {
     it('Html contains global css', () => {
         runTest(
             '<style>div {color: red}</style><div style="font-size:10px">test</div>',
-            '<div style="color: red;font-size:10px">test</div>'
+            '<div style="color:red;font-size:10px">test</div>'
         );
         runTest(
             '<html><head><style>.a .b{color: red} .b:hover {color:blue}</style></head><body><div class=a>a<div class=b style="font-size:10px">test</div></div></body></html>',
-            '<div>a<div style="color: red;font-size:10px">test</div></div>'
+            '<div>a<div style="color:red;font-size:10px">test</div></div>'
         );
     });
     it('Html contains script', () => {
@@ -174,7 +174,7 @@ describe('sanitizeHtml with styleCallback', () => {
     it('Valid HTML', () => {
         runTest(
             '<span style="z-index: 1; color: red; font-size: 10px;">1</span><span style="z-index: 2; color: black">2</span>',
-            '<span style="color: red; font-size: 10px">1</span><span style="z-index: 2">2</span>'
+            '<span style="color:red;font-size:10px">1</span><span style="z-index:2">2</span>'
         );
     });
 
@@ -188,7 +188,7 @@ describe('sanitizeHtml with styleCallback', () => {
     it('width in DIV or LI should be removed', () => {
         runTest(
             '<span style="display: inline-block; width: 10px">1</span><div style="width: 10px;">2</div><ul><li style="width: 10px">3</li></ul>',
-            '<span style="display: inline-block; width: 10px">1</span><div>2</div><ul><li>3</li></ul>'
+            '<span style="display:inline-block;width:10px">1</span><div>2</div><ul><li>3</li></ul>'
         );
     });
 });
@@ -250,7 +250,7 @@ describe('sanitizeHtml with additionalDefaultStyleValues', () => {
     it('default styles', () => {
         runTest(
             '<div style="width: 10px; height: 10px; border-bottom-color: rgb(0, 0, 0); border-left-color: red"></div>',
-            '<div style="height: 10px; border-left-color: red"></div>'
+            '<div style="height:10px;border-left-color:red"></div>'
         );
     });
 });
@@ -279,21 +279,18 @@ describe('sanitizeHtml with additionalGlobalStyleNodes', () => {
     }
 
     it('global styles', () => {
-        runTest('<div class="test"></div>', '<div style="color: red"></div>');
+        runTest('<div class="test"></div>', '<div style="color:red"></div>');
     });
 
     it('global styles with inline style', () => {
         runTest(
             '<div class="test" style="font-size: 10px"></div>',
-            '<div style="color: red;font-size: 10px"></div>'
+            '<div style="color:red;font-size:10px"></div>'
         );
     });
 
     it('global styles with conflict inline style', () => {
-        runTest(
-            '<div class="test" style="color: blue"></div>',
-            '<div style="color: red;color: blue"></div>'
-        );
+        runTest('<div class="test" style="color: blue"></div>', '<div style="color:blue"></div>');
     });
 });
 
@@ -309,7 +306,7 @@ describe('sanitizeHtml with white-space style', () => {
             '<div>  line  \n  1  ' +
                 '<div style="white-space: normal">  line  \n  2  </div>' +
                 '  line \n 3  </div>',
-            '<div>  line  \n  1  <div style="white-space: normal">  line  \n  2  </div>  line \n 3  </div>'
+            '<div>  line  \n  1  <div style="white-space:normal">  line  \n  2  </div>  line \n 3  </div>'
         );
     });
 
@@ -318,7 +315,7 @@ describe('sanitizeHtml with white-space style', () => {
             '<div>  line  \n  1  ' +
                 '<div style="white-space: nowrap">  line  \n  2  </div>' +
                 '  line \n 3  </div>',
-            '<div>  line  \n  1  <div style="white-space: nowrap">  line  \n  2  </div>  line \n 3  </div>'
+            '<div>  line  \n  1  <div style="white-space:nowrap">  line  \n  2  </div>  line \n 3  </div>'
         );
     });
 
@@ -327,16 +324,16 @@ describe('sanitizeHtml with white-space style', () => {
             '<div>  line  \n  1  ' +
                 '<div style="white-space: pre">  line  \n  2  </div>' +
                 '  line \n 3  </div>',
-            '<div>  line  \n  1  <div style="white-space: pre">&nbsp; line &nbsp;\n&nbsp; 2 &nbsp;</div>  line \n 3  </div>'
+            '<div>  line  \n  1  <div style="white-space:pre">&nbsp; line &nbsp;\n&nbsp; 2 &nbsp;</div>  line \n 3  </div>'
         );
     });
 
     it('handle pre-line', () => {
         runTest(
             '<div>  line  \n  1  ' +
-                '<div style="white-space: pre-line">  line  \n  2  </div>' +
+                '<div style="white-space:pre-line">  line  \n  2  </div>' +
                 '  line \n 3  </div>',
-            '<div>  line  \n  1  <div style="white-space: pre-line">  line  \n  2  </div>  line \n 3  </div>'
+            '<div>  line  \n  1  <div style="white-space:pre-line">  line  \n  2  </div>  line \n 3  </div>'
         );
     });
 
@@ -345,7 +342,7 @@ describe('sanitizeHtml with white-space style', () => {
             '<div>  line  \n  1  ' +
                 '<div style="white-space: pre-wrap">  line  \n  2  </div>' +
                 '  line \n 3  </div>',
-            '<div>  line  \n  1  <div style="white-space: pre-wrap">&nbsp; line &nbsp;\n&nbsp; 2 &nbsp;</div>  line \n 3  </div>'
+            '<div>  line  \n  1  <div style="white-space:pre-wrap">&nbsp; line &nbsp;\n&nbsp; 2 &nbsp;</div>  line \n 3  </div>'
         );
     });
 
@@ -361,7 +358,7 @@ describe('sanitizeHtml with white-space style', () => {
             '<div>  line  \n  1  ' +
                 '<pre style="white-space: normal">  line  \n  2  </pre>' +
                 '  line \n 3  </div>',
-            '<div>  line  \n  1  <pre style="white-space: normal">  line  \n  2  </pre>  line \n 3  </div>'
+            '<div>  line  \n  1  <pre style="white-space:normal">  line  \n  2  </pre>  line \n 3  </div>'
         );
     });
 });

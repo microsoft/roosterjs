@@ -85,3 +85,6 @@ export { default as clearEventDataCache } from './event/clearEventDataCache';
 export { default as isModifierKey } from './event/isModifierKey';
 export { default as isCharacterValue } from './event/isCharacterValue';
 export { default as isCtrlOrMetaPressed } from './event/isCtrlOrMetaPressed';
+
+export { default as getStyles } from './style/getStyles';
+export { default as setStyles } from './style/setStyles';
