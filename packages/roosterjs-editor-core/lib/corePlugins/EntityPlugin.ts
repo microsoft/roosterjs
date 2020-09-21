@@ -137,7 +137,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
 
     private handleCutEvent = (event: ClipboardEvent) => {
         const range = this.editor.getSelectionRange();
-        if (!range.collapsed) {
+        if (range && !range.collapsed) {
             this.checkRemoveEntityForRange(event);
         }
     };
