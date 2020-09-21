@@ -1,5 +1,5 @@
 import { cloneObject } from './cloneObject';
-import { PredefinedCssMap, StringMap, StyleCallbackMap } from 'roosterjs-editor-types';
+import { StringMap, StyleCallbackMap } from 'roosterjs-editor-types';
 
 const ALLOWED_HTML_TAG_MAP = {
     // Allowed tags
@@ -184,12 +184,6 @@ const DEFAULT_STYLE_VALUES: { [name: string]: string } = {
 // This is to preserve entity related CSS classes when paste.
 const ALLOWED_CSS_CLASSES: string[] = [];
 
-const PREDEFINED_CSS_FOR_ELEMENT: PredefinedCssMap = {
-    PRE: {
-        'white-space': 'pre',
-    },
-};
-
 /**
  * @internal
  */
@@ -253,15 +247,6 @@ export function getStyleCallbacks(callbacks: StyleCallbackMap): StyleCallbackMap
     result.position = result.position || removeValue;
     result.width = result.width || removeWidthForLiAndDiv;
     return result;
-}
-
-/**
- * @internal
- */
-export function getPredefinedCssForElement(
-    additionalPredefinedCssForElement: PredefinedCssMap
-): PredefinedCssMap {
-    return { ...PREDEFINED_CSS_FOR_ELEMENT, ...(additionalPredefinedCssForElement || {}) };
 }
 
 function removeValue(): null {

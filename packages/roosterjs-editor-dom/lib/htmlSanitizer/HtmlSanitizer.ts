@@ -1,5 +1,6 @@
 import changeElementTag from '../utils/changeElementTag';
 import getInheritableStyles from './getInheritableStyles';
+import getPredefinedCssForElement from './getPredefinedCssForElement';
 import getStyles from '../style/getStyles';
 import getTagOfNode from '../utils/getTagOfNode';
 import htmlToDom from './htmlToDom';
@@ -13,7 +14,6 @@ import {
     getAllowedTags,
     getDefaultStyleValues,
     getDisallowedTags,
-    getPredefinedCssForElement,
     getStyleCallbacks,
 } from './getAllowedValues';
 import {
@@ -72,7 +72,7 @@ export default class HtmlSanitizer {
     private allowedAttributes: string[];
     private allowedCssClassesRegex: RegExp;
     private defaultStyleValues: StringMap;
-    private predefinedCssForElement: PredefinedCssMap;
+    private additionalPredefinedCssForElement: PredefinedCssMap;
     private additionalGlobalStyleNodes: HTMLStyleElement[];
     private unknownTagReplacement: string;
 
@@ -92,9 +92,7 @@ export default class HtmlSanitizer {
             options.additionalAllowedCssClasses
         );
         this.defaultStyleValues = getDefaultStyleValues(options.additionalDefaultStyleValues);
-        this.predefinedCssForElement = getPredefinedCssForElement(
-            options.additionalPredefinedCssForElement
-        );
+        this.additionalPredefinedCssForElement = options.additionalPredefinedCssForElement;
         this.additionalGlobalStyleNodes = options.additionalGlobalStyleNodes || [];
         this.unknownTagReplacement = options.unknownTagReplacement;
     }
@@ -249,8 +247,10 @@ export default class HtmlSanitizer {
     }
 
     private preprocessCss(element: HTMLElement, thisStyle: StringMap) {
-        const tag = getTagOfNode(element);
-        const predefinedStyles = this.predefinedCssForElement[tag];
+        const predefinedStyles = getPredefinedCssForElement(
+            element,
+            this.additionalPredefinedCssForElement
+        );
         if (predefinedStyles) {
             Object.keys(predefinedStyles).forEach(name => {
                 thisStyle[name] = predefinedStyles[name];
