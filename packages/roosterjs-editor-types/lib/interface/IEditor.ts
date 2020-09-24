@@ -184,6 +184,11 @@ export default interface IEditor {
     insertContent(content: string, option?: InsertOption): void;
 
     /**
+     * Delete selected content
+     */
+    deleteSelectedContent(): NodePosition;
+
+    /**
      * Paste into editor using a clipboardData object
      * @param clipboardData Clipboard data retrieved from clipboard
      * @param pasteAsText Force pasting as plain text. Default value is false

@@ -1,24 +1,18 @@
 import {
+    addRangeToSelection,
     extractClipboardEvent,
     fromHtml,
     readFile,
     setHtmlWithSelectionPath,
-    addRangeToSelection,
-    getSelectionRangeInRegion,
-    splitTextNode,
-    collapseNodesInRegion,
-    safeInstanceOf,
-    Position,
 } from 'roosterjs-editor-dom';
 import {
+    ChangeSource,
     ClipboardData,
     ContentPosition,
     EditorPlugin,
     GetContentMode,
     IEditor,
     PluginEventType,
-    ChangeSource,
-    PositionType,
 } from 'roosterjs-editor-types';
 
 const CONTAINER_HTML =
@@ -84,7 +78,7 @@ export default class CopyPastePlugin implements EditorPlugin {
 
                 if (isCut) {
                     this.editor.addUndoSnapshot(() => {
-                        const position = this.deleteSelectedContents();
+                        const position = this.editor.deleteSelectedContent();
                         this.editor.focus();
                         this.editor.select(position);
                     }, ChangeSource.Cut);
@@ -157,54 +151,5 @@ export default class CopyPastePlugin implements EditorPlugin {
         tempDiv.style.color = '';
         tempDiv.style.display = 'none';
         tempDiv.innerHTML = '';
-    }
-
-    private deleteSelectedContents() {
-        let result: Position = null;
-        const nodesToDelete: Node[] = [];
-
-        this.editor.getSelectedRegions().forEach(region => {
-            const rangeInRegion = getSelectionRangeInRegion(region);
-            if (rangeInRegion) {
-                let { startContainer, endContainer, startOffset, endOffset } = rangeInRegion;
-
-                const isSameNode = startContainer == endContainer;
-                if (safeInstanceOf(endContainer, 'Text')) {
-                    endContainer = splitTextNode(endContainer, endOffset, true /*returnFirstPart*/);
-
-                    if (isSameNode) {
-                        startContainer = endContainer;
-                    }
-                }
-
-                if (safeInstanceOf(startContainer, 'Text')) {
-                    startContainer = splitTextNode(
-                        startContainer,
-                        startOffset,
-                        false /*returnFirstPart*/
-                    );
-                    if (isSameNode) {
-                        endContainer = startContainer;
-                    }
-                }
-
-                const newNodes = collapseNodesInRegion(region, [startContainer, endContainer]);
-
-                for (let node = newNodes[0]; node; node = node.nextSibling) {
-                    if (!result) {
-                        result = new Position(newNodes[0], PositionType.Before);
-                    }
-
-                    nodesToDelete.push(node);
-
-                    if (node == newNodes[newNodes.length - 1]) {
-                        break;
-                    }
-                }
-            }
-        });
-
-        nodesToDelete.forEach(node => node.parentNode?.removeChild(node));
-        return result;
     }
 }

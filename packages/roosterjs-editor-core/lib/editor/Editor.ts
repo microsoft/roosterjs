@@ -34,6 +34,7 @@ import {
     contains,
     ContentTraverser,
     createRange,
+    deleteSelectedContent,
     getRegionsFromRange,
     findClosestElementAncestor,
     fromHtml,
@@ -256,6 +257,14 @@ export default class Editor implements IEditor {
 
             this.insertNode(fragment, option);
         }
+    }
+
+    /**
+     * Delete selected content
+     */
+    public deleteSelectedContent(): NodePosition {
+        const range = this.getSelectionRange();
+        return range && !range.collapsed && deleteSelectedContent(this.core.contentDiv, range);
     }
 
     /**
