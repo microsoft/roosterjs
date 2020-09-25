@@ -71,9 +71,11 @@ export default function getBlockElementAtNode(rootNode: Node, node: Node): Block
                     headNode = tailNode = parentNode;
                 }
                 break;
-            } else {
+            } else if (parentNode != rootNode) {
                 // Continue collapsing to parent
                 headNode = tailNode = parentNode;
+            } else {
+                break;
             }
         }
 
