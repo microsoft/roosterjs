@@ -1,20 +1,18 @@
-import createEditorCore from '../../lib/editor/createEditorCore';
+import createCorePlugins, { getPluginState } from '../../lib/corePlugins/createCorePlugins';
+import { coreApiMap } from '../../lib/coreApi/coreApiMap';
 import { EditorCore, EditorOptions } from 'roosterjs-editor-types';
 
 export default function createMockEditorCore(
     contentDiv: HTMLDivElement,
     options: EditorOptions
 ): EditorCore {
-    const core = createEditorCore(contentDiv, options);
     return {
         contentDiv,
-        api: core.api,
+        api: {
+            ...coreApiMap,
+            ...(options.coreApiOverride || {}),
+        },
         plugins: options.plugins || [],
-        domEvent: core.domEvent,
-        edit: core.edit,
-        lifecycle: core.lifecycle,
-        undo: core.undo,
-        pendingFormatState: core.pendingFormatState,
-        entity: core.entity,
+        ...getPluginState(createCorePlugins(contentDiv, options)),
     };
 }

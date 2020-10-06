@@ -1,14 +1,20 @@
-import createEditorCore from './createEditorCore';
+import { coreApiMap } from '../coreApi/coreApiMap';
+import createCorePlugins, {
+    getPluginState,
+    PLACEHOLDER_PLUGIN_NAME,
+} from '../corePlugins/createCorePlugins';
 import {
     BlockElement,
     ChangeSource,
     ClipboardData,
     ColorTransformDirection,
     ContentPosition,
+    CorePlugins,
     DefaultFormat,
     DOMEventHandler,
     EditorCore,
     EditorOptions,
+    EditorPlugin,
     EditorUndoState,
     GenericContentEditFeature,
     GetContentMode,
@@ -71,7 +77,26 @@ export default class Editor implements IEditor {
         }
 
         // 2. Store options values to local variables
-        this.core = createEditorCore(contentDiv, options);
+        const corePlugins = createCorePlugins(contentDiv, options);
+        const plugins: EditorPlugin[] = [];
+        Object.keys(corePlugins).forEach(
+            (name: typeof PLACEHOLDER_PLUGIN_NAME | keyof CorePlugins) => {
+                if (name == PLACEHOLDER_PLUGIN_NAME) {
+                    Array.prototype.push.apply(plugins, options.plugins);
+                } else {
+                    plugins.push(corePlugins[name]);
+                }
+            }
+        );
+        this.core = {
+            contentDiv,
+            api: {
+                ...coreApiMap,
+                ...(options.coreApiOverride || {}),
+            },
+            plugins: plugins.filter(x => !!x),
+            ...getPluginState(corePlugins),
+        };
         this.enableExperimentFeatures = options.enableExperimentFeatures;
 
         // 3. Initialize plugins

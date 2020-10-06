@@ -20,7 +20,7 @@ export default class TypeAfterLinkPlugin implements EditorPlugin {
      * Get a friendly name of  this plugin
      */
     getName() {
-        return 'TypeAfterLinkPlugin';
+        return 'TypeAfterLink';
     }
 
     /**
