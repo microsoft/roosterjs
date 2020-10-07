@@ -14,21 +14,3 @@ export default function getFirstLastBlockElement(rootNode: Node, isFirst: boolea
     } while (node && node.firstChild);
     return node && getBlockElementAtNode(rootNode, node);
 }
-
-/**
- * Get the first BlockElement of under the root node.
- * If no suitable BlockElement found, returns null
- * @param rootNode The root node to get BlockElement from
- */
-export function getFirstBlockElement(rootNode: Node): BlockElement {
-    return getFirstLastBlockElement(rootNode, true /*isFirst*/);
-}
-
-/**
- * Get the last BlockElement of under the root node.
- * If no suitable BlockElement found, returns null
- * @param rootNode The root node to get BlockElement from
- */
-export function getLastBlockElement(rootNode: Node): BlockElement {
-    return getFirstLastBlockElement(rootNode, false /*isFirst*/);
-}

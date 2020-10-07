@@ -1,20 +1,17 @@
 import * as DomTestHelper from '../DomTestHelper';
+import getFirstLastBlockElement from '../../lib/blockElements/getFirstLastBlockElement';
 import { BlockElement } from 'roosterjs-editor-types';
-import {
-    getFirstBlockElement,
-    getLastBlockElement,
-} from '../../lib/blockElements/getFirstLastBlockElement';
 
 let testID = 'getFirstLastBlockElement';
 
-describe('getBlockElement getFirstBlockElement', () => {
+describe('getFirstLastBlockElement first', () => {
     afterEach(() => {
         DomTestHelper.removeElement(testID);
     });
 
     function runTest(rootNode: Node, testBlockElement: BlockElement) {
         // Act
-        let blockElement = getFirstBlockElement(rootNode);
+        let blockElement = getFirstLastBlockElement(rootNode, true /*isFirst*/);
 
         // Assert
         let isBlockElementEqual = blockElement.equals(testBlockElement);
@@ -65,14 +62,14 @@ describe('getBlockElement getFirstBlockElement', () => {
     });
 });
 
-describe('getBlockElement getLastBlockElement', () => {
+describe('getFirstLastBlockElement: last', () => {
     afterEach(() => {
         DomTestHelper.removeElement(testID);
     });
 
     function runTest(rootNode: Node, testBlockElement: BlockElement) {
         // Act
-        let blockElement = getLastBlockElement(rootNode);
+        let blockElement = getFirstLastBlockElement(rootNode, false /*isFirst*/);
 
         // Assert
         let isBlockElementEqual = blockElement.equals(testBlockElement);
