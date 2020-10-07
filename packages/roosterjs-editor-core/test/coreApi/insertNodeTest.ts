@@ -1,4 +1,3 @@
-import * as dom from 'roosterjs-editor-dom';
 import createEditorCore from './createMockEditorCore';
 import { ContentPosition } from 'roosterjs-editor-types';
 import { getSelectionRange } from '../../lib/coreApi/getSelectionRange';
@@ -192,7 +191,6 @@ describe('insertNode', () => {
     });
 
     it('insert at selection with focus, no replace, no new line, no update cursor', () => {
-        spyOn(dom, 'adjustNodeInsertPosition').and.callThrough();
         const core = createEditorCore(div, {});
         const node = document.createElement('span');
         node.id = 'span1';
@@ -209,11 +207,9 @@ describe('insertNode', () => {
         expect(div.innerHTML).toBe(
             '<span id="span1"></span><div id="div2"></div><div id="div3"></div>'
         );
-        expect(dom.adjustNodeInsertPosition).toHaveBeenCalled();
     });
 
     it('insert at selection with focus, replace, no new line, no update cursor', () => {
-        spyOn(dom, 'adjustNodeInsertPosition').and.callThrough();
         const core = createEditorCore(div, {});
         const node = document.createElement('span');
         node.id = 'span1';
@@ -228,11 +224,9 @@ describe('insertNode', () => {
         });
 
         expect(div.innerHTML).toBe('<span id="span1"></span><div id="div3"></div>');
-        expect(dom.adjustNodeInsertPosition).toHaveBeenCalled();
     });
 
     it('insert at selection with focus, no replace, new line and no element block, no update cursor', () => {
-        spyOn(dom, 'adjustNodeInsertPosition').and.callThrough();
         const core = createEditorCore(div, {});
         const node = document.createElement('span');
         node.id = 'span1';
@@ -249,11 +243,9 @@ describe('insertNode', () => {
         expect(div.innerHTML).toBe(
             '<span id="span2"></span><br><span id="span1"></span><span id="span3"></span>'
         );
-        expect(dom.adjustNodeInsertPosition).not.toHaveBeenCalled();
     });
 
     it('insert at selection with focus, no replace, new line with parent block, no update cursor', () => {
-        spyOn(dom, 'adjustNodeInsertPosition').and.callThrough();
         const core = createEditorCore(div, {});
         const node = document.createElement('span');
         node.id = 'span1';
@@ -270,11 +262,9 @@ describe('insertNode', () => {
         expect(div.innerHTML).toBe(
             '<div><span id="span2"></span><span id="span3"></span></div><span id="span1"></span>'
         );
-        expect(dom.adjustNodeInsertPosition).not.toHaveBeenCalled();
     });
 
     it('insert at selection with focus, no replace, no new line, update cursor', () => {
-        spyOn(dom, 'adjustNodeInsertPosition').and.callThrough();
         const core = createEditorCore(div, {});
         const node = document.createElement('span');
         node.id = 'span1';
