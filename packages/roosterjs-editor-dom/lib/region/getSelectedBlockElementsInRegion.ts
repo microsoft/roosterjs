@@ -10,12 +10,15 @@ import { BlockElement, Region } from 'roosterjs-editor-types';
  * @param region The region to get block elements from
  * @param createBlockIfEmpty When set to true, a new empty block element will be created if there is not
  * any blocks in the region. Default value is false
+ * @param ignoreFullSelectionInRegion (Optional) True to ignore the fullSelectionStart/end value in region, and
+ * return a range for the whole region, false to only return the selected part of region
  */
 export default function getSelectedBlockElementsInRegion(
     region: Region,
-    createBlockIfEmpty?: boolean
+    createBlockIfEmpty?: boolean,
+    ignoreFullSelectionInRegion?: boolean
 ): BlockElement[] {
-    const range = getSelectionRangeInRegion(region);
+    const range = getSelectionRangeInRegion(region, ignoreFullSelectionInRegion);
     let blocks: BlockElement[] = [];
 
     if (range) {

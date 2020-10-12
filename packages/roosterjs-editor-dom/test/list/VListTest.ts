@@ -250,49 +250,6 @@ describe('VList.contains', () => {
     });
 });
 
-describe('VList.getFirstOrLastNode', () => {
-    const testId = 'VList_getFirstOrLastNode';
-    const ListRoot = 'listRoot';
-
-    afterEach(() => {
-        DomTestHelper.removeElement(testId);
-    });
-
-    function runTest(sourceHtml: string, firstInnerHTML: string, lastInnerHTML: string) {
-        DomTestHelper.createElementFromContent(testId, sourceHtml);
-        const listRoot = document.getElementById(ListRoot) as HTMLOListElement | HTMLUListElement;
-        const vList = new VList(listRoot);
-        const first = vList.getFirstOrLastNode(false) as HTMLElement;
-        const last = vList.getFirstOrLastNode(true) as HTMLElement;
-        expect(first?.innerHTML).toBe(firstInnerHTML);
-        expect(last?.innerHTML).toBe(lastInnerHTML);
-    }
-
-    it('empty list', () => {
-        runTest(`<ol id="${ListRoot}"></ol>`, undefined, undefined);
-    });
-
-    it('single item list', () => {
-        runTest(`<ol id="${ListRoot}"><li>line1</li></ol>`, 'line1', 'line1');
-    });
-
-    it('multiple items list', () => {
-        runTest(
-            `<ol id="${ListRoot}"><li>line1</li><li>line2</li><li>line3</li></ol>`,
-            'line1',
-            'line3'
-        );
-    });
-
-    it('list with orphan items', () => {
-        runTest(
-            `<ol id="${ListRoot}"><div>line1</div><li>line2</li><div>line3</div></ol>`,
-            'line1',
-            'line2<div>line3</div>'
-        );
-    });
-});
-
 describe('VList.writeBack', () => {
     const testId = 'VList_writeBack';
     const ListRoot = 'listRoot';

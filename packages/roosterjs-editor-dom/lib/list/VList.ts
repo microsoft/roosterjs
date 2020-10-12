@@ -144,15 +144,6 @@ export default class VList {
     }
 
     /**
-     * Get the first or last node of this list
-     * @param isLast true to get last node, false to get first node
-     */
-    getFirstOrLastNode(isLast: boolean): Node {
-        const item = this.items[isLast ? this.items.length - 1 : 0];
-        return item?.getNode();
-    }
-
-    /**
      * Write the result back into DOM tree
      * After that, this VList becomes unavailable because we set this.rootList to null
      */
