@@ -2,6 +2,7 @@ import * as DomTestHelper from '../DomTestHelper';
 import createRange from '../../lib/selection/createRange';
 import getSelectedBlockElementsInRegion from '../../lib/region/getSelectedBlockElementsInRegion';
 import { getRegionCreator } from '../../lib/region/getRegionsFromRange';
+import { RegionBase } from 'roosterjs-editor-types';
 
 const testID = 'getSelectedBlockElementsInRegion';
 const RegionRoot = 'root';
@@ -10,6 +11,15 @@ const NodeAfter = 'after';
 const FocusNode = 'focus';
 const FocusNode1 = 'focus1';
 const FocusNode2 = 'focus2';
+
+function createRegionBase(rootNode: HTMLElement, nodeBefore: Node, nodeAfter: Node): RegionBase {
+    return {
+        rootNode,
+        nodeBefore,
+        nodeAfter,
+        skipTags: ['TABLE'],
+    };
+}
 
 describe('getSelectedBlockElementsInRegion', () => {
     afterEach(() => {
@@ -36,12 +46,12 @@ describe('getSelectedBlockElementsInRegion', () => {
             throw new Error('root node not found.');
         }
 
-        if (!focusNode && (!focusNode1 || !focusNode2)) {
-            throw new Error('focus node not found');
-        }
-
-        const range = focusNode ? createRange(focusNode) : createRange(focusNode1, focusNode2);
-        const creator = getRegionCreator(range, ['TABLE']);
+        const range = focusNode
+            ? createRange(focusNode)
+            : focusNode1 && focusNode2
+            ? createRange(focusNode1, focusNode2)
+            : null;
+        const creator = range ? getRegionCreator(range, ['TABLE']) : createRegionBase;
         const region = creator(root, before, after);
 
         // Act
@@ -58,6 +68,22 @@ describe('getSelectedBlockElementsInRegion', () => {
     it('null input', () => {
         const blocks = getSelectedBlockElementsInRegion(null);
         expect(blocks).toEqual([]);
+    });
+
+    it('No selection', () => {
+        runTest(
+            `<div id="${RegionRoot}"><div id="resultDiv1">line 1</div><div id="resultDiv2">line 2</div></div>`,
+            () => [
+                {
+                    start: document.getElementById('resultDiv1'),
+                    end: document.getElementById('resultDiv1'),
+                },
+                {
+                    start: document.getElementById('resultDiv2'),
+                    end: document.getElementById('resultDiv2'),
+                },
+            ]
+        );
     });
 
     it('Single node region, selection is totally out of range', () => {

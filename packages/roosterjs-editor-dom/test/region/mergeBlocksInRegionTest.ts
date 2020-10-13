@@ -27,6 +27,7 @@ describe('mergeBlocksInRegion', () => {
         mergeBlocksInRegion(
             {
                 rootNode: div,
+                skipTags: [],
             },
             refNode,
             targetNode
@@ -40,6 +41,7 @@ describe('mergeBlocksInRegion', () => {
         mergeBlocksInRegion(
             {
                 rootNode: div,
+                skipTags: [],
             },
             null,
             null
@@ -58,6 +60,7 @@ describe('mergeBlocksInRegion', () => {
         mergeBlocksInRegion(
             {
                 rootNode: div,
+                skipTags: [],
             },
             refNode,
             targetNode

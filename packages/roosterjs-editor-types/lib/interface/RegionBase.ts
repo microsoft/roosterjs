@@ -33,4 +33,9 @@ export default interface RegionBase {
      * All nodes before this node after nodeBefore and contaiend by rootNode will be treated contained by this region.
      */
     nodeAfter?: Node;
+
+    /**
+     * Tags that child elements will be skipped
+     */
+    skipTags: string[];
 }

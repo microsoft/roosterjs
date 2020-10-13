@@ -3,26 +3,23 @@ import fromHtml from '../utils/fromHtml';
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
 import getSelectionRangeInRegion from './getSelectionRangeInRegion';
 import shouldSkipNode from '../utils/shouldSkipNode';
-import { BlockElement, Region } from 'roosterjs-editor-types';
+import { BlockElement, RegionBase } from 'roosterjs-editor-types';
 
 /**
  * Get all block elements covered by the selection under this region
- * @param region The region to get block elements from
+ * @param regionBase The region to get block elements from
  * @param createBlockIfEmpty When set to true, a new empty block element will be created if there is not
  * any blocks in the region. Default value is false
- * @param ignoreFullSelectionInRegion (Optional) True to ignore the fullSelectionStart/end value in region, and
- * return a range for the whole region, false to only return the selected part of region
  */
 export default function getSelectedBlockElementsInRegion(
-    region: Region,
-    createBlockIfEmpty?: boolean,
-    ignoreFullSelectionInRegion?: boolean
+    regionBase: RegionBase,
+    createBlockIfEmpty?: boolean
 ): BlockElement[] {
-    const range = getSelectionRangeInRegion(region, ignoreFullSelectionInRegion);
+    const range = getSelectionRangeInRegion(regionBase);
     let blocks: BlockElement[] = [];
 
     if (range) {
-        const { rootNode, skipTags } = region;
+        const { rootNode, skipTags } = regionBase;
         const traverser = ContentTraverser.createSelectionTraverser(rootNode, range, skipTags);
 
         for (
@@ -47,10 +44,10 @@ export default function getSelectedBlockElementsInRegion(
         });
     }
 
-    if (blocks.length == 0 && region && !region.rootNode.firstChild && createBlockIfEmpty) {
-        const newNode = fromHtml('<div><br></div>', region.rootNode.ownerDocument)[0];
-        region.rootNode.appendChild(newNode);
-        blocks.push(getBlockElementAtNode(region.rootNode, newNode));
+    if (blocks.length == 0 && regionBase && !regionBase.rootNode.firstChild && createBlockIfEmpty) {
+        const newNode = fromHtml('<div><br></div>', regionBase.rootNode.ownerDocument)[0];
+        regionBase.rootNode.appendChild(newNode);
+        blocks.push(getBlockElementAtNode(regionBase.rootNode, newNode));
     }
 
     return blocks;
