@@ -47,7 +47,9 @@ export default function insertTable(
         );
         vtable.writeBack();
         editor.insertNode(fragment);
-        editor.runAsync(() => editor.select(new Position(table, PositionType.Begin).normalize()));
+        editor.runAsync(editor =>
+            editor.select(new Position(table, PositionType.Begin).normalize())
+        );
     }, ChangeSource.Format);
 }
 

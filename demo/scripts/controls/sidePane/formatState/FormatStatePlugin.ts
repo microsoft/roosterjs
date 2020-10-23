@@ -15,8 +15,8 @@ export default class FormatStatePlugin extends SidePanePluginImpl<
 
     initialize(editor: IEditor) {
         super.initialize(editor);
-        this.editor.runAsync(() => {
-            this.editor.focus();
+        this.editor.runAsync(editor => {
+            editor.focus();
 
             this.updateFormatState();
         });

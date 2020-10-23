@@ -112,17 +112,19 @@ describe('DOMEventPlugin verify event handlers while allow keyboard event propag
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
         select = jasmine.createSpy('select');
         getSelectionRange = jasmine.createSpy().and.returnValue(getSelectionRangeResult);
-        plugin.initialize(<IEditor>(<any>{
+        const editor = <IEditor>(<any>{
             addDomEventHandler: (map: Record<string, any>) => {
                 eventMap = map;
                 return jasmine.createSpy('disposer');
             },
             triggerPluginEvent,
-            runAsync: (callback: any) => callback(),
             addUndoSnapshot,
             select,
             getSelectionRange,
-        }));
+        });
+        editor.runAsync = (callback: any) => callback(editor);
+
+        plugin.initialize(editor);
     });
 
     afterEach(() => {

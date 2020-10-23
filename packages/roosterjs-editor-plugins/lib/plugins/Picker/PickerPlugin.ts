@@ -484,8 +484,8 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             if (replacementNode) {
                 this.replaceNode(nodeBeforeCursor, replacementNode);
                 if (this.isPendingInputEventHandling) {
-                    this.editor.runAsync(() => {
-                        this.editor.select(replacementNode, PositionType.After);
+                    this.editor.runAsync(editor => {
+                        editor.select(replacementNode, PositionType.After);
                     });
                 } else {
                     this.editor.select(replacementNode, PositionType.After);

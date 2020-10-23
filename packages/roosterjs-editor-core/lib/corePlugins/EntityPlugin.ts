@@ -299,7 +299,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
  */
 const workaroundSelectionIssueForIE = Browser.isIE
     ? (editor: IEditor) => {
-          editor.runAsync(() => {
+          editor.runAsync(editor => {
               const workaroundButton = editor.getCustomData('ENTITY_IE_FOCUS_BUTTON', () => {
                   const button = editor.getDocument().createElement('button');
                   button.style.overflow = 'hidden';

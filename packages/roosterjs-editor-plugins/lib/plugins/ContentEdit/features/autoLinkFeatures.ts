@@ -111,7 +111,7 @@ function autoLink(event: PluginEvent, editor: IEditor) {
     anchor.textContent = linkData.originalUrl;
     anchor.href = linkData.normalizedUrl;
 
-    editor.runAsync(() => {
+    editor.runAsync(editor => {
         editor.addUndoSnapshot(
             () => {
                 replaceWithNode(

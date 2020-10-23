@@ -81,7 +81,7 @@ const UpDownInTable: ContentEditFeature = {
             }
         }
 
-        editor.runAsync(() => {
+        editor.runAsync(editor => {
             let newContainer = editor.getElementAtCursor();
             if (
                 contains(vtable.table, newContainer) &&

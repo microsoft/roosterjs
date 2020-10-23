@@ -73,14 +73,14 @@ export default class CopyPastePlugin implements EditorPlugin {
                 isCut,
             });
 
-            this.editor.runAsync(() => {
+            this.editor.runAsync(editor => {
                 this.cleanUpAndRestoreSelection(tempDiv, originalRange);
 
                 if (isCut) {
-                    this.editor.addUndoSnapshot(() => {
+                    editor.addUndoSnapshot(() => {
                         const position = this.editor.deleteSelectedContent();
-                        this.editor.focus();
-                        this.editor.select(position);
+                        editor.focus();
+                        editor.select(position);
                     }, ChangeSource.Cut);
                 }
             });

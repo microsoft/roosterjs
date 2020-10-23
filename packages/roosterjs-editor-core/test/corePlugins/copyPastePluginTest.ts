@@ -195,7 +195,7 @@ describe('CopyPastePlugin copy', () => {
     });
 
     it('after copy', () => {
-        editor.runAsync = callback => callback();
+        editor.runAsync = callback => callback(editor);
 
         const event = <Event>{};
         handler.copy(event);
@@ -205,7 +205,7 @@ describe('CopyPastePlugin copy', () => {
     });
 
     it('after cut with text content', () => {
-        editor.runAsync = callback => callback();
+        editor.runAsync = callback => callback(editor);
         const contentDiv = document.createElement('div');
         contentDiv.innerHTML = 'This is a test';
 
@@ -236,7 +236,7 @@ describe('CopyPastePlugin copy', () => {
     });
 
     it('after cut with html content', () => {
-        editor.runAsync = callback => callback();
+        editor.runAsync = callback => callback(editor);
         const contentDiv = document.createElement('div');
         contentDiv.innerHTML =
             '<ol><li>line1</li><li><div>line2</div><div>line3</div></li><li>line4</li></ol><div>line5</div>';

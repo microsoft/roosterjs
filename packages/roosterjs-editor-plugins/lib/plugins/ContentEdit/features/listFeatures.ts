@@ -57,7 +57,7 @@ const MergeInNewLine: ContentEditFeature = {
     handleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
         if (li.previousSibling) {
-            editor.runAsync(() => {
+            editor.runAsync(editor => {
                 let br = editor.getDocument().createElement('BR');
                 editor.insertNode(br);
                 editor.select(br, PositionType.After);
@@ -125,7 +125,7 @@ const AutoBullet: ContentEditFeature = {
         return false;
     },
     handleEvent: (event, editor) => {
-        editor.runAsync(() => {
+        editor.runAsync(editor => {
             editor.addUndoSnapshot(
                 () => {
                     let searcher = editor.getContentSearcherOfCursor();

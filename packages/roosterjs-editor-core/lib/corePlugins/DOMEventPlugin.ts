@@ -104,8 +104,8 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     }
 
     private onDrop = (e: UIEvent) => {
-        this.editor.runAsync(() => {
-            this.editor.addUndoSnapshot(() => {}, ChangeSource.Drop);
+        this.editor.runAsync(editor => {
+            editor.addUndoSnapshot(() => {}, ChangeSource.Drop);
         });
     };
 

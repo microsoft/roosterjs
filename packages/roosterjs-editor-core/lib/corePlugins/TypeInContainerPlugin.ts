@@ -52,11 +52,8 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             if (range.collapsed) {
                 this.editor.ensureTypeInContainer(Position.getStart(range), event.rawEvent);
             } else {
-                this.editor.runAsync(() => {
-                    this.editor.ensureTypeInContainer(
-                        this.editor.getFocusedPosition(),
-                        event.rawEvent
-                    );
+                this.editor.runAsync(editor => {
+                    editor.ensureTypeInContainer(editor.getFocusedPosition(), event.rawEvent);
                 });
             }
         }

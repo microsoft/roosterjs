@@ -462,7 +462,7 @@ export default interface IEditor {
      * Run a callback function asynchronously
      * @param callback The callback function to run
      */
-    runAsync(callback: () => void): void;
+    runAsync(callback: (editor: IEditor) => void): void;
 
     /**
      * Set DOM attribute of editor content DIV

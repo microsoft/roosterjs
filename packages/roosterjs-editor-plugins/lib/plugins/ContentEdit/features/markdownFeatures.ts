@@ -25,7 +25,7 @@ function generateBasicMarkdownFeature(
             !!cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter),
         handleEvent: (event, editor) => {
             // runAsync is here to allow the event to complete so autocomplete will present the trigger character.
-            editor.runAsync(() => {
+            editor.runAsync(editor => {
                 handleMarkdownEvent(event, editor, triggerCharacter, elementTag);
             });
         },

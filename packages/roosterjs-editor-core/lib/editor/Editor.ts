@@ -655,11 +655,11 @@ export default class Editor implements IEditor {
      * Run a callback function asynchronously
      * @param callback The callback function to run
      */
-    public runAsync(callback: () => void) {
+    public runAsync(callback: (editor: IEditor) => void) {
         let win = this.core.contentDiv.ownerDocument.defaultView || window;
         win.requestAnimationFrame(() => {
             if (!this.isDisposed() && callback) {
-                callback();
+                callback(this);
             }
         });
     }
