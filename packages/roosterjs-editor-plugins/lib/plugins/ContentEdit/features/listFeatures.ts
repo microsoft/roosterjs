@@ -1,6 +1,6 @@
 import { setIndentation, toggleBullet, toggleNumbering } from 'roosterjs-editor-api';
 import {
-    ContentEditFeature,
+    BuildInEditFeature,
     IEditor,
     Indentation,
     ListFeatureSettings,
@@ -20,7 +20,7 @@ import {
 /**
  * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
  */
-const IndentWhenTab: ContentEditFeature = {
+const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB],
     shouldHandleEvent: (event, editor) =>
         !event.rawEvent.shiftKey && cacheGetListElement(event, editor),
@@ -33,7 +33,7 @@ const IndentWhenTab: ContentEditFeature = {
 /**
  * OutdentWhenShiftTab edit feature, provides the ability to outdent current list when user press Shift+TAB
  */
-const OutdentWhenShiftTab: ContentEditFeature = {
+const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB],
     shouldHandleEvent: (event, editor) =>
         event.rawEvent.shiftKey && cacheGetListElement(event, editor),
@@ -47,7 +47,7 @@ const OutdentWhenShiftTab: ContentEditFeature = {
  * MergeInNewLine edit feature, provides the ability to merge current line into a new line when user press
  * BACKSPACE at beginning of a list item
  */
-const MergeInNewLine: ContentEditFeature = {
+const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
@@ -73,7 +73,7 @@ const MergeInNewLine: ContentEditFeature = {
  * OutdentWhenBackOn1stEmptyLine edit feature, provides the ability to outdent current item if user press
  * BACKSPACE at the first and empty line of a list
  */
-const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
+const OutdentWhenBackOn1stEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
@@ -86,7 +86,7 @@ const OutdentWhenBackOn1stEmptyLine: ContentEditFeature = {
  * OutdentWhenEnterOnEmptyLine edit feature, provides the ability to outdent current item if user press
  * ENTER at the beginning of an empty line of a list
  */
-const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
+const OutdentWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
@@ -107,7 +107,7 @@ const OutdentWhenEnterOnEmptyLine: ContentEditFeature = {
  * When user input "1. ", convert into a numbering list
  * When user input "- " or "* ", convert into a bullet list
  */
-const AutoBullet: ContentEditFeature = {
+const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
         if (!cacheGetListElement(event, editor)) {
@@ -186,7 +186,10 @@ function cacheGetListElement(event: PluginKeyboardEvent, editor: IEditor) {
 /**
  * @internal
  */
-export const ListFeatures: Record<keyof ListFeatureSettings, ContentEditFeature> = {
+export const ListFeatures: Record<
+    keyof ListFeatureSettings,
+    BuildInEditFeature<PluginKeyboardEvent>
+> = {
     autoBullet: AutoBullet,
     indentWhenTab: IndentWhenTab,
     outdentWhenShiftTab: OutdentWhenShiftTab,

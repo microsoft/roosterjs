@@ -5,7 +5,7 @@ import {
     Position,
 } from 'roosterjs-editor-dom';
 import {
-    ContentEditFeature,
+    BuildInEditFeature,
     EntityFeatureSettings,
     EntityOperation,
     IEditor,
@@ -19,7 +19,7 @@ import {
  * A content edit feature to trigger EntityOperation event with operation "Click" when user
  * clicks on a readonly entity.
  */
-const ClickOnEntityFeature: ContentEditFeature = {
+const ClickOnEntityFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => cacheGetReadonlyEntityElement(event, editor),
     handleEvent: (event, editor) => {
@@ -31,7 +31,7 @@ const ClickOnEntityFeature: ContentEditFeature = {
  * A content edit feature to trigger EntityOperation event with operation "Escape" when user
  * presses ESC on a readonly entity.
  */
-const EscapeFromEntityFeature: ContentEditFeature = {
+const EscapeFromEntityFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ESCAPE],
     shouldHandleEvent: (event, editor) => cacheGetReadonlyEntityElement(event, editor),
     handleEvent: (event, editor) => {
@@ -67,7 +67,7 @@ function cacheGetReadonlyEntityElement(
  * Browser's default behavior will insert an extra BR tag before the entity which causes an extra
  * empty line. So we override the default behavior here.
  */
-const EnterBeforeReadonlyEntityFeature: ContentEditFeature = {
+const EnterBeforeReadonlyEntityFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) =>
         cacheGetNeighborEntityElement(event, editor, true /*isNext*/, false /*collapseOnly*/),
@@ -99,7 +99,7 @@ const EnterBeforeReadonlyEntityFeature: ContentEditFeature = {
  * A content edit feature to trigger EntityOperation event with operation "RemoveFromEnd" when user
  * press BACKSPACE right after an entity
  */
-const BackspaceAfterEntityFeature: ContentEditFeature = {
+const BackspaceAfterEntityFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) =>
         cacheGetNeighborEntityElement(event, editor, false /*isNext*/, true /*collapseOnly*/),
@@ -118,7 +118,7 @@ const BackspaceAfterEntityFeature: ContentEditFeature = {
  * A content edit feature to trigger EntityOperation event with operation "RemoveFromStart" when user
  * press DELETE right after an entity
  */
-const DeleteBeforeEntityFeature: ContentEditFeature = {
+const DeleteBeforeEntityFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.DELETE],
     shouldHandleEvent: (event, editor) =>
         cacheGetNeighborEntityElement(event, editor, true /*isNext*/, true /*collapseOnly*/),
@@ -193,7 +193,10 @@ function cacheGetNeighborEntityElement(
 /**
  * @internal
  */
-export const EntityFeatures: Record<keyof EntityFeatureSettings, ContentEditFeature> = {
+export const EntityFeatures: Record<
+    keyof EntityFeatureSettings,
+    BuildInEditFeature<PluginKeyboardEvent>
+> = {
     clickOnEntity: ClickOnEntityFeature,
     escapeFromEntity: EscapeFromEntityFeature,
     enterBeforeReadonlyEntity: EnterBeforeReadonlyEntityFeature,

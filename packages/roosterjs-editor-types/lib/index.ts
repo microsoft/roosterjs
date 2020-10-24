@@ -90,7 +90,11 @@ export { default as HtmlSanitizerOptions } from './interface/HtmlSanitizerOption
 export { default as SanitizeHtmlOptions } from './interface/SanitizeHtmlOptions';
 export { default as TargetWindow } from './interface/TargetWindow';
 export { default as IEditor } from './interface/IEditor';
-export { ContentEditFeature, GenericContentEditFeature } from './interface/ContentEditFeature';
+export {
+    ContentEditFeature,
+    GenericContentEditFeature,
+    BuildInEditFeature,
+} from './interface/ContentEditFeature';
 export { default as EditorPlugin } from './interface/EditorPlugin';
 export { default as PluginWithState } from './interface/PluginWithState';
 export {

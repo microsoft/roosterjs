@@ -66,10 +66,14 @@ export default class EditPlugin implements PluginWithState<EditPluginState> {
         let ctrlOrMeta = false;
 
         if (event.eventType == PluginEventType.KeyDown) {
-            let rawEvent = event.rawEvent;
+            const rawEvent = event.rawEvent;
+            const range = this.editor.getSelectionRange();
+
             ctrlOrMeta = isCtrlOrMetaPressed(rawEvent);
             hasFunctionKey = ctrlOrMeta || rawEvent.altKey;
-            features = this.state.features[rawEvent.which];
+            features =
+                this.state.features[rawEvent.which] ||
+                (range && !range.collapsed && this.state.features[Keys.RANGE]);
         } else if (event.eventType == PluginEventType.ContentChanged) {
             features = this.state.features[Keys.CONTENTCHANGED];
         }

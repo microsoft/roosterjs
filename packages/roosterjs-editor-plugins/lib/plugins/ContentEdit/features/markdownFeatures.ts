@@ -1,7 +1,7 @@
 import { cacheGetEventData, createRange } from 'roosterjs-editor-dom';
 import {
+    BuildInEditFeature,
     ChangeSource,
-    ContentEditFeature,
     IEditor,
     Keys,
     MarkdownFeatureSettings,
@@ -17,7 +17,7 @@ function generateBasicMarkdownFeature(
     triggerCharacter: string,
     elementTag: string,
     useShiftKey: boolean
-): ContentEditFeature {
+): BuildInEditFeature<PluginKeyboardEvent> {
     return {
         keys: [key],
         shouldHandleEvent: (event, editor) =>
@@ -125,7 +125,7 @@ function handleMarkdownEvent(
 /**
  * Markdown bold feature. Bolds text with markdown shortcuts.
  */
-const MarkdownBold: ContentEditFeature = generateBasicMarkdownFeature(
+const MarkdownBold: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkdownFeature(
     Keys.EIGHT_ASTIRISK,
     '*',
     'b',
@@ -135,7 +135,7 @@ const MarkdownBold: ContentEditFeature = generateBasicMarkdownFeature(
 /**
  * Markdown italics feature. Italicises text with markdown shortcuts.
  */
-const MarkdownItalic: ContentEditFeature = generateBasicMarkdownFeature(
+const MarkdownItalic: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkdownFeature(
     Keys.DASH_UNDERSCORE,
     '_',
     'i',
@@ -145,7 +145,7 @@ const MarkdownItalic: ContentEditFeature = generateBasicMarkdownFeature(
 /**
  * Markdown strikethru feature. Strikethrus text with markdown shortcuts.
  */
-const MarkdownStrikethru: ContentEditFeature = generateBasicMarkdownFeature(
+const MarkdownStrikethru: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkdownFeature(
     Keys.GRAVE_TILDE,
     '~',
     's',
@@ -155,7 +155,7 @@ const MarkdownStrikethru: ContentEditFeature = generateBasicMarkdownFeature(
 /**
  * Markdown inline code feature. Marks specific text as inline code with markdown shortcuts.
  */
-const MarkdownInlineCode: ContentEditFeature = generateBasicMarkdownFeature(
+const MarkdownInlineCode: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkdownFeature(
     Keys.GRAVE_TILDE,
     '`',
     'code',
@@ -165,7 +165,10 @@ const MarkdownInlineCode: ContentEditFeature = generateBasicMarkdownFeature(
 /**
  * @internal
  */
-export const MarkdownFeatures: Record<keyof MarkdownFeatureSettings, ContentEditFeature> = {
+export const MarkdownFeatures: Record<
+    keyof MarkdownFeatureSettings,
+    BuildInEditFeature<PluginKeyboardEvent>
+> = {
     markdownBold: MarkdownBold,
     markdownItalic: MarkdownItalic,
     markdownStrikethru: MarkdownStrikethru,

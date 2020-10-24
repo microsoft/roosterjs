@@ -1,9 +1,9 @@
 import { removeLink, replaceWithNode } from 'roosterjs-editor-api';
 import {
     AutoLinkFeatureSettings,
+    BuildInEditFeature,
     ChangeSource,
     ClipboardData,
-    ContentEditFeature,
     IEditor,
     Keys,
     LinkData,
@@ -29,7 +29,7 @@ const MINIMUM_LENGTH = 5;
  * AutoLink edit feature, provides the ability to automatically convert text user typed or pasted
  * in hyperlink format into a real hyperlink
  */
-const AutoLink: ContentEditFeature = {
+const AutoLink: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ENTER, Keys.SPACE, Keys.CONTENTCHANGED],
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
@@ -39,7 +39,7 @@ const AutoLink: ContentEditFeature = {
  * UnlinkWhenBackspaceAfterLink edit feature, provides the ability to convert a hyperlink back into text
  * if user presses BACKSPACE right after a hyperlink
  */
-const UnlinkWhenBackspaceAfterLink: ContentEditFeature = {
+const UnlinkWhenBackspaceAfterLink: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: hasLinkBeforeCursor,
     handleEvent: (event, editor) => {
@@ -135,7 +135,10 @@ function autoLink(event: PluginEvent, editor: IEditor) {
 /**
  * @internal
  */
-export const AutoLinkFeatures: Record<keyof AutoLinkFeatureSettings, ContentEditFeature> = {
+export const AutoLinkFeatures: Record<
+    keyof AutoLinkFeatureSettings,
+    BuildInEditFeature<PluginKeyboardEvent>
+> = {
     autoLink: AutoLink,
     unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink,
 };

@@ -1,6 +1,6 @@
 import { editTable } from 'roosterjs-editor-api';
 import {
-    ContentEditFeature,
+    BuildInEditFeature,
     IEditor,
     Keys,
     NodeType,
@@ -8,6 +8,7 @@ import {
     PositionType,
     TableFeatureSettings,
     TableOperation,
+    PluginKeyboardEvent,
 } from 'roosterjs-editor-types';
 import {
     Browser,
@@ -22,7 +23,7 @@ import {
 /**
  * TabInTable edit feature, provides the ability to jump between cells when user press TAB in table
  */
-const TabInTable: ContentEditFeature = {
+const TabInTable: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB],
     shouldHandleEvent: cacheGetTableCell,
     handleEvent: (event, editor) => {
@@ -61,7 +62,7 @@ const TabInTable: ContentEditFeature = {
  * UpDownInTable edit feature, provides the ability to jump to cell above/below when user press UP/DOWN
  * in table
  */
-const UpDownInTable: ContentEditFeature = {
+const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.UP, Keys.DOWN],
     shouldHandleEvent: cacheGetTableCell,
     handleEvent: (event, editor) => {
@@ -127,7 +128,10 @@ function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellEl
 /**
  * @internal
  */
-export const TableFeatures: Record<keyof TableFeatureSettings, ContentEditFeature> = {
+export const TableFeatures: Record<
+    keyof TableFeatureSettings,
+    BuildInEditFeature<PluginKeyboardEvent>
+> = {
     tabInTable: TabInTable,
     upDownInTable: UpDownInTable,
 };

@@ -27,8 +27,10 @@ export const enum Keys {
     GRAVE_TILDE = 192,
 
     // Keys below are non-standard, and should be used in ContentEditFeatures only
-    Ctrl = 0x100,
-    Meta = 0x200,
-    Shift = 0x400,
-    CONTENTCHANGED = 0x800,
+    CONTENTCHANGED = 0x101,
+    RANGE = 0x102,
+
+    Ctrl = 0x1000,
+    Meta = 0x2000,
+    Shift = 0x4000,
 }

@@ -1,5 +1,5 @@
 import {
-    ContentEditFeature,
+    BuildInEditFeature,
     IEditor,
     Keys,
     PluginKeyboardEvent,
@@ -30,7 +30,7 @@ const CHILD_SELECTOR = Object.keys(CHILD_PARENT_TAG_MAP).join(',');
  * a structured element (bullet/numbering list, blockquote, table) if the element is at beginning of
  * document
  */
-const InsertLineBeforeStructuredNodeFeature: ContentEditFeature = {
+const InsertLineBeforeStructuredNodeFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ENTER],
     shouldHandleEvent: cacheGetStructuredElement,
     handleEvent: (event, editor) => {
@@ -74,7 +74,7 @@ function cacheGetStructuredElement(event: PluginKeyboardEvent, editor: IEditor) 
  */
 export const StructuredNodeFeatures: Record<
     keyof StructuredNodeFeatureSettings,
-    ContentEditFeature
+    BuildInEditFeature<PluginKeyboardEvent>
 > = {
     insertLineBeforeStructuredNodeFeature: InsertLineBeforeStructuredNodeFeature,
 };

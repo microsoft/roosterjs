@@ -8,8 +8,8 @@ import { ShortcutFeatures } from './features/shortcutFeatures';
 import { StructuredNodeFeatures } from './features/structuredNodeFeatures';
 import { TableFeatures } from './features/tableFeatures';
 import {
+    BuildInEditFeature,
     ContentEditFeatureSettings,
-    GenericContentEditFeature,
     PluginEvent,
 } from 'roosterjs-editor-types';
 
@@ -30,7 +30,7 @@ const allFeatures = {
  */
 export default function getAllFeatures(): Record<
     keyof ContentEditFeatureSettings,
-    GenericContentEditFeature<PluginEvent>
+    BuildInEditFeature<PluginEvent>
 > {
     return allFeatures;
 }

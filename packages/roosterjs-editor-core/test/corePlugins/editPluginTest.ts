@@ -8,7 +8,11 @@ describe('EditPlugin', () => {
     beforeEach(() => {
         plugin = new EditPlugin();
         state = plugin.getState();
-        plugin.initialize(<IEditor>(<any>{}));
+        plugin.initialize(<IEditor>(<any>{
+            getSelectionRange: () => ({
+                collapsed: true,
+            }),
+        }));
     });
 
     afterEach(() => {

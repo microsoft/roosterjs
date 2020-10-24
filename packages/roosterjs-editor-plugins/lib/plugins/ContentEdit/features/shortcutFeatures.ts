@@ -1,6 +1,6 @@
 import { Browser, cacheGetEventData } from 'roosterjs-editor-dom';
 import {
-    ContentEditFeature,
+    BuildInEditFeature,
     FontSizeChange,
     IEditor,
     Keys,
@@ -63,7 +63,7 @@ const commands: ShortcutCommand[] = [
  * Ctrl/Meta+Shift+>: increase font size
  * Ctrl/Meta+Shift+<: decrease font size
  */
-const DefaultShortcut: ContentEditFeature = {
+const DefaultShortcut: BuildInEditFeature<PluginKeyboardEvent> = {
     allowFunctionKeys: true,
     keys: [Keys.B, Keys.I, Keys.U, Keys.Y, Keys.Z, Keys.COMMA, Keys.PERIOD, Keys.FORWARDSLASH],
     shouldHandleEvent: cacheGetCommand,
@@ -96,6 +96,9 @@ function cacheGetCommand(event: PluginKeyboardEvent) {
 /**
  * @internal
  */
-export const ShortcutFeatures: Record<keyof ShortcutFeatureSettings, ContentEditFeature> = {
+export const ShortcutFeatures: Record<
+    keyof ShortcutFeatureSettings,
+    BuildInEditFeature<PluginKeyboardEvent>
+> = {
     defaultShortcut: DefaultShortcut,
 };

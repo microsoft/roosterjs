@@ -1,7 +1,12 @@
 import { Browser, getComputedStyle, Position } from 'roosterjs-editor-dom';
-import { ContentEditFeature, CursorFeatureSettings, Keys } from 'roosterjs-editor-types';
+import {
+    BuildInEditFeature,
+    CursorFeatureSettings,
+    Keys,
+    PluginKeyboardEvent,
+} from 'roosterjs-editor-types';
 
-const NoCycleCursorMove: ContentEditFeature = {
+const NoCycleCursorMove: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.LEFT, Keys.RIGHT],
     allowFunctionKeys: true,
     shouldHandleEvent: (event, editor, ctrlOrMeta) => {
@@ -32,6 +37,9 @@ const NoCycleCursorMove: ContentEditFeature = {
 /**
  * @internal
  */
-export const CursorFeatures: Record<keyof CursorFeatureSettings, ContentEditFeature> = {
+export const CursorFeatures: Record<
+    keyof CursorFeatureSettings,
+    BuildInEditFeature<PluginKeyboardEvent>
+> = {
     noCycleCursorMove: NoCycleCursorMove,
 };
