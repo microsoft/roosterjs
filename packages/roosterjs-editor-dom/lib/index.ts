@@ -47,6 +47,7 @@ export { default as readFile } from './utils/readFile';
 export { default as VTable } from './table/VTable';
 export { default as VList } from './list/VList';
 export { default as createVListFromRegion } from './list/createVListFromRegion';
+export { default as VListChain } from './list/VListChain';
 
 export { default as getRegionsFromRange } from './region/getRegionsFromRange';
 export { default as getSelectedBlockElementsInRegion } from './region/getSelectedBlockElementsInRegion';

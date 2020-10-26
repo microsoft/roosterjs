@@ -103,6 +103,11 @@ export interface ListFeatureSettings {
      * @default false
      */
     mergeInNewLineWhenBackspaceOnFirstChar: boolean;
+
+    /**
+     * When edit with lists, maintain the list numbers of list chain
+     */
+    maintainListChain: boolean;
 }
 
 /**

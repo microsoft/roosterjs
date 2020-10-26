@@ -1,5 +1,6 @@
 export * from './ContentEdit';
 export * from './CustomReplace';
+export * from './CutPasteListChain';
 export * from './HyperLink';
 export * from './ImageResize';
 export * from './Paste';

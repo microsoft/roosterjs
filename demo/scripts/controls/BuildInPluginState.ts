@@ -9,6 +9,7 @@ export interface BuildInPluginList {
     paste: boolean;
     watermark: boolean;
     imageResize: boolean;
+    cutPasteListChain: boolean;
     tableResize: boolean;
     customReplace: boolean;
     pickerPlugin: boolean;

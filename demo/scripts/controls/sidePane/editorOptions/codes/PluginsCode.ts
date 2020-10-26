@@ -4,7 +4,13 @@ import ContentEditCode from './ContentEditCode';
 import HyperLinkCode from './HyperLinkCode';
 import PickerPluginCode from './PickerPluginCode';
 import WatermarkCode from './WatermarkCode';
-import { CustomReplaceCode, ImageResizeCode, PasteCode, TableResizeCode } from './SimplePluginCode';
+import {
+    CustomReplaceCode,
+    CutPasteListChainCode,
+    ImageResizeCode,
+    PasteCode,
+    TableResizeCode,
+} from './SimplePluginCode';
 
 export default class PluginsCode extends CodeElement {
     private plugins: CodeElement[];
@@ -19,6 +25,7 @@ export default class PluginsCode extends CodeElement {
             pluginList.paste && new PasteCode(),
             pluginList.watermark && new WatermarkCode(this.state.watermarkText),
             pluginList.imageResize && new ImageResizeCode(),
+            pluginList.cutPasteListChain && new CutPasteListChainCode(),
             pluginList.tableResize && new TableResizeCode(),
             pluginList.pickerPlugin && new PickerPluginCode(),
             pluginList.customReplace && new CustomReplaceCode(),
