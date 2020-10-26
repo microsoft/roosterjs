@@ -21,7 +21,7 @@ export default function blockFormat(
         if (!beforeRunCallback || beforeRunCallback()) {
             const regions = editor.getSelectedRegions();
             const chains = editor.useExperimentFeatures()
-                ? VListChain.createListChains(regions)
+                ? VListChain.createListChains(regions, start?.node)
                 : [];
             regions.forEach(region => callback(region, start, end, chains));
             experimentCommitListChains(editor, chains);
