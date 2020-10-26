@@ -5,6 +5,7 @@ import {
     getEntitySelector,
     isCharacterValue,
     toArray,
+    arrayPush,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -196,10 +197,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             this.checkRemoveEntityForRange(null /*rawEvent*/);
         }
 
-        Array.prototype.push.apply(
-            sanitizingOption.additionalAllowedCssClasses,
-            ALLOWED_CSS_CLASSES
-        );
+        arrayPush(sanitizingOption.additionalAllowedCssClasses, ALLOWED_CSS_CLASSES);
     }
 
     private handleContentChangedEvent(resetAll: boolean) {

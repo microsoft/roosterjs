@@ -1,4 +1,4 @@
-import { safeInstanceOf, toArray } from 'roosterjs-editor-dom';
+import { arrayPush, safeInstanceOf, toArray } from 'roosterjs-editor-dom';
 import {
     ColorTransformDirection,
     DarkModeDatasetNames,
@@ -93,10 +93,10 @@ function getAll(rootNode: Node, includeSelf: boolean): HTMLElement[] {
             result.push(rootNode);
         }
         const allChildren = rootNode.getElementsByTagName('*');
-        Array.prototype.push.apply(result, toArray(allChildren));
+        arrayPush(result, toArray(allChildren));
     } else if (safeInstanceOf(rootNode, 'DocumentFragment')) {
         const allChildren = rootNode.querySelectorAll('*');
-        Array.prototype.push.apply(result, toArray(allChildren));
+        arrayPush(result, toArray(allChildren));
     }
 
     return result;

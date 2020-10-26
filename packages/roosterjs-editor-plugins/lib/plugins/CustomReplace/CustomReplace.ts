@@ -50,7 +50,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
     }
 
     /**
-     * Get a friendly name of  this plugin
+     * Get a friendly name of this plugin
      */
     getName() {
         return 'CustomReplace';

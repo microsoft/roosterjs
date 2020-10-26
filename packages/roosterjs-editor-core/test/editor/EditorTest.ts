@@ -158,6 +158,11 @@ describe('Editor insertNode() at end of content div', () => {
         editor.setContent(originalContent);
     });
 
+    afterEach(() => {
+        editor.dispose();
+        TestHelper.removeElement(testID);
+    });
+
     it('insert two nodes at the end', () => {
         let node = document.createElement('div');
         node.id = 'signature';
@@ -448,6 +453,8 @@ describe('Editor contains()', () => {
 
         // Assert
         expect(containsNode).toBe(false);
+
+        otherNode.parentNode.removeChild(otherNode);
     });
 });
 

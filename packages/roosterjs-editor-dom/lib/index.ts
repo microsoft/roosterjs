@@ -10,6 +10,7 @@ export { default as LinkInlineElement } from './inlineElements/LinkInlineElement
 export { default as NodeInlineElement } from './inlineElements/NodeInlineElement';
 export { default as PartialInlineElement } from './inlineElements/PartialInlineElement';
 
+export { default as arrayPush } from './utils/arrayPush';
 export { default as applyTextStyle } from './utils/applyTextStyle';
 export { Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';

@@ -54,6 +54,7 @@ import {
     queryElements,
     wrap,
     isPositionAtBeginningOf,
+    arrayPush,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -82,7 +83,7 @@ export default class Editor implements IEditor {
         Object.keys(corePlugins).forEach(
             (name: typeof PLACEHOLDER_PLUGIN_NAME | keyof CorePlugins) => {
                 if (name == PLACEHOLDER_PLUGIN_NAME) {
-                    Array.prototype.push.apply(plugins, options.plugins);
+                    arrayPush(plugins, options.plugins);
                 } else {
                     plugins.push(corePlugins[name]);
                 }

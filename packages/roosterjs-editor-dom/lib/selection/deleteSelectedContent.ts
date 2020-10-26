@@ -1,3 +1,4 @@
+import arrayPush from '../utils/arrayPush';
 import collapseNodesInRegion from '../region/collapseNodesInRegion';
 import getRegionsFromRange from '../region/getRegionsFromRange';
 import getSelectionRangeInRegion from '../region/getSelectionRangeInRegion';
@@ -56,7 +57,7 @@ export default function deleteSelectedContent(root: HTMLElement, range: Range) {
 
             // Find out all nodes to be deleted
             const nodes = collapseNodesInRegion(region, [afterStart, beforeEnd]);
-            Array.prototype.push.apply(nodesToDelete, nodes);
+            arrayPush(nodesToDelete, nodes);
             return { region, beforeStart, afterEnd };
         })
         .filter(x => !!x);
