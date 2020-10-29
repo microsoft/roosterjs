@@ -1,4 +1,18 @@
-import { setIndentation, toggleBullet, toggleNumbering } from 'roosterjs-editor-api';
+import experimentToggleListType from 'roosterjs-editor-api/lib/experiment/experimentToggleListType';
+import {
+    experimentCommitListChains,
+    setIndentation,
+    toggleBullet,
+    toggleNumbering,
+} from 'roosterjs-editor-api';
+import {
+    Browser,
+    getTagOfNode,
+    isNodeEmpty,
+    isPositionAtBeginningOf,
+    Position,
+    VListChain,
+} from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
     IEditor,
@@ -8,14 +22,10 @@ import {
     NodeType,
     PluginKeyboardEvent,
     PositionType,
+    ListType,
+    QueryScope,
+    RegionBase,
 } from 'roosterjs-editor-types';
-import {
-    Browser,
-    getTagOfNode,
-    isNodeEmpty,
-    isPositionAtBeginningOf,
-    Position,
-} from 'roosterjs-editor-dom';
 
 /**
  * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
@@ -57,11 +67,11 @@ const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
     handleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
         if (li.previousSibling) {
-            editor.runAsync(editor => {
-                let br = editor.getDocument().createElement('BR');
-                editor.insertNode(br);
-                editor.select(br, PositionType.After);
-            });
+            const chains = getListChains(editor);
+            let br = editor.getDocument().createElement('BR');
+            editor.insertNode(br);
+            editor.select(br, PositionType.After);
+            experimentCommitListChains(editor, chains);
         } else {
             toggleListAndPreventDefault(event, editor);
         }
@@ -112,13 +122,13 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: (event, editor) => {
         if (!cacheGetListElement(event, editor)) {
             let searcher = editor.getContentSearcherOfCursor(event);
-            let textBeforeCursor = searcher.getSubStringBefore(3);
+            let textBeforeCursor = searcher.getSubStringBefore(4);
 
             // Auto list is triggered if:
             // 1. Text before cursor exactly mathces '*', '-' or '1.'
             // 2. There's no non-text inline entities before cursor
             return (
-                ['*', '-', '1.'].indexOf(textBeforeCursor) >= 0 &&
+                /^(\*|-|[0-9]{1,2}\.)$/.test(textBeforeCursor) &&
                 !searcher.getNearestNonTextInlineElement()
             );
         }
@@ -128,31 +138,33 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
         editor.runAsync(editor => {
             editor.addUndoSnapshot(
                 () => {
+                    let regions: RegionBase[];
                     let searcher = editor.getContentSearcherOfCursor();
-                    let textBeforeCursor = searcher.getSubStringBefore(3);
+                    let textBeforeCursor = searcher.getSubStringBefore(4);
                     let rangeToDelete = searcher.getRangeFromText(
                         textBeforeCursor,
                         true /*exactMatch*/
                     );
 
-                    if (rangeToDelete) {
-                        rangeToDelete.deleteContents();
-                        const node = rangeToDelete.startContainer;
-                        if (
-                            node?.nodeType == NodeType.Text &&
-                            node.nodeValue == '' &&
-                            !node.nextSibling
-                        ) {
-                            const br = editor.getDocument().createElement('BR');
-                            editor.insertNode(br);
-                            editor.select(br, PositionType.Before);
-                        }
-                    }
-
-                    if (textBeforeCursor.indexOf('1.') == 0) {
-                        toggleNumbering(editor);
-                    } else {
+                    if (!rangeToDelete) {
+                        // no op if the range can't be found
+                    } else if (
+                        textBeforeCursor.indexOf('*') == 0 ||
+                        textBeforeCursor.indexOf('-') == 0
+                    ) {
+                        prepareAutoBullet(editor, rangeToDelete);
                         toggleBullet(editor);
+                    } else if (textBeforeCursor.indexOf('1.') == 0) {
+                        prepareAutoBullet(editor, rangeToDelete);
+                        toggleNumbering(editor);
+                    } else if (
+                        editor.useExperimentFeatures() &&
+                        (regions = editor.getSelectedRegions()) &&
+                        regions.length == 1
+                    ) {
+                        const num = parseInt(textBeforeCursor);
+                        prepareAutoBullet(editor, rangeToDelete);
+                        experimentToggleListType(editor, ListType.Ordered, num);
                     }
                 },
                 null /*changeSource*/,
@@ -161,6 +173,39 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
         });
     },
 };
+
+/**
+ * Maintain the list numbers in list chain
+ * e.g. we have two lists:
+ * 1, 2, 3 and 4, 5, 6
+ * Now we delete list item 2, so the first one becomes "1, 2".
+ * This edit feature can maintain the list number of the second list to become "3, 4, 5"
+ */
+const MaintainListChain: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.ENTER, Keys.TAB, Keys.DELETE, Keys.BACKSPACE, Keys.RANGE],
+    shouldHandleEvent: (event, editor) =>
+        editor.queryElements('li', QueryScope.OnSelection).length > 0,
+    handleEvent: (event, editor) => {
+        const chains = getListChains(editor);
+        editor.runAsync(editor => experimentCommitListChains(editor, chains));
+    },
+};
+
+function getListChains(editor: IEditor) {
+    return editor.useExperimentFeatures()
+        ? VListChain.createListChains(editor.getSelectedRegions())
+        : [];
+}
+
+function prepareAutoBullet(editor: IEditor, range: Range) {
+    range.deleteContents();
+    const node = range.startContainer;
+    if (node?.nodeType == NodeType.Text && node.nodeValue == '' && !node.nextSibling) {
+        const br = editor.getDocument().createElement('BR');
+        editor.insertNode(br);
+        editor.select(br, PositionType.Before);
+    }
+}
 
 function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: IEditor) {
     let listInfo = cacheGetListElement(event, editor);
@@ -196,4 +241,5 @@ export const ListFeatures: Record<
     outdentWhenBackspaceOnEmptyFirstLine: OutdentWhenBackOn1stEmptyLine,
     outdentWhenEnterOnEmptyLine: OutdentWhenEnterOnEmptyLine,
     mergeInNewLineWhenBackspaceOnFirstChar: MergeInNewLine,
+    maintainListChain: MaintainListChain,
 };

@@ -14,6 +14,7 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
     outdentWhenEnterOnEmptyLine: 'Outdent list when Enter on empty line',
     mergeInNewLineWhenBackspaceOnFirstChar:
         'Merge in new line when Backspace on first char in list',
+    maintainListChain: 'Maintain the continued list numbers',
     unquoteWhenBackspaceOnEmptyFirstLine: 'Unquote when Backspace on empty first line',
     unquoteWhenEnterOnEmptyLine: 'Unquote when Enter on empty line',
     tabInTable: 'Tab to jump cell in table',

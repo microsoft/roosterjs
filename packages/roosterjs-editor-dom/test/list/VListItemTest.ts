@@ -306,12 +306,15 @@ describe('VList.changeListType', () => {
 
 describe('VListItem.writeBack', () => {
     function runTest(
-        listStackTags: string[],
+        listStackTags: (string | HTMLElement)[],
         listTypes: (ListType.Ordered | ListType.Unordered)[],
-        expectedHtml: string
+        expectedHtml: string,
+        originalRoot?: HTMLOListElement | HTMLUListElement
     ) {
         // Arrange
-        const listStack = listStackTags.map(tag => document.createElement(tag));
+        const listStack = listStackTags.map(tag =>
+            tag instanceof HTMLElement ? tag : document.createElement(tag)
+        );
         for (let i = 1; i < listStack.length; i++) {
             listStack[i - 1].appendChild(listStack[i]);
         }
@@ -321,7 +324,7 @@ describe('VListItem.writeBack', () => {
         const thisItem = new VListItem(li, ...listTypes);
 
         // Act
-        thisItem.writeBack(listStack);
+        thisItem.writeBack(listStack, originalRoot);
 
         // Assert
         expect(listStack.length).toBe(listTypes.length + 1);
@@ -398,5 +401,80 @@ describe('VListItem.writeBack', () => {
 
     it('pass in OL=>OL, this item is not list, has LI', () => {
         runTest(['div', 'ol', 'ol'], [], '<ol><ol></ol></ol><div></div>');
+    });
+
+    it('use original root', () => {
+        const ol = document.createElement('ol');
+        ol.dataset.test = 'test';
+        runTest(['div'], [ListType.Ordered], '<ol data-test="test"><li><div></div></li></ol>', ol);
+    });
+
+    it('use existing original root', () => {
+        const ol = document.createElement('ol');
+        ol.id = 'id1';
+        ol.dataset.test = 'test';
+        runTest(
+            ['div', ol],
+            [ListType.Ordered],
+            '<ol id="id1" data-test="test"><li><div></div></li></ol>',
+            ol
+        );
+    });
+
+    it('use existing original root which is not in list stack, and there is already matched root', () => {
+        const ol = document.createElement('ol');
+        ol.id = 'id1';
+        ol.dataset.test = 'test';
+        runTest(['div', 'ol'], [ListType.Ordered], '<ol><li><div></div></li></ol>', ol);
+    });
+
+    it('use existing original root which is not in list stack, and there is no matched root', () => {
+        const ol = document.createElement('ol');
+        ol.id = 'id1';
+        ol.dataset.test = 'test';
+        runTest(
+            ['div', 'ul'],
+            [ListType.Ordered],
+            '<ul></ul><ol id="id1" data-test="test"><li><div></div></li></ol>',
+            ol
+        );
+    });
+
+    it('use existing original root which is already appended to root and cannot be reused', () => {
+        const div = document.createElement('div');
+        const ol = document.createElement('ol');
+        ol.id = 'id1';
+        ol.dataset.test = 'test';
+        div.appendChild(ol);
+        runTest(
+            [div, 'ul'],
+            [ListType.Ordered],
+            '<ol id="id1" data-test="test"></ol><ul></ul><ol data-test="test"><li><div></div></li></ol>',
+            ol
+        );
+    });
+
+    it('level > 1, do not use existing original root', () => {
+        const ol = document.createElement('ol');
+        ol.id = 'id1';
+        ol.dataset.test = 'test';
+        runTest(
+            ['div', ol],
+            [ListType.Ordered, ListType.Ordered],
+            '<ol id="id1" data-test="test"><ol style="list-style-type: lower-alpha;"><li><div></div></li></ol></ol>',
+            ol
+        );
+    });
+
+    it('use existing original root in multiple levels scenario', () => {
+        const ol = document.createElement('ol');
+        ol.id = 'id1';
+        ol.dataset.test = 'test';
+        runTest(
+            ['div'],
+            [ListType.Ordered, ListType.Unordered],
+            '<ol id="id1" data-test="test"><ul><li><div></div></li></ul></ol>',
+            ol
+        );
     });
 });

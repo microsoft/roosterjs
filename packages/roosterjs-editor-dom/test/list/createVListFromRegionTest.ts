@@ -336,6 +336,26 @@ describe('createVListFromRegion from selection, with sibling list', () => {
         );
     });
 
+    it('has sibling nodes, has previous sibling list, but current list do not start frm 1', () => {
+        runTest(
+            `<ul><li>previous sibling</li></ul><ol start="2"><li>line1</li><li id="${FocusNode}">line2</li><li>line3</li></ol><div>next sibling</div>`,
+            [
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li>line1</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: `<li id="${FocusNode}">line2</li>`,
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li>line3</li>',
+                },
+            ]
+        );
+    });
+
     it('has sibling nodes, has next sibling list', () => {
         runTest(
             `<div>previous sibling</div><ol><li>line1</li><li id="${FocusNode}">line2</li><li>line3</li></ol><ul><li>next sibling</li></ul>`,
@@ -355,6 +375,26 @@ describe('createVListFromRegion from selection, with sibling list', () => {
                 {
                     listTypes: [ListType.None, ListType.Unordered],
                     outerHTML: '<li>next sibling</li>',
+                },
+            ]
+        );
+    });
+
+    it('has sibling nodes, has next sibling list, but current list do not start frm 1', () => {
+        runTest(
+            `<div>previous sibling</div><ol start="2"><li>line1</li><li id="${FocusNode}">line2</li><li>line3</li></ol><ul><li>next sibling</li></ul>`,
+            [
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li>line1</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: `<li id="${FocusNode}">line2</li>`,
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li>line3</li>',
                 },
             ]
         );

@@ -30,3 +30,5 @@ export { default as toggleSubscript } from './format/toggleSubscript';
 export { default as toggleSuperscript } from './format/toggleSuperscript';
 export { default as toggleUnderline } from './format/toggleUnderline';
 export { default as toggleHeader } from './format/toggleHeader';
+
+export { default as experimentCommitListChains } from './experiment/experimentCommitListChains';

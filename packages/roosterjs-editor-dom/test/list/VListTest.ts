@@ -252,7 +252,6 @@ describe('VList.contains', () => {
 
 describe('VList.writeBack', () => {
     const testId = 'VList_writeBack';
-    const ListRoot = 'listRoot';
 
     afterEach(() => {
         DomTestHelper.removeElement(testId);
@@ -260,10 +259,13 @@ describe('VList.writeBack', () => {
 
     function runTest(
         newItems: { html: string; listTypes: (ListType.Ordered | ListType.Unordered)[] }[],
-        expectedHtml: string
+        expectedHtml: string,
+        originalRoot?: HTMLOListElement
     ) {
-        const div = DomTestHelper.createElementFromContent(testId, `<ol id="${ListRoot}"></ol>`);
-        const list = document.getElementById(ListRoot) as HTMLOListElement;
+        const div = DomTestHelper.createElementFromContent(testId, '');
+        div.appendChild(originalRoot || document.createElement('ol'));
+
+        const list = originalRoot || (div.firstChild as HTMLOListElement);
         const vList = new VList(list);
         const items = (<any>vList).items as VListItem[];
 
@@ -303,6 +305,26 @@ describe('VList.writeBack', () => {
                 },
             ],
             '<ol><li>item1</li><li>item2</li></ol>'
+        );
+    });
+
+    it('Write back with mixed types of items', () => {
+        runTest(
+            [
+                {
+                    html: '<li>item1</li>',
+                    listTypes: [ListType.Ordered],
+                },
+                {
+                    html: '<li>bullet</li>',
+                    listTypes: [ListType.Unordered],
+                },
+                {
+                    html: '<li>item2</li>',
+                    listTypes: [ListType.Ordered],
+                },
+            ],
+            '<ol><li>item1</li></ol><ul><li>bullet</li></ul><ol start="2"><li>item2</li></ol>'
         );
     });
 
@@ -399,6 +421,79 @@ describe('VList.writeBack', () => {
                 },
             ],
             '<ul><li>item1</li></ul><div>item2</div><ol><li>item3</li></ol>'
+        );
+    });
+
+    it('Write back with original list', () => {
+        const ol = document.createElement('ol');
+        ol.dataset.test = 'test';
+        runTest(
+            [
+                {
+                    html: '<li>item1</li>',
+                    listTypes: [ListType.Ordered],
+                },
+            ],
+            '<ol data-test="test"><li>item1</li></ol>',
+            ol
+        );
+    });
+
+    it('Write back with original list and start number', () => {
+        const ol = document.createElement('ol');
+        ol.start = 3;
+        runTest(
+            [
+                {
+                    html: '<li>item3</li>',
+                    listTypes: [ListType.Ordered],
+                },
+                {
+                    html: '<li>item3.1</li>',
+                    listTypes: [ListType.Ordered, ListType.Ordered],
+                },
+                {
+                    html: '<li>bullet</li>',
+                    listTypes: [ListType.Unordered],
+                },
+                {
+                    html: '<li>item4</li>',
+                    listTypes: [ListType.Ordered],
+                },
+            ],
+            '<ol start="3"><li>item3</li><ol style="list-style-type: lower-alpha;"><li>item3.1</li></ol></ol><ul><li>bullet</li></ul><ol start="4"><li>item4</li></ol>',
+            ol
+        );
+    });
+
+    it('Write back with original list and start number, start with non-list', () => {
+        const ol = document.createElement('ol');
+        ol.start = 3;
+        runTest(
+            [
+                {
+                    html: '<li>text</li>',
+                    listTypes: [],
+                },
+                {
+                    html: '<li>item3</li>',
+                    listTypes: [ListType.Ordered],
+                },
+                {
+                    html: '<li>item4</li>',
+                    listTypes: [ListType.Ordered],
+                },
+                {
+                    html: '<li>text</li>',
+                    listTypes: [],
+                },
+                {
+                    html: '<li>item5</li>',
+                    listTypes: [ListType.Ordered],
+                },
+            ],
+            '<div>text</div><ol start="3"><li>item3</li><li>item4</li></ol><div>text</div><ol start="5"><li>item5</li></ol>',
+            ol
         );
     });
 });

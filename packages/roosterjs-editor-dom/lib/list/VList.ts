@@ -5,6 +5,7 @@ import isBlockElement from '../utils/isBlockElement';
 import isNodeEmpty from '../utils/isNodeEmpty';
 import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import splitParentNode from '../utils/splitParentNode';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
@@ -144,6 +145,22 @@ export default class VList {
     }
 
     /**
+     * Get list number of the last item in this VList.
+     * If there is no order list item, result will be undefined
+     */
+    getLastItemNumber(): number | undefined {
+        const start = getStart(this.rootList);
+
+        return start === undefined
+            ? start
+            : start -
+                  1 +
+                  this.items.filter(
+                      item => item.getListType() == ListType.Ordered && item.getLevel() == 1
+                  ).length;
+    }
+
+    /**
      * Write the result back into DOM tree
      * After that, this VList becomes unavailable because we set this.rootList to null
      */
@@ -152,10 +169,38 @@ export default class VList {
             throw new Error('rootList must not be null');
         }
 
-        const listStack: Node[] = [this.rootList.ownerDocument.createDocumentFragment()];
+        const doc = this.rootList.ownerDocument;
+        const listStack: Node[] = [doc.createDocumentFragment()];
+        const placeholder = doc.createTextNode('');
+        let start = getStart(this.rootList) || 1;
+        let lastList: Node;
 
-        this.items.forEach(item => item.writeBack(listStack));
-        this.rootList.parentNode.replaceChild(listStack[0], this.rootList);
+        // Use a placeholder to hold the position since the root list may be moved into document fragment later
+        this.rootList.parentNode.replaceChild(placeholder, this.rootList);
+
+        this.items.forEach(item => {
+            item.writeBack(listStack, this.rootList);
+            const topList = listStack[1];
+
+            if (safeInstanceOf(topList, 'HTMLOListElement')) {
+                if (lastList != topList) {
+                    if (start == 1) {
+                        topList.removeAttribute('start');
+                    } else {
+                        topList.start = start;
+                    }
+                }
+
+                if (item.getLevel() == 1) {
+                    start++;
+                }
+            }
+
+            lastList = topList;
+        });
+
+        // Restore the content to the positioni of placeholder
+        placeholder.parentNode.replaceChild(listStack[0], placeholder);
 
         // Set rootList to null to avoid this to be called again for the same VList, because
         // after change the rootList may not be available any more (e.g. outdent all items).
@@ -335,4 +380,8 @@ function moveLiToList(li: HTMLLIElement) {
 
         unwrap(li.parentNode);
     }
+}
+
+function getStart(list: HTMLOListElement | HTMLUListElement): number | undefined {
+    return safeInstanceOf(list, 'HTMLOListElement') ? list.start : undefined;
 }

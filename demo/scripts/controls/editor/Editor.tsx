@@ -3,6 +3,7 @@ import BuildInPluginState, { UrlPlaceholder } from '../BuildInPluginState';
 import SampleColorPickerPluginDataProvider from '../samplepicker/SampleColorPickerPluginDataProvider';
 import { ContentEdit } from 'roosterjs-editor-plugins/lib/ContentEdit';
 import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins/lib/CustomReplace';
+import { CutPasteListChain } from 'roosterjs-editor-plugins/lib/CutPasteListChain';
 import { Editor as RoosterJsEditor } from 'roosterjs-editor-core';
 import { EditorInstanceToggleablePlugins } from './EditorInstanceToggleablePlugins';
 import { EditorOptions, EditorPlugin, UndoSnapshotsService } from 'roosterjs-editor-types';
@@ -76,6 +77,7 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
             paste: pluginList.paste ? new Paste() : null,
             watermark: pluginList.watermark ? new Watermark(this.state.watermarkText) : null,
             imageResize: pluginList.imageResize ? new ImageResize() : null,
+            cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
             tableResize: pluginList.tableResize ? new TableResize() : null,
             pickerPlugin: pluginList.pickerPlugin
                 ? new PickerPlugin(new SampleColorPickerPluginDataProvider(), {

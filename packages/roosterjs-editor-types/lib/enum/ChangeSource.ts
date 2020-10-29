@@ -57,4 +57,9 @@ export const enum ChangeSource {
      * Editor is switched to light mode, content color is changed
      */
     SwitchToLightMode = 'SwitchToLightMode',
+
+    /**
+     * List chain reorganized numbers of lists
+     */
+    ListChain = 'ListChain',
 }
