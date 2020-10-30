@@ -156,10 +156,10 @@ export { default as UndoPluginState } from './corePluginState/UndoPluginState';
 export {
     AttributeCallback,
     AttributeCallbackMap,
+    CssStyleCallback,
+    CssStyleCallbackMap,
     ElementCallback,
     StringMap,
-    StyleCallback,
-    StyleCallbackMap,
     ElementCallbackMap,
     PredefinedCssMap,
 } from './type/htmlSanitizerCallbackTypes';

@@ -1,9 +1,9 @@
 import {
-    ElementCallbackMap,
     AttributeCallbackMap,
-    StringMap,
-    StyleCallbackMap,
+    CssStyleCallbackMap,
+    ElementCallbackMap,
     PredefinedCssMap,
+    StringMap,
 } from '../type/htmlSanitizerCallbackTypes';
 
 /**
@@ -23,7 +23,7 @@ export default interface HtmlSanitizerOptions {
     /**
      * Callbacks for CSS styles
      */
-    styleCallbacks?: StyleCallbackMap;
+    cssStyleCallbacks?: CssStyleCallbackMap;
 
     /**
      * Allowed HTML tags in addition to default tags, in upper case

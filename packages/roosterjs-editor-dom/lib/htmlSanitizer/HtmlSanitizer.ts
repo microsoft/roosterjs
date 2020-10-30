@@ -17,14 +17,14 @@ import {
     getStyleCallbacks,
 } from './getAllowedValues';
 import {
-    HtmlSanitizerOptions,
-    SanitizeHtmlOptions,
-    StringMap,
-    StyleCallbackMap,
-    ElementCallbackMap,
     AttributeCallbackMap,
+    CssStyleCallbackMap,
+    ElementCallbackMap,
+    HtmlSanitizerOptions,
     NodeType,
     PredefinedCssMap,
+    SanitizeHtmlOptions,
+    StringMap,
 } from 'roosterjs-editor-types';
 
 /**
@@ -65,7 +65,7 @@ export default class HtmlSanitizer {
     }
 
     private elementCallbacks: ElementCallbackMap;
-    private styleCallbacks: StyleCallbackMap;
+    private styleCallbacks: CssStyleCallbackMap;
     private attributeCallbacks: AttributeCallbackMap;
     private allowedTags: string[];
     private disallowedTags: string[];
@@ -83,7 +83,7 @@ export default class HtmlSanitizer {
     constructor(options?: HtmlSanitizerOptions) {
         options = options || {};
         this.elementCallbacks = cloneObject(options.elementCallbacks);
-        this.styleCallbacks = getStyleCallbacks(options.styleCallbacks);
+        this.styleCallbacks = getStyleCallbacks(options.cssStyleCallbacks);
         this.attributeCallbacks = cloneObject(options.attributeCallbacks);
         this.allowedTags = getAllowedTags(options.additionalAllowedTags);
         this.disallowedTags = getDisallowedTags();
@@ -265,7 +265,7 @@ export default class HtmlSanitizer {
             let callback = this.styleCallbacks[name];
             let isInheritable = thisStyle[name] != undefined;
             let keep =
-                (!callback || callback(value, element, context)) &&
+                (!callback || callback(value, element, thisStyle, context)) &&
                 value != 'inherit' &&
                 value.indexOf('expression') < 0 &&
                 name.substr(0, 1) != '-' &&

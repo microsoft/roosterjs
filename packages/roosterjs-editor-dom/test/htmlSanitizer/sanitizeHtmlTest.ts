@@ -155,7 +155,7 @@ describe('sanitizeHtml with styleCallback', () => {
 
     beforeAll(() => {
         sanitizer = new HtmlSanitizer({
-            styleCallbacks: {
+            cssStyleCallbacks: {
                 color: value => value == 'red',
                 ['z-index']: value => parseInt(value) > 1,
             },

@@ -1,5 +1,5 @@
 import { cloneObject } from './cloneObject';
-import { StringMap, StyleCallbackMap } from 'roosterjs-editor-types';
+import { CssStyleCallbackMap, StringMap } from 'roosterjs-editor-types';
 
 const ALLOWED_HTML_TAG_MAP = {
     // Allowed tags
@@ -242,7 +242,7 @@ export function getDefaultStyleValues(additionalDefaultStyles: StringMap): Strin
 /**
  * @internal
  */
-export function getStyleCallbacks(callbacks: StyleCallbackMap): StyleCallbackMap {
+export function getStyleCallbacks(callbacks: CssStyleCallbackMap): CssStyleCallbackMap {
     let result = cloneObject(callbacks);
     result.position = result.position || removeValue;
     result.width = result.width || removeWidthForLiAndDiv;

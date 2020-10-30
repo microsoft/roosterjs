@@ -32,7 +32,7 @@ export default function toggleHeader(editor: IEditor, level: number) {
             let traverser = editor.getSelectionTraverser();
             let blockElement = traverser ? traverser.currentBlockElement : null;
             let sanitizer = new HtmlSanitizer({
-                styleCallbacks: {
+                cssStyleCallbacks: {
                     'font-size': () => false,
                 },
             });
