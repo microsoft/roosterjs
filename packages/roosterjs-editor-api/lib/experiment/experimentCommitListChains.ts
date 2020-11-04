@@ -1,5 +1,5 @@
-import { ChangeSource, IEditor } from 'roosterjs-editor-types';
-import { VListChain } from 'roosterjs-editor-dom';
+import { IEditor } from 'roosterjs-editor-types';
+import { Position, VListChain } from 'roosterjs-editor-dom';
 
 /**
  * Commit changes of all list changes when experiment features are allowed
@@ -8,9 +8,10 @@ import { VListChain } from 'roosterjs-editor-dom';
  */
 export default function experimentCommitListChains(editor: IEditor, chains: VListChain[]) {
     if (chains?.length > 0) {
-        editor.addUndoSnapshot((start, end) => {
-            chains.forEach(chain => chain.commit());
-            editor.select(start, end);
-        }, ChangeSource.ListChain);
+        const range = editor.getSelectionRange();
+        const start = range && Position.getStart(range);
+        const end = range && Position.getEnd(range);
+        chains.forEach(chain => chain.commit());
+        editor.select(start, end);
     }
 }

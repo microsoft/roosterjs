@@ -68,10 +68,12 @@ const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
         if (li.previousSibling) {
             const chains = getListChains(editor);
-            let br = editor.getDocument().createElement('BR');
-            editor.insertNode(br);
-            editor.select(br, PositionType.After);
-            experimentCommitListChains(editor, chains);
+            editor.runAsync(editor => {
+                let br = editor.getDocument().createElement('BR');
+                editor.insertNode(br);
+                editor.select(br, PositionType.After);
+                experimentCommitListChains(editor, chains);
+            });
         } else {
             toggleListAndPreventDefault(event, editor);
         }

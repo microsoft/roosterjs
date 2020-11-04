@@ -26,6 +26,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
     position: NodePosition,
     keyboardEvent?: KeyboardEvent
 ) => {
+    position = position.normalize();
     const block = getBlockElementAtNode(core.contentDiv, position.node);
     let formatNode: HTMLElement;
 
