@@ -31,18 +31,23 @@ export default function applyFormat(
             elementStyle.fontSize = fontSize;
         }
         if (textColor || textColors) {
+            elementStyle.color =
+                (isDarkMode ? textColors?.darkModeColor : textColors?.lightModeColor) || textColor;
+
             if (textColors && isDarkMode) {
                 element.dataset[DarkModeDatasetNames.OriginalStyleColor] =
                     textColors.lightModeColor;
             }
-            elementStyle.color = textColor;
         }
         if (backgroundColor || backgroundColors) {
+            elementStyle.backgroundColor =
+                (isDarkMode ? backgroundColors?.darkModeColor : backgroundColors?.lightModeColor) ||
+                backgroundColor;
+
             if (backgroundColors && isDarkMode) {
                 element.dataset[DarkModeDatasetNames.OriginalStyleBackgroundColor] =
                     backgroundColors.lightModeColor;
             }
-            elementStyle.backgroundColor = backgroundColor;
         }
         if (bold) {
             elementStyle.fontWeight = 'bold';
