@@ -398,6 +398,13 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 this.setIsSuggesting(false);
                 this.blockSuggestions = true;
                 this.cancelDefaultKeyDownEvent(event);
+            } else if (keyboardEvent.key == BACKSPACE_CHARCODE) {
+                // #483: If we are backspacing over the trigger character that triggered this Picker
+                // then we need to hide the Picker
+                const wordBeforeCursor = this.getWord(event);
+                if (wordBeforeCursor == this.pickerOptions.triggerCharacter) {
+                    this.setIsSuggesting(false);
+                }
             } else if (
                 this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
