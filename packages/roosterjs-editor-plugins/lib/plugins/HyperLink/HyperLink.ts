@@ -1,11 +1,12 @@
-import { Browser } from 'roosterjs-editor-dom';
+import { Browser, matchLink } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin, isCtrlOrMetaPressed } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { PluginEvent, PluginEventType, ChangeSource } from 'roosterjs-editor-types';
 
 /**
  * An editor plugin that show a tooltip for existing link
  */
 export default class HyperLink implements EditorPlugin {
+    private trackedLink: HTMLAnchorElement = null;
     private editor: Editor;
     private disposer: () => void;
 
@@ -74,7 +75,22 @@ export default class HyperLink implements EditorPlugin {
                 <Node>event.rawEvent.srcElement
             ) as HTMLAnchorElement;
 
+            // If cursor has moved out of previously tracked link
+            // update link href if applicable and then reset tracked state
+            if (this.trackedLink && anchor !== this.trackedLink) {
+                if (!this.doesLinkDisplayMatchHref(this.trackedLink)) {
+                    this.updateLinkHref(event, this.editor);
+                }
+
+                this.trackedLink = null;
+            }
+
             if (anchor) {
+                // Cache link if its href attribute currently matches its display text
+                if (!this.trackedLink && this.doesLinkDisplayMatchHref(anchor)) {
+                    this.trackedLink = anchor;
+                }
+
                 if (this.onLinkClick && this.onLinkClick(anchor, event.rawEvent) !== false) {
                     return;
                 }
@@ -105,5 +121,31 @@ export default class HyperLink implements EditorPlugin {
         try {
             return anchor ? anchor.href : null;
         } catch {}
+    }
+
+    /**
+     * Compares the normalized URL of inner text of element to its href to see if they match
+     */
+    private doesLinkDisplayMatchHref(element: HTMLAnchorElement): boolean {
+        let url = matchLink(element.innerText.trim()).normalizedUrl;
+        return url === element.href || url + '/' === element.href;
+    }
+
+    /**
+     * Update href of an element in place to new display text if it's a valid URL
+     */
+    private updateLinkHref(event: PluginEvent, editor: Editor) {
+        let originalLink = this.trackedLink;
+        let anchor = originalLink.cloneNode(true /*deep*/) as HTMLAnchorElement;
+
+        let linkData = matchLink(this.trackedLink.innerText.trim());
+        anchor.href = linkData.normalizedUrl;
+
+        editor.runAsync(() => {
+            editor.performAutoComplete(() => {
+                editor.replaceNode(originalLink, anchor);
+                return anchor;
+            }, ChangeSource.AutoLink);
+        });
     }
 }
