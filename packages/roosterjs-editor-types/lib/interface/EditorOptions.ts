@@ -3,6 +3,7 @@ import DefaultFormat from './DefaultFormat';
 import EditorPlugin from './EditorPlugin';
 import UndoSnapshotsService from './UndoSnapshotsService';
 import { CoreApiMap } from './EditorCore';
+import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
 
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class
@@ -69,7 +70,7 @@ export default interface EditorOptions {
     /**
      * Whether enable experiment features
      */
-    enableExperimentFeatures?: boolean;
+    experimentFeatures?: ExperimentalFeatures[];
 
     /**
      * By default, we will stop propagation of a printable keyboard event

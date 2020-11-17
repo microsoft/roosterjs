@@ -10,6 +10,7 @@ import { ChangeSource } from '../enum/ChangeSource';
 import { ContentPosition } from '../enum/ContentPosition';
 import { DOMEventHandler } from '../type/domEventHandler';
 import { EditorUndoState, StyleBasedFormatState } from './FormatState';
+import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
 import { GenericContentEditFeature } from './ContentEditFeature';
 import { GetContentMode } from '../enum/GetContentMode';
 import { InsertOption } from './InsertOption';
@@ -512,9 +513,10 @@ export default interface IEditor {
     isDarkMode(): boolean;
 
     /**
-     * Whether experiment features can be used
+     * Check if the given experimental feature is enabled
+     * @param feature The feature to check
      */
-    useExperimentFeatures(): boolean;
+    isFeatureEnabled(feature: ExperimentalFeatures): boolean;
 
     //#endregion
 }

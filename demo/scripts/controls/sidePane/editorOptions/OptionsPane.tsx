@@ -4,6 +4,7 @@ import Code from './Code';
 import ContentEditFeatures from './ContentEditFeatures';
 import DefaultFormatPane from './DefaultFormat';
 import EditorCode from './codes/EditorCode';
+import ExperimentalFeaturesPane from './ExperimentalFeatures';
 import MainPaneBase from '../../MainPaneBase';
 import Plugins from './Plugins';
 
@@ -28,7 +29,6 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
     private exportForm = React.createRef<HTMLFormElement>();
     private exportData = React.createRef<HTMLInputElement>();
     private showRibbon = React.createRef<HTMLInputElement>();
-    private experiment = React.createRef<HTMLInputElement>();
 
     constructor(props: BuildInPluginProps) {
         super(props);
@@ -39,21 +39,6 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             <div>
                 <div>
                     <button onClick={this.onExport}>Export to CodePen</button>
-                </div>
-
-                <div>
-                    <br />
-                </div>
-
-                <div>
-                    <input
-                        id="useExperimentFeature"
-                        type="checkbox"
-                        checked={this.state.useExperimentFeatures}
-                        onChange={this.onChangeExperiment}
-                        ref={this.experiment}
-                    />
-                    <label htmlFor="useExperimentFeature">Use experiment features</label>
                 </div>
 
                 <div>
@@ -84,6 +69,19 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
                         resetState={this.resetState}
                     />
                 </details>
+                <details>
+                    <summary>
+                        <b>Experimental features:</b>
+                    </summary>
+                    <ExperimentalFeaturesPane
+                        state={this.state.experimentalFeatures}
+                        resetState={this.resetState}
+                    />
+                </details>
+
+                <div>
+                    <br />
+                </div>
 
                 <input
                     id="showRibbon"
@@ -137,7 +135,7 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             pluginList: { ...this.state.pluginList },
             contentEditFeatures: { ...this.state.contentEditFeatures },
             defaultFormat: { ...this.state.defaultFormat },
-            useExperimentFeatures: this.state.useExperimentFeatures,
+            experimentalFeatures: this.state.experimentalFeatures,
         };
 
         if (callback) {
@@ -170,13 +168,6 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             showRibbon,
         });
         MainPaneBase.getInstance().setIsRibbonShown(showRibbon);
-    };
-
-    private onChangeExperiment = () => {
-        let useExperimentFeatures = this.experiment.current.checked;
-        this.resetState(state => {
-            state.useExperimentFeatures = useExperimentFeatures;
-        }, true);
     };
 
     private getHtml() {

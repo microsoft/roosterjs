@@ -34,6 +34,7 @@ describe('LifecyclePlugin', () => {
             },
             isDarkMode: false,
             onExternalContentTransform: undefined,
+            experimentalFeatures: [],
         });
 
         expect(div.isContentEditable).toBeTrue();
@@ -81,6 +82,7 @@ describe('LifecyclePlugin', () => {
             },
             isDarkMode: false,
             onExternalContentTransform: undefined,
+            experimentalFeatures: [],
         });
 
         expect(div.isContentEditable).toBeTrue();

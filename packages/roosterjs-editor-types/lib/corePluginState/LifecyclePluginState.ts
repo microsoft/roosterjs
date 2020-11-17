@@ -1,5 +1,6 @@
 import CustomData from '../interface/CustomData';
 import DefaultFormat from '../interface/DefaultFormat';
+import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
 
 /**
  * The state object for LifecyclePlugin
@@ -24,4 +25,9 @@ export default interface LifecyclePluginState {
      * External content transform function to help do color transform for existing content
      */
     onExternalContentTransform: (htmlIn: HTMLElement) => void;
+
+    /**
+     * Enabled experimental features
+     */
+    experimentalFeatures: ExperimentalFeatures[];
 }

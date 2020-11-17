@@ -16,6 +16,7 @@ import {
     EditorOptions,
     EditorPlugin,
     EditorUndoState,
+    ExperimentalFeatures,
     GenericContentEditFeature,
     GetContentMode,
     IContentTraverser,
@@ -62,7 +63,6 @@ import {
  */
 export default class Editor implements IEditor {
     private core: EditorCore;
-    private enableExperimentFeatures: boolean;
 
     //#region Lifecycle
 
@@ -98,7 +98,6 @@ export default class Editor implements IEditor {
             plugins: plugins.filter(x => !!x),
             ...getPluginState(corePlugins),
         };
-        this.enableExperimentFeatures = options.enableExperimentFeatures;
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
@@ -748,10 +747,11 @@ export default class Editor implements IEditor {
     }
 
     /**
-     * Whether experiment features can be used
+     * Check if the given experimental feature is enabled
+     * @param feature The feature to check
      */
-    public useExperimentFeatures(): boolean {
-        return !!this.enableExperimentFeatures;
+    public isFeatureEnabled(feature: ExperimentalFeatures): boolean {
+        return this.core.lifecycle.experimentalFeatures.indexOf(feature) >= 0;
     }
 
     //#endregion

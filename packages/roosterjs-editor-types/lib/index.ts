@@ -14,6 +14,7 @@ export { DarkModeDatasetNames } from './enum/DarkModeDatasetNames';
 export { Direction } from './enum/Direction';
 export { EntityClasses } from './enum/EntityClasses';
 export { EntityOperation } from './enum/EntityOperation';
+export { ExperimentalFeatures } from './enum/ExperimentalFeatures';
 export { FontSizeChange } from './enum/FontSizeChange';
 export { GetContentMode } from './enum/GetContentMode';
 export { Indentation } from './enum/Indentation';
