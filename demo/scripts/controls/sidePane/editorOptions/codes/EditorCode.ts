@@ -30,7 +30,7 @@ export default class EditorCode extends CodeElement {
         code += this.indent('plugins: plugins,\n');
         code += defaultFormat ? this.indent('defaultFormat: defaultFormat,\n') : '';
         code += expermientalFeatures
-            ? this.indent(`experimentFeatures: [\n${expermientalFeatures}],\n`)
+            ? this.indent(`experimentalFeatures: [\n${expermientalFeatures}],\n`)
             : '';
         code += '};\n';
         code += 'let editor = new roosterjs.Editor(contentDiv, options);\n';

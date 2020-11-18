@@ -68,9 +68,9 @@ export default interface EditorOptions {
     scrollContainer?: HTMLElement;
 
     /**
-     * Whether enable experiment features
+     * Specify the enabled experimental features
      */
-    experimentFeatures?: ExperimentalFeatures[];
+    experimentalFeatures?: ExperimentalFeatures[];
 
     /**
      * By default, we will stop propagation of a printable keyboard event
