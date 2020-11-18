@@ -7,6 +7,9 @@ import {
 } from 'roosterjs-editor-core';
 import { PluginEvent, PluginEventType, ChangeSource } from 'roosterjs-editor-types';
 
+const PAGEUP_KEYCODE = 33;
+const DOWN_KEYCODE = 40;
+
 /**
  * An editor plugin that show a tooltip for existing link
  */
@@ -76,7 +79,9 @@ export default class HyperLink implements EditorPlugin {
     public onPluginEvent(event: PluginEvent): void {
         if (
             event.eventType == PluginEventType.MouseUp ||
-            event.eventType == PluginEventType.KeyUp
+            (event.eventType == PluginEventType.KeyUp &&
+                event.rawEvent.which >= PAGEUP_KEYCODE &&
+                event.rawEvent.which <= DOWN_KEYCODE)
         ) {
             const anchor = cacheGetElementAtCursor(
                 this.editor,
