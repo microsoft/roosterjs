@@ -7,7 +7,7 @@ export interface ExperimentalFeaturesProps {
     resetState: (callback: (state: BuildInPluginState) => void, resetEditor: boolean) => void;
 }
 
-const FeatureName = {
+const FeatureNames: { [key in ExperimentalFeatures]: string } = {
     [ExperimentalFeatures.ListChain]: 'Enable List Chain for numbering list',
     [ExperimentalFeatures.MergePastedLine]:
         'When paste, try merge pasted content to the same line with existing content',
@@ -23,13 +23,9 @@ export default class ExperimentalFeaturesPane extends React.Component<
     render() {
         return (
             <>
-                {[
-                    ExperimentalFeatures.ListChain,
-                    ExperimentalFeatures.MergePastedLine,
-                    ExperimentalFeatures.NewBullet,
-                    ExperimentalFeatures.NewIndentation,
-                    ExperimentalFeatures.NewNumbering,
-                ].map(name => this.renderFeature(name))}
+                {Object.keys(FeatureNames).map((name: keyof typeof FeatureNames) =>
+                    this.renderFeature(name)
+                )}
             </>
         );
     }
@@ -44,7 +40,7 @@ export default class ExperimentalFeaturesPane extends React.Component<
                     id={name}
                     onChange={() => this.onClick(name)}
                 />
-                <label htmlFor={name}>{FeatureName[name]}</label>
+                <label htmlFor={name}>{FeatureNames[name]}</label>
             </div>
         );
     }
