@@ -5,7 +5,7 @@ import {
     isCtrlOrMetaPressed,
     cacheGetElementAtCursor,
 } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType, ChangeSource } from 'roosterjs-editor-types';
+import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 const PAGEUP_KEYCODE = 33;
 const DOWN_KEYCODE = 40;
@@ -163,16 +163,18 @@ export default class HyperLink implements EditorPlugin {
      */
     private updateLinkHref(event: PluginEvent, editor: Editor) {
         let originalLink = this.trackedLink; // keep the element available for the auto complete function
-        let anchor = originalLink.cloneNode(true /*deep*/) as HTMLAnchorElement;
 
         let linkData = matchLink(this.trackedLink.innerText.trim());
-        anchor.href = linkData.normalizedUrl;
+        if (linkData !== null) {
+            let anchor = originalLink.cloneNode(true /*deep*/) as HTMLAnchorElement;
+            anchor.href = linkData.normalizedUrl;
 
-        editor.runAsync(() => {
-            editor.performAutoComplete(() => {
-                editor.replaceNode(originalLink, anchor);
-                return anchor;
+            editor.runAsync(() => {
+                editor.performAutoComplete(() => {
+                    editor.replaceNode(originalLink, anchor);
+                    return anchor;
+                });
             });
-        });
+        }
     }
 }
