@@ -172,7 +172,7 @@ export default class HyperLink implements EditorPlugin {
             editor.performAutoComplete(() => {
                 editor.replaceNode(originalLink, anchor);
                 return anchor;
-            }, ChangeSource.AutoLink);
+            });
         });
     }
 }
