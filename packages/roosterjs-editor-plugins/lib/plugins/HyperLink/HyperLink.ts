@@ -145,7 +145,7 @@ export default class HyperLink implements EditorPlugin {
     }
 
     /**
-     * Compares the normalized URL of inner text of element to its href to see if they match
+     * Compares the URL of inner text of element to its href to see if they match
      */
     private doesLinkDisplayMatchHref(element: HTMLAnchorElement): boolean {
         let display = element.innerText.trim();
@@ -162,7 +162,7 @@ export default class HyperLink implements EditorPlugin {
      * Update href of an element in place to new display text if it's a valid URL
      */
     private updateLinkHref(event: PluginEvent, editor: Editor) {
-        let originalLink = this.trackedLink;
+        let originalLink = this.trackedLink; // keep the element available for the auto complete function
         let anchor = originalLink.cloneNode(true /*deep*/) as HTMLAnchorElement;
 
         let linkData = matchLink(this.trackedLink.innerText.trim());
