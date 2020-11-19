@@ -6,6 +6,7 @@ import {
     IEditor,
     Indentation,
     QueryScope,
+    ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 
 /**
@@ -17,7 +18,7 @@ import {
  * Indentation.Increase to increase indentation or Indentation.Decrease to decrease indentation
  */
 export default function setIndentation(editor: IEditor, indentation: Indentation) {
-    if (editor.useExperimentFeatures()) {
+    if (editor.isFeatureEnabled(ExperimentalFeatures.NewIndentation)) {
         experimentSetIndentation(editor, indentation);
     } else {
         let command: DocumentCommand.Indent | DocumentCommand.Outdent =

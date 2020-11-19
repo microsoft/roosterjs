@@ -25,6 +25,7 @@ import {
     ListType,
     QueryScope,
     RegionBase,
+    ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 
 /**
@@ -160,7 +161,7 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
                         prepareAutoBullet(editor, rangeToDelete);
                         toggleNumbering(editor);
                     } else if (
-                        editor.useExperimentFeatures() &&
+                        editor.isFeatureEnabled(ExperimentalFeatures.ListChain) &&
                         (regions = editor.getSelectedRegions()) &&
                         regions.length == 1
                     ) {
@@ -194,7 +195,7 @@ const MaintainListChain: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 function getListChains(editor: IEditor) {
-    return editor.useExperimentFeatures()
+    return editor.isFeatureEnabled(ExperimentalFeatures.ListChain)
         ? VListChain.createListChains(editor.getSelectedRegions())
         : [];
 }

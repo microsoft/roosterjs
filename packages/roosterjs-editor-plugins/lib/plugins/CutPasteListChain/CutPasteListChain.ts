@@ -6,6 +6,7 @@ import {
     IEditor,
     PluginEvent,
     PluginEventType,
+    ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 
 /**
@@ -73,7 +74,7 @@ export default class CutPasteListChain implements EditorPlugin {
     };
 
     private cacheListChains(source: ChangeSource) {
-        if (this.editor.useExperimentFeatures()) {
+        if (this.editor.isFeatureEnabled(ExperimentalFeatures.ListChain)) {
             this.chains = VListChain.createListChains(this.editor.getSelectedRegions());
             this.expectedChangeSource = source;
         }
