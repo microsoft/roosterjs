@@ -42,25 +42,9 @@ describe('EntityPlugin', () => {
 
     it('init', () => {
         expect(eventMap).toBeDefined();
-        expect(eventMap.contextmenu).toBeDefined();
         expect(state).toEqual({
             clickingPoint: null,
             knownEntityElements: [],
-        });
-    });
-
-    it('context menu event', () => {
-        const target = {};
-        const preventDefault = jasmine.createSpy('preventDefault');
-        const rawEvent = <UIEvent>(<any>{ target, preventDefault });
-        spyOn(dom, 'getEntityFromElement').and.callFake(node => <any>node);
-        eventMap.contextmenu(rawEvent);
-
-        expect(preventDefault).toHaveBeenCalled();
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
-            operation: EntityOperation.ContextMenu,
-            rawEvent,
-            entity: target,
         });
     });
 
