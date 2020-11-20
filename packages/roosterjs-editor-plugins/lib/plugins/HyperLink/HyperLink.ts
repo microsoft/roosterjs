@@ -84,7 +84,7 @@ export default class HyperLink implements EditorPlugin {
             // update link href if applicable and then reset tracked state
             if (this.trackedLink && anchor !== this.trackedLink) {
                 if (!this.doesLinkDisplayMatchHref(this.trackedLink)) {
-                    this.updateLinkHref(event, this.editor);
+                    this.updateLinkHref(event);
                 }
 
                 this.trackedLink = null;
@@ -152,7 +152,7 @@ export default class HyperLink implements EditorPlugin {
     /**
      * Update href of an element in place to new display text if it's a valid URL
      */
-    private updateLinkHref(event: PluginEvent, editor: IEditor) {
+    private updateLinkHref(event: PluginEvent) {
         let originalLink = this.trackedLink; // keep the element available for the auto complete function
 
         let linkData = matchLink(this.trackedLink.innerText.trim());
@@ -160,9 +160,9 @@ export default class HyperLink implements EditorPlugin {
             let anchor = originalLink.cloneNode(true /*deep*/) as HTMLAnchorElement;
             anchor.href = linkData.normalizedUrl;
 
-            editor.runAsync(() => {
-                editor.addUndoSnapshot(() => {
-                    editor.replaceNode(originalLink, anchor);
+            this.editor.runAsync(() => {
+                this.editor.addUndoSnapshot(() => {
+                    this.editor.replaceNode(originalLink, anchor);
                     return anchor;
                 });
             });
