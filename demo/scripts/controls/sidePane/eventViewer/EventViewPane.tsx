@@ -33,6 +33,7 @@ const EventTypeMap = {
     [PluginEventType.PendingFormatStateChanged]: 'PendingFormatStateChanged',
     [PluginEventType.Scroll]: 'Scroll',
     [PluginEventType.BeforeCutCopy]: 'BeforeCutCopy',
+    [PluginEventType.ContextMenu]: 'ContextMenu',
 };
 
 export default class EventViewPane extends React.Component<
@@ -129,6 +130,7 @@ export default class EventViewPane extends React.Component<
 
             case PluginEventType.MouseDown:
             case PluginEventType.MouseUp:
+            case PluginEventType.ContextMenu:
                 return (
                     <span>
                         Button=

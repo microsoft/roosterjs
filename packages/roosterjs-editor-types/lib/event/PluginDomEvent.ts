@@ -23,9 +23,16 @@ export interface PluginMouseUpEvent extends BasePluginEvent<PluginEventType.Mous
 }
 
 /**
+ * This represents a PluginEvent wrapping native ContextMenu event
+ */
+export interface PluginContextMenuEvent extends BasePluginEvent<PluginEventType.ContextMenu> {
+    rawEvent: MouseEvent;
+}
+
+/**
  * This represents a PluginEvent wrapping native Mouse event
  */
-export type PluginMouseEvent = PluginMouseDownEvent | PluginMouseUpEvent;
+export type PluginMouseEvent = PluginMouseDownEvent | PluginMouseUpEvent | PluginContextMenuEvent;
 
 /**
  * This represents a PluginEvent wrapping native KeyDown event

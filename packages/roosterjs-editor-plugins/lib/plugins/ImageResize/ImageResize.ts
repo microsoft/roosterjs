@@ -159,8 +159,6 @@ export default class ImageResize implements EditorPlugin {
 
             if (selectImageAfterUnSelect) {
                 this.editor.select(img);
-            } else {
-                this.editor.select(img, PositionType.After);
             }
 
             this.resizeDiv = null;
@@ -258,7 +256,7 @@ export default class ImageResize implements EditorPlugin {
         }
         this.direction = null;
         this.editor.addUndoSnapshot();
-        this.editor.triggerContentChangedEvent(ChangeSource.ImageResize);
+        this.editor.triggerContentChangedEvent(ChangeSource.ImageResize, img);
         this.stopEvent(e);
     };
 

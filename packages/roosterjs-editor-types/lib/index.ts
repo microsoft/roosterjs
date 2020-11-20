@@ -37,6 +37,7 @@ export { default as PendingFormatStateChangedEvent } from './event/PendingFormat
 export {
     PluginDomEvent,
     PluginCompositionEvent,
+    PluginContextMenuEvent,
     PluginKeyboardEvent,
     PluginKeyDownEvent,
     PluginKeyPressEvent,

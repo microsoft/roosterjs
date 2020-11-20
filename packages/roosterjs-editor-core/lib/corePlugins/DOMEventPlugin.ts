@@ -61,6 +61,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
             // 2. Mouse event
             mousedown: PluginEventType.MouseDown,
+            contextmenu: PluginEventType.ContextMenu,
 
             // 3. IME state management
             compositionstart: () => (this.state.isInIME = true),

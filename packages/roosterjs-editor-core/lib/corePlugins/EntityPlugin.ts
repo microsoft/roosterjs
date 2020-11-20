@@ -42,7 +42,6 @@ const ALLOWED_CSS_CLASSES = [
  */
 export default class EntityPlugin implements PluginWithState<EntityPluginState> {
     private editor: IEditor;
-    private disposer: () => void;
     private state: EntityPluginState;
 
     /**
@@ -68,17 +67,12 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.disposer = this.editor.addDomEventHandler({
-            contextmenu: this.handleContextMenuEvent,
-        });
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        this.disposer();
-        this.disposer = null;
         this.editor = null;
         this.state.knownEntityElements = [];
         this.state.clickingPoint = null;
@@ -123,10 +117,13 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             case PluginEventType.ExtractContentWithDom:
                 this.handleExtractContentWithDomEvent(event.clonedRoot);
                 break;
+            case PluginEventType.ContextMenu:
+                this.handleContextMenuEvent(event.rawEvent);
+                break;
         }
     }
 
-    private handleContextMenuEvent = (event: UIEvent) => {
+    private handleContextMenuEvent(event: UIEvent) {
         const node = event.target as Node;
         const entityElement = node && this.editor.getElementAtCursor(getEntitySelector(), node);
 
@@ -134,7 +131,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             event.preventDefault();
             this.triggerEvent(entityElement, EntityOperation.ContextMenu, event);
         }
-    };
+    }
 
     private handleCutEvent = (event: ClipboardEvent) => {
         const range = this.editor.getSelectionRange();
