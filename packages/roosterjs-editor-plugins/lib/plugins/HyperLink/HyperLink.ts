@@ -137,8 +137,14 @@ export default class HyperLink implements EditorPlugin {
      * Compares the normalized URL of inner text of element to its href to see if they match
      */
     private doesLinkDisplayMatchHref(element: HTMLAnchorElement): boolean {
-        let url = matchLink(element.innerText.trim()).normalizedUrl;
-        return url === element.href || url + '/' === element.href;
+        let display = element.innerText.trim();
+        let rule = new RegExp(`^(?:https?:\\/\\/)?${display}\\/?`, 'i');
+        let href = this.tryGetHref(element);
+        if (href !== null) {
+            return rule.test(href);
+        }
+
+        return false;
     }
 
     /**
