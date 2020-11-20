@@ -1,5 +1,5 @@
 import { Browser, isCtrlOrMetaPressed, matchLink } from 'roosterjs-editor-dom';
-import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 /**
  * An editor plugin that show a tooltip for existing link
@@ -70,7 +70,9 @@ export default class HyperLink implements EditorPlugin {
     public onPluginEvent(event: PluginEvent): void {
         if (
             event.eventType == PluginEventType.MouseUp ||
-            event.eventType == PluginEventType.KeyUp
+            (event.eventType == PluginEventType.KeyUp &&
+                event.rawEvent.which >= Keys.PAGEUP &&
+                event.rawEvent.which <= Keys.DOWN)
         ) {
             const anchor = this.editor.getElementAtCursor(
                 'A[href]',
