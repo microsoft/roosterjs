@@ -68,10 +68,14 @@ export default class HyperLink implements EditorPlugin {
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent): void {
-        if (event.eventType == PluginEventType.MouseUp) {
+        if (
+            event.eventType == PluginEventType.MouseUp ||
+            event.eventType == PluginEventType.KeyUp
+        ) {
             const anchor = this.editor.getElementAtCursor(
-                'A',
-                <Node>event.rawEvent.srcElement
+                'A[href]',
+                null /*startFrom*/,
+                event
             ) as HTMLAnchorElement;
 
             // If cursor has moved out of previously tracked link
@@ -84,12 +88,19 @@ export default class HyperLink implements EditorPlugin {
                 this.trackedLink = null;
             }
 
-            if (anchor) {
-                // Cache link if its href attribute currently matches its display text
-                if (!this.trackedLink && this.doesLinkDisplayMatchHref(anchor)) {
-                    this.trackedLink = anchor;
-                }
+            // Cache link if its href attribute currently matches its display text
+            if (!this.trackedLink && this.doesLinkDisplayMatchHref(anchor)) {
+                this.trackedLink = anchor;
+            }
+        }
 
+        if (event.eventType == PluginEventType.MouseUp) {
+            const anchor = this.editor.getElementAtCursor(
+                'A',
+                <Node>event.rawEvent.srcElement
+            ) as HTMLAnchorElement;
+
+            if (anchor) {
                 if (this.onLinkClick && this.onLinkClick(anchor, event.rawEvent) !== false) {
                     return;
                 }
