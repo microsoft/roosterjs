@@ -1,10 +1,18 @@
 import { Browser, isCtrlOrMetaPressed, matchLink } from 'roosterjs-editor-dom';
-import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    //    ChangeSource,
+    EditorPlugin,
+    IEditor,
+    Keys,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 
 /**
  * An editor plugin that show a tooltip for existing link
  */
 export default class HyperLink implements EditorPlugin {
+    private originalHref: string;
     private trackedLink: HTMLAnchorElement = null;
     private editor: IEditor;
     private disposer: () => void;
@@ -72,7 +80,8 @@ export default class HyperLink implements EditorPlugin {
             event.eventType == PluginEventType.MouseUp ||
             (event.eventType == PluginEventType.KeyUp &&
                 event.rawEvent.which >= Keys.PAGEUP &&
-                event.rawEvent.which <= Keys.DOWN)
+                event.rawEvent.which <= Keys.DOWN) ||
+            event.eventType == PluginEventType.ContentChanged
         ) {
             const anchor = this.editor.getElementAtCursor(
                 'A[href]',
@@ -88,11 +97,19 @@ export default class HyperLink implements EditorPlugin {
                 }
 
                 this.trackedLink = null;
+                this.originalHref = '';
             }
 
-            // Cache link if its href attribute currently matches its display text
+            // If the link's href value was edited, stop tracking the link.
+            if (this.trackedLink && this.tryGetHref(this.trackedLink) !== this.originalHref) {
+                this.trackedLink = null;
+                this.originalHref = '';
+            }
+
+            // Cache link and href value if its href attribute currently matches its display text
             if (!this.trackedLink && this.doesLinkDisplayMatchHref(anchor)) {
                 this.trackedLink = anchor;
+                this.originalHref = this.tryGetHref(anchor);
             }
         }
 
