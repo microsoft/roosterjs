@@ -139,11 +139,14 @@ export default class HyperLink implements EditorPlugin {
      * Compares the normalized URL of inner text of element to its href to see if they match
      */
     private doesLinkDisplayMatchHref(element: HTMLAnchorElement): boolean {
-        let display = element.innerText.trim();
-        let rule = new RegExp(`^(?:https?:\\/\\/)?${display}\\/?`, 'i');
-        let href = this.tryGetHref(element);
-        if (href !== null) {
-            return rule.test(href);
+        if (element) {
+            let display = element.innerText.trim();
+            let escapedDisplay = display.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            let rule = new RegExp(`^(?:https?:\\/\\/)?${escapedDisplay}\\/?`, 'i');
+            let href = this.tryGetHref(element);
+            if (href !== null) {
+                return rule.test(href);
+            }
         }
 
         return false;
@@ -153,19 +156,13 @@ export default class HyperLink implements EditorPlugin {
      * Update href of an element in place to new display text if it's a valid URL
      */
     private updateLinkHref(event: PluginEvent) {
-        let originalLink = this.trackedLink; // keep the element available for the auto complete function
-
-        let linkData = matchLink(this.trackedLink.innerText.trim());
-        if (linkData !== null) {
-            let anchor = originalLink.cloneNode(true /*deep*/) as HTMLAnchorElement;
-            anchor.href = linkData.normalizedUrl;
-
-            this.editor.runAsync(() => {
+        if (this.trackedLink) {
+            let linkData = matchLink(this.trackedLink.innerText.trim());
+            if (linkData !== null) {
                 this.editor.addUndoSnapshot(() => {
-                    this.editor.replaceNode(originalLink, anchor);
-                    return anchor;
+                    this.trackedLink.href = linkData.normalizedUrl;
                 });
-            });
+            }
         }
     }
 }
