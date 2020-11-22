@@ -21,6 +21,7 @@ const ENTITY_TYPE = 'IMAGE_RESIZE_WRAPPER';
 
 const HANDLE_SIZE = 7;
 const HANDLE_MARGIN = 3;
+const HANDLE_POSITIONS = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
 
 /**
  * ImageResize plugin provides the ability to resize an inline image in editor
@@ -235,8 +236,6 @@ export default class ImageResize implements EditorPlugin {
                     img.style.height = newHeight + 'px';
                 }
             }
-
-            this.positionSingleDirectionHandles(img);
         }
         this.stopEvent(e);
     };
@@ -297,26 +296,27 @@ export default class ImageResize implements EditorPlugin {
         wrapper.style.display = 'inline-flex';
 
         const html =
-            ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w']
-                .map(
-                    pos =>
-                        `<div div id=${pos}-handle style="position:absolute;width:${HANDLE_SIZE}px;height:${HANDLE_SIZE}px;background-color: ${
-                            this.selectionBorderColor
-                        };cursor: ${pos}-resize;${
-                            this.isNorth(pos) ? 'top' : 'bottom'
-                        }:-${HANDLE_MARGIN}px;${
-                            this.isWest(pos) ? 'left' : 'right'
-                        }:-${HANDLE_MARGIN}px"></div>`
-                )
-                .join('') +
-            `<div style="position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${this.selectionBorderColor};pointer-events:none;"></div>`;
+            HANDLE_POSITIONS.map(
+                pos =>
+                    `<div style="position:absolute;${this.isWest(pos) ? 'left' : 'right'}:${
+                        this.isSingleDirectionNS(pos) ? '50%' : '0px'
+                    };${this.isNorth(pos) ? 'top' : 'bottom'}:${
+                        this.isSingleDirectionWE(pos) ? '50%' : '0px'
+                    }">
+                            <div id=${pos}-handle style="position:relative;width:${HANDLE_SIZE}px;height:${HANDLE_SIZE}px;background-color: ${
+                        this.selectionBorderColor
+                    };cursor: ${pos}-resize;${
+                        this.isNorth(pos) ? 'top' : 'bottom'
+                    }:-${HANDLE_MARGIN}px;${
+                        this.isWest(pos) ? 'left' : 'right'
+                    }:-${HANDLE_MARGIN}px"></div></div>`
+            ).join('') +
+            `<div style="position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${this.selectionBorderColor};pointer-events:none;">`;
 
         fromHtml(html, this.editor.getDocument()).forEach(div => {
             wrapper.appendChild(div);
             div.addEventListener('mousedown', this.startResize);
         });
-
-        this.positionSingleDirectionHandles(target);
 
         // If the resizeDiv's image has a transform, apply it to the container
         const selectedImage = this.getSelectedImage(wrapper);
@@ -326,22 +326,6 @@ export default class ImageResize implements EditorPlugin {
         }
 
         return wrapper;
-    }
-
-    private positionSingleDirectionHandles(target: HTMLElement) {
-        const middleWidth = Math.floor((target.clientWidth - HANDLE_SIZE) / 2);
-        const middleHeight = Math.floor((target.clientHeight - HANDLE_SIZE) / 2);
-
-        ['n', 's', 'e', 'w'].forEach(pos => {
-            const handle = document.getElementById(`${pos}-handle`);
-            if (handle) {
-                if (this.isSingleDirectionNS(pos)) {
-                    handle.style.left = `${middleWidth}px`;
-                } else {
-                    handle.style.top = `${middleHeight}px`;
-                }
-            }
-        });
     }
 
     private stopEvent = (e: Event) => {
