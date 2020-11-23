@@ -183,7 +183,7 @@ export default class ImageResize implements EditorPlugin {
             let document = this.editor.getDocument();
             document.addEventListener('mousemove', this.doResize, true /*useCapture*/);
             document.addEventListener('mouseup', this.finishResize, true /*useCapture*/);
-            this.direction = (<HTMLElement>(e.srcElement || e.target)).style.cursor;
+            this.direction = (<HTMLElement>(e.srcElement || e.target)).dataset.direction;
         }
 
         this.stopEvent(e);
@@ -194,7 +194,6 @@ export default class ImageResize implements EditorPlugin {
         if (this.editor && img) {
             let widthChange = e.pageX - this.startPageX;
             let heightChange = e.pageY - this.startPageY;
-
             let newWidth = this.calculateNewWidth(widthChange);
             let newHeight = this.calculateNewHeight(heightChange);
 
@@ -303,7 +302,7 @@ export default class ImageResize implements EditorPlugin {
                     };${this.isNorth(pos) ? 'top' : 'bottom'}:${
                         this.isSingleDirectionWE(pos) ? '50%' : '0px'
                     }">
-                            <div id=${pos}-handle style="position:relative;width:${HANDLE_SIZE}px;height:${HANDLE_SIZE}px;background-color: ${
+                            <div id=${pos}-handle data-direction="${pos}" style="position:relative;width:${HANDLE_SIZE}px;height:${HANDLE_SIZE}px;background-color: ${
                         this.selectionBorderColor
                     };cursor: ${pos}-resize;${
                         this.isNorth(pos) ? 'top' : 'bottom'
@@ -359,16 +358,11 @@ export default class ImageResize implements EditorPlugin {
     }
 
     private isSingleDirectionNS(direction: string): boolean {
-        return (
-            direction &&
-            (direction.substr(0, 1) == 'n' || direction.substr(0, 1) == 's') &&
-            direction.substr(1, 1) != 'e' &&
-            direction.substr(1, 1) != 'w'
-        );
+        return direction && (direction == 'n' || direction == 's');
     }
 
     private isSingleDirectionWE(direction: string): boolean {
-        return direction && (direction.substr(0, 1) == 'w' || direction.substr(0, 1) == 'e');
+        return direction && (direction == 'w' || direction == 'e');
     }
 
     private onDragStart = (e: DragEvent) => {
