@@ -58,12 +58,11 @@ export default class HyperLink implements EditorPlugin {
     };
 
     protected onBlur = (e: FocusEvent) => {
-        if (this.trackedLink && !this.doesLinkDisplayMatchHref(this.trackedLink)) {
-            this.updateLinkHref();
+        if (this.trackedLink) {
+            this.updateLinkHrefIfShouldUpdate();
         }
 
-        this.trackedLink = null;
-        this.originalHref = '';
+        this.resetLinkTracking();
     };
 
     /**
@@ -104,15 +103,12 @@ export default class HyperLink implements EditorPlugin {
                     this.trackedLink &&
                     (anchor !== this.trackedLink || event.eventType == PluginEventType.KeyUp)
                 ) {
-                    if (!this.doesLinkDisplayMatchHref(this.trackedLink)) {
-                        this.updateLinkHref();
-                    }
+                    this.updateLinkHrefIfShouldUpdate();
                 }
 
                 // If the link's href value was edited, or the cursor has moved out of the previously tracked link,
                 // stop tracking the link.
-                this.trackedLink = null;
-                this.originalHref = '';
+                this.resetLinkTracking();
             }
 
             // Cache link and href value if its href attribute currently matches its display text
@@ -168,6 +164,23 @@ export default class HyperLink implements EditorPlugin {
         return (
             isCharacterValue(event) || event.which == Keys.BACKSPACE || event.which == Keys.DELETE
         );
+    }
+
+    /**
+     * Updates the href of the tracked link if the display text doesn't match href anymore
+     */
+    private updateLinkHrefIfShouldUpdate() {
+        if (!this.doesLinkDisplayMatchHref(this.trackedLink)) {
+            this.updateLinkHref();
+        }
+    }
+
+    /**
+     * Clears the tracked link and its original href value so that it's back to default state
+     */
+    private resetLinkTracking() {
+        this.trackedLink = null;
+        this.originalHref = '';
     }
 
     /**
