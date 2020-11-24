@@ -354,7 +354,7 @@ export default class ImageResize implements EditorPlugin {
     }
 
     private isWest(direction: string): boolean {
-        return direction && (direction.substr(0, 1) == 'w' || direction.substr(1, 1) == 'w');
+        return direction && (direction.substr(1, 1) == 'w' || direction == 'w');
     }
 
     private isSingleDirectionNS(direction: string): boolean {
