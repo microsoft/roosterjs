@@ -5,9 +5,14 @@ import IEditor from './IEditor';
  */
 export default interface PickerDataProvider {
     /**
-     * Function called when the plugin is intialized to register two callbacks with the data provider and a reference to the Editor.
-     * The first is called in order to "commit" a new element to the editor body that isn't handled automatically by the editor plugin.
-     * The second sets the isSuggesting value for situations wherethe UX needs to manipulate the suggesting state that's otherwise plugin managed.
+     * Function called when the plugin is intialized to register two callbacks with the
+     * data provider and to provide a reference to the Editor. The first callback, insertNodeCallback,
+     * may be called in order to "commit" a new element to the editor body that isn't handled
+     * automatically by the editor plugin. The second callback, setIsSuggestingCallback, sets
+     * the isSuggesting value in the plugin. The isSuggesting value determines whether the picker
+     * is shown (true) or hidden (false). In most cases, this value is managed by the plugin, but
+     * the setIsSuggestingCallback may be used for situations where the UX needs to manipulate the
+     * suggesting state on its own.
      */
     onInitalize: (
         insertNodeCallback: (nodeToInsert: HTMLElement) => void,
@@ -21,7 +26,8 @@ export default interface PickerDataProvider {
     onDispose: () => void;
 
     /**
-     * Function called when the picker changes suggesting state.
+     * Function called when the picker changes suggesting state
+     * (isSuggesting - true: Plugin is being shown; false: Plugin is being hidden).
      */
     onIsSuggestingChanged: (isSuggesting: boolean) => void;
 
@@ -47,7 +53,8 @@ export default interface PickerDataProvider {
     onRemove: (nodeRemoved: Node, isBackwards: boolean) => Node;
 
     /**
-     * Function that returns the current cursor position as an anchor point for where to show UX.
+     * Function that is called by the plugin to set the current cursor position as an
+     * anchor point for where to show UX.
      */
     setCursorPoint?: (targetPoint: { x: number; y: number }, buffer: number) => void;
 
