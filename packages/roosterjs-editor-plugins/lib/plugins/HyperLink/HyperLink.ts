@@ -1,12 +1,5 @@
-import { Browser, isCtrlOrMetaPressed, matchLink } from 'roosterjs-editor-dom';
-import {
-    //    ChangeSource,
-    EditorPlugin,
-    IEditor,
-    Keys,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import { Browser, isCharacterValue, isCtrlOrMetaPressed, matchLink } from 'roosterjs-editor-dom';
+import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 /**
  * An editor plugin that show a tooltip for existing link
@@ -45,7 +38,11 @@ export default class HyperLink implements EditorPlugin {
         this.editor = editor;
         this.disposer =
             this.getTooltipCallback &&
-            editor.addDomEventHandler({ mouseover: this.onMouse, mouseout: this.onMouse });
+            editor.addDomEventHandler({
+                mouseover: this.onMouse,
+                mouseout: this.onMouse,
+                blur: this.onBlur,
+            });
     }
 
     protected onMouse = (e: MouseEvent) => {
@@ -58,6 +55,15 @@ export default class HyperLink implements EditorPlugin {
                 e.type == 'mouseover' ? this.getTooltipCallback(href, a) : null
             );
         }
+    };
+
+    protected onBlur = (e: FocusEvent) => {
+        if (this.trackedLink && !this.doesLinkDisplayMatchHref(this.trackedLink)) {
+            this.updateLinkHref();
+        }
+
+        this.trackedLink = null;
+        this.originalHref = '';
     };
 
     /**
@@ -78,10 +84,7 @@ export default class HyperLink implements EditorPlugin {
     public onPluginEvent(event: PluginEvent): void {
         if (
             event.eventType == PluginEventType.MouseUp ||
-            (event.eventType == PluginEventType.KeyUp &&
-                event.rawEvent.which >= Keys.PAGEUP &&
-                event.rawEvent.which <= Keys.DOWN) ||
-            event.eventType == PluginEventType.ContentChanged
+            (event.eventType == PluginEventType.KeyUp && !this.isContentEditValue(event.rawEvent))
         ) {
             const anchor = this.editor.getElementAtCursor(
                 'A[href]',
@@ -89,19 +92,25 @@ export default class HyperLink implements EditorPlugin {
                 event
             ) as HTMLAnchorElement;
 
-            // If cursor has moved out of previously tracked link
-            // update link href if applicable and then reset tracked state
-            if (this.trackedLink && anchor !== this.trackedLink) {
-                if (!this.doesLinkDisplayMatchHref(this.trackedLink)) {
-                    this.updateLinkHref(event);
+            if (
+                this.trackedLink &&
+                (anchor !== this.trackedLink ||
+                    event.eventType == PluginEventType.KeyUp ||
+                    this.tryGetHref(this.trackedLink) !== this.originalHref)
+            ) {
+                // If cursor has moved out of previously tracked link or non-content key event
+                // detected, update link href if display text doesn't match href anymore
+                if (
+                    this.trackedLink &&
+                    (anchor !== this.trackedLink || event.eventType == PluginEventType.KeyUp)
+                ) {
+                    if (!this.doesLinkDisplayMatchHref(this.trackedLink)) {
+                        this.updateLinkHref();
+                    }
                 }
 
-                this.trackedLink = null;
-                this.originalHref = '';
-            }
-
-            // If the link's href value was edited, stop tracking the link.
-            if (this.trackedLink && this.tryGetHref(this.trackedLink) !== this.originalHref) {
+                // If the link's href value was edited, or the cursor has moved out of the previously tracked link,
+                // stop tracking the link.
                 this.trackedLink = null;
                 this.originalHref = '';
             }
@@ -153,11 +162,23 @@ export default class HyperLink implements EditorPlugin {
     }
 
     /**
-     * Compares the normalized URL of inner text of element to its href to see if they match
+     * Determines if KeyboardEvent is meant to edit content
+     */
+    private isContentEditValue(event: KeyboardEvent): boolean {
+        return (
+            isCharacterValue(event) || event.which == Keys.BACKSPACE || event.which == Keys.DELETE
+        );
+    }
+
+    /**
+     * Compares the normalized URL of inner text of element to its href to see if they match.
      */
     private doesLinkDisplayMatchHref(element: HTMLAnchorElement): boolean {
         if (element) {
             let display = element.innerText.trim();
+
+            // We first escape the display text so that any text passed into the regex is not
+            // treated as a special character.
             let escapedDisplay = display.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
             let rule = new RegExp(`^(?:https?:\\/\\/)?${escapedDisplay}\\/?`, 'i');
             let href = this.tryGetHref(element);
@@ -172,7 +193,7 @@ export default class HyperLink implements EditorPlugin {
     /**
      * Update href of an element in place to new display text if it's a valid URL
      */
-    private updateLinkHref(event: PluginEvent) {
+    private updateLinkHref() {
         if (this.trackedLink) {
             let linkData = matchLink(this.trackedLink.innerText.trim());
             if (linkData !== null) {
