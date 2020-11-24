@@ -83,7 +83,9 @@ export default class HyperLink implements EditorPlugin {
     public onPluginEvent(event: PluginEvent): void {
         if (
             event.eventType == PluginEventType.MouseUp ||
-            (event.eventType == PluginEventType.KeyUp && !this.isContentEditValue(event.rawEvent))
+            (event.eventType == PluginEventType.KeyUp &&
+                (!this.isContentEditValue(event.rawEvent) || event.rawEvent.which == Keys.SPACE)) ||
+            event.eventType == PluginEventType.ContentChanged
         ) {
             const anchor = this.editor.getElementAtCursor(
                 'A[href]',
@@ -91,23 +93,23 @@ export default class HyperLink implements EditorPlugin {
                 event
             ) as HTMLAnchorElement;
 
+            const shouldCheckUpdateLink =
+                anchor !== this.trackedLink ||
+                event.eventType == PluginEventType.KeyUp ||
+                event.eventType == PluginEventType.ContentChanged;
+
             if (
                 this.trackedLink &&
-                (anchor !== this.trackedLink ||
-                    event.eventType == PluginEventType.KeyUp ||
-                    this.tryGetHref(this.trackedLink) !== this.originalHref)
+                (shouldCheckUpdateLink || this.tryGetHref(this.trackedLink) !== this.originalHref)
             ) {
-                // If cursor has moved out of previously tracked link or non-content key event
-                // detected, update link href if display text doesn't match href anymore
-                if (
-                    this.trackedLink &&
-                    (anchor !== this.trackedLink || event.eventType == PluginEventType.KeyUp)
-                ) {
+                // If cursor has moved out of previously tracked link
+                // update link href if display text doesn't match href anymore.
+                if (shouldCheckUpdateLink) {
                     this.updateLinkHrefIfShouldUpdate();
                 }
 
-                // If the link's href value was edited, or the cursor has moved out of the previously tracked link,
-                // stop tracking the link.
+                // If the link's href value was edited, or the cursor has moved out of the
+                // previously tracked link, stop tracking the link.
                 this.resetLinkTracking();
             }
 
