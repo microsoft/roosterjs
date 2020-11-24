@@ -19,6 +19,10 @@ const ALT_KEYCODE = 18;
 
 const ENTITY_TYPE = 'IMAGE_RESIZE_WRAPPER';
 
+const HANDLE_SIZE = 7;
+const HANDLE_MARGIN = 3;
+const HANDLE_POSITIONS = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
+
 /**
  * ImageResize plugin provides the ability to resize an inline image in editor
  */
@@ -177,7 +181,7 @@ export default class ImageResize implements EditorPlugin {
             let document = this.editor.getDocument();
             document.addEventListener('mousemove', this.doResize, true /*useCapture*/);
             document.addEventListener('mouseup', this.finishResize, true /*useCapture*/);
-            this.direction = (<HTMLElement>(e.srcElement || e.target)).style.cursor;
+            this.direction = (<HTMLElement>(e.srcElement || e.target)).dataset.direction;
         }
 
         this.stopEvent(e);
@@ -188,14 +192,8 @@ export default class ImageResize implements EditorPlugin {
         if (this.editor && img) {
             let widthChange = e.pageX - this.startPageX;
             let heightChange = e.pageY - this.startPageY;
-            let newWidth = Math.max(
-                this.startWidth + (this.isWest(this.direction) ? -widthChange : widthChange),
-                this.minWidth
-            );
-            let newHeight = Math.max(
-                this.startHeight + (this.isNorth(this.direction) ? -heightChange : heightChange),
-                this.minHeight
-            );
+            let newWidth = this.calculateNewWidth(widthChange);
+            let newHeight = this.calculateNewHeight(heightChange);
 
             if (this.forcePreserveRatio || e.shiftKey) {
                 let ratio =
@@ -239,6 +237,28 @@ export default class ImageResize implements EditorPlugin {
         this.stopEvent(e);
     };
 
+    private calculateNewWidth(widthChange: number): number {
+        let newWidth = this.startWidth;
+        if (!this.isSingleDirectionNS(this.direction)) {
+            newWidth = Math.max(
+                this.startWidth + (this.isWest(this.direction) ? -widthChange : widthChange),
+                this.minWidth
+            );
+        }
+        return newWidth;
+    }
+
+    private calculateNewHeight(heightChange: number): number {
+        let newHeight = this.startHeight;
+        if (!this.isSingleDirectionWE(this.direction)) {
+            newHeight = Math.max(
+                this.startHeight + (this.isNorth(this.direction) ? -heightChange : heightChange),
+                this.minHeight
+            );
+        }
+        return newHeight;
+    }
+
     private finishResize = (e: MouseEvent) => {
         var img = this.getSelectedImage() as HTMLImageElement;
         if (this.editor && img) {
@@ -273,17 +293,23 @@ export default class ImageResize implements EditorPlugin {
         wrapper.style.display = 'inline-flex';
 
         const html =
-            ['nw', 'ne', 'sw', 'se']
-                .map(
-                    pos =>
-                        `<div style="position:absolute;width:7px;height:7px;background-color: ${
-                            this.selectionBorderColor
-                        };cursor: ${pos}-resize;${this.isNorth(pos) ? 'top' : 'bottom'}:-3px;${
-                            this.isWest(pos) ? 'left' : 'right'
-                        }:-3px"></div>`
-                )
-                .join('') +
-            `<div style="position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${this.selectionBorderColor};pointer-events:none;"></div>`;
+            HANDLE_POSITIONS.map(
+                pos =>
+                    `<div style="position:absolute;${this.isWest(pos) ? 'left' : 'right'}:${
+                        this.isSingleDirectionNS(pos) ? '50%' : '0px'
+                    };${this.isNorth(pos) ? 'top' : 'bottom'}:${
+                        this.isSingleDirectionWE(pos) ? '50%' : '0px'
+                    }">
+                            <div id=${pos}-handle data-direction="${pos}" style="position:relative;width:${HANDLE_SIZE}px;height:${HANDLE_SIZE}px;background-color: ${
+                        this.selectionBorderColor
+                    };cursor: ${pos}-resize;${
+                        this.isNorth(pos) ? 'top' : 'bottom'
+                    }:-${HANDLE_MARGIN}px;${
+                        this.isWest(pos) ? 'left' : 'right'
+                    }:-${HANDLE_MARGIN}px"></div></div>`
+            ).join('') +
+            `<div style="position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${this.selectionBorderColor};pointer-events:none;">`;
+
         fromHtml(html, this.editor.getDocument()).forEach(div => {
             wrapper.appendChild(div);
             div.addEventListener('mousedown', this.startResize);
@@ -326,7 +352,15 @@ export default class ImageResize implements EditorPlugin {
     }
 
     private isWest(direction: string): boolean {
-        return direction && direction.substr(1, 1) == 'w';
+        return direction && (direction.substr(1, 1) == 'w' || direction == 'w');
+    }
+
+    private isSingleDirectionNS(direction: string): boolean {
+        return direction && (direction == 'n' || direction == 's');
+    }
+
+    private isSingleDirectionWE(direction: string): boolean {
+        return direction && (direction == 'w' || direction == 'e');
     }
 
     private onDragStart = (e: DragEvent) => {
