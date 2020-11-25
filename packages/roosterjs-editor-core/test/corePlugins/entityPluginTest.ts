@@ -13,7 +13,6 @@ import {
 
 describe('EntityPlugin', () => {
     let plugin: EntityPlugin;
-    let eventMap: Record<string, (event: UIEvent) => void>;
     let triggerPluginEvent: jasmine.Spy;
     let state: EntityPluginState;
     let editor: IEditor;
@@ -23,10 +22,6 @@ describe('EntityPlugin', () => {
         plugin = new EntityPlugin();
         state = plugin.getState();
         editor = <IEditor>(<any>{
-            addDomEventHandler: (map: Record<string, (event: UIEvent) => void>) => {
-                eventMap = map;
-                return () => {};
-            },
             getElementAtCursor: (selector: string, node: Node) => node,
             triggerPluginEvent,
         });
@@ -36,12 +31,10 @@ describe('EntityPlugin', () => {
     afterEach(() => {
         plugin.dispose();
         plugin = null;
-        eventMap = null;
         editor = null;
     });
 
     it('init', () => {
-        expect(eventMap).toBeDefined();
         expect(state).toEqual({
             clickingPoint: null,
             knownEntityElements: [],
