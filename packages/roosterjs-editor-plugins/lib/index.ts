@@ -1,4 +1,5 @@
 export * from './ContentEdit';
+export * from './ContextMenu';
 export * from './CustomReplace';
 export * from './CutPasteListChain';
 export * from './HyperLink';

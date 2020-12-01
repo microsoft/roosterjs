@@ -16,6 +16,7 @@ const initialState: BuildInPluginState = {
         tableResize: true,
         customReplace: true,
         pickerPlugin: true,
+        contextMenu: true,
     },
     contentEditFeatures: getDefaultContentEditFeatureSettings(),
     defaultFormat: {},

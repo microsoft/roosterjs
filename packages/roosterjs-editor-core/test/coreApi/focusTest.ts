@@ -21,6 +21,7 @@ describe('focus', () => {
             isInIME: false,
             scrollContainer: null,
             stopPrintableKeyboardEventPropagation: false,
+            contextMenuProviders: [],
         };
 
         focus(core);

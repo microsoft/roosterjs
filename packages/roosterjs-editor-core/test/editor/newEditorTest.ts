@@ -60,6 +60,7 @@ describe('Editor', () => {
             scrollContainer: div,
             selectionRange: null,
             stopPrintableKeyboardEventPropagation: true,
+            contextMenuProviders: [],
         });
         expect(core.edit).toEqual({
             features: {},
@@ -163,6 +164,7 @@ describe('Editor', () => {
             scrollContainer: scrollContaner,
             selectionRange: null,
             stopPrintableKeyboardEventPropagation: false,
+            contextMenuProviders: [],
         });
         expect(core.edit).toEqual({
             features: {},

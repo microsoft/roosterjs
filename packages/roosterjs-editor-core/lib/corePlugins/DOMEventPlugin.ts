@@ -1,12 +1,14 @@
-import { Browser, isCharacterValue } from 'roosterjs-editor-dom';
+import { arrayPush, Browser, isCharacterValue } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
+    ContextMenuProvider,
     DOMEventHandler,
     DOMEventPluginState,
     EditorOptions,
     IEditor,
     PluginEventType,
     PluginWithState,
+    EditorPlugin,
 } from 'roosterjs-editor-types';
 
 /**
@@ -36,6 +38,8 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             scrollContainer: options.scrollContainer || contentDiv,
             selectionRange: null,
             stopPrintableKeyboardEventPropagation: !options.allowKeyboardEventPropagation,
+            contextMenuProviders:
+                options.plugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) || [],
         };
     }
 
@@ -61,7 +65,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
             // 2. Mouse event
             mousedown: PluginEventType.MouseDown,
-            contextmenu: PluginEventType.ContextMenu,
+            contextmenu: this.onContextMenuEvent,
 
             // 3. IME state management
             compositionstart: () => (this.state.isInIME = true),
@@ -145,4 +149,25 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     private onInputEvent = (event: InputEvent) => {
         event.stopPropagation();
     };
+
+    private onContextMenuEvent = (event: MouseEvent) => {
+        const allItems: any[] = [];
+        this.state.contextMenuProviders.forEach(provider => {
+            const items = provider.getContextMenuItems(event.target as Node);
+            if (items?.length > 0) {
+                if (allItems.length > 0) {
+                    allItems.push(null);
+                }
+                arrayPush(allItems, items);
+            }
+        });
+        this.editor.triggerPluginEvent(PluginEventType.ContextMenu, {
+            rawEvent: event,
+            items: allItems,
+        });
+    };
+}
+
+function isContextMenuProvider(source: EditorPlugin): source is ContextMenuProvider<any> {
+    return !!(<ContextMenuProvider<any>>source)?.getContextMenuItems;
 }

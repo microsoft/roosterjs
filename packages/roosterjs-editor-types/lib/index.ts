@@ -36,6 +36,7 @@ export { default as ExtractContentWithDomEvent } from './event/ExtractContentWit
 export { default as PendingFormatStateChangedEvent } from './event/PendingFormatStateChangedEvent';
 export {
     PluginDomEvent,
+    PluginDomEventBase,
     PluginCompositionEvent,
     PluginContextMenuEvent,
     PluginKeyboardEvent,
@@ -60,6 +61,7 @@ export {
 // Interface
 export { default as BlockElement } from './interface/BlockElement';
 export { default as ClipboardData } from './interface/ClipboardData';
+export { default as ContextMenuProvider } from './interface/ContextMenuProvider';
 export { default as CustomData } from './interface/CustomData';
 export { default as DefaultFormat } from './interface/DefaultFormat';
 export { default as Entity } from './interface/Entity';

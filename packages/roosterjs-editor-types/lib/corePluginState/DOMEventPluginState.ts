@@ -1,3 +1,5 @@
+import ContextMenuProvider from '../interface/ContextMenuProvider';
+
 /**
  * The state object for DOMEventPlugin
  */
@@ -21,4 +23,9 @@ export default interface DOMEventPluginState {
      * stop propagation of a printable keyboard event
      */
     stopPrintableKeyboardEventPropagation: boolean;
+
+    /**
+     * Context menu providers, that can provi context menu items
+     */
+    contextMenuProviders: ContextMenuProvider<any>[];
 }

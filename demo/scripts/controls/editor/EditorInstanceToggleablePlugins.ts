@@ -1,4 +1,8 @@
+import ResetListPlugin from '../contextMenu/ResetListPlugin';
+import RotateImagePlugin from '../contextMenu/RotateImagePlugin';
 import { ContentEdit } from 'roosterjs-editor-plugins/lib/ContentEdit';
+import { ContextMenu } from 'roosterjs-editor-plugins/lib/ContextMenu';
+import { ContextMenuItem } from '../contextMenu/ContextMenuProvider';
 import { CustomReplace } from 'roosterjs-editor-plugins/lib/CustomReplace';
 import { CutPasteListChain } from 'roosterjs-editor-plugins/lib/CutPasteListChain';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
@@ -18,4 +22,7 @@ export type EditorInstanceToggleablePlugins = {
     tableResize: TableResize;
     customReplace: CustomReplace;
     pickerPlugin: PickerPlugin;
+    contextMenu: ContextMenu<ContextMenuItem>;
+    resetList: ResetListPlugin;
+    rotateImage: RotateImagePlugin;
 };

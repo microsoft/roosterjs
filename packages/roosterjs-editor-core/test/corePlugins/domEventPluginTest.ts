@@ -33,6 +33,7 @@ describe('DOMEventPlugin', () => {
             scrollContainer: div,
             selectionRange: null,
             stopPrintableKeyboardEventPropagation: true,
+            contextMenuProviders: [],
         });
 
         expect(addDomEventHandler).toHaveBeenCalled();
@@ -80,6 +81,7 @@ describe('DOMEventPlugin', () => {
             scrollContainer: divScrollContainer,
             selectionRange: null,
             stopPrintableKeyboardEventPropagation: false,
+            contextMenuProviders: [],
         });
 
         expect(addDomEventHandler).toHaveBeenCalled();

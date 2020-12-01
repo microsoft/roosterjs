@@ -1,7 +1,11 @@
 import * as React from 'react';
 import BuildInPluginState, { UrlPlaceholder } from '../BuildInPluginState';
+import ResetListPlugin from '../contextMenu/ResetListPlugin';
+import RotateImagePlugin from '../contextMenu/RotateImagePlugin';
 import SampleColorPickerPluginDataProvider from '../samplepicker/SampleColorPickerPluginDataProvider';
 import { ContentEdit } from 'roosterjs-editor-plugins/lib/ContentEdit';
+import { CONTEXT_MENU_DATA_PROVIDER } from '../contextMenu/ContextMenuProvider';
+import { ContextMenu } from 'roosterjs-editor-plugins/lib/ContextMenu';
 import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins/lib/CustomReplace';
 import { CutPasteListChain } from 'roosterjs-editor-plugins/lib/CutPasteListChain';
 import { Editor as RoosterJsEditor } from 'roosterjs-editor-core';
@@ -88,10 +92,15 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
                   })
                 : null,
             customReplace: pluginList.customReplace ? new CustomReplacePlugin() : null,
+            resetList: pluginList.contextMenu ? new ResetListPlugin() : null,
+            rotateImage: pluginList.contextMenu ? new RotateImagePlugin() : null,
+            contextMenu: pluginList.contextMenu
+                ? new ContextMenu(CONTEXT_MENU_DATA_PROVIDER)
+                : null,
         };
         let plugins = [
             ...Object.keys(editorInstanceToggleablePlugins).map(
-                k => (editorInstanceToggleablePlugins as any)[k]
+                (k: keyof EditorInstanceToggleablePlugins) => editorInstanceToggleablePlugins[k]
             ),
             ...this.props.plugins,
         ];

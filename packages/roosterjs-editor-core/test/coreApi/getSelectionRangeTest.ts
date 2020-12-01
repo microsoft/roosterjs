@@ -46,6 +46,7 @@ describe('getSelectionRange', () => {
             isInIME: false,
             scrollContainer: null,
             stopPrintableKeyboardEventPropagation: false,
+            contextMenuProviders: [],
         };
         const input = document.createElement('input');
         document.body.appendChild(input);
