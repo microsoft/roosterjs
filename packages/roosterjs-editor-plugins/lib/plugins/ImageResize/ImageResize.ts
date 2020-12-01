@@ -1,4 +1,4 @@
-import { contains, getTagOfNode, toArray } from 'roosterjs-editor-dom';
+import { contains, getTagOfNode, toArray, safeInstanceOf } from 'roosterjs-editor-dom';
 import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import {
     ContentChangedEvent,
@@ -50,7 +50,7 @@ export default class ImageResize implements EditorPlugin {
         private selectionBorderColor: string = '#DB626C',
         private forcePreserveRatio: boolean = false,
         private resizableImageSelector: string = 'img'
-    ) { }
+    ) {}
 
     /**
      * Get a friendly name of  this plugin
@@ -67,6 +67,7 @@ export default class ImageResize implements EditorPlugin {
         this.editor = editor;
         this.disposer = editor.addDomEventHandler({
             dragstart: this.onDragStart,
+            contextmenu: this.onContextMenu,
             blur: this.onBlur,
         });
     }
@@ -165,7 +166,7 @@ export default class ImageResize implements EditorPlugin {
                 img.removeAttribute('contentEditable');
                 let referenceNode =
                     this.resizeDiv.previousSibling &&
-                        this.resizeDiv.previousSibling.nodeType == NodeType.Comment
+                    this.resizeDiv.previousSibling.nodeType == NodeType.Comment
                         ? this.resizeDiv.previousSibling
                         : this.resizeDiv;
                 parent.insertBefore(img, referenceNode);
@@ -393,6 +394,17 @@ export default class ImageResize implements EditorPlugin {
     private onDragStart = (e: DragEvent) => {
         if ((e.srcElement || e.target) == this.getSelectedImage()) {
             this.hideResizeHandle(true);
+        }
+    };
+
+    private onContextMenu = (e: UIEvent) => {
+        const position = this.editor.getFocusedPosition();
+        if (
+            position &&
+            !safeInstanceOf(e.target as Node, 'HTMLImageElement') &&
+            safeInstanceOf(position.element.firstChild as Node, 'HTMLImageElement')
+        ) {
+            this.showResizeHandle(position.element.firstElementChild as HTMLImageElement);
         }
     };
 }
