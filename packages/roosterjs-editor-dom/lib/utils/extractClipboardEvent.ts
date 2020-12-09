@@ -1,6 +1,10 @@
 import toArray from './toArray';
 import { Browser } from './Browser';
-import { ClipboardData } from 'roosterjs-editor-types';
+import {
+    ClipboardData,
+    EdgeLinkPreview,
+    ExtractClipboardEventOption,
+} from 'roosterjs-editor-types';
 
 // HTML header to indicate where is the HTML content started from.
 // Sample header:
@@ -33,7 +37,8 @@ interface WindowForIE extends Window {
  */
 export default function extractClipboardEvent(
     event: ClipboardEvent,
-    callback: (items: ClipboardData) => void
+    callback: (items: ClipboardData) => void,
+    options?: ExtractClipboardEventOption
 ) {
     let dataTransfer =
         event.clipboardData ||
@@ -45,25 +50,53 @@ export default function extractClipboardEvent(
         rawHtml: undefined,
     };
 
+    const handlers: {
+        promise: Promise<string>;
+        callback: (value: string) => void;
+    }[] = [];
+
     if (event.clipboardData && event.clipboardData.items) {
         event.preventDefault();
-        let items = event.clipboardData.items;
+
+        // Set rawHtml to null so that caller knows that we have tried
+        result.rawHtml = null;
+        const items = event.clipboardData.items;
+
         for (let i = 0; i < items.length; i++) {
             let item = items[i];
-            if (item.type && item.type.indexOf('text/html') == 0) {
-                item.getAsString(html => {
-                    result.rawHtml = Browser.isEdge ? workaroundForEdge(html) : html;
-                    callback(result);
-                });
-                return;
+
+            switch (item.type) {
+                case 'text/html':
+                    handlers.push({
+                        promise: getAsString(item),
+                        callback: value => {
+                            result.rawHtml = Browser.isEdge ? workaroundForEdge(value) : value;
+                        },
+                    });
+                    break;
+                case 'text/link-preview':
+                    if (options?.allowLinkPreview) {
+                        handlers.push({
+                            promise: getAsString(item),
+                            callback: value => {
+                                try {
+                                    result.linkPreview = JSON.parse(value) as EdgeLinkPreview;
+                                } catch {}
+                            },
+                        });
+                    }
+                    break;
             }
         }
-
-        // No HTML content found, set html to null
-        result.rawHtml = null;
     }
 
-    callback(result);
+    Promise.all(handlers.map(handler => handler.promise)).then(values => {
+        for (let i = 0; i < handlers.length; i++) {
+            handlers[i].callback(values[i]);
+        }
+
+        callback(result);
+    });
 }
 
 function getImage(dataTransfer: DataTransfer): File {
@@ -103,4 +136,12 @@ function workaroundForEdge(html: string) {
     }
 
     return html;
+}
+
+function getAsString(item: DataTransferItem): Promise<string> {
+    return new Promise<string>(resolve => {
+        item.getAsString(value => {
+            resolve(value);
+        });
+    });
 }

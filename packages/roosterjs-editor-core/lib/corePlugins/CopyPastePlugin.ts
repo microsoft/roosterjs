@@ -13,6 +13,7 @@ import {
     GetContentMode,
     IEditor,
     PluginEventType,
+    ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 
 const CONTAINER_HTML =
@@ -88,22 +89,30 @@ export default class CopyPastePlugin implements EditorPlugin {
     }
 
     private onPaste = (event: Event) => {
-        extractClipboardEvent(event as ClipboardEvent, items => {
-            if (items.rawHtml === undefined) {
-                // Can't get pasted HTML directly, need to use a temp DIV to retrieve pasted content.
-                // This is mostly for IE
-                const originalSelectionRange = this.editor.getSelectionRange();
-                const tempDiv = this.getTempDiv();
+        extractClipboardEvent(
+            event as ClipboardEvent,
+            items => {
+                if (items.rawHtml === undefined) {
+                    // Can't get pasted HTML directly, need to use a temp DIV to retrieve pasted content.
+                    // This is mostly for IE
+                    const originalSelectionRange = this.editor.getSelectionRange();
+                    const tempDiv = this.getTempDiv();
 
-                this.editor.runAsync(() => {
-                    items.rawHtml = tempDiv.innerHTML;
-                    this.cleanUpAndRestoreSelection(tempDiv, originalSelectionRange);
+                    this.editor.runAsync(() => {
+                        items.rawHtml = tempDiv.innerHTML;
+                        this.cleanUpAndRestoreSelection(tempDiv, originalSelectionRange);
+                        this.paste(items);
+                    });
+                } else {
                     this.paste(items);
-                });
-            } else {
-                this.paste(items);
+                }
+            },
+            {
+                allowLinkPreview: this.editor.isFeatureEnabled(
+                    ExperimentalFeatures.PasteWithLinkPreview
+                ),
             }
-        });
+        );
     };
 
     private paste(clipboardData: ClipboardData) {

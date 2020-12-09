@@ -1,3 +1,5 @@
+import EdgeLinkPreview from '../browser/EdgeLinkPreview';
+
 /**
  * An object contains all related data for pasting
  */
@@ -18,6 +20,11 @@ export default interface ClipboardData {
      * When set to undefined, it means there may be HTML in clipboard event, but fail to retrieve
      */
     rawHtml: string;
+
+    /**
+     * Link Preview information provided by Edge
+     */
+    linkPreview?: EdgeLinkPreview;
 
     /**
      * Image file from clipboard event

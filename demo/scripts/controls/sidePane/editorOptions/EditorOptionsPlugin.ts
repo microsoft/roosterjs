@@ -29,6 +29,8 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.NewBullet,
         ExperimentalFeatures.NewIndentation,
         ExperimentalFeatures.NewNumbering,
+        ExperimentalFeatures.PasteWithLinkPreview,
+        ExperimentalFeatures.SingleDirectionResize,
     ],
 };
 

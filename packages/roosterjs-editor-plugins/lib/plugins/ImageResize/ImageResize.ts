@@ -9,6 +9,7 @@ import {
     PositionType,
     EntityOperation,
     Entity,
+    ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 
 const DELETE_KEYCODE = 46;
@@ -21,7 +22,9 @@ const ENTITY_TYPE = 'IMAGE_RESIZE_WRAPPER';
 
 const HANDLE_SIZE = 7;
 const HANDLE_MARGIN = 3;
-const HANDLE_POSITIONS = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
+const CORNER_HANDLE_POSITIONS = ['nw', 'ne', 'se', 'sw'];
+const SIDE_HANDLE_POSITIONS = ['n', 'e', 's', 'w'];
+const ALL_HANDLE_POSITIONS = CORNER_HANDLE_POSITIONS.concat(SIDE_HANDLE_POSITIONS);
 
 /**
  * ImageResize plugin provides the ability to resize an inline image in editor
@@ -293,21 +296,26 @@ export default class ImageResize implements EditorPlugin {
         wrapper.style.display = 'inline-flex';
 
         const html =
-            HANDLE_POSITIONS.map(
-                pos =>
-                    `<div style="position:absolute;${this.isWest(pos) ? 'left' : 'right'}:${
-                        this.isSingleDirectionNS(pos) ? '50%' : '0px'
-                    };${this.isNorth(pos) ? 'top' : 'bottom'}:${
-                        this.isSingleDirectionWE(pos) ? '50%' : '0px'
-                    }">
+            (this.editor.isFeatureEnabled(ExperimentalFeatures.SingleDirectionResize)
+                ? ALL_HANDLE_POSITIONS
+                : CORNER_HANDLE_POSITIONS
+            )
+                .map(
+                    pos =>
+                        `<div style="position:absolute;${this.isWest(pos) ? 'left' : 'right'}:${
+                            this.isSingleDirectionNS(pos) ? '50%' : '0px'
+                        };${this.isNorth(pos) ? 'top' : 'bottom'}:${
+                            this.isSingleDirectionWE(pos) ? '50%' : '0px'
+                        }">
                             <div id=${pos}-handle data-direction="${pos}" style="position:relative;width:${HANDLE_SIZE}px;height:${HANDLE_SIZE}px;background-color: ${
-                        this.selectionBorderColor
-                    };cursor: ${pos}-resize;${
-                        this.isNorth(pos) ? 'top' : 'bottom'
-                    }:-${HANDLE_MARGIN}px;${
-                        this.isWest(pos) ? 'left' : 'right'
-                    }:-${HANDLE_MARGIN}px"></div></div>`
-            ).join('') +
+                            this.selectionBorderColor
+                        };cursor: ${pos}-resize;${
+                            this.isNorth(pos) ? 'top' : 'bottom'
+                        }:-${HANDLE_MARGIN}px;${
+                            this.isWest(pos) ? 'left' : 'right'
+                        }:-${HANDLE_MARGIN}px"></div></div>`
+                )
+                .join('') +
             `<div style="position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${this.selectionBorderColor};pointer-events:none;">`;
 
         fromHtml(html, this.editor.getDocument()).forEach(div => {

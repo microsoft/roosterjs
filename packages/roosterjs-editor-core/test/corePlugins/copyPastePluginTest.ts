@@ -46,6 +46,7 @@ describe('CopyPastePlugin paste', () => {
             },
             getDocument: () => document,
             select: () => {},
+            isFeatureEnabled: () => false,
         }));
     });
 
