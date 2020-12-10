@@ -33,7 +33,7 @@ export const enum ExperimentalFeatures {
     SingleDirectionResize = 'SingleDirectionResize',
 
     /**
-     * Try retrieve linke preview information when paste
+     * Try retrieve link preview information when paste
      */
     PasteWithLinkPreview = 'PasteWithLinkPreview',
 }

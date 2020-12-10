@@ -15,8 +15,7 @@ const FeatureNames: { [key in ExperimentalFeatures]: string } = {
     [ExperimentalFeatures.NewIndentation]: 'Toggle indentation using VList',
     [ExperimentalFeatures.NewNumbering]: 'Toggle numbering using VList',
     [ExperimentalFeatures.SingleDirectionResize]: 'Resize an image horizontally or vertically',
-    [ExperimentalFeatures.PasteWithLinkPreview]:
-        'Try retrieve linke preview information when paste',
+    [ExperimentalFeatures.PasteWithLinkPreview]: 'Try retrieve link preview information when paste',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<
