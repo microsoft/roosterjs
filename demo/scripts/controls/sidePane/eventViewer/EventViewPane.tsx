@@ -168,6 +168,12 @@ export default class EventViewPane extends React.Component<
                                 className={styles.img}
                             />
                         ))}
+                        {this.renderPasteContent(
+                            'LinkPreview',
+                            event.clipboardData.linkPreview
+                                ? JSON.stringify(event.clipboardData.linkPreview)
+                                : ''
+                        )}
                     </span>
                 );
             case PluginEventType.PendingFormatStateChanged:
