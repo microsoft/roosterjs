@@ -1,4 +1,4 @@
-import { arrayPush, Browser, isCharacterValue, safeInstanceOf } from 'roosterjs-editor-dom';
+import { arrayPush, Browser, isCharacterValue } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ContextMenuProvider,
@@ -152,15 +152,12 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
     private onContextMenuEvent = (event: MouseEvent) => {
         const allItems: any[] = [];
-        const position = this.editor.getFocusedPosition();
+        const searcher = this.editor.getContentSearcherOfCursor();
+        const elementBeforeCursor = searcher.getInlineElementBefore();
+
         let eventTargetNode = event.target as Node;
-        if (
-            position &&
-            event.button != 2 &&
-            safeInstanceOf(position.node, 'HTMLDivElement') &&
-            safeInstanceOf(position.element.childNodes[position.offset - 1], 'HTMLImageElement')
-        ) {
-            eventTargetNode = position.element.childNodes[position.offset - 1];
+        if (event.button != 2) {
+            eventTargetNode = elementBeforeCursor.getContainerNode();
         }
         this.state.contextMenuProviders.forEach(provider => {
             const items = provider.getContextMenuItems(eventTargetNode);
