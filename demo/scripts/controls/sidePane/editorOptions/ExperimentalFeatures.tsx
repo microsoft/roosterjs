@@ -16,6 +16,7 @@ const FeatureNames: { [key in ExperimentalFeatures]: string } = {
     [ExperimentalFeatures.NewNumbering]: 'Toggle numbering using VList',
     [ExperimentalFeatures.SingleDirectionResize]: 'Resize an image horizontally or vertically',
     [ExperimentalFeatures.PasteWithLinkPreview]: 'Try retrieve link preview information when paste',
+    [ExperimentalFeatures.Capitalization]: 'Change the capitalization in text',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<

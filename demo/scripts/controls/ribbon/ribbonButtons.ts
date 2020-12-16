@@ -3,7 +3,7 @@ import MainPaneBase from '../MainPaneBase';
 import renderInsertLinkDialog from './renderInsertLinkDialog';
 import renderTableOptions from './renderTableOptions';
 import RibbonButtonType from './RibbonButtonType';
-import { Alignment, Direction, Indentation } from 'roosterjs-editor-types';
+import { Alignment, Direction, Indentation, Capitalization } from 'roosterjs-editor-types';
 import { Browser } from 'roosterjs-editor-dom';
 import {
     setBackgroundColor,
@@ -16,6 +16,7 @@ import {
     toggleBullet,
     toggleNumbering,
     setIndentation,
+    setCapitalization,
     setAlignment,
     toggleBlockQuote,
     removeLink,
@@ -107,6 +108,16 @@ const buttons: { [key: string]: RibbonButtonType } = {
             '#666666': 'Dark Gray',
             '#ffffff': 'White',
             '#000000': 'Black',
+        },
+    },
+    capitalization: {
+        title: 'Change case',
+        image: require('../svg/capitalization.svg'),
+        onClick: setCapitalization,
+        dropDownItems: {
+            Capitalize: Capitalization.Capitalize,
+            lowercase: Capitalization.Lowercase,
+            UPPERCASE: Capitalization.Uppercase,
         },
     },
     bullet: {
