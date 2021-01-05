@@ -53,7 +53,7 @@ describe('sanitizeHtml', () => {
         runTest('<div onclick=alert("test")>bb</div>aa', '<div>bb</div>aa');
         runTest('aa<a href=javascript:alert("test")>cc</a>bb', 'aa<a>cc</a>bb');
         runTest('aa<a href="javas\nc\nr\ni\np\nt\n: alert("test")">cc</a>bb', 'aa<a>cc</a>bb');
-        runTest('aa<form action=/>cc</form>bb', 'aa<form>cc</form>bb');
+        runTest('aa<form action=/>cc</form>bb', 'aa<span>cc</span>bb');
     });
     it('Html contains unnecessary CSS', () => {
         runTest(
@@ -198,7 +198,7 @@ describe('sanitizeHtml with additionalAllowedTags, additionalAllowedAttributes',
 
     beforeAll(() => {
         sanitizer = new HtmlSanitizer({
-            additionalAllowedTags: ['TEST1', 'OBJECT'],
+            additionalTagReplacements: { TEST1: '*', OBJECT: '*' },
             additionalAllowedAttributes: ['prop1', 'onclick'],
         });
     });
@@ -435,7 +435,7 @@ describe('sanitizeHtml with unknown/disabled tags, replace with SPAN', () => {
     });
 
     it('Make sure all allowed tags are really allowed', () => {
-        const allowTags = 'H1,H2,H3,H4,H5,H6,FORM,P,ABBR,ADDRESS,B,BDI,BDO,BLOCKQUOTE,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,XMP,TEXTAREA,BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,MAP,CANVAS,FIGCAPTION,FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'
+        const allowTags = 'H1,H2,H3,H4,H5,H6,P,ABBR,ADDRESS,B,BDI,BDO,BLOCKQUOTE,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,XMP,TEXTAREA,BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,MAP,CANVAS,FIGCAPTION,FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'
             .toLowerCase()
             .split(',');
 
@@ -478,6 +478,14 @@ describe('sanitizeHtml with unknown/disabled tags, replace with SPAN', () => {
         disallowedTags.forEach(tag => {
             const html = `text before<${tag}>text after`;
             runTest(html, 'text beforetext after');
+        });
+    });
+
+    it('Make sure tags with replacements are really replaced', () => {
+        const disallowedTags = 'form'.split(',');
+        disallowedTags.forEach(tag => {
+            const html = `text before<${tag}>test text</${tag}>text after`;
+            runTest(html, 'text before<span>test text</span>text after');
         });
     });
 });

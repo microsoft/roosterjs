@@ -91,7 +91,7 @@ export default class Paste implements EditorPlugin {
                     convertPastedContentFromWordOnline(fragment);
                 }
             } else if (fragment.querySelector(GOOGLE_SHEET_NODE_NAME)) {
-                sanitizingOption.additionalAllowedTags.push(GOOGLE_SHEET_NODE_NAME);
+                sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
             } else if (this.editor.isFeatureEnabled(ExperimentalFeatures.MergePastedLine)) {
                 handleLineMerge(fragment);
             }

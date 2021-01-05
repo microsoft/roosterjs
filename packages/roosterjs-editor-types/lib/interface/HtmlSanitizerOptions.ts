@@ -26,9 +26,9 @@ export default interface HtmlSanitizerOptions {
     cssStyleCallbacks?: CssStyleCallbackMap;
 
     /**
-     * Allowed HTML tags in addition to default tags, in upper case
+     * Additional tag replacement, to allow replace a tag to another name, or remove it
      */
-    additionalAllowedTags?: string[];
+    additionalTagReplacements?: Record<string, string>;
 
     /**
      * Allowed HTML attributes in addition to default attributes, in lower case
