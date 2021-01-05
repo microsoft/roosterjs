@@ -26,7 +26,14 @@ export default interface HtmlSanitizerOptions {
     cssStyleCallbacks?: CssStyleCallbackMap;
 
     /**
-     * Additional tag replacement, to allow replace a tag to another name, or remove it
+     * Additional tag replacement, to allow replace a tag to another name, or remove it.
+     *
+     * The value can be:
+     * '*': Keep this element with no change
+     * '<A valid tag name>: Keep this element but change its tag to the given value
+     * null: Remove this element
+     *
+     * For other unknown tags, we will respect the value of unknownTagReplacement with the same meaning
      */
     additionalTagReplacements?: Record<string, string>;
 
