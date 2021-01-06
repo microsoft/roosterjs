@@ -1,7 +1,12 @@
 import experimentToggleListType from '../experiment/experimentToggleListType';
 import processList from '../utils/processList';
-import { ChangeSource, DocumentCommand, ListType } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import {
+    ChangeSource,
+    DocumentCommand,
+    IEditor,
+    ListType,
+    ExperimentalFeatures,
+} from 'roosterjs-editor-types';
 
 /**
  * Toggle numbering at selection
@@ -11,8 +16,8 @@ import { Editor } from 'roosterjs-editor-core';
  * realization of browser execCommand API
  * @param editor The editor instance
  */
-export default function toggleNumbering(editor: Editor) {
-    if (editor.useExperimentFeatures()) {
+export default function toggleNumbering(editor: IEditor) {
+    if (editor.isFeatureEnabled(ExperimentalFeatures.NewNumbering)) {
         experimentToggleListType(editor, ListType.Ordered);
     } else {
         editor.focus();

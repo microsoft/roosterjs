@@ -7,12 +7,13 @@ export default function createDefaultHtmlSanitizerOptions(): Required<HtmlSaniti
     return {
         elementCallbacks: {},
         attributeCallbacks: {},
-        styleCallbacks: {},
+        cssStyleCallbacks: {},
         additionalAllowedTags: [],
-        additionalAllowAttributes: [],
+        additionalAllowedAttributes: [],
         additionalAllowedCssClasses: [],
         additionalDefaultStyleValues: {},
         additionalGlobalStyleNodes: [],
-        allowPreserveWhiteSpace: false,
+        additionalPredefinedCssForElement: {},
+        unknownTagReplacement: null,
     };
 }

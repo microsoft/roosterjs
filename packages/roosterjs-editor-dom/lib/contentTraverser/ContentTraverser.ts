@@ -6,9 +6,15 @@ import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import SelectionBlockScoper from './SelectionBlockScoper';
 import SelectionScoper from './SelectionScoper';
 import TraversingScoper from './TraversingScoper';
-import { BlockElement, ContentPosition, InlineElement, NodePosition } from 'roosterjs-editor-types';
 import { getInlineElementBeforeAfter } from '../inlineElements/getInlineElementBeforeAfter';
 import { getLeafSibling } from '../utils/getLeafSibling';
+import {
+    BlockElement,
+    ContentPosition,
+    IContentTraverser,
+    InlineElement,
+    NodePosition,
+} from 'roosterjs-editor-types';
 
 /**
  * The provides traversing of content inside editor.
@@ -16,7 +22,7 @@ import { getLeafSibling } from '../utils/getLeafSibling';
  * Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
  * the current inline element position
  */
-export default class ContentTraverser {
+export default class ContentTraverser implements IContentTraverser {
     private currentInline: InlineElement;
     private currentBlock: BlockElement;
 
@@ -37,7 +43,7 @@ export default class ContentTraverser {
         rootNode: Node,
         startNode?: Node,
         skipTags?: string[]
-    ): ContentTraverser {
+    ): IContentTraverser {
         return new ContentTraverser(new BodyScoper(rootNode, startNode));
     }
 
@@ -51,7 +57,7 @@ export default class ContentTraverser {
         rootNode: Node,
         range: Range,
         skipTags?: string[]
-    ): ContentTraverser {
+    ): IContentTraverser {
         return new ContentTraverser(new SelectionScoper(rootNode, range), skipTags);
     }
 
@@ -68,7 +74,7 @@ export default class ContentTraverser {
         position: NodePosition | Range,
         start: ContentPosition = ContentPosition.SelectionStart,
         skipTags?: string[]
-    ): ContentTraverser {
+    ): IContentTraverser {
         return new ContentTraverser(new SelectionBlockScoper(rootNode, position, start));
     }
 

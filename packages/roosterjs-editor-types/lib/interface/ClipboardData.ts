@@ -1,47 +1,48 @@
-import DefaultFormat from './DefaultFormat';
+import EdgeLinkPreview from '../browser/EdgeLinkPreview';
 
 /**
  * An object contains all related data for pasting
  */
 export default interface ClipboardData {
     /**
-     * An editor content snapshot before pasting happens. This is used for changing paste format
-     */
-    snapshotBeforePaste: string;
-
-    /**
-     * The format state at cursor before pasting. This is used for changing paste format
-     */
-    originalFormat: DefaultFormat;
-
-    /**
-     * Types of content included by the original onpaste event
+     * Available types from clipboard event
      */
     types: string[];
 
     /**
-     * If the copied data contains image format, this will be the image blob. Otherwise it is null.
-     */
-    image: File;
-
-    /**
-     * BASE64 encoded data uri of the image if any
-     */
-    imageDataUri: string;
-
-    /**
-     * If the copied data contains plain text format, this will be the plain text string. Otherwise it is null.
+     * Plain text from clipboard event
      */
     text: string;
 
     /**
-     * @deprecated
-     * If the copied data contains HTML format, this will be the sanitized html string. Otherwise it is null.
-     */
-    html: string;
-
-    /**
-     * If the copied data contains HTML format, this will be the original html string without any processing. Otherwise it is null.
+     * HTML string from clipboard event.
+     * When set to null, it means there's no HTML from clipboard event.
+     * When set to undefined, it means there may be HTML in clipboard event, but fail to retrieve
      */
     rawHtml: string;
+
+    /**
+     * Link Preview information provided by Edge
+     */
+    linkPreview?: EdgeLinkPreview;
+
+    /**
+     * Image file from clipboard event
+     */
+    image: File;
+
+    /**
+     * Html extracted from raw html string and remove content before and after fragment tag
+     */
+    html?: string;
+
+    /**
+     * An editor content snapshot before pasting happens. This is used for changing paste format
+     */
+    snapshotBeforePaste?: string;
+
+    /**
+     * BASE64 encoded data uri of the image if any
+     */
+    imageDataUri?: string;
 }

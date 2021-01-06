@@ -1,6 +1,7 @@
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
 import { fromHtml, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import {
+    EditorPlugin,
+    IEditor,
     PluginEvent,
     PluginEventType,
     Rect,
@@ -29,7 +30,7 @@ const enum ResizeState {
  * TableResize plugin, provides the ability to resize a table by drag-and-drop
  */
 export default class TableResize implements EditorPlugin {
-    private editor: Editor;
+    private editor: IEditor;
     private onMouseMoveDisposer: () => void;
     private tableRectMap: { table: HTMLTableElement; rect: Rect }[] = null;
     private resizerContainer: HTMLDivElement;
@@ -54,7 +55,7 @@ export default class TableResize implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
         this.setupResizerContainer();
         this.onMouseMoveDisposer = this.editor.addDomEventHandler('mousemove', this.onMouseMove);
@@ -72,9 +73,9 @@ export default class TableResize implements EditorPlugin {
     }
 
     /**
-    * Handle events triggered from editor
-    * @param event PluginEvent object
-    */
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
     onPluginEvent(e: PluginEvent) {
         switch (e.eventType) {
             case PluginEventType.Input:
@@ -139,7 +140,7 @@ export default class TableResize implements EditorPlugin {
                         const td = tr.cells[Math.max(0, j)];
                         const tdRect = normalizeRect(td.getBoundingClientRect());
 
-                        if (e.pageX <= tdRect.right && e.pageY < tdRect.bottom) {
+                        if (tdRect && e.pageX <= tdRect.right && e.pageY < tdRect.bottom) {
                             if (i == 0 && e.pageY < tdRect.top) {
                                 this.setCurrentTd(null);
                                 this.setCurrentInsertTd(ResizeState.Vertical, td, map.rect);
@@ -202,18 +203,24 @@ export default class TableResize implements EditorPlugin {
             this.editor.getDocument()
         )[0] as HTMLDivElement;
 
-        if (this.insertingState == ResizeState.Horizontal) {
-            inserter.style.left = `${rect.left -
-                (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)}px`;
-            inserter.style.top = `${rect.bottom - 8}px`;
-            (inserter.firstChild as HTMLElement).style.width = `${tableRect.right -
-                tableRect.left}px`;
-        } else {
-            inserter.style.left = `${rect.right - 8}px`;
-            inserter.style.top = `${rect.top -
-                (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)}px`;
-            (inserter.firstChild as HTMLElement).style.height = `${tableRect.bottom -
-                tableRect.top}px`;
+        if (rect) {
+            if (this.insertingState == ResizeState.Horizontal) {
+                inserter.style.left = `${
+                    rect.left - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
+                }px`;
+                inserter.style.top = `${rect.bottom - 8}px`;
+                (inserter.firstChild as HTMLElement).style.width = `${
+                    tableRect.right - tableRect.left
+                }px`;
+            } else {
+                inserter.style.left = `${rect.right - 8}px`;
+                inserter.style.top = `${
+                    rect.top - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
+                }px`;
+                (inserter.firstChild as HTMLElement).style.height = `${
+                    tableRect.bottom - tableRect.top
+                }px`;
+            }
         }
 
         inserter.addEventListener('click', this.insertTd);
@@ -240,7 +247,7 @@ export default class TableResize implements EditorPlugin {
     private setCurrentTable(table: HTMLTableElement, rect?: Rect) {
         if (this.currentTable != table) {
             this.setCurrentTd(null);
-            this.setCurrentInsertTd(null);
+            this.setCurrentInsertTd(ResizeState.None);
             this.currentTable = table;
         }
     }
@@ -337,29 +344,32 @@ export default class TableResize implements EditorPlugin {
     private resizeTable = (e: MouseEvent) => {
         if (this.currentTd) {
             const rect = normalizeRect(this.currentTd.getBoundingClientRect());
-            const newPos = this.resizingState == ResizeState.Horizontal ? e.pageY : e.pageX;
 
-            let vtable = new VTable(this.currentTd);
+            if (rect) {
+                const newPos = this.resizingState == ResizeState.Horizontal ? e.pageY : e.pageX;
 
-            if (this.resizingState == ResizeState.Horizontal) {
-                vtable.table.style.height = null;
-                vtable.forEachCellOfCurrentRow(cell => {
-                    if (cell.td) {
-                        cell.td.style.height =
-                            cell.td == this.currentTd ? `${newPos - rect.top}px` : null;
-                    }
-                });
-            } else {
-                vtable.table.style.width = '';
-                vtable.table.width = '';
-                vtable.forEachCellOfCurrentColumn(cell => {
-                    if (cell.td) {
-                        cell.td.style.width =
-                            cell.td == this.currentTd ? `${newPos - rect.left}px` : null;
-                    }
-                });
+                let vtable = new VTable(this.currentTd);
+
+                if (this.resizingState == ResizeState.Horizontal) {
+                    vtable.table.style.height = null;
+                    vtable.forEachCellOfCurrentRow(cell => {
+                        if (cell.td) {
+                            cell.td.style.height =
+                                cell.td == this.currentTd ? `${newPos - rect.top}px` : null;
+                        }
+                    });
+                } else {
+                    vtable.table.style.width = '';
+                    vtable.table.width = '';
+                    vtable.forEachCellOfCurrentColumn(cell => {
+                        if (cell.td) {
+                            cell.td.style.width =
+                                cell.td == this.currentTd ? `${newPos - rect.left}px` : null;
+                        }
+                    });
+                }
+                vtable.writeBack();
             }
-            vtable.writeBack();
         }
     };
 

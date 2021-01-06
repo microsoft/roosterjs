@@ -1,13 +1,18 @@
-import findClosestElementAncestor from '../utils/findClosestElementAncestor';
+import fromHtml from '../utils/fromHtml';
+import getRootListNode from './getRootListNode';
 import getSelectedBlockElementsInRegion from '../region/getSelectedBlockElementsInRegion';
 import isNodeInRegion from '../region/isNodeInRegion';
+import Position from '../selection/Position';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import shouldSkipNode from '../utils/shouldSkipNode';
+import toArray from '../utils/toArray';
 import VList from './VList';
+import wrap from '../utils/wrap';
 import { getLeafSibling } from '../utils/getLeafSibling';
 import { isListElement } from './getListTypeFromNode';
 import { ListType, Region } from 'roosterjs-editor-types';
+import { PositionType } from 'roosterjs-editor-types';
 
-type ListElement = HTMLOListElement | HTMLUListElement;
 const ListSelector = 'ol,ul';
 
 /**
@@ -30,23 +35,39 @@ export default function createVListFromRegion(
     let nodes: Node[] = [];
 
     if (startNode) {
-        const list = getRootListNode(region, startNode);
+        const list = getRootListNode(region, ListSelector, startNode);
         if (list) {
             nodes.push(list);
         }
     } else {
         const blocks = getSelectedBlockElementsInRegion(region);
         blocks.forEach(block => {
-            const list = getRootListNode(region, block.getStartNode());
+            const list = getRootListNode(region, ListSelector, block.getStartNode());
 
             if (list) {
                 if (nodes[nodes.length - 1] != list) {
                     nodes.push(list);
                 }
+                if (
+                    nodes.length == 1 &&
+                    safeInstanceOf(list, 'HTMLOListElement') &&
+                    list.start > 1
+                ) {
+                    // Do not include sibling lists if this list is not start from 1
+                    includeSiblingLists = false;
+                }
             } else {
                 nodes.push(block.collapseToSingleElement());
             }
         });
+
+        if (nodes.length == 0 && !region.rootNode.firstChild) {
+            const newNode = fromHtml('<div><br></div>', region.rootNode.ownerDocument)[0];
+            region.rootNode.appendChild(newNode);
+            nodes.push(newNode);
+            region.fullSelectionStart = new Position(newNode, PositionType.Begin);
+            region.fullSelectionEnd = new Position(newNode, PositionType.End);
+        }
 
         if (includeSiblingLists) {
             tryIncludeSiblingNode(region, nodes, false /*isNext*/);
@@ -79,43 +100,34 @@ export default function createVListFromRegion(
 function tryIncludeSiblingNode(region: Region, nodes: Node[], isNext: boolean) {
     let node = nodes[isNext ? nodes.length - 1 : 0];
     node = getLeafSibling(region.rootNode, node, isNext, region.skipTags, true /*ignoreSpace*/);
-    node = getRootListNode(region, node);
+    node = getRootListNode(region, ListSelector, node);
     if (isNodeInRegion(region, node) && isListElement(node)) {
         if (isNext) {
-            nodes.push(node);
+            if (!safeInstanceOf(node, 'HTMLOListElement') || node.start == 1) {
+                // Only include sibling list when
+                // 1. This is a unordered list, OR
+                // 2. This list starts from 1
+                nodes.push(node);
+            }
         } else {
             nodes.unshift(node);
         }
     }
 }
 
-function getRootListNode(region: Region, node: Node): ListElement {
-    let list = findClosestElementAncestor(node, region.rootNode, ListSelector) as ListElement;
-
-    if (list) {
-        let ancestor: ListElement;
-        while (
-            (ancestor = findClosestElementAncestor(
-                list.parentNode,
-                region.rootNode,
-                ListSelector
-            ) as ListElement)
-        ) {
-            list = ancestor;
-        }
-    }
-
-    return list;
-}
-
 function createVListFromItemNode(node: Node): VList {
+    // Wrap all child nodes under a single one, and put the new list under original root node
+    // so that the list can carry over styles under the root node.
+    const childNodes = toArray(node.childNodes);
+    const nodeForItem = childNodes.length == 1 ? childNodes[0] : wrap(childNodes, 'SPAN');
+
     // Create a temporary OL root element for this list.
     const listNode = node.ownerDocument.createElement('ol'); // Either OL or UL is ok here
-    node.parentNode?.insertBefore(listNode, node);
+    node.appendChild(listNode);
 
     // Create the VList and append items
     const vList = new VList(listNode);
-    vList.appendItem(node, ListType.None);
+    vList.appendItem(nodeForItem, ListType.None);
 
     return vList;
 }

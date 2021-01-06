@@ -1,6 +1,4 @@
-import { ContentPosition } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
-import { PositionContentSearcher } from 'roosterjs-editor-dom';
+import { ContentPosition, IEditor, IPositionContentSearcher } from 'roosterjs-editor-types';
 
 /**
  * Replace text before current selection with a node, current selection will be kept if possible
@@ -12,11 +10,11 @@ import { PositionContentSearcher } from 'roosterjs-editor-dom';
  * @param searcher Optional PositionContentSearcher of current selection to help search text
  */
 export default function replaceWithNode(
-    editor: Editor,
+    editor: IEditor,
     text: string,
     node: Node,
     exactMatch: boolean,
-    searcher?: PositionContentSearcher
+    searcher?: IPositionContentSearcher
 ): boolean;
 
 /**
@@ -28,18 +26,18 @@ export default function replaceWithNode(
  * otherwise there can be some text between the tearget text and selection
  */
 export default function replaceWithNode(
-    editor: Editor,
+    editor: IEditor,
     range: Range,
     node: Node,
     exactMatch: boolean
 ): boolean;
 
 export default function replaceWithNode(
-    editor: Editor,
+    editor: IEditor,
     textOrRange: string | Range,
     node: Node,
     exactMatch: boolean,
-    searcher?: PositionContentSearcher
+    searcher?: IPositionContentSearcher
 ): boolean {
     // Make sure the text and node is valid
     if (!textOrRange || !node) {

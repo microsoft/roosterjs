@@ -1,6 +1,11 @@
 import execCommand from '../utils/execCommand';
-import { Alignment, ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import {
+    Alignment,
+    ChangeSource,
+    DocumentCommand,
+    IEditor,
+    QueryScope,
+} from 'roosterjs-editor-types';
 
 /**
  * Set content alignment
@@ -8,7 +13,7 @@ import { Editor } from 'roosterjs-editor-core';
  * @param alignment The alignment option:
  * Alignment.Center, Alignment.Left, Alignment.Right
  */
-export default function setAlignment(editor: Editor, alignment: Alignment) {
+export default function setAlignment(editor: IEditor, alignment: Alignment) {
     let command = DocumentCommand.JustifyLeft;
     let align = 'left';
 

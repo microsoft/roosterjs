@@ -1,21 +1,22 @@
-import { LinkInlineElement, matchLink } from 'roosterjs-editor-dom';
 import { removeLink, replaceWithNode } from 'roosterjs-editor-api';
 import {
+    AutoLinkFeatureSettings,
+    BuildInEditFeature,
     ChangeSource,
+    ClipboardData,
+    IEditor,
+    Keys,
     LinkData,
     PluginEvent,
     PluginEventType,
     PluginKeyboardEvent,
-    ClipboardData,
 } from 'roosterjs-editor-types';
 import {
-    Editor,
     cacheGetEventData,
-    cacheGetContentSearcher,
-    clearContentSearcherCache,
-    GenericContentEditFeature,
-    Keys,
-} from 'roosterjs-editor-core';
+    clearEventDataCache,
+    LinkInlineElement,
+    matchLink,
+} from 'roosterjs-editor-dom';
 
 /**
  * When user type, they may end a link with a puncatuation, i.e. www.bing.com;
@@ -28,7 +29,7 @@ const MINIMUM_LENGTH = 5;
  * AutoLink edit feature, provides the ability to automatically convert text user typed or pasted
  * in hyperlink format into a real hyperlink
  */
-export const AutoLink: GenericContentEditFeature<PluginEvent> = {
+const AutoLink: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ENTER, Keys.SPACE, Keys.CONTENTCHANGED],
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
@@ -38,16 +39,17 @@ export const AutoLink: GenericContentEditFeature<PluginEvent> = {
  * UnlinkWhenBackspaceAfterLink edit feature, provides the ability to convert a hyperlink back into text
  * if user presses BACKSPACE right after a hyperlink
  */
-export const UnlinkWhenBackspaceAfterLink: GenericContentEditFeature<PluginKeyboardEvent> = {
+const UnlinkWhenBackspaceAfterLink: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: hasLinkBeforeCursor,
     handleEvent: (event, editor) => {
         event.rawEvent.preventDefault();
         removeLink(editor);
     },
+    defaultDisabled: true,
 };
 
-function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
+function cacheGetLinkData(event: PluginEvent, editor: IEditor): LinkData {
     return event.eventType == PluginEventType.KeyDown ||
         (event.eventType == PluginEventType.ContentChanged && event.source == ChangeSource.Paste)
         ? cacheGetEventData(event, 'LINK_DATA', () => {
@@ -60,7 +62,7 @@ function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
                   event.source == ChangeSource.Paste &&
                   (event.data as ClipboardData);
               let link = matchLink((clipboardData.text || '').trim());
-              let searcher = cacheGetContentSearcher(event, editor);
+              let searcher = editor.getContentSearcherOfCursor(event);
 
               // In case the matched link is already inside a <A> tag, we do a range search.
               // getRangeFromText will return null if the given text is already in a LinkInlineElement
@@ -93,13 +95,13 @@ function cacheGetLinkData(event: PluginEvent, editor: Editor): LinkData {
         : null;
 }
 
-function hasLinkBeforeCursor(event: PluginKeyboardEvent, editor: Editor): boolean {
-    let contentSearcher = cacheGetContentSearcher(event, editor);
+function hasLinkBeforeCursor(event: PluginKeyboardEvent, editor: IEditor): boolean {
+    let contentSearcher = editor.getContentSearcherOfCursor(event);
     let inline = contentSearcher.getInlineElementBefore();
     return inline instanceof LinkInlineElement;
 }
 
-function autoLink(event: PluginEvent, editor: Editor) {
+function autoLink(event: PluginEvent, editor: IEditor) {
     let anchor = editor.getDocument().createElement('a');
     let linkData = cacheGetLinkData(event, editor);
 
@@ -109,13 +111,34 @@ function autoLink(event: PluginEvent, editor: Editor) {
     anchor.textContent = linkData.originalUrl;
     anchor.href = linkData.normalizedUrl;
 
-    editor.runAsync(() => {
-        editor.performAutoComplete(() => {
-            replaceWithNode(editor, linkData.originalUrl, anchor, false /* exactMatch */, searcher);
+    editor.runAsync(editor => {
+        editor.addUndoSnapshot(
+            () => {
+                replaceWithNode(
+                    editor,
+                    linkData.originalUrl,
+                    anchor,
+                    false /* exactMatch */,
+                    searcher
+                );
 
-            // The content at cursor has changed. Should also clear the cursor data cache
-            clearContentSearcherCache(event);
-            return anchor;
-        }, ChangeSource.AutoLink);
+                // The content at cursor has changed. Should also clear the cursor data cache
+                clearEventDataCache(event);
+                return anchor;
+            },
+            ChangeSource.AutoLink,
+            true /*canUndoByBackspace*/
+        );
     });
 }
+
+/**
+ * @internal
+ */
+export const AutoLinkFeatures: Record<
+    keyof AutoLinkFeatureSettings,
+    BuildInEditFeature<PluginKeyboardEvent>
+> = {
+    autoLink: AutoLink,
+    unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink,
+};

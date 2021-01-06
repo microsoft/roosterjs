@@ -1,14 +1,19 @@
-import Replacement from './Replacement';
-import { cacheGetContentSearcher, Editor, EditorPlugin } from 'roosterjs-editor-core';
-import { PluginEvent, PluginEventType, PositionType } from 'roosterjs-editor-types';
+import {
+    CustomReplacement,
+    EditorPlugin,
+    IEditor,
+    PluginEvent,
+    PluginEventType,
+    PositionType,
+} from 'roosterjs-editor-types';
 
 const makeReplacement = (
     sourceString: string,
     replacementHTML: string,
     matchSourceCaseSensitive: boolean
-): Replacement => ({ sourceString, replacementHTML, matchSourceCaseSensitive });
+): CustomReplacement => ({ sourceString, replacementHTML, matchSourceCaseSensitive });
 
-const defaultReplacements: Replacement[] = [
+const defaultReplacements: CustomReplacement[] = [
     makeReplacement(':)', '🙂', true),
     makeReplacement(';)', '😉', true),
     makeReplacement(':O', '😲', true),
@@ -22,15 +27,15 @@ const defaultReplacements: Replacement[] = [
  */
 export default class CustomReplacePlugin implements EditorPlugin {
     private longestReplacementLength: number;
-    private editor: Editor;
-    private replacements: Replacement[];
+    private editor: IEditor;
+    private replacements: CustomReplacement[];
     private replacementEndCharacters: Set<string>;
 
     /**
      * Create instance of CustomReplace plugin
      * @param replacements Replacement rules. If not passed, a default replacement rule set will be applied
      */
-    constructor(replacements: Replacement[] = defaultReplacements) {
+    constructor(replacements: CustomReplacement[] = defaultReplacements) {
         this.updateReplacements(replacements);
     }
 
@@ -38,14 +43,14 @@ export default class CustomReplacePlugin implements EditorPlugin {
      * Set the replacements that this plugin is looking for.
      * @param newReplacements new set of replacements for this plugin
      */
-    updateReplacements(newReplacements: Replacement[]) {
+    updateReplacements(newReplacements: CustomReplacement[]) {
         this.replacements = newReplacements;
         this.longestReplacementLength = getLongestReplacementSourceLength(this.replacements);
         this.replacementEndCharacters = getReplacementEndCharacters(this.replacements);
     }
 
     /**
-     * Get a friendly name of  this plugin
+     * Get a friendly name of this plugin
      */
     getName() {
         return 'CustomReplace';
@@ -55,7 +60,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
      * Initialize this plugin
      * @param editor The editor instance
      */
-    public initialize(editor: Editor): void {
+    public initialize(editor: IEditor): void {
         this.editor = editor;
     }
 
@@ -66,6 +71,10 @@ export default class CustomReplacePlugin implements EditorPlugin {
         this.editor = null;
     }
 
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
     public onPluginEvent(event: PluginEvent) {
         if (this.editor.isInIME() || event.eventType != PluginEventType.Input) {
             return;
@@ -81,7 +90,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
         if (range == null) {
             return;
         }
-        const searcher = cacheGetContentSearcher(event, this.editor);
+        const searcher = this.editor.getContentSearcherOfCursor(event);
         const stringToSearch = searcher.getSubStringBefore(this.longestReplacementLength);
 
         const replacement = this.getMatchingReplacement(stringToSearch);
@@ -102,14 +111,18 @@ export default class CustomReplacePlugin implements EditorPlugin {
             parsingSpan.childNodes.length == 1 ? parsingSpan.childNodes[0] : parsingSpan;
 
         // Switch the node for the selection range
-        this.editor.performAutoComplete(() => {
-            matchingRange.deleteContents();
-            matchingRange.insertNode(nodeToInsert);
-            this.editor.select(nodeToInsert, PositionType.End);
-        });
+        this.editor.addUndoSnapshot(
+            () => {
+                matchingRange.deleteContents();
+                matchingRange.insertNode(nodeToInsert);
+                this.editor.select(nodeToInsert, PositionType.End);
+            },
+            null /*changeSource*/,
+            true /*canUndoByBackspace*/
+        );
     }
 
-    private getMatchingReplacement(stringToSearch: string): Replacement | null {
+    private getMatchingReplacement(stringToSearch: string): CustomReplacement | null {
         if (stringToSearch.length == 0) {
             return null;
         }
@@ -130,14 +143,14 @@ export default class CustomReplacePlugin implements EditorPlugin {
     }
 }
 
-function getLongestReplacementSourceLength(replacements: Replacement[]): number {
+function getLongestReplacementSourceLength(replacements: CustomReplacement[]): number {
     return Math.max.apply(
         null,
         replacements.map(replacement => replacement.sourceString.length)
     );
 }
 
-function getReplacementEndCharacters(replacements: Replacement[]): Set<string> {
+function getReplacementEndCharacters(replacements: CustomReplacement[]): Set<string> {
     const endChars = new Set<string>();
     for (let replacement of replacements) {
         const sourceString = replacement.sourceString;

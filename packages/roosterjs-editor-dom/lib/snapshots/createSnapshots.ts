@@ -9,6 +9,7 @@ export default function createSnapshots(maxSize: number): Snapshots {
         snapshots: [],
         totalSize: 0,
         currentIndex: -1,
+        autoCompleteIndex: -1,
         maxSize,
     };
 }

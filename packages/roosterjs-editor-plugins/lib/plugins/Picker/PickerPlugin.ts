@@ -1,9 +1,18 @@
-import { Browser, createRange, PartialInlineElement } from 'roosterjs-editor-dom';
-import { PickerDataProvider, PickerPluginOptions } from './PickerDataProvider';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import {
+    Browser,
+    createRange,
+    isCharacterValue,
+    isModifierKey,
+    PartialInlineElement,
+} from 'roosterjs-editor-dom';
+import {
     ChangeSource,
+    EditorPlugin,
+    IEditor,
     NodePosition,
+    PickerDataProvider,
+    PickerPluginOptions,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
@@ -11,13 +20,6 @@ import {
     PluginKeyboardEvent,
     PositionType,
 } from 'roosterjs-editor-types';
-import {
-    cacheGetContentSearcher,
-    Editor,
-    EditorPlugin,
-    isCharacterValue,
-    isModifierKey,
-} from 'roosterjs-editor-core';
 
 // Character codes.
 // IE11 uses different character codes. which are noted below.
@@ -41,14 +43,6 @@ const UNIDENTIFIED_KEY = 'Unidentified';
 const UNIDENTIFIED_CODE = [0, 229];
 
 /**
- * Interface for PickerPlugin
- */
-export interface EditorPickerPluginInterface<T extends PickerDataProvider = PickerDataProvider>
-    extends EditorPlugin {
-    dataProvider: T;
-}
-
-/**
  * PickerPlugin represents a plugin of editor which can handle picker related behaviors, including
  * - Show picker when special trigger key is pressed
  * - Hide picker
@@ -57,11 +51,11 @@ export interface EditorPickerPluginInterface<T extends PickerDataProvider = Pick
  *
  * PickerPlugin doesn't provide any UI, it just wraps related DOM events and invoke callback functions.
  * To show a picker UI, you need to build your own UI component. Please reference to
- * https://github.com/microsoft/roosterjs/tree/master/publish/samplesite/scripts/controls/samplepicker
+ * https://github.com/microsoft/roosterjs/tree/master/demo/scripts/controls/samplepicker
  */
 export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvider>
-    implements EditorPickerPluginInterface<T> {
-    private editor: Editor;
+    implements EditorPlugin {
+    private editor: IEditor;
     private eventHandledOnKeyDown: boolean;
     private blockSuggestions: boolean;
     private isSuggesting: boolean;
@@ -72,7 +66,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     private currentInputLength: number;
     private newInputLength: number;
 
-    constructor(public readonly dataProvider: T, private pickerOptions: PickerPluginOptions) { }
+    constructor(public readonly dataProvider: T, private pickerOptions: PickerPluginOptions) {}
 
     /**
      * Get a friendly name
@@ -85,7 +79,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    public initialize(editor: Editor) {
+    public initialize(editor: IEditor) {
         this.editor = editor;
         this.dataProvider.onInitalize(
             (htmlNode: Node) => {
@@ -114,11 +108,11 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     this.setIsSuggesting(false);
                 };
 
-                if (this.pickerOptions.handleAutoComplete) {
-                    this.editor.performAutoComplete(insertNode, this.pickerOptions.changeSource);
-                } else {
-                    this.editor.addUndoSnapshot(insertNode, this.pickerOptions.changeSource);
-                }
+                this.editor.addUndoSnapshot(
+                    insertNode,
+                    this.pickerOptions.changeSource,
+                    this.pickerOptions.handleAutoComplete
+                );
             },
             (isSuggesting: boolean) => {
                 this.setIsSuggesting(isSuggesting);
@@ -253,7 +247,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private getWordBeforeCursor(event: PluginKeyboardEvent): string {
-        let searcher = cacheGetContentSearcher(event, this.editor);
+        let searcher = this.editor.getContentSearcherOfCursor(event);
         return searcher ? searcher.getWordBefore() : null;
     }
 
@@ -267,10 +261,10 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private getRangeUntilAt(event: PluginKeyboardEvent): Range {
-        let PositionContentSearcher = cacheGetContentSearcher(event, this.editor);
+        let positionContentSearcher = this.editor.getContentSearcherOfCursor(event);
         let startPos: NodePosition;
         let endPos: NodePosition;
-        PositionContentSearcher.forEachTextInlineElement(textInline => {
+        positionContentSearcher.forEachTextInlineElement(textInline => {
             let hasMatched = false;
             let nodeContent = textInline.getTextContent();
             let nodeIndex = nodeContent ? nodeContent.length : -1;
@@ -349,7 +343,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     this.setLastKnownRange(this.editor.getSelectionRange());
                     if (this.dataProvider.setCursorPoint) {
                         // Determine the bounding rectangle for the @mention
-                        let searcher = cacheGetContentSearcher(event, this.editor);
+                        let searcher = this.editor.getContentSearcherOfCursor(event);
                         let rangeNode = this.editor.getDocument().createRange();
                         let nodeBeforeCursor = searcher.getInlineElementBefore().getContainerNode();
                         let rangeStartSuccessfullySet = this.setRangeStart(
@@ -404,13 +398,20 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 this.setIsSuggesting(false);
                 this.blockSuggestions = true;
                 this.cancelDefaultKeyDownEvent(event);
+            } else if (keyboardEvent.key == BACKSPACE_CHARCODE) {
+                // #483: If we are backspacing over the trigger character that triggered this Picker
+                // then we need to hide the Picker
+                const wordBeforeCursor = this.getWord(event);
+                if (wordBeforeCursor == this.pickerOptions.triggerCharacter) {
+                    this.setIsSuggesting(false);
+                }
             } else if (
                 this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
                     ? keyboardEvent.key == LEFT_ARROW_CHARCODE ||
-                    keyboardEvent.key == RIGHT_ARROW_CHARCODE
+                      keyboardEvent.key == RIGHT_ARROW_CHARCODE
                     : keyboardEvent.key == UP_ARROW_CHARCODE ||
-                    keyboardEvent.key == DOWN_ARROW_CHARCODE)
+                      keyboardEvent.key == DOWN_ARROW_CHARCODE)
             ) {
                 this.dataProvider.shiftHighlight(
                     this.pickerOptions.isHorizontal
@@ -439,7 +440,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     this.cancelDefaultKeyDownEvent(event);
                 }
             } else if (keyboardEvent.key == DELETE_CHARCODE) {
-                let searcher = cacheGetContentSearcher(event, this.editor);
+                let searcher = this.editor.getContentSearcherOfCursor(event);
                 let nodeAfterCursor = searcher.getInlineElementAfter()
                     ? searcher.getInlineElementAfter().getContainerNode()
                     : null;
@@ -473,7 +474,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private tryRemoveNode(event: PluginDomEvent): boolean {
-        const searcher = cacheGetContentSearcher(event, this.editor);
+        const searcher = this.editor.getContentSearcherOfCursor(event);
         const inlineElementBefore = searcher.getInlineElementBefore();
         const nodeBeforeCursor = inlineElementBefore
             ? inlineElementBefore.getContainerNode()
@@ -490,8 +491,8 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             if (replacementNode) {
                 this.replaceNode(nodeBeforeCursor, replacementNode);
                 if (this.isPendingInputEventHandling) {
-                    this.editor.runAsync(() => {
-                        this.editor.select(replacementNode, PositionType.After);
+                    this.editor.runAsync(editor => {
+                        editor.select(replacementNode, PositionType.After);
                     });
                 } else {
                     this.editor.select(replacementNode, PositionType.After);
@@ -547,7 +548,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private getInlineElementBeforeCursor(event: PluginEvent): string {
-        const searcher = cacheGetContentSearcher(event, this.editor);
+        const searcher = this.editor.getContentSearcherOfCursor(event);
         const element = searcher ? searcher.getInlineElementBefore() : null;
         return element ? element.getTextContent() : null;
     }

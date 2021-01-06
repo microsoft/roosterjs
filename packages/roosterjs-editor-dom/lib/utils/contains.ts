@@ -1,4 +1,4 @@
-import isRange from '../typeUtils/isRange';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import { NodeType } from 'roosterjs-editor-types';
 
 /**
@@ -37,7 +37,7 @@ export default function contains(
         return true;
     }
 
-    if (isRange(contained)) {
+    if (safeInstanceOf(contained, 'Range')) {
         contained = contained && contained.commonAncestorContainer;
         treatSameNodeAsContain = true;
     }
@@ -51,5 +51,24 @@ export default function contains(
         return !!treatSameNodeAsContain && container == contained;
     }
 
-    return !!(treatSameNodeAsContain || container != contained) && container.contains(contained);
+    return (
+        !!(treatSameNodeAsContain || container != contained) &&
+        internalContains(container, contained)
+    );
+}
+
+function internalContains(container: Node, contained: Node): boolean {
+    if (container.contains) {
+        return container.contains(contained);
+    } else {
+        while (contained) {
+            if (contained == container) {
+                return true;
+            }
+
+            contained = contained.parentNode;
+        }
+
+        return false;
+    }
 }

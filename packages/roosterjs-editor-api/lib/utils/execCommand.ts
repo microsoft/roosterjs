@@ -1,5 +1,4 @@
-import { ChangeSource, DocumentCommand, PluginEventType } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { ChangeSource, DocumentCommand, IEditor, PluginEventType } from 'roosterjs-editor-types';
 import {
     getPendableFormatState,
     PendableFormatCommandMap,
@@ -9,6 +8,7 @@ import {
 let pendableFormatCommands: string[] = null;
 
 /**
+ * @internal
  * Execute a document command
  * @param editor The editor instance
  * @param command The command to execute
@@ -17,7 +17,7 @@ let pendableFormatCommands: string[] = null;
  * @param doWorkaroundForList Optional, set to true to do workaround for list in order to keep current format.
  * Default value is false.
  */
-export default function execCommand(editor: Editor, command: DocumentCommand) {
+export default function execCommand(editor: IEditor, command: DocumentCommand) {
     editor.focus();
     let formatter = () => editor.getDocument().execCommand(command, false, null);
 

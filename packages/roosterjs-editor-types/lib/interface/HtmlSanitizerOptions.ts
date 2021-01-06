@@ -1,8 +1,9 @@
 import {
-    ElementCallbackMap,
     AttributeCallbackMap,
+    CssStyleCallbackMap,
+    ElementCallbackMap,
+    PredefinedCssMap,
     StringMap,
-    StyleCallbackMap,
 } from '../type/htmlSanitizerCallbackTypes';
 
 /**
@@ -22,7 +23,7 @@ export default interface HtmlSanitizerOptions {
     /**
      * Callbacks for CSS styles
      */
-    styleCallbacks?: StyleCallbackMap;
+    cssStyleCallbacks?: CssStyleCallbackMap;
 
     /**
      * Allowed HTML tags in addition to default tags, in upper case
@@ -31,9 +32,8 @@ export default interface HtmlSanitizerOptions {
 
     /**
      * Allowed HTML attributes in addition to default attributes, in lower case
-     * TODO: rename to "additionalAllowedAttributes" in next major release
      */
-    additionalAllowAttributes?: string[];
+    additionalAllowedAttributes?: string[];
 
     /**
      * Allowed CSS Class names
@@ -51,7 +51,16 @@ export default interface HtmlSanitizerOptions {
     additionalGlobalStyleNodes?: HTMLStyleElement[];
 
     /**
-     * Whether allow CSS white-space in result
+     * Additional predefined CSS for element
      */
-    allowPreserveWhiteSpace?: boolean;
+    additionalPredefinedCssForElement?: PredefinedCssMap;
+
+    /**
+     * Define a replacement tag name of unknown tags.
+     * A star "*" means keep as it is, no replacement
+     * Other valid string means replace the tag name with this string.
+     * Empty string, undefined or null means drop such elements and all its children
+     * @default undefined
+     */
+    unknownTagReplacement?: string;
 }

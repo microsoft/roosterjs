@@ -1,27 +1,6 @@
-import isHTMLTableCellElement from '../typeUtils/isHTMLTableCellElement';
-import isHTMLTableElement from '../typeUtils/isHTMLTableElement';
-import { TableFormat, TableOperation } from 'roosterjs-editor-types';
-import { toArray } from 'roosterjs-editor-dom';
-
-/**
- * Represent a virtual cell of a virtual table
- */
-export interface VCell {
-    /**
-     * The table cell object. The value will be null if this is an expanded virtual cell
-     */
-    td?: HTMLTableCellElement;
-
-    /**
-     * Whether this cell is spanned from left
-     */
-    spanLeft?: boolean;
-
-    /**
-     * Whether this cell is spanned from above
-     */
-    spanAbove?: boolean;
-}
+import safeInstanceOf from '../utils/safeInstanceOf';
+import toArray from '../utils/toArray';
+import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -54,9 +33,9 @@ export default class VTable {
      * @param node The HTML Table or TD node
      */
     constructor(node: HTMLTableElement | HTMLTableCellElement) {
-        this.table = isHTMLTableElement(node) ? node : getTableFromTd(node);
+        this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
         if (this.table) {
-            let currentTd = isHTMLTableElement(node) ? null : node;
+            let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
             let trs = toArray(this.table.rows);
             this.cells = trs.map(row => []);
             trs.forEach((tr, rowIndex) => {
@@ -429,7 +408,7 @@ function cloneCell(cell: VCell): VCell {
  */
 function cloneNode<T extends Node>(node: T): T {
     let newNode = node ? <T>node.cloneNode(false /*deep*/) : null;
-    if (isHTMLTableCellElement(newNode)) {
+    if (safeInstanceOf(newNode, 'HTMLTableCellElement')) {
         newNode.removeAttribute('id');
         if (!newNode.firstChild) {
             newNode.appendChild(node.ownerDocument.createElement('br'));

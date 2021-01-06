@@ -1,7 +1,12 @@
 import experimentToggleListType from '../experiment/experimentToggleListType';
 import processList from '../utils/processList';
-import { ChangeSource, DocumentCommand, ListType } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import {
+    ChangeSource,
+    DocumentCommand,
+    IEditor,
+    ListType,
+    ExperimentalFeatures,
+} from 'roosterjs-editor-types';
 
 /**
  * Toggle bullet at selection
@@ -11,8 +16,8 @@ import { Editor } from 'roosterjs-editor-core';
  * browser execCommand API
  * @param editor The editor instance
  */
-export default function toggleBullet(editor: Editor) {
-    if (editor.useExperimentFeatures()) {
+export default function toggleBullet(editor: IEditor) {
+    if (editor.isFeatureEnabled(ExperimentalFeatures.NewBullet)) {
         experimentToggleListType(editor, ListType.Unordered);
     } else {
         editor.focus();

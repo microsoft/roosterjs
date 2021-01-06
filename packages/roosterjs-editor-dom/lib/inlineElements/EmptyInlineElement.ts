@@ -1,6 +1,7 @@
 import { BlockElement, InlineElement, NodePosition } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Represents an empty InlineElement.
  * This is used for ContentTraverser internally only.
  * An empty InlineElement means current position is at the end of a tag so nothing is included inside this element

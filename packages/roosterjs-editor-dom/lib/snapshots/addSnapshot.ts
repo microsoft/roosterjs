@@ -5,8 +5,13 @@ import { Snapshots } from 'roosterjs-editor-types';
  * Add a new snapshot to the given snapshots data structure
  * @param snapshots The snapshots data structure to add new snapshot into
  * @param snapshot The snapshot to add
+ * @param isAutoCompleteSnapshot Whether this is a snapshot before auto complete action
  */
-export default function addSnapshot(snapshots: Snapshots, snapshot: string) {
+export default function addSnapshot(
+    snapshots: Snapshots,
+    snapshot: string,
+    isAutoCompleteSnapshot: boolean
+) {
     if (snapshots.currentIndex < 0 || snapshot != snapshots.snapshots[snapshots.currentIndex]) {
         clearProceedingSnapshots(snapshots);
         snapshots.snapshots.push(snapshot);
@@ -25,6 +30,11 @@ export default function addSnapshot(snapshots: Snapshots, snapshot: string) {
         if (removeCount > 0) {
             snapshots.snapshots.splice(0, removeCount);
             snapshots.currentIndex -= removeCount;
+            snapshots.autoCompleteIndex -= removeCount;
+        }
+
+        if (isAutoCompleteSnapshot) {
+            snapshots.autoCompleteIndex = snapshots.currentIndex;
         }
     }
 }

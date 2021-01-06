@@ -1,5 +1,4 @@
-import { DocumentCommand } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { DocumentCommand, IEditor } from 'roosterjs-editor-types';
 import {
     Browser,
     createRange,
@@ -9,6 +8,9 @@ import {
     wrap,
 } from 'roosterjs-editor-dom';
 
+/**
+ * @internal
+ */
 export type ValidProcessListDocumentCommands =
     | DocumentCommand.Outdent
     | DocumentCommand.Indent
@@ -16,11 +18,12 @@ export type ValidProcessListDocumentCommands =
     | DocumentCommand.InsertUnorderedList;
 
 /**
+ * @internal
  * Browsers don't handle bullet/numbering list well, especially the formats when switching list statue
  * So we workaround it by always adding format to list element
  */
 export default function processList(
-    editor: Editor,
+    editor: IEditor,
     command: ValidProcessListDocumentCommands
 ): Node {
     let existingList = editor.getElementAtCursor('OL,UL');

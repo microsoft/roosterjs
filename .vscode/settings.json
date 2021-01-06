@@ -21,5 +21,6 @@
     "prettier.printWidth": 100,
     "typescript.extension.sortImports.sortOnSave": true,
     "prettier.jsxBracketSameLine": true,
-    "typescript.extension.sortImports.maxNamedImportsInSingleLine": 4
+    "typescript.extension.sortImports.maxNamedImportsInSingleLine": 4,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

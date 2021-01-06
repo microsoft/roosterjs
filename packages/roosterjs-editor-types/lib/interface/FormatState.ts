@@ -110,21 +110,25 @@ export interface StyleBasedFormatState {
 }
 
 /**
- * The format state
+ * Specify if editor can undo/redo an editing operation
  */
-export default interface FormatState
-    extends PendableFormatState,
-        ElementBasedFormatState,
-        StyleBasedFormatState {
+export interface EditorUndoState {
     /**
-     * @deprecated Use editor.canUndo() instead
      * Whether the content can be undone
      */
     canUndo?: boolean;
 
     /**
-     * @deprecated Use editor.canRedo() instead
      * Whether the content ca nbe redone
      */
     canRedo?: boolean;
 }
+
+/**
+ * The format state
+ */
+export default interface FormatState
+    extends PendableFormatState,
+        ElementBasedFormatState,
+        StyleBasedFormatState,
+        EditorUndoState {}

@@ -1,5 +1,4 @@
-import { ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { ChangeSource, DocumentCommand, IEditor, QueryScope } from 'roosterjs-editor-types';
 import { HtmlSanitizer } from 'roosterjs-editor-dom';
 
 /**
@@ -9,7 +8,7 @@ import { HtmlSanitizer } from 'roosterjs-editor-dom';
  * the HTML header element &lt;H1&gt; to &lt;H6&gt;, 0 means no header
  * if passed in param is outside the range, will be rounded to nearest number in the range
  */
-export default function toggleHeader(editor: Editor, level: number) {
+export default function toggleHeader(editor: IEditor, level: number) {
     level = Math.min(Math.max(Math.round(level), 0), 6);
 
     editor.addUndoSnapshot(() => {
@@ -33,7 +32,7 @@ export default function toggleHeader(editor: Editor, level: number) {
             let traverser = editor.getSelectionTraverser();
             let blockElement = traverser ? traverser.currentBlockElement : null;
             let sanitizer = new HtmlSanitizer({
-                styleCallbacks: {
+                cssStyleCallbacks: {
                     'font-size': () => false,
                 },
             });

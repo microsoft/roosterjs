@@ -1,6 +1,5 @@
 import execCommand from '../utils/execCommand';
-import { DocumentCommand } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { DocumentCommand, IEditor } from 'roosterjs-editor-types';
 
 /**
  * Toggle strikethrough at selection
@@ -10,6 +9,6 @@ import { Editor } from 'roosterjs-editor-core';
  * If selection contains both strikethrough and normal text, strikethrough stlye will be added to the whole selected text
  * @param editor The editor instance
  */
-export default function toggleStrikethrough(editor: Editor) {
+export default function toggleStrikethrough(editor: IEditor) {
     execCommand(editor, DocumentCommand.StrikeThrough);
 }
