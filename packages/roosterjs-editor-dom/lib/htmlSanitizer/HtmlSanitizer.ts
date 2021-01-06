@@ -66,7 +66,7 @@ export default class HtmlSanitizer {
     private elementCallbacks: ElementCallbackMap;
     private styleCallbacks: CssStyleCallbackMap;
     private attributeCallbacks: AttributeCallbackMap;
-    private tagRepacements: Record<string, string>;
+    private tagReplacements: Record<string, string>;
     private allowedAttributes: string[];
     private allowedCssClassesRegex: RegExp;
     private defaultStyleValues: StringMap;
@@ -83,7 +83,7 @@ export default class HtmlSanitizer {
         this.elementCallbacks = cloneObject(options.elementCallbacks);
         this.styleCallbacks = getStyleCallbacks(options.cssStyleCallbacks);
         this.attributeCallbacks = cloneObject(options.attributeCallbacks);
-        this.tagRepacements = getTagReplacement(options.additionalTagReplacements);
+        this.tagReplacements = getTagReplacement(options.additionalTagReplacements);
         this.allowedAttributes = getAllowedAttributes(options.additionalAllowedAttributes);
         this.allowedCssClassesRegex = getAllowedCssClassesRegex(
             options.additionalAllowedCssClasses
@@ -188,7 +188,7 @@ export default class HtmlSanitizer {
         if (isElement) {
             const tag = getTagOfNode(node);
             const callback = this.elementCallbacks[tag];
-            let replacement = this.tagRepacements[tag.toLowerCase()];
+            let replacement = this.tagReplacements[tag.toLowerCase()];
 
             if (replacement === undefined) {
                 replacement = this.unknownTagReplacement;

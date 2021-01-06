@@ -106,7 +106,7 @@ const HTML_TAG_REPLACEMENT: Record<string, string> = {
     wbr: '*',
     xmp: '*',
 
-    // Replaced tas:
+    // Replaced tags:
     form: 'SPAN',
 
     // Disallowed tags
