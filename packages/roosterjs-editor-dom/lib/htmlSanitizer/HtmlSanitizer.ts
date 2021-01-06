@@ -11,9 +11,8 @@ import { cloneObject } from './cloneObject';
 import {
     getAllowedAttributes,
     getAllowedCssClassesRegex,
-    getAllowedTags,
+    getTagReplacement,
     getDefaultStyleValues,
-    getDisallowedTags,
     getStyleCallbacks,
 } from './getAllowedValues';
 import {
@@ -67,8 +66,7 @@ export default class HtmlSanitizer {
     private elementCallbacks: ElementCallbackMap;
     private styleCallbacks: CssStyleCallbackMap;
     private attributeCallbacks: AttributeCallbackMap;
-    private allowedTags: string[];
-    private disallowedTags: string[];
+    private tagReplacements: Record<string, string>;
     private allowedAttributes: string[];
     private allowedCssClassesRegex: RegExp;
     private defaultStyleValues: StringMap;
@@ -85,8 +83,7 @@ export default class HtmlSanitizer {
         this.elementCallbacks = cloneObject(options.elementCallbacks);
         this.styleCallbacks = getStyleCallbacks(options.cssStyleCallbacks);
         this.attributeCallbacks = cloneObject(options.attributeCallbacks);
-        this.allowedTags = getAllowedTags(options.additionalAllowedTags);
-        this.disallowedTags = getDisallowedTags();
+        this.tagReplacements = getTagReplacement(options.additionalTagReplacements);
         this.allowedAttributes = getAllowedAttributes(options.additionalAllowedAttributes);
         this.allowedCssClassesRegex = getAllowedCssClassesRegex(
             options.additionalAllowedCssClasses
@@ -186,28 +183,26 @@ export default class HtmlSanitizer {
         const isText = nodeType == NodeType.Text;
         const isFragment = nodeType == NodeType.DocumentFragment;
 
-        let element = <HTMLElement>node;
-        let shouldKeep: boolean;
+        let shouldKeep = false;
 
         if (isElement) {
             const tag = getTagOfNode(node);
             const callback = this.elementCallbacks[tag];
+            let replacement = this.tagReplacements[tag.toLowerCase()];
+
+            if (replacement === undefined) {
+                replacement = this.unknownTagReplacement;
+            }
+
             if (callback) {
                 shouldKeep = callback(node as HTMLElement, context);
-            } else if (this.allowedTags.indexOf(tag) >= 0 || tag.indexOf(':') > 0) {
+            } else if (tag.indexOf(':') > 0) {
                 shouldKeep = true;
-            } else if (this.disallowedTags.indexOf(tag) >= 0) {
-                shouldKeep = false;
-            } else if (this.unknownTagReplacement === '*') {
+            } else if (tag == replacement || replacement == '*') {
                 shouldKeep = true;
-            } else if (
-                this.unknownTagReplacement &&
-                /^[a-zA-Z][\w]*$/.test(this.unknownTagReplacement)
-            ) {
-                node = changeElementTag(node as HTMLElement, this.unknownTagReplacement);
+            } else if (replacement && /^[a-zA-Z][\w\-]*$/.test(replacement)) {
+                node = changeElementTag(node as HTMLElement, replacement);
                 shouldKeep = true;
-            } else {
-                shouldKeep = false;
             }
         } else if (isText) {
             const whiteSpace = currentStyle['white-space'];
@@ -231,6 +226,7 @@ export default class HtmlSanitizer {
             node.nodeValue = node.nodeValue.replace(/^ /gm, '\u00A0').replace(/ {2}/g, ' \u00A0');
         } else if (isElement || isFragment) {
             let thisStyle = cloneObject(currentStyle);
+            let element = <HTMLElement>node;
             if (isElement) {
                 this.processAttributes(element, context);
                 this.preprocessCss(element, thisStyle);

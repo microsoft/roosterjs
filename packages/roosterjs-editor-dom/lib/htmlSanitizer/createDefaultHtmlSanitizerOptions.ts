@@ -8,7 +8,7 @@ export default function createDefaultHtmlSanitizerOptions(): Required<HtmlSaniti
         elementCallbacks: {},
         attributeCallbacks: {},
         cssStyleCallbacks: {},
-        additionalAllowedTags: [],
+        additionalTagReplacements: {},
         additionalAllowedAttributes: [],
         additionalAllowedCssClasses: [],
         additionalDefaultStyleValues: {},

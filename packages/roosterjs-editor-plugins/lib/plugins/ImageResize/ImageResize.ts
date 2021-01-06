@@ -162,10 +162,13 @@ export default class ImageResize implements EditorPlugin {
         if (this.resizeDiv) {
             const transform = this.resizeDiv.style.transform;
             const img = this.removeResizeDiv(this.resizeDiv);
-            img.style.transform = transform;
 
-            if (selectImageAfterUnSelect) {
-                this.editor.select(img);
+            if (img) {
+                img.style.transform = transform;
+
+                if (selectImageAfterUnSelect) {
+                    this.editor.select(img);
+                }
             }
 
             this.resizeDiv = null;
@@ -339,11 +342,16 @@ export default class ImageResize implements EditorPlugin {
     };
 
     private removeResizeDiv = (resizeDiv: HTMLElement): HTMLImageElement => {
-        const img = resizeDiv?.querySelector('img');
-        resizeDiv?.parentNode?.insertBefore(img, resizeDiv);
-        resizeDiv?.parentNode?.removeChild(resizeDiv);
-
-        return img;
+        if (resizeDiv?.parentNode) {
+            const img = resizeDiv.querySelector('img');
+            if (img) {
+                resizeDiv.parentNode.insertBefore(img, resizeDiv);
+            }
+            resizeDiv.parentNode.removeChild(resizeDiv);
+            return img;
+        } else {
+            return null;
+        }
     };
 
     private onBlur = (e: FocusEvent) => {
