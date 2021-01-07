@@ -154,13 +154,10 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         const allItems: any[] = [];
         const searcher = this.editor.getContentSearcherOfCursor();
         const elementBeforeCursor = searcher?.getInlineElementBefore();
-        if (!elementBeforeCursor) {
-            return;
-        }
 
         let eventTargetNode = event.target as Node;
         if (event.button != 2) {
-            eventTargetNode = elementBeforeCursor.getContainerNode();
+            eventTargetNode = elementBeforeCursor?.getContainerNode();
         }
         this.state.contextMenuProviders.forEach(provider => {
             const items = provider.getContextMenuItems(eventTargetNode);
