@@ -152,8 +152,15 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
     private onContextMenuEvent = (event: MouseEvent) => {
         const allItems: any[] = [];
+        const searcher = this.editor.getContentSearcherOfCursor();
+        const elementBeforeCursor = searcher?.getInlineElementBefore();
+
+        let eventTargetNode = event.target as Node;
+        if (event.button != 2) {
+            eventTargetNode = elementBeforeCursor?.getContainerNode();
+        }
         this.state.contextMenuProviders.forEach(provider => {
-            const items = provider.getContextMenuItems(event.target as Node);
+            const items = provider.getContextMenuItems(eventTargetNode);
             if (items?.length > 0) {
                 if (allItems.length > 0) {
                     allItems.push(null);
