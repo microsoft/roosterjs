@@ -17,9 +17,4 @@ export const enum Capitalization {
      * Transforms all characters to lowercase
      */
     Lowercase = 'lowercase',
-
-    /**
-     * Removes capitalization transformation (default)
-     */
-    none = 'none',
 }

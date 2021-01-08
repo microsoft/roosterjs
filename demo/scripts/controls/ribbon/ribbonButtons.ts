@@ -115,8 +115,7 @@ const buttons: { [key: string]: RibbonButtonType } = {
         image: require('../svg/capitalization.svg'),
         onClick: setCapitalization,
         dropDownItems: {
-            none: '(none)',
-            capitalize: 'Capitalize',
+            capitalize: 'Capitalize Each Word',
             lowercase: 'lowercase',
             uppercase: 'UPPERCASE',
         },
