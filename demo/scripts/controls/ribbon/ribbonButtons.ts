@@ -16,7 +16,7 @@ import {
     toggleBullet,
     toggleNumbering,
     setIndentation,
-    setCapitalization,
+    changeCapitalization,
     setAlignment,
     toggleBlockQuote,
     removeLink,
@@ -113,7 +113,7 @@ const buttons: { [key: string]: RibbonButtonType } = {
     capitalization: {
         title: 'Change case',
         image: require('../svg/capitalization.svg'),
-        onClick: setCapitalization,
+        onClick: changeCapitalization,
         dropDownItems: {
             capitalize: 'Capitalize Each Word',
             lowercase: 'lowercase',

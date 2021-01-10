@@ -1,6 +1,6 @@
 /**
  * The enum used for controlling the capitalization of text.
- * Used by setCapitalization API
+ * Used by changeCapitalization API
  */
 export const enum Capitalization {
     /**

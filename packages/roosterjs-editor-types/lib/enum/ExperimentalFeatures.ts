@@ -36,9 +36,4 @@ export const enum ExperimentalFeatures {
      * Try retrieve link preview information when paste
      */
     PasteWithLinkPreview = 'PasteWithLinkPreview',
-
-    /**
-     * Change the capitalization in text
-     */
-    Capitalization = 'Capitalization',
 }

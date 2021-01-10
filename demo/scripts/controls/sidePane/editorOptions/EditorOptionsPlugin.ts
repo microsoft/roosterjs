@@ -31,7 +31,6 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.NewNumbering,
         ExperimentalFeatures.PasteWithLinkPreview,
         ExperimentalFeatures.SingleDirectionResize,
-        ExperimentalFeatures.Capitalization,
     ],
 };
 
