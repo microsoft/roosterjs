@@ -6,7 +6,7 @@ export const enum Capitalization {
     /**
      * Transforms the first character of each word to uppercase
      */
-    Capitalize = 'capitalize',
+    CapitalizeEachWord = 'capitalize',
 
     /**
      * Transforms all characters to uppercase
