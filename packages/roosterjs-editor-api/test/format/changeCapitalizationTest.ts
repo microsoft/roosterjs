@@ -16,10 +16,15 @@ describe('changeCapitalization()', () => {
         TestHelper.removeElement(testID);
     });
 
-    function runTest(source: string, expected: string, capitalization: Capitalization) {
+    function runTest(
+        source: string,
+        expected: string,
+        capitalization: Capitalization,
+        language?: string
+    ) {
         editor.setContent(source);
         TestHelper.selectNode(document.getElementById('divToTest'));
-        changeCapitalization(editor, capitalization);
+        changeCapitalization(editor, capitalization, language);
         let result = editor.getContent();
         expect(result).toBe(expected);
     }
@@ -107,15 +112,7 @@ describe('changeCapitalization()', () => {
     });
 
     // Internationalization tests
-    it('Greek Σ to lowercase: σ OR ς if terminating a word', () => {
-        runTest(
-            '<div id="divToTest">Σ IS A GREEK LETTER AND APPEARS IN ΟΔΥΣΣΕΥΣ.</div>',
-            '<div id="divToTest"><span>σ is a greek letter and appears in οδυσσευς.</span></div>',
-            Capitalization.Lowercase
-        );
-    });
-
-    it('Turkish undotted lowercase undotted to uppercase I', () => {
+    it('works without a language passed when the character mapping is clear', () => {
         runTest(
             '<div id="divToTest">ılık ısırgan ışık</div>',
             '<div id="divToTest"><span>ILIK ISIRGAN IŞIK</span></div>',
@@ -123,11 +120,48 @@ describe('changeCapitalization()', () => {
         );
     });
 
+    it('does not affect uncased languages even when a cased language is passed', () => {
+        runTest(
+            '<div id="divToTest">לשון הקודש</div>',
+            '<div id="divToTest"><span>לשון הקודש</span></div>',
+            Capitalization.Uppercase,
+            'es'
+        );
+    });
+
+    it('Turkish undotted lowercase undotted to uppercase I', () => {
+        runTest(
+            '<div id="divToTest">ılık ısırgan ışık</div>',
+            '<div id="divToTest"><span>ILIK ISIRGAN IŞIK</span></div>',
+            Capitalization.Uppercase,
+            'tr'
+        );
+    });
+
+    it('Turkish undotted uppercase dotted to lowercase ı', () => {
+        runTest(
+            '<div id="divToTest">ILIK ISIRGAN IŞIK</div>',
+            '<div id="divToTest"><span>ılık ısırgan ışık</span></div>',
+            Capitalization.Lowercase,
+            'tr'
+        );
+    });
+
+    it('Greek Σ to lowercase: σ OR ς if terminating a word', () => {
+        runTest(
+            '<div id="divToTest">Σ IS A GREEK LETTER AND APPEARS IN ΟΔΥΣΣΕΥΣ.</div>',
+            '<div id="divToTest"><span>σ is a greek letter and appears in οδυσσευς.</span></div>',
+            Capitalization.Lowercase,
+            'el'
+        );
+    });
+
     it('German ß to uppercase', () => {
         runTest(
             '<div id="divToTest">grüßen</div>',
             '<div id="divToTest"><span>GRÜSSEN</span></div>',
-            Capitalization.Uppercase
+            Capitalization.Uppercase,
+            'de'
         );
     });
 
@@ -135,7 +169,8 @@ describe('changeCapitalization()', () => {
         runTest(
             '<div id="divToTest">A sus órdenes señora</div>',
             '<div id="divToTest"><span>A SUS ÓRDENES SEÑORA</span></div>',
-            Capitalization.Uppercase
+            Capitalization.Uppercase,
+            'es'
         );
     });
 });

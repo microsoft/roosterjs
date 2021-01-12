@@ -8,7 +8,7 @@ import { getFirstLeafNode, getNextLeafSibling } from 'roosterjs-editor-dom';
  * @param editor The editor instance
  * @param capitalization The case option
  */
-export default function changeCapitalization(editor: IEditor, capitalization: Capitalization) {
+export default function g(editor: IEditor, capitalization: Capitalization, language?: string) {
     applyInlineStyle(editor, element => {
         for (let node = getFirstLeafNode(element); node; node = getNextLeafSibling(element, node)) {
             if (node.nodeType == NodeType.Text) {
@@ -36,6 +36,9 @@ export default function changeCapitalization(editor: IEditor, capitalization: Ca
             // We need the whiteSpace to be set to Preserve so that spaces are not stripped
             tempNode.style.whiteSpace = 'pre';
             document.body.appendChild(tempNode);
+            if (language) {
+                tempNode.lang = language;
+            }
             tempNode.innerText = originalText;
             tempNode.style.textTransform = capitalization;
             transformedText = tempNode.innerText;
