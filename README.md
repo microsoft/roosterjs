@@ -10,6 +10,10 @@ To view the sample site, please click the link below:
 
 [RoosterJs Sample Site](https://microsoft.github.io/roosterjs/index.html).
 
+## Upgrade from RoosterJs 7.\*
+
+Please see [here](https://github.com/microsoft/roosterjs/wiki/RoosterJs-8).
+
 ## Features
 
 ### Packages
