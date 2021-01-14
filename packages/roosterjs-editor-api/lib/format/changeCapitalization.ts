@@ -8,7 +8,11 @@ import { getFirstLeafNode, getNextLeafSibling } from 'roosterjs-editor-dom';
  * @param editor The editor instance
  * @param capitalization The case option
  */
-export default function g(editor: IEditor, capitalization: Capitalization, language?: string) {
+export default function changeCapitalization(
+    editor: IEditor,
+    capitalization: Capitalization,
+    language?: string
+) {
     applyInlineStyle(editor, element => {
         for (let node = getFirstLeafNode(element); node; node = getNextLeafSibling(element, node)) {
             if (node.nodeType == NodeType.Text) {
