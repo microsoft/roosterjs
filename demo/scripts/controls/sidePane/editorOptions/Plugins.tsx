@@ -13,6 +13,7 @@ export interface PluginsProps {
 export default class Plugins extends React.Component<PluginsProps, {}> {
     private linkTitle = React.createRef<HTMLInputElement>();
     private watermarkText = React.createRef<HTMLInputElement>();
+    private forcePreserveRatio = React.createRef<HTMLInputElement>();
 
     render() {
         return (
@@ -42,7 +43,16 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                             (state, value) => (state.watermarkText = value)
                         )
                     )}
-                    {this.renderPluginItem('imageResize', 'Image Resize Plugin')}
+                    {this.renderPluginItem(
+                        'imageResize',
+                        'Image Resize Plugin',
+                        this.renderCheckBox(
+                            'Force preserve ratio',
+                            this.forcePreserveRatio,
+                            this.props.state.forcePreserveRatio,
+                            (state, value) => (state.forcePreserveRatio = value)
+                        )
+                    )}
                     {this.renderPluginItem('cutPasteListChain', 'CutPasteListChainPlugin')}
                     {this.renderPluginItem('tableResize', 'Table Resize Plugin')}
                     {this.renderPluginItem('pickerPlugin', 'Sample Picker Plugin')}
@@ -103,6 +113,28 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                     }
                     onBlur={() => this.props.resetState(null, true)}
                 />
+            </div>
+        );
+    }
+
+    private renderCheckBox(
+        label: string,
+        ref: React.RefObject<HTMLInputElement>,
+        value: boolean,
+        onChange: (state: BuildInPluginState, value: boolean) => void
+    ): JSX.Element {
+        return (
+            <div>
+                <input
+                    type="checkbox"
+                    ref={ref}
+                    checked={value}
+                    onChange={() =>
+                        this.props.resetState(state => onChange(state, ref.current.checked), false)
+                    }
+                    onBlur={() => this.props.resetState(null, true)}
+                />
+                {label}
             </div>
         );
     }
