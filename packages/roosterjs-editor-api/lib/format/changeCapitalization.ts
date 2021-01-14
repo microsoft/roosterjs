@@ -18,27 +18,6 @@ export default function g(editor: IEditor, capitalization: Capitalization, langu
     });
 
     function getCapitalizedText(originalText: string): string {
-        // // To get the capitalized text, we let the textTransform style do it for us which will take into account
-        // // the language-specific case mapping rules (https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform).
-        // // To retrieve the rendered text, we need a temporary node that is not hidden (so we add it to the document temporarily).
-        // let transformedText;
-        // let document = editor.getDocument();
-        // if (document) {
-        //     let tempNode = document.createElement('div');
-        //     // We need the whiteSpace to be set to Preserve so that spaces are not stripped
-        //     tempNode.style.whiteSpace = 'pre';
-        //     document.body.appendChild(tempNode);
-        //     if (language) {
-        //         tempNode.lang = language;
-        //     }
-        //     tempNode.innerText = originalText;
-        //     tempNode.style.textTransform = capitalization;
-        //     transformedText = tempNode.innerText;
-
-        //     document.body.removeChild(tempNode);
-        // }
-        // return transformedText;
-
         switch (capitalization) {
             case Capitalization.Lowercase:
                 return originalText.toLocaleLowerCase(language);
@@ -51,6 +30,16 @@ export default function g(editor: IEditor, capitalization: Capitalization, langu
                         wordArray[i].charAt(0).toLocaleUpperCase(language) + wordArray[i].slice(1);
                 }
                 return wordArray.join(' ');
+            case Capitalization.Sentence:
+                // TODO: Add rules on punctuation for internationalization - TASK 104769
+                const punctuationMarks = '[\\.\\!\\?]';
+                // Find a match of a word character either:
+                // at the beginning of a string with or without preceding whitespace
+                // or preceded by a punctuation mark and at least one whitespace.
+                const regex = new RegExp('^\\s*\\w|' + punctuationMarks + '\\s+\\w', 'g');
+                return originalText.toLocaleLowerCase(language).replace(regex, match => {
+                    return match.toUpperCase();
+                });
         }
     }
 }

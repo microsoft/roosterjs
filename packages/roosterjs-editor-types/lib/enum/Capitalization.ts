@@ -4,9 +4,15 @@
  */
 export const enum Capitalization {
     /**
-     * Transforms the first character of each word to uppercase
+     * Transforms the first character after punctuation mark followed by space
+     * to uppercase and the rest of characters to lowercase.
      */
-    CapitalizeEachWord = 'capitalize',
+    Sentence = 'sentence',
+
+    /**
+     * Transforms all characters to lowercase
+     */
+    Lowercase = 'lowercase',
 
     /**
      * Transforms all characters to uppercase
@@ -14,7 +20,7 @@ export const enum Capitalization {
     Uppercase = 'uppercase',
 
     /**
-     * Transforms all characters to lowercase
+     * Transforms the first character of each word to uppercase
      */
-    Lowercase = 'lowercase',
+    CapitalizeEachWord = 'capitalize',
 }

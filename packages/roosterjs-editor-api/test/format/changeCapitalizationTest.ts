@@ -70,6 +70,22 @@ describe('changeCapitalization()', () => {
         );
     });
 
+    it('Sentence case from UPPERCASE', () => {
+        runTest(
+            '<div id="divToTest">WHAT IS IT? PLEASE. I NEED TO KNOW! ANOTHER SENTENCE.</div>',
+            '<div id="divToTest"><span>What is it? Please. I need to know! Another sentence.</span></div>',
+            Capitalization.Sentence
+        );
+    });
+
+    it('Sentence case does not capitalize URLS', () => {
+        runTest(
+            '<div id="divToTest">example: www.contoso.com is not capitalized but. aww is.</div>',
+            '<div id="divToTest"><span>Example: www.contoso.com is not capitalized but. Aww is.</span></div>',
+            Capitalization.Sentence
+        );
+    });
+
     // Style and markup tests
     it('styled content will retain styling after changing capitalization', () => {
         runTest(
