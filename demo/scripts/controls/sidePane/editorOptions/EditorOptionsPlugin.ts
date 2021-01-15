@@ -22,6 +22,7 @@ const initialState: BuildInPluginState = {
     defaultFormat: {},
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
+    forcePreserveRatio: false,
     showRibbon: true,
     experimentalFeatures: [
         ExperimentalFeatures.ListChain,
