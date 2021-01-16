@@ -9,6 +9,7 @@ import { getFirstLeafNode, getNextLeafSibling } from 'roosterjs-editor-dom';
  * @param capitalization The case option
  * @param language Optional parameter for language string that should comply to "IETF BCP 47 Tags for
  * Identifying Languages". For example: 'en' or 'en-US' for English, 'tr' for Turkish.
+ * Default is the host environment’s current locale.
  */
 export default function changeCapitalization(
     editor: IEditor,
@@ -18,12 +19,16 @@ export default function changeCapitalization(
     applyInlineStyle(editor, element => {
         for (let node = getFirstLeafNode(element); node; node = getNextLeafSibling(element, node)) {
             if (node.nodeType == NodeType.Text) {
-                node.textContent = getCapitalizedText(node.textContent);
+                try {
+                    node.textContent = getCapitalizedText(node.textContent, language);
+                } catch {
+                    node.textContent = getCapitalizedText(node.textContent, undefined);
+                }
             }
         }
     });
 
-    function getCapitalizedText(originalText: string): string {
+    function getCapitalizedText(originalText: string, language: string): string {
         switch (capitalization) {
             case Capitalization.Lowercase:
                 return originalText.toLocaleLowerCase(language);
@@ -46,7 +51,7 @@ export default function changeCapitalization(
                 // example 'yes. hello world' would match 'y' and 'h'.
                 const regex = new RegExp('^\\s*\\w|' + punctuationMarks + '\\s+\\w', 'g');
                 return originalText.toLocaleLowerCase(language).replace(regex, match => {
-                    return match.toLocaleUpperCase();
+                    return match.toLocaleUpperCase(language);
                 });
         }
     }

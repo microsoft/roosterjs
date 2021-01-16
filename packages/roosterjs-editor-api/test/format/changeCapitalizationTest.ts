@@ -136,6 +136,15 @@ describe('changeCapitalization()', () => {
         );
     });
 
+    it('works with an invalid string passed for language', () => {
+        runTest(
+            '<div id="divToTest">first second third</div>',
+            '<div id="divToTest"><span>First Second Third</span></div>',
+            Capitalization.CapitalizeEachWord,
+            '2y3'
+        );
+    });
+
     it('does not affect uncased languages even when a cased language is passed', () => {
         runTest(
             '<div id="divToTest">לשון הקודש</div>',
