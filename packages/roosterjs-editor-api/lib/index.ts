@@ -19,6 +19,7 @@ export { default as setFontName } from './format/setFontName';
 export { default as setFontSize } from './format/setFontSize';
 export { default as setImageAltText } from './format/setImageAltText';
 export { default as setIndentation } from './format/setIndentation';
+export { default as changeCapitalization } from './format/changeCapitalization';
 export { default as toggleBold } from './format/toggleBold';
 export { default as toggleBullet } from './format/toggleBullet';
 export { default as toggleItalic } from './format/toggleItalic';

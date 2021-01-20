@@ -16,6 +16,7 @@ import {
     toggleBullet,
     toggleNumbering,
     setIndentation,
+    changeCapitalization,
     setAlignment,
     toggleBlockQuote,
     removeLink,
@@ -107,6 +108,17 @@ const buttons: { [key: string]: RibbonButtonType } = {
             '#666666': 'Dark Gray',
             '#ffffff': 'White',
             '#000000': 'Black',
+        },
+    },
+    capitalization: {
+        title: 'Change case',
+        image: require('../svg/capitalization.svg'),
+        onClick: changeCapitalization,
+        dropDownItems: {
+            sentence: 'Sentence case.',
+            lowercase: 'lowercase',
+            uppercase: 'UPPERCASE',
+            capitalize: 'Capitalize Each Word',
         },
     },
     bullet: {

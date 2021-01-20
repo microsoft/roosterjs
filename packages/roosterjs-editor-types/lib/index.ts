@@ -19,6 +19,7 @@ export { ExperimentalFeatures } from './enum/ExperimentalFeatures';
 export { FontSizeChange } from './enum/FontSizeChange';
 export { GetContentMode } from './enum/GetContentMode';
 export { Indentation } from './enum/Indentation';
+export { Capitalization } from './enum/Capitalization';
 export { ListType } from './enum/ListType';
 export { PositionType } from './enum/PositionType';
 export { QueryScope } from './enum/QueryScope';

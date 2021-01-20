@@ -28,6 +28,7 @@ export default interface BuildInPluginState {
     watermarkText: string;
     showRibbon: boolean;
     experimentalFeatures: ExperimentalFeatures[];
+    forcePreserveRatio: boolean;
 }
 
 export interface BuildInPluginProps extends BuildInPluginState, SidePaneElementProps {}

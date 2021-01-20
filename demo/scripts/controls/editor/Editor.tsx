@@ -80,7 +80,9 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
             hyperlink: pluginList.hyperlink ? new HyperLink(this.getLinkCallback()) : null,
             paste: pluginList.paste ? new Paste() : null,
             watermark: pluginList.watermark ? new Watermark(this.state.watermarkText) : null,
-            imageResize: pluginList.imageResize ? new ImageResize() : null,
+            imageResize: pluginList.imageResize
+                ? new ImageResize(10, 10, undefined, this.state.forcePreserveRatio)
+                : null,
             cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
             tableResize: pluginList.tableResize ? new TableResize() : null,
             pickerPlugin: pluginList.pickerPlugin

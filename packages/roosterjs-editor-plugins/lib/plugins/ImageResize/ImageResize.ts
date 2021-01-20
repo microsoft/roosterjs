@@ -200,8 +200,16 @@ export default class ImageResize implements EditorPlugin {
             let heightChange = e.pageY - this.startPageY;
             let newWidth = this.calculateNewWidth(widthChange);
             let newHeight = this.calculateNewHeight(heightChange);
+            const isSingleDirection =
+                this.isSingleDirectionNS(this.direction) ||
+                this.isSingleDirectionWE(this.direction);
+            const shouldPreserveRatio =
+                !isSingleDirection && (this.forcePreserveRatio || e.shiftKey);
 
-            if (this.forcePreserveRatio || e.shiftKey) {
+            if (shouldPreserveRatio) {
+                newHeight = Math.min(newHeight, (newWidth * this.startHeight) / this.startWidth);
+                newWidth = Math.min(newWidth, (newHeight * this.startWidth) / this.startHeight);
+
                 let ratio =
                     this.startWidth > 0 && this.startHeight > 0
                         ? (this.startWidth * 1.0) / this.startHeight
@@ -219,7 +227,7 @@ export default class ImageResize implements EditorPlugin {
             img.style.height = newHeight + 'px';
 
             // double check
-            if (this.forcePreserveRatio || e.shiftKey) {
+            if (shouldPreserveRatio) {
                 let ratio =
                     this.startWidth > 0 && this.startHeight > 0
                         ? (this.startWidth * 1.0) / this.startHeight
