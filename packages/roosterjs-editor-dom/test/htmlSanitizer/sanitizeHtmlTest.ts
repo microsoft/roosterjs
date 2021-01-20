@@ -81,6 +81,34 @@ describe('sanitizeHtml', () => {
             '<span dir="ltr">aa</span>'
         );
     });
+    it('Html contains CSS with escaped quoted values', () => {
+        let testIn: string =
+            "<span style='background:url" +
+            '(&quot;https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE1Mu3b?ver=5c31&quot)' +
+            "'>aa</span>";
+        let testOut: string =
+            '<span style="background:url(&quot;https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE1Mu3b?ver=5c31&quot;)">aa</span>';
+
+        runTest(testIn, testOut);
+    });
+    it('Html contains CSS with double quoted values', () => {
+        let testIn: string =
+            "<span style='background:url" +
+            '("https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE1Mu3b?ver=5c31")' +
+            "'>aa</span>";
+        let testOut: string =
+            '<span style="background:url(&quot;https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE1Mu3b?ver=5c31&quot;)">aa</span>';
+
+        runTest(testIn, testOut);
+    });
+    it('Html contains CSS with single quoted values', () => {
+        let testIn: string =
+            '<span style="background:url' +
+            "('https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE1Mu3b?ver=5c31')" +
+            '">aa</span>';
+
+        runTest(testIn, testIn);
+    });
 });
 
 describe('sanitizeHtml with elementCallback', () => {
