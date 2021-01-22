@@ -8,18 +8,14 @@ const END_FRAGMENT = '<!--EndFragment-->';
  * only preserve content between these markups
  * @param fragmentHandler An optional callback to do customized fragment handling
  */
-export default function htmlToDom(
-    html: string,
-    preserveFragmentOnly: boolean,
-    fragmentHandler?: (doc: HTMLDocument, sourceHtml: string) => void
-): HTMLDocument {
+export default function htmlToDom(html: string, preserveFragmentOnly: boolean): HTMLDocument {
     let parser = new DOMParser();
     let doc = parser.parseFromString(html || '', 'text/html');
 
     if (doc && doc.body && doc.body.firstChild) {
         // 1. Filter out html code outside of Fragment tags if need
         if (preserveFragmentOnly) {
-            (fragmentHandler || defaultFragmentTrimmer)(doc, html);
+            doc.body.innerHTML = splitWithFragment(html);
         }
 
         return doc;
@@ -28,25 +24,17 @@ export default function htmlToDom(
     }
 }
 
-function defaultFragmentTrimmer(doc: HTMLDocument, sourceHtml: string) {
-    let [html] = splitWithFragment(sourceHtml);
-    doc.body.innerHTML = html;
-}
-
 /**
  * Split the HTML string using its fragment info
  * @param html Source html string
  * @returns [String within fragment, String before fragment, String after fragment]
  */
-export function splitWithFragment(html: string): [string, string, string] {
+function splitWithFragment(html: string) {
     let startIndex = html.indexOf(START_FRAGMENT);
     let endIndex = html.lastIndexOf(END_FRAGMENT);
     if (startIndex >= 0 && endIndex >= 0 && endIndex >= startIndex + START_FRAGMENT.length) {
-        let before = html.substr(0, startIndex);
-        let after = html.substr(endIndex + END_FRAGMENT.length);
-        html = html.substring(startIndex + START_FRAGMENT.length, endIndex);
-        return [html, before, after];
+        return html.substring(startIndex + START_FRAGMENT.length, endIndex);
     } else {
-        return [html, null, null];
+        return html;
     }
 }

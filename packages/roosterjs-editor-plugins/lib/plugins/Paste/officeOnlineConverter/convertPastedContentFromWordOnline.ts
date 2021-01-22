@@ -191,7 +191,7 @@ function getListItemBlocks(fragment: DocumentFragment): ListItemBlock[] {
         }
     }
 
-    if (curListItemBlock.listItemContainers.length > 0) {
+    if (curListItemBlock?.listItemContainers.length > 0) {
         result.push(curListItemBlock);
     }
 
