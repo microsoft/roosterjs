@@ -13,21 +13,10 @@ const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
  * @param doc HTML Document which contains the content from Excel
  */
 export default function convertPastedContentFromExcel(event: BeforePasteEvent) {
-    const { fragment, sanitizingOption, htmlBefore } = event;
-    let html = event.clipboardData.html;
+    const { fragment, sanitizingOption, htmlBefore, clipboardData } = event;
+    const html = excelHandler(clipboardData.html, htmlBefore);
 
-    if (html.match(LAST_TD_END_REGEX)) {
-        const trMatch = htmlBefore.match(LAST_TR_REGEX);
-        const tr = trMatch ? trMatch[0] : '<TR>';
-        html = tr + html + '</TR>';
-    }
-    if (html.match(LAST_TR_END_REGEX)) {
-        let tableMatch = htmlBefore.match(LAST_TABLE_REGEX);
-        let table = tableMatch ? tableMatch[0] : '<TABLE>';
-        html = table + html + '</TABLE>';
-    }
-
-    if (event.clipboardData.html != html) {
+    if (clipboardData.html != html) {
         const doc = new DOMParser().parseFromString(html, 'text/html');
         while (fragment.firstChild) {
             fragment.removeChild(fragment.firstChild);
@@ -43,4 +32,23 @@ export default function convertPastedContentFromExcel(event: BeforePasteEvent) {
         }
         return true;
     });
+}
+
+/**
+ * @internal Export for test only
+ * @param html Source html
+ */
+export function excelHandler(html: string, htmlBefore: string): string {
+    if (html.match(LAST_TD_END_REGEX)) {
+        const trMatch = htmlBefore.match(LAST_TR_REGEX);
+        const tr = trMatch ? trMatch[0] : '<TR>';
+        html = tr + html + '</TR>';
+    }
+    if (html.match(LAST_TR_END_REGEX)) {
+        let tableMatch = htmlBefore.match(LAST_TABLE_REGEX);
+        let table = tableMatch ? tableMatch[0] : '<TABLE>';
+        html = table + html + '</TABLE>';
+    }
+
+    return html;
 }
