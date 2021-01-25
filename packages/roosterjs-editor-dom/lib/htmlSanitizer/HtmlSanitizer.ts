@@ -27,7 +27,6 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
- * @internal
  * HTML sanitizer class provides two featuers:
  * 1. Convert global CSS to inline CSS
  * 2. Sanitize an HTML document, remove unnecessary/dangerous attribute/nodes

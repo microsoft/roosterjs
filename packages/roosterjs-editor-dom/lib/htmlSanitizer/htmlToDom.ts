@@ -2,6 +2,7 @@ const START_FRAGMENT = '<!--StartFragment-->';
 const END_FRAGMENT = '<!--EndFragment-->';
 
 /**
+ * @internal
  * Build DOM tree from the given HTML string
  * @param html Source HTML string
  * @param preserveFragmentOnly If there is fragment markup (&lt;!--StartFragment--&gt; and &lt;!--EndFragment--&gt;),
