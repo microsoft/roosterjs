@@ -191,7 +191,7 @@ function getListItemBlocks(fragment: DocumentFragment): ListItemBlock[] {
         }
     }
 
-    if (curListItemBlock.listItemContainers.length > 0) {
+    if (curListItemBlock?.listItemContainers.length > 0) {
         result.push(curListItemBlock);
     }
 
@@ -291,14 +291,14 @@ function insertConvertedListToDoc(
 
     const { insertPositionNode } = listItemBlock;
     if (insertPositionNode) {
-        const { parentElement } = insertPositionNode;
-        if (parentElement) {
-            parentElement.insertBefore(convertedListElement, insertPositionNode);
+        const parentNode = insertPositionNode.parentNode;
+        if (parentNode) {
+            parentNode.insertBefore(convertedListElement, insertPositionNode);
         }
     } else {
-        const { parentElement } = listItemBlock.startElement;
-        if (parentElement) {
-            parentElement.appendChild(convertedListElement);
+        const parentNode = listItemBlock.startElement.parentNode;
+        if (parentNode) {
+            parentNode.appendChild(convertedListElement);
         } else {
             fragment.appendChild(convertedListElement);
         }
