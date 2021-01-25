@@ -12,7 +12,7 @@ describe('sanitizeHtml', () => {
     });
 
     function runTest(source: string, exp: string) {
-        let result = sanitizer.exec(source, false, false, { color: '' });
+        let result = sanitizer.exec(source, false, { color: '' });
         expect(result).toBe(exp);
     }
 
@@ -101,7 +101,7 @@ describe('sanitizeHtml with elementCallback', () => {
     });
 
     function runTest(source: string, exp: string) {
-        let result = sanitizer.exec(source, false, false, { color: '' });
+        let result = sanitizer.exec(source, false, { color: '' });
         expect(result).toBe(exp);
     }
 
@@ -136,7 +136,7 @@ describe('sanitizeHtml with attributeCallback', () => {
     });
 
     function runTest(source: string, exp: string) {
-        let result = sanitizer.exec(source, false, false, { color: '' });
+        let result = sanitizer.exec(source, false, { color: '' });
         expect(result).toBe(exp);
     }
 
@@ -167,7 +167,7 @@ describe('sanitizeHtml with styleCallback', () => {
     });
 
     function runTest(source: string, exp: string) {
-        let result = sanitizer.exec(source, false, false, { color: '' });
+        let result = sanitizer.exec(source, false, { color: '' });
         expect(result).toBe(exp);
     }
 
@@ -208,7 +208,7 @@ describe('sanitizeHtml with additionalAllowedTags, additionalAllowedAttributes',
     });
 
     function runTest(source: string, exp: string) {
-        let result = sanitizer.exec(source, false, false, { color: '' });
+        let result = sanitizer.exec(source, false, { color: '' });
         expect(result).toBe(exp);
     }
 
@@ -243,7 +243,7 @@ describe('sanitizeHtml with additionalDefaultStyleValues', () => {
     });
 
     function runTest(source: string, exp: string) {
-        let result = sanitizer.exec(source, false, false, { color: '' });
+        let result = sanitizer.exec(source, false, { color: '' });
         expect(result).toBe(exp);
     }
 
@@ -274,7 +274,7 @@ describe('sanitizeHtml with additionalGlobalStyleNodes', () => {
     });
 
     function runTest(source: string, exp: string) {
-        let result = sanitizer.exec(source, false, false, { color: '' });
+        let result = sanitizer.exec(source, false, { color: '' });
         expect(result).toBe(exp);
     }
 
@@ -297,7 +297,7 @@ describe('sanitizeHtml with additionalGlobalStyleNodes', () => {
 describe('sanitizeHtml with white-space style', () => {
     function runTest(source: string, exp: string) {
         let sanitizer: HtmlSanitizer = new HtmlSanitizer();
-        let result = sanitizer.exec(source, false, false, { color: '' });
+        let result = sanitizer.exec(source, false, { color: '' });
         expect(result).toBe(exp);
     }
 
@@ -368,7 +368,7 @@ describe('sanitizeHtml with unknown/disabled tags and set unknownTagReplacement 
         let sanitizer: HtmlSanitizer = new HtmlSanitizer({
             unknownTagReplacement: '*',
         });
-        let result = sanitizer.exec(source, false, false, { color: '' });
+        let result = sanitizer.exec(source, false, { color: '' });
         expect(result).toBe(exp);
     }
 
@@ -392,7 +392,7 @@ describe('sanitizeHtml with unknown/disabled tags and set unknownTagReplacement 
         let sanitizer: HtmlSanitizer = new HtmlSanitizer({
             unknownTagReplacement: '!invalid!',
         });
-        let result = sanitizer.exec(source, false, false, { color: '' });
+        let result = sanitizer.exec(source, false, { color: '' });
         expect(result).toBe(exp);
     }
 
@@ -416,7 +416,7 @@ describe('sanitizeHtml with unknown/disabled tags, replace with SPAN', () => {
         let sanitizer: HtmlSanitizer = new HtmlSanitizer({
             unknownTagReplacement: 'SPAN',
         });
-        let result = sanitizer.exec(source, false, false, { color: '' });
+        let result = sanitizer.exec(source, false, { color: '' });
         expect(result).toBe(exp);
     }
 

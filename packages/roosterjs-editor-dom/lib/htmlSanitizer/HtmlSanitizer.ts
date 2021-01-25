@@ -3,7 +3,6 @@ import getInheritableStyles from './getInheritableStyles';
 import getPredefinedCssForElement from './getPredefinedCssForElement';
 import getStyles from '../style/getStyles';
 import getTagOfNode from '../utils/getTagOfNode';
-import htmlToDom from './htmlToDom';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import setStyles from '../style/setStyles';
 import toArray from '../utils/toArray';
@@ -55,12 +54,7 @@ export default class HtmlSanitizer {
         let currentStyles = safeInstanceOf(options.currentElementOrStyle, 'HTMLElement')
             ? getInheritableStyles(options.currentElementOrStyle)
             : options.currentElementOrStyle;
-        return sanitizer.exec(
-            html,
-            options.convertCssOnly,
-            options.preserveFragmentOnly,
-            currentStyles
-        );
+        return sanitizer.exec(html, options.convertCssOnly, currentStyles);
     }
 
     private elementCallbacks: ElementCallbackMap;
@@ -102,17 +96,13 @@ export default class HtmlSanitizer {
      * 3. Remove useless CSS properties
      * @param html The input HTML
      * @param convertInlineCssOnly Whether only convert inline css and skip html content sanitizing
-     * @param preserveFragmentOnly If set to true, only preserve the html content between &lt;!--StartFragment--&gt; and &lt;!--Endfragment--&gt;
      * @param currentStyles Current inheritable CSS styles
      */
-    exec(
-        html: string,
-        convertCssOnly?: boolean,
-        preserveFragmentOnly?: boolean,
-        currentStyles?: StringMap
-    ): string {
-        let doc = htmlToDom(html, preserveFragmentOnly);
-        if (doc) {
+    exec(html: string, convertCssOnly?: boolean, currentStyles?: StringMap): string {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html || '', 'text/html');
+
+        if (doc && doc.body && doc.body.firstChild) {
             this.convertGlobalCssToInlineCss(doc);
             if (!convertCssOnly) {
                 this.sanitize(doc.body, currentStyles);
