@@ -5,6 +5,7 @@ import isBlockElement from '../utils/isBlockElement';
 import isNodeEmpty from '../utils/isNodeEmpty';
 import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import splitParentNode from '../utils/splitParentNode';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
@@ -144,12 +145,19 @@ export default class VList {
     }
 
     /**
-     * Get the first or last node of this list
-     * @param isLast true to get last node, false to get first node
+     * Get list number of the last item in this VList.
+     * If there is no order list item, result will be undefined
      */
-    getFirstOrLastNode(isLast: boolean): Node {
-        const item = this.items[isLast ? this.items.length - 1 : 0];
-        return item?.getNode();
+    getLastItemNumber(): number | undefined {
+        const start = getStart(this.rootList);
+
+        return start === undefined
+            ? start
+            : start -
+                  1 +
+                  this.items.filter(
+                      item => item.getListType() == ListType.Ordered && item.getLevel() == 1
+                  ).length;
     }
 
     /**
@@ -161,10 +169,38 @@ export default class VList {
             throw new Error('rootList must not be null');
         }
 
-        const listStack: Node[] = [this.rootList.ownerDocument.createDocumentFragment()];
+        const doc = this.rootList.ownerDocument;
+        const listStack: Node[] = [doc.createDocumentFragment()];
+        const placeholder = doc.createTextNode('');
+        let start = getStart(this.rootList) || 1;
+        let lastList: Node;
 
-        this.items.forEach(item => item.writeBack(listStack));
-        this.rootList.parentNode.replaceChild(listStack[0], this.rootList);
+        // Use a placeholder to hold the position since the root list may be moved into document fragment later
+        this.rootList.parentNode.replaceChild(placeholder, this.rootList);
+
+        this.items.forEach(item => {
+            item.writeBack(listStack, this.rootList);
+            const topList = listStack[1];
+
+            if (safeInstanceOf(topList, 'HTMLOListElement')) {
+                if (lastList != topList) {
+                    if (start == 1) {
+                        topList.removeAttribute('start');
+                    } else {
+                        topList.start = start;
+                    }
+                }
+
+                if (item.getLevel() == 1) {
+                    start++;
+                }
+            }
+
+            lastList = topList;
+        });
+
+        // Restore the content to the positioni of placeholder
+        placeholder.parentNode.replaceChild(listStack[0], placeholder);
 
         // Set rootList to null to avoid this to be called again for the same VList, because
         // after change the rootList may not be available any more (e.g. outdent all items).
@@ -208,18 +244,16 @@ export default class VList {
      * @param type Type of this list item, can be ListType.None
      */
     appendItem(node: Node, type: ListType) {
-        let newListNode = node;
         const nodeTag = getTagOfNode(node);
 
-        if (nodeTag != 'LI' && nodeTag != 'TABLE') {
-            newListNode = changeElementTag(<HTMLElement>node, 'LI');
-        } else if (nodeTag == 'TABLE') {
-            newListNode = wrap(node, 'li');
+        // Change DIV tag to SPAN. Otherwise we can create new list item by Enter key in Safari
+        if (nodeTag == 'DIV') {
+            node = changeElementTag(<HTMLElement>node, 'LI');
+        } else if (nodeTag != 'LI') {
+            node = wrap(node, 'LI');
         }
 
-        this.items.push(
-            type == ListType.None ? new VListItem(newListNode) : new VListItem(newListNode, type)
-        );
+        this.items.push(type == ListType.None ? new VListItem(node) : new VListItem(node, type));
     }
 
     /**
@@ -346,4 +380,8 @@ function moveLiToList(li: HTMLLIElement) {
 
         unwrap(li.parentNode);
     }
+}
+
+function getStart(list: HTMLOListElement | HTMLUListElement): number | undefined {
+    return safeInstanceOf(list, 'HTMLOListElement') ? list.start : undefined;
 }

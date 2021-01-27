@@ -1,6 +1,13 @@
-import { Browser } from 'roosterjs-editor-dom';
-import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
-import { FontSizeChange, PluginEventType, PluginKeyboardEvent } from 'roosterjs-editor-types';
+import { Browser, cacheGetEventData } from 'roosterjs-editor-dom';
+import {
+    BuildInEditFeature,
+    FontSizeChange,
+    IEditor,
+    Keys,
+    PluginEventType,
+    PluginKeyboardEvent,
+    ShortcutFeatureSettings,
+} from 'roosterjs-editor-types';
 import {
     changeFontSize,
     toggleBold,
@@ -13,10 +20,10 @@ import {
 interface ShortcutCommand {
     winKey: number;
     macKey: number;
-    action: (editor: Editor) => any;
+    action: (editor: IEditor) => any;
 }
 
-function createCommand(winKey: number, macKey: number, action: (editor: Editor) => any) {
+function createCommand(winKey: number, macKey: number, action: (editor: IEditor) => any) {
     return {
         winKey,
         macKey,
@@ -56,7 +63,7 @@ const commands: ShortcutCommand[] = [
  * Ctrl/Meta+Shift+>: increase font size
  * Ctrl/Meta+Shift+<: decrease font size
  */
-export const DefaultShortcut: ContentEditFeature = {
+const DefaultShortcut: BuildInEditFeature<PluginKeyboardEvent> = {
     allowFunctionKeys: true,
     keys: [Keys.B, Keys.I, Keys.U, Keys.Y, Keys.Z, Keys.COMMA, Keys.PERIOD, Keys.FORWARDSLASH],
     shouldHandleEvent: cacheGetCommand,
@@ -85,3 +92,13 @@ function cacheGetCommand(event: PluginKeyboardEvent) {
         return key && commands.filter(cmd => (Browser.isMac ? cmd.macKey : cmd.winKey) == key)[0];
     });
 }
+
+/**
+ * @internal
+ */
+export const ShortcutFeatures: Record<
+    keyof ShortcutFeatureSettings,
+    BuildInEditFeature<PluginKeyboardEvent>
+> = {
+    defaultShortcut: DefaultShortcut,
+};

@@ -1,17 +1,9 @@
 export { default as changeFontSize, FONT_SIZES } from './format/changeFontSize';
-export {
-    default as clearBlockFormat,
-    TAGS_TO_UNWRAP,
-    TAGS_TO_STOP_UNWRAP,
-    ATTRIBUTES_TO_PRESERVE,
-} from './format/clearBlockFormat';
+export { default as clearBlockFormat } from './format/clearBlockFormat';
 export { default as clearFormat } from './format/clearFormat';
 export { default as createLink } from './format/createLink';
-export {
-    default as getFormatState,
-    getElementBasedFormatState,
-    getStyleBasedFormatState,
-} from './format/getFormatState';
+export { default as getFormatState, getElementBasedFormatState } from './format/getFormatState';
+export { default as insertEntity } from './format/insertEntity';
 export { default as insertImage } from './format/insertImage';
 export { default as insertTable } from './table/insertTable';
 export { default as editTable } from './table/editTable';
@@ -27,6 +19,7 @@ export { default as setFontName } from './format/setFontName';
 export { default as setFontSize } from './format/setFontSize';
 export { default as setImageAltText } from './format/setImageAltText';
 export { default as setIndentation } from './format/setIndentation';
+export { default as changeCapitalization } from './format/changeCapitalization';
 export { default as toggleBold } from './format/toggleBold';
 export { default as toggleBullet } from './format/toggleBullet';
 export { default as toggleItalic } from './format/toggleItalic';
@@ -39,6 +32,4 @@ export { default as toggleSuperscript } from './format/toggleSuperscript';
 export { default as toggleUnderline } from './format/toggleUnderline';
 export { default as toggleHeader } from './format/toggleHeader';
 
-// @deprecated the function getPendableFormatState will still be available from
-// roosterjs-editor-dom package, keep export it here just for compatibility
-export { getPendableFormatState } from 'roosterjs-editor-dom';
+export { default as experimentCommitListChains } from './experiment/experimentCommitListChains';

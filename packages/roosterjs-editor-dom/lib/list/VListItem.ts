@@ -46,6 +46,13 @@ export default class VListItem {
     }
 
     /**
+     * Get the levels of this list item.
+     */
+    getLevel(): number {
+        return this.listTypes.length - 1;
+    }
+
+    /**
      * Get DOM node of this list item
      */
     getNode(): Node {
@@ -164,9 +171,9 @@ export default class VListItem {
     /**
      * Write the change result back into DOM
      * @param listStack current stack of list elements
+     * @param originalRoot Original list root element. It will be reused when write back if possible
      */
-    writeBack(listStack: Node[]) {
-        const doc = this.node.ownerDocument;
+    writeBack(listStack: Node[], originalRoot?: HTMLOListElement | HTMLUListElement) {
         let nextLevel = 1;
 
         // 1. Determine list elements that we can reuse
@@ -187,13 +194,12 @@ export default class VListItem {
         //    local listTypes:     null     > OL > UL > UL > OL
         //    then we need to create a UL and a OL tag
         for (; nextLevel < this.listTypes.length; nextLevel++) {
-            const listType = this.listTypes[nextLevel];
-            const newList = doc.createElement(listType == ListType.Ordered ? 'ol' : 'ul');
-
-            if (listType == ListType.Ordered) {
-                newList.style.listStyleType =
-                    orderListStyles[(nextLevel - 1) % orderListStyles.length];
-            }
+            const newList = createListElement(
+                listStack[0],
+                this.listTypes[nextLevel],
+                nextLevel,
+                originalRoot
+            );
 
             listStack[listStack.length - 1].appendChild(newList);
             listStack.push(newList);
@@ -211,6 +217,45 @@ export default class VListItem {
             );
         }
     }
+}
+
+function createListElement(
+    newRoot: Node,
+    listType: ListType,
+    nextLevel: number,
+    originalRoot?: HTMLOListElement | HTMLUListElement
+): HTMLOListElement | HTMLUListElement {
+    const doc = newRoot.ownerDocument;
+    let result: HTMLOListElement | HTMLUListElement;
+
+    // Try to reuse the existing root element
+    // It can be reused when
+    // 1. Current list item is level 1 (top level), AND
+    // 2. Original root exists, AND
+    // 3. They have the same list type AND
+    // 4. The original root is not used yet
+    if (nextLevel == 1 && originalRoot && listType == getListTypeFromNode(originalRoot)) {
+        if (contains(newRoot, originalRoot)) {
+            // If it is already used, let's clone one and remove ID to avoid duplicating ID
+            result = originalRoot.cloneNode(false /*deep*/) as HTMLOListElement | HTMLUListElement;
+            (<HTMLOListElement>result).removeAttribute('id');
+        } else {
+            // Remove all child nodes, they will be added back later when write back other items
+            while (originalRoot.firstChild) {
+                originalRoot.removeChild(originalRoot.firstChild);
+            }
+            result = originalRoot;
+        }
+    } else {
+        // Can't be reused, can't clone, let's create a new one
+        result = doc.createElement(listType == ListType.Ordered ? 'ol' : 'ul');
+    }
+
+    if (listType == ListType.Ordered && nextLevel > 1) {
+        result.style.listStyleType = orderListStyles[(nextLevel - 1) % orderListStyles.length];
+    }
+
+    return result;
 }
 
 function wrapIfNotBlockNode(nodes: Node[], checkFirst: boolean, checkLast: boolean): Node[] {

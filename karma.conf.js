@@ -1,16 +1,41 @@
 const argv = require('minimist')(process.argv.slice(2));
 const components = argv.components !== true && argv.components;
+const runCoverage = typeof argv.coverage !== 'undefined';
 
 module.exports = function (config) {
-    config.set({
+    const plugins = [
+        'karma-webpack',
+        'karma-firefox-launcher',
+        'karma-phantomjs-launcher',
+        'karma-jasmine',
+        'karma-sourcemap-loader',
+    ];
+
+    if (runCoverage) {
+        plugins.push('karma-coverage-istanbul-reporter');
+    }
+
+    const rules = runCoverage
+        ? [
+              {
+                  test: /lib(\\|\/).*\.ts$/,
+                  loader: ['@jsdevtools/coverage-istanbul-loader', 'ts-loader'],
+              },
+              {
+                  test: /test(\\|\/).*\.ts$/,
+                  loader: 'ts-loader',
+              },
+          ]
+        : [
+              {
+                  test: /\.ts$/,
+                  loader: 'ts-loader',
+              },
+          ];
+
+    const settings = {
         basePath: '.',
-        plugins: [
-            'karma-webpack',
-            'karma-firefox-launcher',
-            'karma-phantomjs-launcher',
-            'karma-jasmine',
-            'karma-sourcemap-loader',
-        ],
+        plugins,
         client: {
             components: components,
             clearContext: false,
@@ -38,17 +63,7 @@ module.exports = function (config) {
             devtool: 'inline-source-map',
             mode: 'development',
             module: {
-                rules: [
-                    {
-                        test: /\.ts$/,
-                        loader: 'ts-loader',
-                        options: {
-                            compilerOptions: {
-                                rootDir: __dirname,
-                            },
-                        },
-                    },
-                ],
+                rules,
             },
             resolve: {
                 extensions: ['.ts', '.js'],
@@ -59,5 +74,15 @@ module.exports = function (config) {
         // Concurrency level
         // how many browser should be started simultaneous
         concurrency: Infinity,
-    });
+    };
+
+    if (runCoverage) {
+        settings.reporters = ['coverage-istanbul'];
+        settings.coverageIstanbulReporter = {
+            reports: ['html', 'lcovonly', 'text-summary'],
+            dir: './dist/deploy/coverage',
+        };
+    }
+
+    config.set(settings);
 };

@@ -1,8 +1,9 @@
 import {
-    ElementCallbackMap,
     AttributeCallbackMap,
+    CssStyleCallbackMap,
+    ElementCallbackMap,
+    PredefinedCssMap,
     StringMap,
-    StyleCallbackMap,
 } from '../type/htmlSanitizerCallbackTypes';
 
 /**
@@ -22,18 +23,24 @@ export default interface HtmlSanitizerOptions {
     /**
      * Callbacks for CSS styles
      */
-    styleCallbacks?: StyleCallbackMap;
+    cssStyleCallbacks?: CssStyleCallbackMap;
 
     /**
-     * Allowed HTML tags in addition to default tags, in upper case
+     * Additional tag replacement, to allow replace a tag to another name, or remove it.
+     *
+     * The value can be:
+     * '*': Keep this element with no change
+     * '<A valid tag name>: Keep this element but change its tag to the given value
+     * null: Remove this element
+     *
+     * For other unknown tags, we will respect the value of unknownTagReplacement with the same meaning
      */
-    additionalAllowedTags?: string[];
+    additionalTagReplacements?: Record<string, string>;
 
     /**
      * Allowed HTML attributes in addition to default attributes, in lower case
-     * TODO: rename to "additionalAllowedAttributes" in next major release
      */
-    additionalAllowAttributes?: string[];
+    additionalAllowedAttributes?: string[];
 
     /**
      * Allowed CSS Class names
@@ -51,7 +58,16 @@ export default interface HtmlSanitizerOptions {
     additionalGlobalStyleNodes?: HTMLStyleElement[];
 
     /**
-     * Whether allow CSS white-space in result
+     * Additional predefined CSS for element
      */
-    allowPreserveWhiteSpace?: boolean;
+    additionalPredefinedCssForElement?: PredefinedCssMap;
+
+    /**
+     * Define a replacement tag name of unknown tags.
+     * A star "*" means keep as it is, no replacement
+     * Other valid string means replace the tag name with this string.
+     * Empty string, undefined or null means drop such elements and all its children
+     * @default undefined
+     */
+    unknownTagReplacement?: string;
 }

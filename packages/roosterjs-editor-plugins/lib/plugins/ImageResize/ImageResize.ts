@@ -1,32 +1,36 @@
-import { contains, getTagOfNode, toArray } from 'roosterjs-editor-dom';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { contains, fromHtml, getEntitySelector, getTagOfNode, toArray } from 'roosterjs-editor-dom';
+import { insertEntity } from 'roosterjs-editor-api';
 import {
-    ContentChangedEvent,
     ChangeSource,
-    NodeType,
+    EditorPlugin,
+    IEditor,
     PluginEvent,
     PluginEventType,
-    ExtractContentEvent,
     PositionType,
+    EntityOperation,
+    Entity,
+    ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 
-const BEGIN_TAG = 'RoosterJsImageResizingBegin';
-const END_TAG = 'RoosterJsImageResizingEnd';
-const EXTRACT_HTML_REGEX = new RegExp(
-    `<!--${BEGIN_TAG}-->[\\s\\S]*(<img\\s[^>]+>)[\\s\\S]*<!--${END_TAG}-->`,
-    'gim'
-);
 const DELETE_KEYCODE = 46;
 const BACKSPACE_KEYCODE = 8;
 const SHIFT_KEYCODE = 16;
 const CTRL_KEYCODE = 17;
 const ALT_KEYCODE = 18;
 
+const ENTITY_TYPE = 'IMAGE_RESIZE_WRAPPER';
+
+const HANDLE_SIZE = 7;
+const HANDLE_MARGIN = 3;
+const CORNER_HANDLE_POSITIONS = ['nw', 'ne', 'se', 'sw'];
+const SIDE_HANDLE_POSITIONS = ['n', 'e', 's', 'w'];
+const ALL_HANDLE_POSITIONS = CORNER_HANDLE_POSITIONS.concat(SIDE_HANDLE_POSITIONS);
+
 /**
  * ImageResize plugin provides the ability to resize an inline image in editor
  */
 export default class ImageResize implements EditorPlugin {
-    private editor: Editor;
+    private editor: IEditor;
     private startPageX: number;
     private startPageY: number;
     private startWidth: number;
@@ -50,7 +54,7 @@ export default class ImageResize implements EditorPlugin {
         private selectionBorderColor: string = '#DB626C',
         private forcePreserveRatio: boolean = false,
         private resizableImageSelector: string = 'img'
-    ) { }
+    ) {}
 
     /**
      * Get a friendly name of  this plugin
@@ -63,7 +67,7 @@ export default class ImageResize implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = editor.addDomEventHandler({
             dragstart: this.onDragStart,
@@ -75,9 +79,7 @@ export default class ImageResize implements EditorPlugin {
      * Dispose this plugin
      */
     dispose() {
-        if (this.resizeDiv) {
-            this.hideResizeHandle();
-        }
+        this.hideResizeHandle();
         this.disposer();
         this.disposer = null;
         this.editor = null;
@@ -101,7 +103,6 @@ export default class ImageResize implements EditorPlugin {
                     return;
                 }
 
-                target.contentEditable = 'false';
                 const currentImg = this.getSelectedImage();
                 if (currentImg && currentImg != target) {
                     this.hideResizeHandle();
@@ -117,11 +118,10 @@ export default class ImageResize implements EditorPlugin {
             const event = e.rawEvent;
             if (event.which == DELETE_KEYCODE || event.which == BACKSPACE_KEYCODE) {
                 this.editor.addUndoSnapshot(() => {
-                    this.removeResizeDiv(this.resizeDiv);
+                    this.editor.deleteNode(this.resizeDiv);
                 });
                 this.resizeDiv = null;
                 event.preventDefault();
-                this.resizeDiv = null;
             } else if (
                 event.which != SHIFT_KEYCODE &&
                 event.which != CTRL_KEYCODE &&
@@ -131,13 +131,17 @@ export default class ImageResize implements EditorPlugin {
             }
         } else if (
             e.eventType == PluginEventType.ContentChanged &&
-            (<ContentChangedEvent>e).source != ChangeSource.ImageResize
+            e.source != ChangeSource.ImageResize &&
+            (e.source != ChangeSource.InsertEntity || (<Entity>e.data)?.type != ENTITY_TYPE)
         ) {
-            this.editor.queryElements('img', this.removeResizeDivIfAny);
+            this.editor.queryElements(getEntitySelector(ENTITY_TYPE), this.removeResizeDiv);
             this.resizeDiv = null;
-        } else if (e.eventType == PluginEventType.ExtractContent) {
-            const event = <ExtractContentEvent>e;
-            event.content = this.extractHtml(event.content);
+        } else if (e.eventType == PluginEventType.EntityOperation && e.entity.type == ENTITY_TYPE) {
+            if (e.operation == EntityOperation.ReplaceTemporaryContent) {
+                this.removeResizeDiv(e.entity.wrapper);
+            } else if (e.operation == EntityOperation.Click) {
+                this.stopEvent(e.rawEvent);
+            }
         }
     }
 
@@ -147,7 +151,6 @@ export default class ImageResize implements EditorPlugin {
      */
     showResizeHandle(img: HTMLImageElement) {
         this.resizeDiv = this.createResizeDiv(img);
-        img.contentEditable = 'false';
         this.editor.select(this.resizeDiv, PositionType.After);
     }
 
@@ -156,27 +159,18 @@ export default class ImageResize implements EditorPlugin {
      * @param selectImageAfterUnSelect Optional, when set to true, select the image element after hide the resize handle
      */
     hideResizeHandle(selectImageAfterUnSelect?: boolean) {
-        let img = this.getSelectedImage();
-        let parent = this.resizeDiv && this.resizeDiv.parentNode;
-        if (parent) {
+        if (this.resizeDiv) {
+            const transform = this.resizeDiv.style.transform;
+            const img = this.removeResizeDiv(this.resizeDiv);
+
             if (img) {
-                // Reset the transform of the image before the container is removed, so the rotation isn't reset
-                img.style.transform = this.resizeDiv.style.transform;
-                img.removeAttribute('contentEditable');
-                let referenceNode =
-                    this.resizeDiv.previousSibling &&
-                        this.resizeDiv.previousSibling.nodeType == NodeType.Comment
-                        ? this.resizeDiv.previousSibling
-                        : this.resizeDiv;
-                parent.insertBefore(img, referenceNode);
+                img.style.transform = transform;
 
                 if (selectImageAfterUnSelect) {
                     this.editor.select(img);
-                } else {
-                    this.editor.select(img, PositionType.After);
                 }
             }
-            this.removeResizeDiv(this.resizeDiv);
+
             this.resizeDiv = null;
         }
     }
@@ -193,7 +187,7 @@ export default class ImageResize implements EditorPlugin {
             let document = this.editor.getDocument();
             document.addEventListener('mousemove', this.doResize, true /*useCapture*/);
             document.addEventListener('mouseup', this.finishResize, true /*useCapture*/);
-            this.direction = (<HTMLElement>(e.srcElement || e.target)).style.cursor;
+            this.direction = (<HTMLElement>(e.srcElement || e.target)).dataset.direction;
         }
 
         this.stopEvent(e);
@@ -204,16 +198,18 @@ export default class ImageResize implements EditorPlugin {
         if (this.editor && img) {
             let widthChange = e.pageX - this.startPageX;
             let heightChange = e.pageY - this.startPageY;
-            let newWidth = Math.max(
-                this.startWidth + (this.isWest(this.direction) ? -widthChange : widthChange),
-                this.minWidth
-            );
-            let newHeight = Math.max(
-                this.startHeight + (this.isNorth(this.direction) ? -heightChange : heightChange),
-                this.minHeight
-            );
+            let newWidth = this.calculateNewWidth(widthChange);
+            let newHeight = this.calculateNewHeight(heightChange);
+            const isSingleDirection =
+                this.isSingleDirectionNS(this.direction) ||
+                this.isSingleDirectionWE(this.direction);
+            const shouldPreserveRatio =
+                !isSingleDirection && (this.forcePreserveRatio || e.shiftKey);
 
-            if (this.forcePreserveRatio || e.shiftKey) {
+            if (shouldPreserveRatio) {
+                newHeight = Math.min(newHeight, (newWidth * this.startHeight) / this.startWidth);
+                newWidth = Math.min(newWidth, (newHeight * this.startWidth) / this.startHeight);
+
                 let ratio =
                     this.startWidth > 0 && this.startHeight > 0
                         ? (this.startWidth * 1.0) / this.startHeight
@@ -231,7 +227,7 @@ export default class ImageResize implements EditorPlugin {
             img.style.height = newHeight + 'px';
 
             // double check
-            if (this.forcePreserveRatio || e.shiftKey) {
+            if (shouldPreserveRatio) {
                 let ratio =
                     this.startWidth > 0 && this.startHeight > 0
                         ? (this.startWidth * 1.0) / this.startHeight
@@ -255,6 +251,28 @@ export default class ImageResize implements EditorPlugin {
         this.stopEvent(e);
     };
 
+    private calculateNewWidth(widthChange: number): number {
+        let newWidth = this.startWidth;
+        if (!this.isSingleDirectionNS(this.direction)) {
+            newWidth = Math.max(
+                this.startWidth + (this.isWest(this.direction) ? -widthChange : widthChange),
+                this.minWidth
+            );
+        }
+        return newWidth;
+    }
+
+    private calculateNewHeight(heightChange: number): number {
+        let newHeight = this.startHeight;
+        if (!this.isSingleDirectionWE(this.direction)) {
+            newHeight = Math.max(
+                this.startHeight + (this.isNorth(this.direction) ? -heightChange : heightChange),
+                this.minHeight
+            );
+        }
+        return newHeight;
+    }
+
     private finishResize = (e: MouseEvent) => {
         var img = this.getSelectedImage() as HTMLImageElement;
         if (this.editor && img) {
@@ -272,110 +290,81 @@ export default class ImageResize implements EditorPlugin {
         }
         this.direction = null;
         this.editor.addUndoSnapshot();
-        this.editor.triggerContentChangedEvent(ChangeSource.ImageResize);
+        this.editor.triggerContentChangedEvent(ChangeSource.ImageResize, img);
         this.stopEvent(e);
     };
 
     private createResizeDiv(target: HTMLElement) {
-        let document = this.editor.getDocument();
-        let resizeDiv = document.createElement('DIV');
-        let parent = target.parentNode;
-        parent.insertBefore(resizeDiv, target);
-        parent.insertBefore(document.createComment(BEGIN_TAG), resizeDiv);
-        parent.insertBefore(document.createComment(END_TAG), resizeDiv.nextSibling);
+        const { wrapper } = insertEntity(
+            this.editor,
+            ENTITY_TYPE,
+            target,
+            false /*isBlock*/,
+            true /*isReadonly*/
+        );
 
-        resizeDiv.style.position = 'relative';
-        resizeDiv.style.display = 'inline-flex';
-        resizeDiv.contentEditable = 'false';
-        resizeDiv.addEventListener('click', this.stopEvent);
-        resizeDiv.appendChild(target);
-        ['nw', 'ne', 'sw', 'se'].forEach(pos => {
-            let div = document.createElement('DIV');
-            resizeDiv.appendChild(div);
-            div.style.position = 'absolute';
-            div.style.width = '7px';
-            div.style.height = '7px';
-            div.style.backgroundColor = this.selectionBorderColor;
-            div.style.cursor = pos + '-resize';
-            if (this.isNorth(pos)) {
-                div.style.top = '-3px';
-            } else {
-                div.style.bottom = '-3px';
-            }
-            if (this.isWest(pos)) {
-                div.style.left = '-3px';
-            } else {
-                div.style.right = '-3px';
-            }
+        wrapper.style.position = 'relative';
+        wrapper.style.display = 'inline-flex';
+
+        const html =
+            (this.editor.isFeatureEnabled(ExperimentalFeatures.SingleDirectionResize)
+                ? ALL_HANDLE_POSITIONS
+                : CORNER_HANDLE_POSITIONS
+            )
+                .map(
+                    pos =>
+                        `<div style="position:absolute;${this.isWest(pos) ? 'left' : 'right'}:${
+                            this.isSingleDirectionNS(pos) ? '50%' : '0px'
+                        };${this.isNorth(pos) ? 'top' : 'bottom'}:${
+                            this.isSingleDirectionWE(pos) ? '50%' : '0px'
+                        }">
+                            <div id=${pos}-handle data-direction="${pos}" style="position:relative;width:${HANDLE_SIZE}px;height:${HANDLE_SIZE}px;background-color: ${
+                            this.selectionBorderColor
+                        };cursor: ${pos}-resize;${
+                            this.isNorth(pos) ? 'top' : 'bottom'
+                        }:-${HANDLE_MARGIN}px;${
+                            this.isWest(pos) ? 'left' : 'right'
+                        }:-${HANDLE_MARGIN}px"></div></div>`
+                )
+                .join('') +
+            `<div style="position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${this.selectionBorderColor};pointer-events:none;">`;
+
+        fromHtml(html, this.editor.getDocument()).forEach(div => {
+            wrapper.appendChild(div);
             div.addEventListener('mousedown', this.startResize);
         });
 
-        let div = document.createElement('DIV');
-        resizeDiv.appendChild(div);
-        div.style.position = 'absolute';
-        div.style.top = '0';
-        div.style.left = '0';
-        div.style.right = '0';
-        div.style.bottom = '0';
-        div.style.border = 'solid 1px ' + this.selectionBorderColor;
-        div.style.pointerEvents = 'none';
-
         // If the resizeDiv's image has a transform, apply it to the container
-        const selectedImage = this.getSelectedImage(resizeDiv);
+        const selectedImage = this.getSelectedImage(wrapper);
         if (selectedImage && selectedImage.style && selectedImage.style.transform) {
-            resizeDiv.style.transform = selectedImage.style.transform;
+            wrapper.style.transform = selectedImage.style.transform;
             selectedImage.style.transform = '';
         }
 
-        return resizeDiv;
+        return wrapper;
     }
 
-    private stopEvent = (e: UIEvent) => {
+    private stopEvent = (e: Event) => {
         e.stopPropagation();
         e.preventDefault();
     };
 
-    private removeResizeDiv(resizeDiv: HTMLElement) {
-        if (this.editor && this.editor.contains(resizeDiv)) {
-            [resizeDiv.previousSibling, resizeDiv.nextSibling].forEach(comment => {
-                if (comment && comment.nodeType == NodeType.Comment) {
-                    this.editor.deleteNode(comment);
-                }
-            });
-
-            this.editor.deleteNode(resizeDiv);
-        }
-    }
-
-    private removeResizeDivIfAny = (img: HTMLImageElement) => {
-        let div = img && (img.parentNode as HTMLElement);
-        let previous = div && div.previousSibling;
-        let next = div && div.nextSibling;
-        if (
-            previous &&
-            previous.nodeType == NodeType.Comment &&
-            previous.nodeValue == BEGIN_TAG &&
-            next &&
-            next.nodeType == NodeType.Comment &&
-            next.nodeValue == END_TAG
-        ) {
-            div.parentNode.insertBefore(img, div);
-            this.removeResizeDiv(div);
+    private removeResizeDiv = (resizeDiv: HTMLElement): HTMLImageElement => {
+        if (resizeDiv?.parentNode) {
+            const img = resizeDiv.querySelector('img');
+            if (img) {
+                resizeDiv.parentNode.insertBefore(img, resizeDiv);
+            }
+            resizeDiv.parentNode.removeChild(resizeDiv);
+            return img;
+        } else {
+            return null;
         }
     };
 
     private onBlur = (e: FocusEvent) => {
         this.hideResizeHandle();
     };
-
-    private extractHtml(html: string): string {
-        return html.replace(EXTRACT_HTML_REGEX, (...groups: string[]) => {
-            return groups[1].replace(
-                /(\s*contenteditable="false"(\/?>)|contenteditable="false"\s*)/im,
-                '$2'
-            );
-        });
-    }
 
     private getSelectedImage(div?: HTMLElement): HTMLElement {
         const divWithImage = div || this.resizeDiv;
@@ -387,7 +376,15 @@ export default class ImageResize implements EditorPlugin {
     }
 
     private isWest(direction: string): boolean {
-        return direction && direction.substr(1, 1) == 'w';
+        return direction && (direction.substr(1, 1) == 'w' || direction == 'w');
+    }
+
+    private isSingleDirectionNS(direction: string): boolean {
+        return direction && (direction == 'n' || direction == 's');
+    }
+
+    private isSingleDirectionWE(direction: string): boolean {
+        return direction && (direction == 'w' || direction == 'e');
     }
 
     private onDragStart = (e: DragEvent) => {

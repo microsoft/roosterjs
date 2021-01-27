@@ -1,12 +1,29 @@
-import { cacheGetEventData, ContentEditFeature, Editor, Keys } from 'roosterjs-editor-core';
-import { contains, getTagOfNode, isVoidHtmlElement, Position, VTable } from 'roosterjs-editor-dom';
-import { NodeType, PluginEvent, PositionType, TableOperation } from 'roosterjs-editor-types';
 import { editTable } from 'roosterjs-editor-api';
+import {
+    BuildInEditFeature,
+    IEditor,
+    Keys,
+    NodeType,
+    PluginEvent,
+    PositionType,
+    TableFeatureSettings,
+    TableOperation,
+    PluginKeyboardEvent,
+} from 'roosterjs-editor-types';
+import {
+    Browser,
+    cacheGetEventData,
+    contains,
+    getTagOfNode,
+    isVoidHtmlElement,
+    Position,
+    VTable,
+} from 'roosterjs-editor-dom';
 
 /**
  * TabInTable edit feature, provides the ability to jump between cells when user press TAB in table
  */
-export const TabInTable: ContentEditFeature = {
+const TabInTable: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB],
     shouldHandleEvent: cacheGetTableCell,
     handleEvent: (event, editor) => {
@@ -45,7 +62,7 @@ export const TabInTable: ContentEditFeature = {
  * UpDownInTable edit feature, provides the ability to jump to cell above/below when user press UP/DOWN
  * in table
  */
-export const UpDownInTable: ContentEditFeature = {
+const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.UP, Keys.DOWN],
     shouldHandleEvent: cacheGetTableCell,
     handleEvent: (event, editor) => {
@@ -55,7 +72,7 @@ export const UpDownInTable: ContentEditFeature = {
         let step = isUp ? -1 : 1;
         let targetTd: HTMLTableCellElement = null;
         let hasShiftKey = event.rawEvent.shiftKey;
-        let { anchorNode, anchorOffset } = editor.getSelection();
+        let { anchorNode, anchorOffset } = editor.getDocument().defaultView.getSelection();
 
         for (let row = vtable.row; row >= 0 && row < vtable.cells.length; row += step) {
             let cell = vtable.getCell(row, vtable.col);
@@ -65,7 +82,7 @@ export const UpDownInTable: ContentEditFeature = {
             }
         }
 
-        editor.runAsync(() => {
+        editor.runAsync(editor => {
             let newContainer = editor.getElementAtCursor();
             if (
                 contains(vtable.table, newContainer) &&
@@ -82,18 +99,23 @@ export const UpDownInTable: ContentEditFeature = {
                                   newPos.isAtEnd ? PositionType.After : PositionType.Before
                               )
                             : newPos;
-                    editor
-                        .getSelection()
-                        .setBaseAndExtent(anchorNode, anchorOffset, newPos.node, newPos.offset);
+                    const selection = editor.getDocument().defaultView.getSelection();
+                    selection.setBaseAndExtent(
+                        anchorNode,
+                        anchorOffset,
+                        newPos.node,
+                        newPos.offset
+                    );
                 } else {
                     editor.select(newPos);
                 }
             }
         });
     },
+    defaultDisabled: !Browser.isChrome && !Browser.isSafari,
 };
 
-function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellElement {
+function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellElement {
     return cacheGetEventData(event, 'TABLECELL_FOR_TABLE_FEATURES', () => {
         let pos = editor.getFocusedPosition();
         let firstTd = pos && editor.getElementAtCursor('TD,TH,LI', pos.node);
@@ -102,3 +124,14 @@ function cacheGetTableCell(event: PluginEvent, editor: Editor): HTMLTableCellEle
         );
     });
 }
+
+/**
+ * @internal
+ */
+export const TableFeatures: Record<
+    keyof TableFeatureSettings,
+    BuildInEditFeature<PluginKeyboardEvent>
+> = {
+    tabInTable: TabInTable,
+    upDownInTable: UpDownInTable,
+};

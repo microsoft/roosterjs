@@ -188,7 +188,7 @@ function iterateNodes(
  * @param skipTags Tags to skip
  */
 function areNodesValid(root: Node, nodeBefore: Node, nodeAfter: Node, skipTags: string[]) {
-    if (!root || !root.firstChild) {
+    if (!root) {
         return false;
     } else {
         const firstNodeOfRegion = nodeBefore && getNextLeafSibling(root, nodeBefore, skipTags);

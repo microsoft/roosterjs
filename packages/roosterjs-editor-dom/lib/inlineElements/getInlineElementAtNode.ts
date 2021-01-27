@@ -1,9 +1,9 @@
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
 import getTagOfNode from '../utils/getTagOfNode';
 import ImageInlineElement from './ImageInlineElement';
-import isNode from '../typeUtils/isNode';
 import LinkInlineElement from './LinkInlineElement';
 import NodeInlineElement from './NodeInlineElement';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import { BlockElement, InlineElement } from 'roosterjs-editor-types';
 
 /**
@@ -28,7 +28,7 @@ export default function getInlineElementAtNode(
     node: Node
 ): InlineElement {
     // An inline element has to be in a block element, get the block first and then resolve through the factory
-    let parentBlock = isNode(parent) ? getBlockElementAtNode(parent, node) : parent;
+    let parentBlock = safeInstanceOf(parent, 'Node') ? getBlockElementAtNode(parent, node) : parent;
     return node && parentBlock && resolveInlineElement(node, parentBlock);
 }
 

@@ -15,6 +15,7 @@ import {
     getTagOfNode,
     collapseNodes,
     unwrap,
+    toArray,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -107,7 +108,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
             }
 
             // Get all list items(<li>) in the current iterator element.
-            const currentListItems = listItemContainer.querySelectorAll('li');
+            const currentListItems = toArray(listItemContainer.querySelectorAll('li'));
             currentListItems.forEach(item => {
                 // If item is in root level and the type of list changes then
                 // insert the current list into body and then reinitialize the convertedListElement
@@ -144,8 +145,8 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
  * @param fragment pasted document that contains all the list element.
  */
 function sanitizeListItemContainer(fragment: DocumentFragment) {
-    const listItemContainerListEl = fragment.querySelectorAll(
-        `${WORD_ORDERED_LIST_SELECTOR}, ${WORD_UNORDERED_LIST_SELECTOR}`
+    const listItemContainerListEl = toArray(
+        fragment.querySelectorAll(`${WORD_ORDERED_LIST_SELECTOR}, ${WORD_UNORDERED_LIST_SELECTOR}`)
     );
     listItemContainerListEl.forEach(el => {
         const replaceRegex = new RegExp(`\\b${LIST_CONTAINER_ELEMENT_CLASS_NAME}\\b`, 'g');
@@ -190,7 +191,7 @@ function getListItemBlocks(fragment: DocumentFragment): ListItemBlock[] {
         }
     }
 
-    if (curListItemBlock.listItemContainers.length > 0) {
+    if (curListItemBlock?.listItemContainers.length > 0) {
         result.push(curListItemBlock);
     }
 
@@ -249,7 +250,7 @@ function insertListItem(
         if (!curListLevel.firstChild) {
             // If the current level is empty, create empty list within the current level
             // then move the level iterator into the next level.
-            curListLevel.append(doc.createElement(listType));
+            curListLevel.appendChild(doc.createElement(listType));
             curListLevel = curListLevel.firstElementChild;
         } else {
             // If the current level is not empty, the last item in the needs to be a UL or OL
@@ -262,7 +263,7 @@ function insertListItem(
             } else {
                 // If the last child is not a list, then append a new list to the level
                 // and move the level iterator to the new level.
-                curListLevel.append(doc.createElement(listType));
+                curListLevel.appendChild(doc.createElement(listType));
                 curListLevel = curListLevel.lastElementChild;
             }
         }
@@ -290,14 +291,14 @@ function insertConvertedListToDoc(
 
     const { insertPositionNode } = listItemBlock;
     if (insertPositionNode) {
-        const { parentElement } = insertPositionNode;
-        if (parentElement) {
-            parentElement.insertBefore(convertedListElement, insertPositionNode);
+        const parentNode = insertPositionNode.parentNode;
+        if (parentNode) {
+            parentNode.insertBefore(convertedListElement, insertPositionNode);
         }
     } else {
-        const { parentElement } = listItemBlock.startElement;
-        if (parentElement) {
-            parentElement.appendChild(convertedListElement);
+        const parentNode = listItemBlock.startElement.parentNode;
+        if (parentNode) {
+            parentNode.appendChild(convertedListElement);
         } else {
             fragment.appendChild(convertedListElement);
         }

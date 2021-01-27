@@ -1,13 +1,14 @@
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
-import { chainSanitizerCallback } from 'roosterjs-editor-dom';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import handleLineMerge from './lineMerge/handleLineMerge';
+import { toArray } from 'roosterjs-editor-dom';
 import { WAC_IDENTIFING_SELECTOR } from './officeOnlineConverter/constants';
 import {
-    AttributeCallbackMap,
-    ClipboardData,
+    EditorPlugin,
+    IEditor,
     PluginEvent,
     PluginEventType,
+    ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 import convertPastedContentFromWordOnline, {
     isWordOnlineWithList,
@@ -28,14 +29,13 @@ const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
  * 3. Content copied from Word Online or Onenote Online
  */
 export default class Paste implements EditorPlugin {
-    private editor: Editor;
+    private editor: IEditor;
 
     /**
-     * Create an instance of Paste
-     * @param preserved @deprecated Not used. Preserved parameter only used for compatibility with old code
-     * @param attributeCallbacks @deprecated A set of callbacks to help handle html attribute during sanitization
+     * Construct a new instance of Paste class
+     * @param unknownTagReplacement Replace solution of unknown tags, default behavior is to replace with SPAN
      */
-    constructor(preserved?: any, private attributeCallbacks?: AttributeCallbackMap) {}
+    constructor(private unknownTagReplacement: string = 'SPAN') {}
 
     /**
      * Get a friendly name of  this plugin
@@ -48,16 +48,14 @@ export default class Paste implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
     }
 
     /**
      * Dispose this plugin
      */
-    dispose() {
-        this.editor = null;
-    }
+    dispose() {}
 
     /**
      * Handle events triggered from editor
@@ -66,7 +64,7 @@ export default class Paste implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.BeforePaste) {
             const { htmlAttributes, fragment, sanitizingOption } = event;
-            let wacListElements: NodeListOf<Element>;
+            let wacListElements: Node[];
 
             if (htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE) {
                 // Handle HTML copied from Word
@@ -77,7 +75,10 @@ export default class Paste implements EditorPlugin {
             ) {
                 // Handle HTML copied from Excel
                 convertPastedContentFromExcel(event);
-            } else if ((wacListElements = fragment.querySelectorAll(WAC_IDENTIFING_SELECTOR))[0]) {
+            } else if (
+                (wacListElements = toArray(fragment.querySelectorAll(WAC_IDENTIFING_SELECTOR))) &&
+                wacListElements.length > 0
+            ) {
                 // Once it is known that the document is from WAC
                 // We need to remove the display property and margin from all the list item
                 wacListElements.forEach((el: HTMLElement) => {
@@ -90,46 +91,13 @@ export default class Paste implements EditorPlugin {
                     convertPastedContentFromWordOnline(fragment);
                 }
             } else if (fragment.querySelector(GOOGLE_SHEET_NODE_NAME)) {
-                sanitizingOption.additionalAllowedTags.push(GOOGLE_SHEET_NODE_NAME);
+                sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
+            } else if (this.editor.isFeatureEnabled(ExperimentalFeatures.MergePastedLine)) {
+                handleLineMerge(fragment);
             }
 
-            // TODO: Deprecate attributeCallbacks parameter
-            if (this.attributeCallbacks) {
-                Object.keys(this.attributeCallbacks).forEach(name => {
-                    chainSanitizerCallback(
-                        sanitizingOption.attributeCallbacks,
-                        name,
-                        this.attributeCallbacks[name]
-                    );
-                });
-            }
+            // Replace unknown tags with SPAN
+            sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
         }
-    }
-
-    /**
-     * @deprecated
-     * Paste into editor using passed in clipboardData with original format
-     * @param clipboardData The clipboardData to paste
-     */
-    public pasteOriginal(clipboardData: ClipboardData) {
-        this.editor.paste(clipboardData);
-    }
-
-    /**
-     * @deprecated
-     * Paste plain text into editor using passed in clipboardData
-     * @param clipboardData The clipboardData to paste
-     */
-    public pasteText(clipboardData: ClipboardData) {
-        this.editor.paste(clipboardData, true /*pasteAsText*/);
-    }
-
-    /**
-     * @deprecated
-     * Paste into editor using passed in clipboardData with curent format
-     * @param clipboardData The clipboardData to paste
-     */
-    public pasteAndMergeFormat(clipboardData: ClipboardData) {
-        this.editor.paste(clipboardData, false /*pasteAsText*/, true /*applyCurrentFormat*/);
     }
 }

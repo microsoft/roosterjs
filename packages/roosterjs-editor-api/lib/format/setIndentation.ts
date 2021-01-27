@@ -1,7 +1,13 @@
 import experimentSetIndentation from '../experiment/experimentSetIndentation';
 import processList from '../utils/processList';
-import { ChangeSource, DocumentCommand, Indentation, QueryScope } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import {
+    ChangeSource,
+    DocumentCommand,
+    IEditor,
+    Indentation,
+    QueryScope,
+    ExperimentalFeatures,
+} from 'roosterjs-editor-types';
 
 /**
  * Set indentation at selection
@@ -11,8 +17,8 @@ import { Editor } from 'roosterjs-editor-core';
  * @param indentation The indentation option:
  * Indentation.Increase to increase indentation or Indentation.Decrease to decrease indentation
  */
-export default function setIndentation(editor: Editor, indentation: Indentation) {
-    if (editor.useExperimentFeatures()) {
+export default function setIndentation(editor: IEditor, indentation: Indentation) {
+    if (editor.isFeatureEnabled(ExperimentalFeatures.NewIndentation)) {
         experimentSetIndentation(editor, indentation);
     } else {
         let command: DocumentCommand.Indent | DocumentCommand.Outdent =

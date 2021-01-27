@@ -1,7 +1,5 @@
-export { default as NodeBlockElement } from './blockElements/NodeBlockElement';
 export { default as getBlockElementAtNode } from './blockElements/getBlockElementAtNode';
 export { default as getFirstLastBlockElement } from './blockElements/getFirstLastBlockElement';
-export { default as StartEndBlockElement } from './blockElements/StartEndBlockElement';
 
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
 export { default as PositionContentSearcher } from './contentTraverser/PositionContentSearcher';
@@ -12,6 +10,7 @@ export { default as LinkInlineElement } from './inlineElements/LinkInlineElement
 export { default as NodeInlineElement } from './inlineElements/NodeInlineElement';
 export { default as PartialInlineElement } from './inlineElements/PartialInlineElement';
 
+export { default as arrayPush } from './utils/arrayPush';
 export { default as applyTextStyle } from './utils/applyTextStyle';
 export { Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
@@ -30,10 +29,8 @@ export {
 export { default as getTagOfNode } from './utils/getTagOfNode';
 export { default as isBlockElement } from './utils/isBlockElement';
 export { default as isNodeEmpty } from './utils/isNodeEmpty';
-export { default as isRtl } from './utils/isRtl';
 export { default as isVoidHtmlElement } from './utils/isVoidHtmlElement';
 export { default as matchLink } from './utils/matchLink';
-export { default as adjustNodeInsertPosition } from './utils/adjustNodeInsertPosition';
 export { default as queryElements } from './utils/queryElements';
 export { default as splitParentNode, splitBalancedNodeRange } from './utils/splitParentNode';
 export { default as unwrap } from './utils/unwrap';
@@ -44,41 +41,52 @@ export { default as getTextContent } from './utils/getTextContent';
 export { default as splitTextNode } from './utils/splitTextNode';
 export { default as normalizeRect } from './utils/normalizeRect';
 export { default as toArray } from './utils/toArray';
+export { default as safeInstanceOf } from './utils/safeInstanceOf';
+export { default as readFile } from './utils/readFile';
 
-export { default as VTable, VCell } from './table/VTable';
+export { default as VTable } from './table/VTable';
 export { default as VList } from './list/VList';
 export { default as createVListFromRegion } from './list/createVListFromRegion';
+export { default as VListChain } from './list/VListChain';
 
 export { default as getRegionsFromRange } from './region/getRegionsFromRange';
 export { default as getSelectedBlockElementsInRegion } from './region/getSelectedBlockElementsInRegion';
 export { default as collapseNodesInRegion } from './region/collapseNodesInRegion';
 export { default as isNodeInRegion } from './region/isNodeInRegion';
+export { default as getSelectionRangeInRegion } from './region/getSelectionRangeInRegion';
+export { default as mergeBlocksInRegion } from './region/mergeBlocksInRegion';
 
 export { default as Position } from './selection/Position';
-export { default as createRange, getRangeFromSelectionPath } from './selection/createRange';
+export { default as createRange } from './selection/createRange';
 export { default as getPositionRect } from './selection/getPositionRect';
 export { default as isPositionAtBeginningOf } from './selection/isPositionAtBeginningOf';
 export { default as getSelectionPath } from './selection/getSelectionPath';
 export { default as getHtmlWithSelectionPath } from './selection/getHtmlWithSelectionPath';
 export { default as setHtmlWithSelectionPath } from './selection/setHtmlWithSelectionPath';
+export { default as addRangeToSelection } from './selection/addRangeToSelection';
+export { default as deleteSelectedContent } from './selection/deleteSelectedContent';
 
 export { default as addSnapshot } from './snapshots/addSnapshot';
 export { default as canMoveCurrentSnapshot } from './snapshots/canMoveCurrentSnapshot';
 export { default as clearProceedingSnapshots } from './snapshots/clearProceedingSnapshots';
 export { default as moveCurrentSnapsnot } from './snapshots/moveCurrentSnapsnot';
 export { default as createSnapshots } from './snapshots/createSnapshots';
+export { default as canUndoAutoComplete } from './snapshots/canUndoAutoComplete';
 
 export { default as HtmlSanitizer } from './htmlSanitizer/HtmlSanitizer';
-export { default as htmlToDom, splitWithFragment } from './htmlSanitizer/htmlToDom';
 export { default as getInheritableStyles } from './htmlSanitizer/getInheritableStyles';
 export { default as createDefaultHtmlSanitizerOptions } from './htmlSanitizer/createDefaultHtmlSanitizerOptions';
 export { default as chainSanitizerCallback } from './htmlSanitizer/chainSanitizerCallback';
 
-export { default as isDocumentFragment } from './typeUtils/isDocumentFragment';
-export { default as isHTMLElement } from './typeUtils/isHTMLElement';
-export { default as isHTMLOListElement } from './typeUtils/isHTMLOListElement';
-export { default as isHTMLTableCellElement } from './typeUtils/isHTMLTableCellElement';
-export { default as isHTMLTableElement } from './typeUtils/isHTMLTableElement';
-export { default as isNode } from './typeUtils/isNode';
-export { default as isRange } from './typeUtils/isRange';
-export { default as safeInstanceOf } from './typeUtils/safeInstanceOf';
+export { default as commitEntity } from './entity/commitEntity';
+export { default as getEntityFromElement } from './entity/getEntityFromElement';
+export { default as getEntitySelector } from './entity/getEntitySelector';
+
+export { default as cacheGetEventData } from './event/cacheGetEventData';
+export { default as clearEventDataCache } from './event/clearEventDataCache';
+export { default as isModifierKey } from './event/isModifierKey';
+export { default as isCharacterValue } from './event/isCharacterValue';
+export { default as isCtrlOrMetaPressed } from './event/isCtrlOrMetaPressed';
+
+export { default as getStyles } from './style/getStyles';
+export { default as setStyles } from './style/setStyles';

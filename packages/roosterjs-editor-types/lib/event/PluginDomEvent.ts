@@ -2,66 +2,81 @@ import BasePluginEvent from './BasePluginEvent';
 import { PluginEventType } from './PluginEventType';
 
 /**
- * This represents a PluginEvent wrapping native CompositionEnd event
+ * A base interface of all DOM events
  */
-export interface PluginCompositionEvent extends BasePluginEvent<PluginEventType.CompositionEnd> {
-    rawEvent: CompositionEvent;
+export interface PluginDomEventBase<TEventType extends PluginEventType, TRawEvent extends Event>
+    extends BasePluginEvent<TEventType> {
+    rawEvent: TRawEvent;
 }
 
 /**
- * This represents a PluginEvent wrapping native MouseDown event
+ * This interface represents a PluginEvent wrapping native CompositionEnd event
  */
-export interface PluginMouseDownEvent extends BasePluginEvent<PluginEventType.MouseDown> {
-    rawEvent: MouseEvent;
+export interface PluginCompositionEvent
+    extends PluginDomEventBase<PluginEventType.CompositionEnd, CompositionEvent> {}
+
+/**
+ * This interface represents a PluginEvent wrapping native MouseDown event
+ */
+export interface PluginMouseDownEvent
+    extends PluginDomEventBase<PluginEventType.MouseDown, MouseEvent> {}
+
+/**
+ * This interface represents a PluginEvent wrapping native MouseUp event
+ */
+export interface PluginMouseUpEvent
+    extends PluginDomEventBase<PluginEventType.MouseUp, MouseEvent> {}
+
+/**
+ * This interface represents a PluginEvent wrapping native ContextMenu event
+ */
+export interface PluginContextMenuEvent
+    extends PluginDomEventBase<PluginEventType.ContextMenu, MouseEvent> {
+    /**
+     * A callback array to let edtior retrieve context menu itesm related to this event.
+     * Plugins can add their own getter callback to this array,
+     * items from each getter will be separated by a splitter item represented by null
+     */
+    items: any[];
 }
 
 /**
- * This represents a PluginEvent wrapping native MouseUp event
+ * This interface represents a PluginEvent wrapping native Mouse event
  */
-export interface PluginMouseUpEvent extends BasePluginEvent<PluginEventType.MouseUp> {
-    rawEvent: MouseEvent;
-}
+export type PluginMouseEvent = PluginMouseDownEvent | PluginMouseUpEvent | PluginContextMenuEvent;
 
 /**
- * This represents a PluginEvent wrapping native Mouse event
+ * This interface represents a PluginEvent wrapping native KeyDown event
  */
-export type PluginMouseEvent = PluginMouseDownEvent | PluginMouseUpEvent;
+export interface PluginKeyDownEvent
+    extends PluginDomEventBase<PluginEventType.KeyDown, KeyboardEvent> {}
 
 /**
- * This represents a PluginEvent wrapping native KeyDown event
+ * This interface represents a PluginEvent wrapping native KeyPress event
  */
-export interface PluginKeyDownEvent extends BasePluginEvent<PluginEventType.KeyDown> {
-    rawEvent: KeyboardEvent;
-}
+export interface PluginKeyPressEvent
+    extends PluginDomEventBase<PluginEventType.KeyPress, KeyboardEvent> {}
 
 /**
- * This represents a PluginEvent wrapping native KeyPress event
+ * This interface represents a PluginEvent wrapping native KeyUp event
  */
-export interface PluginKeyPressEvent extends BasePluginEvent<PluginEventType.KeyPress> {
-    rawEvent: KeyboardEvent;
-}
+export interface PluginKeyUpEvent
+    extends PluginDomEventBase<PluginEventType.KeyUp, KeyboardEvent> {}
 
 /**
- * This represents a PluginEvent wrapping native KeyUp event
- */
-export interface PluginKeyUpEvent extends BasePluginEvent<PluginEventType.KeyUp> {
-    rawEvent: KeyboardEvent;
-}
-
-/**
- * The represents a PluginEvent wrapping native Keyboard event
+ * The interface represents a PluginEvent wrapping native Keyboard event
  */
 export type PluginKeyboardEvent = PluginKeyDownEvent | PluginKeyPressEvent | PluginKeyUpEvent;
 
 /**
- * This represents a PluginEvent wrapping native input / textinput event
+ * This interface represents a PluginEvent wrapping native input / textinput event
  */
-export interface PluginInputEvent extends BasePluginEvent<PluginEventType.Input> {
-    rawEvent: InputEvent;
-}
+export interface PluginInputEvent extends PluginDomEventBase<PluginEventType.Input, InputEvent> {}
 
-export interface PluginScrollEvent extends BasePluginEvent<PluginEventType.Scroll> {
-    rawEvent: UIEvent;
+/**
+ * This interface represents a PluginEvent wrapping native scroll event
+ */
+export interface PluginScrollEvent extends PluginDomEventBase<PluginEventType.Scroll, UIEvent> {
     scrollContainer: HTMLElement;
 }
 

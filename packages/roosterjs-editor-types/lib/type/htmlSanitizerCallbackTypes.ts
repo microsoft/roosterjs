@@ -19,10 +19,16 @@ export type AttributeCallback = (value: string, element: HTMLElement, context: O
  * Style callback, will be called when HtmlSanitizer process an inline CSS style with given name
  * @param value Value of the CSS rule
  * @param element The HTML element contains this CSS style
+ * @param thisStyle Current values of known inheritable styles
  * @param context A context object to store values which can used for communicating among callbacks
  * @returns True if this rule should be kept, otherwise false
  */
-export type StyleCallback = (value: string, element: HTMLElement, context: Object) => boolean;
+export type CssStyleCallback = (
+    value: string,
+    element: HTMLElement,
+    thisStyle: StringMap,
+    context: Object
+) => boolean;
 
 /**
  * A map of elements callback. Tag name should be in upper case
@@ -37,7 +43,12 @@ export type AttributeCallbackMap = Record<string, AttributeCallback>;
 /**
  * A map of style callbacks. Style name should be in lower case
  */
-export type StyleCallbackMap = Record<string, StyleCallback>;
+export type CssStyleCallbackMap = Record<string, CssStyleCallback>;
+
+/**
+ * A map of predefined CSS styles for elements
+ */
+export type PredefinedCssMap = Record<string, StringMap>;
 
 /**
  * A map of atttribute callbacks. Tag name should be in lower case

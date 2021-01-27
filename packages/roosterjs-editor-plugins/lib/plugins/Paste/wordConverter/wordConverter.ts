@@ -1,5 +1,5 @@
-import CustomData, { createCustomData } from './CustomData';
 import WordConverterArguments from './WordConverterArguments';
+import WordCustomData, { createCustomData } from './WordCustomData';
 
 /**
  * @internal
@@ -19,7 +19,7 @@ export default interface WordConverter {
     wordConverterArgs: WordConverterArguments;
 
     /** Custom data storage for list items */
-    customData: CustomData;
+    wordCustomData: WordCustomData;
 }
 
 /**
@@ -32,6 +32,6 @@ export function createWordConverter(): WordConverter {
         numBulletsConverted: 0,
         numNumberedConverted: 0,
         wordConverterArgs: null,
-        customData: createCustomData(),
+        wordCustomData: createCustomData(),
     };
 }

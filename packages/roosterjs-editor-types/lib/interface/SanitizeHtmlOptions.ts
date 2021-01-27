@@ -15,9 +15,4 @@ export default interface SanitizeHtmlOptions extends HtmlSanitizerOptions {
      * When set to true, will only do inline CSS conversion and skip the sanitizing pass
      */
     convertCssOnly?: boolean;
-
-    /**
-     * When set to true, only content inside Fragment markup (if any) will be preserved
-     */
-    preserveFragmentOnly?: boolean;
 }

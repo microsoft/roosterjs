@@ -6,11 +6,10 @@ node_js:
     - 10
 before_install:
     - yarn
-    # - cd publish/samplesite/instrumentation-tests && yarn && cd ../../..
 install:
     - npm run build:ci
 script:
-    - xvfb-run npm run test
+    - xvfb-run npm run test:coverage
     # puppeteer-firefox does not run in travis because it depends on a
     # libstdc++6  that is not available in travis.
     # See https://github.com/GoogleChrome/puppeteer/pull/3657
@@ -32,4 +31,6 @@ deploy:
       script: node tools/build.js publish --token $NPM_TOKEN
       skip-cleanup: true
       on:
-          branch: master
+          branch:
+              - master
+              - vnext

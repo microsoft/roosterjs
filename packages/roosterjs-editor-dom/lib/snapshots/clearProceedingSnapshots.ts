@@ -13,5 +13,6 @@ export default function clearProceedingSnapshots(snapshots: Snapshots) {
         }
         snapshots.snapshots.splice(snapshots.currentIndex + 1);
         snapshots.totalSize -= removedSize;
+        snapshots.autoCompleteIndex = -1;
     }
 }

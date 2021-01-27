@@ -318,7 +318,7 @@ function buildDoc() {
 }
 
 async function buildDemoSite() {
-    var sourcePathRoot = path.join(rootPath, 'publish/samplesite');
+    var sourcePathRoot = path.join(rootPath, 'demo');
     var sourcePath = path.join(sourcePathRoot, 'scripts');
     runNode(typescriptPath + ' --noEmit ', sourcePath);
 
@@ -475,7 +475,7 @@ class Runner {
         (async () => {
             console.log(`Start building roosterjs version ${version}\n`);
 
-            var bar = new ProgressBar('[:bar] (:current/:total finished) :message', {
+            var bar = new ProgressBar('[:bar] (:current/:total finished) :message  ', {
                 total: this.tasks.length,
                 width: 40,
                 complete: '#',

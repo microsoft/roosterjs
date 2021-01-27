@@ -1,172 +1,180 @@
-import Editor from '../editor/Editor';
-import EditorPlugin from '../interfaces/EditorPlugin';
-import {
-    Browser,
-    getPendableFormatState,
-    Position,
-    PendableFormatNames,
-    PendableFormatCommandMap,
-} from 'roosterjs-editor-dom';
+import { arrayPush, Browser, isCharacterValue } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
+    ContextMenuProvider,
+    DOMEventHandler,
+    DOMEventPluginState,
+    EditorOptions,
+    IEditor,
     PluginEventType,
-    NodePosition,
-    PendableFormatState,
-    PluginEvent,
+    PluginWithState,
+    EditorPlugin,
 } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * DOMEventPlugin handles customized DOM events, including:
- * 1. IME state management
- * 2. Selection management
- * 3. Cut and Drop management
- * 4. Pending format state management
- * 5. Scroll container and scroll event management
+ * 1. Keyboard event
+ * 2. Mouse event
+ * 3. IME state
+ * 4. Drop event
+ * 5. Focus and blur event
+ * 6. Input event
+ * 7. Scroll event
  */
-export default class DOMEventPlugin implements EditorPlugin {
-    private editor: Editor;
-    private inIme = false;
+export default class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
+    private editor: IEditor;
     private disposer: () => void;
-    private cachedPosition: NodePosition;
-    private cachedFormatState: PendableFormatState;
+    private state: DOMEventPluginState;
 
-    constructor(private disableRestoreSelectionOnFocus: boolean) {}
+    /**
+     * Construct a new instance of DOMEventPlugin
+     * @param options The editor options
+     * @param contentDiv The editor content DIV
+     */
+    constructor(options: EditorOptions, contentDiv: HTMLDivElement) {
+        this.state = {
+            isInIME: false,
+            scrollContainer: options.scrollContainer || contentDiv,
+            selectionRange: null,
+            stopPrintableKeyboardEventPropagation: !options.allowKeyboardEventPropagation,
+            contextMenuProviders:
+                options.plugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) || [],
+        };
+    }
 
+    /**
+     * Get a friendly name of  this plugin
+     */
     getName() {
         return 'DOMEvent';
     }
 
-    initialize(editor: Editor) {
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
+    initialize(editor: IEditor) {
         this.editor = editor;
 
         this.disposer = editor.addDomEventHandler({
-            // 1. IME state management
-            compositionstart: () => (this.inIme = true),
+            // 1. Keyboard event
+            keypress: this.getEventHandler(PluginEventType.KeyPress),
+            keydown: this.getEventHandler(PluginEventType.KeyDown),
+            keyup: this.getEventHandler(PluginEventType.KeyUp),
+
+            // 2. Mouse event
+            mousedown: PluginEventType.MouseDown,
+            contextmenu: this.onContextMenuEvent,
+
+            // 3. IME state management
+            compositionstart: () => (this.state.isInIME = true),
             compositionend: (rawEvent: CompositionEvent) => {
-                this.inIme = false;
+                this.state.isInIME = false;
                 editor.triggerPluginEvent(PluginEventType.CompositionEnd, {
                     rawEvent,
                 });
             },
 
-            // 2. Cut and drop management
-            drop: this.onNativeEvent,
-            cut: this.onNativeEvent,
+            // 4. Drop event
+            drop: this.onDrop,
 
-            // 3. Selection mangement
+            // 5. Focus mangement
             focus: this.onFocus,
             [Browser.isIEOrEdge ? 'beforedeactivate' : 'blur']: this.onBlur,
+
+            // 6. Input event
+            [Browser.isIE ? 'textinput' : 'input']: this.getEventHandler(PluginEventType.Input),
         });
 
-        this.editor.getScrollContainer().addEventListener('scroll', this.onScroll);
+        // 7. Scroll event
+        this.state.scrollContainer.addEventListener('scroll', this.onScroll);
     }
 
+    /**
+     * Dispose this plugin
+     */
     dispose() {
-        this.editor.getScrollContainer().removeEventListener('scroll', this.onScroll);
-
+        this.state.scrollContainer.removeEventListener('scroll', this.onScroll);
         this.disposer();
         this.disposer = null;
         this.editor = null;
-        this.clear();
     }
 
     /**
-     * Handle events triggered from editor
-     * @param event PluginEvent object
+     * Get plugin state object
      */
-    onPluginEvent(event: PluginEvent) {
-        switch (event.eventType) {
-            case PluginEventType.PendingFormatStateChanged:
-                // Got PendingFormatStateChagned event, cache current position and pending format
-                this.cachedPosition = this.getCurrentPosition();
-                this.cachedFormatState = event.formatState;
-                break;
-            case PluginEventType.KeyDown:
-            case PluginEventType.MouseDown:
-            case PluginEventType.ContentChanged:
-                // If content or position is changed (by keyboard, mouse, or code),
-                // check if current position is still the same with the cached one (if exist),
-                // and clear cached format if position is changed since it is out-of-date now
-                if (
-                    this.cachedPosition &&
-                    !this.cachedPosition.equalTo(this.getCurrentPosition())
-                ) {
-                    this.clear();
-                }
-                break;
-        }
+    getState() {
+        return this.state;
     }
 
-    /**
-     * Restore cached pending format state (if exist) to current selection
-     */
-    public restorePendingFormatState() {
-        if (this.cachedFormatState) {
-            let formatState = getPendableFormatState(this.editor.getDocument());
-            (<PendableFormatNames[]>Object.keys(PendableFormatCommandMap)).forEach(key => {
-                if (this.cachedFormatState[key] != formatState[key]) {
-                    this.editor
-                        .getDocument()
-                        .execCommand(PendableFormatCommandMap[key], false, null);
-                }
-            });
-            this.cachedPosition = this.getCurrentPosition();
-        }
-    }
-
-    /**
-     * Check if editor is in IME input sequence
-     * @returns True if editor is in IME input sequence, otherwise false
-     */
-    public isInIME() {
-        return this.inIme;
-    }
-
-    private onNativeEvent = (e: UIEvent) => {
-        this.editor.runAsync(() => {
-            this.editor.addUndoSnapshot(
-                () => {},
-                e.type == 'cut' ? ChangeSource.Cut : ChangeSource.Drop
-            );
+    private onDrop = (e: UIEvent) => {
+        this.editor.runAsync(editor => {
+            editor.addUndoSnapshot(() => {}, ChangeSource.Drop);
         });
     };
 
     private onFocus = () => {
-        if (this.disableRestoreSelectionOnFocus) {
-            if (this.cachedPosition && this.cachedFormatState) {
-                let range = this.editor.getSelectionRange();
-                if (
-                    range.collapsed &&
-                    Position.getStart(range).normalize().equalTo(this.cachedPosition)
-                ) {
-                    this.restorePendingFormatState();
-                } else {
-                    this.clear();
-                }
-            }
-        } else {
-            this.editor.restoreSavedRange();
-        }
+        this.editor.select(this.state.selectionRange);
+        this.state.selectionRange = null;
     };
 
     private onBlur = () => {
-        this.editor.saveSelectionRange();
+        this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
     };
 
     private onScroll = (e: UIEvent) => {
         this.editor.triggerPluginEvent(PluginEventType.Scroll, {
             rawEvent: e,
-            scrollContainer: this.editor.getScrollContainer(),
+            scrollContainer: this.state.scrollContainer,
         });
     };
 
-    private clear() {
-        this.cachedPosition = null;
-        this.cachedFormatState = null;
+    private getEventHandler(eventType: PluginEventType): DOMEventHandler {
+        return this.state.stopPrintableKeyboardEventPropagation
+            ? {
+                  pluginEventType: eventType,
+                  beforeDispatch:
+                      eventType == PluginEventType.Input ? this.onInputEvent : this.onKeybaordEvent,
+              }
+            : eventType;
     }
 
-    private getCurrentPosition() {
-        let range = this.editor.getSelectionRange();
-        return range && Position.getStart(range).normalize();
-    }
+    private onKeybaordEvent = (event: KeyboardEvent) => {
+        if (isCharacterValue(event)) {
+            event.stopPropagation();
+        }
+    };
+
+    private onInputEvent = (event: InputEvent) => {
+        event.stopPropagation();
+    };
+
+    private onContextMenuEvent = (event: MouseEvent) => {
+        const allItems: any[] = [];
+        const searcher = this.editor.getContentSearcherOfCursor();
+        const elementBeforeCursor = searcher?.getInlineElementBefore();
+
+        let eventTargetNode = event.target as Node;
+        if (event.button != 2) {
+            eventTargetNode = elementBeforeCursor?.getContainerNode();
+        }
+        this.state.contextMenuProviders.forEach(provider => {
+            const items = provider.getContextMenuItems(eventTargetNode);
+            if (items?.length > 0) {
+                if (allItems.length > 0) {
+                    allItems.push(null);
+                }
+                arrayPush(allItems, items);
+            }
+        });
+        this.editor.triggerPluginEvent(PluginEventType.ContextMenu, {
+            rawEvent: event,
+            items: allItems,
+        });
+    };
+}
+
+function isContextMenuProvider(source: EditorPlugin): source is ContextMenuProvider<any> {
+    return !!(<ContextMenuProvider<any>>source)?.getContextMenuItems;
 }

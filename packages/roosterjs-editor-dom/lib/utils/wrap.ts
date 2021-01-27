@@ -1,6 +1,5 @@
 import fromHtml from './fromHtml';
-import isHTMLElement from '../typeUtils/isHTMLElement';
-import isNode from '../typeUtils/isNode';
+import safeInstanceOf from '../utils/safeInstanceOf';
 
 /**
  * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
@@ -30,12 +29,12 @@ export default function wrap(nodes: Node | Node[], wrapper?: string): HTMLElemen
 export default function wrap(nodes: Node | Node[], wrapper?: HTMLElement): HTMLElement;
 
 export default function wrap(nodes: Node | Node[], wrapper?: string | HTMLElement): HTMLElement {
-    nodes = !nodes ? [] : isNode(nodes) ? [nodes] : nodes;
+    nodes = !nodes ? [] : safeInstanceOf(nodes, 'Node') ? [nodes] : nodes;
     if (nodes.length == 0 || !nodes[0]) {
         return null;
     }
 
-    if (!isHTMLElement(wrapper)) {
+    if (!safeInstanceOf(wrapper, 'HTMLElement')) {
         let document = nodes[0].ownerDocument;
         wrapper = wrapper || 'div';
         wrapper = /^\w+$/.test(wrapper)

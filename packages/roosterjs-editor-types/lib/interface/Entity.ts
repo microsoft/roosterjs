@@ -18,9 +18,9 @@ export default interface Entity {
     id: string;
 
     /**
-     * The root DOM node of this entity
+     * The wrapper DOM node of this entity which holds the info CSS classes of this entity
      */
-    contentNode: HTMLElement;
+    wrapper: HTMLElement;
 
     /**
      * Whether this is a readonly entity

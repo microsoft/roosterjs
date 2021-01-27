@@ -1,17 +1,14 @@
-import { createRange } from 'roosterjs-editor-dom';
+import { cacheGetEventData, createRange } from 'roosterjs-editor-dom';
 import {
+    BuildInEditFeature,
     ChangeSource,
+    IEditor,
+    Keys,
+    MarkdownFeatureSettings,
     NodePosition,
     PluginKeyboardEvent,
     PositionType,
 } from 'roosterjs-editor-types';
-import {
-    cacheGetContentSearcher,
-    cacheGetEventData,
-    ContentEditFeature,
-    Editor,
-    Keys,
-} from 'roosterjs-editor-core';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
@@ -20,7 +17,7 @@ function generateBasicMarkdownFeature(
     triggerCharacter: string,
     elementTag: string,
     useShiftKey: boolean
-): ContentEditFeature {
+): BuildInEditFeature<PluginKeyboardEvent> {
     return {
         keys: [key],
         shouldHandleEvent: (event, editor) =>
@@ -28,7 +25,7 @@ function generateBasicMarkdownFeature(
             !!cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter),
         handleEvent: (event, editor) => {
             // runAsync is here to allow the event to complete so autocomplete will present the trigger character.
-            editor.runAsync(() => {
+            editor.runAsync(editor => {
                 handleMarkdownEvent(event, editor, triggerCharacter, elementTag);
             });
         },
@@ -37,11 +34,11 @@ function generateBasicMarkdownFeature(
 
 function cacheGetRangeForMarkdownOperation(
     event: PluginKeyboardEvent,
-    editor: Editor,
+    editor: IEditor,
     triggerCharacter: string
 ): Range {
     return cacheGetEventData(event, 'MARKDOWN_RANGE', () => {
-        const searcher = cacheGetContentSearcher(event, editor);
+        const searcher = editor.getContentSearcherOfCursor(event);
 
         let startPosition: NodePosition;
         let endPosition: NodePosition;
@@ -88,41 +85,47 @@ function cacheGetRangeForMarkdownOperation(
 
 function handleMarkdownEvent(
     event: PluginKeyboardEvent,
-    editor: Editor,
+    editor: IEditor,
     triggerCharacter: string,
     elementTag: string
 ) {
-    editor.performAutoComplete(() => {
-        const range = cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter);
-        if (!!range) {
-            // get the text content range
-            const textContentRange = range.cloneRange();
-            textContentRange.setStart(
-                textContentRange.startContainer,
-                textContentRange.startOffset + 1
-            );
+    editor.addUndoSnapshot(
+        () => {
+            const range = cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter);
+            if (!!range) {
+                // get the text content range
+                const textContentRange = range.cloneRange();
+                textContentRange.setStart(
+                    textContentRange.startContainer,
+                    textContentRange.startOffset + 1
+                );
 
-            // set the removal range to include the typed last character.
-            range.setEnd(range.endContainer, range.endOffset + 1);
+                // set the removal range to include the typed last character.
+                range.setEnd(range.endContainer, range.endOffset + 1);
 
-            // extract content and put it into a new element.
-            const elementToWrap = editor.getDocument().createElement(elementTag);
-            elementToWrap.appendChild(textContentRange.extractContents());
-            range.deleteContents();
+                // extract content and put it into a new element.
+                const elementToWrap = editor.getDocument().createElement(elementTag);
+                elementToWrap.appendChild(textContentRange.extractContents());
+                range.deleteContents();
 
-            // ZWS here ensures we don't end up inside the newly created node.
-            const nonPrintedSpaceTextNode = editor.getDocument().createTextNode(ZERO_WIDTH_SPACE);
-            range.insertNode(nonPrintedSpaceTextNode);
-            range.insertNode(elementToWrap);
-            editor.select(nonPrintedSpaceTextNode, PositionType.End);
-        }
-    }, ChangeSource.Format);
+                // ZWS here ensures we don't end up inside the newly created node.
+                const nonPrintedSpaceTextNode = editor
+                    .getDocument()
+                    .createTextNode(ZERO_WIDTH_SPACE);
+                range.insertNode(nonPrintedSpaceTextNode);
+                range.insertNode(elementToWrap);
+                editor.select(nonPrintedSpaceTextNode, PositionType.End);
+            }
+        },
+        ChangeSource.Format,
+        true /*canUndoByBackspace*/
+    );
 }
 
 /**
  * Markdown bold feature. Bolds text with markdown shortcuts.
  */
-export const MarkdownBold: ContentEditFeature = generateBasicMarkdownFeature(
+const MarkdownBold: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkdownFeature(
     Keys.EIGHT_ASTIRISK,
     '*',
     'b',
@@ -132,7 +135,7 @@ export const MarkdownBold: ContentEditFeature = generateBasicMarkdownFeature(
 /**
  * Markdown italics feature. Italicises text with markdown shortcuts.
  */
-export const MarkdownItalic: ContentEditFeature = generateBasicMarkdownFeature(
+const MarkdownItalic: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkdownFeature(
     Keys.DASH_UNDERSCORE,
     '_',
     'i',
@@ -142,7 +145,7 @@ export const MarkdownItalic: ContentEditFeature = generateBasicMarkdownFeature(
 /**
  * Markdown strikethru feature. Strikethrus text with markdown shortcuts.
  */
-export const MarkdownStrikethru: ContentEditFeature = generateBasicMarkdownFeature(
+const MarkdownStrikethru: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkdownFeature(
     Keys.GRAVE_TILDE,
     '~',
     's',
@@ -152,9 +155,22 @@ export const MarkdownStrikethru: ContentEditFeature = generateBasicMarkdownFeatu
 /**
  * Markdown inline code feature. Marks specific text as inline code with markdown shortcuts.
  */
-export const MarkdownInlineCode: ContentEditFeature = generateBasicMarkdownFeature(
+const MarkdownInlineCode: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkdownFeature(
     Keys.GRAVE_TILDE,
     '`',
     'code',
     false
 );
+
+/**
+ * @internal
+ */
+export const MarkdownFeatures: Record<
+    keyof MarkdownFeatureSettings,
+    BuildInEditFeature<PluginKeyboardEvent>
+> = {
+    markdownBold: MarkdownBold,
+    markdownItalic: MarkdownItalic,
+    markdownStrikethru: MarkdownStrikethru,
+    markdownInlineCode: MarkdownInlineCode,
+};

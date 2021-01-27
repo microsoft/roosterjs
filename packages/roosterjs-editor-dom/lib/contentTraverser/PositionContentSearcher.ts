@@ -1,6 +1,11 @@
 import ContentTraverser from './ContentTraverser';
 import createRange from '../selection/createRange';
-import { InlineElement, NodePosition } from 'roosterjs-editor-types';
+import {
+    IContentTraverser,
+    InlineElement,
+    IPositionContentSearcher,
+    NodePosition,
+} from 'roosterjs-editor-types';
 
 // White space matching regex. It matches following chars:
 // \s: white space
@@ -12,7 +17,7 @@ const WHITESPACE_REGEX = /[\s\u00A0\u200B\u3000]+([^\s\u00A0\u200B\u3000]*)$/i;
 /**
  * The class that helps search content around a position
  */
-export default class PositionContentSearcher {
+export default class PositionContentSearcher implements IPositionContentSearcher {
     // The cached text before position that has been read so far
     private text = '';
 
@@ -26,7 +31,7 @@ export default class PositionContentSearcher {
     private inlineAfter: InlineElement;
 
     // The content traverser used to traverse backwards
-    private traverser: ContentTraverser;
+    private traverser: IContentTraverser;
 
     // Backward parsing has completed
     private traversingComplete: boolean;

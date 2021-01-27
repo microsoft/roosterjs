@@ -1,31 +1,11 @@
-import ContentEditFeatures, { getDefaultContentEditFeatures } from './ContentEditFeatures';
-import { AutoLink, UnlinkWhenBackspaceAfterLink } from './features/autoLinkFeatures';
-import { DefaultShortcut } from './features/shortcutFeatures';
-import { Editor, EditorPlugin, GenericContentEditFeature } from 'roosterjs-editor-core';
-import { InsertLineBeforeStructuredNodeFeature } from './features/insertLineBeforeStructuredNodeFeature';
-import { NoCycleCursorMove } from './features/noCycleCursorMove';
-import { PluginEvent } from 'roosterjs-editor-types';
-import { TabInTable, UpDownInTable } from './features/tableFeatures';
+import getAllFeatures from './getAllFeatures';
 import {
-    MarkdownBold,
-    MarkdownItalic,
-    MarkdownStrikethru,
-    MarkdownInlineCode,
-} from './features/markdownFeatures';
-
-import {
-    AutoBullet,
-    IndentWhenTab,
-    OutdentWhenShiftTab,
-    MergeInNewLine,
-    OutdentWhenBackOn1stEmptyLine,
-    OutdentWhenEnterOnEmptyLine,
-    getSmartOrderedList,
-} from './features/listFeatures';
-import {
-    UnquoteWhenBackOnEmpty1stLine,
-    UnquoteWhenEnterOnEmptyLine,
-} from './features/quoteFeatures';
+    ContentEditFeatureSettings,
+    EditorPlugin,
+    GenericContentEditFeature,
+    IEditor,
+    PluginEvent,
+} from 'roosterjs-editor-types';
 
 /**
  * An editor plugin to handle content edit event.
@@ -40,13 +20,15 @@ import {
  * 8. Manage list style
  */
 export default class ContentEdit implements EditorPlugin {
-    private editor: Editor;
-
     /**
      * Create instance of ContentEdit plugin
-     * @param features An optional feature set to determine which features the plugin should provide
+     * @param settingsOverride An optional feature set to override default feature settings
+     * @param additionalFeatures Optional. More features to add
      */
-    constructor(private featureSet?: ContentEditFeatures) {}
+    constructor(
+        private settingsOverride?: Partial<ContentEditFeatureSettings>,
+        private additionalFeatures?: GenericContentEditFeature<PluginEvent>[]
+    ) {}
 
     /**
      * Get a friendly name of  this plugin
@@ -59,45 +41,30 @@ export default class ContentEdit implements EditorPlugin {
      * Initialize this plugin
      * @param editor The editor instance
      */
-    public initialize(editor: Editor): void {
-        this.editor = editor;
-        this.getFilteredFeatures().forEach(feature => this.editor.addContentEditFeature(feature));
+    initialize(editor: IEditor): void {
+        const features: GenericContentEditFeature<PluginEvent>[] = [];
+        const allFeatures = getAllFeatures();
+
+        Object.keys(allFeatures).forEach((key: keyof typeof allFeatures) => {
+            const feature = allFeatures[key];
+            const hasSettingForKey =
+                this.settingsOverride && this.settingsOverride[key] !== undefined;
+
+            if (
+                (hasSettingForKey && this.settingsOverride[key]) ||
+                (!hasSettingForKey && !feature.defaultDisabled)
+            ) {
+                features.push(feature);
+            }
+        });
+
+        features
+            .concat(this.additionalFeatures || [])
+            .forEach(feature => editor.addContentEditFeature(feature));
     }
 
     /**
      * Dispose this plugin
      */
-    public dispose(): void {
-        this.editor = null;
-    }
-
-    private getFilteredFeatures(): GenericContentEditFeature<PluginEvent>[] {
-        let featureSet = this.featureSet || getDefaultContentEditFeatures();
-        let allFeatures: {
-            [key in keyof Partial<ContentEditFeatures>]: GenericContentEditFeature<PluginEvent>;
-        } = {
-            indentWhenTab: IndentWhenTab,
-            outdentWhenShiftTab: OutdentWhenShiftTab,
-            outdentWhenBackspaceOnEmptyFirstLine: OutdentWhenBackOn1stEmptyLine,
-            outdentWhenEnterOnEmptyLine: OutdentWhenEnterOnEmptyLine,
-            mergeInNewLineWhenBackspaceOnFirstChar: MergeInNewLine,
-            unquoteWhenBackspaceOnEmptyFirstLine: UnquoteWhenBackOnEmpty1stLine,
-            unquoteWhenEnterOnEmptyLine: UnquoteWhenEnterOnEmptyLine,
-            tabInTable: TabInTable,
-            upDownInTable: UpDownInTable,
-            insertLineBeforeStructuredNodeFeature: InsertLineBeforeStructuredNodeFeature,
-            autoBullet: AutoBullet,
-            autoLink: AutoLink,
-            unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink,
-            defaultShortcut: DefaultShortcut,
-            noCycleCursorMove: NoCycleCursorMove,
-            smartOrderedList: getSmartOrderedList(featureSet.smartOrderedListStyles),
-            markdownBold: MarkdownBold,
-            markdownItalic: MarkdownItalic,
-            markdownStrikethru: MarkdownStrikethru,
-            markdownInlineCode: MarkdownInlineCode,
-        };
-        let keys = Object.keys(allFeatures) as (keyof ContentEditFeatures)[];
-        return keys.filter(key => featureSet[key]).map(key => allFeatures[key]);
-    }
+    dispose(): void {}
 }

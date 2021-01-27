@@ -1,14 +1,136 @@
 import { cloneObject } from './cloneObject';
-import { StringMap, StyleCallbackMap } from 'roosterjs-editor-types';
+import { CssStyleCallbackMap, StringMap } from 'roosterjs-editor-types';
 
-const ALLOWED_HTML_TAGS = (
-    'BODY,H1,H2,H3,H4,H5,H6,FORM,P,BR,NOBR,HR,ACRONYM,ABBR,ADDRESS,B,' +
-    'BDI,BDO,BIG,BLOCKQUOTE,CENTER,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,' +
-    'Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,WBR,XMP,INPUT,TEXTAREA,' +
-    'BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,IMG,MAP,AREA,CANVAS,FIGCAPTION,' +
-    'FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,TABLE,CAPTION,TH,TR,TD,THEAD,TBODY,' +
-    'TFOOT,COL,COLGROUP,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'
-).split(',');
+const HTML_TAG_REPLACEMENT: Record<string, string> = {
+    // Allowed tags
+    a: '*',
+    abbr: '*',
+    address: '*',
+    area: '*',
+    article: '*',
+    aside: '*',
+    b: '*',
+    bdi: '*',
+    bdo: '*',
+    blockquote: '*',
+    body: '*',
+    br: '*',
+    button: '*',
+    canvas: '*',
+    caption: '*',
+    center: '*',
+    cite: '*',
+    code: '*',
+    col: '*',
+    colgroup: '*',
+    data: '*',
+    datalist: '*',
+    dd: '*',
+    del: '*',
+    details: '*',
+    dfn: '*',
+    dialog: '*',
+    dir: '*',
+    div: '*',
+    dl: '*',
+    dt: '*',
+    em: '*',
+    fieldset: '*',
+    figcaption: '*',
+    figure: '*',
+    font: '*',
+    footer: '*',
+    h1: '*',
+    h2: '*',
+    h3: '*',
+    h4: '*',
+    h5: '*',
+    h6: '*',
+    head: '*',
+    header: '*',
+    hgroup: '*',
+    hr: '*',
+    html: '*',
+    i: '*',
+    img: '*',
+    input: '*',
+    ins: '*',
+    kbd: '*',
+    label: '*',
+    legend: '*',
+    li: '*',
+    main: '*',
+    map: '*',
+    mark: '*',
+    menu: '*',
+    menuitem: '*',
+    meter: '*',
+    nav: '*',
+    ol: '*',
+    optgroup: '*',
+    option: '*',
+    output: '*',
+    p: '*',
+    picture: '*',
+    pre: '*',
+    progress: '*',
+    q: '*',
+    rp: '*',
+    rt: '*',
+    ruby: '*',
+    s: '*',
+    samp: '*',
+    section: '*',
+    select: '*',
+    small: '*',
+    span: '*',
+    strike: '*',
+    strong: '*',
+    sub: '*',
+    summary: '*',
+    sup: '*',
+    table: '*',
+    tbody: '*',
+    td: '*',
+    template: '*',
+    textarea: '*',
+    tfoot: '*',
+    th: '*',
+    thead: '*',
+    time: '*',
+    tr: '*',
+    tt: '*',
+    u: '*',
+    ul: '*',
+    var: '*',
+    wbr: '*',
+    xmp: '*',
+
+    // Replaced tags:
+    form: 'SPAN',
+
+    // Disallowed tags
+    applet: null,
+    audio: null,
+    base: null,
+    basefont: null,
+    embed: null,
+    frame: null,
+    frameset: null,
+    iframe: null,
+    link: null,
+    meta: null,
+    noscript: null,
+    object: null,
+    param: null,
+    script: null,
+    slot: null,
+    source: null,
+    style: null,
+    title: null,
+    track: null,
+    video: null,
+};
 
 const ALLOWED_HTML_ATTRIBUTES = (
     'accept,align,alt,checked,cite,color,cols,colspan,contextmenu,' +
@@ -67,8 +189,18 @@ const ALLOWED_CSS_CLASSES: string[] = [];
 /**
  * @internal
  */
-export function getAllowedTags(additionalTags: string[]): string[] {
-    return unique(ALLOWED_HTML_TAGS.concat(additionalTags || [])).map(tag => tag.toUpperCase());
+export function getTagReplacement(
+    additionalReplacements: Record<string, string>
+): Record<string, string> {
+    const result = { ...HTML_TAG_REPLACEMENT };
+    const replacements = additionalReplacements || {};
+    Object.keys(replacements).forEach(key => {
+        if (key) {
+            result[key.toLowerCase()] = replacements[key];
+        }
+    });
+
+    return result;
 }
 
 /**
@@ -110,7 +242,7 @@ export function getDefaultStyleValues(additionalDefaultStyles: StringMap): Strin
 /**
  * @internal
  */
-export function getStyleCallbacks(callbacks: StyleCallbackMap): StyleCallbackMap {
+export function getStyleCallbacks(callbacks: CssStyleCallbackMap): CssStyleCallbackMap {
     let result = cloneObject(callbacks);
     result.position = result.position || removeValue;
     result.width = result.width || removeWidthForLiAndDiv;

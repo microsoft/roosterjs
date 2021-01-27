@@ -1,6 +1,5 @@
 import execCommand from '../utils/execCommand';
-import { DocumentCommand } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { DocumentCommand, IEditor } from 'roosterjs-editor-types';
 
 /**
  * Toggle subscript at selection
@@ -12,6 +11,6 @@ import { Editor } from 'roosterjs-editor-core';
  * execCommand API
  * @param editor The editor instance
  */
-export default function toggleSubscript(editor: Editor) {
+export default function toggleSubscript(editor: IEditor) {
     execCommand(editor, DocumentCommand.Subscript);
 }

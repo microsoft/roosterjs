@@ -1,29 +1,24 @@
-import { applyFormat, getTagOfNode, wrap } from 'roosterjs-editor-dom';
-import { Editor, EditorPlugin } from 'roosterjs-editor-core';
+import { applyFormat, getEntitySelector, getTagOfNode } from 'roosterjs-editor-dom';
+import { insertEntity } from 'roosterjs-editor-api';
 import {
-    ChangeSource,
+    DefaultFormat,
+    EditorPlugin,
+    Entity,
+    EntityOperation,
+    IEditor,
     PluginEvent,
     PluginEventType,
     ContentPosition,
-    ExtractContentEvent,
-    DefaultFormat,
 } from 'roosterjs-editor-types';
 
-const WATERMARK_SPAN_ID = '_rooster_watermarkSpan';
-const WATERMARK_REGEX = new RegExp(
-    `<span[^>]*id=['"]?${WATERMARK_SPAN_ID}['"]?[^>]*>[^<]*</span>`,
-    'ig'
-);
-const SPELLCHECK_ATTR_NAME = 'spellcheck';
+const ENTITY_TYPE = 'WATERMARK_WRAPPER';
 
 /**
  * A watermark plugin to manage watermark string for roosterjs
  */
 export default class Watermark implements EditorPlugin {
-    private editor: Editor;
-    private isWatermarkShowing: boolean;
+    private editor: IEditor;
     private disposer: () => void;
-    private spellcheckInitialValue: string;
 
     /**
      * Create an instance of Watermark plugin
@@ -47,13 +42,12 @@ export default class Watermark implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: Editor) {
+    initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = this.editor.addDomEventHandler({
-            focus: this.handleWatermark,
-            blur: this.handleWatermark,
+            focus: this.showHideWatermark,
+            blur: this.showHideWatermark,
         });
-        this.spellcheckInitialValue = this.editor.getEditorDomAttribute(SPELLCHECK_ATTR_NAME);
     }
 
     /**
@@ -62,7 +56,6 @@ export default class Watermark implements EditorPlugin {
     dispose() {
         this.disposer();
         this.disposer = null;
-        this.hideWatermark();
         this.editor = null;
     }
 
@@ -71,73 +64,60 @@ export default class Watermark implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.EditorReady) {
-            this.showHideWatermark(false /*ignoreCachedState*/);
-        } else if (event.eventType == PluginEventType.ContentChanged) {
-            // When content is changed from setContent() API, current cached state
-            // may not be accurate, so we ignore it
-            this.showHideWatermark(event.source == ChangeSource.SetContent);
-        } else if (event.eventType == PluginEventType.ExtractContent && this.isWatermarkShowing) {
-            this.removeWartermarkFromHtml(event as ExtractContentEvent);
+        if (
+            event.eventType == PluginEventType.EditorReady ||
+            (event.eventType == PluginEventType.ContentChanged &&
+                (<Entity>event.data)?.type != ENTITY_TYPE)
+        ) {
+            this.showHideWatermark();
+        } else if (
+            event.eventType == PluginEventType.EntityOperation &&
+            event.entity.type == ENTITY_TYPE
+        ) {
+            const {
+                operation,
+                entity: { wrapper },
+            } = event;
+            if (operation == EntityOperation.ReplaceTemporaryContent) {
+                this.removeWatermark(wrapper);
+            } else if (event.operation == EntityOperation.NewEntity) {
+                applyFormat(wrapper, this.format, this.editor.isDarkMode());
+                wrapper.spellcheck = false;
+            }
         }
     }
 
-    private handleWatermark = () => {
-        this.showHideWatermark(false /*ignoreCachedState*/);
+    private showHideWatermark = () => {
+        const hasFocus = this.editor.hasFocus();
+        const watermarks = this.editor.queryElements(getEntitySelector(ENTITY_TYPE));
+        const isShowing = watermarks.length > 0;
+
+        if (hasFocus && isShowing) {
+            watermarks.forEach(this.removeWatermark);
+            this.editor.focus();
+        } else if (!hasFocus && !isShowing && this.editor.isEmpty()) {
+            insertEntity(
+                this.editor,
+                ENTITY_TYPE,
+                this.editor.getDocument().createTextNode(this.watermark),
+                false /*isBlock*/,
+                false /*isReadonly*/,
+                ContentPosition.Begin
+            );
+        }
     };
 
-    private showHideWatermark(ignoreCachedState: boolean) {
-        if (this.editor.hasFocus() && (ignoreCachedState || this.isWatermarkShowing)) {
-            this.hideWatermark();
-            this.editor.focus();
-        } else if (
-            !this.editor.hasFocus() &&
-            (ignoreCachedState || !this.isWatermarkShowing) &&
-            this.editor.isEmpty(true /*trim*/)
+    private removeWatermark = (wrapper: HTMLElement) => {
+        const parentNode = wrapper.parentNode;
+        parentNode?.removeChild(wrapper);
+
+        // After remove watermark node, if it leaves an empty DIV, append a BR node into it to make it a regular empty line
+        if (
+            this.editor.contains(parentNode) &&
+            getTagOfNode(parentNode) == 'DIV' &&
+            !parentNode.firstChild
         ) {
-            this.showWatermark();
+            parentNode.appendChild(this.editor.getDocument().createElement('BR'));
         }
-    }
-
-    private showWatermark() {
-        let document = this.editor.getDocument();
-        let watermarkNode = wrap(
-            document.createTextNode(this.watermark),
-            `<span id="${WATERMARK_SPAN_ID}"></span>`
-        ) as HTMLElement;
-        applyFormat(watermarkNode, this.format, this.editor.isDarkMode());
-        this.editor.insertNode(watermarkNode, {
-            position: ContentPosition.Begin,
-            updateCursor: false,
-            replaceSelection: false,
-            insertOnNewLine: false,
-        });
-        this.editor.setEditorDomAttribute(SPELLCHECK_ATTR_NAME, 'false');
-        this.isWatermarkShowing = true;
-    }
-
-    private hideWatermark() {
-        this.editor.queryElements(`span[id="${WATERMARK_SPAN_ID}"]`, span => {
-            let parentNode = span.parentNode;
-            this.editor.deleteNode(span);
-
-            // After remove watermark node, if it leaves an empty DIV, append a BR node into it to make it a regular empty line
-            if (
-                this.editor.contains(parentNode) &&
-                getTagOfNode(parentNode) == 'DIV' &&
-                !parentNode.firstChild
-            ) {
-                parentNode.appendChild(this.editor.getDocument().createElement('BR'));
-            }
-        });
-
-        this.editor.setEditorDomAttribute(SPELLCHECK_ATTR_NAME, this.spellcheckInitialValue);
-        this.isWatermarkShowing = false;
-    }
-
-    private removeWartermarkFromHtml(event: ExtractContentEvent) {
-        let content = event.content;
-        content = content.replace(WATERMARK_REGEX, '');
-        event.content = content;
-    }
+    };
 }
