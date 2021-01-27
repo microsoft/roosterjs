@@ -90,7 +90,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.clipboarddata.html#html" class="tsd-kind-icon">html</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.clipboarddata.html#image" class="tsd-kind-icon">image</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.clipboarddata.html#imagedatauri" class="tsd-kind-icon">image<wbr>Data<wbr>Uri</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.clipboarddata.html#originalformat" class="tsd-kind-icon">original<wbr>Format</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.clipboarddata.html#linkpreview" class="tsd-kind-icon">link<wbr>Preview</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.clipboarddata.html#rawhtml" class="tsd-kind-icon">raw<wbr>Html</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.clipboarddata.html#snapshotbeforepaste" class="tsd-kind-icon">snapshot<wbr>Before<wbr>Paste</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.clipboarddata.html#text" class="tsd-kind-icon">text</a></li>
@@ -104,19 +104,17 @@
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="html" class="tsd-anchor"></a>
-					<h3>html</h3>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> html</h3>
 					<div class="tsd-signature tsd-kind-icon">html<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L41">roosterjs-editor-types/lib/interface/ClipboardData.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L37">roosterjs-editor-types/lib/interface/ClipboardData.ts:37</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
-						<dl class="tsd-comment-tags">
-							<dt>deprecated</dt>
-							<dd><p>If the copied data contains HTML format, this will be the sanitized html string. Otherwise it is null.</p>
-							</dd>
-						</dl>
+						<div class="lead">
+							<p>Html extracted from raw html string and remove content before and after fragment tag</p>
+						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
@@ -125,22 +123,22 @@
 					<div class="tsd-signature tsd-kind-icon">image<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">File</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L25">roosterjs-editor-types/lib/interface/ClipboardData.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L32">roosterjs-editor-types/lib/interface/ClipboardData.ts:32</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>If the copied data contains image format, this will be the image blob. Otherwise it is null.</p>
+							<p>Image file from clipboard event</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="imagedatauri" class="tsd-anchor"></a>
-					<h3>image<wbr>Data<wbr>Uri</h3>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> image<wbr>Data<wbr>Uri</h3>
 					<div class="tsd-signature tsd-kind-icon">image<wbr>Data<wbr>Uri<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L30">roosterjs-editor-types/lib/interface/ClipboardData.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L47">roosterjs-editor-types/lib/interface/ClipboardData.ts:47</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -150,17 +148,17 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="originalformat" class="tsd-anchor"></a>
-					<h3>original<wbr>Format</h3>
-					<div class="tsd-signature tsd-kind-icon">original<wbr>Format<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.defaultformat.html" class="tsd-signature-type">DefaultFormat</a></div>
+					<a name="linkpreview" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> link<wbr>Preview</h3>
+					<div class="tsd-signature tsd-kind-icon">link<wbr>Preview<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EdgeLinkPreview</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L15">roosterjs-editor-types/lib/interface/ClipboardData.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L27">roosterjs-editor-types/lib/interface/ClipboardData.ts:27</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The format state at cursor before pasting. This is used for changing paste format</p>
+							<p>Link Preview information provided by Edge</p>
 						</div>
 					</div>
 				</section>
@@ -170,22 +168,24 @@
 					<div class="tsd-signature tsd-kind-icon">raw<wbr>Html<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L46">roosterjs-editor-types/lib/interface/ClipboardData.ts:46</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L22">roosterjs-editor-types/lib/interface/ClipboardData.ts:22</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>If the copied data contains HTML format, this will be the original html string without any processing. Otherwise it is null.</p>
+							<p>HTML string from clipboard event.
+								When set to null, it means there&#39;s no HTML from clipboard event.
+							When set to undefined, it means there may be HTML in clipboard event, but fail to retrieve</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="snapshotbeforepaste" class="tsd-anchor"></a>
-					<h3>snapshot<wbr>Before<wbr>Paste</h3>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> snapshot<wbr>Before<wbr>Paste</h3>
 					<div class="tsd-signature tsd-kind-icon">snapshot<wbr>Before<wbr>Paste<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L10">roosterjs-editor-types/lib/interface/ClipboardData.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L42">roosterjs-editor-types/lib/interface/ClipboardData.ts:42</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -200,12 +200,12 @@
 					<div class="tsd-signature tsd-kind-icon">text<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L35">roosterjs-editor-types/lib/interface/ClipboardData.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L15">roosterjs-editor-types/lib/interface/ClipboardData.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>If the copied data contains plain text format, this will be the plain text string. Otherwise it is null.</p>
+							<p>Plain text from clipboard event</p>
 						</div>
 					</div>
 				</section>
@@ -215,12 +215,12 @@
 					<div class="tsd-signature tsd-kind-icon">types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L20">roosterjs-editor-types/lib/interface/ClipboardData.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/ClipboardData.ts#L10">roosterjs-editor-types/lib/interface/ClipboardData.ts:10</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Types of content included by the original onpaste event</p>
+							<p>Available types from clipboard event</p>
 						</div>
 					</div>
 				</section>
@@ -250,9 +250,6 @@
 					<li class="current tsd-kind-module">
 						<a href="../modules/roosterjs_editor_types.html">roosterjs-<wbr>editor-<wbr>types</a>
 					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/roosterjs_html_sanitizer.html">roosterjs-<wbr>html-<wbr>sanitizer</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
@@ -272,7 +269,7 @@
 								<a href="roosterjs_editor_types.clipboarddata.html#imagedatauri" class="tsd-kind-icon">image<wbr>Data<wbr>Uri</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.clipboarddata.html#originalformat" class="tsd-kind-icon">original<wbr>Format</a>
+								<a href="roosterjs_editor_types.clipboarddata.html#linkpreview" class="tsd-kind-icon">link<wbr>Preview</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.clipboarddata.html#rawhtml" class="tsd-kind-icon">raw<wbr>Html</a>

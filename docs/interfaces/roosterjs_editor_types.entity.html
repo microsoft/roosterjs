@@ -92,10 +92,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entity.html#contentnode" class="tsd-kind-icon">content<wbr>Node</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entity.html#id" class="tsd-kind-icon">id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entity.html#isreadonly" class="tsd-kind-icon">is<wbr>Readonly</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entity.html#type" class="tsd-kind-icon">type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entity.html#wrapper" class="tsd-kind-icon">wrapper</a></li>
 							</ul>
 						</section>
 					</div>
@@ -104,27 +104,12 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="contentnode" class="tsd-anchor"></a>
-					<h3>content<wbr>Node</h3>
-					<div class="tsd-signature tsd-kind-icon">content<wbr>Node<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/Entity.ts#L23">roosterjs-editor-types/lib/interface/Entity.ts:23</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The root DOM node of this entity</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="id" class="tsd-anchor"></a>
 					<h3>id</h3>
 					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/Entity.ts#L18">roosterjs-editor-types/lib/interface/Entity.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/Entity.ts#L18">roosterjs-editor-types/lib/interface/Entity.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -139,7 +124,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Readonly<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/Entity.ts#L28">roosterjs-editor-types/lib/interface/Entity.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/Entity.ts#L28">roosterjs-editor-types/lib/interface/Entity.ts:28</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -154,12 +139,27 @@
 					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/Entity.ts#L13">roosterjs-editor-types/lib/interface/Entity.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/Entity.ts#L13">roosterjs-editor-types/lib/interface/Entity.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Type of this entity. Specified when insert an entity, can be an valid CSS class-like string.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="wrapper" class="tsd-anchor"></a>
+					<h3>wrapper</h3>
+					<div class="tsd-signature tsd-kind-icon">wrapper<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/Entity.ts#L23">roosterjs-editor-types/lib/interface/Entity.ts:23</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The wrapper DOM node of this entity which holds the info CSS classes of this entity</p>
 						</div>
 					</div>
 				</section>
@@ -189,9 +189,6 @@
 					<li class="current tsd-kind-module">
 						<a href="../modules/roosterjs_editor_types.html">roosterjs-<wbr>editor-<wbr>types</a>
 					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/roosterjs_html_sanitizer.html">roosterjs-<wbr>html-<wbr>sanitizer</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
@@ -202,9 +199,6 @@
 						<a href="roosterjs_editor_types.entity.html" class="tsd-kind-icon">Entity</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.entity.html#contentnode" class="tsd-kind-icon">content<wbr>Node</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.entity.html#id" class="tsd-kind-icon">id</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
@@ -212,6 +206,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.entity.html#type" class="tsd-kind-icon">type</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.entity.html#wrapper" class="tsd-kind-icon">wrapper</a>
 							</li>
 						</ul>
 					</li>

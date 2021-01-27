@@ -92,15 +92,16 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionalallowattributes" class="tsd-kind-icon">additional<wbr>Allow<wbr>Attributes</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionalallowedattributes" class="tsd-kind-icon">additional<wbr>Allowed<wbr>Attributes</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionalallowedcssclasses" class="tsd-kind-icon">additional<wbr>Allowed<wbr>Css<wbr>Classes</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionalallowedtags" class="tsd-kind-icon">additional<wbr>Allowed<wbr>Tags</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionaldefaultstylevalues" class="tsd-kind-icon">additional<wbr>Default<wbr>Style<wbr>Values</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionalglobalstylenodes" class="tsd-kind-icon">additional<wbr>Global<wbr>Style<wbr>Nodes</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#allowpreservewhitespace" class="tsd-kind-icon">allow<wbr>Preserve<wbr>White<wbr>Space</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionalpredefinedcssforelement" class="tsd-kind-icon">additional<wbr>Predefined<wbr>Css<wbr>For<wbr>Element</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionaltagreplacements" class="tsd-kind-icon">additional<wbr>Tag<wbr>Replacements</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#attributecallbacks" class="tsd-kind-icon">attribute<wbr>Callbacks</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#cssstylecallbacks" class="tsd-kind-icon">css<wbr>Style<wbr>Callbacks</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#elementcallbacks" class="tsd-kind-icon">element<wbr>Callbacks</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#stylecallbacks" class="tsd-kind-icon">style<wbr>Callbacks</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.htmlsanitizeroptions.html#unknowntagreplacement" class="tsd-kind-icon">unknown<wbr>Tag<wbr>Replacement</a></li>
 							</ul>
 						</section>
 					</div>
@@ -109,18 +110,17 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="additionalallowattributes" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> additional<wbr>Allow<wbr>Attributes</h3>
-					<div class="tsd-signature tsd-kind-icon">additional<wbr>Allow<wbr>Attributes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+					<a name="additionalallowedattributes" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> additional<wbr>Allowed<wbr>Attributes</h3>
+					<div class="tsd-signature tsd-kind-icon">additional<wbr>Allowed<wbr>Attributes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L36">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L43">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:43</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Allowed HTML attributes in addition to default attributes, in lower case
-							TODO: rename to &quot;additionalAllowedAttributes&quot; in next major release</p>
+							<p>Allowed HTML attributes in addition to default attributes, in lower case</p>
 						</div>
 					</div>
 				</section>
@@ -130,7 +130,7 @@
 					<div class="tsd-signature tsd-kind-icon">additional<wbr>Allowed<wbr>Css<wbr>Classes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L41">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L48">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:48</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -140,27 +140,12 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="additionalallowedtags" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> additional<wbr>Allowed<wbr>Tags</h3>
-					<div class="tsd-signature tsd-kind-icon">additional<wbr>Allowed<wbr>Tags<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L30">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:30</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Allowed HTML tags in addition to default tags, in upper case</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="additionaldefaultstylevalues" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> additional<wbr>Default<wbr>Style<wbr>Values</h3>
 					<div class="tsd-signature tsd-kind-icon">additional<wbr>Default<wbr>Style<wbr>Values<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_editor_types.html#stringmap" class="tsd-signature-type">StringMap</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L46">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:46</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L53">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:53</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -175,7 +160,7 @@
 					<div class="tsd-signature tsd-kind-icon">additional<wbr>Global<wbr>Style<wbr>Nodes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLStyleElement</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L51">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L58">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:58</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -185,18 +170,38 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="allowpreservewhitespace" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> allow<wbr>Preserve<wbr>White<wbr>Space</h3>
-					<div class="tsd-signature tsd-kind-icon">allow<wbr>Preserve<wbr>White<wbr>Space<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="additionalpredefinedcssforelement" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> additional<wbr>Predefined<wbr>Css<wbr>For<wbr>Element</h3>
+					<div class="tsd-signature tsd-kind-icon">additional<wbr>Predefined<wbr>Css<wbr>For<wbr>Element<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_editor_types.html#predefinedcssmap" class="tsd-signature-type">PredefinedCssMap</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L56">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L63">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:63</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Whether allow CSS white-space in result</p>
+							<p>Additional predefined CSS for element</p>
 						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="additionaltagreplacements" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> additional<wbr>Tag<wbr>Replacements</h3>
+					<div class="tsd-signature tsd-kind-icon">additional<wbr>Tag<wbr>Replacements<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L38">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:38</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Additional tag replacement, to allow replace a tag to another name, or remove it.</p>
+						</div>
+						<p>The value can be:
+							&#39;*&#39;: Keep this element with no change
+							&#39;<A valid tag name>: Keep this element but change its tag to the given value
+						null: Remove this element</p>
+						<p>For other unknown tags, we will respect the value of unknownTagReplacement with the same meaning</p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
@@ -205,7 +210,7 @@
 					<div class="tsd-signature tsd-kind-icon">attribute<wbr>Callbacks<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_editor_types.html#attributecallbackmap" class="tsd-signature-type">AttributeCallbackMap</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L20">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L21">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -215,12 +220,27 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="cssstylecallbacks" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> css<wbr>Style<wbr>Callbacks</h3>
+					<div class="tsd-signature tsd-kind-icon">css<wbr>Style<wbr>Callbacks<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_editor_types.html#cssstylecallbackmap" class="tsd-signature-type">CssStyleCallbackMap</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L26">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:26</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Callbacks for CSS styles</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="elementcallbacks" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> element<wbr>Callbacks</h3>
 					<div class="tsd-signature tsd-kind-icon">element<wbr>Callbacks<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_editor_types.html#elementcallbackmap" class="tsd-signature-type">ElementCallbackMap</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L15">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L16">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:16</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -230,18 +250,26 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="stylecallbacks" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> style<wbr>Callbacks</h3>
-					<div class="tsd-signature tsd-kind-icon">style<wbr>Callbacks<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_editor_types.html#stylecallbackmap" class="tsd-signature-type">StyleCallbackMap</a></div>
+					<a name="unknowntagreplacement" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> unknown<wbr>Tag<wbr>Replacement</h3>
+					<div class="tsd-signature tsd-kind-icon">unknown<wbr>Tag<wbr>Replacement<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L25">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts#L72">roosterjs-editor-types/lib/interface/HtmlSanitizerOptions.ts:72</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Callbacks for CSS styles</p>
+							<p>Define a replacement tag name of unknown tags.
+								A star &quot;*&quot; means keep as it is, no replacement
+								Other valid string means replace the tag name with this string.
+							Empty string, undefined or null means drop such elements and all its children</p>
 						</div>
+						<dl class="tsd-comment-tags">
+							<dt>default</dt>
+							<dd><p>undefined</p>
+							</dd>
+						</dl>
 					</div>
 				</section>
 			</section>
@@ -270,9 +298,6 @@
 					<li class="current tsd-kind-module">
 						<a href="../modules/roosterjs_editor_types.html">roosterjs-<wbr>editor-<wbr>types</a>
 					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/roosterjs_html_sanitizer.html">roosterjs-<wbr>html-<wbr>sanitizer</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
@@ -283,13 +308,10 @@
 						<a href="roosterjs_editor_types.htmlsanitizeroptions.html" class="tsd-kind-icon">Html<wbr>Sanitizer<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionalallowattributes" class="tsd-kind-icon">additional<wbr>Allow<wbr>Attributes</a>
+								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionalallowedattributes" class="tsd-kind-icon">additional<wbr>Allowed<wbr>Attributes</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionalallowedcssclasses" class="tsd-kind-icon">additional<wbr>Allowed<wbr>Css<wbr>Classes</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionalallowedtags" class="tsd-kind-icon">additional<wbr>Allowed<wbr>Tags</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionaldefaultstylevalues" class="tsd-kind-icon">additional<wbr>Default<wbr>Style<wbr>Values</a>
@@ -298,16 +320,22 @@
 								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionalglobalstylenodes" class="tsd-kind-icon">additional<wbr>Global<wbr>Style<wbr>Nodes</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#allowpreservewhitespace" class="tsd-kind-icon">allow<wbr>Preserve<wbr>White<wbr>Space</a>
+								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionalpredefinedcssforelement" class="tsd-kind-icon">additional<wbr>Predefined<wbr>Css<wbr>For<wbr>Element</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#additionaltagreplacements" class="tsd-kind-icon">additional<wbr>Tag<wbr>Replacements</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#attributecallbacks" class="tsd-kind-icon">attribute<wbr>Callbacks</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#cssstylecallbacks" class="tsd-kind-icon">css<wbr>Style<wbr>Callbacks</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#elementcallbacks" class="tsd-kind-icon">element<wbr>Callbacks</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#stylecallbacks" class="tsd-kind-icon">style<wbr>Callbacks</a>
+								<a href="roosterjs_editor_types.htmlsanitizeroptions.html#unknowntagreplacement" class="tsd-kind-icon">unknown<wbr>Tag<wbr>Replacement</a>
 							</li>
 						</ul>
 					</li>

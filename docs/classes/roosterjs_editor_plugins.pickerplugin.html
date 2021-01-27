@@ -78,14 +78,14 @@
 					</div>
 					<p>PickerPlugin doesn&#39;t provide any UI, it just wraps related DOM events and invoke callback functions.
 						To show a picker UI, you need to build your own UI component. Please reference to
-					<a href="https://github.com/microsoft/roosterjs/tree/master/publish/samplesite/scripts/controls/samplepicker">https://github.com/microsoft/roosterjs/tree/master/publish/samplesite/scripts/controls/samplepicker</a></p>
+					<a href="https://github.com/microsoft/roosterjs/tree/master/demo/scripts/controls/samplepicker">https://github.com/microsoft/roosterjs/tree/master/demo/scripts/controls/samplepicker</a></p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-type-parameters">
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
 					<li>
-						<h4>T<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_plugins.pickerdataprovider.html" class="tsd-signature-type">PickerDataProvider</a></h4>
+						<h4>T<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.pickerdataprovider.html" class="tsd-signature-type">PickerDataProvider</a></h4>
 					</li>
 				</ul>
 			</section>
@@ -100,7 +100,7 @@
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/roosterjs_editor_plugins.editorpickerplugininterface.html" class="tsd-signature-type">EditorPickerPluginInterface</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<li><a href="../interfaces/roosterjs_editor_types.editorplugin.html" class="tsd-signature-type">EditorPlugin</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -138,13 +138,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Picker<wbr>Plugin<span class="tsd-signature-symbol">(</span>dataProvider<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, pickerOptions<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_plugins.pickerpluginoptions.html" class="tsd-signature-type">PickerPluginOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.pickerplugin.html" class="tsd-signature-type">PickerPlugin</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Picker<wbr>Plugin<span class="tsd-signature-symbol">(</span>dataProvider<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, pickerOptions<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.pickerpluginoptions.html" class="tsd-signature-type">PickerPluginOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.pickerplugin.html" class="tsd-signature-type">PickerPlugin</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L73">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:73</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L67">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:67</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -153,7 +153,7 @@
 									<h5>dataProvider: <span class="tsd-signature-type">T</span></h5>
 								</li>
 								<li>
-									<h5>pickerOptions: <a href="../interfaces/roosterjs_editor_plugins.pickerpluginoptions.html" class="tsd-signature-type">PickerPluginOptions</a></h5>
+									<h5>pickerOptions: <a href="../interfaces/roosterjs_editor_types.pickerpluginoptions.html" class="tsd-signature-type">PickerPluginOptions</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_plugins.pickerplugin.html" class="tsd-signature-type">PickerPlugin</a></h4>
@@ -168,9 +168,8 @@
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> data<wbr>Provider</h3>
 					<div class="tsd-signature tsd-kind-icon">data<wbr>Provider<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span></div>
 					<aside class="tsd-sources">
-						<p>Implementation of <a href="../interfaces/roosterjs_editor_plugins.editorpickerplugininterface.html">EditorPickerPluginInterface</a>.<a href="../interfaces/roosterjs_editor_plugins.editorpickerplugininterface.html#dataprovider">dataProvider</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L75">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:75</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L69">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:69</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -187,7 +186,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L133">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L127">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:127</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -209,7 +208,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L80">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L74">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:74</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -225,13 +224,13 @@
 					<a name="initialize" class="tsd-anchor"></a>
 					<h3>initialize</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">initialize<span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_core.editor.html" class="tsd-signature-type">Editor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">initialize<span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type">IEditor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L88">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L82">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:82</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -242,7 +241,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>editor: <a href="roosterjs_editor_core.editor.html" class="tsd-signature-type">Editor</a></h5>
+									<h5>editor: <a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type">IEditor</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Editor instance</p>
 									</div>
@@ -262,7 +261,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L159">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:159</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L153">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:153</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -293,7 +292,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L146">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:146</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts#L140">roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts:140</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -344,13 +343,31 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_editor_types.html">roosterjs-<wbr>editor-<wbr>types</a>
 					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/roosterjs_html_sanitizer.html">roosterjs-<wbr>html-<wbr>sanitizer</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.contentedit.html" class="tsd-kind-icon">Content<wbr>Edit</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="roosterjs_editor_plugins.contextmenu.html" class="tsd-kind-icon">Context<wbr>Menu</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.customreplaceplugin.html" class="tsd-kind-icon">Custom<wbr>Replace<wbr>Plugin</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.cutpastelistchain.html" class="tsd-kind-icon">Cut<wbr>Paste<wbr>List<wbr>Chain</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.hyperlink.html" class="tsd-kind-icon">Hyper<wbr>Link</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.imageresize.html" class="tsd-kind-icon">Image<wbr>Resize</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.paste.html" class="tsd-kind-icon">Paste</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
@@ -381,6 +398,21 @@
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.tableresize.html" class="tsd-kind-icon">Table<wbr>Resize</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.watermark.html" class="tsd-kind-icon">Watermark</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="../interfaces/roosterjs_editor_plugins.contextmenuoptions.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/roosterjs_editor_plugins.html#getallfeatures" class="tsd-kind-icon">get<wbr>All<wbr>Features</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/roosterjs_editor_plugins.html#handlelinemerge" class="tsd-kind-icon">handle<wbr>Line<wbr>Merge</a>
+					</li>
 				</ul>
 			</nav>
 		</div>

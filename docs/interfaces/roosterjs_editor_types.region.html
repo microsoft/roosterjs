@@ -68,27 +68,21 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represents a DOM region.
-							A region is a range under a given node, and possibly after one child and before another child
-						e.g.</p>
-						<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></code></pre>
-						<p>We can define a region under DIV before the second TABLE and after the first TABLE</p>
+						<p>Represents a DOM region with selection information
+						For more info about Region, see RegionBase</p>
 					</div>
-					<p>This is used when user&#39;s selection go across different TD elements or start from TD and end after
-						that TD (or inverse way). Some block operation should not ruin the TABLE structure, so we need to
-					split the selection into several regions.</p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Region</span>
+						<a href="roosterjs_editor_types.regionbase.html" class="tsd-signature-type">RegionBase</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">Region</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -101,10 +95,10 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.region.html#fullselectionend" class="tsd-kind-icon">full<wbr>Selection<wbr>End</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.region.html#fullselectionstart" class="tsd-kind-icon">full<wbr>Selection<wbr>Start</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.region.html#nodeafter" class="tsd-kind-icon">node<wbr>After</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.region.html#nodebefore" class="tsd-kind-icon">node<wbr>Before</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.region.html#rootnode" class="tsd-kind-icon">root<wbr>Node</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.region.html#skiptags" class="tsd-kind-icon">skip<wbr>Tags</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.region.html#nodeafter" class="tsd-kind-icon">node<wbr>After</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.region.html#nodebefore" class="tsd-kind-icon">node<wbr>Before</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.region.html#rootnode" class="tsd-kind-icon">root<wbr>Node</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.region.html#skiptags" class="tsd-kind-icon">skip<wbr>Tags</a></li>
 							</ul>
 						</section>
 					</div>
@@ -118,7 +112,7 @@
 					<div class="tsd-signature tsd-kind-icon">full<wbr>Selection<wbr>End<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.nodeposition.html" class="tsd-signature-type">NodePosition</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/Region.ts#L54">roosterjs-editor-types/lib/interface/Region.ts:54</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/Region.ts#L19">roosterjs-editor-types/lib/interface/Region.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -134,7 +128,7 @@
 					<div class="tsd-signature tsd-kind-icon">full<wbr>Selection<wbr>Start<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.nodeposition.html" class="tsd-signature-type">NodePosition</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/Region.ts#L48">roosterjs-editor-types/lib/interface/Region.ts:48</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/Region.ts#L13">roosterjs-editor-types/lib/interface/Region.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -144,13 +138,14 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="nodeafter" class="tsd-anchor"></a>
-					<h3>node<wbr>After</h3>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> node<wbr>After</h3>
 					<div class="tsd-signature tsd-kind-icon">node<wbr>After<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Node</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_editor_types.regionbase.html">RegionBase</a>.<a href="roosterjs_editor_types.regionbase.html#nodeafter">nodeAfter</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/Region.ts#L37">roosterjs-editor-types/lib/interface/Region.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/RegionBase.ts#L35">roosterjs-editor-types/lib/interface/RegionBase.ts:35</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -160,13 +155,14 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="nodebefore" class="tsd-anchor"></a>
-					<h3>node<wbr>Before</h3>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> node<wbr>Before</h3>
 					<div class="tsd-signature tsd-kind-icon">node<wbr>Before<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Node</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_editor_types.regionbase.html">RegionBase</a>.<a href="roosterjs_editor_types.regionbase.html#nodebefore">nodeBefore</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/Region.ts#L31">roosterjs-editor-types/lib/interface/Region.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/RegionBase.ts#L29">roosterjs-editor-types/lib/interface/RegionBase.ts:29</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -176,13 +172,14 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="rootnode" class="tsd-anchor"></a>
 					<h3>root<wbr>Node</h3>
 					<div class="tsd-signature tsd-kind-icon">root<wbr>Node<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_editor_types.regionbase.html">RegionBase</a>.<a href="roosterjs_editor_types.regionbase.html#rootnode">rootNode</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/Region.ts#L25">roosterjs-editor-types/lib/interface/Region.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/RegionBase.ts#L23">roosterjs-editor-types/lib/interface/RegionBase.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -191,13 +188,14 @@
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="skiptags" class="tsd-anchor"></a>
 					<h3>skip<wbr>Tags</h3>
 					<div class="tsd-signature tsd-kind-icon">skip<wbr>Tags<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_editor_types.regionbase.html">RegionBase</a>.<a href="roosterjs_editor_types.regionbase.html#skiptags">skipTags</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-types/lib/interface/Region.ts#L42">roosterjs-editor-types/lib/interface/Region.ts:42</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-types/lib/interface/RegionBase.ts#L40">roosterjs-editor-types/lib/interface/RegionBase.ts:40</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -232,9 +230,6 @@
 					<li class="current tsd-kind-module">
 						<a href="../modules/roosterjs_editor_types.html">roosterjs-<wbr>editor-<wbr>types</a>
 					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/roosterjs_html_sanitizer.html">roosterjs-<wbr>html-<wbr>sanitizer</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
@@ -250,16 +245,16 @@
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.region.html#fullselectionstart" class="tsd-kind-icon">full<wbr>Selection<wbr>Start</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_editor_types.region.html#nodeafter" class="tsd-kind-icon">node<wbr>After</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_editor_types.region.html#nodebefore" class="tsd-kind-icon">node<wbr>Before</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_editor_types.region.html#rootnode" class="tsd-kind-icon">root<wbr>Node</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_editor_types.region.html#skiptags" class="tsd-kind-icon">skip<wbr>Tags</a>
 							</li>
 						</ul>

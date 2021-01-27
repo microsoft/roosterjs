@@ -83,7 +83,7 @@
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/roosterjs_editor_core.editorplugin.html" class="tsd-signature-type">EditorPlugin</a></li>
+					<li><a href="../interfaces/roosterjs_editor_types.editorplugin.html" class="tsd-signature-type">EditorPlugin</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -102,6 +102,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink.html#dispose" class="tsd-kind-icon">dispose</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink.html#initialize" class="tsd-kind-icon">initialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="roosterjs_editor_plugins.hyperlink.html#onblur" class="tsd-kind-icon">on<wbr>Blur</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="roosterjs_editor_plugins.hyperlink.html#onmouse" class="tsd-kind-icon">on<wbr>Mouse</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.hyperlink.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
 							</ul>
@@ -121,7 +122,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L10">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L11">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -216,7 +217,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L58">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L71">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:71</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -238,7 +239,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L28">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L29">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:29</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -254,13 +255,13 @@
 					<a name="initialize" class="tsd-anchor"></a>
 					<h3>initialize</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">initialize<span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_core.editor.html" class="tsd-signature-type">Editor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">initialize<span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type">IEditor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L36">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L37">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:37</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -271,10 +272,33 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>editor: <a href="roosterjs_editor_core.editor.html" class="tsd-signature-type">Editor</a></h5>
+									<h5>editor: <a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type">IEditor</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The editor instance</p>
 									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="onblur" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> on<wbr>Blur</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Blur<span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">FocusEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L60">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:60</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>e: <span class="tsd-signature-type">FocusEvent</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -291,7 +315,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L43">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L48">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:48</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -314,7 +338,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c125d9e/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L70">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ceef893d/packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts#L83">roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts:83</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -361,13 +385,22 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_editor_types.html">roosterjs-<wbr>editor-<wbr>types</a>
 					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/roosterjs_html_sanitizer.html">roosterjs-<wbr>html-<wbr>sanitizer</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.contentedit.html" class="tsd-kind-icon">Content<wbr>Edit</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="roosterjs_editor_plugins.contextmenu.html" class="tsd-kind-icon">Context<wbr>Menu</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.customreplaceplugin.html" class="tsd-kind-icon">Custom<wbr>Replace<wbr>Plugin</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.cutpastelistchain.html" class="tsd-kind-icon">Cut<wbr>Paste<wbr>List<wbr>Chain</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
@@ -386,6 +419,9 @@
 								<a href="roosterjs_editor_plugins.hyperlink.html#initialize" class="tsd-kind-icon">initialize</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="roosterjs_editor_plugins.hyperlink.html#onblur" class="tsd-kind-icon">on<wbr>Blur</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
 								<a href="roosterjs_editor_plugins.hyperlink.html#onmouse" class="tsd-kind-icon">on<wbr>Mouse</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -395,6 +431,30 @@
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.imageresize.html" class="tsd-kind-icon">Image<wbr>Resize</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.paste.html" class="tsd-kind-icon">Paste</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="roosterjs_editor_plugins.pickerplugin.html" class="tsd-kind-icon">Picker<wbr>Plugin</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.tableresize.html" class="tsd-kind-icon">Table<wbr>Resize</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.watermark.html" class="tsd-kind-icon">Watermark</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="../interfaces/roosterjs_editor_plugins.contextmenuoptions.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/roosterjs_editor_plugins.html#getallfeatures" class="tsd-kind-icon">get<wbr>All<wbr>Features</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/roosterjs_editor_plugins.html#handlelinemerge" class="tsd-kind-icon">handle<wbr>Line<wbr>Merge</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
