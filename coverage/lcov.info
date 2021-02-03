@@ -1,5 +1,5 @@
 TN:
-SF:packages\roosterjs-editor-api\lib\index.ts
+SF:packages/roosterjs-editor-api/lib/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -42,7 +42,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\experiment\experimentCommitListChains.ts
+SF:packages/roosterjs-editor-api/lib/experiment/experimentCommitListChains.ts
 FN:9,experimentCommitListChains
 FN:14,(anonymous_1)
 FNF:2
@@ -73,7 +73,7 @@ BRF:10
 BRH:4
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\experiment\experimentSetIndentation.ts
+SF:packages/roosterjs-editor-api/lib/experiment/experimentSetIndentation.ts
 FN:21,experimentSetIndentation
 FN:24,(anonymous_1)
 FN:44,(anonymous_2)
@@ -139,7 +139,7 @@ BRF:14
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\experiment\experimentToggleListType.ts
+SF:packages/roosterjs-editor-api/lib/experiment/experimentToggleListType.ts
 FN:15,experimentToggleListType
 FN:20,(anonymous_1)
 FN:22,(anonymous_2)
@@ -175,7 +175,7 @@ BRF:12
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\changeCapitalization.ts
+SF:packages/roosterjs-editor-api/lib/format/changeCapitalization.ts
 FN:14,changeCapitalization
 FN:19,(anonymous_1)
 FN:31,getCapitalizedText
@@ -218,7 +218,7 @@ BRF:6
 BRH:5
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\changeFontSize.ts
+SF:packages/roosterjs-editor-api/lib/format/changeFontSize.ts
 FN:19,changeFontSize
 FN:25,(anonymous_1)
 FN:35,getNewFontSize
@@ -289,7 +289,7 @@ BRF:23
 BRH:17
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\clearBlockFormat.ts
+SF:packages/roosterjs-editor-api/lib/format/clearBlockFormat.ts
 FN:30,clearBlockFormat
 FN:31,(anonymous_1)
 FN:53,clearNodeFormat
@@ -382,7 +382,7 @@ BRF:28
 BRH:26
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\clearFormat.ts
+SF:packages/roosterjs-editor-api/lib/format/clearFormat.ts
 FN:19,clearFormat
 FN:21,(anonymous_1)
 FN:24,(anonymous_2)
@@ -465,7 +465,7 @@ BRF:24
 BRH:11
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\createLink.ts
+SF:packages/roosterjs-editor-api/lib/format/createLink.ts
 FN:12,applyLinkPrefix
 FN:49,createLink
 FN:67,(anonymous_2)
@@ -570,7 +570,7 @@ BRF:34
 BRH:22
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\getFormatState.ts
+SF:packages/roosterjs-editor-api/lib/format/getFormatState.ts
 FN:18,getElementBasedFormatState
 FN:48,getFormatState
 FNF:2
@@ -593,7 +593,7 @@ BRF:3
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\insertEntity.ts
+SF:packages/roosterjs-editor-api/lib/format/insertEntity.ts
 FN:27,insertEntity
 FNF:1
 FNH:0
@@ -661,7 +661,7 @@ BRF:24
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\insertImage.ts
+SF:packages/roosterjs-editor-api/lib/format/insertImage.ts
 FN:19,insertImage
 FN:23,(anonymous_1)
 FN:31,insertImageWithSrc
@@ -696,7 +696,7 @@ BRF:6
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\removeLink.ts
+SF:packages/roosterjs-editor-api/lib/format/removeLink.ts
 FN:10,removeLink
 FN:12,(anonymous_1)
 FNF:2
@@ -715,7 +715,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\replaceWithNode.ts
+SF:packages/roosterjs-editor-api/lib/format/replaceWithNode.ts
 FN:35,replaceWithNode
 FNF:1
 FNH:1
@@ -757,7 +757,7 @@ BRF:17
 BRH:8
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\rotateElement.ts
+SF:packages/roosterjs-editor-api/lib/format/rotateElement.ts
 FN:9,rotateElement
 FN:11,(anonymous_1)
 FNF:2
@@ -776,7 +776,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\setAlignment.ts
+SF:packages/roosterjs-editor-api/lib/format/setAlignment.ts
 FN:16,setAlignment
 FN:28,(anonymous_1)
 FN:33,(anonymous_2)
@@ -809,7 +809,7 @@ BRF:4
 BRH:4
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\setBackgroundColor.ts
+SF:packages/roosterjs-editor-api/lib/format/setBackgroundColor.ts
 FN:14,setBackgroundColor
 FN:17,(anonymous_1)
 FN:23,(anonymous_2)
@@ -846,7 +846,7 @@ BRF:10
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\setDirection.ts
+SF:packages/roosterjs-editor-api/lib/format/setDirection.ts
 FN:10,setDirection
 FN:12,(anonymous_1)
 FN:13,(anonymous_2)
@@ -873,7 +873,7 @@ BRF:4
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\setFontName.ts
+SF:packages/roosterjs-editor-api/lib/format/setFontName.ts
 FN:10,setFontName
 FN:15,(anonymous_1)
 FNF:2
@@ -893,7 +893,7 @@ BRF:2
 BRH:1
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\setFontSize.ts
+SF:packages/roosterjs-editor-api/lib/format/setFontSize.ts
 FN:11,setFontSize
 FN:16,(anonymous_1)
 FNF:2
@@ -919,7 +919,7 @@ BRF:4
 BRH:3
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\setImageAltText.ts
+SF:packages/roosterjs-editor-api/lib/format/setImageAltText.ts
 FN:12,setImageAltText
 FN:14,(anonymous_1)
 FN:15,(anonymous_2)
@@ -939,7 +939,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\setIndentation.ts
+SF:packages/roosterjs-editor-api/lib/format/setIndentation.ts
 FN:20,setIndentation
 FN:26,(anonymous_1)
 FN:39,(anonymous_2)
@@ -979,7 +979,7 @@ BRF:8
 BRH:6
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\setTextColor.ts
+SF:packages/roosterjs-editor-api/lib/format/setTextColor.ts
 FN:14,setTextColor
 FN:17,(anonymous_1)
 FN:23,(anonymous_2)
@@ -1016,7 +1016,7 @@ BRF:10
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\toggleBlockQuote.ts
+SF:packages/roosterjs-editor-api/lib/format/toggleBlockQuote.ts
 FN:6,(anonymous_0)
 FN:19,toggleBlockQuote
 FN:22,(anonymous_2)
@@ -1048,7 +1048,7 @@ BRF:2
 BRH:1
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\toggleBold.ts
+SF:packages/roosterjs-editor-api/lib/format/toggleBold.ts
 FN:12,toggleBold
 FNF:1
 FNH:1
@@ -1062,7 +1062,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\toggleBullet.ts
+SF:packages/roosterjs-editor-api/lib/format/toggleBullet.ts
 FN:19,toggleBullet
 FN:25,(anonymous_1)
 FNF:2
@@ -1085,7 +1085,7 @@ BRF:2
 BRH:1
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\toggleCodeBlock.ts
+SF:packages/roosterjs-editor-api/lib/format/toggleCodeBlock.ts
 FN:15,toggleCodeBlock
 FN:21,(anonymous_1)
 FN:26,(anonymous_2)
@@ -1125,7 +1125,7 @@ BRF:8
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\toggleHeader.ts
+SF:packages/roosterjs-editor-api/lib/format/toggleHeader.ts
 FN:11,toggleHeader
 FN:14,(anonymous_1)
 FN:18,(anonymous_2)
@@ -1172,7 +1172,7 @@ BRF:6
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\toggleItalic.ts
+SF:packages/roosterjs-editor-api/lib/format/toggleItalic.ts
 FN:12,toggleItalic
 FNF:1
 FNH:1
@@ -1186,7 +1186,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\toggleNumbering.ts
+SF:packages/roosterjs-editor-api/lib/format/toggleNumbering.ts
 FN:19,toggleNumbering
 FN:25,(anonymous_1)
 FNF:2
@@ -1209,7 +1209,7 @@ BRF:2
 BRH:1
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\toggleStrikethrough.ts
+SF:packages/roosterjs-editor-api/lib/format/toggleStrikethrough.ts
 FN:12,toggleStrikethrough
 FNF:1
 FNH:1
@@ -1223,7 +1223,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\toggleSubscript.ts
+SF:packages/roosterjs-editor-api/lib/format/toggleSubscript.ts
 FN:14,toggleSubscript
 FNF:1
 FNH:1
@@ -1237,7 +1237,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\toggleSuperscript.ts
+SF:packages/roosterjs-editor-api/lib/format/toggleSuperscript.ts
 FN:14,toggleSuperscript
 FNF:1
 FNH:1
@@ -1251,7 +1251,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\format\toggleUnderline.ts
+SF:packages/roosterjs-editor-api/lib/format/toggleUnderline.ts
 FN:12,toggleUnderline
 FNF:1
 FNH:1
@@ -1265,7 +1265,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\table\editTable.ts
+SF:packages/roosterjs-editor-api/lib/table/editTable.ts
 FN:9,editTable
 FN:12,(anonymous_1)
 FN:27,calculateCellToSelect
@@ -1311,7 +1311,7 @@ BRF:6
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\table\formatTable.ts
+SF:packages/roosterjs-editor-api/lib/table/formatTable.ts
 FN:10,formatTable
 FN:17,(anonymous_1)
 FNF:2
@@ -1338,7 +1338,7 @@ BRF:4
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\table\insertTable.ts
+SF:packages/roosterjs-editor-api/lib/table/insertTable.ts
 FN:13,insertTable
 FN:37,(anonymous_1)
 FN:50,(anonymous_2)
@@ -1390,7 +1390,7 @@ BRF:6
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\utils\applyInlineStyle.ts
+SF:packages/roosterjs-editor-api/lib/utils/applyInlineStyle.ts
 FN:12,applyInlineStyle
 FN:50,(anonymous_1)
 FN:57,(anonymous_2)
@@ -1459,7 +1459,7 @@ BRF:24
 BRH:19
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\utils\blockFormat.ts
+SF:packages/roosterjs-editor-api/lib/utils/blockFormat.ts
 FN:15,blockFormat
 FN:26,(anonymous_1)
 FN:32,(anonymous_2)
@@ -1495,7 +1495,7 @@ BRF:10
 BRH:5
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\utils\blockWrap.ts
+SF:packages/roosterjs-editor-api/lib/utils/blockWrap.ts
 FN:22,blockWrap
 FN:29,(anonymous_1)
 FN:45,(anonymous_2)
@@ -1540,7 +1540,7 @@ BRF:13
 BRH:10
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\utils\collapseSelectedBlocks.ts
+SF:packages/roosterjs-editor-api/lib/utils/collapseSelectedBlocks.ts
 FN:10,collapseSelectedBlocks
 FN:24,(anonymous_1)
 FN:30,isEmptyBlockUnderTR
@@ -1576,7 +1576,7 @@ BRF:7
 BRH:5
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\utils\execCommand.ts
+SF:packages/roosterjs-editor-api/lib/utils/execCommand.ts
 FN:20,execCommand
 FN:22,(anonymous_1)
 FN:40,isPendableFormatCommand
@@ -1617,7 +1617,7 @@ BRF:8
 BRH:8
 end_of_record
 TN:
-SF:packages\roosterjs-editor-api\lib\utils\processList.ts
+SF:packages/roosterjs-editor-api/lib/utils/processList.ts
 FN:25,processList
 FNF:1
 FNH:1
@@ -1693,7 +1693,7 @@ BRF:30
 BRH:3
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\index.ts
+SF:packages/roosterjs-editor-core/lib/index.ts
 FNF:0
 FNH:0
 DA:2,1
@@ -1703,7 +1703,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\addUndoSnapshot.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/addUndoSnapshot.ts
 FN:21,(anonymous_0)
 FNF:1
 FNH:1
@@ -1759,7 +1759,7 @@ BRF:20
 BRH:19
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\attachDomEvent.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/attachDomEvent.ts
 FN:17,(anonymous_0)
 FN:21,(anonymous_1)
 FN:23,(anonymous_2)
@@ -1771,7 +1771,7 @@ FNF:7
 FNH:7
 FNDA:284,(anonymous_0)
 FNDA:1932,(anonymous_1)
-FNDA:148,(anonymous_2)
+FNDA:52,(anonymous_2)
 FNDA:1859,(anonymous_3)
 FNDA:271,(anonymous_4)
 FNDA:1859,(anonymous_5)
@@ -1780,9 +1780,9 @@ DA:17,1
 DA:21,284
 DA:22,1932
 DA:23,1932
-DA:24,148
-DA:25,147
-DA:27,148
+DA:24,52
+DA:25,51
+DA:27,52
 DA:28,31
 DA:38,1932
 DA:39,1932
@@ -1800,10 +1800,10 @@ LF:20
 LH:20
 BRDA:21,0,0,284
 BRDA:21,0,1,1
-BRDA:24,1,0,147
+BRDA:24,1,0,51
 BRDA:24,1,1,1
 BRDA:27,2,0,31
-BRDA:27,2,1,117
+BRDA:27,2,1,21
 BRDA:52,3,0,142
 BRDA:52,3,1,1790
 BRDA:54,4,0,1243
@@ -1814,7 +1814,7 @@ BRF:12
 BRH:11
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\coreApiMap.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/coreApiMap.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -1839,7 +1839,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\createPasteFragment.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/createPasteFragment.ts
 FN:35,(anonymous_0)
 FN:67,(anonymous_1)
 FN:71,(anonymous_2)
@@ -1966,7 +1966,7 @@ BRF:44
 BRH:31
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\ensureTypeInContainer.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/ensureTypeInContainer.ts
 FN:24,(anonymous_0)
 FN:72,wasNodeJustCreatedByKeyboardEvent
 FNF:2
@@ -2013,7 +2013,7 @@ BRF:18
 BRH:11
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\focus.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/focus.ts
 FN:9,(anonymous_0)
 FNF:1
 FNH:1
@@ -2045,7 +2045,7 @@ BRF:12
 BRH:10
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\getContent.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/getContent.ts
 FN:22,(anonymous_0)
 FNF:1
 FNH:1
@@ -2094,7 +2094,7 @@ BRF:17
 BRH:13
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\getSelectionRange.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/getSelectionRange.ts
 FN:11,(anonymous_0)
 FNF:1
 FNH:1
@@ -2131,7 +2131,7 @@ BRF:14
 BRH:13
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\getStyleBasedFormatState.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/getStyleBasedFormatState.ts
 FN:13,(anonymous_0)
 FNF:1
 FNH:1
@@ -2170,7 +2170,7 @@ BRF:16
 BRH:14
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\hasFocus.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/hasFocus.ts
 FN:10,(anonymous_0)
 FNF:1
 FNH:1
@@ -2187,7 +2187,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\insertNode.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/insertNode.ts
 FN:42,getInitialRange
 FN:68,(anonymous_1)
 FN:90,(anonymous_2)
@@ -2478,7 +2478,7 @@ BRF:140
 BRH:76
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\restoreUndoSnapshot.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/restoreUndoSnapshot.ts
 FN:9,(anonymous_0)
 FNF:1
 FNH:0
@@ -2504,7 +2504,7 @@ BRF:6
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\selectRange.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/selectRange.ts
 FN:21,(anonymous_0)
 FN:48,restorePendingFormatState
 FN:58,(anonymous_2)
@@ -2553,7 +2553,7 @@ BRF:12
 BRH:12
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\setContent.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/setContent.ts
 FN:18,(anonymous_0)
 FNF:1
 FNH:1
@@ -2581,7 +2581,7 @@ BRF:7
 BRH:7
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\transformColor.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/transformColor.ts
 FN:13,(anonymous_0)
 FN:19,(anonymous_1)
 FN:43,(anonymous_2)
@@ -2672,7 +2672,7 @@ BRF:31
 BRH:28
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\coreApi\triggerEvent.ts
+SF:packages/roosterjs-editor-core/lib/coreApi/triggerEvent.ts
 FN:10,(anonymous_0)
 FN:15,(anonymous_1)
 FN:16,(anonymous_2)
@@ -2712,7 +2712,7 @@ BRF:14
 BRH:14
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\corePlugins\CopyPastePlugin.ts
+SF:packages/roosterjs-editor-core/lib/corePlugins/CopyPastePlugin.ts
 FN:26,(anonymous_0)
 FN:91,(anonymous_2)
 FN:94,(anonymous_3)
@@ -2840,7 +2840,7 @@ BRF:18
 BRH:12
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\corePlugins\DOMEventPlugin.ts
+SF:packages/roosterjs-editor-core/lib/corePlugins/DOMEventPlugin.ts
 FN:25,(anonymous_0)
 FN:35,DOMEventPlugin
 FN:111,(anonymous_2)
@@ -2868,7 +2868,7 @@ FNDA:242,DOMEventPlugin
 FNDA:1,(anonymous_2)
 FNDA:1,(anonymous_3)
 FNDA:0,(anonymous_4)
-FNDA:117,(anonymous_5)
+FNDA:21,(anonymous_5)
 FNDA:1,(anonymous_6)
 FNDA:0,(anonymous_7)
 FNDA:2,(anonymous_8)
@@ -2907,8 +2907,8 @@ DA:111,242
 DA:112,1
 DA:113,1
 DA:117,242
-DA:118,117
-DA:119,117
+DA:118,21
+DA:119,21
 DA:122,242
 DA:123,1
 DA:126,242
@@ -2982,7 +2982,7 @@ BRF:40
 BRH:19
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\corePlugins\EditPlugin.ts
+SF:packages/roosterjs-editor-core/lib/corePlugins/EditPlugin.ts
 FN:16,(anonymous_0)
 FN:24,EditPlugin
 FN:33,(anonymous_2)
@@ -3052,7 +3052,7 @@ BRF:19
 BRH:18
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\corePlugins\EntityPlugin.ts
+SF:packages/roosterjs-editor-core/lib/corePlugins/EntityPlugin.ts
 FN:43,(anonymous_0)
 FN:50,EntityPlugin
 FN:136,(anonymous_2)
@@ -3333,7 +3333,7 @@ BRF:72
 BRH:49
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\corePlugins\LifecyclePlugin.ts
+SF:packages/roosterjs-editor-core/lib/corePlugins/LifecyclePlugin.ts
 FN:54,(anonymous_0)
 FN:67,LifecyclePlugin
 FN:73,(anonymous_2)
@@ -3507,7 +3507,7 @@ BRF:58
 BRH:50
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\corePlugins\MouseUpPlugin.ts
+SF:packages/roosterjs-editor-core/lib/corePlugins/MouseUpPlugin.ts
 FN:8,(anonymous_0)
 FN:54,(anonymous_2)
 FN:15,(anonymous_3)
@@ -3559,7 +3559,7 @@ BRF:8
 BRH:7
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\corePlugins\PendingFormatStatePlugin.ts
+SF:packages/roosterjs-editor-core/lib/corePlugins/PendingFormatStatePlugin.ts
 FN:14,(anonymous_0)
 FN:24,PendingFormatStatePlugin
 FN:34,(anonymous_2)
@@ -3623,7 +3623,7 @@ BRF:10
 BRH:10
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\corePlugins\TypeAfterLinkPlugin.ts
+SF:packages/roosterjs-editor-core/lib/corePlugins/TypeAfterLinkPlugin.ts
 FN:16,(anonymous_0)
 FN:22,(anonymous_2)
 FN:30,(anonymous_3)
@@ -3671,7 +3671,7 @@ BRF:12
 BRH:11
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\corePlugins\TypeInContainerPlugin.ts
+SF:packages/roosterjs-editor-core/lib/corePlugins/TypeInContainerPlugin.ts
 FN:8,(anonymous_0)
 FN:14,(anonymous_2)
 FN:22,(anonymous_3)
@@ -3718,7 +3718,7 @@ BRF:8
 BRH:7
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\corePlugins\UndoPlugin.ts
+SF:packages/roosterjs-editor-core/lib/corePlugins/UndoPlugin.ts
 FN:29,(anonymous_0)
 FN:38,UndoPlugin
 FN:51,(anonymous_2)
@@ -3897,7 +3897,7 @@ BRF:57
 BRH:51
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\corePlugins\createCorePlugins.ts
+SF:packages/roosterjs-editor-core/lib/corePlugins/createCorePlugins.ts
 FN:24,createCorePlugins
 FN:51,getPluginState
 FNF:2
@@ -3948,7 +3948,7 @@ BRF:22
 BRH:22
 end_of_record
 TN:
-SF:packages\roosterjs-editor-core\lib\editor\Editor.ts
+SF:packages/roosterjs-editor-core/lib/editor/Editor.ts
 FN:64,(anonymous_2)
 FN:74,Editor
 FN:84,(anonymous_4)
@@ -4026,7 +4026,7 @@ FNDA:2,(anonymous_11)
 FNDA:2,(anonymous_12)
 FNDA:2,(anonymous_13)
 FNDA:0,(anonymous_14)
-FNDA:227,(anonymous_15)
+FNDA:131,(anonymous_15)
 FNDA:370,(anonymous_16)
 FNDA:0,(anonymous_17)
 FNDA:0,(anonymous_18)
@@ -4041,7 +4041,7 @@ FNDA:192,(anonymous_26)
 FNDA:0,(anonymous_27)
 FNDA:0,(anonymous_28)
 FNDA:115,(anonymous_29)
-FNDA:191,(anonymous_30)
+FNDA:95,(anonymous_30)
 FNDA:14,(anonymous_31)
 FNDA:14,(anonymous_32)
 FNDA:14,(anonymous_33)
@@ -4113,7 +4113,7 @@ DA:185,0
 DA:193,1
 DA:194,0
 DA:197,1
-DA:198,227
+DA:198,131
 DA:201,1
 DA:203,372
 DA:206,370
@@ -4162,8 +4162,8 @@ DA:366,0
 DA:372,1
 DA:373,115
 DA:376,1
-DA:377,191
-DA:388,191
+DA:377,95
+DA:388,95
 DA:394,1
 DA:395,14
 DA:396,14
@@ -4316,7 +4316,7 @@ BRDA:347,23,0,192
 BRDA:347,23,1,0
 BRDA:358,24,0,0
 BRDA:358,24,1,0
-BRDA:378,25,0,116
+BRDA:378,25,0,20
 BRDA:378,25,1,75
 BRDA:380,26,0,5
 BRDA:380,26,1,70
@@ -4324,7 +4324,7 @@ BRDA:382,27,0,0
 BRDA:382,27,1,70
 BRDA:381,28,0,70
 BRDA:381,28,1,0
-BRDA:388,29,0,191
+BRDA:388,29,0,95
 BRDA:388,29,1,73
 BRDA:396,30,0,14
 BRDA:396,30,1,0
@@ -4388,7 +4388,7 @@ BRF:120
 BRH:67
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\index.ts
+SF:packages/roosterjs-editor-dom/lib/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -4476,7 +4476,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\blockElements\NodeBlockElement.ts
+SF:packages/roosterjs-editor-dom/lib/blockElements/NodeBlockElement.ts
 FN:10,(anonymous_0)
 FN:11,NodeBlockElement
 FN:18,(anonymous_2)
@@ -4524,7 +4524,7 @@ BRF:2
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\blockElements\StartEndBlockElement.ts
+SF:packages/roosterjs-editor-dom/lib/blockElements/StartEndBlockElement.ts
 FN:22,(anonymous_0)
 FN:23,StartEndBlockElement
 FN:25,(anonymous_2)
@@ -4606,7 +4606,7 @@ BRF:18
 BRH:16
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\blockElements\getBlockElementAtNode.ts
+SF:packages/roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode.ts
 FN:34,getBlockElementAtNode
 FN:97,findHeadTailLeafNode
 FNF:2
@@ -4700,7 +4700,7 @@ BRF:34
 BRH:33
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\blockElements\getFirstLastBlockElement.ts
+SF:packages/roosterjs-editor-dom/lib/blockElements/getFirstLastBlockElement.ts
 FN:10,getFirstLastBlockElement
 FNF:1
 FNH:1
@@ -4725,7 +4725,7 @@ BRF:8
 BRH:8
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\contentTraverser\BodyScoper.ts
+SF:packages/roosterjs-editor-dom/lib/contentTraverser/BodyScoper.ts
 FN:13,(anonymous_0)
 FN:21,BodyScoper
 FN:28,(anonymous_2)
@@ -4769,7 +4769,7 @@ BRF:6
 BRH:3
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\contentTraverser\ContentTraverser.ts
+SF:packages/roosterjs-editor-dom/lib/contentTraverser/ContentTraverser.ts
 FN:25,(anonymous_0)
 FN:34,ContentTraverser
 FN:42,(anonymous_2)
@@ -4926,7 +4926,7 @@ BRF:52
 BRH:46
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\contentTraverser\PositionContentSearcher.ts
+SF:packages/roosterjs-editor-dom/lib/contentTraverser/PositionContentSearcher.ts
 FN:20,(anonymous_0)
 FN:50,PositionContentSearcher
 FN:57,(anonymous_2)
@@ -5091,7 +5091,7 @@ BRF:55
 BRH:21
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\contentTraverser\SelectionBlockScoper.ts
+SF:packages/roosterjs-editor-dom/lib/contentTraverser/SelectionBlockScoper.ts
 FN:22,(anonymous_0)
 FN:32,SelectionBlockScoper
 FN:45,(anonymous_2)
@@ -5173,7 +5173,7 @@ BRF:27
 BRH:24
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\contentTraverser\SelectionScoper.ts
+SF:packages/roosterjs-editor-dom/lib/contentTraverser/SelectionScoper.ts
 FN:14,(anonymous_0)
 FN:25,SelectionScoper
 FN:33,(anonymous_2)
@@ -5277,7 +5277,7 @@ BRF:40
 BRH:36
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\entity\commitEntity.ts
+SF:packages/roosterjs-editor-dom/lib/entity/commitEntity.ts
 FN:12,commitEntity
 FNF:1
 FNH:0
@@ -5306,7 +5306,7 @@ BRF:10
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\entity\getEntityFromElement.ts
+SF:packages/roosterjs-editor-dom/lib/entity/getEntityFromElement.ts
 FN:8,getEntityFromElement
 FN:14,(anonymous_1)
 FNF:2
@@ -5351,7 +5351,7 @@ BRF:18
 BRH:14
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\entity\getEntitySelector.ts
+SF:packages/roosterjs-editor-dom/lib/entity/getEntitySelector.ts
 FN:8,getEntitySelector
 FNF:1
 FNH:1
@@ -5370,7 +5370,7 @@ BRF:4
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\event\cacheGetEventData.ts
+SF:packages/roosterjs-editor-dom/lib/event/cacheGetEventData.ts
 FN:10,cacheGetEventData
 FNF:1
 FNH:1
@@ -5396,7 +5396,7 @@ BRF:9
 BRH:3
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\event\clearEventDataCache.ts
+SF:packages/roosterjs-editor-dom/lib/event/clearEventDataCache.ts
 FN:8,clearEventDataCache
 FNF:1
 FNH:0
@@ -5423,7 +5423,7 @@ BRF:10
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\event\isCharacterValue.ts
+SF:packages/roosterjs-editor-dom/lib/event/isCharacterValue.ts
 FN:10,isCharacterValue
 FNF:1
 FNH:1
@@ -5440,7 +5440,7 @@ BRF:3
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\event\isCtrlOrMetaPressed.ts
+SF:packages/roosterjs-editor-dom/lib/event/isCtrlOrMetaPressed.ts
 FN:9,(anonymous_0)
 FN:10,(anonymous_1)
 FNF:2
@@ -5460,7 +5460,7 @@ BRF:2
 BRH:1
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\event\isModifierKey.ts
+SF:packages/roosterjs-editor-dom/lib/event/isModifierKey.ts
 FN:9,isModifierKey
 FNF:1
 FNH:1
@@ -5488,7 +5488,7 @@ BRF:9
 BRH:9
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\htmlSanitizer\HtmlSanitizer.ts
+SF:packages/roosterjs-editor-dom/lib/htmlSanitizer/HtmlSanitizer.ts
 FN:33,(anonymous_0)
 FN:75,HtmlSanitizer
 FN:39,(anonymous_2)
@@ -5802,7 +5802,7 @@ BRF:122
 BRH:102
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\htmlSanitizer\chainSanitizerCallback.ts
+SF:packages/roosterjs-editor-dom/lib/htmlSanitizer/chainSanitizerCallback.ts
 FN:9,chainSanitizerCallback
 FN:18,(anonymous_1)
 FNF:2
@@ -5824,7 +5824,7 @@ BRF:2
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\htmlSanitizer\cloneObject.ts
+SF:packages/roosterjs-editor-dom/lib/htmlSanitizer/cloneObject.ts
 FN:1,nativeClone
 FN:8,customClone
 FNF:2
@@ -5852,7 +5852,7 @@ BRF:8
 BRH:3
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\htmlSanitizer\createDefaultHtmlSanitizerOptions.ts
+SF:packages/roosterjs-editor-dom/lib/htmlSanitizer/createDefaultHtmlSanitizerOptions.ts
 FN:6,createDefaultHtmlSanitizerOptions
 FNF:1
 FNH:1
@@ -5865,7 +5865,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\htmlSanitizer\getAllowedValues.ts
+SF:packages/roosterjs-editor-dom/lib/htmlSanitizer/getAllowedValues.ts
 FN:192,getTagReplacement
 FN:197,(anonymous_3)
 FN:209,getAllowedAttributes
@@ -5956,7 +5956,7 @@ BRF:22
 BRH:19
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\htmlSanitizer\getInheritableStyles.ts
+SF:packages/roosterjs-editor-dom/lib/htmlSanitizer/getInheritableStyles.ts
 FN:17,getInheritableStyles
 FN:22,(anonymous_1)
 FNF:2
@@ -5985,7 +5985,7 @@ BRF:8
 BRH:8
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\htmlSanitizer\getPredefinedCssForElement.ts
+SF:packages/roosterjs-editor-dom/lib/htmlSanitizer/getPredefinedCssForElement.ts
 FN:44,getPredefinedCssForElement
 FNF:1
 FNH:1
@@ -6005,7 +6005,7 @@ BRF:4
 BRH:4
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\inlineElements\EmptyInlineElement.ts
+SF:packages/roosterjs-editor-dom/lib/inlineElements/EmptyInlineElement.ts
 FN:9,(anonymous_0)
 FN:10,EmptyInlineElement
 FN:15,(anonymous_2)
@@ -6058,7 +6058,7 @@ BRF:2
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\inlineElements\ImageInlineElement.ts
+SF:packages/roosterjs-editor-dom/lib/inlineElements/ImageInlineElement.ts
 FN:7,(anonymous_6)
 FN:8,ImageInlineElement
 FNF:2
@@ -6077,7 +6077,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\inlineElements\LinkInlineElement.ts
+SF:packages/roosterjs-editor-dom/lib/inlineElements/LinkInlineElement.ts
 FN:7,(anonymous_6)
 FN:8,LinkInlineElement
 FNF:2
@@ -6096,7 +6096,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\inlineElements\NodeInlineElement.ts
+SF:packages/roosterjs-editor-dom/lib/inlineElements/NodeInlineElement.ts
 FN:18,(anonymous_0)
 FN:19,NodeInlineElement
 FN:24,(anonymous_2)
@@ -6162,7 +6162,7 @@ BRF:9
 BRH:9
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\inlineElements\PartialInlineElement.ts
+SF:packages/roosterjs-editor-dom/lib/inlineElements/PartialInlineElement.ts
 FN:14,(anonymous_0)
 FN:15,PartialInlineElement
 FN:24,(anonymous_2)
@@ -6270,7 +6270,7 @@ BRF:26
 BRH:20
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\inlineElements\getFirstLastInlineElement.ts
+SF:packages/roosterjs-editor-dom/lib/inlineElements/getFirstLastInlineElement.ts
 FN:9,getFirstInlineElement
 FN:20,getLastInlineElement
 FNF:2
@@ -6295,7 +6295,7 @@ BRF:4
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\inlineElements\getInlineElementAtNode.ts
+SF:packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementAtNode.ts
 FN:26,getInlineElementAtNode
 FN:40,resolveInlineElement
 FNF:2
@@ -6344,7 +6344,7 @@ BRF:15
 BRH:15
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\inlineElements\getInlineElementBeforeAfter.ts
+SF:packages/roosterjs-editor-dom/lib/inlineElements/getInlineElementBeforeAfter.ts
 FN:17,getInlineElementBefore
 FN:31,getInlineElementAfter
 FN:38,getInlineElementBeforeAfter
@@ -6413,7 +6413,7 @@ BRF:30
 BRH:26
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\list\VList.ts
+SF:packages/roosterjs-editor-dom/lib/list/VList.ts
 FN:63,(anonymous_1)
 FN:70,VList
 FN:140,(anonymous_3)
@@ -6683,7 +6683,7 @@ BRF:88
 BRH:79
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\list\VListChain.ts
+SF:packages/roosterjs-editor-dom/lib/list/VListChain.ts
 FN:19,(anonymous_0)
 FN:130,VListChain
 FN:29,(anonymous_2)
@@ -6817,7 +6817,7 @@ BRF:22
 BRH:21
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\list\VListItem.ts
+SF:packages/roosterjs-editor-dom/lib/list/VListItem.ts
 FN:23,(anonymous_1)
 FN:32,VListItem
 FN:44,(anonymous_3)
@@ -6987,7 +6987,7 @@ BRF:48
 BRH:47
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\list\createVListFromRegion.ts
+SF:packages/roosterjs-editor-dom/lib/list/createVListFromRegion.ts
 FN:26,createVListFromRegion
 FN:44,(anonymous_1)
 FN:77,(anonymous_2)
@@ -7113,7 +7113,7 @@ BRF:41
 BRH:36
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\list\getListTypeFromNode.ts
+SF:packages/roosterjs-editor-dom/lib/list/getListTypeFromNode.ts
 FN:19,getListTypeFromNode
 FN:35,isListElement
 FNF:2
@@ -7137,7 +7137,7 @@ BRF:3
 BRH:3
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\list\getRootListNode.ts
+SF:packages/roosterjs-editor-dom/lib/list/getRootListNode.ts
 FN:21,getRootListNode
 FNF:1
 FNH:1
@@ -7160,7 +7160,7 @@ BRF:4
 BRH:4
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\region\collapseNodesInRegion.ts
+SF:packages/roosterjs-editor-dom/lib/region/collapseNodesInRegion.ts
 FN:13,collapseNodesInRegion
 FN:28,(anonymous_1)
 FNF:2
@@ -7198,7 +7198,7 @@ BRF:12
 BRH:12
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\region\getRegionsFromRange.ts
+SF:packages/roosterjs-editor-dom/lib/region/getRegionsFromRange.ts
 FN:16,getRegionsFromRange
 FN:31,(anonymous_1)
 FN:37,getRegionCreator
@@ -7348,7 +7348,7 @@ BRF:59
 BRH:58
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\region\getSelectedBlockElementsInRegion.ts
+SF:packages/roosterjs-editor-dom/lib/region/getSelectedBlockElementsInRegion.ts
 FN:14,getSelectedBlockElementsInRegion
 FN:34,(anonymous_1)
 FNF:2
@@ -7407,7 +7407,7 @@ BRF:20
 BRH:18
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\region\getSelectionRangeInRegion.ts
+SF:packages/roosterjs-editor-dom/lib/region/getSelectionRangeInRegion.ts
 FN:12,getSelectionRangeInRegion
 FN:46,isRegion
 FNF:2
@@ -7466,7 +7466,7 @@ BRF:23
 BRH:23
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\region\isNodeInRegion.ts
+SF:packages/roosterjs-editor-dom/lib/region/isNodeInRegion.ts
 FN:9,isNodeInRegion
 FNF:1
 FNH:1
@@ -7486,7 +7486,7 @@ BRF:6
 BRH:6
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\region\mergeBlocksInRegion.ts
+SF:packages/roosterjs-editor-dom/lib/region/mergeBlocksInRegion.ts
 FN:18,mergeBlocksInRegion
 FNF:1
 FNH:1
@@ -7552,7 +7552,7 @@ BRF:28
 BRH:26
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\region\regionTypeData.ts
+SF:packages/roosterjs-editor-dom/lib/region/regionTypeData.ts
 FNF:0
 FNH:0
 DA:24,1
@@ -7563,7 +7563,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\selection\Position.ts
+SF:packages/roosterjs-editor-dom/lib/selection/Position.ts
 FN:8,(anonymous_0)
 FN:38,Position
 FN:82,(anonymous_2)
@@ -7695,7 +7695,7 @@ BRF:46
 BRH:46
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\selection\addRangeToSelection.ts
+SF:packages/roosterjs-editor-dom/lib/selection/addRangeToSelection.ts
 FN:10,addRangeToSelection
 FNF:1
 FNH:1
@@ -7752,7 +7752,7 @@ BRF:33
 BRH:21
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\selection\createRange.ts
+SF:packages/roosterjs-editor-dom/lib/selection/createRange.ts
 FN:55,createRange
 FN:102,getFocusablePosition
 FN:108,isNodePosition
@@ -7848,7 +7848,7 @@ BRF:44
 BRH:41
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\selection\deleteSelectedContent.ts
+SF:packages/roosterjs-editor-dom/lib/selection/deleteSelectedContent.ts
 FN:17,deleteSelectedContent
 FN:35,(anonymous_1)
 FN:63,(anonymous_2)
@@ -7950,7 +7950,7 @@ BRF:34
 BRH:27
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\selection\getHtmlWithSelectionPath.ts
+SF:packages/roosterjs-editor-dom/lib/selection/getHtmlWithSelectionPath.ts
 FN:12,getHtmlWithSelectionPath
 FN:20,(anonymous_1)
 FNF:2
@@ -8005,7 +8005,7 @@ BRF:16
 BRH:14
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\selection\getPositionRect.ts
+SF:packages/roosterjs-editor-dom/lib/selection/getPositionRect.ts
 FN:9,getPositionRect
 FNF:1
 FNH:1
@@ -8071,7 +8071,7 @@ BRF:25
 BRH:20
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\selection\getSelectionPath.ts
+SF:packages/roosterjs-editor-dom/lib/selection/getSelectionPath.ts
 FN:10,getSelectionPath
 FN:35,getPositionPath
 FNF:2
@@ -8141,7 +8141,7 @@ BRF:22
 BRH:20
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\selection\isPositionAtBeginningOf.ts
+SF:packages/roosterjs-editor-dom/lib/selection/isPositionAtBeginningOf.ts
 FN:13,isPositionAtBeginningOf
 FN:28,areAllPrevousNodesEmpty
 FNF:2
@@ -8180,7 +8180,7 @@ BRF:10
 BRH:10
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\selection\setHtmlWithSelectionPath.ts
+SF:packages/roosterjs-editor-dom/lib/selection/setHtmlWithSelectionPath.ts
 FN:11,setHtmlWithSelectionPath
 FNF:1
 FNH:1
@@ -8216,7 +8216,7 @@ BRF:14
 BRH:14
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\snapshots\addSnapshot.ts
+SF:packages/roosterjs-editor-dom/lib/snapshots/addSnapshot.ts
 FN:10,addSnapshot
 FNF:1
 FNH:1
@@ -8254,7 +8254,7 @@ BRF:10
 BRH:10
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\snapshots\canMoveCurrentSnapshot.ts
+SF:packages/roosterjs-editor-dom/lib/snapshots/canMoveCurrentSnapshot.ts
 FN:9,canMoveCurrentSnapshot
 FNF:1
 FNH:1
@@ -8270,7 +8270,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\snapshots\canUndoAutoComplete.ts
+SF:packages/roosterjs-editor-dom/lib/snapshots/canUndoAutoComplete.ts
 FN:6,canUndoAutoComplete
 FNF:1
 FNH:1
@@ -8285,7 +8285,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\snapshots\clearProceedingSnapshots.ts
+SF:packages/roosterjs-editor-dom/lib/snapshots/clearProceedingSnapshots.ts
 FN:8,clearProceedingSnapshots
 FNF:1
 FNH:1
@@ -8307,7 +8307,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\snapshots\createSnapshots.ts
+SF:packages/roosterjs-editor-dom/lib/snapshots/createSnapshots.ts
 FN:7,createSnapshots
 FNF:1
 FNH:1
@@ -8320,7 +8320,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\snapshots\moveCurrentSnapsnot.ts
+SF:packages/roosterjs-editor-dom/lib/snapshots/moveCurrentSnapsnot.ts
 FN:10,moveCurrentSnapsnot
 FNF:1
 FNH:1
@@ -8340,7 +8340,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\style\getStyles.ts
+SF:packages/roosterjs-editor-dom/lib/style/getStyles.ts
 FN:5,getStyles
 FN:8,(anonymous_1)
 FNF:2
@@ -8373,7 +8373,7 @@ BRF:10
 BRH:9
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\style\setStyles.ts
+SF:packages/roosterjs-editor-dom/lib/style/setStyles.ts
 FN:6,setStyles
 FN:9,(anonymous_1)
 FN:15,(anonymous_2)
@@ -8413,7 +8413,7 @@ BRF:14
 BRH:13
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\table\VTable.ts
+SF:packages/roosterjs-editor-dom/lib/table/VTable.ts
 FN:8,(anonymous_0)
 FN:35,VTable
 FN:40,(anonymous_2)
@@ -8834,7 +8834,7 @@ BRF:143
 BRH:137
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\Browser.ts
+SF:packages/roosterjs-editor-dom/lib/utils/Browser.ts
 FN:9,getBrowserInfo
 FNF:1
 FNH:1
@@ -8874,7 +8874,7 @@ BRDA:29,4,1,1
 BRDA:36,5,0,1
 BRDA:36,5,1,4
 BRDA:42,6,0,7
-BRDA:42,6,1,1
+BRDA:42,6,1,2
 BRDA:54,7,0,7
 BRDA:54,7,1,5
 BRDA:62,8,0,1
@@ -8883,7 +8883,7 @@ BRF:18
 BRH:17
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\applyFormat.ts
+SF:packages/roosterjs-editor-dom/lib/utils/applyFormat.ts
 FN:8,applyFormat
 FNF:1
 FNH:1
@@ -8976,7 +8976,7 @@ BRF:52
 BRH:23
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\applyTextStyle.ts
+SF:packages/roosterjs-editor-dom/lib/utils/applyTextStyle.ts
 FN:18,applyTextStyle
 FN:53,(anonymous_1)
 FN:55,(anonymous_2)
@@ -9065,7 +9065,7 @@ BRF:31
 BRH:31
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\arrayPush.ts
+SF:packages/roosterjs-editor-dom/lib/utils/arrayPush.ts
 FN:6,arrayPush
 FNF:1
 FNH:1
@@ -9078,7 +9078,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\changeElementTag.ts
+SF:packages/roosterjs-editor-dom/lib/utils/changeElementTag.ts
 FN:23,changeElementTag
 FNF:1
 FNH:1
@@ -9115,7 +9115,7 @@ BRF:10
 BRH:8
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\collapseNodes.ts
+SF:packages/roosterjs-editor-dom/lib/utils/collapseNodes.ts
 FN:17,collapseNodes
 FN:53,collapse
 FNF:2
@@ -9174,17 +9174,17 @@ BRF:20
 BRH:19
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\contains.ts
+SF:packages/roosterjs-editor-dom/lib/utils/contains.ts
 FN:27,contains
 FN:60,internalContains
 FNF:2
 FNH:2
-FNDA:9521,contains
+FNDA:9425,contains
 FNDA:6604,internalContains
 DA:1,1
 DA:27,1
-DA:32,9521
-DA:33,641
+DA:32,9425
+DA:33,545
 DA:36,8880
 DA:37,1827
 DA:40,7053
@@ -9205,10 +9205,10 @@ DA:69,0
 DA:72,0
 LF:22
 LH:17
-BRDA:32,0,0,641
+BRDA:32,0,0,545
 BRDA:32,0,1,8880
-BRDA:32,1,0,9521
-BRDA:32,1,1,9510
+BRDA:32,1,0,9425
+BRDA:32,1,1,9414
 BRDA:36,2,0,1827
 BRDA:36,2,1,7053
 BRDA:36,3,0,8880
@@ -9239,7 +9239,7 @@ BRF:30
 BRH:27
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\extractClipboardEvent.ts
+SF:packages/roosterjs-editor-dom/lib/utils/extractClipboardEvent.ts
 FN:38,extractClipboardEvent
 FN:72,(anonymous_1)
 FN:81,(anonymous_2)
@@ -9353,7 +9353,7 @@ BRF:38
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\findClosestElementAncestor.ts
+SF:packages/roosterjs-editor-dom/lib/utils/findClosestElementAncestor.ts
 FN:16,findClosestElementAncestor
 FNF:1
 FNH:1
@@ -9397,7 +9397,7 @@ BRF:23
 BRH:17
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\fromHtml.ts
+SF:packages/roosterjs-editor-dom/lib/utils/fromHtml.ts
 FN:9,fromHtml
 FNF:1
 FNH:1
@@ -9413,7 +9413,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\getComputedStyles.ts
+SF:packages/roosterjs-editor-dom/lib/utils/getComputedStyles.ts
 FN:10,getComputedStyles
 FN:39,getComputedStyle
 FN:43,px2Pt
@@ -9468,7 +9468,7 @@ BRF:20
 BRH:18
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\getLeafNode.ts
+SF:packages/roosterjs-editor-dom/lib/utils/getLeafNode.ts
 FN:9,getLeafNode
 FN:10,(anonymous_1)
 FN:27,getFirstLeafNode
@@ -9506,7 +9506,7 @@ BRF:8
 BRH:7
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\getLeafSibling.ts
+SF:packages/roosterjs-editor-dom/lib/utils/getLeafSibling.ts
 FN:13,getLeafSibling
 FN:22,(anonymous_1)
 FN:23,(anonymous_2)
@@ -9574,7 +9574,7 @@ BRF:16
 BRH:16
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\getPendableFormatState.ts
+SF:packages/roosterjs-editor-dom/lib/utils/getPendableFormatState.ts
 FN:48,getPendableFormatState
 FN:51,(anonymous_1)
 FNF:2
@@ -9593,7 +9593,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\getTagOfNode.ts
+SF:packages/roosterjs-editor-dom/lib/utils/getTagOfNode.ts
 FN:8,getTagOfNode
 FNF:1
 FNH:1
@@ -9605,12 +9605,12 @@ LH:2
 BRDA:9,0,0,6151
 BRDA:9,0,1,2432
 BRDA:9,1,0,8583
-BRDA:9,1,1,8573
+BRDA:9,1,1,8572
 BRF:4
 BRH:4
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\getTextContent.ts
+SF:packages/roosterjs-editor-dom/lib/utils/getTextContent.ts
 FN:8,getTextContent
 FNF:1
 FNH:0
@@ -9632,7 +9632,7 @@ BRF:2
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\isBlockElement.ts
+SF:packages/roosterjs-editor-dom/lib/utils/isBlockElement.ts
 FN:13,isBlockElement
 FNF:1
 FNH:1
@@ -9652,7 +9652,7 @@ BRF:3
 BRH:3
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\isNodeAfter.ts
+SF:packages/roosterjs-editor-dom/lib/utils/isNodeAfter.ts
 FN:9,isNodeAfter
 FNF:1
 FNH:1
@@ -9668,7 +9668,7 @@ BRF:3
 BRH:3
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\isNodeEmpty.ts
+SF:packages/roosterjs-editor-dom/lib/utils/isNodeEmpty.ts
 FN:15,isNodeEmpty
 FN:34,trim
 FNF:2
@@ -9711,7 +9711,7 @@ BRF:13
 BRH:12
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\isVoidHtmlElement.ts
+SF:packages/roosterjs-editor-dom/lib/utils/isVoidHtmlElement.ts
 FN:17,isVoidHtmlElement
 FNF:1
 FNH:1
@@ -9728,7 +9728,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\matchLink.ts
+SF:packages/roosterjs-editor-dom/lib/utils/matchLink.ts
 FN:43,(anonymous_0)
 FN:59,(anonymous_1)
 FN:77,matchLink
@@ -9773,7 +9773,7 @@ BRF:14
 BRH:13
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\normalizeRect.ts
+SF:packages/roosterjs-editor-dom/lib/utils/normalizeRect.ts
 FN:7,normalizeRect
 FNF:1
 FNH:1
@@ -9791,7 +9791,7 @@ BRF:4
 BRH:3
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\queryElements.ts
+SF:packages/roosterjs-editor-dom/lib/utils/queryElements.ts
 FN:13,queryElements
 FN:41,(anonymous_1)
 FN:57,isIntersectWithNodeRange
@@ -9867,7 +9867,7 @@ BRF:32
 BRH:32
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\readFile.ts
+SF:packages/roosterjs-editor-dom/lib/utils/readFile.ts
 FN:7,readFile
 FN:10,(anonymous_1)
 FN:13,(anonymous_2)
@@ -9894,7 +9894,7 @@ BRF:4
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\safeInstanceOf.ts
+SF:packages/roosterjs-editor-dom/lib/utils/safeInstanceOf.ts
 FN:11,getTargetWindow
 FN:30,safeInstanceOf
 FNF:2
@@ -9937,7 +9937,7 @@ BRF:19
 BRH:19
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\shouldSkipNode.ts
+SF:packages/roosterjs-editor-dom/lib/utils/shouldSkipNode.ts
 FN:20,shouldSkipNode
 FNF:1
 FNH:1
@@ -9991,7 +9991,7 @@ BRF:21
 BRH:20
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\splitParentNode.ts
+SF:packages/roosterjs-editor-dom/lib/utils/splitParentNode.ts
 FN:14,splitParentNode
 FN:51,splitBalancedNodeRange
 FNF:2
@@ -10059,7 +10059,7 @@ BRF:27
 BRH:27
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\splitTextNode.ts
+SF:packages/roosterjs-editor-dom/lib/utils/splitTextNode.ts
 FN:8,splitTextNode
 FNF:1
 FNH:1
@@ -10083,7 +10083,7 @@ BRF:6
 BRH:6
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\toArray.ts
+SF:packages/roosterjs-editor-dom/lib/utils/toArray.ts
 FN:27,toArray
 FNF:1
 FNH:1
@@ -10096,7 +10096,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\unwrap.ts
+SF:packages/roosterjs-editor-dom/lib/utils/unwrap.ts
 FN:5,unwrap
 FNF:1
 FNH:1
@@ -10119,7 +10119,7 @@ BRF:4
 BRH:4
 end_of_record
 TN:
-SF:packages\roosterjs-editor-dom\lib\utils\wrap.ts
+SF:packages/roosterjs-editor-dom/lib/utils/wrap.ts
 FN:31,wrap
 FNF:1
 FNH:1
@@ -10162,7 +10162,7 @@ BRF:16
 BRH:15
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\ContentEdit.ts
+SF:packages/roosterjs-editor-plugins/lib/ContentEdit.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -10172,7 +10172,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\ContextMenu.ts
+SF:packages/roosterjs-editor-plugins/lib/ContextMenu.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -10182,7 +10182,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\CustomReplace.ts
+SF:packages/roosterjs-editor-plugins/lib/CustomReplace.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -10192,7 +10192,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\CutPasteListChain.ts
+SF:packages/roosterjs-editor-plugins/lib/CutPasteListChain.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -10202,7 +10202,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\HyperLink.ts
+SF:packages/roosterjs-editor-plugins/lib/HyperLink.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -10212,7 +10212,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\ImageResize.ts
+SF:packages/roosterjs-editor-plugins/lib/ImageResize.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -10222,7 +10222,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\Paste.ts
+SF:packages/roosterjs-editor-plugins/lib/Paste.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -10232,7 +10232,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\Picker.ts
+SF:packages/roosterjs-editor-plugins/lib/Picker.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -10242,7 +10242,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\TableResize.ts
+SF:packages/roosterjs-editor-plugins/lib/TableResize.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -10252,7 +10252,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\Watermark.ts
+SF:packages/roosterjs-editor-plugins/lib/Watermark.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -10262,7 +10262,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\index.ts
+SF:packages/roosterjs-editor-plugins/lib/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -10281,7 +10281,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContentEdit\ContentEdit.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/ContentEdit.ts
 FN:22,(anonymous_0)
 FN:28,ContentEdit
 FN:36,(anonymous_2)
@@ -10332,7 +10332,7 @@ BRF:10
 BRH:8
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContentEdit\getAllFeatures.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/getAllFeatures.ts
 FN:31,getAllFeatures
 FNF:1
 FNH:1
@@ -10355,7 +10355,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContentEdit\index.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -10366,7 +10366,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContentEdit\features\autoLinkFeatures.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/features/autoLinkFeatures.ts
 FN:45,(anonymous_0)
 FN:52,cacheGetLinkData
 FN:55,(anonymous_2)
@@ -10457,7 +10457,7 @@ BRF:28
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContentEdit\features\cursorFeatures.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/features/cursorFeatures.ts
 FN:12,(anonymous_0)
 FN:31,(anonymous_1)
 FNF:2
@@ -10490,7 +10490,7 @@ BRF:11
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContentEdit\features\entityFeatures.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/features/entityFeatures.ts
 FN:24,(anonymous_0)
 FN:25,(anonymous_1)
 FN:36,(anonymous_2)
@@ -10628,7 +10628,7 @@ BRF:46
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContentEdit\features\listFeatures.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/features/listFeatures.ts
 FN:36,(anonymous_0)
 FN:38,(anonymous_1)
 FN:49,(anonymous_2)
@@ -10816,7 +10816,7 @@ BRF:56
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContentEdit\features\markdownFeatures.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/features/markdownFeatures.ts
 FN:15,generateBasicMarkdownFeature
 FN:23,(anonymous_1)
 FN:26,(anonymous_2)
@@ -10914,7 +10914,7 @@ BRF:25
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContentEdit\features\quoteFeatures.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/features/quoteFeatures.ts
 FN:28,(anonymous_0)
 FN:41,(anonymous_1)
 FN:46,(anonymous_2)
@@ -10989,7 +10989,7 @@ BRF:20
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContentEdit\features\shortcutFeatures.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/features/shortcutFeatures.ts
 FN:26,createCommand
 FN:38,(anonymous_1)
 FN:39,(anonymous_2)
@@ -11051,7 +11051,7 @@ BRF:16
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContentEdit\features\structuredNodeFeatures.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/features/structuredNodeFeatures.ts
 FN:36,(anonymous_0)
 FN:39,(anonymous_1)
 FN:51,cacheGetStructuredElement
@@ -11102,7 +11102,7 @@ BRF:14
 BRH:1
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContentEdit\features\tableFeatures.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/features/tableFeatures.ts
 FN:29,(anonymous_0)
 FN:68,(anonymous_1)
 FN:85,(anonymous_2)
@@ -11218,7 +11218,7 @@ BRF:46
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContextMenu\ContextMenu.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts
 FN:23,(anonymous_0)
 FN:32,ContextMenu
 FN:93,(anonymous_2)
@@ -11295,7 +11295,7 @@ BRF:18
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ContextMenu\index.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ContextMenu/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -11305,7 +11305,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\CustomReplace\CustomReplace.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/CustomReplace/CustomReplace.ts
 FN:10,(anonymous_0)
 FN:28,(anonymous_1)
 FN:38,CustomReplacePlugin
@@ -11427,7 +11427,7 @@ BRF:25
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\CustomReplace\index.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/CustomReplace/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -11437,7 +11437,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\CutPasteListChain\CutPasteListChain.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/CutPasteListChain/CutPasteListChain.ts
 FN:15,(anonymous_0)
 FN:72,(anonymous_2)
 FN:24,(anonymous_3)
@@ -11510,7 +11510,7 @@ BRF:19
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\CutPasteListChain\index.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/CutPasteListChain/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -11520,7 +11520,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\HyperLink\HyperLink.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/HyperLink/HyperLink.ts
 FN:7,(anonymous_0)
 FN:20,HyperLink
 FN:21,(anonymous_2)
@@ -11700,7 +11700,7 @@ BRF:64
 BRH:9
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\HyperLink\index.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/HyperLink/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -11710,7 +11710,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ImageResize\ImageResize.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts
 FN:32,(anonymous_0)
 FN:51,ImageResize
 FN:178,(anonymous_2)
@@ -12123,7 +12123,7 @@ BRF:162
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\ImageResize\index.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/ImageResize/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -12133,7 +12133,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Paste\Paste.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Paste/Paste.ts
 FN:31,(anonymous_0)
 FN:38,Paste
 FN:43,(anonymous_2)
@@ -12216,7 +12216,7 @@ BRF:20
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Paste\index.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Paste/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -12226,7 +12226,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Paste\excelConverter\convertPastedContentFromExcel.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Paste/excelConverter/convertPastedContentFromExcel.ts
 FN:15,convertPastedContentFromExcel
 FN:29,(anonymous_1)
 FN:41,excelHandler
@@ -12290,7 +12290,7 @@ BRF:20
 BRH:6
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Paste\lineMerge\handleLineMerge.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Paste/lineMerge/handleLineMerge.ts
 FN:15,handleLineMerge
 FN:38,processBlock
 FN:57,checkAndAddBr
@@ -12371,7 +12371,7 @@ BRF:38
 BRH:33
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Paste\officeOnlineConverter\ListItemBlock.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Paste/officeOnlineConverter/ListItemBlock.ts
 FN:31,createListItemBlock
 FNF:1
 FNH:1
@@ -12388,7 +12388,7 @@ BRF:4
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Paste\officeOnlineConverter\constants.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Paste/officeOnlineConverter/constants.ts
 FNF:0
 FNH:0
 DA:4,1
@@ -12405,7 +12405,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Paste\officeOnlineConverter\convertPastedContentFromWordOnline.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Paste/officeOnlineConverter/convertPastedContentFromWordOnline.ts
 FN:24,isWordOnlineWithList
 FN:63,convertPastedContentFromWordOnline
 FN:67,(anonymous_2)
@@ -12577,7 +12577,7 @@ BRF:48
 BRH:38
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Paste\wordConverter\LevelLists.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Paste/wordConverter/LevelLists.ts
 FN:22,createLevelLists
 FNF:1
 FNH:0
@@ -12590,7 +12590,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Paste\wordConverter\WordConverterArguments.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Paste/wordConverter/WordConverterArguments.ts
 FN:45,createWordConverterArguments
 FNF:1
 FNH:0
@@ -12604,7 +12604,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Paste\wordConverter\WordCustomData.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Paste/wordConverter/WordCustomData.ts
 FN:22,createCustomData
 FN:33,setObject
 FN:52,getObject
@@ -12657,7 +12657,7 @@ BRF:14
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Paste\wordConverter\convertPastedContentFromWord.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Paste/wordConverter/convertPastedContentFromWord.ts
 FN:11,convertPastedContentFromWord
 FN:15,(anonymous_1)
 FNF:2
@@ -12689,7 +12689,7 @@ BRF:4
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Paste\wordConverter\converterUtils.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Paste/wordConverter/converterUtils.ts
 FN:29,processNodesDiscovery
 FN:155,processNodeConvert
 FN:201,getOrCreateListForNode
@@ -13054,7 +13054,7 @@ BRF:134
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Paste\wordConverter\wordConverter.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Paste/wordConverter/wordConverter.ts
 FN:29,createWordConverter
 FNF:1
 FNH:0
@@ -13068,7 +13068,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Picker\PickerPlugin.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Picker/PickerPlugin.ts
 FN:56,(anonymous_0)
 FN:69,PickerPlugin
 FN:74,(anonymous_2)
@@ -13559,7 +13559,7 @@ BRF:191
 BRH:6
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Picker\index.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Picker/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -13569,7 +13569,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\TableResize\TableResize.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts
 FN:23,(anonymous_0)
 FN:32,(anonymous_1)
 FN:104,(anonymous_3)
@@ -13903,7 +13903,7 @@ BRF:84
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\TableResize\index.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/TableResize/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -13913,7 +13913,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Watermark\Watermark.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Watermark/Watermark.ts
 FN:19,(anonymous_0)
 FN:27,Watermark
 FN:90,(anonymous_2)
@@ -14016,7 +14016,7 @@ BRF:37
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-plugins\lib\plugins\Watermark\index.ts
+SF:packages/roosterjs-editor-plugins/lib/plugins/Watermark/index.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -14026,7 +14026,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\index.ts
+SF:packages/roosterjs-editor-types/lib/index.ts
 FNF:0
 FNH:0
 DA:3,1
@@ -14058,7 +14058,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\browser\DocumentCommand.ts
+SF:packages/roosterjs-editor-types/lib/browser/DocumentCommand.ts
 FN:5,(anonymous_0)
 FNF:1
 FNH:1
@@ -14119,7 +14119,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\browser\DocumentPosition.ts
+SF:packages/roosterjs-editor-types/lib/browser/DocumentPosition.ts
 FN:5,(anonymous_0)
 FNF:1
 FNH:1
@@ -14139,7 +14139,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\browser\Keys.ts
+SF:packages/roosterjs-editor-types/lib/browser/Keys.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14181,7 +14181,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\browser\NodeType.ts
+SF:packages/roosterjs-editor-types/lib/browser/NodeType.ts
 FN:6,(anonymous_0)
 FNF:1
 FNH:1
@@ -14202,7 +14202,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\Alignment.ts
+SF:packages/roosterjs-editor-types/lib/enum/Alignment.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14219,7 +14219,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\Capitalization.ts
+SF:packages/roosterjs-editor-types/lib/enum/Capitalization.ts
 FN:5,(anonymous_0)
 FNF:1
 FNH:1
@@ -14237,7 +14237,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\ChangeSource.ts
+SF:packages/roosterjs-editor-types/lib/enum/ChangeSource.ts
 FN:5,(anonymous_0)
 FNF:1
 FNH:1
@@ -14263,7 +14263,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\ColorTransformDirection.ts
+SF:packages/roosterjs-editor-types/lib/enum/ColorTransformDirection.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14279,7 +14279,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\ContentPosition.ts
+SF:packages/roosterjs-editor-types/lib/enum/ContentPosition.ts
 FN:6,(anonymous_0)
 FNF:1
 FNH:1
@@ -14299,7 +14299,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\DarkModeDatasetNames.ts
+SF:packages/roosterjs-editor-types/lib/enum/DarkModeDatasetNames.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14317,7 +14317,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\Direction.ts
+SF:packages/roosterjs-editor-types/lib/enum/Direction.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14333,7 +14333,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\EntityClasses.ts
+SF:packages/roosterjs-editor-types/lib/enum/EntityClasses.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14351,7 +14351,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\EntityOperation.ts
+SF:packages/roosterjs-editor-types/lib/enum/EntityOperation.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14374,7 +14374,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\ExperimentalFeatures.ts
+SF:packages/roosterjs-editor-types/lib/enum/ExperimentalFeatures.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14395,7 +14395,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\FontSizeChange.ts
+SF:packages/roosterjs-editor-types/lib/enum/FontSizeChange.ts
 FN:5,(anonymous_0)
 FNF:1
 FNH:1
@@ -14411,7 +14411,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\GetContentMode.ts
+SF:packages/roosterjs-editor-types/lib/enum/GetContentMode.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14429,7 +14429,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\Indentation.ts
+SF:packages/roosterjs-editor-types/lib/enum/Indentation.ts
 FN:5,(anonymous_0)
 FNF:1
 FNH:1
@@ -14445,7 +14445,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\ListType.ts
+SF:packages/roosterjs-editor-types/lib/enum/ListType.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14462,7 +14462,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\PositionType.ts
+SF:packages/roosterjs-editor-types/lib/enum/PositionType.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14480,7 +14480,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\QueryScope.ts
+SF:packages/roosterjs-editor-types/lib/enum/QueryScope.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14497,7 +14497,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\RegionType.ts
+SF:packages/roosterjs-editor-types/lib/enum/RegionType.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14512,7 +14512,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\enum\TableOperation.ts
+SF:packages/roosterjs-editor-types/lib/enum/TableOperation.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14539,7 +14539,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs-editor-types\lib\event\PluginEventType.ts
+SF:packages/roosterjs-editor-types/lib/event/PluginEventType.ts
 FN:4,(anonymous_0)
 FNF:1
 FNH:1
@@ -14570,7 +14570,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs\lib\createEditor.ts
+SF:packages/roosterjs/lib/createEditor.ts
 FN:15,createEditor
 FNF:1
 FNH:1
@@ -14593,7 +14593,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:packages\roosterjs\lib\index.ts
+SF:packages/roosterjs/lib/index.ts
 FNF:0
 FNH:0
 DA:1,1
