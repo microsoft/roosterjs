@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">9.26% </span>
+                <span class="strong">9.09% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/54</span>
+                <span class='fraction'>5/55</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">4.35% </span>
+                <span class="strong">3.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/46</span>
+                <span class='fraction'>2/60</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">9.8% </span>
+                <span class="strong">9.43% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/51</span>
+                <span class='fraction'>5/53</span>
             </div>
         
             
@@ -194,7 +194,15 @@
 <a name='L135'></a><a href='#L135'>135</a>
 <a name='L136'></a><a href='#L136'>136</a>
 <a name='L137'></a><a href='#L137'>137</a>
-<a name='L138'></a><a href='#L138'>138</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -272,12 +280,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -285,6 +290,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -296,14 +319,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -399,51 +415,59 @@ const UpDownInTable: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
     keys: [Keys.UP, Keys.DOWN],
     shouldHandleEvent: cacheGetTableCell,
     handleEvent: <span class="fstat-no" title="function not covered" >(e</span>vent, editor) =&gt; {
-        let td = <span class="cstat-no" title="statement not covered" >cacheGetTableCell(event, editor);</span>
-        let vtable = <span class="cstat-no" title="statement not covered" >new VTable(td);</span>
-        let isUp = <span class="cstat-no" title="statement not covered" >event.rawEvent.which == Keys.UP;</span>
-        let step = <span class="cstat-no" title="statement not covered" >isUp ? -1 : 1;</span>
+        const td = <span class="cstat-no" title="statement not covered" >cacheGetTableCell(event, editor);</span>
+        const vtable = <span class="cstat-no" title="statement not covered" >new VTable(td);</span>
+        const isUp = <span class="cstat-no" title="statement not covered" >event.rawEvent.which == Keys.UP;</span>
+        const step = <span class="cstat-no" title="statement not covered" >isUp ? -1 : 1;</span>
+        const hasShiftKey = <span class="cstat-no" title="statement not covered" >event.rawEvent.shiftKey;</span>
+        const selection<span class="cstat-no" title="statement not covered" > = editor.getDocument().defaultView?.getSelection();</span>
         let targetTd: HTMLTableCellElement = <span class="cstat-no" title="statement not covered" >null;</span>
-        let hasShiftKey = <span class="cstat-no" title="statement not covered" >event.rawEvent.shiftKey;</span>
-        let <span class="cstat-no" title="statement not covered" >{ <span class="cstat-no" title="statement not covered" >a</span>nchorNode,</span> <span class="cstat-no" title="statement not covered" >anchorOffset } = editor.getDocument().defaultView.getSelection();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        for (let row = <span class="cstat-no" title="statement not covered" >vtable.row;</span> row &gt;= 0 &amp;&amp; row &lt; vtable.cells.length; row += step) {</span>
-            let cell = <span class="cstat-no" title="statement not covered" >vtable.getCell(row, vtable.col);</span>
-<span class="cstat-no" title="statement not covered" >            if (cell.td &amp;&amp; cell.td != td) {</span>
-<span class="cstat-no" title="statement not covered" >                targetTd = cell.td;</span>
-<span class="cstat-no" title="statement not covered" >                break;</span>
-            }
-        }
+<span class="cstat-no" title="statement not covered" >        if (selection) {</span>
+            let { <span class="cstat-no" title="statement not covered" >anchorNode,</span> <span class="cstat-no" title="statement not covered" >anchorOffset </span>} = selection;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        editor.runAsync(<span class="fstat-no" title="function not covered" >editor </span>=&gt; {</span>
-            let newContainer = <span class="cstat-no" title="statement not covered" >editor.getElementAtCursor();</span>
-<span class="cstat-no" title="statement not covered" >            if (</span>
-                contains(vtable.table, newContainer) &amp;&amp;
-                !contains(td, newContainer, true /*treatSameNodeAsContain*/)
-            ) {
-                let newPos = <span class="cstat-no" title="statement not covered" >targetTd</span>
-                    ? new Position(targetTd, PositionType.Begin)
-                    : new Position(vtable.table, isUp ? PositionType.Before : PositionType.After);
-<span class="cstat-no" title="statement not covered" >                if (hasShiftKey) {</span>
-<span class="cstat-no" title="statement not covered" >                    newPos =</span>
-                        newPos.node.nodeType == NodeType.Element &amp;&amp; isVoidHtmlElement(newPos.node)
-                            ? new Position(
-                                  newPos.node,
-                                  newPos.isAtEnd ? PositionType.After : PositionType.Before
-                              )
-                            : newPos;
-                    const selection = <span class="cstat-no" title="statement not covered" >editor.getDocument().defaultView.getSelection();</span>
-<span class="cstat-no" title="statement not covered" >                    selection.setBaseAndExtent(</span>
-                        anchorNode,
-                        anchorOffset,
-                        newPos.node,
-                        newPos.offset
-                    );
-                } else {
-<span class="cstat-no" title="statement not covered" >                    editor.select(newPos);</span>
+<span class="cstat-no" title="statement not covered" >            for (let row = <span class="cstat-no" title="statement not covered" >vtable.row;</span> row &gt;= 0 &amp;&amp; row &lt; vtable.cells.length; row += step) {</span>
+                let cell = <span class="cstat-no" title="statement not covered" >vtable.getCell(row, vtable.col);</span>
+<span class="cstat-no" title="statement not covered" >                if (cell.td &amp;&amp; cell.td != td) {</span>
+<span class="cstat-no" title="statement not covered" >                    targetTd = cell.td;</span>
+<span class="cstat-no" title="statement not covered" >                    break;</span>
                 }
             }
-        });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            editor.runAsync(<span class="fstat-no" title="function not covered" >editor </span>=&gt; {</span>
+                let newContainer = <span class="cstat-no" title="statement not covered" >editor.getElementAtCursor();</span>
+<span class="cstat-no" title="statement not covered" >                if (</span>
+                    contains(vtable.table, newContainer) &amp;&amp;
+                    !contains(td, newContainer, true /*treatSameNodeAsContain*/)
+                ) {
+                    let newPos = <span class="cstat-no" title="statement not covered" >targetTd</span>
+                        ? new Position(targetTd, PositionType.Begin)
+                        : new Position(
+                              vtable.table,
+                              isUp ? PositionType.Before : PositionType.After
+                          );
+<span class="cstat-no" title="statement not covered" >                    if (hasShiftKey) {</span>
+<span class="cstat-no" title="statement not covered" >                        newPos =</span>
+                            newPos.node.nodeType == NodeType.Element &amp;&amp;
+                            isVoidHtmlElement(newPos.node)
+                                ? new Position(
+                                      newPos.node,
+                                      newPos.isAtEnd ? PositionType.After : PositionType.Before
+                                  )
+                                : newPos;
+                        const selection<span class="cstat-no" title="statement not covered" > = editor.getDocument().defaultView?.getSelection();</span>
+<span class="cstat-no" title="statement not covered" >                        selection?.setBaseAndExtent(</span>
+                            anchorNode,
+                            anchorOffset,
+                            newPos.node,
+                            newPos.offset
+                        );
+                    } else {
+<span class="cstat-no" title="statement not covered" >                        editor.select(newPos);</span>
+                    }
+                }
+            });
+        }
     },
     defaultDisabled: !Browser.isChrome &amp;&amp; !Browser.isSafari,
 };
@@ -475,7 +499,7 @@ export const TableFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Feb 03 2021 21:15:16 GMT+0000 (Coordinated Universal Time)
+                at Wed Feb 17 2021 22:04:15 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
