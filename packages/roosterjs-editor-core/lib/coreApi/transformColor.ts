@@ -70,7 +70,7 @@ export const transformColor: TransformColor = (
                 }
                 delete element.dataset[name];
             });
-        } else if (element) {
+        } else if (direction == ColorTransformDirection.LightToDark && element) {
             if (core.lifecycle.onExternalContentTransform) {
                 core.lifecycle.onExternalContentTransform(element);
             } else {

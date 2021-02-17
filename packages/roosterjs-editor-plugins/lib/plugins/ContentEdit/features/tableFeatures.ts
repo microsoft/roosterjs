@@ -66,51 +66,59 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.UP, Keys.DOWN],
     shouldHandleEvent: cacheGetTableCell,
     handleEvent: (event, editor) => {
-        let td = cacheGetTableCell(event, editor);
-        let vtable = new VTable(td);
-        let isUp = event.rawEvent.which == Keys.UP;
-        let step = isUp ? -1 : 1;
+        const td = cacheGetTableCell(event, editor);
+        const vtable = new VTable(td);
+        const isUp = event.rawEvent.which == Keys.UP;
+        const step = isUp ? -1 : 1;
+        const hasShiftKey = event.rawEvent.shiftKey;
+        const selection = editor.getDocument().defaultView?.getSelection();
         let targetTd: HTMLTableCellElement = null;
-        let hasShiftKey = event.rawEvent.shiftKey;
-        let { anchorNode, anchorOffset } = editor.getDocument().defaultView.getSelection();
 
-        for (let row = vtable.row; row >= 0 && row < vtable.cells.length; row += step) {
-            let cell = vtable.getCell(row, vtable.col);
-            if (cell.td && cell.td != td) {
-                targetTd = cell.td;
-                break;
-            }
-        }
+        if (selection) {
+            let { anchorNode, anchorOffset } = selection;
 
-        editor.runAsync(editor => {
-            let newContainer = editor.getElementAtCursor();
-            if (
-                contains(vtable.table, newContainer) &&
-                !contains(td, newContainer, true /*treatSameNodeAsContain*/)
-            ) {
-                let newPos = targetTd
-                    ? new Position(targetTd, PositionType.Begin)
-                    : new Position(vtable.table, isUp ? PositionType.Before : PositionType.After);
-                if (hasShiftKey) {
-                    newPos =
-                        newPos.node.nodeType == NodeType.Element && isVoidHtmlElement(newPos.node)
-                            ? new Position(
-                                  newPos.node,
-                                  newPos.isAtEnd ? PositionType.After : PositionType.Before
-                              )
-                            : newPos;
-                    const selection = editor.getDocument().defaultView.getSelection();
-                    selection.setBaseAndExtent(
-                        anchorNode,
-                        anchorOffset,
-                        newPos.node,
-                        newPos.offset
-                    );
-                } else {
-                    editor.select(newPos);
+            for (let row = vtable.row; row >= 0 && row < vtable.cells.length; row += step) {
+                let cell = vtable.getCell(row, vtable.col);
+                if (cell.td && cell.td != td) {
+                    targetTd = cell.td;
+                    break;
                 }
             }
-        });
+
+            editor.runAsync(editor => {
+                let newContainer = editor.getElementAtCursor();
+                if (
+                    contains(vtable.table, newContainer) &&
+                    !contains(td, newContainer, true /*treatSameNodeAsContain*/)
+                ) {
+                    let newPos = targetTd
+                        ? new Position(targetTd, PositionType.Begin)
+                        : new Position(
+                              vtable.table,
+                              isUp ? PositionType.Before : PositionType.After
+                          );
+                    if (hasShiftKey) {
+                        newPos =
+                            newPos.node.nodeType == NodeType.Element &&
+                            isVoidHtmlElement(newPos.node)
+                                ? new Position(
+                                      newPos.node,
+                                      newPos.isAtEnd ? PositionType.After : PositionType.Before
+                                  )
+                                : newPos;
+                        const selection = editor.getDocument().defaultView?.getSelection();
+                        selection?.setBaseAndExtent(
+                            anchorNode,
+                            anchorOffset,
+                            newPos.node,
+                            newPos.offset
+                        );
+                    } else {
+                        editor.select(newPos);
+                    }
+                }
+            });
+        }
     },
     defaultDisabled: !Browser.isChrome && !Browser.isSafari,
 };

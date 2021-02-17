@@ -392,7 +392,7 @@ export default class Editor implements IEditor {
      * Get current focused position. Return null if editor doesn't have focus at this time.
      */
     public getFocusedPosition(): NodePosition {
-        let sel = this.getDocument().defaultView.getSelection();
+        let sel = this.getDocument().defaultView?.getSelection();
         if (this.contains(sel && sel.focusNode)) {
             return new Position(sel.focusNode, sel.focusOffset);
         }

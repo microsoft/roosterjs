@@ -35,13 +35,15 @@ export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): 
             getSelectionPath(core.contentDiv, originalRange);
         const range = path && createRange(clonedRoot, path.start, path.end);
 
-        core.api.transformColor(
-            core,
-            clonedRoot,
-            false /*includeSelf*/,
-            null /*callback*/,
-            ColorTransformDirection.DarkToLight
-        );
+        if (core.lifecycle.isDarkMode) {
+            core.api.transformColor(
+                core,
+                clonedRoot,
+                false /*includeSelf*/,
+                null /*callback*/,
+                ColorTransformDirection.DarkToLight
+            );
+        }
 
         if (triggerExtractContentEvent) {
             core.api.triggerEvent(
