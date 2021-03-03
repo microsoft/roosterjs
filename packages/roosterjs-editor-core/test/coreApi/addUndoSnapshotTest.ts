@@ -179,6 +179,34 @@ describe('addUndoSnapshot', () => {
         );
         expect(core.undo.snapshotsService.canUndoAutoComplete()).toBeTruthy();
     });
+
+    it('shadow edit', () => {
+        const triggerEvent = jasmine.createSpy('triggerEvent');
+        const addSnapshot = jasmine.createSpy('addSnapshot');
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                getSelectionRange: () => document.createRange(),
+                triggerEvent,
+            },
+        });
+
+        core.lifecycle.shadowEditFragment = document.createDocumentFragment();
+        core.undo.snapshotsService.addSnapshot = addSnapshot;
+
+        let content = 'test 1';
+        spyOn(core.api, 'getContent').and.callFake(() => content);
+
+        addUndoSnapshot(
+            core,
+            () => {
+                content = 'test 2';
+            },
+            null,
+            true
+        );
+        expect(triggerEvent).not.toHaveBeenCalled();
+        expect(addSnapshot).not.toHaveBeenCalled();
+    });
 });
 
 function createUndoSnapshotService(addSnapshot: any): UndoSnapshotsService {

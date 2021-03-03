@@ -86,6 +86,8 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             isDarkMode: !!options.inDarkMode,
             onExternalContentTransform: options.onExternalContentTransform,
             experimentalFeatures: options.experimentalFeatures || [],
+            shadowEditFragment: null,
+            shadowEditSelectionPath: null,
         };
     }
 

@@ -12,7 +12,10 @@ export const triggerEvent: TriggerEvent = (
     pluginEvent: PluginEvent,
     broadcast: boolean
 ) => {
-    if (broadcast || !core.plugins.some(plugin => handledExclusively(pluginEvent, plugin))) {
+    if (
+        !core.lifecycle.shadowEditFragment &&
+        (broadcast || !core.plugins.some(plugin => handledExclusively(pluginEvent, plugin)))
+    ) {
         core.plugins.forEach(plugin => {
             if (plugin.onPluginEvent) {
                 plugin.onPluginEvent(pluginEvent);

@@ -7,7 +7,7 @@ import { NodePosition, NodeType, SelectionPath } from 'roosterjs-editor-types';
  * @param rootNode The root node where the path start from
  * @param range The range of selection
  */
-export default function getSelectionPath(rootNode: HTMLElement, range: Range): SelectionPath {
+export default function getSelectionPath(rootNode: Node, range: Range): SelectionPath {
     if (!range) {
         return null;
     }
@@ -32,7 +32,7 @@ export default function getSelectionPath(rootNode: HTMLElement, range: Range): S
  * as selectionRange (if node is of type Text, it is an offset into the text of that node.
  * If node is of type Element, it is the index of a child in that Element node.)
  */
-function getPositionPath(position: NodePosition, rootNode: HTMLElement): number[] {
+function getPositionPath(position: NodePosition, rootNode: Node): number[] {
     if (!position || !rootNode) {
         return [];
     }

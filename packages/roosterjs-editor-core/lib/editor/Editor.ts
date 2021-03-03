@@ -747,6 +747,54 @@ export default class Editor implements IEditor {
     }
 
     /**
+     * Make the editor in "Shadow Edit" mode.
+     * In Shadow Edit mode, all format change will finally be ignored.
+     * This can be used for building a live preview feature for format button, to allow user
+     * see format result without really apply it.
+     * This function can be called repeatly. If editor is already in shadow edit mode, we can still
+     * use this function to do more shadow edit operation.
+     * @param formatCallback The format call back function to call.
+     */
+    public startShadowEdit(formatCallback: () => void) {
+        const { lifecycle, contentDiv } = this.core;
+        if (!lifecycle.shadowEditFragment) {
+            const range = this.getSelectionRange();
+            lifecycle.shadowEditSelectionPath = range && getSelectionPath(contentDiv, range);
+            lifecycle.shadowEditFragment = this.getDocument().createDocumentFragment();
+            while (contentDiv.firstChild) {
+                lifecycle.shadowEditFragment.appendChild(contentDiv.firstChild);
+            }
+        }
+
+        contentDiv.innerHTML = '';
+        contentDiv.appendChild(lifecycle.shadowEditFragment.cloneNode(true /*deep*/));
+        this.focus();
+        this.select(lifecycle.shadowEditSelectionPath);
+
+        formatCallback?.();
+
+        this.getSelectionRange()?.collapse(true /*toStart*/);
+        contentDiv.blur();
+    }
+
+    /**
+     * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
+     */
+    public stopShadowEdit() {
+        const { lifecycle, contentDiv } = this.core;
+
+        if (lifecycle.shadowEditFragment) {
+            contentDiv.innerHTML = '';
+            contentDiv.appendChild(lifecycle.shadowEditFragment);
+            this.focus();
+            this.select(lifecycle.shadowEditSelectionPath);
+        }
+
+        lifecycle.shadowEditFragment = null;
+        lifecycle.shadowEditSelectionPath = null;
+    }
+
+    /**
      * Check if the given experimental feature is enabled
      * @param feature The feature to check
      */
