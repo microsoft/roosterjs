@@ -58,7 +58,6 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
                     <DropDown
                         editor={editor}
                         button={button}
-                        useShadowEdit={true}
                         onHideDropDown={this.onHideDropDown}
                     />
                 )}
@@ -92,6 +91,8 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
     };
 
     private onHideDropDown = () => {
+        this.props.plugin.getEditor().stopShadowEdit();
+
         if (Browser.isSafari) {
             this.props.plugin.getEditor().select(this.range);
         }
@@ -110,15 +111,11 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
 function DropDown(props: {
     editor: IEditor;
     button: RibbonButtonType;
-    useShadowEdit: boolean;
     onHideDropDown: () => void;
 }) {
-    const { editor, button, useShadowEdit, onHideDropDown } = props;
-    const onMouseOut = React.useCallback(() => {
-        editor.stopShadowEdit();
-    }, []);
+    const { editor, button, onHideDropDown } = props;
     return (
-        <div className={styles.dropDown} onMouseOut={onMouseOut}>
+        <div className={styles.dropDown}>
             {Object.keys(button.dropDownItems).map(key =>
                 button.dropDownRenderer ? (
                     <div key={key}>
@@ -135,7 +132,6 @@ function DropDown(props: {
                         itemName={key}
                         displayName={button.dropDownItems[key]}
                         buttonOnClick={button.onClick}
-                        useShadowEdit={useShadowEdit}
                     />
                 )
             )}
@@ -148,19 +144,15 @@ function DropDownItem(props: {
     itemName: string;
     displayName: string;
     buttonOnClick: (editor: IEditor, key: string) => void;
-    useShadowEdit: boolean;
 }) {
-    const { editor, itemName, displayName, buttonOnClick, useShadowEdit } = props;
+    const { editor, itemName, displayName, buttonOnClick } = props;
     const onClick = React.useCallback(() => {
         editor.stopShadowEdit();
         buttonOnClick?.(editor, itemName);
     }, []);
     const onMouseOver = React.useCallback(() => {
-        if (useShadowEdit && buttonOnClick) {
-            editor.startShadowEdit(() => {
-                buttonOnClick(editor, itemName);
-            });
-        }
+        editor.startShadowEdit();
+        buttonOnClick?.(editor, itemName);
     }, []);
 
     return (

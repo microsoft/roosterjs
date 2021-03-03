@@ -753,9 +753,8 @@ export default class Editor implements IEditor {
      * see format result without really apply it.
      * This function can be called repeatly. If editor is already in shadow edit mode, we can still
      * use this function to do more shadow edit operation.
-     * @param formatCallback The format call back function to call.
      */
-    public startShadowEdit(formatCallback: () => void) {
+    public startShadowEdit() {
         const { lifecycle, contentDiv } = this.core;
         if (!lifecycle.shadowEditFragment) {
             const range = this.getSelectionRange();
@@ -768,13 +767,6 @@ export default class Editor implements IEditor {
 
         contentDiv.innerHTML = '';
         contentDiv.appendChild(lifecycle.shadowEditFragment.cloneNode(true /*deep*/));
-        this.focus();
-        this.select(lifecycle.shadowEditSelectionPath);
-
-        formatCallback?.();
-
-        this.getSelectionRange()?.collapse(true /*toStart*/);
-        contentDiv.blur();
     }
 
     /**
@@ -782,16 +774,18 @@ export default class Editor implements IEditor {
      */
     public stopShadowEdit() {
         const { lifecycle, contentDiv } = this.core;
-
-        if (lifecycle.shadowEditFragment) {
-            contentDiv.innerHTML = '';
-            contentDiv.appendChild(lifecycle.shadowEditFragment);
-            this.focus();
-            this.select(lifecycle.shadowEditSelectionPath);
-        }
+        const { shadowEditFragment, shadowEditSelectionPath } = lifecycle;
+        const isInShadowEdit = !!shadowEditFragment;
 
         lifecycle.shadowEditFragment = null;
         lifecycle.shadowEditSelectionPath = null;
+
+        if (isInShadowEdit) {
+            contentDiv.innerHTML = '';
+            contentDiv.appendChild(shadowEditFragment);
+            this.focus();
+            this.select(shadowEditSelectionPath);
+        }
     }
 
     /**

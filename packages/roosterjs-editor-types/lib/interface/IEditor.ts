@@ -519,9 +519,8 @@ export default interface IEditor {
      * see format result without really apply it.
      * This function can be called repeatly. If editor is already in shadow edit mode, we can still
      * use this function to do more shadow edit operation.
-     * @param formatCallback The format call back function to call.
      */
-    startShadowEdit(formatCallback: () => void): void;
+    startShadowEdit(): void;
 
     /**
      * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
