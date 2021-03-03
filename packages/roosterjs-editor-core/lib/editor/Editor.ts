@@ -755,37 +755,21 @@ export default class Editor implements IEditor {
      * use this function to do more shadow edit operation.
      */
     public startShadowEdit() {
-        const { lifecycle, contentDiv } = this.core;
-        if (!lifecycle.shadowEditFragment) {
-            const range = this.getSelectionRange();
-            lifecycle.shadowEditSelectionPath = range && getSelectionPath(contentDiv, range);
-            lifecycle.shadowEditFragment = this.getDocument().createDocumentFragment();
-            while (contentDiv.firstChild) {
-                lifecycle.shadowEditFragment.appendChild(contentDiv.firstChild);
-            }
-        }
-
-        contentDiv.innerHTML = '';
-        contentDiv.appendChild(lifecycle.shadowEditFragment.cloneNode(true /*deep*/));
+        this.core.api.switchShadowEdit(this.core, true /*isOn*/);
     }
 
     /**
      * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
      */
     public stopShadowEdit() {
-        const { lifecycle, contentDiv } = this.core;
-        const { shadowEditFragment, shadowEditSelectionPath } = lifecycle;
-        const isInShadowEdit = !!shadowEditFragment;
+        this.core.api.switchShadowEdit(this.core, false /*isOn*/);
+    }
 
-        lifecycle.shadowEditFragment = null;
-        lifecycle.shadowEditSelectionPath = null;
-
-        if (isInShadowEdit) {
-            contentDiv.innerHTML = '';
-            contentDiv.appendChild(shadowEditFragment);
-            this.focus();
-            this.select(shadowEditSelectionPath);
-        }
+    /**
+     * Check if editor is in Shadow Edit mode
+     */
+    public isInShadowEdit() {
+        return !!this.core.lifecycle.shadowEditFragment;
     }
 
     /**

@@ -89,4 +89,14 @@ export const enum PluginEventType {
      * HTML ContextMenu event
      */
     ContextMenu = 16,
+
+    /**
+     * Editor is has entered shadow edit mode
+     */
+    EnterShadowEdit = 17,
+
+    /**
+     * Editor is about to leave shadow edit mode
+     */
+    LeaveShadowEdit = 18,
 }

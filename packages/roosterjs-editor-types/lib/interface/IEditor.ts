@@ -528,6 +528,11 @@ export default interface IEditor {
     stopShadowEdit(): void;
 
     /**
+     * Check if editor is in Shadow Edit mode
+     */
+    isInShadowEdit(): boolean;
+
+    /**
      * Check if the given experimental feature is enabled
      * @param feature The feature to check
      */

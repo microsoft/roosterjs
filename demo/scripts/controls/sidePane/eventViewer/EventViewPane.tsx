@@ -34,6 +34,8 @@ const EventTypeMap = {
     [PluginEventType.Scroll]: 'Scroll',
     [PluginEventType.BeforeCutCopy]: 'BeforeCutCopy',
     [PluginEventType.ContextMenu]: 'ContextMenu',
+    [PluginEventType.EnterShadowEdit]: 'EnterShadowEdit',
+    [PluginEventType.LeaveShadowEdit]: 'LeaveShadowEdit',
 };
 
 export default class EventViewPane extends React.Component<

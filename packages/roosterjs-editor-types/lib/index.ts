@@ -59,6 +59,7 @@ export {
     PluginEventFromType,
     PluginEventFromTypeGeneric,
 } from './event/PluginEventData';
+export { EnterShadowEditEvent, LeaveShadowEditEvent } from './event/ShadowEditEvent';
 
 // Interface
 export { default as BlockElement } from './interface/BlockElement';
@@ -129,6 +130,7 @@ export {
     RestoreUndoSnapshot,
     SelectRange,
     SetContent,
+    SwitchShadowEdit,
     TransformColor,
     TriggerEvent,
 } from './interface/EditorCore';
