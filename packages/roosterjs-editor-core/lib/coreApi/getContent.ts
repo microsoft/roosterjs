@@ -10,6 +10,7 @@ import {
     getHtmlWithSelectionPath,
     getSelectionPath,
     getTextContent,
+    safeInstanceOf,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -31,7 +32,7 @@ export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): 
     if (mode == GetContentMode.PlainText) {
         content = getTextContent(root);
     } else if (triggerExtractContentEvent || core.lifecycle.isDarkMode) {
-        const clonedRoot = root.cloneNode(true /*deep*/) as HTMLElement;
+        const clonedRoot = cloneNode(root);
         const originalRange = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
         const path = !includeSelectionMarker
             ? null
@@ -78,3 +79,15 @@ export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): 
 
     return content;
 };
+
+function cloneNode(node: HTMLElement | DocumentFragment): HTMLElement {
+    let clonedNode: HTMLElement;
+    if (safeInstanceOf(node, 'DocumentFragment')) {
+        clonedNode = node.ownerDocument.createElement('div');
+        clonedNode.appendChild(node.cloneNode(true /*deep*/));
+    } else {
+        clonedNode = node.cloneNode(true /*deep*/) as HTMLElement;
+    }
+
+    return clonedNode;
+}
