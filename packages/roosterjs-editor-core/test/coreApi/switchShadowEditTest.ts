@@ -96,7 +96,7 @@ describe('switchShadowEdit', () => {
         expect(triggerEvent).toHaveBeenCalledWith(
             core,
             {
-                eventType: PluginEventType.LeaveShadowEdit,
+                eventType: PluginEventType.LeavingShadowEdit,
             },
             false
         );
