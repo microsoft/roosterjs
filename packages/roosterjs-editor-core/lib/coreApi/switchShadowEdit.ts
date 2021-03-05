@@ -21,7 +21,7 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
             core.api.triggerEvent(
                 core,
                 {
-                    eventType: PluginEventType.EnterShadowEdit,
+                    eventType: PluginEventType.EnteredShadowEdit,
                     fragment: shadowEditFragment,
                     selectionPath: shadowEditSelectionPath,
                 },
@@ -42,7 +42,7 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
             core.api.triggerEvent(
                 core,
                 {
-                    eventType: PluginEventType.LeaveShadowEdit,
+                    eventType: PluginEventType.LeavingShadowEdit,
                 },
                 false /*broadcast*/
             );

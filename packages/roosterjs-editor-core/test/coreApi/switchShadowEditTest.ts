@@ -49,7 +49,7 @@ describe('switchShadowEdit', () => {
         expect(triggerEvent).toHaveBeenCalledWith(
             core,
             {
-                eventType: PluginEventType.EnterShadowEdit,
+                eventType: PluginEventType.EnteredShadowEdit,
                 fragment: core.lifecycle.shadowEditFragment,
                 selectionPath: core.lifecycle.shadowEditSelectionPath,
             },

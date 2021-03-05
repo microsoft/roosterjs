@@ -5,7 +5,7 @@ import { SelectionPath } from '..';
 /**
  * A plugin triggered right after editor has entered Shadow Edit mode
  */
-export interface EnterShadowEditEvent extends BasePluginEvent<PluginEventType.EnterShadowEdit> {
+export interface EnterShadowEditEvent extends BasePluginEvent<PluginEventType.EnteredShadowEdit> {
     /**
      * The document fragment of original editor content
      */
@@ -20,4 +20,4 @@ export interface EnterShadowEditEvent extends BasePluginEvent<PluginEventType.En
 /**
  * A plugin triggered right before editor leave Shadow Edit mode
  */
-export interface LeaveShadowEditEvent extends BasePluginEvent<PluginEventType.LeaveShadowEdit> {}
+export interface LeaveShadowEditEvent extends BasePluginEvent<PluginEventType.LeavingShadowEdit> {}

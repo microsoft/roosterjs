@@ -91,12 +91,12 @@ export const enum PluginEventType {
     ContextMenu = 16,
 
     /**
-     * Editor is has entered shadow edit mode
+     * Editor has entered shadow edit mode
      */
-    EnterShadowEdit = 17,
+    EnteredShadowEdit = 17,
 
     /**
      * Editor is about to leave shadow edit mode
      */
-    LeaveShadowEdit = 18,
+    LeavingShadowEdit = 18,
 }
