@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.77% </span>
+                <span class="strong">96.88% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>30/31</span>
+                <span class='fraction'>31/32</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.15% </span>
+                <span class="strong">96.3% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>25/26</span>
+                <span class='fraction'>26/27</span>
             </div>
         
             
@@ -108,9 +108,14 @@
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -120,14 +125,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">343x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">345x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">343x</span>
-<span class="cline-any cline-yes">343x</span>
+<span class="cline-any cline-yes">345x</span>
+<span class="cline-any cline-yes">345x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">343x</span>
+<span class="cline-any cline-yes">345x</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
@@ -147,19 +155,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">343x</span>
+<span class="cline-any cline-yes">345x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">343x</span>
-<span class="cline-any cline-yes">343x</span>
+<span class="cline-any cline-yes">345x</span>
+<span class="cline-any cline-yes">345x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">343x</span>
+<span class="cline-any cline-yes">345x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import getSelectionPath from './getSelectionPath';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import getInnerHTML from '../utils/getInnerHTML';
+import getSelectionPath from './getSelectionPath';
 import getTagOfNode from '../utils/getTagOfNode';
 import queryElements from '../utils/queryElements';
 &nbsp;
@@ -170,7 +179,10 @@ import queryElements from '../utils/queryElements';
  * @param range The range of selection. If pass null, no selection path will be added
  * @returns Inner HTML of the root node, followed by HTML comment contains selection path if the given range is valid
  */
-export default function getHtmlWithSelectionPath(rootNode: HTMLElement, range: Range): string {
+export default function getHtmlWithSelectionPath(
+    rootNode: HTMLElement | DocumentFragment,
+    range: Range
+): string {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!rootNode) {
 <span class="cstat-no" title="statement not covered" >        return '';</span>
     }
@@ -205,7 +217,7 @@ export default function getHtmlWithSelectionPath(rootNode: HTMLElement, range: R
         } catch {}
     }
 &nbsp;
-    const content = rootNode.innerHTML;
+    const content = getInnerHTML(rootNode);
     const selectionPath = range &amp;&amp; getSelectionPath(rootNode, range);
 &nbsp;
     return selectionPath ? `${content}&lt;!--${JSON.stringify(selectionPath)}--&gt;` : content;
@@ -217,7 +229,7 @@ export default function getHtmlWithSelectionPath(rootNode: HTMLElement, range: R
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Feb 17 2021 22:04:15 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 10 2021 06:10:12 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
