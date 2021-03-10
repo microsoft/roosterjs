@@ -10,6 +10,7 @@ import {
     getHtmlWithSelectionPath,
     getSelectionPath,
     getTextContent,
+    safeInstanceOf,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -24,15 +25,22 @@ export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): 
     const triggerExtractContentEvent = mode == GetContentMode.CleanHTML;
     const includeSelectionMarker = mode == GetContentMode.RawHTMLWithSelection;
 
+    // When there is fragment for shadow edit, always use the cached fragment as document since HTML node in editor
+    // has been changed by uncommited shadow edit which should be ignored.
+    const root = core.lifecycle.shadowEditFragment || core.contentDiv;
+
     if (mode == GetContentMode.PlainText) {
-        content = getTextContent(core.contentDiv);
+        content = getTextContent(root);
     } else if (triggerExtractContentEvent || core.lifecycle.isDarkMode) {
-        const clonedRoot = core.contentDiv.cloneNode(true /*deep*/) as HTMLElement;
+        const clonedRoot = cloneNode(root);
         const originalRange = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-        const path =
-            includeSelectionMarker &&
-            originalRange &&
-            getSelectionPath(core.contentDiv, originalRange);
+        const path = !includeSelectionMarker
+            ? null
+            : core.lifecycle.shadowEditFragment
+            ? core.lifecycle.shadowEditSelectionPath
+            : originalRange
+            ? getSelectionPath(core.contentDiv, originalRange)
+            : null;
         const range = path && createRange(clonedRoot, path.start, path.end);
 
         if (core.lifecycle.isDarkMode) {
@@ -64,10 +72,22 @@ export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): 
         }
     } else {
         content = getHtmlWithSelectionPath(
-            core.contentDiv,
+            root,
             includeSelectionMarker && core.api.getSelectionRange(core, true /*tryGetFromCache*/)
         );
     }
 
     return content;
 };
+
+function cloneNode(node: HTMLElement | DocumentFragment): HTMLElement {
+    let clonedNode: HTMLElement;
+    if (safeInstanceOf(node, 'DocumentFragment')) {
+        clonedNode = node.ownerDocument.createElement('div');
+        clonedNode.appendChild(node.cloneNode(true /*deep*/));
+    } else {
+        clonedNode = node.cloneNode(true /*deep*/) as HTMLElement;
+    }
+
+    return clonedNode;
+}

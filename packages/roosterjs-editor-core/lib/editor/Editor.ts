@@ -747,6 +747,32 @@ export default class Editor implements IEditor {
     }
 
     /**
+     * Make the editor in "Shadow Edit" mode.
+     * In Shadow Edit mode, all format change will finally be ignored.
+     * This can be used for building a live preview feature for format button, to allow user
+     * see format result without really apply it.
+     * This function can be called repeatly. If editor is already in shadow edit mode, we can still
+     * use this function to do more shadow edit operation.
+     */
+    public startShadowEdit() {
+        this.core.api.switchShadowEdit(this.core, true /*isOn*/);
+    }
+
+    /**
+     * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
+     */
+    public stopShadowEdit() {
+        this.core.api.switchShadowEdit(this.core, false /*isOn*/);
+    }
+
+    /**
+     * Check if editor is in Shadow Edit mode
+     */
+    public isInShadowEdit() {
+        return !!this.core.lifecycle.shadowEditFragment;
+    }
+
+    /**
      * Check if the given experimental feature is enabled
      * @param feature The feature to check
      */

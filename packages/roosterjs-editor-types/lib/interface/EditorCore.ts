@@ -158,6 +158,13 @@ export type SetContent = (
 ) => void;
 
 /**
+ * Switch the Shadow Edit mode of editor On/Off
+ * @param core The EditorCore object
+ * @param isOn True to switch On, False to switch Off
+ */
+export type SwitchShadowEdit = (core: EditorCore, isOn: boolean) => void;
+
+/**
  * Edit and transform color of elements between light mode and dark mode
  * @param core The EditorCore object
  * @param rootNode The root HTML node to transform
@@ -288,6 +295,13 @@ export interface CoreApiMap {
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     setContent: SetContent;
+
+    /**
+     * Switch the Shadow Edit mode of editor On/Off
+     * @param core The EditorCore object
+     * @param isOn True to switch On, False to switch Off
+     */
+    switchShadowEdit: SwitchShadowEdit;
 
     /**
      * Edit and transform color of elements between light mode and dark mode

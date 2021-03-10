@@ -91,4 +91,25 @@ describe('getContent', () => {
         const html = getContent(core, GetContentMode.RawHTMLOnly);
         expect(html).toBe('<div>test1</div>');
     });
+
+    it('getContent with shadow edit', () => {
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                getSelectionRange: () => document.createRange(),
+            },
+        });
+        core.lifecycle.shadowEditFragment = document.createDocumentFragment();
+        core.lifecycle.shadowEditFragment.appendChild(document.createTextNode('test0'));
+        core.lifecycle.shadowEditSelectionPath = {
+            start: [0],
+            end: [0],
+        };
+
+        div.innerHTML = '<div>test1</div>';
+        const html1 = getContent(core, GetContentMode.RawHTMLOnly);
+        expect(html1).toBe('test0');
+
+        const html2 = getContent(core, GetContentMode.RawHTMLWithSelection);
+        expect(html2).toBe('test0<!--{"start":[],"end":[]}-->');
+    });
 });

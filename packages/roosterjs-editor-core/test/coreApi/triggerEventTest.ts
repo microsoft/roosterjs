@@ -78,6 +78,17 @@ describe('triggerEvent', () => {
         expect(onPluginEvent2).toHaveBeenCalledWith(event);
         expect(onPluginEvent1).toHaveBeenCalledBefore(onPluginEvent2);
     });
+
+    it('shadow edit', () => {
+        const onPluginEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            plugins: [createPlugin(onPluginEvent)],
+        });
+        const event = createDefaultEvent();
+        core.lifecycle.shadowEditFragment = document.createDocumentFragment();
+        triggerEvent(core, event, false);
+        expect(onPluginEvent).not.toHaveBeenCalled();
+    });
 });
 
 function createDefaultEvent(): PluginEvent {
