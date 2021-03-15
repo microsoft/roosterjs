@@ -13,6 +13,7 @@ import {
 const INSERTER_COLOR = '#4A4A4A';
 const INSERTER_SIDE_LENGTH = 12;
 const INSERTER_BORDER_SIZE = 1;
+const INSERTER_HOVER_OFFSET = 5;
 
 const CELL_RESIZER_WIDTH = 4;
 const HORIZONTAL_RESIZER_HTML =
@@ -141,11 +142,11 @@ export default class TableResize implements EditorPlugin {
                         const tdRect = normalizeRect(td.getBoundingClientRect());
 
                         if (tdRect && e.pageX <= tdRect.right && e.pageY < tdRect.bottom) {
-                            if (i == 0 && e.pageY < tdRect.top) {
+                            if (i == 0 && e.pageY <= tdRect.top + INSERTER_HOVER_OFFSET) {
                                 this.setCurrentTd(null);
                                 this.setCurrentInsertTd(ResizeState.Vertical, td, map.rect);
                                 break;
-                            } else if (j == 0 && e.pageX < tdRect.left) {
+                            } else if (j == 0 && e.pageX <= tdRect.left + INSERTER_HOVER_OFFSET) {
                                 this.setCurrentTd(null);
                                 this.setCurrentInsertTd(ResizeState.Horizontal, td, map.rect);
                                 break;
@@ -190,6 +191,9 @@ export default class TableResize implements EditorPlugin {
     }
 
     private createInserter(tableRect: Rect) {
+        if (this.insertingState == ResizeState.None) {
+            return;
+        }
         const rect = normalizeRect(this.currentInsertTd.getBoundingClientRect());
         const editorBackgroundColor = this.editor.getDefaultFormat().backgroundColor;
         const inserterBackgroundColor = editorBackgroundColor || 'white';
@@ -342,7 +346,7 @@ export default class TableResize implements EditorPlugin {
     };
 
     private resizeTable = (e: MouseEvent) => {
-        if (this.currentTd) {
+        if (this.currentTd && this.resizingState !== ResizeState.None) {
             const rect = normalizeRect(this.currentTd.getBoundingClientRect());
 
             if (rect) {
@@ -363,6 +367,7 @@ export default class TableResize implements EditorPlugin {
                     vtable.table.width = '';
                     vtable.forEachCellOfCurrentColumn(cell => {
                         if (cell.td) {
+                            cell.td.style.wordBreak = 'break-word';
                             cell.td.style.width =
                                 cell.td == this.currentTd ? `${newPos - rect.left}px` : null;
                         }
