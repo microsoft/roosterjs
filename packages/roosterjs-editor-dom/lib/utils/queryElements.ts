@@ -11,7 +11,7 @@ import { DocumentPosition, NodeType, QueryScope } from 'roosterjs-editor-types';
  * @returns HTML Element array of the query result
  */
 export default function queryElements(
-    container: HTMLElement,
+    container: ParentNode,
     selector: string,
     forEachCallback?: (node: HTMLElement) => any,
     scope: QueryScope = QueryScope.Body,

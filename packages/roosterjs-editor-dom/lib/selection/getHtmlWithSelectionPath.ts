@@ -1,3 +1,4 @@
+import getInnerHTML from '../utils/getInnerHTML';
 import getSelectionPath from './getSelectionPath';
 import getTagOfNode from '../utils/getTagOfNode';
 import queryElements from '../utils/queryElements';
@@ -9,7 +10,10 @@ import queryElements from '../utils/queryElements';
  * @param range The range of selection. If pass null, no selection path will be added
  * @returns Inner HTML of the root node, followed by HTML comment contains selection path if the given range is valid
  */
-export default function getHtmlWithSelectionPath(rootNode: HTMLElement, range: Range): string {
+export default function getHtmlWithSelectionPath(
+    rootNode: HTMLElement | DocumentFragment,
+    range: Range
+): string {
     if (!rootNode) {
         return '';
     }
@@ -44,7 +48,7 @@ export default function getHtmlWithSelectionPath(rootNode: HTMLElement, range: R
         } catch {}
     }
 
-    const content = rootNode.innerHTML;
+    const content = getInnerHTML(rootNode);
     const selectionPath = range && getSelectionPath(rootNode, range);
 
     return selectionPath ? `${content}<!--${JSON.stringify(selectionPath)}-->` : content;

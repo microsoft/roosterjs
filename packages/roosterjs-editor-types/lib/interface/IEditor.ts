@@ -513,6 +513,26 @@ export default interface IEditor {
     isDarkMode(): boolean;
 
     /**
+     * Make the editor in "Shadow Edit" mode.
+     * In Shadow Edit mode, all format change will finally be ignored.
+     * This can be used for building a live preview feature for format button, to allow user
+     * see format result without really apply it.
+     * This function can be called repeatly. If editor is already in shadow edit mode, we can still
+     * use this function to do more shadow edit operation.
+     */
+    startShadowEdit(): void;
+
+    /**
+     * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
+     */
+    stopShadowEdit(): void;
+
+    /**
+     * Check if editor is in Shadow Edit mode
+     */
+    isInShadowEdit(): boolean;
+
+    /**
      * Check if the given experimental feature is enabled
      * @param feature The feature to check
      */

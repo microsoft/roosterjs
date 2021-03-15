@@ -25,16 +25,20 @@ export const addUndoSnapshot: AddUndoSnapshot = (
     canUndoByBackspace: boolean
 ) => {
     const undoState = core.undo;
-    let isNested = undoState.isNested;
+    const isNested = undoState.isNested;
+    const isShadowEdit = !!core.lifecycle.shadowEditFragment;
     let data: any;
 
     if (!isNested) {
         undoState.isNested = true;
-        undoState.snapshotsService.addSnapshot(
-            core.api.getContent(core, GetContentMode.RawHTMLWithSelection),
-            canUndoByBackspace
-        );
-        undoState.hasNewContent = false;
+
+        if (!isShadowEdit) {
+            undoState.snapshotsService.addSnapshot(
+                core.api.getContent(core, GetContentMode.RawHTMLWithSelection),
+                canUndoByBackspace
+            );
+            undoState.hasNewContent = false;
+        }
     }
 
     try {
@@ -45,7 +49,7 @@ export const addUndoSnapshot: AddUndoSnapshot = (
                 range && Position.getEnd(range).normalize()
             );
 
-            if (!isNested) {
+            if (!isNested && !isShadowEdit) {
                 undoState.snapshotsService.addSnapshot(
                     core.api.getContent(core, GetContentMode.RawHTMLWithSelection),
                     false /*isAutoCompleteSnapshot*/

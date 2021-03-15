@@ -1,5 +1,6 @@
 import CustomData from '../interface/CustomData';
 import DefaultFormat from '../interface/DefaultFormat';
+import SelectionPath from '../interface/SelectionPath';
 import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
 
 /**
@@ -30,4 +31,14 @@ export default interface LifecyclePluginState {
      * Enabled experimental features
      */
     experimentalFeatures: ExperimentalFeatures[];
+
+    /**
+     * Cached document fragment for original content
+     */
+    shadowEditFragment: DocumentFragment;
+
+    /**
+     * Cached selection path for original content
+     */
+    shadowEditSelectionPath: SelectionPath;
 }
