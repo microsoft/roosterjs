@@ -1,4 +1,4 @@
-import { contains, fromHtml, getEntitySelector, getTagOfNode, toArray } from 'roosterjs-editor-dom';
+import { fromHtml, getEntitySelector, getTagOfNode, toArray } from 'roosterjs-editor-dom';
 import { insertEntity } from 'roosterjs-editor-api';
 import {
     ChangeSource,
@@ -91,6 +91,10 @@ export default class ImageResize implements EditorPlugin {
      */
     onPluginEvent(e: PluginEvent) {
         if (e.eventType == PluginEventType.MouseDown) {
+            if (this.resizeDiv) {
+                this.hideResizeHandle();
+            }
+        } else if (e.eventType == PluginEventType.MouseUp) {
             const event = e.rawEvent;
             const target = <HTMLElement>(event.srcElement || event.target);
 
@@ -111,8 +115,6 @@ export default class ImageResize implements EditorPlugin {
                 if (!this.resizeDiv) {
                     this.showResizeHandle(<HTMLImageElement>target);
                 }
-            } else if (this.resizeDiv && !contains(this.resizeDiv, target)) {
-                this.hideResizeHandle();
             }
         } else if (e.eventType == PluginEventType.KeyDown && this.resizeDiv) {
             const event = e.rawEvent;
