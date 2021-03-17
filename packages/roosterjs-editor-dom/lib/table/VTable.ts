@@ -279,6 +279,14 @@ export default class VTable {
         this.forEachCellOfColumn(this.col, callback);
     }
 
+    forEachCellOfPreviousColumn(callback: (cell: VCell, row: VCell[], i: number) => any) {
+        this.forEachCellOfColumn(this.col - 1, callback);
+    }
+
+    forEachCellOfNextColumn(callback: (cell: VCell, row: VCell[], i: number) => any) {
+        this.forEachCellOfColumn(this.col + 1, callback);
+    }
+
     /**
      * Loop each cell of current row and invoke a callback function
      * @param callback The callback function to invoke

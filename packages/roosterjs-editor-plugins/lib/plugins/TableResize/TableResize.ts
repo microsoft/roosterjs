@@ -368,13 +368,23 @@ export default class TableResize implements EditorPlugin {
                 } else {
                     vtable.table.style.width = '';
                     vtable.table.width = '';
+                    let toRight: boolean = true;
                     vtable.forEachCellOfCurrentColumn(cell => {
                         if (cell.td) {
                             cell.td.style.wordBreak = 'break-word';
-                            cell.td.style.width =
-                                cell.td == this.currentTd ? `${newPos - rect.left}px` : null;
+                            if (newPos - rect.left > cell.td.style.width)
+                                cell.td.style.width =
+                                    cell.td == this.currentTd ? `${newPos - rect.left}px` : null;
                         }
                     });
+                    // resize to the right
+                    if (newPos - rect.left > 0) {
+                        console.log('to right..........');
+                    }
+                    // resize to the left
+                    else {
+                        console.log('to left..........');
+                    }
                 }
                 vtable.writeBack();
             }
