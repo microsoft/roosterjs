@@ -1,5 +1,6 @@
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
+import { normalizeRect } from 'roosterjs-editor-dom';
 import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
 /**
@@ -279,12 +280,27 @@ export default class VTable {
         this.forEachCellOfColumn(this.col, callback);
     }
 
-    forEachCellOfPreviousColumn(callback: (cell: VCell, row: VCell[], i: number) => any) {
-        this.forEachCellOfColumn(this.col - 1, callback);
-    }
-
-    forEachCellOfNextColumn(callback: (cell: VCell, row: VCell[], i: number) => any) {
-        this.forEachCellOfColumn(this.col + 1, callback);
+    getCellsWithBorder(borderPos: number): HTMLTableCellElement[] {
+        const cells: HTMLTableCellElement[] = [];
+        for (let i = 0; i < this.cells.length; i++) {
+            let found = false;
+            for (let j = 0; j < this.cells[i].length; j++) {
+                const cell = this.getCell(i, j);
+                if (cell.td) {
+                    const cellRect = normalizeRect(cell.td.getBoundingClientRect());
+                    if (cellRect.right == borderPos) {
+                        found = true;
+                        cells.push(cell.td);
+                    } else if (cellRect.right > borderPos) {
+                        break;
+                    }
+                }
+            }
+            if (!found) {
+                break;
+            }
+        }
+        return cells;
     }
 
     /**
