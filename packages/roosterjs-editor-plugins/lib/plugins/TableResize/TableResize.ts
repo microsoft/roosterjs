@@ -392,8 +392,8 @@ export default class TableResize implements EditorPlugin {
                         }
                     });
                 } else {
-                    vtable.table.style.width = '';
-                    vtable.table.width = '';
+                    //vtable.table.style.width = '';
+                    //vtable.table.width = '';
 
                     // method 1
                     /*const cellsWithTheSameRightBorder: HTMLTableCellElement[] = [];
