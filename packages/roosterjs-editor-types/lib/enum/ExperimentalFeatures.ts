@@ -3,27 +3,27 @@
  */
 export const enum ExperimentalFeatures {
     /**
-     * Toggle indentation using VList
+     * @deprecated This feature is always enabled
      */
     NewIndentation = 'NewIndentation',
 
     /**
-     * Toggle bullet using VList
+     * @deprecated This feature is always enabled
      */
     NewBullet = 'NewBullet',
 
     /**
-     * Toggle numbering using VList
+     * @deprecated This feature is always enabled
      */
     NewNumbering = 'NewNumbering',
 
     /**
-     * Enable List Chain for numbering list
+     * @deprecated This feature is always enabled
      */
     ListChain = 'ListChain',
 
     /**
-     * When paste, try merge pasted content to the same line with existing content
+     * @deprecated This feature is always enabled
      */
     MergePastedLine = 'MergePastedLine',
 

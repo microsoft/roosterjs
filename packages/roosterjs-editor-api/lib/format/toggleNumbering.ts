@@ -1,12 +1,5 @@
-import experimentToggleListType from '../experiment/experimentToggleListType';
-import processList from '../utils/processList';
-import {
-    ChangeSource,
-    DocumentCommand,
-    IEditor,
-    ListType,
-    ExperimentalFeatures,
-} from 'roosterjs-editor-types';
+import toggleListType from '../utils/toggleListType';
+import { IEditor, ListType } from 'roosterjs-editor-types';
 
 /**
  * Toggle numbering at selection
@@ -15,15 +8,8 @@ import {
  * If selection contains both bullet/numbering and normal text, the behavior is decided by corresponding
  * realization of browser execCommand API
  * @param editor The editor instance
+ * @param startNumber (Optional) Start number of the list
  */
-export default function toggleNumbering(editor: IEditor) {
-    if (editor.isFeatureEnabled(ExperimentalFeatures.NewNumbering)) {
-        experimentToggleListType(editor, ListType.Ordered);
-    } else {
-        editor.focus();
-        editor.addUndoSnapshot(
-            () => processList(editor, DocumentCommand.InsertOrderedList),
-            ChangeSource.Format
-        );
-    }
+export default function toggleNumbering(editor: IEditor, startNumber?: number) {
+    toggleListType(editor, ListType.Ordered, startNumber);
 }
