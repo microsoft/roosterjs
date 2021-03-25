@@ -148,9 +148,8 @@ export default class TableResize implements EditorPlugin {
                                 // set inserter at current td
                                 if (e.pageX >= tdRect.left + (tdRect.right - tdRect.left) / 2.0) {
                                     verticalInserterTd = td;
-                                }
-                                // set inserter at previous td if it exists
-                                else {
+                                } else {
+                                    // set inserter at previous td if it exists
                                     const preTd = td.previousElementSibling as HTMLTableCellElement;
                                     if (preTd) {
                                         verticalInserterTd = preTd;
@@ -170,9 +169,8 @@ export default class TableResize implements EditorPlugin {
                                 // set inserter at current td
                                 if (e.pageY >= tdRect.top + (tdRect.bottom - tdRect.top) / 2.0) {
                                     horizontalInserterTd = td;
-                                }
-                                // set insert at previous td if it exists
-                                else {
+                                } else {
+                                    // set insert at previous td if it exists
                                     const preTd = this.currentTable.rows[i - 1]?.cells[0];
                                     if (preTd) {
                                         horizontalInserterTd = preTd;
