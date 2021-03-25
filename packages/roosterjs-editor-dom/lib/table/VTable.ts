@@ -280,25 +280,47 @@ export default class VTable {
         this.forEachCellOfColumn(this.col, callback);
     }
 
-    getCellsWithBorder(borderPos: number): HTMLTableCellElement[] {
+    /**
+     * Loop each table cell and get all the cells that share the same border.
+     * The result is an array of table cell elements where the first element is the narrowest td
+     * @param borderPos The position of the border
+     * @param isRightBorder Indicate whether it is a right border or left border
+     */
+    getCellsWithBorder(borderPos: number, isRightBorder: boolean): HTMLTableCellElement[] {
         const cells: HTMLTableCellElement[] = [];
+        let pos: number = 0;
+        let closestValue: number = isRightBorder ? -1 : Number.MAX_SAFE_INTEGER;
         for (let i = 0; i < this.cells.length; i++) {
-            let found = false;
             for (let j = 0; j < this.cells[i].length; j++) {
                 const cell = this.getCell(i, j);
                 if (cell.td) {
                     const cellRect = normalizeRect(cell.td.getBoundingClientRect());
-                    if (cellRect.right == borderPos) {
-                        found = true;
+                    if ((isRightBorder ? cellRect.right : cellRect.left) == borderPos) {
+                        if (!isRightBorder) {
+                            if (cellRect.right < closestValue) {
+                                closestValue = cellRect.right;
+                                pos = cells.length;
+                            }
+                            cell.td.setAttribute('originalRightBorder', cellRect.right.toString());
+                        } else {
+                            if (cellRect.left > closestValue) {
+                                closestValue = cellRect.left;
+                                pos = cells.length;
+                            }
+                            cell.td.setAttribute('originalLeftBorder', cellRect.left.toString());
+                        }
                         cells.push(cell.td);
                     } else if (cellRect.right > borderPos) {
                         break;
                     }
                 }
             }
-            if (!found) {
-                break;
-            }
+        }
+
+        if (cells.length > 0) {
+            const temp = cells[0];
+            cells[0] = cells[pos];
+            cells[pos] = temp;
         }
         return cells;
     }

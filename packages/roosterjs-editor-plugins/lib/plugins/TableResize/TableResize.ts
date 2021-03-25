@@ -41,7 +41,8 @@ export default class TableResize implements EditorPlugin {
     //private originalWidthOfCurrentTd: number;
     //private originalWidthOfNextTd: number;
     private cellsToResize: HTMLTableCellElement[] = [];
-    private rightBorderOfNextTd: number;
+    private nextCellsToResize: HTMLTableCellElement[] = [];
+    //private rightBorderOfNextTd: number;
     private horizontalResizer: HTMLDivElement;
     private verticalResizer: HTMLDivElement;
     private resizingState: ResizeState = ResizeState.None;
@@ -337,10 +338,10 @@ export default class TableResize implements EditorPlugin {
         this.startResizeTable(e);
     };
 
-    private getNextSiblingTd = () => {
+    /*private getNextSiblingTd = () => {
         const nextCell = this.currentTd?.nextElementSibling;
         return nextCell ? (nextCell as HTMLTableCellElement) : null;
-    };
+    };*/
 
     /*private getCellWidth = (cell: HTMLTableCellElement) => {
         if (cell.style?.width) {
@@ -353,12 +354,26 @@ export default class TableResize implements EditorPlugin {
     private startVerticalResizeTable = (e: MouseEvent) => {
         //this.originalWidthOfCurrentTd = parseInt(this.currentTd.style.width.slice(0, -2));
         //this.originalWidthOfNextTd = parseInt(this.getNextSiblingTd().style.width.slice(0, -2));
-        this.rightBorderOfNextTd = this.getNextSiblingTd().getBoundingClientRect().right;
+        //this.rightBorderOfNextTd = this.getNextSiblingTd().getBoundingClientRect().right;
         //console.log('start right border: ' + this.rightBorderOfNextTd);
         this.resizingState = ResizeState.Vertical;
 
-        //const tb = this.currentTable;
+        const vtable = new VTable(this.currentTd);
+        if (vtable) {
+            const rect = normalizeRect(this.currentTd.getBoundingClientRect());
+            this.cellsToResize = vtable.getCellsWithBorder(rect.right, true);
+            this.nextCellsToResize = vtable.getCellsWithBorder(rect.right, false);
+        }
 
+        /*this.nextCellsToResize.forEach(td => {
+            const nextRect = normalizeRect(td.getBoundingClientRect());
+            console.log(
+                'next td at mouse down: ' +
+                    td.getAttribute('originalRightBorder') +
+                    ', right border: ' +
+                    nextRect.right
+            );
+        });*/
         this.startResizeTable(e);
     };
 
@@ -373,10 +388,17 @@ export default class TableResize implements EditorPlugin {
         //this.resizeTable(e);
     };
 
+    // get the total width of padding-left, padding-right and border-width of the cell
+    private getTdOffsetWidth = (td: HTMLTableCellElement): number => {
+        return (
+            parseInt(this.currentTable.cellPadding) * 2 +
+            parseInt(td.style.borderWidth.slice(0, -2))
+        );
+    };
+
     private resizeTable = (e: MouseEvent) => {
         if (this.currentTd && this.resizingState !== ResizeState.None) {
             const rect = normalizeRect(this.currentTd.getBoundingClientRect());
-            //const nextRect = normalizeRect(this.getNextSiblingTd().getBoundingClientRect());
 
             if (rect) {
                 const newPos = this.resizingState == ResizeState.Horizontal ? e.pageY : e.pageX;
@@ -392,106 +414,77 @@ export default class TableResize implements EditorPlugin {
                         }
                     });
                 } else {
+                    const leftBoundary: number = parseInt(
+                        this.cellsToResize[0].getAttribute('originalLeftBorder')
+                    );
+
+                    const rightBoundary: number =
+                        this.nextCellsToResize.length > 0
+                            ? parseInt(
+                                  this.nextCellsToResize[0].getAttribute('originalRightBorder')
+                              )
+                            : Number.MAX_SAFE_INTEGER;
+
+                    if (newPos <= leftBoundary + 20 || newPos >= rightBoundary - 20) {
+                        console.log('out of bourndary!!!');
+                        return;
+                    } else {
+                        console.log(
+                            'within bourndary!!!  newPos: ' +
+                                newPos +
+                                '  RB: ' +
+                                (rightBoundary - 20)
+                        );
+                    }
+
                     //vtable.table.style.width = '';
                     //vtable.table.width = '';
 
-                    // method 1
-                    /*const cellsWithTheSameRightBorder: HTMLTableCellElement[] = [];
-                    vtable.forEachCellOfCurrentColumn(cell => {
-                        if (cell.td) {
-                            const cellRect = normalizeRect(cell.td.getBoundingClientRect());
-                            // Ensure
-                            if (cellRect.right == rect.right) {
-                                console.log('cell with same border: ' + cell.td.innerHTML + '  ');
-                                cellsWithTheSameRightBorder.push(cell.td);
-                                //cell.td.style.width = `${newPos - rect.left}px`;
-                            } else if (cellRect.right < rect.right) {
-                                let nextTd = cell.td.nextElementSibling as HTMLTableCellElement;
-                                while (nextTd) {
-                                    if (
-                                        normalizeRect(nextTd.getBoundingClientRect()).right ==
-                                        rect.right
-                                    ) {
-                                        cellsWithTheSameRightBorder.push(nextTd);
-                                        break;
-                                    }
-                                    nextTd = nextTd.nextElementSibling as HTMLTableCellElement;
-                                }
-                            } else {
-                                console.log('********* no same border!!!');
-                            }
-                        } else {
-                            cellsWithTheSameRightBorder.push(vtable.getCell(2, 0).td);
-                        }
-                    });
-
-                    cellsWithTheSameRightBorder.forEach(td => {
-                        td.style.wordBreak = 'break-word';
-                        let originalWidth;
-                        //if (td.innerHTML == 'aa') {
-                        //   originalWidth = 240;
-                        // } else {
-                        originalWidth = parseInt(td.style.width.slice(0, -2));
-                        //  }
-                        const offset = newPos - rect.left - originalWidth;
-                        //console.log('setting current: ' + cell.td.innerHTML + '  ');
-                        td.style.width = `${newPos - rect.left}px`;
-
-                        if (td.nextElementSibling) {
-                            const nextTd = td.nextElementSibling as HTMLTableCellElement;
-                            const nextTdWidth = parseInt(nextTd.style.width.slice(0, -2));
-                            //console.log('setting next: ' + nextTd.innerHTML + ' ');
-                            nextTd.style.width = `${nextTdWidth - offset}px`;
-                        }
-                    });*/
-
-                    // method 2
-                    if (this.cellsToResize.length == 0) {
-                        this.cellsToResize = vtable.getCellsWithBorder(rect.right);
-                    }
-
+                    let didActuallyResize: boolean = true;
                     this.cellsToResize.forEach(td => {
-                        console.log('setting curretn cell: ' + td.innerHTML);
+                        const rect = normalizeRect(td.getBoundingClientRect());
                         td.style.wordBreak = 'break-word';
-                        td.style.width = td == this.currentTd ? `${newPos - rect.left}px` : null;
+                        const originalRightBorder: number = td.getBoundingClientRect().right;
+                        const originalLeftBorder: number = td.getBoundingClientRect().left;
+                        const originalWidth = originalRightBorder - originalLeftBorder;
+                        console.log(
+                            '************* old width: ' + (originalRightBorder - originalLeftBorder)
+                        );
+                        const offset = this.getTdOffsetWidth(td);
+                        td.style.width = `${newPos - rect.left - offset}px`;
+                        const newRightBorder: number = td.getBoundingClientRect().right;
+                        const leftBorder: number = td.getBoundingClientRect().left;
 
-                        const nextTd = td.nextElementSibling as HTMLTableCellElement;
-                        if (nextTd) {
-                            const nextTdWidth = this.rightBorderOfNextTd - newPos;
-                            //const nextTdWidth = this.rightBorderOfNextTd - newPos;
-                            nextTd.style.width =
-                                td == this.currentTd ? `${nextTdWidth - 5.5}px` : null;
-                            console.log('setting next cell: ' + nextTd.innerHTML);
-                        } else {
-                            console.log('no next!!!');
+                        const newWidth = newRightBorder - leftBorder;
+                        console.log('****** new width: ' + (newRightBorder - leftBorder));
+
+                        if (originalWidth == newWidth) {
+                            //console.log('************ not actually resized!!!');
+                            didActuallyResize = false;
                         }
                     });
 
-                    /*vtable.forEachCellOfCurrentColumn(cell => {
-                        if (cell.td) {
-                            cell.td.style.wordBreak = 'break-word';
-                            cell.td.style.width =
-                                cell.td == this.currentTd ? `${newPos - rect.left}px` : null;
-                            console.log('setting current td: ' + cell.td.innerHTML);
-                            //cell.td.style.width = `${newPos - rect.left}px`;
-
-                            const nextTd = cell.td.nextElementSibling as HTMLTableCellElement;
-                            if (nextTd) {
-                                const nextTdWidth = this.rightBorderOfNextTd - newPos;
-                                //console.log('new width next: ' + nextTdWidth);
-                                if (cell.td == this.currentTd) {
-                                    //const nextTdWidth = this.rightBorderOfNextTd - newPos;
-                                    nextTd.style.width = `${nextTdWidth - 5.5}px`;
-                                    console.log('setting next cell: ' + nextTd.innerHTML);
-                                } else {
-                                    nextTd.style.width = null;
-                                    //nextTd.style.width = `${nextTdWidth - 5.5}px`;
-                                }
-                            } else {
-                                console.log('no next!!!');
-                            }
-                        }
-                    });*/
+                    // if (didActuallyResize) {
+                    this.nextCellsToResize.forEach(td => {
+                        td.style.wordBreak = 'break-word';
+                        console.log(
+                            'next td ' +
+                                td.innerHTML +
+                                ', right: ' +
+                                normalizeRect(td.getBoundingClientRect()).right
+                        );
+                        const nextTdWidth =
+                            parseInt(td.getAttribute('originalRightBorder')) - newPos;
+                        const offset = this.getTdOffsetWidth(td);
+                        td.style.width = `${nextTdWidth - offset}px`;
+                        /*const offset =
+                            normalizeRect(td.getBoundingClientRect()).right -
+                            parseInt(td.getAttribute('originalRightBorder'));
+                        console.log('**** offset: ' + offset);
+                        td.style.width = `${nextTdWidth - offset}px`;*/
+                        //td.hidden = false;
+                    });
+                    // }
                 }
                 vtable.writeBack();
             }
@@ -503,6 +496,7 @@ export default class TableResize implements EditorPlugin {
         doc.removeEventListener('mousemove', this.frameAnimateResizeTable, true);
         doc.removeEventListener('mouseup', this.endResizeTable, true);
         this.cellsToResize = [];
+        this.nextCellsToResize = [];
 
         this.editor.addUndoSnapshot((start, end) => {
             this.frameAnimateResizeTable(e);
