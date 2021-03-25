@@ -4,8 +4,6 @@ import setBackgroundColor from '../../lib/format/setBackgroundColor';
 import setFontName from '../../lib/format/setFontName';
 import setFontSize from '../../lib/format/setFontSize';
 import setTextColor from '../../lib/format/setTextColor';
-import toggleBullet from '../../lib/format/toggleBullet';
-import toggleNumbering from '../../lib/format/toggleNumbering';
 import toggleStrikethrough from '../../lib/format/toggleStrikethrough';
 import toggleSubscript from '../../lib/format/toggleSubscript';
 import toggleSuperscript from '../../lib/format/toggleSuperscript';
@@ -22,24 +20,6 @@ describe('FormatUtils', () => {
     afterEach(() => {
         editor.dispose();
         TestHelper.removeElement(testID);
-    });
-
-    it('toggleBullet() triggers the bullet command in document', () => {
-        let document = editor.getDocument();
-        spyOn(document, 'execCommand').and.callThrough();
-
-        toggleBullet(editor);
-
-        expect(document.execCommand).toHaveBeenCalledWith('insertUnorderedList', false, null);
-    });
-
-    it('toggleNumbering() triggers the numbering command in document', () => {
-        let document = editor.getDocument();
-        spyOn(document, 'execCommand').and.callThrough();
-
-        toggleNumbering(editor);
-
-        expect(document.execCommand).toHaveBeenCalledWith('insertOrderedList', false, null);
     });
 
     it('toggleStrikethrough() triggers the strikethrough command in document', () => {

@@ -130,7 +130,7 @@ const buttons: { [key: string]: RibbonButtonType } = {
     numbering: {
         title: 'Numbering',
         image: require('../svg/numbering.svg'),
-        onClick: toggleNumbering,
+        onClick: editor => toggleNumbering(editor),
         checked: format => format.isNumbering,
     },
     outdent: {
