@@ -142,13 +142,13 @@ export default class TableResize implements EditorPlugin {
                         const td = tr.cells[Math.max(0, j)];
                         const tdRect = normalizeRect(td.getBoundingClientRect());
 
-                        if (tdRect && e.pageX <= tdRect.right && e.pageY < tdRect.bottom) {
+                        if (tdRect && e.pageX <= tdRect.right && e.pageY <= tdRect.bottom) {
                             if (i == 0 && e.pageY <= tdRect.top + INSERTER_HOVER_OFFSET) {
                                 let verticalInserterTd = null;
                                 // set inserter at current td
                                 if (e.pageX >= tdRect.left + (tdRect.right - tdRect.left) / 2.0) {
                                     verticalInserterTd = td;
-                                } else {
+                                } else if (e.pageX >= tdRect.left) {
                                     // set inserter at previous td if it exists
                                     const preTd = td.previousElementSibling as HTMLTableCellElement;
                                     if (preTd) {
@@ -169,7 +169,7 @@ export default class TableResize implements EditorPlugin {
                                 // set inserter at current td
                                 if (e.pageY >= tdRect.top + (tdRect.bottom - tdRect.top) / 2.0) {
                                     horizontalInserterTd = td;
-                                } else {
+                                } else if (e.pageY >= tdRect.top) {
                                     // set insert at previous td if it exists
                                     const preTd = this.currentTable.rows[i - 1]?.cells[0];
                                     if (preTd) {
