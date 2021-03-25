@@ -149,50 +149,13 @@ export default class TableResize implements EditorPlugin {
 
                         if (tdRect && e.pageX <= tdRect.right && e.pageY < tdRect.bottom) {
                             if (i == 0 && e.pageY <= tdRect.top + INSERTER_HOVER_OFFSET) {
-                                let verticalInserterTd = null;
-                                // set inserter at current td
-                                if (e.pageX >= tdRect.left + (tdRect.right - tdRect.left) / 2.0) {
-                                    verticalInserterTd = td;
-                                }
-                                // set inserter at previous td if it exists
-                                else {
-                                    const preTd = td.previousElementSibling as HTMLTableCellElement;
-                                    if (preTd) {
-                                        verticalInserterTd = preTd;
-                                    }
-                                }
-                                if (verticalInserterTd) {
-                                    this.setCurrentTd(null);
-                                    this.setCurrentInsertTd(
-                                        ResizeState.Vertical,
-                                        verticalInserterTd,
-                                        map.rect
-                                    );
-                                    break;
-                                }
+                                this.setCurrentTd(null);
+                                this.setCurrentInsertTd(ResizeState.Vertical, td, map.rect);
+                                break;
                             } else if (j == 0 && e.pageX <= tdRect.left + INSERTER_HOVER_OFFSET) {
-                                let horizontalInserterTd = null;
-                                // set inserter at current td
-                                if (e.pageY >= tdRect.top + (tdRect.bottom - tdRect.top) / 2.0) {
-                                    horizontalInserterTd = td;
-                                }
-                                // set insert at previous td if it exists
-                                else {
-                                    const preTd = this.currentTable.rows[i - 1]?.cells[0];
-                                    if (preTd) {
-                                        horizontalInserterTd = preTd;
-                                    }
-                                }
-
-                                if (horizontalInserterTd) {
-                                    this.setCurrentTd(null);
-                                    this.setCurrentInsertTd(
-                                        ResizeState.Horizontal,
-                                        horizontalInserterTd,
-                                        map.rect
-                                    );
-                                    break;
-                                }
+                                this.setCurrentTd(null);
+                                this.setCurrentInsertTd(ResizeState.Vertical, td, map.rect);
+                                break;
                             } else {
                                 this.setCurrentTd(td, map.rect, tdRect.right, tdRect.bottom);
                                 this.setCurrentInsertTd(ResizeState.None);
