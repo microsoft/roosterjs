@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-editor-api/lib/experiment/experimentToggleListType.ts</title>
+    <title>Code coverage report for roosterjs-editor-api/lib/utils/toggleListType.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-api/lib/experiment</a> experimentToggleListType.ts</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-api/lib/utils</a> toggleListType.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">30% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/10</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>0/12</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
-                <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>9/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">33.33% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>4/12</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">66.67% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>2/3</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -89,11 +89,7 @@
 <a name='L30'></a><a href='#L30'>30</a>
 <a name='L31'></a><a href='#L31'>31</a>
 <a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L33'></a><a href='#L33'>33</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -108,24 +104,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -136,32 +128,28 @@ import { IEditor, ListType } from 'roosterjs-editor-types';
 /**
  * @internal
  */
-export default function experimentToggleListType(editor: IEditor, listType: ListType): void;
-export default function experimentToggleListType(
+export default function toggleListType(editor: IEditor, listType: ListType): void;
+export default function toggleListType(
     editor: IEditor,
     listType: ListType.Ordered,
     startNumber: number
 ): void;
 &nbsp;
-export default function <span class="fstat-no" title="function not covered" >experimentToggleListType(</span>
-    editor: IEditor,
-    listType: ListType,
-    startNumber?: number
-) {
-<span class="cstat-no" title="statement not covered" >    blockFormat(editor, <span class="fstat-no" title="function not covered" >(r</span>egion, start, end, chains) =&gt; {</span>
+export default function toggleListType(editor: IEditor, listType: ListType, startNumber?: number) {
+    blockFormat(editor, (region, start, end, chains) =&gt; {
         const chain =
-<span class="cstat-no" title="statement not covered" >            startNumber &gt; 0 &amp;&amp; chains.filter(<span class="fstat-no" title="function not covered" >chain </span>=&gt; <span class="cstat-no" title="statement not covered" >chain.canAppendAtCursor(startNumber))[</span>0];</span>
+            startNumber &gt; 0 &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >chains.filter(<span class="fstat-no" title="function not covered" >chain </span>=&gt; <span class="cstat-no" title="statement not covered" >chain.canAppendAtCursor(startNumber))[</span>0];</span>
         const vList =
-<span class="cstat-no" title="statement not covered" >            chain &amp;&amp; start.equalTo(end)</span>
-                ? chain.createVListAtBlock(
+            chain &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >start.equalTo(end)</span>
+                ? <span class="branch-0 cbranch-no" title="branch not covered" >chain.createVListAtBlock(</span>
                       getBlockElementAtNode(region.rootNode, start.node)?.collapseToSingleElement(),
                       startNumber
                   )
                 : createVListFromRegion(region, true /*includeSiblingLists*/);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (vList) {</span>
-<span class="cstat-no" title="statement not covered" >            vList.changeListType(start, end, listType);</span>
-<span class="cstat-no" title="statement not covered" >            vList.writeBack();</span>
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (vList) {
+            vList.changeListType(start, end, listType);
+            vList.writeBack();
         }
     });
 }
@@ -172,7 +160,7 @@ export default function <span class="fstat-no" title="function not covered" >exp
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Mar 16 2021 16:39:49 GMT+0000 (Coordinated Universal Time)
+                at Thu Mar 25 2021 19:08:40 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

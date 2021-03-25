@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.75% </span>
+                <span class="strong">12.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>11/80</span>
+                <span class='fraction'>10/79</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">3.57% </span>
+                <span class="strong">3.77% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/56</span>
+                <span class='fraction'>2/53</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.92% </span>
+                <span class="strong">12.82% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/79</span>
+                <span class='fraction'>10/78</span>
             </div>
         
             
@@ -296,25 +296,13 @@
 <a name='L237'></a><a href='#L237'>237</a>
 <a name='L238'></a><a href='#L238'>238</a>
 <a name='L239'></a><a href='#L239'>239</a>
-<a name='L240'></a><a href='#L240'>240</a>
-<a name='L241'></a><a href='#L241'>241</a>
-<a name='L242'></a><a href='#L242'>242</a>
-<a name='L243'></a><a href='#L243'>243</a>
-<a name='L244'></a><a href='#L244'>244</a>
-<a name='L245'></a><a href='#L245'>245</a>
-<a name='L246'></a><a href='#L246'>246</a>
-<a name='L247'></a><a href='#L247'>247</a>
-<a name='L248'></a><a href='#L248'>248</a>
-<a name='L249'></a><a href='#L249'>249</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L240'></a><a href='#L240'>240</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -468,10 +456,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -503,8 +487,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -553,8 +535,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import experimentToggleListType from 'roosterjs-editor-api/lib/experiment/experimentToggleListType';
-import {
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
     experimentCommitListChains,
     setIndentation,
     toggleBullet,
@@ -577,10 +558,8 @@ import {
     NodeType,
     PluginKeyboardEvent,
     PositionType,
-    ListType,
     QueryScope,
     RegionBase,
-    ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 &nbsp;
 /**
@@ -715,14 +694,10 @@ const AutoBullet: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
                     } else <span class="cstat-no" title="statement not covered" >if (textBeforeCursor.indexOf('1.') == 0) {</span>
 <span class="cstat-no" title="statement not covered" >                        prepareAutoBullet(editor, rangeToDelete);</span>
 <span class="cstat-no" title="statement not covered" >                        toggleNumbering(editor);</span>
-                    } else <span class="cstat-no" title="statement not covered" >if (</span>
-                        editor.isFeatureEnabled(ExperimentalFeatures.ListChain) &amp;&amp;
-                        (regions = editor.getSelectedRegions()) &amp;&amp;
-                        regions.length == 1
-                    ) {
+                    } else <span class="cstat-no" title="statement not covered" >if ((regions = editor.getSelectedRegions()) &amp;&amp; regions.length == 1) {</span>
                         const num = <span class="cstat-no" title="statement not covered" >parseInt(textBeforeCursor);</span>
 <span class="cstat-no" title="statement not covered" >                        prepareAutoBullet(editor, rangeToDelete);</span>
-<span class="cstat-no" title="statement not covered" >                        experimentToggleListType(editor, ListType.Ordered, num);</span>
+<span class="cstat-no" title="statement not covered" >                        toggleNumbering(editor, num);</span>
                     }
                 },
                 null /*changeSource*/,
@@ -750,9 +725,7 @@ const MaintainListChain: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
 };
 &nbsp;
 function <span class="fstat-no" title="function not covered" >getListChains(</span>editor: IEditor) {
-<span class="cstat-no" title="statement not covered" >    return editor.isFeatureEnabled(ExperimentalFeatures.ListChain)</span>
-        ? VListChain.createListChains(editor.getSelectedRegions())
-        : [];
+<span class="cstat-no" title="statement not covered" >    return VListChain.createListChains(editor.getSelectedRegions());</span>
 }
 &nbsp;
 function <span class="fstat-no" title="function not covered" >prepareAutoBullet(</span>editor: IEditor, range: Range) {
@@ -808,7 +781,7 @@ export const ListFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Mar 16 2021 16:39:49 GMT+0000 (Coordinated Universal Time)
+                at Thu Mar 25 2021 19:08:40 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
