@@ -151,7 +151,7 @@ export default class TableResize implements EditorPlugin {
                                 break;
                             } else if (j == 0 && e.pageX <= tdRect.left + INSERTER_HOVER_OFFSET) {
                                 this.setCurrentTd(null);
-                                this.setCurrentInsertTd(ResizeState.Vertical, td, map.rect);
+                                this.setCurrentInsertTd(ResizeState.Horizontal, td, map.rect);
                                 break;
                             } else {
                                 this.setCurrentTd(td, map.rect, tdRect.right, tdRect.bottom);
