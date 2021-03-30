@@ -384,6 +384,21 @@ export default class TableResize implements EditorPlugin {
                         }
                     });
                 } else {
+                    const leftBoundary: number = parseInt(
+                        this.currentCellsToResize[0].getAttribute('originalLeftBorder')
+                    );
+
+                    const rightBoundary: number =
+                        this.nextCellsToResize.length > 0
+                            ? parseInt(
+                                  this.nextCellsToResize[0].getAttribute('originalRightBorder')
+                              )
+                            : Number.MAX_SAFE_INTEGER;
+
+                    if (newPos <= leftBoundary + 20 || newPos >= rightBoundary - 20) {
+                        return;
+                    }
+
                     this.currentCellsToResize.forEach(td => {
                         const rect = normalizeRect(td.getBoundingClientRect());
                         td.style.wordBreak = 'break-word';
