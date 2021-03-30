@@ -408,12 +408,6 @@ export default class TableResize implements EditorPlugin {
 
                     this.nextCellsToResize.forEach(td => {
                         td.style.wordBreak = 'break-word';
-                        console.log(
-                            'next td ' +
-                                td.innerHTML +
-                                ', right: ' +
-                                normalizeRect(td.getBoundingClientRect()).right
-                        );
                         const nextTdWidth =
                             parseInt(td.getAttribute('originalRightBorder')) - newPos;
                         const offset = this.getTdOffsetWidth(td);
