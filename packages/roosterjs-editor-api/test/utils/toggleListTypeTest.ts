@@ -1,8 +1,8 @@
 import * as TestHelper from '../TestHelper';
-import processList from '../../lib/utils/processList';
-import { DocumentCommand, IEditor, PositionType } from 'roosterjs-editor-types';
+import toggleListType from '../../lib/utils/toggleListType';
+import { IEditor, ListType, PositionType } from 'roosterjs-editor-types';
 
-describe('processList()', () => {
+describe('toggleListTypeTest()', () => {
     const testID = 'processList';
     let editor: IEditor;
 
@@ -28,7 +28,7 @@ describe('processList()', () => {
         editor.select(document.getElementById('focusNode'), PositionType.Begin);
 
         // Act
-        processList(editor, DocumentCommand.Outdent);
+        toggleListType(editor, ListType.Unordered);
 
         // Assert
         expect(editor.getContent()).toBe(
@@ -36,7 +36,7 @@ describe('processList()', () => {
                 '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div>' +
                 '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">' +
                 '<ul><li>test</li></ul>' +
-                '<span id="focusNode" style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"></span>' +
+                '<div><span id="focusNode" style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"></span></div>' +
                 '</div>'
         );
     });
@@ -54,7 +54,7 @@ describe('processList()', () => {
         editor.select(document.getElementById('focusNode'), PositionType.Begin);
 
         // Act
-        processList(editor, DocumentCommand.Outdent);
+        toggleListType(editor, ListType.Unordered);
 
         // Assert
         expect(editor.getContent()).toBe(
@@ -62,7 +62,8 @@ describe('processList()', () => {
                 '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div>' +
                 '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">' +
                 '<ul><li>test</li></ul>' +
-                '<span id="focusNode" style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"></span><ul><li>test</li></ul>' +
+                '<div><span id="focusNode" style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"></span></div>' +
+                '<ul><li>test</li></ul>' +
                 '</div>'
         );
     });
@@ -80,14 +81,15 @@ describe('processList()', () => {
         editor.select(document.getElementById('focusNode'), PositionType.Begin);
 
         // Act
-        processList(editor, DocumentCommand.Outdent);
+        toggleListType(editor, ListType.Unordered);
 
         // Assert
         expect(editor.getContent()).toBe(
             '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div>' +
                 '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div>' +
                 '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">' +
-                '<ul><li>test</li><li>test</li></ul><br>' +
+                '<ul><li>test</li><li>test</li></ul>' +
+                '<div><br></div>' +
                 '</div>'
         );
     });
@@ -105,14 +107,15 @@ describe('processList()', () => {
         editor.select(document.getElementById('focusNode'), PositionType.Begin);
 
         // Act
-        processList(editor, DocumentCommand.Outdent);
+        toggleListType(editor, ListType.Unordered);
 
         // Assert
         expect(editor.getContent()).toBe(
             '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div>' +
                 '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div>' +
                 '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">' +
-                '<ul><li>test</li></ul><br>' +
+                '<ul><li>test</li></ul>' +
+                '<div><br></div>' +
                 '<ul><li>test</li></ul>' +
                 '</div>'
         );
