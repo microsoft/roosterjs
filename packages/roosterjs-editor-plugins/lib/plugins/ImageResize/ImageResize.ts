@@ -306,7 +306,7 @@ export default class ImageResize implements EditorPlugin {
         );
 
         wrapper.style.position = 'relative';
-        wrapper.style.display = Browser.isIE ? 'inline-flex' : 'inline-block';
+        wrapper.style.display = Browser.isSafari ? 'inline-block' : 'inline-flex';
 
         const html =
             (this.editor.isFeatureEnabled(ExperimentalFeatures.SingleDirectionResize)
