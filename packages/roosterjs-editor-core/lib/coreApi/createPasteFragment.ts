@@ -113,10 +113,23 @@ export const createPasteFragment: CreatePasteFragment = (
                 .replace(/^ /g, NBSP_HTML)
                 .replace(/\r/g, '')
                 .replace(/ {2}/g, ' ' + NBSP_HTML);
+            const textNode = document.createTextNode(line);
 
-            const node = line == '' ? document.createElement('br') : document.createTextNode(line);
-
-            fragment.appendChild(index == 0 || index == lines.length - 1 ? node : wrap(node));
+            // There are 3 scenarios:
+            // 1. Single line: Paste as it is
+            // 2. Two lines: Add <br> between the lines
+            // 3. 3 or More lines, For first and last line, paste as it is. For middle lines, wrap with DIV, and add BR if it is empty line
+            if (lines.length == 2 && index == 0) {
+                // 1 of 2 lines scenario, add BR
+                fragment.appendChild(textNode);
+                fragment.appendChild(document.createElement('br'));
+            } else if (index > 0 && index < lines.length - 1) {
+                // Middle line of >=3 lines scenario, wrap with DIV
+                fragment.appendChild(wrap(line == '' ? document.createElement('br') : textNode));
+            } else {
+                // All others, paste as it is
+                fragment.appendChild(textNode);
+            }
         });
     }
 
