@@ -1,4 +1,4 @@
-import { fromHtml, normalizeRect, VTable } from 'roosterjs-editor-dom';
+import { fromHtml, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
     IEditor,
@@ -45,6 +45,7 @@ export default class TableResize implements EditorPlugin {
     private currentInsertTd: HTMLTableCellElement;
     private insertingState: ResizeState = ResizeState.None;
     private inserter: HTMLDivElement;
+    private isRTL: boolean;
 
     /**
      * Get a friendly name of  this plugin
@@ -112,18 +113,32 @@ export default class TableResize implements EditorPlugin {
             this.cacheRects();
         }
 
+        this.isRTL = getComputedStyle(this.editor.getDocument().body, 'direction') == 'rtl';
+
         if (this.tableRectMap) {
             let i = this.tableRectMap.length - 1;
             for (; i >= 0; i--) {
                 const { table, rect } = this.tableRectMap[i];
-                if (
-                    e.pageX >= rect.left - INSERTER_SIDE_LENGTH &&
-                    e.pageX <= rect.right &&
-                    e.pageY >= rect.top - INSERTER_SIDE_LENGTH &&
-                    e.pageY <= rect.bottom
-                ) {
-                    this.setCurrentTable(table, rect);
-                    break;
+                if (this.isRTL) {
+                    if (
+                        e.pageX <= rect.right + INSERTER_SIDE_LENGTH &&
+                        e.pageX >= rect.left &&
+                        e.pageY >= rect.top - INSERTER_SIDE_LENGTH &&
+                        e.pageY <= rect.bottom
+                    ) {
+                        this.setCurrentTable(table, rect);
+                        break;
+                    }
+                } else {
+                    if (
+                        e.pageX >= rect.left - INSERTER_SIDE_LENGTH &&
+                        e.pageX <= rect.right &&
+                        e.pageY >= rect.top - INSERTER_SIDE_LENGTH &&
+                        e.pageY <= rect.bottom
+                    ) {
+                        this.setCurrentTable(table, rect);
+                        break;
+                    }
                 }
             }
 
@@ -142,54 +157,125 @@ export default class TableResize implements EditorPlugin {
                         const td = tr.cells[j];
                         const tdRect = normalizeRect(td.getBoundingClientRect());
 
-                        if (tdRect && e.pageX <= tdRect.right && e.pageY <= tdRect.bottom) {
-                            if (i == 0 && e.pageY <= tdRect.top + INSERTER_HOVER_OFFSET) {
-                                let verticalInserterTd: HTMLTableCellElement = null;
-                                // set inserter at current td
-                                if (e.pageX >= tdRect.left + (tdRect.right - tdRect.left) / 2.0) {
-                                    verticalInserterTd = td;
-                                } else if (e.pageX >= tdRect.left) {
-                                    // set inserter at previous td if it exists
-                                    const preTd = td.previousElementSibling as HTMLTableCellElement;
-                                    if (preTd) {
-                                        verticalInserterTd = preTd;
+                        if (this.isRTL) {
+                            if (tdRect && e.pageX >= tdRect.left && e.pageY <= tdRect.bottom) {
+                                if (i == 0 && e.pageY <= tdRect.top + INSERTER_HOVER_OFFSET) {
+                                    let verticalInserterTd: HTMLTableCellElement = null;
+                                    // set inserter at current td
+                                    if (
+                                        e.pageX <=
+                                        tdRect.left + (tdRect.right - tdRect.left) / 2.0
+                                    ) {
+                                        verticalInserterTd = td;
+                                    } else if (e.pageX <= tdRect.right) {
+                                        // set inserter at previous td if it exists
+                                        const preTd = td.previousElementSibling as HTMLTableCellElement;
+                                        if (preTd) {
+                                            verticalInserterTd = preTd;
+                                        }
                                     }
-                                }
-                                if (verticalInserterTd) {
-                                    this.setCurrentTd(null);
-                                    this.setCurrentInsertTd(
-                                        ResizeState.Vertical,
-                                        verticalInserterTd,
-                                        map.rect
-                                    );
-                                    break;
-                                }
-                            } else if (j == 0 && e.pageX <= tdRect.left + INSERTER_HOVER_OFFSET) {
-                                let horizontalInserterTd: HTMLTableCellElement = null;
-                                // set inserter at current td
-                                if (e.pageY >= tdRect.top + (tdRect.bottom - tdRect.top) / 2.0) {
-                                    horizontalInserterTd = td;
-                                } else if (e.pageY >= tdRect.top) {
-                                    // set insert at previous td if it exists
-                                    const preTd = this.currentTable.rows[i - 1]?.cells[0];
-                                    if (preTd) {
-                                        horizontalInserterTd = preTd;
+                                    if (verticalInserterTd) {
+                                        this.setCurrentTd(null);
+                                        this.setCurrentInsertTd(
+                                            ResizeState.Vertical,
+                                            verticalInserterTd,
+                                            map.rect
+                                        );
+                                        break;
                                     }
-                                }
+                                } else if (
+                                    j == 0 &&
+                                    e.pageX >= tdRect.right - INSERTER_HOVER_OFFSET
+                                ) {
+                                    let horizontalInserterTd: HTMLTableCellElement = null;
+                                    // set inserter at current td
+                                    if (
+                                        e.pageY >=
+                                        tdRect.top + (tdRect.bottom - tdRect.top) / 2.0
+                                    ) {
+                                        horizontalInserterTd = td;
+                                    } else if (e.pageY >= tdRect.top) {
+                                        // set insert at previous td if it exists
+                                        const preTd = this.currentTable.rows[i - 1]?.cells[0];
+                                        if (preTd) {
+                                            horizontalInserterTd = preTd;
+                                        }
+                                    }
 
-                                if (horizontalInserterTd) {
-                                    this.setCurrentTd(null);
-                                    this.setCurrentInsertTd(
-                                        ResizeState.Horizontal,
-                                        horizontalInserterTd,
-                                        map.rect
-                                    );
+                                    if (horizontalInserterTd) {
+                                        this.setCurrentTd(null);
+                                        this.setCurrentInsertTd(
+                                            ResizeState.Horizontal,
+                                            horizontalInserterTd,
+                                            map.rect
+                                        );
+                                        break;
+                                    }
+                                } else {
+                                    this.setCurrentTd(td, map.rect, tdRect.right, tdRect.bottom);
+                                    this.setCurrentInsertTd(ResizeState.None);
                                     break;
                                 }
-                            } else {
-                                this.setCurrentTd(td, map.rect, tdRect.right, tdRect.bottom);
-                                this.setCurrentInsertTd(ResizeState.None);
-                                break;
+                            }
+                        } else {
+                            if (tdRect && e.pageX <= tdRect.right && e.pageY <= tdRect.bottom) {
+                                if (i == 0 && e.pageY <= tdRect.top + INSERTER_HOVER_OFFSET) {
+                                    let verticalInserterTd: HTMLTableCellElement = null;
+                                    // set inserter at current td
+                                    if (
+                                        e.pageX >=
+                                        tdRect.left + (tdRect.right - tdRect.left) / 2.0
+                                    ) {
+                                        verticalInserterTd = td;
+                                    } else if (e.pageX >= tdRect.left) {
+                                        // set inserter at previous td if it exists
+                                        const preTd = td.previousElementSibling as HTMLTableCellElement;
+                                        if (preTd) {
+                                            verticalInserterTd = preTd;
+                                        }
+                                    }
+                                    if (verticalInserterTd) {
+                                        this.setCurrentTd(null);
+                                        this.setCurrentInsertTd(
+                                            ResizeState.Vertical,
+                                            verticalInserterTd,
+                                            map.rect
+                                        );
+                                        break;
+                                    }
+                                } else if (
+                                    j == 0 &&
+                                    e.pageX <= tdRect.left + INSERTER_HOVER_OFFSET
+                                ) {
+                                    let horizontalInserterTd: HTMLTableCellElement = null;
+                                    // set inserter at current td
+                                    if (
+                                        e.pageY >=
+                                        tdRect.top + (tdRect.bottom - tdRect.top) / 2.0
+                                    ) {
+                                        horizontalInserterTd = td;
+                                    } else if (e.pageY >= tdRect.top) {
+                                        // set insert at previous td if it exists
+                                        const preTd = this.currentTable.rows[i - 1]?.cells[0];
+                                        if (preTd) {
+                                            horizontalInserterTd = preTd;
+                                        }
+                                    }
+
+                                    if (horizontalInserterTd) {
+                                        this.setCurrentTd(null);
+                                        this.setCurrentInsertTd(
+                                            ResizeState.Horizontal,
+                                            horizontalInserterTd,
+                                            map.rect
+                                        );
+                                        break;
+                                    }
+                                } else {
+                                    this.setCurrentTd(td, map.rect, tdRect.right, tdRect.bottom);
+                                    this.setCurrentInsertTd(ResizeState.None);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -234,8 +320,9 @@ export default class TableResize implements EditorPlugin {
         const editorBackgroundColor = this.editor.getDefaultFormat().backgroundColor;
         const inserterBackgroundColor = editorBackgroundColor || 'white';
         const inserterColor = this.editor.isDarkMode() ? INSERTER_COLOR_DARK_MODE : INSERTER_COLOR;
+        const leftOrRight = this.isRTL ? 'right' : 'left';
 
-        const HORIZONTAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${inserterColor}px; font-size: 16px; color: ${inserterColor}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${inserterColor}; border-radius: 50%; background-color: ${inserterBackgroundColor}"><div style="position: absolute; left: 12px; top: 5px; height: 3px; border-top: 1px solid ${inserterColor}; border-bottom: 1px solid ${inserterColor}; border-right: 1px solid ${inserterColor}; border-left: 0px; box-sizing: border-box; background-color: ${inserterBackgroundColor};"></div>+</div>`;
+        const HORIZONTAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${inserterColor}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${inserterColor}; border-radius: 50%; background-color: ${inserterBackgroundColor}"><div style="position: absolute; ${leftOrRight}: 12px; top: 5px; height: 3px; border-top: 1px solid ${inserterColor}; border-bottom: 1px solid ${inserterColor}; border-right: 1px solid ${inserterColor}; border-left: 0px; box-sizing: border-box; background-color: ${inserterBackgroundColor};"></div>+</div>`;
         const VERTICAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${inserterColor}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${inserterColor}; border-radius: 50%; background-color: ${inserterBackgroundColor}"><div style="position: absolute; left: 5px; top: 12px; width: 3px; border-left: 1px solid ${inserterColor}; border-right: 1px solid ${inserterColor}; border-bottom: 1px solid ${inserterColor}; border-top: 0px; box-sizing: border-box; background-color: ${inserterBackgroundColor};"></div>+</div>`;
 
         const inserter = fromHtml(
@@ -247,15 +334,23 @@ export default class TableResize implements EditorPlugin {
 
         if (rect) {
             if (this.insertingState == ResizeState.Horizontal) {
-                inserter.style.left = `${
-                    rect.left - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
-                }px`;
+                if (this.isRTL) {
+                    inserter.style.left = `${rect.right}px`;
+                } else {
+                    inserter.style.left = `${
+                        rect.left - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
+                    }px`;
+                }
                 inserter.style.top = `${rect.bottom - 8}px`;
                 (inserter.firstChild as HTMLElement).style.width = `${
                     tableRect.right - tableRect.left
                 }px`;
             } else {
-                inserter.style.left = `${rect.right - 8}px`;
+                if (this.isRTL) {
+                    inserter.style.left = `${rect.left - 8}px`;
+                } else {
+                    inserter.style.left = `${rect.right - 8}px`;
+                }
                 inserter.style.top = `${
                     rect.top - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
                 }px`;
