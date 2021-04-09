@@ -16,6 +16,10 @@ import {
 // StartSelection:140
 // EndSelection:160
 const CLIPBOARD_HTML_HEADER_REGEX = /^Version:[0-9\.]+\s+StartHTML:\s*([0-9]+)\s+EndHTML:\s*([0-9]+)\s+/i;
+const TEXT_TYPE_PREFIX = 'text/';
+const IMAGE_TYPE_PREFIX = 'image/';
+const HTML_TYPE = TEXT_TYPE_PREFIX + 'html';
+const LINKPREVIEW_TYPE = TEXT_TYPE_PREFIX + 'link-preview';
 
 interface WindowForIE extends Window {
     clipboardData: DataTransfer;
@@ -67,7 +71,7 @@ export default function extractClipboardEvent(
             let item = items[i];
 
             switch (item.type) {
-                case 'text/html':
+                case HTML_TYPE:
                     handlers.push({
                         promise: getAsString(item),
                         callback: value => {
@@ -75,7 +79,7 @@ export default function extractClipboardEvent(
                         },
                     });
                     break;
-                case 'text/link-preview':
+                case LINKPREVIEW_TYPE:
                     if (options?.allowLinkPreview) {
                         handlers.push({
                             promise: getAsString(item),
@@ -88,12 +92,16 @@ export default function extractClipboardEvent(
                     }
                     break;
                 default:
-                    if (options?.allowedCustomPasteType?.indexOf(item.type) >= 0) {
-                        handlers.push({
-                            promise: getAsString(item),
-                            callback: value => (result.customValues[item.type] = value),
-                        });
+                    if (item.type.indexOf(TEXT_TYPE_PREFIX) == 0) {
+                        const textType = item.type.substr(TEXT_TYPE_PREFIX.length);
+                        if (options?.allowedCustomPasteType?.indexOf(textType) >= 0) {
+                            handlers.push({
+                                promise: getAsString(item),
+                                callback: value => (result.customValues[textType] = value),
+                            });
+                        }
                     }
+                    break;
             }
         }
     }
@@ -112,7 +120,7 @@ function getImage(dataTransfer: DataTransfer): File {
     let fileCount = dataTransfer.items ? dataTransfer.items.length : 0;
     for (let i = 0; i < fileCount; i++) {
         let item = dataTransfer.items[i];
-        if (item.type && item.type.indexOf('image/') == 0) {
+        if (item.type && item.type.indexOf(IMAGE_TYPE_PREFIX) == 0) {
             return item.getAsFile();
         }
     }
@@ -120,7 +128,7 @@ function getImage(dataTransfer: DataTransfer): File {
     fileCount = dataTransfer.files ? dataTransfer.files.length : 0;
     for (let i = 0; i < fileCount; i++) {
         let file = dataTransfer.files.item(i);
-        if (file.type && file.type.indexOf('image/') == 0) {
+        if (file.type && file.type.indexOf(IMAGE_TYPE_PREFIX) == 0) {
             return file;
         }
     }
