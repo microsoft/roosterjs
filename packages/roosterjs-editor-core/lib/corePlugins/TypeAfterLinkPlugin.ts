@@ -1,4 +1,4 @@
-import { Browser, LinkInlineElement, Position } from 'roosterjs-editor-dom';
+import { Browser, LinkInlineElement } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
     IEditor,
@@ -49,12 +49,13 @@ export default class TypeAfterLinkPlugin implements EditorPlugin {
         ) {
             let range = this.editor.getSelectionRange();
             if (range && range.collapsed && this.editor.getElementAtCursor('A[href]')) {
-                let searcher = this.editor.getContentSearcherOfCursor(event);
-                let inlineElement = searcher.getInlineElementBefore();
-                if (inlineElement instanceof LinkInlineElement) {
-                    this.editor.select(
-                        new Position(inlineElement.getContainerNode(), PositionType.After)
-                    );
+                const searcher = this.editor.getContentSearcherOfCursor(event);
+                const inlineElementBefore = searcher.getInlineElementBefore();
+                const inlineElementAfter = searcher.getInlineElementAfter();
+                if (inlineElementBefore instanceof LinkInlineElement) {
+                    this.editor.select(inlineElementBefore.getContainerNode(), PositionType.After);
+                } else if (inlineElementAfter instanceof LinkInlineElement) {
+                    this.editor.select(inlineElementAfter.getContainerNode(), PositionType.Before);
                 }
             }
         }
