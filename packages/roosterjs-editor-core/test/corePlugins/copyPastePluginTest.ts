@@ -16,7 +16,7 @@ describe('CopyPastePlugin paste', () => {
 
     beforeEach(() => {
         handler = null;
-        plugin = new CopyPastePlugin();
+        plugin = new CopyPastePlugin({});
 
         addDomEventHandler = jasmine
             .createSpy('addDomEventHandler')
@@ -70,6 +70,7 @@ describe('CopyPastePlugin paste', () => {
             text: '',
             image: null,
             types: [],
+            customValues: {},
         };
         spyOn(dom, 'extractClipboardEvent').and.callFake((event, callback) => {
             callback(items);
@@ -86,6 +87,7 @@ describe('CopyPastePlugin paste', () => {
             text: '',
             image: <any>{},
             types: [],
+            customValues: {},
         };
         spyOn(dom, 'extractClipboardEvent').and.callFake((event, callback) => {
             callback(items);
@@ -108,6 +110,7 @@ describe('CopyPastePlugin paste', () => {
             text: '',
             image: <any>{},
             types: [],
+            customValues: {},
         };
         const expected = { ...items };
         spyOn(dom, 'extractClipboardEvent').and.callFake((event, callback) => {
@@ -138,7 +141,7 @@ describe('CopyPastePlugin copy', () => {
 
     beforeEach(() => {
         handler = null;
-        plugin = new CopyPastePlugin();
+        plugin = new CopyPastePlugin({});
 
         addDomEventHandler = jasmine
             .createSpy('addDomEventHandler')

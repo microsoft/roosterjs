@@ -9,11 +9,13 @@ import {
     ChangeSource,
     ClipboardData,
     ContentPosition,
-    EditorPlugin,
+    CopyPastePluginState,
+    EditorOptions,
     GetContentMode,
     IEditor,
     PluginEventType,
     ExperimentalFeatures,
+    PluginWithState,
 } from 'roosterjs-editor-types';
 
 const CONTAINER_HTML =
@@ -23,9 +25,20 @@ const CONTAINER_HTML =
  * @internal
  * Copy and paste plugin for handling onCopy and onPaste event
  */
-export default class CopyPastePlugin implements EditorPlugin {
+export default class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
     private editor: IEditor;
     private disposer: () => void;
+    private state: CopyPastePluginState;
+
+    /**
+     * Construct a new instance of CopyPastePlugin
+     * @param options The editor options
+     */
+    constructor(options: EditorOptions) {
+        this.state = {
+            allowedCustomPasteType: options.allowedCustomPasteType || [],
+        };
+    }
 
     /**
      * Get a friendly name of  this plugin
@@ -54,6 +67,13 @@ export default class CopyPastePlugin implements EditorPlugin {
         this.disposer();
         this.disposer = null;
         this.editor = null;
+    }
+
+    /**
+     * Get plugin state object
+     */
+    getState() {
+        return this.state;
     }
 
     private onCutCopy(event: Event, isCut: boolean) {
@@ -111,6 +131,7 @@ export default class CopyPastePlugin implements EditorPlugin {
                 allowLinkPreview: this.editor.isFeatureEnabled(
                     ExperimentalFeatures.PasteWithLinkPreview
                 ),
+                allowedCustomPasteType: this.state.allowedCustomPasteType,
             }
         );
     };

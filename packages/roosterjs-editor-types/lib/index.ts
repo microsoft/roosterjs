@@ -160,6 +160,7 @@ export { default as EntityPluginState } from './corePluginState/EntityPluginStat
 export { default as LifecyclePluginState } from './corePluginState/LifecyclePluginState';
 export { default as PendingFormatStatePluginState } from './corePluginState/PendingFormatStatePluginState';
 export { default as UndoPluginState } from './corePluginState/UndoPluginState';
+export { default as CopyPastePluginState } from './corePluginState/CopyPastePluginState';
 
 // Other type
 export {

@@ -35,6 +35,7 @@ describe('createPasteFragment', () => {
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: null,
+            customValues: {},
         };
         const fragment = createPasteFragment(core, clipboardData, null, false, false);
         const html = getHTML(fragment);
@@ -55,6 +56,7 @@ describe('createPasteFragment', () => {
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: null,
+            customValues: {},
         };
         const fragment = createPasteFragment(core, clipboardData, null, false, false);
         const html = getHTML(fragment);
@@ -75,6 +77,7 @@ describe('createPasteFragment', () => {
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: null,
+            customValues: {},
         };
         const fragment = createPasteFragment(core, clipboardData, null, true, false);
         const html = getHTML(fragment);
@@ -95,6 +98,7 @@ describe('createPasteFragment', () => {
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: 'test',
+            customValues: {},
         };
         const fragment = createPasteFragment(core, clipboardData, null, false, false);
         const html = getHTML(fragment);
@@ -115,6 +119,7 @@ describe('createPasteFragment', () => {
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: 'test',
+            customValues: {},
         };
         const fragment = createPasteFragment(core, clipboardData, null, false, false);
         const html = getHTML(fragment);
@@ -135,6 +140,7 @@ describe('createPasteFragment', () => {
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: 'test',
+            customValues: {},
         };
         const fragment = createPasteFragment(core, clipboardData, null, true, false);
         const html = getHTML(fragment);
@@ -155,6 +161,7 @@ describe('createPasteFragment', () => {
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: 'test',
+            customValues: {},
         };
         const fragment = createPasteFragment(core, clipboardData, null, false, false);
         const html = getHTML(fragment);
@@ -175,6 +182,7 @@ describe('createPasteFragment', () => {
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: 'test',
+            customValues: {},
         };
         const fragment = createPasteFragment(core, clipboardData, null, true, false);
         const html = getHTML(fragment);
@@ -199,6 +207,7 @@ describe('createPasteFragment', () => {
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: null,
+            customValues: {},
         };
         const fragment = createPasteFragment(core, clipboardData, null, false, false);
 
@@ -242,6 +251,7 @@ describe('createPasteFragment', () => {
             image: null,
             snapshotBeforePaste: null,
             imageDataUri: null,
+            customValues: {},
         };
         const fragment = createPasteFragment(core, clipboardData, null, false, false);
 

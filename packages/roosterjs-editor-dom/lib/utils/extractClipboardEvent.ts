@@ -48,6 +48,7 @@ export default function extractClipboardEvent(
         text: dataTransfer.getData('text'),
         image: getImage(dataTransfer),
         rawHtml: undefined,
+        customValues: {},
     };
 
     const handlers: {
@@ -86,6 +87,13 @@ export default function extractClipboardEvent(
                         });
                     }
                     break;
+                default:
+                    if (options?.allowedCustomPasteType?.indexOf(item.type) >= 0) {
+                        handlers.push({
+                            promise: getAsString(item),
+                            callback: value => (result.customValues[item.type] = value),
+                        });
+                    }
             }
         }
     }

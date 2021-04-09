@@ -79,4 +79,9 @@ export default interface EditorOptions {
      * to be handled by ancestor nodes of editor.
      */
     allowKeyboardEventPropagation?: boolean;
+
+    /**
+     * Allowed custom content type when paste besides text/plain, text/html and images
+     */
+    allowedCustomPasteType?: string[];
 }
