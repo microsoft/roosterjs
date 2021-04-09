@@ -1,4 +1,4 @@
-import { fromHtml, getEntitySelector, getTagOfNode, toArray } from 'roosterjs-editor-dom';
+import { Browser, fromHtml, getEntitySelector, getTagOfNode, toArray } from 'roosterjs-editor-dom';
 import { insertEntity } from 'roosterjs-editor-api';
 import {
     ChangeSource,
@@ -306,7 +306,7 @@ export default class ImageResize implements EditorPlugin {
         );
 
         wrapper.style.position = 'relative';
-        wrapper.style.display = 'inline-flex';
+        wrapper.style.display = Browser.isSafari ? 'inline-block' : 'inline-flex';
 
         const html =
             (this.editor.isFeatureEnabled(ExperimentalFeatures.SingleDirectionResize)
