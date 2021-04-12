@@ -113,32 +113,19 @@ export default class TableResize implements EditorPlugin {
             this.cacheRects();
         }
 
-        this.isRTL = getComputedStyle(this.editor.getDocument().body, 'direction') == 'rtl';
-
         if (this.tableRectMap) {
             let i = this.tableRectMap.length - 1;
             for (; i >= 0; i--) {
                 const { table, rect } = this.tableRectMap[i];
-                if (this.isRTL) {
-                    if (
-                        e.pageX <= rect.right + INSERTER_SIDE_LENGTH &&
-                        e.pageX >= rect.left &&
-                        e.pageY >= rect.top - INSERTER_SIDE_LENGTH &&
-                        e.pageY <= rect.bottom
-                    ) {
-                        this.setCurrentTable(table, rect);
-                        break;
-                    }
-                } else {
-                    if (
-                        e.pageX >= rect.left - INSERTER_SIDE_LENGTH &&
-                        e.pageX <= rect.right &&
-                        e.pageY >= rect.top - INSERTER_SIDE_LENGTH &&
-                        e.pageY <= rect.bottom
-                    ) {
-                        this.setCurrentTable(table, rect);
-                        break;
-                    }
+
+                if (
+                    e.pageX <= rect.right + (this.isRTL ? INSERTER_SIDE_LENGTH : 0) &&
+                    e.pageX >= rect.left - (this.isRTL ? 0 : INSERTER_SIDE_LENGTH) &&
+                    e.pageY >= rect.top - INSERTER_SIDE_LENGTH &&
+                    e.pageY <= rect.bottom
+                ) {
+                    this.setCurrentTable(table, rect);
+                    break;
                 }
             }
 
@@ -157,125 +144,73 @@ export default class TableResize implements EditorPlugin {
                         const td = tr.cells[j];
                         const tdRect = normalizeRect(td.getBoundingClientRect());
 
-                        if (this.isRTL) {
-                            if (tdRect && e.pageX >= tdRect.left && e.pageY <= tdRect.bottom) {
-                                if (i == 0 && e.pageY <= tdRect.top + INSERTER_HOVER_OFFSET) {
-                                    let verticalInserterTd: HTMLTableCellElement = null;
-                                    // set inserter at current td
-                                    if (
-                                        e.pageX <=
-                                        tdRect.left + (tdRect.right - tdRect.left) / 2.0
-                                    ) {
-                                        verticalInserterTd = td;
-                                    } else if (e.pageX <= tdRect.right) {
-                                        // set inserter at previous td if it exists
-                                        const preTd = td.previousElementSibling as HTMLTableCellElement;
-                                        if (preTd) {
-                                            verticalInserterTd = preTd;
-                                        }
-                                    }
-                                    if (verticalInserterTd) {
-                                        this.setCurrentTd(null);
-                                        this.setCurrentInsertTd(
-                                            ResizeState.Vertical,
-                                            verticalInserterTd,
-                                            map.rect
-                                        );
-                                        break;
-                                    }
-                                } else if (
-                                    j == 0 &&
-                                    e.pageX >= tdRect.right - INSERTER_HOVER_OFFSET
+                        if (
+                            tdRect &&
+                            (this.isRTL ? e.pageX >= tdRect.left : e.pageX <= tdRect.right) &&
+                            e.pageY <= tdRect.bottom
+                        ) {
+                            // check vertical isnerter
+                            if (i == 0 && e.pageY <= tdRect.top + INSERTER_HOVER_OFFSET) {
+                                let verticalInserterTd: HTMLTableCellElement = null;
+                                // set inserter at current td
+                                if (
+                                    this.isRTL
+                                        ? e.pageX <=
+                                          tdRect.left + (tdRect.right - tdRect.left) / 2.0
+                                        : e.pageX >=
+                                          tdRect.left + (tdRect.right - tdRect.left) / 2.0
                                 ) {
-                                    let horizontalInserterTd: HTMLTableCellElement = null;
-                                    // set inserter at current td
-                                    if (
-                                        e.pageY >=
-                                        tdRect.top + (tdRect.bottom - tdRect.top) / 2.0
-                                    ) {
-                                        horizontalInserterTd = td;
-                                    } else if (e.pageY >= tdRect.top) {
-                                        // set insert at previous td if it exists
-                                        const preTd = this.currentTable.rows[i - 1]?.cells[0];
-                                        if (preTd) {
-                                            horizontalInserterTd = preTd;
-                                        }
+                                    verticalInserterTd = td;
+                                } else if (
+                                    this.isRTL ? e.pageX <= tdRect.right : e.pageX >= tdRect.left
+                                ) {
+                                    // set inserter at previous td if it exists
+                                    const preTd = td.previousElementSibling as HTMLTableCellElement;
+                                    if (preTd) {
+                                        verticalInserterTd = preTd;
                                     }
-
-                                    if (horizontalInserterTd) {
-                                        this.setCurrentTd(null);
-                                        this.setCurrentInsertTd(
-                                            ResizeState.Horizontal,
-                                            horizontalInserterTd,
-                                            map.rect
-                                        );
-                                        break;
-                                    }
-                                } else {
-                                    this.setCurrentTd(td, map.rect, tdRect.right, tdRect.bottom);
-                                    this.setCurrentInsertTd(ResizeState.None);
+                                }
+                                if (verticalInserterTd) {
+                                    this.setCurrentTd(null);
+                                    this.setCurrentInsertTd(
+                                        ResizeState.Vertical,
+                                        verticalInserterTd,
+                                        map.rect
+                                    );
                                     break;
                                 }
                             }
-                        } else {
-                            if (tdRect && e.pageX <= tdRect.right && e.pageY <= tdRect.bottom) {
-                                if (i == 0 && e.pageY <= tdRect.top + INSERTER_HOVER_OFFSET) {
-                                    let verticalInserterTd: HTMLTableCellElement = null;
-                                    // set inserter at current td
-                                    if (
-                                        e.pageX >=
-                                        tdRect.left + (tdRect.right - tdRect.left) / 2.0
-                                    ) {
-                                        verticalInserterTd = td;
-                                    } else if (e.pageX >= tdRect.left) {
-                                        // set inserter at previous td if it exists
-                                        const preTd = td.previousElementSibling as HTMLTableCellElement;
-                                        if (preTd) {
-                                            verticalInserterTd = preTd;
-                                        }
+                            // check horizontal inserter
+                            else if (
+                                j == 0 && this.isRTL
+                                    ? e.pageX >= tdRect.right - INSERTER_HOVER_OFFSET
+                                    : e.pageX <= tdRect.left + INSERTER_HOVER_OFFSET
+                            ) {
+                                let horizontalInserterTd: HTMLTableCellElement = null;
+                                // set inserter at current td
+                                if (e.pageY >= tdRect.top + (tdRect.bottom - tdRect.top) / 2.0) {
+                                    horizontalInserterTd = td;
+                                } else if (e.pageY >= tdRect.top) {
+                                    // set insert at previous td if it exists
+                                    const preTd = this.currentTable.rows[i - 1]?.cells[0];
+                                    if (preTd) {
+                                        horizontalInserterTd = preTd;
                                     }
-                                    if (verticalInserterTd) {
-                                        this.setCurrentTd(null);
-                                        this.setCurrentInsertTd(
-                                            ResizeState.Vertical,
-                                            verticalInserterTd,
-                                            map.rect
-                                        );
-                                        break;
-                                    }
-                                } else if (
-                                    j == 0 &&
-                                    e.pageX <= tdRect.left + INSERTER_HOVER_OFFSET
-                                ) {
-                                    let horizontalInserterTd: HTMLTableCellElement = null;
-                                    // set inserter at current td
-                                    if (
-                                        e.pageY >=
-                                        tdRect.top + (tdRect.bottom - tdRect.top) / 2.0
-                                    ) {
-                                        horizontalInserterTd = td;
-                                    } else if (e.pageY >= tdRect.top) {
-                                        // set insert at previous td if it exists
-                                        const preTd = this.currentTable.rows[i - 1]?.cells[0];
-                                        if (preTd) {
-                                            horizontalInserterTd = preTd;
-                                        }
-                                    }
+                                }
 
-                                    if (horizontalInserterTd) {
-                                        this.setCurrentTd(null);
-                                        this.setCurrentInsertTd(
-                                            ResizeState.Horizontal,
-                                            horizontalInserterTd,
-                                            map.rect
-                                        );
-                                        break;
-                                    }
-                                } else {
-                                    this.setCurrentTd(td, map.rect, tdRect.right, tdRect.bottom);
-                                    this.setCurrentInsertTd(ResizeState.None);
+                                if (horizontalInserterTd) {
+                                    this.setCurrentTd(null);
+                                    this.setCurrentInsertTd(
+                                        ResizeState.Horizontal,
+                                        horizontalInserterTd,
+                                        map.rect
+                                    );
                                     break;
                                 }
+                            } else {
+                                this.setCurrentTd(td, map.rect, tdRect.right, tdRect.bottom);
+                                this.setCurrentInsertTd(ResizeState.None);
+                                break;
                             }
                         }
                     }
@@ -316,6 +251,8 @@ export default class TableResize implements EditorPlugin {
         if (this.insertingState == ResizeState.None) {
             return;
         }
+
+        this.isRTL = getComputedStyle(this.editor.getDocument().body, 'direction') == 'rtl';
         const rect = normalizeRect(this.currentInsertTd.getBoundingClientRect());
         const editorBackgroundColor = this.editor.getDefaultFormat().backgroundColor;
         const inserterBackgroundColor = editorBackgroundColor || 'white';
