@@ -179,9 +179,8 @@ export default class TableResize implements EditorPlugin {
                                     );
                                     break;
                                 }
-                            }
-                            // check horizontal inserter
-                            else if (
+                                // check horizontal inserter
+                            } else if (
                                 j == 0 && this.isRTL
                                     ? e.pageX >= tdRect.right - INSERTER_HOVER_OFFSET
                                     : e.pageX <= tdRect.left + INSERTER_HOVER_OFFSET
