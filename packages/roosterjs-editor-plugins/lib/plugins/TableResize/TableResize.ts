@@ -181,9 +181,10 @@ export default class TableResize implements EditorPlugin {
                                 }
                                 // check horizontal inserter
                             } else if (
-                                j == 0 && this.isRTL
+                                j == 0 &&
+                                (this.isRTL
                                     ? e.pageX >= tdRect.right - INSERTER_HOVER_OFFSET
-                                    : e.pageX <= tdRect.left + INSERTER_HOVER_OFFSET
+                                    : e.pageX <= tdRect.left + INSERTER_HOVER_OFFSET)
                             ) {
                                 let horizontalInserterTd: HTMLTableCellElement = null;
                                 // set inserter at current td
