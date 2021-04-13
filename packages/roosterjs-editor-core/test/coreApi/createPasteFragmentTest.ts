@@ -42,6 +42,26 @@ describe('createPasteFragment', () => {
         expect(html).toBe('This is a test');
     });
 
+    it('two lines plain text input, html output', () => {
+        const triggerEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent,
+            },
+        });
+        const clipboardData: ClipboardData = {
+            types: [],
+            text: 'This is a test\nthis is line 2',
+            rawHtml: null,
+            image: null,
+            snapshotBeforePaste: null,
+            imageDataUri: null,
+        };
+        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const html = getHTML(fragment);
+        expect(html).toBe('This is a test<br>this is line 2');
+    });
+
     it('multi-line plain text input, html output', () => {
         const triggerEvent = jasmine.createSpy();
         const core = createEditorCore(div, {
@@ -61,6 +81,106 @@ describe('createPasteFragment', () => {
         const fragment = createPasteFragment(core, clipboardData, null, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('This is a test<div>this is line 2</div>this is line 3');
+    });
+
+    it('two lines plain text input with empty lines, html output, 1', () => {
+        const triggerEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent,
+            },
+        });
+        const clipboardData: ClipboardData = {
+            types: [],
+            text: '\nthis is line 2',
+            rawHtml: null,
+            image: null,
+            snapshotBeforePaste: null,
+            imageDataUri: null,
+        };
+        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const html = getHTML(fragment);
+        expect(html).toBe('<br>this is line 2');
+    });
+
+    it('two lines plain text input with empty lines, html output, 2', () => {
+        const triggerEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent,
+            },
+        });
+        const clipboardData: ClipboardData = {
+            types: [],
+            text: 'this is line 1\n',
+            rawHtml: null,
+            image: null,
+            snapshotBeforePaste: null,
+            imageDataUri: null,
+        };
+        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const html = getHTML(fragment);
+        expect(html).toBe('this is line 1<br>');
+    });
+
+    it('multi-line plain text input with empty lines, html output, 1', () => {
+        const triggerEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent,
+            },
+        });
+        const clipboardData: ClipboardData = {
+            types: [],
+            text: '\nthis is line 2\nthis is line 3',
+            rawHtml: null,
+            image: null,
+            snapshotBeforePaste: null,
+            imageDataUri: null,
+        };
+        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const html = getHTML(fragment);
+        expect(html).toBe('<div>this is line 2</div>this is line 3');
+    });
+
+    it('multi-line plain text input with empty lines, html output, 2', () => {
+        const triggerEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent,
+            },
+        });
+        const clipboardData: ClipboardData = {
+            types: [],
+            text: 'this is line 1\n\nthis is line 3',
+            rawHtml: null,
+            image: null,
+            snapshotBeforePaste: null,
+            imageDataUri: null,
+        };
+        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const html = getHTML(fragment);
+        expect(html).toBe('this is line 1<div><br></div>this is line 3');
+    });
+
+    it('multi-line plain text input with empty lines, html output, 3', () => {
+        const triggerEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent,
+            },
+        });
+        const clipboardData: ClipboardData = {
+            types: [],
+            text: 'this is line 1\nthis is line 2\n',
+            rawHtml: null,
+            image: null,
+            snapshotBeforePaste: null,
+            imageDataUri: null,
+        };
+        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const html = getHTML(fragment);
+        expect(html).toBe('this is line 1<div>this is line 2</div>');
     });
 
     it('multi-line plain text input, text output', () => {
