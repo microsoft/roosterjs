@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>RegionType | RoosterJs API Reference</title>
+	<title>CopyPastePluginState | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/roosterjs_editor_types.html">roosterjs-editor-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_types.regiontype.html">RegionType</a>
+					<a href="roosterjs_editor_types.copypastepluginstate.html">CopyPastePluginState</a>
 				</li>
 			</ul>
-			<h1>Enumeration RegionType</h1>
+			<h1>Interface CopyPastePluginState</h1>
 		</div>
 	</div>
 </header>
@@ -68,37 +68,46 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Type of all possible regions. Currently we only support region of Table</p>
+						<p>The state object for CopyPastePlugin</p>
 					</div>
 				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">CopyPastePluginState</span>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Enumeration members</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="roosterjs_editor_types.regiontype.html#table" class="tsd-kind-icon">Table</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.copypastepluginstate.html#allowedcustompastetype" class="tsd-kind-icon">allowed<wbr>Custom<wbr>Paste<wbr>Type</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Enumeration members</h2>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="table" class="tsd-anchor"></a>
-					<h3>Table</h3>
-					<div class="tsd-signature tsd-kind-icon">Table<span class="tsd-signature-symbol">:</span></div>
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="allowedcustompastetype" class="tsd-anchor"></a>
+					<h3>allowed<wbr>Custom<wbr>Paste<wbr>Type</h3>
+					<div class="tsd-signature tsd-kind-icon">allowed<wbr>Custom<wbr>Paste<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a391116/packages/roosterjs-editor-types/lib/enum/RegionType.ts#L8">roosterjs-editor-types/lib/enum/RegionType.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a391116/packages/roosterjs-editor-types/lib/corePluginState/CopyPastePluginState.ts#L9">roosterjs-editor-types/lib/corePluginState/CopyPastePluginState.ts:9</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Region splitted by Table</p>
+							<p>Allowed custom content type when paste besides text/plain, text/html and images
+							Only text types are supported, and do not add &quot;text/&quot; prefix to the type values</p>
 						</div>
 					</div>
 				</section>
@@ -134,11 +143,11 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-enum tsd-parent-kind-module">
-						<a href="roosterjs_editor_types.regiontype.html" class="tsd-kind-icon">Region<wbr>Type</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
+						<a href="roosterjs_editor_types.copypastepluginstate.html" class="tsd-kind-icon">Copy<wbr>Paste<wbr>Plugin<wbr>State</a>
 						<ul>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="roosterjs_editor_types.regiontype.html#table" class="tsd-kind-icon">Table</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.copypastepluginstate.html#allowedcustompastetype" class="tsd-kind-icon">allowed<wbr>Custom<wbr>Paste<wbr>Type</a>
 							</li>
 						</ul>
 					</li>
@@ -164,6 +173,7 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
