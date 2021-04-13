@@ -60,7 +60,9 @@ const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
         let range = editor.getSelectionRange();
-        return li && range && isPositionAtBeginningOf(Position.getStart(range), li);
+        return (
+            li && range && range.collapsed && isPositionAtBeginningOf(Position.getStart(range), li)
+        );
     },
     handleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
