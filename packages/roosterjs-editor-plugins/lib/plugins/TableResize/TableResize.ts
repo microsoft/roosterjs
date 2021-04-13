@@ -252,7 +252,6 @@ export default class TableResize implements EditorPlugin {
             return;
         }
 
-        this.isRTL = getComputedStyle(this.editor.getDocument().body, 'direction') == 'rtl';
         const rect = normalizeRect(this.currentInsertTd.getBoundingClientRect());
         const editorBackgroundColor = this.editor.getDefaultFormat().backgroundColor;
         const inserterBackgroundColor = editorBackgroundColor || 'white';
@@ -268,6 +267,8 @@ export default class TableResize implements EditorPlugin {
                 : VERTICAL_INSERTER_HTML,
             this.editor.getDocument()
         )[0] as HTMLDivElement;
+
+        this.isRTL = getComputedStyle(this.editor.getDocument().body, 'direction') == 'rtl';
 
         if (rect) {
             if (this.insertingState == ResizeState.Horizontal) {
