@@ -1,4 +1,4 @@
-import { fromHtml, normalizeRect, VTable } from 'roosterjs-editor-dom';
+import { fromHtml, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
     IEditor,
@@ -45,6 +45,7 @@ export default class TableResize implements EditorPlugin {
     private currentInsertTd: HTMLTableCellElement;
     private insertingState: ResizeState = ResizeState.None;
     private inserter: HTMLDivElement;
+    private isRTL: boolean;
 
     /**
      * Get a friendly name of  this plugin
@@ -116,9 +117,10 @@ export default class TableResize implements EditorPlugin {
             let i = this.tableRectMap.length - 1;
             for (; i >= 0; i--) {
                 const { table, rect } = this.tableRectMap[i];
+
                 if (
-                    e.pageX >= rect.left - INSERTER_SIDE_LENGTH &&
-                    e.pageX <= rect.right &&
+                    e.pageX <= rect.right + (this.isRTL ? INSERTER_SIDE_LENGTH : 0) &&
+                    e.pageX >= rect.left - (this.isRTL ? 0 : INSERTER_SIDE_LENGTH) &&
                     e.pageY >= rect.top - INSERTER_SIDE_LENGTH &&
                     e.pageY <= rect.bottom
                 ) {
@@ -142,13 +144,26 @@ export default class TableResize implements EditorPlugin {
                         const td = tr.cells[j];
                         const tdRect = normalizeRect(td.getBoundingClientRect());
 
-                        if (tdRect && e.pageX <= tdRect.right && e.pageY <= tdRect.bottom) {
+                        if (
+                            tdRect &&
+                            (this.isRTL ? e.pageX >= tdRect.left : e.pageX <= tdRect.right) &&
+                            e.pageY <= tdRect.bottom
+                        ) {
+                            // check vertical isnerter
                             if (i == 0 && e.pageY <= tdRect.top + INSERTER_HOVER_OFFSET) {
                                 let verticalInserterTd: HTMLTableCellElement = null;
                                 // set inserter at current td
-                                if (e.pageX >= tdRect.left + (tdRect.right - tdRect.left) / 2.0) {
+                                if (
+                                    this.isRTL
+                                        ? e.pageX <=
+                                          tdRect.left + (tdRect.right - tdRect.left) / 2.0
+                                        : e.pageX >=
+                                          tdRect.left + (tdRect.right - tdRect.left) / 2.0
+                                ) {
                                     verticalInserterTd = td;
-                                } else if (e.pageX >= tdRect.left) {
+                                } else if (
+                                    this.isRTL ? e.pageX <= tdRect.right : e.pageX >= tdRect.left
+                                ) {
                                     // set inserter at previous td if it exists
                                     const preTd = td.previousElementSibling as HTMLTableCellElement;
                                     if (preTd) {
@@ -164,7 +179,13 @@ export default class TableResize implements EditorPlugin {
                                     );
                                     break;
                                 }
-                            } else if (j == 0 && e.pageX <= tdRect.left + INSERTER_HOVER_OFFSET) {
+                                // check horizontal inserter
+                            } else if (
+                                j == 0 &&
+                                (this.isRTL
+                                    ? e.pageX >= tdRect.right - INSERTER_HOVER_OFFSET
+                                    : e.pageX <= tdRect.left + INSERTER_HOVER_OFFSET)
+                            ) {
                                 let horizontalInserterTd: HTMLTableCellElement = null;
                                 // set inserter at current td
                                 if (e.pageY >= tdRect.top + (tdRect.bottom - tdRect.top) / 2.0) {
@@ -230,12 +251,14 @@ export default class TableResize implements EditorPlugin {
         if (this.insertingState == ResizeState.None) {
             return;
         }
+
         const rect = normalizeRect(this.currentInsertTd.getBoundingClientRect());
         const editorBackgroundColor = this.editor.getDefaultFormat().backgroundColor;
         const inserterBackgroundColor = editorBackgroundColor || 'white';
         const inserterColor = this.editor.isDarkMode() ? INSERTER_COLOR_DARK_MODE : INSERTER_COLOR;
+        const leftOrRight = this.isRTL ? 'right' : 'left';
 
-        const HORIZONTAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${inserterColor}px; font-size: 16px; color: ${inserterColor}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${inserterColor}; border-radius: 50%; background-color: ${inserterBackgroundColor}"><div style="position: absolute; left: 12px; top: 5px; height: 3px; border-top: 1px solid ${inserterColor}; border-bottom: 1px solid ${inserterColor}; border-right: 1px solid ${inserterColor}; border-left: 0px; box-sizing: border-box; background-color: ${inserterBackgroundColor};"></div>+</div>`;
+        const HORIZONTAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${inserterColor}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${inserterColor}; border-radius: 50%; background-color: ${inserterBackgroundColor}"><div style="position: absolute; ${leftOrRight}: 12px; top: 5px; height: 3px; border-top: 1px solid ${inserterColor}; border-bottom: 1px solid ${inserterColor}; border-right: 1px solid ${inserterColor}; border-left: 0px; box-sizing: border-box; background-color: ${inserterBackgroundColor};"></div>+</div>`;
         const VERTICAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${inserterColor}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${inserterColor}; border-radius: 50%; background-color: ${inserterBackgroundColor}"><div style="position: absolute; left: 5px; top: 12px; width: 3px; border-left: 1px solid ${inserterColor}; border-right: 1px solid ${inserterColor}; border-bottom: 1px solid ${inserterColor}; border-top: 0px; box-sizing: border-box; background-color: ${inserterBackgroundColor};"></div>+</div>`;
 
         const inserter = fromHtml(
@@ -247,15 +270,23 @@ export default class TableResize implements EditorPlugin {
 
         if (rect) {
             if (this.insertingState == ResizeState.Horizontal) {
-                inserter.style.left = `${
-                    rect.left - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
-                }px`;
+                if (this.isRTL) {
+                    inserter.style.left = `${rect.right}px`;
+                } else {
+                    inserter.style.left = `${
+                        rect.left - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
+                    }px`;
+                }
                 inserter.style.top = `${rect.bottom - 8}px`;
                 (inserter.firstChild as HTMLElement).style.width = `${
                     tableRect.right - tableRect.left
                 }px`;
             } else {
-                inserter.style.left = `${rect.right - 8}px`;
+                if (this.isRTL) {
+                    inserter.style.left = `${rect.left - 8}px`;
+                } else {
+                    inserter.style.left = `${rect.right - 8}px`;
+                }
                 inserter.style.top = `${
                     rect.top - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
                 }px`;
@@ -447,5 +478,6 @@ export default class TableResize implements EditorPlugin {
                 });
             }
         });
+        this.isRTL = getComputedStyle(this.editor.getDocument().body, 'direction') == 'rtl';
     }
 }
