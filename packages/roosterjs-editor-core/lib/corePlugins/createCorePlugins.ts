@@ -37,7 +37,7 @@ export default function createCorePlugins(
         domEvent: map.domEvent || new DOMEventPlugin(options, contentDiv),
         pendingFormatState: map.pendingFormatState || new PendingFormatStatePlugin(),
         mouseUp: map.mouseUp || new MouseUpPlugin(),
-        copyPaste: map.copyPaste || new CopyPastePlugin(),
+        copyPaste: map.copyPaste || new CopyPastePlugin(options),
         entity: map.entity || new EntityPlugin(),
         lifecycle: map.lifecycle || new LifecyclePlugin(options, contentDiv),
     };
@@ -56,5 +56,6 @@ export function getPluginState(corePlugins: CorePlugins): PluginState {
         lifecycle: corePlugins.lifecycle.getState(),
         undo: corePlugins.undo.getState(),
         entity: corePlugins.entity.getState(),
+        copyPaste: corePlugins.copyPaste.getState(),
     };
 }

@@ -45,4 +45,10 @@ export default interface ClipboardData {
      * BASE64 encoded data uri of the image if any
      */
     imageDataUri?: string;
+
+    /**
+     * Value of custom paste type. By default it is always empty.
+     * To allow custom paste type, pass the allowed types to EditorOptions.allowedCustomPasteType
+     */
+    customValues: Record<string, string>;
 }

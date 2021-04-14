@@ -1,3 +1,4 @@
+import CopyPastePluginState from '../corePluginState/CopyPastePluginState';
 import DOMEventPluginState from '../corePluginState/DOMEventPluginState';
 import EditorPlugin from './EditorPlugin';
 import EditPluginState from '../corePluginState/EditPluginState';
@@ -51,7 +52,7 @@ export default interface CorePlugins {
     /**
      * Copy and paste plugin for handling onCopy and onPaste event
      */
-    readonly copyPaste: EditorPlugin;
+    readonly copyPaste: PluginWithState<CopyPastePluginState>;
 
     /**
      * Entity Plugin handles all operations related to an entity and generate entity specified events
