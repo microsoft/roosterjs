@@ -268,8 +268,6 @@ export default class TableResize implements EditorPlugin {
             this.editor.getDocument()
         )[0] as HTMLDivElement;
 
-        this.isRTL = getComputedStyle(this.editor.getDocument().body, 'direction') == 'rtl';
-
         if (rect) {
             if (this.insertingState == ResizeState.Horizontal) {
                 if (this.isRTL) {
@@ -480,5 +478,6 @@ export default class TableResize implements EditorPlugin {
                 });
             }
         });
+        this.isRTL = getComputedStyle(this.editor.getDocument().body, 'direction') == 'rtl';
     }
 }
