@@ -413,6 +413,7 @@ export default class TableResize implements EditorPlugin {
         if (vtable) {
             const rect = normalizeRect(this.currentTd.getBoundingClientRect());
 
+            // calculate and retrieve the cells of the two columns shared by the current vertical resizer
             this.currentCellsToResize = vtable.getCellsWithBorder(
                 this.isRTL ? rect.left : rect.right,
                 !this.isRTL
