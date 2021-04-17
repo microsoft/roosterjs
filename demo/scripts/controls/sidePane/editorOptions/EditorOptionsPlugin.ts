@@ -25,11 +25,6 @@ const initialState: BuildInPluginState = {
     forcePreserveRatio: false,
     showRibbon: true,
     experimentalFeatures: [
-        ExperimentalFeatures.ListChain,
-        ExperimentalFeatures.MergePastedLine,
-        ExperimentalFeatures.NewBullet,
-        ExperimentalFeatures.NewIndentation,
-        ExperimentalFeatures.NewNumbering,
         ExperimentalFeatures.PasteWithLinkPreview,
         ExperimentalFeatures.SingleDirectionResize,
     ],

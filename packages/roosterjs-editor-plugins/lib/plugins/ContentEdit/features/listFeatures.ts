@@ -1,4 +1,3 @@
-import experimentToggleListType from 'roosterjs-editor-api/lib/experiment/experimentToggleListType';
 import {
     experimentCommitListChains,
     setIndentation,
@@ -22,10 +21,8 @@ import {
     NodeType,
     PluginKeyboardEvent,
     PositionType,
-    ListType,
     QueryScope,
     RegionBase,
-    ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 
 /**
@@ -63,7 +60,7 @@ const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
         let range = editor.getSelectionRange();
-        return li && range && isPositionAtBeginningOf(Position.getStart(range), li);
+        return li && range?.collapsed && isPositionAtBeginningOf(Position.getStart(range), li);
     },
     handleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
@@ -160,14 +157,10 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
                     } else if (textBeforeCursor.indexOf('1.') == 0) {
                         prepareAutoBullet(editor, rangeToDelete);
                         toggleNumbering(editor);
-                    } else if (
-                        editor.isFeatureEnabled(ExperimentalFeatures.ListChain) &&
-                        (regions = editor.getSelectedRegions()) &&
-                        regions.length == 1
-                    ) {
+                    } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
                         const num = parseInt(textBeforeCursor);
                         prepareAutoBullet(editor, rangeToDelete);
-                        experimentToggleListType(editor, ListType.Ordered, num);
+                        toggleNumbering(editor, num);
                     }
                 },
                 null /*changeSource*/,
@@ -195,9 +188,7 @@ const MaintainListChain: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 function getListChains(editor: IEditor) {
-    return editor.isFeatureEnabled(ExperimentalFeatures.ListChain)
-        ? VListChain.createListChains(editor.getSelectedRegions())
-        : [];
+    return VListChain.createListChains(editor.getSelectedRegions());
 }
 
 function prepareAutoBullet(editor: IEditor, range: Range) {

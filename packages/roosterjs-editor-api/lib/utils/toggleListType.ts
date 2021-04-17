@@ -5,18 +5,14 @@ import { IEditor, ListType } from 'roosterjs-editor-types';
 /**
  * @internal
  */
-export default function experimentToggleListType(editor: IEditor, listType: ListType): void;
-export default function experimentToggleListType(
+export default function toggleListType(editor: IEditor, listType: ListType): void;
+export default function toggleListType(
     editor: IEditor,
     listType: ListType.Ordered,
     startNumber: number
 ): void;
 
-export default function experimentToggleListType(
-    editor: IEditor,
-    listType: ListType,
-    startNumber?: number
-) {
+export default function toggleListType(editor: IEditor, listType: ListType, startNumber?: number) {
     blockFormat(editor, (region, start, end, chains) => {
         const chain =
             startNumber > 0 && chains.filter(chain => chain.canAppendAtCursor(startNumber))[0];

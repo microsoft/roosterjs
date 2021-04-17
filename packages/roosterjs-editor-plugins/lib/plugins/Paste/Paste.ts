@@ -1,15 +1,10 @@
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
+import convertPastedContentFromTeams from './teamsConverter/convertPastedContentFromTeams';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import handleLineMerge from './lineMerge/handleLineMerge';
+import { EditorPlugin, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { toArray } from 'roosterjs-editor-dom';
 import { WAC_IDENTIFING_SELECTOR } from './officeOnlineConverter/constants';
-import {
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-    ExperimentalFeatures,
-} from 'roosterjs-editor-types';
 import convertPastedContentFromWordOnline, {
     isWordOnlineWithList,
 } from './officeOnlineConverter/convertPastedContentFromWordOnline';
@@ -29,8 +24,6 @@ const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
  * 3. Content copied from Word Online or Onenote Online
  */
 export default class Paste implements EditorPlugin {
-    private editor: IEditor;
-
     /**
      * Construct a new instance of Paste class
      * @param unknownTagReplacement Replace solution of unknown tags, default behavior is to replace with SPAN
@@ -48,9 +41,7 @@ export default class Paste implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IEditor) {
-        this.editor = editor;
-    }
+    initialize() {}
 
     /**
      * Dispose this plugin
@@ -92,7 +83,8 @@ export default class Paste implements EditorPlugin {
                 }
             } else if (fragment.querySelector(GOOGLE_SHEET_NODE_NAME)) {
                 sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
-            } else if (this.editor.isFeatureEnabled(ExperimentalFeatures.MergePastedLine)) {
+            } else {
+                convertPastedContentFromTeams(fragment);
                 handleLineMerge(fragment);
             }
 

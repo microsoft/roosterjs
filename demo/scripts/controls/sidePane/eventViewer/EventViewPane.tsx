@@ -176,6 +176,12 @@ export default class EventViewPane extends React.Component<
                                 ? JSON.stringify(event.clipboardData.linkPreview)
                                 : ''
                         )}
+                        {Object.keys(event.clipboardData.customValues).map(contentType =>
+                            this.renderPasteContent(
+                                contentType,
+                                event.clipboardData.customValues[contentType]
+                            )
+                        )}
                     </span>
                 );
             case PluginEventType.PendingFormatStateChanged:
