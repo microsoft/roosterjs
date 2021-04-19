@@ -38,6 +38,8 @@ export default class TableResize implements EditorPlugin {
     private resizerContainer: HTMLDivElement;
     private currentTable: HTMLTableElement;
     private currentTd: HTMLTableCellElement;
+    private currentCellsToResize: HTMLTableCellElement[] = [];
+    private nextCellsToResize: HTMLTableCellElement[] = [];
     private horizontalResizer: HTMLDivElement;
     private verticalResizer: HTMLDivElement;
     private resizingState: ResizeState = ResizeState.None;
@@ -208,7 +210,12 @@ export default class TableResize implements EditorPlugin {
                                     break;
                                 }
                             } else {
-                                this.setCurrentTd(td, map.rect, tdRect.right, tdRect.bottom);
+                                this.setCurrentTd(
+                                    td,
+                                    map.rect,
+                                    this.isRTL ? tdRect.left : tdRect.right,
+                                    tdRect.bottom
+                                );
                                 this.setCurrentInsertTd(ResizeState.None);
                                 break;
                             }
@@ -329,13 +336,13 @@ export default class TableResize implements EditorPlugin {
     private setCurrentTd(
         td: HTMLTableCellElement,
         tableRect: Rect,
-        right: number,
+        resizerPosX: number,
         bottom: number
     ): void;
     private setCurrentTd(
         td: HTMLTableCellElement,
         tableRect?: Rect,
-        right?: number,
+        resizerPosX?: number,
         bottom?: number
     ) {
         if (this.currentTd != td) {
@@ -358,7 +365,7 @@ export default class TableResize implements EditorPlugin {
                 );
                 this.verticalResizer = this.createResizer(
                     false /*horizontal*/,
-                    right - CELL_RESIZER_WIDTH + 1,
+                    resizerPosX - CELL_RESIZER_WIDTH + 1,
                     tableRect.top,
                     CELL_RESIZER_WIDTH,
                     tableRect.bottom - tableRect.top
@@ -401,6 +408,22 @@ export default class TableResize implements EditorPlugin {
 
     private startVerticalResizeTable = (e: MouseEvent) => {
         this.resizingState = ResizeState.Vertical;
+
+        const vtable = new VTable(this.currentTd);
+        if (vtable) {
+            const rect = normalizeRect(this.currentTd.getBoundingClientRect());
+
+            // calculate and retrieve the cells of the two columns shared by the current vertical resizer
+            this.currentCellsToResize = vtable.getCellsWithBorder(
+                this.isRTL ? rect.left : rect.right,
+                !this.isRTL
+            );
+            this.nextCellsToResize = vtable.getCellsWithBorder(
+                this.isRTL ? rect.left : rect.right,
+                this.isRTL
+            );
+        }
+
         this.startResizeTable(e);
     };
 
@@ -412,6 +435,14 @@ export default class TableResize implements EditorPlugin {
 
     private frameAnimateResizeTable = (e: MouseEvent) => {
         this.editor.runAsync(() => this.resizeTable(e));
+    };
+
+    // get the total width of padding-left, padding-right and border-width of the cell
+    private getTdOffsetWidth = (td: HTMLTableCellElement): number => {
+        return (
+            parseInt(this.currentTable.cellPadding) * 2 +
+            parseInt(td.style.borderWidth.slice(0, -2))
+        );
     };
 
     private resizeTable = (e: MouseEvent) => {
@@ -432,14 +463,51 @@ export default class TableResize implements EditorPlugin {
                         }
                     });
                 } else {
-                    vtable.table.style.width = '';
-                    vtable.table.width = '';
-                    vtable.forEachCellOfCurrentColumn(cell => {
-                        if (cell.td) {
-                            cell.td.style.wordBreak = 'break-word';
-                            cell.td.style.width =
-                                cell.td == this.currentTd ? `${newPos - rect.left}px` : null;
-                        }
+                    let leftBoundary: number;
+                    let rightBoundary: number;
+
+                    if (this.isRTL) {
+                        leftBoundary =
+                            this.nextCellsToResize.length > 0
+                                ? parseInt(
+                                      this.nextCellsToResize[0].getAttribute('originalLeftBorder')
+                                  )
+                                : 0;
+                        rightBoundary = parseInt(
+                            this.currentCellsToResize[0].getAttribute('originalRightBorder')
+                        );
+                    } else {
+                        leftBoundary = parseInt(
+                            this.currentCellsToResize[0].getAttribute('originalLeftBorder')
+                        );
+                        rightBoundary =
+                            this.nextCellsToResize.length > 0
+                                ? parseInt(
+                                      this.nextCellsToResize[0].getAttribute('originalRightBorder')
+                                  )
+                                : Number.MAX_SAFE_INTEGER;
+                    }
+
+                    if (newPos <= leftBoundary + 20 || newPos >= rightBoundary - 20) {
+                        return;
+                    }
+
+                    this.currentCellsToResize.forEach(td => {
+                        const rect = normalizeRect(td.getBoundingClientRect());
+                        td.style.wordBreak = 'break-word';
+                        const offset = this.getTdOffsetWidth(td);
+                        td.style.width = this.isRTL
+                            ? `${rect.right - newPos - offset}px`
+                            : `${newPos - rect.left - offset}px`;
+                    });
+
+                    this.nextCellsToResize.forEach(td => {
+                        td.style.wordBreak = 'break-word';
+                        const offset = this.getTdOffsetWidth(td);
+                        const tdWidth = this.isRTL
+                            ? newPos - parseInt(td.getAttribute('originalLeftBorder'))
+                            : parseInt(td.getAttribute('originalRightBorder')) - newPos;
+                        td.style.width = `${tdWidth - offset}px`;
                     });
                 }
                 vtable.writeBack();
@@ -451,6 +519,8 @@ export default class TableResize implements EditorPlugin {
         const doc = this.editor.getDocument();
         doc.removeEventListener('mousemove', this.frameAnimateResizeTable, true);
         doc.removeEventListener('mouseup', this.endResizeTable, true);
+        this.currentCellsToResize = [];
+        this.nextCellsToResize = [];
 
         this.editor.addUndoSnapshot((start, end) => {
             this.frameAnimateResizeTable(e);

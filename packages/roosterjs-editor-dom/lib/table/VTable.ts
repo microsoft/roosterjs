@@ -1,3 +1,4 @@
+import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
 import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
@@ -277,6 +278,77 @@ export default class VTable {
      */
     forEachCellOfCurrentColumn(callback: (cell: VCell, row: VCell[], i: number) => any) {
         this.forEachCellOfColumn(this.col, callback);
+    }
+
+    /**
+     * Loop each table cell and get all the cells that share the same border from one side
+     * The result is an array of table cell elements where the first element is the narrowest td
+     * @param borderPos The position of the border
+     * @param getLeftCells Get left-hand-side or right-hand-side cells of the border
+     *
+     * Example, consider having a 3 by 4 table as below with merged and split cells
+     *
+     *     | 1 | 4 | 7 | 8 |
+     *     |   5   |   9   |
+     *     |   3   |   10  |
+     *
+     *  input => borderPos: the 3rd border, getLeftCells: true
+     *  output => [4, 5, 3], where the first element (4) is the narrowest cell
+     *
+     *  input => borderPos: the 3rd border, getLeftCells: false
+     *  output => [7, 9, 10], where the first element (7) is the narrowest cell
+     *
+     *  input => borderPos: the 2nd border, getLeftCells: true
+     *  output => [1], where the first element (1) is the narrowest (and only) cell
+     *
+     *  input => borderPos: the 2nd border, getLeftCells: false
+     *  output => [4], where the first element (4) is the narrowest (and only) cell
+     */
+    getCellsWithBorder(borderPos: number, getLeftCells: boolean): HTMLTableCellElement[] {
+        const cells: HTMLTableCellElement[] = [];
+        let closestIndex: number = 0;
+        let closestValue: number = getLeftCells ? -1 : Number.MAX_SAFE_INTEGER;
+        for (let i = 0; i < this.cells.length; i++) {
+            for (let j = 0; j < this.cells[i].length; j++) {
+                const cell = this.getCell(i, j);
+                if (cell.td) {
+                    const cellRect = normalizeRect(cell.td.getBoundingClientRect());
+                    let found: boolean = false;
+                    if (getLeftCells) {
+                        if (cellRect.right == borderPos) {
+                            found = true;
+                            if (cellRect.left > closestValue) {
+                                closestValue = cellRect.left;
+                                closestIndex = cells.length;
+                            }
+                            cell.td.setAttribute('originalLeftBorder', cellRect.left.toString());
+                            cells.push(cell.td);
+                        } else if (found) {
+                            break;
+                        }
+                    } else {
+                        if (cellRect.left == borderPos) {
+                            found = true;
+                            if (cellRect.right < closestValue) {
+                                closestValue = cellRect.right;
+                                closestIndex = cells.length;
+                            }
+                            cell.td.setAttribute('originalRightBorder', cellRect.right.toString());
+                            cells.push(cell.td);
+                        } else if (found) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (cells.length > 0) {
+            const temp = cells[0];
+            cells[0] = cells[closestIndex];
+            cells[closestIndex] = temp;
+        }
+        return cells;
     }
 
     /**
