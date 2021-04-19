@@ -540,12 +540,14 @@ export default class TableResize implements EditorPlugin {
         this.destoryRectMap();
         this.tableRectMap = [];
         this.editor.queryElements('table', table => {
-            const rect = normalizeRect(table.getBoundingClientRect());
-            if (rect) {
-                this.tableRectMap.push({
-                    table,
-                    rect,
-                });
+            if (table.isContentEditable) {
+                const rect = normalizeRect(table.getBoundingClientRect());
+                if (rect) {
+                    this.tableRectMap.push({
+                        table,
+                        rect,
+                    });
+                }
             }
         });
         this.isRTL = getComputedStyle(this.editor.getDocument().body, 'direction') == 'rtl';

@@ -98,7 +98,7 @@ export default class ImageResize implements EditorPlugin {
             const event = e.rawEvent;
             const target = <HTMLElement>(event.srcElement || event.target);
 
-            if (getTagOfNode(target) == 'IMG') {
+            if (getTagOfNode(target) == 'IMG' && target.isContentEditable) {
                 const parent = target.parentNode as HTMLElement;
                 const elements = parent
                     ? toArray(parent.querySelectorAll(this.resizableImageSelector))
