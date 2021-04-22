@@ -15,7 +15,7 @@ const INSERTER_COLOR_DARK_MODE = 'white';
 const INSERTER_SIDE_LENGTH = 12;
 const INSERTER_BORDER_SIZE = 1;
 const INSERTER_HOVER_OFFSET = 5;
-const CELL_MINIMUM_WIDTH = 20;
+const CELL_MINIMUM_LENGTH = 20;
 const CELL_RESIZER_WIDTH = 4;
 const TABLE_RESIZER_LENGTH = 12;
 const HORIZONTAL_RESIZER_HTML =
@@ -546,12 +546,11 @@ export default class TableResize implements EditorPlugin {
                     const newWidth = originalWidth * ratioX;
                     const newHeight = originalHeight * ratioY;
 
-                    if (newWidth >= CELL_MINIMUM_WIDTH) {
+                    if (newWidth >= CELL_MINIMUM_LENGTH) {
                         cell.td.style.wordBreak = 'break-word';
                         cell.td.style.width = `${newWidth}px`;
                     }
-                    if (newHeight >= CELL_MINIMUM_WIDTH) {
-                        cell.td.style.wordBreak = 'break-word';
+                    if (newHeight >= CELL_MINIMUM_LENGTH) {
                         cell.td.style.height = `${newHeight}px`;
                     }
                 }
@@ -610,8 +609,8 @@ export default class TableResize implements EditorPlugin {
                     }
 
                     if (
-                        newPos <= leftBoundary + CELL_MINIMUM_WIDTH ||
-                        newPos >= rightBoundary - CELL_MINIMUM_WIDTH
+                        newPos <= leftBoundary + CELL_MINIMUM_LENGTH ||
+                        newPos >= rightBoundary - CELL_MINIMUM_LENGTH
                     ) {
                         return;
                     }
