@@ -6,6 +6,8 @@ import InsertContentPane from './insertContent/InsertContentPane';
 import InsertEntityPane from './insertEntity/InsertEntityPane';
 import MatchLinkPane from './matchLink/MatchLinkPane';
 import SanitizerPane from './sanitizer/SanitizerPane';
+import VListPane from './vlist/VListPane';
+import VTablePane from './vtable/VTablePane';
 
 export interface ApiPlaygroundReactComponent
     extends React.Component<ApiPaneProps, any>,
@@ -43,6 +45,14 @@ const apiEntries: { [key: string]: ApiEntry } = {
     entity: {
         name: 'Insert Entity',
         component: InsertEntityPane,
+    },
+    vlist: {
+        name: 'VList',
+        component: VListPane,
+    },
+    vtable: {
+        name: 'VTable',
+        component: VTablePane,
     },
     more: {
         name: 'Coming soon...',

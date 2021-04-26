@@ -47,6 +47,7 @@ export { default as getInnerHTML } from './utils/getInnerHTML';
 
 export { default as VTable } from './table/VTable';
 export { default as VList } from './list/VList';
+export { default as VListItem } from './list/VListItem';
 export { default as createVListFromRegion } from './list/createVListFromRegion';
 export { default as VListChain } from './list/VListChain';
 
