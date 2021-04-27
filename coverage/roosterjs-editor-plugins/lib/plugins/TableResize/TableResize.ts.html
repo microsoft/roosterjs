@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.08% </span>
+                <span class="strong">12.55% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>29/240</span>
+                <span class='fraction'>30/239</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">6.25% </span>
+                <span class="strong">6.45% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/32</span>
+                <span class='fraction'>2/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.39% </span>
+                <span class="strong">12.88% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>29/234</span>
+                <span class='fraction'>30/233</span>
             </div>
         
             
@@ -607,12 +607,7 @@
 <a name='L548'></a><a href='#L548'>548</a>
 <a name='L549'></a><a href='#L549'>549</a>
 <a name='L550'></a><a href='#L550'>550</a>
-<a name='L551'></a><a href='#L551'>551</a>
-<a name='L552'></a><a href='#L552'>552</a>
-<a name='L553'></a><a href='#L553'>553</a>
-<a name='L554'></a><a href='#L554'>554</a>
-<a name='L555'></a><a href='#L555'>555</a>
-<a name='L556'></a><a href='#L556'>556</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L551'></a><a href='#L551'>551</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -629,7 +624,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1051,14 +1046,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1103,6 +1090,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1118,9 +1108,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1184,7 +1174,7 @@ const INSERTER_COLOR_DARK_MODE = 'white';
 const INSERTER_SIDE_LENGTH = 12;
 const INSERTER_BORDER_SIZE = 1;
 const INSERTER_HOVER_OFFSET = 5;
-&nbsp;
+const MIN_CELL_WIDTH = 30;
 const CELL_RESIZER_WIDTH = 4;
 const HORIZONTAL_RESIZER_HTML =
     '&lt;div style="position: fixed; cursor: row-resize; user-select: none"&gt;&lt;/div&gt;';
@@ -1606,14 +1596,6 @@ export default class TableResize implements EditorPlugin {
 <span class="cstat-no" title="statement not covered" >        this.editor.runAsync(<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >t</span>his.resizeTable(e));</span></span>
     };
 &nbsp;
-    // get the total width of padding-left, padding-right and border-width of the cell
-    private <span class="cstat-no" title="statement not covered" >getTdOffsetWidth = <span class="fstat-no" title="function not covered" >(t</span>d: HTMLTableCellElement): number =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        return (</span>
-            parseInt(this.currentTable.cellPadding) * 2 +
-            parseInt(td.style.borderWidth.slice(0, -2))
-        );
-    };
-&nbsp;
     private <span class="cstat-no" title="statement not covered" >resizeTable = <span class="fstat-no" title="function not covered" >(e</span>: MouseEvent) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        if (this.currentTd &amp;&amp; this.resizingState !== ResizeState.None) {</span>
             const rect = <span class="cstat-no" title="statement not covered" >normalizeRect(this.currentTd.getBoundingClientRect());</span>
@@ -1657,26 +1639,29 @@ export default class TableResize implements EditorPlugin {
                                 : Number.MAX_SAFE_INTEGER;
                     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                    if (newPos &lt;= leftBoundary + 20 || newPos &gt;= rightBoundary - 20) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (</span>
+                        newPos &lt;= leftBoundary + MIN_CELL_WIDTH ||
+                        newPos &gt;= rightBoundary - MIN_CELL_WIDTH
+                    ) {
 <span class="cstat-no" title="statement not covered" >                        return;</span>
                     }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                    this.currentCellsToResize.forEach(<span class="fstat-no" title="function not covered" >td </span>=&gt; {</span>
                         const rect = <span class="cstat-no" title="statement not covered" >normalizeRect(td.getBoundingClientRect());</span>
 <span class="cstat-no" title="statement not covered" >                        td.style.wordBreak = 'break-word';</span>
-                        const offset = <span class="cstat-no" title="statement not covered" >this.getTdOffsetWidth(td);</span>
+<span class="cstat-no" title="statement not covered" >                        td.style.boxSizing = 'border-box';</span>
 <span class="cstat-no" title="statement not covered" >                        td.style.width = this.isRTL</span>
-                            ? `${rect.right - newPos - offset}px`
-                            : `${newPos - rect.left - offset}px`;
+                            ? `${rect.right - newPos}px`
+                            : `${newPos - rect.left}px`;
                     });
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                    this.nextCellsToResize.forEach(<span class="fstat-no" title="function not covered" >td </span>=&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                        td.style.wordBreak = 'break-word';</span>
-                        const offset = <span class="cstat-no" title="statement not covered" >this.getTdOffsetWidth(td);</span>
                         const tdWidth = <span class="cstat-no" title="statement not covered" >this.isRTL</span>
                             ? newPos - parseInt(td.getAttribute('originalLeftBorder'))
                             : parseInt(td.getAttribute('originalRightBorder')) - newPos;
-<span class="cstat-no" title="statement not covered" >                        td.style.width = `${tdWidth - offset}px`;</span>
+<span class="cstat-no" title="statement not covered" >                        td.style.boxSizing = 'border-box';</span>
+<span class="cstat-no" title="statement not covered" >                        td.style.width = `${tdWidth}px`;</span>
                     });
                 }
 <span class="cstat-no" title="statement not covered" >                vtable.writeBack();</span>
@@ -1729,7 +1714,7 @@ export default class TableResize implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Apr 27 2021 22:56:17 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 27 2021 23:20:56 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
