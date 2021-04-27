@@ -15,7 +15,7 @@ const INSERTER_COLOR_DARK_MODE = 'white';
 const INSERTER_SIDE_LENGTH = 12;
 const INSERTER_BORDER_SIZE = 1;
 const INSERTER_HOVER_OFFSET = 5;
-
+const MIN_CELL_WIDTH = 30;
 const CELL_RESIZER_WIDTH = 4;
 const HORIZONTAL_RESIZER_HTML =
     '<div style="position: fixed; cursor: row-resize; user-select: none"></div>';
@@ -437,14 +437,6 @@ export default class TableResize implements EditorPlugin {
         this.editor.runAsync(() => this.resizeTable(e));
     };
 
-    // get the total width of padding-left, padding-right and border-width of the cell
-    private getTdOffsetWidth = (td: HTMLTableCellElement): number => {
-        return (
-            parseInt(this.currentTable.cellPadding) * 2 +
-            parseInt(td.style.borderWidth.slice(0, -2))
-        );
-    };
-
     private resizeTable = (e: MouseEvent) => {
         if (this.currentTd && this.resizingState !== ResizeState.None) {
             const rect = normalizeRect(this.currentTd.getBoundingClientRect());
@@ -488,26 +480,29 @@ export default class TableResize implements EditorPlugin {
                                 : Number.MAX_SAFE_INTEGER;
                     }
 
-                    if (newPos <= leftBoundary + 20 || newPos >= rightBoundary - 20) {
+                    if (
+                        newPos <= leftBoundary + MIN_CELL_WIDTH ||
+                        newPos >= rightBoundary - MIN_CELL_WIDTH
+                    ) {
                         return;
                     }
 
                     this.currentCellsToResize.forEach(td => {
                         const rect = normalizeRect(td.getBoundingClientRect());
                         td.style.wordBreak = 'break-word';
-                        const offset = this.getTdOffsetWidth(td);
+                        td.style.boxSizing = 'border-box';
                         td.style.width = this.isRTL
-                            ? `${rect.right - newPos - offset}px`
-                            : `${newPos - rect.left - offset}px`;
+                            ? `${rect.right - newPos}px`
+                            : `${newPos - rect.left}px`;
                     });
 
                     this.nextCellsToResize.forEach(td => {
                         td.style.wordBreak = 'break-word';
-                        const offset = this.getTdOffsetWidth(td);
                         const tdWidth = this.isRTL
                             ? newPos - parseInt(td.getAttribute('originalLeftBorder'))
                             : parseInt(td.getAttribute('originalRightBorder')) - newPos;
-                        td.style.width = `${tdWidth - offset}px`;
+                        td.style.boxSizing = 'border-box';
+                        td.style.width = `${tdWidth}px`;
                     });
                 }
                 vtable.writeBack();
