@@ -61,7 +61,7 @@ import {
  * the writeBack() function will handle everything related to DOM change
  */
 export default class VList {
-    private items: VListItem[] = [];
+    public readonly items: VListItem[] = [];
 
     /**
      * Create a new instance of VList class
