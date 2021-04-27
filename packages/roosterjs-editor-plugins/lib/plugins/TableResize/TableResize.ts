@@ -1,4 +1,5 @@
 import { fromHtml, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
+import { traceDeprecation } from 'node:process';
 import {
     EditorPlugin,
     IEditor,
@@ -49,6 +50,8 @@ export default class TableResize implements EditorPlugin {
     private inserter: HTMLDivElement;
     private isRTL: boolean;
 
+    private isLeftMouseDown: boolean = false;
+
     /**
      * Get a friendly name of  this plugin
      */
@@ -64,6 +67,8 @@ export default class TableResize implements EditorPlugin {
         this.editor = editor;
         this.setupResizerContainer();
         this.onMouseMoveDisposer = this.editor.addDomEventHandler('mousemove', this.onMouseMove);
+        this.editor.addDomEventHandler('mousedown', this.onMouseDown);
+        this.editor.addDomEventHandler('mouseup', this.onMouseUp);
     }
 
     /**
@@ -90,6 +95,16 @@ export default class TableResize implements EditorPlugin {
                 break;
         }
     }
+
+    private onMouseDown = (e: MouseEvent) => {
+        if (e.button === 0) {
+            this.isLeftMouseDown = true;
+        }
+    };
+
+    private onMouseUp = (e: MouseEvent) => {
+        this.isLeftMouseDown = false;
+    };
 
     private setupResizerContainer() {
         this.resizerContainer = this.editor.getDocument().createElement('div');
@@ -174,11 +189,13 @@ export default class TableResize implements EditorPlugin {
                                 }
                                 if (verticalInserterTd) {
                                     this.setCurrentTd(null);
-                                    this.setCurrentInsertTd(
-                                        ResizeState.Vertical,
-                                        verticalInserterTd,
-                                        map.rect
-                                    );
+                                    if (!this.isLeftMouseDown) {
+                                        this.setCurrentInsertTd(
+                                            ResizeState.Vertical,
+                                            verticalInserterTd,
+                                            map.rect
+                                        );
+                                    }
                                     break;
                                 }
                                 // check horizontal inserter
@@ -202,11 +219,13 @@ export default class TableResize implements EditorPlugin {
 
                                 if (horizontalInserterTd) {
                                     this.setCurrentTd(null);
-                                    this.setCurrentInsertTd(
-                                        ResizeState.Horizontal,
-                                        horizontalInserterTd,
-                                        map.rect
-                                    );
+                                    if (!this.isLeftMouseDown) {
+                                        this.setCurrentInsertTd(
+                                            ResizeState.Horizontal,
+                                            horizontalInserterTd,
+                                            map.rect
+                                        );
+                                    }
                                     break;
                                 }
                             } else {
@@ -418,6 +437,9 @@ export default class TableResize implements EditorPlugin {
                 this.isRTL ? rect.left : rect.right,
                 !this.isRTL
             );
+
+            //this.currentCellsToResize = vtable.getCellsWithBorder(rect.left, false);
+
             this.nextCellsToResize = vtable.getCellsWithBorder(
                 this.isRTL ? rect.left : rect.right,
                 this.isRTL
@@ -439,10 +461,11 @@ export default class TableResize implements EditorPlugin {
 
     // get the total width of padding-left, padding-right and border-width of the cell
     private getTdOffsetWidth = (td: HTMLTableCellElement): number => {
-        return (
+        /*return (
             parseInt(this.currentTable.cellPadding) * 2 +
             parseInt(td.style.borderWidth.slice(0, -2))
-        );
+        );*/
+        return 1;
     };
 
     private resizeTable = (e: MouseEvent) => {
@@ -488,27 +511,49 @@ export default class TableResize implements EditorPlugin {
                                 : Number.MAX_SAFE_INTEGER;
                     }
 
-                    if (newPos <= leftBoundary + 20 || newPos >= rightBoundary - 20) {
+                    if (newPos <= leftBoundary + 50) {
                         return;
                     }
 
-                    this.currentCellsToResize.forEach(td => {
+                    /*this.currentCellsToResize.forEach(td => {
+                        console.log('***** current td: ' + td.textContent);
                         const rect = normalizeRect(td.getBoundingClientRect());
                         td.style.wordBreak = 'break-word';
                         const offset = this.getTdOffsetWidth(td);
+                        const newWidth = newPos - rect.left - offset;
                         td.style.width = this.isRTL
                             ? `${rect.right - newPos - offset}px`
                             : `${newPos - rect.left - offset}px`;
-                    });
+                    });*/
 
-                    this.nextCellsToResize.forEach(td => {
+                    /*vtable.forEachCellOfCurrentColumn(cell => {
+                        if (cell.td) {
+                            console.log('***** current td: ' + cell.td.textContent);
+                            const offset = this.getTdOffsetWidth(cell.td);
+                            cell.td.style.wordBreak = 'break-word';
+                            cell.td.style.width =
+                                cell.td == this.currentTd
+                                    ? `${newPos - rect.left - offset}px`
+                                    : null;
+                        }
+                    });*/
+
+                    /*this.nextCellsToResize.forEach(td => {
                         td.style.wordBreak = 'break-word';
                         const offset = this.getTdOffsetWidth(td);
                         const tdWidth = this.isRTL
                             ? newPos - parseInt(td.getAttribute('originalLeftBorder'))
                             : parseInt(td.getAttribute('originalRightBorder')) - newPos;
                         td.style.width = `${tdWidth - offset}px`;
-                    });
+                    });*/
+
+                    /*vtable.forEachCellOfCurrentColumn(cell => {
+                        if (cell.td) {
+                            cell.td.style.wordBreak = 'break-word';
+                            cell.td.style.width =
+                                cell.td == this.currentTd ? `${newPos - rect.left}px` : null;
+                        }
+                    });*/
                 }
                 vtable.writeBack();
             }
@@ -551,5 +596,6 @@ export default class TableResize implements EditorPlugin {
             }
         });
         this.isRTL = getComputedStyle(this.editor.getDocument().body, 'direction') == 'rtl';
+        const aa = this.isRTL;
     }
 }
