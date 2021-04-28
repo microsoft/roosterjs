@@ -15,7 +15,7 @@ const INSERTER_COLOR_DARK_MODE = 'white';
 const INSERTER_SIDE_LENGTH = 12;
 const INSERTER_BORDER_SIZE = 1;
 const INSERTER_HOVER_OFFSET = 5;
-const CELL_MINIMUM_LENGTH = 20;
+const MIN_CELL_WIDTH = 30;
 const CELL_RESIZER_WIDTH = 4;
 const TABLE_RESIZER_LENGTH = 12;
 const HORIZONTAL_RESIZER_HTML =
@@ -501,14 +501,6 @@ export default class TableResize implements EditorPlugin {
         this.editor.runAsync(() => this.resizeCells(e));
     };
 
-    // get the total width of padding-left, padding-right and border-width of the cell
-    private getTdOffsetWidth = (td: HTMLTableCellElement): number => {
-        return (
-            parseInt(this.currentTable.cellPadding) * 2 +
-            parseInt(td.style.borderWidth.slice(0, -2))
-        );
-    };
-
     private resizeCells = (e: MouseEvent) => {
         this.setTableResizer(null);
         if (this.resizingState === ResizeState.None) {
@@ -546,11 +538,11 @@ export default class TableResize implements EditorPlugin {
                     const newWidth = originalWidth * ratioX;
                     const newHeight = originalHeight * ratioY;
 
-                    if (newWidth >= CELL_MINIMUM_LENGTH) {
+                    if (newWidth >= MIN_CELL_WIDTH) {
                         cell.td.style.wordBreak = 'break-word';
                         cell.td.style.width = `${newWidth}px`;
                     }
-                    if (newHeight >= CELL_MINIMUM_LENGTH) {
+                    if (newHeight >= MIN_CELL_WIDTH) {
                         cell.td.style.height = `${newHeight}px`;
                     }
                 }
@@ -609,8 +601,8 @@ export default class TableResize implements EditorPlugin {
                     }
 
                     if (
-                        newPos <= leftBoundary + CELL_MINIMUM_LENGTH ||
-                        newPos >= rightBoundary - CELL_MINIMUM_LENGTH
+                        newPos <= leftBoundary + MIN_CELL_WIDTH ||
+                        newPos >= rightBoundary - MIN_CELL_WIDTH
                     ) {
                         return;
                     }
@@ -618,19 +610,19 @@ export default class TableResize implements EditorPlugin {
                     this.currentCellsToResize.forEach(td => {
                         const rect = normalizeRect(td.getBoundingClientRect());
                         td.style.wordBreak = 'break-word';
-                        const offset = this.getTdOffsetWidth(td);
+                        td.style.boxSizing = 'border-box';
                         td.style.width = this.isRTL
-                            ? `${rect.right - newPos - offset}px`
-                            : `${newPos - rect.left - offset}px`;
+                            ? `${rect.right - newPos}px`
+                            : `${newPos - rect.left}px`;
                     });
 
                     this.nextCellsToResize.forEach(td => {
                         td.style.wordBreak = 'break-word';
-                        const offset = this.getTdOffsetWidth(td);
                         const tdWidth = this.isRTL
                             ? newPos - parseInt(td.getAttribute('originalLeftBorder'))
                             : parseInt(td.getAttribute('originalRightBorder')) - newPos;
-                        td.style.width = `${tdWidth - offset}px`;
+                        td.style.boxSizing = 'border-box';
+                        td.style.width = `${tdWidth}px`;
                     });
                 }
                 vtable.writeBack();
