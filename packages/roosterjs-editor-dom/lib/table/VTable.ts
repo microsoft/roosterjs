@@ -273,17 +273,6 @@ export default class VTable {
     }
 
     /**
-     * Loop each cell of the table and invoke a callback function
-     * @param callback The callback function to invoke
-     */
-    forEachCell(callback: (cell: VCell) => any) {
-        for (let i = 0; i < this.cells.length; i++) {
-            for (let j = 0; j < this.cells[i].length; j++) {
-                callback(this.getCell(i, j));
-            }
-        }
-    }
-    /**
      * Loop each cell of current column and invoke a callback function
      * @param callback The callback function to invoke
      */

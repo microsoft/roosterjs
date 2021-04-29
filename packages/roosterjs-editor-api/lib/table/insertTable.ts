@@ -30,7 +30,6 @@ export default function insertTable(
             tr.appendChild(td);
             td.appendChild(document.createElement('br'));
             td.style.width = getTableCellWidth(columns);
-            td.style.height = '20px';
         }
     }
 
