@@ -545,11 +545,13 @@ export default class TableResize implements EditorPlugin {
                         const newWidth = originalWidth * ratioX;
                         const newHeight = originalHeight * ratioY;
 
+                        cell.td.style.boxSizing = 'border-box';
                         if (newWidth >= MIN_CELL_WIDTH) {
                             cell.td.style.wordBreak = 'break-word';
                             cell.td.style.width = `${newWidth}px`;
                         }
-                        if (newHeight >= MIN_CELL_WIDTH) {
+
+                        if (j == 0) {
                             cell.td.style.height = `${newHeight}px`;
                         }
                     }
@@ -578,8 +580,9 @@ export default class TableResize implements EditorPlugin {
                 if (this.resizingState == ResizeState.Horizontal) {
                     vtable.table.style.height = null;
                     vtable.forEachCellOfCurrentRow(cell => {
-                        if (cell.td && cell.td == this.currentTd) {
-                            cell.td.style.height = `${newPos - rect.top}px`;
+                        if (cell.td) {
+                            cell.td.style.height =
+                                cell.td == this.currentTd ? `${newPos - rect.top}px` : null;
                         }
                     });
                 } else {
