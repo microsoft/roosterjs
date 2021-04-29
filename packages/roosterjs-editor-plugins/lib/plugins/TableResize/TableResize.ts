@@ -100,7 +100,8 @@ export default class TableResize implements EditorPlugin {
     }
 
     private setupResizerContainer() {
-        this.resizerContainer = this.editor.getDocument().createElement('div');
+        const document = this.editor.getDocument();
+        this.resizerContainer = document.createElement('div');
         this.editor.insertNode(this.resizerContainer, {
             updateCursor: false,
             insertOnNewLine: false,
@@ -108,7 +109,7 @@ export default class TableResize implements EditorPlugin {
             position: ContentPosition.Outside,
         });
 
-        this.tableResizerContainer = this.editor.getDocument().createElement('div');
+        this.tableResizerContainer = document.createElement('div');
         this.editor.insertNode(this.tableResizerContainer, {
             updateCursor: false,
             insertOnNewLine: false,
