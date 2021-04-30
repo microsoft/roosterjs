@@ -16,6 +16,7 @@ const INSERTER_SIDE_LENGTH = 12;
 const INSERTER_BORDER_SIZE = 1;
 const INSERTER_HOVER_OFFSET = 5;
 const MIN_CELL_WIDTH = 30;
+const MIN_CELL_HEIGHT = 20;
 const CELL_RESIZER_WIDTH = 4;
 const TABLE_RESIZER_LENGTH = 12;
 const HORIZONTAL_RESIZER_HTML =
@@ -529,30 +530,29 @@ export default class TableResize implements EditorPlugin {
                 for (let j = 0; j < vtable.cells[i].length; j++) {
                     const cell = vtable.cells[i][j];
                     if (cell.td) {
-                        const originalWidth: number = cell.td.style.width
-                            ? parseFloat(
-                                  cell.td.style.width.substr(0, cell.td.style.width.length - 2)
-                              )
-                            : cell.td.getBoundingClientRect().right -
-                              cell.td.getBoundingClientRect().left;
-                        const originalHeight: number = cell.td.style.height
-                            ? parseFloat(
-                                  cell.td.style.height.substr(0, cell.td.style.height.length - 2)
-                              )
-                            : cell.td.getBoundingClientRect().bottom -
-                              cell.td.getBoundingClientRect().top;
-
-                        const newWidth = originalWidth * ratioX;
-                        const newHeight = originalHeight * ratioY;
-
-                        cell.td.style.boxSizing = 'border-box';
-                        if (newWidth >= MIN_CELL_WIDTH) {
-                            cell.td.style.wordBreak = 'break-word';
-                            cell.td.style.width = `${newWidth}px`;
+                        if (ratioX != 1.0) {
+                            const originalWidth: number = cell.td.style.width
+                                ? parseFloat(
+                                      cell.td.style.width.substr(0, cell.td.style.width.length - 2)
+                                  )
+                                : cell.td.getBoundingClientRect().right -
+                                  cell.td.getBoundingClientRect().left;
+                            const newWidth = originalWidth * ratioX;
+                            cell.td.style.boxSizing = 'border-box';
+                            if (newWidth >= MIN_CELL_WIDTH) {
+                                cell.td.style.wordBreak = 'break-word';
+                                cell.td.style.width = `${newWidth}px`;
+                            }
                         }
 
-                        if (j == 0) {
-                            cell.td.style.height = `${newHeight}px`;
+                        if (ratioY != 1.0) {
+                            const originalHeight =
+                                cell.td.getBoundingClientRect().bottom -
+                                cell.td.getBoundingClientRect().top;
+                            const newHeight = originalHeight * ratioY;
+                            if (newHeight >= MIN_CELL_HEIGHT) {
+                                cell.td.style.height = `${newHeight}px`;
+                            }
                         }
                     }
                 }
