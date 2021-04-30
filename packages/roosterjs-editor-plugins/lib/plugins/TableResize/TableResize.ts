@@ -526,37 +526,47 @@ export default class TableResize implements EditorPlugin {
                     : (e.pageX - currentBorder) / (currentBorder - rect.left));
             const ratioY = 1.0 + (e.pageY - tableBottomBorder) / (tableBottomBorder - rect.top);
 
-            for (let i = 0; i < vtable.cells.length; i++) {
-                for (let j = 0; j < vtable.cells[i].length; j++) {
-                    const cell = vtable.cells[i][j];
-                    if (cell.td) {
-                        if (ratioX != 1.0) {
-                            const originalWidth: number = cell.td.style.width
-                                ? parseFloat(
-                                      cell.td.style.width.substr(0, cell.td.style.width.length - 2)
-                                  )
-                                : cell.td.getBoundingClientRect().right -
-                                  cell.td.getBoundingClientRect().left;
-                            const newWidth = originalWidth * ratioX;
-                            cell.td.style.boxSizing = 'border-box';
-                            if (newWidth >= MIN_CELL_WIDTH) {
-                                cell.td.style.wordBreak = 'break-word';
-                                cell.td.style.width = `${newWidth}px`;
+            const shouldResizeX = Math.abs(ratioX - 1.0) > 1e-3;
+            const shouldResizeY = Math.abs(ratioY - 1.0) > 1e-3;
+            if (shouldResizeX || shouldResizeY)
+                for (let i = 0; i < vtable.cells.length; i++) {
+                    for (let j = 0; j < vtable.cells[i].length; j++) {
+                        const cell = vtable.cells[i][j];
+                        if (cell.td) {
+                            if (shouldResizeX) {
+                                const originalWidth: number = cell.td.style.width
+                                    ? parseFloat(
+                                          cell.td.style.width.substr(
+                                              0,
+                                              cell.td.style.width.length - 2
+                                          )
+                                      )
+                                    : cell.td.getBoundingClientRect().right -
+                                      cell.td.getBoundingClientRect().left;
+                                const newWidth = originalWidth * ratioX;
+                                cell.td.style.boxSizing = 'border-box';
+                                if (newWidth >= MIN_CELL_WIDTH) {
+                                    cell.td.style.wordBreak = 'break-word';
+                                    cell.td.style.width = `${newWidth}px`;
+                                }
                             }
-                        }
 
-                        if (ratioY != 1.0) {
-                            const originalHeight =
-                                cell.td.getBoundingClientRect().bottom -
-                                cell.td.getBoundingClientRect().top;
-                            const newHeight = originalHeight * ratioY;
-                            if (newHeight >= MIN_CELL_HEIGHT) {
-                                cell.td.style.height = `${newHeight}px`;
+                            if (shouldResizeY) {
+                                if (j == 0) {
+                                    const originalHeight =
+                                        cell.td.getBoundingClientRect().bottom -
+                                        cell.td.getBoundingClientRect().top;
+                                    const newHeight = originalHeight * ratioY;
+                                    if (newHeight >= MIN_CELL_HEIGHT) {
+                                        cell.td.style.height = `${newHeight}px`;
+                                    }
+                                } else {
+                                    cell.td.style.height = '';
+                                }
                             }
                         }
                     }
                 }
-            }
 
             rect = normalizeRect(this.currentTable.getBoundingClientRect());
             currentBorder = this.isRTL ? rect.left : rect.right;
