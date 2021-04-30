@@ -528,7 +528,7 @@ export default class TableResize implements EditorPlugin {
 
             const shouldResizeX = Math.abs(ratioX - 1.0) > 1e-3;
             const shouldResizeY = Math.abs(ratioY - 1.0) > 1e-3;
-            if (shouldResizeX || shouldResizeY)
+            if (shouldResizeX || shouldResizeY) {
                 for (let i = 0; i < vtable.cells.length; i++) {
                     for (let j = 0; j < vtable.cells[i].length; j++) {
                         const cell = vtable.cells[i][j];
@@ -567,7 +567,7 @@ export default class TableResize implements EditorPlugin {
                         }
                     }
                 }
-
+            }
             rect = normalizeRect(this.currentTable.getBoundingClientRect());
             currentBorder = this.isRTL ? rect.left : rect.right;
             this.currentTable.setAttribute(
