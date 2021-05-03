@@ -10,7 +10,7 @@ const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
 /**
  * @internal
  * Convert pasted content from Excel, add borders when source doc doesn't have a border
- * @param doc HTML Document which contains the content from Excel
+ * @param event The BeforePaste event
  */
 export default function convertPastedContentFromExcel(event: BeforePasteEvent) {
     const { fragment, sanitizingOption, htmlBefore, clipboardData } = event;

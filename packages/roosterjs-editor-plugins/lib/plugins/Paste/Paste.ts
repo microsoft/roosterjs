@@ -1,4 +1,5 @@
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
+import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromTeams from './teamsConverter/convertPastedContentFromTeams';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import handleLineMerge from './lineMerge/handleLineMerge';
@@ -13,8 +14,9 @@ const WORD_ATTRIBUTE_NAME = 'xmlns:w';
 const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';
 const EXCEL_ATTRIBUTE_NAME = 'xmlns:x';
 const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
-const EXCEL_ONLINE_ATTRIBUTE_NAME = 'ProgId';
+const PROG_ID_NAME = 'ProgId';
 const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
+const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
 const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 
 /**
@@ -62,10 +64,12 @@ export default class Paste implements EditorPlugin {
                 convertPastedContentFromWord(event);
             } else if (
                 htmlAttributes[EXCEL_ATTRIBUTE_NAME] == EXCEL_ATTRIBUTE_VALUE ||
-                htmlAttributes[EXCEL_ONLINE_ATTRIBUTE_NAME] == EXCEL_ONLINE_ATTRIBUTE_VALUE
+                htmlAttributes[PROG_ID_NAME] == EXCEL_ONLINE_ATTRIBUTE_VALUE
             ) {
                 // Handle HTML copied from Excel
                 convertPastedContentFromExcel(event);
+            } else if (htmlAttributes[PROG_ID_NAME] == POWERPOINT_ATTRIBUTE_VALUE) {
+                convertPastedContentFromPowerPoint(event);
             } else if (
                 (wacListElements = toArray(fragment.querySelectorAll(WAC_IDENTIFING_SELECTOR))) &&
                 wacListElements.length > 0
