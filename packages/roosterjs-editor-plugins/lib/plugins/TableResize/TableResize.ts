@@ -1,5 +1,4 @@
 import { fromHtml, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { traceDeprecation } from 'node:process';
 import {
     EditorPlugin,
     IEditor,
@@ -84,7 +83,10 @@ export default class TableResize implements EditorPlugin {
      * Dispose this plugin
      */
     dispose() {
+        const doc = this.editor.getDocument();
         this.onMouseMoveDisposer();
+        doc.removeEventListener('mouseup', this.onMouseUp, true);
+        doc.removeEventListener('mousedown', this.onMouseDown, true);
         this.tableRectMap = null;
         this.removeResizerContainer();
         this.setCurrentTable(null);
@@ -209,6 +211,7 @@ export default class TableResize implements EditorPlugin {
                                 }
                                 if (verticalInserterTd) {
                                     this.setCurrentTd(null);
+                                    // we hide the inserter if left mouse button is pressed
                                     if (!this.isLeftMouseDown) {
                                         this.setCurrentInsertTd(
                                             ResizeState.Vertical,
@@ -239,6 +242,7 @@ export default class TableResize implements EditorPlugin {
 
                                 if (horizontalInserterTd) {
                                     this.setCurrentTd(null);
+                                    // we hide the inserter if left mouse button is pressed
                                     if (!this.isLeftMouseDown) {
                                         this.setCurrentInsertTd(
                                             ResizeState.Horizontal,
@@ -504,8 +508,6 @@ export default class TableResize implements EditorPlugin {
                 !this.isRTL
             );
 
-            //this.currentCellsToResize = vtable.getCellsWithBorder(rect.left, false);
-
             this.nextCellsToResize = vtable.getCellsWithBorder(
                 this.isRTL ? rect.left : rect.right,
                 this.isRTL
@@ -704,6 +706,5 @@ export default class TableResize implements EditorPlugin {
             }
         });
         this.isRTL = getComputedStyle(this.editor.getDocument().body, 'direction') == 'rtl';
-        const aa = this.isRTL;
     }
 }
