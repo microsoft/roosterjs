@@ -137,7 +137,7 @@ const ALLOWED_HTML_ATTRIBUTES = (
     'coords,datetime,default,dir,dirname,disabled,download,face,headers,height,hidden,high,href,' +
     'hreflang,ismap,kind,label,lang,list,low,max,maxlength,media,min,multiple,open,optimum,pattern,' +
     'placeholder,readonly,rel,required,reversed,rows,rowspan,scope,selected,shape,size,sizes,span,' +
-    'spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,type,usemap,value,' +
+    'spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,type,usemap,valign,value,' +
     'width,wrap'
 ).split(',');
 
