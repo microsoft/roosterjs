@@ -643,53 +643,30 @@ export default class TableResize implements EditorPlugin {
                                 : Number.MAX_SAFE_INTEGER;
                     }
 
-                    if (newPos <= leftBoundary + 50) {
-                        /*if (
+                    if (
                         newPos <= leftBoundary + MIN_CELL_WIDTH ||
                         newPos >= rightBoundary - MIN_CELL_WIDTH
-                    ) {*/
-
+                    ) {
                         return;
                     }
 
-                    /*this.currentCellsToResize.forEach(td => {
-                        console.log('***** current td: ' + td.textContent);
+                    this.currentCellsToResize.forEach(td => {
                         const rect = normalizeRect(td.getBoundingClientRect());
                         td.style.wordBreak = 'break-word';
-                        const offset = this.getTdOffsetWidth(td);
-                        const newWidth = newPos - rect.left - offset;
+                        td.style.boxSizing = 'border-box';
                         td.style.width = this.isRTL
-                            ? `${rect.right - newPos - offset}px`
-                            : `${newPos - rect.left - offset}px`;
-                    });*/
+                            ? `${rect.right - newPos}px`
+                            : `${newPos - rect.left}px`;
+                    });
 
-                    /*vtable.forEachCellOfCurrentColumn(cell => {
-                        if (cell.td) {
-                            console.log('***** current td: ' + cell.td.textContent);
-                            const offset = this.getTdOffsetWidth(cell.td);
-                            cell.td.style.wordBreak = 'break-word';
-                            cell.td.style.width =
-                                cell.td == this.currentTd
-                                    ? `${newPos - rect.left - offset}px`
-                                    : null;
-                        }
-                    });*/
-
-                    /*this.nextCellsToResize.forEach(td => {
+                    this.nextCellsToResize.forEach(td => {
                         td.style.wordBreak = 'break-word';
                         const tdWidth = this.isRTL
                             ? newPos - parseInt(td.getAttribute('originalLeftBorder'))
                             : parseInt(td.getAttribute('originalRightBorder')) - newPos;
-                        td.style.width = `${tdWidth - offset}px`;
-                    });*/
-
-                    /*vtable.forEachCellOfCurrentColumn(cell => {
-                        if (cell.td) {
-                            cell.td.style.wordBreak = 'break-word';
-                            cell.td.style.width =
-                                cell.td == this.currentTd ? `${newPos - rect.left}px` : null;
-                        }
-                    });*/
+                        td.style.boxSizing = 'border-box';
+                        td.style.width = `${tdWidth}px`;
+                    });
                 }
                 vtable.writeBack();
             }
