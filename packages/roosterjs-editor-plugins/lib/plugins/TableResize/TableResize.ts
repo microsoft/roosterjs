@@ -57,7 +57,6 @@ export default class TableResize implements EditorPlugin {
     private insertingState: ResizeState = ResizeState.None;
     private inserter: HTMLDivElement;
     private isRTL: boolean;
-
     private isLeftMouseDown: boolean = false;
 
     /**
@@ -507,7 +506,6 @@ export default class TableResize implements EditorPlugin {
                 this.isRTL ? rect.left : rect.right,
                 !this.isRTL
             );
-
             this.nextCellsToResize = vtable.getCellsWithBorder(
                 this.isRTL ? rect.left : rect.right,
                 this.isRTL
