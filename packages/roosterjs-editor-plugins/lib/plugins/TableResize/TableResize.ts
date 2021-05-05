@@ -195,7 +195,7 @@ export default class TableResize implements EditorPlugin {
                                 if (verticalInserterTd) {
                                     this.setCurrentTd(null);
                                     // we hide the inserter if left mouse button is pressed
-                                    if (e.buttons !== 1) {
+                                    if (e.buttons == 0) {
                                         this.setCurrentInsertTd(
                                             ResizeState.Vertical,
                                             verticalInserterTd,
@@ -226,7 +226,7 @@ export default class TableResize implements EditorPlugin {
                                 if (horizontalInserterTd) {
                                     this.setCurrentTd(null);
                                     // we hide the inserter if left mouse button is pressed
-                                    if (e.buttons !== 1) {
+                                    if (e.buttons == 0) {
                                         this.setCurrentInsertTd(
                                             ResizeState.Horizontal,
                                             horizontalInserterTd,
