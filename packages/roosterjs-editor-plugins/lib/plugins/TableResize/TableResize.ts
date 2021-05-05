@@ -194,11 +194,14 @@ export default class TableResize implements EditorPlugin {
                                 }
                                 if (verticalInserterTd) {
                                     this.setCurrentTd(null);
-                                    this.setCurrentInsertTd(
-                                        ResizeState.Vertical,
-                                        verticalInserterTd,
-                                        map.rect
-                                    );
+                                    // we hide the inserter if left mouse button is pressed
+                                    if (e.buttons == 0) {
+                                        this.setCurrentInsertTd(
+                                            ResizeState.Vertical,
+                                            verticalInserterTd,
+                                            map.rect
+                                        );
+                                    }
                                     break;
                                 }
                                 // check horizontal inserter
@@ -222,11 +225,14 @@ export default class TableResize implements EditorPlugin {
 
                                 if (horizontalInserterTd) {
                                     this.setCurrentTd(null);
-                                    this.setCurrentInsertTd(
-                                        ResizeState.Horizontal,
-                                        horizontalInserterTd,
-                                        map.rect
-                                    );
+                                    // we hide the inserter if left mouse button is pressed
+                                    if (e.buttons == 0) {
+                                        this.setCurrentInsertTd(
+                                            ResizeState.Horizontal,
+                                            horizontalInserterTd,
+                                            map.rect
+                                        );
+                                    }
                                     break;
                                 }
                             } else {
