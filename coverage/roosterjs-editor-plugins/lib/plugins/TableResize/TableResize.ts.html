@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.46% </span>
+                <span class="strong">11.39% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>36/314</span>
+                <span class='fraction'>36/316</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">1.06% </span>
+                <span class="strong">1.04% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/188</span>
+                <span class='fraction'>2/192</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.76% </span>
+                <span class="strong">11.69% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>36/306</span>
+                <span class='fraction'>36/308</span>
             </div>
         
             
@@ -743,7 +743,13 @@
 <a name='L684'></a><a href='#L684'>684</a>
 <a name='L685'></a><a href='#L685'>685</a>
 <a name='L686'></a><a href='#L686'>686</a>
-<a name='L687'></a><a href='#L687'>687</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L687'></a><a href='#L687'>687</a>
+<a name='L688'></a><a href='#L688'>688</a>
+<a name='L689'></a><a href='#L689'>689</a>
+<a name='L690'></a><a href='#L690'>690</a>
+<a name='L691'></a><a href='#L691'>691</a>
+<a name='L692'></a><a href='#L692'>692</a>
+<a name='L693'></a><a href='#L693'>693</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -939,14 +945,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -955,19 +955,31 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1625,11 +1637,14 @@ export default class TableResize implements EditorPlugin {
                                 }
 <span class="cstat-no" title="statement not covered" >                                if (verticalInserterTd) {</span>
 <span class="cstat-no" title="statement not covered" >                                    this.setCurrentTd(null);</span>
-<span class="cstat-no" title="statement not covered" >                                    this.setCurrentInsertTd(</span>
-                                        ResizeState.Vertical,
-                                        verticalInserterTd,
-                                        map.rect
-                                    );
+                                    // we hide the inserter if left mouse button is pressed
+<span class="cstat-no" title="statement not covered" >                                    if (e.buttons == 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                        this.setCurrentInsertTd(</span>
+                                            ResizeState.Vertical,
+                                            verticalInserterTd,
+                                            map.rect
+                                        );
+                                    }
 <span class="cstat-no" title="statement not covered" >                                    break;</span>
                                 }
                                 // check horizontal inserter
@@ -1653,11 +1668,14 @@ export default class TableResize implements EditorPlugin {
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                                if (horizontalInserterTd) {</span>
 <span class="cstat-no" title="statement not covered" >                                    this.setCurrentTd(null);</span>
-<span class="cstat-no" title="statement not covered" >                                    this.setCurrentInsertTd(</span>
-                                        ResizeState.Horizontal,
-                                        horizontalInserterTd,
-                                        map.rect
-                                    );
+                                    // we hide the inserter if left mouse button is pressed
+<span class="cstat-no" title="statement not covered" >                                    if (e.buttons == 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                        this.setCurrentInsertTd(</span>
+                                            ResizeState.Horizontal,
+                                            horizontalInserterTd,
+                                            map.rect
+                                        );
+                                    }
 <span class="cstat-no" title="statement not covered" >                                    break;</span>
                                 }
                             } else {
@@ -2122,7 +2140,7 @@ export default class TableResize implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon May 03 2021 16:59:02 GMT+0000 (Coordinated Universal Time)
+                at Wed May 05 2021 03:57:03 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
