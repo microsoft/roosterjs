@@ -57,7 +57,6 @@ export default class TableResize implements EditorPlugin {
     private insertingState: ResizeState = ResizeState.None;
     private inserter: HTMLDivElement;
     private isRTL: boolean;
-    private isLeftMouseDown: boolean = false;
 
     /**
      * Get a friendly name of  this plugin
@@ -74,18 +73,13 @@ export default class TableResize implements EditorPlugin {
         this.editor = editor;
         this.setupResizerContainer();
         this.onMouseMoveDisposer = this.editor.addDomEventHandler('mousemove', this.onMouseMove);
-        this.editor.addDomEventHandler('mousedown', this.onMouseDown);
-        this.editor.addDomEventHandler('mouseup', this.onMouseUp);
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        const doc = this.editor.getDocument();
         this.onMouseMoveDisposer();
-        doc.removeEventListener('mouseup', this.onMouseUp, true);
-        doc.removeEventListener('mousedown', this.onMouseDown, true);
         this.tableRectMap = null;
         this.removeResizerContainer();
         this.setCurrentTable(null);
@@ -105,16 +99,6 @@ export default class TableResize implements EditorPlugin {
                 break;
         }
     }
-
-    private onMouseDown = (e: MouseEvent) => {
-        if (e.button === 0) {
-            this.isLeftMouseDown = true;
-        }
-    };
-
-    private onMouseUp = (e: MouseEvent) => {
-        this.isLeftMouseDown = false;
-    };
 
     private setupResizerContainer() {
         const document = this.editor.getDocument();
@@ -211,7 +195,7 @@ export default class TableResize implements EditorPlugin {
                                 if (verticalInserterTd) {
                                     this.setCurrentTd(null);
                                     // we hide the inserter if left mouse button is pressed
-                                    if (!this.isLeftMouseDown) {
+                                    if (e.buttons !== 1) {
                                         this.setCurrentInsertTd(
                                             ResizeState.Vertical,
                                             verticalInserterTd,
@@ -242,7 +226,7 @@ export default class TableResize implements EditorPlugin {
                                 if (horizontalInserterTd) {
                                     this.setCurrentTd(null);
                                     // we hide the inserter if left mouse button is pressed
-                                    if (!this.isLeftMouseDown) {
+                                    if (e.buttons !== 1) {
                                         this.setCurrentInsertTd(
                                             ResizeState.Horizontal,
                                             horizontalInserterTd,
