@@ -591,8 +591,7 @@ export default class TableResize implements EditorPlugin {
                     vtable.table.style.height = null;
                     vtable.forEachCellOfCurrentRow(cell => {
                         if (cell.td) {
-                            cell.td.style.height =
-                                cell.td == this.currentTd ? `${newPos - rect.top}px` : null;
+                            cell.td == this.currentTd ? `${newPos - rect.top}px` : null;
                         }
                     });
                 } else {
@@ -621,7 +620,14 @@ export default class TableResize implements EditorPlugin {
                                 : Number.MAX_SAFE_INTEGER;
                     }
 
-                    if (
+                    if (e.shiftKey) {
+                        if (
+                            (!this.isRTL && newPos <= leftBoundary + MIN_CELL_WIDTH) ||
+                            (this.isRTL && newPos >= rightBoundary - MIN_CELL_WIDTH)
+                        ) {
+                            return;
+                        }
+                    } else if (
                         newPos <= leftBoundary + MIN_CELL_WIDTH ||
                         newPos >= rightBoundary - MIN_CELL_WIDTH
                     ) {
@@ -637,14 +643,16 @@ export default class TableResize implements EditorPlugin {
                             : `${newPos - rect.left}px`;
                     });
 
-                    this.nextCellsToResize.forEach(td => {
-                        td.style.wordBreak = 'break-word';
-                        const tdWidth = this.isRTL
-                            ? newPos - parseInt(td.getAttribute('originalLeftBorder'))
-                            : parseInt(td.getAttribute('originalRightBorder')) - newPos;
-                        td.style.boxSizing = 'border-box';
-                        td.style.width = `${tdWidth}px`;
-                    });
+                    if (!e.shiftKey) {
+                        this.nextCellsToResize.forEach(td => {
+                            td.style.wordBreak = 'break-word';
+                            const tdWidth = this.isRTL
+                                ? newPos - parseInt(td.getAttribute('originalLeftBorder'))
+                                : parseInt(td.getAttribute('originalRightBorder')) - newPos;
+                            td.style.boxSizing = 'border-box';
+                            td.style.width = `${tdWidth}px`;
+                        });
+                    }
                 }
                 vtable.writeBack();
             }
