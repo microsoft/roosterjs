@@ -591,7 +591,8 @@ export default class TableResize implements EditorPlugin {
                     vtable.table.style.height = null;
                     vtable.forEachCellOfCurrentRow(cell => {
                         if (cell.td) {
-                            cell.td == this.currentTd ? `${newPos - rect.top}px` : null;
+                            cell.td.style.height =
+                                cell.td == this.currentTd ? `${newPos - rect.top}px` : null;
                         }
                     });
                 } else {
