@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.39% </span>
+                <span class="strong">11.25% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>36/316</span>
+                <span class='fraction'>36/320</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">1.04% </span>
+                <span class="strong">0.99% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/192</span>
+                <span class='fraction'>2/202</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.69% </span>
+                <span class="strong">11.54% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>36/308</span>
+                <span class='fraction'>36/312</span>
             </div>
         
             
@@ -749,7 +749,16 @@
 <a name='L690'></a><a href='#L690'>690</a>
 <a name='L691'></a><a href='#L691'>691</a>
 <a name='L692'></a><a href='#L692'>692</a>
-<a name='L693'></a><a href='#L693'>693</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L693'></a><a href='#L693'>693</a>
+<a name='L694'></a><a href='#L694'>694</a>
+<a name='L695'></a><a href='#L695'>695</a>
+<a name='L696'></a><a href='#L696'>696</a>
+<a name='L697'></a><a href='#L697'>697</a>
+<a name='L698'></a><a href='#L698'>698</a>
+<a name='L699'></a><a href='#L699'>699</a>
+<a name='L700'></a><a href='#L700'>700</a>
+<a name='L701'></a><a href='#L701'>701</a>
+<a name='L702'></a><a href='#L702'>702</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1379,6 +1388,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1397,10 +1413,12 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2070,7 +2088,14 @@ export default class TableResize implements EditorPlugin {
                                 : Number.MAX_SAFE_INTEGER;
                     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                    if (</span>
+<span class="cstat-no" title="statement not covered" >                    if (e.shiftKey) {</span>
+<span class="cstat-no" title="statement not covered" >                        if (</span>
+                            (!this.isRTL &amp;&amp; newPos &lt;= leftBoundary + MIN_CELL_WIDTH) ||
+                            (this.isRTL &amp;&amp; newPos &gt;= rightBoundary - MIN_CELL_WIDTH)
+                        ) {
+<span class="cstat-no" title="statement not covered" >                            return;</span>
+                        }
+                    } else <span class="cstat-no" title="statement not covered" >if (</span>
                         newPos &lt;= leftBoundary + MIN_CELL_WIDTH ||
                         newPos &gt;= rightBoundary - MIN_CELL_WIDTH
                     ) {
@@ -2086,14 +2111,16 @@ export default class TableResize implements EditorPlugin {
                             : `${newPos - rect.left}px`;
                     });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                    this.nextCellsToResize.forEach(<span class="fstat-no" title="function not covered" >td </span>=&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                        td.style.wordBreak = 'break-word';</span>
-                        const tdWidth = <span class="cstat-no" title="statement not covered" >this.isRTL</span>
-                            ? newPos - parseInt(td.getAttribute('originalLeftBorder'))
-                            : parseInt(td.getAttribute('originalRightBorder')) - newPos;
-<span class="cstat-no" title="statement not covered" >                        td.style.boxSizing = 'border-box';</span>
-<span class="cstat-no" title="statement not covered" >                        td.style.width = `${tdWidth}px`;</span>
-                    });
+<span class="cstat-no" title="statement not covered" >                    if (!e.shiftKey) {</span>
+<span class="cstat-no" title="statement not covered" >                        this.nextCellsToResize.forEach(<span class="fstat-no" title="function not covered" >td </span>=&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                            td.style.wordBreak = 'break-word';</span>
+                            const tdWidth = <span class="cstat-no" title="statement not covered" >this.isRTL</span>
+                                ? newPos - parseInt(td.getAttribute('originalLeftBorder'))
+                                : parseInt(td.getAttribute('originalRightBorder')) - newPos;
+<span class="cstat-no" title="statement not covered" >                            td.style.boxSizing = 'border-box';</span>
+<span class="cstat-no" title="statement not covered" >                            td.style.width = `${tdWidth}px`;</span>
+                        });
+                    }
                 }
 <span class="cstat-no" title="statement not covered" >                vtable.writeBack();</span>
             }
@@ -2140,7 +2167,7 @@ export default class TableResize implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed May 05 2021 05:08:29 GMT+0000 (Coordinated Universal Time)
+                at Wed May 05 2021 17:33:34 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
