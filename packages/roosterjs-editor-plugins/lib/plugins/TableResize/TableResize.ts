@@ -120,10 +120,14 @@ export default class TableResize implements EditorPlugin {
     }
 
     private removeResizerContainer() {
-        this.resizerContainer.parentNode.removeChild(this.resizerContainer);
-        this.resizerContainer = null;
-        this.tableResizerContainer.parentNode.removeChild(this.tableResizerContainer);
-        this.tableResizerContainer = null;
+        if (this.resizerContainer && this.resizerContainer.parentNode) {
+            this.resizerContainer.parentNode.removeChild(this.resizerContainer);
+            this.resizerContainer = null;
+        }
+        if (this.tableResizerContainer && this.tableResizerContainer.parentNode) {
+            this.tableResizerContainer.parentNode.removeChild(this.tableResizerContainer);
+            this.tableResizerContainer = null;
+        }
     }
 
     private onMouseMove = (e: MouseEvent) => {
@@ -270,7 +274,9 @@ export default class TableResize implements EditorPlugin {
     ) {
         if (td != this.currentInsertTd || insertingState != this.insertingState) {
             if (this.currentInsertTd) {
-                this.resizerContainer.removeChild(this.inserter);
+                if (this.resizerContainer) {
+                    this.resizerContainer.removeChild(this.inserter);
+                }
                 this.inserter = null;
             }
             this.insertingState = insertingState;
@@ -373,8 +379,10 @@ export default class TableResize implements EditorPlugin {
     ) {
         if (this.currentTd != td) {
             if (this.currentTd) {
-                this.resizerContainer.removeChild(this.horizontalResizer);
-                this.resizerContainer.removeChild(this.verticalResizer);
+                if (this.resizerContainer) {
+                    this.resizerContainer.removeChild(this.horizontalResizer);
+                    this.resizerContainer.removeChild(this.verticalResizer);
+                }
                 this.horizontalResizer = null;
                 this.verticalResizer = null;
             }
