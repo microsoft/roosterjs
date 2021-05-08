@@ -120,14 +120,10 @@ export default class TableResize implements EditorPlugin {
     }
 
     private removeResizerContainer() {
-        if (this.resizerContainer && this.resizerContainer.parentNode) {
-            this.resizerContainer.parentNode.removeChild(this.resizerContainer);
-            this.resizerContainer = null;
-        }
-        if (this.tableResizerContainer && this.tableResizerContainer.parentNode) {
-            this.tableResizerContainer.parentNode.removeChild(this.tableResizerContainer);
-            this.tableResizerContainer = null;
-        }
+        this.resizerContainer?.parentNode?.removeChild(this.resizerContainer);
+        this.resizerContainer = null;
+        this.tableResizerContainer?.parentNode?.removeChild(this.tableResizerContainer);
+        this.tableResizerContainer = null;
     }
 
     private onMouseMove = (e: MouseEvent) => {
@@ -274,9 +270,7 @@ export default class TableResize implements EditorPlugin {
     ) {
         if (td != this.currentInsertTd || insertingState != this.insertingState) {
             if (this.currentInsertTd) {
-                if (this.resizerContainer) {
-                    this.resizerContainer.removeChild(this.inserter);
-                }
+                this.inserter?.parentNode?.removeChild(this.inserter);
                 this.inserter = null;
             }
             this.insertingState = insertingState;
@@ -379,10 +373,8 @@ export default class TableResize implements EditorPlugin {
     ) {
         if (this.currentTd != td) {
             if (this.currentTd) {
-                if (this.resizerContainer) {
-                    this.resizerContainer.removeChild(this.horizontalResizer);
-                    this.resizerContainer.removeChild(this.verticalResizer);
-                }
+                this.horizontalResizer?.parentNode?.removeChild(this.horizontalResizer);
+                this.verticalResizer?.parentNode?.removeChild(this.verticalResizer);
                 this.horizontalResizer = null;
                 this.verticalResizer = null;
             }
