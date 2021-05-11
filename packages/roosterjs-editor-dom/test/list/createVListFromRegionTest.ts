@@ -408,7 +408,11 @@ describe('createVListFromRegion from selection, with sibling list', () => {
             [
                 {
                     listTypes: [ListType.None, ListType.Ordered],
-                    outerHTML: '<li>previous sibling<div>line1</div></li>',
+                    outerHTML: '<li>previous sibling</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li style="display:block"><div>line1</div></li>',
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered],
@@ -416,7 +420,11 @@ describe('createVListFromRegion from selection, with sibling list', () => {
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered],
-                    outerHTML: '<li>line3<div>next sibling</div></li>',
+                    outerHTML: '<li>line3</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li style="display:block"><div>next sibling</div></li>',
                 },
             ]
         );
