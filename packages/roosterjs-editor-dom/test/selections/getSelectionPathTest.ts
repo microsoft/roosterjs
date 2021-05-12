@@ -288,24 +288,5 @@ describe('getPositionPath', () => {
                 end: [2],
             });
         });
-
-        it('Should merge continuous text nodes', () => {
-            const div = dom('<div><span>test1</span></div>');
-            div.firstChild.insertBefore(document.createTextNode(''), null);
-            div.firstChild.insertBefore(document.createTextNode('test2'), null);
-            const initialRange = div.ownerDocument.createRange();
-            initialRange.setStart(div, 0);
-            initialRange.setEnd(div, 1);
-
-            expect(div.firstChild.childNodes.length).toBe(3);
-            const paths = getSelectionPath(div, initialRange);
-
-            // Assert
-            expect(paths).toEqual({
-                start: [0],
-                end: [1],
-            });
-            expect(div.firstChild.childNodes.length).toBe(1);
-        });
     });
 });

@@ -12,9 +12,6 @@ export default function getSelectionPath(rootNode: Node, range: Range): Selectio
         return null;
     }
 
-    // Merge sibling text nodes to avoid inaccuracy of text node offset
-    rootNode.normalize();
-
     let selectionPath: SelectionPath = {
         start: getPositionPath(Position.getStart(range), rootNode),
         end: getPositionPath(Position.getEnd(range), rootNode),
