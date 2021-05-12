@@ -6,6 +6,7 @@ export interface MainPaneBaseState {
     showSidePane: boolean;
     showRibbon: boolean;
     isPopoutShown: boolean;
+    isDark: boolean;
 }
 
 export default abstract class MainPaneBase extends React.Component<{}, MainPaneBaseState> {
@@ -29,4 +30,6 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
     abstract setIsRibbonShown(isShown: boolean): void;
 
     abstract popout(): void;
+
+    abstract setDark(isDark: boolean): void;
 }
