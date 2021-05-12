@@ -6,10 +6,14 @@ import RibbonButtonType from './RibbonButtonType';
 import { Alignment, Direction, Indentation } from 'roosterjs-editor-types';
 import { Browser } from 'roosterjs-editor-dom';
 import {
-    setBackgroundColor,
+    setTextColorFromRibbon,
+    textColorNames,
+    setBackColorFromRibbon,
+    backColorNames,
+} from './colors';
+import {
     setFontName,
     setFontSize,
-    setTextColor,
     toggleBold,
     toggleItalic,
     toggleUnderline,
@@ -79,36 +83,14 @@ const buttons: { [key: string]: RibbonButtonType } = {
     textColor: {
         title: 'Text color',
         image: require('../svg/textcolor.svg'),
-        onClick: setTextColor,
-        dropDownItems: {
-            '#757b80': 'Gray',
-            '#bd1398': 'Violet',
-            '#7232ad': 'Purple',
-            '#006fc9': 'Blue',
-            '#4ba524': 'Green',
-            '#e2c501': 'Yellow',
-            '#d05c12': 'Orange',
-            '#ff0000': 'Red',
-            '#ffffff': 'White',
-            '#000000': 'Black',
-        },
+        onClick: setTextColorFromRibbon,
+        dropDownItems: textColorNames,
     },
     backColor: {
         title: 'Highlight',
         image: require('../svg/backcolor.svg'),
-        onClick: setBackgroundColor,
-        dropDownItems: {
-            '#ffff00': 'Yellow',
-            '#00ff00': 'Green',
-            '#00ffff': 'Cyan',
-            '#ff00ff': 'Purple',
-            '#0000ff': 'Blue',
-            '#ff0000': 'Red',
-            '#bebebe': 'Gray',
-            '#666666': 'Dark Gray',
-            '#ffffff': 'White',
-            '#000000': 'Black',
-        },
+        onClick: setBackColorFromRibbon,
+        dropDownItems: backColorNames,
     },
     capitalization: {
         title: 'Change case',
@@ -270,6 +252,18 @@ const buttons: { [key: string]: RibbonButtonType } = {
             selection: 'Remove formatting of selected text',
             block: 'Remove formatting of selected paragraphs',
         },
+    },
+    dark: {
+        title: 'Dark Mode',
+        image: require('../svg/moon.svg'),
+        onClick: editor => {
+            const isDark = !editor.isDarkMode();
+            editor.setDarkModeState(isDark);
+            MainPaneBase.getInstance().setDark(isDark);
+        },
+        checked: (format, editor) => editor.isDarkMode(),
+        isDisabled: editor =>
+            !(Browser.isChrome || Browser.isFirefox) || editor.getDocument().defaultView != window,
     },
     paste: {
         title: 'Paste Again',

@@ -30,6 +30,7 @@ class MainPane extends MainPaneBase {
             showSidePane: window.location.hash != '',
             showRibbon: true,
             isPopoutShown: false,
+            isDark: false,
         };
     }
 
@@ -62,6 +63,7 @@ class MainPane extends MainPaneBase {
                                 initState={plugins.editorOptions.getBuildInPluginState()}
                                 content={this.content}
                                 snapshotService={plugins.snapshot.getSnapshotService()}
+                                isDark={this.state.isDark}
                             />
 
                             {this.state.showSidePane ? (
@@ -148,6 +150,12 @@ class MainPane extends MainPaneBase {
                 this.popoutRoot
             );
         }, 0);
+    }
+
+    setDark(isDark: boolean) {
+        this.setState({
+            isDark: isDark,
+        });
     }
 
     private onMouseDown = (e: React.MouseEvent<EventTarget>) => {
