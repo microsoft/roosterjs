@@ -305,7 +305,7 @@ describe('getPositionPath', () => {
                 start: [0],
                 end: [1],
             });
-            expect(div.firstChild.childNodes.length).toBe(1);
+            expect(div.firstChild.childNodes.length).toBe(3);
         });
     });
 });
