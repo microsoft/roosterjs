@@ -26,11 +26,33 @@ describe('VListItem.getNode', () => {
     it('set node to a valid node', () => {
         const node = document.createTextNode('test');
         const item = new VListItem(node);
-        expect(item.getNode()).toBe(node);
+        expect(item.getNode().firstChild).toBe(node);
+        expect(item.isDummy()).toBe(true);
     });
 
     it('set ListType to null', () => {
         expect(() => new VListItem(null)).toThrow();
+    });
+});
+
+describe('VListItem.isDummy', () => {
+    it('set node to a valid node', () => {
+        const node = document.createTextNode('test');
+        const li = document.createElement('li');
+        li.appendChild(node);
+        const item = new VListItem(li);
+        expect(item.getNode()).toBe(li);
+        expect(item.isDummy()).toBe(false);
+    });
+
+    it('set node to a valid node', () => {
+        const node = document.createTextNode('test');
+        const li = document.createElement('li');
+        li.appendChild(node);
+        li.style.display = 'block';
+        const item = new VListItem(li);
+        expect(item.getNode()).toBe(li);
+        expect(item.isDummy()).toBe(true);
     });
 });
 
@@ -54,125 +76,6 @@ describe('VListItem.contains', () => {
         const div = document.createElement('div');
         const item = new VListItem(div);
         expect(item.contains(node)).toBeFalsy();
-    });
-});
-
-describe('VListItem.isOrphanItem', () => {
-    it('check for non-orphan item', () => {
-        const li = document.createElement('li');
-        const item = new VListItem(li);
-        expect(item.isOrphanItem()).toBeFalsy();
-    });
-
-    it('check for orphan item', () => {
-        const div = document.createElement('div');
-        const item = new VListItem(div);
-        expect(item.isOrphanItem()).toBeTruthy();
-    });
-});
-
-describe('VListItem.canMerge', () => {
-    it('check for null', () => {
-        const thisItem = new VListItem(document.createElement('li'));
-        expect(thisItem.canMerge(null)).toBeFalsy();
-    });
-
-    it('check for non-orphan item', () => {
-        const li = document.createElement('li');
-        const targetItem = new VListItem(li);
-        const thisItem = new VListItem(document.createElement('li'));
-        expect(thisItem.canMerge(targetItem)).toBeFalsy();
-    });
-
-    it('check for item with different list depth', () => {
-        const li = document.createElement('div');
-        const targetItem = new VListItem(li, ListType.Ordered);
-        const thisItem = new VListItem(
-            document.createElement('li'),
-            ListType.Ordered,
-            ListType.Ordered
-        );
-        expect(thisItem.canMerge(targetItem)).toBeFalsy();
-    });
-
-    it('check for item with different list type', () => {
-        const li = document.createElement('div');
-        const targetItem = new VListItem(li, ListType.Ordered, ListType.Unordered);
-        const thisItem = new VListItem(
-            document.createElement('li'),
-            ListType.Ordered,
-            ListType.Ordered
-        );
-        expect(thisItem.canMerge(targetItem)).toBeFalsy();
-    });
-
-    it('check for item that can be merged, case 1: depth = 0', () => {
-        const li = document.createElement('div');
-        const targetItem = new VListItem(li);
-        const thisItem = new VListItem(document.createElement('li'));
-        expect(thisItem.canMerge(targetItem)).toBeTruthy();
-    });
-
-    it('check for item that can be merged, case 2: depth = 1', () => {
-        const li = document.createElement('div');
-        const targetItem = new VListItem(li, ListType.Ordered);
-        const thisItem = new VListItem(document.createElement('li'), ListType.Ordered);
-        expect(thisItem.canMerge(targetItem)).toBeTruthy();
-    });
-
-    it('check for item that can be merged, case 3: depth = 2 with different list types', () => {
-        const li = document.createElement('div');
-        const targetItem = new VListItem(li, ListType.Ordered, ListType.Unordered);
-        const thisItem = new VListItem(
-            document.createElement('li'),
-            ListType.Ordered,
-            ListType.Unordered
-        );
-        expect(thisItem.canMerge(targetItem)).toBeTruthy();
-    });
-});
-
-describe('VListItem.mergeItems', () => {
-    function runTest(targetTags: string[], expectedHtml: string) {
-        const li = document.createElement('li');
-        const thisItem = new VListItem(li);
-        const targetItems = targetTags
-            ? targetTags.map(tag => new VListItem(document.createElement(tag)))
-            : null;
-        thisItem.mergeItems(targetItems);
-        expect(li.innerHTML).toBe(expectedHtml);
-    }
-
-    it('null input', () => {
-        runTest(null, '');
-    });
-
-    it('empty aray input', () => {
-        runTest([], '');
-    });
-
-    it('Single item, block element input', () => {
-        runTest(['div'], '<div></div>');
-    });
-
-    it('Single item, inline element input', () => {
-        runTest(['span'], '<div><span></span></div>');
-    });
-
-    it('Multiple items, start with block, end with block', () => {
-        runTest(['div', 'span', 'div'], '<div></div><span></span><div></div>');
-    });
-
-    it('Multiple items, start with block, end with inline', () => {
-        runTest(['div', 'span', 'span'], '<div></div><span></span><span></span>');
-    });
-
-    it('Multiple items, start with inline, end with inline', () => {
-        runTest(['span', 'div', 'span'], '<div><span></span><div></div><span></span></div>');
-    });
-
-    it('Multiple items, start with inline, end with block', () => {
-        runTest(['span', 'div', 'div'], '<div><span></span><div></div><div></div></div>');
     });
 });
 

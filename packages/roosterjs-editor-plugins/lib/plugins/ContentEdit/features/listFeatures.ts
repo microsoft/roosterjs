@@ -1,3 +1,4 @@
+import blockFormat from 'roosterjs-editor-api/lib/utils/blockFormat';
 import {
     experimentCommitListChains,
     setIndentation,
@@ -11,6 +12,7 @@ import {
     isPositionAtBeginningOf,
     Position,
     VListChain,
+    createVListFromRegion,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -65,12 +67,11 @@ const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
     handleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
         if (li.previousSibling) {
-            const chains = getListChains(editor);
-            editor.runAsync(editor => {
-                let br = editor.getDocument().createElement('BR');
-                editor.insertNode(br);
-                editor.select(br, PositionType.After);
-                experimentCommitListChains(editor, chains);
+            blockFormat(editor, (region, start, end) => {
+                const vList = createVListFromRegion(region, false /*includeSiblingList*/, li);
+                vList.setIndentation(start, end, Indentation.Decrease, true /*softOutdent*/);
+                vList.writeBack();
+                event.rawEvent.preventDefault();
             });
         } else {
             toggleListAndPreventDefault(event, editor);
@@ -135,38 +136,38 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
         return false;
     },
     handleEvent: (event, editor) => {
-        editor.runAsync(editor => {
-            editor.addUndoSnapshot(
-                () => {
-                    let regions: RegionBase[];
-                    let searcher = editor.getContentSearcherOfCursor();
-                    let textBeforeCursor = searcher.getSubStringBefore(4);
-                    let rangeToDelete = searcher.getRangeFromText(
-                        textBeforeCursor,
-                        true /*exactMatch*/
-                    );
+        editor.insertContent('&nbsp;');
+        event.rawEvent.preventDefault();
+        editor.addUndoSnapshot(
+            () => {
+                let regions: RegionBase[];
+                let searcher = editor.getContentSearcherOfCursor();
+                let textBeforeCursor = searcher.getSubStringBefore(4);
+                let rangeToDelete = searcher.getRangeFromText(
+                    textBeforeCursor,
+                    true /*exactMatch*/
+                );
 
-                    if (!rangeToDelete) {
-                        // no op if the range can't be found
-                    } else if (
-                        textBeforeCursor.indexOf('*') == 0 ||
-                        textBeforeCursor.indexOf('-') == 0
-                    ) {
-                        prepareAutoBullet(editor, rangeToDelete);
-                        toggleBullet(editor);
-                    } else if (textBeforeCursor.indexOf('1.') == 0) {
-                        prepareAutoBullet(editor, rangeToDelete);
-                        toggleNumbering(editor);
-                    } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
-                        const num = parseInt(textBeforeCursor);
-                        prepareAutoBullet(editor, rangeToDelete);
-                        toggleNumbering(editor, num);
-                    }
-                },
-                null /*changeSource*/,
-                true /*canUndoByBackspace*/
-            );
-        });
+                if (!rangeToDelete) {
+                    // no op if the range can't be found
+                } else if (
+                    textBeforeCursor.indexOf('*') == 0 ||
+                    textBeforeCursor.indexOf('-') == 0
+                ) {
+                    prepareAutoBullet(editor, rangeToDelete);
+                    toggleBullet(editor);
+                } else if (textBeforeCursor.indexOf('1.') == 0) {
+                    prepareAutoBullet(editor, rangeToDelete);
+                    toggleNumbering(editor);
+                } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
+                    const num = parseInt(textBeforeCursor);
+                    prepareAutoBullet(editor, rangeToDelete);
+                    toggleNumbering(editor, num);
+                }
+            },
+            null /*changeSource*/,
+            true /*canUndoByBackspace*/
+        );
     },
 };
 

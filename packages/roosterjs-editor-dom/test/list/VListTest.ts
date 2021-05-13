@@ -89,7 +89,7 @@ describe('VList.ctor', () => {
         runTest(`<ol id="${ListRoot}"><div>line1</div><li>line2</li><div>line3</div></ol>`, [
             {
                 listTypes: [ListType.None, ListType.Ordered],
-                outerHTML: '<div>line1</div>',
+                outerHTML: '<li style="display:block"><div>line1</div></li>',
             },
             {
                 listTypes: [ListType.None, ListType.Ordered],
@@ -115,7 +115,7 @@ describe('VList.ctor', () => {
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered, ListType.Unordered],
-                    outerHTML: '<div>line1</div>',
+                    outerHTML: '<li style="display:block"><div>line1</div></li>',
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered, ListType.Unordered],
@@ -380,7 +380,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul><div>item1</div><li>item2</li></ul><ol><li>item3</li></ol>'
+            '<ul><li style="display:block"><div>item1</div></li><li>item2</li></ul><ol><li>item3</li></ol>'
         );
     });
 
@@ -400,7 +400,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul><div>item1</div><li>item2</li></ul><ol><li>item3</li></ol>'
+            '<ul><li style="display:block"><div>item1</div></li><li>item2</li></ul><ol><li>item3</li></ol>'
         );
     });
 
@@ -1153,7 +1153,11 @@ describe('VList.mergeVList', () => {
             [
                 {
                     listTypes: [ListType.None, ListType.Ordered],
-                    outerHTML: '<li>line1<div>line2</div></li>',
+                    outerHTML: '<li>line1</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered],
+                    outerHTML: '<li style="display:block"><div>line2</div></li>',
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered],
@@ -1178,7 +1182,7 @@ describe('VList.mergeVList', () => {
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered, ListType.Unordered],
-                    outerHTML: '<div>line2</div>',
+                    outerHTML: '<li style="display:block"><div>line2</div></li>',
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered, ListType.Unordered],
@@ -1195,7 +1199,11 @@ describe('VList.mergeVList', () => {
             [
                 {
                     listTypes: [ListType.None, ListType.Ordered, ListType.Unordered],
-                    outerHTML: '<li>line1<div>line2</div></li>',
+                    outerHTML: '<li>line1</li>',
+                },
+                {
+                    listTypes: [ListType.None, ListType.Ordered, ListType.Unordered],
+                    outerHTML: '<li style="display:block"><div>line2</div></li>',
                 },
                 {
                     listTypes: [ListType.None, ListType.Ordered, ListType.Unordered],
