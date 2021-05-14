@@ -13,8 +13,14 @@ export default function preProcessTable(table: HTMLTableElement) {
     if (table.hasAttribute('width')) {
         table.removeAttribute('width');
     }
+    if (table.hasAttribute('height')) {
+        table.removeAttribute('height');
+    }
 
     for (let i = 0, row; (row = table.rows[i]); i++) {
+        if (row.hasAttribute('width')) {
+            row.removeAttribute('width');
+        }
         if (row.hasAttribute('height')) {
             row.removeAttribute('height');
         }
