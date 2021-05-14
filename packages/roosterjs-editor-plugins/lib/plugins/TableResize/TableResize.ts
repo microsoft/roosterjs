@@ -1,4 +1,10 @@
-import { fromHtml, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
+import {
+    fromHtml,
+    getComputedStyle,
+    normalizeRect,
+    preProcessTable,
+    VTable,
+} from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
     IEditor,
@@ -506,6 +512,10 @@ export default class TableResize implements EditorPlugin {
     }
 
     private frameAnimateResizeCells = (e: MouseEvent) => {
+        if (!this.currentTable.hasAttribute('isPreProcessed')) {
+            preProcessTable(this.currentTable);
+            this.currentTable.setAttribute('isPreProcessed', 'true');
+        }
         this.editor.runAsync(() => this.resizeCells(e));
     };
 
@@ -540,6 +550,8 @@ export default class TableResize implements EditorPlugin {
                         const cell = vtable.cells[i][j];
                         if (cell.td) {
                             if (shouldResizeX) {
+                                // the width of some external table is fixed, we make it resizeable only when we need to
+                                this.currentTable.style.width = null;
                                 const originalWidth: number = cell.td.style.width
                                     ? parseFloat(
                                           cell.td.style.width.substr(
@@ -553,11 +565,13 @@ export default class TableResize implements EditorPlugin {
                                 cell.td.style.boxSizing = 'border-box';
                                 if (newWidth >= MIN_CELL_WIDTH) {
                                     cell.td.style.wordBreak = 'break-word';
+                                    cell.td.style.whiteSpace = 'normal';
                                     cell.td.style.width = `${newWidth}px`;
                                 }
                             }
 
                             if (shouldResizeY) {
+                                vtable.table.style.height = null;
                                 if (j == 0) {
                                     const originalHeight =
                                         cell.td.getBoundingClientRect().bottom -
@@ -567,7 +581,7 @@ export default class TableResize implements EditorPlugin {
                                         cell.td.style.height = `${newHeight}px`;
                                     }
                                 } else {
-                                    cell.td.style.height = '';
+                                    cell.td.style.height = null;
                                 }
                             }
                         }
@@ -642,8 +656,15 @@ export default class TableResize implements EditorPlugin {
                     }
 
                     this.currentCellsToResize.forEach(td => {
+                        // Since we allow the user to resize the table width on adjusting the border of the last cell,
+                        // we need to make the table width resizeable by setting it as null
+                        if (!td.nextElementSibling) {
+                            this.currentTable.style.width = null;
+                        }
+
                         const rect = normalizeRect(td.getBoundingClientRect());
                         td.style.wordBreak = 'break-word';
+                        td.style.whiteSpace = 'normal';
                         td.style.boxSizing = 'border-box';
                         td.style.width = this.isRTL
                             ? `${rect.right - newPos}px`
@@ -653,6 +674,7 @@ export default class TableResize implements EditorPlugin {
                     if (!e.shiftKey) {
                         this.nextCellsToResize.forEach(td => {
                             td.style.wordBreak = 'break-word';
+                            td.style.whiteSpace = 'normal';
                             const tdWidth = this.isRTL
                                 ? newPos - parseInt(td.getAttribute('originalLeftBorder'))
                                 : parseInt(td.getAttribute('originalRightBorder')) - newPos;
