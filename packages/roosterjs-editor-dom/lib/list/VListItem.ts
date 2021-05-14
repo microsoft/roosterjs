@@ -2,6 +2,7 @@ import contains from '../utils/contains';
 import getListTypeFromNode from './getListTypeFromNode';
 import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
@@ -22,6 +23,8 @@ const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
  */
 export default class VListItem {
     private listTypes: ListType[];
+    private node: HTMLLIElement;
+    private dummy: boolean;
 
     /**
      * Construct a new instance of VListItem class
@@ -29,10 +32,17 @@ export default class VListItem {
      * @param listTypes An array represnets list types of all parent and current level.
      * Skip this parameter for a non-list item.
      */
-    constructor(private node: Node, ...listTypes: (ListType.Ordered | ListType.Unordered)[]) {
+    constructor(node: Node, ...listTypes: (ListType.Ordered | ListType.Unordered)[]) {
         if (!node) {
             throw new Error('node must not be null');
         }
+
+        this.node = safeInstanceOf(node, 'HTMLLIElement')
+            ? node
+            : (wrap(node, '<li style="display:block"></li>') as HTMLLIElement);
+        const display = this.node.style.display;
+
+        this.dummy = display != 'list-item' && display != '';
 
         // Always add a None list type in front of all other types to represent non-list scenario.
         this.listTypes = [ListType.None, ...listTypes];
@@ -55,7 +65,7 @@ export default class VListItem {
     /**
      * Get DOM node of this list item
      */
-    getNode(): Node {
+    getNode(): HTMLLIElement {
         return this.node;
     }
 
@@ -68,32 +78,23 @@ export default class VListItem {
     }
 
     /**
-     * Check if this item is an orphan item.
-     *
-     * Orphan item is not a normal case but could happen. It represents the DOM nodes directly under OL/UL tag
-     * and are in front of all other LI tags so that they cannot be merged into any existing LI tags.
-     *
-     * For example:
-     * ```html
-     * <ol>
-     *   <div>Orphan node</div>
-     *   <li>first item</li>
-     * </ol>
-     * ```
-     * Here the first DIV tag is an orphan item.
-     *
-     * There can also be nodes directly under OL/UL but between other LI tags in source HTML which should not be
-     * treated as orphan item because they can be merged into their previous LI tag. But when we build VList,
-     * those nodes will be merged into LI, so that ideally here they should not exist.
+     * Check if this item is a dummy item.
+     * A dummy item is also represented by LI tag, but it won't render a bullet (for Unordered list) or a number (for Ordered list)
+     * normally it has CSS style display set to a value other than "list-item"
      */
-    isOrphanItem(): boolean {
-        return getTagOfNode(this.node) != 'LI';
+    isDummy() {
+        return this.dummy;
     }
 
     /**
-     * Check if the given item can be merged into this item.
-     * An item can be merged when it is an orphan item and its list type stack is exactly the same with current one.
-     * @param item The item to check
+     * @deprecated Always return false
+     */
+    isOrphanItem(): boolean {
+        return false;
+    }
+
+    /**
+     * @deprecated
      */
     canMerge(item: VListItem): boolean {
         if (!item?.isOrphanItem() || this.listTypes.length != item.listTypes.length) {
@@ -104,25 +105,7 @@ export default class VListItem {
     }
 
     /**
-     * Merge items into this item.
-     * @example Before merge:
-     * ```html
-     * <ol>
-     *   <li>Current item</li>
-     *   <div>line 1</div>
-     *   <div>line 2</div>
-     * </ol>
-     * ```
-     * After merge then two DIVs into LI:
-     * ```html
-     * <ol>
-     *   <li>Current item
-     *     <div>line 1</div>
-     *     <div>line 2</div>
-     *   </li>
-     * </ol>
-     * ```
-     * @param items The items to merge
+     * @deprecated
      */
     mergeItems(items: VListItem[]) {
         const nodesToWrap = items?.map(item => item.node) || [];
@@ -169,6 +152,14 @@ export default class VListItem {
     }
 
     /**
+     * Set whether the item is a dummy item
+     * @param isDummy Whether the item is a dummy item
+     */
+    setIsDummy(isDummy: boolean) {
+        this.dummy = isDummy;
+    }
+
+    /**
      * Write the change result back into DOM
      * @param listStack current stack of list elements
      * @param originalRoot Original list root element. It will be reused when write back if possible
@@ -207,6 +198,7 @@ export default class VListItem {
 
         // 3. Add current node into deepest list element
         listStack[listStack.length - 1].appendChild(this.node);
+        this.node.style.display = this.dummy ? 'block' : null;
 
         // 4. If this is not a list item now, need to unwrap the LI node and do proper handling
         if (this.listTypes.length <= 1) {
