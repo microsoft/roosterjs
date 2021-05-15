@@ -2,7 +2,7 @@ import { normalizeRect } from 'roosterjs-editor-dom';
 
 /**
  * Preprocess the HTML content of the table so that we can resize it properly:
- *     1. Calculate and set table width
+ *     1. Calculate and set table width. This is to ensure that table width is fixed when resizing individual column
  *     2. Remove useless width/height HTML attributes
  *     3. For each cell, convert pt to px if there is any.
  *        If unit used is neither px nor pt, or, no unit specified, caculate it based on bounding rectangle

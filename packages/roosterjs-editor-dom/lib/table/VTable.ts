@@ -282,7 +282,7 @@ export default class VTable {
 
     /**
      * Loop each table cell and get all the cells that share the same border from one side
-     * The result is an array of table cell elements where the first element is the narrowest td
+     * The result is an array of table cell elements
      * @param borderPos The position of the border
      * @param getLeftCells Get left-hand-side or right-hand-side cells of the border
      *
@@ -293,21 +293,19 @@ export default class VTable {
      *     |   3   |   10  |
      *
      *  input => borderPos: the 3rd border, getLeftCells: true
-     *  output => [4, 5, 3], where the first element (4) is the narrowest cell
+     *  output => [4, 5, 3]
      *
      *  input => borderPos: the 3rd border, getLeftCells: false
-     *  output => [7, 9, 10], where the first element (7) is the narrowest cell
+     *  output => [7, 9, 10]
      *
      *  input => borderPos: the 2nd border, getLeftCells: true
-     *  output => [1], where the first element (1) is the narrowest (and only) cell
+     *  output => [1]
      *
      *  input => borderPos: the 2nd border, getLeftCells: false
-     *  output => [4], where the first element (4) is the narrowest (and only) cell
+     *  output => [4]
      */
     getCellsWithBorder(borderPos: number, getLeftCells: boolean): HTMLTableCellElement[] {
         const cells: HTMLTableCellElement[] = [];
-        let closestIndex: number = 0;
-        let closestValue: number = getLeftCells ? -1 : Number.MAX_SAFE_INTEGER;
         for (let i = 0; i < this.cells.length; i++) {
             for (let j = 0; j < this.cells[i].length; j++) {
                 const cell = this.getCell(i, j);
@@ -317,11 +315,6 @@ export default class VTable {
                     if (getLeftCells) {
                         if (cellRect.right == borderPos) {
                             found = true;
-                            if (cellRect.left > closestValue) {
-                                closestValue = cellRect.left;
-                                closestIndex = cells.length;
-                            }
-                            cell.td.setAttribute('originalLeftBorder', cellRect.left.toString());
                             cells.push(cell.td);
                         } else if (found) {
                             break;
@@ -329,11 +322,6 @@ export default class VTable {
                     } else {
                         if (cellRect.left == borderPos) {
                             found = true;
-                            if (cellRect.right < closestValue) {
-                                closestValue = cellRect.right;
-                                closestIndex = cells.length;
-                            }
-                            cell.td.setAttribute('originalRightBorder', cellRect.right.toString());
                             cells.push(cell.td);
                         } else if (found) {
                             break;
@@ -341,12 +329,6 @@ export default class VTable {
                     }
                 }
             }
-        }
-
-        if (cells.length > 0) {
-            const temp = cells[0];
-            cells[0] = cells[closestIndex];
-            cells[closestIndex] = temp;
         }
         return cells;
     }
