@@ -48,7 +48,6 @@ export default class TableResize implements EditorPlugin {
     private currentTable: HTMLTableElement;
     private currentTd: HTMLTableCellElement;
     private currentCellsToResize: HTMLTableCellElement[] = [];
-    //private nextCellsToResize: HTMLTableCellElement[] = [];
     private horizontalResizer: HTMLDivElement;
     private verticalResizer: HTMLDivElement;
     private tableResizer: HTMLDivElement;
@@ -498,33 +497,30 @@ export default class TableResize implements EditorPlugin {
             this.currentLeftBoundary = 0;
             this.currentRightBoundary = Number.MAX_SAFE_INTEGER;
             this.currentCellsToResize.forEach(td => {
-                if (!this.isRTL) {
-                    this.currentLeftBoundary = Math.max(
-                        this.currentLeftBoundary,
-                        normalizeRect(td.getBoundingClientRect()).left
-                    );
+                const nextTd = td.nextElementSibling as HTMLTableElement;
+                this.currentLeftBoundary = this.isRTL
+                    ? nextTd
+                        ? Math.max(
+                              this.currentLeftBoundary,
+                              normalizeRect(nextTd.getBoundingClientRect()).left
+                          )
+                        : 0
+                    : Math.max(
+                          this.currentLeftBoundary,
+                          normalizeRect(td.getBoundingClientRect()).left
+                      );
 
-                    const nextTd = td.nextElementSibling as HTMLTableElement;
-                    if (nextTd) {
-                        this.currentRightBoundary = Math.min(
-                            this.currentRightBoundary,
-                            normalizeRect(nextTd.getBoundingClientRect()).right
-                        );
-                    }
-                } else {
-                    this.currentRightBoundary = Math.min(
-                        this.currentRightBoundary,
-                        normalizeRect(td.getBoundingClientRect()).right
-                    );
-
-                    const nextTd = td.nextElementSibling as HTMLTableElement;
-                    if (nextTd) {
-                        this.currentLeftBoundary = Math.max(
-                            this.currentLeftBoundary,
-                            normalizeRect(nextTd.getBoundingClientRect()).left
-                        );
-                    }
-                }
+                this.currentRightBoundary = this.isRTL
+                    ? Math.min(
+                          this.currentRightBoundary,
+                          normalizeRect(td.getBoundingClientRect()).right
+                      )
+                    : nextTd
+                    ? Math.min(
+                          this.currentRightBoundary,
+                          normalizeRect(nextTd.getBoundingClientRect()).right
+                      )
+                    : Number.MAX_SAFE_INTEGER;
             });
         }
 
