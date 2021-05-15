@@ -32,7 +32,6 @@ export { default as isNodeEmpty } from './utils/isNodeEmpty';
 export { default as isVoidHtmlElement } from './utils/isVoidHtmlElement';
 export { default as matchLink } from './utils/matchLink';
 export { default as queryElements } from './utils/queryElements';
-export { default as preProcessTable } from './utils/preprocessTable';
 export { default as splitParentNode, splitBalancedNodeRange } from './utils/splitParentNode';
 export { default as unwrap } from './utils/unwrap';
 export { default as wrap } from './utils/wrap';

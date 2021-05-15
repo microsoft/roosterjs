@@ -1,10 +1,5 @@
-import {
-    fromHtml,
-    getComputedStyle,
-    normalizeRect,
-    preProcessTable,
-    VTable,
-} from 'roosterjs-editor-dom';
+import preProcessTable from './preprocessTable';
+import { fromHtml, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
     IEditor,
@@ -551,6 +546,7 @@ export default class TableResize implements EditorPlugin {
                         if (cell.td) {
                             if (shouldResizeX) {
                                 // the width of some external table is fixed, we make it resizeable only when we need to
+                                this.currentTable.removeAttribute('width');
                                 this.currentTable.style.width = null;
                                 const originalWidth: number = cell.td.style.width
                                     ? parseFloat(
@@ -571,6 +567,7 @@ export default class TableResize implements EditorPlugin {
                             }
 
                             if (shouldResizeY) {
+                                vtable.table.removeAttribute('height');
                                 vtable.table.style.height = null;
                                 if (j == 0) {
                                     const originalHeight =
@@ -608,6 +605,7 @@ export default class TableResize implements EditorPlugin {
                 let vtable = new VTable(this.currentTd);
 
                 if (this.resizingState == ResizeState.Horizontal) {
+                    vtable.table.removeAttribute('height');
                     vtable.table.style.height = null;
                     vtable.forEachCellOfCurrentRow(cell => {
                         if (cell.td) {
@@ -659,6 +657,7 @@ export default class TableResize implements EditorPlugin {
                         // Since we allow the user to resize the table width on adjusting the border of the last cell,
                         // we need to make the table width resizeable by setting it as null
                         if (!td.nextElementSibling) {
+                            this.currentTable.removeAttribute('width');
                             this.currentTable.style.width = null;
                         }
 
