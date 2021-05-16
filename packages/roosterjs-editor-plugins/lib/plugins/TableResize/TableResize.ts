@@ -58,9 +58,6 @@ export default class TableResize implements EditorPlugin {
     private inserter: HTMLDivElement;
     private isRTL: boolean;
 
-    private currentLeftBoundary: number; // current left boundary for resizing a column
-    private currentRightBoundary: number; // current right boundary for resizing a column
-
     /**
      * Get a friendly name of  this plugin
      */
@@ -493,35 +490,6 @@ export default class TableResize implements EditorPlugin {
                 this.isRTL ? rect.left : rect.right,
                 !this.isRTL
             );
-
-            this.currentLeftBoundary = 0;
-            this.currentRightBoundary = Number.MAX_SAFE_INTEGER;
-            this.currentCellsToResize.forEach(td => {
-                const nextTd = td.nextElementSibling as HTMLTableElement;
-                this.currentLeftBoundary = this.isRTL
-                    ? nextTd
-                        ? Math.max(
-                              this.currentLeftBoundary,
-                              normalizeRect(nextTd.getBoundingClientRect()).left
-                          )
-                        : 0
-                    : Math.max(
-                          this.currentLeftBoundary,
-                          normalizeRect(td.getBoundingClientRect()).left
-                      );
-
-                this.currentRightBoundary = this.isRTL
-                    ? Math.min(
-                          this.currentRightBoundary,
-                          normalizeRect(td.getBoundingClientRect()).right
-                      )
-                    : nextTd
-                    ? Math.min(
-                          this.currentRightBoundary,
-                          normalizeRect(nextTd.getBoundingClientRect()).right
-                      )
-                    : Number.MAX_SAFE_INTEGER;
-            });
         }
 
         this.startResizeCells(e);
@@ -622,12 +590,9 @@ export default class TableResize implements EditorPlugin {
             return;
         } else if (this.currentTd) {
             const rect = normalizeRect(this.currentTd.getBoundingClientRect());
-
             if (rect) {
                 const newPos = this.resizingState == ResizeState.Horizontal ? e.pageY : e.pageX;
-
                 let vtable = new VTable(this.currentTd);
-
                 if (this.resizingState == ResizeState.Horizontal) {
                     vtable.table.removeAttribute('height');
                     vtable.table.style.height = null;
@@ -638,38 +603,46 @@ export default class TableResize implements EditorPlugin {
                         }
                     });
                 } else {
-                    if (e.shiftKey) {
-                        if (
-                            (!this.isRTL && newPos <= this.currentLeftBoundary + MIN_CELL_WIDTH) ||
-                            (this.isRTL && newPos >= this.currentRightBoundary - MIN_CELL_WIDTH)
-                        ) {
-                            return;
-                        }
-                    } else if (
-                        newPos <= this.currentLeftBoundary + MIN_CELL_WIDTH ||
-                        newPos >= this.currentRightBoundary - MIN_CELL_WIDTH
-                    ) {
-                        return;
-                    }
-
                     // Since we allow the user to resize the table width on adjusting the border of the last cell,
-                    // we need to make the table width resizeable by setting it as null
-                    if (!this.currentCellsToResize[0].nextElementSibling) {
+                    // we need to make the table width resizeable by setting it as null;
+                    // We also allow the user to resize the table width if Shift key is pressed
+                    if (!this.currentCellsToResize[0].nextElementSibling || e.shiftKey) {
                         this.currentTable.removeAttribute('width');
                         this.currentTable.style.width = null;
                     }
 
                     this.currentCellsToResize.forEach(td => {
                         const rect = normalizeRect(td.getBoundingClientRect());
+                        const nextTd = td.nextElementSibling as HTMLTableElement;
                         td.style.wordBreak = 'break-word';
                         td.style.whiteSpace = 'normal';
                         td.style.boxSizing = 'border-box';
+
+                        const nextTdWidth = nextTd
+                            ? this.isRTL
+                                ? newPos - normalizeRect(nextTd.getBoundingClientRect()).left
+                                : normalizeRect(nextTd.getBoundingClientRect()).right - newPos
+                            : Number.MAX_SAFE_INTEGER;
+
+                        if (
+                            this.isRTL &&
+                            (rect.right - newPos < MIN_CELL_WIDTH || nextTdWidth < MIN_CELL_WIDTH)
+                        ) {
+                            return;
+                        }
+
+                        if (
+                            !this.isRTL &&
+                            (newPos - rect.left < MIN_CELL_WIDTH || nextTdWidth < MIN_CELL_WIDTH)
+                        ) {
+                            return;
+                        }
+
                         td.style.width = this.isRTL
                             ? `${rect.right - newPos}px`
                             : `${newPos - rect.left}px`;
 
-                        const nextTd = td.nextElementSibling as HTMLTableElement;
-                        if (!e.shiftKey && nextTd) {
+                        if (!e.shiftKey && nextTd && nextTdWidth >= MIN_CELL_WIDTH) {
                             nextTd.style.wordBreak = 'break-word';
                             nextTd.style.whiteSpace = 'normal';
                             nextTd.style.boxSizing = 'border-box';
