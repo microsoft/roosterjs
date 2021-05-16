@@ -89,12 +89,14 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
         // 7. Scroll event
         this.state.scrollContainer.addEventListener('scroll', this.onScroll);
+        this.editor.getDocument().defaultView?.addEventListener('scroll', this.onScroll);
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
+        this.editor.getDocument().defaultView?.removeEventListener('scroll', this.onScroll);
         this.state.scrollContainer.removeEventListener('scroll', this.onScroll);
         this.disposer();
         this.disposer = null;

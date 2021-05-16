@@ -156,7 +156,10 @@ export default class VList {
             : start -
                   1 +
                   this.items.filter(
-                      item => item.getListType() == ListType.Ordered && item.getLevel() == 1
+                      item =>
+                          item.getListType() == ListType.Ordered &&
+                          item.getLevel() == 1 &&
+                          !item.isDummy()
                   ).length;
     }
 
@@ -213,9 +216,35 @@ export default class VList {
      * @param end End positon to operate to
      * @param indentation Indent or outdent
      */
-    setIndentation(start: NodePosition, end: NodePosition, indentation: Indentation) {
+    setIndentation(start: NodePosition, end: NodePosition, indentation: Indentation): void;
+
+    /**
+     * Outdent the give range of this list
+     * @param start Start position to operate from
+     * @param end End positon to operate to
+     * @param indentation Specify to outdent
+     * @param softOutdent (Optional) True to make the item to by dummy (no bullet or number) if the item is not dummy,
+     * otherwise outdent the item
+     */
+    setIndentation(
+        start: NodePosition,
+        end: NodePosition,
+        indentation: Indentation.Decrease,
+        softOutdent?: boolean
+    ): void;
+
+    setIndentation(
+        start: NodePosition,
+        end: NodePosition,
+        indentation: Indentation,
+        softOutdent?: boolean
+    ) {
         this.findListItems(start, end, item =>
-            indentation == Indentation.Decrease ? item.outdent() : item.indent()
+            indentation == Indentation.Decrease
+                ? softOutdent && !item.isDummy()
+                    ? item.setIsDummy(true /*isDummy*/)
+                    : item.outdent()
+                : item.indent()
         );
     }
 
@@ -246,7 +275,7 @@ export default class VList {
     appendItem(node: Node, type: ListType) {
         const nodeTag = getTagOfNode(node);
 
-        // Change DIV tag to SPAN. Otherwise we can create new list item by Enter key in Safari
+        // Change DIV tag to SPAN. Otherwise we cannot create new list item by Enter key in Safari
         if (nodeTag == 'DIV') {
             node = changeElementTag(<HTMLElement>node, 'LI');
         } else if (nodeTag != 'LI') {
@@ -266,25 +295,9 @@ export default class VList {
      */
     mergeVList(list: VList) {
         if (list && list != this) {
-            const originalLength = this.items.length;
             list.items.forEach(item => this.items.push(item));
             list.items.splice(0, list.items.length);
-
-            this.mergeOrphanNodesAfter(originalLength - 1);
             list.rootList.parentNode?.removeChild(list.rootList);
-        }
-    }
-
-    private mergeOrphanNodesAfter(startIndex: number) {
-        const item = this.items[startIndex];
-
-        if (item && !item.isOrphanItem()) {
-            for (let i = startIndex + 1; i <= this.items.length; i++) {
-                if (!item || !item.canMerge(this.items[i])) {
-                    item.mergeItems(this.items.splice(startIndex + 1, i - startIndex - 1));
-                    break;
-                }
-            }
         }
     }
 
@@ -318,7 +331,6 @@ export default class VList {
 
         if (callback) {
             result.forEach(callback);
-            this.mergeOrphanNodesAfter(endIndex);
         }
 
         return result;
@@ -329,16 +341,17 @@ export default class VList {
         listTypes: (ListType.Ordered | ListType.Unordered)[] = []
     ) {
         const type = getListTypeFromNode(list);
+        const items = toArray(list.childNodes);
 
-        for (let item = list.firstChild; !!item; item = item.nextSibling) {
+        items.forEach(item => {
             const newListTypes = [...listTypes, type];
 
             if (isListElement(item)) {
-                this.populateItems(item as HTMLOListElement | HTMLUListElement, newListTypes);
+                this.populateItems(item, newListTypes);
             } else if (item.nodeType != NodeType.Text || item.nodeValue.trim() != '') {
                 this.items.push(new VListItem(item, ...newListTypes));
             }
-        }
+        });
     }
 }
 

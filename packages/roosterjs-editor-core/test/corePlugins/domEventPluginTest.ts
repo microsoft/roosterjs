@@ -7,6 +7,8 @@ import {
     PluginEventType,
 } from 'roosterjs-editor-types';
 
+const getDocument = () => document;
+
 describe('DOMEventPlugin', () => {
     it('init and dispose', () => {
         const addEventListener = jasmine.createSpy('addEventListener');
@@ -22,6 +24,7 @@ describe('DOMEventPlugin', () => {
             .and.returnValue(disposer);
         const state = plugin.getState();
         plugin.initialize(<IEditor>(<any>{
+            getDocument,
             addDomEventHandler,
         }));
 
@@ -69,6 +72,7 @@ describe('DOMEventPlugin', () => {
             .createSpy('addDomEventHandler')
             .and.returnValue(jasmine.createSpy('disposer'));
         plugin.initialize(<IEditor>(<any>{
+            getDocument,
             addDomEventHandler,
         }));
 
@@ -115,6 +119,7 @@ describe('DOMEventPlugin verify event handlers while allow keyboard event propag
         select = jasmine.createSpy('select');
         getSelectionRange = jasmine.createSpy().and.returnValue(getSelectionRangeResult);
         const editor = <IEditor>(<any>{
+            getDocument,
             addDomEventHandler: (map: Record<string, any>) => {
                 eventMap = map;
                 return jasmine.createSpy('disposer');
@@ -204,6 +209,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
         plugin = new DOMEventPlugin({}, div);
         state = plugin.getState();
         plugin.initialize(<IEditor>(<any>{
+            getDocument,
             addDomEventHandler: (map: Record<string, any>) => {
                 eventMap = map;
                 return jasmine.createSpy('disposer');
