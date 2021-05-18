@@ -10,15 +10,19 @@ import { normalizeRect } from 'roosterjs-editor-dom';
 
 const Pt2PxCoefficient = 1.333;
 
-function setHTMLElementWidthInPx(element: HTMLElement) {
-    element.removeAttribute('width');
-    const rect = normalizeRect(element.getBoundingClientRect());
-    element.style.boxSizing = 'border-box';
-    element.style.width = `${rect.right - rect.left}px`;
+function setHTMLElementSizeInPx(element: HTMLElement) {
+    if (!!element) {
+        element.removeAttribute('width');
+        element.removeAttribute('height');
+        const rect = normalizeRect(element.getBoundingClientRect());
+        element.style.boxSizing = 'border-box';
+        element.style.width = `${rect.right - rect.left}px`;
+        element.style.height = `${rect.bottom - rect.top}px`;
+    }
 }
 
 export default function preProcessTable(table: HTMLTableElement) {
-    setHTMLElementWidthInPx(table);
+    setHTMLElementSizeInPx(table);
     for (let i = 0, row; (row = table.rows[i]); i++) {
         row.removeAttribute('width');
         row.removeAttribute('height');
