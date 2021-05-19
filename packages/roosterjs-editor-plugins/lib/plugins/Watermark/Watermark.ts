@@ -27,7 +27,10 @@ export default class Watermark implements EditorPlugin {
     constructor(private watermark: string, private format?: DefaultFormat) {
         this.format = this.format || {
             fontSize: '14px',
-            textColor: '#aaa',
+            textColors: {
+                lightModeColor: '#AAAAAA',
+                darkModeColor: '#6B6B6B',
+            },
         };
     }
 

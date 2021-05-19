@@ -1,4 +1,5 @@
-import { DarkModeDatasetNames, DefaultFormat } from 'roosterjs-editor-types';
+import setColor from './setColor';
+import { DefaultFormat } from 'roosterjs-editor-types';
 
 /**
  * Apply format to an HTML element
@@ -30,25 +31,10 @@ export default function applyFormat(
         if (fontSize) {
             elementStyle.fontSize = fontSize;
         }
-        if (textColor || textColors) {
-            elementStyle.color =
-                (isDarkMode ? textColors?.darkModeColor : textColors?.lightModeColor) || textColor;
 
-            if (textColors && isDarkMode) {
-                element.dataset[DarkModeDatasetNames.OriginalStyleColor] =
-                    textColors.lightModeColor;
-            }
-        }
-        if (backgroundColor || backgroundColors) {
-            elementStyle.backgroundColor =
-                (isDarkMode ? backgroundColors?.darkModeColor : backgroundColors?.lightModeColor) ||
-                backgroundColor;
+        setColor(element, textColors || textColor, false /*isBackground*/, isDarkMode);
+        setColor(element, backgroundColors || backgroundColor, true /*isBackground*/, isDarkMode);
 
-            if (backgroundColors && isDarkMode) {
-                element.dataset[DarkModeDatasetNames.OriginalStyleBackgroundColor] =
-                    backgroundColors.lightModeColor;
-            }
-        }
         if (bold) {
             elementStyle.fontWeight = 'bold';
         }

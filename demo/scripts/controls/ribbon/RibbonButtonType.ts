@@ -13,6 +13,7 @@ export default interface RibbonButtonType {
     onClick: (editor: IEditor, value: string) => void;
     checked?: (format: FormatState, editor: IEditor) => boolean;
     isDisabled?: (editor: IEditor) => boolean;
+    isHidden?: () => boolean;
     dropDownItems?: { [key: string]: string };
     dropDownRenderer?: DropDownRenderer;
     preserveOnClickAway?: boolean;

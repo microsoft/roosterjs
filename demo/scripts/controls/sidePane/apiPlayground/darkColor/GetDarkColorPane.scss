@@ -1,0 +1,23 @@
+.result {
+    position: absolute;
+    left: 25px;
+    right: 25px;
+    top: 25px;
+    bottom: 25px;
+}
+
+.lightBackground {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    border: solid 1px black;
+}
+
+.darkBackground {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    background-color: #333333;
+    border: solid 1px black;
+}

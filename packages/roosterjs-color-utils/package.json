@@ -1,0 +1,9 @@
+{
+    "name": "roosterjs-color-utils",
+    "description": "Color utilities for roosterjs",
+    "dependencies": {
+        "color": "^3.0.0",
+        "roosterjs-editor-types": ""
+    },
+    "main": "./lib/index.ts"
+}

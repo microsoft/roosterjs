@@ -27,6 +27,7 @@ export default interface BuildInPluginState {
     linkTitle: string;
     watermarkText: string;
     showRibbon: boolean;
+    supportDarkMode: boolean;
     experimentalFeatures: ExperimentalFeatures[];
     forcePreserveRatio: boolean;
 }

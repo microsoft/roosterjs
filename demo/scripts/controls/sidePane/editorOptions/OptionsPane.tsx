@@ -20,6 +20,7 @@ const htmlButtons =
     '<button id=buttonNumbering>Numbering</button>\n' +
     '<button id=buttonUndo>Undo</button>\n' +
     '<button id=buttonRedo>Redo</button>\n';
+const darkButton = '<button id=buttonDark>Dark Mode</button>\n';
 const htmlEnd =
     '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n' +
     '</body>\n' +
@@ -29,6 +30,7 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
     private exportForm = React.createRef<HTMLFormElement>();
     private exportData = React.createRef<HTMLInputElement>();
     private showRibbon = React.createRef<HTMLInputElement>();
+    private darkMode = React.createRef<HTMLInputElement>();
 
     constructor(props: BuildInPluginProps) {
         super(props);
@@ -40,11 +42,9 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
                 <div>
                     <button onClick={this.onExport}>Export to CodePen</button>
                 </div>
-
                 <div>
                     <br />
                 </div>
-
                 <details>
                     <summary>
                         <b>Plugins:</b>
@@ -78,22 +78,30 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
                         resetState={this.resetState}
                     />
                 </details>
-
                 <div>
                     <br />
                 </div>
-
-                <input
-                    id="showRibbon"
-                    type="checkbox"
-                    checked={this.state.showRibbon}
-                    onChange={this.onToggleRibbon}
-                    ref={this.showRibbon}
-                />
-                <label htmlFor="showRibbon">Show format buttons</label>
-
+                <div>
+                    <input
+                        id="showRibbon"
+                        type="checkbox"
+                        checked={this.state.showRibbon}
+                        onChange={this.onToggleRibbon}
+                        ref={this.showRibbon}
+                    />
+                    <label htmlFor="showRibbon">Show format buttons</label>
+                </div>{' '}
+                <div>
+                    <input
+                        id="darkMode"
+                        type="checkbox"
+                        checked={this.state.supportDarkMode}
+                        onChange={this.onToggleDarkMode}
+                        ref={this.darkMode}
+                    />
+                    <label htmlFor="darkMode">Support dark mode</label>
+                </div>
                 <hr />
-
                 <details>
                     <summary>
                         <b>HTML Code:</b>
@@ -104,14 +112,12 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
                         </code>
                     </div>
                 </details>
-
                 <details>
                     <summary>
                         <b>Typescript Code:</b>
                     </summary>
                     <Code state={this.state} />
                 </details>
-
                 <form
                     ref={this.exportForm}
                     method="POST"
@@ -137,6 +143,7 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             defaultFormat: { ...this.state.defaultFormat },
             experimentalFeatures: this.state.experimentalFeatures,
             forcePreserveRatio: this.state.forcePreserveRatio,
+            supportDarkMode: this.state.supportDarkMode,
         };
 
         if (callback) {
@@ -171,7 +178,17 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
         MainPaneBase.getInstance().setIsRibbonShown(showRibbon);
     };
 
+    private onToggleDarkMode = () => {
+        let supportDarkMode = this.darkMode.current.checked;
+        this.setState({
+            supportDarkMode,
+        });
+        MainPaneBase.getInstance().setIsDarkModeSupported(supportDarkMode);
+    };
+
     private getHtml() {
-        return `${htmlStart}${this.state.showRibbon ? htmlButtons : ''}${htmlEnd}`;
+        return `${htmlStart}${this.state.showRibbon ? htmlButtons : ''}${
+            this.state.supportDarkMode ? darkButton : ''
+        }${htmlEnd}`;
     }
 }

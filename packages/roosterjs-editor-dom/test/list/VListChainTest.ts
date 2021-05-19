@@ -2,7 +2,7 @@ import getBlockElementAtNode from '../../lib/blockElements/getBlockElementAtNode
 import VListChain from '../../lib/list/VListChain';
 import VListItem from '../../lib/list/VListItem';
 import { ListType, PositionType } from 'roosterjs-editor-types';
-import { Position } from 'roosterjs/lib';
+import { Position } from 'roosterjs-editor-dom';
 
 const CurrentNode = 'CurrentNode';
 

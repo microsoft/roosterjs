@@ -2,9 +2,10 @@ import LifecyclePlugin from '../../lib/corePlugins/LifecyclePlugin';
 import { ChangeSource, IEditor, NodePosition, PluginEventType } from 'roosterjs-editor-types';
 
 describe('LifecyclePlugin', () => {
+    const getDarkColor = (color: string) => color;
     it('init', () => {
         const div = document.createElement('div');
-        const plugin = new LifecyclePlugin({}, div);
+        const plugin = new LifecyclePlugin({ getDarkColor }, div);
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         const state = plugin.getState();
 
@@ -37,6 +38,7 @@ describe('LifecyclePlugin', () => {
             experimentalFeatures: [],
             shadowEditSelectionPath: null,
             shadowEditFragment: null,
+            getDarkColor,
         });
 
         expect(div.isContentEditable).toBeTrue();
@@ -53,6 +55,7 @@ describe('LifecyclePlugin', () => {
         const div = document.createElement('div');
         const plugin = new LifecyclePlugin(
             {
+                getDarkColor,
                 defaultFormat: {
                     fontFamily: 'arial',
                 },
@@ -87,6 +90,7 @@ describe('LifecyclePlugin', () => {
             experimentalFeatures: [],
             shadowEditFragment: null,
             shadowEditSelectionPath: null,
+            getDarkColor,
         });
 
         expect(div.isContentEditable).toBeTrue();

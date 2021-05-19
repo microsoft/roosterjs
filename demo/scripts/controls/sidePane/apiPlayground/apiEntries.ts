@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ApiPaneProps, { ApiPlaygroundComponent } from './ApiPaneProps';
 import BlockElementsPane from './blockElements/BlockElementsPane';
+import GetDarkColorPane from './darkColor/GetDarkColorPane';
 import GetSelectedRegionsPane from './region/GetSelectedRegionsPane';
 import InsertContentPane from './insertContent/InsertContentPane';
 import InsertEntityPane from './insertEntity/InsertEntityPane';
@@ -53,6 +54,10 @@ const apiEntries: { [key: string]: ApiEntry } = {
     vtable: {
         name: 'VTable',
         component: VTablePane,
+    },
+    getDarkColor: {
+        name: 'getDarkColor',
+        component: GetDarkColorPane,
     },
     more: {
         name: 'Coming soon...',
