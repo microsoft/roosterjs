@@ -27,7 +27,6 @@ import {
 export default class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private editor: IEditor;
     private disposer: () => void;
-    private onBlurDisposer: () => void;
     private state: DOMEventPluginState;
 
     /**
@@ -61,24 +60,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         this.editor = editor;
 
         const document = this.editor.getDocument();
-
-        // onBlur handlers
-        this.onBlurDisposer = editor.addDomEventHandler(
-            Browser.isSafari
-                ? {
-                      keydown: this.onKeyDown,
-                  }
-                : {
-                      [Browser.isIEOrEdge ? 'beforedeactivate' : 'blur']: this.cacheSelection,
-                  }
-        );
-
-        if (Browser.isSafari) {
-            document.addEventListener('mousedown', this.onMouseDownDocument, true /*useCapture*/);
-            document.defaultView?.addEventListener('blur', this.cacheSelection);
-        }
-
-        this.disposer = editor.addDomEventHandler({
+        const eventHandlers: Record<string, DOMEventHandler> = {
             // 1. Keyboard event
             keypress: this.getEventHandler(PluginEventType.KeyPress),
             keydown: this.getEventHandler(PluginEventType.KeyDown),
@@ -105,9 +87,20 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
             // 6. Input event
             [Browser.isIE ? 'textinput' : 'input']: this.getEventHandler(PluginEventType.Input),
-        });
+        };
 
-        // 7. Scroll event
+        // 7. onBlur handlers
+        if (Browser.isSafari) {
+            document.addEventListener('mousedown', this.onMouseDownDocument, true /*useCapture*/);
+            document.addEventListener('keydown', this.onKeyDownDocument);
+            document.defaultView?.addEventListener('blur', this.cacheSelection);
+        } else {
+            eventHandlers[Browser.isIEOrEdge ? 'beforedeactivate' : 'blur'] = this.cacheSelection;
+        }
+
+        this.disposer = editor.addDomEventHandler(eventHandlers);
+
+        // 8. Scroll event
         this.state.scrollContainer.addEventListener('scroll', this.onScroll);
         document.defaultView?.addEventListener('scroll', this.onScroll);
     }
@@ -123,6 +116,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
                 this.onMouseDownDocument,
                 true /*useCapture*/
             );
+            document.removeEventListener('keydown', this.onKeyDownDocument);
             document.defaultView?.removeEventListener('blur', this.cacheSelection);
         }
 
@@ -130,8 +124,6 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         this.state.scrollContainer.removeEventListener('scroll', this.onScroll);
         this.disposer();
         this.disposer = null;
-        this.onBlurDisposer();
-        this.onBlurDisposer = null;
         this.editor = null;
     }
 
@@ -152,8 +144,8 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         this.editor.select(this.state.selectionRange);
         this.state.selectionRange = null;
     };
-    private onKeyDown = (event: KeyboardEvent) => {
-        if (event.which == Keys.TAB) {
+    private onKeyDownDocument = (event: KeyboardEvent) => {
+        if (event.which == Keys.TAB && !event.defaultPrevented) {
             this.cacheSelection();
         }
     };
