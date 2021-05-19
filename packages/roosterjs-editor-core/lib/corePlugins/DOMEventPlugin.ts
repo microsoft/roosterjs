@@ -103,6 +103,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         // 8. Scroll event
         this.state.scrollContainer.addEventListener('scroll', this.onScroll);
         document.defaultView?.addEventListener('scroll', this.onScroll);
+        document.defaultView?.addEventListener('resize', this.onScroll);
     }
 
     /**
@@ -120,6 +121,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             document.defaultView?.removeEventListener('blur', this.cacheSelection);
         }
 
+        document.defaultView?.removeEventListener('resize', this.onScroll);
         document.defaultView?.removeEventListener('scroll', this.onScroll);
         this.state.scrollContainer.removeEventListener('scroll', this.onScroll);
         this.disposer();
