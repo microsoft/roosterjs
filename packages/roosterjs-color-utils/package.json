@@ -5,5 +5,6 @@
         "color": "^3.0.0",
         "roosterjs-editor-types": ""
     },
-    "main": "./lib/index.ts"
+    "main": "./lib/index.ts",
+    "version": "1.0.0"
 }
