@@ -150,7 +150,6 @@ describe('DOMEventPlugin verify event handlers while allow keyboard event propag
         expect(eventMap.compositionend).toBeDefined();
         expect(eventMap.drop).toBeDefined();
         expect(eventMap.focus).toBeDefined();
-        expect(eventMap.blur).toBeDefined();
     });
 
     it('verify composition event', () => {
@@ -184,14 +183,6 @@ describe('DOMEventPlugin verify event handlers while allow keyboard event propag
         expect(select).toHaveBeenCalledTimes(1);
         expect(select.calls.argsFor(0)[0]).toBe(range);
         expect(state.selectionRange).toBeNull();
-    });
-
-    it('verify blur event', () => {
-        expect(state.selectionRange).toBeNull();
-        eventMap.blur(<Event>{});
-
-        expect(getSelectionRange).toHaveBeenCalledWith(false);
-        expect(state.selectionRange).toBe(getSelectionRangeResult);
     });
 });
 
