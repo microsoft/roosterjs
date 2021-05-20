@@ -2,7 +2,6 @@ import * as React from 'react';
 import MainPaneBase from '../MainPaneBase';
 import RibbonButtonType from './RibbonButtonType';
 import RibbonPlugin from './RibbonPlugin';
-import { Browser } from 'roosterjs-editor-dom';
 import { FormatState, IEditor } from 'roosterjs-editor-types';
 
 const styles = require('./RibbonButton.scss');
@@ -19,8 +18,6 @@ export interface RibbonButtonState {
 }
 
 export default class RibbonButton extends React.Component<RibbonButtonProps, RibbonButtonState> {
-    private range: Range;
-
     constructor(props: RibbonButtonProps) {
         super(props);
         this.state = {
@@ -78,10 +75,6 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
     };
 
     private onShowDropDown = () => {
-        if (Browser.isSafari) {
-            this.range = this.props.plugin.getEditor().getSelectionRange();
-        }
-
         if (!this.props.button.preserveOnClickAway) {
             this.getDocument().addEventListener('click', this.onHideDropDown);
         }
@@ -92,10 +85,6 @@ export default class RibbonButton extends React.Component<RibbonButtonProps, Rib
 
     private onHideDropDown = () => {
         this.props.plugin.getEditor().stopShadowEdit();
-
-        if (Browser.isSafari) {
-            this.props.plugin.getEditor().select(this.range);
-        }
 
         this.getDocument().removeEventListener('click', this.onHideDropDown);
         this.setState({
