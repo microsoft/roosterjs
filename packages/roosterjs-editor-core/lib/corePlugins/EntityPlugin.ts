@@ -145,7 +145,9 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         const node = target as Node;
         const entityElement = node && this.editor.getElementAtCursor(getEntitySelector(), node);
         if (entityElement && !entityElement.isContentEditable) {
-            event.preventDefault();
+            if (!entityElement.draggable) {
+                event.preventDefault();
+            }
             this.state.clickingPoint = { pageX, pageY };
         }
     }
