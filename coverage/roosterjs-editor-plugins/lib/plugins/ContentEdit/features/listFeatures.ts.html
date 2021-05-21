@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.75% </span>
+                <span class="strong">13.25% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>11/80</span>
+                <span class='fraction'>11/83</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">3.51% </span>
+                <span class="strong">3.17% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/57</span>
+                <span class='fraction'>2/63</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.92% </span>
+                <span class="strong">13.41% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/79</span>
+                <span class='fraction'>11/82</span>
             </div>
         
             
@@ -297,7 +297,12 @@
 <a name='L238'></a><a href='#L238'>238</a>
 <a name='L239'></a><a href='#L239'>239</a>
 <a name='L240'></a><a href='#L240'>240</a>
-<a name='L241'></a><a href='#L241'>241</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L241'></a><a href='#L241'>241</a>
+<a name='L242'></a><a href='#L242'>242</a>
+<a name='L243'></a><a href='#L243'>243</a>
+<a name='L244'></a><a href='#L244'>244</a>
+<a name='L245'></a><a href='#L245'>245</a>
+<a name='L246'></a><a href='#L246'>246</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -328,7 +333,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -493,10 +497,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -552,6 +562,7 @@ import {
     Position,
     VListChain,
     createVListFromRegion,
+    isBlockElement,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -559,9 +570,7 @@ import {
     Indentation,
     ListFeatureSettings,
     Keys,
-    NodeType,
     PluginKeyboardEvent,
-    PositionType,
     QueryScope,
     RegionBase,
 } from 'roosterjs-editor-types';
@@ -733,11 +742,17 @@ function <span class="fstat-no" title="function not covered" >getListChains(</sp
 &nbsp;
 function <span class="fstat-no" title="function not covered" >prepareAutoBullet(</span>editor: IEditor, range: Range) {
 <span class="cstat-no" title="statement not covered" >    range.deleteContents();</span>
-    const node = <span class="cstat-no" title="statement not covered" >range.startContainer;</span>
-<span class="cstat-no" title="statement not covered" >    if (node?.nodeType == NodeType.Text &amp;&amp; node.nodeValue == '' &amp;&amp; !node.nextSibling) {</span>
+&nbsp;
+    const block = <span class="cstat-no" title="statement not covered" >editor.getBlockElementAtNode(range.startContainer);</span>
+    const endNode = <span class="cstat-no" title="statement not covered" >block?.getEndNode();</span>
+<span class="cstat-no" title="statement not covered" >    if (endNode &amp;&amp; getTagOfNode(endNode) != 'BR' &amp;&amp; block?.getTextContent().trim() === '') {</span>
         const br = <span class="cstat-no" title="statement not covered" >editor.getDocument().createElement('BR');</span>
-<span class="cstat-no" title="statement not covered" >        editor.insertNode(br);</span>
-<span class="cstat-no" title="statement not covered" >        editor.select(br, PositionType.Before);</span>
+<span class="cstat-no" title="statement not covered" >        if (isBlockElement(endNode)) {</span>
+<span class="cstat-no" title="statement not covered" >            endNode.appendChild(br);</span>
+        } else {
+<span class="cstat-no" title="statement not covered" >            endNode.parentNode.insertBefore(br, endNode.nextSibling);</span>
+        }
+<span class="cstat-no" title="statement not covered" >        editor.select(range.startContainer, range.startOffset);</span>
     }
 }
 &nbsp;
@@ -784,7 +799,7 @@ export const ListFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 20 2021 22:50:56 GMT+0000 (Coordinated Universal Time)
+                at Fri May 21 2021 04:27:43 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
