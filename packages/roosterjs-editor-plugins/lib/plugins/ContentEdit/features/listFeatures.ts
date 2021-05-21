@@ -13,6 +13,7 @@ import {
     Position,
     VListChain,
     createVListFromRegion,
+    isBlockElement,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -20,9 +21,7 @@ import {
     Indentation,
     ListFeatureSettings,
     Keys,
-    NodeType,
     PluginKeyboardEvent,
-    PositionType,
     QueryScope,
     RegionBase,
 } from 'roosterjs-editor-types';
@@ -194,11 +193,17 @@ function getListChains(editor: IEditor) {
 
 function prepareAutoBullet(editor: IEditor, range: Range) {
     range.deleteContents();
-    const node = range.startContainer;
-    if (node?.nodeType == NodeType.Text && node.nodeValue == '' && !node.nextSibling) {
+
+    const block = editor.getBlockElementAtNode(range.startContainer);
+    const endNode = block?.getEndNode();
+    if (endNode && getTagOfNode(endNode) != 'BR' && block?.getTextContent().trim() === '') {
         const br = editor.getDocument().createElement('BR');
-        editor.insertNode(br);
-        editor.select(br, PositionType.Before);
+        if (isBlockElement(endNode)) {
+            endNode.appendChild(br);
+        } else {
+            endNode.parentNode.insertBefore(br, endNode.nextSibling);
+        }
+        editor.select(range.startContainer, range.startOffset);
     }
 }
 
