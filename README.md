@@ -237,8 +237,6 @@ To build the sample site code yourself, follow these instructions:
     npm start
     ```
 
-3. Navigate to the sample editor at http://localhost:3000/
-
 ## Debugging
 
 There are two options for debugging:
