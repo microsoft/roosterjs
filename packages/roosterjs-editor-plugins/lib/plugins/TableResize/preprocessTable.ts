@@ -19,7 +19,7 @@ export function setHTMLElementSizeInPx(element: HTMLElement, dimension: Dimensio
             element.removeAttribute('width');
             element.removeAttribute('height');
             const unit = element.style?.width?.substr(element.style.width.length - 2);
-            if (!unit || unit !== 'px' /*&& unit !== 'pt'*/) {
+            if (!unit || unit !== 'px') {
                 const rect = normalizeRect(element.getBoundingClientRect());
                 element.style.boxSizing = 'border-box';
                 element.style.width = `${rect.right - rect.left}px`;
@@ -28,7 +28,7 @@ export function setHTMLElementSizeInPx(element: HTMLElement, dimension: Dimensio
 
         if (dimension === Dimension.HEIGHT || dimension === Dimension.BOTH) {
             const unit2 = element.style?.height?.substr(element.style.height.length - 2);
-            if (!unit2 || unit2 !== 'px' /*&& unit2 !== 'pt' */) {
+            if (!unit2 || unit2 !== 'px') {
                 const rect = normalizeRect(element.getBoundingClientRect());
                 element.style.boxSizing = 'border-box';
                 element.style.height = `${rect.bottom - rect.top}px`;
@@ -83,6 +83,7 @@ export default function preProcessTable(
         table.removeAttribute('height');
         table.style.height = null;
     } else if (resizeState === ResizeState.Vertical) {
+        setHTMLElementSizeInPx(table, Dimension.HEIGHT); // Make sure table height is fixed when changing table wdith
         setTableCells(table, Dimension.WIDTH); // Make sure every cell has 'width' instead of null in order to be resized properly
         /*
         Since dragging the last border would cause table width to change, we need to remove width properties
