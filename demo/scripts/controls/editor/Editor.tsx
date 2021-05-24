@@ -42,24 +42,15 @@ export default function Editor(props: EditorProps) {
         experimentalFeatures,
     } = props.initState;
 
-    const getLinkCallback = React.useCallback(() => {
-        let linkCallback: (url: string) => string;
-
-        if (linkTitle) {
-            let index = linkTitle.indexOf(UrlPlaceholder);
-            if (index >= 0) {
-                let left = linkTitle.substr(0, index);
-                let right = linkTitle.substr(index + UrlPlaceholder.length);
-                linkCallback = url => left + url + right;
-            } else {
-                linkCallback = () => linkTitle;
-            }
-        } else {
-            linkCallback = null;
-        }
-
-        return linkCallback;
-    }, [linkTitle]);
+    const getLinkCallback = React.useCallback(
+        (): ((url: string) => string) =>
+            linkTitle?.indexOf(UrlPlaceholder) >= 0
+                ? url => linkTitle.replace(UrlPlaceholder, url)
+                : linkTitle
+                ? () => linkTitle
+                : null,
+        [linkTitle]
+    );
 
     React.useEffect(() => {
         const editorInstanceToggleablePlugins: EditorInstanceToggleablePlugins = {

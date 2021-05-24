@@ -6,18 +6,19 @@
     bottom: 25px;
 }
 
-.lightBackground {
+.backgroundBase {
     position: relative;
     width: 100px;
     height: 100px;
-    background-color: white;
     border: solid 1px black;
 }
 
+.lightBackground {
+    @extend .backgroundBase;
+    background-color: white;
+}
+
 .darkBackground {
-    position: relative;
-    width: 100px;
-    height: 100px;
+    @extend .backgroundBase;
     background-color: #333333;
-    border: solid 1px black;
 }
