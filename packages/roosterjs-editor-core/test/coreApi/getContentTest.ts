@@ -112,4 +112,33 @@ describe('getContent', () => {
         const html2 = getContent(core, GetContentMode.RawHTMLWithSelection);
         expect(html2).toBe('test0<!--{"start":[],"end":[]}-->');
     });
+
+    it('getContent with empty text node', () => {
+        const firstDiv = document.createElement('div');
+        firstDiv.appendChild(document.createTextNode(''));
+        const a = document.createElement('a');
+        a.href = '#';
+        const text1 = document.createTextNode('text1');
+        a.appendChild(text1);
+        firstDiv.appendChild(a);
+        const text2 = document.createTextNode('text2');
+        firstDiv.appendChild(text2);
+        const text3 = document.createTextNode('text3');
+        firstDiv.appendChild(text3);
+        div.appendChild(firstDiv);
+
+        const range = document.createRange();
+        range.setStart(text1, 0);
+        range.setEnd(text3, 5);
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                getSelectionRange: () => range,
+            },
+        });
+
+        const content = core.api.getContent(core, GetContentMode.RawHTMLWithSelection);
+        expect(content).toBe(
+            '<div><a href="#">text1</a>text2text3</div><!--{"start":[0,0,0,0],"end":[0,1,10]}-->'
+        );
+    });
 });

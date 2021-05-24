@@ -33,6 +33,8 @@ export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): 
         content = getTextContent(root);
     } else if (triggerExtractContentEvent || core.lifecycle.isDarkMode) {
         const clonedRoot = cloneNode(root);
+        clonedRoot.normalize();
+
         const originalRange = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
         const path = !includeSelectionMarker
             ? null
