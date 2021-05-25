@@ -90,6 +90,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.lifecyclepluginstate.html#customdata" class="tsd-kind-icon">custom<wbr>Data</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.lifecyclepluginstate.html#defaultformat" class="tsd-kind-icon">default<wbr>Format</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.lifecyclepluginstate.html#experimentalfeatures" class="tsd-kind-icon">experimental<wbr>Features</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.lifecyclepluginstate.html#getdarkcolor" class="tsd-kind-icon">get<wbr>Dark<wbr>Color</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.lifecyclepluginstate.html#isdarkmode" class="tsd-kind-icon">is<wbr>Dark<wbr>Mode</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.lifecyclepluginstate.html#onexternalcontenttransform" class="tsd-kind-icon">on<wbr>External<wbr>Content<wbr>Transform</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.lifecyclepluginstate.html#shadoweditfragment" class="tsd-kind-icon">shadow<wbr>Edit<wbr>Fragment</a></li>
@@ -107,7 +108,7 @@
 					<div class="tsd-signature tsd-kind-icon">custom<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="roosterjs_editor_types.customdata.html" class="tsd-signature-type">CustomData</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5c423cd/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L13">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc88ee3/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L13">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -122,7 +123,7 @@
 					<div class="tsd-signature tsd-kind-icon">default<wbr>Format<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.defaultformat.html" class="tsd-signature-type">DefaultFormat</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5c423cd/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L18">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc88ee3/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L18">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -137,7 +138,7 @@
 					<div class="tsd-signature tsd-kind-icon">experimental<wbr>Features<span class="tsd-signature-symbol">:</span> <a href="../enums/roosterjs_editor_types.experimentalfeatures.html" class="tsd-signature-type">ExperimentalFeatures</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5c423cd/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L33">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc88ee3/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L38">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:38</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -147,12 +148,48 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="getdarkcolor" class="tsd-anchor"></a>
+					<h3>get<wbr>Dark<wbr>Color</h3>
+					<div class="tsd-signature tsd-kind-icon">get<wbr>Dark<wbr>Color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>lightColor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc88ee3/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L28">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:28</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Calculate dark mode color from light mode color</p>
+						</div>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>lightColor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>lightColor: <span class="tsd-signature-type">string</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="isdarkmode" class="tsd-anchor"></a>
 					<h3>is<wbr>Dark<wbr>Mode</h3>
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Dark<wbr>Mode<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5c423cd/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L23">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc88ee3/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L23">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -167,7 +204,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>External<wbr>Content<wbr>Transform<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>htmlIn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5c423cd/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L28">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc88ee3/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L33">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -203,7 +240,7 @@
 					<div class="tsd-signature tsd-kind-icon">shadow<wbr>Edit<wbr>Fragment<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">DocumentFragment</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5c423cd/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L38">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc88ee3/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L43">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:43</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -218,7 +255,7 @@
 					<div class="tsd-signature tsd-kind-icon">shadow<wbr>Edit<wbr>Selection<wbr>Path<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.selectionpath.html" class="tsd-signature-type">SelectionPath</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5c423cd/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L43">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:43</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc88ee3/packages/roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts#L48">roosterjs-editor-types/lib/corePluginState/LifecyclePluginState.ts:48</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -237,6 +274,9 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs.html">roosterjs</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/roosterjs_color_utils.html">roosterjs-<wbr>color-<wbr>utils</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs_editor_api.html">roosterjs-<wbr>editor-<wbr>api</a>
@@ -270,6 +310,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.lifecyclepluginstate.html#experimentalfeatures" class="tsd-kind-icon">experimental<wbr>Features</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.lifecyclepluginstate.html#getdarkcolor" class="tsd-kind-icon">get<wbr>Dark<wbr>Color</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.lifecyclepluginstate.html#isdarkmode" class="tsd-kind-icon">is<wbr>Dark<wbr>Mode</a>
