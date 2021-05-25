@@ -544,7 +544,7 @@ export default class Editor implements IEditor {
     /**
      * Whether there is an available undo/redo snapshot
      */
-    getUndoState(): EditorUndoState {
+    public getUndoState(): EditorUndoState {
         const { hasNewContent, snapshotsService } = this.core.undo;
         return {
             canUndo: hasNewContent || snapshotsService.canMove(-1 /*previousSnapshot*/),

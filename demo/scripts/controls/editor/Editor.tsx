@@ -10,7 +10,8 @@ import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins/l
 import { CutPasteListChain } from 'roosterjs-editor-plugins/lib/CutPasteListChain';
 import { Editor as RoosterJsEditor } from 'roosterjs-editor-core';
 import { EditorInstanceToggleablePlugins } from './EditorInstanceToggleablePlugins';
-import { EditorOptions, EditorPlugin, UndoSnapshotsService } from 'roosterjs-editor-types';
+import { EditorOptions, EditorPlugin, IEditor, UndoSnapshotsService } from 'roosterjs-editor-types';
+import { getDarkColor } from 'roosterjs-color-utils';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { ImageResize } from 'roosterjs-editor-plugins/lib/ImageResize';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
@@ -23,65 +24,42 @@ const styles = require('./Editor.scss');
 export interface EditorProps {
     plugins: EditorPlugin[];
     initState: BuildInPluginState;
-    content: string;
     snapshotService: UndoSnapshotsService;
     className?: string;
 }
 
-let editorInstanceToggleablePlugins: EditorInstanceToggleablePlugins | null = null;
+export default function Editor(props: EditorProps) {
+    const contentDiv = React.useRef<HTMLDivElement>();
+    const editor = React.useRef<IEditor>();
 
-export default class Editor extends React.Component<EditorProps, BuildInPluginState> {
-    private contentDiv: HTMLDivElement;
-    private editor: RoosterJsEditor;
+    const {
+        pluginList,
+        contentEditFeatures,
+        linkTitle,
+        watermarkText,
+        forcePreserveRatio,
+        defaultFormat,
+        experimentalFeatures,
+    } = props.initState;
 
-    constructor(props: EditorProps) {
-        super(props);
-        this.state = props.initState;
-    }
-
-    render() {
-        return (
-            <div className={this.props.className}>
-                <div className={styles.editor} ref={ref => (this.contentDiv = ref)} />
-            </div>
-        );
-    }
-
-    componentWillUpdate() {
-        this.disposeEditor();
-    }
-
-    componentDidUpdate() {
-        this.initEditor();
-    }
-
-    componentDidMount() {
-        this.initEditor();
-    }
-
-    componentWillUnmount() {
-        this.disposeEditor();
-    }
-
-    resetEditorPlugin(pluginState: BuildInPluginState) {
-        this.setState(pluginState);
-    }
-
-    getContent() {
-        return this.editor.getContent();
-    }
-
-    private initEditor() {
-        let pluginList = this.state.pluginList;
-        editorInstanceToggleablePlugins = {
-            contentEdit: pluginList.contentEdit
-                ? new ContentEdit(this.state.contentEditFeatures)
+    const getLinkCallback = React.useCallback(
+        (): ((url: string) => string) =>
+            linkTitle?.indexOf(UrlPlaceholder) >= 0
+                ? url => linkTitle.replace(UrlPlaceholder, url)
+                : linkTitle
+                ? () => linkTitle
                 : null,
-            hyperlink: pluginList.hyperlink ? new HyperLink(this.getLinkCallback()) : null,
+        [linkTitle]
+    );
+
+    React.useEffect(() => {
+        const editorInstanceToggleablePlugins: EditorInstanceToggleablePlugins = {
+            contentEdit: pluginList.contentEdit ? new ContentEdit(contentEditFeatures) : null,
+            hyperlink: pluginList.hyperlink ? new HyperLink(getLinkCallback()) : null,
             paste: pluginList.paste ? new Paste() : null,
-            watermark: pluginList.watermark ? new Watermark(this.state.watermarkText) : null,
+            watermark: pluginList.watermark ? new Watermark(watermarkText) : null,
             imageResize: pluginList.imageResize
-                ? new ImageResize(10, 10, undefined, this.state.forcePreserveRatio)
+                ? new ImageResize(10, 10, undefined, forcePreserveRatio)
                 : null,
             cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
             tableResize: pluginList.tableResize ? new TableResize() : null,
@@ -100,45 +78,38 @@ export default class Editor extends React.Component<EditorProps, BuildInPluginSt
                 ? new ContextMenu(CONTEXT_MENU_DATA_PROVIDER)
                 : null,
         };
-        let plugins = [
+        const plugins = [
             ...Object.keys(editorInstanceToggleablePlugins).map(
                 (k: keyof EditorInstanceToggleablePlugins) => editorInstanceToggleablePlugins[k]
             ),
-            ...this.props.plugins,
+            ...props.plugins,
         ];
-        let defaultFormat = { ...this.state.defaultFormat };
-        let options: EditorOptions = {
-            plugins: plugins,
-            defaultFormat: defaultFormat,
-            initialContent: this.props.content,
-            experimentalFeatures: this.state.experimentalFeatures,
-            undoSnapshotService: this.props.snapshotService,
+        const options: EditorOptions = {
+            plugins,
+            defaultFormat,
+            getDarkColor,
+            experimentalFeatures: experimentalFeatures,
+            undoSnapshotService: props.snapshotService,
         };
-        this.editor = new RoosterJsEditor(this.contentDiv, options);
-    }
+        editor.current = new RoosterJsEditor(contentDiv.current, options);
+        return () => {
+            editor.current.dispose();
+            editor.current = null;
+        };
+    }, [
+        pluginList,
+        contentEditFeatures,
+        watermarkText,
+        forcePreserveRatio,
+        props.plugins,
+        defaultFormat,
+        experimentalFeatures,
+        props.snapshotService,
+    ]);
 
-    private disposeEditor() {
-        this.editor.dispose();
-        this.editor = null;
-    }
-
-    private getLinkCallback(): (url: string) => string {
-        let linkCallback: (url: string) => string;
-        let linkTitle = this.state.linkTitle;
-
-        if (linkTitle) {
-            let index = linkTitle.indexOf(UrlPlaceholder);
-            if (index >= 0) {
-                let left = linkTitle.substr(0, index);
-                let right = linkTitle.substr(index + UrlPlaceholder.length);
-                linkCallback = url => left + url + right;
-            } else {
-                linkCallback = () => linkTitle;
-            }
-        } else {
-            linkCallback = null;
-        }
-
-        return linkCallback;
-    }
+    return (
+        <div className={props.className}>
+            <div className={styles.editor} ref={contentDiv} />
+        </div>
+    );
 }

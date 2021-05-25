@@ -44,6 +44,7 @@ export { default as toArray } from './utils/toArray';
 export { default as safeInstanceOf } from './utils/safeInstanceOf';
 export { default as readFile } from './utils/readFile';
 export { default as getInnerHTML } from './utils/getInnerHTML';
+export { default as setColor } from './utils/setColor';
 
 export { default as VTable } from './table/VTable';
 export { default as VList } from './list/VList';

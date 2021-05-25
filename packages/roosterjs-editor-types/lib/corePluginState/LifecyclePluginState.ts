@@ -23,6 +23,11 @@ export default interface LifecyclePluginState {
     isDarkMode: boolean;
 
     /**
+     * Calculate dark mode color from light mode color
+     */
+    getDarkColor: (lightColor: string) => string;
+
+    /**
      * External content transform function to help do color transform for existing content
      */
     onExternalContentTransform: (htmlIn: HTMLElement) => void;

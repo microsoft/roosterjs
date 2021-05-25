@@ -24,6 +24,7 @@ const initialState: BuildInPluginState = {
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
     showRibbon: true,
+    supportDarkMode: true,
     experimentalFeatures: [
         ExperimentalFeatures.PasteWithLinkPreview,
         ExperimentalFeatures.SingleDirectionResize,

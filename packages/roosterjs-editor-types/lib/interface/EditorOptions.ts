@@ -53,6 +53,7 @@ export default interface EditorOptions {
     inDarkMode?: boolean;
 
     /**
+     * @deprecated
      * RoosterJS provides an experemental "external content handler" that transforms text
      * This is used when content is pasted or inserted via a method we can hook into.
      * This transform is currently "lossy" and will eliminate color information.
@@ -60,6 +61,17 @@ export default interface EditorOptions {
      * It takes in the impacted HTMLElement
      */
     onExternalContentTransform?: (htmlIn: HTMLElement) => void;
+
+    /**
+     * A util function to transform light mode color to dark mode color
+     * Default value is to return the original light color
+     */
+    getDarkColor?: (lightColor: string) => string;
+
+    /**
+     * Whether to skip the adjust editor process when for light/dark mode
+     */
+    doNotAdjustEditorColor?: boolean;
 
     /**
      * The scroll container to get scroll event from.
