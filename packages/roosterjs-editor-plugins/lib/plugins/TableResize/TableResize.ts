@@ -540,7 +540,7 @@ export default class TableResize implements EditorPlugin {
                         const cell = vtable.cells[i][j];
                         if (cell.td) {
                             if (shouldResizeX) {
-                                // the width of some external table is fixed, we make it resizeable only when we need to
+                                // the width of some external table is fixed, we need to make it resizeable
                                 this.currentTable.removeAttribute('width');
                                 this.currentTable.style.width = null;
                                 const originalWidth: number = cell.td.style.width
@@ -562,8 +562,9 @@ export default class TableResize implements EditorPlugin {
                             }
 
                             if (shouldResizeY) {
-                                vtable.table.removeAttribute('height');
-                                vtable.table.style.height = null;
+                                // the height of some external table is fixed, we need to make it resizeable
+                                this.currentTable.removeAttribute('height');
+                                this.currentTable.style.height = null;
                                 if (j == 0) {
                                     const originalHeight = cell.td.style.height
                                         ? parseFloat(

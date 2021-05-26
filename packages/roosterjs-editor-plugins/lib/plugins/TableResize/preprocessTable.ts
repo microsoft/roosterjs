@@ -17,22 +17,16 @@ export function setHTMLElementSizeInPx(element: HTMLElement, dimension: Dimensio
     if (!!element) {
         if (dimension === Dimension.WIDTH || dimension === Dimension.BOTH) {
             element.removeAttribute('width');
-            element.removeAttribute('height');
-            const unit = element.style?.width?.substr(element.style.width.length - 2);
-            if (!unit || unit !== 'px') {
-                const rect = normalizeRect(element.getBoundingClientRect());
-                element.style.boxSizing = 'border-box';
-                element.style.width = `${rect.right - rect.left}px`;
-            }
+            const rect = normalizeRect(element.getBoundingClientRect());
+            element.style.boxSizing = 'border-box';
+            element.style.width = `${rect.right - rect.left}px`;
         }
 
         if (dimension === Dimension.HEIGHT || dimension === Dimension.BOTH) {
-            const unit2 = element.style?.height?.substr(element.style.height.length - 2);
-            if (!unit2 || unit2 !== 'px') {
-                const rect = normalizeRect(element.getBoundingClientRect());
-                element.style.boxSizing = 'border-box';
-                element.style.height = `${rect.bottom - rect.top}px`;
-            }
+            element.removeAttribute('height');
+            const rect = normalizeRect(element.getBoundingClientRect());
+            element.style.boxSizing = 'border-box';
+            element.style.height = `${rect.bottom - rect.top}px`;
         }
     }
 }
@@ -75,7 +69,6 @@ export default function preProcessTable(
     byAddingNewColumn: boolean = false
 ) {
     if (resizeState === ResizeState.Both) {
-        setHTMLElementSizeInPx(table, Dimension.BOTH); // Need to set table width/height since the new width/height depend on them
         setTableCells(table, Dimension.BOTH); // Make sure every cell has both 'width' and 'height' instead of null in order to be resized properly
     } else if (resizeState === ResizeState.Horizontal) {
         setHTMLElementSizeInPx(table, Dimension.WIDTH); // we should not chnage table width when resizing table height
@@ -83,15 +76,13 @@ export default function preProcessTable(
         table.removeAttribute('height');
         table.style.height = null;
     } else if (resizeState === ResizeState.Vertical) {
-        setHTMLElementSizeInPx(table, Dimension.HEIGHT); // Make sure table height is fixed when changing table wdith
+        setHTMLElementSizeInPx(table, Dimension.BOTH); // Make sure table width/height is fixed to avoid shifting effect
         setTableCells(table, Dimension.WIDTH); // Make sure every cell has 'width' instead of null in order to be resized properly
         /*
         Since dragging the last border would cause table width to change, we need to remove width properties
         if it is not dragging the last border, we should set table width to make sure the table width won't be changed during resizing
         */
-        if (!byAddingNewColumn) {
-            setHTMLElementSizeInPx(table, Dimension.WIDTH);
-        } else {
+        if (byAddingNewColumn) {
             table.removeAttribute('width');
             table.style.width = null;
         }
