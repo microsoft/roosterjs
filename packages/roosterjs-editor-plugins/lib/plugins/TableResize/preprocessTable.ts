@@ -15,6 +15,8 @@ export const enum ResizeState {
 
 export function setHTMLElementSizeInPx(element: HTMLElement, dimension: Dimension) {
     if (!!element) {
+        //element.style.borderColor = 'white';
+
         if (dimension === Dimension.WIDTH || dimension === Dimension.BOTH) {
             element.removeAttribute('width');
             const rect = normalizeRect(element.getBoundingClientRect());
@@ -62,6 +64,14 @@ export function setTableCells(table: HTMLTableElement, dimension: Dimension) {
         }
     }
 }
+
+/*export function setTableBorders(table: HTMLTableElement, shouldShow: boolean) {
+    for (let i = 0, row; (row = table.rows[i]); i++) {
+        for (let j = 0, cell; (cell = row.cells[j]); j++) {
+            cell.style.borderColor = shouldShow ? 'rgb(212, 212, 212)' : 'white';
+        }
+    }
+}*/
 
 export default function preProcessTable(
     table: HTMLTableElement,

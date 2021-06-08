@@ -1,7 +1,7 @@
-import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
 import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
+//import normalizeRect from '../utils/normalizeRect';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -310,7 +310,7 @@ export default class VTable {
             for (let j = 0; j < this.cells[i].length; j++) {
                 const cell = this.getCell(i, j);
                 if (cell.td) {
-                    const cellRect = normalizeRect(cell.td.getBoundingClientRect());
+                    const cellRect = cell.td.getBoundingClientRect();
                     let found: boolean = false;
                     if (getLeftCells) {
                         if (cellRect.right == borderPos) {
@@ -331,6 +331,54 @@ export default class VTable {
             }
         }
         return cells;
+    }
+
+    setBorderVisibility(
+        cells: HTMLTableCellElement[],
+        isRightBorder: boolean,
+        shouldShow: boolean
+    ) {
+        cells.forEach(cell => {
+            const style = window.getComputedStyle(cell, null);
+            const borderColor = style.getPropertyValue(
+                isRightBorder ? 'border-right-color' : 'border-left-color'
+            );
+            const leftBracketIndex = borderColor.indexOf('(');
+            const rgbColor = borderColor
+                .substring(leftBracketIndex + 1, borderColor.length - 1)
+                .replace(/ /g, '')
+                .split(',');
+            let newBorderColor: string = 'rgb(';
+
+            if (!shouldShow) {
+                //if (rgbColor.length == 3) {
+                rgbColor.push('0');
+                //}
+            } else {
+                // if (rgbColor.length == 4) {
+                rgbColor.pop();
+                //}
+            }
+
+            for (let i = 0; i < rgbColor.length; i++) {
+                newBorderColor += rgbColor[i];
+                if (i != rgbColor.length - 1) {
+                    newBorderColor += ',';
+                } else {
+                    newBorderColor += ')';
+                }
+            }
+
+            //console.log('**** new border color: ' + newBorderColor);
+
+            if (isRightBorder) {
+                cell.style.borderRightColor = newBorderColor;
+                //cell.style.borderRightWidth = shouldShow ? '1px' : '0';
+            } else {
+                cell.style.borderLeftColor = newBorderColor;
+                //cell.style.borderLeftWidth = shouldShow ? '1px' : '0';
+            }
+        });
     }
 
     /**
