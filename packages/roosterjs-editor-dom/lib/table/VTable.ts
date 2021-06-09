@@ -333,54 +333,6 @@ export default class VTable {
         return cells;
     }
 
-    setBorderVisibility(
-        cells: HTMLTableCellElement[],
-        isRightBorder: boolean,
-        shouldShow: boolean
-    ) {
-        cells.forEach(cell => {
-            const style = window.getComputedStyle(cell, null);
-            const borderColor = style.getPropertyValue(
-                isRightBorder ? 'border-right-color' : 'border-left-color'
-            );
-            const leftBracketIndex = borderColor.indexOf('(');
-            const rgbColor = borderColor
-                .substring(leftBracketIndex + 1, borderColor.length - 1)
-                .replace(/ /g, '')
-                .split(',');
-            let newBorderColor: string = 'rgb(';
-
-            if (!shouldShow) {
-                //if (rgbColor.length == 3) {
-                rgbColor.push('0');
-                //}
-            } else {
-                // if (rgbColor.length == 4) {
-                rgbColor.pop();
-                //}
-            }
-
-            for (let i = 0; i < rgbColor.length; i++) {
-                newBorderColor += rgbColor[i];
-                if (i != rgbColor.length - 1) {
-                    newBorderColor += ',';
-                } else {
-                    newBorderColor += ')';
-                }
-            }
-
-            //console.log('**** new border color: ' + newBorderColor);
-
-            if (isRightBorder) {
-                cell.style.borderRightColor = newBorderColor;
-                //cell.style.borderRightWidth = shouldShow ? '1px' : '0';
-            } else {
-                cell.style.borderLeftColor = newBorderColor;
-                //cell.style.borderLeftWidth = shouldShow ? '1px' : '0';
-            }
-        });
-    }
-
     /**
      * Loop each cell of current row and invoke a callback function
      * @param callback The callback function to invoke
