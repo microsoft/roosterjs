@@ -231,8 +231,8 @@ async function pack(isProduction, isAmd) {
             library: isAmd ? undefined : 'roosterjs',
         },
         resolve: {
-            extensions: ['.ts'],
-            modules: [packagesPath],
+            extensions: ['.ts', '.js'],
+            modules: [packagesPath, nodeModulesPath],
         },
         module: {
             rules: [

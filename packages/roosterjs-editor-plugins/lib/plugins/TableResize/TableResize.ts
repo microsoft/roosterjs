@@ -94,6 +94,7 @@ export default class TableResize implements EditorPlugin {
             case PluginEventType.Input:
             case PluginEventType.ContentChanged:
             case PluginEventType.Scroll:
+                this.setTableResizer(null);
                 this.tableRectMap = null;
                 break;
         }
@@ -349,6 +350,11 @@ export default class TableResize implements EditorPlugin {
             vtable.writeBack();
             this.editor.select(start, end);
             this.setCurrentInsertTd(ResizeState.None);
+            // need to update the position of table resizer as new row/column has been added
+            if (this.currentTable) {
+                const rect = normalizeRect(this.currentTable.getBoundingClientRect());
+                this.setTableResizer(rect);
+            }
         }, ChangeSource.Format);
     };
 

@@ -1,4 +1,4 @@
-import { Browser, getComputedStyles } from 'roosterjs-editor-dom';
+import { Browser, getComputedStyles, setColor } from 'roosterjs-editor-dom';
 import {
     DefaultFormat,
     DocumentCommand,
@@ -58,6 +58,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     private contentDivFormat: string[];
     private initializer: () => void;
     private disposer: () => void;
+    private adjustColor: () => void;
 
     /**
      * Construct a new instance of LifecyclePlugin
@@ -79,11 +80,20 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
                 contentDiv.removeAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME);
             };
         }
+        this.adjustColor = options.doNotAdjustEditorColor
+            ? () => {}
+            : () => {
+                  const { textColors, backgroundColors } = DARK_MODE_DEFAULT_FORMAT;
+                  const { isDarkMode } = this.state;
+                  setColor(contentDiv, textColors, false /*isBackground*/, isDarkMode);
+                  setColor(contentDiv, backgroundColors, true /*isBackground*/, isDarkMode);
+              };
 
         this.state = {
             customData: {},
             defaultFormat: options.defaultFormat || null,
             isDarkMode: !!options.inDarkMode,
+            getDarkColor: options.getDarkColor || ((color: string) => color),
             onExternalContentTransform: options.onExternalContentTransform,
             experimentalFeatures: options.experimentalFeatures || [],
             shadowEditFragment: null,
@@ -113,6 +123,9 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
 
         // Set content DIV to be editable
         this.initializer?.();
+
+        // Set editor background color for dark mode
+        this.adjustColor();
 
         // Do proper change for browsers to disable some browser-specified behaviors.
         this.adjustBrowserBehavior();
@@ -165,6 +178,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         ) {
             this.state.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
             this.recalculateDefaultFormat();
+            this.adjustColor();
         }
     }
 

@@ -67,7 +67,7 @@ module.exports = function (config) {
             },
             resolve: {
                 extensions: ['.ts', '.js'],
-                modules: ['./packages'],
+                modules: ['./packages', './node_modules'],
             },
         },
 

@@ -6,7 +6,8 @@
         "roosterjs-editor-dom": "",
         "roosterjs-editor-core": "",
         "roosterjs-editor-api": "",
-        "roosterjs-editor-plugins": ""
+        "roosterjs-editor-plugins": "",
+        "roosterjs-color-utils": ""
     },
     "main": "./lib/index.ts"
 }

@@ -16,15 +16,17 @@ export default class Ribbon extends React.Component<RibbonProps, {}> {
         let format = editor && getFormatState(editor);
         return editor ? (
             <div className={this.props.className || ''}>
-                {Object.keys(ribbonButtons).map(key => (
-                    <RibbonButton
-                        key={key}
-                        plugin={plugin}
-                        format={format}
-                        button={ribbonButtons[key]}
-                        onClicked={this.onButtonClicked}
-                    />
-                ))}
+                {Object.keys(ribbonButtons)
+                    .filter(key => !ribbonButtons[key].isHidden || !ribbonButtons[key].isHidden())
+                    .map(key => (
+                        <RibbonButton
+                            key={key}
+                            plugin={plugin}
+                            format={format}
+                            button={ribbonButtons[key]}
+                            onClicked={this.onButtonClicked}
+                        />
+                    ))}
             </div>
         ) : null;
     }

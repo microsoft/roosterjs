@@ -5,10 +5,11 @@ import {
     DOMEventHandler,
     DOMEventPluginState,
     EditorOptions,
+    EditorPlugin,
     IEditor,
+    Keys,
     PluginEventType,
     PluginWithState,
-    EditorPlugin,
 } from 'roosterjs-editor-types';
 
 /**
@@ -21,6 +22,7 @@ import {
  * 5. Focus and blur event
  * 6. Input event
  * 7. Scroll event
+ * It contains special handling for Safari since Safari cannot get correct selection when onBlur event is triggered in editor.
  */
 export default class DOMEventPlugin implements PluginWithState<DOMEventPluginState> {
     private editor: IEditor;
@@ -57,7 +59,8 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     initialize(editor: IEditor) {
         this.editor = editor;
 
-        this.disposer = editor.addDomEventHandler({
+        const document = this.editor.getDocument();
+        const eventHandlers: Record<string, DOMEventHandler> = {
             // 1. Keyboard event
             keypress: this.getEventHandler(PluginEventType.KeyPress),
             keydown: this.getEventHandler(PluginEventType.KeyDown),
@@ -81,22 +84,45 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
             // 5. Focus mangement
             focus: this.onFocus,
-            [Browser.isIEOrEdge ? 'beforedeactivate' : 'blur']: this.onBlur,
 
             // 6. Input event
             [Browser.isIE ? 'textinput' : 'input']: this.getEventHandler(PluginEventType.Input),
-        });
+        };
 
-        // 7. Scroll event
+        // 7. onBlur handlers
+        if (Browser.isSafari) {
+            document.addEventListener('mousedown', this.onMouseDownDocument, true /*useCapture*/);
+            document.addEventListener('keydown', this.onKeyDownDocument);
+            document.defaultView?.addEventListener('blur', this.cacheSelection);
+        } else {
+            eventHandlers[Browser.isIEOrEdge ? 'beforedeactivate' : 'blur'] = this.cacheSelection;
+        }
+
+        this.disposer = editor.addDomEventHandler(eventHandlers);
+
+        // 8. Scroll event
         this.state.scrollContainer.addEventListener('scroll', this.onScroll);
-        this.editor.getDocument().defaultView?.addEventListener('scroll', this.onScroll);
+        document.defaultView?.addEventListener('scroll', this.onScroll);
+        document.defaultView?.addEventListener('resize', this.onScroll);
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        this.editor.getDocument().defaultView?.removeEventListener('scroll', this.onScroll);
+        const document = this.editor.getDocument();
+        if (Browser.isSafari) {
+            document.removeEventListener(
+                'mousedown',
+                this.onMouseDownDocument,
+                true /*useCapture*/
+            );
+            document.removeEventListener('keydown', this.onKeyDownDocument);
+            document.defaultView?.removeEventListener('blur', this.cacheSelection);
+        }
+
+        document.defaultView?.removeEventListener('resize', this.onScroll);
+        document.defaultView?.removeEventListener('scroll', this.onScroll);
         this.state.scrollContainer.removeEventListener('scroll', this.onScroll);
         this.disposer();
         this.disposer = null;
@@ -120,11 +146,23 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         this.editor.select(this.state.selectionRange);
         this.state.selectionRange = null;
     };
-
-    private onBlur = () => {
-        this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
+    private onKeyDownDocument = (event: KeyboardEvent) => {
+        if (event.which == Keys.TAB && !event.defaultPrevented) {
+            this.cacheSelection();
+        }
     };
 
+    private onMouseDownDocument = (event: MouseEvent) => {
+        if (!this.state.selectionRange && !this.editor.contains(event.target as Node)) {
+            this.cacheSelection();
+        }
+    };
+
+    private cacheSelection = () => {
+        if (!this.state.selectionRange) {
+            this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
+        }
+    };
     private onScroll = (e: UIEvent) => {
         this.editor.triggerPluginEvent(PluginEventType.Scroll, {
             rawEvent: e,

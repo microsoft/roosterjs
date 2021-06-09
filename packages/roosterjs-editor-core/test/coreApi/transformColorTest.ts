@@ -1,5 +1,6 @@
 import createEditorCore from './createMockEditorCore';
 import { ColorTransformDirection } from 'roosterjs-editor-types';
+import { getDarkColor } from 'roosterjs-color-utils';
 import { transformColor } from '../../lib/coreApi/transformColor';
 
 describe('transformColor Dark to light', () => {
@@ -170,12 +171,14 @@ describe('transformColor Light to dark', () => {
     });
 
     it('single element with color and background color, no transform function', () => {
-        const core = createEditorCore(div, { inDarkMode: true });
+        const core = createEditorCore(div, { inDarkMode: true, getDarkColor });
         const element = document.createElement('div');
         element.style.color = 'red';
         element.style.backgroundColor = 'green';
         transformColor(core, element, true, null, ColorTransformDirection.LightToDark);
-        expect(element.outerHTML).toBe('<div style=""></div>');
+        expect(element.outerHTML).toBe(
+            '<div style="color: rgb(255, 39, 17) !important; background-color: rgb(74, 175, 57) !important;" data-ogsc="red" data-ogsb="green"></div>'
+        );
     });
 
     it('single element with color and background color, has transform function', () => {
