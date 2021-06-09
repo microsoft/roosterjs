@@ -103,7 +103,7 @@ export default function preProcessTable(
     if (resizeState === ResizeState.Both) {
         setTableCells(table, Dimension.BOTH); // Make sure every cell has both 'width' and 'height' instead of null in order to be resized properly
     } else if (resizeState === ResizeState.Horizontal) {
-        setHTMLElementSizeInPx(table, Dimension.WIDTH, false); // we should not chnage table width when resizing table height
+        setHTMLElementSizeInPx(table, Dimension.WIDTH, false); // we should not change table width when resizing table height
         // unlock table height by removing height properties
         table.removeAttribute('height');
         table.style.height = null;

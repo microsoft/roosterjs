@@ -1,7 +1,7 @@
+import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
 import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
-//import normalizeRect from '../utils/normalizeRect';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -310,7 +310,7 @@ export default class VTable {
             for (let j = 0; j < this.cells[i].length; j++) {
                 const cell = this.getCell(i, j);
                 if (cell.td) {
-                    const cellRect = cell.td.getBoundingClientRect();
+                    const cellRect = normalizeRect(cell.td.getBoundingClientRect());
                     let found: boolean = false;
                     if (getLeftCells) {
                         if (cellRect.right == borderPos) {

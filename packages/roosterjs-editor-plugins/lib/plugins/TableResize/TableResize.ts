@@ -505,7 +505,6 @@ export default class TableResize implements EditorPlugin {
     };
 
     private startResizeCells(e: MouseEvent) {
-        //preProcessTable(this.currentTable, this.resizingState);
         const doc = this.editor.getDocument();
         doc.addEventListener('mousemove', this.frameAnimateResizeCells, true);
         doc.addEventListener('mouseup', this.endResizeCells, true);
@@ -619,6 +618,7 @@ export default class TableResize implements EditorPlugin {
                     }
                     vtable.forEachCellOfCurrentRow(cell => {
                         if (cell.td) {
+                            cell.td.style.boxSizing = 'border-box';
                             cell.td.style.height =
                                 cell.td == this.currentTd ? `${newPos - rect.top}px` : null;
                         }
@@ -635,11 +635,6 @@ export default class TableResize implements EditorPlugin {
                         );
                         preProcessTable(vtable.table, ResizeState.Vertical);
 
-                        const rect2 = this.currentTd.getBoundingClientRect();
-                        this.currentCellsToResize = vtable.getCellsWithBorder(
-                            this.isRTL ? rect2.left : rect2.right,
-                            !this.isRTL
-                        );
                         console.log(
                             '**** after preProcess table: ' +
                                 this.currentCellsToResize[0]?.getBoundingClientRect().left
