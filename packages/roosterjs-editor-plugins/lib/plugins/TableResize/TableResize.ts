@@ -1,6 +1,5 @@
 import preProcessTable, { ResizeState, setEmptyTableCells } from './preprocessTable';
 import { fromHtml, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
-//import { timeStamp } from 'console';
 import {
     EditorPlugin,
     IEditor,
