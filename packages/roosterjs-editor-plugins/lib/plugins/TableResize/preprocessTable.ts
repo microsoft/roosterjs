@@ -13,11 +13,7 @@ export const enum ResizeState {
     Both, // when resizing the whole table
 }
 
-export function setHTMLElementSizeInPx(
-    element: HTMLElement,
-    dimension: Dimension,
-    storeOnly: boolean
-) {
+function setHTMLElementSizeInPx(element: HTMLElement, dimension: Dimension, storeOnly: boolean) {
     if (!!element) {
         if (dimension === Dimension.WIDTH || dimension === Dimension.BOTH) {
             const rect = normalizeRect(element.getBoundingClientRect());
@@ -53,7 +49,7 @@ export function setEmptyTableCells(table: HTMLTableElement) {
     }
 }
 
-export function setTableCells(table: HTMLTableElement, dimension: Dimension) {
+function setTableCells(table: HTMLTableElement, dimension: Dimension) {
     // measure and store the width/height into attribute
     for (let i = 0, row; (row = table.rows[i]); i++) {
         for (let j = 0, cell; (cell = row.cells[j]); j++) {
