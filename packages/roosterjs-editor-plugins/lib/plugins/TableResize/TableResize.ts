@@ -67,7 +67,6 @@ export default class TableResize implements EditorPlugin {
      * @param editor Editor instance
      */
     initialize(editor: IEditor) {
-        //this.counter = 0;
         this.editor = editor;
         this.setupResizerContainer();
         this.onMouseMoveDisposer = this.editor.addDomEventHandler('mousemove', this.onMouseMove);
