@@ -14,12 +14,12 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
             const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
             shadowEditSelectionPath = range && getSelectionPath(contentDiv, range);
             shadowEditFragment = core.contentDiv.ownerDocument.createDocumentFragment();
-            shadowEditFragment.normalize();
 
             while (contentDiv.firstChild) {
                 shadowEditFragment.appendChild(contentDiv.firstChild);
             }
 
+            shadowEditFragment.normalize();
             core.api.triggerEvent(
                 core,
                 {
