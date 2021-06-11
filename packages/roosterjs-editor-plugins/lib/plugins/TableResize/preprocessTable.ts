@@ -65,16 +65,11 @@ export function setTableCells(table: HTMLTableElement) {
     }
 }
 
-export default function preProcessTable(table: HTMLTableElement, resizeState: ResizeState) {
+export default function preProcessTable(table: HTMLTableElement) {
     const isProcessed = table.getAttribute('isProcessed');
     if (!isProcessed) {
         setTableCells(table);
         setHTMLElementSizeInPx(table, false); // Make sure table width/height is fixed to avoid shifting effect
-        if (resizeState === ResizeState.Horizontal) {
-            // unlock table height by removing height properties
-            table.removeAttribute('height');
-            table.style.height = null;
-        }
         table.setAttribute('isProcessed', 'yes');
     }
 }

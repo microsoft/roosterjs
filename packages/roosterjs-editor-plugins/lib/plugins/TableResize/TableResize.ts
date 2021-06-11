@@ -510,7 +510,7 @@ export default class TableResize implements EditorPlugin {
 
     private resizeTable = (mouseX: number, mouseY: number) => {
         let vtable = new VTable(this.currentTable);
-        preProcessTable(vtable.table, ResizeState.Both);
+        preProcessTable(vtable.table);
         if (!this.isReadyForResizingTable) {
             const rect = vtable.table.getBoundingClientRect();
             this.currentTableVerticalBorder = this.isRTL ? rect.left : rect.right;
@@ -596,7 +596,9 @@ export default class TableResize implements EditorPlugin {
     };
 
     private resizeRows = (newPos: number, rect: Rect, vtable: VTable) => {
-        preProcessTable(vtable.table, ResizeState.Horizontal);
+        preProcessTable(vtable.table);
+        vtable.table.removeAttribute('height');
+        vtable.table.style.height = null;
         vtable.forEachCellOfCurrentRow(cell => {
             if (cell.td) {
                 cell.td.style.height = cell.td == this.currentTd ? `${newPos - rect.top}px` : null;
@@ -605,7 +607,7 @@ export default class TableResize implements EditorPlugin {
     };
 
     private resizeColumns = (newPos: number, vtable: VTable, isShiftPressed: boolean) => {
-        preProcessTable(vtable.table, ResizeState.Vertical);
+        preProcessTable(vtable.table);
         // Since we allow the user to resize the table width on adjusting the border of the last cell,
         // we need to make the table width resizeable by setting it as null;
         // We also allow the user to resize the table width if Shift key is pressed
