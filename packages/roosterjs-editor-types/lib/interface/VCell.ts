@@ -16,4 +16,7 @@ export default interface VCell {
      * Whether this cell is spanned from above
      */
     spanAbove?: boolean;
+
+    width?: number;
+    height?: number;
 }

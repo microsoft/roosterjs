@@ -436,19 +436,17 @@ export default class VTable {
         return result;
     }
 
-    private setHTMLElementSizeInPx(element: HTMLElement, storeOnly: boolean) {
+    private setHTMLElementSizeInPx(element: HTMLElement, newWidth?: number, newHeight?: number) {
         if (!!element) {
-            const rect = element.getBoundingClientRect();
-            if (!storeOnly) {
-                element.removeAttribute('width');
-                element.removeAttribute('height');
-                element.style.boxSizing = 'border-box';
-                element.style.width = `${rect.width}px`;
-                element.style.height = `${rect.height}px`;
-            } else {
-                element.setAttribute('newWidth', `${rect.width}px`);
-                element.setAttribute('newHeight', `${rect.height}px`);
-            }
+            element.removeAttribute('width');
+            element.removeAttribute('height');
+            element.style.boxSizing = 'border-box';
+            element.style.width = `${
+                newWidth !== undefined ? newWidth : element.getBoundingClientRect().width
+            }px`;
+            element.style.height = `${
+                newHeight !== undefined ? newHeight : element.getBoundingClientRect().height
+            }px`;
         }
     }
 
@@ -463,10 +461,14 @@ export default class VTable {
     }
 
     public setTableCells() {
-        // measure and store the width/height into attribute
+        // measure and store the width/height into VCell
         for (let i = 0, row; (row = this.table.rows[i]); i++) {
             for (let j = 0, cell; (cell = row.cells[j]); j++) {
-                this.setHTMLElementSizeInPx(cell, true);
+                if (this.cells[i][j]) {
+                    const rect = cell.getBoundingClientRect();
+                    this.cells[i][j].width = rect.width;
+                    this.cells[i][j].height = rect.height;
+                }
             }
         }
 
@@ -478,19 +480,12 @@ export default class VTable {
             row.style.height = null;
 
             for (let j = 0, cell; (cell = row.cells[j]); j++) {
-                cell.removeAttribute('width');
-                cell.removeAttribute('height');
-                cell.style.boxSizing = 'border-box';
-                const newWidth = cell.getAttribute('newWidth');
-                const newHeight = cell.getAttribute('newHeight');
-                if (newWidth) {
-                    cell.style.width = newWidth;
-                    cell.removeAttribute('newWidth');
-                }
-
-                if (newHeight) {
-                    cell.style.height = newHeight;
-                    cell.removeAttribute('newHeight');
+                if (this.cells[i][j]) {
+                    this.setHTMLElementSizeInPx(
+                        cell,
+                        this.cells[i][j].width,
+                        this.cells[i][j].height
+                    );
                 }
             }
         }
@@ -499,7 +494,7 @@ export default class VTable {
     public preProcessTable() {
         if (!this.isProcessed) {
             this.setTableCells();
-            this.setHTMLElementSizeInPx(this.table, false); // Make sure table width/height is fixed to avoid shifting effect
+            this.setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
             this.isProcessed = true;
         }
     }
