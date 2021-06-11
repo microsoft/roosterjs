@@ -1,4 +1,4 @@
-import preProcessTable, { ResizeState, setEmptyTableCells } from './preprocessTable';
+import preProcessTable, { ResizeState, setEmptyTableCells, setTableCells } from './preprocessTable';
 import { fromHtml, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
@@ -51,8 +51,9 @@ export default class TableResize implements EditorPlugin {
     private inserter: HTMLDivElement;
     private isRTL: boolean;
 
-    private isReadyForResizingWidth: boolean = false;
-    private isReadyForResizingHeight: boolean = false;
+    private currentTableVerticalBorder: number;
+    private currentTableHorizontalBorder: number;
+    private cellsBeforeResize: HTMLTableCellElement[][] = [];
     private isReadyForResizingTable: boolean = false;
 
     /**
@@ -336,7 +337,10 @@ export default class TableResize implements EditorPlugin {
 
     private insertTd = () => {
         if (this.insertingState === ResizeState.Vertical) {
-            preProcessTable(this.currentTable, ResizeState.Vertical, true);
+            setTableCells(this.currentTable);
+            // Since adding new column will cause table width to change, we need to remove width properties
+            this.currentTable.removeAttribute('width');
+            this.currentTable.style.width = null;
         }
         this.editor.addUndoSnapshot((start, end) => {
             const vtable = new VTable(this.currentInsertTd);
@@ -469,13 +473,6 @@ export default class TableResize implements EditorPlugin {
             return;
         }
         this.resizingState = ResizeState.Both;
-        const rect = normalizeRect(this.currentTable.getBoundingClientRect());
-        if (this.isRTL) {
-            this.currentTable.setAttribute('currentLeftBorder', rect.left.toString());
-        } else {
-            this.currentTable.setAttribute('currentRightBorder', rect.right.toString());
-        }
-        this.currentTable.setAttribute('currentBottomBorder', rect.bottom.toString());
         this.startResizeCells(e);
     };
 
@@ -513,24 +510,36 @@ export default class TableResize implements EditorPlugin {
 
     private resizeTable = (mouseX: number, mouseY: number) => {
         let vtable = new VTable(this.currentTable);
-
+        preProcessTable(vtable.table, ResizeState.Both);
         if (!this.isReadyForResizingTable) {
-            preProcessTable(vtable.table, ResizeState.Both);
+            const rect = vtable.table.getBoundingClientRect();
+            this.currentTableVerticalBorder = this.isRTL ? rect.left : rect.right;
+            this.currentTableHorizontalBorder = rect.bottom;
+
+            for (let i = 0; i < vtable.cells.length; i++) {
+                this.cellsBeforeResize.push([]);
+                for (let j = 0; j < vtable.cells[i].length; j++) {
+                    this.cellsBeforeResize[i].push(
+                        vtable.cells[i][j].td?.cloneNode(true) as HTMLTableCellElement
+                    );
+                }
+            }
+
             this.isReadyForResizingTable = true;
         }
-        let rect = normalizeRect(vtable.table.getBoundingClientRect());
-        let currentBorder: number = parseFloat(
-            vtable.table.getAttribute(this.isRTL ? 'currentLeftBorder' : 'currentRightBorder')
-        );
-        const tableBottomBorder: number = parseFloat(
-            vtable.table.getAttribute('currentBottomBorder')
-        );
+        const rect = normalizeRect(vtable.table.getBoundingClientRect());
+
         const ratioX =
             1.0 +
             (this.isRTL
-                ? (currentBorder - mouseX) / (rect.right - currentBorder)
-                : (mouseX - currentBorder) / (currentBorder - rect.left));
-        const ratioY = 1.0 + (mouseY - tableBottomBorder) / (tableBottomBorder - rect.top);
+                ? (this.currentTableVerticalBorder - mouseX) /
+                  (rect.right - this.currentTableVerticalBorder)
+                : (mouseX - this.currentTableVerticalBorder) /
+                  (this.currentTableVerticalBorder - rect.left));
+        const ratioY =
+            1.0 +
+            (mouseY - this.currentTableHorizontalBorder) /
+                (this.currentTableHorizontalBorder - rect.top);
 
         const shouldResizeX = Math.abs(ratioX - 1.0) > 1e-3;
         const shouldResizeY = Math.abs(ratioY - 1.0) > 1e-3;
@@ -538,17 +547,18 @@ export default class TableResize implements EditorPlugin {
             for (let i = 0; i < vtable.cells.length; i++) {
                 for (let j = 0; j < vtable.cells[i].length; j++) {
                     const cell = vtable.cells[i][j];
-                    if (cell.td) {
+                    const originalTd = this.cellsBeforeResize[i][j];
+                    if (cell.td && originalTd) {
                         if (shouldResizeX) {
                             // the width of some external table is fixed, we need to make it resizeable
-                            vtable.table.removeAttribute('width');
                             vtable.table.style.width = null;
-                            const originalWidth: number = cell.td.style.width
-                                ? parseFloat(
-                                      cell.td.style.width.substr(0, cell.td.style.width.length - 2)
-                                  )
-                                : cell.td.getBoundingClientRect().right -
-                                  cell.td.getBoundingClientRect().left;
+                            const originalWidth: number = parseFloat(
+                                originalTd.style.width.substr(
+                                    0,
+                                    originalTd.style.width.indexOf('px')
+                                )
+                            );
+
                             const newWidth = originalWidth * ratioX;
                             cell.td.style.boxSizing = 'border-box';
                             if (newWidth >= MIN_CELL_WIDTH) {
@@ -560,18 +570,15 @@ export default class TableResize implements EditorPlugin {
 
                         if (shouldResizeY) {
                             // the height of some external table is fixed, we need to make it resizeable
-                            vtable.table.removeAttribute('height');
                             vtable.table.style.height = null;
                             if (j == 0) {
-                                const originalHeight = cell.td.style.height
-                                    ? parseFloat(
-                                          cell.td.style.height.substr(
-                                              0,
-                                              cell.td.style.height.length - 2
-                                          )
-                                      )
-                                    : cell.td.getBoundingClientRect().bottom -
-                                      cell.td.getBoundingClientRect().top;
+                                const originalHeight: number = parseFloat(
+                                    originalTd.style.height.substr(
+                                        0,
+                                        originalTd.style.height.indexOf('px')
+                                    )
+                                );
+
                                 const newHeight = originalHeight * ratioY;
                                 if (newHeight >= MIN_CELL_HEIGHT) {
                                     cell.td.style.height = `${newHeight}px`;
@@ -584,24 +591,12 @@ export default class TableResize implements EditorPlugin {
                 }
             }
         }
-        rect = normalizeRect(vtable.table.getBoundingClientRect());
-        currentBorder = this.isRTL ? rect.left : rect.right;
-        vtable.table.setAttribute(
-            this.isRTL ? 'currentLeftBorder' : 'currentRightBorder',
-            currentBorder.toString()
-        );
-
-        const currentBottomBorder = vtable.table.getBoundingClientRect().bottom;
-        vtable.table.setAttribute('currentBottomBorder', currentBottomBorder.toString());
         vtable.writeBack();
         return;
     };
 
     private resizeRows = (newPos: number, rect: Rect, vtable: VTable) => {
-        if (!this.isReadyForResizingHeight) {
-            preProcessTable(vtable.table, ResizeState.Horizontal);
-            this.isReadyForResizingHeight = true;
-        }
+        preProcessTable(vtable.table, ResizeState.Horizontal);
         vtable.forEachCellOfCurrentRow(cell => {
             if (cell.td) {
                 cell.td.style.height = cell.td == this.currentTd ? `${newPos - rect.top}px` : null;
@@ -610,15 +605,14 @@ export default class TableResize implements EditorPlugin {
     };
 
     private resizeColumns = (newPos: number, vtable: VTable, isShiftPressed: boolean) => {
-        if (!this.isReadyForResizingWidth) {
-            preProcessTable(vtable.table, ResizeState.Vertical);
-            this.isReadyForResizingWidth = true;
-        }
+        preProcessTable(vtable.table, ResizeState.Vertical);
         // Since we allow the user to resize the table width on adjusting the border of the last cell,
         // we need to make the table width resizeable by setting it as null;
         // We also allow the user to resize the table width if Shift key is pressed
-        if (!this.currentCellsToResize[0].nextElementSibling || isShiftPressed) {
-            vtable.table.removeAttribute('width');
+        const isLastCell: boolean =
+            this.currentCellsToResize[0] ==
+            this.currentCellsToResize[0].parentElement.lastElementChild;
+        if (isLastCell || isShiftPressed) {
             vtable.table.style.width = null;
         }
 
@@ -696,13 +690,12 @@ export default class TableResize implements EditorPlugin {
         this.setCurrentTd(null);
         this.setTableResizer(null);
 
-        if (this.resizingState === ResizeState.Vertical) {
-            this.isReadyForResizingWidth = false;
-        } else if (this.resizingState === ResizeState.Horizontal) {
-            this.isReadyForResizingHeight = false;
-        } else {
+        if (this.resizingState === ResizeState.Both) {
             this.isReadyForResizingTable = false;
+            this.cellsBeforeResize = [];
         }
+
+        this.currentTable.removeAttribute('isProcessed');
 
         this.resizingState = ResizeState.None;
     };
