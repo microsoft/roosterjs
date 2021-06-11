@@ -710,6 +710,7 @@ export default class TableResize implements EditorPlugin {
             this.cellsBeforeResize = [];
         }
 
+        this.resizingVtable = null;
         this.resizingState = ResizeState.None;
     };
 
