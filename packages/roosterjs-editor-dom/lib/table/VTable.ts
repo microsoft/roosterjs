@@ -27,6 +27,8 @@ export default class VTable {
      */
     col: number;
 
+    isProcessed: boolean;
+
     private trs: HTMLTableRowElement[] = [];
 
     /**
@@ -36,6 +38,7 @@ export default class VTable {
     constructor(node: HTMLTableElement | HTMLTableCellElement) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
         if (this.table) {
+            this.isProcessed = false;
             let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
             let trs = toArray(this.table.rows);
             this.cells = trs.map(row => []);
@@ -431,6 +434,74 @@ export default class VTable {
             result++;
         }
         return result;
+    }
+
+    private setHTMLElementSizeInPx(element: HTMLElement, storeOnly: boolean) {
+        if (!!element) {
+            const rect = element.getBoundingClientRect();
+            if (!storeOnly) {
+                element.removeAttribute('width');
+                element.removeAttribute('height');
+                element.style.boxSizing = 'border-box';
+                element.style.width = `${rect.width}px`;
+                element.style.height = `${rect.height}px`;
+            } else {
+                element.setAttribute('newWidth', `${rect.width}px`);
+                element.setAttribute('newHeight', `${rect.height}px`);
+            }
+        }
+    }
+
+    public setEmptyTableCells() {
+        for (let i = 0, row; (row = this.table.rows[i]); i++) {
+            for (let j = 0, cell; (cell = row.cells[j]); j++) {
+                if (!cell.innerHTML) {
+                    cell.appendChild(document.createElement('br'));
+                }
+            }
+        }
+    }
+
+    public setTableCells() {
+        // measure and store the width/height into attribute
+        for (let i = 0, row; (row = this.table.rows[i]); i++) {
+            for (let j = 0, cell; (cell = row.cells[j]); j++) {
+                this.setHTMLElementSizeInPx(cell, true);
+            }
+        }
+
+        // set width/height for each cell
+        for (let i = 0, row; (row = this.table.rows[i]); i++) {
+            row.removeAttribute('width');
+            row.style.width = null;
+            row.removeAttribute('height');
+            row.style.height = null;
+
+            for (let j = 0, cell; (cell = row.cells[j]); j++) {
+                cell.removeAttribute('width');
+                cell.removeAttribute('height');
+                cell.style.boxSizing = 'border-box';
+                const newWidth = cell.getAttribute('newWidth');
+                const newHeight = cell.getAttribute('newHeight');
+                if (newWidth) {
+                    cell.style.width = newWidth;
+                    cell.removeAttribute('newWidth');
+                }
+
+                if (newHeight) {
+                    cell.style.height = newHeight;
+                    cell.removeAttribute('newHeight');
+                }
+            }
+        }
+    }
+
+    public preProcessTable() {
+        if (!this.isProcessed) {
+            this.setTableCells();
+            this.setHTMLElementSizeInPx(this.table, false); // Make sure table width/height is fixed to avoid shifting effect
+            this.isProcessed = true;
+        }
     }
 }
 
