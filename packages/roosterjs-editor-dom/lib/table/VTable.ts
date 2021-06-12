@@ -27,18 +27,15 @@ export default class VTable {
      */
     col: number;
 
-    isProcessed: boolean;
-
     private trs: HTMLTableRowElement[] = [];
 
     /**
      * Create a new instance of VTable object using HTML TABLE or TD node
      * @param node The HTML Table or TD node
      */
-    constructor(node: HTMLTableElement | HTMLTableCellElement) {
+    constructor(node: HTMLTableElement | HTMLTableCellElement, normalizeSize?: boolean) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
         if (this.table) {
-            this.isProcessed = false;
             let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
             let trs = toArray(this.table.rows);
             this.cells = trs.map(row => []);
@@ -65,6 +62,11 @@ export default class VTable {
                     }
                 }
             });
+
+            if (normalizeSize) {
+                this.setEmptyTableCells();
+                this.normalizeSize();
+            }
         }
     }
 
@@ -436,25 +438,13 @@ export default class VTable {
         return result;
     }
 
-    private setHTMLElementSizeInPx(element: HTMLElement, newWidth?: number, newHeight?: number) {
-        if (!!element) {
-            element.removeAttribute('width');
-            element.removeAttribute('height');
-            element.style.boxSizing = 'border-box';
-            element.style.width = `${
-                newWidth !== undefined ? newWidth : element.getBoundingClientRect().width
-            }px`;
-            element.style.height = `${
-                newHeight !== undefined ? newHeight : element.getBoundingClientRect().height
-            }px`;
-        }
-    }
-
-    public setEmptyTableCells() {
+    private setEmptyTableCells() {
         for (let i = 0, row; (row = this.table.rows[i]); i++) {
             for (let j = 0, cell; (cell = row.cells[j]); j++) {
-                if (!cell.innerHTML) {
-                    cell.appendChild(document.createElement('br'));
+                if (cell) {
+                    if (!cell.innerHTML || !cell.innerHTML.trim()) {
+                        cell.appendChild(document.createElement('br'));
+                    }
                 }
             }
         }
@@ -462,41 +452,50 @@ export default class VTable {
 
     public setTableCells() {
         // measure and store the width/height into VCell
-        for (let i = 0, row; (row = this.table.rows[i]); i++) {
-            for (let j = 0, cell; (cell = row.cells[j]); j++) {
-                if (this.cells[i][j]) {
-                    const rect = cell.getBoundingClientRect();
-                    this.cells[i][j].width = rect.width;
-                    this.cells[i][j].height = rect.height;
+        for (let i = 0; i < this.cells.length; i++) {
+            for (let j = 0; j < this.cells[i].length; j++) {
+                const cell = this.cells[i][j];
+                if (cell.td) {
+                    const rect = cell.td.getBoundingClientRect();
+                    cell.width = rect.width;
+                    cell.height = rect.height;
                 }
             }
         }
 
-        // set width/height for each cell
+        // remove width/height for each row
         for (let i = 0, row; (row = this.table.rows[i]); i++) {
             row.removeAttribute('width');
             row.style.width = null;
             row.removeAttribute('height');
             row.style.height = null;
+        }
 
-            for (let j = 0, cell; (cell = row.cells[j]); j++) {
-                if (this.cells[i][j]) {
-                    this.setHTMLElementSizeInPx(
-                        cell,
-                        this.cells[i][j].width,
-                        this.cells[i][j].height
-                    );
+        // set width/height for each cell
+        for (let i = 0; i < this.cells.length; i++) {
+            for (let j = 0; j < this.cells[i].length; j++) {
+                const cell = this.cells[i][j];
+                if (cell) {
+                    setHTMLElementSizeInPx(cell.td, cell.width, cell.height);
                 }
             }
         }
     }
 
-    public preProcessTable() {
-        if (!this.isProcessed) {
-            this.setTableCells();
-            this.setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
-            this.isProcessed = true;
-        }
+    private normalizeSize() {
+        this.setTableCells();
+        setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
+    }
+}
+
+function setHTMLElementSizeInPx(element: HTMLElement, newWidth?: number, newHeight?: number) {
+    if (!!element) {
+        element.removeAttribute('width');
+        element.removeAttribute('height');
+        element.style.boxSizing = 'border-box';
+        const rect = element.getBoundingClientRect();
+        element.style.width = `${newWidth !== undefined ? newWidth : rect.width}px`;
+        element.style.height = `${newHeight !== undefined ? newHeight : rect.height}px`;
     }
 }
 
