@@ -579,7 +579,6 @@ export default class TableResize implements EditorPlugin {
                 }
             }
         }
-        this.resizingVtable.writeBack();
         return;
     };
 
@@ -647,6 +646,7 @@ export default class TableResize implements EditorPlugin {
             return;
         } else if (this.resizingState === ResizeState.Both) {
             this.resizeTable(e.pageX, e.pageY);
+            this.resizingVtable.writeBack();
         } else if (this.currentTd) {
             const rect = normalizeRect(this.currentTd.getBoundingClientRect());
             if (rect) {
