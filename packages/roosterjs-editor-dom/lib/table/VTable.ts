@@ -64,7 +64,6 @@ export default class VTable {
             });
 
             if (normalizeSize) {
-                this.setEmptyTableCells();
                 this.normalizeSize();
             }
         }
@@ -438,7 +437,7 @@ export default class VTable {
         return result;
     }
 
-    private setEmptyTableCells() {
+    private normalizeEmptyTableCells() {
         for (let i = 0, row; (row = this.table.rows[i]); i++) {
             for (let j = 0, cell; (cell = row.cells[j]); j++) {
                 if (cell) {
@@ -450,7 +449,8 @@ export default class VTable {
         }
     }
 
-    public setTableCells() {
+    /* normalize width/height for each cell in the table */
+    public normalizeTableCellSize() {
         // measure and store the width/height into VCell
         for (let i = 0; i < this.cells.length; i++) {
             for (let j = 0; j < this.cells[i].length; j++) {
@@ -483,7 +483,8 @@ export default class VTable {
     }
 
     private normalizeSize() {
-        this.setTableCells();
+        this.normalizeEmptyTableCells();
+        this.normalizeTableCellSize();
         setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
     }
 }

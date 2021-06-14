@@ -344,7 +344,7 @@ export default class TableResize implements EditorPlugin {
     private insertTd = () => {
         let vtable = new VTable(this.currentInsertTd);
         if (this.insertingState === ResizeState.Vertical) {
-            vtable.setTableCells();
+            vtable.normalizeTableCellSize();
             // Since adding new column will cause table width to change, we need to remove width properties
             vtable.table.removeAttribute('width');
             vtable.table.style.width = null;
@@ -478,7 +478,10 @@ export default class TableResize implements EditorPlugin {
         if (!this.currentTable) {
             return;
         }
-        this.resizingVtable = new VTable(this.currentTable, true);
+        this.resizingVtable = new VTable(
+            this.currentTable,
+            true /* normalize the table for resizing */
+        );
         this.resizingState = ResizeState.Both;
 
         const rect = this.resizingVtable.table.getBoundingClientRect();
@@ -492,7 +495,10 @@ export default class TableResize implements EditorPlugin {
         if (!this.currentTd) {
             return;
         }
-        this.resizingVtable = new VTable(this.currentTd, true);
+        this.resizingVtable = new VTable(
+            this.currentTd,
+            true /* normalize the table for resizing */
+        );
         this.resizingState = ResizeState.Horizontal;
         this.startResizeCells(e);
     };
@@ -501,7 +507,10 @@ export default class TableResize implements EditorPlugin {
         if (!this.currentTd) {
             return;
         }
-        this.resizingVtable = new VTable(this.currentTd, true);
+        this.resizingVtable = new VTable(
+            this.currentTd,
+            true /* normalize the table for resizing */
+        );
         this.resizingState = ResizeState.Vertical;
         if (this.resizingVtable) {
             const rect = normalizeRect(this.currentTd.getBoundingClientRect());
@@ -604,10 +613,11 @@ export default class TableResize implements EditorPlugin {
 
         this.currentCellsToResize.forEach((td, rowIndex) => {
             const nextTd = this.nextCellsToResize[rowIndex];
+            const nextTdRect = normalizeRect(nextTd.getBoundingClientRect());
             const nextTdWidth = nextTd
                 ? this.isRTL
-                    ? newPos - normalizeRect(nextTd.getBoundingClientRect()).left
-                    : normalizeRect(nextTd.getBoundingClientRect()).right - newPos
+                    ? newPos - nextTdRect.left
+                    : nextTdRect.right - newPos
                 : Number.MAX_SAFE_INTEGER;
 
             const rect = normalizeRect(td.getBoundingClientRect());
