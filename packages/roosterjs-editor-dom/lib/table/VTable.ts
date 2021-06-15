@@ -63,6 +63,7 @@ export default class VTable {
                 }
             });
 
+            this.measureAndStoreCellSize();
             if (normalizeSize) {
                 this.normalizeSize();
             }
@@ -449,8 +450,7 @@ export default class VTable {
         }
     }
 
-    /* normalize width/height for each cell in the table */
-    public normalizeTableCellSize() {
+    private measureAndStoreCellSize() {
         // measure and store the width/height into VCell
         for (let i = 0; i < this.cells.length; i++) {
             for (let j = 0; j < this.cells[i].length; j++) {
@@ -462,7 +462,10 @@ export default class VTable {
                 }
             }
         }
+    }
 
+    /* normalize width/height for each cell in the table */
+    public normalizeTableCellSize() {
         // remove width/height for each row
         for (let i = 0, row; (row = this.table.rows[i]); i++) {
             row.removeAttribute('width');
