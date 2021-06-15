@@ -79,6 +79,8 @@ export default function extractClipboardEvent(
                         },
                     });
                     break;
+                // TODO: Remove this branch and deprecate EdgeLinkPreview feature since it can be
+                // covered with ClipboardData.customValues and EditorOptions.allowedCustomPasteType
                 case LINKPREVIEW_TYPE:
                     if (options?.allowLinkPreview) {
                         handlers.push({
