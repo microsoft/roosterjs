@@ -33,7 +33,7 @@ export const enum ExperimentalFeatures {
     SingleDirectionResize = 'SingleDirectionResize',
 
     /**
-     * Try retrieve link preview information when paste
+     * @deprecated Use EditorOptions.allowedCustomPasteType with value "link-preview" instead
      */
     PasteWithLinkPreview = 'PasteWithLinkPreview',
 }

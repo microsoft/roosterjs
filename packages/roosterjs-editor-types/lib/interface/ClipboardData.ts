@@ -22,6 +22,7 @@ export default interface ClipboardData {
     rawHtml: string;
 
     /**
+     * @deprecated
      * Link Preview information provided by Edge
      */
     linkPreview?: EdgeLinkPreview;

@@ -1,4 +1,7 @@
-/** @internal */
+/**
+ * @internal
+ * @deprecated
+ */
 export default interface EdgeLinkPreview {
     domain: string;
     preferred_format: string;

@@ -3,6 +3,7 @@
  */
 export default interface ExtractClipboardEventOption {
     /**
+     * @deprecated
      * Whether retrieving value of text/link-preview is allowed
      */
     allowLinkPreview?: boolean;
