@@ -53,10 +53,14 @@ export default class VTable {
 
                     for (let colSpan = 0; colSpan < td.colSpan; colSpan++, targetCol++) {
                         for (let rowSpan = 0; rowSpan < td.rowSpan; rowSpan++) {
+                            const hasTd: boolean = colSpan + rowSpan == 0;
+                            const rect = td.getBoundingClientRect();
                             this.cells[rowIndex + rowSpan][targetCol] = {
-                                td: colSpan + rowSpan == 0 ? td : null,
+                                td: hasTd ? td : null,
                                 spanLeft: colSpan > 0,
                                 spanAbove: rowSpan > 0,
+                                width: hasTd ? rect.width : undefined,
+                                height: hasTd ? rect.height : undefined,
                             };
                         }
                     }

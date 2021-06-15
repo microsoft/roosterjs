@@ -613,7 +613,7 @@ export default class TableResize implements EditorPlugin {
 
         this.currentCellsToResize.forEach((td, rowIndex) => {
             const nextTd = this.nextCellsToResize[rowIndex];
-            const nextTdRect = normalizeRect(nextTd.getBoundingClientRect());
+            const nextTdRect = normalizeRect(nextTd?.getBoundingClientRect());
             const nextTdWidth = nextTd
                 ? this.isRTL
                     ? newPos - nextTdRect.left

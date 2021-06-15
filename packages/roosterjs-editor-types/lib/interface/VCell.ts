@@ -17,6 +17,13 @@ export default interface VCell {
      */
     spanAbove?: boolean;
 
-    width?: number /* the width in pixel of the actual td (including border and padding) */;
-    height?: number /* the height in pixel of the actual td (including border and padding) */;
+    /**
+     * The width in pixel of the actual td (including border and padding)
+     */
+    width?: number;
+
+    /**
+     * The height in pixel of the actual td (including border and padding)
+     */
+    height?: number;
 }
