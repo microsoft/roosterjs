@@ -16,4 +16,14 @@ export default interface VCell {
      * Whether this cell is spanned from above
      */
     spanAbove?: boolean;
+
+    /**
+     * The width in pixel of the actual td (including border and padding)
+     */
+    width?: number;
+
+    /**
+     * The height in pixel of the actual td (including border and padding)
+     */
+    height?: number;
 }
