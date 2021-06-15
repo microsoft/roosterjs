@@ -67,7 +67,6 @@ export default class VTable {
                 }
             });
 
-            this.measureAndStoreCellSize();
             if (normalizeSize) {
                 this.normalizeSize();
             }
@@ -449,20 +448,6 @@ export default class VTable {
                     if (!cell.innerHTML || !cell.innerHTML.trim()) {
                         cell.appendChild(document.createElement('br'));
                     }
-                }
-            }
-        }
-    }
-
-    private measureAndStoreCellSize() {
-        // measure and store the width/height into VCell
-        for (let i = 0; i < this.cells.length; i++) {
-            for (let j = 0; j < this.cells[i].length; j++) {
-                const cell = this.cells[i][j];
-                if (cell.td) {
-                    const rect = cell.td.getBoundingClientRect();
-                    cell.width = rect.width;
-                    cell.height = rect.height;
                 }
             }
         }
