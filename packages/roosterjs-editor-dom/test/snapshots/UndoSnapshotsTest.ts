@@ -2,7 +2,7 @@ import addSnapshot from '../../lib/snapshots/addSnapshot';
 import canMoveCurrentSnapshot from '../../lib/snapshots/canMoveCurrentSnapshot';
 import clearProceedingSnapshots from '../../lib/snapshots/clearProceedingSnapshots';
 import createSnapshots from '../../lib/snapshots/createSnapshots';
-import moveCurrentSnapsnot from '../../lib/snapshots/moveCurrentSnapsnot';
+import moveCurrentSnapshot from '../../lib/snapshots/moveCurrentSnapshot';
 import { canUndoAutoComplete } from 'roosterjs-editor-dom';
 import { UndoSnapshotsService } from 'roosterjs-editor-types';
 
@@ -75,7 +75,7 @@ function createUndoSnapshots(size: number = 1e7): UndoSnapshotsService {
 
     return {
         canMove: (delta: number): boolean => canMoveCurrentSnapshot(snapshots, delta),
-        move: (delta: number): string => moveCurrentSnapsnot(snapshots, delta),
+        move: (delta: number): string => moveCurrentSnapshot(snapshots, delta),
         addSnapshot: (snapshot: string, autoComplete: boolean) =>
             addSnapshot(snapshots, snapshot, autoComplete),
         clearRedo: () => clearProceedingSnapshots(snapshots),
