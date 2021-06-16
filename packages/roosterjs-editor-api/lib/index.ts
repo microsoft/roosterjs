@@ -8,6 +8,7 @@ export { default as insertImage } from './format/insertImage';
 export { default as insertTable } from './table/insertTable';
 export { default as editTable } from './table/editTable';
 export { default as formatTable } from './table/formatTable';
+export { default as paste } from './format/paste';
 export { default as removeLink } from './format/removeLink';
 export { default as replaceWithNode } from './format/replaceWithNode';
 export { default as rotateElement } from './format/rotateElement';

@@ -16,8 +16,6 @@ export default interface ClipboardData {
 
     /**
      * HTML string from clipboard event.
-     * When set to null, it means there's no HTML from clipboard event.
-     * When set to undefined, it means there may be HTML in clipboard event, but fail to retrieve
      */
     rawHtml: string;
 
